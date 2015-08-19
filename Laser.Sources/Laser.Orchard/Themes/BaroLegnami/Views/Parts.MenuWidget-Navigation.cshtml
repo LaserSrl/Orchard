@@ -1,0 +1,63 @@
+﻿@{
+    var Menu = Model.Menu;
+
+    var items = (IList<dynamic>)Enumerable.Cast<dynamic>(Menu.Items);
+
+    if (items.Any()) {
+    }
+}
+<ul class="sf-menu header_menu">
+    @foreach (var item in items) {
+        if (!HasText(item.Text)) {
+        @DisplayChildren(item)
+        } else {
+            if ((bool)item.Selected) {
+                item.Classes.Add("current");
+            }
+
+@* morphing the shape to keep Model untouched*@
+            item.Metadata.Alternates.Clear();
+            item.Metadata.Type = "MenuItemLink";
+
+@* render the menu item only if it has some content *@
+            var renderedMenuItemLink = Display(item);
+            if (HasText(renderedMenuItemLink)) {
+                var tagLI = Tag(item, "li");
+        @tagLI.StartElement
+        @renderedMenuItemLink 
+
+                if (item.Item.Items.Length > 0) {
+        <ul class="submenu">
+            @DisplayChildren(item)
+        </ul>
+                }
+    
+        @tagLI.EndElement
+            }
+        }
+    }
+</ul>
+@*<ul class="sf-menu header_menu">
+    <li class="current"><a href="index.html">Home<strong></strong></a></li>
+    <li><a href="index-1.html"><span></span>About us<strong></strong></a>
+        <ul class='submenu'>
+            <li class='sub-menu'><a href="#">Adipiscing elit</a>
+                <ul class='submenu2'>
+                    <li><a href="#">Adipiscing elit</a></li>
+                    <li><a href="#">Pellentesque sed</a></li>
+                    <li><a href="#">Aliquam congue</a></li>
+                    <li><a href="#">Fermentum nisl</a></li>
+                    <li><a href="#">Mauris accumsan</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Pellentesque sed</a></li>
+            <li><a href="#">Aliquam congue</a></li>
+            <li><a href="#">Fermentum nisl</a></li>
+            <li><a href="#">Mauris accumsan</a></li>
+        </ul>
+    </li>
+    <li><a href="index-2.html">Services<strong></strong></a></li>
+    <li><a href="index-3.html">Pricing<strong></strong></a></li>
+    <li><a href="index-4.html">Blog<strong></strong></a></li>
+    <li><a href="index-5.html">Contacts<strong></strong></a></li>
+</ul>*@

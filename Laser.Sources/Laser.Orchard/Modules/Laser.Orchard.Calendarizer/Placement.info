@@ -1,0 +1,10 @@
+﻿<Placement>
+  <Place Parts_Scheduler="Content:1" />
+  <Place Parts_Scheduler_Edit="Content:1" />
+  <Match DisplayType="Summary">
+    <Place Parts_Scheduler_Summary="Content:1" />
+  </Match>
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_Scheduler_SummaryAdmin="Content:before" />
+  </Match>
+</Placement>

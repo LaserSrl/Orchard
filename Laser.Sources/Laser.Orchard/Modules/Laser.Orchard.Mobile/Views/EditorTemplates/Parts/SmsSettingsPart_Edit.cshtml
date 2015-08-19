@@ -1,0 +1,36 @@
+﻿@model Laser.Orchard.Mobile.Models.SmsSettingsPart
+<fieldset>
+    <legend>@T("Sms Settings")</legend>
+    
+    @Html.LabelFor(m=>m.MamDriverIdentifier, T("Mam driver identifier"))
+    @Html.EditorFor(m=>m.MamDriverIdentifier)
+    @Html.ValidationMessageFor(m=>m.MamDriverIdentifier)
+
+    @Html.LabelFor(m=>m.MamHaveAlias, T("Mam has alias"))
+    @Html.EditorFor(m=>m.MamHaveAlias)
+    @Html.ValidationMessageFor(m=>m.MamHaveAlias)
+
+    @Html.LabelFor(m=>m.SmsFrom, T("Sms sender name"))
+    @Html.EditorFor(m=>m.SmsFrom)
+    @Html.ValidationMessageFor(m=>m.SmsFrom)
+
+    @Html.LabelFor(m=>m.SmsPrority, T("SMS priority"))
+    @Html.EditorFor(m=>m.SmsPrority)
+    @Html.ValidationMessageFor(m=>m.SmsPrority)
+
+    @Html.LabelFor(m=>m.SmsValidityPeriod, T("Sms validity period in seconds"))
+    @Html.EditorFor(m=>m.SmsValidityPeriod)
+    @Html.ValidationMessageFor(m=>m.SmsValidityPeriod)
+
+    @Html.LabelFor(m=>m.TotalMaxRetry, T("Total max retry"))
+    @Html.EditorFor(m=>m.TotalMaxRetry)
+    @Html.ValidationMessageFor(m=>m.SmsValidityPeriod)
+
+@*    @Html.LabelFor(m=>m.UrlSmsEngine)
+    @Html.EditorFor(m=>m.UrlSmsEngine)*@
+
+    @Html.LabelFor(m=>m.SmsServiceEndPoint, T("Sms web service url end-point"))
+    @Html.EditorFor(m=>m.SmsServiceEndPoint)
+    @Html.ValidationMessageFor(m=>m.SmsServiceEndPoint)
+
+</fieldset>

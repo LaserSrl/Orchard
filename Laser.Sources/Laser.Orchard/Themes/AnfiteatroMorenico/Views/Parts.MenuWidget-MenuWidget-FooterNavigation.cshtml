@@ -1,0 +1,37 @@
+﻿@using Orchard.DisplayManagement.Descriptors;
+@using Orchard.Environment.Extensions;
+@{
+    var Menu = Model.Menu;
+
+    var items = (IList<dynamic>)Enumerable.Cast<dynamic>(Menu.Items);
+
+    if (items.Any()) {
+    }
+    var cssClass = Model.Menu.MenuName.Replace("menu.", "");
+}
+<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+    <h5 class="footer-title">@Model.ContentItem.WidgetPart.Title</h5>
+    <ul class="footer-nav">
+        @foreach (var item in items) {
+            if (!HasText(item.Text)) {
+            @DisplayChildren(item)
+            } else {
+                if ((bool)item.Selected) {
+                    item.Classes.Add("active");
+                }
+
+@* morphing the shape to keep Model untouched*@
+                item.Metadata.Alternates.Clear();
+                item.Metadata.Type = "MenuItemLink";
+                var renderedMenuItemLink = Display(item);
+            
+@* render the menu item only if it has some content *@
+                var tagLI = Tag(item, "li");
+            @tagLI.StartElement
+            @renderedMenuItemLink 
+            @tagLI.EndElement
+            }
+        }
+    </ul>
+</div>
+

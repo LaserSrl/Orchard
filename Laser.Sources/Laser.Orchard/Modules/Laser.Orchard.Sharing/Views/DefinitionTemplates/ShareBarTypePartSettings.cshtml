@@ -1,0 +1,12 @@
+﻿@model Laser.Orchard.Sharing.Settings.ShareBarTypePartSettings
+    <fieldset>
+    <div>
+        @Html.LabelFor(m => m.Mode, T("Share bar display style"))
+        @Html.DropDownListFor(m => m.Mode, 
+        new System.Web.Mvc.SelectList(Enum.GetNames(typeof(Laser.Orchard.Sharing.Settings.ShareBarMode)), Model.Mode))
+        <span class="hint">
+            @T("Preview of available modes is available here: ")&nbsp;<a href="http://www.addthis.com/Gallery">AddThis gallery</a>.
+        </span>
+    </div>
+    </fieldset>
+

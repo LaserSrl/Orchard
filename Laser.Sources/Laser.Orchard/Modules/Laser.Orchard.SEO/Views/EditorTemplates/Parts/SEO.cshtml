@@ -1,0 +1,33 @@
+﻿@model Laser.Orchard.SEO.Models.SeoPart
+@{
+  Style.Include("~/Themes/LoveVda/Styles/css/editor.css");
+}
+<fieldset class="editor">
+  <legend>SEO</legend>
+
+  <div class="editor-label">
+    @Html.LabelFor(m => m.TitleOverride, @T("TitleOverride"))
+  </div>
+  <div class="editor-field">
+    @Html.TextBoxFor(m => m.TitleOverride, new { @class = "large text" })
+    <span class="hint">@T("TitleOverrideDescription")</span>
+    @Html.ValidationMessageFor(m => m.TitleOverride)
+  </div>
+
+  <div class="editor-label">
+    @Html.LabelFor(m => m.Description, @T("Description"))
+  </div>
+  <div class="editor-field">
+    @Html.TextBoxFor(m => m.Description, new { @class = "large text" })
+    @Html.ValidationMessageFor(m => m.Description)
+  </div>
+
+  <div class="editor-label">
+    @Html.LabelFor(m => m.Keywords, @T("Keywords"))
+  </div>
+  <div class="editor-field">
+    @Html.TextBoxFor(m => m.Keywords, new { @class = "large text" })
+    @Html.ValidationMessageFor(m => m.Keywords)
+  </div>
+
+</fieldset>

@@ -1,0 +1,10 @@
+﻿Name: Laser.Orchard.MessageStore
+AntiForgery: enabled
+Author: Laser Group - Frediani Lorenzo
+Website: http://www.laser-group.com
+Version: 1.8
+OrchardVersion: 1.8
+Description: Description for the module
+Features:
+    Laser.Orchard.MessageStore:
+        Description: Description for feature Laser.Orchard.MessageStore.

@@ -1,0 +1,50 @@
+﻿@model Laser.Orchard.MessageStore.ViewModels.MessageStoreEditModel
+@Html.HiddenFor(x => x.Gruppoid)
+@Html.HiddenFor(x => x.MarkMessage)
+@Html.HiddenFor(x => x.MessageDate)
+@Html.HiddenFor(x => x.MessageTextHtml)
+@Html.HiddenFor(x => x.MessageObject)
+@{
+    Style.Require("CssMessageStore").AtHead();
+    var messagecolor = "triangle-border left";
+    if (Model.MarkMessage == true) {
+        messagecolor = "triangle-border right";
+    }
+}
+<fieldset class="@messagecolor">
+    @if (Model.Gruppoid == -1) {
+   
+        @Html.HiddenFor(x => x.MarkRead)
+        <div class="editor-label">@Html.LabelFor(x => x.MessageFrom, T("From"))</div>
+        <div class="editor-field">@Html.EditorFor(x => x.MessageFrom)</div>
+
+        <div class="editor-label">@Html.LabelFor(x => x.MessageTo, T("To"))</div>
+        <div class="editor-field">@Html.EditorFor(x => x.MessageTo)</div>
+
+        <div class="editor-label">@Html.LabelFor(x => x.MessageText, T("Message Text"))</div>
+        <div class="editor-field">@Html.TextAreaFor(x => x.MessageText)</div>
+
+
+    } else { 
+
+        @Html.HiddenFor(x => x.MessageFrom)
+        @Html.HiddenFor(x => x.MessageTo)
+        @Html.HiddenFor(x => x.MessageText)
+
+        <div>
+            <table style="width: 100%">
+                <tr>
+                    <td>@Model.MessageDate.ToLongDateString() @Model.MessageDate.ToShortTimeString()</td>
+                    <td style="text-align: right;">
+                        <div class="checkboxlbl">@Html.LabelFor(x => x.MarkRead, @T("Mark to read")) @Html.CheckBoxFor(x => x.MarkRead) </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">@Model.MessageText</td>
+                </tr>
+            </table>
+        </div>
+       
+    }
+
+</fieldset>

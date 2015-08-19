@@ -1,0 +1,15 @@
+﻿AntiForgery: enabled
+Author: Laser Group - Frediani Lorenzo
+Website: http://www.laser-group.com
+Version: 1.8
+OrchardVersion: 1.8
+Description: Push Manager
+Features:
+    Laser.Orchard.Mobile:
+		Name: Laser Mobile Push
+        Description: Manage push mobile
+		Dependencies: Orchard.ContentPicker,Laser.Orchard.StartupConfig,Orchard.Forms,Orchard.Autoroute,Orchard.Taxonomies,Orchard.Tokens,Orchard.Users,Laser.Orchard.jQueryPlugins
+    Laser.Orchard.Sms:
+		Name: Laser SMS
+        Description: Extends Orchard with SMS functionality. Recovery password phone number will be added to users, in order to receive a Lost Passwrd link via SMS.
+		Dependencies: Laser.Orchard.StartupConfig

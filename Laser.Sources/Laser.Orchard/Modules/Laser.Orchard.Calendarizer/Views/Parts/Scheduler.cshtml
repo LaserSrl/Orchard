@@ -1,0 +1,25 @@
+﻿@{
+    string resultText;
+    DateTime From = Model.ContentPart.FromDate.ToLocalTime();
+    DateTime To = Model.ContentPart.ToDate.ToLocalTime();
+    From.ToLocalTime();
+}
+@if (From.Year == 1) {
+    resultText = T("Not yet defined").Text;
+} else if (Model.AllDay) {
+    if (From.Date == To.Date) {
+        resultText = String.Format(T("The {0}").Text, From.ToShortDateString());
+    } else {
+        resultText = String.Format(T("From {0} to {1}").Text, From.ToShortDateString(), To.ToShortDateString());
+    }
+
+} else {
+    if (From.Date == To.Date) {
+        resultText = String.Format(T("The {0} from {1} to {2}").Text, From.ToShortDateString(), From.ToShortTimeString(), To.ToShortTimeString());
+    } else {
+        resultText = String.Format(T("From {0} at {1} to {2} at {3}").Text, From.ToShortDateString(), From.ToShortTimeString(), To.ToShortDateString(), To.ToShortTimeString());
+    }
+}
+<h3 class="scheduler">
+    @resultText
+</h3>

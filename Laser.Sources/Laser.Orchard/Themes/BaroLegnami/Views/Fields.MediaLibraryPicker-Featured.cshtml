@@ -1,0 +1,39 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Fields
+@using Orchard.Utility.Extensions;
+
+@{
+    var field = (MediaLibraryPickerField)Model.ContentField;
+    string name = field.DisplayName;
+    var contents = field.MediaParts;
+}
+<div class="slider_wrapper">
+    <div class="" id="camera_wrap">
+        @foreach (var content in contents) {
+            <div data-src="@Display.ResizeMediaUrl(Width: 1400, Height: 383, Mode: "crop", Alignment: "middlecenter", Path: content.MediaUrl)">
+            </div>
+        }
+    </div>
+</div>
+@{
+using (Script.Foot()) { 
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            jQuery('#camera_wrap').camera({
+                loader: false,
+                pagination: false,
+                thumbnails: false,
+                height: '27.35714285%',
+                fx: 'simpleFade',
+                rows: '1',
+                slicedCols: '1',
+                slicedRows: '1',
+                caption: false
+            });
+
+        });
+    </script>
+}
+}

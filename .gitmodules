@@ -1,0 +1,3 @@
+[submodule "Orchard.Sources"]
+	path = Orchard.Sources
+	url = https://github.com/LaserSrl/Orchard.git

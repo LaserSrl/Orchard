@@ -1,0 +1,12 @@
+﻿Name: Laser.Orchard.Queues
+AntiForgery: enabled
+Author: Laser S.R.L.
+Website: https://www.laser-group.com
+Version: 1.0
+OrchardVersion: 1.8
+Description: Queues management module.
+Features:
+    Laser.Orchard.Queues:
+        Description: Manage queues by interrogating periodically the current number and sending notifications to registered users.
+		Category: Services
+		Dependencies: Laser.Orchard.jQueryPlugins, Laser.Orchard.Mobile, Laser.Orchard.StartupConfig

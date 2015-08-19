@@ -1,0 +1,223 @@
+﻿@using Orchard.Core.Contents.ViewModels;
+@using Laser.Orchard.AdvancedSearch.ViewModels;
+
+
+@{
+    Script.Require("jQuery");
+    Script.Require("jQueryUI").AtHead();
+    Style.Require("AdvancedSearch").AtHead();
+    Style.Require("Accordion").AtHead();
+    var typeDisplayName = Model.TypeDisplayName;
+    var pageTitle = T("Manage Content");
+    var createLinkText = T("Create New Content");
+    if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
+        pageTitle = T("Manage {0} Content", typeDisplayName);
+        createLinkText = T("Create New {0}", typeDisplayName);
+    }
+    Layout.Title = pageTitle;
+}
+
+@using (Script.Head()) {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            inputvalueignorelist = new Array('AdvancedOptions.SelectedLanguageId0', 'AdvancedOptions.SelectedOwner', 'AdvancedOptions.SelectedFromDate', 'AdvancedOptions.SelectedToDate', 'AdvancedOptions.DateFilterType0', 'AdvancedOptions.SelectedTermId0', 'AdvancedOptions.HasMediafalse');
+            $('.accordion-section-content :input').each(function () {
+                if (!(inputvalueignorelist.indexOf((this.name + $(this).val())) >= 0)) {
+                    if (this.name == 'AdvancedOptions.HasMedia') {
+                        if (this.checked == true) {
+                            //if (!$(this).parent().hasClass('open')) {
+                            //    $(this).parent().parent().addClass('open');
+                            //    $(this).parent().parent().css({ display: "block" });
+                            //    //if ($($(this).parent().parent().parent().find('.accordion-section-title')).hasClass('active')) {
+                            //    //   $($(this).parent().parent().parent().find('.accordion-section-title')).addClass('active');
+                            //    //}
+                            //}
+                            if (!$(this).parentsUntil($('.accordion-section-content')).parent().hasClass('open')) {
+                                $(this).parentsUntil($('.accordion-section-content')).parent().addClass('open');
+                                $(this).parentsUntil($('.accordion-section-content')).parent().css({ display: "block" });
+                            }
+                            if (!$($(this).parentsUntil($('.accordion-section')).parent().find('.accordion-section-title')).hasClass('active')) {
+                                $($(this).parentsUntil($('.accordion-section')).parent().find('.accordion-section-title')).addClass('active');
+                            }
+                        }
+                    }
+                    else {
+                      
+                        if (!$(this).parentsUntil($('.accordion-section-content')).parent().hasClass('open')) {
+                            $(this).parentsUntil($('.accordion-section-content')).parent().addClass('open');
+                            $(this).parentsUntil($('.accordion-section-content')).parent().css({ display: "block" });
+                        }
+                         if (!$($(this).parentsUntil($('.accordion-section')).parent().find('.accordion-section-title')).hasClass('active')) {
+                            $($(this).parentsUntil($('.accordion-section')).parent().find('.accordion-section-title')).addClass('active');
+                        }
+                    }
+                }
+            });
+
+            function close_accordion_section() {
+                $('.accordion .accordion-section-title').removeClass('active');
+                //  $('.accordion .accordion-section-content').slideUp(300).removeClass('open');
+            }
+
+            $('.accordion-section-title').click(function (e) {
+                // Grab current anchor value
+                var currentAttrValue = $(this).attr('href');
+
+                if ($(e.target).is('.active')) {
+                    close_accordion_section();
+                    $(e.target).parent().find(' .accordion-section-content').slideUp(300).removeClass('open')
+                    //  $('.accordion ').slideUp(300).removeClass('open');
+                } else {
+                    close_accordion_section();
+
+                    // Add active class to section title
+                    $(this).addClass('active');
+                    // Open up the hidden content panel
+                    $('.accordion ' + currentAttrValue).slideDown(300).addClass('open');
+                }
+
+                e.preventDefault();
+            });
+        });
+    </script>
+}
+
+
+@using (Script.Foot()) {
+    @Display.DatePickerLocalization()
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+            $('#dateFromResults').datepicker({ showAnim: "", changeYear: true, changeMonth: true });
+            $('#dateToResults').datepicker({ showAnim: "", changeYear: true, changeMonth: true });
+        });
+        //]]>
+    </script>
+}
+<div class="manage">
+    @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
+</div>
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset class="bulk-actions">
+        <label for="publishActions">@T("Actions:")</label>
+        <select id="publishActions" name="Options.BulkAction">
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
+        </select>
+        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+    </fieldset> 
+    <div class="dotted">
+        <fieldset class="bulk-actions dotted">
+            <label for="filterResults" class="bulk-filter">@T("Show")</label>
+            <select id="filterResults" name="Options.SelectedFilter">
+                @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
+                @foreach (var filterOption in Model.Options.FilterOptions) {
+                    @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
+                }
+            </select>
+            <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
+            <select id="orderResults" name="Options.OrderBy">
+                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
+                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
+                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
+            </select>
+            <label for="contentResults" class="bulk-order">@T("Filter by")</label>
+            <select id="contentResults" name="Options.ContentsStatus">
+                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Latest, T("latest").ToString())
+                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Published, T("published").ToString())
+                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Draft, T("unpublished").ToString())
+                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.AllVersions, T("all versions").ToString())
+            </select>
+        </fieldset>
+        <div class="accordion">
+            <div class="accordion-section">
+                <a class="accordion-section-title" href="#accordion-1">@T("Advanced filters")</a>
+                <div id="accordion-1" class="accordion-section-content">
+                    <fieldset class="bulk-actions dotted">
+
+                        <label for="languageResults" class="bulk-filter">@T("Language")</label>
+                        <select id="languageResults" name="AdvancedOptions.SelectedLanguageId">
+                            @Html.SelectOption((string)Model.AdvancedOptions.SelectedLanguageId.ToString(), "0", T("any (show all)").ToString())
+                            @foreach (var languageOption in Model.AdvancedOptions.LanguageOptions) {
+                                @Html.SelectOption((string)Model.AdvancedOptions.SelectedLanguageId.ToString(), (string)languageOption.Key.ToString(), (string)languageOption.Value)
+                            }
+                        </select>
+                        <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
+                        @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults" })
+
+                        <label for="dateFromResults" class="bulk-filter">@T("Date From")</label>
+                        <span class="date">@Html.TextBox("AdvancedOptions.SelectedFromDate", (string)(Model.AdvancedOptions.SelectedFromDate != null ? Model.AdvancedOptions.SelectedFromDate.ToString() : ""), new { id = "dateFromResults" })</span>
+                        <label for="dateToResults" class="bulk-filter">@T("Date To")</label>
+                        <span class="date">@Html.TextBox("AdvancedOptions.SelectedToDate", (string)(Model.AdvancedOptions.SelectedToDate != null ? Model.AdvancedOptions.SelectedToDate.ToString() : ""), new { id = "dateToResults" })</span>
+                        <select id="dateTypeResults" name="AdvancedOptions.DateFilterType">
+                            @foreach (var dateFilterOption in Enum.GetNames(typeof(Laser.Orchard.AdvancedSearch.DateFilterOptions))) {
+                                @Html.SelectOption((string)Convert.ToInt32(Model.AdvancedOptions.DateFilterType).ToString(), (string)Convert.ToInt32(Enum.Parse(typeof(Laser.Orchard.AdvancedSearch.DateFilterOptions), dateFilterOption)).ToString(), (string)dateFilterOption)
+                            }
+                        </select>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="accordion-section">
+                <a class="accordion-section-title" href="#accordion-2">@T("Other filters")</a>
+                <div id="accordion-2" class="accordion-section-content">
+
+                    <fieldset class="bulk-actions dotted">
+                        @*<legend>@T("Other filters")</legend>*@
+                        @try {
+                            if (Model.AdvancedOptions.TaxonomiesOptions != null && Model.AdvancedOptions.TaxonomiesOptions.Count > 0) {
+                            <label for="termsResults" class="bulk-filter">@T("Terms")</label>
+                            <select id="termsResults" name="AdvancedOptions.SelectedTermId">
+                                @Html.SelectOption((string)Model.AdvancedOptions.SelectedTermId.ToString(), "0", T("any (show all)").ToString())
+                                @{ int optgroupinserted = 0;
+                                   foreach (var languageOption in Model.AdvancedOptions.TaxonomiesOptions) {
+                                       if ((string)languageOption.Key.ToString() == "-1") {
+                                           if (optgroupinserted > 0) {
+                                               Html.Raw("</optgroup>");
+                                           }
+                                           optgroupinserted = 1;
+                                           @Html.Raw("<optgroup label=\"" + (string)languageOption.Value + "\">");
+                                       }
+                                       else {
+                                    @Html.SelectOption((string)Model.AdvancedOptions.SelectedTermId.ToString(), (string)languageOption.Key.ToString(), (string)languageOption.Value)
+                                       }
+                                   }
+                                   if (optgroupinserted > 0) {
+                                       @Html.Raw("</optgroup>");
+                                   }
+                                }
+                            </select>
+                            }
+                        }
+                        catch { }
+                        @try {
+                            if (Model.AdvancedOptions.StatusOptions != null && Model.AdvancedOptions.StatusOptions.Count > 0) {
+                            <label for="statusResults" class="bulk-filter">@T("Extended status")</label>
+                            <select id="statusResults" name="AdvancedOptions.SelectedStatus">
+                                @Html.SelectOption((string)Model.AdvancedOptions.SelectedStatus, "", T("any (show all)").ToString())
+                                @foreach (var status in Model.AdvancedOptions.StatusOptions) {
+                                    @Html.SelectOption((string)Model.AdvancedOptions.SelectedStatus, (string)status.Key.ToString(), (string)status.Value)
+                                }
+                            </select>
+                            }
+                        }
+                        catch { }
+
+                        <label for="hasMediaResults" class="bulk-filter">@T("Only with media")</label>
+                        @Html.CheckBox("AdvancedOptions.HasMedia", (bool)Model.AdvancedOptions.HasMedia, new { id = "hasMediaResults" })
+                    </fieldset>
+                </div>
+            </div>
+            <div>
+                <div class="manage">
+                    <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <fieldset class="contentItems bulk-items">
+        @Display(Model.ContentItems)
+    </fieldset>
+    @Display(Model.Pager)
+}

@@ -1,0 +1,50 @@
+﻿<Placement>
+  <!--
+  Place  aaFields_Numeric_Edit__CommonPart-Creator="Content:1;Alternate:FieldCreator"/>
+  Place  aaFields_Numeric_Edit__CommonPart-LastModifier="-"/
+  Place  aaFields_Numeric__CommonPart-Creator="-"/>
+  Place  aaFields_Numeric__CommonPart-LastModifier="-"/>
+  -->
+
+    <Place Fields_Numeric__CommonPart-Creator="-"/>
+    <Place Fields_Numeric__CommonPart-LastModifier="-"/>
+
+  <Place Parts_ContentPickerConnector="Content:1"/>
+
+  <!-- Taxonomies: Start -->
+  <Place Fields_TaxonomyField_Edit="-" Fields_TaxonomyField_Localized_Edit="Content:9" Parts_TaxonomyExtension_Edit="Content:6"/>
+  <Place Parts_TermPart="-" Parts_TermPart_Localized="Content:5" />
+  <Place Parts_TaxonomyExtensionsSiteSettings_Edit="Content:10" />
+  
+
+  <!-- Display terms in front-end summaries -->
+  <Match DisplayType="Summary">
+    <Place Fields_TaxonomyField="Content:after"/>
+  </Match>
+
+  <!-- Display terms in content item details -->
+  <Match DisplayType="Detail">
+    <Place Fields_TaxonomyField="Content:5"/>
+  </Match>
+
+  <!-- Display terms in admin summaries -->
+  <Match DisplayType="SummaryAdmin">
+    <Place Fields_TaxonomyField="Content:5"/>
+  </Match>
+
+  <!-- Display in admin -->
+  <Place Parts_Taxonomies_Term_Fields="Content:2"/>
+
+  <!-- New Shapes -->
+  <Place Parts_TaxonomyPart="Content:5" />
+  <Place Parts_TermPart_Feed="Content" />
+
+  <!-- Navigation -->
+  <Place Parts_Navigation_Taxonomy_Edit="Content:5"/>
+  <!-- Taxonomies: End -->
+
+  <!-- Permission Extension-->
+  <Place Parts_UsersGroupsSettings_Edit="Content:0"/>
+  <Place Parts_UsersGroups="Content:0"/>
+  <!-- Permission Extension:End-->
+</Placement>

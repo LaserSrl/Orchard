@@ -1,0 +1,17 @@
+﻿Name: Laser SEO
+AntiForgery: enabled
+Author: Laser
+Website: http://www.laser-group.com
+Version: 1.8
+OrchardVersion: 1.8
+Features:
+    Laser.Orchard.SEO:
+        Name: Laser SEO
+        Description: Search Engine Optimization.
+        Dependencies: Orchard.ContentTypes
+        Category: SEO
+    Laser.Orchard.Favicon:
+        Name: Laser Favicon
+        Description: Aggiunge la gestione della favicon alle impostazioni del sito.
+        Dependencies: Orchard.Media, Settings
+        Category: SEO

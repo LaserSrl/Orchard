@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>Wake up script</title>
+<HTA:APPLICATION
+  APPLICATIONNAME="Wake up script"
+  ID="WakeUpScript"
+  VERSION="1.00"
+/>
+</head>
+
+<script language="VBScript">
+Function LPad(s, l, c)
+  Dim n : n = 0
+  If l > Len(s) Then n = l - Len(s)
+  LPad = String(n, c) & s
+End Function
+
+Sub Window_OnLoad
+	Dim objIEA,	TodayDay, TodayMonth, TodayYear  
+	Dim Urls(4)
+	TodayDay   = Day(Date())
+	TodayMonth = Month(Date())
+	TodayYear  = Year(Date())
+	
+	'********************Definizione Url
+	Urls(0)= "http://expoincitta.laser-group.com/Laser.orchard.WebServices/Json/GetByAlias?datafine="&LPad(TodayYear,4,"0")&"-"&LPad(TodayMonth,2,"0")&"-"&LPad(TodayDay,2,"0")&"&datainizio="&LPad(TodayYear,4,"0")&"-"&LPad(TodayMonth,2,"0")&"-"&LPad(TodayDay,2,"0")&"&displayAlias=e015/lista-eventi&lang=it-IT&page=1&pageSize=9999"
+	Urls(1)= "http://expoincitta.laser-group.com/Laser.orchard.WebServices/Json/GetByAlias?datafine="&LPad(TodayYear,4,"0")&"-"&LPad(TodayMonth,2,"0")&"-"&LPad(TodayDay,2,"0")&"&datainizio="&LPad(TodayYear,4,"0")&"-"&LPad(TodayMonth,2,"0")&"-"&LPad(TodayDay,2,"0")&"&displayAlias=e015/lista-eventi&lang=en-US&page=1&pageSize=9999"
+	Urls(2)= "http://expoincitta.laser-group.com/Laser.orchard.WebServices/Json/GetByAlias?displayAlias=e015/lista-eventi&datafine="&LPad(TodayYear,4,"0")&"-"&LPad(TodayMonth,2,"0")&"-"&LPad(TodayDay,2,"0")&"&datainizio="&LPad(TodayYear,4,"0")&"-"&LPad(TodayMonth,2,"0")&"-"&LPad(TodayDay,2,"0")&"&lang=it-IT"
+	Urls(3)= "http://expoincitta.laser-group.com/Laser.orchard.WebServices/Json/GetByAlias?displayAlias=e015/lista-eventi&datafine="&LPad(TodayYear,4,"0")&"-"&LPad(TodayMonth,2,"0")&"-"&LPad(TodayDay,2,"0")&"&datainizio="&LPad(TodayYear,4,"0")&"-"&LPad(TodayMonth,2,"0")&"-"&LPad(TodayDay,2,"0")&"&lang=en-US"
+	'********************Definizione Url End
+		
+	For Each UrlItem In Urls
+		if (UrlItem<>"") Then
+        	Set objIEA = CreateObject("InternetExplorer.Application")
+            Document.Write "Begin - " & UrlItem
+			objIEA.Navigate UrlItem
+			objIEA.visible = true
+			While objIEA.Busy
+			Wend
+			Document.Write " - Done<br/>"
+	        objIEA.Quit
+	        Set objIEA = Nothing
+		End If
+	Next
+	Document.Write "Finish"
+    Self.Close 
+End Sub
+</script>
+
+<body>
+</body>
+</html>

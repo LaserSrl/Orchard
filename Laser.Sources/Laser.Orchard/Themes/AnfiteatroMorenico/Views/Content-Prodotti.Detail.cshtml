@@ -1,0 +1,60 @@
+﻿@using Orchard.Utility.Extensions;
+@{
+    if (Model.Title != null) {
+        Layout.Title = Model.Title;
+    }
+
+    Model.Classes.Add("content-item");
+
+    var contentTypeClassName = ((string)Model.ContentItem.ContentType).HtmlClassify();
+    Model.Classes.Add(contentTypeClassName);
+
+    var tag = Tag(Model, "article");
+    var medias = Model.ContentItem.Prodotti.Gallery.MediaParts;
+    var parents = Model.ContentItem.ContentPickerConnectorPart.ParentContentItems;
+}
+<div class="row">
+    <div class="col-xs-12 col-sm-8">
+        <h1 class="item-title prodotti">@Model.ContentItem.TitlePart.Title</h1>
+        @Html.Raw(@Model.ContentItem.BodyPart.Text)
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        @if (medias.Count > 0) {
+
+            <img class="img-responsive img-thumbnail" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "crop", Alignment: "middlecenter", Path: medias[0].MediaUrl)" />
+        }
+    </div>
+</div>
+@if (medias.Count > 1) {
+<div class="space-20"></div>
+    <div class="row">
+        <h4 class="item-subtitle prodotti">@T("Gallery")</h4>
+        @for (int i = 1; i < medias.Count; i++) {
+            <div class="col-xs-12 col-sm-4 col-md-2">
+                <a data-lightbox="gallery" href="@medias[i].MediaUrl">
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "crop", Alignment: "middlecenter", Path: medias[i].MediaUrl)" /></a>
+            </div>
+        }
+    </div>
+
+}
+@if (parents.Length > 0) {
+<div class="space-20"></div>
+<div class="row">
+    <h4 class="item-subtitle prodotti">@T("Producers")</h4>
+    <ul>
+        @foreach (var produttore in parents) {
+            <li class="col-xs-12 col-sm-4">
+                <strong>@produttore.ParentContentItem.TitlePart.Title</strong><br />
+                @produttore.ParentContentItem.MapPart.LocationInfo
+                @if (produttore.ParentContentItem.MapPart.LocationInfo != produttore.ParentContentItem.MapPart.LocationAddress) {
+                    <text>-</text> @produttore.ParentContentItem.MapPart.LocationAddress
+                }<br />
+                @produttore.ParentContentItem.Produttore.Telefono.Value<br/>
+                <a href="mailto:@produttore.ParentContentItem.Produttore.Email.Value">@produttore.ParentContentItem.Produttore.Email.Value</a><br />
+                <a target="_blank" href="@produttore.ParentContentItem.Produttore.SitoWeb.Value">@produttore.ParentContentItem.Produttore.SitoWeb.Value</a><br />
+            </li>
+        }
+        </ul>
+</div>
+}

@@ -1,0 +1,18 @@
+﻿@model Laser.Orchard.Payment.ViewModels.PaymentSettingsVM
+<fieldset>
+    <legend>@T("Payment Settings")</legend>
+    <h2>Payment Method</h2>
+    @Html.DropDownListFor(m => m.PaymentMethodSelected,Model.ListOfPaymentMethod)
+    <div class="editor-field">
+        <fieldset>
+            <h2>GestPay</h2>
+            @Html.LabelFor(m => m.GestpayShopLogin, T("Gestpay Login account"))
+            @Html.TextBoxFor(m => m.GestpayShopLogin)
+            <div class="checkbox-and-label">
+                @Html.CheckBoxFor(m => m.GestpayTest)
+                <label for="@Html.FieldIdFor(m => m.GestpayTest)" class="forcheckbox">@T("Test") </label>
+                <span class="hint">@T("Set if login is a GestPay test account")</span>
+            </div>
+        </fieldset>
+    </div>
+</fieldset>

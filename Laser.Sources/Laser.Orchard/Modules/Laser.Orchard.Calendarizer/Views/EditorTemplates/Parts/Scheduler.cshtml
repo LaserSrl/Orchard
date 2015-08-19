@@ -1,0 +1,81 @@
+﻿@model Laser.Orchard.Calendarizer.Models.SchedulerPart
+@{
+    Script.Require("JQueryUI_Tabs").AtHead();
+    var MostraDataOra = false;
+    var classtouse = "insertcontroldate";
+    if (Model.Settings.ContainsKey("CalendarizerSettings.UseDateAndTime")) {
+        bool.TryParse(Model.Settings["CalendarizerSettings.UseDateAndTime"] ?? "False", out MostraDataOra);
+        if (MostraDataOra) {
+            classtouse = "insertcontroldatetime";
+        }
+    }
+}
+@using (Script.Head()) {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            calendarize_changed();
+        });
+    </script>
+}
+<fieldset class="scheduler-datetime">
+    <legend>@T("Scheduling infos")</legend>
+    @Html.CheckBoxFor(m => m.AllDay)
+    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AllDay)">@T("All days")</label>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#@Html.FieldIdFor(m => m.AllDay)').bind('change', function () {
+                calendarize_changed();
+            });
+        });
+
+        function calendarize_changed() {
+            if ($('#@Html.FieldIdFor(m => m.AllDay)').prop('checked')) {
+                $('#calendarizeddate').hide();
+            }
+            else {
+                $('#calendarizeddate').show();
+            }
+        }
+
+    </script>
+
+    <br />
+    <div id="calendarizeddate">
+        <label  for="@Html.FieldIdFor(m => m.FromDate)">@T("From date")</label>
+        @if (MostraDataOra) {
+            @Html.TextBoxFor(m => m.FromDate, new { @class = classtouse })
+        } else {
+            @Html.TextBoxFor(m => m.FromDate, new { @class = classtouse, @Value = Model.FromDate.ToString("dd MMM yyyy") })
+        }
+        <br />
+        <label  for="@Html.FieldIdFor(m => m.ToDate)">@T("To date")</label>
+        @if (MostraDataOra) {
+            @Html.TextBoxFor(m => m.ToDate, new { @class = classtouse })
+        } else {
+            @Html.TextBoxFor(m => m.ToDate, new { @class = classtouse, @Value = Model.ToDate.ToString("dd MMM yyyy") })        
+        }
+    </div>
+
+</fieldset>
+
+
+
+@{
+    using (Script.Foot()) {
+    @Display.DatePickerLocalization();
+    @Display.TimePickerLocalization();
+                                       
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+            $(".insertcontroldate").datepicker({ showAnim: "", changeYear: true, changeMonth: true, minDate: 0 });
+            $(".insertcontroldatetime").datetimepicker({ showAnim: "", changeYear: true, changeMonth: true, minDate: 0 });
+        })
+        //]]>
+    </script>
+    
+    }
+
+
+}

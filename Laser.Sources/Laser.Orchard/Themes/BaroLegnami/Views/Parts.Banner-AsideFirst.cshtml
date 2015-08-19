@@ -1,0 +1,19 @@
+﻿@{
+    Script.Require("jQueryColorBox").AtHead();
+    Style.Require("jQueryColorBox").AtHead();
+}
+@{
+    var HighlightsService = WorkContext.Resolve<Laser.Orchard.Highlights.Services.IHighlightsService>();
+    var nItems = Model.HighlightsItems.Count;
+    int splitAt = (nItems - 1) / 2;
+    var i = 0;
+}
+@foreach (var item in Model.HighlightsItems) {
+    if (Model.ContentPart.ItemsSourceType == Laser.Orchard.Highlights.Enums.ItemsSourceTypes.ByHand) {
+    @Display(item.Content)} else if (Model.ContentPart.ItemsSourceType == Laser.Orchard.Highlights.Enums.ItemsSourceTypes.FromQuery) {
+        //FromQuery
+        var shape = HighlightsService.CreateHighlightsItemShape(item, Model.HighlightsGroup.DisplayTemplate.ToString());
+    @Display(shape)
+    }
+    i++;
+}

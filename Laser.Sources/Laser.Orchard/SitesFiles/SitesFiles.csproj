@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{54548A99-0B95-4143-A4DF-2E92EEA5752A}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SitesFiles</RootNamespace>
+    <AssemblyName>SitesFiles</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="expoincitta\Mobile\EXPO_dev.p12" />
+    <None Include="expoincitta\Mobile\EXPO_prod.p12" />
+    <None Include="FondationGP\Mobile\pushProdMorgex.p12" />
+    <None Include="FondationGP\Mobile\pushSvilMorgex.p12" />
+    <None Include="FondationGP\Mobile\pushsviluppoAME.p12" />
+    <None Include="IvreaTerritorio\Mobile\pushVisitami.p12" />
+    <None Include="IvreaTerritorio\WebServices\CalendarEvent.cshtml" />
+    <None Include="IvreaTerritorio\WebServices\CalendarEvent1.cshtml" />
+    <None Include="IvreaTerritorio\WebServices\Eventi015VM.cshtml" />
+    <None Include="IvreaTerritorio\WebServices\Eventi015VM1.cshtml" />
+    <None Include="IvreaTerritorio\WebServices\Itinerario.cshtml" />
+    <None Include="IvreaTerritorio\WebServices\Itinerario1.cshtml" />
+    <None Include="IvreaTerritorio\WebServices\POI.cshtml" />
+    <None Include="IvreaTerritorio\WebServices\POI1.cshtml" />
+    <None Include="TerritorioMorgex\Mobile\pushProdMorgex.p12" />
+    <None Include="TerritorioMorgex\Mobile\pushSvilMorgex.p12" />
+    <None Include="TurismoTorino\Mobile\ttdev.p12" />
+    <None Include="TurismoTorino\Mobile\ttprod.p12" />
+    <None Include="Vialfre\Mobile\pushDevVialfre.p12" />
+    <None Include="Vialfre\Mobile\pushProdVialfre.p12" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AltoAdige\Xslt\feedurl.xslt" />
+    <Content Include="AltoAdige\Xslt\feedurldetail.xslt" />
+    <Content Include="expoincitta\Xslt\BikeSharing.xslt" />
+    <Content Include="expoincitta\Xslt\ListaCategorie.xslt" />
+    <Content Include="expoincitta\Xslt\ListaEventi.xslt" />
+    <Content Include="expoincitta\Xslt\OtpStops.xslt" />
+    <Content Include="expoincitta\Xslt\OtpStopTimes.xslt" />
+    <Content Include="FondationGP\Xslt\NewsField.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="TurismoTorino\Xslt\ElencoProduttori.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="TurismoTorino\Xslt\ListaEventi.xslt" />
+    <Content Include="TurismoTorino\Xslt\Listaproduttori.xslt" />
+    <Content Include="TurismoTorino\Xslt\Poi.xslt" />
+    <Content Include="TurismoTorino\Xslt\PoiByComuniIstat.xslt" />
+    <Content Include="TurismoTorino\Xslt\Produttoribycomune.xslt" />
+    <Content Include="Vialfre\Xslt\LuoghiEvento.Luoghi.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Vialfre\Xslt\ProgrammaEvento.Programma.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Vialfre\Xslt\Luoghi.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Vialfre\Xslt\Programma.xslt" />
+    <Content Include="Vialfre\Xslt\TipiEventi.xslt" />
+    <Content Include="Vialfre\Xslt\Visitami.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ViviIlBiellese\Xslt\feedurl.xslt" />
+    <Content Include="WakeUp.hta" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViviIlBiellese\Mobile\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

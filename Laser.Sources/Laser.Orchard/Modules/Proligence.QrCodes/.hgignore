@@ -1,0 +1,5 @@
+syntax: glob
+packages.config
+obj/
+bin/
+App_Data/

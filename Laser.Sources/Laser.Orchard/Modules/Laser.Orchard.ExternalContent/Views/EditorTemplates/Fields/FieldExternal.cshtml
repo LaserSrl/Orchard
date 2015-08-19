@@ -1,0 +1,19 @@
+﻿@model Laser.Orchard.ExternalContent.ViewModels.FieldExternalVM
+@using Orchard.Utility.Extensions;
+
+@{
+    Script.Require("jQuery").AtFoot();
+    var name = Model.Field.Name;
+    var required = ((bool?)Model.Setting.Required) ?? false;
+}
+    @if (String.IsNullOrEmpty(Model.Setting.ExternalURL))
+    {
+<fieldset  data-required="@required.ToString().ToLower()">
+        <label  @if (required)
+                { <text>class="required"</text> } for="@Html.FieldIdFor(m => "FieldExternal-" + name)">@name.CamelFriendly()</label>
+        @Html.TextBoxFor(m => m.Field.ExternalUrl, new { @class = "text large tokenized" })
+         <span class="hint">@T("Insert url and token")</span>
+</fieldset>
+        @Display.TokenHint()
+}
+

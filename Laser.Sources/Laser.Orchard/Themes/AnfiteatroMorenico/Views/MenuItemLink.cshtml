@@ -1,0 +1,27 @@
+﻿@using Orchard.Environment.Configuration
+@{
+    var settings = WorkContext.Resolve<ShellSettings>();
+    var prefix = settings.RequestUrlPrefix;
+}
+@functions {
+    // To support the layout classifaction below. Implementing as a razor function because we can, could otherwise be a Func<string[], string, string> in the code block following.
+    string NormalizeUrl(string url, string prefix) {
+        return url.StartsWith("~") ? Url.Content(url.StartsWith("~/" + prefix) ? url : url.Replace("~", "~/" + prefix)) : url;
+    }
+}
+@{
+    var url = Model.Href ?? "#";
+    if (Model.Content != null && Model.Content.ContentItem != null && Model.Content.ContentItem.ContentType == "CategorieEventiTerm") {
+        var urlPattern = "~/eventi?datainizio={0}&datafine={1}&termids={2}";
+        url = String.Format(urlPattern,
+            Request.QueryString["datainizio"] ?? DateTime.Today.ToString("dd/MM/yyyy"),
+            Request.QueryString["datafine"] ?? DateTime.Today.ToString("dd/MM/yyyy"),
+            Model.Content.ContentItem.Id.ToString());
+        url = NormalizeUrl(url, prefix);
+    }
+}
+@if (Model.Item.Items.Length == 0 || (Model.Parent.ContentItem != null && Model.Parent.ContentItem.ContentType != "Menu")) {
+    <a href="@url">@Model.Text</a>
+} else {
+    <a id="dLabel-@(Model.Content.Id)" data-target="#" href="@url" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">@Model.Text<span class="caret"></span></a>
+}

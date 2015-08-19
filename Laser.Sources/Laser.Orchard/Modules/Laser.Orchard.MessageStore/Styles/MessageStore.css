@@ -1,0 +1,87 @@
+﻿.checkboxlbl label {
+    display: inline;
+}
+
+.messagebasecolor {
+}
+
+.messagemarkcolor {
+    background-color: #F9F9F9;
+}
+
+
+.triangle-border.left:before {
+    border-color: rgba(0, 0, 0, 0) #5A8F00;
+    border-width: 15px 30px 15px 0;
+    bottom: auto;
+    left: -30px;
+    top: 10px;
+}
+
+.triangle-border.right:before {
+    border-color: rgba(0, 0, 0, 0) #5A8F00;
+    border-width: 15px 0 15px 30px;
+    bottom: auto;
+    left: auto;
+    right: -30px;
+    top: 11px;
+}
+
+.triangle-border:before {
+    border-color: #5A8F00 rgba(0, 0, 0, 0);
+    border-style: solid;
+    border-width: 20px 20px 0;
+    bottom: -20px;
+    content: "";
+    display: block;
+    left: 40px;
+    position: absolute;
+    width: 0;
+}
+
+.triangle-border.left:after {
+    border-color: rgba(0, 0, 0, 0) #FFFFFF;
+    border-width: 13px 26px 13px 0;
+    bottom: auto;
+    left: -26px;
+    top: 12px;
+}
+
+.triangle-border.right:after {
+    border-color: rgba(0, 0, 0, 0) #FFFFFF;
+    border-width: 13px 0 13px 26px;
+    bottom: auto;
+    left: auto;
+    right: -26px;
+    top: 13px;
+}
+
+.triangle-border:after {
+    border-color: #FFFFFF rgba(0, 0, 0, 0);
+    border-style: solid;
+    border-width: 13px 13px 0;
+    bottom: -13px;
+    content: "";
+    display: block;
+    left: 47px;
+    position: absolute;
+    width: 0;
+}
+
+.triangle-border.left {
+    margin-left: 30px;
+}
+
+.triangle-border.right {
+    margin-right: 30px;
+}
+
+.triangle-border {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 2px solid #5A8F00;
+    border-radius: 10px;
+    color: #333333;
+    margin: 1em 0 3em;
+    padding: 15px;
+    position: relative;
+}

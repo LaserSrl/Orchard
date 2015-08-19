@@ -1,0 +1,12 @@
+﻿Name: Laser Advanced Search
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.8
+OrchardVersion: 1.8
+Description: Enable an advanced search tab within Admin content list
+Features:
+    Laser.Orchard.AdvancedSearch:
+        Description: Description for feature Laser.Orchard.AdvancedSearch.
+		Category: Search
+		Dependencies: Contents, Orchard.Localization, Orchard.Taxonomies, Orchard.Users, Orchard.JQuery,Laser.Orchard.jQueryPlugins

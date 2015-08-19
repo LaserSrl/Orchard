@@ -1,0 +1,25 @@
+﻿@using System.Web.Mvc.Html
+@using Orchard.Mvc.Html
+@model Laser.Orchard.ExternalContent.Settings.FieldExternalSetting
+<fieldset>
+    @Html.CheckBoxFor(m => m.Required)
+    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Required)">@T("Required")</label>
+    <span class="hint">@T("If checked, the field will be mandatory.")</span>
+</fieldset>
+<fieldset>
+    @Html.CheckBoxFor(m => m.NoFollow)
+    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.NoFollow)">@T("No Follow")</label>
+    <span class="hint">@T("If not checked, the linked content will be charged with contentitem.")</span>
+</fieldset>
+<fieldset>
+    @Html.CheckBoxFor(m => m.GenerateL)
+    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.GenerateL)">@T("Generate on L For Mobile")</label>
+    <span class="hint">@T("Used only on mobile communication. If checked, the linked content will be put in l field")</span>
+</fieldset>
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.ExternalURL)">@T("External URL")</label>
+    @Html.TextBoxFor(m => m.ExternalURL, new { @class = "text large tokenized" })
+    <span class="hint">@T("Insert url and token")</span>
+    @Html.ValidationMessageFor(m => m.ExternalURL)
+</fieldset>
+ @Display.TokenHint()

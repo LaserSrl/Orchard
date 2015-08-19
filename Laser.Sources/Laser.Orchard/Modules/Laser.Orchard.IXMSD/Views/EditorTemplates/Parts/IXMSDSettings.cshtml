@@ -1,0 +1,36 @@
+﻿@model Laser.Orchard.IXMSD.Models.IXMSDSettingsPart
+<fieldset>
+    <legend>@T("IXMSD Settings")</legend>
+    <div class="editor-field">
+        <fieldset>
+            @Html.LabelFor(m => m.DaysBeforeTodayToParseIntoLog, T("DaysBeforeTodayToParseIntoLog"))
+            @Html.EditorFor(m => m.DaysBeforeTodayToParseIntoLog)
+        </fieldset>
+        <fieldset>
+            @Html.LabelFor(m => m.LogDownloadFileFolder, T("LogDownloadFileFolder"))
+            @Html.TextBoxFor(m => m.LogDownloadFileFolder)
+        </fieldset>
+        <fieldset>
+            @Html.LabelFor(m => m.LogFileName, T("LogFileName"))
+            @Html.TextBoxFor(m => m.LogFileName)
+        </fieldset>
+        <fieldset>
+            @Html.LabelFor(m => m.URL, T("URL"))
+            @Html.TextBoxFor(m => m.URL)
+        </fieldset>
+        <fieldset>
+            @Html.LabelFor(m => m.ftpRemoteHost, T("ftpRemoteHost"))
+            @Html.TextBoxFor(m => m.ftpRemoteHost)
+        </fieldset>
+        <fieldset>
+            @Html.LabelFor(m => m.ftpUser, T("ftpUser"))
+            @Html.TextBoxFor(m => m.ftpUser)
+        </fieldset>
+        <fieldset>
+            @Html.LabelFor(m => m.ftpPwd, T("ftpPwd"))
+            @Html.TextBoxFor(m => m.ftpPwd)
+        </fieldset>
+
+
+    </div>
+</fieldset>

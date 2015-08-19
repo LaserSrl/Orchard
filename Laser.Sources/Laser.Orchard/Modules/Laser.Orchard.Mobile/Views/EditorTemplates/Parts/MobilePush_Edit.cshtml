@@ -1,0 +1,32 @@
+﻿@model Laser.Orchard.Mobile.ViewModels.MobilePushVM
+<fieldset>
+    <legend>@T("Mobile Push")</legend>
+    <div class="editor-field">
+       @Html.HiddenFor(m => m.TitlePush)
+         @*<div class="editor-label">@Html.LabelFor(m => m.TitlePush, T("Title"))</div>
+        <div class="editor-field">@Html.TextBoxFor(m => m.TitlePush, new { @class = "text large" })</div>*@
+        <br />
+        <div class="editor-label">@Html.LabelFor(m => m.TextPush, T("Text"))</div>
+        <div class="editor-field">@Html.TextAreaFor(m => m.TextPush, new { @class = "text large" })</div>
+        <br />
+        <div class="checkbox-and-label">
+            @Html.CheckBoxFor(m => m.ToPush)
+            <label for="@Html.FieldIdFor(m => m.ToPush)" class="forcheckbox">@T("Push on next Publish") </label>
+            <span class="hint">@T("Push will be sent to devices when ContentItem will published")</span>
+        </div>
+        <br />
+        @if (Model.ShowTestOptions){
+        <div class="checkbox-and-label">
+            @Html.CheckBoxFor(m => m.TestPush, new { @class = "checkbox" })
+            <label for="@Html.FieldIdFor(m => m.TestPush)" class="forcheckbox">@T("Test Push on device") </label>
+            <span class="hint">@T("Mask to make test for Push... this option is set by settings of module")</span>
+        </div>
+        }else{
+        @Html.HiddenFor(m=>m.TestPush)
+        }
+        <div class="editor-label">@Html.LabelFor(m => m.DevicePush, T("To Device"))</div>
+        <div class="editor-field">@Html.DropDownListFor(m => m.DevicePush, Model.ListOfDevice)
+            <span class="hint">@T("Select Devices")</span>
+        </div>
+    </div>
+</fieldset>

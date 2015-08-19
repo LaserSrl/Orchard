@@ -1,0 +1,12 @@
+﻿Name: Laser Zone Alternates
+AntiForgery: enabled
+Author: Laser
+Website: http://www.laser-group.com
+Version: 1.8
+OrchardVersion: 1.8
+Description: Zone Alternates
+Features:
+    Laser.Orchard.ZoneAlternates:
+        Description: Per ogni Widget, aggiunge una definizione di Shape alternativi per la zona di posizionamento, per il Widget stesso e per tutte le parti che contiene.
+        Dependencies: Common, Orchard.Fields, Orchard.Widgets
+        Category: Designer

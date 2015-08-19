@@ -1,0 +1,558 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows.Forms;
+using System.Data.SqlServerCe;
+namespace Pubblicazione {
+
+    public partial class Deploy : Form {
+        private BackgroundWorker bw = new BackgroundWorker();
+
+        private enum TipoDeploy { dll, modulo };
+
+        private string basepath = Properties.Settings.Default.PathOrchardDev;// @"C:\Sviluppo\Laser.Orchard.Community\";
+        private string premodulo = (Properties.Settings.Default.PathOrchardDev + @"Orchard.Source\src\Orchard.Web\Modules\").ToLower();
+        private Dictionary<string, string> ProgettiDaSelezionare;
+        private Dictionary<string, string> elencoLibrerie;
+
+        private Dictionary<string, string> elencoModuli;
+
+        private Dictionary<string, string> elencoTemi;
+
+        private Dictionary<string, string> elencoLibrerieOrchard;
+
+        private Dictionary<string, string> elencoModuliOrchard;
+
+        private Dictionary<string, string> elencoTemiOrchard;
+        private Int32 totaleprogress = 0;
+        private Int32 progressstep = 0;
+
+        public Deploy() {
+            InitializeComponent();
+        }
+
+        private void btnAll_Click(object sender, EventArgs e) {
+            bw.RunWorkerAsync("btnAll");
+        }
+
+        private void btnOnlyDll(object sender, EventArgs e) {
+            //  this.button1.Enabled = false;
+            bw.RunWorkerAsync("OnlyDll");
+
+            //this.TheprogressBar.Value = 0;
+            //this.TheprogressBar.Maximum = 1+ (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count) ;
+            //this.TheprogressBar.Step = 1;
+            //string deploypath = basepath + @"DeployScripts\Deploy";
+            //if (Directory.Exists(deploypath) && this.chkDeleteFolder.Checked)
+            //    Directory.Delete(deploypath, true);
+            //Directory.CreateDirectory(deploypath);
+            //TheprogressBar.PerformStep();
+            //CopyDll();
+            //this.tabControl1.SelectedIndex = 2;
+            //this.button1.Enabled = true;
+            //    MessageBox.Show("Operazione terminata");
+        }
+
+        private void CopyDll() {
+            string deploypath = basepath + @"DeployScripts\Deploy";
+
+            foreach (var a in this.clbLibrary.CheckedItems) {
+                DirectoryInfo parentDir = Directory.GetParent(elencoModuli[this.clbModules.Items[0].ToString()]);
+                ProcessXcopy(parentDir.Parent.FullName + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
+                ProcessXcopy(parentDir.Parent.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+            }
+
+            foreach (var a in this.clbLibraryOrchard.CheckedItems) {
+                DirectoryInfo parentDir = Directory.GetParent(elencoModuliOrchard[this.clbModulesOrchard.Items[0].ToString()]);
+                ProcessXcopy(parentDir.Parent.FullName + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
+                ProcessXcopy(parentDir.Parent.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+            }
+            foreach (var a in this.clbModules.CheckedItems) {
+                DirectoryInfo parentDir = Directory.GetParent(elencoModuli[a.ToString()]);
+                //  ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
+                ProcessXcopy(parentDir.Parent.FullName + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
+                ProcessXcopy(parentDir.Parent.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+            }
+            foreach (var a in this.clbModulesOrchard.CheckedItems) {
+                DirectoryInfo parentDir = Directory.GetParent(elencoModuliOrchard[a.ToString()]);
+                //  ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
+                ProcessXcopy(parentDir.Parent.FullName + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
+                ProcessXcopy(parentDir.Parent.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+            }
+        }
+
+        private ProjectClass ReadProject(string pathsoluzion, Dictionary<string, string> MyelencoLibrerie, Dictionary<string, string> MyelencoModuli, Dictionary<string, string> MyelencoTemi) {
+            this.tbOrchardDev.Text = Properties.Settings.Default.PathOrchardDev;
+            string Content;
+            try {
+                Content = File.ReadAllText(pathsoluzion);
+            }
+            catch {
+                Content = "";
+            }
+            Regex projReg = new Regex(
+                "Project\\(\"\\{[\\w-]*\\}\"\\) = \"([\\w _]*.*)\", \"(.*\\.(cs|vcx|vb)proj)\""
+                , RegexOptions.Compiled);
+            var matches = projReg.Matches(Content).Cast<Match>();
+            var Projects = matches.Select(x => x.Groups[2].Value).ToList();
+            for (int i = 0; i < Projects.Count; ++i) {
+                if (!Path.IsPathRooted(Projects[i]))
+                    Projects[i] = Path.Combine(Path.GetDirectoryName(pathsoluzion),
+                        Projects[i]);
+                Projects[i] = Path.GetFullPath(Projects[i]);
+
+                if (Projects[i].StartsWith(basepath + @"Orchard.Source\src\Orchard.Web\Modules"))
+
+                    MyelencoModuli.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
+
+                if (Projects[i].StartsWith(basepath + @"Orchard.Source\src\Orchard.Web\Themes"))
+                    MyelencoTemi.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
+
+                if (Projects[i].StartsWith(basepath + @"Lib"))
+                    MyelencoLibrerie.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
+            }
+
+            var orderelencoLibrerie = from x in MyelencoLibrerie orderby x.Key ascending select x;
+            var orderelencoModuli = from x in MyelencoModuli orderby x.Key ascending select x;
+            var orderelencoTemi = from x in MyelencoTemi orderby x.Key ascending select x;
+
+            ProjectClass PC = new ProjectClass();
+            PC.ListCommon = orderelencoLibrerie;
+            PC.ListModule = orderelencoModuli;
+            PC.ListTheme = orderelencoTemi;
+            return PC;
+        }
+
+        private void bw_RunWorkedCompleted(object sender, RunWorkerCompletedEventArgs e) {
+        }
+
+        private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e) {
+            TheprogressBar.Value = e.ProgressPercentage;
+        }
+
+        private void bw_DoWork(object sender, DoWorkEventArgs e) {
+            Action action = () => OperazioneTerminata.Visible = false;
+            OperazioneTerminata.Invoke(action);
+
+            action = () => Mylog.Text = "";
+            Mylog.Invoke(action);
+
+            action = () => tabControl1.SelectedIndex = 2;
+            tabControl1.Invoke(action);
+
+            action = () => TheprogressBar.Visible = true;
+            TheprogressBar.Invoke(action);
+
+            //   this.btnAll.Enabled = false;
+            progressstep = 0;
+            //  ;
+            switch (e.Argument.ToString()) {
+                case "btnAll":
+
+                    totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count) * 2;
+
+                    action = () => btnAll.Enabled = false;
+                    btnAll.Invoke(action);
+                    break;
+
+                case "OnlyDll":
+                    totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count);
+                    action = () => button1.Enabled = false;
+                    button1.Invoke(action);
+                    break;
+            }
+
+            // this.TheprogressBar.Value = 0;
+            // this.TheprogressBar.Maximum = (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count) * 2;
+            // this.TheprogressBar.Step = 1;
+            string deploypath = basepath + @"DeployScripts\Deploy";
+            if (Directory.Exists(deploypath) && this.chkDeleteFolder.Checked)
+                Directory.Delete(deploypath, true);
+            Directory.CreateDirectory(deploypath);
+            //foreach (var a in this.clbLibrary.CheckedItems) {
+            //    DirectoryInfo parentDir = Directory.GetParent(elencoModuli[this.clbModules.Items[0].ToString()]);
+            //    ProcessXcopy(parentDir.Parent.FullName + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
+            //    ProcessXcopy(parentDir.Parent.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
+            //}
+            progressstep++;
+            bw.ReportProgress(100 * progressstep / totaleprogress);
+            Thread.Sleep(100);
+
+            if (e.Argument == "btnAll") {
+                foreach (var a in this.clbModules.CheckedItems) {
+                    DirectoryInfo parentDir = Directory.GetParent(elencoModuli[a.ToString()]);
+                    ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
+                    //             ProcessXcopy(parentDir.Parent.FullName + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
+                    //            ProcessXcopy(parentDir.Parent.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
+                    // TheprogressBar.PerformStep();
+                    progressstep++;
+                    bw.ReportProgress(100 * progressstep / totaleprogress);
+                    Thread.Sleep(100);
+                }
+                foreach (var a in this.clbModulesOrchard.CheckedItems) {
+                    DirectoryInfo parentDir = Directory.GetParent(elencoModuliOrchard[a.ToString()]);
+                    ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
+                    //             ProcessXcopy(parentDir.Parent.FullName + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
+                    //            ProcessXcopy(parentDir.Parent.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
+                    //  TheprogressBar.PerformStep();
+                    progressstep++;
+                    bw.ReportProgress(100 * progressstep / totaleprogress);
+                    Thread.Sleep(100);
+                }
+                foreach (var a in this.clbThemes.CheckedItems) {
+                    ProcessXcopy(elencoTemi[a.ToString()] + "*.*", deploypath + @"\Themes\" + a.ToString());
+                    //TheprogressBar.PerformStep();
+                    progressstep++;
+                    bw.ReportProgress(100 * progressstep / totaleprogress);
+                    Thread.Sleep(100);
+                }
+                foreach (var a in this.clbThemesOrchard.CheckedItems) {
+                    ProcessXcopy(elencoTemiOrchard[a.ToString()] + "*.*", deploypath + @"\Themes\" + a.ToString());
+                    //TheprogressBar.PerformStep();
+                    progressstep++;
+                    bw.ReportProgress(100 * progressstep / totaleprogress);
+                    Thread.Sleep(100);
+                }
+            }
+            CopyDll();
+            // XCOPY ..\Orchard.Source\src\Orchard.Web\Modules\*%nomefile% DeploySingleFile\Modules\ /S /Y /EXCLUDE:deploy.excludelist.txt
+            //XCOPY ..\Orchard.Source\src\Orchard.Web\Themes\*%nomefile% DeploySingleFile\Themes\ /S /Y /EXCLUDE:deploy.excludelist.txt
+            //XCOPY ..\Orchard.Source\src\Orchard.Web\Modules\*.* Deploy\Modules\ /S /Y /EXCLUDE:deploy.excludelist.txt
+            //XCOPY ..\Orchard.Source\src\Orchard.Web\Themes\*.* Deploy\Themes\ /S /Y /EXCLUDE:deploy.excludelist.txt
+            //     this.tabControl1.SelectedIndex = 2;
+
+            bw.ReportProgress(0);
+            Thread.Sleep(100);
+            //       this.OperazioneTerminata.Visible = true;
+
+            //          this.btnAll.Enabled = true;
+
+            switch (e.Argument.ToString()) {
+                case "btnAll":
+                    action = () => btnAll.Enabled = true;
+                    btnAll.Invoke(action);
+                    break;
+
+                case "OnlyDll":
+                    action = () => button1.Enabled = true;
+                    button1.Invoke(action);
+                    break;
+            }
+            action = () => TheprogressBar.Visible = false;
+            TheprogressBar.Invoke(action);
+            action = () => OperazioneTerminata.Visible = true;
+            OperazioneTerminata.Invoke(action);
+        }
+
+        private void Form1_Load(object sender, EventArgs e) {
+            Initialize();
+            bw.WorkerReportsProgress = true;
+            bw.WorkerSupportsCancellation = true;
+            bw.DoWork += new DoWorkEventHandler(bw_DoWork);
+            bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkedCompleted);
+          
+        }
+
+        private void label1_Click(object sender, EventArgs e) {
+        }
+
+        private void OutputDataReceived(object sender, DataReceivedEventArgs e) {
+            Action action = () => Mylog.Text += e.Data + "\r\n";
+            Mylog.Invoke(action);
+        }
+
+        private void ProcessXcopy(string SolutionDirectory, string TargetDirectory) {
+            if (!(Directory.Exists(TargetDirectory)))
+                Directory.CreateDirectory(TargetDirectory);
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.CreateNoWindow = true;
+            //     startInfo.CreateNoWindow = false;
+            startInfo.UseShellExecute = false;
+            startInfo.FileName = "xcopy";
+            //      startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + @" /S /Y /EXCLUDE:" + basepath + @"DeployScripts\deploy.excludelist.txt"; //@" /e /y /I";
+            startInfo.RedirectStandardOutput = true;
+
+            try {
+                //using (Process exeProcess = Process.Start(startInfo) {
+                //    exeProcess.WaitForExit();
+                //}
+
+                var process =
+               new Process {
+                   StartInfo = startInfo
+               };
+
+                process.OutputDataReceived += OutputDataReceived;
+
+                process.Start();
+                process.BeginOutputReadLine();
+                process.WaitForExit();
+            }
+            catch (Exception exp) {
+                throw exp;
+            }
+        }
+
+        private void btnoprnfolder_Click(object sender, EventArgs e) {
+            Process.Start("explorer.exe", basepath + @"DeployScripts\Deploy");
+        }
+
+        private void btnzip_Click(object sender, EventArgs e) {
+            if (File.Exists(basepath + @"DeployScripts\Deploy.zip"))
+                File.Delete(basepath + @"DeployScripts\Deploy.zip");
+            System.IO.Compression.ZipFile.CreateFromDirectory(basepath + @"DeployScripts\Deploy", basepath + @"DeployScripts\Deploy.zip");
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e) {
+        }
+
+        private void label5_Click(object sender, EventArgs e) {
+        }
+        private void Initialize(){
+            basepath = Properties.Settings.Default.PathOrchardDev;// @"C:\Sviluppo\Laser.Orchard.Community\";
+         premodulo = (Properties.Settings.Default.PathOrchardDev + @"Orchard.Source\src\Orchard.Web\Modules\").ToLower();
+         this.clbLibrary.Items.Clear();
+         this.clbModules.Items.Clear();
+         this.clbThemes.Items.Clear();
+         this.clbLibraryOrchard.Items.Clear();
+         this.clbModulesOrchard.Items.Clear();
+         this.clbThemesOrchard.Items.Clear();
+         elencoModuli = new Dictionary<string, string>();
+         elencoLibrerie = new Dictionary<string, string>();
+         elencoTemi = new Dictionary<string, string>();
+         elencoModuliOrchard = new Dictionary<string, string>();
+         elencoLibrerieOrchard = new Dictionary<string, string>();
+         elencoTemiOrchard = new Dictionary<string, string>();
+         this.tbOrchardDev.Text = basepath;//Properties.Settings.Default.PathOrchardDev;
+         string SlnPath = basepath + @"Laser.Orchard.Dev\Laser.Orchard.Dev.sln";
+         ProjectClass PC = ReadProject(SlnPath, elencoLibrerie, elencoModuli, elencoTemi);
+
+         foreach (var prog in PC.ListCommon)
+             this.clbLibrary.Items.Add(prog.Key);
+         foreach (var prog in PC.ListModule)
+             this.clbModules.Items.Add(prog.Key);
+         foreach (var prog in PC.ListTheme)
+             this.clbThemes.Items.Add(prog.Key);
+
+         SlnPath = basepath + @"Orchard.Source\src\Orchard.sln";
+         PC = ReadProject(SlnPath, elencoLibrerieOrchard, elencoModuliOrchard, elencoTemiOrchard);
+         foreach (var prog in PC.ListCommon)
+             this.clbLibraryOrchard.Items.Add(prog.Key);
+         foreach (var prog in PC.ListModule)
+             this.clbModulesOrchard.Items.Add(prog.Key);
+         foreach (var prog in PC.ListTheme)
+             this.clbThemesOrchard.Items.Add(prog.Key);
+        }
+
+        private void SaveSetting_Click(object sender, EventArgs e) {
+            Properties.Settings.Default.PathOrchardDev = this.tbOrchardDev.Text;
+            Properties.Settings.Default.Save();
+            Initialize();  
+           }
+
+        private FileInfo[] elencofile(string search, SearchOption tiporicerca, DateTime fromdate) {
+            var directory = new DirectoryInfo(basepath);
+            if (directory.Exists) {
+                var files = directory.GetFiles(search, tiporicerca)
+    .Where(file => file.LastWriteTime >= fromdate && file.FullName.IndexOf(@"\obj\") < 0 && file.FullName.IndexOf(@"\bin\") < 0).ToArray<FileInfo>();
+
+                //foreach (FileInfo file in files) {
+                //    if (file.FullName.IndexOf(@"\obj\") < 0) {
+                //        //Orchard.Source\src\Orchard.Web\Modules\
+                //        this.Mylog.Text += file.FullName + "\r\n";
+                //    }
+                //}
+                return files;
+            }
+            else
+                return null;
+        }
+
+        private void Autoseleziona_Click(object sender, EventArgs e) {
+            ProgettiDaSelezionare = new Dictionary<string, string>();
+            this.Mylog.Text = "";
+            var directory = new DirectoryInfo(basepath);//basepath
+            DateTime from_date = dateTimePicker1.Value;
+            this.Mylog.Text = "";
+
+            FileInfo[] a = elencofile("*.info", SearchOption.AllDirectories, from_date);
+            RicavaElencoProgetti(a, TipoDeploy.modulo);
+            a = elencofile("module.txt", SearchOption.AllDirectories, from_date);
+            RicavaElencoProgetti(a, TipoDeploy.modulo);
+            a = elencofile("*.cshtml", SearchOption.AllDirectories, from_date);
+            RicavaElencoProgetti(a, TipoDeploy.modulo);
+            a = elencofile("*.cs", SearchOption.AllDirectories, from_date);
+            RicavaElencoProgetti(a, TipoDeploy.dll);
+            foreach (string key in ProgettiDaSelezionare.Keys)
+                Mylog.Text += ProgettiDaSelezionare[key].PadLeft(7) + " " + key + "\r\n";
+
+            Mylog.Text += " --- ALTRI FILES MODIFICATI ---\r\n";
+            a = elencofile("*", SearchOption.AllDirectories, from_date);
+            var estenzioneTolteperaltrifiles = ".cs,.dll,.pdb,.log".Split(','); ;
+            foreach (FileInfo key in a) {
+                if (key.FullName.ToLower().IndexOf(premodulo) > -1) {
+                    if (!estenzioneTolteperaltrifiles.Contains(key.Extension)) {
+                        string nomeprogetto = key.FullName.ToLower().Replace(premodulo, "").Split('\\')[0];
+                        if (ProgettiDaSelezionare.ContainsKey(nomeprogetto)) {
+                            if (ProgettiDaSelezionare[nomeprogetto] != TipoDeploy.modulo.ToString()) {
+                                Mylog.Text += key.FullName + "\r\n";
+                            }
+                        }
+                        else {
+                            Mylog.Text += key.FullName + "\r\n";
+                        }
+                    }
+                }
+            }
+        }
+
+        private void RicavaElencoProgetti(FileInfo[] elencoProgetti, TipoDeploy td) {
+            foreach (FileInfo file in elencoProgetti) {
+                if (file.FullName.ToLower().IndexOf(premodulo) > -1) {
+                    string nomeprogetto = file.FullName.ToLower().Replace(premodulo, "").Split('\\')[0];
+                    if (!ProgettiDaSelezionare.ContainsKey(nomeprogetto)) {
+                        ProgettiDaSelezionare.Add(nomeprogetto, td.ToString());
+                    }
+                    else {
+                        if (td == TipoDeploy.modulo && ProgettiDaSelezionare[nomeprogetto] != TipoDeploy.modulo.ToString())
+                            ProgettiDaSelezionare[nomeprogetto] = TipoDeploy.modulo.ToString();
+                    }
+                }
+            }
+        }
+
+        private void tabPage1_Click(object sender, EventArgs e) {
+        }
+
+        private void CheckAll_CheckedChanged(object sender, EventArgs e) {
+            if (this.CheckAll.Checked) {
+                this.CheckAll.Text = "Uncheck All";
+                for (int i = 0; i < this.clbLibrary.Items.Count; i++) {
+                    this.clbLibrary.SetItemChecked(i, true);
+                }
+                for (int i = 0; i < this.clbLibraryOrchard.Items.Count; i++) {
+                    this.clbLibraryOrchard.SetItemChecked(i, true);
+                }
+                for (int i = 0; i < this.clbThemesOrchard.Items.Count; i++) {
+                    this.clbThemesOrchard.SetItemChecked(i, true);
+                }
+                for (int i = 0; i < this.clbThemes.Items.Count; i++) {
+                    this.clbThemes.SetItemChecked(i, true);
+                }
+                for (int i = 0; i < this.clbModules.Items.Count; i++) {
+                    this.clbModules.SetItemChecked(i, true);
+                }
+                for (int i = 0; i < this.clbModulesOrchard.Items.Count; i++) {
+                    this.clbModulesOrchard.SetItemChecked(i, true);
+                }
+            }
+            else {
+                this.CheckAll.Text = "Check All";
+                for (int i = 0; i < this.clbLibrary.Items.Count; i++) {
+                    this.clbLibrary.SetItemChecked(i, false);
+                }
+                for (int i = 0; i < this.clbLibraryOrchard.Items.Count; i++) {
+                    this.clbLibraryOrchard.SetItemChecked(i, false);
+                }
+                for (int i = 0; i < this.clbThemes.Items.Count; i++) {
+                    this.clbThemes.SetItemChecked(i, false);
+                }
+                for (int i = 0; i < this.clbThemesOrchard.Items.Count; i++) {
+                    this.clbThemesOrchard.SetItemChecked(i, false);
+                }
+                for (int i = 0; i < this.clbModules.Items.Count; i++) {
+                    this.clbModules.SetItemChecked(i, false);
+                }
+                for (int i = 0; i < this.clbModulesOrchard.Items.Count; i++) {
+                    this.clbModulesOrchard.SetItemChecked(i, false);
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e) {
+            for (int i = 0; i < this.clbModules.Items.Count; i++) {
+                this.clbModules.SetItemChecked(i, false);
+            }
+            for (int i = 0; i < this.clbModulesOrchard.Items.Count; i++) {
+                this.clbModulesOrchard.SetItemChecked(i, false);
+            }
+
+            foreach (string key in ProgettiDaSelezionare.Keys) {
+                if (ProgettiDaSelezionare[key] == TipoDeploy.dll.ToString()) {
+                    for (int i = 0; i < this.clbModules.Items.Count; i++) {
+                        if (((string)this.clbModules.Items[i]).ToLower() == key) {
+                            this.clbModules.SetItemChecked(i, true);
+                        }
+                    }
+                    for (int i = 0; i < this.clbModulesOrchard.Items.Count; i++) {
+                        if (((string)this.clbModulesOrchard.Items[i]).ToLower() == key) {
+                            this.clbModulesOrchard.SetItemChecked(i, true);
+                        }
+                    }
+                }
+            }
+            //  this.chkDeleteFolder.Checked = true;
+            //  bw.RunWorkerAsync("OnlyDll");
+        }
+
+        private void button3_Click(object sender, EventArgs e) {
+            for (int i = 0; i < this.clbModules.Items.Count; i++) {
+                this.clbModules.SetItemChecked(i, false);
+            }
+            for (int i = 0; i < this.clbModulesOrchard.Items.Count; i++) {
+                this.clbModulesOrchard.SetItemChecked(i, false);
+            }
+
+            // moduli
+            //   this.chkDeleteFolder.Checked = false;
+            foreach (string key in ProgettiDaSelezionare.Keys) {
+                if (ProgettiDaSelezionare[key] == TipoDeploy.modulo.ToString()) {
+                    for (int i = 0; i < this.clbModules.Items.Count; i++) {
+                        if (((string)this.clbModules.Items[i]).ToLower() == key) {
+                            this.clbModules.SetItemChecked(i, true);
+                        }
+                    }
+                    for (int i = 0; i < this.clbModulesOrchard.Items.Count; i++) {
+                        if (((string)this.clbModulesOrchard.Items[i]).ToLower() == key) {
+                            this.clbModulesOrchard.SetItemChecked(i, true);
+                        }
+                    }
+                }
+            }
+
+            // bw.RunWorkerAsync("btnAll");
+        }
+
+        private void btnReset_Click(object sender, EventArgs e) {
+            tbOrchardDev.Text=@"C:\Sviluppo\Laser.Orchard.Community\";
+        }
+    }
+
+    public class ProjectClass {
+
+        public IOrderedEnumerable<KeyValuePair<string, string>> ListCommon { get; set; }
+
+        public IOrderedEnumerable<KeyValuePair<string, string>> ListModule { get; set; }
+
+        public IOrderedEnumerable<KeyValuePair<string, string>> ListTheme { get; set; }
+    }
+}

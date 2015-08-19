@@ -1,0 +1,23 @@
+﻿@{
+    IEnumerable<object> blogPosts = Model.ContentItems;
+}
+@if (!(blogPosts == null || blogPosts.Count() < 1)) {
+    foreach (var contentItem in Model.ContentItems) {
+    <div class="wrapper">
+        <div class="col1">
+            <img src="@Display.ResizeMediaUrl(Width: 56, Height: 56, Mode: "crop", Alignment: "middlecenter", Path: contentItem.BlogPost.PostPicture.MediaParts[0].MediaUrl)" alt="" class="img2 no_resize">
+            @{
+        var cultureInfo = new System.Globalization.CultureInfo(WorkContext.CurrentCulture);
+        var giorno = cultureInfo.DateTimeFormat.GetDayName(((DateTime)contentItem.CommonPart.PublishedUtc).DayOfWeek);
+        var stringDate = ((DateTime)contentItem.CommonPart.PublishedUtc).ToShortDateString();
+                }
+            <p>@giorno,<br>
+                <time datetime="2013-01-01">@stringDate</time></p>
+        </div>
+        <div class="box2">
+            <h2>@contentItem.TitlePart.Title</h2>
+            @Html.Raw(contentItem.BodyPart.Text)
+        </div>
+    </div>
+}
+}

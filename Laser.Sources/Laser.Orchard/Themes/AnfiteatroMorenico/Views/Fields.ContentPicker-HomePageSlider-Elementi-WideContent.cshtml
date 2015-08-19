@@ -1,0 +1,30 @@
+﻿@using Orchard.ContentPicker.Fields
+@using Orchard.Utility.Extensions;
+@using Orchard.Environment.Configuration
+@functions {
+    // To support the layout classifaction below. Implementing as a razor function because we can, could otherwise be a Func<string[], string, string> in the code block following.
+    string NormalizeUrl(string url, string prefix) {
+        return url.StartsWith("~") ? Url.Content(url.StartsWith("~/" + prefix) ? url : url.Replace("~", "~/" + prefix)) : url;
+    }
+}
+
+@{
+    var settings = WorkContext.Resolve<ShellSettings>();
+    var prefix = settings.RequestUrlPrefix;
+    var field = (ContentPickerField)Model.ContentField;
+    string name = field.DisplayName;
+    var contentItems = field.ContentItems;
+}
+@if (contentItems.Any()) {
+    foreach (dynamic contentItem in contentItems) {
+    <div>
+        <img src="@Display.ResizeMediaUrl(Width: 1920, Height: 547, Mode: "crop", Alignment: "middlecenter", Path: contentItem.Elementoslide.Immagine.MediaParts[0].MediaUrl)" class="img-responsive">
+        <div class="container text-center">
+            <h3 class="slider-title">@contentItem.TitlePart.Title</h3>
+            <h4 class="slider-desc">@contentItem.Elementoslide.Sottotitolo.Value</h4>
+            <a href="@(NormalizeUrl(contentItem.Elementoslide.Link.Value, prefix))" target="@contentItem.Elementoslide.Link.Target" class="slider-link">@contentItem.Elementoslide.Link.Text</a>
+        </div>
+    </div>
+    }
+}
+
