@@ -1,0 +1,166 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2013 Laser s.r.l.
+
+
+# > #: msgctxt  { contesto del messaggio - Originale ITA }
+# > #| msgid  	{ identificativo del messaggio - Originale ITA }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/Questionnaire_Edit.cshtml"
+msgid "Questionnaire questions and allowed answers"
+msgstr "Domande e risposte del questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/Questionnaire_Edit.cshtml"
+msgid "Question"
+msgstr "Domanda"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/Questionnaire_Edit.cshtml"
+msgid "Question Type"
+msgstr "Tipo domanda"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/Questionnaire_Edit.cshtml"
+msgid "Actions"
+msgstr "Azioni"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/Questionnaire_Edit.cshtml"
+msgid "Add Question"
+msgstr "Nuova Domanda"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Type a section name"
+msgstr "Digita il nome della sezione"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Type the question"
+msgstr "Digita la domanda"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Must accept terms and conditions"
+msgstr "Obbligartoria accettazione dei termini e condizioni"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Terms and conditions text"
+msgstr "Testo Termini e condizioni"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Section"
+msgstr "Sezione"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Question type"
+msgstr "Tipologia domanda"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Answer type"
+msgstr "Tipologia risposta"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Question text"
+msgstr "Testo della domanda"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Properties"
+msgstr "Propriet&agrave"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Actions"
+msgstr "Azioni"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Remove"
+msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Behaviour"
+msgstr "Comportamento"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Add Answer"
+msgstr "Nuova Risp."
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Condition"
+msgstr "Condizione"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/AnswerEditModel.cshtml"
+msgid "Answer"
+msgstr "Risposta"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/AnswerEditModel.cshtml"
+msgid "Remove"
+msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontEnd_Edit.cshtml"
+msgid "Send your questionnaire"
+msgstr "Inoltra questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontEnd_Edit.cshtml"
+msgid "Please answer to all questions!"
+msgstr "Si prega di rispondere a tutte le domande!"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontEnd_Edit.cshtml"
+msgid "Thank you for submitting your feedback."
+msgstr "Grazie di averci fornito il tuo parere!"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontEnd_Edit.cshtml"
+msgid "I accept your terms and conditions. I want to answer to your survey."
+msgstr "Accetto i termini e lecondizioni del servizio. Desidero partecipare al vostro questionario."
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontEnd_Edit.cshtml"
+msgid "Continue >"
+msgstr "Avanti >"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontEnd_Edit.cshtml"
+msgid "Previous"
+msgstr "Precedente"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontEnd_Edit.cshtml"
+msgid "Next"
+msgstr "Successivo"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontEnd_Edit_Unauthorized.cshtml"
+msgid "You have to be logged in, before answering a questionnaire!"
+msgstr "Devi essere autenticato per poter rispondere al nostro questionario!"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontEnd_Edit_Unauthorized.cshtml"
+msgid "login"
+msgstr "accedere con le tue credenziali"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontEnd_Edit_Unauthorized.cshtml"
+msgid "create an account"
+msgstr "creare un nuovo account"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontEnd_Edit_Unauthorized.cshtml"
+msgid "You can {0} or {1}"
+msgstr "Puoi {0} oppure {1}"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/ViewModels/ValidationProvider.cs"
+msgid "You have to answer to {0}"
+msgstr "Domanda {0} obbligatoria"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/ViewModels/ValidationProvider.cs"
+msgid "Your answer to {0} must be a valid email address"
+msgstr "La risposta alla domanda {0} deve essere un indirizzo email valido"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/ViewModels/ValidationProvider.cs"
+msgid "Your answer to {0} must be a valid internet address"
+msgstr "La risposta alla domanda {0} deve essere un indirizzo internet valido"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/ViewModels/ValidationProvider.cs"
+msgid "Your answer to {0} must be a valid date"
+msgstr "La risposta alla domanda {0} deve essere una data valida"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/ViewModels/ValidationProvider.cs"
+msgid "Your answer to {0} must be a valid date and time"
+msgstr "La risposta alla domanda {0} deve essere una data e ora valida"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Controllers/QuestionnaireController.cs"
+msgid "Please, accept our terms and conditions!"
+msgstr "Si prega di accettare i termini e le condizioni del servizio!"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Controllers/QuestionnaireController.cs"
+msgid "Invalid captcha!"
+msgstr "reCaptcha non corretto!"
+

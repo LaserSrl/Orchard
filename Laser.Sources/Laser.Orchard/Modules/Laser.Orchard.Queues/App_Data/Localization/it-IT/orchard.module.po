@@ -1,0 +1,112 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2013 Laser s.r.l.
+
+# > #: msgctxt  { contesto del messaggio - Originale ITA }
+# > #| msgid  	{ identificativo del messaggio - Originale ITA }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "System.ComponentModel.DataAnnotations.RequiredAttribute"
+msgid "The Queue Service URL field is required."
+msgstr "Il campo URL Servizio Code e' obbligatorio."
+
+msgctxt "System.ComponentModel.DataAnnotations.RequiredAttribute"
+msgid "The Polling Interval field is required."
+msgstr "Il campo Intervallo di Polling e' obbligatorio."
+
+msgctxt "System.ComponentModel.DataAnnotations.RequiredAttribute"
+msgid "The Notifications to Send field is required."
+msgstr "Il campo Notifiche da Inviare e' obbligatorio."
+
+msgctxt "System.ComponentModel.DataAnnotations.RangeAttribute"
+msgid "The Polling Interval field should be an integer number greater than or equal to 0."
+msgstr "Il campo Intervallo di Polling dev'essere un numero intero maggiore o uguale a 0."
+
+msgctxt "System.ComponentModel.DataAnnotations.RangeAttribute"
+msgid "The Notifications to Send field should be an integer number greater than or equal to 0."
+msgstr "Il campo Notifiche da Inviare dev'essere un numero intero maggiore o uguale a 0."
+
+msgctxt "Laser.Orchard.Queues.ViewModels.ValidateQueueTicketData"
+msgid "The Queue Name field is required."
+msgstr "Il campo Nome Coda e' obbligatorio."
+
+msgctxt "System.ComponentModel.DataAnnotations.RangeAttribute"
+msgid "Error on queue {0}: the Number Distance and Max Number fields are required."
+msgstr "Errore sulla coda {0}: i campi Distanza Numeri e Numero Massimo sono obbligatori."
+
+msgctxt "System.ComponentModel.DataAnnotations.RangeAttribute"
+msgid "Error on queue {0}: the Number Distance and Max Number fields must be integer numbers greater than 0."
+msgstr "Errore sulla coda {0}: i campi Distanza Numeri e Numero Massimo devono essere dei numeri interi maggiori di 0."
+
+msgctxt "Laser.Orchard.Queues.Handlers.QueuesSettingsHandler"
+msgid "Queues"
+msgstr "Code"
+
+msgctxt "Laser.Orchard.Queues.Drivers.QueuesSettingsDriver"
+msgid "Cannot have multiple queues with the same name ({0})"
+msgstr "Impossibile inserire code multiple con lo stesso nome ({0})"
+
+msgctxt "Laser.Orchard.Queues.Tasks.QueueScheduledTaskHandler"
+msgid "The queue {0} is currently serving the number {1}. Your number will be served soon."
+msgstr "La coda {0} sta attualmente servendo il numero {1}. Il tuo numero verra' servito fra poco."
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/Parts/QueuesSettings.cshtml"
+msgid "Manage Queues"
+msgstr "Gestione Code"
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/Parts/QueuesSettings.cshtml"
+msgid "Queue Service URL"
+msgstr "URL Servizio Code"
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/Parts/QueuesSettings.cshtml"
+msgid "The URL of the service providing the current number."
+msgstr "L'URL del servizio che fornisce il numero corrente."
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/Parts/QueuesSettings.cshtml"
+msgid "Polling Interval"
+msgstr "Intervallo di Polling"
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/Parts/QueuesSettings.cshtml"
+msgid "The number of minutes between each interrogation of the data."
+msgstr "Il numero di minuti tra ogni interrogazione dei dati."
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/Parts/QueuesSettings.cshtml"
+msgid "Notifications to Send"
+msgstr "Notifiche da Inviare"
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/Parts/QueuesSettings.cshtml"
+msgid "The maximum amount of notifications that a user will receive for each of his numbers."
+msgstr "Il massimo numero di notifiche che gli utenti riceveranno per ognuno dei loro numeri."
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/Parts/QueuesSettings.cshtml"
+msgid "Add Queue"
+msgstr "Aggiungi Coda"
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/Parts/QueuesSettings.cshtml"
+msgid "The Name field should be a unique identifier for the queue."
+msgstr "Il campo Nome dev'essere un identificativo univoco della coda."
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/Parts/QueuesSettings.cshtml"
+msgid "The Number Distance field tells the system to notify the user when its number is at the specified distance from the current number."
+msgstr "Il campo Distanza Numeri dice al sistema di inviare una notifica all'utente quando il suo numero e' alla distanza specificata dal numero corrente."
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/Parts/QueuesSettings.cshtml"
+msgid "The Max Number field represents the maximum number distributed for the queue, after which the numbers distributed may restart."
+msgstr "Il campo Numero Massimo rappresenta il valore massimo dei numeri distribuiti per la coda, dopo il quale la distribuzione dei numeri potrebbe ricominciare dal primo."
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/QueueEdit.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/QueueEdit.cshtml"
+msgid "Number Distance"
+msgstr "Distanza Numeri"
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/QueueEdit.cshtml"
+msgid "Max Number"
+msgstr "Numero Massimo"
+
+msgctxt "~/Modules/Laser.Orchard.Queues/Views/EditorTemplates/QueueEdit.cshtml"
+msgid "Remove"
+msgstr "Rimuovi"

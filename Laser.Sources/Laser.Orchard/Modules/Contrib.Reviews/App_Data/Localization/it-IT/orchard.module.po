@@ -1,0 +1,57 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2013 Laser s.r.l.
+
+
+# > #: msgctxt  { contesto del messaggio - Originale ITA }
+# > #| msgid  	{ identificativo del messaggio - Originale ITA }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/ConfirmRatingDelete.cshtml"
+msgid "When you clear your rating, if you've left a review it will also be deleted. Do you wish to proceed?"
+msgstr "Quando cancelli il tuo voto, se hai lasciato una recensione verrà anch'essa cancellata. Vuoi procedere comunque?"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/DefinitionTemplates/ReviewTypePartSettings.cshtml"
+msgid "Enable star rating"
+msgstr "Abilita il voto tramite stellette"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
+msgid "Rate:"
+msgstr "Voto:"
+ 
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
+msgid "Save"
+msgstr "Salva"
+ 
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "Rate:"
+msgstr "Voto:"
+ 
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "Save"
+msgstr "Salva"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.SummaryAdmin.cshtml"
+msgid "Rating:"
+msgstr "Voto:"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
+msgid "character(s) remaining:"
+msgstr "caratteri rimanenti:"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
+msgid "There are no reviews for this item."
+msgstr "Non ci sono recensioni per questo elemento:"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
+msgid "Are you sure you wish to delete your review? Your Rating will also be deleted."
+msgstr "Sei sicuro di voler rimuovere la tua recensione? Contestualmente sarà rimosso anche il tuo voto."
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
+msgid "No reviews yet. " 
+msgstr "Nessun commento. "
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
+msgid "Be the first to write a review!"
+msgstr "Scrivi un commento per primo!"

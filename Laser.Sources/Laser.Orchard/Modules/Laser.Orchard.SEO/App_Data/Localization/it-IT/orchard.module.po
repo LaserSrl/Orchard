@@ -1,0 +1,41 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2013 IN.VA S.p.A.
+# Tutti i diritti riservati
+
+# msgctxt "~/Modules/Percorso/.../Template.cshtml"
+# msgid "EtichettaID"
+# msgstr "Stringa localizzata."
+
+################################################################################
+# SEO
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "TitleOverride"
+msgstr "Titolo della pagina"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "TitleOverrideDescription"
+msgstr "ATTENZIONE: lascia vuoto questo campo per usare il normale titolo del contenuto."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "Description"
+msgstr "META Description"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "Keywords"
+msgstr "META Keywords"
+
+################################################################################
+# FAVICON
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/Favicon.FaviconSettings.cshtml"
+msgid "Favicon"
+msgstr "Favicon"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/Favicon.FaviconSettings.cshtml"
+msgid "Favicon URL"
+msgstr "Indirizzo virtuale immagine"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/Favicon.FaviconSettings.cshtml"
+msgid "current"
+msgstr "Favicon attuale"

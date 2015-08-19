@@ -1,0 +1,93 @@
+﻿# Orchard resource strings - it-IT
+# Copyright (c) 2013 Laser s.r.l.
+
+
+# > #: msgctxt  { contesto del messaggio - Originale ITA }
+# > #| msgid  	{ identificativo del messaggio - Originale ITA }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgid "Title"
+msgstr "Titolo"
+
+msgid "Text"
+msgstr "Testo"
+
+msgid "Settings - Mobile Push Part"
+msgstr "Mobile Push Part - Impostazioni"
+
+msgid "Default is false. Will hide the content picker field selector for related content item"
+msgstr "Mobile Push Part - Impostazioni"
+
+msgid "Hide Related Content Picker Field"
+msgstr "Nascondi il Content Picker Field di selezione - related content item"
+
+msgid "Accept push with no Related content"
+msgstr "Permetti Push senza un contenuto linkato"
+
+msgid "Default is false. If selected accept 0 on idrelated (used for push with no contentitem linked)"
+msgstr ""
+
+msgid "Mobile Push"
+msgstr Mobile Push""
+
+msgid "Push on next Publish"
+msgstr "Fai una push alla prossima pubblicazione"
+
+msgid "Push will be sent to devices when ContentItem will published"
+msgstr "Verrà inviata una push alla pubblicazione di un content item"
+
+msgid "Test Push on device"
+msgstr "Permetti la gestione dello sviluppo"
+
+msgid "Mask to make test for Push... this option is set by settings of module"
+msgstr "Segna per effettuare test di invio push .. opzioneconfigurabile nei setting del modulo"
+
+msgid "To Device"
+msgstr "Lista  deiDispositivi"
+
+msgid "Select Devices"Apple Certificate Password Development"
+msgstr "Seleziona dispositivo"
+
+msgid "Push Mobile Settings"
+msgstr "Impostazioni PushMobile"
+
+msgid "Push Mobile Settings"
+msgstr "Impostazioni PushMobile"
+
+msgid "Apple Push Sound"
+msgstr "Apple Push Sound"
+msgid "Apple Production"
+msgstr "Apple Production"
+
+msgid "Apple Certificate Password"
+msgstr "Apple Certificate Password"
+
+msgid "Apple Path Certificate File"
+msgstr "Apple Path Certificate File" 
+
+msgid "Apple Development"
+msgstr "Apple Development"
+
+msgid "Apple Certificate Password Development"
+msgstr "Apple Certificate Password Development"
+
+msgid "Apple Path Certificate File Development"
+msgstr "Apple Path Certificate File Development"
+
+msgid "Show Test Options"
+msgstr "Show Test Options"
+
+msgid "Will able back office to send push to development device"
+msgstr  "Will able back office to send push to development device"
+
+msgid "User Agent redirect"
+msgstr "User Agent redirect"
+
+msgid "App name"
+msgstr "App name"
+
+msgid "Add Redirect"
+msgstr "Add Redirect"
+
