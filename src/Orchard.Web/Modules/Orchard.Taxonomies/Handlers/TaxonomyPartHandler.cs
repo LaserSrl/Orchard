@@ -23,7 +23,7 @@ namespace Orchard.Taxonomies.Handlers {
             OnPublished<TaxonomyPart>((context, part) => {
                 var previousTermTypeName = part.TermTypeName;
                 
-                if (previousName == null || part.Name == previousName) {
+                if (previousName == null) {
                     // is it a new taxonomy ?
                     taxonomyService.CreateTermContentType(part);
                 }

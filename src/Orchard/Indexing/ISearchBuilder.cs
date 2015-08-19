@@ -8,7 +8,7 @@ namespace Orchard.Indexing {
 
         ISearchBuilder WithField(string field, bool value);
         ISearchBuilder WithField(string field, DateTime value);
-        ISearchBuilder WithField(string field, string value);
+        ISearchBuilder WithField(string field, string value, bool toLowerValue=true);
         ISearchBuilder WithField(string field, int value);
         ISearchBuilder WithField(string field, double value);
         ISearchBuilder WithinRange(string field, int? min, int? max, bool includeMin = true, bool includeMax = true);

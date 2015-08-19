@@ -40,7 +40,7 @@ namespace Orchard.ContentPicker.Drivers {
                     var model = new ContentPickerFieldViewModel {
                         Field = field,
                         Part = part,
-                        ContentItems = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Published, QueryHints.Empty).ToList(),
+                        ContentItems = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Latest, QueryHints.Empty).ToList(),
                     };
 
                     model.SelectedIds = string.Concat(",", field.Ids);

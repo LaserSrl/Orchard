@@ -19,11 +19,22 @@ namespace Orchard.Localization.Services {
             if (cultureRecord == null)
                 return null;
 
-            return _contentManager.Query(content.ContentItem.ContentType)
-                .Where<LocalizationPartRecord>(l => l.MasterContentItemId == content.ContentItem.Id && l.CultureId == cultureRecord.Id)
-                .List()
-                .Select(i => i.As<LocalizationPart>())
-                .SingleOrDefault();
+            if (!content.ContentItem.TypeDefinition.Parts.Any(x => x.PartDefinition.Name == "TermPart"))
+            {
+                return _contentManager.Query(content.ContentItem.ContentType)
+                    .Where<LocalizationPartRecord>(l => l.MasterContentItemId == content.ContentItem.Id && l.CultureId == cultureRecord.Id)
+                    .List()
+                    .Select(i => i.As<LocalizationPart>())
+                    .SingleOrDefault();
+            }
+            else
+            {
+                return _contentManager.Query()
+                    .Where<LocalizationPartRecord>(l => l.MasterContentItemId == content.ContentItem.Id && l.CultureId == cultureRecord.Id)
+                    .List()
+                    .Select(i => i.As<LocalizationPart>())
+                    .SingleOrDefault();
+            }
         }
 
         string ILocalizationService.GetContentCulture(IContent content) {
@@ -44,19 +55,38 @@ namespace Orchard.Localization.Services {
         IEnumerable<LocalizationPart> ILocalizationService.GetLocalizations(IContent content, VersionOptions versionOptions) {
             var localized = content.As<LocalizationPart>();
 
-            if (localized.MasterContentItem != null)
+            if (!content.ContentItem.TypeDefinition.Parts.Any(x => x.PartDefinition.Name == "TermPart"))
+            {
+                if (localized.MasterContentItem != null)
+                    return _contentManager.Query(versionOptions, localized.ContentItem.ContentType)
+                        .Where<LocalizationPartRecord>(l =>
+                            l.Id != localized.ContentItem.Id
+                            && (l.Id == localized.MasterContentItem.ContentItem.Id
+                                || l.MasterContentItemId == localized.MasterContentItem.ContentItem.Id))
+                        .List()
+                        .Select(i => i.As<LocalizationPart>());
+
                 return _contentManager.Query(versionOptions, localized.ContentItem.ContentType)
-                    .Where<LocalizationPartRecord>(l =>
-                        l.Id != localized.ContentItem.Id
-                        && (l.Id == localized.MasterContentItem.ContentItem.Id
-                            || l.MasterContentItemId == localized.MasterContentItem.ContentItem.Id))
+                    .Where<LocalizationPartRecord>(l => l.MasterContentItemId == localized.ContentItem.Id)
                     .List()
                     .Select(i => i.As<LocalizationPart>());
+            }
+            else
+            {
+                if (localized.MasterContentItem != null)
+                    return _contentManager.Query(versionOptions)
+                        .Where<LocalizationPartRecord>(l =>
+                            l.Id != localized.ContentItem.Id
+                            && (l.Id == localized.MasterContentItem.ContentItem.Id
+                                || l.MasterContentItemId == localized.MasterContentItem.ContentItem.Id))
+                        .List()
+                        .Select(i => i.As<LocalizationPart>());
 
-            return _contentManager.Query(versionOptions, localized.ContentItem.ContentType)
-                .Where<LocalizationPartRecord>(l => l.MasterContentItemId == localized.ContentItem.Id)
-                .List()
-                .Select(i => i.As<LocalizationPart>());
+                return _contentManager.Query(versionOptions)
+                    .Where<LocalizationPartRecord>(l => l.MasterContentItemId == localized.ContentItem.Id)
+                    .List()
+                    .Select(i => i.As<LocalizationPart>());
+            }
         }
     }
 }

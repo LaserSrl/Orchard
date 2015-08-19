@@ -15,7 +15,7 @@ namespace Orchard.Tokens {
         }
 
         public static string UrlEncode(string token, object value) {
-            return HttpUtility.UrlEncode(value.ToString());
+            return HttpUtility.UrlEncode(Convert.ToString(value));
         }
 
         public static ReplaceOptions Default {

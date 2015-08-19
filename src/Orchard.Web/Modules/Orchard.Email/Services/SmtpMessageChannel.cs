@@ -43,11 +43,17 @@ namespace Orchard.Email.Services {
             if (!_smtpSettings.IsValid()) {
                 return;
             }
+            string _recipient="";
+            if (parameters["Recipients"] is String[]) {
+                _recipient = String.Join(",", ((string[])parameters["Recipients"]));
+            }
+            else
+                _recipient = parameters["Recipients"] as string;
 
             var emailMessage = new EmailMessage {
                 Body = parameters["Body"] as string,
                 Subject = parameters["Subject"] as string,
-                Recipients = parameters["Recipients"] as string
+                Recipients = _recipient
             };
 
             if (emailMessage.Recipients.Length == 0) {

@@ -87,7 +87,8 @@ namespace Orchard.Autoroute.Handlers {
                 if (currentHomePages.Any(x => x.Id == part.Id)) {
                     return;
                 }
-
+            }
+             if (part.DisplayAlias != "/"){
                 var previous = part.Path;
                 if (!_autorouteService.Value.ProcessPath(part))
                     _orchardServices.Notifier.Warning(T("Permalinks in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",

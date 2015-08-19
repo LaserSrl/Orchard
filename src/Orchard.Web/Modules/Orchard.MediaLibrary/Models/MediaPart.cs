@@ -7,7 +7,7 @@ using Orchard.Core.Title.Models;
 namespace Orchard.MediaLibrary.Models {
     public class MediaPart : ContentPart<MediaPartRecord> {
 
-        internal LazyField<string> _publicUrl = new LazyField<string>();
+        public LazyField<string> _publicUrl = new LazyField<string>();
 
         /// <summary>
         /// Gets or sets the title of the media.

@@ -20,7 +20,7 @@ namespace Orchard.Indexing {
             return this;
         }
 
-        public ISearchBuilder WithField(string field, string value) {
+        public ISearchBuilder WithField(string field, string value, bool toLowerValue = true) {
             return this;
         }
 

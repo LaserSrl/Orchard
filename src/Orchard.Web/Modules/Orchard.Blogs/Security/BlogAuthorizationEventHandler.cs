@@ -15,7 +15,7 @@ namespace Orchard.Blogs.Security {
             if (!context.Granted &&
                 context.Content.Is<ICommonPart>()) {
 
-                if (context.Permission.Name == Orchard.Core.Contents.Permissions.PublishContent.Name && context.Content.ContentItem.ContentType == "BlogPost") {
+                    if ((context.Permission.Name == Orchard.Core.Contents.Permissions.PublishContent.Name && context.Content.ContentItem.ContentType == "BlogPost") || (context.Permission.Name == Core.Contents.Permissions.PublishOwnContent.Name && context.Content.ContentItem.ContentType == "BlogPost")) {
                     context.Adjusted = true;
                     context.Permission = Permissions.PublishBlogPost;
                 }

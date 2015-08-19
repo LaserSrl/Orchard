@@ -124,11 +124,15 @@ namespace Lucene.Services {
             return this;
         }
 
-        public ISearchBuilder WithField(string field, string value) {
+        public ISearchBuilder WithField(string field, string value, bool toLowerValue=true) {
             CreatePendingClause();
 
             if (!String.IsNullOrWhiteSpace(value)) {
-                _query = new TermQuery(new Term(field, QueryParser.Escape(value.ToLower())));
+                if (toLowerValue) {
+                    _query = new TermQuery(new Term(field, QueryParser.Escape(value.ToLower())));
+                } else {
+                    _query = new TermQuery(new Term(field, QueryParser.Escape(value)));
+                }
             }
 
             return this;

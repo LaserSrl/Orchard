@@ -153,7 +153,8 @@ namespace Orchard.SecureSocketsLayer.Services {
             var httpContext = _workContextAccessor.GetContext().HttpContext;
             var routeData = new RouteData();
             foreach (var routeValue in routeValues) {
-                routeData.Values[routeValue.Key] = routeValue.Value;
+                if (! (routeValue.Key.ToLower()=="id" && routeValue.Value == "") )
+                   routeData.Values[routeValue.Key] = routeValue.Value;
             }
             routeData.Values["controller"] = controllerName;
             routeData.Values["action"] = actionName;

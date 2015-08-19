@@ -73,12 +73,12 @@ namespace Orchard.Search.Controllers {
                         var rawTypes = settings.DisplayedContentTypes.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                         var contentTypes = _contentDefinitionManager
                             .ListTypeDefinitions()
-                            .Where(x => x.Parts.Any(p => rawTypes.Contains(p.PartDefinition.Name)))
+                            .Where(x => x.Parts.Any(p => rawTypes.Contains(p.PartDefinition.Name) || rawTypes.Contains(x.Name)))
                             .ToArray();
 
 
                         foreach (string type in contentTypes.Select(x => x.Name)) {
-                            builder.WithField("type", type).AsFilter();
+                            builder.WithField("type", type, false).AsFilter();
                         }
                     }
 
@@ -87,8 +87,7 @@ namespace Orchard.Search.Controllers {
                     var searchResults = builder.Search();
 
                     foundIds = searchResults.Select(searchHit => searchHit.ContentItemId).ToArray();
-                }
-                catch (Exception exception) {
+                } catch (Exception exception) {
                     Logger.Error(T("Invalid search query: {0}", exception.Message).Text);
                     Services.Notifier.Error(T("Invalid search query: {0}", exception.Message));
                 }
@@ -108,7 +107,7 @@ namespace Orchard.Search.Controllers {
             var pagerShape = Services.New.Pager(pager).TotalItemCount(totalCount);
 
 
-            foreach(IShape item in list.Items) {
+            foreach (IShape item in list.Items) {
                 item.Metadata.Type = "ContentPicker";
             }
 
