@@ -1,0 +1,70 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2013 Laser s.r.l.
+
+
+# > #: msgctxt  { contesto del messaggio - Originale ITA }
+# > #| msgid  	{ identificativo del messaggio - Originale ITA }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.Maps/Views/EditorTemplates/Parts/Map.cshtml"
+msgid "Map Fields"
+msgstr "Definizione della Mappa"
+
+msgctxt "~/Modules/Laser.Orchard.Maps/Views/EditorTemplates/Parts/Map.cshtml"
+msgid "Type a Location"
+msgstr "Scrivi un punto da ricercare"
+
+msgctxt "~/Modules/Laser.Orchard.Maps/Views/EditorTemplates/Parts/Map.cshtml"
+msgid "Location Info"
+msgstr "Informazioni"
+
+msgctxt "~/Modules/Laser.Orchard.Maps/Views/EditorTemplates/Parts/Map.cshtml"
+msgid "Location Address"
+msgstr "Informazioni sull'indirizzo"
+
+msgctxt "~/Modules/Laser.Orchard.Maps/Views/Parts/Map.cshtml"
+msgid "Map"
+msgstr "Mappa"
+
+msgctxt "~/Modules/Laser.Orchard.Maps/Views/DefinitionTemplates/MapPartSettings.cshtml"
+msgid "Required latitutde and longitude"
+msgstr "Latitudine e longitudine sono obbligatorie"
+
+msgctxt "Laser.Orchard.Maps.Pojections.AroundMeFilter"
+msgid "Around Me"
+msgstr "Intorno a me"
+
+msgctxt "Laser.Orchard.Maps.Pojections.AroundMeFilter"
+msgid "Maps"
+msgstr "Mappe"
+
+msgctxt "Laser.Orchard.Maps.Pojections.AroundMeFilter"
+msgid "Search for Content Items contained in an area"
+msgstr "Cerca i contenuti compresi in una determinata area"
+
+msgctxt "Laser.Orchard.Maps.Pojections.AroundMeFilter"
+msgid "Content Items contained in the specified area"
+msgstr "Contenuti compresi in una determinata area"
+
+
+msgctxt "Laser.Orchard.Maps.Pojections.AroundMeForm"
+msgid "Position coords"
+msgstr "Coordinate della posizione"
+
+msgctxt "Laser.Orchard.Maps.Pojections.AroundMeForm"
+msgid "Comma separated Latitude,Longitude central position."
+msgstr "Latitudine,Longitudine separate da virgola della posizione centrale."
+
+msgctxt "Laser.Orchard.Maps.Pojections.AroundMeForm"
+msgid "Distance"
+msgstr "Distanza"
+
+msgctxt "Laser.Orchard.Maps.Pojections.AroundMeForm"
+msgid "Distance from position in meters."
+msgstr "Distanza in metri dalla posizione fornita."
+
+msgctxt "Laser.Orchard.Maps.Drivers.MapPartDriver"
+msgid "A point on the map is required."
+msgstr "Il punto su mappa è obbligatorio."

@@ -1,0 +1,112 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2010 Outercurve Foundation
+# All rights reserved
+# This file is distributed under the BSD license
+
+
+# msgid "You need to hit \"Save\" in order to save your changes."
+# msgstr "Devi premere \"Salva\" per salvare le modifiche."
+
+Orchard.Web\Modules\Laser.Orchard.Highlights\Views\EditorTemplates\Parts\HighlightsGroup_Edit.cshtml
+
+#: ~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml
+#| msgid "Highlights group"
+msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
+msgid "Highlights group"
+msgstr "Gruppo di Evidenze"
+
+#: ~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml
+#| msgid "Template type"
+msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
+msgid "Template type"
+msgstr "Tipo di template"
+
+#: ~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml
+#| msgid "Template type"
+msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
+msgid "Display plugin"
+msgstr "Visualizzazione"
+
+#: ~/Modules/Laser.Orchard.Highlights/Drivers/HighlightsGroupDriver.cs
+#| msgid "Current Template - Display association not allowed"
+msgctxt "Laser.Orchard.Highlights.Drivers.HighlightsGroupDriver"
+msgid "Current Template - Display association not allowed"
+msgstr "Associazione fra Template e Visualizzazione non consentita"
+
+# msgid "Save to update this list."
+# msgstr ""
+
+# msgid "Save to accept order change."
+# msgstr ""
+
+# msgid "Published"
+# msgstr "Pubblicato"
+
+# msgid "No published"
+# msgstr "Non pubblicato"
+
+# msgid "until"
+# msgstr "fino al"
+
+# msgid "from"
+# msgstr "dal"
+
+# msgid "Add"
+# msgstr "Aggiungi"
+
+# msgid "Save the item before adding mini-banner!"
+# msgstr "Salvare l'oggetto prima di aggiungere il banner!"
+
+# msgid "Save the item before adding banner!"
+# msgstr "Salvare l'oggetto prima di aggiungere ... il banner" 
+
+# msgid "There are unsaved changes"
+# msgstr "Sono presenti modifiche non salvate."
+
+# #| msgid "Delete"
+# msgid "Delete"
+# msgstr "Elimina"
+
+# #| msgid "Remove"
+# msgid "Remove"
+# msgstr "Elimina"
+
+# #| msgid "Save"
+# msgid "save"
+# msgstr "salva"
+
+# #| msgid "Back"
+# msgid "Back"
+# msgstr "Ritorna"
+
+# #| msgid "Edit"
+# msgid "Edit"
+# msgstr "Modifica"
+
+# msgid "Link Url"
+# msgstr "Collegamento"
+
+# msgid "Link Target"
+# msgstr "Destinazione"
+
+# msgid "Order"
+# msgstr "Posizione"
+
+# msgid "You need to save your changes."
+# msgstr "E' necessario salvare le modifiche."
+
+# msgid "Details"
+# msgstr "Dettagli"
+
+#: ~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsItem_Edit.cshtml
+#| msgid "Link to video"
+msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsItem_Edit.cshtml"
+msgid "Link to video"
+msgstr "Link a video"
+
+
+#: ~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsItem_Edit.cshtml
+#| msgid "Title size"
+msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsItem_Edit.cshtml"
+msgid "Title size"
+msgstr "Dimensione titolo"

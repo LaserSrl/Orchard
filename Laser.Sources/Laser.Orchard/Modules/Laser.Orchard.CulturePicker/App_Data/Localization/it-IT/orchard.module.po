@@ -1,0 +1,23 @@
+msgctxt "Laser.Orchard.CulturePicker.Projections.CurrentCultureFilter"
+msgid "Localization"
+msgstr "Localizzazione"
+
+msgctxt "Laser.Orchard.CulturePicker.Projections.CurrentCultureFilter"
+msgid "For current or default culture"
+msgstr "Per la lingua corrente o quella di default"
+
+msgctxt "Laser.Orchard.CulturePicker.Projections.CurrentCultureFilter"
+msgid "Localized content items for current or default culture"
+msgstr "Versione tradotta dei contenuti nella lingua corrente o quella di default"
+
+msgctxt "Laser.Orchard.CulturePicker.Projections.CurrentCultureWithUntranslatedFilter"
+msgid "Localization"
+msgstr "Localizzazione"
+
+msgctxt "Laser.Orchard.CulturePicker.Projections.CurrentCultureWithUntranslatedFilter"
+msgid "For current culture (include untranslated in default)"
+msgstr "Per la lingua corrente (includi non tradotti in default)"
+
+msgctxt "Laser.Orchard.CulturePicker.Projections.CurrentCultureWithUntranslatedFilter"
+msgid "Localized content items for current culture (untranslated included in default culture)"
+msgstr "Versione tradotta dei contenuti nella lingua corrente (non tradotti inclusi nella lingua di default)"

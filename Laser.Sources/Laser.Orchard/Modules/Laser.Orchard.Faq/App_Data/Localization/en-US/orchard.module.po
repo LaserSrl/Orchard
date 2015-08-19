@@ -1,0 +1,105 @@
+# Orchard resource strings - ru-RU
+# Copyright (c) 2010 Outercurve Foundation
+# All rights reserved
+# This file is distributed under the BSD license
+
+#: ~/Modules/Laser.Orchard.Faq/Views/EditorTemplates/Parts/Faq.cshtml
+#| msgid "FaqType"
+msgid "FaqType"
+msgstr "Faq Type"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/EditorTemplates/Parts/Faq.cshtml
+#| msgid "Question"
+msgid "Question"
+msgstr "Question"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/EditorTemplates/Parts/Faq.cshtml
+#| msgid "ChooseType"
+msgid "ChooseType"
+msgstr "Choose type"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/EditorTemplates/Parts/FaqType.cshtml
+#| msgid "Title"
+msgid "Title"
+msgstr "Title"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/EditorTemplates/Parts/LastFaqWidget.cshtml
+#| msgid "ViewCount"
+msgid "ViewCount"
+msgstr "Quantity of question to show"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/EditorTemplates/Parts/LastFaqWidget.cshtml
+#| msgid "Page"
+msgid "Page"
+msgstr "Pagination"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/FaqType.cshtml
+#| msgid "Title"
+msgid "Title"
+msgstr "Title"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/Faq.cshtml
+#| msgid "FaqType"
+msgid "FaqType"
+msgstr "Faq Type"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/Faq.cshtml
+#| msgid "Question"
+msgid "Question"
+msgstr "Question"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/FaqWidget.cshtml
+#| msgid "NoItems"
+msgid "NoItems"
+msgstr "No items"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/LastFaqWidget.cshtml
+#| msgid "NoItems"
+msgid "NoItems"
+msgstr "No items"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/LastFaqWidget.cshtml
+#| msgid "Hide"
+msgid "Hide"
+msgstr "Hide"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/LastFaqWidget.cshtml
+#| msgid "Answer"
+msgid "Answer"
+msgstr "Answer"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/LastFaqWidget.cshtml
+#| msgid "FirstPage"
+msgid "FirstPage"
+msgstr "First"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/LastFaqWidget.cshtml
+#| msgid "PreviousPage"
+msgid "PreviousPage"
+msgstr "Previous"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/LastFaqWidget.cshtml
+#| msgid "NextPage"
+msgid "NextPage"
+msgstr "Next"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/LastFaqWidget.cshtml
+#| msgid "LastPage"
+msgid "LastPage"
+msgstr "Last"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/LastFaqWidget.cshtml
+#| msgid "FAQ"
+msgid "FAQ"
+msgstr "Faq"
+
+#: ~/Modules/Laser.Orchard.Faq/Views/Parts/LastFaqWidget.cshtml
+#| msgid "Section"
+msgid "Section"
+msgstr "Section"
+
+#: Laser.Orchard.Faq.Drivers.FaqTypeDriver
+#| msgid "Faq Type with the same name already exists."
+msgctxt "Laser.Orchard.Faq.Drivers.FaqTypeDriver"
+msgid "Faq Type with the same name already exists."
+msgstr "Faq Type with the same name already exists."
