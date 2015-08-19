@@ -25,13 +25,13 @@ namespace Pubblicazione.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\aa")]
-        public string PathOrchardDev {
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Sviluppo\\DotNet\\Laser.Platform.Orchard\\")]
+        public string BasePlatformRootPath {
             get {
-                return ((string)(this["PathOrchardDev"]));
+                return ((string)(this["BasePlatformRootPath"]));
             }
             set {
-                this["PathOrchardDev"] = value;
+                this["BasePlatformRootPath"] = value;
             }
         }
     }

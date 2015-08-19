@@ -2,8 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Pubblicazione.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="PathOrchardDev" Type="System.String" Scope="User">
-      <Value Profile="(Default)">c:\aa</Value>
+    <Setting Name="BasePlatformRootPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Sviluppo\DotNet\Laser.Platform.Orchard\</Value>
     </Setting>
   </Settings>
 </SettingsFile>

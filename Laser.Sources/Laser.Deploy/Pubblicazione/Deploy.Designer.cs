@@ -110,7 +110,7 @@
             // 
             // btnzip
             // 
-            this.btnzip.Location = new System.Drawing.Point(692, 526);
+            this.btnzip.Location = new System.Drawing.Point(692, 527);
             this.btnzip.Name = "btnzip";
             this.btnzip.Size = new System.Drawing.Size(75, 23);
             this.btnzip.TabIndex = 10;
@@ -360,7 +360,7 @@
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(495, 39);
+            this.btnReset.Location = new System.Drawing.Point(771, 46);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(75, 23);
             this.btnReset.TabIndex = 14;
@@ -370,7 +370,7 @@
             // 
             // SaveSetting
             // 
-            this.SaveSetting.Location = new System.Drawing.Point(771, 7);
+            this.SaveSetting.Location = new System.Drawing.Point(771, 17);
             this.SaveSetting.Name = "SaveSetting";
             this.SaveSetting.Size = new System.Drawing.Size(75, 23);
             this.SaveSetting.TabIndex = 13;
@@ -381,16 +381,16 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(492, 22);
+            this.label5.Location = new System.Drawing.Point(483, 22);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(241, 13);
+            this.label5.Size = new System.Drawing.Size(268, 13);
             this.label5.TabIndex = 12;
-            this.label5.Text = "Default is C:\\Sviluppo\\Laser.Orchard.Community\\";
+            this.label5.Text = "Default is D:\\Sviluppo\\DotNet\\Laser.Platform.Orchard\\";
             this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // tbOrchardDev
             // 
-            this.tbOrchardDev.Location = new System.Drawing.Point(117, 15);
+            this.tbOrchardDev.Location = new System.Drawing.Point(108, 18);
             this.tbOrchardDev.Name = "tbOrchardDev";
             this.tbOrchardDev.Size = new System.Drawing.Size(355, 20);
             this.tbOrchardDev.TabIndex = 11;
@@ -406,7 +406,7 @@
             // 
             // TheprogressBar
             // 
-            this.TheprogressBar.Location = new System.Drawing.Point(247, 528);
+            this.TheprogressBar.Location = new System.Drawing.Point(247, 527);
             this.TheprogressBar.Name = "TheprogressBar";
             this.TheprogressBar.Size = new System.Drawing.Size(393, 23);
             this.TheprogressBar.TabIndex = 12;

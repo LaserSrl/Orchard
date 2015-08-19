@@ -15,8 +15,7 @@ namespace Pubblicazione {
 
         private enum TipoDeploy { dll, modulo };
 
-        private string basepath = Properties.Settings.Default.PathOrchardDev;// @"C:\Sviluppo\Laser.Orchard.Community\";
-        private string premodulo = (Properties.Settings.Default.PathOrchardDev + @"Orchard.Source\src\Orchard.Web\Modules\").ToLower();
+        private string basepath, premodulo, deploypath;
         private Dictionary<string, string> ProgettiDaSelezionare;
         private Dictionary<string, string> elencoLibrerie;
 
@@ -59,7 +58,6 @@ namespace Pubblicazione {
         }
 
         private void CopyDll() {
-            string deploypath = basepath + @"DeployScripts\Deploy";
 
             foreach (var a in this.clbLibrary.CheckedItems) {
                 DirectoryInfo parentDir = Directory.GetParent(elencoModuli[this.clbModules.Items[0].ToString()]);
@@ -99,12 +97,11 @@ namespace Pubblicazione {
         }
 
         private ProjectClass ReadProject(string pathsoluzion, Dictionary<string, string> MyelencoLibrerie, Dictionary<string, string> MyelencoModuli, Dictionary<string, string> MyelencoTemi) {
-            this.tbOrchardDev.Text = Properties.Settings.Default.PathOrchardDev;
+            this.tbOrchardDev.Text = Properties.Settings.Default.BasePlatformRootPath;
             string Content;
             try {
                 Content = File.ReadAllText(pathsoluzion);
-            }
-            catch {
+            } catch {
                 Content = "";
             }
             Regex projReg = new Regex(
@@ -117,15 +114,13 @@ namespace Pubblicazione {
                     Projects[i] = Path.Combine(Path.GetDirectoryName(pathsoluzion),
                         Projects[i]);
                 Projects[i] = Path.GetFullPath(Projects[i]);
-
-                if (Projects[i].StartsWith(basepath + @"Orchard.Source\src\Orchard.Web\Modules"))
-
+                if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Modules\"))
                     MyelencoModuli.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
 
-                if (Projects[i].StartsWith(basepath + @"Orchard.Source\src\Orchard.Web\Themes"))
+                if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Themes\"))
                     MyelencoTemi.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
 
-                if (Projects[i].StartsWith(basepath + @"Lib"))
+                if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Libraries\"))
                     MyelencoLibrerie.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
             }
 
@@ -182,7 +177,6 @@ namespace Pubblicazione {
             // this.TheprogressBar.Value = 0;
             // this.TheprogressBar.Maximum = (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count) * 2;
             // this.TheprogressBar.Step = 1;
-            string deploypath = basepath + @"DeployScripts\Deploy";
             if (Directory.Exists(deploypath) && this.chkDeleteFolder.Checked)
                 Directory.Delete(deploypath, true);
             Directory.CreateDirectory(deploypath);
@@ -232,10 +226,10 @@ namespace Pubblicazione {
                 }
             }
             CopyDll();
-            // XCOPY ..\Orchard.Source\src\Orchard.Web\Modules\*%nomefile% DeploySingleFile\Modules\ /S /Y /EXCLUDE:deploy.excludelist.txt
-            //XCOPY ..\Orchard.Source\src\Orchard.Web\Themes\*%nomefile% DeploySingleFile\Themes\ /S /Y /EXCLUDE:deploy.excludelist.txt
-            //XCOPY ..\Orchard.Source\src\Orchard.Web\Modules\*.* Deploy\Modules\ /S /Y /EXCLUDE:deploy.excludelist.txt
-            //XCOPY ..\Orchard.Source\src\Orchard.Web\Themes\*.* Deploy\Themes\ /S /Y /EXCLUDE:deploy.excludelist.txt
+            // XCOPY ..\Orchard.Sources\src\Orchard.Web\Modules\*%nomefile% DeploySingleFile\Modules\ /S /Y /EXCLUDE:deploy.excludelist.txt
+            //XCOPY ..\Orchard.Sources\src\Orchard.Web\Themes\*%nomefile% DeploySingleFile\Themes\ /S /Y /EXCLUDE:deploy.excludelist.txt
+            //XCOPY ..\Orchard.Sources\src\Orchard.Web\Modules\*.* Deploy\Modules\ /S /Y /EXCLUDE:deploy.excludelist.txt
+            //XCOPY ..\Orchard.Sources\src\Orchard.Web\Themes\*.* Deploy\Themes\ /S /Y /EXCLUDE:deploy.excludelist.txt
             //     this.tabControl1.SelectedIndex = 2;
 
             bw.ReportProgress(0);
@@ -268,7 +262,7 @@ namespace Pubblicazione {
             bw.DoWork += new DoWorkEventHandler(bw_DoWork);
             bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkedCompleted);
-          
+
         }
 
         private void label1_Click(object sender, EventArgs e) {
@@ -288,7 +282,7 @@ namespace Pubblicazione {
             startInfo.UseShellExecute = false;
             startInfo.FileName = "xcopy";
             //      startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + @" /S /Y /EXCLUDE:" + basepath + @"DeployScripts\deploy.excludelist.txt"; //@" /e /y /I";
+            startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + @" /S /Y /EXCLUDE:" + Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\deploy.excludelist.txt"); //@" /e /y /I";
             startInfo.RedirectStandardOutput = true;
 
             try {
@@ -306,20 +300,19 @@ namespace Pubblicazione {
                 process.Start();
                 process.BeginOutputReadLine();
                 process.WaitForExit();
-            }
-            catch (Exception exp) {
+            } catch (Exception exp) {
                 throw exp;
             }
         }
 
         private void btnoprnfolder_Click(object sender, EventArgs e) {
-            Process.Start("explorer.exe", basepath + @"DeployScripts\Deploy");
+            Process.Start("explorer.exe", deploypath);
         }
 
         private void btnzip_Click(object sender, EventArgs e) {
-            if (File.Exists(basepath + @"DeployScripts\Deploy.zip"))
-                File.Delete(basepath + @"DeployScripts\Deploy.zip");
-            System.IO.Compression.ZipFile.CreateFromDirectory(basepath + @"DeployScripts\Deploy", basepath + @"DeployScripts\Deploy.zip");
+            if (File.Exists(Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\Deploy.zip")))
+                File.Delete(basepath + Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\Deploy.zip"));
+            System.IO.Compression.ZipFile.CreateFromDirectory(Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\Deploy"), Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\Deploy.zip"));
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e) {
@@ -327,47 +320,49 @@ namespace Pubblicazione {
 
         private void label5_Click(object sender, EventArgs e) {
         }
-        private void Initialize(){
-            basepath = Properties.Settings.Default.PathOrchardDev;// @"C:\Sviluppo\Laser.Orchard.Community\";
-         premodulo = (Properties.Settings.Default.PathOrchardDev + @"Orchard.Source\src\Orchard.Web\Modules\").ToLower();
-         this.clbLibrary.Items.Clear();
-         this.clbModules.Items.Clear();
-         this.clbThemes.Items.Clear();
-         this.clbLibraryOrchard.Items.Clear();
-         this.clbModulesOrchard.Items.Clear();
-         this.clbThemesOrchard.Items.Clear();
-         elencoModuli = new Dictionary<string, string>();
-         elencoLibrerie = new Dictionary<string, string>();
-         elencoTemi = new Dictionary<string, string>();
-         elencoModuliOrchard = new Dictionary<string, string>();
-         elencoLibrerieOrchard = new Dictionary<string, string>();
-         elencoTemiOrchard = new Dictionary<string, string>();
-         this.tbOrchardDev.Text = basepath;//Properties.Settings.Default.PathOrchardDev;
-         string SlnPath = basepath + @"Laser.Orchard.Dev\Laser.Orchard.Dev.sln";
-         ProjectClass PC = ReadProject(SlnPath, elencoLibrerie, elencoModuli, elencoTemi);
+        private void Initialize() {
+            basepath = Properties.Settings.Default.BasePlatformRootPath;// @"C:\Sviluppo\Laser.Orchard.Community\";
+            premodulo = Path.Combine(Properties.Settings.Default.BasePlatformRootPath, @"Orchard.Sources\src\Orchard.Web\Modules\").ToLower();
+            deploypath = Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\Deploy");
 
-         foreach (var prog in PC.ListCommon)
-             this.clbLibrary.Items.Add(prog.Key);
-         foreach (var prog in PC.ListModule)
-             this.clbModules.Items.Add(prog.Key);
-         foreach (var prog in PC.ListTheme)
-             this.clbThemes.Items.Add(prog.Key);
+            this.clbLibrary.Items.Clear();
+            this.clbModules.Items.Clear();
+            this.clbThemes.Items.Clear();
+            this.clbLibraryOrchard.Items.Clear();
+            this.clbModulesOrchard.Items.Clear();
+            this.clbThemesOrchard.Items.Clear();
+            elencoModuli = new Dictionary<string, string>();
+            elencoLibrerie = new Dictionary<string, string>();
+            elencoTemi = new Dictionary<string, string>();
+            elencoModuliOrchard = new Dictionary<string, string>();
+            elencoLibrerieOrchard = new Dictionary<string, string>();
+            elencoTemiOrchard = new Dictionary<string, string>();
+            this.tbOrchardDev.Text = basepath;//Properties.Settings.Default.BasePlatformRootPath;
+            string SlnPath = Path.Combine(basepath, @"Laser.Sources\Laser.Orchard\Laser.Orchard.sln");
+            ProjectClass PC = ReadProject(SlnPath, elencoLibrerie, elencoModuli, elencoTemi);
 
-         SlnPath = basepath + @"Orchard.Source\src\Orchard.sln";
-         PC = ReadProject(SlnPath, elencoLibrerieOrchard, elencoModuliOrchard, elencoTemiOrchard);
-         foreach (var prog in PC.ListCommon)
-             this.clbLibraryOrchard.Items.Add(prog.Key);
-         foreach (var prog in PC.ListModule)
-             this.clbModulesOrchard.Items.Add(prog.Key);
-         foreach (var prog in PC.ListTheme)
-             this.clbThemesOrchard.Items.Add(prog.Key);
+            foreach (var prog in PC.ListCommon)
+                this.clbLibrary.Items.Add(prog.Key);
+            foreach (var prog in PC.ListModule)
+                this.clbModules.Items.Add(prog.Key);
+            foreach (var prog in PC.ListTheme)
+                this.clbThemes.Items.Add(prog.Key);
+
+            SlnPath = Path.Combine(basepath, @"Orchard.Sources\src\Orchard.sln");
+            PC = ReadProject(SlnPath, elencoLibrerieOrchard, elencoModuliOrchard, elencoTemiOrchard);
+            foreach (var prog in PC.ListCommon)
+                this.clbLibraryOrchard.Items.Add(prog.Key);
+            foreach (var prog in PC.ListModule)
+                this.clbModulesOrchard.Items.Add(prog.Key);
+            foreach (var prog in PC.ListTheme)
+                this.clbThemesOrchard.Items.Add(prog.Key);
         }
 
         private void SaveSetting_Click(object sender, EventArgs e) {
-            Properties.Settings.Default.PathOrchardDev = this.tbOrchardDev.Text;
+            Properties.Settings.Default.BasePlatformRootPath = this.tbOrchardDev.Text;
             Properties.Settings.Default.Save();
-            Initialize();  
-           }
+            Initialize();
+        }
 
         private FileInfo[] elencofile(string search, SearchOption tiporicerca, DateTime fromdate) {
             var directory = new DirectoryInfo(basepath);
@@ -377,13 +372,12 @@ namespace Pubblicazione {
 
                 //foreach (FileInfo file in files) {
                 //    if (file.FullName.IndexOf(@"\obj\") < 0) {
-                //        //Orchard.Source\src\Orchard.Web\Modules\
+                //        //Orchard.Sources\src\Orchard.Web\Modules\
                 //        this.Mylog.Text += file.FullName + "\r\n";
                 //    }
                 //}
                 return files;
-            }
-            else
+            } else
                 return null;
         }
 
@@ -416,8 +410,7 @@ namespace Pubblicazione {
                             if (ProgettiDaSelezionare[nomeprogetto] != TipoDeploy.modulo.ToString()) {
                                 Mylog.Text += key.FullName + "\r\n";
                             }
-                        }
-                        else {
+                        } else {
                             Mylog.Text += key.FullName + "\r\n";
                         }
                     }
@@ -431,8 +424,7 @@ namespace Pubblicazione {
                     string nomeprogetto = file.FullName.ToLower().Replace(premodulo, "").Split('\\')[0];
                     if (!ProgettiDaSelezionare.ContainsKey(nomeprogetto)) {
                         ProgettiDaSelezionare.Add(nomeprogetto, td.ToString());
-                    }
-                    else {
+                    } else {
                         if (td == TipoDeploy.modulo && ProgettiDaSelezionare[nomeprogetto] != TipoDeploy.modulo.ToString())
                             ProgettiDaSelezionare[nomeprogetto] = TipoDeploy.modulo.ToString();
                     }
@@ -464,8 +456,7 @@ namespace Pubblicazione {
                 for (int i = 0; i < this.clbModulesOrchard.Items.Count; i++) {
                     this.clbModulesOrchard.SetItemChecked(i, true);
                 }
-            }
-            else {
+            } else {
                 this.CheckAll.Text = "Check All";
                 for (int i = 0; i < this.clbLibrary.Items.Count; i++) {
                     this.clbLibrary.SetItemChecked(i, false);
@@ -543,7 +534,7 @@ namespace Pubblicazione {
         }
 
         private void btnReset_Click(object sender, EventArgs e) {
-            tbOrchardDev.Text=@"C:\Sviluppo\Laser.Orchard.Community\";
+            tbOrchardDev.Text = @"C:\Sviluppo\Laser.Orchard.Community\";
         }
     }
 
