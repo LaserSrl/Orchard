@@ -8,8 +8,9 @@
 .osm\
 Web.Debug.config
 Web.Release.config
-Media\
-Files\
+\Media\
+\Files\
+\Tests\
 obj\
 \bin\System
 \bin\NHibernate

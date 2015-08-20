@@ -381,7 +381,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(483, 22);
+            this.label5.Location = new System.Drawing.Point(492, 22);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(268, 13);
             this.label5.TabIndex = 12;
@@ -390,7 +390,7 @@
             // 
             // tbOrchardDev
             // 
-            this.tbOrchardDev.Location = new System.Drawing.Point(108, 18);
+            this.tbOrchardDev.Location = new System.Drawing.Point(126, 18);
             this.tbOrchardDev.Name = "tbOrchardDev";
             this.tbOrchardDev.Size = new System.Drawing.Size(355, 20);
             this.tbOrchardDev.TabIndex = 11;
@@ -400,9 +400,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(11, 22);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(77, 13);
+            this.label4.Size = new System.Drawing.Size(104, 13);
             this.label4.TabIndex = 10;
-            this.label4.Text = "Orchard Folder";
+            this.label4.Text = "Platform Base Folder";
             // 
             // TheprogressBar
             // 
