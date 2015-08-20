@@ -1,9 +1,5 @@
 ﻿@using Orchard.Utility.Extensions;
 @{
-    if (Model.Title != null) {
-        Layout.Title = Model.Title;
-    }
-
     Model.Classes.Add("content-item");
 
     var contentTypeClassName = ((string)Model.ContentItem.ContentType).HtmlClassify();
@@ -44,7 +40,7 @@
 <div class="row">
     <div class="col-xs-12 col-sm-4">
         <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)">
-            <img src="@Display.ResizeMediaUrl(Width: 720, Height: 480, Mode: "crop", Alignment: "middlecenter", Path: Model.ContentItem.CalendarEvent.Gallery.MediaParts[0].MediaUrl)" class="img-responsive">
+            <img src="@Display.ResizeMediaUrl(Width: 720, Height: 480, Mode: "pad", Alignment: "middlecenter", Path: Model.ContentItem.CalendarEvent.Gallery.MediaParts[0].MediaUrl)" class="img-responsive">
         </a>
     </div>
     <div class="col-xs-12 col-sm-8">

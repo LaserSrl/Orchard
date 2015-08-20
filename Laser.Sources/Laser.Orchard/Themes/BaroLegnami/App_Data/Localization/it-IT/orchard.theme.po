@@ -1,0 +1,41 @@
+msgstr msgid "# Orchard resource strings - it-IT
+# Copyright (c) 2013 Laser s.r.l.
+
+
+# > #: msgctxt  { contesto del messaggio - Originale ITA }
+# > #| msgid  	{ identificativo del messaggio - Originale ITA }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.ContactForm.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.ContactForm.cshtml"
+msgid "Your Name"
+msgstr "Il vostro nome"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.ContactForm.cshtml"
+msgid "Email"
+msgstr "Email"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.ContactForm.cshtml"
+msgid "Email Address"
+msgstr "Indirizzo Email"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.ContactForm.cshtml"
+msgid "Subject"
+msgstr "Oggetto"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.ContactForm.cshtml"
+msgid "Message"
+msgstr "Messaggio"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.ContactForm.cshtml"
+msgid "Comments or Inquiry"
+msgstr "Il tuo messaggio"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.ContactForm.cshtml"
+msgid "Send"
+msgstr "Inoltra"

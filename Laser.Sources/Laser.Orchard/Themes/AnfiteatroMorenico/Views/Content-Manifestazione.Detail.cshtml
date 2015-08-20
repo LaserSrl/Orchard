@@ -2,8 +2,8 @@
 @{
     var themeBasePath = Url.Content(Html.ThemePath(WorkContext.CurrentTheme, ""));
 
-    if (Model.Title != null) {
-        Layout.Title = Model.Title;
+    if (Model.ContentItem.TitlePart != null && Model.ContentItem.TitlePart.Title != null) {
+        Layout.Title = Model.ContentItem.TitlePart.Title;
     }
 
     Model.Classes.Add("content-item");
@@ -24,7 +24,7 @@
     </div>
     <div class="col-xs-12 col-sm-4">
         @if (medias.Count > 0) {
-            <img class="img-responsive img-thumbnail" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "crop", Alignment: "middlecenter", Path: medias[0].MediaUrl)" />
+            <img class="img-responsive img-thumbnail" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[0].MediaUrl)" />
         }
     </div>
 </div>
@@ -35,7 +35,7 @@
         @for (int i = 1; i < medias.Count; i++) {
             <div class="col-xs-12 col-sm-4 col-md-2">
                 <a data-lightbox="gallery" href="@medias[i].MediaUrl">
-                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "crop", Alignment: "middlecenter", Path: medias[i].MediaUrl)" /></a>
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[i].MediaUrl)" /></a>
             </div>
         }
     </div>

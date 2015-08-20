@@ -1,0 +1,77 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2013 Laser s.r.l.
+
+
+# > #: msgctxt  { contesto del messaggio - Originale ITA }
+# > #| msgid  	{ identificativo del messaggio - Originale ITA }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Your Name"
+msgstr "Il vostro nome"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Email"
+msgstr "Email"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Email Address"
+msgstr "Indirizzo email"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Confirm Email"
+msgstr "Conferma Email"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid ""Confirm Email Address""
+msgstr "Conferma indirizzo email"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Subject"
+msgstr "Oggetto"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Address"
+msgstr "Indirizzo"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Address of the Point of Interest"
+msgstr "Indirizzo del punto di interesse"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Coordinates"
+msgstr "Coordinate"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Latitude"
+msgstr "Latitudine"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Longitude"
+msgstr "Longitudine"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Description"
+msgstr "Descrizione"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Description of the Point of Interest"
+msgstr "Descrizione del punto di interesse"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Send"
+msgstr "Inoltra"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Add attachment"
+msgstr "Aggiungi allegato"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
+msgid "Upload file"
+msgstr "Carica file"

@@ -3,7 +3,7 @@
     var settings = WorkContext.Resolve<ShellSettings>();
     var tenantName = settings.Name;
 
-    var title = @WorkContext.CurrentSite.SiteName;
+    var title = String.Concat(Layout.Title," - ", WorkContext.CurrentSite.SiteName);
     var subthemePath = "~/Themes/AnfiteatroMorenico/Styles/" + tenantName + "/";
 
 }

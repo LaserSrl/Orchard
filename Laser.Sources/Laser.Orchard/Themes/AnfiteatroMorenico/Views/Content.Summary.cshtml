@@ -56,7 +56,7 @@
     <div class="col-xs-12 col-sm-3">
         <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)">
             @if (mediagalleryitems.Count > 0) {
-                <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "crop", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[0]).MediaUrl)">
+                <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[0]).MediaUrl)">
             }</a>
     </div>
     <div class="col-xs-12 col-sm-9">
@@ -81,7 +81,7 @@
         @for (int i = 1; i < mediagalleryitems.Count; i++) {
             <div class="col-xs-12 col-sm-4 col-md-2">
                 <a data-lightbox="gallery-@(Model.ContentItem.Id)" href="@(((dynamic)mediagalleryitems[i]).MediaUrl)">
-                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "crop", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[i]).MediaUrl)" /></a>
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[i]).MediaUrl)" /></a>
             </div>
         }
     </div>

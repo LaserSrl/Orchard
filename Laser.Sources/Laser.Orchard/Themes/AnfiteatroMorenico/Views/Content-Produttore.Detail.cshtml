@@ -1,7 +1,7 @@
 ﻿@using Orchard.Utility.Extensions;
 @{
-    if (Model.Title != null) {
-        Layout.Title = Model.Title;
+    if (Model.ContentItem.TitlePart != null && Model.ContentItem.TitlePart.Title != null) {
+        Layout.Title = Model.ContentItem.TitlePart.Title;
     }
 
     Model.Classes.Add("content-item");
@@ -35,7 +35,7 @@
         @foreach (var prodotto in prodotti) {
             <div class="col-xs-12 col-sm-4 col-md-2"><a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)prodotto)">
                 @if (prodotto.Prodotti.Gallery.MediaParts.Count > 0) {
-                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "crop", Alignment: "middlecenter", Path: prodotto.Prodotti.Gallery.MediaParts[0].MediaUrl)" />
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: prodotto.Prodotti.Gallery.MediaParts[0].MediaUrl)" />
                 } else {
                     <img class="img-responsive" src="http://placehold.it/720x600" />
                 }
