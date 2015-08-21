@@ -9,7 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Data.SqlServerCe;
 namespace Pubblicazione {
-
+    public enum ExclusionFileOptions { None, Full, ModulesThemes};
     public partial class Deploy : Form {
         private BackgroundWorker bw = new BackgroundWorker();
 
@@ -217,7 +217,7 @@ namespace Pubblicazione {
                 progressstep++;
                 bw.ReportProgress(100 * progressstep / totaleprogress);
                 Thread.Sleep(100);
-                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\bin", "*.*"), Path.Combine(deploypath, @"bin"), useExclusions:false);
+                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\bin", "*.*"), Path.Combine(deploypath, @"bin"), ExclusionFileOptions.None);
                 progressstep++;
                 bw.ReportProgress(100 * progressstep / totaleprogress);
                 Thread.Sleep(100);
@@ -230,7 +230,7 @@ namespace Pubblicazione {
                 bw.ReportProgress(100 * progressstep / totaleprogress);
                 Thread.Sleep(100);
                 ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules", "*.*"), Path.Combine(deploypath, @"Modules"));
-                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules", "*.recipe.xml"), Path.Combine(deploypath, @"Modules"), useExclusions:false);
+                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules", "*.recipe.xml"), Path.Combine(deploypath, @"Modules"), ExclusionFileOptions.None);
                 progressstep++;
                 bw.ReportProgress(100 * progressstep / totaleprogress);
                 Thread.Sleep(100);
@@ -255,7 +255,7 @@ namespace Pubblicazione {
                     foreach (var a in this.clbModules.CheckedItems) {
                         DirectoryInfo parentDir = Directory.GetParent(elencoModuli[a.ToString()]);
                         ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
-                        ProcessXcopy(parentDir.FullName + @"\*.recipe.xml", deploypath + @"\Modules\" + a.ToString(), useExclusions: false);
+                        ProcessXcopy(parentDir.FullName + @"\*.recipe.xml", deploypath + @"\Modules\" + a.ToString(), ExclusionFileOptions.None);
                         progressstep++;
                         bw.ReportProgress(100 * progressstep / totaleprogress);
                         Thread.Sleep(100);
@@ -263,7 +263,7 @@ namespace Pubblicazione {
                     foreach (var a in this.clbModulesOrchard.CheckedItems) {
                         DirectoryInfo parentDir = Directory.GetParent(elencoModuliOrchard[a.ToString()]);
                         ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
-                        ProcessXcopy(parentDir.FullName + @"\*.recipe.xml", deploypath + @"\Modules\" + a.ToString(), useExclusions:false);
+                        ProcessXcopy(parentDir.FullName + @"\*.recipe.xml", deploypath + @"\Modules\" + a.ToString(), ExclusionFileOptions.None);
                         progressstep++;
                         bw.ReportProgress(100 * progressstep / totaleprogress);
                         Thread.Sleep(100);
@@ -335,7 +335,7 @@ namespace Pubblicazione {
             Mylog.Invoke(action);
         }
 
-        private void ProcessXcopy(string SolutionDirectory, string TargetDirectory, bool useExclusions = true) {
+        private void ProcessXcopy(string SolutionDirectory, string TargetDirectory, ExclusionFileOptions exclusionFile = ExclusionFileOptions.ModulesThemes) {
             if (!(Directory.Exists(TargetDirectory)))
                 Directory.CreateDirectory(TargetDirectory);
             ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -344,11 +344,14 @@ namespace Pubblicazione {
             startInfo.UseShellExecute = false;
             startInfo.FileName = "xcopy";
             //      startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            if (useExclusions) {
+            if (exclusionFile== ExclusionFileOptions.Full) {
                 startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + @" /S /Y /EXCLUDE:" + Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\deploy.excludelist.txt"); //@" /e /y /I";
+            } else if (exclusionFile == ExclusionFileOptions.ModulesThemes) {
+                startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + @" /S /Y /EXCLUDE:" + Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\modulesthemes.excludelist.txt"); //@" /e /y /I";
+            } else if (exclusionFile == ExclusionFileOptions.None) {
+                startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + " /S /Y"; //@" /e /y /I";
             } else {
                 startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + " /S /Y"; //@" /e /y /I";
-            
             }
             startInfo.RedirectStandardOutput = true;
 
