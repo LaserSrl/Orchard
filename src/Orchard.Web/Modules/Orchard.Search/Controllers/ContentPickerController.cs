@@ -78,7 +78,7 @@ namespace Orchard.Search.Controllers {
 
 
                         foreach (string type in contentTypes.Select(x => x.Name)) {
-                            builder.WithField("type", type, false).AsFilter();
+                            builder.WithField("type", type, false).NotAnalyzed().AsFilter();
                         }
                     }
 
