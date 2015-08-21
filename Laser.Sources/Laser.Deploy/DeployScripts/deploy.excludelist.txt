@@ -1,4 +1,4 @@
-.pdb 
+.pdb\ 
 .xml\ 
 .cs\
 .bak\
@@ -14,14 +14,3 @@ Web.Release.config
 \Files\
 \Tests\
 obj\
-\bin\System
-\bin\NHibernate
-\bin\FluentNHibernate
-\bin\Autofac
-\bin\Castle
-\bin\log4net
-\bin\Iesi
-\bin\Newtonsoft
-\bin\Microsoft
-\bin\Orchard.Core
-\bin\Orchard.Framework
