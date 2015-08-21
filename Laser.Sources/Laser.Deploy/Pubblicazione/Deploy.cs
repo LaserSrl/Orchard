@@ -34,6 +34,9 @@ namespace Pubblicazione {
         public Deploy() {
             InitializeComponent();
         }
+        private void btnFullDeploy_Click(object sender, EventArgs e) {
+            bw.RunWorkerAsync("btnFullDeploy");
+        }
 
         private void btnAll_Click(object sender, EventArgs e) {
             bw.RunWorkerAsync("btnAll");
@@ -168,6 +171,14 @@ namespace Pubblicazione {
             progressstep = 0;
             //  ;
             switch (e.Argument.ToString()) {
+                case "btnFullDeploy":
+
+                    totaleprogress = 1 + 10;
+
+                    action = () => btnFullDeploy.Enabled = false;
+                    btnFullDeploy.Invoke(action);
+                    break;
+
                 case "btnAll":
 
                     totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count) * 2;
@@ -197,48 +208,85 @@ namespace Pubblicazione {
             progressstep++;
             bw.ReportProgress(100 * progressstep / totaleprogress);
             Thread.Sleep(100);
-
-            if (e.Argument == "btnAll") {
-                foreach (var a in this.clbModules.CheckedItems) {
-                    DirectoryInfo parentDir = Directory.GetParent(elencoModuli[a.ToString()]);
-                    ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
-                    //             ProcessXcopy(parentDir.Parent.FullName + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
-                    //            ProcessXcopy(parentDir.Parent.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
-                    // TheprogressBar.PerformStep();
-                    progressstep++;
-                    bw.ReportProgress(100 * progressstep / totaleprogress);
-                    Thread.Sleep(100);
+            if (e.Argument == "btnFullDeploy") {
+                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\App_Data\Localization", "*.*"), Path.Combine(deploypath, @"App_Data\Localization"));
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+                File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\App_Data", @"hrestart.txt"), Path.Combine(deploypath, @"App_Data\hrestart.txt"));
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\bin", "*.*"), Path.Combine(deploypath, @"bin"), useExclusions:false);
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Config", "*.*"), Path.Combine(deploypath, @"Config"));
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Core", "*.*"), Path.Combine(deploypath, @"Core"));
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules", "*.*"), Path.Combine(deploypath, @"Modules"));
+                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules", "*.recipe.xml"), Path.Combine(deploypath, @"Modules"), useExclusions:false);
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes", "*.*"), Path.Combine(deploypath, @"Themes"));
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+                File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web", @"global.asax"), Path.Combine(deploypath, "Global.asax"));
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+                File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web", @"web.config"), Path.Combine(deploypath, "web.config"));
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+                File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web", @"refresh.html"), Path.Combine(deploypath, "refresh.html"));
+                progressstep++;
+                bw.ReportProgress(100 * progressstep / totaleprogress);
+                Thread.Sleep(100);
+            } else {
+                if (e.Argument == "btnAll") {
+                    foreach (var a in this.clbModules.CheckedItems) {
+                        DirectoryInfo parentDir = Directory.GetParent(elencoModuli[a.ToString()]);
+                        ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
+                        ProcessXcopy(parentDir.FullName + @"\*.recipe.xml", deploypath + @"\Modules\" + a.ToString(), useExclusions: false);
+                        progressstep++;
+                        bw.ReportProgress(100 * progressstep / totaleprogress);
+                        Thread.Sleep(100);
+                    }
+                    foreach (var a in this.clbModulesOrchard.CheckedItems) {
+                        DirectoryInfo parentDir = Directory.GetParent(elencoModuliOrchard[a.ToString()]);
+                        ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
+                        ProcessXcopy(parentDir.FullName + @"\*.recipe.xml", deploypath + @"\Modules\" + a.ToString(), useExclusions:false);
+                        progressstep++;
+                        bw.ReportProgress(100 * progressstep / totaleprogress);
+                        Thread.Sleep(100);
+                    }
+                    foreach (var a in this.clbThemes.CheckedItems) {
+                        ProcessXcopy(Path.Combine(elencoTemi[a.ToString()], "*.*"), Path.Combine(deploypath, @"Themes", a.ToString()));
+                        progressstep++;
+                        bw.ReportProgress(100 * progressstep / totaleprogress);
+                        Thread.Sleep(100);
+                    }
+                    if (this.clbThemesOrchard.CheckedItems.Count > 0) { // se ho sceelto almeno un tema Orchard, allora devo copiare anche \Themes\bin\*.*
+                        File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes\web.config"), Path.Combine(deploypath, @"Themes\web.config"));
+                        ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes\bin", "*.*"), Path.Combine(deploypath, @"Themes\bin"));
+                    }
+                    foreach (var a in this.clbThemesOrchard.CheckedItems) {
+                        ProcessXcopy(Path.Combine(elencoTemiOrchard[a.ToString()], "*.*"), Path.Combine(deploypath, @"Themes", a.ToString()));
+                        progressstep++;
+                        bw.ReportProgress(100 * progressstep / totaleprogress);
+                        Thread.Sleep(100);
+                    }
                 }
-                foreach (var a in this.clbModulesOrchard.CheckedItems) {
-                    DirectoryInfo parentDir = Directory.GetParent(elencoModuliOrchard[a.ToString()]);
-                    ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
-                    //             ProcessXcopy(parentDir.Parent.FullName + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
-                    //            ProcessXcopy(parentDir.Parent.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
-                    //  TheprogressBar.PerformStep();
-                    progressstep++;
-                    bw.ReportProgress(100 * progressstep / totaleprogress);
-                    Thread.Sleep(100);
-                }
-                foreach (var a in this.clbThemes.CheckedItems) {
-                    ProcessXcopy(Path.Combine(elencoTemi[a.ToString()], "*.*"), Path.Combine(deploypath, @"Themes", a.ToString()));
-                    //TheprogressBar.PerformStep();
-                    progressstep++;
-                    bw.ReportProgress(100 * progressstep / totaleprogress);
-                    Thread.Sleep(100);
-                }
-                if (this.clbThemesOrchard.CheckedItems.Count > 0) { // se ho sceelto almeno un tema Orchard, allora devo copiare anche \Themes\bin\*.*
-                    File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes\web.config"), Path.Combine(deploypath, @"Themes\web.config"));
-                    ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes\bin", "*.*"), Path.Combine(deploypath, @"Themes\bin"));
-                }
-                foreach (var a in this.clbThemesOrchard.CheckedItems) {
-                    ProcessXcopy(Path.Combine(elencoTemiOrchard[a.ToString()], "*.*"), Path.Combine(deploypath, @"Themes", a.ToString()));
-                    //TheprogressBar.PerformStep();
-                    progressstep++;
-                    bw.ReportProgress(100 * progressstep / totaleprogress);
-                    Thread.Sleep(100);
-                }
+                CopyDll();
             }
-            CopyDll();
             // XCOPY ..\Orchard.Sources\src\Orchard.Web\Modules\*%nomefile% DeploySingleFile\Modules\ /S /Y /EXCLUDE:deploy.excludelist.txt
             //XCOPY ..\Orchard.Sources\src\Orchard.Web\Themes\*%nomefile% DeploySingleFile\Themes\ /S /Y /EXCLUDE:deploy.excludelist.txt
             //XCOPY ..\Orchard.Sources\src\Orchard.Web\Modules\*.* Deploy\Modules\ /S /Y /EXCLUDE:deploy.excludelist.txt
@@ -252,6 +300,10 @@ namespace Pubblicazione {
             //          this.btnAll.Enabled = true;
 
             switch (e.Argument.ToString()) {
+                case "btnFullDeploy":
+                    action = () => btnFullDeploy.Enabled = true;
+                    btnFullDeploy.Invoke(action);
+                    break;
                 case "btnAll":
                     action = () => btnAll.Enabled = true;
                     btnAll.Invoke(action);
@@ -278,15 +330,12 @@ namespace Pubblicazione {
 
         }
 
-        private void label1_Click(object sender, EventArgs e) {
-        }
-
         private void OutputDataReceived(object sender, DataReceivedEventArgs e) {
             Action action = () => Mylog.AppendText(e.Data + "\r\n");
             Mylog.Invoke(action);
         }
 
-        private void ProcessXcopy(string SolutionDirectory, string TargetDirectory) {
+        private void ProcessXcopy(string SolutionDirectory, string TargetDirectory, bool useExclusions = true) {
             if (!(Directory.Exists(TargetDirectory)))
                 Directory.CreateDirectory(TargetDirectory);
             ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -295,7 +344,12 @@ namespace Pubblicazione {
             startInfo.UseShellExecute = false;
             startInfo.FileName = "xcopy";
             //      startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + @" /S /Y /EXCLUDE:" + Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\deploy.excludelist.txt"); //@" /e /y /I";
+            if (useExclusions) {
+                startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + @" /S /Y /EXCLUDE:" + Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\deploy.excludelist.txt"); //@" /e /y /I";
+            } else {
+                startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + " /S /Y"; //@" /e /y /I";
+            
+            }
             startInfo.RedirectStandardOutput = true;
 
             try {
@@ -324,15 +378,13 @@ namespace Pubblicazione {
 
         private void btnzip_Click(object sender, EventArgs e) {
             if (File.Exists(Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\Deploy.zip")))
-                File.Delete(basepath + Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\Deploy.zip"));
+                File.Delete(Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\Deploy.zip"));
             System.IO.Compression.ZipFile.CreateFromDirectory(Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\Deploy"), Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\Deploy.zip"));
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e) {
         }
 
-        private void label5_Click(object sender, EventArgs e) {
-        }
         private void Initialize() {
             basepath = Properties.Settings.Default.BasePlatformRootPath;// @"C:\Sviluppo\Laser.Orchard.Community\";
             premodulo = Path.Combine(Properties.Settings.Default.BasePlatformRootPath, @"Orchard.Sources\src\Orchard.Web\Modules\").ToLower();
@@ -549,6 +601,7 @@ namespace Pubblicazione {
         private void btnReset_Click(object sender, EventArgs e) {
             tbOrchardDev.Text = Properties.Settings.Default.BasePlatformRootPath;
         }
+
     }
 
     public class ProjectClass {

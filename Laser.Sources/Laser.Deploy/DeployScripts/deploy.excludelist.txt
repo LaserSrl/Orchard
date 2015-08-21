@@ -6,6 +6,8 @@
 .sln 
 .csproj
 .osm\
+.Debug.config
+.Release.config
 Web.Debug.config
 Web.Release.config
 \Media\

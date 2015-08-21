@@ -59,6 +59,7 @@
             this.TheprogressBar = new System.Windows.Forms.ProgressBar();
             this.OperazioneTerminata = new System.Windows.Forms.Label();
             this.CheckAll = new System.Windows.Forms.CheckBox();
+            this.btnFullDeploy = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -386,7 +387,6 @@
             this.label5.Size = new System.Drawing.Size(268, 13);
             this.label5.TabIndex = 12;
             this.label5.Text = "Default is D:\\Sviluppo\\DotNet\\Laser.Platform.Orchard\\";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // tbOrchardDev
             // 
@@ -406,7 +406,7 @@
             // 
             // TheprogressBar
             // 
-            this.TheprogressBar.Location = new System.Drawing.Point(247, 527);
+            this.TheprogressBar.Location = new System.Drawing.Point(293, 527);
             this.TheprogressBar.Name = "TheprogressBar";
             this.TheprogressBar.Size = new System.Drawing.Size(393, 23);
             this.TheprogressBar.TabIndex = 12;
@@ -433,11 +433,22 @@
             this.CheckAll.UseVisualStyleBackColor = true;
             this.CheckAll.CheckedChanged += new System.EventHandler(this.CheckAll_CheckedChanged);
             // 
+            // btnFullDeploy
+            // 
+            this.btnFullDeploy.Location = new System.Drawing.Point(203, 527);
+            this.btnFullDeploy.Name = "btnFullDeploy";
+            this.btnFullDeploy.Size = new System.Drawing.Size(75, 23);
+            this.btnFullDeploy.TabIndex = 15;
+            this.btnFullDeploy.Text = "Full";
+            this.btnFullDeploy.UseVisualStyleBackColor = true;
+            this.btnFullDeploy.Click += new System.EventHandler(this.btnFullDeploy_Click);
+            // 
             // Deploy
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(881, 574);
+            this.ClientSize = new System.Drawing.Size(881, 597);
+            this.Controls.Add(this.btnFullDeploy);
             this.Controls.Add(this.CheckAll);
             this.Controls.Add(this.OperazioneTerminata);
             this.Controls.Add(this.TheprogressBar);
@@ -502,6 +513,7 @@
         private System.Windows.Forms.TextBox Mylog;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.Button btnFullDeploy;
     }
 }
 
