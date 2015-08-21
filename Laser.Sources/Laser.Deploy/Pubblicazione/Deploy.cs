@@ -9,7 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Data.SqlServerCe;
 namespace Pubblicazione {
-    public enum ExclusionFileOptions { None, Full, ModulesThemes};
+    public enum ExclusionFileOptions { None, Deploy, ModulesThemes};
     public partial class Deploy : Form {
         private BackgroundWorker bw = new BackgroundWorker();
 
@@ -217,7 +217,7 @@ namespace Pubblicazione {
                 progressstep++;
                 bw.ReportProgress(100 * progressstep / totaleprogress);
                 Thread.Sleep(100);
-                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\bin", "*.*"), Path.Combine(deploypath, @"bin"), ExclusionFileOptions.None);
+                ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\bin", "*.*"), Path.Combine(deploypath, @"bin"), ExclusionFileOptions.Deploy);
                 progressstep++;
                 bw.ReportProgress(100 * progressstep / totaleprogress);
                 Thread.Sleep(100);
@@ -344,7 +344,7 @@ namespace Pubblicazione {
             startInfo.UseShellExecute = false;
             startInfo.FileName = "xcopy";
             //      startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            if (exclusionFile== ExclusionFileOptions.Full) {
+            if (exclusionFile== ExclusionFileOptions.Deploy) {
                 startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + @" /S /Y /EXCLUDE:" + Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\deploy.excludelist.txt"); //@" /e /y /I";
             } else if (exclusionFile == ExclusionFileOptions.ModulesThemes) {
                 startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + @" /S /Y /EXCLUDE:" + Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\modulesthemes.excludelist.txt"); //@" /e /y /I";
