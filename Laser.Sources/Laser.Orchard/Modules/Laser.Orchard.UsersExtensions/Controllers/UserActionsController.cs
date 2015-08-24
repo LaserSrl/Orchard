@@ -297,6 +297,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                 Culture = "it-IT",
                 PolicyAnswers = _usersExtensionsServices.GetUserLinkedPolicies("it-IT").Select(x => new UserPolicyAnswer {
                     PolicyId = x.Id,
+                    UserHaveToAccept = x.UserHaveToAccept,
                     PolicyAnswer = false
                 }).ToList()
             };

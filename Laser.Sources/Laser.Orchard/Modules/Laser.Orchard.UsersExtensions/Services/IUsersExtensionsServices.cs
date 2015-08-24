@@ -226,6 +226,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
             var policies = GetUserLinkedPolicies().Select(x => new UserPolicyAnswerWithContent {
                 PolicyAnswer = false,
                 PolicyId = x.Id,
+                UserHaveToAccept = x.UserHaveToAccept,
                 PolicyText = x.ContentItem
             }).ToList();
             return policies;
