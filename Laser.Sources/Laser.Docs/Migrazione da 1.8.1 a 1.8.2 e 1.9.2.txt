@@ -1,0 +1,52 @@
+Pssaggi di migrazione a Orchard 1.9.1
+============================================================================================================
+UnloadProject
+Edit project
+Replace Automatici
+<HintPath>..\Orchard. 						<HintPath>..\..\..\..\Orchard\src\Orchard.Web\Modules\Orchard.
+<HintPath>..\..\bin\Orchard.				<HintPath>..\..\..\..\Orchard\src\Orchard.Web\bin\Orchard.
+<HintPath>..\..\..\..\lib\					<HintPath>..\..\..\..\Orchard\lib\
+
+Replace da tutti i cs
+using JetBrains.Annotations;
+[UsedImplicitly]
+
+Replace Manuali
+Versioni delle reference orchard o dipendenze di orchard (NON rimuovere le versioni del framework)
+<Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+<Reference Include="Newtonsoft.Json">
+
+Controllare la versione di System.Web.Mvc (da recuperare da D:\Sviluppo\DotNet\Laser.Orchard.Git\Orchard\lib\aspnetmvc\System.Web.Mvc.dll)
+Cambiare riferimenti a dipendeze
+Switchard al Framework to 4.5.1
+Modificare Module.txt
+Modificare tutti i Web.Config Copiandoli da un modulo orchard
+	- root
+	- Script
+	- Style
+
+
+GitHub
+FORK LASER
+https://github.com/LaserSrl/Orchard.git
+
+FORK PRINCIPALE
+https://github.com/OrchardCMS/Orchard.git
+
+
+
+Replace fatti per il branch 1.8.1
+=================================================================================================================================================================================================
+Orchard.Core, Version=1.7.2.0													>					Orchard.Core, Version=1.8.1.0
+Orchard.Framework, Version=1.7.2.0												>					Orchard.Framework, Version=1.8.1.0
+<HintPath>..\..\bin\Orchard.													>					<HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.
+<HintPath>..\Orchard.															>					<HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.
+<HintPath>..\..\..\..\lib\														>					<HintPath>..\..\..\..\Orchard.Sources\lib\
+<HintPath>..\..\..\..\..\Laser.Orchard.Dev\packages\							>					<HintPath>..\..\..\packages\
+
+
+Regex
+(System.Web.Mvc)+, (Version=4.0.0.0|Version=4.0.0.1|Version=3.0.0.0)+,			>					\1, Version=5.1.0.0,
+
+Su tutti i file .cs da VS
+using JetBrains.Annotations;													>					
