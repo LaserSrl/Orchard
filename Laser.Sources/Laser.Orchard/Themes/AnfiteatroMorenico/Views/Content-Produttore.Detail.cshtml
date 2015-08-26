@@ -35,9 +35,9 @@
         @foreach (var prodotto in prodotti) {
             <div class="col-xs-12 col-sm-4 col-md-2"><a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)prodotto)">
                 @if (prodotto.Prodotti.Gallery.MediaParts.Count > 0) {
-                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: prodotto.Prodotti.Gallery.MediaParts[0].MediaUrl)" />
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: prodotto.Prodotti.Gallery.MediaParts[0].MediaUrl)" alt="@prodotto.Prodotti.Gallery.MediaParts[0].AlternateText" />
                 } else {
-                    <img class="img-responsive" src="http://placehold.it/720x600" />
+                    <img class="img-responsive" src="http://placehold.it/720x600" alt=""/>
                 }
                 </a>
             </div>

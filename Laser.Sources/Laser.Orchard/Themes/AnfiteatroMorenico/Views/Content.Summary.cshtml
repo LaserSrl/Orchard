@@ -56,7 +56,7 @@
     <div class="col-xs-12 col-sm-3">
         <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)">
             @if (mediagalleryitems.Count > 0) {
-                <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[0]).MediaUrl)">
+                <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[0]).MediaUrl)" alt="@(((dynamic)mediagalleryitems[0]).AlternateText)" />
             }</a>
     </div>
     <div class="col-xs-12 col-sm-9">
@@ -68,7 +68,9 @@
         @if (Model.ContentItem.ContentType != "Produttore") {
             string bodyHtml = Model.ContentItem.BodyPart.Text;
             var body = new HtmlString(Html.Excerpt(bodyHtml, 470).ToString().Replace(Environment.NewLine, "</p>" + Environment.NewLine + "<p>")); 
-            @body
+            <p>
+                @body
+            </p>
             <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" class="pull-right @cssClass">@T("read more")...</a>
         }
     </div>
@@ -81,7 +83,7 @@
         @for (int i = 1; i < mediagalleryitems.Count; i++) {
             <div class="col-xs-12 col-sm-4 col-md-2">
                 <a data-lightbox="gallery-@(Model.ContentItem.Id)" href="@(((dynamic)mediagalleryitems[i]).MediaUrl)">
-                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[i]).MediaUrl)" /></a>
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[i]).MediaUrl)" alt="@(((dynamic)mediagalleryitems[i]).AlternateText)" /></a>
             </div>
         }
     </div>

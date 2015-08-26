@@ -18,7 +18,7 @@
 @if (contentItems.Any()) {
     foreach (dynamic contentItem in contentItems) {
     <div>
-        <img src="@Display.ResizeMediaUrl(Width: 1920, Height: 547, Mode: "pad", Alignment: "middlecenter", Path: contentItem.Elementoslide.Immagine.MediaParts[0].MediaUrl)" class="img-responsive">
+        <img src="@Display.ResizeMediaUrl(Width: 1920, Height: 547, Mode: "pad", Alignment: "middlecenter", Path: contentItem.Elementoslide.Immagine.MediaParts[0].MediaUrl)" class="img-responsive" alt="@contentItem.Elementoslide.Immagine.MediaParts[0].AlternateText" />
         <div class="container text-center">
             <h3 class="slider-title">@contentItem.TitlePart.Title</h3>
             <h4 class="slider-desc">@contentItem.Elementoslide.Sottotitolo.Value</h4>
