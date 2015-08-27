@@ -34,7 +34,7 @@
     </div>
     <div class="col-xs-12 col-sm-4">
         @if (medias.Count > 0) {
-            <img class="img-responsive img-thumbnail" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[0].MediaUrl)" />
+            <img class="img-responsive img-thumbnail" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[0].MediaUrl)" alt="@medias[0].AlternateText" />
         }
     </div>
 </div>
@@ -45,7 +45,7 @@
         @for (int i = 1; i < medias.Count; i++) {
             <div class="col-xs-12 col-sm-4 col-md-2">
                 <a data-lightbox="gallery" href="@medias[i].MediaUrl">
-                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[i].MediaUrl)" /></a>
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[i].MediaUrl)" alt="@medias[i].AlternateText" /></a>
             </div>
         }
     </div>
@@ -86,9 +86,9 @@
             <div class="col-xs-12 col-sm-4 col-md-2">
                  <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)itinerario.ParentContentItem)">               
                      @if (itinerario.ParentContentItem.Itinerario.Gallery.MediaParts.Count > 0) {
-                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: itinerario.ParentContentItem.Itinerario.Gallery.MediaParts[0].MediaUrl)" />
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: itinerario.ParentContentItem.Itinerario.Gallery.MediaParts[0].MediaUrl)" alt="@itinerario.ParentContentItem.Itinerario.Gallery.MediaParts[0].AlternateText" />
                      } else {
-                    <img class="img-responsive" src="@(themeBasePath + "/styles/images/trekking.png")">
+                    <img class="img-responsive" src="@(themeBasePath + "/styles/images/trekking.png")" alt="">
                      }
                 <br />
                 <span>@itinerario.ParentContentItem.TitlePart.Title</span>

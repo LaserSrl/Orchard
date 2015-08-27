@@ -16,7 +16,9 @@
                 string bodyHtml = content.BodyPart.Text;
                 var body = new HtmlString(Html.Excerpt(bodyHtml, 450).ToString().Replace(Environment.NewLine, "</p>" + Environment.NewLine + "<p>")); 
                         }
-                        @body
+                        <p>
+                            @body
+                        </p>
                         <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)content)" class="pull-right">@T("read more")...</a>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web;
 using Laser.Orchard.Policy.Models;
@@ -28,10 +29,12 @@ namespace Laser.Orchard.UsersExtensions.Models {
 
     public class UserPolicyAnswer {
         public int PolicyId { get; set; }
+        public bool UserHaveToAccept { get; set; }
         public bool PolicyAnswer { get; set; }
     }
 
     public class UserPolicyAnswerWithContent : UserPolicyAnswer {
-        public dynamic PolicyText { get; set; }
+        [Bindable(false)] // never bind from view
+        public ContentItem PolicyText { get; set; }
     }
 }

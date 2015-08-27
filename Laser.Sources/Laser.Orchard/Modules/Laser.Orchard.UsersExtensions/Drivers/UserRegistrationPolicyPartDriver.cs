@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security;
 using System.Web;
+using Laser.Orchard.Policy.Models;
 using Laser.Orchard.Policy.Services;
 using Laser.Orchard.Policy.ViewModels;
 using Laser.Orchard.StartupConfig.Services;
@@ -23,6 +24,7 @@ namespace Laser.Orchard.UsersExtensions.Drivers {
         private readonly IUsersExtensionsServices _usersExtensionsServices;
         private readonly IPolicyServices _policyServices;
         private readonly IControllerContextAccessor _controllerAccessor;
+
         public UserRegistrationPolicyPartDriver(IUtilsServices utilsServices, IUsersExtensionsServices usersExtensionsServices, IPolicyServices policyServices, IControllerContextAccessor controllerAccessor) {
             T = NullLocalizer.Instance;
             Log = NullLogger.Instance;
@@ -64,9 +66,9 @@ namespace Laser.Orchard.UsersExtensions.Drivers {
             if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy")) {
                 var policies = _usersExtensionsServices.BuildEditorForRegistrationPolicies();
                 if (updater.TryUpdateModel(policies, Prefix, null, null)) {
-                    if (policies.Where(x => (
-                            (x.PolicyAnswer == false) && x.PolicyText.PolicyTextInfoPart.UserHaveToAccept)).Count() > 0) {
-                        throw new SecurityException(T("User has to accept policies!").Text);
+                    if (policies.Count(x => (
+                            (x.PolicyAnswer == false) && x.UserHaveToAccept)) > 0) {
+                        updater.AddModelError("NotAcceptedPolicies", T("User has to accept policies!"));
                     }
                     _controllerAccessor.Context.Controller.TempData["VolatileAnswers"] = String.Join(",", policies.Where(x => x.PolicyAnswer).Select(x => x.PolicyId.ToString()));
                 }
