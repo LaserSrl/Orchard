@@ -52,9 +52,15 @@
             <xsl:element name="Summary" namespace="">
                 <xsl:value-of select="summary"/>
             </xsl:element>
-            <xsl:element name="Content" namespace="">
-                <xsl:value-of select="content"/>
-            </xsl:element>
+            <xsl:choose>
+                <xsl:when test="string-length(content)>0">
+                    <xsl:element name="Content" namespace="">
+                        <xsl:value-of select="content"/>
+                    </xsl:element>
+                </xsl:when>
+                <xsl:otherwise>
+                </xsl:otherwise>
+            </xsl:choose>
 			<xsl:element name="Category" namespace="">
 			<xsl:for-each select="categories">
                 <xsl:value-of select="concat(name,', ')"/>
