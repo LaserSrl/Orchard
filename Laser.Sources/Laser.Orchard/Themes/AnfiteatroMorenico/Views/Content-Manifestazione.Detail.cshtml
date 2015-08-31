@@ -60,7 +60,7 @@
         @for (int i = 0; i < attachments.Count; i++) {
             <div class="col-xs-12 col-sm-4 col-md-2">
                 <a target="_blank" href="@attachments[i].MediaUrl">
-                    <img class="img-responsive" src="@(themeBasePath + "/styles/images/attachment.png")"  alt="@T("Attachment")" />
+                    <img class="img-responsive" src="@(themeBasePath + "/styles/images/attachment.png")" alt="@T("Attachment")" />
                     <span>@(String.IsNullOrWhiteSpace(attachments[i].AlternateText) ? attachments[i].FileName : attachments[i].AlternateText)</span>
                 </a>
             </div>

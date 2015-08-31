@@ -39,9 +39,6 @@ namespace Laser.Orchard.Commons.Helpers {
             var tag = tb.ToString(TagRenderMode.Normal);
             return MvcHtmlString.Create(tag);
         }
-
-
-
         public static MvcHtmlString LinkToAddNestedForm<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, string linkText, string containerElement, string counterElement, string cssClass = null, Dictionary<string, object> DefaultPropertyValues = null, string codetoexecuteafter = "") where TProperty : IEnumerable<object> {
             // a fake index to replace with a real index
             var guid = Guid.NewGuid().ToString();
@@ -115,6 +112,14 @@ namespace Laser.Orchard.Commons.Helpers {
             tb.InnerHtml = linkText;
             var tag = tb.ToString(TagRenderMode.Normal);
             return MvcHtmlString.Create(tag);
+        }
+        public static IHtmlString StripTag(this HtmlHelper htmlHelper, string text, string tag) {
+            var result = Regex.Replace(text, String.Format("<{0}[^>]*>(.*)</{0}>",tag), "");
+            return MvcHtmlString.Create(result);
+        }
+        public static IHtmlString StripAttributes(this HtmlHelper htmlHelper, string text, string[] attributes) {
+            var result = Regex.Replace(text, String.Format("({0})\\s*=\\s*\"[^\"]*\"", String.Join("|", attributes)), "");
+            return MvcHtmlString.Create(result);
         }
         private static string JsEncode(this string s) {
             if (string.IsNullOrEmpty(s)) return "";
