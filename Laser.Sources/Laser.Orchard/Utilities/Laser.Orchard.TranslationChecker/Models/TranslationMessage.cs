@@ -14,5 +14,6 @@ namespace Laser.Orchard.TranslationChecker.Models {
         }
         public string MessageContext { get; set; }
         public string MessageId { get; set; }
+        public object MessageLanguage { get; set; }
     }
 }

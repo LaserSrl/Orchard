@@ -21,7 +21,7 @@ namespace Laser.Orchard.TranslationChecker {
         const string NAMESPACE_REGEX = @"namespace\s+([^{\r\:\s]+)";
         const string CLASSNAME_REGEX = @"\s+class\s+([^{\r\:\s]+)";
         const string PO_REGEX = @"msgctxt\s+{0}[\r|\n]+msgid\s+{1}";
-        const string PO_SUBSTRINGS_REGEX = @"[\\\.\(\[\)\]\*\?\!\<\>]{1}";
+        const string PO_SUBSTRINGS_REGEX = @"[\\\.\(\[\)\]\{\}\*\?\!\<\>]{1}"; // these chars will be escaped in the match regex \.()[]{}*?!<>
 
         private string _folder, _baseFolderModules, _baseFolderThemes;
         private string[] _modulesFolders, _themesFolders;
@@ -108,10 +108,17 @@ namespace Laser.Orchard.TranslationChecker {
                         ContainerType = translationArea,
                         ContainerName = Path.GetFileName(folderPath),
                         MessageContext = matchContext,
-                        MessageId = matchingString
+                        MessageId = matchingString,
+                        MessageLanguage = language
                     };
-                    if (!_translationMessages.Contains(translationMessage)) {
-                        if (!TranslationExists(folderPath, language, matchContext, matchingString)) {
+                    if (!_translationMessages.Any(x=> 
+                        x.MessageContext.Equals(translationMessage.MessageContext) &&
+                        x.MessageId.Equals(translationMessage.MessageId) &&
+                        x.ContainerName.Equals(translationMessage.ContainerName) &&
+                        x.ContainerType.Equals(translationMessage.ContainerType) &&
+                        x.ContainerName.Equals(translationMessage.ContainerName) &&
+                        x.MessageLanguage.Equals(translationMessage.MessageLanguage))) {
+                        if (!TranslationExists(folderPath, language, matchContext, matchingString, translationArea)) {
                             this.txtLogOperations.AppendText(String.Concat("msgctxt ", matchContext, "\r\n"));
                             this.txtLogOperations.AppendText(String.Concat("msgid ", matchingString, "\r\n"));
                             _translationMessages.Add(translationMessage);
@@ -133,9 +140,15 @@ namespace Laser.Orchard.TranslationChecker {
             return returnValue;
         }
 
-        private bool TranslationExists(string folderPath, string language, string messageContext, string messageId) {
+        private bool TranslationExists(string folderPath, string language, string messageContext, string messageId, TranslationArea translationArea) {
             var localizationFolder = Path.Combine(folderPath, @"App_Data\Localization", language);
-            var localizationFile = Path.Combine(localizationFolder, PO_MODULE_FILENAME);
+            string localizationFile;
+            if (translationArea == TranslationArea.Modules) {
+                localizationFile = Path.Combine(localizationFolder, PO_MODULE_FILENAME);
+            } else {
+                localizationFile = Path.Combine(localizationFolder, PO_THEME_FILENAME);
+            }
+
 
             if (!File.Exists(localizationFile)) return false;
             var poContent = File.ReadAllText(localizationFile);
@@ -151,9 +164,24 @@ namespace Laser.Orchard.TranslationChecker {
 
         private void btnAskForTranslations_Click(object sender, EventArgs e) {
             foreach (var containerString in this.chkTranslations.CheckedItems) {
-                var collection = _translationMessages.Where(x => x.ContainerName.Equals(containerString.ToString()));
+                var collection = _translationMessages.Where(x => x.ContainerName.Equals(containerString.ToString())).Distinct();
                 //TODO: chiamata al ws di traduzione
             }
+        }
+
+        private void btnCopyToClipboard_Click(object sender, EventArgs e) {
+            List<string[]> toCopy = new List<string[]>();
+            foreach (var containerString in this.chkTranslations.CheckedItems) {
+                var collection = _translationMessages.Where(x => x.ContainerName.Equals(containerString.ToString())).Distinct();
+                toCopy.AddRange(collection.Select(x => new string[] {
+                    "",
+                    String.Concat("msgctxt ",x.MessageContext,""), 
+                    String.Concat("msgid ",x.MessageId,""),
+                    String.Concat("msgstr ",x.MessageId," ***"),
+                }));
+                //TODO: chiamata al ws di traduzione
+            }
+            Clipboard.SetText(String.Concat(toCopy.Select(x => String.Join("\r\n", x))));
         }
 
     }

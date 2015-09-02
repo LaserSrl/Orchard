@@ -30,6 +30,7 @@
             this.chkTranslations = new System.Windows.Forms.CheckedListBox();
             this.btnCheckUncheckAll = new System.Windows.Forms.Button();
             this.btnAskForTranslations = new System.Windows.Forms.Button();
+            this.btnCopyToClipboard = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnCheckTraduzioni
@@ -96,11 +97,22 @@
             this.btnAskForTranslations.UseVisualStyleBackColor = true;
             this.btnAskForTranslations.Click += new System.EventHandler(this.btnAskForTranslations_Click);
             // 
+            // btnCopyToClipboard
+            // 
+            this.btnCopyToClipboard.Location = new System.Drawing.Point(767, 560);
+            this.btnCopyToClipboard.Name = "btnCopyToClipboard";
+            this.btnCopyToClipboard.Size = new System.Drawing.Size(136, 23);
+            this.btnCopyToClipboard.TabIndex = 7;
+            this.btnCopyToClipboard.Text = "Copy To clipboard";
+            this.btnCopyToClipboard.UseVisualStyleBackColor = true;
+            this.btnCopyToClipboard.Click += new System.EventHandler(this.btnCopyToClipboard_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(948, 622);
+            this.Controls.Add(this.btnCopyToClipboard);
             this.Controls.Add(this.btnAskForTranslations);
             this.Controls.Add(this.btnCheckUncheckAll);
             this.Controls.Add(this.chkTranslations);
@@ -125,6 +137,7 @@
         private System.Windows.Forms.CheckedListBox chkTranslations;
         internal System.Windows.Forms.Button btnCheckUncheckAll;
         private System.Windows.Forms.Button btnAskForTranslations;
+        private System.Windows.Forms.Button btnCopyToClipboard;
     }
 }
 
