@@ -32,36 +32,36 @@ msgctxt "~/Modules/Laser.Orchard.Maps/Views/DefinitionTemplates/MapPartSettings.
 msgid "Required latitutde and longitude"
 msgstr "Latitudine e longitudine sono obbligatorie"
 
-msgctxt "Laser.Orchard.Maps.Pojections.AroundMeFilter"
+msgctxt "Laser.Orchard.Maps.Projections.AroundMeFilter"
 msgid "Around Me"
 msgstr "Intorno a me"
 
-msgctxt "Laser.Orchard.Maps.Pojections.AroundMeFilter"
+msgctxt "Laser.Orchard.Maps.Projections.AroundMeFilter"
 msgid "Maps"
 msgstr "Mappe"
 
-msgctxt "Laser.Orchard.Maps.Pojections.AroundMeFilter"
+msgctxt "Laser.Orchard.Maps.Projections.AroundMeFilter"
 msgid "Search for Content Items contained in an area"
 msgstr "Cerca i contenuti compresi in una determinata area"
 
-msgctxt "Laser.Orchard.Maps.Pojections.AroundMeFilter"
+msgctxt "Laser.Orchard.Maps.Projections.AroundMeFilter"
 msgid "Content Items contained in the specified area"
 msgstr "Contenuti compresi in una determinata area"
 
 
-msgctxt "Laser.Orchard.Maps.Pojections.AroundMeForm"
+msgctxt "Laser.Orchard.Maps.Projections.AroundMeForm"
 msgid "Position coords"
 msgstr "Coordinate della posizione"
 
-msgctxt "Laser.Orchard.Maps.Pojections.AroundMeForm"
+msgctxt "Laser.Orchard.Maps.Projections.AroundMeForm"
 msgid "Comma separated Latitude,Longitude central position."
 msgstr "Latitudine,Longitudine separate da virgola della posizione centrale."
 
-msgctxt "Laser.Orchard.Maps.Pojections.AroundMeForm"
+msgctxt "Laser.Orchard.Maps.Projections.AroundMeForm"
 msgid "Distance"
 msgstr "Distanza"
 
-msgctxt "Laser.Orchard.Maps.Pojections.AroundMeForm"
+msgctxt "Laser.Orchard.Maps.Projections.AroundMeForm"
 msgid "Distance from position in meters."
 msgstr "Distanza in metri dalla posizione fornita."
 
