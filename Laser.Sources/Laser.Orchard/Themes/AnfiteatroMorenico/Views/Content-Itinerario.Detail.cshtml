@@ -28,7 +28,7 @@
 <div class="row">
     <h4 class="item-subtitle @cssClass">@T("Points of interest")</h4>
         @foreach (var poi in pois) {
-            <div class="col-xs-12 col-sm-4 col-md-2"><a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)poi)">
+            <div class="col-xs-12 col-sm-4 col-md-2"><a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)poi)" title="@T("Go to page {0}", poi.TitlePart.Title)">
                 @if (poi.POI.Gallery.MediaParts.Count > 0) {
                     <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: poi.POI.Gallery.MediaParts[0].MediaUrl)" alt="@poi.POI.Gallery.MediaParts[0].AlternateText" />
                 } else {

@@ -54,8 +54,8 @@
                     <text>-</text> @produttore.ParentContentItem.MapPart.LocationAddress
                 }<br />
                 @produttore.ParentContentItem.Produttore.Telefono.Value<br/>
-                <a href="mailto:@produttore.ParentContentItem.Produttore.Email.Value">@produttore.ParentContentItem.Produttore.Email.Value</a><br />
-                <a target="_blank" href="@produttore.ParentContentItem.Produttore.SitoWeb.Value">@produttore.ParentContentItem.Produttore.SitoWeb.Value</a><br />
+                <a title="@T("Email to {0}", produttore.ParentContentItem.Produttore.Email.Value ?? "")" href="mailto:@produttore.ParentContentItem.Produttore.Email.Value">@produttore.ParentContentItem.Produttore.Email.Value</a><br />
+                <a title="@T("Open {0} to a new window", produttore.ParentContentItem.Produttore.SitoWeb.Value ?? "")" target="_blank" href="@produttore.ParentContentItem.Produttore.SitoWeb.Value">@produttore.ParentContentItem.Produttore.SitoWeb.Value</a><br />
             </li>
         }
         </ul>

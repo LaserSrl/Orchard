@@ -54,13 +54,13 @@
 }
 <div class="row">
     <div class="col-xs-12 col-sm-3">
-        <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)">
+        <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" title="@T("Go to page {0}",Model.ContentItem.TitlePart.Title)">
             @if (mediagalleryitems.Count > 0) {
                 <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[0]).MediaUrl)" alt="@(((dynamic)mediagalleryitems[0]).AlternateText)" />
             }</a>
     </div>
     <div class="col-xs-12 col-sm-9">
-        <h2 class="item-title"><a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" class="@cssClass">@Model.ContentItem.TitlePart.Title</a></h2>
+        <h2 class="item-title"><a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" title="@T("Go to page {0}",Model.ContentItem.TitlePart.Title)" class="@cssClass">@Model.ContentItem.TitlePart.Title</a></h2>
         @if (!String.IsNullOrWhiteSpace(eventDates)) {
             <h4 class="item-data">@eventDates</h4>
         }
@@ -71,7 +71,7 @@
             <p>
                 @body
             </p>
-            <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" class="pull-right @cssClass">@T("read more")...</a>
+            <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" title="@T("Go to page {0}",Model.ContentItem.TitlePart.Title)" class="pull-right @cssClass">@T("read more")...</a>
         }
     </div>
 </div>

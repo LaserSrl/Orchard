@@ -68,7 +68,7 @@
         <h4 class="item-subtitle eventi">@T("Gallery")</h4>
         @for (int i = 1; i < medias.Count; i++) {
             <div class="col-xs-12 col-sm-4 col-md-2">
-                <a data-lightbox="gallery" href="@medias[i].MediaUrl">
+                <a data-lightbox="gallery" href="@medias[i].MediaUrl" title="@T("Click to zoom")">
                     <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[i].MediaUrl)" alt="@medias[i].AlternateText" /></a>
             </div>
         }
@@ -87,11 +87,11 @@
                 @contatto.Contatto.Indirizzo.Value<br />
                 }
                                 @if (!String.IsNullOrWhiteSpace(contatto.Contatto.Email.Value)) {
-                <a href="mailto:@contatto.Contatto.Email.Value">@contatto.Contatto.Email.Value</a><br />
+                <a  title="@T("Email to {0}",contatto.Contatto.Email.Value)" href="mailto:@contatto.Contatto.Email.Value">@contatto.Contatto.Email.Value</a><br />
                                 }
                                 @if (!String.IsNullOrWhiteSpace(contatto.Contatto.SitoWeb.Value)) {
 
-                <a target="_blank" href="@contatto.Contatto.SitoWeb.Value">@contatto.Contatto.SitoWeb.Value</a><br />
+                <a target="_blank" title="@T("Open {0} to a new window",contatto.Contatto.SitoWeb.Value)" href="@contatto.Contatto.SitoWeb.Value">@contatto.Contatto.SitoWeb.Value</a><br />
                                 }
                                 @if (!String.IsNullOrWhiteSpace(contatto.Contatto.Note.Value)) {
                 @contatto.Contatto.Note.Value<br/>
@@ -107,7 +107,7 @@
         <h4 class="item-subtitle eventi">@T("Attachments")</h4>
         @for (int i = 0; i < attachments.Count; i++) {
             <div class="col-xs-12 col-sm-4 col-md-2">
-                <a target="_blank" href="@attachments[i].MediaUrl">
+                <a target="_blank" href="@attachments[i].MediaUrl"  title="@T("Click to download {0}", attachments[i].FileName)">
                     <img class="img-responsive" src="@(themeBasePath + "/styles/images/attachment.png")" alt="@T("Attachment")" />
                     <span>@(String.IsNullOrWhiteSpace(attachments[i].AlternateText) ? attachments[i].FileName : attachments[i].AlternateText)</span>
                 </a>

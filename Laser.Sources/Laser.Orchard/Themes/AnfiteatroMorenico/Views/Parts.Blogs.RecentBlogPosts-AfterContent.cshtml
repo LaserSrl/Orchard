@@ -19,7 +19,7 @@
                         <p>
                             @body
                         </p>
-                        <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)content)" class="pull-right">@T("read more")...</a>
+                        <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)content)" title="@T("Go to page {0}", content.TitlePart.Title)" class="pull-right">@T("read more")...</a>
                     </div>
                 </div>
             }

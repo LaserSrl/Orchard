@@ -30,7 +30,7 @@
         <h4 class="item-subtitle prodotti">@T("Gallery")</h4>
         @for (int i = 1; i < medias.Count; i++) {
             <div class="col-xs-12 col-sm-4 col-md-2">
-                <a data-lightbox="gallery" href="@medias[i].MediaUrl">
+                <a data-lightbox="gallery" href="@medias[i].MediaUrl" title="@T("Click to zoom")">
                     <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[i].MediaUrl)" alt="@medias[i].AlternateText" /></a>
             </div>
         }

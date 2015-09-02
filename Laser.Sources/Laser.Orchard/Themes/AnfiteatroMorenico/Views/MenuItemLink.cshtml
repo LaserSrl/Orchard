@@ -21,7 +21,7 @@
     }
 }
 @if (Model.Item.Items.Length == 0 || (Model.Parent.ContentItem != null && Model.Parent.ContentItem.ContentType != "Menu")) {
-    <a href="@url">@Model.Text</a>
+    <a title="@T("Go to page {0}", Model.Text)" href="@url">@Model.Text</a>
 } else {
-    <a id="dLabel-@(Model.Content.Id)" data-target="#" href="@url" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">@Model.Text<span class="caret"></span></a>
+    <a title="@T("Open submenu of {0}", Model.Text)" id="dLabel-@(Model.Content.Id)" data-target="#" href="@url" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">@Model.Text<span class="caret"></span></a>
 }
