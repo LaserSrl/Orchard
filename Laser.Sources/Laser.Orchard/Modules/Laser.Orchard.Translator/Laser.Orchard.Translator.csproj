@@ -6,12 +6,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7A05758D-761E-4B5D-8A64-B93BE5DA3C93}</ProjectGuid>
+    <ProjectGuid>{677F97F0-2D20-4720-B544-A4959D045383}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laser.Orchard.jQueryPlugins</RootNamespace>
-    <AssemblyName>Laser.Orchard.jQueryPlugins</AssemblyName>
+    <RootNamespace>Laser.Orchard.Translator</RootNamespace>
+    <AssemblyName>Laser.Orchard.Translator</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
@@ -47,6 +47,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Laser.Orchard.StartupConfig">
+      <HintPath>..\Laser.Orchard.StartupConfig\bin\Laser.Orchard.StartupConfig.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Orchard.Core, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -56,107 +59,75 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.MediaLibrary, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.MediaLibrary\bin\Orchard.MediaLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\jquery.carouFredSel.js" />
-    <Content Include="Scripts\jquery.carouFredSel.min.js" />
-    <Content Include="Scripts\jquery.carousel.js" />
-    <Content Include="Scripts\jquery.colorbox-min.js" />
-    <Content Include="Scripts\jquery.colorbox.js" />
-    <Content Include="Scripts\jquery.contactable.js" />
-    <Content Include="Scripts\jquery.contactable.min.js" />
-    <Content Include="Scripts\jquery.cycle.all.min.js" />
-    <Content Include="Scripts\jquery.cycle2.min.js" />
-    <Content Include="Scripts\jquery.multiSelect.js" />
-    <Content Include="Scripts\jquery.print.js" />
-    <Content Include="Scripts\jquery.tools.min.js" />
-    <Content Include="Scripts\jquery.ui.datepicker-de.js" />
-    <Content Include="Scripts\jquery.ui.datepicker-en.js" />
-    <Content Include="Scripts\jquery.ui.datepicker-es.js" />
-    <Content Include="Scripts\jquery.ui.datepicker-fr.js" />
-    <Content Include="Scripts\jquery.ui.datepicker-it.js" />
-    <Content Include="Scripts\jquery.ui.datepicker-ja.js" />
-    <Content Include="Scripts\jquery.ui.datepicker-ru.js" />
-    <Content Include="Scripts\jquery.ui.datepicker-zh-CN.js" />
-    <Content Include="Scripts\jquery.ui.datepicker-zh-HK.js" />
-    <Content Include="Scripts\jquery.ui.datepicker-zh-TW.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\custom\jquery.nestedmodels.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\Jssor\jssor.core.js" />
-    <Content Include="Scripts\Jssor\jssor.slider.js" />
-    <Content Include="Scripts\Jssor\jssor.slider.mini.js" />
-    <Content Include="Scripts\Jssor\jssor.utils.js" />
-    <Content Include="Scripts\jsTree\jstree.js" />
-    <Content Include="Scripts\jsTree\jstree.min.js" />
-    <Content Include="Styles\accordion.css" />
-    <Content Include="Styles\custom\divtablelayouts.css" />
-    <Content Include="Styles\images\autocomplete\fake_sel.gif" />
-    <Content Include="Styles\images\autocomplete\fake_sel_pad.gif" />
-    <Content Include="Styles\images\autocomplete\fake_sel_red.gif" />
-    <Content Include="Styles\images\autocomplete\fake_sel_red_pad.gif" />
-    <Content Include="Styles\images\caroufredsel\arrows.png" />
-    <Content Include="Styles\images\colorbox\border.png" />
-    <Content Include="Styles\images\colorbox\controls.png" />
-    <Content Include="Styles\images\colorbox\loading.gif" />
-    <Content Include="Styles\images\colorbox\loading_background.png" />
-    <Content Include="Styles\images\cycle\arrows.png" />
-    <Content Include="Styles\images\cycle\trans-black-60.png" />
-    <Content Include="Styles\images\cycle\trans-black-70.png" />
-    <Content Include="Styles\images\cycle\trans-black-80.png" />
-    <Content Include="Styles\images\multiselect\fake_sel.gif" />
-    <Content Include="Styles\images\multiselect\fake_sel_pad.gif" />
-    <Content Include="Styles\images\multiselect\fake_sel_red.gif" />
-    <Content Include="Styles\images\multiselect\fake_sel_red_pad.gif" />
-    <Content Include="Styles\images\colorbox\overlay.png" />
-    <Content Include="Styles\jquery.caroufredsel.responsive.css" />
-    <Content Include="Styles\jquery.cycle.css" />
-    <Content Include="Styles\jquery.autocomplete.css" />
-    <Content Include="Styles\jquery.colorbox.css" />
-    <Content Include="Styles\jquery.multiSelect.css" />
-    <Content Include="Styles\Jssor\img\a17.png" />
-    <Content Include="Styles\Jssor\img\browser-icons.png" />
-    <Content Include="Styles\Jssor\img\loading.gif" />
-    <Content Include="Styles\Jssor\img\play_icon.png" />
+    <Content Include="Styles\laser-orchard-translator.css" />
     <Content Include="Web.config" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
-    <Content Include="Styles\Jssor\jssor.bannerslider.css" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\TranslatorSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\TranslatorAPIController.cs" />
+    <Compile Include="Controllers\TranslatorController.cs" />
+    <Compile Include="Controllers\TranslatorTreeController.cs" />
+    <Compile Include="Controllers\ImportExportController.cs" />
+    <Compile Include="Drivers\TranslatorSettingsDriver.cs" />
+    <Compile Include="Enum.cs" />
+    <Compile Include="Handlers\TranslatorSettingsHandler.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\TranslationRecord.cs" />
+    <Compile Include="Models\TranslatorSettingsPart.cs" />
+    <Compile Include="Permissions\TranslatorPermission.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Services\TranslatorServices.cs" />
+    <Compile Include="ViewModels\TranslationDetailViewModel.cs" />
+    <Compile Include="ViewModels\TranslationTreeNodeViewModel.cs" />
+    <Compile Include="ViewModels\TranslationTreeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
+    <Content Include="Views\TranslatorTree\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Translator\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Translator\TranslatorForm.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

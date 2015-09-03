@@ -5,8 +5,11 @@ namespace Laser.Orchard.jQueryPlugins {
     public class ResourceManifest : IResourceManifestProvider {
 
         public void BuildManifests(ResourceManifestBuilder builder) {
+
             var manifest = builder.Add();
+
             //Scripts
+
             manifest.DefineScript("jQuery_Print").SetUrl("jquery.print.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_Cycle").SetUrl("jquery.cycle.all.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_Cycle2").SetUrl("jquery.cycle2.min.js").SetDependencies("jQuery");
@@ -35,9 +38,13 @@ namespace Laser.Orchard.jQueryPlugins {
             manifest.DefineScript("Jssor_Slider").SetUrl("Jssor/jssor.slider.js").SetDependencies("jQuery");
             manifest.DefineScript("Jssor_Utils").SetUrl("Jssor/jssor.utils.js").SetDependencies("jQuery");
             manifest.DefineScript("Jssor_Mini").SetUrl("Jssor/jssor.slider.mini.js").SetDependencies("jQuery");
-          
+
+            manifest.DefineScript("jsTree").SetUrl("jsTree/jstree.js").SetDependencies("jQuery");
+            manifest.DefineScript("jsTree_Mini").SetUrl("jsTree/jstree.min.js").SetDependencies("jQuery");
+            manifest.DefineScript("jsTreeGrid").SetUrl("jsTree/jstreegrid.js").SetDependencies("jsTree");
 
             //Styles
+
             manifest.DefineStyle("jQuery_MultiSelect").SetUrl("jquery.multiSelect.css");
             manifest.DefineStyle("jQuery_Autocomplete").SetUrl("jquery.autocomplete.css");
             manifest.DefineStyle("jQuery_Cycle").SetUrl("jquery.cycle.css");
@@ -46,6 +53,11 @@ namespace Laser.Orchard.jQueryPlugins {
             manifest.DefineStyle("DivTableLayouts").SetUrl("custom/divtablelayouts.css");
 
             manifest.DefineStyle("Jssor_BannerSlider").SetUrl("Jssor/jssor.bannerslider.css");
+
+            manifest.DefineStyle("jsTree_Default").SetUrl("jsTree/Default/style.css");
+            manifest.DefineStyle("jsTree_Default_Mini").SetUrl("jsTree/Default/style.min.css");
+            manifest.DefineStyle("jsTree_DefaultDark").SetUrl("jsTree/DefaultDark/style.css");
+            manifest.DefineStyle("jsTree_DefaultDark_Mini").SetUrl("jsTree/DefaultDark/style.min.css");
           
             manifest.DefineStyle("Accordion").SetUrl("accordion.css");
         }

@@ -11,6 +11,8 @@ namespace Laser.Orchard.StartupConfig.Services {
 
     public interface IUtilsServices : IDependency {
 
+        string TenantPath { get; }
+
         string StorageMediaPath { get; }
 
         string VirtualMediaPath { get; }
@@ -91,6 +93,7 @@ namespace Laser.Orchard.StartupConfig.Services {
         }
 
         private readonly IModuleService _moduleService;
+        private readonly string _tenantPath;
         private readonly string _storageMediaPath; // C:\orchard\media\default
         private readonly string _virtualMediaPath; // ~/Media/Default/
         private readonly string _publicMediaPath; // /Orchard/Media/Default/
@@ -115,7 +118,14 @@ namespace Laser.Orchard.StartupConfig.Services {
                 appPath = '/' + appPath;
 
             _publicMediaPath = appPath + "Media/" + settings.Name + "/";
+
+            _tenantPath = HostingEnvironment.IsHosted ? HostingEnvironment.MapPath("~/") ?? "" : AppDomain.CurrentDomain.BaseDirectory;
         }
+
+        /// <summary>
+        /// Returns the tenant path
+        /// </summary>
+        public string TenantPath { get { return _tenantPath; } }
 
         /// <summary>
         /// Returns the media path in the format C:\orchard\media\default\

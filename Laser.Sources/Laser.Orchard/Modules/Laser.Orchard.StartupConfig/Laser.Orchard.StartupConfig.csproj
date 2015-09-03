@@ -273,7 +273,6 @@
     </Content>
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
     <Content Include="App_Data\Localization\fr-FR\orchard.module.po" />
-    <Content Include="ClassDiagram1.cd" />
     <None Include="Properties\PublishProfiles\OrchardModuleRelease.pubxml" />
     <Content Include="Views\Parts\ContentPickerConnector.cshtml" />
     <Content Include="Views\DefinitionTemplates\Parts\ContentPickerConnector.Settings.cshtml" />
