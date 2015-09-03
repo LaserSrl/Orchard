@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using Laser.Orchard.TranslationChecker.Models;
 
@@ -91,10 +95,10 @@ namespace Laser.Orchard.TranslationChecker {
                 } else {
                     matchContext = ""; // reset value if file is a .cs
                 }
-                var fileContent = File.ReadAllText(file);
+                var fileContent = File.ReadAllText(file).Replace("\\\"","-------");
                 var matches = Regex.Matches(fileContent, T_REGEX);
                 foreach (Match match in matches) {
-                    var matchingString = match.Groups[2].Value;
+                    var matchingString = match.Groups[2].Value.Replace("-------","\\\"");
                     if (matchContext == "") {
                         matchContext = GetClassContext(fileContent, match.Groups[1].Index);
                     }
@@ -104,6 +108,7 @@ namespace Laser.Orchard.TranslationChecker {
                     if (!matchContext.EndsWith("\"")) {
                         matchContext = String.Concat(matchContext, "\"");
                     }
+                    matchContext = matchContext.Replace("-------", "\\\"");
                     var translationMessage = new TranslationMessage {
                         ContainerType = translationArea,
                         ContainerName = Path.GetFileName(folderPath),
@@ -111,7 +116,7 @@ namespace Laser.Orchard.TranslationChecker {
                         MessageId = matchingString,
                         MessageLanguage = language
                     };
-                    if (!_translationMessages.Any(x=> 
+                    if (!_translationMessages.Any(x =>
                         x.MessageContext.Equals(translationMessage.MessageContext) &&
                         x.MessageId.Equals(translationMessage.MessageId) &&
                         x.ContainerName.Equals(translationMessage.ContainerName) &&
@@ -166,6 +171,8 @@ namespace Laser.Orchard.TranslationChecker {
             foreach (var containerString in this.chkTranslations.CheckedItems) {
                 var collection = _translationMessages.Where(x => x.ContainerName.Equals(containerString.ToString())).Distinct();
                 //TODO: chiamata al ws di traduzione
+                AskForTranslations(collection).Wait();
+
             }
         }
 
@@ -184,5 +191,26 @@ namespace Laser.Orchard.TranslationChecker {
             Clipboard.SetText(String.Concat(toCopy.Select(x => String.Join("\r\n", x))));
         }
 
+        async Task<string> AskForTranslations(IEnumerable<TranslationMessage> messages) {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            var URI = String.Concat(ConfigurationManager.AppSettings["RemoteTranslationBaseUrl"], "/TranslatorAPI/AddRecords");
+            var listRecords = messages.Select(x => new TranslationRecord {
+                Id = 0,
+                ContainerName = x.ContainerName,
+                ContainerType = x.TinyContainerType,
+                Context = x.MessageContext.Substring(1, x.MessageContext.Length - 2),
+                Message = x.MessageId.Substring(1, x.MessageId.Length - 2),
+                Language = x.MessageLanguage
+            }).ToList();
+            string result = ""; ;
+            using (var client = new HttpClient()) {
+                var serializedMessages = serializer.Serialize(listRecords);
+                var content = new StringContent(serializedMessages, Encoding.UTF8, "application/json");
+                var httpResult = await client.PostAsync(URI, content);
+                result = await httpResult.Content.ReadAsStringAsync();
+
+            }
+            return result;
+        }
     }
 }
