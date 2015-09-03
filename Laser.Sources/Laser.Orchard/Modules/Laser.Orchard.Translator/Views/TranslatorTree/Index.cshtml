@@ -1,0 +1,101 @@
+﻿@model Laser.Orchard.Translator.ViewModels.TranslatorViewModel
+
+@{
+    Script.Require("jsTreeGrid").AtHead();
+    Style.Require("jsTree_Default").AtHead();
+
+    Layout.Title = T("Translator").ToString();
+
+    var displayAdvancedButtons = Model.ShowAdvancedOperations ? String.Empty : "display:none";
+
+    var CultureList = Model.CultureList.ToList();
+    CultureList.Insert(0, "");
+}
+
+<fieldset>
+    <legend>@T("Translation Status")</legend>
+
+    <div style="padding: 10px 0px 10px 0px;">
+        @T("Language: ")
+        @Html.DropDownList("SelectLanguage", new SelectList(CultureList))
+    </div>
+
+    <div id="folderTree"></div>
+</fieldset>
+
+@{using (Html.BeginForm("Index",
+                        "Translator",
+                         new { area = "Laser.Orchard.Translator" },
+                         FormMethod.Post,
+                         new { id = "showDetailsForm", style = "display:none" }))
+  {
+    @Html.AntiForgeryTokenOrchard()
+    <input id="language" name="Language" type="hidden" />
+    <input id="folderName" name="FolderName" type="hidden" />
+    <input id="folderType" name="FolderType" type="hidden" />
+    <input id="showTranslator" class="button" type="submit" value="@T("Show Details")" />
+  }
+}
+
+<fieldset style="margin-top:10px; @Html.Raw(displayAdvancedButtons)">
+    <legend style="padding-bottom: 5px;">@T("Advanced Operations")</legend>
+
+    @{using (Html.BeginForm("ImportTranslations", "ImportExport", new { area = "Laser.Orchard.Translator" }, FormMethod.Post, new { id = "importForm" }))
+      {
+        @Html.AntiForgeryTokenOrchard()
+        <input id="importTranslations" class="button" type="submit" value="@T("Import Translations")" />
+      }
+    }
+</fieldset>
+
+@{
+    using (Script.Foot())
+    {
+    <script type="text/javascript">
+        $(function () {
+            $('#SelectLanguage').change(function () {
+                $.getJSON('@Url.Action("CreateJsonForTree", "TranslatorTree")', { language: $(this).val() }, function (response) {
+                    var tree = $.jstree.reference('#folderTree');
+                    if (tree != null) tree.destroy();
+                    $('#folderTree').jstree({
+                        "core": {
+                            "data": response,
+                            "themes": { "dots": false }
+                        },
+                        "plugins": ["grid"],
+                        "grid": {
+                            columns: [
+                                { width: "" },
+                                { width: "", value: "percent" }
+                            ]
+                        }
+                    });
+                })
+
+                if ($(this).val() != '') {
+                    $('#showDetailsForm').show();
+                    $('#language').val($(this).val());
+                }
+                else
+                    $('#showDetailsForm').hide();
+            });
+
+            $('#folderTree').on('select_node.jstree', function () {
+                $('#folderName').val($('#folderTree').jstree().get_selected(true)[0].text);
+                $('#folderType').val($('#folderTree').jstree().get_selected(true)[0].data.type);
+            });
+
+            $('#showDetailsForm').submit(function () {
+                var selectedNodes = $('#folderTree').jstree().get_selected(true);
+                if (selectedNodes.length == 0 || selectedNodes[0].parents.length < 2)
+                {
+                    alert("@T("Please select a module or a theme.")");
+                    return false;
+                }
+            });
+
+            $('#importForm').submit(function () { return confirm("@T("This operation will delete all current translations and replace them with the translations currently contained in the .po files. Do You want to continue?")"); });
+        });
+    </script>
+    }
+}

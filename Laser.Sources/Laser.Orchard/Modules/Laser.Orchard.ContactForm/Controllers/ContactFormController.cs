@@ -1,9 +1,9 @@
-﻿using System.Web.Mvc;
+﻿using Laser.Orchard.ContactForm.Models;
+using Laser.Orchard.ContactForm.Services;
 using Orchard;
 using Orchard.Mvc.Extensions;
-using Laser.Orchard.ContactForm.Models;
-using Laser.Orchard.ContactForm.Services;
 using System;
+using System.Web.Mvc;
 
 namespace Laser.Orchard.ContactForm.Controllers
 {
