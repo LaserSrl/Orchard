@@ -39,12 +39,12 @@
 }
 <div class="row">
     <div class="col-xs-12 col-sm-4">
-        <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)">
+        <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" title="@T("Go to page {0}",Model.ContentItem.TitlePart.Title)">
             <img src="@Display.ResizeMediaUrl(Width: 720, Height: 480, Mode: "pad", Alignment: "middlecenter", Path: Model.ContentItem.CalendarEvent.Gallery.MediaParts[0].MediaUrl)" class="img-responsive" alt="@Model.ContentItem.CalendarEvent.Gallery.MediaParts[0].AlternateText">
         </a>
     </div>
     <div class="col-xs-12 col-sm-8">
-        <h3 class="eventi-title"><a class="neutro" href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)">
+        <h3 class="eventi-title"><a title="@T("Go to page {0}",Model.ContentItem.TitlePart.Title)" class="neutro" href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)">
             @Model.ContentItem.TitlePart.Title.ToUpper()</a></h3>
         <h4 class="eventi-date">@eventDates</h4>
         
@@ -55,7 +55,7 @@
         <p>
             @body
         </p>
-        <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" class="pull-right bluette">@T("read more")...</a>
+        <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" title="@T("Go to page {0}",Model.ContentItem.TitlePart.Title)" class="pull-right bluette">@T("read more")...</a>
 
     </div>
 </div>

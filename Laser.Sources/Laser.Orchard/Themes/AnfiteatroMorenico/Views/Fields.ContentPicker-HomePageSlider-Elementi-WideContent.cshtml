@@ -22,7 +22,7 @@
         <div class="container text-center">
             <h3 class="slider-title">@contentItem.TitlePart.Title</h3>
             <h4 class="slider-desc">@contentItem.Elementoslide.Sottotitolo.Value</h4>
-            <a href="@(NormalizeUrl(contentItem.Elementoslide.Link.Value, prefix))" target="@contentItem.Elementoslide.Link.Target" class="slider-link">@contentItem.Elementoslide.Link.Text</a>
+            <a href="@(NormalizeUrl(contentItem.Elementoslide.Link.Value, prefix))" target="@contentItem.Elementoslide.Link.Target" class="slider-link" title="@T("Go to page {0}", String.Concat(contentItem.TitlePart.Title," ",contentItem.Elementoslide.Sottotitolo.Value))">@contentItem.Elementoslide.Link.Text</a>
         </div>
     </div>
     }

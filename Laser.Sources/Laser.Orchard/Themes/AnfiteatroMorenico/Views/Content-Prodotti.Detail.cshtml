@@ -16,6 +16,9 @@
 <div class="row">
     <div class="col-xs-12 col-sm-8">
         <h1 class="item-title prodotti">@Model.ContentItem.TitlePart.Title</h1>
+        @{
+            var body = Model.ContentItem.BodyPart.Text;
+            }
         @Html.Raw(@Model.ContentItem.BodyPart.Text)
     </div>
     <div class="col-xs-12 col-sm-4">
@@ -51,8 +54,8 @@
                     <text>-</text> @produttore.ParentContentItem.MapPart.LocationAddress
                 }<br />
                 @produttore.ParentContentItem.Produttore.Telefono.Value<br/>
-                <a href="mailto:@produttore.ParentContentItem.Produttore.Email.Value">@produttore.ParentContentItem.Produttore.Email.Value</a><br />
-                <a target="_blank" href="@produttore.ParentContentItem.Produttore.SitoWeb.Value">@produttore.ParentContentItem.Produttore.SitoWeb.Value</a><br />
+                <a title="@T("Email to {0}", produttore.ParentContentItem.Produttore.Email.Value ?? "")" href="mailto:@produttore.ParentContentItem.Produttore.Email.Value">@produttore.ParentContentItem.Produttore.Email.Value</a><br />
+                <a title="@T("Open {0} to a new window", produttore.ParentContentItem.Produttore.SitoWeb.Value ?? "")" target="_blank" href="@produttore.ParentContentItem.Produttore.SitoWeb.Value">@produttore.ParentContentItem.Produttore.SitoWeb.Value</a><br />
             </li>
         }
         </ul>

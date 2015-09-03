@@ -63,11 +63,13 @@
                 @contatto.Contatto.Indirizzo.Value<br />
                 }
                                 @if (!String.IsNullOrWhiteSpace(contatto.Contatto.Email.Value)) {
-                <a href="mailto:@contatto.Contatto.Email.Value">@contatto.Contatto.Email.Value</a><br />
+                <a  title="@T("Email to {0}",contatto.Contatto.Email.Value)" href="mailto:@contatto.Contatto.Email.Value">@contatto.Contatto.Email.Value</a><br />
+
                                 }
                                 @if (!String.IsNullOrWhiteSpace(contatto.Contatto.SitoWeb.Value)) {
 
-                <a target="_blank" href="@contatto.Contatto.SitoWeb.Value">@contatto.Contatto.SitoWeb.Value</a><br />
+                <a target="_blank" title="@T("Open {0} to a new window",contatto.Contatto.SitoWeb.Value)" href="@contatto.Contatto.SitoWeb.Value">@contatto.Contatto.SitoWeb.Value</a><br />
+
                                 }
                                 @if (!String.IsNullOrWhiteSpace(contatto.Contatto.Note.Value)) {
                 @contatto.Contatto.Note.Value<br/>
