@@ -10,23 +10,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
-namespace Laser.Orchard.Translator.Controllers
-{
-    public class TranslatorController : Controller
-    {
+namespace Laser.Orchard.Translator.Controllers {
+    public class TranslatorController : Controller {
         private readonly ITranslatorServices _translatorServices;
 
         public Localizer T { get; set; }
 
-        public TranslatorController(ITranslatorServices translatorServices)
-        {
+        public TranslatorController(ITranslatorServices translatorServices) {
             _translatorServices = translatorServices;
             T = NullLocalizer.Instance;
         }
 
         [Admin]
-        public ActionResult Index(string language, string folderName, string folderType)
-        {
+        public ActionResult Index(string language, string folderName, string folderType) {
             TranslationDetailViewModel translationDetailVM = new TranslationDetailViewModel();
             List<StringSummaryViewModel> messages = new List<StringSummaryViewModel>();
 
@@ -34,8 +30,7 @@ namespace Laser.Orchard.Translator.Controllers
                                                                                         && m.ContainerName == folderName
                                                                                         && m.ContainerType == folderType
                                                                                         && !String.IsNullOrWhiteSpace(m.TranslatedMessage));
-            foreach (var message in localizedMessageRecords)
-            {
+            foreach (var message in localizedMessageRecords) {
                 messages.Add(new StringSummaryViewModel { id = message.Id, message = message.Message, localized = true });
             }
 
@@ -44,43 +39,38 @@ namespace Laser.Orchard.Translator.Controllers
                                                                                         && m.ContainerType == folderType
                                                                                         && String.IsNullOrWhiteSpace(m.TranslatedMessage));
 
-            foreach (var message in unlocalizedMessageRecords)
-            {
+            foreach (var message in unlocalizedMessageRecords) {
                 messages.Add(new StringSummaryViewModel { id = message.Id, message = message.Message, localized = false });
             }
 
             translationDetailVM.containerName = folderName;
             translationDetailVM.language = language;
-            translationDetailVM.messages = messages.OrderBy(m => m.message).ToList();
+            translationDetailVM.messages = messages.OrderBy(m => m.localized).ThenBy(x => x.message).ToList();
 
             return View(translationDetailVM);
         }
 
         [Themed(false)]
-        public ActionResult TranslatorForm(int id)
-        {
+        public ActionResult TranslatorForm(int id) {
             TranslationRecord messageRecord = _translatorServices.GetTranslations().Where(m => m.Id == id).FirstOrDefault();
 
             if (messageRecord != null)
                 return View(messageRecord);
             else
                 return View(new TranslationRecord());
-           
+
         }
 
         [HttpPost]
         [ActionName("TranslatorForm")]
         [FormValueRequired("saveTranslation")]
-        public ActionResult SaveTranslation(TranslationRecord translation)
-        {
+        public ActionResult SaveTranslation(TranslationRecord translation) {
             bool success = _translatorServices.TryAddOrUpdateTranslation(translation);
 
-            if (!success)
-            {
+            if (!success) {
                 ModelState.AddModelError("SaveTranslationError", T("An error occurred while saving the translation. Please reload the page and retry.").ToString());
                 ViewBag.SaveSuccess = false;
-            }
-            else
+            } else
                 ViewBag.SaveSuccess = true;
 
             return View(translation);
@@ -89,20 +79,16 @@ namespace Laser.Orchard.Translator.Controllers
         [HttpPost]
         [ActionName("TranslatorForm")]
         [FormValueRequired("deleteTranslation")]
-        public ActionResult DeleteTranslation(int id)
-        {
+        public ActionResult DeleteTranslation(int id) {
             TranslationRecord messageRecord = _translatorServices.GetTranslations().Where(m => m.Id == id).FirstOrDefault();
 
             bool success = _translatorServices.DeleteTranslation(messageRecord);
 
-            if (!success)
-            {
+            if (!success) {
                 ModelState.AddModelError("DeleteTranslationError", T("Unable to delete the translation.").ToString());
                 ViewBag.DeleteSuccess = false;
                 return View(messageRecord);
-            }
-            else
-            {
+            } else {
                 ViewBag.DeleteSuccess = true;
                 return View(new TranslationRecord { Id = 0 });
             }
