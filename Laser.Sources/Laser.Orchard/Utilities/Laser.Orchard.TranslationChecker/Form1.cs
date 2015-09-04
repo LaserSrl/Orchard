@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -33,6 +34,7 @@ namespace Laser.Orchard.TranslationChecker {
 
         public Form1() {
             InitializeComponent();
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
         }
 
         private void Form1_Load(object sender, EventArgs e) {
@@ -95,10 +97,10 @@ namespace Laser.Orchard.TranslationChecker {
                 } else {
                     matchContext = ""; // reset value if file is a .cs
                 }
-                var fileContent = File.ReadAllText(file).Replace("\\\"","-------");
+                var fileContent = File.ReadAllText(file).Replace("\\\"", "-------");
                 var matches = Regex.Matches(fileContent, T_REGEX);
                 foreach (Match match in matches) {
-                    var matchingString = match.Groups[2].Value.Replace("-------","\\\"");
+                    var matchingString = match.Groups[2].Value.Replace("-------", "\\\"");
                     if (matchContext == "") {
                         matchContext = GetClassContext(fileContent, match.Groups[1].Index);
                     }
@@ -171,7 +173,7 @@ namespace Laser.Orchard.TranslationChecker {
             foreach (var containerString in this.chkTranslations.CheckedItems) {
                 var collection = _translationMessages.Where(x => x.ContainerName.Equals(containerString.ToString())).Distinct();
                 //TODO: chiamata al ws di traduzione
-                AskForTranslations(collection).Wait();
+                AskForTranslations(collection);
 
             }
         }
@@ -186,12 +188,11 @@ namespace Laser.Orchard.TranslationChecker {
                     String.Concat("msgid ",x.MessageId,""),
                     String.Concat("msgstr ",x.MessageId," ***"),
                 }));
-                //TODO: chiamata al ws di traduzione
             }
             Clipboard.SetText(String.Concat(toCopy.Select(x => String.Join("\r\n", x))));
         }
 
-        async Task<string> AskForTranslations(IEnumerable<TranslationMessage> messages) {
+        private void AskForTranslations(IEnumerable<TranslationMessage> messages) {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             var URI = String.Concat(ConfigurationManager.AppSettings["RemoteTranslationBaseUrl"], "/TranslatorAPI/AddRecords");
             var listRecords = messages.Select(x => new TranslationRecord {
@@ -202,15 +203,24 @@ namespace Laser.Orchard.TranslationChecker {
                 Message = x.MessageId.Substring(1, x.MessageId.Length - 2),
                 Language = x.MessageLanguage
             }).ToList();
-            string result = ""; ;
-            using (var client = new HttpClient()) {
-                var serializedMessages = serializer.Serialize(listRecords);
-                var content = new StringContent(serializedMessages, Encoding.UTF8, "application/json");
-                var httpResult = await client.PostAsync(URI, content);
-                result = await httpResult.Content.ReadAsStringAsync();
+            try {
+                using (var client = new HttpClient()) {
+                    var serializedMessages = serializer.Serialize(listRecords);
+                    var content = new StringContent(serializedMessages, Encoding.UTF8, "application/json");
+                    var httpResult = client.PostAsync(URI, content);
+                    string responseBody = httpResult.Result.ToString();
+                    //return responseBody;
+                }
 
+            } catch (HttpRequestException e) {
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+                //return null;
             }
-            return result;
+
+
         }
+
+
     }
 }
