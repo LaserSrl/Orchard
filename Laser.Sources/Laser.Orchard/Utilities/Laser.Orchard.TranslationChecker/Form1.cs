@@ -58,11 +58,15 @@ namespace Laser.Orchard.TranslationChecker {
             this.cmbLingue.DataSource = languages;
             this.cmbLingue.ValueMember = "Name";
             this.cmbLingue.DisplayMember = "DisplayName";
+            this.panel1.Visible = false;
+            this.lblTranslatorWsUrl.Text = ConfigurationManager.AppSettings["RemoteTranslationBaseUrl"];
+
         }
 
         private void ResetData() {
             _translationMessages.Clear();
             this.chkTranslations.Items.Clear();
+            this.panel1.Visible = false;
         }
         private void CheckMissingTranslations(string language) {
             //Modules check
@@ -83,6 +87,7 @@ namespace Laser.Orchard.TranslationChecker {
             foreach (var item in _translationMessages.Select(x => x.ContainerName).Distinct()) {
                 this.chkTranslations.Items.Add(item, true);
             }
+            this.panel1.Visible = true;
         }
 
         private void ParseT(string folderPath, string language, TranslationArea translationArea) {
@@ -170,10 +175,13 @@ namespace Laser.Orchard.TranslationChecker {
         }
 
         private void btnAskForTranslations_Click(object sender, EventArgs e) {
+            this.txtLogOperations.AppendText(String.Concat("Sending translations ", "\r\n"));
+            this.txtLogOperations.AppendText(String.Concat("==============================================", "\r\n"));
             foreach (var containerString in this.chkTranslations.CheckedItems) {
                 var collection = _translationMessages.Where(x => x.ContainerName.Equals(containerString.ToString())).Distinct();
                 //TODO: chiamata al ws di traduzione
                 AskForTranslations(collection);
+                this.txtLogOperations.AppendText(String.Concat("Translations sent for: ", containerString.ToString(), "\r\n"));
 
             }
         }
@@ -208,7 +216,9 @@ namespace Laser.Orchard.TranslationChecker {
                     var serializedMessages = serializer.Serialize(listRecords);
                     var content = new StringContent(serializedMessages, Encoding.UTF8, "application/json");
                     var httpResult = client.PostAsync(URI, content);
-                    string responseBody = httpResult.Result.ToString();
+                    if (!httpResult.Result.IsSuccessStatusCode) {
+                        this.txtLogOperations.AppendText(String.Concat("Error: ", httpResult.Result.ReasonPhrase, "\r\n"));
+                    }
                     //return responseBody;
                 }
 

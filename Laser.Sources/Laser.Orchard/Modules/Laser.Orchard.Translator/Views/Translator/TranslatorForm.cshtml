@@ -4,7 +4,7 @@
 
 @{
     Script.Require("jQuery").AtHead();
-    
+
     Style.Require("Laser.Orchard.Translator");
 
     Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("lte IE 8").SetAttribute("media", "screen, projection");
@@ -27,39 +27,46 @@
     <div id="main" class="iframe-main">
         <div id="translation-container">
             @{
-                if (Model.Id != 0)
-                {
-                    <h2>@Model.Message</h2>
+                if (Model.Id != 0) {
+                <h2>@Model.Message</h2>
                 
                     using (Html.BeginForm("TranslatorForm", "Translator",
                                           new { area = "Laser.Orchard.Translator" },
                                           FormMethod.Post,
-                                          new { id = "translation-form" }))
-                    {
-                        @Html.AntiForgeryTokenOrchard()
-                        <div id="translation-text-container">
-                            @Html.LabelFor(m => m.Context, @T("Context"))
-                            @Html.TextBoxFor(m => m.Context, new { @class = "text large" })
-                        </div>
-                        <div id="translated-text-container">
-                            @Html.LabelFor(m => m.TranslatedMessage, @T("Translation"))
-                            @Html.TextAreaFor(m => m.TranslatedMessage)
-                        </div>
+                                          new { id = "translation-form" })) {
+                @Html.AntiForgeryTokenOrchard()
+                <div id="translation-text-container">
+                    @Html.LabelFor(m => m.Context, @T("Context"))
+                    @Html.TextBoxFor(m => m.Context, new { @class = "text large" })
+                </div>
+                <div id="translated-text-container">
+                    @Html.LabelFor(m => m.TranslatedMessage, @T("Translation"))
+                    @Html.TextAreaFor(m => m.TranslatedMessage)
+                </div>
                 
-                        @Html.HiddenFor(m => m.Id);
-                        @Html.HiddenFor(m => m.Language);
-                        @Html.HiddenFor(m => m.Message);
-                        @Html.HiddenFor(m => m.ContainerName);
-                        @Html.HiddenFor(m => m.ContainerType);
+                @Html.HiddenFor(m => m.Id);
+                @Html.HiddenFor(m => m.Language);
+                @Html.HiddenFor(m => m.Message);
+                @Html.HiddenFor(m => m.ContainerName);
+                @Html.HiddenFor(m => m.ContainerType);
 
-                        if (ViewData.ModelState.IsValid)
-                        {
-                            <input id="save-translation" name="saveTranslation" class="button" type="submit" value="@T("Save")" />
-                            if (authorized)
-                            {
-                                <input id="delete-translation" name="deleteTranslation" class="button" type="submit" value="@T("Delete")" />
-                            }
-                        }
+                                                     if (ViewData.ModelState.IsValid) {
+                <input id="save-translation" name="saveTranslation" class="button" type="submit" value="@T("Save")" />
+                                                         if (authorized) {
+                <input id="delete-translation" name="deleteTranslation" class="button" type="submit" value="@T("Delete")" />
+                                                         }
+                                                     }
+                    }
+
+                    if (ViewBag.SuggestedTranslations != null && ViewBag.SuggestedTranslations.Count > 0) {
+                        var suggestedTranslationsIndex = 0;
+                <h2>@T("Suggestions")</h2>
+                <ul>
+                    @foreach (var suggested in ViewBag.SuggestedTranslations) {
+                        <li><a class="suggested-translation-item" title="@T("Click to use this translation")" id="suggestedTranslations_@suggestedTranslationsIndex" href="#">@suggested</a></li>
+                        suggestedTranslationsIndex++;
+                    }
+                </ul>
                     }
                 }
             }
@@ -68,6 +75,10 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            $(".suggested-translation-item").click(function () {
+                $("#@Html.FieldIdFor(m => m.TranslatedMessage)").val($(this).text());
+            });
+
             if ('@ViewBag.SaveSuccess' == 'True') {
                 if ('@String.IsNullOrWhiteSpace(Model.TranslatedMessage)' == 'True')
                     window.parent.$('#message-@Model.Id').children("i").attr("class", "icon-remove");

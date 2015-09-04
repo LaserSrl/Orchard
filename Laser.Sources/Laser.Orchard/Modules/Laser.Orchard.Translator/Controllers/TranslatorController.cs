@@ -24,28 +24,19 @@ namespace Laser.Orchard.Translator.Controllers {
         [Admin]
         public ActionResult Index(string language, string folderName, string folderType) {
             TranslationDetailViewModel translationDetailVM = new TranslationDetailViewModel();
-            List<StringSummaryViewModel> messages = new List<StringSummaryViewModel>();
 
-            var localizedMessageRecords = _translatorServices.GetTranslations().Where(m => m.Language == language
+            var messages = _translatorServices.GetTranslations().Where(m => m.Language == language
                                                                                         && m.ContainerName == folderName
-                                                                                        && m.ContainerType == folderType
-                                                                                        && !String.IsNullOrWhiteSpace(m.TranslatedMessage));
-            foreach (var message in localizedMessageRecords) {
-                messages.Add(new StringSummaryViewModel { id = message.Id, message = message.Message, localized = true });
-            }
-
-            var unlocalizedMessageRecords = _translatorServices.GetTranslations().Where(m => m.Language == language
-                                                                                        && m.ContainerName == folderName
-                                                                                        && m.ContainerType == folderType
-                                                                                        && String.IsNullOrWhiteSpace(m.TranslatedMessage));
-
-            foreach (var message in unlocalizedMessageRecords) {
-                messages.Add(new StringSummaryViewModel { id = message.Id, message = message.Message, localized = false });
-            }
+                                                                                        && m.ContainerType == folderType)
+                                                                               .Select(x => new StringSummaryViewModel {
+                                                                                   id = x.Id,
+                                                                                   message = x.Message,
+                                                                                   localized = (x.TranslatedMessage == null || x.TranslatedMessage == "") ? false : true
+                                                                               });
 
             translationDetailVM.containerName = folderName;
             translationDetailVM.language = language;
-            translationDetailVM.messages = messages.OrderBy(m => m.localized).ThenBy(x => x.message).ToList();
+            translationDetailVM.messages = messages.ToList().OrderBy(m => m.localized).ThenBy(x => x.message).ToList();
 
             return View(translationDetailVM);
         }
@@ -53,11 +44,12 @@ namespace Laser.Orchard.Translator.Controllers {
         [Themed(false)]
         public ActionResult TranslatorForm(int id) {
             TranslationRecord messageRecord = _translatorServices.GetTranslations().Where(m => m.Id == id).FirstOrDefault();
-
-            if (messageRecord != null)
+            if (messageRecord != null) {
+                ViewBag.SuggestedTranslations = _translatorServices.GetSuggestedTranslations(messageRecord.Message, messageRecord.Language);
                 return View(messageRecord);
-            else
+            } else {
                 return View(new TranslationRecord());
+            }
 
         }
 
@@ -66,12 +58,14 @@ namespace Laser.Orchard.Translator.Controllers {
         [FormValueRequired("saveTranslation")]
         public ActionResult SaveTranslation(TranslationRecord translation) {
             bool success = _translatorServices.TryAddOrUpdateTranslation(translation);
+            ViewBag.SuggestedTranslations = _translatorServices.GetSuggestedTranslations(translation.Message, translation.Language);
 
             if (!success) {
                 ModelState.AddModelError("SaveTranslationError", T("An error occurred while saving the translation. Please reload the page and retry.").ToString());
                 ViewBag.SaveSuccess = false;
-            } else
+            } else {
                 ViewBag.SaveSuccess = true;
+            }
 
             return View(translation);
         }
