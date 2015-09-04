@@ -91,7 +91,9 @@ namespace Laser.Orchard.Translator.Controllers
                                 translation.TranslatedMessage = match.Groups[3].Value;
                                 translation.Language = language;
 
-                                _translatorServices.TryAddOrUpdateTranslation(translation);
+                                if (!_translatorServices.TryAddOrUpdateTranslation(translation)) {
+                                    var a = "";
+                                }
                             }
                         }
                     }
