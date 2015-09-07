@@ -26,15 +26,16 @@ namespace Laser.Orchard.Translator.Controllers {
             TranslationDetailViewModel translationDetailVM = new TranslationDetailViewModel();
 
             var messages = _translatorServices.GetTranslations().Where(m => m.Language == language
-                                                                                        && m.ContainerName == folderName
-                                                                                        && m.ContainerType == folderType)
-                                                                               .Select(x => new StringSummaryViewModel {
-                                                                                   id = x.Id,
-                                                                                   message = x.Message,
-                                                                                   localized = (x.TranslatedMessage == null || x.TranslatedMessage == "") ? false : true
-                                                                               });
+                                                                         && m.ContainerName == folderName
+                                                                         && m.ContainerType == folderType)
+                                                                .Select(x => new StringSummaryViewModel {
+                                                                    id = x.Id,
+                                                                    message = x.Message,
+                                                                    localized = (x.TranslatedMessage == null || x.TranslatedMessage == "") ? false : true
+                                                                });
 
             translationDetailVM.containerName = folderName;
+            translationDetailVM.containerType = folderType;
             translationDetailVM.language = language;
             translationDetailVM.messages = messages.ToList().OrderBy(m => m.localized).ThenBy(x => x.message).ToList();
 

@@ -32,12 +32,14 @@ namespace Laser.Orchard.Translator.Controllers
             T = NullLocalizer.Instance;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string selectedCulture, string selectedFolderName, string selectedFolderType)
         {
             TranslatorViewModel treeVM = new TranslatorViewModel();
 
             treeVM.CultureList = _translatorServices.GetCultureList();
-            treeVM.ShowAdvancedOperations = _orchardServices.Authorizer.Authorize(Permissions.TranslatorPermission.ManageTranslations);
+            treeVM.selectedCulture = selectedCulture;
+            treeVM.selectedFolderName = selectedFolderName;
+            treeVM.selectedFolderType = selectedFolderType;
 
             return View(treeVM);
         }
@@ -50,6 +52,7 @@ namespace Laser.Orchard.Translator.Controllers
             {
                 tree.Add(new TranslationTreeNodeViewModel
                 {
+                    id = "translatortree-parent-M",
                     text = T("Modules").ToString(),
                     children = CreateListForTree(language, Path.Combine(_utilsServices.TenantPath, "Modules"), ElementToTranslate.Module),
                     data = new Dictionary<string, string>() { { "type", "M" } }
@@ -57,6 +60,7 @@ namespace Laser.Orchard.Translator.Controllers
 
                 tree.Add(new TranslationTreeNodeViewModel
                 {
+                    id = "translatortree-parent-T",
                     text = T("Themes").ToString(),
                     children = CreateListForTree(language, Path.Combine(_utilsServices.TenantPath, "Themes"), ElementToTranslate.Theme),
                     data = new Dictionary<string, string>() { { "type", "T" } }
@@ -85,26 +89,39 @@ namespace Laser.Orchard.Translator.Controllers
             foreach (var item in list)
             {
                 Dictionary<string, string> additionalData = new Dictionary<string, string>();
-
-                additionalData.Add("percent", GetCompletionPercent(language, Path.Combine(parentFolder, item)).ToString() + "%");
+                string folderType = "";
 
                 if (elementType == ElementToTranslate.Module)
-                    additionalData.Add("type", "M");
+                    folderType = "M";
                 else if (elementType == ElementToTranslate.Theme)
-                    additionalData.Add("type", "T");
+                    folderType = "T";
 
-                treeList.Add(new TranslationTreeNodeViewModel { text = item, data = additionalData });
+                additionalData.Add("percent", GetCompletionPercent(language, item, folderType).ToString() + "%");
+                additionalData.Add("type", folderType);
+
+                treeList.Add(new TranslationTreeNodeViewModel { id = "translatortree-child-" + item.Replace('.','-'), text = item, data = additionalData });
             }
 
             return treeList;
         }
 
-        private int GetCompletionPercent(string language, string folder)
+        private int GetCompletionPercent(string language, string containerName, string containerType)
         {
-            if (!Directory.Exists(Path.Combine(folder, "App_Data", "Localization", language)))
+            var translationCount = _translatorServices.GetTranslations().Where(t => t.Language == language
+                                                                                 && t.ContainerName == containerName
+                                                                                 && t.ContainerType == containerType)
+                                                                        .AsParallel()
+                                                                        .GroupBy(t => t.TranslatedMessage != "" && t.TranslatedMessage != null)
+                                                                        .Select(t => new { translated = t.Key, count = t.Count() });
+
+            var countDictionary = translationCount.ToDictionary(g => g.translated, g => g.count);
+
+            if (!countDictionary.ContainsKey(true))
                 return 0;
             else
-                return 100;
+            {
+                return !countDictionary.ContainsKey(false) ? 100 : (int)Math.Floor((double)countDictionary[true] / (countDictionary[true] + countDictionary[false]) * 100);
+            }
         }
     }
 }

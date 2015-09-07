@@ -47,6 +47,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\..\..\..\Orchard.Sources\lib\dotnetzip\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="Laser.Orchard.StartupConfig">
       <HintPath>..\Laser.Orchard.StartupConfig\bin\Laser.Orchard.StartupConfig.dll</HintPath>
     </Reference>

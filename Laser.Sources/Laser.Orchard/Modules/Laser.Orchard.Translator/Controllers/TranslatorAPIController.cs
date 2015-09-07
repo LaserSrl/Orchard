@@ -40,7 +40,25 @@ namespace Laser.Orchard.Translator.Controllers
                                                                                               && r.Language == record.Language);
 
                     if (!alreadyExistingRecords.Any())
-                        _translatorServices.TryAddOrUpdateTranslation(record);
+                    {
+                        bool success = _translatorServices.TryAddOrUpdateTranslation(record);
+                        if (!success)
+                        {
+                            _transactionManager.Cancel();
+                            return false;
+                        }
+                    }
+
+                    var folderList = records.GroupBy(g => new { g.ContainerName, g.ContainerType })
+                                            .Select(g => new { g.Key.ContainerName, g.Key.ContainerType });
+
+                    foreach (var folder in folderList)
+                    {
+                        if (folder.ContainerType == "M")
+                            _translatorServices.EnableFolderTranslation(folder.ContainerName, ElementToTranslate.Module);
+                        else if (folder.ContainerType == "T")
+                            _translatorServices.EnableFolderTranslation(folder.ContainerName, ElementToTranslate.Theme);
+                    }
                 }
 
                 return true;

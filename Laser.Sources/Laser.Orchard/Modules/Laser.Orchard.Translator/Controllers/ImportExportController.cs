@@ -1,8 +1,10 @@
-﻿using Laser.Orchard.StartupConfig.Services;
+﻿using Ionic.Zip;
+using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.Translator.Models;
 using Laser.Orchard.Translator.Services;
 using Orchard;
 using Orchard.ContentManagement;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,6 +45,78 @@ namespace Laser.Orchard.Translator.Controllers
 
             string returnUrl = this.Request.UrlReferrer.AbsolutePath;
             return Redirect(returnUrl);
+        }
+
+        public ActionResult ExportTranslations()
+        {
+            using (ZipFile zip = new ZipFile())
+            {
+                Response.Clear();
+                Response.BufferOutput = false;
+                Response.ContentType = "application/zip";
+
+                var messagesToExport = _translatorServices.GetTranslations().Where(m => m.TranslatedMessage != null && m.TranslatedMessage != "");
+
+                var foldersToExport = messagesToExport.GroupBy(f => new { f.ContainerName, f.ContainerType, f.Language })
+                                                      .Select(g => new { g.Key.ContainerName, g.Key.ContainerType, g.Key.Language });
+
+                foreach (var folder in foldersToExport)
+                {
+                    var folderMessages = messagesToExport.Where(m => m.ContainerName == folder.ContainerName
+                                                                  && m.ContainerType == folder.ContainerType
+                                                                  && m.Language == folder.Language)
+                                                         .OrderBy(m => m.Context).ThenBy(m => m.Message);
+
+                    MemoryStream stream = new MemoryStream();
+                    StreamWriter streamWriter = new StreamWriter(stream);
+
+                    streamWriter.WriteLine("# Orchard resource strings - " + folder.Language);
+                    streamWriter.WriteLine("# Copyright (c) " + DateTime.Now.Year + " Laser s.r.l.");
+                    streamWriter.WriteLine(Environment.NewLine);
+
+                    streamWriter.WriteLine("# > #: msgctxt { contesto del messaggio - Originale ITA }");
+                    streamWriter.WriteLine("# > #| msgid { identificativo del messaggio - Originale ITA }");
+                    streamWriter.WriteLine("# > msgctxt  \"{ contesto del messaggio }\"");
+                    streamWriter.WriteLine("# > msgid \"{ identificativo del messaggio }\"");
+                    streamWriter.WriteLine("# > msgstr \"{ messaggio }\"");
+                    streamWriter.Write(Environment.NewLine);
+
+                    foreach (var message in folderMessages)
+                    {
+                        streamWriter.WriteLine("msgctxt \"" + message.Context + "\"");
+                        streamWriter.WriteLine("msgid \"" + message.Message + "\"");
+                        streamWriter.WriteLine("msgstr \"" + message.TranslatedMessage + "\"");
+                        streamWriter.Write(Environment.NewLine);
+                    }
+
+                    streamWriter.Flush();
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    string parentFolder = "";
+                    string fileName = "";
+
+                    if (folder.ContainerType == "M")
+                    {
+                        parentFolder = "Modules";
+                        fileName = "orchard.module.po";
+                    }
+                    else if (folder.ContainerType == "T")
+                    {
+                        parentFolder = "Themes";
+                        fileName = "orchard.theme.po";
+                    }
+
+                    if (!String.IsNullOrWhiteSpace(fileName) && !String.IsNullOrWhiteSpace(parentFolder))
+                        zip.AddEntry(parentFolder + "/" + folder.ContainerName + "/App_Data/Localization/" + folder.Language + "/" + fileName, stream);
+                }
+
+                zip.Save(Response.OutputStream);
+            }
+
+            Response.Flush();
+            Response.End();
+
+            return new EmptyResult();
         }
 
         private void ImportFromPO(List<string> foldersToImport, ElementToTranslate type)

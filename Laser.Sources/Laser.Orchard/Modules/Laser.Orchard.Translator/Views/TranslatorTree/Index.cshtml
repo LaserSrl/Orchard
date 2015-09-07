@@ -1,12 +1,21 @@
 ﻿@model Laser.Orchard.Translator.ViewModels.TranslatorViewModel
 
+@using Laser.Orchard.Translator.Permissions;
+
 @{
     Script.Require("jsTreeGrid").AtHead();
     Style.Require("jsTree_Default").AtHead();
+    Style.Require("Laser.Orchard.Translator");
 
     Layout.Title = T("Translator").ToString();
 
-    var displayAdvancedButtons = Model.ShowAdvancedOperations ? String.Empty : "display:none";
+    var authorized = AuthorizedFor(TranslatorPermission.ManageTranslations);
+    var displayAdvancedButtons = authorized ? String.Empty : "display:none";
+
+    var modifiedFolderName = "";
+    if (!String.IsNullOrWhiteSpace(Model.selectedFolderName)) {
+        modifiedFolderName = Model.selectedFolderName.Replace(".", "-");
+    }
 
     var CultureList = Model.CultureList.ToList();
     CultureList.Insert(0, "");
@@ -17,7 +26,7 @@
 
     <div style="padding: 10px 0px 10px 0px;">
         @T("Language: ")
-        @Html.DropDownList("SelectLanguage", new SelectList(CultureList))
+        @Html.DropDownList("SelectLanguage", new SelectList(CultureList, Model.selectedCulture))
     </div>
 
     <div id="folderTree"></div>
@@ -40,12 +49,13 @@
 <fieldset style="margin-top:10px; @Html.Raw(displayAdvancedButtons)">
     <legend style="padding-bottom: 5px;">@T("Advanced Operations")</legend>
 
-    @{using (Html.BeginForm("ImportTranslations", "ImportExport", new { area = "Laser.Orchard.Translator" }, FormMethod.Post, new { id = "importForm" }))
+    @{using (Html.BeginForm("ImportTranslations", "ImportExport", new { area = "Laser.Orchard.Translator" }, FormMethod.Post, new { id = "importForm", style = "display:inline;" }))
       {
         @Html.AntiForgeryTokenOrchard()
         <input id="importTranslations" class="button" type="submit" value="@T("Import Translations")" />
       }
     }
+    <a class="button" href="@Url.Action("ExportTranslations", "ImportExport")">@T("Export Translations")</a>
 </fieldset>
 
 @{
@@ -79,6 +89,15 @@
                 else
                     $('#showDetailsForm').hide();
             });
+
+            if ($('#SelectLanguage').val() != '') {
+                $('#SelectLanguage').trigger('change');
+            }
+
+            $('#folderTree').bind("loaded.jstree", function (e, data) {
+                if ('@String.IsNullOrWhiteSpace(Model.selectedFolderName)' == 'False' && '@String.IsNullOrWhiteSpace(Model.selectedFolderType)' == 'False')
+                    $('#folderTree').jstree("select_node", '#translatortree-child-@modifiedFolderName');
+            })
 
             $('#folderTree').on('select_node.jstree', function () {
                 $('#folderName').val($('#folderTree').jstree().get_selected(true)[0].text);
