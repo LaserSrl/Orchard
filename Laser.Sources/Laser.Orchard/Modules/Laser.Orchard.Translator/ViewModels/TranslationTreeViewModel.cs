@@ -5,6 +5,8 @@ namespace Laser.Orchard.Translator.ViewModels
     public class TranslatorViewModel
     {
         public IEnumerable<string> CultureList { get; set; }
-        public bool ShowAdvancedOperations { get; set; }
+        public string selectedCulture;
+        public string selectedFolderName;
+        public string selectedFolderType;
     }
 }

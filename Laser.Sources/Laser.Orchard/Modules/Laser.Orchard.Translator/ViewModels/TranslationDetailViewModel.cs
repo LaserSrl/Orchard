@@ -5,6 +5,7 @@ namespace Laser.Orchard.Translator.ViewModels
     public class TranslationDetailViewModel
     {
         public string containerName;
+        public string containerType;
         public string language;
         public List<StringSummaryViewModel> messages;
     }

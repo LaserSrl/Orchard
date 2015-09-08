@@ -69,10 +69,24 @@
     padding-bottom: 10px;
 }
 
+#suggestions-area {
+    padding-top: 15px;
+}
+
 .icon-ok {
     color: green;
 }
 
 .icon-remove {
     color: red;
+}
+
+.jstree-default .jstree-clicked, .jstree-hovered {
+    border-radius: 0px !important;
+    box-shadow: none !important;
+}
+
+.jstree-grid-cell {
+    padding-left: 0px !important;
+    width: 92% !important;
 }

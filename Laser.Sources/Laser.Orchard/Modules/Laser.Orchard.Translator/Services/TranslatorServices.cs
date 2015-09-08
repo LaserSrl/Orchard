@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.Translator.Models;
 using Orchard;
+using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Localization.Services;
@@ -15,18 +16,21 @@ namespace Laser.Orchard.Translator.Services {
         IQueryable<TranslationRecord> GetTranslations();
         IList<string> GetSuggestedTranslations(string message, string language);
         bool TryAddOrUpdateTranslation(TranslationRecord translation);
+        void EnableFolderTranslation(string folderName, ElementToTranslate folderType);
         bool DeleteTranslation(TranslationRecord record);
         void DeleteAllTranslations();
     }
 
     public class TranslatorServices : ITranslatorServices {
         private readonly ICultureManager _cultureManager;
+        private readonly IOrchardServices _orchardServices;
         private readonly IRepository<TranslationRecord> _translationRecordRepository;
 
         public Localizer T { get; set; }
 
-        public TranslatorServices(ICultureManager cultureManager, IRepository<TranslationRecord> translationRecordRepository) {
+        public TranslatorServices(ICultureManager cultureManager, IOrchardServices orchardServices, IRepository<TranslationRecord> translationRecordRepository) {
             _cultureManager = cultureManager;
+            _orchardServices = orchardServices;
             _translationRecordRepository = translationRecordRepository;
             T = NullLocalizer.Instance;
         }
@@ -102,6 +106,34 @@ namespace Laser.Orchard.Translator.Services {
             }
         }
 
+        public void EnableFolderTranslation(string folderName, ElementToTranslate folderType)
+        {
+            var translatorSettings = _orchardServices.WorkContext.CurrentSite.As<TranslatorSettingsPart>();
+
+            List<string> enabledFolders = new List<string>();
+            if (folderType == ElementToTranslate.Module)
+                enabledFolders = translatorSettings.ModulesToTranslate.Replace(" ", "").Split(',').ToList();
+            else if (folderType == ElementToTranslate.Theme)
+                enabledFolders = translatorSettings.ThemesToTranslate.Replace(" ", "").Split(',').ToList();
+
+            if (!enabledFolders.Contains(folderName))
+            {
+                if (folderType == ElementToTranslate.Module)
+                {
+                    if (!String.IsNullOrWhiteSpace(translatorSettings.ModulesToTranslate))
+                        translatorSettings.ModulesToTranslate += ",";
+
+                    translatorSettings.ModulesToTranslate += folderName;
+                }
+                else if (folderType == ElementToTranslate.Theme)
+                {
+                    if (!String.IsNullOrWhiteSpace(translatorSettings.ThemesToTranslate))
+                        translatorSettings.ThemesToTranslate += ",";
+
+                    translatorSettings.ThemesToTranslate += folderName;
+                }
+            }
+        }
 
         public IList<string> GetSuggestedTranslations(string message, string language) {
             return GetTranslations().Where(w => w.Message.ToString() == message && w.Language == language && w.TranslatedMessage.ToString() != "").Take(5)

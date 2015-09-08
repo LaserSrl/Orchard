@@ -58,15 +58,17 @@
                                                      }
                     }
 
-                    if (ViewBag.SuggestedTranslations != null && ViewBag.SuggestedTranslations.Count > 0) {
-                        var suggestedTranslationsIndex = 0;
-                <h2>@T("Suggestions")</h2>
-                <ul>
-                    @foreach (var suggested in ViewBag.SuggestedTranslations) {
-                        <li><a class="suggested-translation-item" title="@T("Click to use this translation")" id="suggestedTranslations_@suggestedTranslationsIndex" href="#"><i class="fa fa-comments-o"></i>@suggested</a></li>
-                        suggestedTranslationsIndex++;
-                    }
-                </ul>
+                if (ViewBag.SuggestedTranslations != null && ViewBag.SuggestedTranslations.Count > 0) {
+                    var suggestedTranslationsIndex = 0;
+                   <div id="suggestions-area">
+                        <h2>@T("Suggestions")</h2>
+                        <ul>
+                            @foreach (var suggested in ViewBag.SuggestedTranslations) {
+                                <li><a class="suggested-translation-item" title="@T("Click to use this translation")" id="suggestedTranslations_@suggestedTranslationsIndex" href="#">@suggested</a></li>
+                                suggestedTranslationsIndex++;
+                            }
+                        </ul>
+                    </div>
                     }
                 }
             }
