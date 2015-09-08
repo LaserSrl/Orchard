@@ -96,7 +96,18 @@ namespace Laser.Orchard.Translator.Controllers
                 else if (elementType == ElementToTranslate.Theme)
                     folderType = "T";
 
-                additionalData.Add("percent", GetCompletionPercent(language, item, folderType).ToString() + "%");
+                int percent = GetCompletionPercent(language, item, folderType);
+                if (percent < 0)
+                {
+                    //additionalData.Add("percent", T("N/D").ToString());
+                    additionalData.Add("to_translate", "false");
+                }
+                else
+                {
+                    additionalData.Add("percent", GetCompletionPercent(language, item, folderType).ToString() + "%");
+                    additionalData.Add("to_translate", "true");
+                }
+
                 additionalData.Add("type", folderType);
 
                 treeList.Add(new TranslationTreeNodeViewModel { id = "translatortree-child-" + item.Replace('.','-'), text = item, data = additionalData });
@@ -117,7 +128,7 @@ namespace Laser.Orchard.Translator.Controllers
             var countDictionary = translationCount.ToDictionary(g => g.translated, g => g.count);
 
             if (!countDictionary.ContainsKey(true))
-                return 0;
+                return !countDictionary.ContainsKey(false) ? -1 : 0;
             else
             {
                 return !countDictionary.ContainsKey(false) ? 100 : (int)Math.Floor((double)countDictionary[true] / (countDictionary[true] + countDictionary[false]) * 100);
