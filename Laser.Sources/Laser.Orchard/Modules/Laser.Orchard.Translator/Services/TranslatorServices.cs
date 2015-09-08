@@ -66,8 +66,8 @@ namespace Laser.Orchard.Translator.Services {
                 existingTranslations = GetTranslations().Where(t => t.Language == translation.Language
                                                                     && t.ContainerName == translation.ContainerName
                                                                     && t.ContainerType == translation.ContainerType
-                                                                    && t.Context == translation.Context
-                                                                    && t.Message == translation.Message).ToList();
+                                                                    && t.Context.ToString() == translation.Context
+                                                                    && t.Message.ToString() == translation.Message).ToList();
             }
 
             if (existingTranslations.Any()) {
