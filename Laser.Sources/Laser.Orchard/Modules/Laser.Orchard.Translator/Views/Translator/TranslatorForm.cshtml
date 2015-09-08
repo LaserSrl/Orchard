@@ -63,7 +63,7 @@
                 <h2>@T("Suggestions")</h2>
                 <ul>
                     @foreach (var suggested in ViewBag.SuggestedTranslations) {
-                        <li><a class="suggested-translation-item" title="@T("Click to use this translation")" id="suggestedTranslations_@suggestedTranslationsIndex" href="#">@suggested</a></li>
+                        <li><a class="suggested-translation-item" title="@T("Click to use this translation")" id="suggestedTranslations_@suggestedTranslationsIndex" href="#"><i class="fa fa-comments-o"></i>@suggested</a></li>
                         suggestedTranslationsIndex++;
                     }
                 </ul>

@@ -105,7 +105,7 @@ namespace Laser.Orchard.Translator.Services {
 
         public IList<string> GetSuggestedTranslations(string message, string language) {
             return GetTranslations().Where(w => w.Message.ToString() == message && w.Language == language && w.TranslatedMessage.ToString() != "").Take(5)
-                .Select(x => x.TranslatedMessage).ToList();
+                .Select(x => x.TranslatedMessage).AsParallel().Distinct().ToList();
         }
     }
 }
