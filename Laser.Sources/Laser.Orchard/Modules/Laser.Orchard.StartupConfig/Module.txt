@@ -48,3 +48,8 @@ Features:
 		Description: Enable Permission and Group Management
 		Category: Role
 		Dependencies: Orchard.Workflows,Orchard.Forms,itWORKS.ExtendedRegistration
+	Laser.Orchard.StartupConfig.Maintenance
+		Name: Laser Maintenance System
+		Description: Enable feature for site's maintenance, message etc...
+		Category: Messaging
+		Dependencies: Laser.Orchard.StartupConfig,Orchard.PublishLater
