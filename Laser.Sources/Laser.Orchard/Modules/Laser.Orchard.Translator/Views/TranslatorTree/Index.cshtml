@@ -106,9 +106,16 @@
 
             $('#showDetailsForm').submit(function () {
                 var selectedNodes = $('#folderTree').jstree().get_selected(true);
+
                 if (selectedNodes.length == 0 || selectedNodes[0].parents.length < 2)
                 {
                     alert("@T("Please select a module or a theme.")");
+                    return false;
+                }
+
+                if (selectedNodes[0].data.to_translate == 'false')
+                {
+                    alert("@T("Nothing to translate for this element.")");
                     return false;
                 }
             });

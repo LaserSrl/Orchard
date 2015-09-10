@@ -35,8 +35,8 @@ namespace Laser.Orchard.Translator.Controllers
                 {
                     var alreadyExistingRecords = _translatorServices.GetTranslations().Where(r => r.ContainerName == record.ContainerName
                                                                                               && r.ContainerType == record.ContainerType
-                                                                                              && r.Context == record.Context
-                                                                                              && r.Message == record.Message
+                                                                                              && r.Context.ToString() == record.Context
+                                                                                              && r.Message.ToString() == record.Message
                                                                                               && r.Language == record.Language);
 
                     if (!alreadyExistingRecords.Any())

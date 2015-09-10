@@ -66,8 +66,8 @@ namespace Laser.Orchard.Translator.Services {
                 existingTranslations = GetTranslations().Where(t => t.Language == translation.Language
                                                                     && t.ContainerName == translation.ContainerName
                                                                     && t.ContainerType == translation.ContainerType
-                                                                    && t.Context == translation.Context
-                                                                    && t.Message == translation.Message).ToList();
+                                                                    && t.Context.ToString() == translation.Context
+                                                                    && t.Message.ToString() == translation.Message).ToList();
             }
 
             if (existingTranslations.Any()) {
@@ -136,9 +136,8 @@ namespace Laser.Orchard.Translator.Services {
         }
 
         public IList<string> GetSuggestedTranslations(string message, string language) {
-            return GetTranslations().Where(w => w.Message.ToString() == message && w.Language == language && w.TranslatedMessage.ToString() != "")
-                                    .Take(5)
-                                    .Select(x => x.TranslatedMessage).ToList();
+            return GetTranslations().Where(w => w.Message.ToString() == message && w.Language == language && w.TranslatedMessage.ToString() != "").Take(5)
+                .Select(x => x.TranslatedMessage).AsParallel().Distinct().ToList();
         }
     }
 }
