@@ -1,5 +1,19 @@
-﻿using System;
+﻿using Orchard.Caching;
+using Orchard.ContentManagement;
+using Orchard.Environment.Configuration;
+using Orchard.Logging;
+using Orchard.Mvc.Extensions;
+using Orchard.Mvc.Filters;
+using Orchard.OutputCache.Models;
+using Orchard.OutputCache.Services;
+using Orchard.OutputCache.ViewModels;
+using Orchard.Services;
+using Orchard.Themes;
+using Orchard.UI.Admin;
+using Orchard.Utility.Extensions;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -8,27 +22,10 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.Mvc.Extensions;
-using Orchard.OutputCache.Models;
-using Orchard.OutputCache.Services;
-using Orchard.Caching;
-using Orchard.ContentManagement;
-using Orchard.Environment.Configuration;
-using Orchard.Logging;
-using Orchard.Mvc.Filters;
-using Orchard.Services;
-using Orchard.Themes;
-using Orchard.UI.Admin;
-using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
-using System.Collections.Specialized;
-using Orchard.OutputCache.ViewModels;
-using Orchard.UI.Admin.Notification;
-using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.OutputCache.Filters {
-    public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter {
 
+    public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter {
         private readonly ICacheManager _cacheManager;
         private readonly IOutputCacheStorageProvider _cacheStorageProvider;
         private readonly ITagCache _tagCache;
@@ -41,8 +38,8 @@ namespace Orchard.OutputCache.Filters {
         private readonly ShellSettings _shellSettings;
         private readonly ICacheControlStrategy _cacheControlStrategy;
 
-        TextWriter _originalWriter;
-        StringWriter _cachingWriter;
+        private TextWriter _originalWriter;
+        private StringWriter _cachingWriter;
 
         private static string RefreshKey = "__r";
         private static long Epoch = new DateTime(2014, DateTimeKind.Utc).Ticks;
@@ -59,7 +56,6 @@ namespace Orchard.OutputCache.Filters {
             ISignals signals,
             ShellSettings shellSettings,
             ICacheControlStrategy cacheControlStrategy) {
-
             _cacheManager = cacheManager;
             _cacheStorageProvider = cacheStorageProvider;
             _tagCache = tagCache;
@@ -85,6 +81,7 @@ namespace Orchard.OutputCache.Filters {
         private string _invariantCacheKey;
         private DateTime _now;
         private string[] _varyQueryStringParameters;
+        private string[] _varyCookieStringParameters;
         private ISet<string> _varyRequestHeaders;
         private bool _transformRedirect;
 
@@ -95,7 +92,6 @@ namespace Orchard.OutputCache.Filters {
         public ILogger Logger { get; set; }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
-
             // apply OutputCacheAttribute logic if defined
             var actionAttributes = filterContext.ActionDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
             var controllerAttributes = filterContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
@@ -113,7 +109,7 @@ namespace Orchard.OutputCache.Filters {
             // saving the current datetime
             _now = _clock.UtcNow;
 
-            // before executing an action, we check if a valid cached result is already 
+            // before executing an action, we check if a valid cached result is already
             // existing for this context (url, theme, culture, tenant)
 
             Logger.Debug("Request on: " + filterContext.RequestContext.HttpContext.Request.RawUrl);
@@ -142,7 +138,6 @@ namespace Orchard.OutputCache.Filters {
                 return;
             }
 
-
             // caches the default cache duration to prevent a query to the settings
             _cacheDuration = _cacheManager.Get("CacheSettingsPart.Duration",
                 context => {
@@ -166,9 +161,17 @@ namespace Orchard.OutputCache.Filters {
                 context => {
                     context.Monitor(_signals.When(CacheSettingsPart.CacheKey));
                     var varyQueryStringParameters = _workContext.CurrentSite.As<CacheSettingsPart>().VaryQueryStringParameters;
-
                     return string.IsNullOrWhiteSpace(varyQueryStringParameters) ? null
                         : varyQueryStringParameters.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+                }
+            );
+
+            _varyCookieStringParameters = _cacheManager.Get("CacheSettingsPart.VaryCookieStringParameters",
+                context => {
+                    context.Monitor(_signals.When(CacheSettingsPart.CacheKey));
+                    var varyCookieStringParameters = _workContext.CurrentSite.As<CacheSettingsPart>().VaryCookieStringParameters;
+                    return string.IsNullOrWhiteSpace(varyCookieStringParameters) ? null
+                        : varyCookieStringParameters.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
                 }
             );
 
@@ -210,7 +213,7 @@ namespace Orchard.OutputCache.Filters {
                     return _workContext.CurrentSite.As<CacheSettingsPart>().DebugMode;
                 }
             );
-            
+
             // don't cache ignored url ?
             if (IsIgnoredUrl(filterContext.RequestContext.HttpContext.Request.AppRelativeCurrentExecutionFilePath, _ignoredUrls)) {
                 return;
@@ -219,6 +222,8 @@ namespace Orchard.OutputCache.Filters {
             var queryString = filterContext.RequestContext.HttpContext.Request.QueryString;
             var requestHeaders = filterContext.RequestContext.HttpContext.Request.Headers;
             var parameters = new Dictionary<string, object>(filterContext.ActionParameters);
+            var cookieCollection = filterContext.RequestContext.HttpContext.Request.Cookies;
+            //_workContext.HttpContext.Request.Cookies;
 
             foreach (var key in queryString.AllKeys) {
                 if (key == null || (_varyQueryStringParameters != null
@@ -230,6 +235,14 @@ namespace Orchard.OutputCache.Filters {
                 }
 
                 parameters[key] = queryString[key];
+            }
+            
+            if (_varyCookieStringParameters != null) {
+                foreach (var key in cookieCollection.AllKeys) {
+                    if (_varyCookieStringParameters.Contains(key)) {
+                        parameters["Cookie:" + key] = cookieCollection[key].Value;
+                    }
+                }
             }
 
             foreach (var varyByRequestHeader in _varyRequestHeaders) {
@@ -247,7 +260,6 @@ namespace Orchard.OutputCache.Filters {
             // don't retrieve cache content if refused
             // in this case the result of the action will update the current cached version
             if (filterContext.RequestContext.HttpContext.Request.Headers["Cache-Control"] != "no-cache" || _ignoreNoCache) {
-
                 // fetch cached data
                 _cacheItem = _cacheStorageProvider.GetCacheItem(_cacheKey);
 
@@ -288,7 +300,7 @@ namespace Orchard.OutputCache.Filters {
 
             _cacheItem = new CacheItem();
 
-            // get contents 
+            // get contents
             ApplyCacheControl(_cacheItem, response);
 
             // no cache content available, intercept the execution results for caching, using the targetted encoding
@@ -300,13 +312,11 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
-        
             // handle redirections
             _transformRedirect = TransformRedirect(filterContext);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
-
             string capturedResponse = null;
             if (_completeResponse != null) {
                 capturedResponse = _completeResponse(filterContext);
@@ -317,7 +327,6 @@ namespace Orchard.OutputCache.Filters {
             // ignore error results from cache
             if (response.StatusCode != (int)HttpStatusCode.OK ||
                 _transformRedirect) {
-
                 // Never cache non-200 responses.
                 filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 filterContext.HttpContext.Response.Cache.SetNoStore();
@@ -396,7 +405,6 @@ namespace Orchard.OutputCache.Filters {
         }
 
         private bool TransformRedirect(ActionExecutedContext filterContext) {
-
             // removes the target of the redirection from cache after a POST
 
             if (filterContext.Result == null) {
@@ -437,7 +445,7 @@ namespace Orchard.OutputCache.Filters {
 
             // adding a refresh key so that the redirection doesn't get restored
             // from a cached version on a proxy
-            // this can happen when using public caching, we want to force the 
+            // this can happen when using public caching, we want to force the
             // client to get a fresh copy of the redirectUrl page
 
             if (GetMaxAge() > 0) {
@@ -469,7 +477,6 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-
         }
 
         /// <summary>
@@ -481,7 +488,7 @@ namespace Orchard.OutputCache.Filters {
                 if (maxAge.TotalMilliseconds < 0) {
                     maxAge = TimeSpan.FromSeconds(0);
                 }
-                
+
                 response.Cache.SetCacheability(HttpCacheability.Public);
                 response.Cache.SetMaxAge(maxAge);
             }
@@ -539,7 +546,6 @@ namespace Orchard.OutputCache.Filters {
                     keyBuilder.AppendFormat("{0}={1};", pair.Key.ToLowerInvariant(), Convert.ToString(pair.Value).ToLowerInvariant());
                 }
             }
-
             return keyBuilder.ToString();
         }
 
@@ -593,7 +599,7 @@ namespace Orchard.OutputCache.Filters {
             );
         }
     }
-    
+
     public class ViewDataContainer : IViewDataContainer {
         public ViewDataDictionary ViewData { get; set; }
     }

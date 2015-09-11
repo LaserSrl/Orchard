@@ -12,6 +12,7 @@ namespace Orchard.OutputCache.ViewModels {
         public bool ApplyCulture { get; set; }
         public bool DebugMode { get; set; }
         public string VaryQueryStringParameters { get; set; }
+        public string VaryCookieStringParameters { get; set; }
         public string VaryRequestHeaders { get; set; }
         public bool IgnoreNoCache { get; set; }
     }

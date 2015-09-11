@@ -19,6 +19,11 @@ namespace Orchard.OutputCache.Models {
             set { this.Store(x => x.VaryQueryStringParameters, value); }
         }
 
+        public string VaryCookieStringParameters {
+            get { return this.Retrieve(x => x.VaryCookieStringParameters); }
+            set { this.Store(x => x.VaryCookieStringParameters, value); }
+        }
+
         public string VaryRequestHeaders {
             get { return this.Retrieve(x => x.VaryRequestHeaders); }
             set { this.Store(x => x.VaryRequestHeaders, value); }
