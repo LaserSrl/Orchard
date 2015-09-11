@@ -122,7 +122,7 @@ namespace Laser.Orchard.Translator.Controllers
                                                                                  && t.ContainerName == containerName
                                                                                  && t.ContainerType == containerType)
                                                                         .AsParallel()
-                                                                        .GroupBy(t => t.TranslatedMessage.ToString() != "" && t.TranslatedMessage.ToString() != null)
+                                                                        .GroupBy(t => t.TranslatedMessage != null && t.TranslatedMessage.ToString() != "")
                                                                         .Select(t => new { translated = t.Key, count = t.Count() });
 
             var countDictionary = translationCount.ToDictionary(g => g.translated, g => g.count);

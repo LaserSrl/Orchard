@@ -37,7 +37,7 @@ namespace Laser.Orchard.Translator.Services {
 
         public IEnumerable<string> GetCultureList() {
             //Lista completa da usare in produzione
-            return CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(c => c.Name);
+            return CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(c => c.Name).OrderBy(c => c);
 
             //Lista ridotta a scopo di test
             //return _cultureManager.ListCultures();
