@@ -60,14 +60,17 @@ namespace Laser.Orchard.Translator.Services {
             List<TranslationRecord> existingTranslations = new List<TranslationRecord>();
             bool searchById = translation.Id != 0;
 
+            if (translation.TranslatedMessage != null)
+                translation.TranslatedMessage = translation.TranslatedMessage.Trim();
+
             if (searchById) {
                 existingTranslations = GetTranslations().Where(t => t.Id == translation.Id).ToList();
             } else {
                 existingTranslations = GetTranslations().Where(t => t.Language == translation.Language
                                                                     && t.ContainerName == translation.ContainerName
                                                                     && t.ContainerType == translation.ContainerType
-                                                                    && t.Context.ToString() == translation.Context
-                                                                    && t.Message.ToString() == translation.Message).ToList();
+                                                                    && t.Context == translation.Context
+                                                                    && t.Message == translation.Message).ToList();
             }
 
             if (existingTranslations.Any()) {
@@ -136,8 +139,15 @@ namespace Laser.Orchard.Translator.Services {
         }
 
         public IList<string> GetSuggestedTranslations(string message, string language) {
-            return GetTranslations().Where(w => w.Message.ToString() == message && w.Language == language && w.TranslatedMessage.ToString() != "").Take(5)
-                .Select(x => x.TranslatedMessage).AsParallel().Distinct().ToList();
+            return GetTranslations().Where(w => w.Message == message
+                                             && w.Language == language
+                                             && w.TranslatedMessage != null
+                                             && w.TranslatedMessage != string.Empty)
+                                    .Take(5)
+                                    .Select(x => x.TranslatedMessage)
+                                    .AsParallel()
+                                    .Distinct()
+                                    .ToList();
         }
     }
 }

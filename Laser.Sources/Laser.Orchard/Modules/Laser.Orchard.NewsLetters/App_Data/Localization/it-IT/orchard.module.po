@@ -1,4 +1,4 @@
-﻿# Orchard resource strings - it-IT
+# Orchard resource strings - it-IT
 # Copyright (c) 2010 Outercurve Foundation
 # All rights reserved
 # This file is distributed under the BSD license

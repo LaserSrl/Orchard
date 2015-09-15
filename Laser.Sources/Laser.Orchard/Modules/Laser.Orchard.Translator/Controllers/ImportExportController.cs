@@ -55,7 +55,8 @@ namespace Laser.Orchard.Translator.Controllers
                 Response.BufferOutput = false;
                 Response.ContentType = "application/zip";
 
-                var messagesToExport = _translatorServices.GetTranslations().Where(m => m.TranslatedMessage.ToString() != null && m.TranslatedMessage.ToString() != "");
+                var messagesToExport = _translatorServices.GetTranslations().Where(m => m.TranslatedMessage != null
+                                                                                     && m.TranslatedMessage != string.Empty);
 
                 var foldersToExport = messagesToExport.GroupBy(f => new { f.ContainerName, f.ContainerType, f.Language })
                                                       .Select(g => new { g.Key.ContainerName, g.Key.ContainerType, g.Key.Language });
@@ -65,7 +66,7 @@ namespace Laser.Orchard.Translator.Controllers
                     var folderMessages = messagesToExport.Where(m => m.ContainerName == folder.ContainerName
                                                                   && m.ContainerType == folder.ContainerType
                                                                   && m.Language == folder.Language)
-                                                         .OrderBy(m => m.Context.ToString()).ThenBy(m => m.Message.ToString());
+                                                         .OrderBy(m => m.Context).ThenBy(m => m.Message);
 
                     MemoryStream stream = new MemoryStream();
                     StreamWriter streamWriter = new StreamWriter(stream);
@@ -165,9 +166,7 @@ namespace Laser.Orchard.Translator.Controllers
                                 translation.TranslatedMessage = match.Groups[3].Value;
                                 translation.Language = language;
 
-                                if (!_translatorServices.TryAddOrUpdateTranslation(translation)) {
-                                    var a = "";
-                                }
+                                _translatorServices.TryAddOrUpdateTranslation(translation);
                             }
                         }
                     }

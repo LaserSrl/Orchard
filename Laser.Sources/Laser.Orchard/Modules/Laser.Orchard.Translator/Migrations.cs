@@ -7,9 +7,9 @@ namespace Laser.Orchard.Translator {
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<string>("ContainerName")
                 .Column<string>("ContainerType", column => column.WithLength(1))
-                .Column<string>("Context", col => col.Unlimited())
-                .Column<string>("Message", col => col.Unlimited())
-                .Column<string>("TranslatedMessage", col => col.Unlimited())
+                .Column<string>("Context", column => column.WithLength(4000))
+                .Column<string>("Message", column => column.WithLength(4000))
+                .Column<string>("TranslatedMessage", column => column.WithLength(4000))
                 .Column<string>("Language")
                 );
 
