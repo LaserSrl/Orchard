@@ -56,11 +56,16 @@
     <div class="col-xs-12 col-sm-3">
         <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" title="@T("Go to page {0}",Model.ContentItem.TitlePart.Title)">
             @if (mediagalleryitems.Count > 0) {
-                <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[0]).MediaUrl)" alt="@(((dynamic)mediagalleryitems[0]).AlternateText)" />
+		var alt=(((dynamic)mediagalleryitems[0]).AlternateText);
+		if (string.IsNullOrEmpty(alt)){
+		alt=Model.ContentItem.TitlePart.Title;
+		}
+		           
+			   <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[0]).MediaUrl)" alt="@alt" />
             }</a>
     </div>
     <div class="col-xs-12 col-sm-9">
-        <h2 class="item-title"><a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" title="@T("Go to page {0}",Model.ContentItem.TitlePart.Title)" class="@cssClass">@Model.ContentItem.TitlePart.Title</a></h2>
+        <h2 class="item-title"><a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" title="@T("Go to page {0}",Model.ContentItem.TitlePart.Title)" class="@cssClass">@Model.ContentItem.TitlePart.Title</a></h2><h3></h3>
         @if (!String.IsNullOrWhiteSpace(eventDates)) {
             <h4 class="item-data">@eventDates</h4>
         }
@@ -83,7 +88,12 @@
         @for (int i = 1; i < mediagalleryitems.Count; i++) {
             <div class="col-xs-12 col-sm-4 col-md-2">
                 <a data-lightbox="gallery-@(Model.ContentItem.Id)" href="@(((dynamic)mediagalleryitems[i]).MediaUrl)">
-                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[i]).MediaUrl)" alt="@(((dynamic)mediagalleryitems[i]).AlternateText)" /></a>
+				@{var alt2=(((dynamic)mediagalleryitems[i]).AlternateText);
+		if (string.IsNullOrEmpty(alt2)){
+		alt2=Model.ContentItem.TitlePart.Title;
+		}
+		} 
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: ((dynamic)mediagalleryitems[i]).MediaUrl)" alt="@alt2" /></a>
             </div>
         }
     </div>

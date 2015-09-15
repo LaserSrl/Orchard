@@ -24,7 +24,7 @@
     
 }
 <div id="cat-nav">
-    <h3 class="subtitle @cssClass">@Model.ContentItem.WidgetPart.Title</h3>
+    <h3 class="subtitle @cssClass">@Model.ContentItem.WidgetPart.Title</h3><h4></h4>
     <hr />
 
     <ul>
@@ -61,7 +61,7 @@
             }
 
 
-            <a href="@url" class="@cssClass" title="@T("Go to page {0}", @item.Text)"><i class="glyphicon glyphicon-chevron-right @cssClass"></i> @item.Text</a>
+            <a href="@url" class="@cssClass" title="@T("Go to page {0}", @item.Text)"><em class="glyphicon glyphicon-chevron-right @cssClass"></em> @item.Text</a>
             @tagLI.EndElement
             }
         }
