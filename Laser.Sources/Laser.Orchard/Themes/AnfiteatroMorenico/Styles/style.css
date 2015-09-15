@@ -164,3 +164,4 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{ font-weight:800; }
 .message-Information { color: green; border-color:green; }
 
 .message-Error { color: red; border-color:red; }
+div.cc-cookies { width: 100%;}
