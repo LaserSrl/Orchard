@@ -31,7 +31,7 @@ namespace Laser.Orchard.Translator.Controllers {
                                                                 .Select(x => new StringSummaryViewModel {
                                                                     id = x.Id,
                                                                     message = x.Message,
-                                                                    localized = (x.TranslatedMessage.ToString() == null || x.TranslatedMessage.ToString() == "") ? false : true
+                                                                    localized = !String.IsNullOrWhiteSpace(x.TranslatedMessage)
                                                                 });
 
             translationDetailVM.containerName = folderName;

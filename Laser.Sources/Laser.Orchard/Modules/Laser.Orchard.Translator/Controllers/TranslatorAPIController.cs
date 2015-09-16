@@ -35,8 +35,8 @@ namespace Laser.Orchard.Translator.Controllers
                 {
                     var alreadyExistingRecords = _translatorServices.GetTranslations().Where(r => r.ContainerName == record.ContainerName
                                                                                               && r.ContainerType == record.ContainerType
-                                                                                              && r.Context.ToString() == record.Context
-                                                                                              && r.Message.ToString() == record.Message
+                                                                                              && r.Context == record.Context
+                                                                                              && r.Message == record.Message
                                                                                               && r.Language == record.Language);
 
                     if (!alreadyExistingRecords.Any())
@@ -48,17 +48,17 @@ namespace Laser.Orchard.Translator.Controllers
                             return false;
                         }
                     }
+                }
 
-                    var folderList = records.GroupBy(g => new { g.ContainerName, g.ContainerType })
+                var folderList = records.GroupBy(g => new { g.ContainerName, g.ContainerType })
                                             .Select(g => new { g.Key.ContainerName, g.Key.ContainerType });
 
-                    foreach (var folder in folderList)
-                    {
-                        if (folder.ContainerType == "M")
-                            _translatorServices.EnableFolderTranslation(folder.ContainerName, ElementToTranslate.Module);
-                        else if (folder.ContainerType == "T")
-                            _translatorServices.EnableFolderTranslation(folder.ContainerName, ElementToTranslate.Theme);
-                    }
+                foreach (var folder in folderList)
+                {
+                    if (folder.ContainerType == "M")
+                        _translatorServices.EnableFolderTranslation(folder.ContainerName, ElementToTranslate.Module);
+                    else if (folder.ContainerType == "T")
+                        _translatorServices.EnableFolderTranslation(folder.ContainerName, ElementToTranslate.Theme);
                 }
 
                 return true;
