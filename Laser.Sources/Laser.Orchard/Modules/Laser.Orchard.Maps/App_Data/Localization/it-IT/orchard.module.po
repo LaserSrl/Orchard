@@ -67,4 +67,4 @@ msgstr "Distanza in metri dalla posizione fornita."
 
 msgctxt "Laser.Orchard.Maps.Drivers.MapPartDriver"
 msgid "A point on the map is required."
-msgstr "Il punto su mappa è obbligatorio."
+msgstr "Il punto su mappa Ã¨ obbligatorio."

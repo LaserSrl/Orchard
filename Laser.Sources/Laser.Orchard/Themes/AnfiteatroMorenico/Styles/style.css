@@ -81,7 +81,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{ font-weight:800; }
 .home-box{ text-align:center; margin-top:-80px; }
 .home-box-circle{ position:relative; border-radius:50%; box-shadow:0 0 7px #333; color:#fff; width:158px; height:158px; line-height:170px; font-size:100px; display:inline-block; }
 .home-box-circle:hover,.home-box-circle:focus{ text-decoration:none; color:#fff; }
-.home-box-circle i{ display:block; position:relative; z-index:2; transition:transform 0.4s ease; -webkit-transition:transform 0.4s ease; }
+.home-box-circle em{ display:block; position:relative; z-index:2; transition:transform 0.4s ease; -webkit-transition:transform 0.4s ease; }
 .home-box-circle.punti-di-interesse{ background:#f79432; }
 .home-box-circle.outdoor{ background:#41b75b; }
 .home-box-circle.prodotti, .home-box-circle.prodotti_home { background:#3366b7; }
@@ -90,7 +90,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{ font-weight:800; }
 
 .home-box-circle .home-box-hover{ z-index:1; background:#36A7DA; top:50%; left:50%; bottom:50%; right:50%; transition:all ease 0.5s; position:absolute; border-radius:50%; }
 .home-box-circle:hover .home-box-hover{ top:0; left:0; right:0; bottom:0; }
-.home-box-circle:hover i{ transform:scale(1.1); -webkit-transform:scale(1.1); }
+.home-box-circle:hover em{ transform:scale(1.1); -webkit-transform:scale(1.1); }
 .home-box-title{ font-size:18px; margin:5px 0; font-weight:300; }
 .home-box-title a{ color:#7f8384; }
 
@@ -164,3 +164,4 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{ font-weight:800; }
 .message-Information { color: green; border-color:green; }
 
 .message-Error { color: red; border-color:red; }
+div.cc-cookies { width: 100%;}

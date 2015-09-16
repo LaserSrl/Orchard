@@ -37,7 +37,7 @@ namespace Laser.Orchard.Translator.Services {
 
         public IEnumerable<string> GetCultureList() {
             //Lista completa da usare in produzione
-            return CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(c => c.Name);
+            return CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(c => c.Name).OrderBy(c => c);
 
             //Lista ridotta a scopo di test
             //return _cultureManager.ListCultures();
@@ -59,6 +59,9 @@ namespace Laser.Orchard.Translator.Services {
         private void AddOrUpdateTranslation(TranslationRecord translation) {
             List<TranslationRecord> existingTranslations = new List<TranslationRecord>();
             bool searchById = translation.Id != 0;
+
+            if (translation.TranslatedMessage != null)
+                translation.TranslatedMessage = translation.TranslatedMessage.Trim();
 
             if (searchById) {
                 existingTranslations = GetTranslations().Where(t => t.Id == translation.Id).ToList();
@@ -136,9 +139,15 @@ namespace Laser.Orchard.Translator.Services {
         }
 
         public IList<string> GetSuggestedTranslations(string message, string language) {
-            return GetTranslations().Where(w => w.Message.ToString() == message && w.Language == language && w.TranslatedMessage.ToString() != "")
+            return GetTranslations().Where(w => w.Message == message
+                                             && w.Language == language
+                                             && w.TranslatedMessage != null
+                                             && w.TranslatedMessage != string.Empty)
                                     .Take(5)
-                                    .Select(x => x.TranslatedMessage).ToList();
+                                    .Select(x => x.TranslatedMessage)
+                                    .AsParallel()
+                                    .Distinct()
+                                    .ToList();
         }
     }
 }

@@ -47,4 +47,5 @@
   <Place Parts_UsersGroupsSettings_Edit="Content:0"/>
   <Place Parts_UsersGroups="Content:0"/>
   <!-- Permission Extension:End-->
+  <Place Parts_Maintenance_Edit="Content:0"/>
 </Placement>

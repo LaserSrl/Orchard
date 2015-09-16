@@ -55,7 +55,8 @@ namespace Laser.Orchard.Translator.Controllers
                 Response.BufferOutput = false;
                 Response.ContentType = "application/zip";
 
-                var messagesToExport = _translatorServices.GetTranslations().Where(m => m.TranslatedMessage != null && m.TranslatedMessage != "");
+                var messagesToExport = _translatorServices.GetTranslations().Where(m => m.TranslatedMessage != null
+                                                                                     && m.TranslatedMessage != string.Empty);
 
                 var foldersToExport = messagesToExport.GroupBy(f => new { f.ContainerName, f.ContainerType, f.Language })
                                                       .Select(g => new { g.Key.ContainerName, g.Key.ContainerType, g.Key.Language });
@@ -74,8 +75,8 @@ namespace Laser.Orchard.Translator.Controllers
                     streamWriter.WriteLine("# Copyright (c) " + DateTime.Now.Year + " Laser s.r.l.");
                     streamWriter.WriteLine(Environment.NewLine);
 
-                    streamWriter.WriteLine("# > #: msgctxt { contesto del messaggio - Originale ITA }");
-                    streamWriter.WriteLine("# > #| msgid { identificativo del messaggio - Originale ITA }");
+                    streamWriter.WriteLine("# > #: msgctxt { contesto del messaggio - Originale }");
+                    streamWriter.WriteLine("# > #| msgid { identificativo del messaggio - Originale }");
                     streamWriter.WriteLine("# > msgctxt  \"{ contesto del messaggio }\"");
                     streamWriter.WriteLine("# > msgid \"{ identificativo del messaggio }\"");
                     streamWriter.WriteLine("# > msgstr \"{ messaggio }\"");
@@ -165,9 +166,7 @@ namespace Laser.Orchard.Translator.Controllers
                                 translation.TranslatedMessage = match.Groups[3].Value;
                                 translation.Language = language;
 
-                                if (!_translatorServices.TryAddOrUpdateTranslation(translation)) {
-                                    var a = "";
-                                }
+                                _translatorServices.TryAddOrUpdateTranslation(translation);
                             }
                         }
                     }

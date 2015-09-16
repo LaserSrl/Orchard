@@ -14,7 +14,7 @@ msgstr "Enregistrement pas possible: {0}"
 
 msgctxt "Laser.Orchard.Fidelity.Controllers.FidelityController"
 msgid "The provided part cannot be used for registration."
-msgstr "La pièce fourni ne peut pas être utilisé pour s'enregistrer."
+msgstr "La piÃ¨ce fourni ne peut pas Ãªtre utilisÃ© pour s'enregistrer."
 
 msgctxt "Laser.Orchard.Fidelity.Controllers.FidelityController"
 msgid "Unable to register: {0}"
@@ -22,11 +22,11 @@ msgstr "Enregistrement pas possible: {0}"
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/FidelitySiteSettings.cshtml"
 msgid "Developer Secret Key"
-msgstr "Clé Secrète Developpeur"
+msgstr "ClÃ© SecrÃ¨te Developpeur"
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/FidelitySiteSettings.cshtml"
 msgid "The secret developer key used by Loyalzoo."
-msgstr "La clé secrète du developpeur utilizée par Loyalzoo."
+msgstr "La clÃ© secrÃ¨te du developpeur utilizÃ©e par Loyalzoo."
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/FidelitySiteSettings.cshtml"
 msgid "API URL"
@@ -34,7 +34,7 @@ msgstr "URL API"
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/FidelitySiteSettings.cshtml"
 msgid "The URL to use to call Loyalzoo."
-msgstr "L'URL à utilizer pour appeler Loyalzoo"
+msgstr "L'URL Ã  utilizer pour appeler Loyalzoo"
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/FidelitySiteSettings.cshtml"
 msgid "Merchant Username"
@@ -42,7 +42,7 @@ msgstr "Nom d'Utilisateur Marchand"
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/FidelitySiteSettings.cshtml"
 msgid "The username of the merchant account."
-msgstr "Le nom d'utilisateur du compte associé au marchand."
+msgstr "Le nom d'utilisateur du compte associÃ© au marchand."
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/FidelitySiteSettings.cshtml"
 msgid "Merchant Password"
@@ -50,11 +50,11 @@ msgstr "Mot de Passe Marchand"
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/FidelitySiteSettings.cshtml"
 msgid "The password of the merchant account."
-msgstr "Le mot de passe du compte associé au marchand."
+msgstr "Le mot de passe du compte associÃ© au marchand."
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/LoyalzooUserSettings.cshtml"
 msgid "Loyalzoo User Data"
-msgstr "Données Utilizateur Loyalzoo"
+msgstr "DonnÃ©es Utilizateur Loyalzoo"
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/LoyalzooUserSettings.cshtml"
 msgid "Loyalzoo Username"
@@ -62,7 +62,7 @@ msgstr "Nom d'Utilizateur Loyalzoo"
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/LoyalzooUserSettings.cshtml"
 msgid "The username of the Loyalzoo customer account."
-msgstr "Le nom d'utilisateur du compte associé au client."
+msgstr "Le nom d'utilisateur du compte associÃ© au client."
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/LoyalzooUserSettings.cshtml"
 msgid "Loyalzoo Password"
@@ -70,7 +70,7 @@ msgstr "Mot de Passe Loyalzoo"
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/LoyalzooUserSettings.cshtml"
 msgid "The password of the Loyalzoo customer account."
-msgstr "Le mot de passe du compte associé au client."
+msgstr "Le mot de passe du compte associÃ© au client."
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/LoyalzooUserSettings.cshtml"
 msgid "Loyalzoo Customer Session ID"
@@ -82,8 +82,8 @@ msgstr "L'ID de session du compte client Loyalzoo."
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/LoyalzooUserSettings.cshtml"
 msgid "Automatically create Loyalzoo account"
-msgstr "Créer automatiquement un compte Loyalzoo"
+msgstr "CrÃ©er automatiquement un compte Loyalzoo"
 
 msgctxt "~/Modules/Laser.Orchard.Fidelity/Views/EditorTemplates/Parts/LoyalzooUserSettings.cshtml"
 msgid "<b>Warning</b>: By using this button the above Loyalzoo data will be ignored and an account will be automatically created using a random password."
-msgstr "<b>Attention</b>: En utilisant ce bouton les données Loyalzoo au-dessus seront ignorés et un compte sera automatiquement creée en utilizant un mot de passe aléatoire."
+msgstr "<b>Attention</b>: En utilisant ce bouton les donnÃ©es Loyalzoo au-dessus seront ignorÃ©s et un compte sera automatiquement creÃ©e en utilizant un mot de passe alÃ©atoire."

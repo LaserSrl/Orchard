@@ -47,6 +47,14 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\..\..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
@@ -179,6 +187,7 @@
     <Compile Include="Activities\TaxonomySetValuesForm.cs" />
     <Compile Include="Activities\UserEventActivity.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Drivers\MaintenancePartDriver.cs" />
     <Compile Include="Drivers\PublishExtensionPartDriver.cs" />
     <Compile Include="Drivers\TaxonomyExtensionPartDriver.cs" />
     <Compile Include="Drivers\TaxonomyExtensionsSiteSettingsDriver.cs" />
@@ -196,6 +205,7 @@
     <Compile Include="Extensions\MediaHelperExtensions.cs" />
     <Compile Include="Filters\ControllerContextFilter.cs" />
     <Compile Include="Handlers\ContentPickerFieldExtensionHandler.cs" />
+    <Compile Include="Handlers\MaintenancePartHandler.cs" />
     <Compile Include="Handlers\TaxonomyExtensionPartHandler.cs" />
     <Compile Include="Handlers\TaxonomyExtensionsSiteSettingsHandler.cs" />
     <Compile Include="Handlers\TaxonomyPartHandlerExtension.cs" />
@@ -212,7 +222,12 @@
     <Compile Include="Migrations\RelationshipsEnhancerMigrations.cs" />
     <Compile Include="Migrations\TaxonomyExtensionsMigrations.cs" />
     <Compile Include="Models\ContentPickerConnector.cs" />
+    <Compile Include="Models\MaintenancePart.cs" />
     <Compile Include="Models\PublishExtensionPart.cs" />
+    <Compile Include="Services\IMaintenanceService.cs" />
+    <Compile Include="Services\MaintenanceBanner.cs" />
+    <Compile Include="Services\MaintenanceService.cs" />
+    <Compile Include="ViewModels\MaintenanceVM.cs" />
     <Compile Include="ViewModels\Response.cs" />
     <Compile Include="Models\TaxonomyExtensionsSiteSettingsPart.cs" />
     <Compile Include="Models\UsersGroupsPart.cs" />
@@ -282,6 +297,7 @@
     <Content Include="Views\DefinitionTemplates\UserGroupSettings.cshtml" />
     <Content Include="Views\DefinitionTemplates\ContentPickerFieldExtensionSettings.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\TaxonomyExtension_Edit.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Maintenance_Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,4 +1,4 @@
-﻿# Orchard resource strings - it-IT
+# Orchard resource strings - it-IT
 # Copyright (c) 2013 Laser s.r.l.
 
 
