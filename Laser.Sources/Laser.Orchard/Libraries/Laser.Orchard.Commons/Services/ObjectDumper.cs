@@ -84,23 +84,24 @@ namespace Laser.Orchard.Commons.Services {
             if (_parents.Count >= _levels) {
                 return _current;
             }
-            if (FormatType(o) == "FieldExternal") {
-                // testo il caso in cui non ho un contentobject ma un content url
-                if (((dynamic)o).ContentObject != null) {
-                    //     return _current;
-                    if (!(((dynamic)o).Setting.GenerateL)) {
+            try {
+                if (FormatType(o) == "FieldExternal") {
+                    // testo il caso in cui non ho un contentobject ma un content url
+                    if (((dynamic)o).ContentObject != null) {
+                        //     return _current;
+                        if (!(((dynamic)o).Setting.GenerateL)) {
 
-                        o = ((dynamic)o).ContentObject;
-                        o = cleanobj(o);
-                        name = name + "_exp";
-                        nameDynamicJsonArray = "List<generic>";
-                    }
-                    else {
-                        return _current;
+                            o = ((dynamic)o).ContentObject;
+                            o = cleanobj(o);
+                            name = name + "_exp";
+                            nameDynamicJsonArray = "List<generic>";
+                        } else {
+                            return _current;
+                        }
                     }
                 }
-            }
-
+            } catch { }
+        
             //_parents.Push(o);
             _parents.Push("a");
             // starts a new container
