@@ -22,6 +22,8 @@ namespace Laser.Orchard.Maps.Drivers {
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
 
+            //// test per cambio culture
+            //System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;  // #GM 2015-09-15
         }
         public ILogger Logger { get; set; }
 
@@ -72,7 +74,8 @@ namespace Laser.Orchard.Maps.Drivers {
                 MapTiles = mapsSettings.MapsTiles,
                 MaxZoom = mapsSettings.MaxZoom,
                 GoogleApiKey = mapsSettings.GoogleApiKey,
-                Map = part
+                Map = part,
+                DecimalSeparator = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator // #GM 2015-09-15
             };
             return ContentShape(shapeName,
                                 () => shapeHelper.EditorTemplate(TemplateName: templateName,

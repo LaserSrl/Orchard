@@ -11,5 +11,6 @@ namespace Laser.Orchard.Maps.ViewModels {
         public int MaxZoom { get; set; }
         public MapPart Map { get; set; }
         public string GoogleApiKey { get; set; }
+        public string DecimalSeparator { get; set; } // #GM 2015-09-15
     }
 }
