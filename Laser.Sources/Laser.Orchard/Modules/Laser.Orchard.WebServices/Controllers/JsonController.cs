@@ -262,7 +262,7 @@ namespace Laser.Orchard.WebServices.Controllers {
         // Attributes:
         // displayAlias: url di ingresso Es: displayAlias=produttore-hermes
         // filterSubItemsParts: elennco csv delle parti da estrarre in presenza di array di ContentItems Es: filterSubItemsParts=TitlePart,AutoroutePart,MapPart
-        public ContentResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10) {
+        public ContentResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour="") {
             //   Logger.Error("inizio"+DateTime.Now.ToString());
             var autoroutePart = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>()
                 .ForVersion(VersionOptions.Published)
@@ -276,7 +276,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                 return null;
             }
 
-            ContentResult cr = (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel);
+            ContentResult cr = (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, complexBehaviour.Split(','));
             //    Logger.Error("Fine:"+DateTime.Now.ToString());
 
             if (_orchardServices.WorkContext.CurrentSite.As<WebServiceSettingsPart>().LogWebservice) {
@@ -290,16 +290,16 @@ namespace Laser.Orchard.WebServices.Controllers {
         // Attributes:
         // contentId: id del content Es: contentId=1
         // filterSubItemsParts: elennco csv delle parti da estrarre in presenza di array di ContentItems Es: filterSubItemsParts=TitlePart,AutoroutePart,MapPart
-        public ContentResult GetById(int contentId, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10) {
+        public ContentResult GetById(int contentId, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
             IContent item = _orchardServices.ContentManager.Get(contentId, VersionOptions.Published);
             if (item == null) {
                 new HttpException(404, ("Not found"));
                 return null;
             }
-            return (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel);
+            return (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, complexBehaviour.Split(','));
         }
 
-        private ActionResult GetContent(IContent content, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string fieldspartsFilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10) {
+        private ActionResult GetContent(IContent content, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string fieldspartsFilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string[] complexBehaviour = null) {
             var result = new ContentResult { ContentType = "application/json" };
             var jsonString = "{}";
 
@@ -307,7 +307,7 @@ namespace Laser.Orchard.WebServices.Controllers {
             XElement dump;
             XElement projectionDump = null;
             // il dump dell'oggetto principale non filtra per field
-            ObjectDumper dumper = new ObjectDumper(deeplevel, null, false, tinyResponse);
+            ObjectDumper dumper = new ObjectDumper(deeplevel, null, false, tinyResponse, complexBehaviour);
             dynamic shape, specificShape;
             var sb = new StringBuilder();
             List<XElement> listContent = new List<XElement>();
@@ -351,7 +351,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                         sb.Append(",");
                     }
                     sb.Append("{");
-                    dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse);
+                    dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
                     projectionDump = dumper.Dump(item, String.Format("[{0}]", i));
                     JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                     sb.Append("}");
@@ -408,7 +408,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                             sb.Append(",");
                         }
                         sb.Append("{");
-                        dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse);
+                        dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
                         projectionDump = dumper.Dump(item, String.Format("[{0}]", i));
                         JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                         sb.Append("}");
@@ -447,7 +447,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                                 sb.Append(",");
                             }
                             sb.Append("{");
-                            dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse);
+                            dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
                             projectionDump = dumper.Dump(item, String.Format("[{0}]", i));
                             JsonConverter.ConvertToJSon(projectionDump, sb);
                             sb.Append("}");
@@ -479,7 +479,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                     //sb.Append(", \"m\": [");
 
                     sb.Append("{");
-                    dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse);
+                    dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
                     //nameDynamicJsonArray = "List<generic>";
                     if (ExtertalFields.ContentObject != null) {
                         projectionDump = dumper.Dump(cleanobj(ExtertalFields.ContentObject), ExtertalFields.Name, "List<generic>");
@@ -518,7 +518,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                                 sb.Append(",");
                             }
                             sb.Append("{");
-                            dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse);
+                            dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
                             projectionDump = dumper.Dump(item, String.Format("[{0}]", i));
                             JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                             sb.Append("}");
@@ -575,13 +575,13 @@ namespace Laser.Orchard.WebServices.Controllers {
                             sb.Append(",");
                         }
                         sb.Append("{");
-                        dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse);
+                        dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
                         if (resultTarget == ResultTarget.Contents) {
                             projectionDump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
                             JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                         }
                         else {
-                            var dumperForPart = new ObjectDumper(deeplevel, _filterContentFieldsParts, true, tinyResponse);
+                            var dumperForPart = new ObjectDumper(deeplevel, _filterContentFieldsParts, true, tinyResponse, complexBehaviour);
                             projectionDump = dumperForPart.Dump(item, "TermPart");
                             JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                         }
