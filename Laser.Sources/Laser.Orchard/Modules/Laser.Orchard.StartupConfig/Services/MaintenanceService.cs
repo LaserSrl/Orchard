@@ -44,7 +44,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                 Mapper.CreateMap<MaintenancePart, MaintenanceVM>();
                 Mapper.Map(y.As<MaintenancePart>(), MaintenanceVM);
                 MaintenanceVM.IDcontentitem = y.Id;
-                MaintenanceVM.Published = y.IsPublished();
+                MaintenanceVM.Published = y.HasPublished();
                 ListMaintenanceVM.Add(MaintenanceVM);
             }
             return ListMaintenanceVM;

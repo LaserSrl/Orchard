@@ -134,9 +134,6 @@
     <Content Include="Views\SlideEventiHomePage.cshtml" />
     <Content Include="Views\Parts.Blogs.RecentBlogPosts-AfterContent.cshtml" />
     <Content Include="Views\MenuItemLink.cshtml" />
-    <Content Include="Views\Parts.TermPart.cshtml">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="Views\_MenuItemLink-CategorieEventiTerm.cshtml" />
     <Content Include="Views\Widget-FormEventiWidget.cshtml" />
     <Content Include="Views\Widget-MenuWidget.cshtml" />
