@@ -178,8 +178,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                     RegisteredServices = _controllerContextAccessor.Context.Controller.TempData
                 };
                 result = _utilsServices.GetResponse(ResponseType.Success, data: registeredServicesData);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 result = _utilsServices.GetResponse(ResponseType.None, ex.Message);
             }
 
@@ -194,8 +193,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                     RegisteredServices = _controllerContextAccessor.Context.Controller.TempData
                 };
                 result = _utilsServices.GetResponse(ResponseType.Success, "", registeredServicesData);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 result = _utilsServices.GetResponse(ResponseType.InvalidUser, ex.Message);
             }
             return Json(result);
@@ -206,8 +204,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             try {
                 _usersExtensionsServices.SignOut();
                 result = _utilsServices.GetResponse(ResponseType.Success);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 result = _utilsServices.GetResponse(ResponseType.InvalidUser, ex.Message);
             }
             return Json(result);
@@ -241,7 +238,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             return new ContentResult { Content = sb.ToString(), ContentType = "application/json" };
         }
 
-        private ContentResult GetRegistrationPoliciesLogic(string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string lang = null) {
+        private ContentResult GetRegistrationPoliciesLogic(string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string lang = null, string complexBehaviour = "") {
             var sb = new StringBuilder();
             var _filterContentFieldsParts = mfilter.ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             XElement dump;
@@ -272,7 +269,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                     sb.Append(",");
                 }
                 sb.Append("{");
-                dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse);
+                dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour.Split(','));
                 projectionDump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
                 JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                 sb.Append("}");
@@ -328,18 +325,15 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             if (userOptions == LostPasswordUserOptions.Account) {
                 if (_userService.SendLostPasswordEmail(username, nonce => Url.MakeAbsolute(Url.Action("LostPassword", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl))) {
                     result = _utilsServices.GetResponse(ResponseType.Success);
-                }
-                else {
+                } else {
                     result = _utilsServices.GetResponse(ResponseType.None, T("Send email failed.").Text);
                 }
-            }
-            else {
+            } else {
                 var sendSmsResult = _usersExtensionsServices.SendLostPasswordSms(internationalPrefix, username, nonce => Url.MakeAbsolute(Url.Action("LostPassword", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
 
                 if (sendSmsResult == "TRUE") {
                     result = _utilsServices.GetResponse(ResponseType.Success);
-                }
-                else {
+                } else {
                     Dictionary<string, string> errors = new Dictionary<string, string>();
                     errors.Add("BODYEXCEEDED", "messaggio rigettato per superamento lunghezza max di testo (160 caratteri)");
                     errors.Add("MISSINGPARAMETER_1", "Destinatario mancante");

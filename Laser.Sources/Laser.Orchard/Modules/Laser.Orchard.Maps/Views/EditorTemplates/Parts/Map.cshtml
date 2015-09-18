@@ -128,8 +128,14 @@
 
             autocomplete.bindTo('bounds', map);
             google.maps.event.addListener(marker, 'dragend', function() {
-                $('#@Html.FieldIdFor(model => model.Map.Latitude)').val(marker.getPosition().lat().toString().replace('.',','));
-                $('#@Html.FieldIdFor(model => model.Map.Longitude)').val(marker.getPosition().lng().toString().replace('.',','));
+                if('@Model.DecimalSeparator' == ',') {
+                    $('#@Html.FieldIdFor(model => model.Map.Latitude)').val(marker.getPosition().lat().toString().replace('.',','));
+                    $('#@Html.FieldIdFor(model => model.Map.Longitude)').val(marker.getPosition().lng().toString().replace('.',','));
+                }
+                else {
+                    $('#@Html.FieldIdFor(model => model.Map.Latitude)').val(marker.getPosition().lat().toString().replace(',','.'));
+                    $('#@Html.FieldIdFor(model => model.Map.Longitude)').val(marker.getPosition().lng().toString().replace(',','.'));
+                }
             });
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 infowindow.close();
@@ -157,8 +163,14 @@
                   new google.maps.Size(35, 35));
                 marker.setIcon(image);*/
                 marker.setPosition(place.geometry.location);
-                $('#@Html.FieldIdFor(model => model.Map.Latitude)').val(place.geometry.location.lat().toString().replace('.',','));
-                $('#@Html.FieldIdFor(model => model.Map.Longitude)').val(place.geometry.location.lng().toString().replace('.',','));
+                if('@Model.DecimalSeparator' == ',') {
+                    $('#@Html.FieldIdFor(model => model.Map.Latitude)').val(place.geometry.location.lat().toString().replace('.',','));
+                    $('#@Html.FieldIdFor(model => model.Map.Longitude)').val(place.geometry.location.lng().toString().replace('.',','));
+                }
+                else {
+                    $('#@Html.FieldIdFor(model => model.Map.Latitude)').val(place.geometry.location.lat().toString().replace(',','.'));
+                    $('#@Html.FieldIdFor(model => model.Map.Longitude)').val(place.geometry.location.lng().toString().replace(',','.'));
+                }
                 var address = '';
                 if (place.address_components) {
                     address = [

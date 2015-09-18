@@ -42,21 +42,21 @@ namespace Laser.Orchard.Commons.Services {
         private string[] _keepOnlyTheeseMembers;
         private string[] _filterContentFieldsParts;
         private bool _omitContentItem;
+        private string[] _complexBehaviour;
         // object/key/dump
 
-        public ObjectDumper(int levels, string[] filterContentFieldsParts = null, bool omitContentItem = false, bool tinyResponse = true) {
+        public ObjectDumper(int levels, string[] filterContentFieldsParts = null, bool omitContentItem = false, bool tinyResponse = true, string[] complexBehaviour = null) {
             _levels = levels;
             _xdoc = new XDocument();
             _xdoc.Add(_current = new XElement("ul"));
-
+            _complexBehaviour = complexBehaviour;
 
             _contentRendered = new List<ContentFlags>();
             if (tinyResponse) {
                 _skipParts = new string[]{"CommonPart", "Version","LocalizationPart","Storage", "Taxonomy",
                              "Ids","LayerPart","CommentsPart","QrCodePart","MobilePushPart","InfosetPart","FieldIndexPart","IdentityPart","UserPart",
                              "UserRolesPart", "AdminMenuPart", "MenuPart", "TermsPart","FieldStorageEventStorage","ButtonToWorkflowsPart" };
-            }
-            else {
+            } else {
                 _skipParts = new string[]{
                 "InfosetPart","FieldIndexPart","IdentityPart","UserPart","UserRolesPart", "AdminMenuPart", "MenuPart"};
             }
@@ -74,8 +74,7 @@ namespace Laser.Orchard.Commons.Services {
         private dynamic cleanobj(dynamic objec) {
             if (((dynamic)objec).ToRemove != null) {
                 return cleanobj(((dynamic)objec).ToRemove);
-            }
-            else
+            } else
                 return objec;
         }
 
@@ -84,23 +83,26 @@ namespace Laser.Orchard.Commons.Services {
             if (_parents.Count >= _levels) {
                 return _current;
             }
-            if (FormatType(o) == "FieldExternal") {
-                // testo il caso in cui non ho un contentobject ma un content url
-                if (((dynamic)o).ContentObject != null) {
-                    //     return _current;
-                    if (!(((dynamic)o).Setting.GenerateL)) {
+            if (o == null && !_complexBehaviour.Select(s => s.ToLowerInvariant()).Contains("returnnulls")) { // Se non devo
+                return null;
+            }
+            if (o != null){
+                if (FormatType(o) == "FieldExternal") {
+                    // testo il caso in cui non ho un contentobject ma un content url
+                    if (((dynamic)o).ContentObject != null) {
+                        //     return _current;
+                        if (!(((dynamic)o).Setting.GenerateL)) {
 
-                        o = ((dynamic)o).ContentObject;
-                        o = cleanobj(o);
-                        name = name + "_exp";
-                        nameDynamicJsonArray = "List<generic>";
-                    }
-                    else {
-                        return _current;
+                            o = ((dynamic)o).ContentObject;
+                            o = cleanobj(o);
+                            name = name + "_exp";
+                            nameDynamicJsonArray = "List<generic>";
+                        } else {
+                            return _current;
+                        }
                     }
                 }
-            }
-
+            } 
             //_parents.Push(o);
             _parents.Push("a");
             // starts a new container
@@ -109,22 +111,18 @@ namespace Laser.Orchard.Commons.Services {
             try {
                 if (o == null) {
                     DumpValue(null, name);
-                }
-                else if (o.GetType().IsValueType || o is string) {
+                } else if (o.GetType().IsValueType || o is string) {
                     DumpValue(o, name);
-                }
-                else {
+                } else {
                     if (_parents.Count >= _levels) {
                         return _current;
-                    }
-                    else if (o.ToString().EndsWith(".ContentItemVersionRecord") || o.ToString().EndsWith(".ContentItemRecord")) {
+                    } else if (o.ToString().EndsWith(".ContentItemVersionRecord") || o.ToString().EndsWith(".ContentItemRecord")) {
                         return _current;
                     }
 
                     DumpObject(o, name, nameDynamicJsonArray);
                 }
-            }
-            finally {
+            } finally {
                 _parents.Pop();
                 RestoreCurrentNode();
             }
@@ -163,13 +161,12 @@ namespace Laser.Orchard.Commons.Services {
                         elementType = tmp_FormatType;
                         break;
                 }
-            }
-            else
+            } else
                 elementType = nameDynamicJsonArray;
             _current.Add(
                 new XElement("h1", new XText(name)),
                 // new XElement("span", elementType)
-                 new XElement("span", elementType,new XAttribute("type","string"))
+                 new XElement("span", elementType, new XAttribute("type", "string"))
 
             );
 
@@ -179,8 +176,7 @@ namespace Laser.Orchard.Commons.Services {
             try {
                 if (o is IDictionary) {
                     DumpDictionary((IDictionary)o);
-                }
-                else if (o is IShape) {
+                } else if (o is IShape) {
                     DumpShape((IShape)o);
 
                     // a shape can also be IEnumerable
@@ -213,22 +209,17 @@ namespace Laser.Orchard.Commons.Services {
                         // DumpEnumerable((IEnumerable) o);
                     }
 
-                }
-                else if (o is IEnumerable) {
+                } else if (o is IEnumerable) {
                     DumpEnumerable((IEnumerable)o);
-                }
-                else if (o is ContentItem && name.StartsWith("[")) { // Array di Contents
+                } else if (o is ContentItem && name.StartsWith("[")) { // Array di Contents
                     DumpMembers(o, _filterContentFieldsParts, name);
-                }
-                else if (o.GetType().Equals(typeof(DynamicJsonObject))) {
+                } else if (o.GetType().Equals(typeof(DynamicJsonObject))) {
                     DumpDynamicMembers(o);
-                }
-                else {
+                } else {
                     //???
                     DumpMembers(o, _filterContentFieldsParts, name);
                 }
-            }
-            finally {
+            } finally {
                 RestoreCurrentNode();
             }
         }
@@ -263,8 +254,7 @@ namespace Laser.Orchard.Commons.Services {
                                     }
                                 }
 
-                    }
-                    else {
+                    } else {
                         SafeCall(() => Dump(dynObject[member], member, padrearray));
                     }
                 }
@@ -279,11 +269,9 @@ namespace Laser.Orchard.Commons.Services {
                     var currentContent = _contentRendered.SingleOrDefault(w => w.Name == contentType);
                     if (currentContent == null) {
                         _contentRendered.Add(new ContentFlags { Name = contentType, Ids = new List<string> { contentId.ToString() } });
-                    }
-                    else if (!currentContent.Ids.Contains(contentId.ToString())) {
+                    } else if (!currentContent.Ids.Contains(contentId.ToString())) {
                         currentContent.Ids.Add(contentId.ToString());
-                    }
-                    else {
+                    } else {
                         //this contentItem has been rendered yet
                         // But I need to render Type and Id
                         var tinyObject = new {
@@ -293,8 +281,7 @@ namespace Laser.Orchard.Commons.Services {
                         DumpMembers(tinyObject);
                         return;
                     }
-                }
-                else {
+                } else {
                     //this contentItem has been rendered yet
                     // But I need to render Type and Id
                     var tinyObject = new {
@@ -313,8 +300,7 @@ namespace Laser.Orchard.Commons.Services {
             if (_keepOnlyTheeseMembers.Select(s => s.Split('/')[0]).Contains(objectName)) { // se ho impostato Membri specifici allora recupero solo quelli
                 members = members
                     .Where(m => _keepOnlyTheeseMembers.Contains(objectName + "/" + m.Name));
-            }
-            else { // altrimenti escludo quelli dannosi o ridondanti o inutili
+            } else { // altrimenti escludo quelli dannosi o ridondanti o inutili
                 members = members
                     .Where(m => !_skipMembers.Contains(objectName + "/" + m.Name) && !_skipMembers.Contains("*/" + m.Name));
             }
@@ -422,8 +408,7 @@ namespace Laser.Orchard.Commons.Services {
             if (member is FieldInfo) {
                 var field = (FieldInfo)member;
                 Dump(field.GetValue(o), member.Name);
-            }
-            else if (member is PropertyInfo) {
+            } else if (member is PropertyInfo) {
                 var prop = (PropertyInfo)member;
 
                 if (prop.GetIndexParameters().Length == 0 && prop.CanRead) {
@@ -446,26 +431,21 @@ namespace Laser.Orchard.Commons.Services {
                 //    formatted = formatted.Substring(0, MaxStringLength / 2) + "..." + formatted.Substring(formatted.Length - MaxStringLength / 2);
                 //}
                 formatted = "\"" + o.ToString() + "\"";
-            }
-            else if (o is DateTime) {
+            } else if (o is DateTime) {
                 formatted = "#" + ((DateTime)o).ToString(CultureInfo.InvariantCulture) + "#";
-            }
-            else if (o is Single || o is float || o is double) {
+            } else if (o is Single || o is float || o is double) {
                 try {
                     formatted = ((float)o).ToString(CultureInfo.InvariantCulture);
-                }
-                catch {
+                } catch {
                     BigInteger a;
                     NumberFormatInfo nfi = new NumberFormatInfo();
                     nfi.NumberGroupSeparator = "";
                     nfi.NumberDecimalSeparator = ",";
                     formatted = ((double)o).ToString("N0", nfi);
                 }
-            }
-            else if (o is decimal) {
+            } else if (o is decimal) {
                 formatted = ((decimal)o).ToString(CultureInfo.InvariantCulture);
-            }
-            else {
+            } else {
                 formatted = o.ToString();
             }
 
@@ -486,8 +466,7 @@ namespace Laser.Orchard.Commons.Services {
                 var genericArguments = String.Join(", ", type.GetGenericArguments().Select(FormatType).ToArray());
                 if (genericArguments.EndsWith("Record") && type.Name.Substring(0, type.Name.IndexOf('`')) == "PersistentGenericBag") {
                     return String.Format("{0}<{1}>", "List", genericArguments);
-                }
-                else {
+                } else {
                     return String.Format("{0}<{1}>", type.Name.Substring(0, type.Name.IndexOf('`')), genericArguments);
                 }
             }
@@ -498,8 +477,7 @@ namespace Laser.Orchard.Commons.Services {
         private static void SafeCall(Action action) {
             try {
                 action();
-            }
-            catch {
+            } catch {
                 // ignore exceptions is safe call
             }
         }
