@@ -1,7 +1,12 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2010 Outercurve Foundation
-# All rights reserved
-# This file is distributed under the BSD license
+# Copyright (c) 2015 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Controllers/NewsletterAdminController.cs"
 msgid "Newsletter deleted"
@@ -32,12 +37,12 @@ msgid "Newsletter information updated"
 msgstr "Informazioni della newsletter aggiornate"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Controllers/SubscriptionController.cs"
-msgid "Please select at least one newsletter!"
-msgstr "Si prega di selezionare almeno una Newsletter"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Controllers/SubscriptionController.cs"
 msgid "Email and email confirmation must match!"
 msgstr "Email e Conferma Email devono essere uguali!"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Controllers/SubscriptionController.cs"
+msgid "Please select at least one newsletter!"
+msgstr "Si prega di selezionare almeno una Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Drivers/AnnouncementPartDriver.cs"
 msgid "Announcement Error"
@@ -48,24 +53,24 @@ msgid "NewsletterDefinition Error"
 msgstr "Errore nella Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Drivers/NewsletterEditionPartDriver.cs"
-msgid "NewsletterEdition Error"
-msgstr "Errore nell'Edizione della Newsletter"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Drivers/NewsletterEditionPartDriver.cs"
 msgid "Dispatched newsletter can't be updated!"
 msgstr "Una Newsletter già inviata non può essere aggiornata!"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Drivers/NewsletterEditionPartDriver.cs"
+msgid "NewsletterEdition Error"
+msgstr "Errore nell'Edizione della Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Drivers/SubscriberRegistrationPartDriver.cs"
 msgid "SubscriberRegistration Error"
 msgstr "Errore nella fase di registrazione "
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Navigation/AdminMenu.cs"
-msgid "Newsletters"
-msgstr "Newsletter"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Navigation/AdminMenu.cs"
 msgid "newsletter"
 msgstr "newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Navigation/AdminMenu.cs"
+msgid "Newsletters"
+msgstr "Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Services/NewsletterServices.cs"
 msgid "Email already registered!"
@@ -76,16 +81,12 @@ msgid "Email not yet registered!"
 msgstr "Email non ancora registrata!"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Services/NewsletterServices.cs"
-msgid "Newsletter Edition sent to a test email!"
-msgstr "Edizione inviata all'email di test!"
-	
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Services/NewsletterServices.cs"
 msgid "Enter a test email!"
 msgstr "Inserisci un'email di test!"
-	
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/Announcement_Edit.cshtml"
-msgid "Newsletter Announcement"
-msgstr "Comunicato per Newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Services/NewsletterServices.cs"
+msgid "Newsletter Edition sent to a test email!"
+msgstr "Edizione inviata all'email di test!"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/Announcement_Edit.cshtml"
 msgid "Announcement Title"
@@ -95,13 +96,9 @@ msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/Announc
 msgid "Attached to this Newsletter"
 msgstr "Allegato alla seguente Newsltter"
 
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterDefinition_Edit.cshtml"
-msgid "Newsletter Templates"
-msgstr "Modeli Newsletter"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterDefinition_Edit.cshtml"
-msgid "Templates"
-msgstr "Modelli"
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/Announcement_Edit.cshtml"
+msgid "Newsletter Announcement"
+msgstr "Comunicato per Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterDefinition_Edit.cshtml"
 msgid "Choose templates of this  newsletter"
@@ -109,39 +106,47 @@ msgstr "Scegli i modelli per questa newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterDefinition_Edit.cshtml"
 msgid "Edition Template"
-msgstr "            "
+msgstr "Template Edizione"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterDefinition_Edit.cshtml"
+msgid "Newsletter Templates"
+msgstr "Modeli Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterDefinition_Edit.cshtml"
 msgid "Subscription Template"
 msgstr "Modello di iscrizione"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterDefinition_Edit.cshtml"
+msgid "Templates"
+msgstr "Modelli"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterDefinition_Edit.cshtml"
 msgid "Unsubscription Template"
 msgstr "Modello di cancellazione"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterEdition_Edit.cshtml"
+msgid "Announcement Item"
+msgstr "Comunicati"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterEdition_Edit.cshtml"
 msgid "Newsletter Edition"
 msgstr "Edizione Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterEdition_Edit.cshtml"
-msgid "Newsletter Edition Infos"
-msgstr "Inforrmazioni sull'Edizione della Newsletter"
+msgid "Newsletter edition"
+msgstr "Edizione newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterEdition_Edit.cshtml"
-msgid "sent on"
-msgstr "inviata il"
+msgid "Newsletter Edition Infos"
+msgstr "Inforrmazioni sull'Edizione della Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterEdition_Edit.cshtml"
 msgid "Newsletter not yet sent"
 msgstr "Newsletter non ancora inviata"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterEdition_Edit.cshtml"
-msgid "Proposed Announcements"">
-msgstr "Comunicati disponibili"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterEdition_Edit.cshtml"
-msgid "Announcement Item"
-msgstr "Comunicati"
+msgid "sent on"
+msgstr "inviata il"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/SendNewsletterButton.cshtml"
 msgid "Insert a test email"
@@ -154,7 +159,6 @@ msgstr "Invia Newsletter"
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/SendNewsletterButton.cshtml"
 msgid "Send Test Newsletter"
 msgstr "Invia un'anteprima all'indirizzo di test"
-
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/SubscriberRegistration_Edit.cshtml"
 msgid "Newsletter Subscription"
@@ -169,6 +173,10 @@ msgid "Subscription for this/theese Newsletter(s)"
 msgstr "Iscrizioni della newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Create.cshtml"
+msgid "Create Newsletter"
+msgstr "Crea nuova Newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Create.cshtml"
 msgid "New Newsletter"
 msgstr "Nuova Newsletter"
 
@@ -176,155 +184,127 @@ msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Create.cshtml
 msgid "Newsletter List"
 msgstr "Elenco Newsletter"
 
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Create.cshtml"
-msgid "Create Newsletter"
-msgstr "Crea nuova Newsletter"
-
-
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Edit.cshtml"
-msgid "Newsletter Properties"
-msgstr "Proprietà Newsletter"
+msgid "Edit Newsletter"
+msgstr "Modifica Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Edit.cshtml"
 msgid "Newsletter List"
 msgstr "Elenco Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Edit.cshtml"
-msgid "Edit Newsletter"
-msgstr "Modifica Newsletter"
+msgid "Newsletter Properties"
+msgstr "Proprietà Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
-msgid "Manage Newsletter editions"
-msgstr "Gestisci Edizioni della Newsletter"
+msgid "Actions:"
+msgstr "Azioni:"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
+msgid "Apply"
+msgstr "Applica"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
 msgid "Create Newsletter"
 msgstr "Crea Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
-msgid "Actions:"
-msgstr "Azioni:"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
-msgid "Choose action...""
-msgstr "Scegli azione..."
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
-msgid "Delete""
-msgstr "            "
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
-msgid "Apply"
-msgstr "Applica"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
-msgid "Properties"         
-msgstr "Proprietà
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
-msgid "Delete"       
-msgstr "Elimina"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
-msgid "Subscribers"        
-msgstr "Iscritti"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
-msgid "New Edition"        
-msgstr "Nuova Edizione"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
 msgid "Editions Archive"
 msgstr "Archivio Edizioni"
 
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Create.cshtml"
-msgid "New Newsletter Edition"
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
+msgid "Manage Newsletter editions"
+msgstr "Gestisci Edizioni della Newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
+msgid "New Edition"
 msgstr "Nuova Edizione"
 
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Create.cshtml"
-msgid "Newsletter List"
-msgstr "Elenco Newsletter"
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
+msgid "Properties"
+msgstr "Proprietà
 
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Create.cshtml"
-msgid "Newsletter Edition List"
-msgstr "Elenco Edizioni"
+msgctxt "
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
+msgid "Subscribers"
+msgstr "Iscritti"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Create.cshtml"
 msgid "Create Newsletter Edition"
 msgstr "Crea nuova Edizione"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Create.cshtml"
+msgid "New Newsletter Edition"
+msgstr "Nuova Edizione"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Create.cshtml"
+msgid "Newsletter Edition List"
+msgstr "Elenco Edizioni"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Create.cshtml"
 msgid "Newsletter List"
 msgstr "Elenco Newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Edit.cshtml"
+msgid "Edit Newsletter Edition"
+msgstr "Modifica Edizione"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Edit.cshtml"
 msgid "Newsletter Edition Edit"
 msgstr "Modifica Edizione"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Edit.cshtml"
-msgid "Newsletter List"
-msgstr "Elenco Newsletter"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Edit.cshtml"
 msgid "Newsletter Edition List"
 msgstr "Elenco Edizioni"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Edit.cshtml"
-msgid "Edit Newsletter Edition"
-msgstr "Modifica Edizione"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
-msgid "Sent"
-msgstr "Inviata"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
-msgid "Not yet sent"
-msgstr "Non inviata"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
-msgid "Edition sent"
-msgstr "Edizione inviata"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
-msgid "Edition not yet sent"
-msgstr "Edizione non ancora inviata"
-
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
-msgid "Newsletter Editions List"
-msgstr "Elenco Edizioni"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
 msgid "Newsletter List"
 msgstr "Elenco Newsletter"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
-msgid "Create New Edition"
-msgstr "Crea Nuova Edizione"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
 msgid "Actions:"
 msgstr "Azioni:"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
-msgid "Choose action...""
-msgstr "Scegli azione..."
+msgid "Apply"
+msgstr "Applica"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
-msgid "Delete""
+msgid "Create New Edition"
+msgstr "Crea Nuova Edizione"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
+msgid "Delete"
 msgstr "Elimina"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
-msgid "Apply"
-msgstr "Applica"
+msgid "Edit"
+msgstr "Modifica"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
+msgid "Edition not yet sent"
+msgstr "Edizione non ancora inviata"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
+msgid "Edition sent"
+msgstr "Edizione inviata"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
 msgid "Newsletter edition nr. {0}"
 msgstr "Edizione Newnsletter n. {0}"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
-msgid "Sent on"
-msgstr "Inviata il"
+msgid "Newsletter Editions List"
+msgstr "Elenco Edizioni"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
+msgid "Newsletter Editions List "
+msgstr "Elenco delle edizioni delle newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
+msgid "Newsletter List"
+msgstr "Elenco Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
 msgid "Newsletter to be numbered"
@@ -335,33 +315,40 @@ msgid "Not yet sent"
 msgstr "Non ancora inviata"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
-msgid "Edit"   
-msgstr "Modifica"
+msgid "Sent"
+msgstr "Inviata"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
-msgid "Delete"       
-msgstr "Elimina"
+msgid "Sent on"
+msgstr "Inviata il"
 
-msgid "Name"
-msgstr "Nome"
-
-msgid "Your Name"
-msgstr "Il tuo nome"
-
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Parts/SubscriberRegistration.cshtml"
 msgid "Email"
 msgstr "Email"
 
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Parts/SubscriberRegistration.cshtml"
 msgid "Email Address"
 msgstr "Indirizzo Email"
 
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Parts/SubscriberRegistration.cshtml"
 msgid "Email Confirmation"
 msgstr "Conferma Email"
 
-msgid "Subscribe to"
-msgstr "Desidero iscrivermi alla newsletter"
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Parts/SubscriberRegistration.cshtml"
+msgid "Name"
+msgstr "Nome"
 
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Parts/SubscriberRegistration.cshtml"
 msgid "Subscribe"
-msgstr "Iscrivimi"
+msgstr "Sottoscrivi"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Parts/SubscriberRegistration.cshtml"
+msgid "Subscribe to"
+msgstr "Sottoscrivi"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Parts/SubscriberRegistration.cshtml"
+msgid "Your Name"
+msgstr "Il tuo Nome"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Create.cshtml"
 msgid "New Newsletter Edition"
@@ -372,116 +359,210 @@ msgid "Newsletter Edition Edit"
 msgstr "Modifica Edizione"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
-msgid "Confirmed"
-msgstr "Confermato"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
-msgid "Email confirmed"
-msgstr "Email confermata"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
-msgid "Not confirmed"
-msgstr "Non confermata"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
-msgid "Email not confirmed"
-msgstr "Email non confermata"
-
-
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
-msgid "Newsletter Subscribers List"
-msgstr "Elenco Iscritti"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
-msgid "Newsletter List"
-msgstr "Elenco Newsletter"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
-msgid "Newsletter Edition List"
-msgstr "Elenco"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
 msgid "Actions:"
 msgstr "Azioni:"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
-msgid "Choose action...""
-msgstr "Scegli azione..."
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
-msgid "Delete""
-msgstr "Elimina"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
 msgid "Apply"
 msgstr "Applica"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
-msgid "Subscribed from {0}"
-msgstr "Iscritto dal {0}"
-
-msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
 msgid "Confirmation on {0}"
 msgstr "Confermato il {0}"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
-msgid "Unsubscribed on {0}"
-msgstr "Cancellato il {0}"
+msgid "Confirmed"
+msgstr "Confermato"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
 msgid "Delete"
 msgstr "Elimina"
 
-# Etichette comuni Modulo e tema per il front-end
-msgid "Newsletter subscription"
-msgstr "Iscrizione Newsletter"
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
+msgid "Email confirmed"
+msgstr "Email confermata"
 
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
+msgid "Email not confirmed"
+msgstr "Email non confermata"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
+msgid "Newsletter Edition List"
+msgstr "Elenco"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
+msgid "Newsletter List"
+msgstr "Elenco Newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
+msgid "Newsletter Subscribers List"
+msgstr "Elenco Iscritti"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
+msgid "Not confirmed"
+msgstr "Non confermata"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
+msgid "Subscribed from {0}"
+msgstr "Iscritto dal {0}"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
+msgid "Unsubscribed on {0}"
+msgstr "Cancellato il {0}"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.ConfirmationEmailSent.cshtml"
 msgid "Dear"
-msgstr "Gentile"
+msgstr "Egregio"
 
-msgid "a confirmation email was sent to your email address.<br/>Please confirm your email by clicking on link in your email."
-msgstr "un'email di conferma è stata inviata al tuo indirizzo email<br/>Conferma la tua email cliccando sul link presente nel messaggio che ti abbiamo inviato."
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.ConfirmationEmailSent.cshtml"
+msgid "Newsletter subscription"
+msgstr "Sottoscrizione newsletter"
 
-msgid "a confirmation email was sent to your email address.<br/>Please confirm your unsubscription by clicking on link in your email."
-msgstr "un'email di conferma è stata inviata al tuo indirizzo email<br/>Conferma la cancellazione della tua iscrizione cliccnado sul link presente nel messaggio che ti abbiamo inviato."
-
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.ConfirmedEmail.cshtml"
 msgid "Email confirmation"
 msgstr "Conferma Email"
 
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.ConfirmedEmail.cshtml"
 msgid "Your Email address has been confirmed! Thank you!"
-msgstr "Il tuo indirizzo email è stato confermato! Grazie!"
+msgstr "La tua email è stata confermata! Grazie!"
 
-msgid "Newsletter subscription"
-msgstr "Iscrizione Newsletter"
-
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.SubscribeError.cshtml"
 msgid "Dear"
-msgstr "Gentile"
+msgstr "Egregio"
 
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.SubscribeError.cshtml"
+msgid "Newsletter subscription"
+msgstr "Sottoscrizione newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.SubscribeError.cshtml"
 msgid "Something went worng. Please retry."
-msgstr "Qualcosa è andato storto. Riprova."
+msgstr "Si è verificato un problema. Si prega di riprovare."
 
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.UnconfirmedEmail.cshtml"
 msgid "Email confirmation"
 msgstr "Conferma Email"
 
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.UnconfirmedEmail.cshtml"
 msgid "No email address found!"
-msgstr "Nessun indirizzo email trovato!"
+msgstr "Indirizzo email non trovato!"
 
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.Unsubscribe.cshtml"
+msgid "Email"
+msgstr "Email"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.Unsubscribe.cshtml"
+msgid "Email Address"
+msgstr "Indirizzo Email"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.Unsubscribe.cshtml"
+msgid "Email Confirmation"
+msgstr "Conferma Email"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.Unsubscribe.cshtml"
 msgid "Newsletter unsubscription"
-msgstr "Cancellazione dalla newsletter"
+msgstr "Rimozione sottoscrizione newsletter"
 
-msgid "Newsletter {0} unsubscription"
-msgstr "Cancellazione dalla newsletter {0}"
-
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.Unsubscribe.cshtml"
 msgid "Unsubscribe"
-msgstr "Cancella iscrizione"
+msgstr "Annulla sottoscrizione"
 
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.UnsubscribedEmail.cshtml"
+msgid "Newsletter unsubscription"
+msgstr "Rimozione sottoscrizione newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.UnsubscribedEmail.cshtml"
 msgid "Your Email address has been removed! Thank you!"
-msgstr "Il tuo indirizzo email è stato cancellato dalla Newsletter! Grazie!"
+msgstr "La tua email è stata rimossa! Grazie!"
 
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.UnsubscribeEmailSent.cshtml"
+msgid "Newsletter unsubscription"
+msgstr "Rimozione sottoscrizione newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.UnsubscribeError.cshtml"
 msgid "Newsletter unsubscribe"
-msgstr "Cancellazione iscrizione"
+msgstr "Rimuovi sottoscrizione newsletter"
 
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.UnsubscribeError.cshtml"
 msgid "No email address found!"
-msgstr "Nessun indirizzo email trovato!"
+msgstr "Indirizzo email non trovato!"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterAdminController"
+msgid "Couldn't create newsletter"
+msgstr "Non è possibile creare la newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterAdminController"
+msgid "Couldn't delete newsletter"
+msgstr "Non è possibile eliminare la newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterAdminController"
+msgid "Couldn't edit newsletter"
+msgstr "Non è possibile modificare la newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterAdminController"
+msgid "Not allowed to create newsletters"
+msgstr "Non si dispone dell'autorizzazione di creare newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterAdminController"
+msgid "Not allowed to edit newsletter"
+msgstr "Non si dispone dell'autorizzazione di modificare newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterEditionAdminController"
+msgid "Couldn't create newsletter"
+msgstr "Non è possibile creare la newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterEditionAdminController"
+msgid "Couldn't delete newsletter"
+msgstr "Non è possibile eliminare la newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterEditionAdminController"
+msgid "Couldn't edit newsletter"
+msgstr "Non è possibile modificare la newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterEditionAdminController"
+msgid "Not allowed to create newsletters"
+msgstr "Non si dispone dell'autorizzazione di creare newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterEditionAdminController"
+msgid "Not allowed to edit newsletter"
+msgstr "Non si dispone dell'autorizzazione di modificare newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.SubscribersAdminController"
+msgid "Couldn't create newsletter"
+msgstr "Non è possibile creare la newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.SubscribersAdminController"
+msgid "Couldn't delete newsletter"
+msgstr "Non è possibile eliminare la newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.SubscribersAdminController"
+msgid "Couldn't edit newsletter"
+msgstr "Non è possibile modificare la newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.SubscribersAdminController"
+msgid "Not allowed to create newsletters"
+msgstr "Non si dispone dell'autorizzazione di creare newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.SubscribersAdminController"
+msgid "Not allowed to edit newsletter"
+msgstr "Non si dispone dell'autorizzazione di modificare newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Drivers.AnnouncementPartDriver"
+msgid "Announcement Error"
+msgstr "Errore Annuncio"
+
+msgctxt "Laser.Orchard.NewsLetters.Drivers.NewsletterDefinitionPartDriver"
+msgid "NewsletterDefinition Error"
+msgstr "Errore NewsletterDefinition"
+
+msgctxt "Laser.Orchard.NewsLetters.Drivers.NewsletterEditionPartDriver"
+msgid "Dispatched newsletter can't be updated!"
+msgstr "Non è possibile aggiornare una newsletter spedita!"
+
+msgctxt "Laser.Orchard.NewsLetters.Drivers.NewsletterEditionPartDriver"
+msgid "NewsletterEdition Error"
+msgstr "Errore NewsletterEdition"
+
+msgctxt "Laser.Orchard.NewsLetters.Drivers.SubscriberRegistrationPartDriver"
+msgid "SubscriberRegistration Error"
+msgstr "Errore SubscriberRegistration"
 

@@ -1,0 +1,74 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2015 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.UsersExtensions/Views/EditorTemplates/Parts/UserRegistrationPolicy_Edit.cshtml"
+msgid "Accept"
+msgstr "Accetto"
+
+msgctxt "~/Modules/Laser.Orchard.UsersExtensions/Views/EditorTemplates/Parts/UserRegistrationPolicy_Edit.cshtml"
+msgid "Don't Accept"
+msgstr "Non accetto"
+
+msgctxt "~/Modules/Laser.Orchard.UsersExtensions/Views/EditorTemplates/Parts/UserRegistrationPolicy_Edit.cshtml"
+msgid "I have read the regulation."
+msgstr "Ho letto il regolamento."
+
+msgctxt "~/Modules/Laser.Orchard.UsersExtensions/Views/EditorTemplates/Parts/UserRegistrationPolicy_Edit.cshtml"
+msgid "Policies"
+msgstr "Informative"
+
+msgctxt "~/Modules/Laser.Orchard.UsersExtensions/Views/EditorTemplates/Parts/UsersRegistrationSettings.cshtml"
+msgid "All Policies"
+msgstr "Tutte le informative"
+
+msgctxt "~/Modules/Laser.Orchard.UsersExtensions/Views/EditorTemplates/Parts/UsersRegistrationSettings.cshtml"
+msgid "Include policies on registration"
+msgstr "Includi informative in fase di registrazione"
+
+msgctxt "~/Modules/Laser.Orchard.UsersExtensions/Views/EditorTemplates/Parts/UsersRegistrationSettings.cshtml"
+msgid "Policy filters"
+msgstr "Filtri informative"
+
+msgctxt "~/Modules/Laser.Orchard.UsersExtensions/Views/EditorTemplates/Parts/UsersRegistrationSettings.cshtml"
+msgid "Registration behaviour"
+msgstr "Comportamento durante la fare di registrazione"
+
+msgctxt "~/Modules/Laser.Orchard.UsersExtensions/Views/EditorTemplates/Parts/UsersRegistrationSettings.cshtml"
+msgid "Users registration - policies acceptation"
+msgstr "Registrazione utenti - accettazione informative"
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Invalid user."
+msgstr "Utente non valido."
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Send email failed."
+msgstr "Invio email fallito"
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Send SMS failed."
+msgstr "Invio SMS fallito."
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Users cannot recover lost password due to site settings."
+msgstr "Le impostazioni del sito non permettono il recupero della password."
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Users cannot register due to site settings."
+msgstr "Le impostazioni del sito non permettono la registrazione di nuovi utenti."
+
+msgctxt "Laser.Orchard.UsersExtensions.Drivers.UserRegistrationPolicyPartDriver"
+msgid "User has to accept policies!"
+msgstr "L'utente deve accettare le informative!"
+
+msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
+msgid "Lost password"
+msgstr "Password dimenticata"
+

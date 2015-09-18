@@ -1,0 +1,22 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2015 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Orchard.Captcha/Views/EditorTemplates/Parts.Captcha.SiteSettings.cshtml"
+msgid "Captcha"
+msgstr "Captcha"
+
+msgctxt "Orchard.Captcha.Drivers.CaptchaSettingsDriver"
+msgid "Captcha settings not saved"
+msgstr "Impostazioni Captcha non salvate"
+
+msgctxt "Orchard.Captcha.Services.CaptchaService"
+msgid "Incorrect please try again"
+msgstr "Non corretto prego riprovare"
+

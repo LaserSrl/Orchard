@@ -1,0 +1,30 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2015 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.Sharing/Views/DefinitionTemplates/ShareBarTypePartSettings.cshtml"
+msgid "Preview of available modes is available here: "
+msgstr "L'anteprima dei modi disponibili è consultabile qui:"
+
+msgctxt "~/Modules/Laser.Orchard.Sharing/Views/DefinitionTemplates/ShareBarTypePartSettings.cshtml"
+msgid "Share bar display style"
+msgstr "Stile di visualizzazione della barra di condivisione"
+
+msgctxt "~/Modules/Laser.Orchard.Sharing/Views/EditorTemplates/Parts/Share.Settings.cshtml"
+msgid "AddThis service account"
+msgstr "Account del servizio AddThis"
+
+msgctxt "~/Modules/Laser.Orchard.Sharing/Views/EditorTemplates/Parts/Share.Settings.cshtml"
+msgid "Content sharing settings"
+msgstr "Impostazioni di condivisione del contenuto"
+
+msgctxt "Laser.Orchard.Sharing.MissingSettingsBanner"
+msgid "Content sharing settings needs to be configured."
+msgstr "E' necessario configurare le impostazioni di condivisione del contenuto."
+

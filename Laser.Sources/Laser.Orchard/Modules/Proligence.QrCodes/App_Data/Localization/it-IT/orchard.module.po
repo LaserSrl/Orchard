@@ -1,0 +1,30 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2015 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Proligence.QrCodes/Views/DefinitionTemplates/QrCodeTypePartSettings.cshtml"
+msgid "Size (in pixels)"
+msgstr "Dimensione (in pixel)"
+
+msgctxt "~/Modules/Proligence.QrCodes/Views/DefinitionTemplates/QrCodeTypePartSettings.cshtml"
+msgid "Value"
+msgstr "Valore"
+
+msgctxt "~/Modules/Proligence.QrCodes/Views/EditorTemplates/Parts/QrCode.cshtml"
+msgid "Set QR code parameters"
+msgstr "Imposta i parametri del QR code"
+
+msgctxt "~/Modules/Proligence.QrCodes/Views/EditorTemplates/Parts/QrCode.cshtml"
+msgid "Size (in pixels)"
+msgstr "Dimensione (in pixel)"
+
+msgctxt "~/Modules/Proligence.QrCodes/Views/EditorTemplates/Parts/QrCode.cshtml"
+msgid "Value"
+msgstr "Valore"
+
