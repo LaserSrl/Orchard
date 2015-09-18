@@ -9,5 +9,7 @@ using System.Web;
 namespace Laser.Orchard.StartupConfig.Services {
     public interface IMaintenanceService: IDependency {
         List<MaintenanceVM> Get();
+        List<MaintenanceVM> ListAll();
+        List<string> GetAllTenantName();
     }
 }

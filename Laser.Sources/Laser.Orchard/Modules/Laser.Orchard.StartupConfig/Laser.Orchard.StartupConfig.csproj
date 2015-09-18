@@ -186,6 +186,7 @@
     <Compile Include="Activities\TaxonomySetValuesActivity.cs" />
     <Compile Include="Activities\TaxonomySetValuesForm.cs" />
     <Compile Include="Activities\UserEventActivity.cs" />
+    <Compile Include="Controllers\MaintenanceAdminController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Drivers\MaintenancePartDriver.cs" />
     <Compile Include="Drivers\PublishExtensionPartDriver.cs" />
@@ -224,9 +225,12 @@
     <Compile Include="Models\ContentPickerConnector.cs" />
     <Compile Include="Models\MaintenancePart.cs" />
     <Compile Include="Models\PublishExtensionPart.cs" />
+    <Compile Include="Navigation\MaintenanceMenu.cs" />
+    <Compile Include="Permission\MaintenancePermission.cs" />
     <Compile Include="Services\IMaintenanceService.cs" />
     <Compile Include="Services\MaintenanceBanner.cs" />
     <Compile Include="Services\MaintenanceService.cs" />
+    <Compile Include="ViewModels\MaintenanceIndexVM.cs" />
     <Compile Include="ViewModels\MaintenanceVM.cs" />
     <Compile Include="ViewModels\Response.cs" />
     <Compile Include="Models\TaxonomyExtensionsSiteSettingsPart.cs" />
@@ -298,6 +302,8 @@
     <Content Include="Views\DefinitionTemplates\ContentPickerFieldExtensionSettings.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\TaxonomyExtension_Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Maintenance_Edit.cshtml" />
+    <Content Include="Views\MaintenanceAdmin\index.cshtml" />
+    <Content Include="Views\MaintenanceAdmin\Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

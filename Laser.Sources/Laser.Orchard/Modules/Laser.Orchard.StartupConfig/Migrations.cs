@@ -4,6 +4,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
+using System.Data;
 
 namespace Laser.Orchard.StartupConfig {
 
@@ -102,13 +103,16 @@ namespace Laser.Orchard.StartupConfig {
                 .WithPart("CommonPart")
                 .WithPart(typeof(MaintenancePart).Name)
                 .WithPart("PublishLaterPart")
-                .Creatable(true)
+                .Creatable(false)
+                .Draftable()
                 );
             SchemaBuilder.CreateTable("MaintenancePartRecord", table => table
                 .ContentPartVersionRecord()
                 .Column<string>("MaintenanceNotifyType")
                 .Column<string>("MaintenanceNotify")
             );
+            SchemaBuilder.AlterTable("MaintenancePartRecord", table => table
+            .AddColumn("Selected_Tenant", DbType.String));
             return 1;
         }
 
@@ -144,6 +148,11 @@ namespace Laser.Orchard.StartupConfig {
             //      SchemaBuilder.DropTable("MaintenancePartRecord");
 
             return 7;
+        }
+        public int UpdateFrom7() {
+            //      SchemaBuilder.DropTable("MaintenancePartRecord");
+
+            return 8;
         }
     }
 }
