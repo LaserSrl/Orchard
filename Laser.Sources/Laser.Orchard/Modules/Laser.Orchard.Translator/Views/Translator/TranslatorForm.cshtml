@@ -38,7 +38,7 @@
                 <h2>@Model.Message</h2>
                 if (authorized) {
                     @Html.TextBoxFor(m => m.Message, new { id = "translation-message-id", style= "display:none;", @class = "text large" })
-                    <button type="button" id="translation-message">Edit Message</button>
+                    <button type="button" id="edit-message">Edit Message ID</button>
                 }
                 <div id="translation-text-container">
                     @Html.LabelFor(m => m.Context, @T("Context"))
@@ -91,6 +91,7 @@
             });
 
             if ('@ViewBag.SaveSuccess' == 'True') {
+                window.parent.$('#message-@Model.Id').children("span").text("@Model.Message");
                 if ('@String.IsNullOrWhiteSpace(Model.TranslatedMessage)' == 'True')
                     window.parent.$('#message-@Model.Id').children("i").attr("class", "icon-remove");
                 else
@@ -115,17 +116,17 @@
                     return true;
             });
 
-            $('#translation-message').click(function () {
+            $('#edit-message').click(function () {
                 var translationMessage = $('#translation-message-id');
                 if (translationMessage.css("display") == "none") {
                     $("#translation-form h2").hide();
                     $('#translation-message-id').show();
-                    $('#translation-message').text("Reset Message");
+                    $('#edit-message').text("Reset Message ID");
                 } else {
                     $('#translation-message-id').hide();
                     $("#translation-form h2").show();
                     $('#translation-message-id').val("@Model.Message");
-                    $('#translation-message').text("Edit Message");
+                    $('#edit-message').text("Edit Message ID");
                 }
             });
         });
