@@ -78,6 +78,7 @@ namespace Laser.Orchard.Translator.Services {
 
                 existingTranslation.Context = translation.Context;
                 existingTranslation.TranslatedMessage = translation.TranslatedMessage;
+                existingTranslation.Message = translation.Message;  // #GM 2015-09-22
 
                 _translationRecordRepository.Update(existingTranslation);
                 _translationRecordRepository.Flush();

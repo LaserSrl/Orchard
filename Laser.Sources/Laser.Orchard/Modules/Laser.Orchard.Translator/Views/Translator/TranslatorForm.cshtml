@@ -28,13 +28,18 @@
         <div id="translation-container">
             @{
                 if (Model.Id != 0) {
-                <h2>@Model.Message</h2>
                 
                     using (Html.BeginForm("TranslatorForm", "Translator",
                                           new { area = "Laser.Orchard.Translator" },
                                           FormMethod.Post,
                                           new { id = "translation-form" })) {
                 @Html.AntiForgeryTokenOrchard()
+
+                <h2>@Model.Message</h2>
+                if (authorized) {
+                    @Html.TextBoxFor(m => m.Message, new { id = "translation-message-id", style= "display:none;", @class = "text large" })
+                    <button type="button" id="translation-message">Edit Message</button>
+                }
                 <div id="translation-text-container">
                     @Html.LabelFor(m => m.Context, @T("Context"))
                     @Html.TextBoxFor(m => m.Context, new { @class = "text large" })
@@ -46,32 +51,36 @@
                 
                 @Html.HiddenFor(m => m.Id);
                 @Html.HiddenFor(m => m.Language);
-                @Html.HiddenFor(m => m.Message);
+                @Html.HiddenFor(m => m.Message, new { name = "OrigMessage" });
                 @Html.HiddenFor(m => m.ContainerName);
                 @Html.HiddenFor(m => m.ContainerType);
 
-                                                     if (ViewData.ModelState.IsValid) {
+                                                     if (ViewData.ModelState.IsValid)
+                                                     {
                 <input id="save-translation" name="saveTranslation" class="button" type="submit" value="@T("Save")" />
-                                                         if (authorized) {
+                                                         if (authorized)
+                                                         {
                 <input id="delete-translation" name="deleteTranslation" class="button" type="submit" value="@T("Delete")" />
                                                          }
                                                      }
-                    }
+                                                         }
 
-                if (ViewBag.SuggestedTranslations != null && ViewBag.SuggestedTranslations.Count > 0) {
-                    var suggestedTranslationsIndex = 0;
+                                                         if (ViewBag.SuggestedTranslations != null && ViewBag.SuggestedTranslations.Count > 0)
+                                                         {
+                                                             var suggestedTranslationsIndex = 0;
                    <div id="suggestions-area">
                         <h2>@T("Suggestions")</h2>
                         <ul>
-                            @foreach (var suggested in ViewBag.SuggestedTranslations) {
+                            @foreach (var suggested in ViewBag.SuggestedTranslations)
+                            {
                                 <li><a class="suggested-translation-item" title="@T("Click to use this translation")" id="suggestedTranslations_@suggestedTranslationsIndex" href="#">@suggested</a></li>
                                 suggestedTranslationsIndex++;
                             }
                         </ul>
                     </div>
-                    }
+                                                         }
+                                          }
                 }
-            }
         </div>
     </div>
 
@@ -104,6 +113,20 @@
                     return confirm("@T("This operation will completely remove any association between the message and the module. You won't be able to translate this message for this module anymore until it's imported again. Do you want to continue?")");
                 else
                     return true;
+            });
+
+            $('#translation-message').click(function () {
+                var translationMessage = $('#translation-message-id');
+                if (translationMessage.css("display") == "none") {
+                    $("#translation-form h2").hide();
+                    $('#translation-message-id').show();
+                    $('#translation-message').text("Reset Message");
+                } else {
+                    $('#translation-message-id').hide();
+                    $("#translation-form h2").show();
+                    $('#translation-message-id').val("@Model.Message");
+                    $('#translation-message').text("Edit Message");
+                }
             });
         });
     </script>
