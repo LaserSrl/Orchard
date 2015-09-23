@@ -1,0 +1,42 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2015 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.IXMSD/Views/EditorTemplates/Parts/IXMSDSettings.cshtml"
+msgid "DaysBeforeTodayToParseIntoLog"
+msgstr "DaysBeforeTodayToParseIntoLog"
+
+msgctxt "~/Modules/Laser.Orchard.IXMSD/Views/EditorTemplates/Parts/IXMSDSettings.cshtml"
+msgid "ftpPwd"
+msgstr "ftpPwd"
+
+msgctxt "~/Modules/Laser.Orchard.IXMSD/Views/EditorTemplates/Parts/IXMSDSettings.cshtml"
+msgid "ftpRemoteHost"
+msgstr "ftpRemoteHost"
+
+msgctxt "~/Modules/Laser.Orchard.IXMSD/Views/EditorTemplates/Parts/IXMSDSettings.cshtml"
+msgid "ftpUser"
+msgstr "ftpUser"
+
+msgctxt "~/Modules/Laser.Orchard.IXMSD/Views/EditorTemplates/Parts/IXMSDSettings.cshtml"
+msgid "IXMSD Settings"
+msgstr "Impostazioni IXMSD"
+
+msgctxt "~/Modules/Laser.Orchard.IXMSD/Views/EditorTemplates/Parts/IXMSDSettings.cshtml"
+msgid "LogDownloadFileFolder"
+msgstr "LogDownloadFileFolder"
+
+msgctxt "~/Modules/Laser.Orchard.IXMSD/Views/EditorTemplates/Parts/IXMSDSettings.cshtml"
+msgid "LogFileName"
+msgstr "LogFileName"
+
+msgctxt "~/Modules/Laser.Orchard.IXMSD/Views/EditorTemplates/Parts/IXMSDSettings.cshtml"
+msgid "URL"
+msgstr "URL"
+

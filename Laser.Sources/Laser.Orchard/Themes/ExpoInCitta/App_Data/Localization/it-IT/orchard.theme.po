@@ -1,17 +1,18 @@
-msgstr msgid "# Orchard resource strings - it-IT
-# Copyright (c) 2013 Laser s.r.l.
+# Orchard resource strings - it-IT
+# Copyright (c) 2015 Laser s.r.l.
 
 
-# > #: msgctxt  { contesto del messaggio - Originale ITA }
-# > #| msgid  	{ identificativo del messaggio - Originale ITA }
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
 # > msgctxt  "{ contesto del messaggio }"
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
 
 msgctxt "UserEnumeratore"
+msgid "Femmina"
+msgstr "Femmina"
+
+msgctxt "UserEnumeratore"
 msgid "Maschio"
 msgstr "Maschio"
 
-msgctxt "UserEnumeratore"
-msgid "Femmina"
-msgstr "Femmina"

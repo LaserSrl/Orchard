@@ -1,0 +1,210 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2015 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Actions:"
+msgstr "Azioni:"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Advanced filters"
+msgstr "Filtri avanzati"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "all versions"
+msgstr "tutte le versioni"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "any (show all)"
+msgstr "qualsiasi (visualizza tutti)"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Apply"
+msgstr "Applica"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Choose action..."
+msgstr "Scegliere l'azione..."
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Create New {0}"
+msgstr "Crea Nuovo {0}"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Create New Content"
+msgstr "Crea Nuovo Contenuto"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Date From"
+msgstr "Dalla Data"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Date To"
+msgstr "Alla Data"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Extended status"
+msgstr "Stato esteso"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Filter by"
+msgstr "Filtrare per"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Language"
+msgstr "Lingua"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "latest"
+msgstr "ultimo"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Manage {0} Content"
+msgstr "Gestire Contenuto {0}"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Manage Content"
+msgstr "Gestire Contenuto"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Only with media"
+msgstr "Solo con file multimediali"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Ordered by"
+msgstr "Ordinato per"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Other filters"
+msgstr "Altri filtri"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Owner"
+msgstr "Proprietario"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Publish Now"
+msgstr "Pubblica Ora"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "published"
+msgstr "pubblicato"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "recently created"
+msgstr "creato di recente"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "recently modified"
+msgstr "modificato di recente"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "recently published"
+msgstr "pubblicato di recente"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Show"
+msgstr "Visualizza"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Terms"
+msgstr "Termini"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Unpublish"
+msgstr "Annulla Pubblicazione"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "unpublished"
+msgstr "Non pubblicato"
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Cannot create content"
+msgstr "Non è possibile creare il contenuto"
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Cannot edit content"
+msgstr "Non è possibile modificare il contenuto"
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Couldn't clone content"
+msgstr "Non è possibile clonare il contenuto"
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Couldn't create content"
+msgstr "Non è stato possibile creare il contenuto"
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Couldn't edit content"
+msgstr "Non è stato possibile modificare il contenuto"
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Couldn't publish content"
+msgstr "Non è stato possibile pubblicare il contenuto"
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Couldn't publish selected content."
+msgstr "Non è stato possibile pubblicare il contenuto selezionato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Couldn't remove content"
+msgstr "Non è stato possibile eliminare il contenuto"
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Couldn't remove selected content."
+msgstr "Non è stato possibile eliminare il contenuto selezionato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Couldn't unpublish content"
+msgstr "Non è stato possibile annullare la pubblicazione del contenuto"
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Couldn't unpublish selected content."
+msgstr "Non è stato possibile annullare la pubblicazione del contenuto selezionato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "No user found. Ownership filter not applied."
+msgstr "Utente non trovato. Filtro sul proprietario non applicato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "That {0} has been removed."
+msgstr "Il {0} è stato rimosso."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "That content has been published."
+msgstr "Il contenuto è stato pubblicato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "That content has been removed."
+msgstr "Il contenuto è stato rimosso."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "That content has been unpublished."
+msgstr "La pubblicazione del contenuto è stata annullata."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Your {0} has been created."
+msgstr "Il {0} è stato creato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Your {0} has been saved."
+msgstr "Il {0} è stato salvato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Your content has been created."
+msgstr "Il contenuto è stato creato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Your content has been saved."
+msgstr "Il contenuto è stato salvato."
+

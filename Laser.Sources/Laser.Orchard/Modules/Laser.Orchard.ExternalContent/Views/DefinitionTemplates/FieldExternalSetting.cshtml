@@ -23,3 +23,9 @@
     @Html.ValidationMessageFor(m => m.ExternalURL)
 </fieldset>
  @Display.TokenHint()
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.HttpVerb)">@T("Use this HttpVerb")</label>
+    @Html.DropDownListFor(m => m.HttpVerb, new SelectList(Enum.GetValues(typeof(Laser.Orchard.ExternalContent.HttpVerbOptions)), Model.HttpVerb), new { @class = "text" })
+    <span class="hint">@T("Default is GET")</span>
+</fieldset>
+

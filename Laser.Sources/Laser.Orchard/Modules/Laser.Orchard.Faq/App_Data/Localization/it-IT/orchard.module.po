@@ -1,12 +1,16 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2013 Laser s.r.l.
+# Copyright (c) 2015 Laser s.r.l.
 
 
-# > #: msgctxt  { contesto del messaggio - Originale ITA }
-# > #| msgid  	{ identificativo del messaggio - Originale ITA }
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
 # > msgctxt  "{ contesto del messaggio }"
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.Faq/Views/EditorTemplates/Parts/Faq.cshtml"
+msgid "ChooseType"
+msgstr "Scegli una tipologia"
 
 msgctxt "~/Modules/Laser.Orchard.Faq/Views/EditorTemplates/Parts/Faq.cshtml"
 msgid "FaqType"
@@ -33,10 +37,6 @@ msgid "Title"
 msgstr "Titolo"
 
 msgctxt "~/Modules/Laser.Orchard.Faq/Views/Parts/FaqWidget.cshtml"
-msgid "NoItems"
-msgstr "Nessun elemento"
-
-msgctxt "~/Modules/Laser.Orchard.Faq/Views/Parts/FaqWidget.cshtml"
 msgid "Answer"
 msgstr "Risposta"
 
@@ -44,7 +44,7 @@ msgctxt "~/Modules/Laser.Orchard.Faq/Views/Parts/FaqWidget.cshtml"
 msgid "Hide"
 msgstr "Nascondi"
 
-msgctxt "~/Modules/Laser.Orchard.Faq/Views/Parts/FaqWidgetAjax.cshtml"
+msgctxt "~/Modules/Laser.Orchard.Faq/Views/Parts/FaqWidget.cshtml"
 msgid "NoItems"
 msgstr "Nessun elemento"
 
@@ -55,4 +55,16 @@ msgstr "Risposta"
 msgctxt "~/Modules/Laser.Orchard.Faq/Views/Parts/FaqWidgetAjax.cshtml"
 msgid "Hide"
 msgstr "Nascondi"
+
+msgctxt "~/Modules/Laser.Orchard.Faq/Views/Parts/FaqWidgetAjax.cshtml"
+msgid "NoItems"
+msgstr "Nessun elemento"
+
+msgctxt "Laser.Orchard.Faq.Drivers.FaqDriver"
+msgid "Error"
+msgstr "Errore"
+
+msgctxt "Laser.Orchard.Faq.Drivers.FaqTypeDriver"
+msgid "Faq Type with the same name already exists."
+msgstr "Nome del tipo di Faq già esistente"
 

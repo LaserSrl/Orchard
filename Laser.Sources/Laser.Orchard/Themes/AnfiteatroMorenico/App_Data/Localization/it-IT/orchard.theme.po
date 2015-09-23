@@ -1,172 +1,48 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2013 Laser s.r.l.
+# Copyright (c) 2015 Laser s.r.l.
 
-# > #: msgctxt  { contesto del messaggio - Originale ITA }
-# > #| msgid  	{ identificativo del messaggio - Originale ITA }
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
 # > msgctxt  "{ contesto del messaggio }"
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
 
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-BlogPost.Detail.cshtml"
+msgctxt "~/Themes/AnfiteatroMorenico/Views/_MenuItemLink-CategorieEventiTerm.cshtml"
+msgid "Go to page {0}"
+msgstr "Vai alla pagina {0}"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/_MenuItemLink-CategorieEventiTerm.cshtml"
+msgid "Open submenu of {0}"
+msgstr "Apri il sotto menu di {0}"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content.Summary.cshtml"
 msgid "Gallery"
 msgstr "Gallery"
 
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
-msgid "Gallery"
-msgstr "Gallery"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
-msgid "Contacts"
-msgstr "Contatti"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
-msgid "Attachments"
-msgstr "Allegati"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-Itinerario.Detail.cshtml"
-msgid "Points of interest"
-msgstr "Punti di interesse"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-Manifestazione.Detail.cshtml"
-msgid "Gallery"
-msgstr "Gallery"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-Manifestazione.Detail.cshtml"
-msgid "Video"
-msgstr "Video"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-Manifestazione.Detail.cshtml"
-msgid "Attachments"
-msgstr "Allegati"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-POI.Detail.cshtml"
-msgid "Gallery"
-msgstr "Gallery"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-POI.Detail.cshtml"
-msgid "Contacts"
-msgstr "Contatti"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-POI.Detail.cshtml"
-msgid "Itinerary"
-msgstr "Itinerari"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-Prodotti.Detail.cshtml"
-msgid "Gallery"
-msgstr "Gallery"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-Prodotti.Detail.cshtml"
-msgid "Producers"
-msgstr "Produttori"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content-Produttore.Detail.cshtml"
-msgid "Products"
-msgstr "Prodotti"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content.Summary.cshtml"
-msgid "read more"
-msgstr "leggi tutto"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Content.Summary.cshtml"
-msgid "Gallery"
-msgstr "Gallery"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/ElencoShape.cshtml"
-msgid "No contents found!"
-msgstr "Nessun contenuto trovato!"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
-msgid "App Download"
-msgstr "App Download"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Parts.Blogs.RecentBlogPosts-AfterContent.cshtml"
-msgid "read more"
-msgstr "leggi tutto"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "Name"
-msgstr "Name"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "Name"
-msgstr "Nome"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "E-mail"
-msgstr "E-mail"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "Confirm E-mail"
-msgstr "Conferma E-mail"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "Phone"
-msgstr "Telefono"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "Message"
-msgstr "Messaggio"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "Add attachment"
-msgstr "Aggiungi Allegato"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "Send"
-msgstr "Invia la richiesta"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "Upload file"
-msgstr "Upload file"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
-msgid "Inserisci la data"
-msgstr "Inserisci la data"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
-msgid "dal"
-msgstr "dal"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
-msgid "Data"
-msgstr "Data"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
-msgid "al"
-msgstr "al"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
-msgid "Data"
-msgstr "Data"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
-msgid "Cerca l'evento"
-msgstr "Cerca l'evento"
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
-msgid "Cerca l'evento..."
-msgstr "Cerca l'evento..."
-
-msgctx "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
-msgid "Cerca"
-msgstr "Cerca"
-
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-BlogPost.Detail.cshtml"
-msgid "Gallery"
-msgstr "Gallery"
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content.Summary.cshtml"
+msgid "Go to page {0}"
+msgstr "Vai alla pagina {0}"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-BlogPost.Detail.cshtml"
 msgid "Click to zoom"
 msgstr "Clicca per ingrandire"
 
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent-BeforeContent-Summary.cshtml"
-msgid "Go to page {0}"
-msgstr "Vai alla pagina {0}"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-BlogPost.Detail.cshtml"
 msgid "Gallery"
 msgstr "Gallery"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
+msgid "Attachment"
+msgstr "Allegato"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
+msgid "Attachments"
+msgstr "Allegati"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
+msgid "Click to download {0}"
+msgstr "Scarica il file {0}"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
 msgid "Click to zoom"
@@ -181,28 +57,36 @@ msgid "Email to {0}"
 msgstr "Email a {0}"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
+msgid "Gallery"
+msgstr "Gallery"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
 msgid "Open {0} to a new window"
 msgstr "Apri {0} in una nuova finestra"
 
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
-msgid "Attachments"
-msgstr "Allegati"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
-msgid "Click to download {0}"
-msgstr "Scarica il file {0}"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent.Detail.cshtml"
-msgid "Attachment"
-msgstr "Allegato"
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent-BeforeContent-Summary.cshtml"
+msgid "Go to page {0}"
+msgstr "Vai alla pagina {0}"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-InfoPage.Detail.cshtml"
 msgid "Gallery"
 msgstr "Gallery"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Itinerario.Detail.cshtml"
+msgid "Go to page {0}"
+msgstr "Vai alla pagina {0}"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Itinerario.Detail.cshtml"
 msgid "Points of interest"
 msgstr "Punti di interesse"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Manifestazione.Detail.cshtml"
+msgid "Attachment"
+msgstr "Allegato"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Manifestazione.Detail.cshtml"
+msgid "Attachments"
+msgstr "Allegati"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Manifestazione.Detail.cshtml"
 msgid "Gallery"
@@ -212,29 +96,37 @@ msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Manifestazione.Detail.cshtml"
 msgid "Video"
 msgstr "Video"
 
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Manifestazione.Detail.cshtml"
-msgid "Attachments"
-msgstr "Allegati"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Manifestazione.Detail.cshtml"
-msgid "Attachment"
-msgstr "Allegato"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-POI.Detail.cshtml"
-msgid "Gallery"
-msgstr "Gallery"
-
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-POI.Detail.cshtml"
 msgid "Contacts"
 msgstr "Contatti"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-POI.Detail.cshtml"
+msgid "Email to {0}"
+msgstr "Email a {0}"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-POI.Detail.cshtml"
+msgid "Gallery"
+msgstr "Gallery"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-POI.Detail.cshtml"
 msgid "Itinerary"
 msgstr "Itinerari"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-POI.Detail.cshtml"
+msgid "Open {0} to a new window"
+msgstr "Apri {0} in una nuova finestra"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Prodotti.Detail.cshtml"
+msgid "Email to {0}"
+msgstr "Email a {0}"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Prodotti.Detail.cshtml"
 msgid "Gallery"
 msgstr "Gallery"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Prodotti.Detail.cshtml"
+msgid "Open {0} to a new window"
+msgstr "Apri {0} in una nuova finestra"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Prodotti.Detail.cshtml"
 msgid "Producers"
@@ -243,14 +135,6 @@ msgstr "Produttori"
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Produttore.Detail.cshtml"
 msgid "Products"
 msgstr "Prodotti"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content.Summary.cshtml"
-msgid "Go to page {0}"
-msgstr "Vai alla pagina {0}"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content.Summary.cshtml"
-msgid "Gallery"
-msgstr "Gallery"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/ElencoShape.cshtml"
 msgid "No contents found!"
@@ -261,28 +145,32 @@ msgid "Go to page {0}"
 msgstr "Vai alla pagina {0}"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
-msgid "Logo Comune di Ivrea"
-msgstr "Logo Comune di Ivrea"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
-msgid "Logo Regione Piemonte"
-msgstr "Logo Regione Piemonte"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
-msgid "Logo AMI"
-msgstr "Logo AMI"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
 msgid "App Download"
 msgstr "App Download"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
+msgid "Download from Google Play"
+msgstr "Download from Google Play"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
 msgid "Download from iTunes"
 msgstr "Download from iTunes"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
-msgid "Download from Google Play"
-msgstr "Download from Google Play"
+msgid "Email to info.ivrea@turismotorino.org"
+msgstr "Email a info.ivrea@turismotorino.org"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
+msgid "Logo AMI"
+msgstr "Logo AMI"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
+msgid "Logo Comune di Ivrea"
+msgstr "Logo Comune di Ivrea"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
+msgid "Logo Regione Piemonte"
+msgstr "Logo Regione Piemonte"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/MenuItemLink.cshtml"
 msgid "Go to page {0}"
@@ -297,34 +185,40 @@ msgid "Go to page {0}"
 msgstr "Vai alla pagina {0}"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "Name"
-msgstr "Name"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "E-mail"
-msgstr "E-mail"
+msgid "Add attachment"
+msgstr "Aggiungi allegato"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
 msgid "Confirm E-mail"
 msgstr "Conferma E-mail"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "Phone"
-msgstr "Telefono"
+msgid "E-mail"
+msgstr "E-mail"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
 msgid "Message"
 msgstr "Messaggio"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
-msgid "Add attachment"
-msgstr "Aggiungi allegato"
+msgid "Name"
+msgstr "Name"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
+msgid "Phone"
+msgstr "Telefono"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
 msgid "Send"
-msgstr "Invia"msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
+msgstr "Invia"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
 msgid "Upload file"
 msgstr "Carica allegato"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.MenuWidget-AsideSecond.cshtml"
+msgid "Go to page {0}"
+msgstr "Vai alla pagina {0}"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.MenuWidget-Breadcrumb.cshtml"
 msgid "Home"
@@ -335,20 +229,12 @@ msgid "Go to page {0}"
 msgstr "Vai alla pagina {0}"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
-msgid "Inserisci la data"
-msgstr "Inserisci la data"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
-msgid "dal"
-msgstr "dal"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
-msgid "Data"
-msgstr "Data"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
 msgid "al"
 msgstr "al"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
+msgid "Cerca"
+msgstr "Cerca"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
 msgid "Cerca l'evento"
@@ -359,41 +245,14 @@ msgid "Cerca l'evento..."
 msgstr "Cerca l'evento..."
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
-msgid "Cerca"
-msgstr "Cerca"
+msgid "dal"
+msgstr "dal"
 
-msgctxt "~/Themes/AnfiteatroMorenico/Views/_MenuItemLink-CategorieEventiTerm.cshtml"
-msgid "Go to page {0}"
-msgstr "Vai alla pagina {0}"
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
+msgid "Data"
+msgstr "Data"
 
-msgctxt "~/Themes/AnfiteatroMorenico/Views/_MenuItemLink-CategorieEventiTerm.cshtml"
-msgid "Open submenu of {0}"
-msgstr "Apri il sotto menu di {0}"
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
+msgid "Inserisci la data"
+msgstr "Inserisci la data"
 
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.MenuWidget-AsideSecond.cshtml"
-msgid "Go to page {0}"
-msgstr "Vai alla pagina {0}"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Itinerario.Detail.cshtml"
-msgid "Go to page {0}"
-msgstr "Vai alla pagina {0}"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-POI.Detail.cshtml"
-msgid "Email to {0}"
-msgstr "Email a {0}"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-POI.Detail.cshtml"
-msgid "Open {0} to a new window"
-msgstr "Apri {0} in una nuova finestra"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Prodotti.Detail.cshtml"
-msgid "Email to {0}"
-msgstr "Email a {0}"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-Prodotti.Detail.cshtml"
-msgid "Open {0} to a new window"
-msgstr "Apri {0} in una nuova finestra"
-
-msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
-msgid "Email to info.ivrea@turismotorino.org"
-msgstr "Email a info.ivrea@turismotorino.org"

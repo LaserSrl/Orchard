@@ -1,9 +1,9 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2013 Laser s.r.l.
+# Copyright (c) 2015 Laser s.r.l.
 
 
-# > #: msgctxt  { contesto del messaggio - Originale ITA }
-# > #| msgid  	{ identificativo del messaggio - Originale ITA }
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
 # > msgctxt  "{ contesto del messaggio }"
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
@@ -16,42 +16,203 @@ msgctxt "~/Modules/Contrib.Reviews/Views/DefinitionTemplates/ReviewTypePartSetti
 msgid "Enable star rating"
 msgstr "Abilita il voto tramite stellette"
 
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.AverageOnly.cshtml"
+msgid "-"
+msgstr "-"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.AverageOnly.cshtml"
+msgid "*"
+msgstr "*"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.AverageOnly.cshtml"
+msgid "."
+msgstr "."
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
+msgid "-"
+msgstr "-"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
+msgid "*"
+msgstr "*"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
+msgid "**"
+msgstr "**"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
+msgid "***"
+msgstr "***"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
+msgid "****"
+msgstr "****"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
+msgid "*****"
+msgstr "*****"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
+msgid "."
+msgstr "."
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
+msgid "clear your opinion"
+msgstr "Cancella la tua opinione"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
+msgid "give your opinion"
+msgstr "Dai la tua opinione"
+
 msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
 msgid "Rate:"
 msgstr "Voto:"
- 
+
 msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.cshtml"
 msgid "Save"
 msgstr "Salva"
- 
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "-"
+msgstr "-"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "*"
+msgstr "*"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "**"
+msgstr "**"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "***"
+msgstr "***"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "****"
+msgstr "****"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "*****"
+msgstr "*****"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "."
+msgstr "."
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "Average"
+msgstr "Media"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "clear your opinion"
+msgstr "Cancella la tua opinione"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "give your opinion"
+msgstr "Dai la tua opinione"
+
 msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
 msgid "Rate:"
 msgstr "Voto:"
- 
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
+msgid "Ratings"
+msgstr "Voti"
+
 msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.cshtml"
 msgid "Save"
 msgstr "Salva"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.ReadOnly.cshtml"
+msgid "-"
+msgstr "-"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.ReadOnly.cshtml"
+msgid "*"
+msgstr "*"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.Details.ReadOnly.cshtml"
+msgid "."
+msgstr "."
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.NoAverage.cshtml"
+msgid "*"
+msgstr "*"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.NoAverage.cshtml"
+msgid "**"
+msgstr "**"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.NoAverage.cshtml"
+msgid "***"
+msgstr "***"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.NoAverage.cshtml"
+msgid "****"
+msgstr "****"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.NoAverage.cshtml"
+msgid "*****"
+msgstr "*****"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.NoAverage.cshtml"
+msgid "clear your opinion"
+msgstr "Cancella la tua opinione"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.NoAverage.cshtml"
+msgid "give your opinion"
+msgstr "Dai la tua opinione"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.NoAverage.cshtml"
+msgid "Rate:"
+msgstr "Vota:"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.NoAverage.cshtml"
+msgid "Save"
+msgstr "Salva"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.SummaryAdmin.cshtml"
+msgid "-"
+msgstr "-"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.SummaryAdmin.cshtml"
+msgid "*"
+msgstr "*"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.SummaryAdmin.cshtml"
+msgid "."
+msgstr "."
 
 msgctxt "~/Modules/Contrib.Reviews/Views/Parts.Stars.SummaryAdmin.cshtml"
 msgid "Rating:"
 msgstr "Voto:"
 
 msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
-msgid "character(s) remaining:"
-msgstr "caratteri rimanenti:"
-
-msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
-msgid "There are no reviews for this item."
-msgstr "Non ci sono recensioni per questo elemento:"
+msgid "*"
+msgstr "*"
 
 msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
 msgid "Are you sure you wish to delete your review? Your Rating will also be deleted."
 msgstr "Sei sicuro di voler rimuovere la tua recensione? Contestualmente sarà rimosso anche il tuo voto."
 
 msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
-msgid "No reviews yet. " 
+msgid "Be the first to write a review!"
+msgstr "Scrivi un commento per primo!"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
+msgid "character(s) remaining"
+msgstr "Carattere(i) rimanenti"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
+msgid "character(s) remaining:"
+msgstr "caratteri rimanenti:"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
+msgid "No reviews yet. "
 msgstr "Nessun commento. "
 
 msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
-msgid "Be the first to write a review!"
-msgstr "Scrivi un commento per primo!"
+msgid "There are no reviews for this item."
+msgstr "Non ci sono recensioni per questo elemento:"
+

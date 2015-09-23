@@ -1,0 +1,50 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2015 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "External URL"
+msgstr "URL Esterno"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Generate on L For Mobile"
+msgstr "Genera su L For Mobile"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "If checked, the field will be mandatory."
+msgstr "Se selezionato, il campo sarà obbligatorio."
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "If not checked, the linked content will be charged with contentitem."
+msgstr "Se non selezionato, il contenuto collegato sarà caricato insieme al contenuto."
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Insert url and token"
+msgstr "Inserire URL e token"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "No Follow"
+msgstr "Non Seguire"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Required"
+msgstr "Richiesto"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Used only on mobile communication. If checked, the linked content will be put in l field"
+msgstr "Usato solo per la comunicazione mobile. Se selezionato, il contenuto collegato sarà messo nel campo"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/EditorTemplates/Fields/FieldExternal.cshtml"
+msgid "Insert url and token"
+msgstr "Inserire URL e token"
+
+msgctxt "Laser.Orchard.ExternalContent.Drivers.FieldExternalDriver"
+msgid "The field {0} is mandatory"
+msgstr "Il campo {0} è obbligatorio"
+
