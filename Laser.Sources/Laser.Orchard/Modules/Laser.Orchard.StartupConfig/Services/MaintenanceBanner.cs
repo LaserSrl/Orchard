@@ -40,14 +40,15 @@ namespace Laser.Orchard.StartupConfig.Services {
 
             //// Fetching the shell settings for a tenant. This is more efficient if you have many tenants with the Lombiq Hosting Suite,
             //// see below.
-            if (_shellSettings.Name.ToLower() != "default") {
+            string currentTenant=_shellSettings.Name;
+            if (currentTenant.ToLower() != "default") {
                 var tenantShellSettings = _shellSettingsManager.LoadSettings().Where(settings => settings.Name == "Default").Single();
                 var shellContext = _orchardHost.GetShellContext(tenantShellSettings);
                 using (var wc = shellContext.LifetimeScope.Resolve<IWorkContextAccessor>().CreateWorkContextScope()) {
                //     var tenantSiteName = wc.Resolve<ISiteService>().GetSiteSettings().SiteName;
                     List<MaintenanceVM> ListMaintenanceVM = new List<MaintenanceVM>();
                     try {
-                       ListMaintenanceVM = wc.Resolve<IMaintenanceService>().Get();
+                       ListMaintenanceVM = wc.Resolve<IMaintenanceService>().Get().Where(y=>y.Selected_TenantVM.Contains(currentTenant)).ToList();
                     }
                     catch {
                     // non so a priori se il master (default tenant) ha il modulo maintenance enabled

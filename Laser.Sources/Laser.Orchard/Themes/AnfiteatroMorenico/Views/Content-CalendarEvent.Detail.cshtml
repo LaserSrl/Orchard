@@ -58,7 +58,11 @@
     </div>
     <div class="col-xs-12 col-sm-4">
         @if (medias.Count > 0) {
-            <img class="img-responsive img-thumbnail" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[0].MediaUrl)" alt="@medias[0].AlternateText" />
+		var alt=medias[0].AlternateText;
+		if (string.IsNullOrEmpty(alt)){
+		alt=Model.ContentItem.TitlePart.Title;
+		}
+            <img class="img-responsive img-thumbnail" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[0].MediaUrl)" alt="@alt" />
         }
     </div>
 </div>
@@ -69,7 +73,11 @@
         @for (int i = 1; i < medias.Count; i++) {
             <div class="col-xs-12 col-sm-4 col-md-2">
                 <a data-lightbox="gallery" href="@medias[i].MediaUrl" title="@T("Click to zoom")">
-                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[i].MediaUrl)" alt="@medias[i].AlternateText" /></a>
+				@{	var alt2=medias[i].AlternateText;
+		if (string.IsNullOrEmpty(alt2)){
+		alt2=Model.ContentItem.TitlePart.Title;
+		}}
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[i].MediaUrl)" alt="@alt2" /></a>
             </div>
         }
     </div>
