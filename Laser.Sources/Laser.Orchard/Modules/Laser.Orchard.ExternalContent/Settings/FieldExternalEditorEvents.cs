@@ -24,6 +24,8 @@ namespace Laser.Orchard.ExternalContent.Settings {
                 builder.WithSetting("FieldExternalSetting.ExternalURL", model.ExternalURL);
                 builder.WithSetting("FieldExternalSetting.NoFollow", model.NoFollow.ToString());
                 builder.WithSetting("FieldExternalSetting.GenerateL", model.GenerateL.ToString());
+                builder.WithSetting("FieldExternalSetting.HttpVerb", model.HttpVerb.ToString());
+
             }
             yield return DefinitionTemplate(model);
         }
