@@ -23,7 +23,7 @@ using System.Collections.Specialized;
 
 namespace Laser.Orchard.ExternalContent.Services {
     public interface IFieldExternalService : IDependency {
-        dynamic GetContentfromField(Dictionary<string, object> contesto, string field, string nomexlst, string contentType = "");
+        dynamic GetContentfromField(Dictionary<string, object> contesto, string field, string nomexlst, string contentType = "", HttpVerbOptions httpMethod = HttpVerbOptions.GET, HttpDataTypeOptions httpDataType = HttpDataTypeOptions.FORM, string bodyRequest = "");
         string GetUrl(Dictionary<string, object> contesto, string externalUrl);
     }
 
@@ -134,12 +134,13 @@ namespace Laser.Orchard.ExternalContent.Services {
             return newJsonObject;
 
         }
-        public dynamic GetContentfromField(Dictionary<string, object> contesto, string externalUrl, string nomexlst, string contentType = "") {
+        public dynamic GetContentfromField(Dictionary<string, object> contesto, string externalUrl, string nomexlst, string contentType = "", HttpVerbOptions httpMethod = HttpVerbOptions.GET, HttpDataTypeOptions httpDataType = HttpDataTypeOptions.FORM, string bodyRequest = "")
+        {
             dynamic ci = null;
             string UrlToGet = "";
             try {
                 UrlToGet = GetUrl(contesto, externalUrl);
-                string webpagecontent = GetHttpPage(UrlToGet).Trim();
+                string webpagecontent = GetHttpPage(UrlToGet, httpMethod, httpDataType, bodyRequest).Trim();
                 if (!webpagecontent.StartsWith("<")) {
                     if (webpagecontent.StartsWith("[")) {
                         webpagecontent = String.Concat("{\"", nomexlst, "List", "\":", webpagecontent, "}");
@@ -256,7 +257,7 @@ namespace Laser.Orchard.ExternalContent.Services {
         }
 
 
-        private static string GetHttpPage(string uri) {
+        private static string GetHttpPage(string uri, HttpVerbOptions httpMethod, HttpDataTypeOptions httpDataType, string bodyRequest) {
 
             //Uri uri = new Uri("https://mysite.com/auth");
             //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri) as HttpWebRequest;
@@ -271,6 +272,7 @@ namespace Laser.Orchard.ExternalContent.Services {
 
             //// response.
             //HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream dataStream = null;
             String strResult;
             WebResponse objResponse;
             WebRequest objRequest = (HttpWebRequest)WebRequest.Create(uri);
@@ -280,7 +282,25 @@ namespace Laser.Orchard.ExternalContent.Services {
             // HttpWebRequest
             //  objRequest.UseDefaultCredentials = true;
             //objRequest.Accept
-            objRequest.ContentType = "application/json; charset=utf-8";
+            objRequest.Method = httpMethod.ToString();
+
+            // valore di default del content type
+            objRequest.ContentType = "application/x-www-form-urlencoded";
+
+            if (httpMethod == HttpVerbOptions.POST)
+            {
+                if (httpDataType == HttpDataTypeOptions.JSON)
+                {
+                    // JSON
+                    objRequest.ContentType = "application/json; charset=utf-8";
+                }
+
+                // body del post
+                byte[] buffer = System.Text.UTF8Encoding.UTF8.GetBytes(bodyRequest);
+                dataStream = objRequest.GetRequestStream();
+                dataStream.Write(buffer, 0, buffer.Length);
+                dataStream.Close();
+            }
 
             objRequest.PreAuthenticate = false;
             objResponse = objRequest.GetResponse();

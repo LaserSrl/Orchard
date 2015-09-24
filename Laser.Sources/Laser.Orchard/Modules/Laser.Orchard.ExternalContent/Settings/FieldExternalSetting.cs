@@ -7,5 +7,7 @@ namespace Laser.Orchard.ExternalContent.Settings {
         public bool NoFollow { get; set; }
         public bool GenerateL { get; set; }
         public HttpVerbOptions HttpVerb { get; set; }
+        public HttpDataTypeOptions HttpDataType { get; set; }
+        public string BodyRequest { get; set; }
     }
 }

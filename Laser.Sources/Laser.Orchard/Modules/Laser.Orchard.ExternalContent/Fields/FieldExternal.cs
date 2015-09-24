@@ -10,8 +10,37 @@ namespace Laser.Orchard.ExternalContent.Fields {
             get { return Storage.Get<string>("ExternalUrl"); }
             set { Storage.Set("ExternalUrl", value); }
         }
-
-
+        public string HttpVerbCode
+        {
+            get 
+            {
+                return Storage.Get<string>("HttpVerbCode");
+            }
+            set 
+            { 
+                Storage.Set("HttpVerbCode", value);
+            }
+        }
+        public HttpVerbOptions HttpVerb
+        {
+            get {
+                return (HttpVerbOptions)System.Enum.Parse(typeof(HttpVerbOptions), HttpVerbCode); 
+            }
+        }
+        public string HttpDataTypeCode
+        {
+            get { return Storage.Get<string>("HttpDataType"); }
+            set { Storage.Set("HttpDataType", value); }
+        }
+        public HttpDataTypeOptions HttpDataType
+        {
+            get { return (HttpDataTypeOptions)System.Enum.Parse(typeof(HttpDataTypeOptions), HttpDataTypeCode); }
+        }
+        public string BodyRequest
+        {
+            get { return Storage.Get<string>("BodyRequest"); }
+            set { Storage.Set("BodyRequest", value); }
+        }
 
         public dynamic ContentObject {
             get { return _contentObject; }
