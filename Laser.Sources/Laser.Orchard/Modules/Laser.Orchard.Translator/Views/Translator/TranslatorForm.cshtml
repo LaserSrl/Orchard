@@ -91,7 +91,7 @@
             });
 
             if ('@ViewBag.SaveSuccess' == 'True') {
-                window.parent.$('#message-@Model.Id').children("span").text("@Model.Message");
+                window.parent.$('#message-@Model.Id').children("span").html("@Model.Message");
                 if ('@String.IsNullOrWhiteSpace(Model.TranslatedMessage)' == 'True')
                     window.parent.$('#message-@Model.Id').children("i").attr("class", "icon-remove");
                 else
