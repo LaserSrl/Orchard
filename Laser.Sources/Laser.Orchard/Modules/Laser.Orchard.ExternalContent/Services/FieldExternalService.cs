@@ -23,7 +23,7 @@ using System.Collections.Specialized;
 
 namespace Laser.Orchard.ExternalContent.Services {
     public interface IFieldExternalService : IDependency {
-        dynamic GetContentfromField(Dictionary<string, object> contesto, string field, string nomexlst, string contentType = "", HttpVerbOptions httpMethod = HttpVerbOptions.GET, HttpDataTypeOptions httpDataType = HttpDataTypeOptions.FORM, string bodyRequest = "");
+        dynamic GetContentfromField(Dictionary<string, object> contesto, string field, string nomexlst, string contentType = "", HttpVerbOptions httpMethod = HttpVerbOptions.GET, HttpDataTypeOptions httpDataType = HttpDataTypeOptions.JSON, string bodyRequest = "");
         string GetUrl(Dictionary<string, object> contesto, string externalUrl);
     }
 
@@ -134,7 +134,7 @@ namespace Laser.Orchard.ExternalContent.Services {
             return newJsonObject;
 
         }
-        public dynamic GetContentfromField(Dictionary<string, object> contesto, string externalUrl, string nomexlst, string contentType = "", HttpVerbOptions httpMethod = HttpVerbOptions.GET, HttpDataTypeOptions httpDataType = HttpDataTypeOptions.FORM, string bodyRequest = "")
+        public dynamic GetContentfromField(Dictionary<string, object> contesto, string externalUrl, string nomexlst, string contentType = "", HttpVerbOptions httpMethod = HttpVerbOptions.GET, HttpDataTypeOptions httpDataType = HttpDataTypeOptions.JSON, string bodyRequest = "")
         {
             dynamic ci = null;
             string UrlToGet = "";

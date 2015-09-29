@@ -14,7 +14,7 @@ namespace Laser.Orchard.ExternalContent.Fields {
         {
             get 
             {
-                return Storage.Get<string>("HttpVerbCode");
+                return Storage.Get<string>("HttpVerbCode") ?? "GET";
             }
             set 
             { 
@@ -29,7 +29,7 @@ namespace Laser.Orchard.ExternalContent.Fields {
         }
         public string HttpDataTypeCode
         {
-            get { return Storage.Get<string>("HttpDataType"); }
+            get { return Storage.Get<string>("HttpDataType") ?? "JSON"; }
             set { Storage.Set("HttpDataType", value); }
         }
         public HttpDataTypeOptions HttpDataType

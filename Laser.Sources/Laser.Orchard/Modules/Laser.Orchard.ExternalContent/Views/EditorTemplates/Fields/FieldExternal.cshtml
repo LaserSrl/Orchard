@@ -24,7 +24,7 @@
     <fieldset>
         <label for="@Html.FieldIdFor(m => m.Field.HttpDataType)">@T("Use this content type")</label>
         @Html.DropDownListFor(m => m.Field.HttpDataTypeCode, new SelectList(Enum.GetValues(typeof(Laser.Orchard.ExternalContent.HttpDataTypeOptions)), Model.Field.HttpDataTypeCode), new { @class = "text" })
-        <span class="hint">@T("Default is FORM")</span>
+        <span class="hint">@T("Default is JSON")</span>
     </fieldset>
     <fieldset>
         <label for="@Html.FieldIdFor(m => m.Field.BodyRequest)">@T("Body Request")</label>
