@@ -151,12 +151,12 @@
 
                                     @if (contentItem.HasPublished()) {
                                         if (Authorizer.Authorize(Permissions.PublishContent, contentItem)) {
-                                        @Html.Link(T("Pubblicato").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentItem.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" });
-                                        } else {@T("Pubblicato")}
+                                        @Html.Link(T("Published").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentItem.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" });
+                                        } else {@T("Published")}
                                     } else {
                                         if (Authorizer.Authorize(Permissions.PublishContent, contentItem)) {
-                                        @Html.Link(T("Non pubblicato").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
-                                        } else {@T("Non pubblicato");
+                                        @Html.Link(T("Not published").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                                        } else {@T("Not published");
                                         }
                                     }
                                 </span>
@@ -164,7 +164,7 @@
                                 @if (contentItem.HasPublished()) {
                                     if (dataArchiviazione != null) {
                                     <span class="mv-mb-nav-status" style="margin-left: 140px; width: 50px; text-align: right;">
-                                        @T("fino al")
+                                        @T("to")
                                     </span>
                                     <span class="mv-mb-nav-status" style="margin-left: 200px;">
                                         @dataArchiviazione.ToString("dd MMM yyyy")
@@ -173,7 +173,7 @@
                                 } else {
                                     if (dataPubblicazione != null) {
                                     <span class="mv-mb-nav-status" style="margin-left: 140px; width: 50px; text-align: right;">
-                                        @T("dal")
+                                        @T("from")
                                     </span>
                                     <span class="mv-mb-nav-status" style="margin-left: 200px;">
                                         @dataPubblicazione.ToString("dd MMM yyyy")
@@ -286,7 +286,7 @@
 @using (Script.Foot()) {
     <script type="text/javascript">
         //<![CDATA[
-        var ConfermaUscita = '@T("Sono presenti modifiche non salvate.")';
+        var ConfermaUscita = '@T("There are unsaved changes.")';
 
         function switchItemsArea(sender){
             if (sender.value=="ByHand"){

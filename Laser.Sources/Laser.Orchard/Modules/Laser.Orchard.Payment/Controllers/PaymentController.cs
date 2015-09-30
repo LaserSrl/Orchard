@@ -48,9 +48,9 @@ namespace Laser.Orchard.Payment.Controllers {
 
             TransazioneRicevuta esito = _paymentService.GestPayRiceviTranzazioneS2S(a, b);
             if (esito == null) {
-                _notifier.Add(NotifyType.Information, T("transazione non effettuata"));
+                _notifier.Add(NotifyType.Information, T("transaction not effected"));
             } else
-                _notifier.Add(NotifyType.Information, T("transazione effettuata"));
+                _notifier.Add(NotifyType.Information, T("transaction effected"));
             Shape.Esito= "S2S";
             return View(Shape); 
         }
