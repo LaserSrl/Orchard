@@ -411,6 +411,10 @@ msgid "Unsubscribed on {0}"
 msgstr "Cancellato il {0}"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.ConfirmationEmailSent.cshtml"
+msgid "a confirmation email was sent to your email address.<br/>Please confirm your email by clicking on link in your email."
+msgstr "una email di conferma è stata inviata al tuo indirizzo di posta elettronica.<br/>Conferma il tuo indirizzo di posta elettronica cliccando sul link presente nel testo dell'email."
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.ConfirmationEmailSent.cshtml"
 msgid "Dear"
 msgstr "Egregio"
 
@@ -473,6 +477,10 @@ msgstr "Rimozione sottoscrizione newsletter"
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.UnsubscribedEmail.cshtml"
 msgid "Your Email address has been removed! Thank you!"
 msgstr "La tua email è stata rimossa! Grazie!"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.UnsubscribeEmailSent.cshtml"
+msgid "a confirmation email was sent to your email address.<br/>Please confirm your unsubscription by clicking on link in your email."
+msgstr "una email di conferma è stata inviata al tuo indirizzo di posta elettronica.<br/>Conferma l'annullamento della sottoscrizione cliccando sul link presente nel testo dell'email."
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.UnsubscribeEmailSent.cshtml"
 msgid "Newsletter unsubscription"

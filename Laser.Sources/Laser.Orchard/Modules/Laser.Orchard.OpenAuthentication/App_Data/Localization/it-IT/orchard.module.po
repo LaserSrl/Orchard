@@ -101,6 +101,10 @@ msgid "Secret"
 msgstr "Secret"
 
 msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/Admin/Index.cshtml"
+msgid "There are no providers registered. Why not <a href=\"{0}\">register one</a>?"
+msgstr "Non sono presenti provider registrati. Perché non <a href=\"{0}\">registrarne uno</a>?"
+
+msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/Admin/Index.cshtml"
 msgid "When checked, if the user who is authenticating does not have an account then a local account will be created and a username will be created based on claims."
 msgstr "Quando selezionato, se l'utente che si sta validando non ha un account, ne verrà creato uno locale con il nome utente basato sulle informazioni disponibili."
 
@@ -138,7 +142,11 @@ msgstr "Ricordami"
 
 msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/OpenAuthLogOn.cshtml"
 msgid "Sign In"
-msgstr "Registrati"
+msgstr "Accedi"
+
+msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/OpenAuthLogOn.cshtml"
+msgid "This user account will be linked to <b>{0}</b> when you login."
+msgstr "Questo account utente verrà collegato a <b>{0}</b> quando effettui l'accesso."
 
 msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/OpenAuthLogOn.cshtml"
 msgid "Username"
@@ -171,6 +179,10 @@ msgstr "Le password devono essere lunghe almeno {0} caratteri."
 msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/OpenAuthRegister.cshtml"
 msgid "Register"
 msgstr "Registra"
+
+msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/OpenAuthRegister.cshtml"
+msgid "This user account will be linked to <b>{0}</b> when you login."
+msgstr "Questo account utente verrà collegato a <b>{0}</b> quando effettui l'accesso."
 
 msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/OpenAuthRegister.cshtml"
 msgid "Use the form below to create a new account."

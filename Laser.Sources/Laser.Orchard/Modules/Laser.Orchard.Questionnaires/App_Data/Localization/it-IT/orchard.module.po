@@ -230,7 +230,7 @@ msgstr "Nuova Domanda"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/Questionnaire_Edit.cshtml"
 msgid "Max number of uploadable pictures reached. Try to remove one of the existing before adding a new one."
-msgstr "E'stato raggiunto il numero massimo di immagini caricabile. Provare a rimuoverne una esistente prima di aggiungerne una nuova."
+msgstr "È stato raggiunto il numero massimo di immagini caricabile. Provare a rimuoverne una esistente prima di aggiungerne una nuova."
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/Questionnaire_Edit.cshtml"
 msgid "Must accept terms and conditions"

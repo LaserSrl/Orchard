@@ -29,10 +29,10 @@ msgid "Service unavailable, retry"
 msgstr "Servizio non disponibile, riprovare"
 
 msgctxt "Laser.Orchard.Payment.Controllers.PaymentController"
-msgid "transazione effettuata"
+msgid "transaction effected"
 msgstr "transazione effettuata"
 
 msgctxt "Laser.Orchard.Payment.Controllers.PaymentController"
-msgid "transazione non effettuata"
+msgid "transaction not effected"
 msgstr "transazione non effettuata"
 

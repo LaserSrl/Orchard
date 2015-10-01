@@ -29,10 +29,6 @@ msgid "Add"
 msgstr "Aggiungi"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
-msgid "dal"
-msgstr "dal"
-
-msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
 msgid "Display plugin"
 msgstr "Visualizzazione"
 
@@ -41,8 +37,8 @@ msgid "Edit"
 msgstr "Modifica"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
-msgid "fino al"
-msgstr "fino al"
+msgid "from"
+msgstr "dal"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
 msgid "Highlights group"
@@ -53,7 +49,7 @@ msgid "Items source"
 msgstr "Sorgente degli elementi"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
-msgid "Non pubblicato"
+msgid "Not published"
 msgstr "Non pubblicato"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
@@ -61,7 +57,7 @@ msgid "Premere \"Salva\" per memorizzare le modifiche."
 msgstr "Premere \"Salva\" per memorizzare le modifiche."
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
-msgid "Pubblicato"
+msgid "Published"
 msgstr "Pubblicato"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
@@ -81,16 +77,20 @@ msgid "Select a query as source"
 msgstr "Selezionare una ricerca come sorgente"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
-msgid "Sono presenti modifiche non salvate."
-msgstr "Sono presenti modifiche non salvate."
-
-msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
 msgid "Template type"
 msgstr "Tipo di template"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
 msgid "The query to display."
 msgstr "La ricerca da visualizzare."
+
+msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
+msgid "There are unsaved changes."
+msgstr "Sono presenti modifiche non salvate."
+
+msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
+msgid "to"
+msgstr "fino al"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsItem_Edit.cshtml"
 msgid "Link Target"
@@ -113,7 +113,7 @@ msgid "Order"
 msgstr "Ordine"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsItem_Edit.cshtml"
-msgid "Seconda riga titolo"
+msgid "Second line of the title"
 msgstr "Seconda riga titolo"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsItem_Edit.cshtml"
