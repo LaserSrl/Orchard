@@ -1,0 +1,56 @@
+#menu {
+    background: #252c36 none repeat scroll 0 0 !important;
+    display: inline !important;
+    float: left !important;
+    position: relative !important;
+    width: 240px !important;
+}
+
+.section-dashboard, .section-new {
+    background: #252c36 none repeat scroll 0 0 !important;
+    border: 1px solid #404040 !important;
+    border-radius: 2px !important;
+    box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1) !important;
+    padding: 6px 0 !important;
+}
+
+#branding {
+    background: #252c36 none repeat scroll 0 0 !important;
+    float: left !important;
+    height: 100px !important;
+    text-align: center !important;
+    width: 240px !important;
+}
+
+#menu .menu-admin ul a, #menu .menu-admin ul a:link, #menu .menu-admin ul a:visited {
+  color: #2ab9e8 !important;
+  display: block !important;
+  line-height: 1.2em !important;
+  padding: 4px 0 6px 20px !important;
+  text-decoration: none !important;
+}
+
+#menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus, #menu .menu-admin ul .selected a {
+  background-color: #aec3ce !important;
+  border-radius: 2px !important;
+  color: #252c36 !important;
+}
+
+#menu .menu-admin ul a:hover, #menu .menu-admin ul a:active {
+    background-color: #7895a4 !important;
+}
+
+
+#menu .menu-admin li h3 a, #menu .menu-admin li h3 span {
+    color: #2ab9e8 !important;
+    line-height: 16px !important;
+}
+
+header #app a {
+    background: rgba(0, 0, 0, 0) url("images/logo_krake.png") no-repeat scroll 0 0  !important;
+    display: block !important;
+    height: 86px !important;
+    margin: 0 23px !important;
+    text-indent: -9999px !important;
+    width: 77px !important;
+}
