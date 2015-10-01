@@ -46,7 +46,7 @@
     line-height: 16px !important;
 }
 
-header #app a {
+#header #app a {
     background: rgba(0, 0, 0, 0) url("images/logo_krake.png") no-repeat scroll 0 0  !important;
     display: block !important;
     height: 86px !important;
