@@ -25,7 +25,7 @@ msgid "Button Label"
 msgstr "Etichetta del Pulsante"
 
 msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflowsSettings_Edit.cshtml"
-msgid "Button to WrokFlows Settings"
+msgid "Button to WorkFlows Settings"
 msgstr "Pulsante per le Impostazioni Flussi di Lavoro"
 
 msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflowsSettings_Edit.cshtml"
