@@ -50,7 +50,7 @@ msgstr "Oggetto"
 
 msgctxt "~/Modules/Laser.Orchard.TemplateManagement/Views/EditorTemplates/Parts/Template.cshtml"
 msgid "Template. (Expected parser: {0})"
-msgstr "Modello. ({Analizzatore sintattico previsto: 0})"
+msgstr "Modello. (Analizzatore sintattico previsto: {0})"
 
 msgctxt "~/Modules/Laser.Orchard.TemplateManagement/Views/EditorTemplates/Parts/Template.cshtml"
 msgid "The preview of the template"
