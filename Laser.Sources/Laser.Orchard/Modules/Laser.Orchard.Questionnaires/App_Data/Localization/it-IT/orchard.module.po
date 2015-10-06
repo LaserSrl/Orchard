@@ -162,7 +162,7 @@ msgstr "Elimina"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/AnswerEditModel.cshtml"
 msgid "Remove the image?"
-msgstr "Vuoi rimuovere l'immagine?"
+msgstr "Vuoi rimuovere l\\'immagine?"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/GamePart_Edit.cshtml"
 msgid "Abstract"
@@ -254,7 +254,7 @@ msgstr "Rimuovi"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/Questionnaire_Edit.cshtml"
 msgid "Remove the image?"
-msgstr "Vuoi rimuovere l'immagine?"
+msgstr "Vuoi rimuovere l\\\\'immagine?"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/Questionnaire_Edit.cshtml"
 msgid "Terms and conditions text"
@@ -326,7 +326,7 @@ msgstr "Elimina"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
 msgid "Remove the image?"
-msgstr "Vuoi rimuovere l'immagine?"
+msgstr "Vuoi rimuovere l\\'immagine?"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
 msgid "Section"
