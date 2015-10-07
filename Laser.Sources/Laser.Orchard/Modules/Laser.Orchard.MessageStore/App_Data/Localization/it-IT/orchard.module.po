@@ -61,8 +61,20 @@ msgid "Content Items"
 msgstr "Contenuti"
 
 msgctxt "Laser.Orchard.MessageStore.Tokens.StoreTokens"
+msgid "Message from."
+msgstr "Mittente del messaggio."
+
+msgctxt "Laser.Orchard.MessageStore.Tokens.StoreTokens"
 msgid "Message html"
 msgstr "HTML del Messaggio"
+
+msgctxt "Laser.Orchard.MessageStore.Tokens.StoreTokens"
+msgid "Message Object."
+msgstr "Oggetto del messaggio."
+
+msgctxt "Laser.Orchard.MessageStore.Tokens.StoreTokens"
+msgid "Message to."
+msgstr "Destinatario messaggio."
 
 msgctxt "Laser.Orchard.MessageStore.Tokens.StoreTokens"
 msgid "MessageFrom"
@@ -75,4 +87,8 @@ msgstr "MessageObject"
 msgctxt "Laser.Orchard.MessageStore.Tokens.StoreTokens"
 msgid "MessageTo"
 msgstr "MessageTo"
+
+msgctxt "Laser.Orchard.MessageStore.Tokens.StoreTokens"
+msgid "The text of the message."
+msgstr "Il testo del messaggio."
 

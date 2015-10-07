@@ -9,6 +9,18 @@
 # > msgstr "{ messaggio }"
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Body Request"
+msgstr "Corpo della richiesta"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Default is GET"
+msgstr "Il valore di default è GET"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Default is JSON"
+msgstr "Il valore di default è JSON"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "External URL"
 msgstr "URL Esterno"
 
@@ -25,6 +37,10 @@ msgid "If not checked, the linked content will be charged with contentitem."
 msgstr "Se non selezionato, il contenuto collegato sarà caricato insieme al contenuto."
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Insert request body"
+msgstr "Inserire il corpo della richiesta"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "Insert url and token"
 msgstr "Inserire URL e token"
 
@@ -37,12 +53,44 @@ msgid "Required"
 msgstr "Richiesto"
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Use this content type"
+msgstr "Usare questo tipo di contenuto"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Use this HttpVerb"
+msgstr "Usare questo Verbo Http"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "Used only on mobile communication. If checked, the linked content will be put in l field"
 msgstr "Usato solo per la comunicazione mobile. Se selezionato, il contenuto collegato sarà messo nel campo"
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/EditorTemplates/Fields/FieldExternal.cshtml"
+msgid "Body Request"
+msgstr "Corpo della richiesta"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/EditorTemplates/Fields/FieldExternal.cshtml"
+msgid "Default is GET"
+msgstr "Il valore di default è GET"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/EditorTemplates/Fields/FieldExternal.cshtml"
+msgid "Default is JSON"
+msgstr "Il valore di default è JSON"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/EditorTemplates/Fields/FieldExternal.cshtml"
+msgid "Insert request body"
+msgstr "Inserire il corpo della richiesta"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/EditorTemplates/Fields/FieldExternal.cshtml"
 msgid "Insert url and token"
 msgstr "Inserire URL e token"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/EditorTemplates/Fields/FieldExternal.cshtml"
+msgid "Use this content type"
+msgstr "Usare questo tipo di contenuto"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/EditorTemplates/Fields/FieldExternal.cshtml"
+msgid "Use this HttpVerb"
+msgstr "Usare questo Verbo Http"
 
 msgctxt "Laser.Orchard.ExternalContent.Drivers.FieldExternalDriver"
 msgid "The field {0} is mandatory"

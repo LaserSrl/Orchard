@@ -9,6 +9,10 @@
 # > msgstr "{ messaggio }"
 
 msgctxt "~/Modules/Laser.Orchard.Meteo/Views/Parts/MeteoJssor.cshtml"
+msgid "Afternoon"
+msgstr "Pomeriggio"
+
+msgctxt "~/Modules/Laser.Orchard.Meteo/Views/Parts/MeteoJssor.cshtml"
 msgid "Morning"
 msgstr "Mattina"
 

@@ -22,7 +22,7 @@ namespace Laser.Orchard.TranslationChecker {
         const string PO_MODULE_FILENAME = "orchard.module.po";
         const string PO_THEME_FILENAME = "orchard.theme.po";
 
-        const string T_REGEX = "(\\s|\\@)+T\\((\"[^\"]*\").*\\)";
+        const string T_REGEX = "(\\s|\\@)+T\\((\"[^\"]*\")[^\\)]*\\)";
         const string NAMESPACE_REGEX = @"namespace\s+([^{\r\:\s]+)";
         const string CLASSNAME_REGEX = @"\s+class\s+([^{\r\:\s]+)";
         const string PO_REGEX = @"msgctxt\s+{0}[\r|\n]+msgid\s+{1}";

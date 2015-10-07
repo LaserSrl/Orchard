@@ -289,6 +289,10 @@ msgid "Add Answer"
 msgstr "Nuova Risp."
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Add File"
+msgstr "Aggiungi File"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
 msgid "Add Picture"
 msgstr "Aggiungi Immagine"
 
