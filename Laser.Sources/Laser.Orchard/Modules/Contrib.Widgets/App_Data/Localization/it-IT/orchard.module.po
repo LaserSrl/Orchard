@@ -41,6 +41,10 @@ msgid "Are you sure you want to delete this widget? Note: the widget will be rem
 msgstr "Si è sicuri di voler eliminare questo widget? Nota: il widget sarà rimosso definitivamente al salvataggio del contenuto."
 
 msgctxt "~/Modules/Contrib.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml"
+msgid "Remove"
+msgstr "Rimuovi"
+
+msgctxt "~/Modules/Contrib.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml"
 msgid "Widgets"
 msgstr "Widget"
 

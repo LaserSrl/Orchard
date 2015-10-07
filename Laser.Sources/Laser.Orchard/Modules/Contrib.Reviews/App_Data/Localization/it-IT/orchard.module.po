@@ -189,6 +189,10 @@ msgid "Rating:"
 msgstr "Voto:"
 
 msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
+msgid "-"
+msgstr "-"
+
+msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
 msgid "*"
 msgstr "*"
 

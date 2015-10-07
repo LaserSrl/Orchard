@@ -109,6 +109,10 @@ msgid "When checked, if the user who is authenticating does not have an account 
 msgstr "Quando selezionato, se l'utente che si sta validando non ha un account, ne verrà creato uno locale con il nome utente basato sulle informazioni disponibili."
 
 msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/OpenAuthLogOn.cshtml"
+msgid " if you don't have an account."
+msgstr "se non hai un account."
+
+msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/OpenAuthLogOn.cshtml"
 msgid "Account Information"
 msgstr "Informazioni Account"
 

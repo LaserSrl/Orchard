@@ -177,8 +177,16 @@ msgid "No user found. Ownership filter not applied."
 msgstr "Utente non trovato. Filtro sul proprietario non applicato."
 
 msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "That {0} has been published."
+msgstr "Questo {0} è stato pubblicato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
 msgid "That {0} has been removed."
 msgstr "Il {0} è stato rimosso."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "That {0} has been unpublished."
+msgstr "Questo {0} è stato spubblicato."
 
 msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
 msgid "That content has been published."
