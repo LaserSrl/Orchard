@@ -6,7 +6,7 @@ namespace Laser.Orchard.Accessibility
     {
         public const string AccessibilityCookieName = "Accessibility";
         public const string AccessibilityTextOnly = "textonly";
-        public const string AccessibilityNormal = "";
+        public const string AccessibilityNormal = "normal";
         public const string AccessibilityHighContrast = "highcontrast";
 
         /// <summary>
