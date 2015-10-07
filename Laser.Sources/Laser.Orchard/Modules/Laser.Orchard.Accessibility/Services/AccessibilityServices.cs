@@ -1,5 +1,6 @@
 ﻿using Orchard;
 using Orchard.Environment.Configuration;
+using Orchard.Logging;
 using System;
 using System.Web;
 
@@ -9,11 +10,13 @@ namespace Laser.Orchard.Accessibility.Services
     {
         private readonly IOrchardServices _orchardServices;
         private readonly ShellSettings _shellSettings;
+        public ILogger Logger { get; set; }
 
         public AccessibilityServices(IOrchardServices orchardServices, ShellSettings shellSettings)
         {
             _orchardServices = orchardServices;
             _shellSettings = shellSettings;
+            Logger = NullLogger.Instance;
         }
 
         private void setCookie(string cookieValue)
@@ -23,6 +26,9 @@ namespace Laser.Orchard.Accessibility.Services
             string tenantPath = _shellSettings.RequestUrlPrefix ?? "";
             string operation = _orchardServices.WorkContext.HttpContext.Request.QueryString.ToString();
             string appPath = _orchardServices.WorkContext.HttpContext.Request.ApplicationPath;
+            //Logger.Warning("tenantPath=" + tenantPath);
+            //Logger.Warning("operation=" + operation);
+            //Logger.Warning("appPath=" + appPath);
 
             if (tenantPath == "")
             {
@@ -30,8 +36,10 @@ namespace Laser.Orchard.Accessibility.Services
             }
             else
             {
-                path = appPath + "/" + tenantPath;
+                appPath = (appPath.EndsWith("/")) ? appPath : appPath + "/";
+                path = appPath + tenantPath;
             }
+            //Logger.Warning("path=" + path);
 
             // setta il cookie
             HttpCookie cook = new HttpCookie(Utils.AccessibilityCookieName);

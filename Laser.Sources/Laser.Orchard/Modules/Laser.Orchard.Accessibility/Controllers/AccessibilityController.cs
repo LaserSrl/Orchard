@@ -34,7 +34,11 @@ namespace Laser.Orchard.Accessibility.Controllers
                     _accessibilityServices.SetNormal();
                     break;
             }
-            return Redirect("~/"); // RedirectToAction("Index", "Index");
+
+            string aux = System.Web.HttpContext.Current.Request.RawUrl;
+            aux = aux.Remove(aux.IndexOf("Laser.Orchard.Accessibility/Accessibility"));
+
+            return Redirect(aux);
         }
 	}
 }
