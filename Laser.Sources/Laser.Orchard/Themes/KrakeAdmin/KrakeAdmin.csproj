@@ -76,6 +76,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\Images\adminNavBackground.gif" />
+    <Content Include="Styles\Images\logo_krake.png" />
     <Content Include="Styles\krake.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
