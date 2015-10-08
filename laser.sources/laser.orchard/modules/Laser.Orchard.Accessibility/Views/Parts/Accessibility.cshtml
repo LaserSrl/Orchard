@@ -4,7 +4,8 @@
         <a class='tasto-font' href='javascript:resizeText(-1)'>A-</a>
     </li>
     @{
-        var accessibilityCookie = WorkContext.HttpContext.Request.Cookies.Get("Accessibility").Value;
+        var cookie = WorkContext.HttpContext.Request.Cookies.Get("Accessibility");
+        var accessibilityCookie = (cookie == null) ? "" : cookie.Value;
     }
     @if (accessibilityCookie != "highcontrast")
     {
