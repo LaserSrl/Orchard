@@ -23,23 +23,6 @@ namespace Laser.Orchard.Accessibility.Services
         {
             // calcola il path corretto per il cookie
             string path = new Utils().GetTenantBaseUrl(_shellSettings);
-            //string tenantPath = _shellSettings.RequestUrlPrefix ?? "";
-            //string operation = _orchardServices.WorkContext.HttpContext.Request.QueryString.ToString();
-            //string appPath = _orchardServices.WorkContext.HttpContext.Request.ApplicationPath;
-            ////Logger.Warning("tenantPath=" + tenantPath);
-            ////Logger.Warning("operation=" + operation);
-            ////Logger.Warning("appPath=" + appPath);
-
-            //if (tenantPath == "")
-            //{
-            //    path = appPath;
-            //}
-            //else
-            //{
-            //    appPath = (appPath.EndsWith("/")) ? appPath : appPath + "/";
-            //    path = appPath + tenantPath;
-            //}
-            ////Logger.Warning("path=" + path);
 
             // setta il cookie
             HttpCookie cook = new HttpCookie(Utils.AccessibilityCookieName);

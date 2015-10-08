@@ -142,6 +142,9 @@
     <Content Include="Views\EditorTemplate-Privacy.cshtml" />
     <Content Include="Views\Parts.MenuWidget-MenuWidget-FooterNavigation.cshtml" />
     <Content Include="Views\Parts.ContactForm.cshtml" />
+    <Content Include="Views\Parts.Accessibility.cshtml">
+      <SubType>Code</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

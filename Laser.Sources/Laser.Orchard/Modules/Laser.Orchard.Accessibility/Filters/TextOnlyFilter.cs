@@ -1,16 +1,24 @@
-﻿using Orchard.Mvc.Filters;
+﻿using Orchard;
+using Orchard.Mvc.Filters;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using Orchard.Security;
 
 namespace Laser.Orchard.Accessibility.Filters
 {
     public class TextOnlyFilter : FilterProvider, IActionFilter, IResultFilter
     {
+        private readonly IOrchardServices _orchardServices;
         private TextWriter _originalWriter;
         private Action<ControllerContext> _completeResponse;
         private StringWriter _tempWriter;
+
+        public TextOnlyFilter(IOrchardServices services)
+        {
+            _orchardServices = services;
+        }
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -44,7 +52,11 @@ namespace Laser.Orchard.Accessibility.Filters
             _tempWriter.Dispose();
 
             // se richiesto, pulisce l'output per avere "solo testo"
-            if (new Utils().GetTenantCookieValue(Utils.AccessibilityCookieName, filterContext.HttpContext.Request) == Utils.AccessibilityTextOnly)
+            // controlla sia il cookie sia il fatto di non avere accesso alla dashboard
+            bool isAdmin = _orchardServices.Authorizer.Authorize(StandardPermissions.AccessAdminPanel);
+            //var aa = filterContext.GetWorkContext() Authorizer.Authorize(Permissions.PermissionName)  //_orchardServices.WorkContext.CurrentSite.SuperUser;
+            if (new Utils().GetTenantCookieValue(Utils.AccessibilityCookieName, filterContext.HttpContext.Request) == Utils.AccessibilityTextOnly
+                && (isAdmin == false))
             {
                 // pulizia dell'html per ottenere l'effetto "solo testo"
                 capturedText = clearResult(capturedText);
