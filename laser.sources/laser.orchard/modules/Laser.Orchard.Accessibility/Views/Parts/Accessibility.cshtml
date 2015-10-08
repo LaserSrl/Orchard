@@ -1,0 +1,26 @@
+﻿<ul>
+    <li>
+        <a class='tasto-font' href='javascript:resizeText(1)'>A+</a>
+        <a class='tasto-font' href='javascript:resizeText(-1)'>A-</a>
+    </li>
+    <li>
+        <a href='@Model.Url?high'>CONTRASTO</a>
+    </li>
+    <li>
+        <a href='@Model.Url?txt'>SOLO TESTO</a>
+    </li>
+    <li>
+        <a href='@Model.Url?normal'>NORMALE</a>
+    </li>
+</ul>
+@using (Script.Head())
+{
+    <script type="text/javascript">
+        function resizeText(multiplier) {
+          if (document.body.style.fontSize == "") {
+            document.body.style.fontSize = "1.0em";
+          }
+          document.body.style.fontSize = parseFloat(document.body.style.fontSize) + (multiplier * 0.2) + "em";
+        }
+    </script>
+}

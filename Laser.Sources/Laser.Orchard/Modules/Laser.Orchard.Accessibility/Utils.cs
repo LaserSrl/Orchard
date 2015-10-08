@@ -1,4 +1,7 @@
-﻿using System.Web;
+﻿using Orchard;
+using Orchard.Environment.Configuration;
+using System;
+using System.Web;
 
 namespace Laser.Orchard.Accessibility
 {
@@ -18,7 +21,7 @@ namespace Laser.Orchard.Accessibility
         /// <param name="cookieName"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public string getTenantCookieValue(string cookieName, HttpRequestBase request)
+        public string GetTenantCookieValue(string cookieName, HttpRequestBase request)
         {
             string result = "";
             HttpCookie cookie = null;
@@ -37,6 +40,32 @@ namespace Laser.Orchard.Accessibility
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Get the base URL of the current tenant.
+        /// </summary>
+        /// <param name="shellSettings"></param>
+        /// <returns></returns>
+        public string GetTenantBaseUrl(ShellSettings shellSettings)
+        {
+            // calcola il path di base del tenant corrente
+            string path = "/"; 
+            string tenantPath = shellSettings.RequestUrlPrefix ?? "";
+            string operation = HttpContext.Current.Request.QueryString.ToString();   //_orchardServices.WorkContext.HttpContext.Request.QueryString.ToString();
+            string appPath = HttpContext.Current.Request.ApplicationPath; // _orchardServices.WorkContext.HttpContext.Request.ApplicationPath;
+
+            if (tenantPath == "")
+            {
+                path = appPath;
+            }
+            else
+            {
+                appPath = (appPath.EndsWith("/")) ? appPath : appPath + "/";
+                path = appPath + tenantPath;
+            }
+
+            return path;
         }
     }
 }

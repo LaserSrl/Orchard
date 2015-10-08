@@ -58,6 +58,9 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.OutputCache">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.OutputCache\bin\Orchard.OutputCache.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -99,17 +102,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccessibilityController.cs" />
-    <Compile Include="Controllers\Api\AccessibilityController.cs" />
-    <Compile Include="Filters\HighContrastFilter.cs" />
+    <Compile Include="Drivers\AccessibilityPartDriver.cs" />
     <Compile Include="Filters\TextOnlyFilter.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\Accessibility.cs" />
     <Compile Include="Services\AccessibilityServices.cs" />
     <Compile Include="Services\IAccessibilityServices.cs" />
     <Compile Include="StringWriterWithEncoding.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Views\Accessibility\" />
+    <Content Include="Views\Parts\Accessibility_Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Accessibility.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Accessibility_SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

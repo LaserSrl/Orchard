@@ -55,6 +55,24 @@
     @Zone(Model.WideContent)
 }
 <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
+              @*  <!-- inizio modifiche dsweb -->
+            <div class="menu-regolazioni">
+                <div class="container">
+                    <ul>
+                        <li>
+                            <a class='tasto-font' href='#'>A+</a>
+                            <a class='tasto-font' href='#'>A-</a>
+                        </li>
+                        <li>
+                            <a href='index-contrasto.html'>CONTRASTO</a>
+                        </li>
+                        <li>
+                            <a href='index-solotesto.html'>SOLO TESTO</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- fine modifiche dsweb -->*@
     <div class="container">
         <div class="navbar-header">
             <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
@@ -64,11 +82,6 @@
             </a>
         </div>
         <div class="navbar-collapse collapse">
-@*            <ul class="nav navbar-nav navbar-right" id="navbar-social">
-                <li><a href="#"><i class="visitami-facebook"></i></a></li>
-                <li><a href="#"><i class="visitami-twitter"></i></a></li>
-                <li><a href="#"><i class="visitami-linkedin"></i></a></li>
-            </ul>*@
             @if (Model.Navigation != null) {
                 @Zone(Model.Navigation)
             }

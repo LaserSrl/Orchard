@@ -97,6 +97,7 @@
     <Content Include="Styles\images\slide1.jpg" />
     <Content Include="Styles\images\slide2.jpg" />
     <Content Include="Styles\images\trekking.png" />
+    <Content Include="Styles\style-contrasto.css" />
     <Content Include="Views\Layout.cshtml" />
     <Content Include="Views\Content-CalendarEvent-BeforeContent-Summary.cshtml" />
     <Content Include="Views\Content-Prodotti.Detail.cshtml" />

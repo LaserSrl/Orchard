@@ -44,7 +44,7 @@ namespace Laser.Orchard.Accessibility.Filters
             _tempWriter.Dispose();
 
             // se richiesto, pulisce l'output per avere "solo testo"
-            if (new Utils().getTenantCookieValue(Utils.AccessibilityCookieName, filterContext.HttpContext.Request) == Utils.AccessibilityTextOnly)
+            if (new Utils().GetTenantCookieValue(Utils.AccessibilityCookieName, filterContext.HttpContext.Request) == Utils.AccessibilityTextOnly)
             {
                 // pulizia dell'html per ottenere l'effetto "solo testo"
                 capturedText = clearResult(capturedText);
