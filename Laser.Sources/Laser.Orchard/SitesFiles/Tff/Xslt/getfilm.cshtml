@@ -1,0 +1,110 @@
+
+@{
+	XmlDocument mydoc=ToXmlDocument(Model);
+	foreach(XmlNode bookToModify in mydoc.SelectNodes(".//image/url_resource")){
+		bookToModify.InnerXml="http://www.torinofilmfest.org/public/uploaded/"+bookToModify.InnerXml;
+	}
+	foreach(XmlNode bookToModify in mydoc.SelectNodes(".//allegati/url_resource")){
+		bookToModify.InnerXml="http://www.torinofilmfest.org/public/uploaded/"+bookToModify.InnerXml;
+	}
+	mydoc=aggiungipadre(mydoc,"root","_dataList","_data");
+	mydoc=RimuoviFratelli(mydoc,"root/_dataList");
+	
+		foreach(XmlNode node in mydoc.SelectNodes("root/_dataList/_data/sale/lasernumeric")){
+				XmlNode author = mydoc.CreateElement("Id");
+				XmlNode sid= mydoc.CreateElement("Sid");
+				int proiezioneid;
+				int filmid;
+				bool isNumeric = int.TryParse(node.SelectSingleNode("proiezioneID").InnerText, out proiezioneid);
+				isNumeric = int.TryParse(node.ParentNode.ParentNode.SelectSingleNode("id").InnerText, out filmid);
+				author.InnerText=":lasernumeric"+(100000000+proiezioneid*1000000+filmid).ToString()+"lasernumeric:";
+				sid.InnerText=proiezioneid.ToString() +"|"+ filmid.ToString() ;
+				node.AppendChild(author);
+				node.AppendChild(sid);
+
+			}
+	
+	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/id");
+	mydoc=generaid(mydoc,"root/_dataList/_data/id",6000000);
+	mydoc=rendinumeric(mydoc,"root/_dataList/_data/parentID");
+
+	mydoc=textreplace(mydoc,"root/_dataList/_data/film_titolo_orig","\u2028","");
+	mydoc=textreplace(mydoc,"root/_dataList/_data/film_titolo_ita","\u2028","");
+	mydoc=textreplace(mydoc,"root/_dataList/_data/film_titolo_eng","\u2028","");
+	mydoc=textreplace(mydoc,"root/_dataList/_data/sinossi","\u2028","");
+	mydoc=textreplace(mydoc,"root/_dataList/_data/tramina","\u2028","");
+	mydoc=textreplace(mydoc,"root/_dataList/_data/cronaca","\u2028","");
+	mydoc=textreplace(mydoc,"root/_dataList/_data/dichiarazione","\u2028","");
+	mydoc=textreplace(mydoc,"root/_dataList/_data/titolo","\u2028","");
+	mydoc=textreplace(mydoc,"root/_dataList/_data/descrizione","\u2028","");
+	mydoc=rendinumeric(mydoc,"root/_dataList/_data/sezioneID");
+
+
+	
+	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/media/allegati/id");
+	mydoc=generaid(mydoc,"root/_dataList/_data/media/allegati/id",30000000);
+	mydoc=rendinumeric(mydoc,"root/_dataList/_data/media/allegati/id_join");
+	mydoc=rendinumeric(mydoc,"root/_dataList/_data/media/allegati/ordine");
+	mydoc=aggiungipadre(mydoc,"root/_dataList/_data/media","AllegatiList","allegati");
+	mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/media/AllegatiList","allegati");// rende vettore
+	mydoc=cambianome(mydoc,"root/_dataList/_data/media/AllegatiList/allegati","Allegati");
+	
+	mydoc=aggiungipadre(mydoc,"root/_dataList/_data","TrailerList","trailer");
+	mydoc=cambianome(mydoc,"root/_dataList/_data/TrailerList/trailer","Trailerdata");
+	mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/TrailerList","Trailerdata");// rende vettore
+	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/TrailerList/Trailerdata/id");
+	mydoc=generaid(mydoc,"root/_dataList/_data/TrailerList/Trailerdata/id",80000000);
+	mydoc=cambianome(mydoc,"root/_dataList/_data/TrailerList/trailer","Trailer");
+	
+	
+	mydoc=aggiungipadre(mydoc,"root/_dataList/_data","PremiList","premi");
+	mydoc=cambianome(mydoc,"root/_dataList/_data/PremiList/premi","PremiData");
+	mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/PremiList","PremiData");// rende vettore
+	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/PremiList/PremiData/id");
+	mydoc=generaid(mydoc,"root/_dataList/_data/PremiList/Trailerdata/id",800000);
+	mydoc=cambianome(mydoc,"root/_dataList/_data/PremiList/premi","PremiData");
+	
+	
+	mydoc=aggiungipadre(mydoc,"root/_dataList/_data","RegistiList","registi");
+	mydoc=cambianome(mydoc,"root/_dataList/_data/RegistiList/registi","Registidata");
+	mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/RegistiList","Registidata");// rende vettore
+	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/RegistiList/Registidata/id");
+	mydoc=generaid(mydoc,"root/_dataList/_data/RegistiList/Registidata/id",90000000);
+	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/RegistiList/Registidata/media/image/ID_media");
+	mydoc=generaid(mydoc,"root/_dataList/_data/RegistiList/Registidata/media/image/ID_media",10000000);
+	mydoc=rendinumeric(mydoc,"root/_dataList/_data/RegistiList/Registidata/media/image/ID_article");
+	mydoc=aggiungipadre(mydoc,"root/_dataList/_data/RegistiList/Registidata/media","ImageList","image");
+	mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/RegistiList/Registidata/media/ImageList","image");// rende vettore
+	mydoc=cambianome(mydoc,"root/_dataList/_data/RegistiList/Registidata/media/ImageList/image","Dataimage");
+	mydoc=RimuoviNodo(mydoc,"root/_dataList/_data/RegistiList/Registidata/media");	
+	
+
+	mydoc=cambianome(mydoc,"root/_dataList/_data/sale/lasernumeric/id","oldsalaid");
+
+	
+
+	
+
+	mydoc=rendinumeric(mydoc,"root/_dataList/_data/sale/lasernumeric/compra_url/idEvent");
+
+	mydoc=cambianome(mydoc,"root/_dataList/_data/sale/lasernumeric/compra_url","Compraurl");
+	mydoc=cambianome(mydoc,"root/_dataList/_data/sale/lasernumeric","Datasale");
+	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/media/image/ID_media");
+	mydoc=generaid(mydoc,"root/_dataList/_data/media/image/ID_media",10000000);
+
+	mydoc=rendinumeric(mydoc,"root/_dataList/_data/media/image/ID_article");
+	mydoc=aggiungipadre(mydoc,"root/_dataList/_data/media","ImageList","image");
+	mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/media/ImageList","image");// rende vettore
+	mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/sale","Datasale");// rende vettore
+	mydoc=cambianome(mydoc,"root/_dataList/_data/media/ImageList/image","Dataimage");
+	mydoc=RimuoviNodo(mydoc,"root/_dataList/_data/media");
+	mydoc=CreaContatore(mydoc,"root/_dataList/_data","OrdinamentoLaser");
+	mydoc=cambianome(mydoc,"root/_dataList/_data","Datafilm");
+	mydoc=aggiungifiglio(mydoc,"root/_dataList","Datafilm"); // rende vettore
+	mydoc=cambianome(mydoc,"root/_dataList","ToRemove");
+
+	
+	
+
+	SpanXDocument(ToXDocument(mydoc).Root);
+}

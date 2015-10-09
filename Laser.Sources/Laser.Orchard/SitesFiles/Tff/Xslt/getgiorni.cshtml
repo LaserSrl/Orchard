@@ -1,0 +1,16 @@
+@{
+	XmlDocument mydoc=ToXmlDocument(Model);
+
+	mydoc=aggiungipadre(mydoc,"root","_dataList","_data");
+
+	mydoc=RimuoviFratelli(mydoc,"root/_dataList");
+	mydoc=rendinumeric(mydoc,"root/_dataList/_data/parentID");
+	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/id");
+	mydoc=generaid(mydoc,"root/_dataList/_data/id",3000000);
+	mydoc=CreaContatore(mydoc,"root/_dataList/_data","OrdinamentoLaser");
+	mydoc=aggiungifiglio(mydoc,"root/_dataList","_data"); // rende vettore
+	mydoc=cambianome(mydoc,"root/_dataList/_data","DataGiorni");
+	mydoc=cambianome(mydoc,"root/_dataList","ToRemove");
+
+	SpanXDocument(ToXDocument(mydoc).Root);
+}
