@@ -1,7 +1,23 @@
 @{
 	XmlDocument mydoc=ToXmlDocument(Model);
 
-	mydoc=aggiungipadre(mydoc,"root","_dataList","_data");
+    mydoc = aggiungifiglio(mydoc, "root/_data", "dataString"); // aggiunge a tutte le sale una data in formato stringa che verrà valorizzata poi in stile 21 Nov
+    foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/_data/dataString")) {
+        var data = DateTime.Today;
+        var dateTime = bookToModify.ParentNode.SelectSingleNode("data").ChildNodes[0].Value;
+        if (DateTime.TryParseExact(dateTime,
+                       "yyyy-MM-dd",
+                       System.Globalization.CultureInfo.InvariantCulture,
+                       System.Globalization.DateTimeStyles.None,
+                       out data)) {
+            bookToModify.InnerText = data.ToString("d MMM");
+
+        } else {
+            bookToModify.InnerText = "";
+        }
+    }
+
+    mydoc=aggiungipadre(mydoc,"root","_dataList","_data");
 
 	mydoc=RimuoviFratelli(mydoc,"root/_dataList");
 	mydoc=rendinumeric(mydoc,"root/_dataList/_data/parentID");

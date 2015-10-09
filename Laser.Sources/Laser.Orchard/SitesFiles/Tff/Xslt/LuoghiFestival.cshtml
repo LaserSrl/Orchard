@@ -13,10 +13,28 @@
 
 	foreach(XmlNode bookToModify in mydoc.SelectNodes("/root/_dataList/_data/id")){
 			int n;
+            double latitude=0, longitude=0;
             bool isNumeric = int.TryParse(bookToModify.ChildNodes[0].Value, out n);
+            if (n==457){
+                latitude =45.0659785;
+                longitude = 7.6924335;
+            } else if (n == 389) {
+                latitude =45.0689778;
+                longitude = 7.680581;
+            } else if (n == 388) {
+                latitude =45.0683213;
+                longitude = 7.6902969;
+            } else if (n == 390) {
+                latitude =45.0655271;
+                longitude = 7.6766878;
+            } else if (n == 485) {
+                latitude =45.0329495;
+                longitude = 7.6637605;
+
+            }
 			XmlNode nodomappa=bookToModify.ParentNode.SelectSingleNode("MapPart");
-			nodomappa.SelectSingleNode("Latitude").InnerText=":lasernumeric1lasernumeric:";
-			nodomappa.SelectSingleNode("Longitude").InnerText=":lasernumeric2lasernumeric:";
+			nodomappa.SelectSingleNode("Latitude").InnerText=String.Concat(":lasernumeric",latitude.ToString(System.Globalization.CultureInfo.InvariantCulture),"lasernumeric:");
+            nodomappa.SelectSingleNode("Longitude").InnerText = String.Concat(":lasernumeric", longitude.ToString(System.Globalization.CultureInfo.InvariantCulture), "lasernumeric:");
 			nodomappa.SelectSingleNode("Locationinfo").InnerText="ciao";
 			nodomappa.SelectSingleNode("Locationadress").InnerText="ciao";
 	}

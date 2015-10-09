@@ -1,118 +1,133 @@
 @{
 
 
-	XmlDocument mydoc=ToXmlDocument(Model);
-	foreach(XmlNode bookToModify in mydoc.SelectNodes(".//image/url_resource")){
-		bookToModify.InnerXml="http://www.torinofilmfest.org/public/uploaded/"+bookToModify.InnerXml;
-	}
-	mydoc=aggiungipadre(mydoc,"root","_dataList","_data");
-	mydoc=RimuoviFratelli(mydoc,"root/_dataList");
-	
-		foreach(XmlNode bookToModify in mydoc.SelectNodes("/root/_datalist/_data")){
-		
-		bookToModify.InnerXml="http://www.torinofilmfest.org/public/uploaded/"+bookToModify.InnerXml;
-	}
-	
-	
-	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/lasernumeric/id");
-	
-	// generaid
-//	Int32 contatore=0;
-				foreach(XmlNode node in mydoc.SelectNodes("/root/_dataList/_data/lasernumeric/id")){
-			//	contatore++;
-				XmlNode author = mydoc.CreateElement("Id");
-				XmlNode sid= mydoc.CreateElement("Sid");
-			//	int n;
-				int proiezioneid;
-				int filmid;
-               // bool isNumeric = int.TryParse(node.InnerText, out n);
-			 bool isNumeric = int.TryParse(node.ParentNode.SelectSingleNode("proiezioneID").InnerText, out proiezioneid);
-			   isNumeric = int.TryParse(node.ParentNode.SelectSingleNode("film/id").InnerText, out filmid);
-				author.InnerText=":lasernumeric"+(100000000+proiezioneid*1000000+filmid).ToString()+"lasernumeric:";
-				sid.InnerText=proiezioneid.ToString() +"|"+ filmid.ToString() ;
-				node.ParentNode.AppendChild(author);
-				node.ParentNode.AppendChild(sid);
-				node.ParentNode.RemoveChild(node);
-			}
-	
-	
-	mydoc=rendinumeric(mydoc,"root/_dataList/_data/parentID");
-		
-	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/lasernumeric/id");
-		
-		
-//			mydoc=aggiungipadre(mydoc,"root/_dataList/_data","TrailerList","trailer");
-//	mydoc=cambianome(mydoc,"root/_dataList/_data/TrailerList/trailer","Trailerdata");
-//	mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/TrailerList","Trailerdata");// rende vettore
-//	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/TrailerList/Trailerdata/id");
-//	mydoc=generaid(mydoc,"root/_dataList/_data/TrailerList/Trailerdata/id",80000000);
-	
+    XmlDocument mydoc = ToXmlDocument(Model);
+    foreach (XmlNode bookToModify in mydoc.SelectNodes(".//image/url_resource")) {
+        bookToModify.InnerXml = "http://www.torinofilmfest.org/public/uploaded/" + bookToModify.InnerXml;
+    }
+    mydoc = aggiungipadre(mydoc, "root", "_dataList", "_data");
+    mydoc = RimuoviFratelli(mydoc, "root/_dataList");
 
-		mydoc=generaOriginalId(mydoc,"root/_dataList/_data/lasernumeric/compra_url/id");
-	mydoc=generaid(mydoc,"root/_dataList/_data/lasernumeric/compra_url/id",70000000);
-	mydoc=cambianome(mydoc,"root/_dataList/_data/lasernumeric/compra_url","Compraurl");
-		mydoc=rendinumeric(mydoc,"root/_dataList/_data/lasernumeric/giornoID");
-		mydoc=rendinumeric(mydoc,"root/_dataList/_data/lasernumeric/proiezioneID");
-	
+    foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/_datalist/_data")) {
 
-// Film
-	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/lasernumeric/film/id");
-	mydoc=generaid(mydoc,"root/_dataList/_data/lasernumeric/film/id",60000000);	
-//	mydoc=rendinumeric(mydoc,"root/_dataList/_data/lasernumeric/film/id");
-	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/lasernumeric/film/compra_url/id");
-	mydoc=generaid(mydoc,"root/_dataList/_data/lasernumeric/film/compra_url/id",70000000);
-	mydoc=cambianome(mydoc,"root/_dataList/_data/lasernumeric/film/compra_url","Compraurl");
+        bookToModify.InnerXml = "http://www.torinofilmfest.org/public/uploaded/" + bookToModify.InnerXml;
+    }
 
 
+    mydoc = generaOriginalId(mydoc, "root/_dataList/_data/lasernumeric/id");
 
-	mydoc=rendinumeric(mydoc,"root/_dataList/_data/lasernumeric/film/sezioneID");
-		mydoc=rendinumeric(mydoc,"root/_dataList/_data/lasernumeric/film/proiezioneID");
-			mydoc=generaOriginalId(mydoc,"root/_dataList/_data/lasernumeric/film/media/image/ID_media");
-	mydoc=generaid(mydoc,"root/_dataList/_data/lasernumeric/film/media/image/ID_media",10000000);
-	mydoc=aggiungipadre(mydoc,"root/_dataList/_data/lasernumeric/film/media","ImageList","image");
-	mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/lasernumeric/film/media/ImageList","image");// rende vettore	
-	mydoc=cambianome(mydoc,"root/_dataList/_data/lasernumeric/film/media/ImageList/image","Dataimage");
-	mydoc=RimuoviNodo(mydoc,"root/_dataList/_data/lasernumeric/film/media");
+    // generaid
+    //	Int32 contatore=0;
+    foreach (XmlNode node in mydoc.SelectNodes("/root/_dataList/_data/lasernumeric/id")) {
+        //	contatore++;
+        XmlNode author = mydoc.CreateElement("Id");
+        XmlNode sid = mydoc.CreateElement("Sid");
+        //	int n;
+        int proiezioneid;
+        int filmid;
+        // bool isNumeric = int.TryParse(node.InnerText, out n);
+        bool isNumeric = int.TryParse(node.ParentNode.SelectSingleNode("proiezioneID").InnerText, out proiezioneid);
+        isNumeric = int.TryParse(node.ParentNode.SelectSingleNode("film/id").InnerText, out filmid);
+        author.InnerText = ":lasernumeric" + (100000000 + proiezioneid * 1000000 + filmid).ToString() + "lasernumeric:";
+        sid.InnerText = proiezioneid.ToString() + "|" + filmid.ToString();
+        node.ParentNode.AppendChild(author);
+        node.ParentNode.AppendChild(sid);
+        node.ParentNode.RemoveChild(node);
+    }
+
+    mydoc = aggiungifiglio(mydoc, "root/_dataList/_data/lasernumeric", "dataString"); // aggiunge a tutte le sale una data in formato stringa che verrà valorizzata poi in stile 21 Nov
+    foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/_dataList/_data/lasernumeric/dataString")) {
+        var data = DateTime.Today;
+        var dateTime = bookToModify.ParentNode.SelectSingleNode("data").ChildNodes[0].Value;
+        if (DateTime.TryParseExact(dateTime,
+                       "yyyy-MM-dd",
+                       System.Globalization.CultureInfo.InvariantCulture,
+                       System.Globalization.DateTimeStyles.None,
+                       out data)) {
+            bookToModify.InnerText = data.ToString("d MMM");
+
+        } else {
+            bookToModify.InnerText = "";
+        }
+    }
+
+    mydoc = rendinumeric(mydoc, "root/_dataList/_data/parentID");
+
+    mydoc = generaOriginalId(mydoc, "root/_dataList/_data/lasernumeric/id");
 
 
-			mydoc=aggiungipadre(mydoc,"root/_dataList/_data/lasernumeric/film","TrailerList","trailer");
-	mydoc=cambianome(mydoc,"root/_dataList/_data/lasernumeric/film/TrailerList/trailer","Trailerdata");
-	mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/lasernumeric/film/TrailerList","Trailerdata");// rende vettore
-	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/lasernumeric/film/TrailerList/Trailerdata/id");
-	mydoc=generaid(mydoc,"root/_dataList/_data/lasernumeric/film/TrailerList/Trailerdata/id",80000000);
-	
-	
-	mydoc=aggiungipadre(mydoc,"root/_dataList/_data/lasernumeric/film","PremiList","premi");
-	mydoc=cambianome(mydoc,"root/_dataList/_data/lasernumeric/film/PremiList/premi","PremiData");
-	mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/lasernumeric/film/PremiList","PremiData");// rende vettore
-	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/lasernumeric/film/PremiList/PremiData/id");
-	mydoc=generaid(mydoc,"root/_dataList/_data/lasernumeric/film/PremiList/PremiData/id",800000);
-
-	mydoc=RimuoviNodo(mydoc,"root/_dataList/_data/lasernumeric/film/sale");
-	mydoc=cambianome(mydoc,"root/_dataList/_data/lasernumeric/film","Datafilm");
-
-	mydoc=cambianome(mydoc,"root/_dataList/_data/lasernumeric","Datasale");
-		mydoc=generaOriginalId(mydoc,"root/_dataList/_data/media/image/ID_media");
-	mydoc=generaid(mydoc,"root/_dataList/_data/media/image/ID_media",10000000);
+    //			mydoc=aggiungipadre(mydoc,"root/_dataList/_data","TrailerList","trailer");
+    //	mydoc=cambianome(mydoc,"root/_dataList/_data/TrailerList/trailer","Trailerdata");
+    //	mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/TrailerList","Trailerdata");// rende vettore
+    //	mydoc=generaOriginalId(mydoc,"root/_dataList/_data/TrailerList/Trailerdata/id");
+    //	mydoc=generaid(mydoc,"root/_dataList/_data/TrailerList/Trailerdata/id",80000000);
 
 
-	
-	
-	
-	
-	mydoc=rendinumeric(mydoc,"root/_dataList/_data/media/image/ID_article");
-	mydoc=aggiungipadre(mydoc,"root/_dataList/_data/media","ImageList","image");
-	
-		mydoc=aggiungifiglio(mydoc,"root/_dataList/_data/media/ImageList","image");// rende vettore
-	mydoc=cambianome(mydoc,"root/_dataList/_data/media/ImageList/image","Dataimage");
-		mydoc=RimuoviNodo(mydoc,"root/_dataList/_data/media");
-	mydoc=CreaContatore(mydoc,"root/_dataList/_data/Datasale","OrdinamentoLaser");
-	//mydoc=aggiungifiglio(mydoc,"root/_dataList","_data"); // rende vettore
-		mydoc=cambianome(mydoc,"root/_dataList/_data","ToRemove");
+    mydoc = generaOriginalId(mydoc, "root/_dataList/_data/lasernumeric/compra_url/id");
+    mydoc = generaid(mydoc, "root/_dataList/_data/lasernumeric/compra_url/id", 70000000);
+    mydoc = cambianome(mydoc, "root/_dataList/_data/lasernumeric/compra_url", "Compraurl");
+    mydoc = rendinumeric(mydoc, "root/_dataList/_data/lasernumeric/giornoID");
+    mydoc = rendinumeric(mydoc, "root/_dataList/_data/lasernumeric/proiezioneID");
 
-	mydoc=cambianome(mydoc,"root/_dataList","ToRemove");
 
-	
+    // Film
+    mydoc = generaOriginalId(mydoc, "root/_dataList/_data/lasernumeric/film/id");
+    mydoc = generaid(mydoc, "root/_dataList/_data/lasernumeric/film/id", 60000000);
+    //	mydoc=rendinumeric(mydoc,"root/_dataList/_data/lasernumeric/film/id");
+    mydoc = generaOriginalId(mydoc, "root/_dataList/_data/lasernumeric/film/compra_url/id");
+    mydoc = generaid(mydoc, "root/_dataList/_data/lasernumeric/film/compra_url/id", 70000000);
+    mydoc = cambianome(mydoc, "root/_dataList/_data/lasernumeric/film/compra_url", "Compraurl");
 
-	SpanXDocument(ToXDocument(mydoc).Root);
+
+
+    mydoc = rendinumeric(mydoc, "root/_dataList/_data/lasernumeric/film/sezioneID");
+    mydoc = rendinumeric(mydoc, "root/_dataList/_data/lasernumeric/film/proiezioneID");
+    mydoc = generaOriginalId(mydoc, "root/_dataList/_data/lasernumeric/film/media/image/ID_media");
+    mydoc = generaid(mydoc, "root/_dataList/_data/lasernumeric/film/media/image/ID_media", 10000000);
+    mydoc = aggiungipadre(mydoc, "root/_dataList/_data/lasernumeric/film/media", "ImageList", "image");
+    mydoc = aggiungifiglio(mydoc, "root/_dataList/_data/lasernumeric/film/media/ImageList", "image");// rende vettore	
+    mydoc = cambianome(mydoc, "root/_dataList/_data/lasernumeric/film/media/ImageList/image", "Dataimage");
+    mydoc = RimuoviNodo(mydoc, "root/_dataList/_data/lasernumeric/film/media");
+
+
+    mydoc = aggiungipadre(mydoc, "root/_dataList/_data/lasernumeric/film", "TrailerList", "trailer");
+    mydoc = cambianome(mydoc, "root/_dataList/_data/lasernumeric/film/TrailerList/trailer", "Trailerdata");
+    mydoc = aggiungifiglio(mydoc, "root/_dataList/_data/lasernumeric/film/TrailerList", "Trailerdata");// rende vettore
+    mydoc = generaOriginalId(mydoc, "root/_dataList/_data/lasernumeric/film/TrailerList/Trailerdata/id");
+    mydoc = generaid(mydoc, "root/_dataList/_data/lasernumeric/film/TrailerList/Trailerdata/id", 80000000);
+
+
+    mydoc = aggiungipadre(mydoc, "root/_dataList/_data/lasernumeric/film", "PremiList", "premi");
+    mydoc = cambianome(mydoc, "root/_dataList/_data/lasernumeric/film/PremiList/premi", "PremiData");
+    mydoc = aggiungifiglio(mydoc, "root/_dataList/_data/lasernumeric/film/PremiList", "PremiData");// rende vettore
+    mydoc = generaOriginalId(mydoc, "root/_dataList/_data/lasernumeric/film/PremiList/PremiData/id");
+    mydoc = generaid(mydoc, "root/_dataList/_data/lasernumeric/film/PremiList/PremiData/id", 800000);
+
+    mydoc = RimuoviNodo(mydoc, "root/_dataList/_data/lasernumeric/film/sale");
+    mydoc = cambianome(mydoc, "root/_dataList/_data/lasernumeric/film", "Datafilm");
+
+    mydoc = cambianome(mydoc, "root/_dataList/_data/lasernumeric", "Datasale");
+    mydoc = generaOriginalId(mydoc, "root/_dataList/_data/media/image/ID_media");
+    mydoc = generaid(mydoc, "root/_dataList/_data/media/image/ID_media", 10000000);
+
+
+
+
+
+
+    mydoc = rendinumeric(mydoc, "root/_dataList/_data/media/image/ID_article");
+    mydoc = aggiungipadre(mydoc, "root/_dataList/_data/media", "ImageList", "image");
+
+    mydoc = aggiungifiglio(mydoc, "root/_dataList/_data/media/ImageList", "image");// rende vettore
+    mydoc = cambianome(mydoc, "root/_dataList/_data/media/ImageList/image", "Dataimage");
+    mydoc = RimuoviNodo(mydoc, "root/_dataList/_data/media");
+    mydoc = CreaContatore(mydoc, "root/_dataList/_data/Datasale", "OrdinamentoLaser");
+    //mydoc=aggiungifiglio(mydoc,"root/_dataList","_data"); // rende vettore
+    mydoc = cambianome(mydoc, "root/_dataList/_data", "ToRemove");
+
+    mydoc = cambianome(mydoc, "root/_dataList", "ToRemove");
+
+
+
+    SpanXDocument(ToXDocument(mydoc).Root);
 }
