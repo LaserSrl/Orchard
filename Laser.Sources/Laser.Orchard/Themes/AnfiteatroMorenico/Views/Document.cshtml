@@ -8,9 +8,20 @@
 
 }
 @{
-    //Styles    
-    Style.Include("style.css").AtHead();
-    if (WorkContext.HttpContext.Request.QueryString["removejs"] == null) {
+    //Styles
+    // #GM Gestione alto contrasto - start
+    var cookie = WorkContext.HttpContext.Request.Cookies.Get("Accessibility");
+    var accessibilityCookie = (cookie == null) ? "" : cookie.Value;
+    if (accessibilityCookie == "highcontrast")
+    {
+        Style.Include(subthemePath + "style-contrasto.css").AtHead();
+    }
+    else {
+        Style.Include("style.css").AtHead();
+    }
+    // #GM Gestione alto contrasto - end
+    if (WorkContext.HttpContext.Request.QueryString["removejs"] == null)
+    {
         Script.Include("main.js").AtFoot();
     }
     

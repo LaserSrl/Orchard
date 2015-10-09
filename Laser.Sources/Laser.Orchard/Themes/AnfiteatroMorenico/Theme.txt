@@ -4,4 +4,4 @@ Website: http://www.laser-group.com
 Description: Anfiteatro Morenico Ivrea theme
 Version: 1.0
 OrchardVersion: 1.8
-Zones: WideContent, Navigation, HomeBox, Breadcrumb, BeforeContent, AsideFirst, Content, AsideSecond, AfterContent, FooterNavigation
+Zones: WideContent, Accessibility, Navigation, HomeBox, Breadcrumb, BeforeContent, AsideFirst, Content, AsideSecond, AfterContent, FooterNavigation

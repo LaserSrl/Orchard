@@ -37,6 +37,10 @@ msgid "Translator"
 msgstr "Traduttore"
 
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorForm.cshtml"
+msgid "Click to use this translation"
+msgstr "Clicca per usare questa traduzione"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorForm.cshtml"
 msgid "Context"
 msgstr "Contesto"
 
@@ -47,6 +51,10 @@ msgstr "Elimina"
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorForm.cshtml"
 msgid "Save"
 msgstr "Salva"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorForm.cshtml"
+msgid "Suggestions"
+msgstr "Suggerimenti"
 
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorForm.cshtml"
 msgid "This operation will completely remove any association between the message and the module. You won't be able to translate this message for this module anymore until it's imported again. Do you want to continue?"
@@ -65,12 +73,20 @@ msgid "Advanced Operations"
 msgstr "Operazioni Avanzate"
 
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
+msgid "Export Translations"
+msgstr "Esporta Traduzioni"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
 msgid "Import Translations"
 msgstr "Importa le Traduzioni"
 
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
 msgid "Language: "
 msgstr "Lingua:"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
+msgid "Nothing to translate for this element."
+msgstr "Nessuna traduzione necessaria per questo elemento."
 
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
 msgid "Please select a module or a theme."
@@ -103,6 +119,10 @@ msgstr "Impossibile eliminare la traduzione."
 msgctxt "Laser.Orchard.Translator.Controllers.TranslatorTreeController"
 msgid "Modules"
 msgstr "Moduli"
+
+msgctxt "Laser.Orchard.Translator.Controllers.TranslatorTreeController"
+msgid "N/D"
+msgstr "N/D"
 
 msgctxt "Laser.Orchard.Translator.Controllers.TranslatorTreeController"
 msgid "Themes"

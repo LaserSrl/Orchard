@@ -24,6 +24,10 @@ msgctxt "~/Themes/AnfiteatroMorenico/Views/Content.Summary.cshtml"
 msgid "Go to page {0}"
 msgstr "Vai alla pagina {0}"
 
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content.Summary.cshtml"
+msgid "read more"
+msgstr "leggi tutto"
+
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-BlogPost.Detail.cshtml"
 msgid "Click to zoom"
 msgstr "Clicca per ingrandire"
@@ -67,6 +71,10 @@ msgstr "Apri {0} in una nuova finestra"
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent-BeforeContent-Summary.cshtml"
 msgid "Go to page {0}"
 msgstr "Vai alla pagina {0}"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-CalendarEvent-BeforeContent-Summary.cshtml"
+msgid "read more"
+msgstr "leggi tutto"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-InfoPage.Detail.cshtml"
 msgid "Gallery"
@@ -157,6 +165,10 @@ msgid "Download from iTunes"
 msgstr "Download from iTunes"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
+msgid "E015"
+msgstr "E015"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
 msgid "Email to info.ivrea@turismotorino.org"
 msgstr "Email a info.ivrea@turismotorino.org"
 
@@ -167,6 +179,10 @@ msgstr "Logo AMI"
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
 msgid "Logo Comune di Ivrea"
 msgstr "Logo Comune di Ivrea"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
+msgid "Logo E015"
+msgstr "Logo E015"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
 msgid "Logo Regione Piemonte"
@@ -183,6 +199,10 @@ msgstr "Apri il sotto menu di {0}"
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.Blogs.RecentBlogPosts-AfterContent.cshtml"
 msgid "Go to page {0}"
 msgstr "Vai alla pagina {0}"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.Blogs.RecentBlogPosts-AfterContent.cshtml"
+msgid "read more"
+msgstr "leggi tutto"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
 msgid "Add attachment"

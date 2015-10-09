@@ -48,6 +48,14 @@ msgctxt "~/Themes/Proton/Views/Message.cshtml"
 msgid "WARNING"
 msgstr "ATTENZIONE"
 
+msgctxt "~/Themes/Proton/Views/Pager.cshtml"
+msgid "Next"
+msgstr "Successivo"
+
+msgctxt "~/Themes/Proton/Views/Pager.cshtml"
+msgid "Prev"
+msgstr "Precedente"
+
 msgctxt "~/Themes/Proton/Views/Parts.Blogs.BlogPost.List.cshtml"
 msgid "There are no posts for this blog."
 msgstr "Non ci sono news in questa sezione"
@@ -65,8 +73,16 @@ msgid "Comments or Inquiry"
 msgstr "Commenti o richieste"
 
 msgctxt "~/Themes/Proton/Views/Parts.ContactForm-PaginaContatto.cshtml"
+msgid "Confirm E-Mail"
+msgstr "Conferma E-mail"
+
+msgctxt "~/Themes/Proton/Views/Parts.ContactForm-PaginaContatto.cshtml"
 msgid "Confirm Email Address"
 msgstr "Conferma Indirizzo Email"
+
+msgctxt "~/Themes/Proton/Views/Parts.ContactForm-PaginaContatto.cshtml"
+msgid "E-Mail"
+msgstr "E-mail"
 
 msgctxt "~/Themes/Proton/Views/Parts.ContactForm-PaginaContatto.cshtml"
 msgid "Email Address"
@@ -95,4 +111,12 @@ msgstr "Upload file"
 msgctxt "~/Themes/Proton/Views/Parts.ContactForm-PaginaContatto.cshtml"
 msgid "Your Name"
 msgstr "Il tuo Nome"
+
+msgctxt "~/Themes/Proton/Views/Parts.MenuWidget-Breadcrumb.cshtml"
+msgid "Home"
+msgstr "Home"
+
+msgctxt "~/Themes/Proton/Views/PortfolioBreadcrumb.cshtml"
+msgid "Home"
+msgstr "Home"
 

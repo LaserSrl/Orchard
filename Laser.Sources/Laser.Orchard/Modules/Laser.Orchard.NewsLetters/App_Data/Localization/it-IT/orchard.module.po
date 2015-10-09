@@ -145,6 +145,10 @@ msgid "Newsletter not yet sent"
 msgstr "Newsletter non ancora inviata"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterEdition_Edit.cshtml"
+msgid "Proposed Announcements"
+msgstr "Comunicati proposti"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/EditorTemplates/Parts/NewsletterEdition_Edit.cshtml"
 msgid "sent on"
 msgstr "inviata il"
 
@@ -173,6 +177,10 @@ msgid "Subscription for this/theese Newsletter(s)"
 msgstr "Iscrizioni della newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Create.cshtml"
+msgid " &#62; "
+msgstr "&#62;"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Create.cshtml"
 msgid "Create Newsletter"
 msgstr "Crea nuova Newsletter"
 
@@ -183,6 +191,10 @@ msgstr "Nuova Newsletter"
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Create.cshtml"
 msgid "Newsletter List"
 msgstr "Elenco Newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Edit.cshtml"
+msgid " &#62; "
+msgstr "&#62;"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Edit.cshtml"
 msgid "Edit Newsletter"
@@ -205,8 +217,16 @@ msgid "Apply"
 msgstr "Applica"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
+msgid "Choose action..."
+msgstr "Scegliere l'azione..."
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
 msgid "Create Newsletter"
 msgstr "Crea Newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
+msgid "Delete"
+msgstr "Elimina"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
 msgid "Editions Archive"
@@ -231,6 +251,10 @@ msgid "Subscribers"
 msgstr "Iscritti"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Create.cshtml"
+msgid " &#62; "
+msgstr "&#62;"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Create.cshtml"
 msgid "Create Newsletter Edition"
 msgstr "Crea nuova Edizione"
 
@@ -245,6 +269,10 @@ msgstr "Elenco Edizioni"
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Create.cshtml"
 msgid "Newsletter List"
 msgstr "Elenco Newsletter"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Edit.cshtml"
+msgid " &#62; "
+msgstr "&#62;"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Edit.cshtml"
 msgid "Edit Newsletter Edition"
@@ -263,12 +291,20 @@ msgid "Newsletter List"
 msgstr "Elenco Newsletter"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
+msgid " &#62; "
+msgstr "&#62;"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
 msgid "Actions:"
 msgstr "Azioni:"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
 msgid "Apply"
 msgstr "Applica"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
+msgid "Choose action..."
+msgstr "Scegliere l'azione..."
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
 msgid "Create New Edition"
@@ -289,6 +325,10 @@ msgstr "Edizione non ancora inviata"
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
 msgid "Edition sent"
 msgstr "Edizione inviata"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
+msgid "Newsletter Edition List"
+msgstr "Elenco Edizioni"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterEditionAdmin/Index.cshtml"
 msgid "Newsletter edition nr. {0}"
@@ -359,12 +399,20 @@ msgid "Newsletter Edition Edit"
 msgstr "Modifica Edizione"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
+msgid " &#62; "
+msgstr "&#62;"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
 msgid "Actions:"
 msgstr "Azioni:"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
 msgid "Apply"
 msgstr "Applica"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
+msgid "Choose action..."
+msgstr "Scegliere l'azione..."
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/SubscribersAdmin/Index.cshtml"
 msgid "Confirmation on {0}"
