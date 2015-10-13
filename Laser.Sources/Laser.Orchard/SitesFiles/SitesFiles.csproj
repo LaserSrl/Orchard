@@ -48,6 +48,15 @@
     <None Include="IvreaTerritorio\WebServices\POI1.cshtml" />
     <None Include="TerritorioMorgex\Mobile\pushProdMorgex.p12" />
     <None Include="TerritorioMorgex\Mobile\pushSvilMorgex.p12" />
+    <None Include="Tff\Xslt\common.cshtml" />
+    <None Include="Tff\Xslt\getfilm.cshtml" />
+    <None Include="Tff\Xslt\getfilmbyday.cshtml" />
+    <None Include="Tff\Xslt\getgiorni.cshtml" />
+    <None Include="Tff\Xslt\getnews.cshtml" />
+    <None Include="Tff\Xslt\getsezioni.cshtml" />
+    <None Include="Tff\Xslt\getsponsor.cshtml" />
+    <None Include="Tff\Xslt\LuoghiFestival - Copia.cshtml" />
+    <None Include="Tff\Xslt\LuoghiFestival.cshtml" />
     <None Include="TurismoTorino\Mobile\ttdev.p12" />
     <None Include="TurismoTorino\Mobile\ttprod.p12" />
     <None Include="Vialfre\Mobile\pushDevVialfre.p12" />
