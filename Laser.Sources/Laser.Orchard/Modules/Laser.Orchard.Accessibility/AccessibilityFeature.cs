@@ -3,6 +3,7 @@ using Orchard.Caching;
 using Orchard.Environment;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Laser.Orchard.Accessibility
@@ -22,7 +23,28 @@ namespace Laser.Orchard.Accessibility
 
         public void Disabled(global::Orchard.Environment.Extensions.Models.Feature feature)
         {
-            //throw new NotImplementedException();
+            if (feature.Descriptor.Name == "Laser.Orchard.Accessibility")
+            {
+                // imposta la cache in modo che non tenga più conto del cookie "Accessibility"
+                var cacheSettings = _services.WorkContext.CurrentSite.ContentItem.Parts.OfType<CacheSettingsPart>().First();
+
+                if (cacheSettings != null)
+                {
+                    string vary = cacheSettings.VaryCookieStringParameters ?? "";
+                    List<string> coockieList = vary.Split(',').ToList();
+                    
+                    if (coockieList.Contains(Utils.AccessibilityCookieName))
+                    {
+                        coockieList.Remove(Utils.AccessibilityCookieName);
+                        vary = string.Join(",", coockieList);
+                        cacheSettings.VaryCookieStringParameters = vary;
+                        _signals.Trigger(CacheSettingsPart.CacheKey);
+                    }
+                }
+
+                // svuota la cache
+                _cacheStorageProvider.RemoveAll();
+            }
         }
 
         public void Disabling(global::Orchard.Environment.Extensions.Models.Feature feature)
