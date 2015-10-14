@@ -1,6 +1,8 @@
 ﻿using Orchard;
+using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
+using Orchard.OutputCache.Services;
 using System;
 using System.Web;
 
@@ -10,12 +12,16 @@ namespace Laser.Orchard.Accessibility.Services
     {
         private readonly IOrchardServices _orchardServices;
         private readonly ShellSettings _shellSettings;
+        private readonly ISignals _signals;
+        private readonly ICacheService _cacheService;
         public ILogger Logger { get; set; }
 
-        public AccessibilityServices(IOrchardServices orchardServices, ShellSettings shellSettings)
+        public AccessibilityServices(IOrchardServices orchardServices, ShellSettings shellSettings, ISignals signals, ICacheService cacheService)
         {
             _orchardServices = orchardServices;
             _shellSettings = shellSettings;
+            _signals = signals;
+            _cacheService = cacheService;
             Logger = NullLogger.Instance;
         }
 

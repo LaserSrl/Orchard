@@ -1,10 +1,11 @@
-﻿using Orchard;
+﻿using Laser.Orchard.Accessibility.Services;
+using Orchard;
 using Orchard.Mvc.Filters;
+using Orchard.Security;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
-using Orchard.Security;
 
 namespace Laser.Orchard.Accessibility.Filters
 {
@@ -15,7 +16,7 @@ namespace Laser.Orchard.Accessibility.Filters
         private Action<ControllerContext> _completeResponse;
         private StringWriter _tempWriter;
 
-        public TextOnlyFilter(IOrchardServices services)
+        public TextOnlyFilter(IOrchardServices services, IAccessibilityServices accServices)
         {
             _orchardServices = services;
         }
@@ -54,7 +55,6 @@ namespace Laser.Orchard.Accessibility.Filters
             // se richiesto, pulisce l'output per avere "solo testo"
             // controlla sia il cookie sia il fatto di non avere accesso alla dashboard
             bool isAdmin = _orchardServices.Authorizer.Authorize(StandardPermissions.AccessAdminPanel);
-            //var aa = filterContext.GetWorkContext() Authorizer.Authorize(Permissions.PermissionName)  //_orchardServices.WorkContext.CurrentSite.SuperUser;
             if (new Utils().GetTenantCookieValue(Utils.AccessibilityCookieName, filterContext.HttpContext.Request) == Utils.AccessibilityTextOnly
                 && (isAdmin == false))
             {

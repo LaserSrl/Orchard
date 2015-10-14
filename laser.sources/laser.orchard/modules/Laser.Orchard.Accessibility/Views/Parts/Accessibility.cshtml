@@ -5,7 +5,7 @@
     </li>
     @{
         var cookie = WorkContext.HttpContext.Request.Cookies.Get("Accessibility");
-        var accessibilityCookie = (cookie == null) ? "" : cookie.Value;
+        var accessibilityCookie = (cookie == null) ? "normal" : cookie.Value;
     }
     @if (accessibilityCookie != "highcontrast")
     {

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Laser.Orchard.Accessibility.Models;
-using Orchard.ContentManagement.Drivers;
+﻿using Laser.Orchard.Accessibility.Models;
+using Laser.Orchard.Accessibility.Services;
 using Orchard;
+using Orchard.ContentManagement.Drivers;
+using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Environment.Configuration;
 
 namespace Laser.Orchard.Accessibility.Drivers
 {
@@ -45,6 +42,14 @@ namespace Laser.Orchard.Accessibility.Drivers
                     () => shapeHelper.Parts_Accessibility_SummaryAdmin());
 
             // visualizzazione di dettaglio
+
+            // se il cookie non esiste lo crea come "normal"
+            var accessibilityServices = _orchardServices.WorkContext.Resolve<IAccessibilityServices>();
+            if (_orchardServices.WorkContext.HttpContext.Request.Cookies.Get(Utils.AccessibilityCookieName) == null)
+            {
+                accessibilityServices.SetNormal();
+            }
+
             return ContentShape("Parts_Accessibility",
                 () => shapeHelper.Parts_Accessibility(Url: tenantPath));
         }
