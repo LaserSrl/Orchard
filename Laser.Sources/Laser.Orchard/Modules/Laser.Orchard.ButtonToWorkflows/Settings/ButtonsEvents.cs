@@ -22,6 +22,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Settings {
                 var model = definition.Settings.GetModel<ButtonsSetting>();
                 //ButtonsSetting bts= new ButtonsSetting();
                 //bts.ButtonNumber=tmp.ButtonNumber.ToString().Split(',');
+                if (model.ButtonNumber == null) model.ButtonNumber = new string[] { "" };
                 model.ButtonNumber = model.ButtonNumber[0].Split(',');
                 yield return DefinitionTemplate(model);
             }
@@ -33,10 +34,9 @@ namespace Laser.Orchard.ButtonToWorkflows.Settings {
             if (updateModel.TryUpdateModel(model, "ButtonsSetting", null, null)) {
                 if (model.ButtonNumber != null) {
                     builder.WithSetting("ButtonsSetting.ButtonNumber", String.Join(",", model.ButtonNumber));
-                }
-                else
+                } else
                     _notifier.Add(NotifyType.Warning, T("Setting -> Buttons : must be configured"));
-                }
+            }
             yield return DefinitionTemplate(model);
         }
     }

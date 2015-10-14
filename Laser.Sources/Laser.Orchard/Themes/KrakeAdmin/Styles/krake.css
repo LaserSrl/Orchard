@@ -1,9 +1,25 @@
+html {
+    background: #fff url("images/adminNavBackground.gif") repeat-y scroll left top !important;
+}
+
+#layout-content {
+  background: #fff url("../../TheAdmin/styles/images/adminNavBackground.gif") repeat-y scroll left top !important;
+}
+
+body {
+  background: #fff url("../../TheAdmin/styles/images/adminNavBackground.gif") repeat-y scroll left top !important;
+}
+
+#header {
+  background: #fff none repeat scroll 0 0 !important;
+}
+
+#layout-main {
+	color: #252c36 !important;
+}
+
 #menu {
     background: #252c36 none repeat scroll 0 0 !important;
-    display: inline !important;
-    float: left !important;
-    position: relative !important;
-    width: 240px !important;
 }
 
 .section-dashboard, .section-new {
@@ -47,10 +63,59 @@
 }
 
 #header #app a {
-    background: rgba(0, 0, 0, 0) url("images/logo_krake.png") no-repeat scroll 0 0  !important;
+    background: rgba(0, 0, 0, 0) url("images/logo_krake.png") no-repeat scroll 0 0 !important;
     display: block !important;
     height: 86px !important;
-    margin: 0 23px !important;
+    margin: auto !important;
     text-indent: -9999px !important;
     width: 77px !important;
 }
+
+button, .button, a.button {
+	background: #2ab9e8 !important;
+    border: 1px solid #2ab9e8 !important;
+    color: #fff !important;
+    /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(42, 185, 232, 1.0)), to(rgba(35, 171, 215, 1).0) !important;
+    background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0) !important;
+    /*test - base green in pallet is 155,179,108*/
+    background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0)) !important;
+}
+
+button:active, .button:active, a.button:active {
+  background: #2ab9e8 !important;
+  border: 1px solid #2ab9e8 !important;
+  /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(42, 185, 232, 1.0)), to(rgba(35, 171, 215, 1).0) !important;
+  background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0) !important;
+  /*test - base green in pallet is 155,179,108*/
+  background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0)) !important;
+  color: #263541 !important;
+}
+
+select, textarea, input.text, input.textMedium, input.text-medium, input.text-small, input.text-box {  
+  color: #1292bc !important;
+}
+
+#page-title {
+  color: #2ab9e8 !important; 
+}
+
+table.items thead, table.items th {
+    background: #e1eef3 none repeat scroll 0 0 !important;
+    
+}
+
+#main .contentItems > ul > li:nth-child(2n), ul.contentItems > li:nth-child(2n), table.items tr:nth-child(2n) {
+    background-color: #e5f3f7 !important;
+}
+
+table.items {
+  border-color: #dae7eb #dae7eb -moz-use-text-color !important;
+}
+
+.localmenu li.selected a {
+    color: rgba(42, 185, 232, 1) !important;
+}
+
+

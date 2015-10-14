@@ -1,0 +1,121 @@
+@{
+    var lang = HttpContext.Current.Request.QueryString["lang"];
+    XmlDocument mydoc = ToXmlDocument(Model);
+    foreach (XmlNode bookToModify in mydoc.SelectNodes(".//image/url_resource")) {
+        bookToModify.InnerXml = "http://www.torinofilmfest.org/public/uploaded/" + bookToModify.InnerXml;
+    }
+    foreach (XmlNode bookToModify in mydoc.SelectNodes(".//allegati/url_resource")) {
+        bookToModify.InnerXml = "http://www.torinofilmfest.org/public/uploaded/" + bookToModify.InnerXml;
+    }
+
+    mydoc = aggiungifiglio(mydoc, "root/_data", "OrdinamentoLaser"); // Aggiunge ad ogni figlio di data un nodo OrdinamentoLaser
+
+    foreach (XmlNode bookToModify in mydoc.SelectNodes(".//filter")) {
+        string gruppo = bookToModify.ChildNodes[0].Value;
+        string groppoFull = "";
+        int priority;
+        int ordineGruppo = 0;
+        int.TryParse(bookToModify.ParentNode.SelectSingleNode("priority").ChildNodes[0].Value, out priority);
+        if (gruppo == "none") {
+            groppoFull = "Sponsor & Partner";
+            ordineGruppo = 1;
+        } else if (gruppo == "contibuto") {
+            groppoFull = "Con il contributo di";
+            if (lang.ToLowerInvariant().StartsWith("en")){
+                groppoFull = "With contribution on";
+            }
+            ordineGruppo = 2;
+        } else if (gruppo == "sostegno") {
+            groppoFull = "Con il sostegno di";
+            if (lang.ToLowerInvariant().StartsWith("en")) {
+                groppoFull = "Supported by";
+            }
+            ordineGruppo = 3;
+        } else if (gruppo == "main") {
+            groppoFull = "Main Sponsor";
+            ordineGruppo = 4;
+        } else if (gruppo == "sponsor") {
+            groppoFull = "Sponsor";
+            ordineGruppo = 5;
+        } else if (gruppo == "vettore ufficiale") {
+            groppoFull = "Vettore ufficiale";
+            if (lang.ToLowerInvariant().StartsWith("en")) {
+                groppoFull = "Official carrier";
+            }
+            ordineGruppo = 6;
+        } else if (gruppo == "partner") {
+            groppoFull = "Partner";
+            ordineGruppo = 7;
+        } else if (gruppo == "partner culturali") {
+            groppoFull = "Partner culturali";
+            if (lang.ToLowerInvariant().StartsWith("en")) {
+                groppoFull = "Cultural partners";
+            }
+            ordineGruppo = 8;
+        } else if (gruppo == "tecnici") {
+            groppoFull = "Tecnici";
+            if (lang.ToLowerInvariant().StartsWith("en")) {
+                groppoFull = "Technical";
+            }
+            ordineGruppo = 9;
+        } else if (gruppo == "media partner") {
+            groppoFull = "Media partner";
+            ordineGruppo = 10;
+        } else if (gruppo == "TFF press & lounge") {
+            groppoFull = "TFF press & lounge";
+            ordineGruppo = 11;
+        } else if (gruppo == "animazione") {
+            groppoFull = "Animazione";
+            if (lang.ToLowerInvariant().StartsWith("en")) {
+                groppoFull = "Animazione";
+            }
+            ordineGruppo = 12;
+        } else if (gruppo == "media") {
+            groppoFull = "Media";
+            ordineGruppo = 13;
+        } else if (gruppo == "internet") {
+            groppoFull = "Internet";
+            ordineGruppo = 14;
+        } else if (gruppo == "culturali") {
+            groppoFull = "Culturali";
+            if (lang.ToLowerInvariant().StartsWith("en")) {
+                groppoFull = "Culturali";
+            }
+            ordineGruppo = 15;
+        } else if (gruppo == "TV") {
+            groppoFull = "TV";
+            ordineGruppo = 16;
+        } 
+        bookToModify.InnerText = groppoFull;
+        bookToModify.ParentNode.SelectSingleNode("OrdinamentoLaser").InnerText = String.Concat(":lasernumeric", ((ordineGruppo * 100000000) + priority).ToString(), "lasernumeric:");
+    }
+
+
+    mydoc = aggiungipadre(mydoc, "root", "_dataList", "_data");
+
+    mydoc = RimuoviFratelli(mydoc, "root/_dataList");
+    mydoc = rendinumeric(mydoc, "root/_dataList/_data/parentID");
+    mydoc = generaOriginalId(mydoc, "root/_dataList/_data/id");
+    mydoc = generaid(mydoc, "root/_dataList/_data/id", 2000000);
+    mydoc = rendinumeric(mydoc, "root/_dataList/_data/priority");
+    mydoc = generaOriginalId(mydoc, "root/_dataList/_data/media/image/ID_media");
+    mydoc = generaid(mydoc, "root/_dataList/_data/media/image/ID_media", 10000000);
+    mydoc = rendinumeric(mydoc, "root/_dataList/_data/media/image/ID_article");
+    mydoc = aggiungipadre(mydoc, "root/_dataList/_data/media", "ImageList", "image");
+
+    mydoc = generaOriginalId(mydoc, "root/_dataList/_data/media/video/ID_video");
+    mydoc = generaid(mydoc, "root/_dataList/_data/media/video/ID_video", 20000000);
+    mydoc = rendinumeric(mydoc, "root/_dataList/_data/media/video/ID_article");
+    mydoc = aggiungipadre(mydoc, "root/_dataList/_data/media", "VideoList", "video");
+
+    //	mydoc=CreaContatore(mydoc,"root/_dataList/_data","OrdinamentoLaser");
+    mydoc = aggiungifiglio(mydoc, "root/_dataList", "_data"); // rende vettore
+    mydoc = aggiungifiglio(mydoc, "root/_dataList/_data/media/ImageList", "image");// rende vettore
+    mydoc = aggiungifiglio(mydoc, "root/_dataList/_data/media/VideoList", "video");// rende vettore
+    mydoc = cambianome(mydoc, "root/_dataList/_data/media/ImageList/image", "Dataimage");
+    mydoc = RimuoviNodo(mydoc, "root/_dataList/_data/media");
+    mydoc = cambianome(mydoc, "root/_dataList/_data", "DataSponsor");
+    mydoc = cambianome(mydoc, "root/_dataList", "ToRemove");
+
+    SpanXDocument(ToXDocument(mydoc).Root);
+}
