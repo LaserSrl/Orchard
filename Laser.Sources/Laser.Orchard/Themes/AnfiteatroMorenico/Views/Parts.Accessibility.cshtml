@@ -34,7 +34,13 @@
         $(document).ready(function () {
             var fontSize = getCookieValue("AccessibilitySize");
             if (fontSize == "") {
-                setCookieValue("AccessibilitySize", "1.4");
+                fontSize = document.body.style.fontSize;
+                if ((fontSize == null)||(fontSize == "")) {
+                    setCookieValue("AccessibilitySize", "1.4");
+                }
+                else {
+                    setCookieValue("AccessibilitySize", fontSize);
+                }
             }
             else {
                 resizeText(0);
