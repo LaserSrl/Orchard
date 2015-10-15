@@ -62,16 +62,13 @@ namespace Laser.Orchard.Accessibility
                 if (cacheSettings != null)
                 {
                     string vary = cacheSettings.VaryCookieStringParameters ?? "";
-                    if (vary.Contains(Utils.AccessibilityCookieName) == false)
+                    char[] separators = { ',' };
+                    List<string> coockieList = vary.Split(separators, System.StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                    if (coockieList.Contains(Utils.AccessibilityCookieName) == false)
                     {
-                        if (string.IsNullOrWhiteSpace(vary))
-                        {
-                            vary = Utils.AccessibilityCookieName;
-                        }
-                        else
-                        {
-                            vary += "," + Utils.AccessibilityCookieName;
-                        }
+                        coockieList.Add(Utils.AccessibilityCookieName);
+                        vary = string.Join(",", coockieList);
                         cacheSettings.VaryCookieStringParameters = vary;
                         _signals.Trigger(CacheSettingsPart.CacheKey);
                     }

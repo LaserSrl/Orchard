@@ -189,4 +189,3 @@ src/Orchard.Web/Modules/Orchard.DynamicForms/node_modules
 #enable all /lib artifacts
 !lib/*/*.*
 */.vs/*
-/Laser.Sources/Laser.Deploy/DeployScripts/Deploy/Modules/Laser.Orchard.Accessibility/Views/Parts/Accessibility.cshtml

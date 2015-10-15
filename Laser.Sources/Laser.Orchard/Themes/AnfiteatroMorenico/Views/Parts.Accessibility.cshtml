@@ -31,11 +31,42 @@
 @using (Script.Head())
 {
     <script type="text/javascript">
-        function resizeText(multiplier) {
-            if (document.body.style.fontSize == "") {
-                document.body.style.fontSize = "1.0em";
+        $(document).ready(function () {
+            var fontSize = getCookieValue("AccessibilitySize");
+            if (fontSize == "") {
+                setCookieValue("AccessibilitySize", "1.4");
             }
-            document.body.style.fontSize = parseFloat(document.body.style.fontSize) + (multiplier * 0.2) + "em";
+            else {
+                resizeText(0);
+            }
+        });
+
+        function getCookieValue(cookieName) {
+            var result = "";
+            var cookies = document.cookie;
+            var arr = cookies.split(";");
+            var nameLen = cookieName.length + 1;
+            var cook;
+            for (var idx = 0; idx < arr.length; idx++) {
+                cook = arr[idx].trim();
+                if (cook.slice(0, nameLen) == (cookieName + "=")) {
+                    result = cook.substr(nameLen);
+                    break;
+                }
+            }
+            return result;
+        }
+
+        function setCookieValue(cookieName, cookieValue) {
+            var aux = cookieName + "=" + cookieValue + "; expires=" + new Date(new Date().valueOf() + 1000 * 60 * 60 * 24 * 30).toUTCString() + "; path=/";
+            document.cookie = aux;
+        }
+
+        function resizeText(multiplier) {
+            var fontSize = getCookieValue("AccessibilitySize");
+            fontSize = parseFloat(fontSize) + (multiplier * 0.2);
+            setCookieValue("AccessibilitySize", fontSize);
+            document.body.style.fontSize = fontSize + "em";
         }
     </script>
 }
