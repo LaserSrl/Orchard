@@ -35,7 +35,7 @@
             var fontSize = getCookieValue("AccessibilitySize");
             if (fontSize == "") {
                 fontSize = document.body.style.fontSize;
-                if ((fontSize == null)||(fontSize == "")) {
+                if ((fontSize == null) || (fontSize == "")) {
                     setCookieValue("AccessibilitySize", "1.4");
                 }
                 else {
