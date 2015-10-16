@@ -115,9 +115,11 @@
 	mydoc=textreplace(mydoc,"root/_dataList/_data/lasernumeric/tramina","\u2028","");
 	mydoc=textreplace(mydoc,"root/_dataList/_data/lasernumeric/cronaca","\u2028","");
 	mydoc=textreplace(mydoc,"root/_dataList/_data/lasernumeric/dichiarazione","\u2028","");
+    mydoc = textreplace(mydoc, "root/_dataList/_data/lasernumeric/film/cast", "\u2028", "");
 
 	mydoc=textreplace(mydoc,"root/_dataList/_data/lasernumeric/titolo","\u2028","");
 	mydoc=textreplace(mydoc,"root/_dataList/_data/lasernumeric/descrizione","\u2028","");
+    
 //	foreach (XmlNode bookToModify in mydoc.SelectNodes(".//dichiarazione")) {
 //      bookToModify.InnerXml = ""		;
 //  }
