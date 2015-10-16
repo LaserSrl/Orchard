@@ -19,10 +19,10 @@ namespace Laser.Orchard.IXMSD.Models {
             get { return this.Retrieve(x => x.LogFileName,"publishing.log"); }
             set { this.Store(x => x.LogFileName, value); }
         }
-        public string URL {
-            get { return this.Retrieve(x => x.URL,"http://freemium.calcio.vodafone.it/VDFInforma/auto/"); }
-            set { this.Store(x => x.URL, value); }
-        }
+        //public string URL {
+        //    get { return this.Retrieve(x => x.URL,"http://freemium.calcio.vodafone.it/VDFInforma/auto/"); }
+        //    set { this.Store(x => x.URL, value); }
+        //}
         public string ftpRemoteHost {
             get { return this.Retrieve(x => x.ftpRemoteHost,"web4.laser-group.com"); }
             set { this.Store(x => x.ftpRemoteHost, value); }

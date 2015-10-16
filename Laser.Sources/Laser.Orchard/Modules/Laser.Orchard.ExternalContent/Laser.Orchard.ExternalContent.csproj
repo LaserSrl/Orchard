@@ -63,6 +63,9 @@
     <Reference Include="Orchard.Tokens">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
     </Reference>
+    <Reference Include="RazorEngine">
+      <HintPath>..\..\..\packages\RazorEngine.3.7.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -97,6 +100,7 @@
     <Compile Include="Fields\FieldExternal.cs" />
     <Compile Include="Handlers\FieldExternalHandler.cs" />
     <Compile Include="Services\FieldExternalService.cs" />
+    <Compile Include="Services\temp.cs" />
     <Compile Include="Settings\FieldExternalEditorEvents.cs" />
     <Compile Include="Settings\FieldExternalSetting.cs" />
     <Compile Include="ViewModels\FieldExternalVM.cs" />

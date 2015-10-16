@@ -28,9 +28,10 @@ namespace Laser.Orchard.IXMSD.Handlers {
             OnPublished<IXMSDPart>((context, IXMSDPart) => {
                 var getpart = _orchardServices.WorkContext.CurrentSite.As<IXMSDSettingsPart>();
                 if (getpart != null) {
-                    if (!string.IsNullOrEmpty(getpart.URL)) {
+                   // if (!string.IsNullOrEmpty(getpart.URL)) {
                         if (string.IsNullOrEmpty(IXMSDPart.ExternalMediaUrl) || IXMSDPart.ExternalMediaUrl.ToLower().IndexOf(IXMSDPart.ContentItem.As<MediaPart>().FileName.ToLower()) < 0) {
-                            string newFileName = (_shellSettings.Name + "-" + IXMSDPart.ContentItem.As<MediaPart>().FileName).Replace("_", "-").Replace(" ", "-");
+                            string extensionfile = IXMSDPart.ContentItem.As<MediaPart>().FileName.Substring(IXMSDPart.ContentItem.As<MediaPart>().FileName.LastIndexOf('.'));
+                            string newFileName = (_shellSettings.Name + "-" + IXMSDPart.ContentItem.Id.ToString() + extensionfile).Replace("_", "-").Replace(" ", "-");  //IXMSDPart.ContentItem.As<MediaPart>().FileName).Replace("_", "-").Replace(" ", "-");
                             UploadFiles UploadFiles = new UploadFiles();
                             UploadInfo UploadInfo = new UploadInfo();
                             UploadInfo.FinalPath = HostingEnvironment.MapPath(@"~\Media\" + _shellSettings.Name + @"\" + IXMSDPart.ContentItem.As<MediaPart>().FolderPath + @"\" + IXMSDPart.ContentItem.As<MediaPart>().FileName);
@@ -39,7 +40,7 @@ namespace Laser.Orchard.IXMSD.Handlers {
                             oThread.Start();
                             IXMSDPart.ContentItem.As<MediaPart>().FileName = newFileName;
                         }
-                    }
+              //      }
                 }
             });
         }
