@@ -41,8 +41,9 @@ namespace Laser.Orchard.UsersExtensions.Handlers {
 
             if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy")) {
                 var policies = _usersExtensionsServices.BuildEditorForRegistrationPolicies();
-                var answers = _controllerAccessor.Context.Controller.TempData["VolatileAnswers"].ToString(); //userRegistrationPolicy.VolatileAnswers;
-                
+
+                var answers = _controllerAccessor.Context.Controller.TempData["VolatileAnswers"] != null ? _controllerAccessor.Context.Controller.TempData["VolatileAnswers"].ToString() : ""; //userRegistrationPolicy.VolatileAnswers;
+
                 if (!String.IsNullOrWhiteSpace(answers)) {
                     var updateModel = policies.Select(x => new PolicyForUserViewModel {
                         PolicyTextId = x.PolicyId,
