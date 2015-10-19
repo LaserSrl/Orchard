@@ -185,5 +185,9 @@ namespace Laser.Orchard.Questionnaires {
             SchemaBuilder.AlterTable("GamePartRecord", t => t.AddColumn<String>("GameType"));
             return 17;
         }
+        public int UpdateFrom17() {
+            SchemaBuilder.AlterTable("QuestionRecord", t => t.AlterColumn("Question", col => col.WithType(System.Data.DbType.String).WithLength(500)));
+            return 18;
+        }
     }
 }
