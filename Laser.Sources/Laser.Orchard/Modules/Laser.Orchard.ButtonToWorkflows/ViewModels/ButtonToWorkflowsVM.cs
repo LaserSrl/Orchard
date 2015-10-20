@@ -34,7 +34,7 @@ namespace Laser.Orchard.ButtonToWorkflows.ViewModels {
 
         }
         public List<ButtonToWorkflowsVMItem> ElencoButtons { get; set; }
-
+        
     }
     public class ButtonToWorkflowsVMItem {
         public string ButtonText { get; set; }

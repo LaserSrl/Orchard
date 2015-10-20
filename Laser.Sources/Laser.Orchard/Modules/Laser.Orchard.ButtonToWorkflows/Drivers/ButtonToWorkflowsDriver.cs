@@ -65,15 +65,17 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                     if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.CustomButton"+model.ButtonText) {
                          var content =_orchardServices.ContentManager.Get(part.ContentItem.Id,VersionOptions.Latest);
                         //_workflowManager.TriggerEvent("ButtonToWorkflowsSubmitted", content, () => new Dictionary<string, object> { { "Content", content } });
-                         var settings = part.TypePartDefinition.Settings.GetModel<ButtonsSetting>();
-                         settings.ButtonNumber = settings.ButtonNumber[0].Split(',');
+                      //   var settings = part.TypePartDefinition.Settings.GetModel<ButtonsSetting>();
+                      //   settings.ButtonNumber = settings.ButtonNumber[0].Split(',');
                         ButtonToWorkflowsSettingsPart settingmodulo = _orchardServices.WorkContext.CurrentSite.As<ButtonToWorkflowsSettingsPart>();
                         string[] elencoButtonsMessage = settingmodulo.ButtonsMessage.Split('£');
-                          _workflowManager.TriggerEvent(model.ButtonAction+"_btn"+(model.ButtonNumber+1).ToString(), content, () => new Dictionary<string, object> { { "Content", content } });
-                          try {
-                              _notifier.Add(NotifyType.Information, T(elencoButtonsMessage[Convert.ToInt16(settings.ButtonNumber)]));
-                          }
-                          catch { }
+                        part.ActionToExecute = model.ButtonAction + "_btn" + (model.ButtonNumber + 1).ToString();
+                     //   _workflowManager.TriggerEvent(model.ButtonAction+"_btn"+(model.ButtonNumber+1).ToString(), content, () => new Dictionary<string, object> { { "Content", content } });
+                        part.MessageToWrite = elencoButtonsMessage[model.ButtonNumber].ToString();
+                        //try {
+                        //      _notifier.Add(NotifyType.Information, T(elencoButtonsMessage[Convert.ToInt16(settings.ButtonNumber)]));
+                        //  }
+                        //  catch { }
             
                     }
                 }
