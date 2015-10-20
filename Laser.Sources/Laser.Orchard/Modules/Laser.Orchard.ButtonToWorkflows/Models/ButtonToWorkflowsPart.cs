@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.ButtonToWorkflows.Models {
-    public class ButtonToWorkflowsPart : ContentPart<ButtonToWorkflowsPartRecord> {
+    public class ButtonToWorkflowsPart : ContentPart{//<ButtonToWorkflowsPartRecord> {
         public string FromUser {
             get { return this.Retrieve(r => r.FromUser); }
             set { this.Store(r => r.FromUser, value); }
@@ -23,11 +23,22 @@ namespace Laser.Orchard.ButtonToWorkflows.Models {
             get { return this.Retrieve(r => r.ToIdUser); }
             set { this.Store(r => r.ToIdUser, value); }
         }
+        public string ActionToExecute {
+            get { return this.Retrieve(r => r.ActionToExecute); }
+            set { this.Store(r => r.ActionToExecute, value); }
+        }
+        public string MessageToWrite {
+            get { return this.Retrieve(r => r.MessageToWrite); }
+            set { this.Store(r => r.MessageToWrite, value); }
+        }
     }
-    public class ButtonToWorkflowsPartRecord: ContentPartRecord{
-        public virtual string FromUser { get; set; }
-        public virtual string ToUser { get; set; }
-        public virtual int FromIdUser { get; set; }
-        public virtual int ToIdUser { get; set; }
-    }
+    //public class ButtonToWorkflowsPartRecord: ContentPartRecord{
+    //    public virtual string FromUser { get; set; }
+    //    public virtual string ToUser { get; set; }
+    //    public virtual int FromIdUser { get; set; }
+    //    public virtual int ToIdUser { get; set; }
+    //    public virtual string ActionToExecute { get; set; }
+    //    public virtual string MessageToWrite { get; set; }
+        
+    //}
 }

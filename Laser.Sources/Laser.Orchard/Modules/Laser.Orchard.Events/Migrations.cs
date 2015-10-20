@@ -52,7 +52,7 @@ namespace Laser.Orchard.Events
                                         field => field
                                                        .OfType("MediaLibraryPickerField")
                                                        .WithDisplayName("Gallery"))
-                            .WithField("Related events",
+                            .WithField("Relatedevents",
                                         field => field
                                                        .OfType("ContentPickerField")
                                                        .WithDisplayName("Related events"))

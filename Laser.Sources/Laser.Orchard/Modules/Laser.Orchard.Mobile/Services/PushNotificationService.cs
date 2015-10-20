@@ -77,8 +77,8 @@ namespace Laser.Orchard.Mobile.Services {
         public void StorePushNotification(PushNotificationRecord pushElement) {
 
 
-            PushNotificationRecord OldPush = _pushNotificationRepository.Fetch(x => (x.UUIdentifier == pushElement.UUIdentifier || x.Token== pushElement.Token ) && x.Produzione == pushElement.Produzione && x.Device == pushElement.Device).FirstOrDefault();
-        
+            PushNotificationRecord OldPush = _pushNotificationRepository.Fetch(x => (x.UUIdentifier == pushElement.UUIdentifier || x.Token == pushElement.Token) && x.Produzione == pushElement.Produzione && x.Device == pushElement.Device).FirstOrDefault();
+
             DateTime adesso = DateTime.Now;
             // PushNotificationRecord OldPush = GetPushNotificationBy_UUIdentifier(pushElement.UUIdentifier, pushElement.Produzione);
             if (OldPush != null && !string.IsNullOrEmpty(OldPush.UUIdentifier)) { // se dispositivo già registrato sovrascrivo lo stesso record
@@ -137,6 +137,8 @@ namespace Laser.Orchard.Mobile.Services {
         public void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string JsonAndroid, string messageWindows, string sound, string queryDevice = "") {
             bool stopPush = false;
             ContentItem relatedContentItem = null;
+            string ctype = "";
+            string displayalias = "";
             if (idContentRelated > 0) {
 
                 relatedContentItem = _orchardServices.ContentManager.Get(idContentRelated);
@@ -144,6 +146,9 @@ namespace Laser.Orchard.Mobile.Services {
                     _notifier.Information(T("No push will be sent, related content must be published"));
                     stopPush = true;
                 }
+                var extra = getextrainfo(idContentRelated);
+                ctype = extra[0];
+                displayalias = extra[1];
             }
             else { idContentRelated = 0; }
             if (!stopPush) {
@@ -169,6 +174,8 @@ namespace Laser.Orchard.Mobile.Services {
                         pushandroid.Id = 0;
                         pushandroid.Rid = idContentRelated;
                         pushandroid.Text = messageAndroid;
+                        pushandroid.Ct = ctype;
+                        pushandroid.Al = displayalias;
                         SendAllAndroid(pushandroid, produzione, language, queryDevice);
                     }
                     else {
@@ -181,11 +188,11 @@ namespace Laser.Orchard.Mobile.Services {
                     pushapple.Sound = sound;
                     pushapple.Text = messageApple;
                     pushapple.Title = "";
+                    pushapple.Ct = ctype;
+                    pushapple.Al = displayalias;
                     SendAllApple(pushapple, produzione, language, queryDevice);
-
                     //TODO: windows
                     //SendAllWindowsMobile(ci.As<MobilePushPart>(), idContent, idContentRelated, language);
-
                 }
                 if (device == TipoDispositivo.Android.ToString()) {
                     if (string.IsNullOrEmpty(JsonAndroid) || JsonAndroid.Trim() == "") {
@@ -193,6 +200,8 @@ namespace Laser.Orchard.Mobile.Services {
                         pushandroid.Id = 0;
                         pushandroid.Rid = idContentRelated;
                         pushandroid.Text = messageAndroid;
+                        pushandroid.Ct = ctype;
+                        pushandroid.Al = displayalias;
                         SendAllAndroid(pushandroid, produzione, language, queryDevice);
                     }
                     else {
@@ -206,6 +215,8 @@ namespace Laser.Orchard.Mobile.Services {
                     pushapple.Sound = sound;
                     pushapple.Text = messageApple;
                     pushapple.Title = "";
+                    pushapple.Ct = ctype;
+                    pushapple.Al = displayalias;
                     SendAllApple(pushapple, produzione, language, queryDevice);
                 }
                 //TODO: windows
@@ -626,13 +637,13 @@ namespace Laser.Orchard.Mobile.Services {
             //Currently this event will only ever happen for Android GCM
             _myLog.WriteLog(T("Device Registration Changed:  Old-> " + oldSubscriptionId + "  New-> " + newSubscriptionId + " -> " + notification).ToString());
 
-           PushNotificationRecord pnr= _pushNotificationRepository.Fetch(x => x.Token == oldSubscriptionId && x.Device == TipoDispositivo.Android).FirstOrDefault();
-           IEnumerable<PushNotificationRecord> esiste_il_nuovo = _pushNotificationRepository.Fetch(x => x.Token == newSubscriptionId && x.Device == TipoDispositivo.Android);
-           if (esiste_il_nuovo != null && esiste_il_nuovo.FirstOrDefault() != null)
-               pnr.Validated = false;
-           else
-               pnr.Token = newSubscriptionId;
-           _pushNotificationRepository.Update(pnr);
+            PushNotificationRecord pnr = _pushNotificationRepository.Fetch(x => x.Token == oldSubscriptionId && x.Device == TipoDispositivo.Android).FirstOrDefault();
+            IEnumerable<PushNotificationRecord> esiste_il_nuovo = _pushNotificationRepository.Fetch(x => x.Token == newSubscriptionId && x.Device == TipoDispositivo.Android);
+            if (esiste_il_nuovo != null && esiste_il_nuovo.FirstOrDefault() != null)
+                pnr.Validated = false;
+            else
+                pnr.Token = newSubscriptionId;
+            _pushNotificationRepository.Update(pnr);
         }
 
         private void NotificationSent(object sender, INotification notification) {

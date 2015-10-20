@@ -30,6 +30,17 @@ namespace Laser.Orchard.ButtonToWorkflows {
 
          );
             return 4;
+
+            
         }
+//        public int UpdateFrom4() {
+//            SchemaBuilder.AlterTable("ButtonToWorkflowsPart", table => table
+//                        .AddColumn<string>("ActionToExecute")
+//         );
+//            SchemaBuilder.AlterTable("ButtonToWorkflowsPart", table => table
+//             .AddColumn<string>("MessageToWrite")
+//);
+//            return 5;
+//        }
     }
 }
