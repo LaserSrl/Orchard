@@ -76,8 +76,8 @@ button, .button, a.button {
     border: 1px solid #2ab9e8 !important;
     color: #fff !important;
     /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(42, 185, 232, 1.0)), to(rgba(35, 171, 215, 1).0) !important;
-    background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0) !important;
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(42, 185, 232, 1.0)), to(rgba(35, 171, 215, 1.0))) !important;
+    background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0)) !important;
     /*test - base green in pallet is 155,179,108*/
     background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0)) !important;
 }
@@ -86,8 +86,8 @@ button:active, .button:active, a.button:active {
   background: #2ab9e8 !important;
   border: 1px solid #2ab9e8 !important;
   /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/
-  background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(42, 185, 232, 1.0)), to(rgba(35, 171, 215, 1).0) !important;
-  background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0) !important;
+  background: -webkit-gradient(0 0, 0 100%, from(rgba(42, 185, 232, 1.0)), to(rgba(35, 171, 215, 1.0))) !important;
+  background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0)) !important;
   /*test - base green in pallet is 155,179,108*/
   background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0)) !important;
   color: #263541 !important;
@@ -118,4 +118,26 @@ table.items {
     color: rgba(42, 185, 232, 1) !important;
 }
 
+.widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer {
+  background-color: #cbedf8 !important;
+}
 
+.widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer, #widgets-layer-visibility li.on {
+  border-color: #2ab9e8 !important;
+}
+
+.widgets-listed li:hover, .widgets-listed li.on {
+   border-color:#2ab9e8 !important;
+}
+
+button.widgets-move {
+  background-color: rgba(0, 0, 0, 0) !important;
+  background-image: url(../../../modules/orchard.widgets/styles/images/arrows.png) !important;
+  border: 0 none !important;
+}
+
+button.link {
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0 !important;
+  border: 0 none !important;
+  color: #252C36 !important;
+}
