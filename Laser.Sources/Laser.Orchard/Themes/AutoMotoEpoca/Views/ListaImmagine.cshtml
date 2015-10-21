@@ -9,13 +9,14 @@
         var sottotitolo = T("Reported by {0}", content.CommonPart.OwnerField.Value.UserName);
 
         if (content.ContentType == "BlogPost") {
-            mediaUrl = Display.ResizeMediaUrl(Width: 820, Height: 420, Mode: "crop", PadColor: "#000000", Alignment: "middlecenter", Path: content.BlogPost.Gallery.FirstMediaUrl);
+            mediaUrl = new MvcHtmlString(Display.ResizeMediaUrl(Width: 820, Height: 420, Mode: "crop", PadColor: "#000000", Alignment: "middlecenter", Path: content.BlogPost.Gallery.FirstMediaUrl).ToString());
             sottotitolo = T("Published on {0}",content.CommonPart.PublishedUtc.ToString("dd MMMM, yyyy"));
         } else if (content.ContentType == "UserReport") {
             if (content.UserReport.Gallery.MediaParts[0].LogicalType=="Image") {
-                mediaUrl = Display.ResizeMediaUrl(Width: 820, Height: 420, Mode: "crop", PadColor: "#000000", Alignment: "middlecenter", Path: content.UserReport.Gallery.FirstMediaUrl);
+                mediaUrl = new MvcHtmlString(Display.ResizeMediaUrl(Width: 820, Height: 420, Mode: "crop", PadColor: "#000000", Alignment: "middlecenter", Path: content.UserReport.Gallery.FirstMediaUrl).ToString());
             } else {
             }
+            sottotitolo = content.UserReport.Sottotitolo.Value;            
         }
         <div class="col-xs-12 col-sm-6">
             <div class="box-news">

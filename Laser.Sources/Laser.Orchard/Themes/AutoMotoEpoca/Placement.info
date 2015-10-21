@@ -15,7 +15,7 @@
   </Match>
 -->
   <Match DisplayType="Detail">
-    <Place Fields_MediaLibraryPicker="Content:2" Parts_Title="Content:4" Parts_Common_Body="Content:5" Parts_Common_Metadata="-"/>
+    <Place Fields_MediaLibraryPicker="Content:2" Parts_Title="Content:4" Parts_Common_Body="Content:6" Parts_Common_Metadata="-" Fields_Common_Text-Sottotitolo="Content:5"/>
   </Match>
   <Match ContentType="BlogPost">
     <Match DisplayType="Detail">
