@@ -1,5 +1,8 @@
 ﻿@using System.Web.Mvc;
-<div class="accedi">
+@*                        <div class="lang btn-it btn-header active"><a href="#">it</a></div>
+                        <div class="lang btn-en btn-header"><a href="#">en</a></div>*@
+
+<div class="accedi btn-header">
     @if (WorkContext.CurrentUser != null) {
             @T("Welcome, <strong>{0}</strong>!", Html.Raw("<a href=\"" + @Url.Action("ChangePassword", new { Controller = "Account", Area = "Orchard.Users" }) + "\">" + Html.ItemDisplayText(WorkContext.CurrentUser) + "</a>"))<text> | </text>
             @Html.ActionLink(T("Sign Out").ToString(), "LogOff", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl }, new { rel = "nofollow" })

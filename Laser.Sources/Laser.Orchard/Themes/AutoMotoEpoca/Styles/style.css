@@ -18,6 +18,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{font-weight:400;}
 #content{z-index:2; position:relative; background:#000;}
 a{color:#FFF;}
 a:hover, a:focus{color:#DDD; text-decoration:none;}
+.img-big{width:100%;}
 
 /* ----- MENU ----- */
 .container-nav{position:relative;}
@@ -39,10 +40,22 @@ nav{border-top:3px solid #FBC000!important;}
     .navbar-default .navbar-nav > li:hover .line .line-bg{display:block; }
     .navbar-default .navbar-nav > li.active .line .line-bg{display:block;}
 }
-.accedi{position:absolute; padding:3px 25px; background:#FBC000; border-radius:0 0 3px 3px; color:#000; right:0;}
+.btn-header{position:absolute;}
+.btn-header a{color:#000;}
+.btn-header:hover, .btn-header:focus{background:#FFD037;}
+.btn-header{ border-radius:0 0 3px 3px; color:#000; }
+
+.lang{padding:3px 15px; margin:0 2px; border:1px solid #FBC000; border-top:none;}
+.lang a{color:#FBC000}
+.lang:hover, .lang:focus, .lang.active{border:1px solid #FBC000; background:#FBC000;}
+.lang:hover a, .lang:focus a, .lang.active a{color:#000;}
+
+.accedi{right:0; padding:3px 25px; background:#FBC000;}
 @media(max-width:767px){.accedi{right:25%;}}
-.accedi a{color:#000;}
-.accedi:hover, .accedi:focus{background:#FFD037;}
+.btn-it {right:20%;}
+@media(max-width:767px){.btn-it{right:25%;}}
+.btn-en {right:15%;}
+@media(max-width:767px){.btn-en{right:20%;}}
 
 /* ----- SLIDER ----- */
 #auto-slider{position:relative; z-index:2;}
@@ -89,6 +102,8 @@ nav{border-top:3px solid #FBC000!important;}
 .box-news-footer p{margin-bottom:0;}
 .box-news-footer a{display:block; margin-bottom:5px; font-size:12px;}
 @media(max-width:767px){.box-menu-footer{border-top:1px solid #E2E2E2; margin-top:20px;}}
+#footer a{color:#FFF;}
+#footer a:hover, #footer a:focus{color:#DDD; text-decoration:none;}
 
 /* ----- PAGINA NEWS - REPORTAGE ----- */
 .box-img-news{height:300px; margin:10px auto; background-size: cover; background-position: center center; overflow:hidden; display:block;}
@@ -99,8 +114,19 @@ hr{opacity:0.2;}
 /* ----- PAGINA PHOTOGALLERY - CARTOLINE ----- */
 .box-img-photo{height:300px; margin:10px auto; background-size: cover; background-position: center center; overflow:hidden; display:block;}
 
+/* ----- PAGINAZIONE ----- */
+.pager li{background:#000; border:1px solid #FFFFFF; border-radius:0; padding:3px 5px;}
+.pager li a{color:#FFF;}
+.pager li:hover, .pager li:focus{border:1px solid #FBCOO0; background:#333;}
+.pager li:hover a, .pager li:focus a{color:#FBC000}
 
+.pager li > a, .pager li > span{background:#000; color:#AAA; border-radius:0; padding:1px 12px; border-color:#AAA;}
+.pager li:hover, .pager li:hover a, .pager li a:hover, .pager li:focus, .pager li:focus a, .pager li a:focus{background:#000; color:#FBC000; border-color:#FBC000;}
+.pager li span{background:#000; color:#FBC000; border-color:#FBC000;}
 
-
-
-
+/* ----- FORM ----- */
+button{background:#FBC000; color:#000; padding:5px 10px; border-radius:0; border:none;}
+input, button, select, textarea{color:#000;}
+input{ height:25px;}
+input:focus {outline: none !important; border:none; box-shadow: 0 0 10px #FBC000; }
+textarea:focus { outline: none !important; border:none; box-shadow: 0 0 10px #FBC000;}
