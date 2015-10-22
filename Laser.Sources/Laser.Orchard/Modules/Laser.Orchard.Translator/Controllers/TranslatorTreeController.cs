@@ -80,11 +80,13 @@ namespace Laser.Orchard.Translator.Controllers
             else if (elementType == ElementToTranslate.Theme)
                 elementsToTranslate = translatorSettings.ThemesToTranslate.Replace(" ", "").Split(',').ToList();
 
-            var list = new List<string>(Directory.GetDirectories(parentFolder));
-            list = list.Select(dir => dir.Remove(0, dir.LastIndexOf(Path.DirectorySeparatorChar) + 1)).ToList();
-            list = list.Where(dir => elementsToTranslate.Any(x => x == dir)).ToList();
-            list.Sort((x, y) => string.Compare(x, y));
-
+            // rimossa questa verifica in quanto se non presente la cartella su server (cosa possibile in quanto potrei voler tradurre un tema o un modulo non ancora deployato) non presenta il nodo da tradurre
+            //var list = new List<string>(Directory.GetDirectories(parentFolder));
+            //list = list.Select(dir => dir.Remove(0, dir.LastIndexOf(Path.DirectorySeparatorChar) + 1)).ToList();
+            //list = list.Where(dir => elementsToTranslate.Any(x => x == dir)).ToList();
+            //list.Sort((x, y) => string.Compare(x, y));
+            var list = elementsToTranslate;
+            list.Sort((x, y) => string.Compare(x, y)); 
             List<TranslationTreeNodeViewModel> treeList = new List<TranslationTreeNodeViewModel>();
             foreach (var item in list)
             {
