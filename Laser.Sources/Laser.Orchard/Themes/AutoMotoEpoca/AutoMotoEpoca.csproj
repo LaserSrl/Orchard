@@ -175,7 +175,7 @@
     <Content Include="Views\ListaImmagine.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Fields.Common.Text-UserReport-Sottotitolo.cshtml" />
+    <Content Include="Views\Fields.Common.Text-UserReport-Sottotitolo.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
