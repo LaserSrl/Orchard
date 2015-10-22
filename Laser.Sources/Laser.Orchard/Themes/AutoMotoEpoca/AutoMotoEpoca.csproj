@@ -96,7 +96,10 @@
     <Content Include="Styles\images\img-2.jpg" />
     <Content Include="Styles\images\img-3.png" />
     <Content Include="Styles\images\img-4.jpg" />
+    <Content Include="Styles\images\loading.gif" />
     <Content Include="Styles\images\logo.png" />
+    <Content Include="Styles\images\next.png" />
+    <Content Include="Styles\images\prev.png" />
     <Content Include="Styles\images\slide-1.jpg" />
     <Content Include="Styles\images\slide-2.jpg" />
     <Content Include="Styles\images\vodafone.png" />
@@ -117,6 +120,10 @@
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Laser.Orchard.OpenAuthentication\Laser.Orchard.OpenAuthentication.csproj">
+      <Project>{9ce00190-3abe-41e2-966f-76a9b017eb65}</Project>
+      <Name>Laser.Orchard.OpenAuthentication</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +183,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Fields.Common.Text-UserReport-Sottotitolo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\OpenAuthLogOn.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
