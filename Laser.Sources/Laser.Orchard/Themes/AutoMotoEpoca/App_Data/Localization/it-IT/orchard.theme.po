@@ -12,6 +12,18 @@ msgctxt "~/Themes/AutoMotoEpoca/Views/BlogHomeItems.cshtml"
 msgid "Go to page {0}"
 msgstr "Vai alla pagina {0}"
 
+msgctxt "~/Themes/AutoMotoEpoca/Views/EditorTemplates/Parts/UserPwdRecoveryPart_Edit.cshtml"
+msgid "International prefix"
+msgstr "Prefisso internazionale"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/EditorTemplates/Parts/UserPwdRecoveryPart_Edit.cshtml"
+msgid "Password recovery phone number"
+msgstr "Telefono per recupero password"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/EditorTemplates/Parts/UserPwdRecoveryPart_Edit.cshtml"
+msgid "Phone number"
+msgstr "Telefono"
+
 msgctxt "~/Themes/AutoMotoEpoca/Views/LastUserReportHome.cshtml"
 msgid "REPORTAGE"
 msgstr "REPORTAGE"
@@ -61,6 +73,14 @@ msgid "Login to Auto & moto d'epoca."
 msgstr "Accedi a Auto & moto d'epoca."
 
 msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthLogOn.cshtml"
+msgid "Login was unsuccessful. Please correct the errors and try again."
+msgstr "La login non è riuscita. Correggere gli errori e riprovare."
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthLogOn.cshtml"
+msgid "Lost your Password?"
+msgstr "Hai dimenticato la tua password?"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthLogOn.cshtml"
 msgid "Password"
 msgstr "Password"
 
@@ -88,6 +108,62 @@ msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthLogOn.cshtml"
 msgid "Username"
 msgstr "Nome utente"
 
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Account creation was unsuccessful. Please correct the errors and try again."
+msgstr "La creazione dell'account non è riuscita. Correggere gli errori e riprovare."
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Confirm password"
+msgstr "Conferma password"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Confirm password:"
+msgstr "Conferma password:"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Create a New Account"
+msgstr "Creare un nuovo Account"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Email"
+msgstr "Email"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Email:"
+msgstr "Email:"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Password"
+msgstr "Password"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Password:"
+msgstr "Password:"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Passwords are required to be a minimum of {0} characters in length."
+msgstr "Le password devono essere lunghe almeno {0} caratteri."
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Register"
+msgstr "Registra"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "This user account will be linked to <b>{0}</b> when you login."
+msgstr "Questo account utente verrà collegato a <b>{0}</b> quando effettui l'accesso."
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Use the form below to create a new account."
+msgstr "Usare il modulo sottostante per creare un nuovo account."
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Username"
+msgstr "Nome utente"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/OpenAuthRegister.cshtml"
+msgid "Username:"
+msgstr "Nome Utente:"
+
 msgctxt "~/Themes/AutoMotoEpoca/Views/Parts.Blogs.RecentBlogPosts-BeforeMain.cshtml"
 msgid "Go to page {0}"
 msgstr "Vai alla pagina {0}"
@@ -109,8 +185,32 @@ msgid "PHOTOGALLERY"
 msgstr "PHOTOGALLERY"
 
 msgctxt "~/Themes/AutoMotoEpoca/Views/User.cshtml"
+msgid "Dashboard"
+msgstr "Pannello di controllo"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/User.cshtml"
+msgid "Sign In"
+msgstr "Accedi"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/User.cshtml"
+msgid "Sign Out"
+msgstr "Disconnetti"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/User.cshtml"
 msgid "Welcome, <strong>{0}</strong>!"
 msgstr "Benvenuto, <strong>{0}</strong>!"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/UserTop.cshtml"
+msgid "Dashboard"
+msgstr "Pannello di controllo"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/UserTop.cshtml"
+msgid "Sign In"
+msgstr "Accedi"
+
+msgctxt "~/Themes/AutoMotoEpoca/Views/UserTop.cshtml"
+msgid "Sign Out"
+msgstr "Disconnetti"
 
 msgctxt "~/Themes/AutoMotoEpoca/Views/UserTop.cshtml"
 msgid "Welcome, <strong>{0}</strong>!"
