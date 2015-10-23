@@ -21,11 +21,35 @@
     }
 
     //BEGIN: Logica Slider
-    var firstBlockClass = "caption-slide1 fadeFromTop";
-    var secondBlockClass = "caption-slide1 fadeFromBottom";
-    if (item.TitleSize == "NessunTitolo") {
-        secondBlockClass = "caption-slide2 moveFromBottom";
+    var firstBlockClass = "fadeFromTop";
+    var secondBlockClass = "fadeFromBottom";
+    var caption = "caption-r";
+    if (item.TitleSize == "Predefinito") {
+        firstBlockClass = "fadeFromBottom";
+        secondBlockClass = "moveFromTop";
+        caption = "caption-l";
+    } else if (item.TitleSize == "Principale") {
+        firstBlockClass = "moveFromBottom";
+        secondBlockClass = "moveFromTop";
+        caption = "caption-l";
+    } else if (item.TitleSize == "MediaPriorita") {
+        firstBlockClass = "moveFromTop";
+        secondBlockClass = "moveFromTop";
+        caption = "caption-r";
+    } else if (item.TitleSize == "BassaPriorita") {
+        firstBlockClass = "fadeFromBottom";
+        secondBlockClass = "moveFromTop";
+        caption = "caption-l";
+    } else if (item.TitleSize == "Titoletto") {
+        firstBlockClass = "fadeFromBottom";
+        secondBlockClass = "moveFromTop";
+        caption = "caption-r";
+    } else if (item.TitleSize == "NessunTitolo") {
+        firstBlockClass = "fadeFromBottom";
+        secondBlockClass = "moveFromTop";
+        caption = "caption-r";
     }
+
     //END: Logica Slider
 }
 
@@ -33,28 +57,22 @@
 
 <div data-src="@Display.ResizeMediaUrl(Width: 940, Height: 400, Mode: "crop", Alignment: "middlecenter", Path: item.Content.HighlightsItem.Background.MediaParts[0].MediaUrl)">
     <div class="container">
-        <div class="@firstBlockClass">
-            <div class="caption-container">
-                @if (item.TitleSize != "NessunTitolo") {
-                    <h1>@item.Title</h1>
-                } else {
-                    <img src="@Display.ResizeMediaUrl(Width: 900, Height: 325, Mode: "pad", PadColor: "transparent", Alignment: "middlecenter", Path: item.MediaUrl)" class="caption-head" />
-                }
-            </div>
-        </div>
-        <div class="@secondBlockClass">
-            <div class="caption-container">
-                @if (item.TitleSize != "NessunTitolo") {
-                    <img src="@Display.ResizeMediaUrl(Width: 900, Height: 325, Mode: "pad", PadColor: "transparent", Alignment: "middlecenter", Path: item.MediaUrl)" alt="" style="top: 160px"/>
-                } else {
-                    if (!String.IsNullOrEmpty(item.LinkText)) {
+        <div class="caption-slide1 @firstBlockClass">
+            <div class="caption-container @caption">
+                <h1>@item.Title</h1>
+                <h2>@item.SubTitle</h2>
+                @if (!String.IsNullOrEmpty(item.LinkText)) {
                     <a class="btn btn-primary btn-large @(item.LinkTarget == Laser.Orchard.Highlights.Enums.LinkTargets._modal ? "media-cbox" : "")"  
                 title="@item.Title" 
                 href="@(item.LinkUrl != null ? Url.Content(item.LinkUrl) : "")" 
-		        @(item.LinkTarget != Laser.Orchard.Highlights.Enums.LinkTargets._modal ? "target=" + item.LinkTarget :"") >&rarr;  @item.LinkText
+		        @(item.LinkTarget != Laser.Orchard.Highlights.Enums.LinkTargets._modal ? "target=" + item.LinkTarget : "")>+  @item.LinkText
                     </a>
-                    }
                 }
+            </div>
+        </div>
+        <div class="caption-slide2 @secondBlockClass">
+            <div class="caption-container @caption">
+@*                    <img src="@Display.ResizeMediaUrl(Width: 900, Height: 325, Mode: "pad", PadColor: "transparent", Alignment: "middlecenter", Path: item.MediaUrl)" class="caption-head" />*@
             </div>
         </div>
     </div>
