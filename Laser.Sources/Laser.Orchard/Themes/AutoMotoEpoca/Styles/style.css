@@ -141,3 +141,9 @@ input, button, select, textarea{color:#000;}
 input{ height:25px;}
 input:focus {outline: none !important; border:none; box-shadow: 0 0 10px #FBC000; }
 textarea:focus { outline: none !important; border:none; box-shadow: 0 0 10px #FBC000;}
+
+legend { color: #fff; }
+
+/* ----- MESSAGES / VALIDATION ----- */
+.validation-summary-errors { background-color: #FF001C !important; color: #000 !important; padding: 10px !important; margin-bottom: 15px !important; border-radius: 4px; -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075); box-shadow: inset 0 1px 1px rgba(0,0,0,.075); -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s; -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}

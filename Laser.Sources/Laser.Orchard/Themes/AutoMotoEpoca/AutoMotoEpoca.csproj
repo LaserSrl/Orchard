@@ -130,7 +130,6 @@
     <Content Include="Styles\images\.DS_Store" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
     <Content Include="Views\Document.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +185,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\OpenAuthLogOn.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content.Edit-User.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\OpenAuthRegister.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\UserPwdRecoveryPart_Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
