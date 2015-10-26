@@ -190,6 +190,7 @@ namespace Laser.Orchard.Mobile.Services {
                     pushapple.Title = "";
                     pushapple.Ct = ctype;
                     pushapple.Al = displayalias;
+                    pushapple.ValidPayload = true;
                     SendAllApple(pushapple, produzione, language, queryDevice);
                     //TODO: windows
                     //SendAllWindowsMobile(ci.As<MobilePushPart>(), idContent, idContentRelated, language);
@@ -217,6 +218,7 @@ namespace Laser.Orchard.Mobile.Services {
                     pushapple.Title = "";
                     pushapple.Ct = ctype;
                     pushapple.Al = displayalias;
+                    pushapple.ValidPayload = true;
                     SendAllApple(pushapple, produzione, language, queryDevice);
                 }
                 //TODO: windows
