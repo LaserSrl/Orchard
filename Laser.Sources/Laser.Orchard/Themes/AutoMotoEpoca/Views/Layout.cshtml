@@ -61,7 +61,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" rel="home" title="Auto e Moto d'Epoca" href="@(Url.Content(WorkContext.CurrentCulture!="en-US"?"~/":"~/en/home"))">
+                    <a class="navbar-brand" rel="home" title="Auto e Moto d'Epoca" href="@(Url.Content(WorkContext.CurrentCulture != "en-US" ? "~/" : "~/en/home"))">
                         <img class="logo img-responsive" alt="Auto e Moto d'Epoca" src="~/themes/automotoepoca/styles/images/logo.png">
                     </a>
                 </div>
@@ -81,19 +81,15 @@
     <div class="space-40"></div>
     <div class="container">
         @if (Model.BeforeContent != null) { 
-            <div class="row">
-                @Zone(Model.BeforeContent)
-            </div>
+            @Zone(Model.BeforeContent)
+            <div class="space-20"></div>
         }
         @if (Model.Content != null) { 
-            <div class="row">
-                @Zone(Model.Content)
-            </div>
+            @Zone(Model.Content)
         }
         @if (Model.AfterContent != null) { 
-            <div class="row">
-                @Zone(Model.AfterContent)
-            </div>
+            <div class="space-20"></div>
+            @Zone(Model.AfterContent)
         }
         @if (Model.NewsArea != null) {
             <div class="row">

@@ -32,6 +32,11 @@
         <div style="margin-left: 45px; margin-bottom: 0;">
             @Html.Raw(item.Body)
         </div>
+        @if (item.LinkText!=null && item.LinkUrl!=null){
+        <div class="caption-r">
+            <a href="@item.LinkUrl" target="@(item.LinkTarget!=Laser.Orchard.Highlights.Enums.LinkTargets._modal?item.LinkTarget:"")" class="@(item.LinkTarget==Laser.Orchard.Highlights.Enums.LinkTargets._modal?"media-cbox":"")">@item.LinkText</a>
+        </div>
+        }
     </div>
 </div>
 

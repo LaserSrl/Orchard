@@ -29,5 +29,9 @@
     <Match ContentType="PaginaContatto">
       <Place Parts_Map="/BeforeContent:1" Parts_Common_Body="/AsideFirst:1" Parts_ContactForm="Content:1"/>
     </Match>
+    <Match ContentType="Page">
+      <Place Fields_MediaLibraryPicker__Page-Gallery="Content:1" Parts_Common_Body="Content:2" />
+    </Match>
+
   </Match>
 </Placement>

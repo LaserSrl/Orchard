@@ -2174,14 +2174,21 @@ ul.blog-posts {
 */
 
 /*per allineare a sinistra*/
-.caption-l{float:left; width:50%;}
+.caption-l{float:left;}
 
 /*per allineare a destra*/
-.caption-r{float:right; width:50%;}
+.caption-r{float:right;}
 
 /*stile scritte slide*/
-.caption-slide1 .caption-container h1{color:#FFF; border-bottom: 1px solid #BC0B07; font-size: 55px; font-style: italic; font-weight: 400; padding-bottom: 15px; text-align: left; text-shadow: 0px 1px 1px rgba(15,15,15,0.7);}
-.caption-slide1 .caption-container h2{font-family:Helvetica!important; color:#FFF; font-size:17px; font-weight:lighter; width:500px; line-height:24px; text-shadow: 0px 1px 1px rgba(15,15,15,0.7);}
-@media(max-width:600px){.caption-slide1 .caption-container h2{width:300px;}}
-.caption-slide1 .caption-container .btn.btn-primary.btn-large{background:rgba(0,0,0,0.3); padding:7px 10px; width:300px; font-size:29px; border-radius:8px!important; border:2px solid #FFF!important; text-transform:uppercase; font-style:italic; margin-top:0;}
+.caption-slide1 .caption-container h1{color:#FFF; border-bottom: 1px solid #BC0B07; font-size: 55px; font-style: italic; font-weight: 400; padding-bottom: 15px; text-align: left; text-shadow:1px 1px 3px rgba(0,0,0,0.9);}
+.caption-slide1 .caption-container h2{font-family:Helvetica!important; color:#FFF; font-size:17px; font-weight:lighter; width:500px; line-height:24px; text-shadow:1px 1px 3px rgba(0,0,0,0.9);;}
+@media(max-width:600px){.caption-slide1 .caption-container h2{width:250px;}}
+.caption-slide1 .caption-container .btn.btn-primary.btn-large{background:rgba(0,0,0,0.3); padding:7px 10px; width:250px; font-size:29px; border-radius:8px!important; border:2px solid #FFF!important; text-transform:uppercase; font-style:italic; margin-top:0;}
 .caption-slide1 .caption-container .btn.btn-primary.btn-large:hover, .caption-slide1 .caption-container .btn.btn-primary.btn-large:focus{background:rgba(0,0,0,0.8)}
+.widget-services .caption-r a { font-size: 1.1em; font-weight: bolder; }
+.widget-services .caption-r a:before {
+    padding: 0 5px;
+    content: "+";
+}
+
+.widget-services .caption-r { padding: 10px 0; }
