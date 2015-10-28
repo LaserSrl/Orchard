@@ -3,11 +3,11 @@ html {
 }
 
 #layout-content {
-  background: #fff url("../../TheAdmin/styles/images/adminNavBackground.gif") repeat-y scroll left top !important;
+  background: #fff url("images/adminNavBackground.gif") repeat-y scroll left top !important;
 }
 
 body {
-  background: #fff url("../../TheAdmin/styles/images/adminNavBackground.gif") repeat-y scroll left top !important;
+  background: #fff url("images/adminNavBackground.gif") repeat-y scroll left top !important;
 }
 
 #header {
@@ -108,6 +108,12 @@ table.items thead, table.items th {
 
 #main .contentItems > ul > li:nth-child(2n), ul.contentItems > li:nth-child(2n), table.items tr:nth-child(2n) {
     background-color: #e5f3f7 !important;
+}
+
+#layout-main {
+    background-image: url('images/sfondo-krake.png');
+    background-position: bottom right;
+    background-repeat: no-repeat;
 }
 
 table.items {
