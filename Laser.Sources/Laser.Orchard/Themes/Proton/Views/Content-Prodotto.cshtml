@@ -15,11 +15,21 @@
     var tag = Tag(Model, "article");
 
     List<dynamic> breadcrumbElements = new List<dynamic>();
-    breadcrumbElements.Add(new { Name = "Portfolio", Url = "./portfolio", Active = false });
-    breadcrumbElements.Add(new { Name = Model.ContentItem.TitlePart.Title, Url = Url.ItemDisplayUrl((IContent)Model.ContentItem), Active = true});
+    var contentsForBreadcrumb = Model.ContentItem.Prodotto.Breadcrumb.ContentItems;
+    if (contentsForBreadcrumb!=null && contentsForBreadcrumb.Length == 0) {
+        if (Model.ContentItem.Prodotto.Tipoprodotto.Value == "Prodotto") {
+            breadcrumbElements.Add(new { Name = "Portfolio", Url = "./portfolio", Active = false });
+            breadcrumbElements.Add(new { Name = Model.ContentItem.TitlePart.Title, Url = Url.ItemDisplayUrl((IContent)Model.ContentItem), Active = true });
+        } 
+    } else {
+        foreach (var item in contentsForBreadcrumb) {
+            breadcrumbElements.Add(new { Name = item.TitlePart.Title, Url = Url.ItemDisplayUrl((IContent)item), Active = true });
+        }
+        breadcrumbElements.Add(new { Name = Model.ContentItem.TitlePart.Title, Url = Url.ItemDisplayUrl((IContent)Model.ContentItem), Active = true });
+    }
 
-   WorkContext.Layout.Zones["Breadcrumb"].Items.Clear();
-   WorkContext.Layout.Zones["Breadcrumb"].Add(New.PortfolioBreadcrumb(MenuItems: breadcrumbElements), "0");
+    WorkContext.Layout.Zones["Breadcrumb"].Items.Clear();
+    WorkContext.Layout.Zones["Breadcrumb"].Add(New.PortfolioBreadcrumb(MenuItems: breadcrumbElements), "0");
 }
 <!-- BEGIN = Row Wrapper -->
 <div class="row portfolio-wrap">
