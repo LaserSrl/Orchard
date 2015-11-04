@@ -74,10 +74,10 @@ namespace Laser.Orchard.Meteo.Handlers {
                         new Temperature{ _pAltitude = 3000, _pTemperatureDescription =  node.SelectNodes("temperatura_3000")[0]!=null?node.SelectNodes("temperatura_3000")[0].InnerText:null},
                     },
                         _pPressureDescription = node.SelectNodes("pressione")[0] != null ? node.SelectNodes("pressione")[0].InnerText : null,
-                        _pImageUrl = i <= 2 ? "http://meteo.regione.vda.it/downloads/valle_" + (i + 1) + "_" + linguaRegione + (isMorning ? "m" : "p") + "_s.png?" + DateTime.Now.ToShortDateString() : null,
+                        _pImageUrl = i <= 2 ? "http://www.regione.vda.it/territorio/centrofunzionale/meteo/dati2013/bollettino_meteo/valle_" + (i + 1) + "_" + linguaRegione + (isMorning ? "m" : "p") + "_s.png?" + DateTime.Now.ToShortDateString() : null,
                         _pSubInfos = i <= 2 ? new List<MeteoInfoDetails>() { 
-                            new MeteoInfoDetails{ _pForecastDate = DateTime.ParseExact(node.SelectNodes("data")[0].InnerText+" 8.00", "yyyy-MM-dd H.mm", System.Globalization.CultureInfo.InvariantCulture), _pImageUrl="http://meteo.regione.vda.it/downloads/valle_"+(i+1)+"_"+linguaRegione+"m_s.png?"+DateTime.Now.ToShortDateString() },
-                            new MeteoInfoDetails{ _pForecastDate = DateTime.ParseExact(node.SelectNodes("data")[0].InnerText+" 14.00", "yyyy-MM-dd H.mm", System.Globalization.CultureInfo.InvariantCulture), _pImageUrl="http://meteo.regione.vda.it/downloads/valle_"+(i+1)+"_"+linguaRegione+"p_s.png?"+DateTime.Now.ToShortDateString() },
+                            new MeteoInfoDetails{ _pForecastDate = DateTime.ParseExact(node.SelectNodes("data")[0].InnerText+" 8.00", "yyyy-MM-dd H.mm", System.Globalization.CultureInfo.InvariantCulture), _pImageUrl="http://www.regione.vda.it/territorio/centrofunzionale/meteo/dati2013/bollettino_meteo/valle_"+(i+1)+"_"+linguaRegione+"m_s.png?"+DateTime.Now.ToShortDateString() },
+                            new MeteoInfoDetails{ _pForecastDate = DateTime.ParseExact(node.SelectNodes("data")[0].InnerText+" 14.00", "yyyy-MM-dd H.mm", System.Globalization.CultureInfo.InvariantCulture), _pImageUrl="http://www.regione.vda.it/territorio/centrofunzionale/meteo/dati2013/bollettino_meteo/valle_"+(i+1)+"_"+linguaRegione+"p_s.png?"+DateTime.Now.ToShortDateString() },
                         } : null,
                     });
 

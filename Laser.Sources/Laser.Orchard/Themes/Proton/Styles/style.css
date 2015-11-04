@@ -183,19 +183,20 @@ a:hover {
 
 /*BEGIN: livelli secondari del menu*/
 .subnav li > ul {
-    list-style-type:none;
+    list-style-type: none;
 }
+
 .subnav li > ul {
     margin: 0 0 0 5px;
     border-left: 2px #e3e3e3 solid;
 }
 
 .subnav li > ul > li > a {
-    color:#000!important;
+    color: #000!important;
 }
 
 .subnav li > ul > li > a:hover {
-    color:#fff!important;
+    color: #fff!important;
 }
 /*END: livelli secondari del menu*/
 .articles .pagination select {
@@ -217,9 +218,26 @@ a:hover {
 
 .breadcrumb {
     text-transform: uppercase;
-    background-color: white;
-    border-bottom: 1px solid black;
-    border-radius: 0px;
+    font-family: Economica, Helvetica, Arial, sans-serif;
+    font-size: 1.2em;
+    padding: 7px 14px;
+    margin: 18px 0 18px;
+    background-color: #fbfbfb;
+    background-image: -moz-linear-gradient(top, #ffffff, #efefef);
+    background-image: -ms-linear-gradient(top, #ffffff, #efefef);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#efefef));
+    background-image: -webkit-linear-gradient(top, #ffffff, #efefef);
+    background-image: -o-linear-gradient(top, #ffffff, #efefef);
+    background-image: linear-gradient(to bottom, #ffffff, #efefef);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#efefef', GradientType=0);
+    border: 1px solid #ddd;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 1px 0 #ffffff;
+    -moz-box-shadow: inset 0 1px 0 #ffffff;
+    box-shadow: inset 0 1px 0 #ffffff;
 }
 
 .breadcrumb > li + li:before {
@@ -400,8 +418,8 @@ p.featured-subtitle {
     color: #464646;
     text-align: center;
     margin-top: 55px;
-    text-shadow: 0px 1px 1px rgba(255,255,255,0.4);
 }
+
 
 .caption-container h1 span {
 }
@@ -1402,8 +1420,8 @@ h2.title {
 }
 /* ##Gallery
 -------------------------------------------------- */
-.gallery .p-thumb  {
-    margin-bottom:20px;
+.gallery .p-thumb {
+    margin-bottom: 20px;
 }
 
 .gallery .p-thumb img {
@@ -1497,7 +1515,7 @@ h2.title {
 }
 
 .portfolio-related .portfolio {
-    margin-top:0px;
+    margin-top: 0px;
 }
 
 .p-text p {
@@ -2154,3 +2172,23 @@ ul.blog-posts {
 		font-weight: normal;
 		font-style: normal; }
 */
+
+/*per allineare a sinistra*/
+.caption-l{float:left;}
+
+/*per allineare a destra*/
+.caption-r{float:right;}
+
+/*stile scritte slide*/
+.caption-slide1 .caption-container h1{color:#FFF; border-bottom: 1px solid #BC0B07; font-size: 55px; font-style: italic; font-weight: 400; padding-bottom: 15px; text-align: left; text-shadow:1px 1px 3px rgba(0,0,0,0.9);}
+.caption-slide1 .caption-container h2{font-family:Helvetica!important; color:#FFF; font-size:17px; font-weight:lighter; width:500px; line-height:24px; text-shadow:1px 1px 3px rgba(0,0,0,0.9);;}
+@media(max-width:600px){.caption-slide1 .caption-container h2{width:250px;}}
+.caption-slide1 .caption-container .btn.btn-primary.btn-large{background:rgba(0,0,0,0.3); padding:7px 10px; width:250px; font-size:29px; border-radius:8px!important; border:2px solid #FFF!important; text-transform:uppercase; font-style:italic; margin-top:0;}
+.caption-slide1 .caption-container .btn.btn-primary.btn-large:hover, .caption-slide1 .caption-container .btn.btn-primary.btn-large:focus{background:rgba(0,0,0,0.8)}
+.widget-services .caption-r a { font-size: 1.1em; font-weight: bolder; }
+.widget-services .caption-r a:before {
+    padding: 0 5px;
+    content: "+";
+}
+
+.widget-services .caption-r { padding: 10px 0; }

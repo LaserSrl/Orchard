@@ -132,6 +132,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                                         ? string.Empty
                                         : ":" + _orchardServices.WorkContext.HttpContext.Request.Url.Port);
             var dynamicModel = new {
+                WorkContext = _orchardServices.WorkContext,
                 Content = contentModel,
                 Urls = new {
                     MediaUrl = urlHelper.MediaExtensionsImageUrl(),

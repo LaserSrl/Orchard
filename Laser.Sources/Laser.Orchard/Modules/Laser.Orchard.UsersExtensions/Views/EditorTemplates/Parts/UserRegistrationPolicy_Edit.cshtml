@@ -9,10 +9,10 @@
             <h3>@(((dynamic)Model[i].PolicyText).TitlePart.Title)</h3>
             <div>@Html.Raw(((dynamic)Model[i].PolicyText).BodyPart.Text)</div>
             @if (((dynamic)Model[i].PolicyText).PolicyTextInfoPart.PolicyType == null || ((dynamic)Model[i].PolicyText).PolicyTextInfoPart.PolicyType == Laser.Orchard.Policy.PolicyTypeOptions.Policy) {// Privacy
-                @Html.RadioButtonFor(model => model[i].PolicyAnswer, true) @T("Accept")
-                @Html.RadioButtonFor(model => model[i].PolicyAnswer, false) @T("Don't Accept")
+                <label for="@(Html.FieldIdFor(model => model[i].PolicyAnswer) + "_Accept")">@Html.RadioButtonFor(model => model[i].PolicyAnswer, true, new { id=Html.FieldIdFor(model => model[i].PolicyAnswer) + "_Accept"}) @T("Accept")</label>
+                <label for="@(Html.FieldIdFor(model => model[i].PolicyAnswer) + "_NoAccept")">@Html.RadioButtonFor(model => model[i].PolicyAnswer, false, new { id=Html.FieldIdFor(model => model[i].PolicyAnswer) + "_NoAccept"}) @T("Don't Accept")</label>
             } else { // Regolamento
-                @Html.EditorFor(model => model[i].PolicyAnswer) @T("I have read the regulation.")
+                <label for="@(Html.FieldIdFor(model => model[i].PolicyAnswer))">@Html.EditorFor(model => model[i].PolicyAnswer) @T("I have read the regulation.")</label>
             }
         </div>
     }
