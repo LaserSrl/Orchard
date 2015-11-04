@@ -8,7 +8,8 @@
         bookToModify.InnerXml = "http://www.torinofilmfest.org/public/uploaded/" + bookToModify.InnerXml;
     }
 
-    mydoc = aggiungifiglio(mydoc, "root/_data", "OrdinamentoLaser"); // Aggiunge ad ogni figlio di data un nodo OrdinamentoLaser
+mydoc = aggiungifiglio(mydoc, "root/_data", "OrdinamentoLaser"); // Aggiunge ad ogni figlio di data un nodo OrdinamentoLaser
+mydoc = aggiungifiglio(mydoc, "root/_data", "OrdinamentoSection"); // Aggiunge ad ogni figlio di data un nodo OrdinamentoSection
 
     foreach (XmlNode bookToModify in mydoc.SelectNodes(".//filter")) {
         string gruppo = bookToModify.ChildNodes[0].Value;
@@ -86,8 +87,9 @@
             groppoFull = "TV";
             ordineGruppo = 16;
         } 
-        bookToModify.InnerText = groppoFull;
-        bookToModify.ParentNode.SelectSingleNode("OrdinamentoLaser").InnerText = String.Concat(":lasernumeric", ((ordineGruppo * 100000000) + priority).ToString(), "lasernumeric:");
+bookToModify.InnerText = groppoFull;
+bookToModify.ParentNode.SelectSingleNode("OrdinamentoLaser").InnerText = String.Concat(":lasernumeric", ((ordineGruppo * 100000000) + priority).ToString(), "lasernumeric:");
+bookToModify.ParentNode.SelectSingleNode("OrdinamentoSection").InnerText = String.Concat(":lasernumeric", ordineGruppo.ToString(), "lasernumeric:");
     }
 
 
