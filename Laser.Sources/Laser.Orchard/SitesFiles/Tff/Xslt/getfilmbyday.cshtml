@@ -5,6 +5,22 @@
 			bookToModify.ParentNode.RemoveChild(bookToModify);
 		}
 	}
+	
+	foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/_data/lasernumeric")) {
+		 if (bookToModify.SelectNodes("film").Count>1){
+				foreach (XmlNode nodofilm in bookToModify.SelectNodes("film")){
+					XmlNode thechildnode = bookToModify.Clone();
+					foreach(XmlNode nodofiglioclonato in thechildnode.SelectNodes("film")){
+						thechildnode.RemoveChild(nodofiglioclonato);
+					}
+					thechildnode.AppendChild(nodofilm);
+					bookToModify.ParentNode.InsertBefore(thechildnode,bookToModify);//AddBeforeSelf(thechildnode);//.ParentNode.AppendChild(thechildnode);
+				}
+				bookToModify.ParentNode.RemoveChild(bookToModify);
+		 }
+	}
+	
+	
 	foreach (XmlNode bookToModify in mydoc.SelectNodes(".//compra_url")) {
 		if (!bookToModify.HasChildNodes){
 			aggiungifiglio(mydoc, "root/_dataList/_data/lasernumeric", "dataString");
@@ -174,6 +190,8 @@
     mydoc = RimuoviNodo(mydoc, "root/_dataList/_data/lasernumeric/film/sale");
     mydoc = cambianome(mydoc, "root/_dataList/_data/lasernumeric/film", "Datafilm");
 
+	
+	
     mydoc = cambianome(mydoc, "root/_dataList/_data/lasernumeric", "Datasale");
     mydoc = generaOriginalId(mydoc, "root/_dataList/_data/media/image/ID_media");
     mydoc = generaid(mydoc, "root/_dataList/_data/media/image/ID_media", 10000000);
