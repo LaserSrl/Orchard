@@ -1,27 +1,27 @@
+
 html {
     background: #fff url("images/adminNavBackground.gif") repeat-y scroll left top !important;
 }
-
 #layout-content {
-  background: #fff url("images/adminNavBackground.gif") repeat-y scroll left top !important;
+    /*background: #fff url("images/adminNavBackground.gif") repeat-y scroll left top !important;*/
+    background-image: url("images/sfondo-krake.png") !important;
+    background-position: right bottom !important;
+    background-repeat: no-repeat !important;
+    background: none !important;
 }
-
 body {
-  background: #fff url("images/adminNavBackground.gif") repeat-y scroll left top !important;
+    background: #fff url("images/adminNavBackground.gif") repeat-y scroll left top !important;
 }
-
-#header {
-  background: #fff none repeat scroll 0 0 !important;
-}
-
+/*#header {
+    background: #fff none repeat scroll 0 0 !important;
+}*/
+ 
 #layout-main {
-	color: #252c36 !important;
+    color: #252c36 !important;
 }
-
 #menu {
     background: #252c36 none repeat scroll 0 0 !important;
 }
-
 .section-dashboard, .section-new {
     background: #252c36 none repeat scroll 0 0 !important;
     border: 1px solid #404040 !important;
@@ -29,7 +29,6 @@ body {
     box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1) !important;
     padding: 6px 0 !important;
 }
-
 #branding {
     background: #252c36 none repeat scroll 0 0 !important;
     float: left !important;
@@ -37,29 +36,30 @@ body {
     text-align: center !important;
     width: 240px !important;
 }
-
 #menu .menu-admin ul a, #menu .menu-admin ul a:link, #menu .menu-admin ul a:visited {
-  color: #2ab9e8 !important;
-  display: block !important;
-  line-height: 1.2em !important;
-  padding: 4px 0 6px 20px !important;
-  text-decoration: none !important;
+    color: #2ab9e8 !important;
+    display: block !important;
+    line-height: 1.2em !important;
+    padding: 4px 0 6px 20px !important;
+    text-decoration: none !important;
 }
-
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus, #menu .menu-admin ul .selected a {
-  background-color: #aec3ce !important;
-  border-radius: 2px !important;
-  color: #252c36 !important;
+    background-color: #aec3ce !important;
+    border-radius: 2px !important;
+    color: #252c36 !important;
 }
-
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active {
     background-color: #7895a4 !important;
 }
-
-
 #menu .menu-admin li h3 a, #menu .menu-admin li h3 span {
     color: #2ab9e8 !important;
     line-height: 16px !important;
+}
+
+#header #app {
+    float: none !important;
+    font-size: 2.4em;
+    padding: 0;
 }
 
 #header #app a {
@@ -70,80 +70,73 @@ body {
     text-indent: -9999px !important;
     width: 77px !important;
 }
-
 button, .button, a.button {
-	background: #2ab9e8 !important;
-    border: 1px solid #2ab9e8 !important;
+    background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top , rgba(59, 130, 154, 1), rgba(70, 142, 166, 1)) repeat scroll 0 0 !important;
+    border: 1px solid #3b829a !important;
     color: #fff !important;
-    /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(42, 185, 232, 1.0)), to(rgba(35, 171, 215, 1.0))) !important;
-    background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0)) !important;
-    /*test - base green in pallet is 155,179,108*/
-    background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0)) !important;
 }
-
 button:active, .button:active, a.button:active {
-  background: #2ab9e8 !important;
-  border: 1px solid #2ab9e8 !important;
-  /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/
-  background: -webkit-gradient(0 0, 0 100%, from(rgba(42, 185, 232, 1.0)), to(rgba(35, 171, 215, 1.0))) !important;
-  background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0)) !important;
-  /*test - base green in pallet is 155,179,108*/
-  background: -moz-linear-gradient(top, rgba(42, 185, 232, 1.0), rgba(35, 171, 215, 1.0)) !important;
-  color: #263541 !important;
+    background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top , rgba(59, 130, 154, 1), rgba(70, 142, 166, 1)) repeat scroll 0 0 !important;
+    border: 1px solid #3b829a !important;
+    color: #263541 !important;
 }
-
-select, textarea, input.text, input.textMedium, input.text-medium, input.text-small, input.text-box {  
-  color: #1292bc !important;
+select, textarea, input.text, input.textMedium, input.text-medium, input.text-small, input.text-box {
+    color: #3b829a !important;
 }
-
 #page-title {
-  color: #2ab9e8 !important; 
+    color: #3b829a !important;
 }
-
 table.items thead, table.items th {
     background: #e1eef3 none repeat scroll 0 0 !important;
-    
 }
-
 #main .contentItems > ul > li:nth-child(2n), ul.contentItems > li:nth-child(2n), table.items tr:nth-child(2n) {
     background-color: #e5f3f7 !important;
 }
-
+/*
 #layout-main {
-    background-image: url('images/sfondo-krake.png');
-    background-position: bottom right;
+    background-image: url("images/sfondo-krake.png");
+    background-position: right bottom;
     background-repeat: no-repeat;
-}
-
+}*/
 table.items {
-  border-color: #dae7eb #dae7eb -moz-use-text-color !important;
+    border-color: #dae7eb #dae7eb -moz-use-text-color !important;
 }
-
 .localmenu li.selected a {
     color: rgba(42, 185, 232, 1) !important;
 }
-
 .widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer {
-  background-color: #cbedf8 !important;
+    background-color: #cbedf8 !important;
 }
-
 .widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer, #widgets-layer-visibility li.on {
-  border-color: #2ab9e8 !important;
+    border-color: #2ab9e8 !important;
 }
-
 .widgets-listed li:hover, .widgets-listed li.on {
-   border-color:#2ab9e8 !important;
+    border-color: #2ab9e8 !important;
 }
-
 button.widgets-move {
-  background-color: rgba(0, 0, 0, 0) !important;
-  background-image: url(../../../modules/orchard.widgets/styles/images/arrows.png) !important;
-  border: 0 none !important;
+    background-color: rgba(0, 0, 0, 0) !important;
+    background-image: url("../../../modules/orchard.widgets/styles/images/arrows.png") !important;
+    border: 0 none !important;
+}
+button.link {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0 !important;
+    border: 0 none !important;
+    color: #252c36 !important;
 }
 
-button.link {
-  background: rgba(0, 0, 0, 0) none repeat scroll 0 0 !important;
-  border: 0 none !important;
-  color: #252C36 !important;
+#header {
+    background: none !important;
+    height: 127px !important;
+    margin: 16px 0 0;
+}
+
+#site {
+    background: #252c36 none repeat scroll 0 0 !important;
+    color: #fff !important;
+    font-size: 1.385em
+}
+
+#content {
+    background-color: none !important;
+    border: 0px !important;
 }
