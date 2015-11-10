@@ -170,9 +170,10 @@
                 }
             });
             TestQuestionNumber();
+            ScriviMenuTab();
         });
 
-        function scrivimenutab() {
+        function ScriviMenuTab() {
             var menutab = "";
             var numdom = 0;
             $('div.j_question').each(function () {
@@ -193,12 +194,12 @@
             });
 
             $("#j_menuquestion").html(menutab);
-            var tabs = $("#questions").tabs();
+            var tabs = $("#questions").tabs(); 
             tabs.tabs("refresh");
             if (numdom > 0) {
-                var tabs = $("#questions").tabs("option", "active", numdom - 1);
-                tabs.tabs("refresh");
+                tabs = $("#questions").tabs( "option", "active", numdom - 1 );
             }
+            tabs.tabs("refresh");
         }
 
         function PannelloCondition(item) {
@@ -243,7 +244,7 @@
     @Html.TextAreaFor(m => m.TermsText, 25, 80, new { @class = "html tinymce" })
     <br />
     <p id="AddQuestionButton">
-        <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.Questions, T("Add Question").Text, "#questions", ".j_question", "question", null, "TestQuestionNumber()")
+        <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.Questions, T("Add Question").Text, "#questions", ".j_question", "question", null, "TestQuestionNumber(); ScriviMenuTab();")
     </p>
     <div id="questions">
         <ul id="j_menuquestion">
