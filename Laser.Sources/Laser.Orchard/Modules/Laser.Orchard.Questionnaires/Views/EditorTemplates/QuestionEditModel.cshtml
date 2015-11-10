@@ -64,7 +64,7 @@
                 </a>
                 <span class="quest_label">@T("Actions")</span>
                 <i class="fa fa-times" style="color: red"></i>
-                @Html.LinkToRemoveNestedForm(T("Remove").Text, ".j_question", "input.mark-for-delete", "scrivimenutab();TestQuestionNumber();")
+                @Html.LinkToRemoveNestedForm(T("Remove").Text, ".j_question", "input.mark-for-delete", "ScriviMenuTab();TestQuestionNumber();")
                 <br />
                 @{
                     string styleanswer = "block";
@@ -108,9 +108,7 @@
     </table>
     @*    </td>
 </tr>*@
-    <script type="text/javascript">
-        scrivimenutab();
-    </script>
+
 </div>
 
 @using (Script.Foot()) {
