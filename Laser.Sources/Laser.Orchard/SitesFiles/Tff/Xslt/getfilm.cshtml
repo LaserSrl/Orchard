@@ -9,6 +9,14 @@
     mydoc = aggiungipadre(mydoc, "root", "_dataList", "_data");
     mydoc = RimuoviFratelli(mydoc, "root/_dataList");
 
+	 mydoc =cambianome(mydoc,"root/_dataList/_data/lasernumeric","_data");
+foreach (XmlNode nodoSala in mydoc.SelectNodes("root/_dataList/_data/_data")){
+	XmlNode thechildnode=nodoSala.Clone();
+	nodoSala.ParentNode.ParentNode.AppendChild(thechildnode);
+	nodoSala.ParentNode.RemoveChild(nodoSala);
+	
+}
+
     foreach (System.Xml.XmlNode nodoSala in mydoc.SelectNodes("root/_dataList/_data/sale/lasernumeric")) {
 
         XmlNode author = mydoc.CreateElement("Id");
@@ -42,11 +50,12 @@
 
     }
 
+
     mydoc = generaOriginalId(mydoc, "root/_dataList/_data/id");
     mydoc = generaid(mydoc, "root/_dataList/_data/id", 6000000);
     mydoc = rendinumeric(mydoc, "root/_dataList/_data/parentID");
 
-    mydoc = textreplace(mydoc, "root/_dataList/_data/film_titolo_orig", "\u2028", "");
+   mydoc = textreplace(mydoc, "root/_dataList/_data/film_titolo_orig", "\u2028", "");
     mydoc = textreplace(mydoc, "root/_dataList/_data/film_titolo_ita", "\u2028", "");
     mydoc = textreplace(mydoc, "root/_dataList/_data/film_titolo_eng", "\u2028", "");
     mydoc = textreplace(mydoc, "root/_dataList/_data/sinossi", "\u2028", "");
@@ -104,7 +113,6 @@
 
 
 
-
     mydoc = rendinumeric(mydoc, "root/_dataList/_data/sale/lasernumeric/compra_url/idEvent");
 
     mydoc = cambianome(mydoc, "root/_dataList/_data/sale/lasernumeric/compra_url", "Compraurl");
@@ -125,6 +133,7 @@
     mydoc = cambianome(mydoc, "root/_dataList", "ToRemove");
 
 
+ 
 
 
     SpanXDocument(ToXDocument(mydoc).Root);
