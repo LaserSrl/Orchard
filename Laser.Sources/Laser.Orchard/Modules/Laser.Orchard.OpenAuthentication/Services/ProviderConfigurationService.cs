@@ -3,6 +3,8 @@ using System.Linq;
 using Laser.Orchard.OpenAuthentication.Models;
 using Orchard;
 using Orchard.Data;
+using System;
+using Laser.Orchard.OpenAuthentication.ViewModels;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IProviderConfigurationService : IDependency {
@@ -11,6 +13,9 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         void Delete(int id);
         void Create(ProviderConfigurationCreateParams parameters);
         bool VerifyUnicity(string providerName);
+        bool VerifyUnicity(string providerName, int id);
+        CreateProviderViewModel Get(Int32 id);
+        void Edit(CreateProviderViewModel parameters);
     }
 
     public class ProviderConfigurationService : IProviderConfigurationService {
@@ -33,18 +38,50 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         }
 
         public bool VerifyUnicity(string providerName) {
-            return _repository.Get(o => o.ProviderName == providerName) == null; 
+            return _repository.Get(o => o.ProviderName == providerName) == null;
+        }
+        public bool VerifyUnicity(string providerName,int id) {
+            return _repository.Get(o => o.ProviderName == providerName && o.Id!=id) == null;
         }
 
         public void Create(ProviderConfigurationCreateParams parameters) {
             _repository.Create(new ProviderConfigurationRecord {
-                    DisplayName = parameters.DisplayName,
-                    ProviderName = parameters.ProviderName,
-                    ProviderIdentifier = parameters.ProviderIdentifier,
-                    ProviderIdKey = parameters.ProviderIdKey,
-                    ProviderSecret = parameters.ProviderSecret,
-                    IsEnabled = true
-                });
+                DisplayName = parameters.DisplayName,
+                ProviderName = parameters.ProviderName,
+                ProviderIdentifier = parameters.ProviderIdentifier,
+                ProviderIdKey = parameters.ProviderIdKey,
+                ProviderSecret = parameters.ProviderSecret,
+                IsEnabled = 1
+            });
+        }
+
+        public void Edit(CreateProviderViewModel parameters) {
+            ProviderConfigurationRecord rec = _repository.Get(parameters.Id);
+            rec.DisplayName = parameters.DisplayName;
+            rec.IsEnabled = parameters.IsEnabled?1:0;
+            rec.ProviderIdentifier = parameters.ProviderIdentifier;
+            rec.ProviderIdKey = parameters.ProviderIdKey;
+            rec.ProviderName = parameters.ProviderName;
+            rec.ProviderSecret = parameters.ProviderSecret;
+            _repository.Update(rec);
+       
+        }
+
+
+        public CreateProviderViewModel Get(Int32 id) {
+            CreateProviderViewModel cpvm = new CreateProviderViewModel();
+            ProviderConfigurationRecord prec = _repository.Get(o => o.Id == id);
+            cpvm.Id = prec.Id;
+            cpvm.DisplayName = prec.DisplayName;
+            cpvm.IsEnabled = prec.IsEnabled==1;
+            cpvm.ProviderIdentifier = prec.ProviderIdentifier;
+            cpvm.ProviderIdKey = prec.ProviderIdKey;
+            cpvm.ProviderName = prec.ProviderName;
+            cpvm.ProviderSecret = prec.ProviderSecret;
+
+
+            return cpvm;
+
         }
     }
 

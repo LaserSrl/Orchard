@@ -1,0 +1,12 @@
+﻿Name: Laser.Orchard.Facebook
+AntiForgery: enabled
+Author: Laser Group - Frediani Lorenzo
+Website: http://orchardproject.net
+Version: 1.0
+OrchardVersion: 1.0
+Description: Description for the module
+Features:
+    Laser.Orchard.Facebook:
+        Description: Description for feature Laser.Orchard.Facebook.
+		Category: Social
+		Dependencies: Laser.Orchard.OpenAuthentication
