@@ -1,7 +1,7 @@
 ﻿@model Laser.Orchard.OpenAuthentication.ViewModels.CreateProviderViewModel
            
 @{
-    Layout.Title = T("Create External Provider");
+    Layout.Title = T("Edit External Provider");
 }
 
 @using (Html.BeginFormAntiForgeryPost())
@@ -18,7 +18,7 @@
         @Html.TextBoxFor(m => m.ProviderName)
         <span class="hint">@T("The name that will be used internally.")</span>
     </fieldset>*@
-        <fieldset>
+       <fieldset>
         @Html.LabelFor(m => m.ProviderName, T("Technical Name"))
         @Html.DropDownListFor(m => m.ProviderName,Model.ProviderNameList)
         <span class="hint">@T("The name that will be used internally.")</span>

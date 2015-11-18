@@ -52,7 +52,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             // Do we have a configuration?
             var clientConfiguration = _providerConfigurationService.Get(providerName);
 
-            if (clientConfiguration == null)
+            if (clientConfiguration == null || clientConfiguration.IsEnabled!=1)
                 return null;
 
             // Is this a known internal client

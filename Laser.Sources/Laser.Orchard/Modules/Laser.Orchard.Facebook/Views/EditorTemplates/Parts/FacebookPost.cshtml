@@ -1,0 +1,24 @@
+﻿@using System.Web.Mvc.Html
+@model Laser.Orchard.Facebook.ViewModels.FacebookPostVM
+<fieldset>
+    <legend>@T("Facebook")</legend>
+    @Html.HiddenFor(m => m.FacebookMessageSent)
+    <div class="editor-label">@Html.LabelFor(m => m.FacebookMessage, T("Message"))</div>
+    <div class="editor-label">@Html.TextAreaFor(m => m.FacebookMessage)</div>
+    <div class="editor-label">@Html.LabelFor(m => m.FacebookCaption, T("Caption"))</div>
+    <div class="editor-label">@Html.TextBoxFor(m => m.FacebookCaption)</div>
+    <div class="editor-label">@Html.LabelFor(m => m.FacebookDescription, T("Description"))</div>
+    <div class="editor-label">@Html.TextAreaFor(m => m.FacebookDescription)</div>
+    <div class="editor-label">@Html.LabelFor(m => m.FacebookLink, T("Link"))</div>
+    <div class="editor-label">@Html.TextBoxFor(m => m.FacebookLink)</div>
+    <div class="editor-label">@Html.LabelFor(m => m.FacebookName, T("Name"))</div>
+    <div class="editor-label">@Html.TextBoxFor(m => m.FacebookName)</div>
+    <div class="editor-label">@Html.LabelFor(m => m.FacebookPicture, T("Picture Url"))</div>
+    <div class="editor-label">@Html.TextBoxFor(m => m.FacebookPicture)</div>
+    @{
+        if (Model.FacebookAccountList != null) {
+        <div class="editor-label">@Html.LabelFor(m => m.SelectedList, T("AccountList"))</div>
+        <div class="editor-label">@Html.ListBoxFor(m => m.SelectedList, Model.FacebookAccountList)</div>
+        }
+    }
+</fieldset>

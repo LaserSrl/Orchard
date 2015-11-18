@@ -41,6 +41,10 @@ namespace Laser.Orchard.OpenAuthentication.Extensions {
             return urlHelper.Action("Remove", "Admin", new { area = Constants.LocalArea, Id = id });
         }
 
+        public static string EditProviderConfiguration(this UrlHelper urlHelper, int id) {
+            return urlHelper.Action("Edit", "Admin", new { area = Constants.LocalArea, Id = id });
+        }
+
         public static string ProviderCreate(this UrlHelper urlHelper) {
             return urlHelper.Action("CreateProvider", "Admin", new { area = Constants.LocalArea });
         }

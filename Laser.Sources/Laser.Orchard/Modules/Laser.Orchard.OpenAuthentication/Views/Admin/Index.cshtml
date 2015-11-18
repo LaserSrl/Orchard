@@ -19,6 +19,7 @@
                 <th scope="col">@T("Identifier")</th>
                 <th scope="col">@T("Key")</th>
                 <th scope="col">@T("Secret")</th>
+                <th scope="col">@T("Enable Login")</th>
                 <th scope="col">@T("Actions")</th>
             </tr>
         </thead>
@@ -29,7 +30,10 @@
                 <td>@currentProvider.ProviderIdentifier</td>
                 <td>@currentProvider.ProviderIdKey</td>
                 <td>@currentProvider.ProviderSecret</td>
-                <td><a href="@Url.RemoveProviderConfiguration(currentProvider.Id)">@T("Remove")</a></td>
+                 <td>@(currentProvider.IsEnabled==1)</td>
+                <td>
+                <a href="@Url.EditProviderConfiguration(currentProvider.Id)">@T("Edit")</a>&nbsp;|&nbsp;<a href="@Url.RemoveProviderConfiguration(currentProvider.Id)">@T("Remove")</a>
+                </td>
             </tr>
         }
     </table>
