@@ -30,7 +30,9 @@
             } else if (n == 485) {
                 latitude =45.032946;
                 longitude = 7.665949;
-
+            } else if (n == 487) {
+                latitude = 45.068497;
+                longitude = 7.691581;
             }
 			XmlNode nodomappa=bookToModify.ParentNode.SelectSingleNode("MapPart");
 			nodomappa.SelectSingleNode("Latitude").InnerText=String.Concat(":lasernumeric",latitude.ToString(System.Globalization.CultureInfo.InvariantCulture),"lasernumeric:");
