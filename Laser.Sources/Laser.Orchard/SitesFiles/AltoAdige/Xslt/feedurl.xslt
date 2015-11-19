@@ -62,9 +62,17 @@ public int val_selezionato=0;
 			<xsl:element name="Title" namespace="">
 				<xsl:value-of select="title"/>
 			</xsl:element>
-			<xsl:element name="Summary" namespace="">
-				<xsl:value-of select="summary"/>
-			</xsl:element>
+            
+            <xsl:choose>
+                <xsl:when test="string-length(summary)>0">
+                    <xsl:element name="Summary" namespace="">
+                        <xsl:value-of select="summary"/>
+                    </xsl:element>
+                </xsl:when>
+                <xsl:otherwise>
+                </xsl:otherwise>
+            </xsl:choose>
+            
 			<xsl:element name="UpdatedDate" namespace="">
 				<xsl:value-of select="updated"/>
 			</xsl:element>
