@@ -1,0 +1,75 @@
+﻿@using System.Web.Mvc.Html
+@using (Script.Head()) {
+    Script.Require("jQuery_textcounter").AtHead();
+}
+<script type="text/javascript">
+    $(function () {
+        $("#@Html.FieldIdFor(model => model.TwitterMessage)").textcounter({
+            type: "character",            // "character" or "word"
+            min: 0,                      // minimum number of characters/words
+            max: 140,                    // maximum number of characters/words, -1 for unlimited, 'auto' to use maxlength attribute
+            countContainerElement: "div",                  // HTML element to wrap the text count in
+            countContainerClass: "text-count-wrapper",   // class applied to the countContainerElement
+            inputErrorClass: "error",                // error class appended to the input element if error occurs
+            counterErrorClass: "error",                // error class appended to the countContainerElement if error occurs
+            counterText: "Total Count: ",        // counter text
+            errorTextElement: "div",                  // error text element
+            minimumErrorText: "Minimum not met",      // error message for minimum not met,
+            maximumErrorText: "Maximum exceeded",     // error message for maximum range exceeded,
+            displayErrorText: true,                   // display error text messages for minimum/maximum values
+            stopInputAtMaximum: false,                   // stop further text input if maximum reached
+            countSpaces: true,                  // count spaces as character (only for "character" type)
+            countDown: true,                  // if the counter should deduct from maximum characters/words rather than counting up
+            countDownText: "Remaining: ",          // count down text
+            countExtendedCharacters: false,                  // count extended UTF-8 characters as 2 bytes (such as Chinese characters)
+            maxcount: function (el) { },         // Callback: function(element) - Fires when the counter hits the maximum word/character count
+            mincount: function (el) { },         // Callback: function(element) - Fires when the counter hits the minimum word/character count
+            init: function (el) { }          // Callback: function(element) - Fires after the counter is initially setup
+        });
+    });
+</script>
+@model Laser.Orchard.Twitter.ViewModels.TwitterPostVM
+@if (Model.TwitterAccountList == null) {
+    <a href="@Url.Action("Index", "TwitterAccount", new { area = "Laser.Orchard.Twitter" })">@T("Insert a twitter account ")</a>
+}
+else {
+    <fieldset>
+        <legend>@T("Twitter")</legend>
+        @Html.HiddenFor(m => m.TwitterMessageSent)
+        <div class="editor-label">@Html.LabelFor(m => m.TwitterMessage, T("Message"))</div>
+        <div class="editor-label">@Html.TextAreaFor(m => m.TwitterMessage)</div>
+        <span class="hint">@T("Each link is counted 22 characters")</span>
+        <div class="editor-label">@Html.LabelFor(m => m.TwitterCurrentLink, T("Link current page"))</div>
+        <div class="editor-label">@Html.CheckBoxFor(m => m.TwitterCurrentLink)</div>
+        @Html.HiddenFor(m => m.TwitterLink)
+        @*        <div class="editor-label">@Html.LabelFor(m => m.TwitterPicture, T("Meta twitter picture Url"))</div>
+        <div class="editor-label">@Html.TextBoxFor(m => m.TwitterPicture)</div>*@
+
+        @Html.HiddenFor(m => m.TwitterPicture)
+        @if (Model.ShowTitle) {
+            <div class="editor-label">@Html.LabelFor(m => m.TwitterTitle, T("Meta twitter title"))</div>
+            <div class="editor-label">@Html.TextBoxFor(m => m.TwitterTitle)</div>
+        }
+        else {
+            @Html.HiddenFor(m => m.TwitterTitle)
+        }
+        @if (Model.ShowDescription) {
+            <div class="editor-label">@Html.LabelFor(m => m.TwitterDescription, T("Meta twitter description"))</div>
+            <div class="editor-label">@Html.TextAreaFor(m => m.TwitterDescription)</div>
+        }
+        else {
+            @Html.HiddenFor(m => m.TwitterDescription)
+        }
+
+
+        @*    <div class="editor-label">@Html.LabelFor(m => m.TwitterName, T("Name"))</div>
+    <div class="editor-label">@Html.TextBoxFor(m => m.TwitterName)</div>*@
+
+        @{
+        if (Model.TwitterAccountList != null) {
+            <div class="editor-label">@Html.LabelFor(m => m.SelectedList, T("AccountList"))</div>
+            <div class="editor-label">@Html.ListBoxFor(m => m.SelectedList, Model.TwitterAccountList)</div>
+        }
+        }
+    </fieldset>
+}

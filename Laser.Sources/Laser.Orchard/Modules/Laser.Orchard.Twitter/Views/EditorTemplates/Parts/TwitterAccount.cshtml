@@ -1,0 +1,20 @@
+﻿@using System.Web.Mvc.Html
+@model Laser.Orchard.Twitter.ViewModels.TwitterAccountVM
+<fieldset>
+    <legend>@T("Twitter Account")</legend>
+    <div class="editor-label">@Html.LabelFor(m => m.Shared, T("Shared Account"))</div>
+    <div class="editor-label">@Html.CheckBoxFor(m => m.Shared)</div>
+    <span class="hint">@T("Shared = This account can be used by other user to generate Twitter Post")</span>
+</fieldset>
+<br />
+<fieldset>
+    <div class="editor-label">@Html.LabelFor(m => m.Valid, T("Enable"))</div>
+    <div class="editor-label">@Html.CheckBoxFor(m => m.Valid)</div>
+    <span class="hint">@T("Only Enabled account can be used to post on Twitter")</span>
+    @Html.HiddenFor(m => m.IdUser)
+    @Html.HiddenFor(m => m.SocialName)
+    @Html.HiddenFor(m => m.UserToken)
+    @Html.HiddenFor(m => m.UserTokenSecret)
+     @Html.HiddenFor(m => m.DisplayAs)
+     @Html.HiddenFor(m => m.AccountType)
+</fieldset>

@@ -1,0 +1,11 @@
+﻿@model Laser.Orchard.ShortLinks.Models.ShortLinksSettingsPart
+
+<fieldset>
+    <legend>@T("Short Link Settings")</legend>
+
+    <div class="editor-field">        
+        @Html.TextBoxFor(model => model.GoogleApiKey)
+        @Html.ValidationMessageFor(model => model.GoogleApiKey)    
+    </div>
+
+</fieldset>

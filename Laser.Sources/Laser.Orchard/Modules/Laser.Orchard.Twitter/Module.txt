@@ -1,0 +1,12 @@
+﻿Name: Laser.Orchard.Twitter
+AntiForgery: enabled
+Author: Laser Group - Frediani Lorenzo
+Website: http://orchardproject.net
+Version: 1.0
+OrchardVersion: 1.0
+Description: Description for the module
+Features:
+    Laser.Orchard.Twitter:
+        Description: Description for feature Laser.Orchard.Twitter.
+		Category: Social
+		Dependencies: Laser.Orchard.OpenAuthentication , Laser.Orchard.StartupConfig , Orchard.MediaLibrary

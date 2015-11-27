@@ -1,0 +1,8 @@
+﻿<Placement>
+  <Place Parts_TwitterAccount="Content:4" />
+  <Place Parts_TwitterPost="Content:4.02" />
+  <Match DisplayType="Detail">
+    <Place Parts_TwitterPost_Detail="Content:after" />
+  </Match>
+  <Place Fields_MediaLibraryPicker_Edit="Content:4.01"/>
+</Placement>
