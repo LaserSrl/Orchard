@@ -47,11 +47,11 @@ namespace Laser.Orchard.Twitter.Models {
             get { return this.Retrieve(r => r.Valid); }
             set { this.Store(r => r.Valid, value); }
         }
+
         [DisplayName("DisplayAs")]
         public string DisplayAs {
             get { return this.Retrieve(r => r.DisplayAs); }
             set { this.Store(r => r.DisplayAs, value); }
         }
-     }
-
+    }
 }

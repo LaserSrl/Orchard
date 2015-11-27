@@ -45,7 +45,7 @@ namespace Laser.Orchard.Twitter.Services {
         private readonly ShellSettings _shellsettings;
         public ILogger Logger { get; set; }
 
-        public TwitterService(ShellSettings shellsettings, IStorageProvider storageProvider,IOrchardServices orchardServices, INotifier notifier, IWorkContextAccessor workContext, IProviderConfigurationService providerConfigurationService) {
+        public TwitterService(ShellSettings shellsettings, IStorageProvider storageProvider, IOrchardServices orchardServices, INotifier notifier, IWorkContextAccessor workContext, IProviderConfigurationService providerConfigurationService) {
             _shellsettings = shellsettings;
             _providerConfigurationService = providerConfigurationService;
             _storageProvider = storageProvider;
@@ -77,8 +77,6 @@ namespace Laser.Orchard.Twitter.Services {
                         ConsumerKey = pcr.ProviderIdKey,
                         ConsumerSecret = pcr.ProviderSecret
                     };
-                    //  var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-                    //   string urlDetail = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(Twitterpart));
                     TwitterResponse<TwitterStatus> response;
                     string realmessage = message.Message;
                     if (!string.IsNullOrEmpty(message.Link))
@@ -90,9 +88,7 @@ namespace Laser.Orchard.Twitter.Services {
                         var mediaPath = HostingEnvironment.IsHosted
                                 ? HostingEnvironment.MapPath("~/Media/") ?? ""
                                 : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
-                        string physicalPath = mediaPath + _shellsettings.Name+"\\" + message.Picture;
-                    //    string physicalPathFromUrl=_storageProvider.GetStoragePath(_orchardServices.WorkContext.HttpContext.Server.MapPath("/Media/") + message.Picture);
-                   //     byte[] photo = System.IO.File.ReadAllBytes(_orchardServices.WorkContext.HttpContext.Server.MapPath("/Media/")+message.Picture);
+                        string physicalPath = mediaPath + _shellsettings.Name + "\\" + message.Picture;
                         byte[] photo = System.IO.File.ReadAllBytes(physicalPath);
                         response = TwitterStatus.UpdateWithMedia(accesstoken, realmessage.Trim(), photo, new StatusUpdateOptions() { UseSSL = true, APIBaseAddress = "http://api.twitter.com/1.1/" });
                     }

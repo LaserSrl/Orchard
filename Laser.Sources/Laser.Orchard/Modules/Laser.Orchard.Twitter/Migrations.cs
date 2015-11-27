@@ -5,12 +5,6 @@ using Orchard.Data.Migration;
 namespace Laser.Orchard.Twitter {
 
     public class TwitterMigrations : DataMigrationImpl {
-        //  private readonly IUtilsServices _utilServices;
-
-        //public Migrations(IUtilsServices utilsServices)
-        //{
-        //    _utilServices = utilsServices;
-        //}
 
         /// <summary>
         /// This executes whenever this module is activated.
@@ -26,12 +20,20 @@ namespace Laser.Orchard.Twitter {
                 .Column<string>("TwitterLink")
                 .Column<string>("AccountList")
                 .Column<bool>("TwitterMessageSent", col => col.WithDefault(false))
+                .Column<bool>("TwitterCurrentLink", col => col.WithDefault(false))
             );
 
             ContentDefinitionManager.AlterPartDefinition(
                 "TwitterPostPart",
                 b => b
                 .Attachable(true)
+                .WithField("TwitterImage",
+                    field => field
+                    .OfType("MediaLibraryPickerField")
+                    .WithDisplayName("Twitter Image")
+                    .WithSetting("MediaLibraryPickerFieldSettings.Multiple", "false")
+                    .WithSetting("MediaLibraryPickerFieldSettings.AllowedExtensions", "jpg jpeg png gif")
+                    )
                 );
 
             ContentDefinitionManager.AlterPartDefinition(
@@ -48,50 +50,7 @@ namespace Laser.Orchard.Twitter {
                 .Creatable(false)
                 .Draftable(false)
           );
-
             return 1;
-        }
-        public int UpdateFrom1() {
-            SchemaBuilder.AlterTable("TwitterPostPartRecord", table => table
-                .AddColumn<bool>("TwitterCurrentLink")
-                );
-            return 2;
-        }
-        public int UpdateFrom2() {
-            return 3;
-        }
-        public int UpdateFrom3() {
-            ContentDefinitionManager.AlterPartDefinition(
-                   "TwitterPostPart",
-                   b => b
-                       
-                   .WithField("TwitterImage",
-                    field => field
-                    .OfType("MediaLibraryPickerField")
-                    .WithDisplayName("Twitter Image")
-                    .WithSetting("MediaLibraryPickerFieldSettings.Multiple", "false")
-                    .WithSetting("MediaLibraryPickerFieldSettings.AllowedExtensions", "jpg jpeg png gif")
-                    )
-            );
-            return 4;
-        }
-        public int UpdateFrom4() {
-            ContentDefinitionManager.AlterPartDefinition(
-               "TwitterPostPart",
-               b => b
-            .RemoveField("TwitterImage"));
-            ContentDefinitionManager.AlterPartDefinition(
-                   "TwitterPostPart",
-                   b => b
-                   .WithField("TwitterImage",
-                    field => field
-                    .OfType("MediaLibraryPickerField")
-                    .WithDisplayName("Twitter Image")
-                    .WithSetting("MediaLibraryPickerFieldSettings.Multiple", "false")
-                    .WithSetting("MediaLibraryPickerFieldSettings.AllowedExtensions", "jpg jpeg png gif")
-                    )
-            );
-            return 5;
         }
     }
 }

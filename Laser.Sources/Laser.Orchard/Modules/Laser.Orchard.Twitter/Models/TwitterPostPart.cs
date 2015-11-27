@@ -19,7 +19,9 @@ namespace Laser.Orchard.Twitter.Models {
             get { return this.Retrieve(r => r.TwitterMessageSent); }
             set { this.Store(r => r.TwitterMessageSent, value); }
         }
+
         #region card
+
         public string TwitterTitle {
             get { return this.Retrieve(r => r.TwitterTitle); }
             set { this.Store(r => r.TwitterTitle, value); }
@@ -34,7 +36,9 @@ namespace Laser.Orchard.Twitter.Models {
             get { return this.Retrieve(r => r.TwitterPicture); }
             set { this.Store(r => r.TwitterPicture, value); }
         }
-        #endregion
+
+        #endregion card
+
         //public string TwitterName {
         //    get { return this.Retrieve(r => r.TwitterName); }
         //    set { this.Store(r => r.TwitterName, value); }
@@ -43,6 +47,7 @@ namespace Laser.Orchard.Twitter.Models {
             get { return this.Retrieve(r => r.TwitterCurrentLink); }
             set { this.Store(r => r.TwitterCurrentLink, value); }
         }
+
         public string TwitterLink {
             get { return this.Retrieve(r => r.TwitterLink); }
             set { this.Store(r => r.TwitterLink, value); }
@@ -75,6 +80,7 @@ namespace Laser.Orchard.Twitter.Models {
 
         //public virtual string TwitterName { get; set; }
         public virtual string TwitterPicture { get; set; }
+
         public virtual string TwitterLink { get; set; }
         public virtual bool TwitterCurrentLink { get; set; }
         public virtual string AccountList { get; set; }
