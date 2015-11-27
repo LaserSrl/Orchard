@@ -12,6 +12,12 @@ namespace Laser.Orchard.Facebook.Models {
             set { this.Store(r => r.SocialName, value); }
         }
 
+        [DisplayName("AccountType")]
+        public string AccountType {
+            get { return this.Retrieve(r => r.AccountType); }
+            set { this.Store(r => r.AccountType, value); }
+        }
+        
         [DisplayName("UserToken")]
         public string UserToken {
             get { return this.Retrieve(r => r.UserToken); }

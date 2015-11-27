@@ -134,7 +134,7 @@ namespace Laser.Orchard.Facebook.Controllers {
                               select content;
             IEnumerable<ContentIndexVM> listVM = ListContent.Select(p => new ContentIndexVM {
                 Id = p.Id,
-                Title =p.As<FacebookAccountPart>().DisplayAs,// string.IsNullOrEmpty(p.As<FacebookAccountPart>().PageName) ? "User Account" : " Page -> " + p.As<FacebookAccountPart>().PageName,
+                Title =p.As<FacebookAccountPart>().AccountType+" - "+ p.As<FacebookAccountPart>().DisplayAs,// string.IsNullOrEmpty(p.As<FacebookAccountPart>().PageName) ? "User Account" : " Page -> " + p.As<FacebookAccountPart>().PageName,
                 ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
                 UserName = p.As<CommonPart>().Owner.UserName,
                 Option = new { Valid = p.As<FacebookAccountPart>().Valid, Shared = p.As<FacebookAccountPart>().Shared }
@@ -156,7 +156,7 @@ namespace Laser.Orchard.Facebook.Controllers {
         }
 
         [Admin]
-        public ActionResult GetTokenFacebook() {
+        public ActionResult GetPostTokenFacebook() {
             ProviderConfigurationRecord pcr = _providerConfigurationService.Get("Facebook");
             string app_id = pcr.ProviderIdKey;
             string app_secret = pcr.ProviderSecret;
@@ -228,17 +228,22 @@ namespace Laser.Orchard.Facebook.Controllers {
             }
             else {
                 string displayas = "";
+                string AccountType="";
                 if (string.IsNullOrEmpty(fvm.PageName)) {
                     string json = new WebClient().DownloadString("https://graph.facebook.com/me?access_token=" + fvm.UserToken);
-                    displayas = "User - "+ (JObject.Parse(json))["name"].ToString();
+                    displayas =  (JObject.Parse(json))["name"].ToString();
+                    AccountType = "User";
                 }
-                else
-                    displayas ="Page - "+ fvm.PageName;
+                else {
+                    displayas =  fvm.PageName;
+                    AccountType = "Page";
+                }
 
     
                 var newContent = _orchardServices.ContentManager.New(contentType);
                 _orchardServices.ContentManager.Create(newContent);
                 newContent.As<FacebookAccountPart>().IdUser = currentiduser;
+                newContent.As<FacebookAccountPart>().AccountType = AccountType;
                 newContent.As<FacebookAccountPart>().DisplayAs = displayas;
                 newContent.As<FacebookAccountPart>().SocialName = "Facebook";
                 newContent.As<FacebookAccountPart>().UserToken = fvm.UserToken;
@@ -246,6 +251,7 @@ namespace Laser.Orchard.Facebook.Controllers {
                 newContent.As<FacebookAccountPart>().PageName = fvm.PageName;
                 newContent.As<FacebookAccountPart>().PageToken = fvm.PageToken;
                 newContent.As<FacebookAccountPart>().IdPage = fvm.IdPage ?? "";
+                newContent.As<FacebookAccountPart>().Shared = false;
                 if (string.IsNullOrEmpty(fvm.IdPage)) {
                     _notifier.Add(NotifyType.Warning, T("User Facebook Account added"));
                 }

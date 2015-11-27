@@ -39,7 +39,7 @@ namespace Laser.Orchard.Facebook.Drivers {
             List<FacebookAccountPart> listaccount = _facebookService.GetValidFacebookAccount();
             List<SelectListItem> lSelectList = new List<SelectListItem>();
             foreach (FacebookAccountPart fa in listaccount) {
-                lSelectList.Insert(0, new SelectListItem() { Value = fa.Id.ToString(), Text = fa.DisplayAs });
+                lSelectList.Insert(0, new SelectListItem() { Value = fa.Id.ToString(), Text =fa.AccountType+" - "+ fa.DisplayAs });
             }
             if (lSelectList.Count > 0) {
        

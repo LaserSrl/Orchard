@@ -114,9 +114,6 @@
     <Content Include="Views\FacebookAccount\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ActivatingSocial\Facebook.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\FacebookPost.cshtml" />
   </ItemGroup>
   <ItemGroup>

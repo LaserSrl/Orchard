@@ -1,5 +1,8 @@
 ﻿@using System.Web.Mvc.Html
 @model Laser.Orchard.Facebook.ViewModels.FacebookPostVM
+@if (Model.FacebookAccountList == null) {
+    <a href="@Url.Action("Index", "FacebookAccount", new { area = "Laser.Orchard.Facebook"})">@T("Insert a twitter account ")</a>
+}else{
 <fieldset>
     <legend>@T("Facebook")</legend>
     @Html.HiddenFor(m => m.FacebookMessageSent)
@@ -22,3 +25,4 @@
         }
     }
 </fieldset>
+}

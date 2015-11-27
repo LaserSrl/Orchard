@@ -4,7 +4,7 @@
     Layout.Title = T("Facebook Account");
 }
 <div class="manage">
-    <a class="button primaryAction" href="@Url.Action("GetTokenFacebook", "FacebookAccount", new { area = "Laser.Orchard.Facebook", id = 0 })" title="@T("Add Facebook Account")">@T("Add Facebook Account")</a>
+    <a class="button primaryAction" href="@Url.Action("GetPostTokenFacebook", "FacebookAccount", new { area = "Laser.Orchard.Facebook", id = 0 })" title="@T("Add Facebook Account")">@T("Add Facebook Account")</a>
 </div>
 @using (Html.BeginForm("Index", "FacebookAccount", FormMethod.Post)) {
     @Html.AntiForgeryToken()
