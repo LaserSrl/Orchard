@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Laser.Orchard.Twitter.Settings {
 
-    public class PushMobileEditorEvents : ContentDefinitionEditorEventsBase {
+    public class TwitterPostEditorEvents : ContentDefinitionEditorEventsBase {
 
         public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition) {
             if (definition.PartDefinition.Name != "TwitterPostPart") yield break;
