@@ -19,9 +19,15 @@ using Orchard.Localization;
 using Orchard.Messaging.Services;
 using Orchard.Mvc.Html;
 using Orchard.UI.Notify;
+using Orchard.Events;
+using System.Diagnostics;
 
 namespace Laser.Orchard.NewsLetters.Services {
+    public interface IJobsQueueService : IEventHandler {
+        void Enqueue(string message, object parameters, int priority);
+    }
     public class NewsletterServices : Laser.Orchard.NewsLetters.Services.INewsletterServices {
+        private readonly IJobsQueueService _jobsQueueService;
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
         private readonly IRepository<SubscriberRecord> _repositorySubscribers;
@@ -29,14 +35,19 @@ namespace Laser.Orchard.NewsLetters.Services {
         private readonly IRepository<NewsletterEditionPartRecord> _repositoryNewsletterEdition;
         private readonly ITemplateService _templateService;
         private readonly IMessageService _messageService;
-
-        public NewsletterServices(IContentManager contentManager,
+        private readonly INotifier _notifier;
+        public NewsletterServices(
+        
+            IJobsQueueService jobsQueueService,
+            IContentManager contentManager,
             IOrchardServices orchardServices,
             ITemplateService templateService,
              IMessageService messageService,
             IRepository<SubscriberRecord> repositorySubscribers,
             IRepository<NewsletterDefinitionPartRecord> repositoryNewsletterDefinition,
-            IRepository<NewsletterEditionPartRecord> repositoryNewsletterEdition) {
+            IRepository<NewsletterEditionPartRecord> repositoryNewsletterEdition,
+             INotifier notifier) {
+                 _notifier = notifier;
             _contentManager = contentManager;
             _orchardServices = orchardServices;
             _messageService = messageService;
@@ -45,6 +56,7 @@ namespace Laser.Orchard.NewsLetters.Services {
             T = NullLocalizer.Instance;
             _templateService = templateService;
             _repositoryNewsletterEdition = repositoryNewsletterEdition;
+            _jobsQueueService = jobsQueueService;
         }
 
         public Localizer T { get; set; }
@@ -332,7 +344,7 @@ namespace Laser.Orchard.NewsLetters.Services {
         }
         #endregion
 
-        private void SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc) {
+        private void SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, bool queued=true) {
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = _templateService.GetTemplate(templateId);
             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
@@ -370,7 +382,26 @@ namespace Laser.Orchard.NewsLetters.Services {
             if (bcc != null) {
                 data.Add("Bcc", String.Join(",", bcc));
             }
-            _messageService.Send(SmtpMessageChannel.MessageType, data);
+            //var watch = Stopwatch.StartNew();
+            //int msgsent = 0;
+      
+            //for(int i=0;i<20;i++) {
+            //    msgsent++;
+            //    data["Subject"] = msgsent.ToString();
+            //    data["Bcc"] = "lorenzo.frediani@laser-group.com";
+            //    _messageService.Send(SmtpMessageChannel.MessageType, data);
+            //}
+            //watch.Stop();
+            //_notifier.Add(NotifyType.Information, T("Sent " + msgsent.ToString()+" email in Milliseconds:" + watch.ElapsedMilliseconds.ToString()));            
+            if (!queued) {
+                _messageService.Send(SmtpMessageChannel.MessageType, data);
+            }
+            else {
+                var priority = 0;//normal 50 to hight -50 to low
+
+                _jobsQueueService.Enqueue("IMessageService.Send", new { type = SmtpMessageChannel.MessageType, parameters = data }, priority);
+            }
+
 
         }
 
