@@ -1,9 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using Laser.Orchard.TemplateManagement.Models;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Email.Models;
 using Orchard.Environment.Extensions;
+using Laser.Orchard.StartupConfig.Extensions;
+using Laser.Orchard.Commons.Extensions;
+using Orchard.Messaging.Services;
+using Orchard.Email.Services;
+using Orchard.JobsQueue.Services;
 
 namespace Laser.Orchard.TemplateManagement.Services {
     public interface ITemplateService : IDependency {
@@ -15,18 +23,23 @@ namespace Laser.Orchard.TemplateManagement.Services {
         IEnumerable<IParserEngine> GetParsers();
         IParserEngine GetParser(string id);
         IParserEngine SelectParser(TemplatePart template);
-    }
+        void SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, bool queued = true);
+   }
 
     [OrchardFeature("Laser.Orchard.TemplateManagement")]
     public class TemplateService : Component, ITemplateService {
         private readonly IContentManager _contentManager;
         private readonly IEnumerable<IParserEngine> _parsers;
         private readonly IOrchardServices _services;
+        private readonly IMessageService _messageService;
+        private readonly IJobsQueueService _jobsQueueService;
 
-        public TemplateService(IEnumerable<IParserEngine> parsers, IOrchardServices services) {
+        public TemplateService(IEnumerable<IParserEngine> parsers, IOrchardServices services, IMessageService messageService, IJobsQueueService jobsQueueService) {
             _contentManager = services.ContentManager;
             _parsers = parsers;
             _services = services;
+            _messageService = messageService;
+            _jobsQueueService = jobsQueueService;
         }
 
         public IEnumerable<TemplatePart> GetLayouts() {
@@ -73,5 +86,67 @@ namespace Laser.Orchard.TemplateManagement.Services {
         public IEnumerable<IParserEngine> GetParsers() {
             return _parsers;
         }
+
+        public void SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, bool queued = true) {
+            ParseTemplateContext templatectx = new ParseTemplateContext();
+            var template = GetTemplate(templateId);
+            var urlHelper = new UrlHelper(_services.WorkContext.HttpContext.Request.RequestContext);
+
+            // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
+            // Nel template pertanto Model, diventa Model.Content
+            var host = string.Format("{0}://{1}{2}",
+                                    _services.WorkContext.HttpContext.Request.Url.Scheme,
+                                    _services.WorkContext.HttpContext.Request.Url.Host,
+                                    _services.WorkContext.HttpContext.Request.Url.Port == 80
+                                        ? string.Empty
+                                        : ":" + _services.WorkContext.HttpContext.Request.Url.Port);
+            var dynamicModel = new {
+                Content = contentModel,
+                Urls = new {
+                    //SubscriptionSubscribe = urlHelper.SubscriptionSubscribe(),
+                    //SubscriptionUnsubscribe = urlHelper.SubscriptionUnsubscribe(),
+                    //SubscriptionConfirmSubscribe = urlHelper.SubscriptionConfirmSubscribe(),
+                    //SubscriptionConfirmUnsubscribe = urlHelper.SubscriptionConfirmUnsubscribe(),
+                    BaseUrl = _services.WorkContext.CurrentSite.BaseUrl,
+                    MediaUrl = urlHelper.MediaExtensionsImageUrl(),
+                    Domain = host,
+
+                }.ToExpando()
+            };
+            templatectx.Model = dynamicModel;
+
+            var body = ParseTemplate(template, templatectx);
+            var data = new Dictionary<string, object>();
+            var smtp = _services.WorkContext.CurrentSite.As<SmtpSettingsPart>();
+            var recipient = sendTo != null ? sendTo : new List<string> { smtp.Address };
+            data.Add("Subject", template.Subject);
+            data.Add("Body", body);
+            data.Add("Recipients", String.Join(",", recipient));
+            if (bcc != null) {
+                data.Add("Bcc", String.Join(",", bcc));
+            }
+            //var watch = Stopwatch.StartNew();
+            //int msgsent = 0;
+
+            //for(int i=0;i<20;i++) {
+            //    msgsent++;
+            //    data["Subject"] = msgsent.ToString();
+            //    data["Bcc"] = "lorenzo.frediani@laser-group.com";
+            //    _messageService.Send(SmtpMessageChannel.MessageType, data);
+            //}
+            //watch.Stop();
+            //_notifier.Add(NotifyType.Information, T("Sent " + msgsent.ToString()+" email in Milliseconds:" + watch.ElapsedMilliseconds.ToString()));            
+            if (!queued) {
+                _messageService.Send(SmtpMessageChannel.MessageType, data);
+            } else {
+                var priority = 0;//normal 50 to hight -50 to low
+
+                _jobsQueueService.Enqueue("IMessageService.Send", new { type = SmtpMessageChannel.MessageType, parameters = data }, priority);
+            }
+
+
+        }
+
+
     }
 }

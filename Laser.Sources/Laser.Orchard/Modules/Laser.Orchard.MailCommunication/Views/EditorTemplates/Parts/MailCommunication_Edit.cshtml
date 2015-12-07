@@ -1,0 +1,12 @@
+﻿@model Laser.Orchard.MailCommunication.Models.MailCommunicationPart
+@using (Script.Foot()) {
+    Script.Require("JQuery");
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".mail-comm-wrapper").wrapAll("<div id='mail-comm-container' />");
+        });
+    </script>
+}
+<div>
+    <h3>@T("Email communication")</h3>
+</div>
