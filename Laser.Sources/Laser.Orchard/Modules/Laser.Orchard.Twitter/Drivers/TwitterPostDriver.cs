@@ -22,10 +22,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Mvc.Html;
+using System.Globalization;
+using Orchard.MediaProcessing.Services;
+using Orchard.MediaProcessing.Models;
+
+
 
 namespace Laser.Orchard.Twitter.Drivers {
 
     public class TwitterPostDriver : ContentPartDriver<TwitterPostPart> {
+        private readonly IImageProfileManager _imageProfileManager;
         private readonly IOrchardServices _orchardServices;
         private readonly ITwitterService _TwitterService;
         private readonly IProviderConfigurationService _providerConfigurationService;
@@ -40,8 +47,9 @@ namespace Laser.Orchard.Twitter.Drivers {
             get { return "Laser.Orchard.Twitter"; }
         }
 
-        public TwitterPostDriver(IStorageProvider storageProvider, IOrchardServices orchardServices, ITwitterService TwitterService, IProviderConfigurationService providerConfigurationService, ITokenizer tokenizer, IHttpContextAccessor httpContextAccessor, IControllerContextAccessor controllerContextAccessor) {
+        public TwitterPostDriver(IImageProfileManager imageProfileManager, IStorageProvider storageProvider, IOrchardServices orchardServices, ITwitterService TwitterService, IProviderConfigurationService providerConfigurationService, ITokenizer tokenizer, IHttpContextAccessor httpContextAccessor, IControllerContextAccessor controllerContextAccessor) {
             _storageProvider = storageProvider;
+            _imageProfileManager = imageProfileManager;
             _httpContextAccessor = httpContextAccessor;
             _controllerContextAccessor = controllerContextAccessor;
             _tokenizer = tokenizer;
@@ -56,19 +64,35 @@ namespace Laser.Orchard.Twitter.Drivers {
             if (displayType == "Detail") {
                 ProviderConfigurationRecord pcr = _providerConfigurationService.Get("Twitter");
                 TwitterOgVM vm = new TwitterOgVM();
-                vm.Site = pcr.UserIdentifier;
+                if (pcr != null)
+                    vm.Site = pcr.UserIdentifier;
                 TwitterPostPartSettingVM setting = part.Settings.GetModel<TwitterPostPartSettingVM>();
                 var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
                 if (!string.IsNullOrEmpty(setting.Description))
                     vm.Description = _tokenizer.Replace(setting.Description, tokens);
                 else
                     vm.Description = part.TwitterDescription;
-                if (!string.IsNullOrEmpty(setting.Image))
-                    vm.Image = _tokenizer.Replace(setting.Image, tokens);
+                if (!string.IsNullOrEmpty(setting.Image)) {
+                    string ids = _tokenizer.Replace(setting.Image, tokens);
+
+                    int idimage;
+                    Int32.TryParse(ids.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
+                    // _orchardServices.ContentManager.Get(id);
+                    // vm.Image = Url.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));
+                    var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                    //       vm.Image = urlHelper.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));// get current display link
+                    //   Fvm.Link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(Twitterpart));// get current display link
+                    var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
+                    //   var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
+                    //  part.TwitterPicture = pathdocument;// 
+                    vm.Image = urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
+                    //   .ResizeMediaUrl(Width: previewWidth, Height: previewHeight, Mode: "crop", Alignment: "middlecenter", Path: Model.MediaData.MediaUrl)');
+                }
                 else
                     vm.Image = part.TwitterPicture;
                 if (!string.IsNullOrEmpty(setting.Title))
                     vm.Title = _tokenizer.Replace(setting.Title, tokens);
+
                 else
                     vm.Title = part.TwitterTitle;
                 return ContentShape("Parts_TwitterPost_Detail",
@@ -77,7 +101,37 @@ namespace Laser.Orchard.Twitter.Drivers {
             else
                 return null;
         }
+        //private string DoTheResize(int Width, int Height, string path)
+        //{
+        //    var Mode = "pad";
+        //    var Alignment = "middlecenter";
+        //    var PadColor = "000000";
 
+        //    var state = new Dictionary<string, string> {
+        //        {"Width", Width.ToString(CultureInfo.InvariantCulture)},
+        //        {"Height", Height.ToString(CultureInfo.InvariantCulture)},
+        //        {"Mode", Mode},
+        //        {"Alignment", Alignment},
+        //        {"PadColor", PadColor},
+        //    };
+
+        //    var filter = new FilterRecord
+        //    {
+        //        Category = "Transform",
+        //        Type = "Resize",
+        //        State = FormParametersHelper.ToString(state)
+        //    };
+
+        //    var profile = "Transform_Resize"
+        //        + "_w_" + Convert.ToString(Width)
+        //        + "_h_" + Convert.ToString(Height)
+        //        + "_m_" + Convert.ToString(Mode)
+        //        + "_a_" + Convert.ToString(Alignment)
+        //        + "_c_" + Convert.ToString(PadColor);
+
+        //    var resizedImagePath = _imageProfileManager.GetImageProfileUrl(path, profile, filter);
+        //    return resizedImagePath;
+        //}
         protected override DriverResult Editor(TwitterPostPart part, dynamic shapeHelper) {
             TwitterPostVM vm = new TwitterPostVM();
             Mapper.CreateMap<TwitterPostPart, TwitterPostVM>();
@@ -89,7 +143,7 @@ namespace Laser.Orchard.Twitter.Drivers {
                 vm.ShowDescription = false;
             if (!string.IsNullOrEmpty(setting.Image))
                 vm.ShowPicture = false;
-            _controllerContextAccessor.Context.Controller.TempData["ShowPicture"] = vm.ShowPicture;
+            //_controllerContextAccessor.Context.Controller.TempData["ShowPicture"] = vm.ShowPicture;
             //Url.ItemDisplayUrl
             List<TwitterAccountPart> listaccount = _TwitterService.GetValidTwitterAccount();
             List<SelectListItem> lSelectList = new List<SelectListItem>();
@@ -119,24 +173,37 @@ namespace Laser.Orchard.Twitter.Drivers {
             TwitterPostPartSettingVM setting = part.Settings.GetModel<TwitterPostPartSettingVM>();
             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             if (string.IsNullOrEmpty(setting.Image)) {
-                MediaLibraryPickerField mediaPicker = (MediaLibraryPickerField)part.Fields.Where(f => f.Name == "TwitterImage").FirstOrDefault();
-                if (mediaPicker != null && mediaPicker.Ids.Count() > 0) {
-                    try {
-                        var ContentImage = _orchardServices.ContentManager.Get(mediaPicker.Ids[0], VersionOptions.Published);
-                        var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
-                        part.TwitterPicture = pathdocument;//  urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
-                    }
-                    catch {
-                        part.TwitterPicture = "";
-                    }
-                }
-                else
+                //MediaLibraryPickerField mediaPicker = (MediaLibraryPickerField)part.Fields.Where(f => f.Name == "TwitterImage").FirstOrDefault();
+                //if (mediaPicker != null && mediaPicker.Ids.Count() > 0) {
+                //    try {
+                //        var ContentImage = _orchardServices.ContentManager.Get(mediaPicker.Ids[0], VersionOptions.Published);
+                //        var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
+                //        part.TwitterPicture = pathdocument;//  urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
+
+                //    }
+                //    catch {
+                //        part.TwitterPicture = "";
+                //    }
+                //}
+                //else
                     part.TwitterPicture = "";
             }
             else {
-                var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
-
-                part.TwitterPicture = urlHelper.MakeAbsolute(_tokenizer.Replace(setting.Image, tokens));
+                    var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
+                    string listid = _tokenizer.Replace(setting.Image, tokens);
+                    listid = listid.Replace("{", "").Replace("}", "");
+                    Int32 idimage = 0;
+                    Int32.TryParse(listid.Split(',')[0], out idimage);
+                    if (idimage > 0) {
+                        var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
+                        var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
+                        part.TwitterPicture = pathdocument;
+                    }
+                    else
+                        part.TwitterPicture = "";
+                
+                // _orchardServices.ContentManager.Get(
+              //  part.TwitterPicture = urlHelper.MakeAbsolute(_tokenizer.Replace(setting.Image, tokens));
             }
             return Editor(part, shapeHelper);
         }

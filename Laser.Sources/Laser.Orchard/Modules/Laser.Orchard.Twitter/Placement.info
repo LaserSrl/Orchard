@@ -4,5 +4,5 @@
   <Match DisplayType="Detail">
     <Place Parts_TwitterPost_Detail="Content:after" />
   </Match>
-  <Place Fields_MediaLibraryPicker_Edit="Content:4.01"/>
+  <Place Fields_MediaLibraryPicker_Edit="Content:4.03"/>
 </Placement>

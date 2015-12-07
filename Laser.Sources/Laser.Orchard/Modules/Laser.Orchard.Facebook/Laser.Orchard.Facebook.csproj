@@ -64,6 +64,10 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Tokens, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -101,6 +105,8 @@
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Services\IFacebookService.cs" />
+    <Compile Include="Settings\FacebookPostEditEvents.cs" />
+    <Compile Include="Settings\FacebookPostPartSettingVM.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
     <Compile Include="ViewModels\FacebookPostVM.cs" />
     <Compile Include="ViewModels\ListVM.cs" />
@@ -108,6 +114,7 @@
     <Compile Include="ViewModels\SearchIndexVM.cs" />
     <Compile Include="ViewModels\SearchVM.cs" />
     <Compile Include="ViewModels\FacebookAccountVM.cs" />
+    <Content Include="Views\DefinitionTemplates\FacebookPostPartSettingVM.cshtml" />
     <None Include="Views\EditorTemplates\Parts\FacebookAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>

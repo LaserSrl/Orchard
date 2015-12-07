@@ -3,7 +3,15 @@
     Script.Require("jQuery_textcounter").AtHead();
 }
 <script type="text/javascript">
+
     $(function () {
+        $("#@Html.FieldIdFor(model => model.TwitterMessage)").keypress(function (event) {
+            // Check the keyCode and if the user pressed Enter (code = 13) 
+            // disable it
+            if (event.keyCode == 13) {
+                event.preventDefault();
+            }
+        });
         $("#@Html.FieldIdFor(model => model.TwitterMessage)").textcounter({
             type: "character",            // "character" or "word"
             min: 0,                      // minimum number of characters/words

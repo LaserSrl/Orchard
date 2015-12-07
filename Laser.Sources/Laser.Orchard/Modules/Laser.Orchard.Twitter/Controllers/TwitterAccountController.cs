@@ -7,13 +7,17 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
+using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using Twitterizer;
 
@@ -22,6 +26,7 @@ namespace Laser.Orchard.Twitter.Controllers {
     public class TwitterAccountController : Controller, IUpdateModel {
         private readonly IProviderConfigurationService _providerConfigurationService;
         private readonly IOrchardServices _orchardServices;
+        private readonly ShellSettings _shellSettings;
         private readonly IContentManager _contentManager;
         private readonly string contentType = "SocialTwitterAccount";
         private readonly dynamic TestPermission = Permissions.ManageTwitterAccount;
@@ -33,12 +38,14 @@ namespace Laser.Orchard.Twitter.Controllers {
             INotifier notifier,
             IContentManager contentManager
                 , IProviderConfigurationService providerConfigurationService
+            , ShellSettings shellSettings
             ) {
             _orchardServices = orchardServices;
             _contentManager = contentManager;
             _notifier = notifier;
             T = NullLocalizer.Instance;
             _providerConfigurationService = providerConfigurationService;
+            _shellSettings = shellSettings;
         }
 
         [Admin]
@@ -131,7 +138,12 @@ namespace Laser.Orchard.Twitter.Controllers {
                 Title = p.As<TwitterAccountPart>().AccountType + " - " + p.As<TwitterAccountPart>().DisplayAs,// string.IsNullOrEmpty(p.As<TwitterAccountPart>().PageName) ? "User Account" : " Page -> " + p.As<TwitterAccountPart>().PageName,
                 ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
                 UserName = p.As<CommonPart>().Owner.UserName,
-                Option = new { Valid = p.As<TwitterAccountPart>().Valid, Shared = p.As<TwitterAccountPart>().Shared }
+                Option = new {
+                    Valid = p.As<TwitterAccountPart>().Valid,
+                    Shared = p.As<TwitterAccountPart>().Shared,
+                    Image = Url.Content("~/Media/" + _shellSettings.Name + "/twitter_" + p.As<TwitterAccountPart>().DisplayAs + ".jpg")
+                }
+
             });
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
             dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(listVM.Count());
@@ -179,6 +191,42 @@ namespace Laser.Orchard.Twitter.Controllers {
                 vm.DisplayAs = tokens.ScreenName;
                 vm.UserToken = tokens.Token;
                 vm.UserTokenSecret = tokens.TokenSecret; // conterrà l'account_token_secret
+                #region [recupero immagine]
+                OAuthTokens accessToken = new OAuthTokens();
+                accessToken.AccessToken = vm.UserToken;
+                accessToken.AccessTokenSecret = vm.UserTokenSecret;
+                accessToken.ConsumerKey = consumerKey;
+                accessToken.ConsumerSecret = consumerSecret;
+
+                TwitterResponse<TwitterUser> myTwitterUser = TwitterUser.Show(accessToken, tokens.ScreenName);
+                 TwitterUser user = myTwitterUser.ResponseObject;
+                 var profilePictureUrl = user.ProfileImageLocation;
+                 var mediaPath = HostingEnvironment.IsHosted
+                  ? HostingEnvironment.MapPath("~/Media/") ?? ""
+                  : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
+                 WebClient webClient = new WebClient();
+                 webClient.DownloadFile(profilePictureUrl, mediaPath + _shellSettings.Name + @"\twitter_" + vm.DisplayAs + ".jpg");
+                #endregion
+                 // var avatarFormat = "https://api.twitter.com/1.1/users/show.json?screen_name={0}";
+               // var avatarUrl = string.Format(avatarFormat, vm.DisplayAs);
+               // HttpWebRequest avatarRequest = (HttpWebRequest)WebRequest.Create(avatarUrl);
+               // var timelineHeaderFormat = "{0} {1}";
+               // avatarRequest.Headers.Add("Authorization", String.Format("Bearer {0}", vm.UserToken));
+               //// avatarRequest.Headers.Add("Authorization",
+               ////                             string.Format(timelineHeaderFormat, "oauth_token", requestToken));
+               // avatarRequest.Method = "Get";
+               // WebResponse timeLineResponse = avatarRequest.GetResponse();
+
+               // var reader = new StreamReader(timeLineResponse.GetResponseStream());
+               // var avatarJson = string.Empty;
+                //using (authResponse) {
+                //    using (var reader = new StreamReader(timeLineResponse.GetResponseStream())) {
+                //        avatarJson = reader.ReadToEnd();
+                //    }
+                //}
+
+               // Uri profilePictureUrl = new Uri(string.Format("https://api.twitter.com/1.1/users/show.json?screen_name={1}", vm.DisplayAs ));
+
                 OrchardRegister(vm);
             }
             return RedirectToAction("Index", "TwitterAccount", new { area = "Laser.Orchard.Twitter", id = -10 });
@@ -188,7 +236,7 @@ namespace Laser.Orchard.Twitter.Controllers {
             IContentQuery<ContentItem> contentQuery = _orchardServices.ContentManager.Query().ForType(contentType);
             Int32 currentiduser = _orchardServices.WorkContext.CurrentUser.Id;
 
-            Int32 elementi = contentQuery.List().Where(x => x.As<TwitterAccountPart>().IdUser == currentiduser).Count();
+            Int32 elementi = contentQuery.List().Where(x => x.As<TwitterAccountPart>().IdUser == currentiduser && x.As<TwitterAccountPart>().DisplayAs == fvm.DisplayAs).Count();
             if (elementi > 0) {
                 _notifier.Add(NotifyType.Warning, T("User Twitter Account can't be added, is duplicated"));
             }

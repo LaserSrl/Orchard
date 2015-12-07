@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace Laser.Orchard.Facebook.ViewModels {
-    public class FacebookPostVM {
-        public bool FacebookMessageSent { get; set; }
-  
 
+    public class FacebookPostVM {
+
+        public FacebookPostVM() {
+            ShowFacebookCaption = true;
+            ShowFacebookDescription = true;
+            ShowFacebookLink = true;
+            ShowFacebookMessage = true;
+            ShowFacebookName = true;
+            ShowFacebookPicture = true;
+        }
+
+        public bool FacebookMessageSent { get; set; }
         public string FacebookMessage { get; set; }
         public string FacebookCaption { get; set; }
         public string FacebookDescription { get; set; }
@@ -17,7 +22,11 @@ namespace Laser.Orchard.Facebook.ViewModels {
         public string FacebookLink { get; set; }
         public SelectList FacebookAccountList { get; set; }
         public string[] SelectedList { get; set; }
-       
+        public bool ShowFacebookCaption { get; set; }
+        public bool ShowFacebookDescription { get; set; }
+        public bool ShowFacebookLink { get; set; }
+        public bool ShowFacebookMessage { get; set; }
+        public bool ShowFacebookName { get; set; }
+        public bool ShowFacebookPicture { get; set; }
     }
-    
 }

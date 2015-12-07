@@ -27,14 +27,14 @@ namespace Laser.Orchard.Twitter {
                 "TwitterPostPart",
                 b => b
                 .Attachable(true)
-                .WithField("TwitterImage",
-                    field => field
-                    .OfType("MediaLibraryPickerField")
-                    .WithDisplayName("Twitter Image")
-                    .WithSetting("MediaLibraryPickerFieldSettings.Multiple", "false")
-                    .WithSetting("MediaLibraryPickerFieldSettings.AllowedExtensions", "jpg jpeg png gif")
-                    )
-                );
+            //    .WithField("TwitterImage",
+            //        field => field
+            //        .OfType("MediaLibraryPickerField")
+            //        .WithDisplayName("Twitter Image")
+            //        .WithSetting("MediaLibraryPickerFieldSettings.Multiple", "false")
+            //        .WithSetting("MediaLibraryPickerFieldSettings.AllowedExtensions", "jpg jpeg png gif")
+            //        )
+               );
 
             ContentDefinitionManager.AlterPartDefinition(
                 "TwitterAccountPart",

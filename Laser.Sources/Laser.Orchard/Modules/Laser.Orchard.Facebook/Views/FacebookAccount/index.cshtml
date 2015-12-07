@@ -28,8 +28,12 @@
                 <div class="summary" itemscope="itemscope" itemid="@contentIndexVM.Id" itemtype="http://orchardproject.net/data/ContentItem">
                     <div class="properties">
                         <h3><a href="@Url.Action("Edit", "FacebookAccount", new { area = "Laser.Orchard.Facebook", id = contentIndexVM.Id })">@contentIndexVM.Title</a></h3>
-                        <div class="contentType">
-                            @if (contentIndexVM.Option.GetType().GetProperty("Valid").GetValue(contentIndexVM.Option, null)) {
+                       
+                         <div class="contentType">
+                        <div style="float:left;padding-right:15px;">
+                            <img src="@contentIndexVM.Option.GetType().GetProperty("Image").GetValue(contentIndexVM.Option)" width="50px" />
+                        </div>
+                                 @if (contentIndexVM.Option.GetType().GetProperty("Valid").GetValue(contentIndexVM.Option, null)) {
                                 @Html.Raw(" - Enabled")
                             }
                             else {

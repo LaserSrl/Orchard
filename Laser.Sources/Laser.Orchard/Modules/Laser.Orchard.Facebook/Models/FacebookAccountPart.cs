@@ -64,6 +64,16 @@ namespace Laser.Orchard.Facebook.Models {
             get { return this.Retrieve(r => r.DisplayAs); }
             set { this.Store(r => r.DisplayAs, value); }
         }
+
+        public string UserIdFacebook {
+            get { return this.Retrieve(r => r.UserIdFacebook); }
+            set { this.Store(r => r.UserIdFacebook, value); }
+        }
+        public string UserName {
+            get { return this.Retrieve(r => r.UserName); }
+            set { this.Store(r => r.UserName, value); }
+        }
+
      }
 
 }

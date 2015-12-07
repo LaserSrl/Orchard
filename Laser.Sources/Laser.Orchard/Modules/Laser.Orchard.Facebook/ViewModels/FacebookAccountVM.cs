@@ -13,6 +13,7 @@ namespace Laser.Orchard.Facebook.ViewModels {
         public bool Valid { get; set; }
         public string DisplayAs { get; set; }
         public string AccountType { get; set; }
-        
+        public string UserIdFacebook { get; set; }
+        public string UserName { get; set; }
     }
 }
