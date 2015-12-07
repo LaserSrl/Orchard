@@ -18,6 +18,7 @@ namespace Laser.Orchard.Twitter.Handlers {
             _TwitterService = TwitterService;
             _orchardServices = orchardServices;
             Filters.Add(StorageFilter.For(repository));
+        //    Filters.Add(new ActivatingFilter<TwitterPostPart>("CommunicationAdvertising"));
             OnPublished<TwitterPostPart>((context, Twitterpart) => {
                 PostToTwitterViewModel Fvm = new PostToTwitterViewModel();
                 Fvm.Message = Twitterpart.TwitterMessage;

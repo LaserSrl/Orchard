@@ -77,16 +77,20 @@ namespace Laser.Orchard.Twitter.Drivers {
 
                     int idimage;
                     Int32.TryParse(ids.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
-                    // _orchardServices.ContentManager.Get(id);
-                    // vm.Image = Url.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));
-                    var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-                    //       vm.Image = urlHelper.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));// get current display link
-                    //   Fvm.Link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(Twitterpart));// get current display link
-                    var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
-                    //   var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
-                    //  part.TwitterPicture = pathdocument;// 
-                    vm.Image = urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
-                    //   .ResizeMediaUrl(Width: previewWidth, Height: previewHeight, Mode: "crop", Alignment: "middlecenter", Path: Model.MediaData.MediaUrl)');
+                    if (idimage > 0) {
+                        // _orchardServices.ContentManager.Get(id);
+                        // vm.Image = Url.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));
+                        var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                        //       vm.Image = urlHelper.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));// get current display link
+                        //   Fvm.Link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(Twitterpart));// get current display link
+                        var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
+                        //   var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
+                        //  part.TwitterPicture = pathdocument;// 
+                        vm.Image = urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
+                        //   .ResizeMediaUrl(Width: previewWidth, Height: previewHeight, Mode: "crop", Alignment: "middlecenter", Path: Model.MediaData.MediaUrl)');
+                    }
+                    else
+                        vm.Image = "";
                 }
                 else
                     vm.Image = part.TwitterPicture;
