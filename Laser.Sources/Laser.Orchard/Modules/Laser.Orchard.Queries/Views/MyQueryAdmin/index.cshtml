@@ -1,0 +1,77 @@
+﻿@model Laser.Orchard.Queries.ViewModels.SearchIndexVM
+@{
+    Layout.Title = T("List Queries").ToString(); 
+    var ContentsIndexVM = Model.ContentsIndexVM;
+ }
+<div class="manage">
+    <a class="button primaryAction" href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = 0})" title="@T("Create New Query")">@T("Create New Query")</a>
+</div>
+@using (Html.BeginForm("Index", "MyQueryAdmin", FormMethod.Post)) {
+    @Html.AntiForgeryToken()  
+    <fieldset class="bulk-actions">
+        <label for="search">@T("Search:")</label>
+        @Html.TextBoxFor(m => m.Search.Expression)
+
+        <button type="submit">@T("Search")</button>
+        <a href="@Url.Action("Index")">@T("Clear")</a>
+    </fieldset>
+
+
+}
+
+
+<fieldset class="contentItems bulk-items">
+    <ul>
+
+        @{
+            foreach (var contentIndexVM in ContentsIndexVM) {
+          
+            <li>
+                <div class="summary" itemscope="itemscope" itemid="@contentIndexVM.Id" itemtype="http://orchardproject.net/data/ContentItem">
+                    <div class="properties">
+                        <h3><a href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })">@contentIndexVM.Title</a></h3>
+                        <div class="contentType">
+                        </div>
+                        <div class="metadata">
+                            <ul class="pageStatus">
+                                <li>@T("Last modified"): 
+                    @{TimeSpan tp = DateTime.UtcNow - (contentIndexVM.ModifiedUtc ?? DateTime.UtcNow);// content.CommonPart.ModifiedUtc;
+
+                      if (tp.Days > 0) {
+                        @Html.Raw(tp.Days.ToString() + " " + T("days ago"))
+                      }
+                      else if (tp.Hours > 0) {
+                        @Html.Raw(tp.Hours.ToString() + " " + T("hours ago"))
+                      }
+                      else if (tp.Minutes > 0) {
+                        @Html.Raw(tp.Minutes.ToString() + " " + T("minutes ago"))
+                      }
+                      else if (tp.Seconds > 0) {
+                        @Html.Raw(T("a moment ago"))
+                      }
+                        @Html.Raw("&nbsp;&vert;&nbsp;")
+                    }
+                                </li>
+                                <li>@T("By") @contentIndexVM.UserName
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="related">
+                        <a href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })">@T("Edit")</a>
+                        &nbsp;&vert;&nbsp;
+                        <a href="@Url.Action("Remove", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id  })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                    </div>
+                </div>
+            </li>
+            }
+        }
+    </ul>
+</fieldset>
+
+<br />
+@using (Html.BeginForm("Index", "Routes", FormMethod.Post)) {
+    @Display(Model.Pager)
+}
+
+
