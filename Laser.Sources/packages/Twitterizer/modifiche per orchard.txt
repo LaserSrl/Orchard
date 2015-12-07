@@ -1,0 +1,4 @@
+Alla libreria originale ho apportato queste modifiche
+- ho buttato via la parte silverlight,
+- allineato la newtonjson con quella di orchard 
+- portato al frameword 4.5.1
