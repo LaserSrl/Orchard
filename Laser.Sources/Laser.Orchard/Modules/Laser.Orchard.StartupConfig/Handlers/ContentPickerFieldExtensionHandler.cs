@@ -67,32 +67,30 @@ namespace Laser.Orchard.StartupConfig.Handlers
                             foreach (int pickedContentId in pickedContents)
                             {
                                 ContentItem content = _contentManager.Get(pickedContentId);
-                                if (content.Has<LocalizationPart>())
-                                {
-                                    var masterContent = content.As<LocalizationPart>().MasterContentItem == null ? content : content.As<LocalizationPart>().MasterContentItem;
+                                if (content != null) {
+                                    if (content.Has<LocalizationPart>()) {
+                                        var masterContent = content.As<LocalizationPart>().MasterContentItem == null ? content : content.As<LocalizationPart>().MasterContentItem;
 
-                                    var localizedContent = _localizationService.GetLocalizedContentItem(masterContent, language);
-                                    if (localizedContent == null
-                                        && content.As<LocalizationPart>().Culture != contentItem.As<LocalizationPart>().Culture
-                                        && content.As<LocalizationPart>().MasterContentItem != null)
-                                    {
-                                        if (masterContent.As<LocalizationPart>().Culture == contentItem.As<LocalizationPart>().Culture)
-                                            localizedContent = masterContent.As<LocalizationPart>();
-                                    }
-
-                                    if (localizedContent != null)
-                                    {
-                                        if (!translatedContents.Contains(localizedContent.Id))
-                                        {
-                                            itemsTranslated = true;
-                                            translatedContents.Add(localizedContent.Id);
+                                        var localizedContent = _localizationService.GetLocalizedContentItem(masterContent, language);
+                                        if (localizedContent == null
+                                            && content.As<LocalizationPart>().Culture != contentItem.As<LocalizationPart>().Culture
+                                            && content.As<LocalizationPart>().MasterContentItem != null) {
+                                            if (masterContent.As<LocalizationPart>().Culture == contentItem.As<LocalizationPart>().Culture)
+                                                localizedContent = masterContent.As<LocalizationPart>();
                                         }
+
+                                        if (localizedContent != null) {
+                                            if (!translatedContents.Contains(localizedContent.Id)) {
+                                                itemsTranslated = true;
+                                                translatedContents.Add(localizedContent.Id);
+                                            }
+                                        }
+                                        else if (!translatedContents.Contains(content.Id))
+                                            translatedContents.Add(content.Id);
                                     }
-                                    else if (!translatedContents.Contains(content.Id))
+                                    else
                                         translatedContents.Add(content.Id);
                                 }
-                                else
-                                    translatedContents.Add(content.Id);
                             }
 
                             field.Ids = translatedContents.ToArray();
