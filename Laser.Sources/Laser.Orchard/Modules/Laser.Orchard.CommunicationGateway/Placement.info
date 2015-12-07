@@ -1,0 +1,10 @@
+﻿<Placement>  
+  <Match ContentType="CommunicationAdvertising">
+    <Place Fields_ContentPicker_Edit__MobilePushPart-RelatedContent="-" />
+    <Place Fields_ContentPicker_Edit-Campaign="-"/>
+    <Place Parts_CommunicationAdvertising_Edit="Content:1"/>
+  </Match>
+  <Place Parts_QueryFilter="Content:3" />
+  <Place Parts_FacebookPost="Content:4" />
+  <Place Parts_FacebookPostSetting_Edit="Content:4" />
+</Placement>

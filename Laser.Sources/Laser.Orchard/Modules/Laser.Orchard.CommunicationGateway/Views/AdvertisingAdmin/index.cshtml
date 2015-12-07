@@ -1,0 +1,92 @@
+﻿@model Laser.Orchard.CommunicationGateway.ViewModels.SearchIndexVM
+@* <a href="@Url.Action("Edit", "CampaignAdmin", new { area = "Laser.Orchard.CommunicationGateway", id =  Model.Option.Campaign.Id })"><--</a>
+         *@
+
+@{
+    var ContentsIndexVM = Model.ContentsIndexVM;
+
+    if (Model.Option.Campaign.Id >0) {
+        Layout.Title = @T("Campaign") + " " + Model.Option.Campaign.TitlePart.Title + " - " + T("List Advertising");
+    }
+    else {
+        Layout.Title = @T("Flash advertising") + " - " + T("List Advertising");
+    }
+
+}
+<div class="manage">
+    <a class="button primaryAction" href="@Url.Action("Edit", "AdvertisingAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = 0, idCampaign = Model.Option.Campaign.Id })" title="@T("Create New Advertising")">@T("Create New Advertising")</a>
+</div>
+@using (Html.BeginForm("Index", "AdvertisingAdmin", FormMethod.Post)) {
+    @Html.AntiForgeryToken()  
+    <fieldset class="bulk-actions">
+        <label for="search">@T("Search:")</label>
+        @Html.TextBoxFor(m => m.Search.Expression)
+
+        <button type="submit">@T("Search")</button>
+        <a href="@Url.Action("Index")">@T("Clear")</a>
+    </fieldset>
+
+
+}
+
+
+<fieldset class="contentItems bulk-items">
+    <ul>
+
+        @{
+            foreach (var contentIndexVM in ContentsIndexVM) {
+          
+            <li>
+                <div class="summary" itemscope="itemscope" itemid="@contentIndexVM.Id" itemtype="http://orchardproject.net/data/ContentItem">
+                    <div class="properties">
+                        <h3><a href="@Url.Action("Edit", "AdvertisingAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id, idCampaign = Model.Option.Campaign.Id })">@contentIndexVM.Title</a></h3>
+                        <div class="contentType">
+                        </div>
+                        <div class="metadata">
+                            <ul class="pageStatus">
+@*                                          @if  ((bool)contentIndexVM.Option){     
+                                <li> @T("Published")&nbsp;&vert;&nbsp;
+                                </li>
+                                }*@
+                                <li>@T("Last modified"): 
+                    @{TimeSpan tp = DateTime.UtcNow - (contentIndexVM.ModifiedUtc ?? DateTime.UtcNow);// content.CommonPart.ModifiedUtc;
+
+                      if (tp.Days > 0) {
+                        @Html.Raw(tp.Days.ToString() + " " + T("days ago"))
+                      }
+                      else if (tp.Hours > 0) {
+                        @Html.Raw(tp.Hours.ToString() + " " + T("hours ago"))
+                      }
+                      else if (tp.Minutes > 0) {
+                        @Html.Raw(tp.Minutes.ToString() + " " + T("minutes ago"))
+                      }
+                      else if (tp.Seconds > 0) {
+                        @Html.Raw(T("a moment ago"))
+                      }
+                        @Html.Raw("&nbsp;&vert;&nbsp;")
+                    }
+                                </li>
+                                <li>@T("By") @contentIndexVM.UserName
+                                </li>
+                      
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="related">
+                        <a href="@Url.Action("Edit", "AdvertisingAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id, idCampaign = Model.Option.Campaign.Id })">@T("Edit")</a>
+                        &nbsp;&vert;&nbsp;
+                        <a href="@Url.Action("Remove", "AdvertisingAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id, idCampaign = Model.Option.Campaign.Id  })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                    </div>
+                </div>
+            </li>
+            }
+        }
+    </ul>
+</fieldset>
+
+<br />
+@using (Html.BeginForm("Index", "Routes", FormMethod.Post)) {
+    @Display(Model.Pager)
+}
+
+
