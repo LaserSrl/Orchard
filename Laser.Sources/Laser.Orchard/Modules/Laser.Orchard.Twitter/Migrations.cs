@@ -27,13 +27,13 @@ namespace Laser.Orchard.Twitter {
                 "TwitterPostPart",
                 b => b
                 .Attachable(true)
-            //    .WithField("TwitterImage",
-            //        field => field
-            //        .OfType("MediaLibraryPickerField")
-            //        .WithDisplayName("Twitter Image")
-            //        .WithSetting("MediaLibraryPickerFieldSettings.Multiple", "false")
-            //        .WithSetting("MediaLibraryPickerFieldSettings.AllowedExtensions", "jpg jpeg png gif")
-            //        )
+                //    .WithField("TwitterImage",
+                //        field => field
+                //        .OfType("MediaLibraryPickerField")
+                //        .WithDisplayName("Twitter Image")
+                //        .WithSetting("MediaLibraryPickerFieldSettings.Multiple", "false")
+                //        .WithSetting("MediaLibraryPickerFieldSettings.AllowedExtensions", "jpg jpeg png gif")
+                //        )
                );
 
             ContentDefinitionManager.AlterPartDefinition(
@@ -51,6 +51,18 @@ namespace Laser.Orchard.Twitter {
                 .Draftable(false)
           );
             return 1;
+        }
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition(
+            "CommunicationAdvertising",
+            type => type
+                .WithPart("TwitterPostPart", pa => pa
+                .WithSetting("TwitterPostPartSettingVM.Title", "{Content.DisplayText}")
+                .WithSetting("TwitterPostPartSettingVM.Image", "{Content.Fields.CommunicationAdvertisingPart.Gallery}")
+                .WithSetting("TwitterPostPartSettingVM.Description", "{Content.Body}")
+                )
+                );
+            return 2;
         }
     }
 }

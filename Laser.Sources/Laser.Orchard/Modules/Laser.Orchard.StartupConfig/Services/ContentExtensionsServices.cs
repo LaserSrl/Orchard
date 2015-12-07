@@ -20,7 +20,7 @@ using Laser.Orchard.StartupConfig.ViewModels;
 
 namespace Laser.Orchard.StartupConfig.Services {
     public class ContentExtensionsServices : IContentExtensionsServices {
-        private string[] allowedFiles = new string[] { "jpg", "png", "gif", "doc", "docx", "xls", "xlsx", "pdf", "mov", "mp4", "mpg", "mpeg", "avi", "3gp", "mp4v" };
+        private string[] allowedFiles = new string[] { "jpg", "png", "gif", "doc", "docx", "xls", "xlsx", "pdf", "mov", "mp4", "mpg", "mpeg", "avi", "3gp", "mp4v","m4v","m4a","aac" };
         private string[] ProtectedPart = new string[] { "commonpart", "autoroutepart", "userrolespart" };
         private readonly IContentManager _contentManager;
         private readonly IRepository<StringFieldIndexRecord> _stringFieldIndexRepository;

@@ -86,7 +86,7 @@ namespace Laser.Orchard.CommunicationGateway {
             "CommunicationAdvertising",
             type => type
                .WithPart("TitlePart")
-                .WithPart("BodyPart")
+          //      .WithPart("BodyPart")
                 .WithPart("AutoroutePart", p => p
                    .WithSetting("AutorouteSettings.AllowCustomPattern", "false")
                    .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")

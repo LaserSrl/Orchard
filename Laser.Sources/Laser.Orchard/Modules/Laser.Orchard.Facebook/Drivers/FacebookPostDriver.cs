@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Mvc.Extensions;
+using Orchard.MediaLibrary.Models;
 
 namespace Laser.Orchard.Facebook.Drivers {
 
@@ -41,42 +43,52 @@ namespace Laser.Orchard.Facebook.Drivers {
             Mapper.Map(part, vm);
             FacebookPostPartSettingVM setting = part.Settings.GetModel<FacebookPostPartSettingVM>();
             var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
-            if (!string.IsNullOrEmpty(setting.FacebookCaption))
-                vm.ShowFacebookCaption =false;        
-            if (!string.IsNullOrEmpty(setting.FacebookDescription))
-                vm.ShowFacebookDescription =false;      
-            if (!string.IsNullOrEmpty(setting.FacebookLink))
-                vm.ShowFacebookLink =false;
-            if (!string.IsNullOrEmpty(setting.FacebookMessage))
+            if (!string.IsNullOrEmpty(setting.FacebookCaption)) {
+                vm.FacebookCaption = _tokenizer.Replace(setting.FacebookCaption, tokens);
+                vm.ShowFacebookCaption = false;
+            }
+            if (!string.IsNullOrEmpty(setting.FacebookDescription)) {
+                vm.FacebookDescription = _tokenizer.Replace(setting.FacebookDescription, tokens);
+                vm.ShowFacebookDescription = false;
+            }
+            if (!string.IsNullOrEmpty(setting.FacebookLink)) {
+                vm.FacebookLink = _tokenizer.Replace(setting.FacebookLink, tokens);
+                vm.ShowFacebookLink = false;
+            }
+            if (!string.IsNullOrEmpty(setting.FacebookMessage)) {
+                vm.FacebookMessage = _tokenizer.Replace(setting.FacebookMessage, tokens);
                 vm.ShowFacebookMessage = false;
-            if (!string.IsNullOrEmpty(setting.FacebookName))
+            }
+            if (!string.IsNullOrEmpty(setting.FacebookName)) {
+                vm.FacebookName = _tokenizer.Replace(setting.FacebookName, tokens);
                 vm.ShowFacebookName = false;
-            if (!string.IsNullOrEmpty(setting.FacebookPicture))
+            }
+            if (!string.IsNullOrEmpty(setting.FacebookPicture)){
                 vm.ShowFacebookPicture = false;
-            //if (!string.IsNullOrEmpty(setting.FacebookCaption))
-            //    vm.FacebookCaption = _tokenizer.Replace(setting.FacebookCaption, tokens);
-            //else
-            //    vm.FacebookCaption = part.FacebookCaption;
-            //if (!string.IsNullOrEmpty(setting.FacebookDescription))
-            //    vm.FacebookDescription = _tokenizer.Replace(setting.FacebookDescription, tokens);
-            //else
-            //    vm.FacebookDescription = part.FacebookDescription;
-            //if (!string.IsNullOrEmpty(setting.FacebookLink))
-            //    vm.FacebookLink = _tokenizer.Replace(setting.FacebookLink, tokens);
-            //else
-            //    vm.FacebookLink = part.FacebookLink;
-            //if (!string.IsNullOrEmpty(setting.FacebookMessage))
-            //    vm.FacebookMessage = _tokenizer.Replace(setting.FacebookMessage, tokens);
-            //else
-            //    vm.FacebookMessage = part.FacebookMessage;
-            //if (!string.IsNullOrEmpty(setting.FacebookName))
-            //    vm.FacebookName = _tokenizer.Replace(setting.FacebookName, tokens);
-            //else
-            //    vm.FacebookName = part.FacebookName;
-            //if (!string.IsNullOrEmpty(setting.FacebookPicture))
-            //    vm.FacebookPicture = _tokenizer.Replace(setting.FacebookPicture, tokens);
-            //else
-            //    vm.FacebookPicture = part.FacebookPicture;
+                string idimg = _tokenizer.Replace(setting.FacebookPicture, tokens);
+                Int32 idimage = 0;
+             
+                    Int32.TryParse(idimg.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
+                    if (idimage > 0) { 
+                // _orchardServices.ContentManager.Get(id);
+                    // vm.Image = Url.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));
+                    var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                    //       vm.Image = urlHelper.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));// get current display link
+                    //   Fvm.Link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(Twitterpart));// get current display link
+                    var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
+                    //   var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
+                    //  part.TwitterPicture = pathdocument;// 
+                    //  vm.Image =
+                    //   .ResizeMediaUrl(Width: previewWidth, Height: previewHeight, Mode: "crop", Alignment: "middlecenter", Path: Model.MediaData.MediaUrl)');
+
+                    vm.FacebookPicture = urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
+                }
+                else
+                    vm.FacebookPicture = "";
+
+            }
+            else
+                vm.FacebookPicture = part.FacebookPicture;
             List<FacebookAccountPart> listaccount = _facebookService.GetValidFacebookAccount();
             List<SelectListItem> lSelectList = new List<SelectListItem>();
             foreach (FacebookAccountPart fa in listaccount) {
