@@ -85,6 +85,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Email">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Email\bin\Orchard.Email.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Fields">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Fields\bin\Orchard.Fields.dll</HintPath>
     </Reference>
