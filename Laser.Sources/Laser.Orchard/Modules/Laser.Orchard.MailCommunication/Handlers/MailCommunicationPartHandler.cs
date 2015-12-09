@@ -28,7 +28,11 @@ namespace Laser.Orchard.MailCommunication.Handlers {
 
                     if (part.SendToTestEmail && part.EmailForTest != string.Empty) {
                         dynamic content = context.ContentItem;
-                        _templateService.SendTemplatedEmail(content, ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id, null, new List<string> { part.EmailForTest }, false);
+                        _templateService.SendTemplatedEmail(content, 
+                            ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id,
+                            null,
+                            new List<string> { part.EmailForTest },
+                            false);
                     }
                 }
             });

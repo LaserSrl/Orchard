@@ -1,12 +1,55 @@
 ﻿@model Laser.Orchard.MailCommunication.Models.MailCommunicationPart
+@{
+    Script.Require("JQuery").AtHead();
+    Script.Require("jQueryUI_Tabs").AtHead();
+}
 @using (Script.Foot()) {
-    Script.Require("JQuery");
     <script type="text/javascript">
-        $(document).ready(function() {
-            $(".mail-comm-wrapper").wrapAll("<div id='mail-comm-container' />");
+        $(document).ready(function () {
+            $(".mail-comm-wrapper").wrapAll("<div id='mail-comm-container' class='comm-tabbed' />");
         });
+
+        $(document).ready(function () {
+            $(".comm-tabbed").wrapAll("<div id='tab-folder-container' />");
+            $(".tab-folder").each(function (index) {
+                $("#tab-folder-container ul").append('<li>'+$(this).html()+'</li>');
+                $(this).hide();
+            });
+            $("#tab-folder-container").tabs();
+        });
+
     </script>
 }
-<div>
-    <h3>@T("Email communication")</h3>
+    <ul class="comm-tabbed">
+    </ul>
+
+<div class="tab-folder">
+    <a href="#mail-comm-container">@T("Email communication")</a>
+</div>
+<div class="tab-folder">
+    <a href="#twitter-comm-container">@T("Twitter communication")</a>
+</div>
+<div class="tab-folder">
+    <a href="#facebook-comm-container">@T("Facebook communication")</a>
+</div>
+<div class="tab-folder">
+    <a href="#push-comm-container">@T("Push communication")</a>
+</div>
+
+<div class="tab-folder">
+    <a href="#sms-comm-container">@T("SMS communication")</a>
+</div>
+
+
+<div id="twitter-comm-container" class="comm-tabbed">
+    <p>Twitter Content</p>
+</div>
+<div id="facebook-comm-container" class="comm-tabbed">
+    <p>FacebookContent</p>
+</div>
+<div id="push-comm-container" class="comm-tabbed">
+    <p>Push Content</p>
+</div>
+<div id="sms-comm-container" class="comm-tabbed">
+    <p>SMS Content</p>
 </div>
