@@ -138,6 +138,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 DisplayName = viewModel.DisplayName,
                 ProviderName = viewModel.ProviderName,
                 ProviderIdentifier = viewModel.ProviderIdentifier,
+                UserIdentifier=viewModel.UserIdentifier,
                 ProviderIdKey = viewModel.ProviderIdKey,
                 ProviderSecret = viewModel.ProviderSecret,
             });

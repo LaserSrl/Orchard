@@ -150,5 +150,11 @@ namespace Laser.Orchard.OpenAuthentication {
 
             return 8;
         }
+         public int UpdateFrom8() {
+              SchemaBuilder.AlterTable("ProviderConfigurationRecord",
+                  t=>t.AddColumn<string>("UserIdentifier")
+                  );
+            return 9;
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace Laser.Orchard.OpenAuthentication.ViewModels {
         [Required]
         public string ProviderName { get; set; }
         public string ProviderIdentifier { get; set; }
+        public string UserIdentifier { get; set; }
         public string ProviderIdKey { get; set; }
         public string ProviderSecret { get; set; }
         public bool IsEnabled { get; set; }

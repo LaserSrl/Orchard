@@ -28,6 +28,12 @@
         @Html.TextBoxFor(m => m.ProviderIdentifier)
         <span class="hint">@T("This is the url to the end point.")</span>
     </fieldset>
+        <fieldset>
+        @Html.LabelFor(m => m.UserIdentifier, T("User Name (used for twitter post)"))
+        @Html.TextBoxFor(m => m.UserIdentifier)
+        <span class="hint">@T("This is the User Name.")</span>
+    </fieldset>
+    
     <fieldset>
         @Html.LabelFor(m => m.ProviderIdKey, T("Key"))
         @Html.TextBoxFor(m => m.ProviderIdKey)

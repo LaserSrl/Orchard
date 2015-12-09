@@ -17,6 +17,7 @@
             <tr>
                 <th scope="col">@T("Name")</th>
                 <th scope="col">@T("Identifier")</th>
+                 <th scope="col">@T("User")</th>
                 <th scope="col">@T("Key")</th>
                 <th scope="col">@T("Secret")</th>
                 <th scope="col">@T("Enable Login")</th>
@@ -28,6 +29,7 @@
             <tr>
                 <td>@currentProvider.ProviderName</td>
                 <td>@currentProvider.ProviderIdentifier</td>
+                 <td>@currentProvider.UserIdentifier</td>
                 <td>@currentProvider.ProviderIdKey</td>
                 <td>@currentProvider.ProviderSecret</td>
                  <td>@(currentProvider.IsEnabled==1)</td>

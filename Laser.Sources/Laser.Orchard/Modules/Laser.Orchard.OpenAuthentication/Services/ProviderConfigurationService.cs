@@ -49,6 +49,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 DisplayName = parameters.DisplayName,
                 ProviderName = parameters.ProviderName,
                 ProviderIdentifier = parameters.ProviderIdentifier,
+                UserIdentifier=parameters.UserIdentifier,
                 ProviderIdKey = parameters.ProviderIdKey,
                 ProviderSecret = parameters.ProviderSecret,
                 IsEnabled = 1
@@ -60,6 +61,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             rec.DisplayName = parameters.DisplayName;
             rec.IsEnabled = parameters.IsEnabled?1:0;
             rec.ProviderIdentifier = parameters.ProviderIdentifier;
+            rec.UserIdentifier = parameters.UserIdentifier;
             rec.ProviderIdKey = parameters.ProviderIdKey;
             rec.ProviderName = parameters.ProviderName;
             rec.ProviderSecret = parameters.ProviderSecret;
@@ -75,6 +77,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             cpvm.DisplayName = prec.DisplayName;
             cpvm.IsEnabled = prec.IsEnabled==1;
             cpvm.ProviderIdentifier = prec.ProviderIdentifier;
+            cpvm.UserIdentifier = prec.UserIdentifier;
             cpvm.ProviderIdKey = prec.ProviderIdKey;
             cpvm.ProviderName = prec.ProviderName;
             cpvm.ProviderSecret = prec.ProviderSecret;
@@ -89,6 +92,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         public string DisplayName { get; set; }
         public string ProviderName { get; set; }
         public string ProviderIdentifier { get; set; }
+        public string UserIdentifier { get; set; }
         public string ProviderIdKey { get; set; }
         public string ProviderSecret { get; set; }
     }

@@ -7,5 +7,6 @@
         public virtual string ProviderIdKey { get; set; }
         public virtual string ProviderSecret { get; set; }
         public virtual string ProviderIdentifier { get; set; }
+        public virtual string UserIdentifier { get; set; }
        }
 }
