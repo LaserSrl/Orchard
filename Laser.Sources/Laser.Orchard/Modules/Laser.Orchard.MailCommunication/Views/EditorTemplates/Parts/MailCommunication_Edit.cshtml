@@ -2,6 +2,8 @@
 @{
     Script.Require("JQuery").AtHead();
     Script.Require("jQueryUI_Tabs").AtHead();
+    Style.Require("FontAwesome430").AtHead();
+
 }
 @using (Script.Foot()) {
     <script type="text/javascript">
@@ -12,7 +14,7 @@
         $(document).ready(function () {
             $(".comm-tabbed").wrapAll("<div id='tab-folder-container' />");
             $(".tab-folder").each(function (index) {
-                $("#tab-folder-container ul").append('<li>'+$(this).html()+'</li>');
+                $("#tab-folder-container ul").append('<li>' + $(this).html() + '</li>');
                 $(this).hide();
             });
             $("#tab-folder-container").tabs();
@@ -20,25 +22,25 @@
 
     </script>
 }
-    <ul class="comm-tabbed">
-    </ul>
+<ul class="comm-tabbed">
+</ul>
 
 <div class="tab-folder">
-    <a href="#mail-comm-container">@T("Email communication")</a>
+    <a href="#mail-comm-container"><i class="fa fa-envelope"></i>@T("Email")</a>
 </div>
 <div class="tab-folder">
-    <a href="#twitter-comm-container">@T("Twitter communication")</a>
+    <a href="#push-comm-container"><i class="fa fa-mobile"></i>@T("Push")</a>
 </div>
 <div class="tab-folder">
-    <a href="#facebook-comm-container">@T("Facebook communication")</a>
+    <a href="#sms-comm-container"><i class="fa fa-comment"></i>@T("SMS")</a>
 </div>
 <div class="tab-folder">
-    <a href="#push-comm-container">@T("Push communication")</a>
+    <a href="#twitter-comm-container"><i class="fa fa-twitter"></i>@T("Twitter")</a>
+</div>
+<div class="tab-folder">
+    <a href="#facebook-comm-container"><i class="fa fa-facebook"></i>@T("Facebook")</a>
 </div>
 
-<div class="tab-folder">
-    <a href="#sms-comm-container">@T("SMS communication")</a>
-</div>
 
 
 <div id="twitter-comm-container" class="comm-tabbed">
