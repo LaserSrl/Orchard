@@ -53,6 +53,9 @@
     <Reference Include="Facebook">
       <HintPath>..\..\..\packages\Facebook.7.0.6\lib\net45\Facebook.dll</HintPath>
     </Reference>
+    <Reference Include="Laser.Orchard.CommunicationGateway">
+      <HintPath>..\Laser.Orchard.CommunicationGateway\bin\Laser.Orchard.CommunicationGateway.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -58,6 +58,7 @@ namespace Laser.Orchard.Facebook {
                 .WithPart("FacebookPostPart",p=>p
                     .WithSetting("FacebookPostPartSettingVM.FacebookMessage", "{Content.DisplayText}")
                     .WithSetting("FacebookPostPartSettingVM.FacebookPicture", "{Content.Fields.CommunicationAdvertisingPart.Gallery}")
+                     .WithSetting("FacebookPostPartSettingVM.FacebookLink", "Get from content")
                     //.WithSetting("FacebookPostPartSettingVM.FacebookDescription", "{Content.Body}")
                     )
                 );

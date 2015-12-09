@@ -79,13 +79,13 @@ namespace Laser.Orchard.Facebook.Services {
                         pageId += "/";
                     }
                     var objresponsePost = objFacebookClient.Post(pageId + "feed", parameters);
-                    rsp.Message = "Posted";
+                    rsp.Message = "Facebook Posted";
                 }
                 catch (Exception ex) {
                     rsp.Success = false;
                     rsp.Message = "Facebook Posting Error Message: " + ex.Message;
                 }
-                _notifier.Add(NotifyType.Warning, T(rsp.Message));
+                _notifier.Add(NotifyType.Information, T(rsp.Message));
             }
             return rsp;
         }

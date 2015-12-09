@@ -1,7 +1,7 @@
 ﻿@using System.Web.Mvc.Html
 @model Laser.Orchard.Facebook.ViewModels.FacebookPostVM
 @if (Model.FacebookAccountList == null) {
-    <a href="@Url.Action("Index", "FacebookAccount", new { area = "Laser.Orchard.Facebook" })">@T("Insert a facebook account ")</a>
+   <br />   <a href="@Url.Action("Index", "FacebookAccount", new { area = "Laser.Orchard.Facebook" })">@T("Insert a facebook account ")</a> <br /> 
 }
 else {
     <fieldset>
@@ -16,7 +16,7 @@ else {
         }
         @if (Model.ShowFacebookCaption) {
             <div class="editor-label">@Html.LabelFor(m => m.FacebookCaption, T("Caption"))</div>
-            <div class="editor-label">@Html.TextBoxFor(m => m.FacebookCaption)</div>
+            <div class="editor-label">@Html.TextBoxFor(m => m.FacebookCaption, new { @class = "text large" })</div>
         }
         else {
             @Html.HiddenFor(m => m.FacebookCaption)
@@ -30,21 +30,21 @@ else {
         }
         @if (Model.ShowFacebookLink) {
             <div class="editor-label">@Html.LabelFor(m => m.FacebookLink, T("Link"))</div>
-            <div class="editor-label">@Html.TextBoxFor(m => m.FacebookLink)</div>
+            <div class="editor-label">@Html.TextBoxFor(m => m.FacebookLink, new { @class = "text large" })</div>
         }
         else {
             @Html.HiddenFor(m => m.FacebookLink)
         }
         @if (Model.ShowFacebookName) {
             <div class="editor-label">@Html.LabelFor(m => m.FacebookName, T("Name"))</div>
-            <div class="editor-label">@Html.TextBoxFor(m => m.FacebookName)</div>
+            <div class="editor-label">@Html.TextBoxFor(m => m.FacebookName, new { @class = "text large" })</div>
         }
         else {
             @Html.HiddenFor(m => m.FacebookName)
         }
         @if (Model.ShowFacebookPicture) {
             <div class="editor-label">@Html.LabelFor(m => m.FacebookPicture, T("Picture Url"))</div>
-            <div class="editor-label">@Html.TextBoxFor(m => m.FacebookPicture)</div>          
+            <div class="editor-label">@Html.TextBoxFor(m => m.FacebookPicture, new { @class = "text large" })</div>          
         }
         else {
             @Html.HiddenFor(m => m.FacebookPicture)
