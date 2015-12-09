@@ -41,7 +41,7 @@ namespace Laser.Orchard.CommunicationGateway {
                   //     )
                 .WithPart("IdentityPart")
                 .WithPart("CommunicationCampaignPart")
-               // .WithPart("LocalizationPart")
+                  // .WithPart("LocalizationPart")
                 .WithPart("CommonPart")
                 .Creatable(false)
                 .DisplayedAs("Campaign")
@@ -78,7 +78,7 @@ namespace Laser.Orchard.CommunicationGateway {
             .WithSetting("MediaLibraryPickerFieldSettings.Required", "false")
             .WithSetting("MediaLibraryPickerFieldSettings.Multiple", "false")
             .WithSetting("MediaLibraryPickerFieldSettings.DisplayedContentTypes", "Image")
-			.WithSetting("MediaLibraryPickerFieldSettings.AllowedExtensions", "jpg jpeg png gif")
+            .WithSetting("MediaLibraryPickerFieldSettings.AllowedExtensions", "jpg jpeg png gif")
             .WithSetting("MediaLibraryPickerFieldSettings.Hint", "Insert Image")
            )
         );
@@ -86,7 +86,7 @@ namespace Laser.Orchard.CommunicationGateway {
             "CommunicationAdvertising",
             type => type
                .WithPart("TitlePart")
-          //      .WithPart("BodyPart")
+                //      .WithPart("BodyPart")
                 .WithPart("AutoroutePart", p => p
                    .WithSetting("AutorouteSettings.AllowCustomPattern", "false")
                    .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
@@ -104,10 +104,30 @@ namespace Laser.Orchard.CommunicationGateway {
               .Creatable(false)
                .Draftable(true)
               .DisplayedAs("Advertising")
-              
+
             );
             return 1;
         }
 
+        public int UpdateFrom1() {
+            return 2;
+        }
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition(
+            "CommunicationAdvertising",
+            type => type
+                .WithPart("TagsPart")
+                );
+            return 3;
+        }
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterPartDefinition(
+                "CommunicationAdvertisingPart",
+                b => b
+                .WithField("UrlLinked", cfg => cfg
+                .OfType("LinkField"))
+                );
+            return 4;
+        }
     }
 }

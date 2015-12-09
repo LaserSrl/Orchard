@@ -11,3 +11,6 @@
     padding: 10px;
     background-color: #FFFFCC;
 }
+.permalink {
+    display: none;
+}

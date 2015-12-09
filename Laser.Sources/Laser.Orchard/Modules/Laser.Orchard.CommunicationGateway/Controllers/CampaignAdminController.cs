@@ -51,7 +51,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             return View((object)model);
         }
 
-        [HttpPost, ActionName("Edit"), Admin]
+        [HttpPost, ActionName("Edit"), Admin,ValidateInput(false) ]
         public ActionResult EditPOST(int id) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();

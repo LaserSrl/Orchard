@@ -1,5 +1,7 @@
 ﻿@{ Layout.Title = "Edit Advertising"; }
- 
+ @{
+     Style.Include("CommunicationGateway-admin.css").AtHead();
+}
 @using(Html.BeginFormAntiForgeryPost())
 {
     @Display(Model)
