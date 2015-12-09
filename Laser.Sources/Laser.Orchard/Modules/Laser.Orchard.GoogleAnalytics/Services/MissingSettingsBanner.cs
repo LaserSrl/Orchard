@@ -6,6 +6,7 @@ using Orchard.Localization;
 using Orchard.UI.Admin.Notification;
 using Orchard.UI.Notify;
 using Laser.Orchard.GoogleAnalytics.Models;
+using System.Web.Mvc;
 
 namespace Laser.Orchard.GoogleAnalytics.Services {
 	[OrchardFeature("Laser.Orchard.GoogleAnalytics")]
@@ -22,7 +23,9 @@ namespace Laser.Orchard.GoogleAnalytics.Services {
 		public IEnumerable<NotifyEntry> GetNotifications() {
 			var googleAnalyticsSettings = _orchardServices.WorkContext.CurrentSite.As<GoogleAnalyticsSettingsPart>();
 			if (googleAnalyticsSettings == null || string.IsNullOrWhiteSpace(googleAnalyticsSettings.GoogleAnalyticsKey)) {
-				yield return new NotifyEntry { Message = T("The Google Analytics settings need to be configured."), Type = NotifyType.Warning };
+                var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                var url = urlHelper.Action("Index", "Admin", new { Area = "Settings", groupInfoId = "Index" });
+                yield return new NotifyEntry { Message = T("The <a href=\"{0}#googleanalitycssetting\"> Google Analytics</a> settings need to be configured.",url), Type = NotifyType.Warning };
 			}
 		}
 	}
