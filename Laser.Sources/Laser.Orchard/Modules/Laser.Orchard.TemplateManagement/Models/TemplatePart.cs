@@ -10,23 +10,25 @@ namespace Laser.Orchard.TemplateManagement.Models {
         internal LazyField<TemplatePart> LayoutField = new LazyField<TemplatePart>();
 
         public string Title {
-            get { return Record.Title; }
-            set { Record.Title = value; }
+            get { return this.Retrieve(r => r.Title); }
+            set { this.Store(r => r.Title, value); }
+
         }
 
         public string Subject {
-            get { return Record.Subject; }
-            set { Record.Subject = value; }
+            get { return this.Retrieve(r => r.Subject); }
+            set { this.Store(r => r.Subject, value); }
+
         }
 
         public string Text {
-            get { return Record.Text; }
-            set { Record.Text = value; }
+            get { return this.Retrieve(r => r.Text); }
+            set { this.Store(r => r.Text, value); }
         }
 
         public bool IsLayout {
-            get { return Record.IsLayout; }
-            set { Record.IsLayout = value; }
+            get { return this.Retrieve(r => r.IsLayout); }
+            set { this.Store(r => r.IsLayout, value); }
         }
 
         public TemplatePart Layout {

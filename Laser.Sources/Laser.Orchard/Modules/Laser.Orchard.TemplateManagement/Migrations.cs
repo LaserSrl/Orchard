@@ -70,5 +70,15 @@ namespace Laser.Orchard.TemplateManagement {
              SchemaBuilder.ExecuteSql("UPDATE Settings_ContentTypeDefinitionRecord SET Name='CustomTemplate', DisplayName='Custom Template', Settings=Replace(cast(settings as nvarchar(4000)), 'DisplayName=\"Manage Template\"','DisplayName=\"Custom Template\"') WHERE Name='Template'");
              return 4;
          }
+
+         public int UpdateFrom4() {
+             SchemaBuilder.CreateTable("CustomTemplatePickerPartRecord", table => table
+.ContentPartRecord()
+.Column<int>("TemplateIdSelected", c => c.Nullable()));
+
+             ContentDefinitionManager.AlterPartDefinition("CustomTemplatePickerPart", part => part.Attachable(false));
+             return 5;
+         }
+
     }
 }

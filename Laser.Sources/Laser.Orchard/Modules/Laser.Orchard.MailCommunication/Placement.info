@@ -1,0 +1,9 @@
+﻿<Placement>
+  <Place
+    Parts_MailCommunication_Edit="Content:4"
+    Fields_Common_Text_Edit__MailCommunicationPart-Message="Content:4.1;Wrapper=MailCommunicationWrapper"
+    Fields_ContentPicker_Edit__MailCommunicationPart-RelatedMailContent="Content:4.2;Wrapper=MailCommunicationWrapper"
+    Parts_CustomTemplatePicker_Edit="Content:4.3;Wrapper=MailCommunicationWrapper"
+    Parts_MailCommunicationActions_Edit="Content:4.4;Wrapper=MailCommunicationWrapper"
+    />
+</Placement>

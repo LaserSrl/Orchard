@@ -1,0 +1,10 @@
+﻿Name: Laser Orchard MailCommunication
+AntiForgery: enabled
+Author: Laser s.r.l. - Hermes Sbicego
+Website: https://www.laser-group.com
+Version: 1.8
+OrchardVersion: 1.8
+Features:
+    Laser.Orchard.MailCommunication:
+        Description: Make your content ready to be sent via e-mail.
+		Dependencies: Laser.Orchard.CommunicationGateway, Laser.Orchard.TemplateManagement, Orchard.ContentPicker, Orchard.Fields, Orchard.JQuery, Laser.Orchard.jQueryPlugins
