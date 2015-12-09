@@ -17,43 +17,75 @@ using Orchard.Mvc.Extensions;
 using System.Net;
 using System.Text;
 using System.IO;
+using Orchard.UI.Notify;
+using Orchard.Localization;
 namespace Laser.Orchard.ShortLinks.Services {
     public class ShortLinksService : IShortLinksService {
-
+        public Localizer T {get;set;}
         private readonly IAutorouteService _autorouteService;
-
+        private readonly INotifier _notifier;
         private readonly ShellSettings _shellSettings;
         private readonly IOrchardServices _orchardServices;
-        public ShortLinksService(IAutorouteService autorouteService, ShellSettings shellSettings, IOrchardServices orchardServices) {
+        public ShortLinksService(IAutorouteService autorouteService, ShellSettings shellSettings, IOrchardServices orchardServices, INotifier notifier) {
             _autorouteService = autorouteService;
             _shellSettings = shellSettings;
             _orchardServices = orchardServices;
-
+            _notifier = notifier;
+            T = NullLocalizer.Instance;
         }
 
         public string GetShortLink(ContentPart part) {
-            string shorturl = "";
+            //string shorturl = "";
             string longuri = GetFullAbsoluteUrl(part);
-            var apiKey = _orchardServices.WorkContext.CurrentSite.As<Laser.Orchard.ShortLinks.Models.ShortLinksSettingsPart>().GoogleApiKey;
-            string apiurl = "https://www.googleapis.com/urlshortener/v1/url?key=" + apiKey;
-            var request = (HttpWebRequest)WebRequest.Create(apiurl);
-            var postData = "{'longUrl':'" + longuri + "'}";
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            using (var stream = new StreamWriter(request.GetRequestStream())) {
-                stream.Write(postData);
-                stream.Flush();
-                stream.Close();
+            return GetShortLink(longuri);
+            //var apiKey = _orchardServices.WorkContext.CurrentSite.As<Laser.Orchard.ShortLinks.Models.ShortLinksSettingsPart>().GoogleApiKey;
+            //string apiurl = "https://www.googleapis.com/urlshortener/v1/url?key=" + apiKey;
+            //var request = (HttpWebRequest)WebRequest.Create(apiurl);
+            //var postData = "{'longUrl':'" + longuri + "'}";
+            //request.Method = "POST";
+            //request.ContentType = "application/json";
+            //using (var stream = new StreamWriter(request.GetRequestStream())) {
+            //    stream.Write(postData);
+            //    stream.Flush();
+            //    stream.Close();
+            //}
+            //var response = (HttpWebResponse)request.GetResponse();
+            //using (var streamReader = new StreamReader(response.GetResponseStream())) {
+            //    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            //    var jsondict = serializer.Deserialize<Dictionary<string, string>>(streamReader.ReadToEnd());
+            //    shorturl = jsondict["id"];
+            //}
+            //return shorturl;
+        }
+
+        public string GetShortLink(string myurl) {
+            string shorturl = "";
+            string longuri = myurl;// GetFullAbsoluteUrl(part);
+            string apiKey = _orchardServices.WorkContext.CurrentSite.As<Laser.Orchard.ShortLinks.Models.ShortLinksSettingsPart>().GoogleApiKey;
+            if (string.IsNullOrEmpty(apiKey)) {
+                _notifier.Add(NotifyType.Error, T("No Shorturl Setting Found"));
+                //https://console.developers.google.com/apis/credentials
             }
-            var response = (HttpWebResponse)request.GetResponse();
-            using (var streamReader = new StreamReader(response.GetResponseStream())) {
-                var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                var jsondict = serializer.Deserialize<Dictionary<string, string>>(streamReader.ReadToEnd());
-                shorturl = jsondict["id"];
+            else {
+                string apiurl = "https://www.googleapis.com/urlshortener/v1/url?key=" + apiKey;
+                var request = (HttpWebRequest)WebRequest.Create(apiurl);
+                var postData = "{'longUrl':'" + longuri + "'}";
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                using (var stream = new StreamWriter(request.GetRequestStream())) {
+                    stream.Write(postData);
+                    stream.Flush();
+                    stream.Close();
+                }
+                var response = (HttpWebResponse)request.GetResponse();
+                using (var streamReader = new StreamReader(response.GetResponseStream())) {
+                    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    var jsondict = serializer.Deserialize<Dictionary<string, string>>(streamReader.ReadToEnd());
+                    shorturl = jsondict["id"];
+                }
             }
             return shorturl;
         }
-
 
         /// <summary>
         /// 

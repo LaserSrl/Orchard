@@ -15,6 +15,6 @@ namespace Laser.Orchard.ShortLinks.Services {
 	   /// <returns></returns>
         string GetFullAbsoluteUrl(ContentPart part);
         string GetShortLink(ContentPart part);
-
+        string GetShortLink(string myurl);
     }
 }
