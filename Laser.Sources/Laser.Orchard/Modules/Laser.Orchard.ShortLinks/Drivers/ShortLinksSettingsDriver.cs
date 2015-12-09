@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Laser.orchard.ShortLinks.Drivers {
+namespace Laser.Orchard.ShortLinks.Drivers {
     public class ShortLinksSettingsDriver : ContentPartDriver<ShortLinksSettingsPart> {
 
      

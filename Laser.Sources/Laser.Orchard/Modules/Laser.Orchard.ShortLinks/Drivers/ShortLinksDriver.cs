@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Laser.orchard.ShortLinks.Drivers {
+namespace Laser.Orchard.ShortLinks.Drivers {
     public class ShortLinksDriver: ContentPartDriver<ShortLinksPart> {
 
         private readonly IOrchardServices _service;

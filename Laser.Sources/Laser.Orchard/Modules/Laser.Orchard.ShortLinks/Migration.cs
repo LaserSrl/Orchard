@@ -6,7 +6,7 @@ using Orchard.Data.Migration;
 using Laser.Orchard.ShortLinks.Models;
 
 
-namespace Laser.orchard.ShortLinks {
+namespace Laser.Orchard.ShortLinks {
     public class Migration: DataMigrationImpl {
         
         public int Create() {

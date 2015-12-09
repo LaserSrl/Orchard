@@ -16,7 +16,7 @@ using Orchard.Environment.Configuration;
 using System.Web.Mvc;
 using Laser.Orchard.ShortLinks.Services;
 
-namespace Laser.orchard.ShortLinks.Handlers {
+namespace Laser.Orchard.ShortLinks.Handlers {
     public class ShortLinksHandler : ContentHandler {
                
         private readonly INotifier _notifier;
