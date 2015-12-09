@@ -122,7 +122,7 @@ namespace Laser.Orchard.Twitter.Services {
                 }
             }
             if (trysended && rsp.Success)
-                _notifier.Add(NotifyType.Information, T("All Twitter posted"));
+                _notifier.Add(NotifyType.Information, T("Twitter posted"));
             return rsp;
         }
 

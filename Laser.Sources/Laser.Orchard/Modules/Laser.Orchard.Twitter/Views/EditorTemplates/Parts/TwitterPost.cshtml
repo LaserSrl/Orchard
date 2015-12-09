@@ -38,7 +38,7 @@
 </script>
 @model Laser.Orchard.Twitter.ViewModels.TwitterPostVM
 @if (Model.TwitterAccountList == null) {
-    <a href="@Url.Action("Index", "TwitterAccount", new { area = "Laser.Orchard.Twitter" })">@T("Insert a twitter account ")</a>
+ <br />   <a href="@Url.Action("Index", "TwitterAccount", new { area = "Laser.Orchard.Twitter" })">@T("Insert a twitter account ")</a> <br /> 
 }
 else {
     <fieldset>
@@ -56,7 +56,7 @@ else {
         @Html.HiddenFor(m => m.TwitterPicture)
         @if (Model.ShowTitle) {
             <div class="editor-label">@Html.LabelFor(m => m.TwitterTitle, T("Meta twitter title"))</div>
-            <div class="editor-label">@Html.TextBoxFor(m => m.TwitterTitle)</div>
+            <div class="editor-label">@Html.TextBoxFor(m => m.TwitterTitle, new { @class = "text large" })</div>
         }
         else {
             @Html.HiddenFor(m => m.TwitterTitle)
