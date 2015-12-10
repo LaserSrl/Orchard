@@ -1,24 +1,10 @@
 ﻿@using System.Web.Mvc.Html
 @model Laser.Orchard.CommunicationGateway.ViewModels.QueryFilterVM
-<fieldset><legend>@T("Select Filter")</legend>
-<div class="editor-label">@Html.LabelFor(m => m.QueryId, T("Elenco Query"))</div>
-<div class="editor-field">@Html.DropDownListFor(m => m.QueryId, Model.ElencoQuery)</div>
+<fieldset>
+    <legend>@T("Select Filter")</legend>
+    <div class="editor-label">@Html.LabelFor(m => m.QueryId, T("Elenco Query"))</div>
+    <div class="editor-field">@Html.DropDownListFor(m => m.QueryId, Model.ElencoQuery)</div>
 </fieldset>
 <ul class="comm-tabbed">
 </ul>
 
-<div class="tab-folder">
-    <a href="#mail-comm-container"><i class="fa fa-envelope"></i>@T("Email")</a>
-</div>
-<div class="tab-folder">
-    <a href="#push-comm-container"><i class="fa fa-mobile"></i>@T("Push")</a>
-</div>
-<div class="tab-folder">
-    <a href="#sms-comm-container"><i class="fa fa-comment"></i>@T("SMS")</a>
-</div>
-<div class="tab-folder">
-    <a href="#twitter-comm-container"><i class="fa fa-twitter"></i>@T("Twitter")</a>
-</div>
-<div class="tab-folder">
-    <a href="#facebook-comm-container"><i class="fa fa-facebook"></i>@T("Facebook")</a>
-</div> 

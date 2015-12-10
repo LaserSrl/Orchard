@@ -11,9 +11,6 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $(".mail-comm-wrapper").wrapAll("<div id='mail-comm-container' class='comm-tabbed' />");
-        });
-
-        $(document).ready(function () {
             $(".comm-tabbed").wrapAll("<div id='tab-folder-container' />");
             $(".tab-folder").each(function (index) {
                 $("#tab-folder-container ul").append('<li>' + $(this).html() + '</li>');
@@ -25,7 +22,5 @@
     </script>
 }
 @using (Html.BeginFormAntiForgeryPost()) {
-
     @Display(Model)
-
 }

@@ -38,48 +38,49 @@
 </script>
 @model Laser.Orchard.Twitter.ViewModels.TwitterPostVM
 <div id="twitter-comm-container" class="comm-tabbed">
-@if (Model.TwitterAccountList == null) {
- <br />   <a href="@Url.Action("Index", "TwitterAccount", new { area = "Laser.Orchard.Twitter" })">@T("Insert a twitter account ")</a> <br /> 
-}
-else {
-    <fieldset>
-        <legend>@T("Twitter")</legend>
-        @Html.HiddenFor(m => m.TwitterMessageSent)
-        <div class="editor-label">@Html.LabelFor(m => m.TwitterMessage, T("Message"))</div>
-        <div class="editor-label">@Html.TextAreaFor(m => m.TwitterMessage)</div>
-        <span class="hint">@T("Each link is counted 22 characters")</span>
-        <div class="editor-label">@Html.LabelFor(m => m.TwitterCurrentLink, T("Link current page"))</div>
-        <div class="editor-label">@Html.CheckBoxFor(m => m.TwitterCurrentLink)</div>
-        @Html.HiddenFor(m => m.TwitterLink)
-        @*        <div class="editor-label">@Html.LabelFor(m => m.TwitterPicture, T("Meta twitter picture Url"))</div>
+    @if (Model.TwitterAccountList == null) {
+        <br />   <a href="@Url.Action("Index", "TwitterAccount", new { area = "Laser.Orchard.Twitter" })">@T("Insert a twitter account ")</a> <br /> 
+    } else {
+        <fieldset>
+            <legend>@T("Twitter")</legend>
+            @Html.HiddenFor(m => m.TwitterMessageSent)
+            <div class="editor-label">@Html.LabelFor(m => m.TwitterMessage, T("Message"))</div>
+            <div class="editor-label">@Html.TextAreaFor(m => m.TwitterMessage)</div>
+            <span class="hint">@T("Each link is counted 22 characters")</span>
+            <div class="editor-label">@Html.LabelFor(m => m.TwitterCurrentLink, T("Link current page"))</div>
+            <div class="editor-label">@Html.CheckBoxFor(m => m.TwitterCurrentLink)</div>
+            @Html.HiddenFor(m => m.TwitterLink)
+            @*        <div class="editor-label">@Html.LabelFor(m => m.TwitterPicture, T("Meta twitter picture Url"))</div>
         <div class="editor-label">@Html.TextBoxFor(m => m.TwitterPicture)</div>*@
 
-        @Html.HiddenFor(m => m.TwitterPicture)
-        @if (Model.ShowTitle) {
-            <div class="editor-label">@Html.LabelFor(m => m.TwitterTitle, T("Meta twitter title"))</div>
-            <div class="editor-label">@Html.TextBoxFor(m => m.TwitterTitle, new { @class = "text large" })</div>
-        }
-        else {
-            @Html.HiddenFor(m => m.TwitterTitle)
-        }
-        @if (Model.ShowDescription) {
-            <div class="editor-label">@Html.LabelFor(m => m.TwitterDescription, T("Meta twitter description"))</div>
-            <div class="editor-label">@Html.TextAreaFor(m => m.TwitterDescription)</div>
-        }
-        else {
-            @Html.HiddenFor(m => m.TwitterDescription)
-        }
+            @Html.HiddenFor(m => m.TwitterPicture)
+            @if (Model.ShowTitle) {
+                <div class="editor-label">@Html.LabelFor(m => m.TwitterTitle, T("Meta twitter title"))</div>
+                <div class="editor-label">@Html.TextBoxFor(m => m.TwitterTitle, new { @class = "text large" })</div>
+            } else {
+                @Html.HiddenFor(m => m.TwitterTitle)
+            }
+            @if (Model.ShowDescription) {
+                <div class="editor-label">@Html.LabelFor(m => m.TwitterDescription, T("Meta twitter description"))</div>
+                <div class="editor-label">@Html.TextAreaFor(m => m.TwitterDescription)</div>
+            } else {
+                @Html.HiddenFor(m => m.TwitterDescription)
+            }
 
 
-        @*    <div class="editor-label">@Html.LabelFor(m => m.TwitterName, T("Name"))</div>
+            @*    <div class="editor-label">@Html.LabelFor(m => m.TwitterName, T("Name"))</div>
     <div class="editor-label">@Html.TextBoxFor(m => m.TwitterName)</div>*@
 
-        @{
-        if (Model.TwitterAccountList != null) {
-            <div class="editor-label">@Html.LabelFor(m => m.SelectedList, T("AccountList"))</div>
-            <div class="editor-label">@Html.ListBoxFor(m => m.SelectedList, Model.TwitterAccountList)</div>
-        }
-        }
-    </fieldset>
-}
-    </div>
+            @{
+            if (Model.TwitterAccountList != null) {
+                <div class="editor-label">@Html.LabelFor(m => m.SelectedList, T("AccountList"))</div>
+                <div class="editor-label">@Html.ListBoxFor(m => m.SelectedList, Model.TwitterAccountList)</div>
+            }
+            }
+        </fieldset>
+    }
+</div>
+
+<div class="tab-folder">
+    <a href="#twitter-comm-container"><i class="fa fa-twitter"></i>@T("Twitter")</a>
+</div>

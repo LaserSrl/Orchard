@@ -2,61 +2,57 @@
 @model Laser.Orchard.Facebook.ViewModels.FacebookPostVM
 
 <div id="facebook-comm-container" class="comm-tabbed">
-@if (Model.FacebookAccountList == null) {
-   <br />   <a href="@Url.Action("Index", "FacebookAccount", new { area = "Laser.Orchard.Facebook" })">@T("Insert a facebook account ")</a> <br /> 
-}
-else {
-    <fieldset>
-        <legend>@T("Facebook")</legend>
-        @Html.HiddenFor(m => m.FacebookMessageSent)
-        @if (Model.ShowFacebookMessage) {
-            <div class="editor-label">@Html.LabelFor(m => m.FacebookMessage, T("Message"))</div>
-            <div class="editor-label">@Html.TextAreaFor(m => m.FacebookMessage)</div>
-        }
-        else {
-            @Html.HiddenFor(m => m.FacebookMessage)
-        }
-        @if (Model.ShowFacebookCaption) {
-            <div class="editor-label">@Html.LabelFor(m => m.FacebookCaption, T("Caption"))</div>
-            <div class="editor-label">@Html.TextBoxFor(m => m.FacebookCaption, new { @class = "text large" })</div>
-        }
-        else {
-            @Html.HiddenFor(m => m.FacebookCaption)
-        }
-        @if (Model.ShowFacebookDescription) {
-            <div class="editor-label">@Html.LabelFor(m => m.FacebookDescription, T("Description"))</div>
-            <div class="editor-label">@Html.TextAreaFor(m => m.FacebookDescription)</div>
-        }
-        else {
-            @Html.HiddenFor(m => m.FacebookDescription)
-        }
-        @if (Model.ShowFacebookLink) {
-            <div class="editor-label">@Html.LabelFor(m => m.FacebookLink, T("Link"))</div>
-            <div class="editor-label">@Html.TextBoxFor(m => m.FacebookLink, new { @class = "text large" })</div>
-        }
-        else {
-            @Html.HiddenFor(m => m.FacebookLink)
-        }
-        @if (Model.ShowFacebookName) {
-            <div class="editor-label">@Html.LabelFor(m => m.FacebookName, T("Name"))</div>
-            <div class="editor-label">@Html.TextBoxFor(m => m.FacebookName, new { @class = "text large" })</div>
-        }
-        else {
-            @Html.HiddenFor(m => m.FacebookName)
-        }
-        @if (Model.ShowFacebookPicture) {
-            <div class="editor-label">@Html.LabelFor(m => m.FacebookPicture, T("Picture Url"))</div>
-            <div class="editor-label">@Html.TextBoxFor(m => m.FacebookPicture, new { @class = "text large" })</div>          
-        }
-        else {
-            @Html.HiddenFor(m => m.FacebookPicture)
-        }
-        @{
-        if (Model.FacebookAccountList != null) {
-            <div class="editor-label">@Html.LabelFor(m => m.SelectedList, T("AccountList"))</div>
-            <div class="editor-label">@Html.ListBoxFor(m => m.SelectedList, Model.FacebookAccountList)</div>
-        }
-        }
-    </fieldset>
-}
-    </div>
+    @if (Model.FacebookAccountList == null) {
+        <br />   <a href="@Url.Action("Index", "FacebookAccount", new { area = "Laser.Orchard.Facebook" })">@T("Insert a facebook account ")</a> <br /> 
+    } else {
+        <fieldset>
+            <legend>@T("Facebook")</legend>
+            @Html.HiddenFor(m => m.FacebookMessageSent)
+            @if (Model.ShowFacebookMessage) {
+                <div class="editor-label">@Html.LabelFor(m => m.FacebookMessage, T("Message"))</div>
+                <div class="editor-label">@Html.TextAreaFor(m => m.FacebookMessage)</div>
+            } else {
+                @Html.HiddenFor(m => m.FacebookMessage)
+            }
+            @if (Model.ShowFacebookCaption) {
+                <div class="editor-label">@Html.LabelFor(m => m.FacebookCaption, T("Caption"))</div>
+                <div class="editor-label">@Html.TextBoxFor(m => m.FacebookCaption, new { @class = "text large" })</div>
+            } else {
+                @Html.HiddenFor(m => m.FacebookCaption)
+            }
+            @if (Model.ShowFacebookDescription) {
+                <div class="editor-label">@Html.LabelFor(m => m.FacebookDescription, T("Description"))</div>
+                <div class="editor-label">@Html.TextAreaFor(m => m.FacebookDescription)</div>
+            } else {
+                @Html.HiddenFor(m => m.FacebookDescription)
+            }
+            @if (Model.ShowFacebookLink) {
+                <div class="editor-label">@Html.LabelFor(m => m.FacebookLink, T("Link"))</div>
+                <div class="editor-label">@Html.TextBoxFor(m => m.FacebookLink, new { @class = "text large" })</div>
+            } else {
+                @Html.HiddenFor(m => m.FacebookLink)
+            }
+            @if (Model.ShowFacebookName) {
+                <div class="editor-label">@Html.LabelFor(m => m.FacebookName, T("Name"))</div>
+                <div class="editor-label">@Html.TextBoxFor(m => m.FacebookName, new { @class = "text large" })</div>
+            } else {
+                @Html.HiddenFor(m => m.FacebookName)
+            }
+            @if (Model.ShowFacebookPicture) {
+                <div class="editor-label">@Html.LabelFor(m => m.FacebookPicture, T("Picture Url"))</div>
+                <div class="editor-label">@Html.TextBoxFor(m => m.FacebookPicture, new { @class = "text large" })</div>          
+            } else {
+                @Html.HiddenFor(m => m.FacebookPicture)
+            }
+            @{
+            if (Model.FacebookAccountList != null) {
+                <div class="editor-label">@Html.LabelFor(m => m.SelectedList, T("AccountList"))</div>
+                <div class="editor-label">@Html.ListBoxFor(m => m.SelectedList, Model.FacebookAccountList)</div>
+            }
+            }
+        </fieldset>
+    }
+</div>
+<div class="tab-folder">
+    <a href="#facebook-comm-container"><i class="fa fa-facebook"></i>@T("Facebook")</a>
+</div>
