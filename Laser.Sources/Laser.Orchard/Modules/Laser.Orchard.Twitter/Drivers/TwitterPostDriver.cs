@@ -26,6 +26,10 @@ using Orchard.Mvc.Html;
 using System.Globalization;
 using Orchard.MediaProcessing.Services;
 using Orchard.MediaProcessing.Models;
+using System.Web.UI.WebControls;
+using System.Xml.Linq;
+using System.Linq.Expressions;
+using Orchard.Environment.Configuration;
 
 
 
@@ -40,6 +44,7 @@ namespace Laser.Orchard.Twitter.Drivers {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IStorageProvider _storageProvider;
+        private readonly ShellSettings _shellSettings;
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
@@ -47,7 +52,7 @@ namespace Laser.Orchard.Twitter.Drivers {
             get { return "Laser.Orchard.Twitter"; }
         }
 
-        public TwitterPostDriver(IImageProfileManager imageProfileManager, IStorageProvider storageProvider, IOrchardServices orchardServices, ITwitterService TwitterService, IProviderConfigurationService providerConfigurationService, ITokenizer tokenizer, IHttpContextAccessor httpContextAccessor, IControllerContextAccessor controllerContextAccessor) {
+        public TwitterPostDriver(IImageProfileManager imageProfileManager, IStorageProvider storageProvider, IOrchardServices orchardServices, ITwitterService TwitterService, IProviderConfigurationService providerConfigurationService, ITokenizer tokenizer, IHttpContextAccessor httpContextAccessor, IControllerContextAccessor controllerContextAccessor, ShellSettings shellSettings) {
             _storageProvider = storageProvider;
             _imageProfileManager = imageProfileManager;
             _httpContextAccessor = httpContextAccessor;
@@ -56,6 +61,7 @@ namespace Laser.Orchard.Twitter.Drivers {
             _orchardServices = orchardServices;
             _TwitterService = TwitterService;
             _providerConfigurationService = providerConfigurationService;
+            _shellSettings = shellSettings;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -147,17 +153,38 @@ namespace Laser.Orchard.Twitter.Drivers {
                 vm.ShowDescription = false;
             if (!string.IsNullOrEmpty(setting.Image))
                 vm.ShowPicture = false;
+            if (setting.ShowTwitterCurrentLink)
+                vm.ShowTwitterCurrentLink = true;
+            else
+                vm.ShowTwitterCurrentLink = false;
             //_controllerContextAccessor.Context.Controller.TempData["ShowPicture"] = vm.ShowPicture;
             //Url.ItemDisplayUrl
             List<TwitterAccountPart> listaccount = _TwitterService.GetValidTwitterAccount();
-            List<SelectListItem> lSelectList = new List<SelectListItem>();
+          //  List<SelectListItem> lSelectList = new List<SelectListItem>();
+            List<OptionList> optionList=new List<OptionList>();
+              var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             foreach (TwitterAccountPart fa in listaccount) {
-                lSelectList.Insert(0, new SelectListItem() { Value = fa.Id.ToString(), Text = fa.AccountType + " - " + fa.DisplayAs });
+            //    lSelectList.Insert(0, (new SelectListItem() { Value = fa.Id.ToString(), Text = fa.AccountType + " - " + fa.DisplayAs }));
+                OptionList ol = new OptionList {
+                    Value = fa.Id.ToString(),
+                    Text = fa.AccountType + " - " + fa.DisplayAs,
+                    ImageUrl =  urlHelper.Content("~/Media/" + _shellSettings.Name + "/twitter_" +fa.DisplayAs + ".jpg"),
+                    Selected = part.AccountList.Contains(fa.Id)?"selected=\"selected\"":""
+                };
+                optionList.Add(ol);
             }
-            if (lSelectList.Count > 0) {
+            vm.ListOption = optionList;
+            //SelectList applicationList = new SelectList();
+            //foreach (TwitterAccountPart fa in listaccount) {
+            //    ListItem test = new ListItem(fa.AccountType + " - " + fa.DisplayAs, fa.Id.ToString());
+            //    test.Attributes.Add("data-value", "myValue1");
+            //    applicationList.Items.Add(test);
+            //      lSelectList.Insert(0, new SelectListItem() { Value = , Text =  });
+            //}
+          //  if (lSelectList.Count > 0) {
                 vm.SelectedList = part.AccountList.Select(x => x.ToString()).ToArray();
-                vm.TwitterAccountList = new SelectList((IEnumerable<SelectListItem>)lSelectList, "Value", "Text", vm.SelectedList);
-            }
+             //   vm.TwitterAccountList = new SelectList((IEnumerable<SelectListItem>)lSelectList, "Value", "Text", vm.SelectedList);
+          //  }
 
             return ContentShape("Parts_TwitterPost",
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts/TwitterPost",
@@ -174,6 +201,10 @@ namespace Laser.Orchard.Twitter.Drivers {
                 part.AccountList = vm.SelectedList.Select(x => Int32.Parse(x)).ToArray();
             else
                 part.AccountList = new Int32[] { };
+
+
+
+
             TwitterPostPartSettingVM setting = part.Settings.GetModel<TwitterPostPartSettingVM>();
             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             if (string.IsNullOrEmpty(setting.Image)) {
@@ -211,5 +242,6 @@ namespace Laser.Orchard.Twitter.Drivers {
             }
             return Editor(part, shapeHelper);
         }
+       
     }
 }

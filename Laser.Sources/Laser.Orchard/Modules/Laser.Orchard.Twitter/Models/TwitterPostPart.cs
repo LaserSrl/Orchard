@@ -48,6 +48,7 @@ namespace Laser.Orchard.Twitter.Models {
             set { this.Store(r => r.TwitterCurrentLink, value); }
         }
 
+
         public string TwitterLink {
             get { return this.Retrieve(r => r.TwitterLink); }
             set { this.Store(r => r.TwitterLink, value); }
@@ -83,6 +84,7 @@ namespace Laser.Orchard.Twitter.Models {
 
         public virtual string TwitterLink { get; set; }
         public virtual bool TwitterCurrentLink { get; set; }
+
         public virtual string AccountList { get; set; }
     }
 }

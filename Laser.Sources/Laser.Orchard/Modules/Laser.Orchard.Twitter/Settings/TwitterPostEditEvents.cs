@@ -3,6 +3,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
+using System;
 using System.Collections.Generic;
 
 namespace Laser.Orchard.Twitter.Settings {
@@ -24,6 +25,7 @@ namespace Laser.Orchard.Twitter.Settings {
             builder.WithSetting("TwitterPostPartSettingVM.Title", ((string)model.Title) ?? "");
             builder.WithSetting("TwitterPostPartSettingVM.Image", ((string)model.Image) ?? "");
             builder.WithSetting("TwitterPostPartSettingVM.Description", ((string)model.Description) ?? "");
+            builder.WithSetting("TwitterPostPartSettingVM.ShowTwitterCurrentLink", ((Boolean)model.ShowTwitterCurrentLink).ToString());
             yield return DefinitionTemplate(model);
         }
     }

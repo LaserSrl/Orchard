@@ -100,7 +100,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\textcounter.min.js" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -118,7 +117,6 @@
     <Compile Include="Models\TwitterPostPart.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Permissions.cs" />
-    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\ITwitterService.cs" />
     <Compile Include="Settings\TwitterPostEditEvents.cs" />
     <Compile Include="Settings\TwitterPostPartSettingVM.cs" />
