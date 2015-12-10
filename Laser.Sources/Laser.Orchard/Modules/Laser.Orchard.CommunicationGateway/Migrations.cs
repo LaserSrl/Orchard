@@ -125,9 +125,10 @@ namespace Laser.Orchard.CommunicationGateway {
                 "CommunicationAdvertisingPart",
                 b => b
                 .WithField("UrlLinked", cfg => cfg
+                    .WithSetting("LinkFieldSettings.LinkTextMode", "Static")
                 .OfType("LinkField"))
                 );
             return 4;
         }
-    }
+     }
 }

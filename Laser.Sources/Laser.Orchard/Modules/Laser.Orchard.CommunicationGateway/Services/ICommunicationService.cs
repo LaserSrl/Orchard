@@ -55,8 +55,9 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 if (pickerField != null) {
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
                     if (firstItem != null) {
+
                         System.Web.Mvc.UrlHelper Url = new UrlHelper(); ;
-                        link = Url.ItemDisplayUrl(firstItem);
+                       link = Url.ItemDisplayUrl(firstItem);
                     }
                     //string ids=(dynamic)part.ContentLinked.ids;
                     //ids=ids.Replace("{","").Replace("}","").Split(',')[0];
