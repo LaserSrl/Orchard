@@ -1,6 +1,6 @@
 ﻿<Placement>
   <Place Parts_TwitterAccount="Content:4" />
-  <Place Parts_TwitterPost="Content:4.02" />
+  <Place Parts_TwitterPost="Content:5.2" />
   <Match DisplayType="Detail">
     <Place Parts_TwitterPost_Detail="Content:after" />
   </Match>

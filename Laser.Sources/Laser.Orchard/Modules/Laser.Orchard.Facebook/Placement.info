@@ -1,4 +1,5 @@
 ﻿<Placement>
   <Place Parts_FacebookAccount="Content:4" />
-  <Place Parts_FacebookPost="Content:4" />
+  <Place Parts_FacebookPost="Content:5.1" />
+  <Place Parts_FacebookPostSetting_Edit="Content:4" />
 </Placement>
