@@ -6,7 +6,6 @@ using Laser.Orchard.TemplateManagement.Models;
 using Laser.Orchard.TemplateManagement.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Logging;
-using Xipton.Razor.Core;
 
 namespace Laser.Orchard.TemplateManagement.Parsers {
     [OrchardFeature("Laser.Orchard.TemplateManagement.Parsers.Razor")]
@@ -32,7 +31,7 @@ namespace Laser.Orchard.TemplateManagement.Parsers {
 
             if (layout != null) {
                 _razorMachine.RegisterLayout("~/shared/_layout.cshtml", layout.Text);
-                templateContent = "@{ Layout = \"_layout\"; }\r\n" + templateContent;
+                templateContent = "@{ Layout = \"~/shared/_layout.cshtml\"; }\r\n" + templateContent;
             }
 
             try {
@@ -42,9 +41,9 @@ namespace Laser.Orchard.TemplateManagement.Parsers {
                 //        viewBag = ((IEnumerable<KeyValuePair<string, string>>) viewBag).Select(x => new KeyValuePair<string, object>(x.Key, x.Value)).ToDictionary(x => x.Key, x => x.Value);
                 //}
                 var tmpl = _razorMachine.ExecuteContent(templateContent, context.Model, null);
-                return tmpl.Result;
+                return tmpl;
             }
-            catch (TemplateCompileException ex) {
+            catch (Exception ex) {
                 Logger.Log(LogLevel.Error, ex, "Failed to parse the {0} Razor template with layout {1}", template.Title, layout != null ? layout.Title : "[none]");
                 return BuildErrorContent(ex, template, layout);
             }   

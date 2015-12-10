@@ -1,27 +1,29 @@
 ﻿using Orchard;
 using Orchard.Environment.Extensions;
-using Xipton.Razor;
+using RazorEngine.Configuration;
+using RazorEngine.Templating;
 
 namespace Laser.Orchard.TemplateManagement.Parsers {
     public interface IRazorMachine : ISingletonDependency {
-        ITemplate ExecuteContent(string templateContent, object model = null, object viewBag = null);
+        string ExecuteContent(string templateContent, object model = null, object viewBag = null);
         void RegisterLayout(string virtualPath, string templateContent);
     }
 
     [OrchardFeature("Laser.Orchard.TemplateManagement.Parsers.Razor")]
     public class RazorMachineWrapper : IRazorMachine {
-        private readonly RazorMachine _razorMachine;
+        private readonly IRazorEngineService _razorEngineService;
 
         public RazorMachineWrapper() {
-            _razorMachine = new RazorMachine();
+            var config = new TemplateServiceConfiguration();
+            _razorEngineService = RazorEngineService.Create(config);
         }
 
-        public ITemplate ExecuteContent(string templateContent, object model = null, object viewBag = null) {
-            return _razorMachine.ExecuteContent(templateContent, model, viewBag);
+        public string ExecuteContent(string templateContent, object model = null, object viewBag = null) {
+            return _razorEngineService.RunCompile(templateContent, "RazorTemplate", null, model, (DynamicViewBag)viewBag);
         }
 
         public void RegisterLayout(string virtualPath, string templateContent) {
-            _razorMachine.RegisterTemplate(virtualPath, templateContent);
+            _razorEngineService.AddTemplate(virtualPath, templateContent);
         }
     }
 }
