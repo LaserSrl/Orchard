@@ -15,6 +15,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.MediaLibrary.Models;
+using Orchard.Environment.Configuration;
 
 namespace Laser.Orchard.Facebook.Drivers {
 
@@ -22,6 +23,7 @@ namespace Laser.Orchard.Facebook.Drivers {
         private readonly IOrchardServices _orchardServices;
         private readonly IFacebookService _facebookService;
         private readonly ITokenizer _tokenizer;
+        private readonly ShellSettings _shellSettings;
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
@@ -29,15 +31,18 @@ namespace Laser.Orchard.Facebook.Drivers {
             get { return "Laser.Orchard.Facebook"; }
         }
 
-        public FacebookPostDriver(IOrchardServices orchardServices, IFacebookService facebookService, ITokenizer tokenizer) {
+        public FacebookPostDriver(ShellSettings shellSettings,IOrchardServices orchardServices, IFacebookService facebookService, ITokenizer tokenizer) {
             _orchardServices = orchardServices;
             _facebookService = facebookService;
+            _shellSettings = shellSettings;
             _tokenizer = tokenizer;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
         protected override DriverResult Editor(FacebookPostPart part, dynamic shapeHelper) {
+            var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+              
             FacebookPostVM vm = new FacebookPostVM();
             Mapper.CreateMap<FacebookPostPart, FacebookPostVM>();
             Mapper.Map(part, vm);
@@ -72,8 +77,7 @@ namespace Laser.Orchard.Facebook.Drivers {
                     if (idimage > 0) { 
                 // _orchardServices.ContentManager.Get(id);
                     // vm.Image = Url.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));
-                    var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-                    //       vm.Image = urlHelper.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));// get current display link
+                       //       vm.Image = urlHelper.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));// get current display link
                     //   Fvm.Link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(Twitterpart));// get current display link
                     var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
                     //   var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
@@ -90,15 +94,24 @@ namespace Laser.Orchard.Facebook.Drivers {
             else
                 vm.FacebookPicture = part.FacebookPicture;
             List<FacebookAccountPart> listaccount = _facebookService.GetValidFacebookAccount();
-            List<SelectListItem> lSelectList = new List<SelectListItem>();
-            foreach (FacebookAccountPart fa in listaccount) {
-                lSelectList.Insert(0, new SelectListItem() { Value = fa.Id.ToString(), Text = fa.AccountType + " - " + fa.DisplayAs });
+         //   List<SelectListItem> lSelectList = new List<SelectListItem>();
+            List<OptionList> optionList = new List<OptionList>();
+           foreach (FacebookAccountPart fa in listaccount) {
+              //  lSelectList.Insert(0, new SelectListItem() { Value = fa.Id.ToString(), Text = fa.AccountType + " - " + fa.DisplayAs });
+                   OptionList ol = new OptionList {
+                    Value = fa.Id.ToString(),
+                    Text = fa.AccountType + " - " + fa.DisplayAs,
+                    ImageUrl =  urlHelper.Content("~/Media/" + _shellSettings.Name + "/facebook_" +fa.UserIdFacebook + ".jpg"),
+                    Selected = part.AccountList.Contains(fa.Id)?"selected=\"selected\"":""
+                };
+                optionList.Add(ol);
             }
-            if (lSelectList.Count > 0) {
-                vm.SelectedList = part.AccountList.Select(x => x.ToString()).ToArray();
+           vm.ListOption = optionList;
+         //   if (lSelectList.Count > 0) {
+          //      vm.SelectedList = part.AccountList.Select(x => x.ToString()).ToArray();
 
-                vm.FacebookAccountList = new SelectList((IEnumerable<SelectListItem>)lSelectList, "Value", "Text", vm.SelectedList);
-            }
+            //    vm.FacebookAccountList = new SelectList((IEnumerable<SelectListItem>)lSelectList, "Value", "Text", vm.SelectedList);
+         //   }
 
             return ContentShape("Parts_FacebookPost",
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts/FacebookPost",

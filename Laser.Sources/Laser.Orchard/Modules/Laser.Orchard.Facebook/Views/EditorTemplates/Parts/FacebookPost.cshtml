@@ -1,8 +1,20 @@
 ﻿@using System.Web.Mvc.Html
 @model Laser.Orchard.Facebook.ViewModels.FacebookPostVM
+@using (Script.Head()) {
+    Script.Require("jQuery_ImagePicker").AtHead();
+    Style.Require("jQuery_ImagePicker").AtHead();
+}
 
+<script type="text/javascript">
+    $(window).load(function () {
+       $("#@Html.FieldIdFor(m => m.SelectedList)").imagepicker(
+              { show_label: true }
+              );
+        }
+    );
+    </script>
 <div id="facebook-comm-container" class="comm-tabbed">
-@if (Model.FacebookAccountList == null) {
+@if (Model.ListOption.Count == 0) {
    <br />   <a href="@Url.Action("Index", "FacebookAccount", new { area = "Laser.Orchard.Facebook" })">@T("Insert a facebook account ")</a> <br /> 
 }
 else {
@@ -51,12 +63,22 @@ else {
         else {
             @Html.HiddenFor(m => m.FacebookPicture)
         }
-        @{
+@*        @{
         if (Model.FacebookAccountList != null) {
             <div class="editor-label">@Html.LabelFor(m => m.SelectedList, T("AccountList"))</div>
             <div class="editor-label">@Html.ListBoxFor(m => m.SelectedList, Model.FacebookAccountList)</div>
         }
-        }
+        }*@
+                    @{
+        if (Model.ListOption.Count>0) {
+            <div class="editor-label">@Html.LabelFor(m => m.SelectedList, T("AccountList"))</div>
+                <select multiple="multiple" name="@Html.FieldNameFor(m => m.SelectedList)" id="@Html.FieldIdFor(m => m.SelectedList)"  class="image-picker show-labels show-html">
+                    @foreach (var item in Model.ListOption) {
+                        <option data-img-src="@item.ImageUrl" data-img-label="@item.Text" value="@item.Value" @(item.Selected)>@item.Text</option>
+                    }
+                </select>
+             }
+            }
     </fieldset>
 }
     </div>
