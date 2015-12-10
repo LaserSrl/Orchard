@@ -1,5 +1,7 @@
 ﻿@using System.Web.Mvc.Html
 @model Laser.Orchard.Facebook.ViewModels.FacebookPostVM
+
+<div id="facebook-comm-container" class="comm-tabbed">
 @if (Model.FacebookAccountList == null) {
    <br />   <a href="@Url.Action("Index", "FacebookAccount", new { area = "Laser.Orchard.Facebook" })">@T("Insert a facebook account ")</a> <br /> 
 }
@@ -57,3 +59,4 @@ else {
         }
     </fieldset>
 }
+    </div>
