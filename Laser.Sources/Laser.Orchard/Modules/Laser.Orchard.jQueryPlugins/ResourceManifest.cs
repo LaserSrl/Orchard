@@ -9,13 +9,14 @@ namespace Laser.Orchard.jQueryPlugins {
             var manifest = builder.Add();
 
             //Scripts
-
+            manifest.DefineScript("jQuery_textcounter").SetUrl("textcounter.min.js").SetDependencies("jQuery");
+            manifest.DefineScript("jQuery_ImagePicker").SetUrl("image-picker.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_Print").SetUrl("jquery.print.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_Cycle").SetUrl("jquery.cycle.all.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_Cycle2").SetUrl("jquery.cycle2.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_MultiSelect").SetUrl("jquery.multiSelect.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_Tools").SetUrl("jquery.tools.min.js").SetDependencies("jQuery", "jQueryUI", "jQueryMigrate");
-            manifest.DefineScript("jQuery_MultiSelect").SetUrl("jquery.multiSelect.js").SetDependencies("jQuery");
+         //   manifest.DefineScript("jQuery_MultiSelect").SetUrl("jquery.multiSelect.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_CarouFredSel").SetUrl("jquery.carouFredSel.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_Carousel").SetUrl("jquery.carousel.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_Contactable").SetUrl("jquery.contactable.min.js").SetDependencies("jQuery");
@@ -44,7 +45,7 @@ namespace Laser.Orchard.jQueryPlugins {
             manifest.DefineScript("jsTreeGrid").SetUrl("jsTree/jstreegrid.js").SetDependencies("jsTree");
 
             //Styles
-
+            manifest.DefineStyle("jQuery_ImagePicker").SetUrl("image-picker.css");
             manifest.DefineStyle("jQuery_MultiSelect").SetUrl("jquery.multiSelect.css");
             manifest.DefineStyle("jQuery_Autocomplete").SetUrl("jquery.autocomplete.css");
             manifest.DefineStyle("jQuery_Cycle").SetUrl("jquery.cycle.css");

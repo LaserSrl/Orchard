@@ -78,6 +78,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\image-picker.min.js" />
     <Content Include="Scripts\jquery.carouFredSel.js" />
     <Content Include="Scripts\jquery.carouFredSel.min.js" />
     <Content Include="Scripts\jquery.carousel.js" />
@@ -114,8 +115,10 @@
     <Content Include="Scripts\Jssor\jssor.utils.js" />
     <Content Include="Scripts\jsTree\jstree.js" />
     <Content Include="Scripts\jsTree\jstree.min.js" />
+    <Content Include="Scripts\textcounter.min.js" />
     <Content Include="Styles\accordion.css" />
     <Content Include="Styles\custom\divtablelayouts.css" />
+    <Content Include="Styles\image-picker.css" />
     <Content Include="Styles\images\autocomplete\fake_sel.gif" />
     <Content Include="Styles\images\autocomplete\fake_sel_pad.gif" />
     <Content Include="Styles\images\autocomplete\fake_sel_red.gif" />
