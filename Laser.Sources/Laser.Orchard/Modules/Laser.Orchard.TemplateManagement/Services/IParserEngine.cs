@@ -11,6 +11,6 @@ namespace Laser.Orchard.TemplateManagement.Services {
 
 	public class ParseTemplateContext {
 		public object Model { get; set; }
-        //public object ViewBag { get; set; }
+        public object ViewBag { get; set; }
 	}
 }
