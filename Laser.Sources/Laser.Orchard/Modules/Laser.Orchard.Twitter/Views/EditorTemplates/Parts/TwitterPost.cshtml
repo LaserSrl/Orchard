@@ -37,6 +37,7 @@
     });
 </script>
 @model Laser.Orchard.Twitter.ViewModels.TwitterPostVM
+<div id="twitter-comm-container" class="comm-tabbed">
 @if (Model.TwitterAccountList == null) {
  <br />   <a href="@Url.Action("Index", "TwitterAccount", new { area = "Laser.Orchard.Twitter" })">@T("Insert a twitter account ")</a> <br /> 
 }
@@ -81,3 +82,4 @@ else {
         }
     </fieldset>
 }
+    </div>
