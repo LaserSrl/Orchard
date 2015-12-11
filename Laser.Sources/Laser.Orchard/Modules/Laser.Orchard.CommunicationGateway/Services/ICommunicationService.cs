@@ -6,11 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.Mvc.Html;
 using System.Web;
 using Orchard.Mvc.Extensions;
 using Orchard.ContentPicker.Fields;
 using Laser.Orchard.ShortLinks.Services;
+
 
 
 namespace Laser.Orchard.CommunicationGateway.Services {
@@ -55,13 +57,9 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 if (pickerField != null) {
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
                     if (firstItem != null) {
-
-                        System.Web.Mvc.UrlHelper Url = new UrlHelper(); ;
-                       link = Url.ItemDisplayUrl(firstItem);
+                       var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                       link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
                     }
-                    //string ids=(dynamic)part.ContentLinked.ids;
-                    //ids=ids.Replace("{","").Replace("}","").Split(',')[0];
-                    // var url = Url.ItemDisplayUrl(firstItem);
                 }
                 else
                     return "";
