@@ -41,7 +41,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
 
 
-     
+
         [Admin]
         public ActionResult Edit(int id, int idCampaign = 0) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
@@ -57,8 +57,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 //  model = _orchardServices.ContentManager.BuildEditor(newContent);
                 //   _contentManager.Create(newContent);
                 model = _contentManager.BuildEditor(newContent);
-            }
-            else
+            } else
                 model = _contentManager.BuildEditor(_orchardServices.ContentManager.Get(id, VersionOptions.Latest));
             return View((object)model);
         }
@@ -74,8 +73,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 var newContent = _orchardServices.ContentManager.New(contentType);
                 _orchardServices.ContentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
-            }
-            else
+            } else
                 content = _orchardServices.ContentManager.Get(id, VersionOptions.Latest);
             var model = _orchardServices.ContentManager.UpdateEditor(content, this);
             if (idCampaign > 0) {
@@ -143,10 +141,11 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             var expression = search.Expression;
             IContentQuery<ContentItem> contentQuery = _orchardServices.ContentManager.Query(VersionOptions.Latest).ForType(contentType).OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
             IEnumerable<ContentItem> ListContent;
+            /*Nel caso di flash advertising la campagna è -10, quindi il filtro è sempre valido.*/
             if (id > 0)
                 ListContent = contentQuery.List().Where(x => ((int[])((dynamic)x).CommunicationAdvertisingPart.Campaign.Ids).Contains(id));
             else
-                ListContent = contentQuery.List();
+                ListContent = contentQuery.List().Where(x => ((dynamic)x).CommunicationAdvertisingPart.Campaign.Ids.Length == 0);
             if (!string.IsNullOrEmpty(search.Expression))
                 ListContent = from content in ListContent
                               where
@@ -157,7 +156,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 Title = p.As<TitlePart>().Title,
                 ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
                 UserName = p.As<CommonPart>().Owner.UserName,
-        //        Option = p.As<FacebookPostPart>().FacebookMessageSent
+                //        Option = p.As<FacebookPostPart>().FacebookMessageSent
             });
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
             dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(listVM.Count());
