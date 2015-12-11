@@ -8,14 +8,14 @@
 
 <script type="text/javascript">
     $(window).load(function () {
-       $("#@Html.FieldIdFor(m => m.SelectedList)").imagepicker(
-              { show_label: true }
-              );
-        }
+        $("#@Html.FieldIdFor(m => m.SelectedList)").imagepicker(
+               { show_label: true }
+               );
+    }
     );
     $(function () {
- 
-            $("#@Html.FieldIdFor(model => model.TwitterMessage)").keypress(function (event) {
+
+        $("#@Html.FieldIdFor(model => model.TwitterMessage)").keypress(function (event) {
             // Check the keyCode and if the user pressed Enter (code = 13) 
             // disable it
             if (event.keyCode == 13) {
@@ -50,10 +50,8 @@
 <div id="twitter-comm-container" class="comm-tabbed">
     @if (Model.ListOption.Count == 0) {
         <br />   <a href="@Url.Action("Index", "TwitterAccount", new { area = "Laser.Orchard.Twitter" })">@T("Insert a twitter account ")</a> <br /> 
-    }
-    else {
+    } else {
         <fieldset>
-            <legend>@T("Twitter")</legend>
             @Html.HiddenFor(m => m.TwitterMessageSent)
             <div class="editor-label">@Html.LabelFor(m => m.TwitterMessage, T("Message"))</div>
             <div class="editor-label">@Html.TextAreaFor(m => m.TwitterMessage)</div>
@@ -70,15 +68,13 @@
             @if (Model.ShowTitle) {
                 <div class="editor-label">@Html.LabelFor(m => m.TwitterTitle, T("Meta twitter title"))</div>
                 <div class="editor-label">@Html.TextBoxFor(m => m.TwitterTitle, new { @class = "text large" })</div>
-            }
-            else {
+            } else {
                 @Html.HiddenFor(m => m.TwitterTitle)
             }
             @if (Model.ShowDescription) {
                 <div class="editor-label">@Html.LabelFor(m => m.TwitterDescription, T("Meta twitter description"))</div>
                 <div class="editor-label">@Html.TextAreaFor(m => m.TwitterDescription)</div>
-            }
-            else {
+            } else {
                 @Html.HiddenFor(m => m.TwitterDescription)
             }
 
@@ -87,8 +83,8 @@
     <div class="editor-label">@Html.TextBoxFor(m => m.TwitterName)</div>*@
 
             @{
-        if (Model.ListOption.Count>0) {
-            <div class="editor-label">@Html.LabelFor(m => m.SelectedList, T("AccountList"))</div>
+            if (Model.ListOption.Count > 0) {
+                <div class="editor-label">@Html.LabelFor(m => m.SelectedList, T("AccountList"))</div>
 @*     <div class="editor-label">@Html.LabelFor(m => m.SelectedList, T("AccountList"))</div>
             <div class="editor-label">@Html.ListBoxFor(m => m.SelectedList, Model.TwitterAccountList,new {@class="image-picker show-labels show-html"})</div>*@
                 <select multiple="multiple" name="@Html.FieldNameFor(m => m.SelectedList)" id="@Html.FieldIdFor(m => m.SelectedList)"  class="image-picker show-labels show-html">
@@ -105,4 +101,6 @@
         </fieldset>
     }
 </div>
-
+<div class="tab-folder">
+    <a href="#twitter-comm-container"><i class="fa fa-twitter"></i>@T("Twitter")</a>
+</div>

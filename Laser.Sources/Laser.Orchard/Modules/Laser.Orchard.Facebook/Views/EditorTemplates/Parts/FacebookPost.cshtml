@@ -19,7 +19,6 @@
 }
 else {
     <fieldset>
-        <legend>@T("Facebook")</legend>
         @Html.HiddenFor(m => m.FacebookMessageSent)
         @if (Model.ShowFacebookMessage) {
             <div class="editor-label">@Html.LabelFor(m => m.FacebookMessage, T("Message"))</div>

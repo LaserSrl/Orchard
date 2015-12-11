@@ -44,6 +44,8 @@ namespace Laser.Orchard.jQueryPlugins {
             manifest.DefineScript("jsTree_Mini").SetUrl("jsTree/jstree.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jsTreeGrid").SetUrl("jsTree/jstreegrid.js").SetDependencies("jsTree");
 
+            manifest.DefineScript("rcswitcher").SetUrl("rcswitcher.min.js").SetDependencies("jQuery");
+
             //Styles
             manifest.DefineStyle("jQuery_ImagePicker").SetUrl("image-picker.css");
             manifest.DefineStyle("jQuery_MultiSelect").SetUrl("jquery.multiSelect.css");
@@ -61,6 +63,8 @@ namespace Laser.Orchard.jQueryPlugins {
             manifest.DefineStyle("jsTree_DefaultDark_Mini").SetUrl("jsTree/DefaultDark/style.min.css");
           
             manifest.DefineStyle("Accordion").SetUrl("accordion.css");
+
+            manifest.DefineStyle("rcswitcher").SetUrl("rcswitcher.min.css");
         }
     }
 }

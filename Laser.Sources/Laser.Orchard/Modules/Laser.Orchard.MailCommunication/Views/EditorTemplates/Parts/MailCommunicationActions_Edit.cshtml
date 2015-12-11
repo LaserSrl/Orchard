@@ -1,15 +1,43 @@
 ﻿@model Laser.Orchard.MailCommunication.Models.MailCommunicationPart
+@{
+    Script.Require("rcswitcher").AtHead();
+    Style.Require("rcswitcher").AtHead();
+}
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function () {
+            $('.rcswitcher-checkbox').rcSwitcher({
+                theme: 'flat',
+                blobOffset: 1,
+                onText: '@T("YES")',
+                offText: '@T("NO")'
+            }).on({
+                'turnon.rcSwitcher': function (e, dataObj) {
+                    if (e.target.id == '@Html.FieldIdFor(m => m.SendToTestEmail)') {
+                        $("#test-email-container").show(400);
+                    }
+                },
+                'turnoff.rcSwitcher': function (e, dataObj) {
+                    if (e.target.id == '@Html.FieldIdFor(m => m.SendToTestEmail)') {
+                        $("#test-email-container").hide(400);
+                    }
+                }
+            });
+        });
+    </script>
+}
+
 <fieldset>
-    <legend>@Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish"))</legend>
-    @Html.CheckBoxFor(model => model.SendOnNextPublish)
+    @Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
+    @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox" })
 </fieldset>
 <fieldset>
-    <legend>@Html.LabelFor(m => m.SendOnNextPublish, T("Send for test"))</legend>
-    @Html.CheckBoxFor(model => model.SendToTestEmail)
+    @Html.LabelFor(m => m.SendToTestEmail, T("Send for test").Text, new { @class = "forcheckbox" })
+    @Html.CheckBoxFor(model => model.SendToTestEmail, new { @class = "rcswitcher-checkbox" })
 </fieldset>
-<fieldset>
-    <legend>@Html.LabelFor(m => m.SendOnNextPublish, T("Test Email"))</legend>
-    @Html.TextBoxFor(model => model.EmailForTest)
+<fieldset id="test-email-container" style="@((!Model.SendToTestEmail) ? "display:none;" : "")">
+    @Html.LabelFor(m => m.SendOnNextPublish, T("Test Email").Text, new { @class = "forcheckbox" })
+    @Html.TextBoxFor(model => model.EmailForTest, new { @class = "text medium" })
     <button type="submit" name="submit.Save" value="submit.MailTest">@T("Send for test")</button>
 </fieldset>
 @if (!Model.MailMessageSent) { 
@@ -17,3 +45,4 @@
 } else {
     @T("Message already sent.")
 }
+
