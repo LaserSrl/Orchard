@@ -46,7 +46,10 @@ public int val_selezionato=0;
 	</xsl:element>
 </xsl:template>
 <xsl:template match="root/layout|root/published">
-
+    
+</xsl:template>
+<xsl:template match="root/layout|root/name">
+    
 </xsl:template>
 <xsl:template match="*">
 	<xsl:element name="{local-name()}" namespace="">
@@ -134,6 +137,8 @@ public int val_selezionato=0;
 		
 		</xsl:element>
 	</xsl:if>
+    
+
 </xsl:template>
 
 	
