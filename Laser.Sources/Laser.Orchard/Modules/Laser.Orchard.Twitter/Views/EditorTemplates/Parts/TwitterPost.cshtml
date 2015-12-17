@@ -3,6 +3,8 @@
     Script.Require("jQuery_textcounter").AtHead();
     Script.Require("jQuery_ImagePicker").AtHead();
     Style.Require("jQuery_ImagePicker").AtHead();
+    Script.Require("rcswitcher").AtHead();
+    Style.Require("rcswitcher").AtHead();
 
 }
 
@@ -13,7 +15,14 @@
                );
     }
     );
+
     $(function () {
+        $('.rcswitcher-checkbox-tw').rcSwitcher({
+            theme: 'flat',
+            blobOffset: 1,
+            onText: '@T("YES")',
+            offText: '@T("NO")'
+        })
 
         $("#@Html.FieldIdFor(model => model.TwitterMessage)").keypress(function (event) {
             // Check the keyCode and if the user pressed Enter (code = 13) 
@@ -98,6 +107,10 @@
         
             }
             }
+        </fieldset>
+        <fieldset>
+            @Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
+            @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-tw" })
         </fieldset>
     }
 </div>

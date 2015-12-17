@@ -6,7 +6,7 @@
 @using (Script.Foot()) {
     <script type="text/javascript">
         $(function () {
-            $('.rcswitcher-checkbox').rcSwitcher({
+            $('.rcswitcher-checkbox-mail').rcSwitcher({
                 theme: 'flat',
                 blobOffset: 1,
                 onText: '@T("YES")',
@@ -28,17 +28,17 @@
 }
 
 <fieldset>
-    @Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
-    @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox" })
-</fieldset>
-<fieldset>
     @Html.LabelFor(m => m.SendToTestEmail, T("Send for test").Text, new { @class = "forcheckbox" })
-    @Html.CheckBoxFor(model => model.SendToTestEmail, new { @class = "rcswitcher-checkbox" })
+    @Html.CheckBoxFor(model => model.SendToTestEmail, new { @class = "rcswitcher-checkbox-mail" })
 </fieldset>
 <fieldset id="test-email-container" style="@((!Model.SendToTestEmail) ? "display:none;" : "")">
     @Html.LabelFor(m => m.SendOnNextPublish, T("Test Email").Text, new { @class = "forcheckbox" })
     @Html.TextBoxFor(model => model.EmailForTest, new { @class = "text medium" })
     <button type="submit" name="submit.Save" value="submit.MailTest">@T("Send for test")</button>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
+    @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-mail" })
 </fieldset>
 @if (!Model.MailMessageSent) { 
     @T("Message not yet sent.")

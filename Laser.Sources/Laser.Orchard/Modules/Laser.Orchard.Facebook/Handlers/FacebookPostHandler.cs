@@ -42,9 +42,11 @@ namespace Laser.Orchard.Facebook.Handlers {
                     Fvm.Message = facebookpart.FacebookMessage;
                     Fvm.Name = facebookpart.FacebookName;
                     Fvm.Picture = facebookpart.FacebookPicture;
-                    ResponseAction rsp = _facebookService.PostFacebook(Fvm, facebookpart);
-                    if (rsp.Success) {
-                        facebookpart.FacebookMessageSent = true;
+                    if (facebookpart.SendOnNextPublish && !facebookpart.FacebookMessageSent) {
+                        ResponseAction rsp = _facebookService.PostFacebook(Fvm, facebookpart);
+                        if (rsp.Success) {
+                            facebookpart.FacebookMessageSent = true;
+                        }
                     }
                 }
                 catch(Exception ex) {

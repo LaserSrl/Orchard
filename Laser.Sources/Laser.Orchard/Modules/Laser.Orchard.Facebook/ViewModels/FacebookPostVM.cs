@@ -21,8 +21,8 @@ namespace Laser.Orchard.Facebook.ViewModels {
         public string FacebookName { get; set; }
         public string FacebookPicture { get; set; }
         public string FacebookLink { get; set; }
-       // public SelectList FacebookAccountList { get; set; }
-        public List<OptionList>ListOption { get; set; }
+        // public SelectList FacebookAccountList { get; set; }
+        public List<OptionList> ListOption { get; set; }
         public string[] SelectedList { get; set; }
         public bool ShowFacebookCaption { get; set; }
         public bool ShowFacebookDescription { get; set; }
@@ -30,7 +30,9 @@ namespace Laser.Orchard.Facebook.ViewModels {
         public bool ShowFacebookMessage { get; set; }
         public bool ShowFacebookName { get; set; }
         public bool ShowFacebookPicture { get; set; }
+        public bool SendOnNextPublish { get; set; }
     }
+
     public class OptionList {
         public string Text { get; set; }
         public string Value { get; set; }

@@ -26,7 +26,7 @@ namespace Laser.Orchard.Twitter.Handlers {
             _notifier = notifier;
             T = NullLocalizer.Instance;
             Filters.Add(StorageFilter.For(repository));
-        //    Filters.Add(new ActivatingFilter<TwitterPostPart>("CommunicationAdvertising"));
+            //    Filters.Add(new ActivatingFilter<TwitterPostPart>("CommunicationAdvertising"));
             OnPublished<TwitterPostPart>((context, Twitterpart) => {
                 try {
                     PostToTwitterViewModel Fvm = new PostToTwitterViewModel();
@@ -36,11 +36,9 @@ namespace Laser.Orchard.Twitter.Handlers {
                         bool tryed = _orchardServices.WorkContext.TryResolve<ICommunicationService>(out _communicationService);
                         if (tryed) {
                             Fvm.Link = _communicationService.GetCampaignLink("Twitter", Twitterpart);
-                        }
-                        else
+                        } else
                             Fvm.Link = "";
-                    }
-                    else
+                    } else
                         if (Twitterpart.TwitterCurrentLink) {
                             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
                             Fvm.Link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(Twitterpart));// get current display link
@@ -50,12 +48,13 @@ namespace Laser.Orchard.Twitter.Handlers {
                     Fvm.Picture = Twitterpart.TwitterPicture;
 
                     Fvm.AccountList = Twitterpart.AccountList;
-                    ResponseAction rsp = _TwitterService.PostTwitter(Fvm);
-                    if (rsp.Success) {
-                        Twitterpart.TwitterMessageSent = true;
+                    if (Twitterpart.SendOnNextPublish && !Twitterpart.TwitterMessageSent) {
+                        ResponseAction rsp = _TwitterService.PostTwitter(Fvm);
+                        if (rsp.Success) {
+                            Twitterpart.TwitterMessageSent = true;
+                        }
                     }
-                }
-                catch(Exception ex) {
+                } catch (Exception ex) {
                     _notifier.Add(NotifyType.Error, T("Twitter error:" + ex.Message));
                 }
             });

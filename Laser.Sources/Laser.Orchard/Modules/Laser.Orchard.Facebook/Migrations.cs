@@ -55,14 +55,20 @@ namespace Laser.Orchard.Facebook {
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
             type => type
-                .WithPart("FacebookPostPart",p=>p
+                .WithPart("FacebookPostPart", p => p
                     .WithSetting("FacebookPostPartSettingVM.FacebookMessage", "{Content.DisplayText}")
                     .WithSetting("FacebookPostPartSettingVM.FacebookPicture", "{Content.Fields.CommunicationAdvertisingPart.Gallery}")
                      .WithSetting("FacebookPostPartSettingVM.FacebookLink", "Get from content")
-                    //.WithSetting("FacebookPostPartSettingVM.FacebookDescription", "{Content.Body}")
+                //.WithSetting("FacebookPostPartSettingVM.FacebookDescription", "{Content.Body}")
                     )
                 );
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("FacebookPostPartRecord", table => table
+                .AddColumn<bool>("SendOnNextPublish", col => col.WithDefault(false)));
+            return 3;
         }
     }
 }

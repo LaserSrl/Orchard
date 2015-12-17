@@ -101,6 +101,8 @@
     <Content Include="Scripts\jquery.ui.datepicker-zh-CN.js" />
     <Content Include="Scripts\jquery.ui.datepicker-zh-HK.js" />
     <Content Include="Scripts\jquery.ui.datepicker-zh-TW.js" />
+    <Content Include="Scripts\jquery.ui.multiselect.widget.js" />
+    <Content Include="Scripts\jquery.ui.multiselect.widget.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\custom\jquery.nestedmodels.js" />
@@ -115,7 +117,7 @@
     <Content Include="Scripts\Jssor\jssor.utils.js" />
     <Content Include="Scripts\jsTree\jstree.js" />
     <Content Include="Scripts\jsTree\jstree.min.js" />
-    <Content Include="Scripts\switch\rcswitcher.min.js" />
+    <Content Include="Scripts\rcswitcher.min.js" />
     <Content Include="Scripts\textcounter.min.js" />
     <Content Include="Styles\accordion.css" />
     <Content Include="Styles\custom\divtablelayouts.css" />
@@ -158,7 +160,7 @@
     <Content Include="Styles\jsTree\Default\style.css" />
     <Content Include="Styles\jsTree\Default\style.min.css" />
     <Content Include="Styles\jsTree\Default\throbber.gif" />
-    <Content Include="Styles\switcher\rcswitcher.min.css" />
+    <Content Include="Styles\rcswitcher.min.css" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />

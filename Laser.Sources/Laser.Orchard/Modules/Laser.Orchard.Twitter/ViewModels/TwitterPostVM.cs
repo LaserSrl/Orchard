@@ -25,6 +25,7 @@ namespace Laser.Orchard.Twitter.ViewModels {
         public bool ShowPicture { get; set; }
         public bool TwitterCurrentLink { get; set; }
         public bool ShowTwitterCurrentLink { get; set; }
+        public bool SendOnNextPublish { get; set; }
     }
     public class OptionList {
         public string Text { get; set; }

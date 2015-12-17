@@ -53,6 +53,11 @@ namespace Laser.Orchard.Twitter.Models {
             get { return this.Retrieve(r => r.TwitterLink); }
             set { this.Store(r => r.TwitterLink, value); }
         }
+        
+        public bool SendOnNextPublish {
+            get { return this.Retrieve(r => r.SendOnNextPublish); }
+            set { this.Store(r => r.SendOnNextPublish, value); }
+        }
 
         public Int32[] AccountList {
             get {
@@ -84,6 +89,7 @@ namespace Laser.Orchard.Twitter.Models {
 
         public virtual string TwitterLink { get; set; }
         public virtual bool TwitterCurrentLink { get; set; }
+        public virtual bool SendOnNextPublish { get; set; }
 
         public virtual string AccountList { get; set; }
     }

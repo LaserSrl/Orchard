@@ -65,5 +65,11 @@ namespace Laser.Orchard.Twitter {
             return 2;
         }
 
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("TwitterPostPartRecord", table => table
+                .AddColumn<bool>("SendOnNextPublish", col => col.WithDefault(false)));
+            return 3;
+        }
+
     }
 }
