@@ -38,11 +38,12 @@
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
-    @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-mail" })
+    @if (!Model.MailMessageSent) { 
+        @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-mail" }) 
+            <i class="fa fa-times-circle" style="color:red"></i> @T("Message not yet sent.")
+    } else {
+        @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-mail", @disabled = "disabled" }) 
+            <i class="fa fa-check-circle" style="color:green"></i> @T("Message already sent.")
+    }
 </fieldset>
-@if (!Model.MailMessageSent) { 
-    @T("Message not yet sent.")
-} else {
-    @T("Message already sent.")
-}
 

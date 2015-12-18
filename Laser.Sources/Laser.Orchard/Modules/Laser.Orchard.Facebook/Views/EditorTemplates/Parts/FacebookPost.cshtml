@@ -16,8 +16,8 @@
                 offText: '@T("NO")'
             })
         });
-            $(window).load(function () {
-                $("#@Html.FieldIdFor(m => m.SelectedList)").imagepicker(
+        $(window).load(function () {
+            $("#@Html.FieldIdFor(m => m.SelectedList)").imagepicker(
                        { show_label: true }
                        );
         }
@@ -87,7 +87,13 @@
         </fieldset>
         <fieldset>
             @Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
-            @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-fb" })
+            @if (!Model.FacebookMessageSent) { 
+                @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-fb" })
+                <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet sent.")
+            } else {
+                @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-fb", @disabled = "disabled" })
+                <i class="fa fa-check-circle" style="color: green"></i> @T("Message already sent.")
+            }
         </fieldset>
  
     }

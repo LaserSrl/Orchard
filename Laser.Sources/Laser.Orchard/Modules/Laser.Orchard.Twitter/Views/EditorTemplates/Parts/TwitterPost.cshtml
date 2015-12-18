@@ -110,7 +110,14 @@
         </fieldset>
         <fieldset>
             @Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
-            @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-tw" })
+            @if (!Model.TwitterMessageSent) { 
+                @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-tw" })
+                <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet sent.")
+
+            } else {
+                @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-tw", @disabled = "disabled" })
+                <i class="fa fa-check-circle" style="color: green"></i> @T("Message already sent.")
+            }
         </fieldset>
     }
 </div>

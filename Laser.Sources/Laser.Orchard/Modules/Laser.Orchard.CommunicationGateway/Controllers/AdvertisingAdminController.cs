@@ -1,5 +1,4 @@
-﻿
-using Laser.Orchard.CommunicationGateway.Helpers;
+﻿using Laser.Orchard.CommunicationGateway.Helpers;
 using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
@@ -21,6 +20,7 @@ using System.IO;
 using System.Dynamic;
 
 namespace Laser.Orchard.CommunicationGateway.Controllers {
+    [ValidateInput(false)]
     public class AdvertisingAdminController : Controller, IUpdateModel {
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
@@ -48,17 +48,17 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 return new HttpUnauthorizedResult();
             object model;
             if (id == 0) {
-                var newContent = _orchardServices.ContentManager.New(contentType);
+                var newContent = _contentManager.New(contentType);
                 if (idCampaign > 0) {
                     List<int> lids = new List<int>();
                     lids.Add(idCampaign);
                     ((dynamic)newContent).CommunicationAdvertisingPart.Campaign.Ids = lids.ToArray();
                 }
-                //  model = _orchardServices.ContentManager.BuildEditor(newContent);
+                //  model = _contentManager.BuildEditor(newContent);
                 //   _contentManager.Create(newContent);
                 model = _contentManager.BuildEditor(newContent);
             } else
-                model = _contentManager.BuildEditor(_orchardServices.ContentManager.Get(id, VersionOptions.Latest));
+                model = _contentManager.BuildEditor(_contentManager.Get(id, VersionOptions.Latest));
             return View((object)model);
         }
 
@@ -70,12 +70,12 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
             ContentItem content;
             if (id == 0) {
-                var newContent = _orchardServices.ContentManager.New(contentType);
-                _orchardServices.ContentManager.Create(newContent, VersionOptions.Draft);
+                var newContent = _contentManager.New(contentType);
+                _contentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
             } else
-                content = _orchardServices.ContentManager.Get(id, VersionOptions.Latest);
-            var model = _orchardServices.ContentManager.UpdateEditor(content, this);
+                content = _contentManager.Get(id, VersionOptions.Latest);
+            var model = _contentManager.UpdateEditor(content, this);
             if (idCampaign > 0) {
                 List<int> lids = new List<int>();
                 lids.Add(idCampaign);
@@ -107,8 +107,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         public ActionResult Remove(Int32 id, int idCampaign = 0) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
-            ContentItem content = _orchardServices.ContentManager.Get(id);
-            _orchardServices.ContentManager.Remove(content);
+            ContentItem content = _contentManager.Get(id);
+            _contentManager.Remove(content);
             return RedirectToAction("Index", "AdvertisingAdmin", new { id = idCampaign });
         }
 
@@ -132,14 +132,14 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 return new HttpUnauthorizedResult();
             dynamic Options = new System.Dynamic.ExpandoObject();
             if (id >= 0)
-                Options.Campaign = _orchardServices.ContentManager.Get(id);
+                Options.Campaign = _contentManager.Get(id);
             else {
                 // Options.Campaign = ""; // devo inserire la proprietà Campaign altrimenti index va in exception
                 Options.Campaign = new System.Dynamic.ExpandoObject();
                 Options.Campaign.Id = id;
             }
             var expression = search.Expression;
-            IContentQuery<ContentItem> contentQuery = _orchardServices.ContentManager.Query(VersionOptions.Latest).ForType(contentType).OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
+            IContentQuery<ContentItem> contentQuery = _contentManager.Query(VersionOptions.Latest).ForType(contentType).OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
             IEnumerable<ContentItem> ListContent;
             /*Nel caso di flash advertising la campagna è -10, quindi il filtro è sempre valido.*/
             if (id > 0)
