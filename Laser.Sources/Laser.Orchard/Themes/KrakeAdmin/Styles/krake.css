@@ -1,27 +1,44 @@
 
 html {
+    background: #d8d9e0 url("images/adminNavBackground.gif") repeat-y scroll left top !important;
+}
+
+body {
     background: #fff url("images/adminNavBackground.gif") repeat-y scroll left top !important;
 }
+
 #layout-content {
     /*background: #fff url("images/adminNavBackground.gif") repeat-y scroll left top !important;*/
     background-image: url("images/sfondo-krake.png") !important;
     background-position: right bottom !important;
     background-repeat: no-repeat !important;
-    background: none !important;
 }
-body {
-    background: #fff url("images/adminNavBackground.gif") repeat-y scroll left top !important;
+
+
+#header {
+    background: #d8d9e0 none repeat scroll 0 0;
+    height: 127px !important;
+    margin: 16px 0 0;
 }
-/*#header {
-    background: #fff none repeat scroll 0 0 !important;
-}*/
- 
+
 #layout-main {
     color: #252c36 !important;
 }
+
 #menu {
     background: #252c36 none repeat scroll 0 0 !important;
 }
+
+#site {
+    background: #252c36 none repeat scroll 0 0 !important;
+    color: #fff !important;
+    font-size: 1.385em;
+}
+
+#content {
+    border-bottom: 3px solid #155878;
+}
+
 .section-dashboard, .section-new {
     background: #252c36 none repeat scroll 0 0 !important;
     border: 1px solid #404040 !important;
@@ -29,13 +46,15 @@ body {
     box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1) !important;
     padding: 6px 0 !important;
 }
+
 #branding {
     background: #252c36 none repeat scroll 0 0 !important;
     float: left !important;
-    height: 100px !important;
+    height: 200px !important;
     text-align: center !important;
     width: 240px !important;
 }
+
 #menu .menu-admin ul a, #menu .menu-admin ul a:link, #menu .menu-admin ul a:visited {
     color: #2ab9e8 !important;
     display: block !important;
@@ -43,14 +62,17 @@ body {
     padding: 4px 0 6px 20px !important;
     text-decoration: none !important;
 }
+
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus, #menu .menu-admin ul .selected a {
     background-color: #aec3ce !important;
     border-radius: 2px !important;
     color: #252c36 !important;
 }
+
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active {
     background-color: #7895a4 !important;
 }
+
 #menu .menu-admin li h3 a, #menu .menu-admin li h3 span {
     color: #2ab9e8 !important;
     line-height: 16px !important;
@@ -70,25 +92,40 @@ body {
     text-indent: -9999px !important;
     width: 77px !important;
 }
+
 button, .button, a.button {
-    background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top , rgba(59, 130, 154, 1), rgba(70, 142, 166, 1)) repeat scroll 0 0 !important;
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(59, 130, 154, 1.0)), to(rgba(70, 142, 166, 1.0)));
+    background: -moz-linear-gradient(top, rgba(59, 130, 154, 1.0), rgba(70, 142, 166, 1.0));
+    border: 1px solid #2ab9e8 !important;
+    color: #fff !important;
+}
+
+button:active, .button:active, a.button:active {
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(59, 130, 154, 1.0)), to(rgba(70, 142, 166, 1.0)));
+    background: -moz-linear-gradient(top, rgba(59, 130, 154, 1.0), rgba(70, 142, 166, 1.0));
     border: 1px solid #3b829a !important;
     color: #fff !important;
 }
-button:active, .button:active, a.button:active {
-    background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top , rgba(59, 130, 154, 1), rgba(70, 142, 166, 1)) repeat scroll 0 0 !important;
+
+button:hover, .button:hover, a.button:hover {
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(59, 130, 154, 1.0)), to(rgba(70, 142, 166, 1.0)));
+    background: -moz-linear-gradient(top, rgba(59, 130, 154, 1.0), rgba(70, 142, 166, 1.0));
     border: 1px solid #3b829a !important;
-    color: #263541 !important;
+    color: #fff !important;
 }
+
 select, textarea, input.text, input.textMedium, input.text-medium, input.text-small, input.text-box {
     color: #3b829a !important;
 }
+
 #page-title {
     color: #3b829a !important;
 }
+
 table.items thead, table.items th {
     background: #e1eef3 none repeat scroll 0 0 !important;
 }
+
 #main .contentItems > ul > li:nth-child(2n), ul.contentItems > li:nth-child(2n), table.items tr:nth-child(2n) {
     background-color: #e5f3f7 !important;
 }
@@ -101,42 +138,54 @@ table.items thead, table.items th {
 table.items {
     border-color: #dae7eb #dae7eb -moz-use-text-color !important;
 }
+
 .localmenu li.selected a {
-    color: rgba(42, 185, 232, 1) !important;
+    color: rgba(41, 110, 144, 1) !important;
 }
+
 .widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer {
     background-color: #cbedf8 !important;
 }
+
 .widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer, #widgets-layer-visibility li.on {
     border-color: #2ab9e8 !important;
 }
+
 .widgets-listed li:hover, .widgets-listed li.on {
     border-color: #2ab9e8 !important;
 }
+
 button.widgets-move {
     background-color: rgba(0, 0, 0, 0) !important;
     background-image: url("../../../modules/orchard.widgets/styles/images/arrows.png") !important;
     border: 0 none !important;
 }
+
+.widgets-actions .button.grey {
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(59, 130, 154, 1.0)), to(rgba(70, 142, 166, 1.0)));
+    background: -moz-linear-gradient(top, rgba(59, 130, 154, 1.0), rgba(70, 142, 166, 1.0));
+    border: 1px solid #2ab9e8 !important;
+    color: #fff !important;
+}
+
+.content-picker .button.grey {
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(59, 130, 154, 1.0)), to(rgba(70, 142, 166, 1.0)));
+    background: -moz-linear-gradient(top, rgba(59, 130, 154, 1.0), rgba(70, 142, 166, 1.0));
+    border: 1px solid #2ab9e8 !important;
+    color: #fff !important;
+}
+
 button.link {
     background: rgba(0, 0, 0, 0) none repeat scroll 0 0 !important;
     border: 0 none !important;
     color: #252c36 !important;
 }
 
-#header {
-    background: none !important;
-    height: 127px !important;
-    margin: 16px 0 0;
+.localmenu li.selected {
+    border-top: 3px solid #155878;
 }
 
-#site {
-    background: #252c36 none repeat scroll 0 0 !important;
-    color: #fff !important;
-    font-size: 1.385em
-}
-
-#content {
-    background-color: none !important;
-    border: 0px !important;
+/*Ovverides jquery UI in order to make text into tabs same as the others */
+.ui-widget {
+    font-size: 1em !important;
 }
