@@ -6,6 +6,11 @@
 @using (Script.Foot()) {
     <script type="text/javascript">
         $(function () {
+                    @if (!Model.MailMessageSent) { 
+            <text>$('#mail-comm-container :input, #mail-comm-container select').attr('readonly', 'readonly');</text>
+                    }
+
+
             $('.rcswitcher-checkbox-mail').rcSwitcher({
                 theme: 'flat',
                 blobOffset: 1,
@@ -40,10 +45,10 @@
     @Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
     @if (!Model.MailMessageSent) { 
         @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-mail" }) 
-            <i class="fa fa-times-circle" style="color:red"></i> @T("Message not yet sent.")
+        <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet sent.")
     } else {
         @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-mail", @disabled = "disabled" }) 
-            <i class="fa fa-check-circle" style="color:green"></i> @T("Message already sent.")
+        <i class="fa fa-check-circle" style="color: green"></i> @T("Message already sent.")
     }
 </fieldset>
 
