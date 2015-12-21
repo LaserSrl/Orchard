@@ -1,15 +1,19 @@
 ﻿using System.Data;
 using Laser.Orchard.Maps.Models;
+using Orchard;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Data;
 using Orchard.Data.Migration;
 
-namespace Laser.Orchard.Maps
-{
-    public class Migrations : DataMigrationImpl
-    {
-        public int Create()
-        {
+namespace Laser.Orchard.Maps {
+    public class Migrations : DataMigrationImpl {
+        private readonly IWorkContextAccessor _workContext;
+        public Migrations(IWorkContextAccessor workContext) {
+            _workContext = workContext;
+        }
+
+        public int Create() {
             // Creating table MapRecord
             SchemaBuilder.CreateTable("MapRecord", table => table
                 .ContentPartRecord()
@@ -23,8 +27,7 @@ namespace Laser.Orchard.Maps
             return 1;
         }
 
-        public int UpdateFrom1()
-        {
+        public int UpdateFrom1() {
             // Create a new widget content type with our map
             ContentDefinitionManager.AlterTypeDefinition("MapWidget", cfg => cfg
                 .WithPart("MapPart")
@@ -36,20 +39,52 @@ namespace Laser.Orchard.Maps
         }
 
         public int UpdateFrom2() {
-            SchemaBuilder.AlterTable("MapRecord", table => table.AddColumn("LocationInfo",DbType.String, column=>column.WithLength(100)));
+            SchemaBuilder.AlterTable("MapRecord", table => table.AddColumn("LocationInfo", DbType.String, column => column.WithLength(100)));
             SchemaBuilder.AlterTable("MapRecord", table => table.AddColumn("LocationAddress", DbType.String, column => column.WithLength(255)));
             return 3;
         }
 
-        public int UpdateFrom3() { 
+        public int UpdateFrom3() {
             ContentDefinitionManager.AlterPartDefinition(typeof(MapPart).Name, cfg => cfg
-                .WithField("MapSourceFile",fieldBuilder => fieldBuilder
+                .WithField("MapSourceFile", fieldBuilder => fieldBuilder
                     .WithDisplayName("Map Source")
                     .OfType("MediaLibraryPickerField")
-                    .WithSetting("MediaLibraryPickerFieldSettings.Required","False")
-                    .WithSetting(" MediaLibraryPickerFieldSettings.Multiple","False"))
+                    .WithSetting("MediaLibraryPickerFieldSettings.Required", "False")
+                    .WithSetting(" MediaLibraryPickerFieldSettings.Multiple", "False"))
                 .Attachable());
             return 4;
+        }
+
+        /// <summary>
+        /// Converte la Part in una Part Draftabile
+        /// </summary>
+        /// <returns></returns>
+        public int UpdateFrom4() {
+            SchemaBuilder.CreateTable("MapVersionRecord",
+             table => table
+              .ContentPartVersionRecord()
+                .Column("Latitude", DbType.Single)
+                .Column("Longitude", DbType.Single)
+                .Column("LocationInfo", DbType.String, column => column.WithLength(100))
+                .Column("LocationAddress", DbType.String, column => column.WithLength(255))
+            );
+            var childRepo = _workContext.GetContext().Resolve<IRepository<MapRecord>>();
+            var childVersionedRepo = _workContext.GetContext().Resolve<IRepository<MapVersionRecord>>();
+
+            foreach (var row in childRepo.Table) {
+                foreach (var version in row.ContentItemRecord.Versions) {
+                    var newItem = new MapVersionRecord() {
+                        ContentItemRecord = row.ContentItemRecord,
+                        ContentItemVersionRecord = version,
+                        Latitude = row.Latitude,
+                        LocationAddress = row.LocationAddress,
+                        LocationInfo = row.LocationInfo,
+                        Longitude = row.Longitude
+                    };
+                    childVersionedRepo.Create(newItem);
+                }
+            }
+            return 5;
         }
     }
 }

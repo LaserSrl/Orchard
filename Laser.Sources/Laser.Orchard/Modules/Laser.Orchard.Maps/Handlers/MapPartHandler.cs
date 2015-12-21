@@ -6,7 +6,7 @@ namespace Laser.Orchard.Maps.Handlers
 {
     public class MapPartHandler : ContentHandler
     {
-        public MapPartHandler(IRepository<MapRecord> repository)
+        public MapPartHandler(IRepository<MapVersionRecord> repository)
         {
             Filters.Add(StorageFilter.For(repository));
         }

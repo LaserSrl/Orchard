@@ -56,7 +56,12 @@ namespace Laser.Orchard.Maps.Projections {
                         catch { throw new Exception(T("Validation Parameters: Latitude, Longitude, Dist not correct").ToString()); }
                         if ((lat != 0 || lon != 0 ) && dist >= 0) {
                             var conrners = _mapServices.GetTopRightAndBottomLeft(lat, lon, dist);
-                            context.Query = query.Where(x => x.ContentPartRecord<MapRecord>(), x => x.Between("Latitude", conrners[1][0], conrners[0][0])).Where(x => x.ContentPartRecord<MapRecord>(), x => x.Between("Longitude", conrners[1][1], conrners[0][1]));
+                            var minLat = Math.Min(conrners[1][0], conrners[0][0]);
+                            var maxLat = Math.Max(conrners[1][0], conrners[0][0]);
+                            var minLon = Math.Min(conrners[1][1], conrners[0][1]);
+                            var maxLon = Math.Max(conrners[1][1], conrners[0][1]);
+
+                            context.Query = query.Where(x => x.ContentPartRecord<MapVersionRecord>(), x => x.Between("Latitude", minLat, maxLat)).Where(x => x.ContentPartRecord<MapVersionRecord>(), x => x.Between("Longitude", minLon, maxLon));
                         }
                     }
          //   }
