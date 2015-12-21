@@ -2,12 +2,17 @@
 @{
     Script.Require("rcswitcher").AtHead();
     Style.Require("rcswitcher").AtHead();
+    bool disabledElements = !Model.MailMessageSent;
 }
 @using (Script.Foot()) {
     <script type="text/javascript">
         $(function () {
-                    @if (!Model.MailMessageSent) { 
-            <text>$('#mail-comm-container :input, #mail-comm-container select').attr('readonly', 'readonly');</text>
+                    @if (disabledElements) { 
+            <text>
+            $('#mail-comm-container :input').attr('readonly', 'readonly');
+            $('#mail-comm-container .button.add').remove();
+            $('#mail-comm-container .content-picker-remove').remove();
+            </text>
                     }
 
 
@@ -43,7 +48,7 @@
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
-    @if (!Model.MailMessageSent) { 
+    @if (!disabledElements) { 
         @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-mail" }) 
         <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet sent.")
     } else {

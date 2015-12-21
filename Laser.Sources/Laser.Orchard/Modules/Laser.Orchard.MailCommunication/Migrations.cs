@@ -22,5 +22,16 @@ namespace Laser.Orchard.MailCommunication {
                 .WithPart("CustomTemplatePickerPart"));
             return 1;
         }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition("CustomTemplate",
+                part => part.WithField("ForEmailCommunication",
+                    cfg => cfg.OfType("BooleanField"))
+                    );
+
+            ContentDefinitionManager.AlterTypeDefinition("CustomTemplate",
+                type => type.WithPart("CustomTemplate"));
+            return 2;
+        }
     }
 }
