@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AdvertisingAdminController.cs" />
     <Compile Include="Controllers\ContactsAdminController.cs" />
+    <Compile Include="Drivers\CommunicationContactDriver.cs" />
     <Compile Include="Drivers\QueryFilterDriver.cs" />
     <Compile Include="Features\CommunicationFeature.cs" />
     <Compile Include="Handlers\CommunicationContactPartHandler.cs" />

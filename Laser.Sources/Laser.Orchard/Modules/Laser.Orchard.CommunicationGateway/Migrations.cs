@@ -156,5 +156,13 @@ namespace Laser.Orchard.CommunicationGateway {
                    );
             return 5;
         }
+
+        public int UpdateFrom5() {
+                 SchemaBuilder.AlterTable("CommunicationContactPartRecord",
+                    table => table
+                    .AddColumn<int>("UserPartRecord_Id")
+                  );
+                  return 6;
+        }
     }
 }

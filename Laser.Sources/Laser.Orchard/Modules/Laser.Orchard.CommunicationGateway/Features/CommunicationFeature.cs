@@ -4,14 +4,16 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Environment;
+using Orchard.Localization;
 using Orchard.Users.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 
 namespace Laser.Orchard.CommunicationGateway.Features {
 
-    public class CommunicationFeature : IFeatureEventHandler {
+    public class CommunicationFeature : IFeatureEventHandler{
         private readonly IOrchardServices _orchardServices;
         private readonly IContentExtensionsServices _contentExtensionsServices;
 
@@ -35,11 +37,12 @@ namespace Laser.Orchard.CommunicationGateway.Features {
                 var users = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().List();
                 //TODO test with 1 Communication inserted
                 if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Count() > 0) {
-                    contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().List().Select(y => y.As<CommunicationContactPart>().User_Id).ToList();
+                    contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().List().Select(y => y.As<CommunicationContactPart>().UserIdentifier).ToList();
                 }
                 var userWithNoConcat = users.Where(x => !contactsUsers.Contains(x.Id));
                 foreach (var user in userWithNoConcat) {
                     ContentItem Contact = _orchardServices.ContentManager.New("CommunicationContact");
+              
                     Contact.As<TitlePart>().Title = user.Email + " " + user.UserName;
                     bool asProfilePart = false;
 
@@ -49,6 +52,10 @@ namespace Laser.Orchard.CommunicationGateway.Features {
                     }
                     catch { asProfilePart = false; }
                     _orchardServices.ContentManager.Create(Contact);
+               
+                    dynamic mypart = (((dynamic)Contact).CommunicationContactPart);
+                    mypart.GetType().GetProperty("UserIdentifier").SetValue(mypart, user.Id, null);
+                  //  Contact.As<CommunicationContactPart>().User_Id = user.Id;
                     if (asProfilePart) {
                         List<ContentPart> Lcp = new List<ContentPart>();
                         Lcp.Add(((ContentPart)((dynamic)Contact).ProfilePart));
@@ -79,5 +86,6 @@ namespace Laser.Orchard.CommunicationGateway.Features {
         public void Uninstalling(global::Orchard.Environment.Extensions.Models.Feature feature) {
             //throw new NotImplementedException();
         }
+
     }
 }
