@@ -69,12 +69,20 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             }
             else
                 content = _contentManager.Get(id, VersionOptions.Latest);
-            var model = _contentManager.UpdateEditor(content, this);
             if (idCampaign > 0) {
                 List<int> lids = new List<int>();
                 lids.Add(idCampaign);
                 ((dynamic)content).CommunicationAdvertisingPart.Campaign.Ids = lids.ToArray();
+                dynamic campaignContent = _contentManager.Get(lids.First());
+
+                // Controllo validità della campagna
+                if (campaignContent.CommunicationCampaignPart.ToDate.DateTime != null && campaignContent.CommunicationCampaignPart.ToDate.DateTime <= DateTime.UtcNow){
+                    _notifier.Add(NotifyType.Error, T("Campaign validity has expired. No changes allowed."));
+                    return RedirectToAction("Index", "AdvertisingAdmin", new { id = idCampaign });
+                }
             }
+
+            var model = _contentManager.UpdateEditor(content, this);
             if (!ModelState.IsValid) {
                 foreach (string key in ModelState.Keys) {
                     if (ModelState[key].Errors.Count > 0)
@@ -147,6 +155,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
                 UserName = p.As<CommonPart>().Owner.UserName,
                 //        Option = p.As<FacebookPostPart>().FacebookMessageSent
+                ContentItem = p
             });
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
             dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(listVM.Count());

@@ -130,7 +130,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 Id = p.Id,
                 Title = p.As<TitlePart>().Title,
                 ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
-                UserName = p.As<CommonPart>().Owner.UserName
+                UserName = p.As<CommonPart>().Owner.UserName,
+                ContentItem = p
             });
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
             dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(listVM.Count());
