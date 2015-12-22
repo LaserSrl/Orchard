@@ -3,9 +3,11 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using System.ComponentModel;
 using Orchard.Localization;
+using System;
 
 namespace Laser.Orchard.Maps.Models
 {
+    [Obsolete("Replaced with 'MapVersionRecord' to enable versioning of this content")]
     public class MapRecord : ContentPartRecord
     {
         public virtual float Latitude { get; set; }
@@ -14,7 +16,14 @@ namespace Laser.Orchard.Maps.Models
         public virtual string LocationAddress { get; set; }
     }
 
-    public class MapPart : ContentPart<MapRecord>
+    public class MapVersionRecord : ContentPartVersionRecord {
+        public virtual float Latitude { get; set; }
+        public virtual float Longitude { get; set; }
+        public virtual string LocationInfo { get; set; }
+        public virtual string LocationAddress { get; set; }
+    }
+
+    public class MapPart : ContentPart<MapVersionRecord>
     {
         [Required]
         [DisplayName("Latitude")]

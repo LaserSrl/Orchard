@@ -23,6 +23,9 @@
             onText: '@T("YES")',
             offText: '@T("NO")'
         })
+        @if (Model.TwitterMessageSent) { 
+            <text>$('#twitter-comm-container :input, #twitter-comm-container select').attr('readonly', 'readonly');</text>
+        }
 
         $("#@Html.FieldIdFor(model => model.TwitterMessage)").keypress(function (event) {
             // Check the keyCode and if the user pressed Enter (code = 13) 
@@ -109,14 +112,14 @@
             }
         </fieldset>
         <fieldset>
-            @Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
+            @Html.LabelFor(m => m.SendOnNextPublish, T("Post on next publish").Text, new { @class = "forcheckbox" })
             @if (!Model.TwitterMessageSent) { 
                 @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-tw" })
-                <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet sent.")
+                <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet posted.")
 
             } else {
                 @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-tw", @disabled = "disabled" })
-                <i class="fa fa-check-circle" style="color: green"></i> @T("Message already sent.")
+                <i class="fa fa-check-circle" style="color: green"></i> @T("Message already posted.")
             }
         </fieldset>
     }

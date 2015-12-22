@@ -2,10 +2,20 @@
 @{
     Script.Require("rcswitcher").AtHead();
     Style.Require("rcswitcher").AtHead();
+    bool disabledElements = !Model.MailMessageSent;
 }
 @using (Script.Foot()) {
     <script type="text/javascript">
         $(function () {
+                    @if (disabledElements) { 
+            <text>
+            $('#mail-comm-container :input').attr('readonly', 'readonly');
+            $('#mail-comm-container .button.add').remove();
+            $('#mail-comm-container .content-picker-remove').remove();
+            </text>
+                    }
+
+
             $('.rcswitcher-checkbox-mail').rcSwitcher({
                 theme: 'flat',
                 blobOffset: 1,
@@ -38,12 +48,12 @@
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
-    @if (!Model.MailMessageSent) { 
+    @if (!disabledElements) { 
         @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-mail" }) 
-            <i class="fa fa-times-circle" style="color:red"></i> @T("Message not yet sent.")
+        <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet sent.")
     } else {
         @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-mail", @disabled = "disabled" }) 
-            <i class="fa fa-check-circle" style="color:green"></i> @T("Message already sent.")
+        <i class="fa fa-check-circle" style="color: green"></i> @T("Message already sent.")
     }
 </fieldset>
 
