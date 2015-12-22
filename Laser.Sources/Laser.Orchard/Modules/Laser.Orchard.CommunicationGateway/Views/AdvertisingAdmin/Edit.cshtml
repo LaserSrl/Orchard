@@ -1,10 +1,10 @@
 ﻿@{ Layout.Title = "Edit Advertising"; }
- @{
-     Style.Include("CommunicationGateway-admin.css").AtHead();
+@{
+    Style.Include("CommunicationGateway-admin.css").AtHead();
 
-     Script.Require("JQuery").AtHead();
-     Script.Require("jQueryUI_Tabs").AtHead();
-     Style.Require("FontAwesome430").AtHead();
+    Script.Require("JQuery").AtHead();
+    Script.Require("jQueryUI_Tabs").AtHead();
+    Style.Require("FontAwesome430").AtHead();
 
 }
 @using (Script.Foot()) {
@@ -18,7 +18,6 @@
             });
             $("#tab-folder-container").tabs();
         });
-
     </script>
 }
 @using (Html.BeginFormAntiForgeryPost()) {

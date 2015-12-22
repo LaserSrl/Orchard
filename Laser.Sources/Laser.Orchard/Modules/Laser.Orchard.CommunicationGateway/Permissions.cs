@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 using System.Collections.Generic;
-using Orchard.Environment.Extensions.Models;
-
 
 namespace Laser.Orchard.CommunicationGateway {
-    public class Permissions: IPermissionProvider{
-        public static readonly Permission ManageCampaigns = new Permission { Description = "Manage Campaigns", Name = "ManageCampaigns" };
+
+    public class Permissions : IPermissionProvider {
+        public static readonly Permission ManageCampaigns = new Permission { Description = "Manage Comunication Campaigns", Name = "ManageCampaigns" };
         public static readonly Permission ManageCommunicationAdv = new Permission { Description = "Manage Comunication Messages", Name = "ManageCommunicationAdv" };
-    
+        public static readonly Permission ManageContact = new Permission { Description = "Manage Comunication Contact", Name = "ManageContact" };
+
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new[] {
                 ManageCampaigns,
-                ManageCommunicationAdv
+                ManageCommunicationAdv,
+                ManageContact
             };
         }
 
@@ -25,11 +23,10 @@ namespace Laser.Orchard.CommunicationGateway {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                 Permissions = new[] {ManageCampaigns,ManageCommunicationAdv}
+                 Permissions = new[] {ManageCampaigns,ManageCommunicationAdv,ManageContact}
                 },
                 new PermissionStereotype {
                     Name = "Editor",
-                    Permissions = new[] {ManageCampaigns,ManageCommunicationAdv}
                 },
                 new PermissionStereotype {
                     Name = "Moderator",

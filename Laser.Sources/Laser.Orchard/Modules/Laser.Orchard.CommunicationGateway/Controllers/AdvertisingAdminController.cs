@@ -13,13 +13,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.MediaLibrary.Models;
-using Laser.Orchard.CommunicationGateway.Models;
-using System.Net;
-using System.IO;
-using System.Dynamic;
 
 namespace Laser.Orchard.CommunicationGateway.Controllers {
+
     [ValidateInput(false)]
     public class AdvertisingAdminController : Controller, IUpdateModel {
         private readonly IOrchardServices _orchardServices;
@@ -39,9 +35,6 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             T = NullLocalizer.Instance;
         }
 
-
-
-
         [Admin]
         public ActionResult Edit(int id, int idCampaign = 0) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
@@ -57,11 +50,11 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 //  model = _contentManager.BuildEditor(newContent);
                 //   _contentManager.Create(newContent);
                 model = _contentManager.BuildEditor(newContent);
-            } else
+            }
+            else
                 model = _contentManager.BuildEditor(_contentManager.Get(id, VersionOptions.Latest));
             return View((object)model);
         }
-
 
         [HttpPost, ActionName("Edit"), Admin]
         public ActionResult EditPOST(int id, int idCampaign = 0) {
@@ -73,7 +66,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 var newContent = _contentManager.New(contentType);
                 _contentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
-            } else
+            }
+            else
                 content = _contentManager.Get(id, VersionOptions.Latest);
             var model = _contentManager.UpdateEditor(content, this);
             if (idCampaign > 0) {
@@ -96,11 +90,9 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 // _contentManager.Unpublish(content);
                 _contentManager.Publish(content);
                 //  _contentManager.Unpublish(content); // inserito per permettere il publishlater
-
             }
             return RedirectToAction("Index", "AdvertisingAdmin", new { id = idCampaign });
         }
-
 
         [HttpPost]
         [Admin]
@@ -122,8 +114,6 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 PageSize = pageSize
             }, search, id);
         }
-
-
 
         [HttpPost]
         [Admin]

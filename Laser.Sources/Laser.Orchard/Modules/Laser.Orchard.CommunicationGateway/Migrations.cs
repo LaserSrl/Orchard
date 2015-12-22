@@ -112,6 +112,7 @@ namespace Laser.Orchard.CommunicationGateway {
         public int UpdateFrom1() {
             return 2;
         }
+
         public int UpdateFrom2() {
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
@@ -120,6 +121,7 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 3;
         }
+
         public int UpdateFrom3() {
             ContentDefinitionManager.AlterPartDefinition(
                 "CommunicationAdvertisingPart",
@@ -130,5 +132,29 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 4;
         }
-     }
+
+        public int UpdateFrom4() {
+            ContentDefinitionManager.AlterPartDefinition(
+              "CommunicationContactPart",
+               b => b
+               .Attachable(false)
+            );
+            SchemaBuilder.CreateTable("CommunicationContactPartRecord",
+                table => table
+                    .ContentPartRecord()
+            );
+
+            ContentDefinitionManager.AlterTypeDefinition(
+                   "CommunicationContact", type => type
+                       .WithPart("TitlePart")
+                       .WithPart("CommonPart")
+                       .WithPart("IdentityPart")
+                       .WithPart("CommunicationContactPart")
+                       .WithPart("ProfilePart")
+                       .Creatable(false)
+                       .Draftable(false)
+                   );
+            return 5;
+        }
+    }
 }
