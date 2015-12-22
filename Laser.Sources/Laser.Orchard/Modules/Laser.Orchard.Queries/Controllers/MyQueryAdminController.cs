@@ -1,5 +1,6 @@
-﻿using Laser.Orchard.Queries.ViewModels;
-using Laser.Orchard.Queries.Helpers;
+﻿using Laser.Orchard.Queries.Helpers;
+using Laser.Orchard.Queries.Services;
+using Laser.Orchard.Queries.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
@@ -13,10 +14,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
-
 namespace Laser.Orchard.Queries.Controllers {
+
     public class MyQueryAdminController : Controller, IUpdateModel {
         private readonly IOrchardServices _orchardServices;
+        private readonly ICustomQuery _customQuery;
         private readonly IContentManager _contentManager;
         private readonly string contentType = "MyCustomQuery";
         private readonly dynamic TestPermission = Permissions.CustomQuery;
@@ -26,10 +28,12 @@ namespace Laser.Orchard.Queries.Controllers {
         public MyQueryAdminController(
             IOrchardServices orchardServices,
             INotifier notifier,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            ICustomQuery customQuery) {
             _orchardServices = orchardServices;
             _contentManager = contentManager;
             _notifier = notifier;
+            _customQuery = customQuery;
             T = NullLocalizer.Instance;
         }
 
@@ -88,7 +92,6 @@ namespace Laser.Orchard.Queries.Controllers {
             return RedirectToAction("Index", "MyQueryAdmin");
         }
 
-
         [HttpGet]
         [Admin]
         public ActionResult Index(int? page, int? pageSize, SearchVM search) {
@@ -108,9 +111,12 @@ namespace Laser.Orchard.Queries.Controllers {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
             var expression = search.Expression;
-            IContentQuery<ContentItem> contentQuery = _orchardServices.ContentManager.Query().ForType(contentType).OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
-            IEnumerable<ContentItem> ListContent = contentQuery.List();
+            string[] listcontentstype = new string[] { contentType, "Query" };
 
+            //IEnumerable<ContentItem> ListContent1 = _orchardServices.ContentManager.Query(VersionOptions.Latest).ForType(listcontentstype).List().Where(x => x.ContentType == contentType || ((dynamic)x).QueryUserFilterExtensionPart.UserQuery.Value == true);
+
+            //  IEnumerable<ContentItem> ListContent=  _orchardServices.ContentManager.Query(VersionOptions.Latest).ForType(listcontentstype).OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc).List().Where(x => x.ContentType == contentType || ((dynamic)x).QueryUserFilterExtensionPart.UserQuery.Value == true);
+            IEnumerable<ContentItem> ListContent = _customQuery.ListContent();
             if (!string.IsNullOrEmpty(search.Expression))
                 ListContent = from content in ListContent
                               where
@@ -120,8 +126,10 @@ namespace Laser.Orchard.Queries.Controllers {
                 Id = p.Id,
                 Title = p.As<TitlePart>().Title,
                 ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
-                UserName = p.As<CommonPart>().Owner.UserName
+                UserName = p.As<CommonPart>().Owner.UserName,
+                ContentType = p.ContentType
             });
+
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
             dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(listVM.Count());
             var list = listVM.Skip(pager.GetStartIndex())

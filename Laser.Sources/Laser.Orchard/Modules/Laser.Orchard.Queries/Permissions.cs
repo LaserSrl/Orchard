@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 using System.Collections.Generic;
-using Orchard.Environment.Extensions.Models;
 
 namespace Laser.Orchard.Queries {
-    public class Permissions: IPermissionProvider{
+
+    public class Permissions : IPermissionProvider {
         public static readonly Permission CustomQuery = new Permission { Description = "Manage CustomQuery", Name = "CustomQuery" };
-      
+        public static readonly Permission UserQuery = new Permission { Description = "Manage CustomQuery", Name = "UserQuery" };
+
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new[] {
-                CustomQuery
+                CustomQuery,
+                UserQuery
             };
         }
 
@@ -22,7 +21,7 @@ namespace Laser.Orchard.Queries {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                 Permissions = new[] {CustomQuery}
+                 Permissions = new[] {CustomQuery,UserQuery}
                 },
                 new PermissionStereotype {
                     Name = "Editor",

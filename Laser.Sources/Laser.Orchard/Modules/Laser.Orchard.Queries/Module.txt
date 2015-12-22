@@ -8,3 +8,4 @@ Description: Description for the module
 Features:
     Laser.Orchard.Queries:
         Description: Description for feature Laser.Orchard.Queries.
+		Dependencies:	Orchard.Forms,Orchard.Projections,Orchard.Fields

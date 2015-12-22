@@ -2,6 +2,7 @@
 using Orchard.UI.Navigation;
 
 namespace Laser.Orchard.Queries.Navigation {
+
     public class AdminMenu : INavigationProvider {
 
         public string MenuName {

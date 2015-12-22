@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Laser.Orchard.Queries.ViewModels {
+
     public class SearchIndexVM {
         public IList<ContentIndexVM> ContentsIndexVM { get; set; }
         public dynamic Pager { get; set; }
@@ -18,7 +17,7 @@ namespace Laser.Orchard.Queries.ViewModels {
         //    //Search.ShowAll = false;
         //}
 
-        public SearchIndexVM(IEnumerable<ContentIndexVM> contents, SearchVM search, dynamic pager, dynamic optionParameter=null) {
+        public SearchIndexVM(IEnumerable<ContentIndexVM> contents, SearchVM search, dynamic pager, dynamic optionParameter = null) {
             ContentsIndexVM = contents.ToArray();
             Search = search;
             Pager = pager;

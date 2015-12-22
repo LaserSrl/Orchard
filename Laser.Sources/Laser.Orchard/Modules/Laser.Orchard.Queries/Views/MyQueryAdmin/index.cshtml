@@ -1,13 +1,15 @@
 ﻿@model Laser.Orchard.Queries.ViewModels.SearchIndexVM
+@using Orchard.Projections.Services
 @{
-    Layout.Title = T("List Queries").ToString(); 
+    Layout.Title = T("List Queries").ToString();
     var ContentsIndexVM = Model.ContentsIndexVM;
- }
+}
 <div class="manage">
-    <a class="button primaryAction" href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = 0})" title="@T("Create New Query")">@T("Create New Query")</a>
+    <a class="button primaryAction" href="@Url.Action("Create", "UserQueryAdmin", new { area = "Laser.Orchard.Queries", id = 0 })" title="@T("Create New Query")">@T("Create New UserQuery")</a>
+    <a class="button primaryAction" href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = 0 })" title="@T("Create New Query")">@T("Create New Query")</a>
 </div>
 @using (Html.BeginForm("Index", "MyQueryAdmin", FormMethod.Post)) {
-    @Html.AntiForgeryToken()  
+    @Html.AntiForgeryToken()
     <fieldset class="bulk-actions">
         <label for="search">@T("Search:")</label>
         @Html.TextBoxFor(m => m.Search.Expression)
@@ -16,25 +18,34 @@
         <a href="@Url.Action("Index")">@T("Clear")</a>
     </fieldset>
 
-
 }
-
 
 <fieldset class="contentItems bulk-items">
     <ul>
 
         @{
+            IQueryService queryService;
+            WorkContext.TryResolve<IQueryService>(out queryService);
+
             foreach (var contentIndexVM in ContentsIndexVM) {
-          
+                int queryid = 0;
             <li>
                 <div class="summary" itemscope="itemscope" itemid="@contentIndexVM.Id" itemtype="http://orchardproject.net/data/ContentItem">
                     <div class="properties">
-                        <h3><a href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })">@contentIndexVM.Title</a></h3>
+                        <h3>
+                            @if (contentIndexVM.ContentType.ToLower() == "query") {
+                                queryid = queryService.GetQuery(contentIndexVM.Id).FilterGroups.FirstOrDefault().Id;
+                                <a href="@Url.Action("Edit", "UserQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })">@contentIndexVM.Title</a>
+                            }
+                            else {
+                                <a href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })">@contentIndexVM.Title</a>
+                            }
+                        </h3>
                         <div class="contentType">
                         </div>
                         <div class="metadata">
                             <ul class="pageStatus">
-                                <li>@T("Last modified"): 
+                                <li>@T("Last modified"):
                     @{TimeSpan tp = DateTime.UtcNow - (contentIndexVM.ModifiedUtc ?? DateTime.UtcNow);// content.CommonPart.ModifiedUtc;
 
                       if (tp.Days > 0) {
@@ -58,9 +69,19 @@
                         </div>
                     </div>
                     <div class="related">
-                        <a href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })">@T("Edit")</a>
-                        &nbsp;&vert;&nbsp;
-                        <a href="@Url.Action("Remove", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id  })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                        @if (contentIndexVM.ContentType.ToLower() == "query") {
+
+                            <a href="@Url.Action("Edit", "UserQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })">@T("Edit")</a>
+                            @Html.Raw("&nbsp;&vert;&nbsp");
+                            <a href="@Url.Action("Delete", "UserQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+
+                        }
+                        else {
+                            <a href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })">@T("Edit")</a>
+                            @Html.Raw("&nbsp;&vert;&nbsp");
+                            <a href="@Url.Action("Remove", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+
+                        }
                     </div>
                 </div>
             </li>
@@ -73,5 +94,3 @@
 @using (Html.BeginForm("Index", "Routes", FormMethod.Post)) {
     @Display(Model.Pager)
 }
-
-

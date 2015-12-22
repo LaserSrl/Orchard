@@ -52,9 +52,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Fields">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Fields\bin\Orchard.Fields.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Forms">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Forms\bin\Orchard.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Framework, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Projections">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -82,23 +91,44 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\FilterController.cs" />
     <Compile Include="Controllers\MyQueryAdminController.cs" />
+    <Compile Include="Controllers\UserQueryAdminController.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\QueryUserFilterExtensionPart.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Services\ICustomQuery.cs" />
+    <Compile Include="Settings\QueryUserFilterExtensionPartEditEvents.cs" />
+    <Compile Include="Settings\QueryUserFilterExtensionPartSettingVM.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
     <Compile Include="ViewModels\SearchIndexVM.cs" />
     <Compile Include="ViewModels\SearchVM.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Content Include="Views\DefinitionTemplates\QueryUserFilterExtensionPartSettingVM.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\MyQueryAdmin\Edit.cshtml" />
-    <Content Include="Views\MyQueryAdmin\index.cshtml" />
+    <Content Include="Views\MyQueryAdmin\Index.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\UserQueryAdmin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Filter\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Filter\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\UserQueryAdmin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\UserQueryAdmin\Preview.cshtml" />
+  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

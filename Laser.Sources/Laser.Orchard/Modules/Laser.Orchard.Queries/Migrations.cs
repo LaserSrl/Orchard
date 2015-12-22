@@ -13,7 +13,7 @@ namespace Laser.Orchard.Queries {
                    .Attachable(false)
                    .WithField("QueryString", cfg => cfg.OfType("TextField")
                        .WithDisplayName("Text Query")
-                         .WithSetting("TextFieldSettings.Flavor", "TextArea") 
+                         .WithSetting("TextFieldSettings.Flavor", "TextArea")
                         .WithSetting("TextFieldSettings.Required", "true")
                         .WithSetting("TextFieldSettings.Hint", "Insert a query")
                         )
@@ -37,7 +37,21 @@ namespace Laser.Orchard.Queries {
                 .Creatable(false)
                 .DisplayedAs("CustomQuery")
               );
-
+            ContentDefinitionManager.AlterPartDefinition(
+                 "QueryUserFilterExtensionPart",
+                  b => b
+                     .Attachable(false)
+                     .WithField("UserQuery", cfg => cfg.OfType("BooleanField")
+                         .WithSetting("BooleanFieldSettings.Hint", "If checked, the query will modified by users")
+                         .WithSetting("BooleanFieldSettings.DefaultValue", "false")
+                     )
+               );
+            ContentDefinitionManager.AlterTypeDefinition(
+                    "Query",
+                    type => type
+                        .WithPart("CommonPart")
+                          .WithPart("QueryUserFilterExtensionPart", p => p.WithSetting("QueryUserFilterExtensionPartSettingVM.QueryUserFilter", "ProfilePartContentFields"))
+                    );
             return 1;
         }
     }
