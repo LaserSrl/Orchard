@@ -23,9 +23,9 @@
             onText: '@T("YES")',
             offText: '@T("NO")'
         })
-        @if (Model.TwitterMessageSent) { 
+@*        @if (Model.TwitterMessageSent) { 
             <text>$('#twitter-comm-container :input, #twitter-comm-container select').attr('readonly', 'readonly');</text>
-        }
+        }*@
 
         $("#@Html.FieldIdFor(model => model.TwitterMessage)").keypress(function (event) {
             // Check the keyCode and if the user pressed Enter (code = 13) 
@@ -120,6 +120,7 @@
             } else {
                 @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-tw", @disabled = "disabled" })
                 <i class="fa fa-check-circle" style="color: green"></i> @T("Message already posted.")
+                <div class="message message-Error">@T("This Twitter message has been already posted. You will be able to edit and save it, but it will not be posted anymore on next publish.")</div>
             }
         </fieldset>
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Orchard.ContentManagement;
 
 namespace Laser.Orchard.CommunicationGateway.ViewModels {
     public class ContentIndexVM {
@@ -10,6 +11,6 @@ namespace Laser.Orchard.CommunicationGateway.ViewModels {
         public string UserName { get; set; }
         public DateTime? ModifiedUtc { get; set; }
         public dynamic Option { get; set; }
-
+        public ContentItem ContentItem { get; set; }
     }
 }

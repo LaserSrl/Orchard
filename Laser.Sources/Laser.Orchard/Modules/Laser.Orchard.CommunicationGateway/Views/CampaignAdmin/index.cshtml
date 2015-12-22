@@ -34,19 +34,17 @@
                         </div>
                         <div class="metadata">
                             <ul class="pageStatus">
+                                <li>@T("Validity"): @(((dynamic)contentIndexVM.ContentItem).CommunicationCampaignPart.FromDate.DateTime) - @(((dynamic)contentIndexVM.ContentItem).CommunicationCampaignPart.ToDate.DateTime)&nbsp;|&nbsp;</li>
                                 <li>@T("Last modified"): 
                     @{TimeSpan tp = DateTime.UtcNow - (contentIndexVM.ModifiedUtc ?? DateTime.UtcNow);// content.CommonPart.ModifiedUtc;
 
                       if (tp.Days > 0) {
                         @Html.Raw(tp.Days.ToString() + " " + T("days ago"))
-                      }
-                      else if (tp.Hours > 0) {
+                      } else if (tp.Hours > 0) {
                         @Html.Raw(tp.Hours.ToString() + " " + T("hours ago"))
-                      }
-                      else if (tp.Minutes > 0) {
+                      } else if (tp.Minutes > 0) {
                         @Html.Raw(tp.Minutes.ToString() + " " + T("minutes ago"))
-                      }
-                      else if (tp.Seconds > 0) {
+                      } else if (tp.Seconds > 0) {
                         @Html.Raw(T("a moment ago"))
                       }
                         @Html.Raw("&nbsp;&vert;&nbsp;")
@@ -75,8 +73,7 @@
     @Display(BuildDisplay(Model.Option.VideoContent, "Detail"));
     }
 
-}
-else {
+} else {
     <br />
     using (Html.BeginForm("Index", "Routes", FormMethod.Post)) {
     @Display(Model.Pager)

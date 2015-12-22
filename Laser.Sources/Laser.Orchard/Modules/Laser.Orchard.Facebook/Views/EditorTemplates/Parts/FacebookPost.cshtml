@@ -15,9 +15,9 @@
                 onText: '@T("YES")',
                 offText: '@T("NO")'
             });
-            @if (Model.FacebookMessageSent) { 
+@*            @if (Model.FacebookMessageSent) { 
                 <text>$('#facebook-comm-container :input, #facebook-comm-container select').attr('readonly', 'readonly');</text>
-            }
+            }*@
 
         });
         $(window).load(function () {
@@ -97,6 +97,7 @@
             } else {
                 @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-fb", @disabled = "disabled" })
                 <i class="fa fa-check-circle" style="color: green"></i> @T("Message already posted.")
+                <div class="message message-Error">@T("This Facebook message has been already posted. You will be able to edit and save it, but it will not be posted anymore on next publish.")</div>
             }
         </fieldset>
  
