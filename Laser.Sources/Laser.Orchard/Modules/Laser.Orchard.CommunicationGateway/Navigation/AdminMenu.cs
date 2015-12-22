@@ -34,12 +34,25 @@ namespace Laser.Orchard.CommunicationGateway.Navigation {
                             .Action("Index", "AdvertisingAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = -10 })
                 //   .LocalNav()
                  )
-                 .Add(sub2 => sub2
-                     .Caption(T("Setting"))
+                 .Add(sub3 => sub3
+                     .Caption(T("Contacts"))
                           .Position("1.063")
-                            .Action("Facebook", "ActivatingSocial", new { area = "Laser.Orchard.CommunicationGateway" })
+                            .Action("Index", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" })
                 //   .LocalNav()
                  )
+                    .Add(sub4 => sub4
+                     .Caption(T("Settings"))
+                          .Position("1.064")
+                // .Action("Index", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" })
+                //   .LocalNav()
+                 )
+                // .Add(sub2 => sub2
+                //     .Caption(T("Setting"))
+                //          .Position("1.064")
+                //            .Action("Facebook", "ActivatingSocial", new { area = "Laser.Orchard.CommunicationGateway" })
+                ////   .LocalNav()
+                // )
+
        );
         }
     }

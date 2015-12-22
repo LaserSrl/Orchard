@@ -9,4 +9,4 @@ Features:
     Laser.Orchard.CommunicationGateway:
 	    Description: Description for feature Laser.Orchard.CommunicationGateway.
 		Category: Social
-		Dependencies: Orchard.PublishLater, Laser.Orchard.Queries,Orchard.Tags,Orchard.ContentPicker,Laser.Orchard.ShortLinks
+		Dependencies: Orchard.PublishLater, Laser.Orchard.Queries,Orchard.Tags,Orchard.ContentPicker,Laser.Orchard.ShortLinks,Laser.Orchard.StartupConfig

@@ -18,7 +18,7 @@
     </div>
 }
 @using (Html.BeginForm("Index", "AdvertisingAdmin", FormMethod.Post)) {
-    @Html.AntiForgeryToken()  
+    @Html.AntiForgeryToken()
     <fieldset class="bulk-actions">
         <label for="search">@T("Search:")</label>
         @Html.TextBoxFor(m => m.Search.Expression)
@@ -27,16 +27,14 @@
         <a href="@Url.Action("Index")">@T("Clear")</a>
     </fieldset>
 
-
 }
-
 
 <fieldset class="contentItems bulk-items">
     <ul>
 
         @{
             foreach (var contentIndexVM in ContentsIndexVM) {
-          
+
             <li>
                 <div class="summary" itemscope="itemscope" itemid="@contentIndexVM.Id" itemtype="http://orchardproject.net/data/ContentItem">
                     <div class="properties">
@@ -49,7 +47,7 @@
                                 <li> @T("Published")&nbsp;&vert;&nbsp;
                                 </li>
                                 }*@
-                                <li>@T("Last modified"): 
+                                <li>@T("Last modified"):
                     @{TimeSpan tp = DateTime.UtcNow - (contentIndexVM.ModifiedUtc ?? DateTime.UtcNow);// content.CommonPart.ModifiedUtc;
 
                       if (tp.Days > 0) {
@@ -88,5 +86,3 @@
 @using (Html.BeginForm("Index", "Routes", FormMethod.Post)) {
     @Display(Model.Pager)
 }
-
-

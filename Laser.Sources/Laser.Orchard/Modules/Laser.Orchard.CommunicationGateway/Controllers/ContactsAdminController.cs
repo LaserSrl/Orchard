@@ -9,21 +9,22 @@ using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.CommunicationGateway.Controllers {
 
-    public class CampaignAdminController : Controller, IUpdateModel {
+    public class ContactsAdminController : Controller, IUpdateModel {
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
-        private readonly string contentType = "CommunicationCampaign";
-        private readonly dynamic TestPermission = Permissions.ManageCampaigns;
+        private readonly string contentType = "CommunicationContact";
+        private readonly dynamic TestPermission = Permissions.ManageContact;
         private readonly INotifier _notifier;
         private Localizer T { get; set; }
 
-        public CampaignAdminController(
+        public ContactsAdminController(
             IOrchardServices orchardServices,
             INotifier notifier,
             IContentManager contentManager) {
@@ -34,36 +35,45 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         }
 
         [Admin]
-        public ActionResult Edit(int id) {
+        public ActionResult Edit(int id, int idCampaign = 0) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
             object model;
             if (id == 0) {
-                var newContent = _orchardServices.ContentManager.New(contentType);
-                //  model = _orchardServices.ContentManager.BuildEditor(newContent);
+                var newContent = _contentManager.New(contentType);
+                //if (idCampaign > 0) {
+                //    List<int> lids = new List<int>();
+                //    lids.Add(idCampaign);
+                //    ((dynamic)newContent).CommunicationAdvertisingPart.Campaign.Ids = lids.ToArray();
+                //}
+                //  model = _contentManager.BuildEditor(newContent);
                 //   _contentManager.Create(newContent);
                 model = _contentManager.BuildEditor(newContent);
             }
             else
-                model = _contentManager.BuildEditor(_orchardServices.ContentManager.Get(id));
+                model = _contentManager.BuildEditor(_contentManager.Get(id, VersionOptions.Latest));
             return View((object)model);
         }
 
-        [HttpPost, ActionName("Edit"), Admin, ValidateInput(false)]
+        [HttpPost, ActionName("Edit"), Admin]
         public ActionResult EditPOST(int id) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
 
             ContentItem content;
             if (id == 0) {
-                var newContent = _orchardServices.ContentManager.New(contentType);
-                _orchardServices.ContentManager.Create(newContent);
+                var newContent = _contentManager.New(contentType);
+                _contentManager.Create(newContent);
                 content = newContent;
             }
             else
-                content = _orchardServices.ContentManager.Get(id);
-            var model = _orchardServices.ContentManager.UpdateEditor(content, this);
-
+                content = _contentManager.Get(id, VersionOptions.Latest);
+            var model = _contentManager.UpdateEditor(content, this);
+            //if (idCampaign > 0) {
+            //    List<int> lids = new List<int>();
+            //    lids.Add(idCampaign);
+            //    ((dynamic)content).CommunicationAdvertisingPart.Campaign.Ids = lids.ToArray();
+            //}
             if (!ModelState.IsValid) {
                 foreach (string key in ModelState.Keys) {
                     if (ModelState[key].Errors.Count > 0)
@@ -73,8 +83,15 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _orchardServices.TransactionManager.Cancel();
                 return View(model);
             }
-            _notifier.Add(NotifyType.Information, T("Campaign saved"));
-            return RedirectToAction("Index", "CampaignAdmin");
+            //  _contentManager.Unpublish(content);
+            _notifier.Add(NotifyType.Information, T("Contact saved"));
+            //if (Request.Form["submit.Publish"] == "submit.Publish") {
+            //    // _contentManager.Unpublish(content);
+            //    _contentManager.Publish(content);
+            //    //  _contentManager.Unpublish(content); // inserito per permettere il publishlater
+
+            //}
+            return RedirectToAction("Index", "ContactsAdmin");//, new { id = idCampaign });
         }
 
         [HttpPost]
@@ -82,45 +99,43 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         public ActionResult Remove(Int32 id) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
-            ContentItem content = _orchardServices.ContentManager.Get(id);
-            IContentQuery<ContentItem> contentQuery = _orchardServices.ContentManager.Query().ForType("CommunicationAdvertising");
-
-            IEnumerable<ContentItem> ListContent = contentQuery.List().Where(x => ((int[])((dynamic)x).CommunicationAdvertisingPart.Campaign.Ids).Contains(id));
-            if (ListContent.Count() == 0)
-                _orchardServices.ContentManager.Remove(content);
-            else
-                _notifier.Add(NotifyType.Warning, T("Can't remove campaign with advertise"));
-
-            return RedirectToAction("Index", "CampaignAdmin");
+            ContentItem content = _contentManager.Get(id);
+            _contentManager.Remove(content);
+            return RedirectToAction("Index", "ContactsAdmin");
         }
 
         [HttpGet]
         [Admin]
-        public ActionResult Index(int? page, int? pageSize, SearchVM search, bool ShowVideo = false) {
+        public ActionResult Index(int? page, int? pageSize, SearchVM search) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
             return Index(new PagerParameters {
                 Page = page,
                 PageSize = pageSize
-            }, search, ShowVideo);
+            }, search);
         }
 
         [HttpPost]
         [Admin]
-        public ActionResult Index(PagerParameters pagerParameters, SearchVM search, bool ShowVideo = false) {
-            dynamic Options = new System.Dynamic.ExpandoObject();
-            Options.ShowVideo = false;
+        public ActionResult Index(PagerParameters pagerParameters, SearchVM search) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
+            dynamic Options = new System.Dynamic.ExpandoObject();
+            //if (id >= 0)
+            //    Options.Campaign = _contentManager.Get(id);
+            //else {
+            // Options.Campaign = ""; // devo inserire la proprietà Campaign altrimenti index va in exception
+            //    Options.Campaign = new System.Dynamic.ExpandoObject();
+            //     Options.Campaign.Id = id;
+            //}
             var expression = search.Expression;
-            IContentQuery<ContentItem> contentQuery = _orchardServices.ContentManager.Query().ForType(contentType).OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
-            IEnumerable<ContentItem> ListContent = contentQuery.List();
-            if (ListContent.Count() == 0 || ShowVideo) {
-                if (_orchardServices.ContentManager.Query<TitlePart, TitlePartRecord>("Video").Where(x => x.Title == "HowTo" + contentType).List().Count() > 0) {
-                    Options.ShowVideo = true;
-                    Options.VideoContent = _orchardServices.ContentManager.Query<TitlePart, TitlePartRecord>("Video").Where(x => x.Title == "HowTo" + contentType).List().Where(y => y.ContentItem.IsPublished()).FirstOrDefault().ContentItem;
-                }
-            }
+            IContentQuery<ContentItem> contentQuery = _contentManager.Query(VersionOptions.Latest).ForType(contentType).OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
+            IEnumerable<ContentItem> ListContent;
+            /*Nel caso di flash advertising la campagna è -10, quindi il filtro è sempre valido.*/
+            //if (id > 0)
+            //    ListContent = contentQuery.List().Where(x => ((int[])((dynamic)x).CommunicationAdvertisingPart.Campaign.Ids).Contains(id));
+            //else
+            ListContent = contentQuery.List(); //.Where(x => ((dynamic)x).CommunicationAdvertisingPart.Campaign.Ids.Length == 0);
             if (!string.IsNullOrEmpty(search.Expression))
                 ListContent = from content in ListContent
                               where
@@ -131,7 +146,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 Title = p.As<TitlePart>().Title,
                 ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
                 UserName = p.As<CommonPart>().Owner.UserName,
-                ContentItem = p
+                //        Option = p.As<FacebookPostPart>().FacebookMessageSent
             });
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
             dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(listVM.Count());

@@ -1,28 +1,27 @@
-﻿using Orchard;
+﻿using Laser.Orchard.ShortLinks.Services;
+using Orchard;
 using Orchard.ContentManagement;
+using Orchard.ContentPicker.Fields;
 using Orchard.Core.Title.Models;
+using Orchard.Mvc.Extensions;
+using Orchard.Mvc.Html;
 using Orchard.Tags.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Orchard.Mvc.Html;
 using System.Web;
-using Orchard.Mvc.Extensions;
-using Orchard.ContentPicker.Fields;
-using Laser.Orchard.ShortLinks.Services;
-
-
+using System.Web.Mvc;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
+
     public interface ICommunicationService : IDependency {
+
         string GetCampaignLink(string CampaignSource, ContentPart part);
     }
 
     public class CommunicationService : ICommunicationService {
         private readonly IOrchardServices _orchardServices;
         private readonly IShortLinksService _shortLinksService;
+
         public CommunicationService(IOrchardServices orchardServices, IShortLinksService shortLinksService) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
@@ -57,8 +56,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 if (pickerField != null) {
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
                     if (firstItem != null) {
-                       var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-                       link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
+                        var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                        link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
                     }
                 }
                 else
@@ -75,11 +74,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             return shortlink;
         }
 
-
-
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="CampaignSource"></param>
         /// <param name="CampaignMedium"></param>
@@ -90,8 +86,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private string ElaborateLink(string link, string CampaignSource = "newsletter", string CampaignMedium = "email", string CampaignTerm = "", string CampaignContent = "", string CampaignName = "") {
             var uriBuilder = new UriBuilder(link);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            query["id"] = "Communication";
-            query["referrer"] = string.Format("utm_source%3D{0}", CampaignSource);
+            query["utm_source"] = "Krake";
+            //query["referrer"] = string.Format("utm_source%3D{0}", CampaignSource);
             query["utm_medium"] = CampaignMedium;
             query["utm_term"] = CampaignTerm;
             query["utm_content"] = CampaignContent;
@@ -100,6 +96,5 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             link = uriBuilder.ToString();
             return link;
         }
-
     }
 }
