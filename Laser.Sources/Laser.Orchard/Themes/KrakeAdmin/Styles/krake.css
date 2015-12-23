@@ -96,8 +96,8 @@ body {
 button, .button, a.button {
     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(59, 130, 154, 1.0)), to(rgba(70, 142, 166, 1.0)));
     background: -moz-linear-gradient(top, rgba(59, 130, 154, 1.0), rgba(70, 142, 166, 1.0));
-    border: 1px solid #2ab9e8 !important;
-    color: #fff !important;
+    border: 1px solid #2ab9e8;
+    color: #fff;
 }
 
 button:active, .button:active, a.button:active {
