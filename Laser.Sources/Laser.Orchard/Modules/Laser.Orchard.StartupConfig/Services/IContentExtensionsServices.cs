@@ -12,6 +12,8 @@ namespace Laser.Orchard.StartupConfig.Services {
         IEnumerable<ParentContent> ContentPickerParents(int contentId, string[] contentTypes);
 
         Response StoreInspectExpando(ExpandoObject theExpando, ContentItem TheContentItem);
+        void StoreInspectExpandoFields(List<ContentPart> listpart, string key, object value, ContentItem theContentItem);
+   
 
         bool FileAllowed(string filename);
     }
