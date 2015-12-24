@@ -8,9 +8,12 @@ using Orchard.Data.Migration;
 
 namespace Laser.Orchard.Maps {
     public class Migrations : DataMigrationImpl {
-        private readonly IWorkContextAccessor _workContext;
-        public Migrations(IWorkContextAccessor workContext) {
-            _workContext = workContext;
+        private readonly IRepository<MapRecord> _record;
+        private readonly IRepository<MapVersionRecord> _versionRecord;
+
+        public Migrations(IRepository<MapRecord> record, IRepository<MapVersionRecord> versionRecord) {
+            _record = record;
+            _versionRecord = versionRecord;
         }
 
         public int Create() {
@@ -68,10 +71,8 @@ namespace Laser.Orchard.Maps {
                 .Column("LocationInfo", DbType.String, column => column.WithLength(100))
                 .Column("LocationAddress", DbType.String, column => column.WithLength(255))
             );
-            var childRepo = _workContext.GetContext().Resolve<IRepository<MapRecord>>();
-            var childVersionedRepo = _workContext.GetContext().Resolve<IRepository<MapVersionRecord>>();
 
-            foreach (var row in childRepo.Table) {
+            foreach (var row in _record.Table) {
                 foreach (var version in row.ContentItemRecord.Versions) {
                     var newItem = new MapVersionRecord() {
                         ContentItemRecord = row.ContentItemRecord,
@@ -81,7 +82,7 @@ namespace Laser.Orchard.Maps {
                         LocationInfo = row.LocationInfo,
                         Longitude = row.Longitude
                     };
-                    childVersionedRepo.Create(newItem);
+                    _versionRecord.Create(newItem);
                 }
             }
             return 5;
