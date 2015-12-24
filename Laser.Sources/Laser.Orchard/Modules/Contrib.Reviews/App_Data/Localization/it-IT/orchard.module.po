@@ -220,3 +220,39 @@ msgctxt "~/Modules/Contrib.Reviews/Views/Parts_Reviews.cshtml"
 msgid "There are no reviews for this item."
 msgstr "Non ci sono recensioni per questo elemento:"
 
+msgctxt "Contrib.Reviews.Controllers.ReviewController"
+msgid "In order to submit a review, you must also submit a rating."
+msgstr "Per inviare la tua recensione, devi avere inviato una valutazione."
+
+msgctxt "Contrib.Reviews.Controllers.ReviewController"
+msgid "Please fill out your comment before submitting your review."
+msgstr "Completa il commento prima di inviare la tua recensione."
+
+msgctxt "Contrib.Reviews.Controllers.ReviewController"
+msgid "Rating was not found."
+msgstr "Valutazione non trovata."
+
+msgctxt "Contrib.Reviews.Controllers.ReviewController"
+msgid "Review was not found."
+msgstr "Recensione non trovata."
+
+msgctxt "Contrib.Reviews.Controllers.ReviewController"
+msgid "Thank you for submitting your review."
+msgstr "Grazie per averci inoltrato la tua recensione."
+
+msgctxt "Contrib.Reviews.Controllers.ReviewController"
+msgid "You are not authorized to delete this Review."
+msgstr "Non sei autorizzato a cancellare la presente recensione."
+
+msgctxt "Contrib.Reviews.Controllers.ReviewController"
+msgid "You have already left a review for this item."
+msgstr "Hai già lasciato una recensione per questo elemento."
+
+msgctxt "Contrib.Reviews.Controllers.ReviewController"
+msgid "Your comment must be less than 1,200 characters in length."
+msgstr "Il tuo commento può essere al massimo di 1.200 caratteri."
+
+msgctxt "Contrib.Reviews.Controllers.ReviewController"
+msgid "Your Review has been deleted."
+msgstr "La tua recensione è stata rimossa."
+

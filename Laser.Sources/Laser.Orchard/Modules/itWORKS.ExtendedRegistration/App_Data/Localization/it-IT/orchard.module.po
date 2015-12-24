@@ -9,12 +9,20 @@
 # > msgstr "{ messaggio }"
 
 msgctxt "~/Modules/itWORKS.ExtendedRegistration/Views/Register.cshtml"
+msgid "Account creation was unsuccessful. Please correct the errors and try again."
+msgstr "La creazione dell'account non è riuscita. Correggere gli errori e riprovare."
+
+msgctxt "~/Modules/itWORKS.ExtendedRegistration/Views/Register.cshtml"
 msgid "Account Information"
 msgstr "Informazioni Account"
 
 msgctxt "~/Modules/itWORKS.ExtendedRegistration/Views/Register.cshtml"
 msgid "Confirm password:"
 msgstr "Conferma password:"
+
+msgctxt "~/Modules/itWORKS.ExtendedRegistration/Views/Register.cshtml"
+msgid "Create a New Account"
+msgstr "Creare un nuovo Account"
 
 msgctxt "~/Modules/itWORKS.ExtendedRegistration/Views/Register.cshtml"
 msgid "Email:"

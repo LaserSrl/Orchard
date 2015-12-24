@@ -125,6 +125,10 @@ msgid "Browse"
 msgstr "Sfoglia"
 
 msgctxt "~/Modules/Laser.Orchard.ContactForm/Views/FileUpload/Add.cshtml"
+msgid "The file \"{0}\" has been uploaded!"
+msgstr "Il file \"{0}\" è stato inviato!"
+
+msgctxt "~/Modules/Laser.Orchard.ContactForm/Views/FileUpload/Add.cshtml"
 msgid "Upload"
 msgstr "Carica"
 
@@ -207,6 +211,22 @@ msgstr "Selezionare un file."
 msgctxt "Laser.Orchard.ContactForm.Controllers.FileUploadController"
 msgid "The file extension in the filename is not allowed or has not been provided."
 msgstr "L'estensione del file non è tra quelle autorizzate o non è contenuta nel nome del file."
+
+msgctxt "Laser.Orchard.ContactForm.Drivers.ContactFormDriver"
+msgid "The destination folder for the uploaded files has been succesfully created!"
+msgstr "La cartella di destinazione per i file da caricare è stata creata con successo!"
+
+msgctxt "Laser.Orchard.ContactForm.Drivers.ContactFormDriver"
+msgid "The destination folder for the uploaded files has not been created!"
+msgstr "La cartella di destinazione per i file da caricare non è stata creata!"
+
+msgctxt "Laser.Orchard.ContactForm.Handlers.ContactFormSettingsPartHandler"
+msgid "Contact Form"
+msgstr "Modulo di Contatto"
+
+msgctxt "Laser.Orchard.ContactForm.Services.ContactFormService"
+msgid "All contact fields are required."
+msgstr "Tutti i campi sono obbligatori."
 
 msgctxt "Laser.Orchard.ContactForm.Services.ContactFormService"
 msgid "An unexpected error occured when sending your message. You may email us directly at: {0}"

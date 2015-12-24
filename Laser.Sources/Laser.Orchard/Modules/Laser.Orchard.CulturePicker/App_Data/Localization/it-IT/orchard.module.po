@@ -57,8 +57,24 @@ msgid "check your input!"
 msgstr "verificare i valori inseriti!"
 
 msgctxt "Laser.Orchard.CulturePicker.Controllers.AdminController"
+msgid "Culture Picker settings updated."
+msgstr "Impostazioni del Culture Picker aggiornate"
+
+msgctxt "Laser.Orchard.CulturePicker.Controllers.AdminController"
+msgid "Settings update failed: {0}"
+msgstr "Aggiornamento impostazioni fallito: {0}"
+
+msgctxt "Laser.Orchard.CulturePicker.Controllers.AdminController"
 msgid "Yout have to be an Administrator to edit Culture Picker settings!"
 msgstr "E' necessario essere amministratori per modificare le impostazioni del selettore di Culture!"
+
+msgctxt "Laser.Orchard.CulturePicker.Navigation.CulturePickerNavigationProvider"
+msgid "Culture Picker"
+msgstr "Culture Picker"
+
+msgctxt "Laser.Orchard.CulturePicker.Navigation.CulturePickerNavigationProvider"
+msgid "Settings"
+msgstr "Impostazioni"
 
 msgctxt "Laser.Orchard.CulturePicker.Projections.CurrentCultureFilter"
 msgid "For current or default culture"

@@ -29,10 +29,22 @@ msgid "Keywords"
 msgstr "META Keywords"
 
 msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "SEO attributes"
+msgstr "Attributi SEO"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "SEO attributes are empty!"
+msgstr "Gli attributi SEO sono vuoti!"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
 msgid "TitleOverride"
 msgstr "Titolo della pagina"
 
 msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
 msgid "TitleOverrideDescription"
 msgstr "ATTENZIONE: lascia vuoto questo campo per usare il normale titolo del contenuto."
+
+msgctxt "Laser.Orchard.SEO.Handlers.FaviconSettingsPartHandler"
+msgid "Favicon"
+msgstr "Favicon"
 

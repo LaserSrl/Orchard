@@ -9,6 +9,10 @@
 # > msgstr "{ messaggio }"
 
 msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/DefinitionTemplates/ButtonsSetting.cshtml"
+msgid "Go on Setting -> Buttons to configure module"
+msgstr "Vai su Impstazioni -> Pulsanti per configurare il modulo"
+
+msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/DefinitionTemplates/ButtonsSetting.cshtml"
 msgid "Select Button Type"
 msgstr "Selezionare il tipo di pulsante"
 
@@ -67,6 +71,10 @@ msgstr "Selezionare i tipi di contenuto"
 msgctxt "Laser.Orchard.ButtonToWorkflows.Drivers.ButtonToWorkflowsDriver"
 msgid "Error Saving Content Item"
 msgstr "Errore durante il salvataggio del contenuto"
+
+msgctxt "Laser.Orchard.ButtonToWorkflows.Handlers.SiteSettingsPartHandler"
+msgid "Buttons"
+msgstr "Pulsanti"
 
 msgctxt "Laser.Orchard.ButtonToWorkflows.Settings.ButtonsEvents"
 msgid "Setting -> Buttons : must be configured"
