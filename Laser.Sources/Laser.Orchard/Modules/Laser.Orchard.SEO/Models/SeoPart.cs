@@ -3,7 +3,7 @@ using Orchard.ContentManagement;
 
 namespace Laser.Orchard.SEO.Models {
 
-    public class SeoPart : ContentPart<SeoRecord> {
+    public class SeoPart : ContentPart<SeoVersionRecord> {
 
         public string TitleOverride {
             get { return this.Retrieve(x => x.TitleOverride); }

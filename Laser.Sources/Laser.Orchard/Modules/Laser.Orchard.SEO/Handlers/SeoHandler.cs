@@ -6,7 +6,7 @@ namespace Laser.Orchard.SEO.Handlers {
 
   public class SeoHandler : ContentHandler {
 
-    public SeoHandler(IRepository<SeoRecord> repository) {
+    public SeoHandler(IRepository<SeoVersionRecord> repository) {
       Filters.Add(StorageFilter.For(repository));
     }
   }

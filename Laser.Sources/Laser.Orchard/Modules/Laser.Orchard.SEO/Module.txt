@@ -8,7 +8,7 @@ Features:
     Laser.Orchard.SEO:
         Name: Laser SEO
         Description: Search Engine Optimization.
-        Dependencies: Orchard.ContentTypes
+        Dependencies: Orchard.ContentTypes, Laser.Orchard.StartupConfig
         Category: SEO
     Laser.Orchard.Favicon:
         Name: Laser Favicon
