@@ -1,0 +1,84 @@
+@{
+
+
+	XmlDocument mydoc=ToXmlDocument(Model);
+
+	
+	mydoc=aggiungipadre(mydoc,"root","lista","data");
+	mydoc=RimuoviFratelli(mydoc,"root/lista");
+	
+	
+	mydoc=cambianome(mydoc,"root/lista/data/filter", "ToRemove");
+	mydoc=cambianome(mydoc,"root/lista/data/comments", "ToRemove");
+	mydoc=cambianome(mydoc,"root/lista/data/likes", "ToRemove");
+	mydoc=cambianome(mydoc,"root/lista/data/caption", "ToRemove");
+	
+	//scelgo i tipi giusti
+	foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/data/type")) {
+		var stringa = bookToModify.ChildNodes[0].Value;
+		if (stringa != "image"){
+			bookToModify.ParentNode.ParentNode.RemoveChild(bookToModify.ParentNode);
+		}
+	}
+	//elimino i tipi
+	mydoc=cambianome(mydoc,"root/lista/data/type", "ToRemove");
+	
+	//imposto la data
+	mydoc=ConvertStringTimeStampToDate(mydoc, "root/lista/data/created_time");
+	
+	
+	//scelgo l immagine piu bella
+	foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/data/images/standard_resolution/url")) {
+		XmlNode image = mydoc.CreateElement("ImageURL");
+		image.InnerXml=bookToModify.ChildNodes[0].Value;
+		bookToModify.ParentNode.ParentNode.ParentNode.AppendChild(image);
+	}
+	//elimino tutte le immagini
+	mydoc=cambianome(mydoc,"root/lista/data/images", "ToRemove");
+	
+	//scelgo le info dell utente
+	foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/data/user")) {
+		XmlNode username = mydoc.CreateElement("Username");
+		username.InnerXml=bookToModify["username"].InnerText;
+		bookToModify.ParentNode.AppendChild(username);
+		XmlNode profileIMG = mydoc.CreateElement("ProfilePictureURL");
+		profileIMG.InnerXml=bookToModify["profile_picture"].InnerText;
+		bookToModify.ParentNode.AppendChild(profileIMG);
+	}
+	//elimino tutte le info utente
+	mydoc=cambianome(mydoc,"root/lista/data/user", "ToRemove");
+	foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/data/users_in_photo")) {
+		bookToModify.ParentNode.RemoveChild(bookToModify);
+	}
+	
+	//sistemo i tags
+	mydoc=ConvertArrayOfStringToString(mydoc,"root/lista/data", "tags", "NuoviTag");
+	
+	//Converto in orginalID
+	mydoc=cambianome(mydoc,"root/lista/data/id", "OriginalId");
+	
+	foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/data/OriginalId")) {
+		var stringa = bookToModify.ChildNodes[0].Value;
+		string[] words = stringa.Split('_');
+		XmlNode identifier = mydoc.CreateElement("Id");
+		identifier.InnerXml=words[0];
+		bookToModify.ParentNode.AppendChild(identifier);
+	}
+	//creo il sid
+	foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/data/Id")) {
+		XmlNode author = mydoc.CreateElement("Sid");
+		author.InnerXml="Instagram:"+bookToModify.ChildNodes[0].Value;
+		bookToModify.ParentNode.AppendChild(author);
+	}
+	//genero id univoco per istanza
+	mydoc=rendinumeric(mydoc, "root/lista/data/Id");
+	
+	mydoc=cambianome(mydoc,"root/lista/data/created_time", "DateCreation");
+	mydoc=cambianome(mydoc,"root/lista/data/link", "LinkURL");
+	
+	mydoc=cambianome(mydoc,"root/lista/data", "Instagram");
+	
+	mydoc=cambianome(mydoc,"root/lista", "ToRemove");
+	
+	SpanXDocument(ToXDocument(mydoc).Root);
+}
