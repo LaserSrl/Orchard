@@ -511,6 +511,10 @@ msgid "Email Confirmation"
 msgstr "Conferma Email"
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.Unsubscribe.cshtml"
+msgid "Newsletter {0} unsubscription"
+msgstr "Revoca iscrizione Newsletter {0}"
+
+msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/Subscription.Unsubscribe.cshtml"
 msgid "Newsletter unsubscription"
 msgstr "Rimozione sottoscrizione newsletter"
 
@@ -555,6 +559,18 @@ msgid "Couldn't edit newsletter"
 msgstr "Non è possibile modificare la newsletter"
 
 msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterAdminController"
+msgid "Newsletter deleted"
+msgstr "Newsletter eliminata"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterAdminController"
+msgid "Newsletter information updated"
+msgstr "Informazioni della Newsletter aggiornate"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterAdminController"
+msgid "newsletter was successfully deleted"
+msgstr "La newsletter è stata correttamente eliminata"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterAdminController"
 msgid "Not allowed to create newsletters"
 msgstr "Non si dispone dell'autorizzazione di creare newsletter"
 
@@ -575,6 +591,14 @@ msgid "Couldn't edit newsletter"
 msgstr "Non è possibile modificare la newsletter"
 
 msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterEditionAdminController"
+msgid "Newsletter edition deleted"
+msgstr "Edizione Newsletter eliminata"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterEditionAdminController"
+msgid "Newsletter edition updated"
+msgstr "Edizione Newsletter aggiornata"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.NewsletterEditionAdminController"
 msgid "Not allowed to create newsletters"
 msgstr "Non si dispone dell'autorizzazione di creare newsletter"
 
@@ -595,12 +619,28 @@ msgid "Couldn't edit newsletter"
 msgstr "Non è possibile modificare la newsletter"
 
 msgctxt "Laser.Orchard.NewsLetters.Controllers.SubscribersAdminController"
+msgid "Newsletter deleted"
+msgstr "Newsletter eliminata"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.SubscribersAdminController"
+msgid "Newsletter information updated"
+msgstr "Informazioni della Newsletter aggiornate"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.SubscribersAdminController"
 msgid "Not allowed to create newsletters"
 msgstr "Non si dispone dell'autorizzazione di creare newsletter"
 
 msgctxt "Laser.Orchard.NewsLetters.Controllers.SubscribersAdminController"
 msgid "Not allowed to edit newsletter"
 msgstr "Non si dispone dell'autorizzazione di modificare newsletter"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.SubscriptionController"
+msgid "Email and email confirmation must match!"
+msgstr "Email e Conferma Email devono essere uguali!"
+
+msgctxt "Laser.Orchard.NewsLetters.Controllers.SubscriptionController"
+msgid "Please select at least one newsletter!"
+msgstr "Si prega di selezionare almeno una Newsletter!"
 
 msgctxt "Laser.Orchard.NewsLetters.Drivers.AnnouncementPartDriver"
 msgid "Announcement Error"
@@ -621,4 +661,32 @@ msgstr "Errore NewsletterEdition"
 msgctxt "Laser.Orchard.NewsLetters.Drivers.SubscriberRegistrationPartDriver"
 msgid "SubscriberRegistration Error"
 msgstr "Errore SubscriberRegistration"
+
+msgctxt "Laser.Orchard.NewsLetters.Services.NewsletterServices"
+msgid "Email already registered!"
+msgstr "Email già registrata!"
+
+msgctxt "Laser.Orchard.NewsLetters.Services.NewsletterServices"
+msgid "Email not found!"
+msgstr "Email non trovata!"
+
+msgctxt "Laser.Orchard.NewsLetters.Services.NewsletterServices"
+msgid "Email not yet registered!"
+msgstr "Email non ancora registrata!"
+
+msgctxt "Laser.Orchard.NewsLetters.Services.NewsletterServices"
+msgid "Enter a test email!"
+msgstr "Inserisci un'email di test!"
+
+msgctxt "Laser.Orchard.NewsLetters.Services.NewsletterServices"
+msgid "Newsletter edition sent to a test email!"
+msgstr "Edizione inviata all'email di test!"
+
+msgctxt "Laser.Orchard.NewsLetters.Services.NewsletterServices"
+msgid "Sent "
+msgstr "Inviata"
+
+msgctxt "Orchard.Blogs.AdminMenu"
+msgid "Newsletters"
+msgstr "Newsletter"
 

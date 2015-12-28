@@ -16,6 +16,18 @@ msgctxt "~/Modules/Laser.Orchard.TemplateManagement/Views/DefinitionTemplates/Te
 msgid "The template parser engine to use by default."
 msgstr "Il motore di parsing del template da usare di default."
 
+msgctxt "~/Modules/Laser.Orchard.TemplateManagement/Views/EditorTemplates/Parts/CustomTemplatePicker_Edit.cshtml"
+msgid "Pick a template"
+msgstr "Seleziona un modello"
+
+msgctxt "~/Modules/Laser.Orchard.TemplateManagement/Views/EditorTemplates/Parts/CustomTemplatePicker_Edit.cshtml"
+msgid "Template picker"
+msgstr "Scelta modello"
+
+msgctxt "~/Modules/Laser.Orchard.TemplateManagement/Views/EditorTemplates/Parts/CustomTemplatePicker_Edit.cshtml"
+msgid "The template to use for."
+msgstr "Il modello da utilizzare."
+
 msgctxt "~/Modules/Laser.Orchard.TemplateManagement/Views/EditorTemplates/Parts/SiteSettings.cshtml"
 msgid "Default Parser"
 msgstr "Analizzatore sintattico predefinito"
@@ -167,4 +179,12 @@ msgstr "E' necessario fornire un indirizzo e-mail"
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "You must select at least one recipient"
 msgstr "E' necessario selezionare almeno un destinatario"
+
+msgctxt "Laser.Orchard.TemplateManagement.Handlers.SiteSettingsPartHandler"
+msgid "Template"
+msgstr "Modello"
+
+msgctxt "Laser.Orchard.TemplateManagement.Services.TemplateService"
+msgid "Sent "
+msgstr "Inviato"
 

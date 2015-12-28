@@ -12,3 +12,7 @@ msgctxt "Laser.Orchard.ContentExtension.Controllers.ContentController"
 msgid "You don't have permission \"Manage settings\" to define and manage User Groups!"
 msgstr "Non si dispone dell'autorizzazione \"Gestione Impostazioni\" per definire e gestire i gruppi di utenti!"
 
+msgctxt "Laser.Orchard.ContentExtension.Controllers.UploadFileController"
+msgid "The file extension in the filename is not allowed or has not been provided."
+msgstr "L'estensione del file non è tra quelle autorizzate o non è contenuta nel nome del file."
+

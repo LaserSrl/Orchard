@@ -68,7 +68,55 @@ msgctxt "Laser.Orchard.UsersExtensions.Drivers.UserRegistrationPolicyPartDriver"
 msgid "User has to accept policies!"
 msgstr "L'utente deve accettare le informative!"
 
+msgctxt "Laser.Orchard.UsersExtensions.Handlers.UserRegistrationSettingsPartHandler"
+msgid "Users extras"
+msgstr "Informazioni supplementari utenti"
+
 msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
 msgid "Lost password"
 msgstr "Password dimenticata"
+
+msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
+msgid "The email address you provided is too long."
+msgstr "Indirizzo email troppo lungo."
+
+msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
+msgid "The new password and confirmation password do not match."
+msgstr "La nuova password e la conferma password non sono uguali."
+
+msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
+msgid "The username or e-mail or password provided is incorrect."
+msgstr "Il Nome Utente, la mail o la password forniti non sono corretti."
+
+msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
+msgid "The username you provided is too long."
+msgstr "Il nome utente è troppo lungo."
+
+msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
+msgid "User cannot register due to Site settings"
+msgstr "Le impostazioni del sito non permettono agli utenti di registrarsi"
+
+msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
+msgid "User has to accept policies!"
+msgstr "L'utente deve accettare le informative!"
+
+msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
+msgid "User with that username and/or email already exists."
+msgstr "Esiste già un utente con il nome e/o l'email indicata."
+
+msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
+msgid "You must specify a password of {0} or more characters."
+msgstr "E' necessario specificare una password di {0} o più caratteri."
+
+msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
+msgid "You must specify a username."
+msgstr "E' necessario specificare un nome utente."
+
+msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
+msgid "You must specify a valid email address."
+msgstr "E' necessario specificare un indirizzo email valido."
+
+msgctxt "Laser.Orchard.UsersExtensions.Services.UsersExtensionsServices"
+msgid "You must specify an email address."
+msgstr "Devi specificare un indirizzo email."
 
