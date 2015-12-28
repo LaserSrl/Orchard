@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="common.cshtml" />
     <None Include="expoincitta\Mobile\EXPO_dev.p12" />
     <None Include="expoincitta\Mobile\EXPO_prod.p12" />
     <None Include="FondationGP\Mobile\pushProdMorgex.p12" />
@@ -48,7 +49,6 @@
     <None Include="IvreaTerritorio\WebServices\POI1.cshtml" />
     <None Include="TerritorioMorgex\Mobile\pushProdMorgex.p12" />
     <None Include="TerritorioMorgex\Mobile\pushSvilMorgex.p12" />
-    <None Include="Tff\Xslt\common.cshtml" />
     <None Include="Tff\Xslt\getfilm.cshtml" />
     <None Include="Tff\Xslt\getfilmbyday.cshtml" />
     <None Include="Tff\Xslt\getgiorni.cshtml" />
