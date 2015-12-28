@@ -196,7 +196,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
             }
 
             if (String.IsNullOrEmpty(email)) {
-                errors.Add(T("TYou must specify an email address.").Text);
+                errors.Add(T("You must specify an email address.").Text);
                 validate = false;
             } else if (email.Length >= 255) {
                 errors.Add(T("The email address you provided is too long.").Text);
