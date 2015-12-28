@@ -1,12 +1,12 @@
 ﻿@model Laser.Orchard.Mobile.Settings.PushMobilePartSettingVM
 <fieldset>
     <h2>@T("Settings - Mobile Push Part")</h2>
-    @Html.HiddenFor(m => m.HideRelated)
-    @*    <div class="checkbox-and-label">
+   @* @Html.HiddenFor(m => m.HideRelated)*@
+      <div class="checkbox-and-label">
         @Html.CheckBoxFor(m => m.HideRelated)
         <label for="@Html.FieldIdFor(m => m.HideRelated)" class="forcheckbox">@T("Hide Related Content Picker Field") </label>
         <span class="hint">@T("Default is false. Will hide the content picker field selector for related content item")</span>
-    </div>*@
+    </div>
 
     <div class="checkbox-and-label">
         @Html.CheckBoxFor(m => m.AcceptZeroRelated)

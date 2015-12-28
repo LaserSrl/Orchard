@@ -44,12 +44,10 @@ namespace Laser.Orchard.Mobile.Controllers {
                     break;
                 default:
                     continuometodo = false;
-
                     break;
             }
             if (continuometodo) {
                 try {
-
                     devicetostore.Validated = true;
                     devicetostore.Language = myDevice.Language;
                     devicetostore.Produzione = myDevice.Produzione;

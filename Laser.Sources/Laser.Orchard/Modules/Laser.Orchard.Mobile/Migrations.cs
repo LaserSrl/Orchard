@@ -1,10 +1,18 @@
-﻿using Orchard.Data.Migration;
-using System;
+﻿using Laser.Orchard.Mobile.Models;
+using Laser.Orchard.StartupConfig.Services;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
-using Laser.Orchard.Mobile.Models;
+using Orchard.Data.Migration;
+using System;
+
 namespace Laser.Orchard.Mobile {
+
     public class Migrations : DataMigrationImpl {
+        private readonly IUtilsServices _utilsServices;
+
+        public Migrations(IUtilsServices utilsServices) {
+            _utilsServices = utilsServices;
+        }
 
         public int Create() {
             SchemaBuilder.CreateTable("PushNotificationRecord",
@@ -91,18 +99,21 @@ namespace Laser.Orchard.Mobile {
                       );
             return 6;
         }
+
         public int UpdateFrom6() {
             SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
                 .AddColumn<bool>("ShowTestOptions", col => col.WithDefault(true))
                 );
             return 7;
         }
+
         public int UpdateFrom7() {
             SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
                 .AddColumn<string>("ApplePushSound", col => col.WithLength(50))
                 );
             return 8;
         }
+
         public int UpdateFrom8() {
             SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
                         .AddColumn<string>("AndroidApiKeyDevelopment")
@@ -110,36 +121,56 @@ namespace Laser.Orchard.Mobile {
 
             return 9;
         }
-          public int UpdateFrom9() {
-              SchemaBuilder.CreateTable("UserPushCategoryRecord",
-                 table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-             .Column<int>("UserPartRecord_Id")
-              .Column<string>("Category")
-             );
+
+        public int UpdateFrom9() {
+            SchemaBuilder.CreateTable("UserPushCategoryRecord",
+               table => table
+              .Column<int>("Id", column => column.PrimaryKey().Identity())
+           .Column<int>("UserPartRecord_Id")
+            .Column<string>("Category")
+           );
             //  SchemaBuilder.CreateForeignKey("UserPushCategoryRecord_UserPartRecord", "UserPushCategoryRecord", new string[] { "UserPartRecord_Id" }, "UserPartRecord", new string[] { "Id" });
 
             return 10;
         }
 
-          public int UpdateFrom10() {
-              SchemaBuilder.DropTable("UserPushCategoryRecord");
-              SchemaBuilder.CreateTable("UserDeviceRecord",
-                 table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<int>("UserPartRecord_Id")
-                  .Column<string>("UUIdentifier", column => column.WithLength(400))
-             );
-              //  SchemaBuilder.CreateForeignKey("UserPushCategoryRecord_UserPartRecord", "UserPushCategoryRecord", new string[] { "UserPartRecord_Id" }, "UserPartRecord", new string[] { "Id" });
-              return 11;
-          }
-          public int UpdateFrom11() {
-              SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
-                       .AddColumn<string>("TaxonomyName")
-                       );
-              return 12;
-          }
-    
+        public int UpdateFrom10() {
+            SchemaBuilder.DropTable("UserPushCategoryRecord");
+            SchemaBuilder.CreateTable("UserDeviceRecord",
+               table => table
+              .Column<int>("Id", column => column.PrimaryKey().Identity())
+              .Column<int>("UserPartRecord_Id")
+                .Column<string>("UUIdentifier", column => column.WithLength(400))
+           );
+            //  SchemaBuilder.CreateForeignKey("UserPushCategoryRecord_UserPartRecord", "UserPushCategoryRecord", new string[] { "UserPartRecord_Id" }, "UserPartRecord", new string[] { "Id" });
+            return 11;
+        }
 
+        public int UpdateFrom11() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                     .AddColumn<string>("TaxonomyName")
+                     );
+            return 12;
+        }
+
+        public int UpdateFrom12() {
+
+            ContentDefinitionManager.AlterTypeDefinition(
+            "CommunicationAdvertising",
+            type => type
+                .WithPart("MobilePushPart")
+                );
+            SchemaBuilder.AlterTable("PushNotificationRecord",
+                              table => table
+                              .AddColumn<int>("CommunicationContactPartRecord_Id")
+                 );
+            return 13;
+        }
+        public int UpdateFrom13() {
+            _utilsServices.EnableFeature("Laser.Orchard.ShortLinks");
+            _utilsServices.EnableFeature("Laser.Orchard.Queries");
+            _utilsServices.EnableFeature("Laser.Orchard.CommunicationGateway");
+            return 14;
+        }
     }
 }

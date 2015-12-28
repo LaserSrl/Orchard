@@ -126,6 +126,7 @@
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -194,11 +195,15 @@
     <Content Include="Views\EditorTemplates\Parts\SmsSettingsPart_Edit.cshtml" />
     <None Include="Service References\SmsServiceReference\SmsService.wsdl" />
     <Content Include="Views\EditorTemplates\Parts\UserPwdRecoveryPart_Edit.cshtml" />
+    <Content Include="Views\EditorTemplates\Fields\ContentPicker.Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\TaxonomiePushController.cs" />
     <Compile Include="Drivers\UserPwdRecoveryPartDriver.cs" />
+    <Compile Include="Feature\MobileCommunicationImportFeature.cs" />
+    <Compile Include="Handlers\MobileContactPartHandler.cs" />
     <Compile Include="Handlers\UserPwdRecoveryPartHandler.cs" />
+    <Compile Include="Models\MobileContactPart.cs" />
     <Compile Include="Models\UserPwdRecoveryPart.cs" />
     <Compile Include="Services\MissingSmsSettingsBanner.cs" />
     <Compile Include="SmsMigrations.cs" />
@@ -259,6 +264,10 @@
     <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
       <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
       <Name>Laser.Orchard.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.CommunicationGateway\Laser.Orchard.CommunicationGateway.csproj">
+      <Project>{bb12e69f-0976-407d-a716-542b7d22ee5f}</Project>
+      <Name>Laser.Orchard.CommunicationGateway</Name>
     </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
       <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>

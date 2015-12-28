@@ -11,6 +11,7 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual DateTime DataModifica { get; set; }
         public virtual bool Produzione { get; set; }
         public virtual string Language { get; set; }
+        public virtual int CommunicationContactPartRecord_Id { get; set; }
     }
     public enum TipoDispositivo { Android, Apple, WindowsMobile }
 }

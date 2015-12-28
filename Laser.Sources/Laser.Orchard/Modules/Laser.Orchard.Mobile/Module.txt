@@ -8,8 +8,14 @@ Features:
     Laser.Orchard.Mobile:
 		Name: Laser Mobile Push
         Description: Manage push mobile
-		Dependencies: Orchard.ContentPicker,Laser.Orchard.StartupConfig,Orchard.Forms,Orchard.Autoroute,Orchard.Taxonomies,Orchard.Tokens,Orchard.Users,Laser.Orchard.jQueryPlugins
+		Dependencies: Orchard.ContentPicker,Laser.Orchard.StartupConfig,Orchard.Forms,Orchard.Autoroute,Orchard.Taxonomies,Orchard.Tokens,Orchard.Users,Laser.Orchard.jQueryPlugins,Laser.Orchard.CommunicationGateway
     Laser.Orchard.Sms:
 		Name: Laser SMS
         Description: Extends Orchard with SMS functionality. Recovery password phone number will be added to users, in order to receive a Lost Passwrd link via SMS.
 		Dependencies: Laser.Orchard.StartupConfig
+	Laser.Orchard.MobileCommunicationImport
+		Name: Laser Mobile Communication Import
+        Description: Link existing data communication
+		Category: Social
+		Dependencies: Laser.Orchard.Mobile
+		

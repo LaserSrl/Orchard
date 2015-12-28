@@ -89,6 +89,7 @@ namespace Laser.Orchard.Mobile.Services {
                             my_disp.UUIdentifier = pushElement.UUIdentifier;
                             _userDeviceRecord.Update(my_disp);
                         }
+
                     }
                 }
                 pushElement.DataModifica = adesso;

@@ -31,5 +31,6 @@ namespace Laser.Orchard.Mobile.ViewModels {
             }
         }
         public bool ShowTestOptions { get; set; }
+        public bool HideRelated { get; set; }
     }
 }

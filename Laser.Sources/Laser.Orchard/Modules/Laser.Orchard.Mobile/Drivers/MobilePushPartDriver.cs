@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Laser.Orchard.Mobile.Models;
+using Laser.Orchard.Mobile.Settings;
 using Laser.Orchard.Mobile.ViewModels;
+using Laser.Orchard.StartupConfig.Services;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -12,14 +14,16 @@ namespace Laser.Orchard.Mobile.Drivers {
     public class MobilePushPartDriver : ContentPartDriver<MobilePushPart> {
 
         private readonly IOrchardServices _orchardServices;
+        private readonly IControllerContextAccessor _controllerContextAccessor;
         public Localizer T { get; set; }
 
         protected override string Prefix {
             get { return "Laser.Mobile.MobilePush"; }
         }
 
-        public MobilePushPartDriver(IOrchardServices orchardServices) {
+        public MobilePushPartDriver(IOrchardServices orchardServices, IControllerContextAccessor controllerContextAccessor) {
             _orchardServices = orchardServices;
+            _controllerContextAccessor = controllerContextAccessor;
         }
 
         protected override DriverResult Editor(MobilePushPart part, dynamic shapeHelper) {
@@ -52,6 +56,9 @@ namespace Laser.Orchard.Mobile.Drivers {
                 viewModel.TestPush = part.TestPush;
                 viewModel.DevicePush = part.DevicePush;
             }
+
+            viewModel.HideRelated = part.Settings.GetModel<PushMobilePartSettingVM>().HideRelated;
+            _controllerContextAccessor.Context.Controller.TempData["HideRelated"] = viewModel.HideRelated;
             return ContentShape("Parts_MobilePush_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/MobilePush_Edit", Model: viewModel, Prefix: Prefix));
         }
 
