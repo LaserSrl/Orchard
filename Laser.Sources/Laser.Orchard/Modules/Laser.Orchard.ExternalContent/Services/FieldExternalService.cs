@@ -133,7 +133,10 @@ namespace Laser.Orchard.ExternalContent.Services {
                         JArray myjarray = new JArray();
                         foreach (var arr in property.Value) {
                             if (arr.ToString() != "[]") {
-                                myjarray.Add(jsonflusher((JObject)arr));
+                                if (arr.GetType().Name == "JValue")
+                                    myjarray.Add(arr);
+                                else
+                                    myjarray.Add(jsonflusher((JObject)arr));
                             }
 
                         }
@@ -277,7 +280,7 @@ namespace Laser.Orchard.ExternalContent.Services {
             }
             if (System.IO.File.Exists(myfile)) {
                    string mytemplate = File.ReadAllText(myfile);
-                   string myfile2 = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\Xslt\common.cshtml";
+                   string myfile2 = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\common.cshtml";
                     if (System.IO.File.Exists(myfile)) {
                         mytemplate= File.ReadAllText(myfile2)+mytemplate;;
                     }
@@ -304,8 +307,8 @@ namespace Laser.Orchard.ExternalContent.Services {
                     var docwww = XDocument.Parse(xmlpage);
 
                
-                // temp er = new temp();
-                //XmlDocument mydoc = er.ToXmlDocument(docwww);
+              //   temp er = new temp();
+              //  XmlDocument mydoc = er.ToXmlDocument(docwww);
                 //foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/_data/lasernumeric/film")) {
                 //    if (!bookToModify.HasChildNodes) {
                 //        bookToModify.ParentNode.ParentNode.RemoveChild(bookToModify.ParentNode);
@@ -319,10 +322,8 @@ namespace Laser.Orchard.ExternalContent.Services {
                 //    mydoc = er.aggiungifiglio(mydoc, "root/_dataList/_data/media/ImageList", "image");
                 //    mydoc = er.RimuoviAlberaturaTranne(mydoc, "root/_dataList");
 
-                //   er.SpanXDocument(er.ToXDocument(mydoc).Root);
+             //     er.SpanXDocument(er.ToXDocument(mydoc).Root);
                 //   er.SpanXDocument(docwww.Root);
-
- 
                     using (var service = RazorEngineService.Create(config)) {
                         
                         result = service.RunCompile(mytemplate, "htmlRawTemplatea", null, docwww);
@@ -334,6 +335,9 @@ namespace Laser.Orchard.ExternalContent.Services {
                 }
                 else
                     output = "";
+                while (output.StartsWith("\t")) {
+                    output=output.Substring(1);
+                }
 
                 string xml = RemoveAllNamespaces(output);
                 XmlDocument doc = new XmlDocument();
@@ -355,6 +359,8 @@ namespace Laser.Orchard.ExternalContent.Services {
                 return XsltTransform(xmlpage, xsltname, contentType);
             }
         }
+
+       
 
         private dynamic XsltTransform(string xmlpage, string xsltname, string contentType = "") {
             string output = "", myXmlFileMoreSpecific, myXmlFileLessSpecific, myXmlFile;
