@@ -108,3 +108,7 @@ msgctxt "~/Modules/Laser.Orchard.Cookies/Views/EditorTemplates/Parts/CookieLawWi
 msgid "Your privacy policy / Cookie policy link"
 msgstr "Link Informativa sulla Privacy / Informativa sui Cookie"
 
+msgctxt "Laser.Orchard.Cookies.Handlers.CookieSettingsPartHandler"
+msgid "Cookies"
+msgstr "Cookies"
+

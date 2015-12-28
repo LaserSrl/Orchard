@@ -697,7 +697,7 @@ namespace Laser.Orchard.Mobile.Services {
         private void DeviceSubscriptionExpiredWindowsMobile(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, INotification notification) {
             _myLog.WriteLog(T("Device Subscription Expired: " + sender + " -> " + expiredDeviceSubscriptionId).ToString());
             // ToDo
-            _myLog.WriteLog(T("Evento Da implementare per Windows").ToString());
+            _myLog.WriteLog(T("The event is not implemented for Windows").ToString());
         }
 
 

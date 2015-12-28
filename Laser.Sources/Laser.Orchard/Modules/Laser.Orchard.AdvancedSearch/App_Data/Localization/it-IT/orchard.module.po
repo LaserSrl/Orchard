@@ -128,6 +128,14 @@ msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "unpublished"
 msgstr "Non pubblicato"
 
+msgctxt "Laser.Orchard.AdvancedSearch.ContentAdminMenu"
+msgid "Advanced Search"
+msgstr "Ricerca Avanzata"
+
+msgctxt "Laser.Orchard.AdvancedSearch.ContentAdminMenu"
+msgid "Content"
+msgstr "Contenuto"
+
 msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
 msgid "Cannot create content"
 msgstr "Non è possibile creare il contenuto"
@@ -135,6 +143,22 @@ msgstr "Non è possibile creare il contenuto"
 msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
 msgid "Cannot edit content"
 msgstr "Non è possibile modificare il contenuto"
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Content successfully published."
+msgstr "Contenuto pubblicato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Content successfully removed."
+msgstr "Contenuto rimosso."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Content successfully unpublished."
+msgstr "Contenuto rimosso dalla pubblicazione."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Could not clone the content item."
+msgstr "Impossibile clonare il contenuto."
 
 msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
 msgid "Couldn't clone content"
@@ -175,6 +199,10 @@ msgstr "Non è stato possibile annullare la pubblicazione del contenuto selezion
 msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
 msgid "No user found. Ownership filter not applied."
 msgstr "Utente non trovato. Filtro sul proprietario non applicato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Successfully cloned. The clone was saved as a draft."
+msgstr "Contenuto clonato. Il nuovo contenuto è stato salvato come bozza."
 
 msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
 msgid "That {0} has been published."

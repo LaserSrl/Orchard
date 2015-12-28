@@ -41,6 +41,10 @@ msgid "Redirect Url"
 msgstr "URL di rimando"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/AppStoreEdit.cshtml"
+msgid "Remove"
+msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/AppStoreEdit.cshtml"
 msgid "Store"
 msgstr "Store"
 
@@ -216,6 +220,18 @@ msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/UserPwdRecov
 msgid "Phone number"
 msgstr "Telefono"
 
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/Parts/UserAgentRedirect.cshtml"
+msgid "For this site exists the '{0}' mobile App on {1}. Do you want to download it?"
+msgstr "Per questo sito esiste l'App mobile '{0}' su {1} . Vuoi scaricarla?"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/Parts/UserAgentRedirect.cshtml"
+msgid "No"
+msgstr "No"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/Parts/UserAgentRedirect.cshtml"
+msgid "Yes"
+msgstr "Si"
+
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/PushNotification/Index.cshtml"
 msgid "Actions"
 msgstr "Azioni"
@@ -239,6 +255,10 @@ msgstr "Dispositivo"
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/PushNotification/Index.cshtml"
 msgid "Devices"
 msgstr "Dispositivi"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/PushNotification/Index.cshtml"
+msgid "Edit"
+msgstr "Modifica"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/PushNotification/Index.cshtml"
 msgid "Language"
@@ -276,9 +296,21 @@ msgctxt "~/Modules/Laser.Orchard.Mobile/Views/PushNotification/Index.cshtml"
 msgid "Validated"
 msgstr "Convalidato"
 
+msgctxt "Laser.Orchard.Mobile.Controllers.TaxonomiePushController"
+msgid "Can't retrieve user category, user not logged in"
+msgstr "Impossibile recuperare la categoria dell'utente, utente non loggato"
+
 msgctxt "Laser.Orchard.Mobile.Drivers.MobilePushPartDriver"
 msgid "Cannot Update!"
 msgstr "Impossibile aggiornare!"
+
+msgctxt "Laser.Orchard.Mobile.Handlers.SiteSettingsPartHandler"
+msgid "PushMobile"
+msgstr "PushMobile"
+
+msgctxt "Laser.Orchard.Mobile.Handlers.SmsSettingsPartHandler"
+msgid "SMS"
+msgstr "SMS"
 
 msgctxt "Laser.Orchard.Mobile.Projections.DeveiceFilter"
 msgid "Content with userpart"
@@ -299,6 +331,58 @@ msgstr "Dispositivo utente"
 msgctxt "Laser.Orchard.Mobile.Services.MissingSmsSettingsBanner"
 msgid "The <a href=\"{0}\">SMS settings</a> need to be configured."
 msgstr "E' necessario configurare le <a href=\"{0}\">inpostazioni SMS</a>."
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Channel Created for: "
+msgstr "Canale creato per:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Channel Destroyed for: "
+msgstr "Canale distrutto per:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Channel Exception: "
+msgstr "Eccezione Canale:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Device Registration Changed:  Old-> "
+msgstr "Registrazione del device modificata: Vecchia ->"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Device Subscription Expired Action: "
+msgstr "Azione sottoscrizione del device scaduta:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Device Subscription Expired Error: "
+msgstr "Errore sottoscrizione del device scaduta:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Device Subscription Expired: "
+msgstr "Sottoscrizione del device scaduta:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Failure: "
+msgstr "Fallito:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "No push will be sent, related content must be published"
+msgstr "Nessuna push sarà inoltrata, il contenuto di riferimento deve essere pubblicato"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Notification sent: "
+msgstr "Notifica inviata:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Sent: "
+msgstr "Inviato"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Sent: message payload exceed the limit"
+msgstr "Invio: il carico utile del messaggio eccede il limite previsto"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "The event is not implemented for Windows"
+msgstr "L'evento non è implementato per Windows"
 
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "A template to format your email message."

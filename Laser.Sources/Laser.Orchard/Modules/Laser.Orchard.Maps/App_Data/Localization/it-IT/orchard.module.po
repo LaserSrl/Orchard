@@ -112,6 +112,10 @@ msgctxt "~/Modules/Laser.Orchard.Maps/Views/EditorTemplates/Parts/OsmMap.cshtml"
 msgid "Map Fields"
 msgstr "Campi della mappa"
 
+msgctxt "~/Modules/Laser.Orchard.Maps/Views/GoogleMapForProjections.cshtml"
+msgid "more"
+msgstr "leggi tutto"
+
 msgctxt "~/Modules/Laser.Orchard.Maps/Views/osmImport/Parkings.cshtml"
 msgid "Done"
 msgstr "Fatto"
@@ -140,6 +144,10 @@ msgctxt "Laser.Orchard.Maps.Drivers.MapPartDriver"
 msgid "A point on the map is required."
 msgstr "Il punto su mappa è obbligatorio."
 
+msgctxt "Laser.Orchard.Maps.Handlers.MapsSiteSettingsHandler"
+msgid "Maps"
+msgstr "Mappe"
+
 msgctxt "Laser.Orchard.Maps.Projections.AroundMeFilter"
 msgid "Around Me"
 msgstr "Intorno a me"
@@ -155,6 +163,10 @@ msgstr "Mappe"
 msgctxt "Laser.Orchard.Maps.Projections.AroundMeFilter"
 msgid "Search for Content Items contained in an area"
 msgstr "Cerca i contenuti compresi in una determinata area"
+
+msgctxt "Laser.Orchard.Maps.Projections.AroundMeFilter"
+msgid "Validation Parameters: Latitude, Longitude, Dist not correct"
+msgstr "Validazione parametri: Latitudine, Longitudine, Distanza (Latitude, Longitude, Dist) non corrette"
 
 msgctxt "Laser.Orchard.Maps.Projections.AroundMeForm"
 msgid "Comma separated Latitude,Longitude central position."

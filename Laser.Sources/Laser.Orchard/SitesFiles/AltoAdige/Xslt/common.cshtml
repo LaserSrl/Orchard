@@ -1,0 +1,284 @@
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Text;
+@using System.Xml;
+@using System.Xml.Linq;
+@using System.Web;
+@functions{
+     enum NodeTypes
+        {
+            HasChildren,
+            IsNode,
+            IsAttribute
+        }
+		void SpanXDocument(XElement elements)
+        {
+		string test="";
+            NodeTypes nodeType;
+			 foreach (XElement element in elements.Elements())
+            {
+                if (element.Descendants().Count() > 0)
+                {
+                    if (element.Descendants().Descendants().Count() > 0)
+                    {
+                        nodeType = NodeTypes.HasChildren;
+                    }
+                    else
+                    {
+                        nodeType = NodeTypes.IsNode;
+                    }
+                }
+                else
+                {
+                    nodeType = NodeTypes.IsAttribute;
+                }
+                switch (nodeType) {
+                    case NodeTypes.HasChildren:
+						aprinodo(element.Name.LocalName);
+                        SpanXDocument(element);
+						chiudinodo(element.Name.LocalName);
+                        break;
+                    case NodeTypes.IsNode:
+						aprinodo(element.Name.LocalName);
+                        foreach (XElement elementNode in element.Elements()) {
+						if (!string.IsNullOrEmpty(elementNode.Value)){
+							writenode(elementNode.Name.LocalName,elementNode.Value);
+							 }
+                        }
+						chiudinodo(element.Name.LocalName);
+                        break;
+                    case NodeTypes.IsAttribute:
+						if (!string.IsNullOrEmpty(element.Value)){
+							writenode(element.Name.LocalName,element.Value);
+						}
+						break;
+                } 
+            }
+        }
+		
+		void aprinodo(string nodo){
+			WriteLiteral( "<" + nodo + ">");
+		}
+		
+		void chiudinodo(string nodo){
+			WriteLiteral( "</" + nodo + ">");
+		}
+		
+		void writenode(string nodo, string valore) {
+			aprinodo( nodo );
+			Write( valore);
+			chiudinodo( nodo );
+		}
+		
+		
+		bool Hafiglio(XmlNode nodo, string figlio) {
+            bool hafiglio = false;
+            foreach (XmlNode nodofiglio in nodo.ChildNodes) {
+                if (nodofiglio.Name == figlio) {
+                    hafiglio = true;
+                }
+            }
+            return hafiglio;
+        }
+		
+		XmlDocument aggiungipadre(XmlDocument doc,string dalnodo,string padre, string figlio){
+				foreach (XmlNode bookToModify in doc.SelectNodes("/" + dalnodo)) {
+                if (!Hafiglio(bookToModify, padre)) {
+					XmlNode author = doc.CreateElement(padre);
+					bookToModify.AppendChild(author);
+					foreach(XmlNode node in bookToModify.SelectNodes(figlio)){
+						node.ParentNode.RemoveChild(node);
+						author.AppendChild(node);
+					}
+				}
+			}
+
+			return doc;
+		}
+		
+		XmlDocument oldaggiungipadre(XmlDocument doc,string dalnodo,string padre, string figlio){
+			XmlNode bookToModify  = doc.SelectSingleNode("/"+dalnodo);
+			XmlNode author = doc.CreateElement(padre);
+			bookToModify.AppendChild(author);
+			foreach(XmlNode node in bookToModify.SelectNodes(figlio)){
+				node.ParentNode.RemoveChild(node);
+				author.AppendChild(node);
+			}
+			return doc;
+		}
+		
+		XmlDocument aggiungifiglio(XmlDocument doc,string dalnodo, string figlio){
+			foreach (XmlNode bookToModify in doc.SelectNodes("/" + dalnodo)) {
+				XmlNode author = doc.CreateElement(figlio);
+				author.InnerXml =" ";
+				bookToModify.AppendChild(author);
+			}
+			return doc;
+		}
+
+		XmlDocument ToXmlDocument(XDocument xDocument)
+        {
+            var xmlDocument = new XmlDocument();
+            using(var xmlReader = xDocument.CreateReader())
+            {
+                xmlDocument.Load(xmlReader);
+            }
+            return xmlDocument;
+        }
+		
+		XDocument ToXDocument( XmlDocument xmlDocument){		    
+			using (var nodeReader = new XmlNodeReader(xmlDocument))
+            {
+                nodeReader.MoveToContent();
+                return XDocument.Load(nodeReader);
+            }
+		}
+		
+		XmlDocument rendinumeric(XmlDocument doc,string dalnodo){
+			foreach(XmlNode node in doc.SelectNodes("/"+dalnodo)){
+				node.InnerText=":lasernumeric"+node.InnerText+"lasernumeric:";
+			}
+			return doc;
+		}
+		
+		
+		void RenameNode(XmlDocument doc,XmlNode e, string newName) {
+            XmlNode newNode = doc.CreateNode(e.NodeType, newName, null);
+            while (e.HasChildNodes) {
+                newNode.AppendChild(e.FirstChild);
+            }
+            XmlAttributeCollection ac = e.Attributes;
+            while (ac.Count > 0) {
+                newNode.Attributes.Append(ac[0]);
+            }
+            XmlNode parent = e.ParentNode;
+            parent.ReplaceChild(newNode, e);
+           // return doc;
+        }
+		
+		XmlDocument cambianome(XmlDocument doc,string dalnodo,string nome){
+			foreach (XmlNode node in doc.SelectNodes("/" + dalnodo)) {
+				RenameNode( doc,node,  nome) ;
+			}
+			return doc;
+		}
+		
+		XmlDocument RimuoviNodo(XmlDocument doc,string dalnodo){
+			foreach(XmlNode child_to_remove in doc.SelectNodes("/"+dalnodo)){
+				//XmlNode child_to_remove = parent.ChildNodes[i]; 
+				// move all the children of "child_to_remove" to be the child of their grandfather (== parent)
+				while(child_to_remove.HasChildNodes){
+					child_to_remove.ParentNode.InsertBefore(child_to_remove.ChildNodes[0], child_to_remove);
+				}	
+				child_to_remove.ParentNode.RemoveChild(child_to_remove);
+			}
+			return doc;
+		}
+		
+		XmlDocument RimuoviFratelli(XmlDocument doc,string nomenodo){
+			XmlNode NodoDaTenere  = doc.SelectSingleNode("/"+nomenodo);
+			foreach (XmlNode nodo in NodoDaTenere.ParentNode.ChildNodes){
+				if (nodo!=NodoDaTenere){
+					NodoDaTenere.ParentNode.RemoveChild(nodo);
+					return RimuoviFratelli( doc, nomenodo);
+				}
+			}
+			return doc;
+		}
+		
+		XmlDocument CreaContatore(XmlDocument doc,string dalnodo,string campodacreare){
+			int i=0;
+			foreach(XmlNode bookToModify in doc.SelectNodes("/"+dalnodo)){
+				i++;
+				XmlNode contatore = doc.CreateElement(campodacreare);
+				contatore.InnerXml = ":lasernumeric"+i.ToString()+"lasernumeric:";
+				bookToModify.AppendChild(contatore);
+			}
+			return doc;
+		}
+		
+		XmlDocument textreplace(XmlDocument doc,string dalnodo,string da,string a){
+			foreach(XmlNode bookToModify in doc.SelectNodes("/"+dalnodo)){
+				bookToModify.InnerXml=bookToModify.InnerXml.Replace(da,a);
+			}
+			return doc;
+		}
+		
+		XmlDocument generaOriginalId(XmlDocument doc,string dalnodo){
+			foreach (XmlNode bookToModify in doc.SelectNodes("/" + dalnodo)) {
+				XmlNode author = doc.CreateElement("OriginalId");
+				author.InnerXml=":lasernumeric"+bookToModify.ChildNodes[0].Value+"lasernumeric:";
+				bookToModify.ParentNode.AppendChild(author);
+			}
+			return doc;
+		}	
+			
+		XmlDocument generaid(XmlDocument doc,string dalnodo,Int32 numero){	
+			foreach(XmlNode node in doc.SelectNodes("/"+dalnodo)){
+				XmlNode author = doc.CreateElement("Id");
+				int n;
+                bool isNumeric = int.TryParse(node.InnerText, out n);
+				author.InnerText=":lasernumeric"+(n+numero).ToString()+"lasernumeric:";
+				node.ParentNode.AppendChild(author);
+				node.ParentNode.RemoveChild(node);
+			}
+			return doc;
+		}
+
+
+		//Patrick
+		
+		XmlDocument ConvertStringTimeStampToDate(XmlDocument doc, string dalnodo){
+			foreach (XmlNode bookToModify in doc.SelectNodes("/"+dalnodo)) 
+			{
+				string string_timestamp = bookToModify.ChildNodes[0].Value;
+				double result;
+				try 
+				{
+					result = Convert.ToDouble(string_timestamp);
+					System.DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+					dtDateTime = dtDateTime.AddSeconds(result).ToLocalTime();
+					bookToModify.ChildNodes[0].Value = "#" + dtDateTime.ToString("MM/dd/yyyy HH:mm:ss") + "#";
+				}
+				catch (FormatException) 
+				{
+					Console.WriteLine("Unable to convert '{0}' to a Double.", string_timestamp);
+				}
+				catch (OverflowException) 
+				{
+					Console.WriteLine("'{0}' is outside the range of a Double.", string_timestamp);
+				}
+			}
+			return doc;
+		}
+		
+		XmlDocument ConvertDateWithFormat(XmlDocument doc, string dalnodo)
+		{
+			foreach (XmlNode bookToModify in doc.SelectNodes("/"+dalnodo)) 
+			{
+				string date_string = bookToModify.ChildNodes[0].Value;
+				DateTime myDate = DateTime.Parse(date_string);
+				bookToModify.ChildNodes[0].Value = "#" + myDate.ToString("MM/dd/yyyy HH:mm:ss") + "#";
+			}
+			return doc;
+		}
+		
+		XmlDocument ConvertArrayOfStringToString(XmlDocument doc, string dalnodo,string nodeName,string newNodeName)
+		{
+			foreach (XmlNode bookToModify in doc.SelectNodes("/"+dalnodo)) 
+			{			
+				string mainString = "";
+				foreach (XmlNode nodofiglio in bookToModify.SelectNodes(nodeName)) {
+                	mainString += "," + nodofiglio.InnerXml;
+					nodofiglio.ParentNode.RemoveChild(nodofiglio);
+            	}
+            	mainString = mainString.Substring(1);
+				XmlNode newString = doc.CreateElement(newNodeName);
+				newString.InnerXml=mainString;
+				bookToModify.AppendChild(newString);
+			}
+			return doc;
+		}
+	
+}

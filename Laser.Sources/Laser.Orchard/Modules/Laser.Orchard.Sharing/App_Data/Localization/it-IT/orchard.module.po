@@ -24,6 +24,14 @@ msgctxt "~/Modules/Laser.Orchard.Sharing/Views/EditorTemplates/Parts/Share.Setti
 msgid "Content sharing settings"
 msgstr "Impostazioni di condivisione del contenuto"
 
+msgctxt "Laser.Orchard.Sharing.Drivers.ShareBarSettingsPartDriver"
+msgid "Content sharing settings updated successfully"
+msgstr "le impostazioni del Content sharing sono state correttamente salvate"
+
+msgctxt "Laser.Orchard.Sharing.Drivers.ShareBarSettingsPartDriver"
+msgid "Error during content sharing settings update!"
+msgstr "Errore durante il salvataggio delle impostazioni del Content sharing!"
+
 msgctxt "Laser.Orchard.Sharing.MissingSettingsBanner"
 msgid "Content sharing settings needs to be configured."
 msgstr "E' necessario configurare le impostazioni di condivisione del contenuto."
