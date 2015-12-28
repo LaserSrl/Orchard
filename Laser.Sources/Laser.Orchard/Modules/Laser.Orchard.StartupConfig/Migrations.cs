@@ -115,44 +115,5 @@ namespace Laser.Orchard.StartupConfig {
             .AddColumn("Selected_Tenant", DbType.String));
             return 1;
         }
-
-        public int UpdateFrom1() {
-            return 2;
-        }
-
-        public int UpdateFrom2() {
-            return 3;
-        }
-
-        public int UpdateFrom3() {
-            return 4;
-        }
-
-        public int UpdateFrom4() {
-            //ContentDefinitionManager.AlterTypeDefinition("Maintenance", b => b
-            //         .Draftable()
-            //         );
-            return 5;
-        }
-
-        public int UpdateFrom5() {
-            //SchemaBuilder.CreateTable("MaintenancePartRecord", table => table
-            //                .ContentPartVersionRecord()
-            //                .Column<string>("MaintenanceNotifyType")
-            //                .Column<string>("MaintenanceNotify")
-            //    );
-            return 6;
-        }
-
-        public int UpdateFrom6() {
-            //      SchemaBuilder.DropTable("MaintenancePartRecord");
-
-            return 7;
-        }
-        public int UpdateFrom7() {
-            //      SchemaBuilder.DropTable("MaintenancePartRecord");
-
-            return 8;
-        }
     }
 }

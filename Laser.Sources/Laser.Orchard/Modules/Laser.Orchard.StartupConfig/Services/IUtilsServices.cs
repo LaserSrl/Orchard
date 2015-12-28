@@ -153,7 +153,7 @@ namespace Laser.Orchard.StartupConfig.Services {
             var features = _moduleService.GetAvailableFeatures().ToDictionary(m => m.Descriptor.Id, m => m);
 
             if (features.ContainsKey(featureId) && !features[featureId].IsEnabled) {
-                _moduleService.EnableFeatures(new string[] { featureId });
+                _moduleService.EnableFeatures(new string[] { featureId },true);
             }
         }
 
