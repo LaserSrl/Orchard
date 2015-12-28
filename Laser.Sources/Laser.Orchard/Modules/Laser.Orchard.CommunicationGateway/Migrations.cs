@@ -164,5 +164,12 @@ namespace Laser.Orchard.CommunicationGateway {
                   );
                   return 6;
         }
+        public int UpdateFrom6() {
+            SchemaBuilder.AlterTable("CommunicationContactPartRecord",
+               table => table
+               .AddColumn<bool>("Master", col => col.WithDefault(false))
+             );
+            return 7;
+        }
     }
 }

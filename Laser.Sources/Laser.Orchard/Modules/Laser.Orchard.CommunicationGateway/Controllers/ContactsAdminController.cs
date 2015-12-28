@@ -1,10 +1,12 @@
 ﻿using Laser.Orchard.CommunicationGateway.Helpers;
+using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
 using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
@@ -21,17 +23,28 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly IContentManager _contentManager;
         private readonly string contentType = "CommunicationContact";
         private readonly dynamic TestPermission = Permissions.ManageContact;
+        private readonly ICommunicationService _communicationService;
         private readonly INotifier _notifier;
         private Localizer T { get; set; }
 
         public ContactsAdminController(
             IOrchardServices orchardServices,
             INotifier notifier,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+             ICommunicationService communicationService) {
             _orchardServices = orchardServices;
             _contentManager = contentManager;
             _notifier = notifier;
             T = NullLocalizer.Instance;
+            _communicationService = communicationService;
+        }
+
+        [Admin]
+        public ActionResult Synchronize() {
+            if (_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner)) {
+                _communicationService.Synchronize();
+            }
+            return RedirectToAction("Index", "ContactsAdmin");
         }
 
         [Admin]

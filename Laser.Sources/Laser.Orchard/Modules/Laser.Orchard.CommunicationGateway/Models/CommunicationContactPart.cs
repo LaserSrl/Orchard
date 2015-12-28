@@ -10,9 +10,18 @@ namespace Laser.Orchard.CommunicationGateway.Models {
             get { return this.Retrieve(r => r.UserPartRecord_Id); }
             set { this.Store(r => r.UserPartRecord_Id, value); }
         }
+
+        /// <summary>
+        /// Il ContentItem di tipo Master indica un contenuto creato da codice a cui sono legati tutti i contenuti senza legami, in questo modo rendo i contenuti querabili
+        /// </summary>
+        public bool Master {
+            get { return this.Retrieve(r => r.Master); }
+            set { this.Store(r => r.Master, value); }
+        }
     }
 
     public class CommunicationContactPartRecord : ContentPartRecord {
         public virtual Int32 UserPartRecord_Id { get; set; }
+        public virtual bool Master { get; set; }
     }
 }
