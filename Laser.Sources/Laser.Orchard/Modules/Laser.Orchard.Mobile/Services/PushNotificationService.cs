@@ -107,12 +107,12 @@ namespace Laser.Orchard.Mobile.Services {
             if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
                 var Contact = _orchardServices.ContentManager.New("CommunicationContact");
                 _orchardServices.ContentManager.Create(Contact);
-                Contact.As<TitlePart>().Title = "Master Content";
+                Contact.As<TitlePart>().Title = "Master Contact";
                 Contact.As<CommunicationContactPart>().Master = true;
             }
             CommunicationContactPart master = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).List().FirstOrDefault();
             int idmaster = master.Id;
-            var notificationrecords = _pushNotificationRepository.Fetch(x => x.CommunicationContactPartRecord_Id == 0).ToList();
+            var notificationrecords = _pushNotificationRepository.Fetch(x => x.CommunicationContactPartRecord_Id == 0 || x.CommunicationContactPartRecord_Id==null).ToList();
             foreach (PushNotificationRecord rec in notificationrecords) {
                 rec.CommunicationContactPartRecord_Id = idmaster;
             }

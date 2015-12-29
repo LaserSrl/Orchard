@@ -195,9 +195,11 @@
     <None Include="Service References\SmsServiceReference\SmsService.wsdl" />
     <Content Include="Views\EditorTemplates\Parts\UserPwdRecoveryPart_Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Fields\ContentPicker.Edit.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\MobileContact_Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\TaxonomiePushController.cs" />
+    <Compile Include="Drivers\MobileContactPartDriver.cs" />
     <Compile Include="Drivers\UserPwdRecoveryPartDriver.cs" />
     <Compile Include="Feature\MobileCommunicationImportFeature.cs" />
     <Compile Include="Handlers\MobileContactPartHandler.cs" />
