@@ -154,13 +154,19 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                               where
                               ((content.As<TitlePart>().Title ?? "").Contains(expression, StringComparison.InvariantCultureIgnoreCase))
                               select content;
-            IEnumerable<ContentIndexVM> listVM = ListContent.Select(p => new ContentIndexVM {
+            IEnumerable<ContentIndexVM> listVM;
+            if (ListContent!=null){
+             listVM = ListContent.Select(p => new ContentIndexVM {
                 Id = p.Id,
                 Title = p.As<TitlePart>().Title,
                 ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
                 UserName = p.As<CommonPart>().Owner.UserName,
                 //        Option = p.As<FacebookPostPart>().FacebookMessageSent
             });
+            }
+                else{
+                    listVM = new List<ContentIndexVM>();
+                 }
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
             dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(listVM.Count());
             var list = listVM.Skip(pager.GetStartIndex())
