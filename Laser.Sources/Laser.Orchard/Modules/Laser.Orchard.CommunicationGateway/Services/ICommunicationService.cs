@@ -5,11 +5,13 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentPicker.Fields;
 using Orchard.Core.Title.Models;
+using Orchard.Localization;
 using Orchard.Modules.Services;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
 using Orchard.Security;
 using Orchard.Tags.Models;
+using Orchard.UI.Notify;
 using Orchard.Users.Models;
 using System;
 using System.Collections.Generic;
@@ -35,23 +37,29 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly IShortLinksService _shortLinksService;
         private readonly IContentExtensionsServices _contentExtensionsServices;
         private readonly IModuleService _moduleService;
+        private readonly INotifier _notifier;
+        public Localizer T { get; set; }
 
-        public CommunicationService(IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices) {
+        public CommunicationService(INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
             _moduleService = moduleService;
+            _notifier = notifier;
+            T = NullLocalizer.Instance;
         }
 
         public void Synchronize() {
 
             #region Creazione di un Contact Master a cui agganciare tutte le parti che non hanno una profilazione
 
+
             if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
                 var Contact = _orchardServices.ContentManager.New("CommunicationContact");
                 _orchardServices.ContentManager.Create(Contact);
                 Contact.As<TitlePart>().Title = "Master Content";
                 Contact.As<CommunicationContactPart>().Master = true;
+                _notifier.Add(NotifyType.Information, T("Master Contact Created"));
             }
 
             #endregion Creazione di un Contact Master a cui agganciare tutte le parti che non hanno una profilazione
@@ -63,20 +71,23 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Count() > 0) {
                 contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().List().Select(y => y.As<CommunicationContactPart>().UserIdentifier).ToList();
             }
-            var userWithNoConcat = users.Where(x => !contactsUsers.Contains(x.Id));
-            foreach (var user in userWithNoConcat) {
+            // var userWithNoConcat = users.Where(x => !contactsUsers.Contains(x.Id));
+            //  foreach (var user in userWithNoConcat) {
+            foreach (var user in users) {
                 UserProfileToContact(user);
             }
-
+            _notifier.Add(NotifyType.Information, T("Syncronized {0} user's profiles",users.Count().ToString()));
             #endregion Import dei profili degli utenti
 
             #region Ricreo collegamento con parte mobile preesistente
 
             var features = _moduleService.GetAvailableFeatures().ToDictionary(m => m.Descriptor.Id, m => m);
-            if (features.ContainsKey("Laser.Orchard.MobileCommunicationImport") && !features["Laser.Orchard.MobileCommunicationImport"].IsEnabled) {
+            if (features.ContainsKey("Laser.Orchard.MobileCommunicationImport")) {
+                if (features["Laser.Orchard.MobileCommunicationImport"].IsEnabled) {
+                    _moduleService.DisableFeatures(new string[] { "Laser.Orchard.MobileCommunicationImport" });
+                }
                 _moduleService.EnableFeatures(new string[] { "Laser.Orchard.MobileCommunicationImport" }, true);
             }
-
             #endregion Ricreo collegamento con parte mobile preesistente
         }
 

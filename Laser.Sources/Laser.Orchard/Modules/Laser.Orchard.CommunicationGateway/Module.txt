@@ -4,9 +4,6 @@ Author: Laser Group - Frediani Lorenzo
 Website: http://orchardproject.net
 Version: 1.0
 OrchardVersion: 1.0
-Description: Description for the module
-Features:
-    Laser.Orchard.CommunicationGateway:
-	    Description: Description for feature Laser.Orchard.CommunicationGateway.
-		Category: Social
-		Dependencies: Orchard.PublishLater, Laser.Orchard.Queries,Orchard.Tags,Orchard.ContentPicker,Laser.Orchard.ShortLinks,Laser.Orchard.StartupConfig,Orchard.Modules
+Description: Description for feature Laser.Orchard.CommunicationGateway.
+Category: Social
+Dependencies: Orchard.PublishLater, Laser.Orchard.Queries,Orchard.Tags,Orchard.ContentPicker,Laser.Orchard.ShortLinks,Laser.Orchard.StartupConfig,Orchard.Modules
