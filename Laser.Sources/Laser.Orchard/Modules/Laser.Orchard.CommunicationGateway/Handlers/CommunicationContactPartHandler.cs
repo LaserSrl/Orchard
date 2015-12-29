@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.Services;
+using Laser.Orchard.StartupConfig.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
@@ -25,7 +26,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             Filters.Add(new ActivatingFilter<EmailContactPart>("CommunicationContact"));
             OnLoaded<EmailContactPart>(LazyLoadEmailHandlers);
 
-            //  Filters.Add(new ActivatingFilter<FavoriteCulturePart>("CommunicationContact"));
+            Filters.Add(new ActivatingFilter<FavoriteCulturePart>("CommunicationContact"));
 
             #region sync user profile
             OnUpdated<UserPart>((context, part) => UpdateProfile(context.ContentItem));
