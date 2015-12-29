@@ -9,4 +9,4 @@ Features:
     Laser.Orchard.Twitter:
         Description: Description for feature Laser.Orchard.Twitter.
 		Category: Social
-		Dependencies: Laser.Orchard.OpenAuthentication , Laser.Orchard.StartupConfig , Orchard.MediaLibrary , Laser.Orchard.CommunicationGateway, Laser.Orchard.jQueryPlugins
+		Dependencies: Laser.Orchard.OpenAuthentication,Laser.Orchard.StartupConfig,Orchard.MediaLibrary,Laser.Orchard.CommunicationGateway,Laser.Orchard.jQueryPlugins
