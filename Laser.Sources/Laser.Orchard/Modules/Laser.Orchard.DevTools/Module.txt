@@ -1,0 +1,11 @@
+﻿Name: Laser.Orchard.DevTools
+AntiForgery: enabled
+Author: Laser Group - Frediani Lorenzo
+Website: http://orchardproject.net
+Version: 1.0
+OrchardVersion: 1.0
+Description: Description for the module
+Features:
+    Laser.Orchard.DevTools:
+        Description: Description for feature Laser.Orchard.DevTools.
+		Dependencies: Laser.Orchard.StartupConfig

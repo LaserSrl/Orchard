@@ -100,7 +100,6 @@ namespace Laser.Orchard.Mobile.Services {
                     _pushNotificationRepository.Flush();
                 }
             }
-               _notifier.Add(NotifyType.Error, T("Linked"));
             _notifier.Add(NotifyType.Information, T("Linked {0} user's mobile device", lUdr.Count().ToString()));
 
             #region [lego i rimanenti content al Content Master per renderli querabili]
