@@ -1,12 +1,16 @@
-﻿using Laser.Orchard.Mobile.Models;
+﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.Mobile.Settings;
 using Laser.Orchard.Mobile.ViewModels;
 using Newtonsoft.Json;
 using Orchard;
+using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
+using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
+using Orchard.Tokens;
 using Orchard.UI.Notify;
 using PushSharp;
 using PushSharp.Android;
@@ -19,23 +23,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
-using Orchard.Autoroute;
-using Orchard.Autoroute.Models;
-using NHibernate;
-using Orchard.Tokens;
-
-
 
 namespace Laser.Orchard.Mobile.Services {
 
     public interface IPushNotificationService : IDependency {
+
         void StorePushNotification(PushNotificationRecord pushElement);
+
         IEnumerable<PushNotificationRecord> SearchPushNotification(string texttosearch);
+
         //  void SendPush(Int32 iddispositivo, string message);
         void PublishedPushEvent(dynamic mycontext, ContentItem ci);
-        void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string JsonAndroid, string messageWindows, string sound, string queryDevice = "");
-    }
 
+        void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string JsonAndroid, string messageWindows, string sound, string queryDevice = "");
+
+        void Synchronize();
+    }
 
     public class PushNotificationService : IPushNotificationService {
         private readonly IRepository<PushNotificationRecord> _pushNotificationRepository;
@@ -46,19 +49,23 @@ namespace Laser.Orchard.Mobile.Services {
         private readonly IMylogService _myLog;
         private readonly ShellSettings _shellSetting;
         private readonly ISessionLocator _sessionLocator;
+
+        //private readonly ICommunicationService _communicationService;
         private readonly ITokenizer _tokenizer;
+
         private Int32 messageAppleSent;
         private string QueryDevice;
 
         public PushNotificationService(
-             IOrchardServices orchardServices
-         , IRepository<PushNotificationRecord> pushNotificationRepository
-            , IRepository<UserDeviceRecord> userDeviceRecord
-         , INotifier notifier
-            , IMylogService myLog
-            , ShellSettings shellSetting
-           , ISessionLocator sessionLocator
-            , ITokenizer tokenizer
+                IOrchardServices orchardServices,
+                IRepository<PushNotificationRecord> pushNotificationRepository,
+                IRepository<UserDeviceRecord> userDeviceRecord,
+                INotifier notifier,
+                IMylogService myLog,
+                ShellSettings shellSetting,
+                ISessionLocator sessionLocator,
+                ITokenizer tokenizer
+            //   ,ICommunicationService communicationService
          ) {
             _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
@@ -71,12 +78,54 @@ namespace Laser.Orchard.Mobile.Services {
             QueryDevice = "";
             _tokenizer = tokenizer;
             _userDeviceRecord = userDeviceRecord;
+            //  _communicationService = communicationService;
+        }
+
+        public void Synchronize() {
+            List<UserDeviceRecord> lUdr = _userDeviceRecord.Fetch(x => x.UserPartRecord.Id > 0).ToList();
+            foreach (UserDeviceRecord up in lUdr) {
+                CommunicationContactPart ciCommunication = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == up.UserPartRecord.Id).List().FirstOrDefault();
+                //  _communicationService.GetContactFromUser(up.UserPartRecord.Id);
+                if (ciCommunication == null) {
+                    // Una contact part dovrebbe esserci in quanto questo codice viene eseguito dopo la sincronizzazione utenti
+                    // Se non vi è una contartpart deduco che il dato sia sporco (es: UUid di un utente che è stato cancellato quindi non sincronizzo il dato con contactpart, verrà legato come se fosse scollegato al contentitem che raggruppa tutti i scollegati)
+                    //throw new Exception("Utente senza associazione alla profilazione");
+                }
+                else {
+                    int idci = ciCommunication.ContentItem.Id;
+                    var records = _pushNotificationRepository.Fetch(x => x.UUIdentifier == up.UUIdentifier).ToList();
+                    foreach (PushNotificationRecord rec in records) {
+                        rec.CommunicationContactPartRecord_Id = idci;
+                    }
+                    _pushNotificationRepository.Flush();
+                }
+            }
+               _notifier.Add(NotifyType.Error, T("Linked"));
+            _notifier.Add(NotifyType.Information, T("Linked {0} user's mobile device", lUdr.Count().ToString()));
+
+            #region [lego i rimanenti content al Content Master per renderli querabili]
+
+            if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
+                var Contact = _orchardServices.ContentManager.New("CommunicationContact");
+                _orchardServices.ContentManager.Create(Contact);
+                Contact.As<TitlePart>().Title = "Master Content";
+                Contact.As<CommunicationContactPart>().Master = true;
+            }
+            CommunicationContactPart master = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).List().FirstOrDefault();
+            int idmaster = master.Id;
+            var notificationrecords = _pushNotificationRepository.Fetch(x => x.CommunicationContactPartRecord_Id == 0).ToList();
+            foreach (PushNotificationRecord rec in notificationrecords) {
+                rec.CommunicationContactPartRecord_Id = idmaster;
+            }
+            _pushNotificationRepository.Flush();
+            _notifier.Add(NotifyType.Information, T("Linked {0} device To Master contact", notificationrecords.Count().ToString()));
+
+            #endregion [lego i rimanenti content al Content Master per renderli querabili]
         }
 
         #region [CRUD PushNotification]
+
         public void StorePushNotification(PushNotificationRecord pushElement) {
-
-
             PushNotificationRecord OldPush = _pushNotificationRepository.Fetch(x => (x.UUIdentifier == pushElement.UUIdentifier || x.Token == pushElement.Token) && x.Produzione == pushElement.Produzione && x.Device == pushElement.Device).FirstOrDefault();
 
             DateTime adesso = DateTime.Now;
@@ -89,7 +138,6 @@ namespace Laser.Orchard.Mobile.Services {
                             my_disp.UUIdentifier = pushElement.UUIdentifier;
                             _userDeviceRecord.Update(my_disp);
                         }
-
                     }
                 }
                 pushElement.DataModifica = adesso;
@@ -108,19 +156,18 @@ namespace Laser.Orchard.Mobile.Services {
         private PushNotificationRecord GetPushNotificationBy_UUIdentifier(string uuidentifier, bool produzione) {
             return _pushNotificationRepository.Fetch(x => x.UUIdentifier == uuidentifier && x.Produzione == produzione).FirstOrDefault();
         }
-        #endregion
+
+        #endregion [CRUD PushNotification]
 
         public IEnumerable<PushNotificationRecord> SearchPushNotification(string texttosearch) {
             return _pushNotificationRepository.Fetch(x => x.UUIdentifier.Contains(texttosearch)).ToList();
         }
 
-
-
         /// <summary>
-        /// For Android 
+        /// For Android
         /// idContentRelated
         /// message
-        /// 
+        ///
         /// For Apple
         /// idContentRelated
         /// message
@@ -141,7 +188,6 @@ namespace Laser.Orchard.Mobile.Services {
             string ctype = "";
             string displayalias = "";
             if (idContentRelated > 0) {
-
                 relatedContentItem = _orchardServices.ContentManager.Get(idContentRelated);
                 if (!relatedContentItem.IsPublished()) {
                     _notifier.Information(T("No push will be sent, related content must be published"));
@@ -168,8 +214,6 @@ namespace Laser.Orchard.Mobile.Services {
                 _myLog.WriteLog("language:" + language);
                 _myLog.WriteLog("Send to:" + device);
                 if (device == "All") {
-
-
                     if (string.IsNullOrEmpty(JsonAndroid) || JsonAndroid.Trim() == "") {
                         PushAndroidVM pushandroid = new PushAndroidVM();
                         pushandroid.Id = 0;
@@ -270,7 +314,6 @@ namespace Laser.Orchard.Mobile.Services {
                         SendAllApplePart(ci.As<MobilePushPart>(), idContent, idContentRelated, language, queryDevice);
 
                         SendAllWindowsMobilePart(ci.As<MobilePushPart>(), idContent, idContentRelated, language, queryDevice);
-
                     }
                     if (ci.As<MobilePushPart>().DevicePush == TipoDispositivo.Android.ToString()) {
                         SendAllAndroidPart(ci.As<MobilePushPart>(), idContent, idContentRelated, language, queryDevice);
@@ -320,9 +363,7 @@ namespace Laser.Orchard.Mobile.Services {
         private void SendAllAndroid(PushAndroidVM newpush, bool produzione, string language, string queryDevice = "") {
             string message = JsonConvert.SerializeObject(newpush);
             SendAllAndroidJson(message, produzione, language, queryDevice);
-
         }
-
 
         private string GetQueryDevice(Dictionary<string, object> contesto, MobilePushPart mpp) {
             string withtoken = mpp.Settings.GetModel<PushMobilePartSettingVM>().QueryDevice;
@@ -342,13 +383,11 @@ namespace Laser.Orchard.Mobile.Services {
                  .List<PushNotificationRecord>();
                 return estrazione.Where(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
             }
-
         }
 
         private void SendAllAndroidJson(string JsonMessage, bool produzione, string language, string queryDevice = "") {
             //var allDevice = _pushNotificationRepository.Fetch(x => x.Device == TipoDispositivo.Android && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
             var allDevice = GetListMobileDevice(queryDevice, TipoDispositivo.Android, produzione, language);
-
 
             string setting = "";
             if (produzione)
@@ -380,7 +419,6 @@ namespace Laser.Orchard.Mobile.Services {
             push.StopAllServices();
         }
 
-
         //private void PushAndroid(PushNotificationRecord dispositivo, bool produzione, string message) {
         //      string setting = "";
         //      if (produzione)
@@ -408,7 +446,6 @@ namespace Laser.Orchard.Mobile.Services {
         //          .WithJson(message));
         //      //   .WithJson(" {    \"tipo\": \"aio\",    \"id\": \"2\",    \"titolo\": \"ole\"  }"));
 
-
         //      push.StopAllServices();
         //  }
 
@@ -424,8 +461,8 @@ namespace Laser.Orchard.Mobile.Services {
             if (_orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ShowTestOptions)
                 produzione = !(mpp.TestPush);
             SendAllApple(newpush, produzione, language, queryDevice);
-
         }
+
         private void SendAllApple(PushAppleVM newpush, bool produzione, string language, string queryDevice = "") {
             var allDevice = GetListMobileDevice(queryDevice, TipoDispositivo.Apple, produzione, language);
             //   var allDevice = _pushNotificationRepository.Fetch(x => x.Device == TipoDispositivo.Apple && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
@@ -435,7 +472,6 @@ namespace Laser.Orchard.Mobile.Services {
             }
         }
 
-
         private void SendAllWindowsMobilePart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, string queryDevice) {
             string message = JsonConvert.SerializeObject(GenerateWindowsMobilePush(mpp, idcontent, idContentRelated));
             bool produzione = true;
@@ -443,6 +479,7 @@ namespace Laser.Orchard.Mobile.Services {
                 produzione = !(mpp.TestPush);
             SendAllWindowsMobile(message, produzione, language, queryDevice);
         }
+
         private void SendAllWindowsMobile(string message, bool produzione, string language, string queryDevice = "") {
             var allDevice = GetListMobileDevice(queryDevice, TipoDispositivo.WindowsMobile, produzione, language);
             //var allDevice = _pushNotificationRepository.Fetch(x => x.Device == TipoDispositivo.WindowsMobile && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
@@ -450,6 +487,7 @@ namespace Laser.Orchard.Mobile.Services {
                 PushWindowsMobile(pnr, produzione, message);
             }
         }
+
         private PushAndroidVM GenerateAndroidPush(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string ctype, string displayalias) {
             PushAndroidVM mypush = new PushAndroidVM();
             //mypush.Title = mpp.TitlePush;
@@ -498,7 +536,7 @@ namespace Laser.Orchard.Mobile.Services {
             return mypush;
         }
 
-        #endregion
+        #endregion Send push to Devices
 
         //public void SendPush(Int32 iddispositivo, string message) {//,string language,bool produzione
         //    PushNotificationRecord devicetopush = _pushNotificationRepository.Fetch(x => x.Id == iddispositivo).FirstOrDefault();
@@ -519,10 +557,7 @@ namespace Laser.Orchard.Mobile.Services {
 
         //}
 
-
-
         private void PushWindowsMobile(PushNotificationRecord dispositivo, bool produzione, string message) {
-
             var setting_WindowsAppPackageName = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().WindowsAppPackageName;
             var setting_WindowsAppSecurityIdentifier = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().WindowsAppSecurityIdentifier;
             var setting_WindowsEndPoint = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().WindowsEndPoint;
@@ -547,7 +582,6 @@ namespace Laser.Orchard.Mobile.Services {
                 .WithText1(message));
             //  .WithText2("This is a Toast"));
 
-
             //-------------------------
             // WINDOWS NOTIFICATIONS
             //-------------------------
@@ -561,10 +595,6 @@ namespace Laser.Orchard.Mobile.Services {
 
             push.StopAllServices();
         }
-
-
-
-
 
         private void PushApple(List<PushNotificationRecord> listdispositivo, bool produzione, PushAppleVM pushMessage) {
             //  string AppleCertificateTenant = _shellSetting.Name;
@@ -621,20 +651,15 @@ namespace Laser.Orchard.Mobile.Services {
                 else {
                     push.QueueNotification(appleNotification);
                 }
-
             }
             push.StopAllServices();
-
         }
 
         private void PushApple(PushNotificationRecord dispositivo, PushAppleVM pushMessage) {
             List<PushNotificationRecord> listdispositivo = new List<PushNotificationRecord>();
             listdispositivo.Add(dispositivo);
             PushApple(listdispositivo, dispositivo.Produzione, pushMessage);
-
         }
-
-
 
         private void DeviceSubscriptionChanged(object sender, string oldSubscriptionId, string newSubscriptionId, INotification notification) {
             //Currently this event will only ever happen for Android GCM
@@ -653,11 +678,9 @@ namespace Laser.Orchard.Mobile.Services {
             _myLog.WriteLog(T("Sent: " + sender + " -> " + notification).ToString());
             messageAppleSent++;
             //   _notifier.Information(T("Sent: " + sender + " -> " + notification));
-
         }
 
         private void NotificationFailed(object sender, INotification notification, Exception notificationFailureException) {
-
             _myLog.WriteLog((T("Failure: " + sender + " -> " + notificationFailureException.Message + " -> " + notification)).ToString());
         }
 
@@ -672,15 +695,19 @@ namespace Laser.Orchard.Mobile.Services {
         private void DeviceSubscriptionExpiredAppleProduzione(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, INotification notification) {
             DeviceSubscriptionExpired(sender, expiredDeviceSubscriptionId, timestamp, notification, true, TipoDispositivo.Apple);
         }
+
         private void DeviceSubscriptionExpiredAppleNotProduzione(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, INotification notification) {
             DeviceSubscriptionExpired(sender, expiredDeviceSubscriptionId, timestamp, notification, false, TipoDispositivo.Apple);
         }
+
         private void DeviceSubscriptionExpiredAndroidProduzione(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, INotification notification) {
             DeviceSubscriptionExpired(sender, expiredDeviceSubscriptionId, timestamp, notification, true, TipoDispositivo.Android);
         }
+
         private void DeviceSubscriptionExpiredAndroidNotProduzione(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, INotification notification) {
             DeviceSubscriptionExpired(sender, expiredDeviceSubscriptionId, timestamp, notification, false, TipoDispositivo.Android);
         }
+
         private void DeviceSubscriptionExpired(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, INotification notification, bool produzione, TipoDispositivo dispositivo) {
             _myLog.WriteLog(T("Device Subscription Expired: " + sender + " -> " + expiredDeviceSubscriptionId).ToString());
             if (_pushNotificationRepository.Fetch(x => x.Token == expiredDeviceSubscriptionId && x.Produzione == produzione && x.Device == dispositivo).Count() == 1) {
@@ -693,13 +720,11 @@ namespace Laser.Orchard.Mobile.Services {
             }
         }
 
-
         private void DeviceSubscriptionExpiredWindowsMobile(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, INotification notification) {
             _myLog.WriteLog(T("Device Subscription Expired: " + sender + " -> " + expiredDeviceSubscriptionId).ToString());
             // ToDo
             _myLog.WriteLog(T("The event is not implemented for Windows").ToString());
         }
-
 
         private void ChannelDestroyed(object sender) {
             _myLog.WriteLog(T("Channel Destroyed for: " + sender).ToString());
@@ -708,7 +733,5 @@ namespace Laser.Orchard.Mobile.Services {
         private void ChannelCreated(object sender, IPushChannel pushChannel) {
             _myLog.WriteLog(T("Channel Created for: " + sender).ToString());
         }
-
-
     }
 }
