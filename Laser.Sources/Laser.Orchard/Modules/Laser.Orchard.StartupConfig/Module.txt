@@ -5,7 +5,7 @@ Website: http://www.laser-group.com
 Version: 1.8
 OrchardVersion: 1.8
 Description: Modulo per definizioni di base utili nella creazione di siti Laser
-Dependencies: Orchard.MediaLibrary, Orchard.Fields, Orchard.ContentPicker, Orchard.Localization
+Dependencies: Orchard.MediaLibrary, Orchard.Fields, Orchard.ContentPicker, Orchard.Localization,Orchard.Modules
 Category: Administration
 Features:
     Laser.Orchard.StartupConfig.UriCultureSelector:
