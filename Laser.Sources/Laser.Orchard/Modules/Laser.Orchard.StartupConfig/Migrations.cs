@@ -31,6 +31,18 @@ namespace Laser.Orchard.StartupConfig {
 
             return 2;
         }
+        public int UpdateFrom2() {
+            SchemaBuilder.CreateTable("FavoriteCulturePartRecord", table =>
+                    table.ContentPartVersionRecord()
+                    .Column<int>("Culture_Id", cfg => cfg.Nullable())
+                    );
+            SchemaBuilder.AlterTable("FavoriteCulturePartRecord", table =>
+               table.CreateIndex("CultureIdIndex", "Culture_Id"));
+            ContentDefinitionManager.AlterPartDefinition("FavoriteCulturePart", part =>
+                part.Attachable(false));
+            return 3;
+        }
+
     }
 
     [OrchardFeature("Laser.Orchard.StartupConfig.PermissionExtension")]

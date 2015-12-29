@@ -47,9 +47,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Laser.orchard.ShortLinks">
-      <HintPath>..\Laser.Orchard.ShortLinks\bin\Laser.orchard.ShortLinks.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Orchard.ContentPicker">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPicker\bin\Orchard.ContentPicker.dll</HintPath>
@@ -105,6 +102,10 @@
     <ProjectReference Include="..\Laser.Orchard.Queries\Laser.Orchard.Queries.csproj">
       <Project>{d494b57f-2ae6-460f-9785-565376409afc}</Project>
       <Name>Laser.Orchard.Queries</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.ShortLinks\Laser.orchard.ShortLinks.csproj">
+      <Project>{ec3ac4a2-7368-4609-999b-29965418372c}</Project>
+      <Name>Laser.orchard.ShortLinks</Name>
     </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
       <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>

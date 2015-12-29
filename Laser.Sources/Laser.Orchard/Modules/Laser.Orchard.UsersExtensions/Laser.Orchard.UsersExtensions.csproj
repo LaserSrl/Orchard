@@ -107,6 +107,7 @@
     <Compile Include="Controllers\UserActionsController.cs" />
     <Compile Include="Drivers\UserRegistrationPolicyPartDriver.cs" />
     <Compile Include="Enumerators.cs" />
+    <Compile Include="Handlers\FavoriteCulturePartHandler.cs" />
     <Compile Include="Handlers\UserRegistrationPolicyPartHandler.cs" />
     <Compile Include="Handlers\UserRegistrationSettingsPartHandler.cs" />
     <Compile Include="Migrations.cs" />

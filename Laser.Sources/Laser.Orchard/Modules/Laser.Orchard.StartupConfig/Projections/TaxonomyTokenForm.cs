@@ -7,10 +7,6 @@ using System;
 
 namespace Laser.Orchard.StartupConfig.Projections
 {
-    public interface IFormProvider : IEventHandler
-    {
-        void Describe(dynamic context);
-    }
 
     [OrchardFeature("Laser.Orchard.StartupConfig.TaxonomiesExtensions")]
     public class TaxonomyTokenForm : IFormProvider
