@@ -20,8 +20,8 @@
         if (cookiesettings.cookieAnalytics) {
             if ('@part.cookieAnalyticsMessage.Replace(System.Environment.NewLine, "")'.length > 0)
             {
-                var analyticsMessage = '@part.cookieAnalyticsMessage.Replace(System.Environment.NewLine, "{{space}}")';
-                cookiesettings.cookieAnalyticsMessage = analyticsMessage.replace("{{space}}", "<br>");
+                var analyticsMessage = '@Html.Raw(part.cookieAnalyticsMessage.Replace(System.Environment.NewLine, "{{space}}"))';
+                cookiesettings.cookieAnalyticsMessage = analyticsMessage.replace("{{space}}", "<br/>");
             }
             if ('@part.cookieWhatAreLinkText'.length > 0)
                 cookiesettings.cookieWhatAreLinkText = '@part.cookieWhatAreLinkText';
