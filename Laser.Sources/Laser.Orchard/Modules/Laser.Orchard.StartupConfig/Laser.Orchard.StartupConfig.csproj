@@ -171,7 +171,6 @@
   <ItemGroup>
     <Content Include="Recipes\Laser.recipe.xml" />
     <Content Include="Web.config" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
@@ -191,6 +190,7 @@
     <Compile Include="Activities\UserEventActivity.cs" />
     <Compile Include="Controllers\MaintenanceAdminController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Drivers\FavoriteCulturePartDriver.cs" />
     <Compile Include="Drivers\MaintenancePartDriver.cs" />
     <Compile Include="Drivers\PublishExtensionPartDriver.cs" />
     <Compile Include="Drivers\TaxonomyExtensionPartDriver.cs" />
@@ -209,6 +209,7 @@
     <Compile Include="Extensions\MediaHelperExtensions.cs" />
     <Compile Include="Filters\ControllerContextFilter.cs" />
     <Compile Include="Handlers\ContentPickerFieldExtensionHandler.cs" />
+    <Compile Include="Handlers\FavoriteCulturePartHandler.cs" />
     <Compile Include="Handlers\MaintenancePartHandler.cs" />
     <Compile Include="Handlers\TaxonomyExtensionPartHandler.cs" />
     <Compile Include="Handlers\TaxonomyExtensionsSiteSettingsHandler.cs" />
@@ -226,6 +227,7 @@
     <Compile Include="Migrations\RelationshipsEnhancerMigrations.cs" />
     <Compile Include="Migrations\TaxonomyExtensionsMigrations.cs" />
     <Compile Include="Models\ContentPickerConnector.cs" />
+    <Compile Include="Models\FavoriteCulturePart.cs" />
     <Compile Include="Models\MaintenancePart.cs" />
     <Compile Include="Models\PublishExtensionPart.cs" />
     <Compile Include="Navigation\MaintenanceMenu.cs" />
@@ -307,6 +309,13 @@
     <Content Include="Views\EditorTemplates\Parts\Maintenance_Edit.cshtml" />
     <Content Include="Views\MaintenanceAdmin\index.cshtml" />
     <Content Include="Views\MaintenanceAdmin\Edit.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\FavoriteCulturePart_Edit.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

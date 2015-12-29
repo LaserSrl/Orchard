@@ -5,9 +5,10 @@
   Place  aaFields_Numeric__CommonPart-Creator="-"/>
   Place  aaFields_Numeric__CommonPart-LastModifier="-"/>
   -->
-
-    <Place Fields_Numeric__CommonPart-Creator="-"/>
-    <Place Fields_Numeric__CommonPart-LastModifier="-"/>
+  <Place Parts_FavoriteCulturePart_Edit="Content:2" />
+  
+  <Place Fields_Numeric__CommonPart-Creator="-"/>
+  <Place Fields_Numeric__CommonPart-LastModifier="-"/>
 
   <Place Parts_ContentPickerConnector="Content:1"/>
 
@@ -15,7 +16,7 @@
   <Place Fields_TaxonomyField_Edit="-" Fields_TaxonomyField_Localized_Edit="Content:9" Parts_TaxonomyExtension_Edit="Content:6"/>
   <Place Parts_TermPart="-" Parts_TermPart_Localized="Content:5" />
   <Place Parts_TaxonomyExtensionsSiteSettings_Edit="Content:10" />
-  
+
 
   <!-- Display terms in front-end summaries -->
   <Match DisplayType="Summary">
