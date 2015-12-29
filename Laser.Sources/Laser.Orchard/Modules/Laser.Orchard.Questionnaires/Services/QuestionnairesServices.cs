@@ -62,12 +62,10 @@ namespace Laser.Orchard.Questionnaires.Services {
             if (id > 0) {
                 try {
                     return ((dynamic)_orchardServices.ContentManager.Get(id)).UserPart.UserName;
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     return "No User";
                 }
-            }
-            else
+            } else
                 return "No User";
         }
 
@@ -117,15 +115,19 @@ namespace Laser.Orchard.Questionnaires.Services {
                 ptc.Model = editModel;
                 int templateid = Ci.As<GamePart>().Settings.GetModel<GamePartSettingVM>().Template;
                 TemplatePart TemplateToUse = _orchardServices.ContentManager.Get(templateid).As<TemplatePart>();
-                string testohtml = _templateService.ParseTemplate(TemplateToUse, ptc);
-                var datiCI = Ci.Record;
-                var data = new Dictionary<string, string>();
-                data.Add("Subject", "Game Ranking");
-                data.Add("Body", testohtml);
-                _messageManager.Send(new string[] { emailRecipe }, "ModuleRankingEmail", "email", data);
-                return true;
-            }
-            else
+                string testohtml;
+                if (TemplateToUse != null) {
+                    testohtml = _templateService.ParseTemplate(TemplateToUse, ptc);
+                    var datiCI = Ci.Record;
+                    var data = new Dictionary<string, string>();
+                    data.Add("Subject", "Game Ranking");
+                    data.Add("Body", testohtml);
+                    _messageManager.Send(new string[] { emailRecipe }, "ModuleRankingEmail", "email", data);
+                    return true;
+                } else { // Nessun template selezionato non mando una mail e ritorno false, mail non inviata
+                    return false;
+                }
+            } else
                 return false;
         }
 
@@ -152,8 +154,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.SessionID = SessionID;
                             CreateUserAnswers(userAnswer);
                         }
-                    }
-                    else if (q.QuestionType == QuestionType.SingleChoice) {
+                    } else if (q.QuestionType == QuestionType.SingleChoice) {
                         if (q.SingleChoiceAnswer > 0) {
                             var userAnswer = new UserAnswersRecord();
                             userAnswer.AnswerRecord_Id = q.SingleChoiceAnswer;
@@ -165,8 +166,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.SessionID = SessionID;
                             CreateUserAnswers(userAnswer);
                         }
-                    }
-                    else if (q.QuestionType == QuestionType.MultiChoice) {
+                    } else if (q.QuestionType == QuestionType.MultiChoice) {
                         var answerList = q.AnswersWithResult.Where(w => w.Answered);
                         foreach (var a in answerList) {
                             var userAnswer = new UserAnswersRecord();
@@ -212,26 +212,22 @@ namespace Laser.Orchard.Questionnaires.Services {
                                 _repositoryAnswer.Delete(_repositoryAnswer.Get(answer.Id));
                             }
                             _repositoryQuestions.Delete(_repositoryQuestions.Get(quest.Id));
-                        }
-                        catch (Exception ex) {
+                        } catch (Exception ex) {
                             throw new Exception("quest.Delete");
                         }
-                    }
-                    else {
+                    } else {
                         try {
                             foreach (var answer in quest.Answers.Where(w => w.Id != 0)) { ///Update and delete Answer
                                 AnswerRecord answerRecord = new AnswerRecord();
                                 Mapper.Map(answer, answerRecord);
                                 if (answer.Delete) {
                                     _repositoryAnswer.Delete(_repositoryAnswer.Get(answer.Id));
-                                }
-                                else if (answer.Id > 0) {
+                                } else if (answer.Id > 0) {
                                     _repositoryAnswer.Update(answerRecord);
                                 }
                             }
                             _repositoryQuestions.Update(questionRecord);
-                        }
-                        catch (Exception ex) {
+                        } catch (Exception ex) {
                             throw new Exception("quest.Update");
                         }
                         try {
@@ -243,8 +239,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                                     _repositoryAnswer.Create(answerRecord);
                                 }
                             }
-                        }
-                        catch (Exception ex) {
+                        } catch (Exception ex) {
                             throw new Exception("answer.Insert");
                         }
                     }
@@ -259,7 +254,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                         AnswerType = quest.AnswerType,
                         Section = quest.Section,
                         ConditionType = quest.ConditionType,
-                        AllFiles=quest.AllFiles,
+                        AllFiles = quest.AllFiles,
                         Condition = quest.Condition,
                         QuestionnairePartRecord_Id = PartID,
                     };
@@ -279,8 +274,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                                 _repositoryAnswer.Flush();
                             }
                         }
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                         throw new Exception("quest.Create");
                     }
 
@@ -292,13 +286,11 @@ namespace Laser.Orchard.Questionnaires.Services {
                             _repositoryQuestions.Update(questionRecord);
                             re = null;
                         }
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                         throw new Exception("quest.CorrezzioneCondizioni");
                     }
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 throw new Exception("quest.UpdateTotale");
             }
         }
