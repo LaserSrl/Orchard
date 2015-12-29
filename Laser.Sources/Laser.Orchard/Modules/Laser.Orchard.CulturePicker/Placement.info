@@ -1,5 +1,5 @@
 ﻿<Placement>
-    <Place Parts_CulturePicker="Content:1"/>
+    <Place Parts_CulturePicker="Content:1" />
     <Match DisplayType="Detail">
       <Place Parts_Localization_ContentTranslations="-"/>
     </Match>
