@@ -5,6 +5,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentPicker.Fields;
 using Orchard.Core.Title.Models;
+using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Modules.Services;
 using Orchard.Mvc.Extensions;
@@ -40,13 +41,16 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly INotifier _notifier;
         public Localizer T { get; set; }
 
-        public CommunicationService(INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices) {
+        private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
+
+        public CommunicationService(IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
             _moduleService = moduleService;
             _notifier = notifier;
             T = NullLocalizer.Instance;
+            _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
         }
 
         public void Synchronize() {
@@ -57,7 +61,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
                 var Contact = _orchardServices.ContentManager.New("CommunicationContact");
                 _orchardServices.ContentManager.Create(Contact);
-                Contact.As<TitlePart>().Title = "Master Content";
+                Contact.As<TitlePart>().Title = "Master Contact";
                 Contact.As<CommunicationContactPart>().Master = true;
                 _notifier.Add(NotifyType.Information, T("Master Contact Created"));
             }
@@ -76,7 +80,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             foreach (var user in users) {
                 UserProfileToContact(user);
             }
-            _notifier.Add(NotifyType.Information, T("Syncronized {0} user's profiles",users.Count().ToString()));
+            _notifier.Add(NotifyType.Information, T("Syncronized {0} user's profiles", users.Count().ToString()));
             #endregion Import dei profili degli utenti
 
             #region Ricreo collegamento con parte mobile preesistente
@@ -181,6 +185,24 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             else {
                 Contact = contactsUsers.ContentItem;
+            }
+            if (!string.IsNullOrEmpty(UserContent.Email)) {
+                CommunicationEmailRecord cmr = _repositoryCommunicationEmailRecord.Fetch(x => x.Email == UserContent.Email).FirstOrDefault();
+                if (cmr != null) {
+                    if (cmr.CommunicationContactPartRecord_Id != Contact.Id) {
+                        cmr.CommunicationContactPartRecord_Id = Contact.Id;
+                        cmr.DataModifica = DateTime.Now;
+                        _repositoryCommunicationEmailRecord.Update(cmr);
+                        _repositoryCommunicationEmailRecord.Flush();
+                    }
+                }
+                else {
+                    CommunicationEmailRecord newrec = new CommunicationEmailRecord();
+                    newrec.Email = UserContent.Email;
+                    newrec.CommunicationContactPartRecord_Id = Contact.Id;
+                    _repositoryCommunicationEmailRecord.Create(newrec);
+                    _repositoryCommunicationEmailRecord.Flush();
+                }
             }
             Contact.As<TitlePart>().Title = UserContent.Email + " " + UserContent.UserName;
             dynamic mypart = (((dynamic)Contact).CommunicationContactPart);

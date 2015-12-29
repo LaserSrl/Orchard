@@ -1,6 +1,7 @@
 ﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
+using System;
 
 namespace Laser.Orchard.CommunicationGateway {
 
@@ -170,6 +171,20 @@ namespace Laser.Orchard.CommunicationGateway {
                .AddColumn<bool>("Master", col => col.WithDefault(false))
              );
             return 7;
+        }
+        public int UpdateFrom7() {
+            SchemaBuilder.CreateTable("CommunicationEmailRecord",
+            table => table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<int>("CommunicationContactPartRecord_Id", column => column.WithDefault(0))
+                .Column<string>("Language", column => column.WithLength(10))
+                .Column<bool>("Validated", col => col.WithDefault(true))
+                .Column<DateTime>("DataInserimento",  c => c.NotNull())
+                .Column<DateTime>("DataModifica", c => c.NotNull())     
+                .Column<bool>("Produzione", col => col.WithDefault(false))     
+                .Column<string>("Email", column => column.WithLength(400))
+             );
+            return 8;
         }
     }
 }

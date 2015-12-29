@@ -115,11 +115,14 @@
     <Compile Include="Controllers\AdvertisingAdminController.cs" />
     <Compile Include="Controllers\ContactsAdminController.cs" />
     <Compile Include="Drivers\CommunicationContactDriver.cs" />
+    <Compile Include="Drivers\EmailContactPartDriver.cs" />
     <Compile Include="Drivers\QueryFilterDriver.cs" />
     <Compile Include="Features\CommunicationFeature.cs" />
     <Compile Include="Handlers\CommunicationContactPartHandler.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Models\CommunicationContactPart.cs" />
+    <Compile Include="Models\CommunicationEmailRecord.cs" />
+    <Compile Include="Models\EmailContactPart.cs" />
     <Compile Include="Models\QueryFilterPart.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Services\ICommunicationService.cs" />

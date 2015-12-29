@@ -4,5 +4,6 @@
     <Place Fields_ContentPicker_Edit-Campaign="-"/>
     <Place Parts_CommunicationAdvertising_Edit="Content:1"/>
   </Match>
+  <Place Parts_EmailContact_Edit="Content:4"/>
   <Place Parts_QueryFilter="Content:3" />
 </Placement>

@@ -1,0 +1,25 @@
+﻿@using Laser.Orchard.CommunicationGateway.Models
+@using Orchard.Security
+@*if (Authorizer.Authorize(StandardPermissions.SiteOwner)) {
+}
+*@
+<fieldset>
+    <legend>@T("Email")</legend>
+    @{
+        foreach (CommunicationEmailRecord pnr in Model) {
+        <div>
+            <span>Mail</span>    @Html.Raw(pnr.Email)
+            <br />
+            <span>Language:</span>    @Html.Raw(pnr.Language)
+            <br />
+            <span>Valid:</span>    @Html.Raw(pnr.Validated)
+            <br />
+            <span>Produzione:</span>    @Html.Raw(pnr.Produzione)
+            <br />
+            <span>Data Creazione :</span>    @Html.Raw(pnr.DataInserimento)
+            <br />
+            <span>Ultima modifica:</span>    @Html.Raw(pnr.DataModifica)
+        </div>  <br />   
+        }
+    }
+</fieldset>
