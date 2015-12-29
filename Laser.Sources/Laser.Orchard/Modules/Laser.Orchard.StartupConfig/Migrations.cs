@@ -36,6 +36,8 @@ namespace Laser.Orchard.StartupConfig {
                     table.ContentPartVersionRecord()
                     .Column<int>("Culture_Id", cfg => cfg.Nullable())
                     );
+            SchemaBuilder.AlterTable("FavoriteCulturePartRecord", table =>
+               table.CreateIndex("CultureIdIndex", "Culture_Id"));
             ContentDefinitionManager.AlterPartDefinition("FavoriteCulturePart", part =>
                 part.Attachable(false));
             return 3;

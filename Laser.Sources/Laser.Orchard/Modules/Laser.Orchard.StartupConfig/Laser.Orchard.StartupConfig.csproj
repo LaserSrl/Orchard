@@ -232,6 +232,9 @@
     <Compile Include="Models\PublishExtensionPart.cs" />
     <Compile Include="Navigation\MaintenanceMenu.cs" />
     <Compile Include="Permission\MaintenancePermission.cs" />
+    <Compile Include="Projections\FavoriteCultureFilter.cs" />
+    <Compile Include="Projections\FavoriteCultureForm.cs" />
+    <Compile Include="Projections\IProviderForProections.cs" />
     <Compile Include="Services\IMaintenanceService.cs" />
     <Compile Include="Services\MaintenanceBanner.cs" />
     <Compile Include="Services\MaintenanceService.cs" />

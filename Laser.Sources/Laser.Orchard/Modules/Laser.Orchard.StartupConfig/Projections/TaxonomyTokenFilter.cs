@@ -11,10 +11,6 @@ using Orchard.Taxonomies.Services;
 
 namespace Laser.Orchard.StartupConfig.Projections
 {
-    public interface IFilterProvider : IEventHandler
-    {
-        void Describe(dynamic describe);
-    }
 
     [OrchardFeature("Laser.Orchard.StartupConfig.TaxonomiesExtensions")]
     public class TaxonomyTokenFilter : IFilterProvider
