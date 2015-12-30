@@ -1,0 +1,24 @@
+﻿@using Laser.Orchard.CommunicationGateway.ViewModels
+@using Orchard.Utility.Extensions
+@using Laser.Orchard.Commons.Helpers
+@model View_EmailVM_element
+@{ 
+    MvcHtmlString answerBlock = Html.UniqueClientId("Email");
+    var qid = "RedirectNum_" + answerBlock;
+}
+<div id="@qid" class="singleemail">
+    <span>Mail</span>
+    @Html.TextBoxFor(x => x.Email, new { @class = "text medium", @placeholder = T("Type a email") })
+    <br />
+    <span>Language:</span>    @Html.EditorFor(x => x.Language)
+    <br />
+    <span>Valid:</span>    @Html.EditorFor(x => x.Validated)
+    <br />
+    <span>Produzione:</span>    @Html.EditorFor(x => x.Produzione)
+    <br />
+    <span>Data Creazione :</span>    @Model.DataInserimento
+    <br />
+    <span>Ultima modifica:</span>    @Model.DataModifica
+    @Html.HiddenFor(x => x.Id)
+</div>
+<br />
