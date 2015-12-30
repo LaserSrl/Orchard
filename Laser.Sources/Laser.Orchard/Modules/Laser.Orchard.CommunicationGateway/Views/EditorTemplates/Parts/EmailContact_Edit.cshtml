@@ -1,25 +1,21 @@
-﻿@using Laser.Orchard.CommunicationGateway.Models
+﻿@using Laser.Orchard.CommunicationGateway.ViewModels
 @using Orchard.Security
+@using Laser.Orchard.Commons.Helpers
+@model View_EmailVM
 @*if (Authorizer.Authorize(StandardPermissions.SiteOwner)) {
 }
 *@
+@{    Script.Require("JQuery").AtHead();
+      Script.Require("jQueryUI").AtHead();
+      Script.Require("jQuery_NestedModels").AtHead();
+      Style.Require("FontAwesome430").AtHead();
+      }
 <fieldset>
-    <legend>@T("Email")</legend>
-    @{
-        foreach (CommunicationEmailRecord pnr in Model) {
-        <div>
-            <span>Mail</span>    @Html.Raw(pnr.Email)
-            <br />
-            <span>Language:</span>    @Html.Raw(pnr.Language)
-            <br />
-            <span>Valid:</span>    @Html.Raw(pnr.Validated)
-            <br />
-            <span>Produzione:</span>    @Html.Raw(pnr.Produzione)
-            <br />
-            <span>Data Creazione :</span>    @Html.Raw(pnr.DataInserimento)
-            <br />
-            <span>Ultima modifica:</span>    @Html.Raw(pnr.DataModifica)
-        </div>  <br />   
-        }
-    }
+    <legend> <i class="fa fa-envelope" style="color: green"></i> @T("Email")</legend>
+        <div id="MasterEmail">
+        @Html.EditorFor(x => x.Elenco)
+    </div>
+   <p id="AddEmailButton">
+   <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x=>x.Elenco, T("Add Email").Text, "#MasterEmail", ".singleemail", "", null)
+    </p>
 </fieldset>

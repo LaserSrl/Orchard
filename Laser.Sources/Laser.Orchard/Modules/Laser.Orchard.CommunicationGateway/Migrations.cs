@@ -176,6 +176,21 @@ namespace Laser.Orchard.CommunicationGateway {
             return 8;
         }
         public int UpdateFrom8() {
+            SchemaBuilder.CreateTable("CommunicationSmsRecord",
+            table => table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<int>("CommunicationContactPartRecord_Id", column => column.WithDefault(0))
+                .Column<string>("Language", column => column.WithLength(10))
+                .Column<bool>("Validated", col => col.WithDefault(true))
+                .Column<DateTime>("DataInserimento", c => c.NotNull())
+                .Column<DateTime>("DataModifica", c => c.NotNull())
+                .Column<bool>("Produzione", col => col.WithDefault(false))
+                .Column<string>("Sms", column => column.WithLength(400))
+                 .Column<string>("Prefix", column => column.WithLength(400))
+             );
+            return 9;
+        }
+        public int UpdateFrom9() {
             ContentDefinitionManager.AlterPartDefinition("CommunicationAdvertisingPart",
                 alt => alt.RemoveField("Campaign"));
             SchemaBuilder.CreateTable("CommunicationAdvertisingPartRecord",
@@ -185,7 +200,7 @@ namespace Laser.Orchard.CommunicationGateway {
             SchemaBuilder.AlterTable("CommunicationAdvertisingPartRecord",
                 table => table.CreateIndex("Ix_CampaignId", "CampaignId"));
 
-            return 9;
+            return 10;
         }
     }
 }

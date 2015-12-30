@@ -1,0 +1,27 @@
+﻿@using Laser.Orchard.CommunicationGateway.Models
+@using Orchard.Security
+@*if (Authorizer.Authorize(StandardPermissions.SiteOwner)) {
+}
+*@
+@if (Model.Count > 0) {
+    <fieldset>
+        <legend>@T("Sms")</legend>
+        @{
+    foreach (CommunicationSmsRecord pnr in Model) {
+            <div>
+                <span>Phone</span> @Html.Raw(pnr.Prefix)    @Html.Raw(pnr.Sms)
+                <br />
+                <span>Language:</span>    @Html.Raw(pnr.Language)
+                <br />
+                <span>Valid:</span>    @Html.Raw(pnr.Validated)
+                <br />
+                <span>Produzione:</span>    @Html.Raw(pnr.Produzione)
+                <br />
+                <span>Data Creazione :</span>    @Html.Raw(pnr.DataInserimento)
+                <br />
+                <span>Ultima modifica:</span>    @Html.Raw(pnr.DataModifica)
+            </div>  <br />   
+    }
+        }
+    </fieldset>
+}

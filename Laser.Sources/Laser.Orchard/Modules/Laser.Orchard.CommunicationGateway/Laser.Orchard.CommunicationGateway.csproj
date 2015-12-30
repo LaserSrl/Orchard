@@ -47,6 +47,14 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Laser.Orchard.Commons, Version=1.0.5841.19763, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\Laser.Orchard.Commons\bin\Debug\Laser.Orchard.Commons.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Orchard.ContentPicker">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPicker\bin\Orchard.ContentPicker.dll</HintPath>
@@ -123,6 +131,7 @@
     <Compile Include="Drivers\CommunicationContactDriver.cs" />
     <Compile Include="Drivers\EmailContactPartDriver.cs" />
     <Compile Include="Drivers\QueryFilterDriver.cs" />
+    <Compile Include="Drivers\SmsContactPartDriver.cs" />
     <Compile Include="Features\CommunicationFeature.cs" />
     <Compile Include="Handlers\CommunicationAdvertisingPartHandler.cs" />
     <Compile Include="Handlers\CommunicationContactPartHandler.cs" />
@@ -130,8 +139,10 @@
     <Compile Include="Models\CommunicationAdvertisingPart.cs" />
     <Compile Include="Models\CommunicationContactPart.cs" />
     <Compile Include="Models\CommunicationEmailRecord.cs" />
+    <Compile Include="Models\CommunicationSmsRecord.cs" />
     <Compile Include="Models\EmailContactPart.cs" />
     <Compile Include="Models\QueryFilterPart.cs" />
+    <Compile Include="Models\SmsContactPart.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Services\ICommunicationService.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
@@ -142,6 +153,7 @@
     <Compile Include="Controllers\CampaignAdminController.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
+    <Compile Include="ViewModels\View_EmailVM.cs" />
     <Content Include="Views\CampaignAdmin\Edit.cshtml" />
     <Content Include="Views\AdvertisingAdmin\Edit.cshtml" />
     <Content Include="Views\AdvertisingAdmin\index.cshtml" />
@@ -152,6 +164,11 @@
     <Content Include="Views\EditorTemplates\Parts\QueryFilter.cshtml" />
     <Content Include="Views\ContactsAdmin\index.cshtml" />
     <Content Include="Views\ContactsAdmin\Edit.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\EmailContact_Edit.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\EditorTemplates\Parts\SmsContact_Edit.cshtml" />
+    <Content Include="Views\EditorTemplates\View_EmailVM_element.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

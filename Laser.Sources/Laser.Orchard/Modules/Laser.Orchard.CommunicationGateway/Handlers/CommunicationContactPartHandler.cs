@@ -16,8 +16,10 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
         public Localizer T { get; set; }
         private readonly ICommunicationService _communicationService;
         private readonly IRepository<CommunicationEmailRecord> _Emailrepository;
+        private readonly IRepository<CommunicationSmsRecord> _Smsrepository;
 
-        public CommunicationContactPartHandler(IRepository<CommunicationEmailRecord> Emailrepository,IRepository<CommunicationContactPartRecord> repository, ICommunicationService communicationService) {
+        public CommunicationContactPartHandler(IRepository<CommunicationSmsRecord> Smsrepository,IRepository<CommunicationEmailRecord> Emailrepository,IRepository<CommunicationContactPartRecord> repository, ICommunicationService communicationService) {
+            _Smsrepository = Smsrepository;
             _communicationService = communicationService;
             Filters.Add(StorageFilter.For(repository));
             _Emailrepository = Emailrepository;
@@ -25,6 +27,9 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
 
             Filters.Add(new ActivatingFilter<EmailContactPart>("CommunicationContact"));
             OnLoaded<EmailContactPart>(LazyLoadEmailHandlers);
+
+            Filters.Add(new ActivatingFilter<SmsContactPart>("CommunicationContact"));
+            OnLoaded<SmsContactPart>(LazyLoadSmsHandlers);
 
             Filters.Add(new ActivatingFilter<FavoriteCulturePart>("CommunicationContact"));
 
@@ -34,7 +39,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             #endregion
         }
 
-
+        
         protected void LazyLoadEmailHandlers(LoadContentContext context, EmailContactPart part) {
             // Add handlers that will load content for id's just-in-time
             part.EmailEntries.Loader(x => OnEmailLoader(context));
@@ -56,9 +61,31 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                     .ToList();
         }
 
+
+        protected void LazyLoadSmsHandlers(LoadContentContext context, SmsContactPart part) {
+            // Add handlers that will load content for id's just-in-time
+            part.SmsEntries.Loader(x => OnSmsLoader(context));
+        }
+
+        private IList<CommunicationSmsRecord> OnSmsLoader(LoadContentContext context) {
+            return _Smsrepository
+                    .Fetch(x => x.CommunicationContactPartRecord_Id == context.ContentItem.Id)
+                    .Select(x => new CommunicationSmsRecord {
+                        DataInserimento = x.DataInserimento,
+                        DataModifica = x.DataModifica,
+                        Language = x.Language,
+                        Id = x.Id,
+                        Produzione = x.Produzione,
+                        Sms = x.Sms,
+                        CommunicationContactPartRecord_Id = x.CommunicationContactPartRecord_Id,
+                        Validated = x.Validated
+                    })
+                    .ToList();
+        }
+
         private void UpdateProfile(ContentItem item) {
             if (item.ContentType == "User") {
-                _communicationService.UserProfileToContact((IUser)item.As<IUser>());
+                _communicationService.UserToContact((IUser)item.As<IUser>());
             }
         }
         private void RemoveLinks(CommunicationContactPart item) {

@@ -12,6 +12,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Tokens;
 using Orchard.UI.Notify;
+using Orchard.Users.Models;
 using PushSharp;
 using PushSharp.Android;
 using PushSharp.Apple;
@@ -43,6 +44,8 @@ namespace Laser.Orchard.Mobile.Services {
     public class PushNotificationService : IPushNotificationService {
         private readonly IRepository<PushNotificationRecord> _pushNotificationRepository;
         private readonly IRepository<UserDeviceRecord> _userDeviceRecord;
+        private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
+
         public Localizer T { get; set; }
         private readonly INotifier _notifier;
         private readonly IOrchardServices _orchardServices;
@@ -64,9 +67,11 @@ namespace Laser.Orchard.Mobile.Services {
                 IMylogService myLog,
                 ShellSettings shellSetting,
                 ISessionLocator sessionLocator,
-                ITokenizer tokenizer
+                ITokenizer tokenizer,
+            IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord
             //   ,ICommunicationService communicationService
          ) {
+            _repositoryCommunicationSmsRecord = repositoryCommunicationSmsRecord;
             _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
             _pushNotificationRepository = pushNotificationRepository;
@@ -82,6 +87,42 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         public void Synchronize() {
+            #region lego tutti gli sms
+            var alluser = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(x=>x.RegistrationStatus==UserStatus.Approved);
+            if (alluser.List().FirstOrDefault().As<UserPwdRecoveryPart>() != null) {
+                var allusercol=alluser.List().Where(x=>!string.IsNullOrEmpty(x.ContentItem.As<UserPwdRecoveryPart>().PhoneNumber)).ToList();
+                foreach (IContent user in allusercol) {
+                    string pref = user.ContentItem.As<UserPwdRecoveryPart>().InternationalPrefix;
+                    string num = user.ContentItem.As<UserPwdRecoveryPart>().PhoneNumber;
+                    CommunicationSmsRecord csr = _repositoryCommunicationSmsRecord.Fetch(x => x.Sms == num && x.Prefix == pref).FirstOrDefault();
+                    CommunicationContactPart ciCommunication = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == user.Id).List().FirstOrDefault();
+                    if (ciCommunication == null) {
+                        // Una contact part dovrebbe esserci in quanto questo codice viene eseguito dopo la sincronizzazione utenti
+                        // Se non vi è una contartpart deduco che il dato sia sporco (es: UUid di un utente che è stato cancellato quindi non sincronizzo il dato con contactpart, verrà legato come se fosse scollegato al contentitem che raggruppa tutti i scollegati)
+                        //throw new Exception("Utente senza associazione alla profilazione");
+                    }
+                    else {
+                        if (csr == null) {
+                            CommunicationSmsRecord newsms = new CommunicationSmsRecord();
+                            newsms.Prefix = pref;
+                            newsms.Sms = num;
+                            newsms.CommunicationContactPartRecord_Id = ciCommunication.ContentItem.Id;
+                            _repositoryCommunicationSmsRecord.Create(newsms);
+                            _repositoryCommunicationSmsRecord.Flush();
+                        }
+                        else {
+                            if (csr.CommunicationContactPartRecord_Id != ciCommunication.ContentItem.Id) {
+                                csr.CommunicationContactPartRecord_Id = ciCommunication.ContentItem.Id;
+                                csr.DataModifica = DateTime.Now;
+                                _repositoryCommunicationSmsRecord.Update(csr);
+                                _repositoryCommunicationSmsRecord.Flush();
+                            }
+                        }
+                    }
+                }
+            }
+            #endregion
+
             List<UserDeviceRecord> lUdr = _userDeviceRecord.Fetch(x => x.UserPartRecord.Id > 0).ToList();
             foreach (UserDeviceRecord up in lUdr) {
                 CommunicationContactPart ciCommunication = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == up.UserPartRecord.Id).List().FirstOrDefault();
@@ -112,7 +153,7 @@ namespace Laser.Orchard.Mobile.Services {
             }
             CommunicationContactPart master = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).List().FirstOrDefault();
             int idmaster = master.Id;
-            var notificationrecords = _pushNotificationRepository.Fetch(x => x.CommunicationContactPartRecord_Id == 0 || x.CommunicationContactPartRecord_Id==null).ToList();
+            var notificationrecords = _pushNotificationRepository.Fetch(x => x.CommunicationContactPartRecord_Id == 0 || x.CommunicationContactPartRecord_Id == null).ToList();
             foreach (PushNotificationRecord rec in notificationrecords) {
                 rec.CommunicationContactPartRecord_Id = idmaster;
             }
