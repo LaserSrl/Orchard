@@ -26,7 +26,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         string GetCampaignLink(string CampaignSource, ContentPart part);
 
-        void UserProfileToContact(IUser UserContent);
+        void UserToContact(IUser UserContent);
 
         CommunicationContactPart GetContactFromUser(int iduser);
 
@@ -78,7 +78,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             // var userWithNoConcat = users.Where(x => !contactsUsers.Contains(x.Id));
             //  foreach (var user in userWithNoConcat) {
             foreach (var user in users) {
-                UserProfileToContact(user);
+                UserToContact(user);
             }
             _notifier.Add(NotifyType.Information, T("Syncronized {0} user's profiles", users.Count().ToString()));
             #endregion Import dei profili degli utenti
@@ -87,10 +87,12 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
             var features = _moduleService.GetAvailableFeatures().ToDictionary(m => m.Descriptor.Id, m => m);
             if (features.ContainsKey("Laser.Orchard.MobileCommunicationImport")) {
-                if (features["Laser.Orchard.MobileCommunicationImport"].IsEnabled) {
-                    _moduleService.DisableFeatures(new string[] { "Laser.Orchard.MobileCommunicationImport" });
+                if (features.ContainsKey("Laser.Orchard.Mobile") && features["Laser.Orchard.Mobile"].IsEnabled) {
+                    if (features["Laser.Orchard.MobileCommunicationImport"].IsEnabled) {
+                        _moduleService.DisableFeatures(new string[] { "Laser.Orchard.MobileCommunicationImport" });
+                    }
+                    _moduleService.EnableFeatures(new string[] { "Laser.Orchard.MobileCommunicationImport" }, true);
                 }
-                _moduleService.EnableFeatures(new string[] { "Laser.Orchard.MobileCommunicationImport" }, true);
             }
             #endregion Ricreo collegamento con parte mobile preesistente
         }
@@ -169,7 +171,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             return link;
         }
 
-        public void UserProfileToContact(IUser UserContent) {
+        public void UserToContact(IUser UserContent) {
             bool asProfilePart = true;
             try {
                 var profpart = ((dynamic)UserContent).ProfilePart;
@@ -186,7 +188,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             else {
                 Contact = contactsUsers.ContentItem;
             }
-            if (!string.IsNullOrEmpty(UserContent.Email)) {
+            if (!string.IsNullOrEmpty(UserContent.Email)&& UserContent.ContentItem.As<UserPart>().RegistrationStatus==UserStatus.Approved) {
                 CommunicationEmailRecord cmr = _repositoryCommunicationEmailRecord.Fetch(x => x.Email == UserContent.Email).FirstOrDefault();
                 if (cmr != null) {
                     if (cmr.CommunicationContactPartRecord_Id != Contact.Id) {
