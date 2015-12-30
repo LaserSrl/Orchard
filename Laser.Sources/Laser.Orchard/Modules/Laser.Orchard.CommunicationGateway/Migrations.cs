@@ -51,17 +51,6 @@ namespace Laser.Orchard.CommunicationGateway {
    "CommunicationAdvertisingPart",
     b => b
        .Attachable(false)
-       .WithField("Campaign", cfg => cfg
-           .OfType("ContentPickerField")
-               .WithSetting("ContentPickerFieldSettings.Hint", "Select a Campaign.")
-               .WithSetting("ContentPickerFieldSettings.Required", "False")
-               .WithSetting("ContentPickerFieldSettings.Multiple", "False")
-               .WithSetting("ContentPickerFieldSettings.ShowContentTab", "True")
-               .WithSetting("ContentPickerFieldSettings.ShowSearchTab", "True")
-               .WithSetting("ContentPickerFieldSettings.DisplayedContentTypes", "Campaign")
-               .WithDisplayName("Campaign")
-               .WithSetting("ContentPartSettings.Attachable", "True")
-           )
        .WithField("ContentLinked", cfg => cfg
            .OfType("ContentPickerField")
                .WithSetting("ContentPickerFieldSettings.Hint", "Select a ContentItem.")
@@ -159,11 +148,11 @@ namespace Laser.Orchard.CommunicationGateway {
         }
 
         public int UpdateFrom5() {
-                 SchemaBuilder.AlterTable("CommunicationContactPartRecord",
-                    table => table
-                    .AddColumn<int>("UserPartRecord_Id")
-                  );
-                  return 6;
+            SchemaBuilder.AlterTable("CommunicationContactPartRecord",
+               table => table
+               .AddColumn<int>("UserPartRecord_Id")
+             );
+            return 6;
         }
         public int UpdateFrom6() {
             SchemaBuilder.AlterTable("CommunicationContactPartRecord",
@@ -179,9 +168,9 @@ namespace Laser.Orchard.CommunicationGateway {
                 .Column<int>("CommunicationContactPartRecord_Id", column => column.WithDefault(0))
                 .Column<string>("Language", column => column.WithLength(10))
                 .Column<bool>("Validated", col => col.WithDefault(true))
-                .Column<DateTime>("DataInserimento",  c => c.NotNull())
-                .Column<DateTime>("DataModifica", c => c.NotNull())     
-                .Column<bool>("Produzione", col => col.WithDefault(false))     
+                .Column<DateTime>("DataInserimento", c => c.NotNull())
+                .Column<DateTime>("DataModifica", c => c.NotNull())
+                .Column<bool>("Produzione", col => col.WithDefault(false))
                 .Column<string>("Email", column => column.WithLength(400))
              );
             return 8;
@@ -200,6 +189,18 @@ namespace Laser.Orchard.CommunicationGateway {
                  .Column<string>("Prefix", column => column.WithLength(400))
              );
             return 9;
+        }
+        public int UpdateFrom9() {
+            ContentDefinitionManager.AlterPartDefinition("CommunicationAdvertisingPart",
+                alt => alt.RemoveField("Campaign"));
+            SchemaBuilder.CreateTable("CommunicationAdvertisingPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<int>("CampaignId"));
+            SchemaBuilder.AlterTable("CommunicationAdvertisingPartRecord",
+                table => table.CreateIndex("Ix_CampaignId", "CampaignId"));
+
+            return 10;
         }
     }
 }

@@ -9,24 +9,22 @@
 @using (Script.Foot()) {
     <script type="text/javascript">
         $(function () {
-            $('.rcswitcher-checkbox-fb').rcSwitcher({
-                theme: 'flat',
-                blobOffset: 1,
-                onText: '@T("YES")',
-                offText: '@T("NO")'
+            $("#@Html.FieldIdFor(m => m.SelectedList)").imagepicker({
+                show_label: true
             });
-@*            @if (Model.FacebookMessageSent) { 
-                <text>$('#facebook-comm-container :input, #facebook-comm-container select').attr('readonly', 'readonly');</text>
-            }*@
+            @if (Model.ListOption.Count > 0) {
+                <text>
+        $('.rcswitcher-checkbox-fb').rcSwitcher({
+            theme: 'flat',
+            blobOffset: 1,
+            onText: '@T("YES")',
+            offText: '@T("NO")'
+        });
+                </text>
+            }
+
 
         });
-        $(window).load(function () {
-            $("#@Html.FieldIdFor(m => m.SelectedList)").imagepicker(
-                       { show_label: true }
-                       );
-        }
-    );
-
     </script>
 }
 

@@ -85,7 +85,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             ContentItem content = _orchardServices.ContentManager.Get(id);
             IContentQuery<ContentItem> contentQuery = _orchardServices.ContentManager.Query().ForType("CommunicationAdvertising");
 
-            IEnumerable<ContentItem> ListContent = contentQuery.List().Where(x => ((int[])((dynamic)x).CommunicationAdvertisingPart.Campaign.Ids).Contains(id));
+            IEnumerable<ContentItem> ListContent = contentQuery.List().Where(x => (((dynamic)x).CommunicationAdvertisingPart.CampaignId.Equals(id)));
             if (ListContent.Count() == 0)
                 _orchardServices.ContentManager.Remove(content);
             else
@@ -114,34 +114,27 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 return new HttpUnauthorizedResult();
             var expression = search.Expression;
             IContentQuery<ContentItem> contentQuery = _orchardServices.ContentManager.Query().ForType(contentType).OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
-            IEnumerable<ContentItem> ListContent = contentQuery.List();
-            if (ListContent.Count() == 0 || ShowVideo) {
+            //IEnumerable<ContentItem> ListContent = contentQuery.List();
+            if (contentQuery.Count() == 0 || ShowVideo) {
                 if (_orchardServices.ContentManager.Query<TitlePart, TitlePartRecord>("Video").Where(x => x.Title == "HowTo" + contentType).List().Count() > 0) {
                     Options.ShowVideo = true;
                     Options.VideoContent = _orchardServices.ContentManager.Query<TitlePart, TitlePartRecord>("Video").Where(x => x.Title == "HowTo" + contentType).List().Where(y => y.ContentItem.IsPublished()).FirstOrDefault().ContentItem;
                 }
             }
             if (!string.IsNullOrEmpty(search.Expression))
-                ListContent = from content in ListContent
-                              where
-                              ((content.As<TitlePart>().Title ?? "").Contains(expression, StringComparison.InvariantCultureIgnoreCase))
-                              select content;
-            IEnumerable<ContentIndexVM> listVM = ListContent.Select(p => new ContentIndexVM {
-                Id = p.Id,
-                Title = p.As<TitlePart>().Title,
-                ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
-                UserName = p.As<CommonPart>().Owner.UserName,
-                ContentItem = p
-            });
+                    contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(expression));
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
-            dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(listVM.Count());
-            var list = listVM.Skip(pager.GetStartIndex())
-                                .Take(pager.PageSize);
-            //_orchardServices.New.List();
-            //list.AddRange(listVM.Skip(pager.GetStartIndex())
-            //                    .Take(pager.PageSize)
-            //                    );
-            var model = new SearchIndexVM(list, search, pagerShape, Options);
+            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(contentQuery.Count());
+            var pageOfContentItems = contentQuery.Slice(pager.GetStartIndex(), pager.PageSize)
+                .Select(p => new ContentIndexVM {
+                    Id = p.Id,
+                    Title = ((dynamic)p).TitlePart.Title,
+                    ModifiedUtc = ((dynamic)p).CommonPart.ModifiedUtc,
+                    UserName = ((dynamic)p).CommonPart.Owner != null ? ((dynamic)p).CommonPart.Owner.UserName : "Anonymous",
+                    ContentItem = p
+                }).ToList();
+
+            var model = new SearchIndexVM(pageOfContentItems, search, pagerShape, Options);
             return View((object)model);
         }
 

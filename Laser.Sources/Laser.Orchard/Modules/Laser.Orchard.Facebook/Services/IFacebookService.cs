@@ -43,7 +43,7 @@ namespace Laser.Orchard.Facebook.Services {
         public List<FacebookAccountPart> GetValidFacebookAccount() {
             List<FacebookAccountVM> listaccount = new List<FacebookAccountVM>();
             Int32 currentiduser = _orchardServices.WorkContext.CurrentUser.Id;
-            return _orchardServices.ContentManager.Query().ForPart<FacebookAccountPart>().List().Where(x => x.Valid == true && (x.Shared || x.IdUser == currentiduser)).ToList();
+            return _orchardServices.ContentManager.Query().ForType(new string[] { "SocialFacebookAccount" }).ForPart<FacebookAccountPart>().List().Where(x => x.Valid == true && (x.Shared || x.IdUser == currentiduser)).ToList();
         }
 
         public ResponseAction PostFacebook(PostToFacebookViewModel message, FacebookPostPart facebookpart = null) {
@@ -91,7 +91,7 @@ namespace Laser.Orchard.Facebook.Services {
         }
 
         private List<FacebookAccountPart> Facebook_GetAccessToken(FacebookPostPart facebookpart) {
-            List<FacebookAccountPart> allparts = _orchardServices.ContentManager.Query().ForPart<FacebookAccountPart>().List().Where(x => x.Valid == true).ToList();
+            List<FacebookAccountPart> allparts = _orchardServices.ContentManager.Query().ForType(new string[] { "SocialTwitterAccount" }).ForPart<FacebookAccountPart>().List().Where(x => x.Valid == true).ToList();
             return allparts.Where(x => facebookpart.AccountList.Contains(x.Id)).ToList();
         }
     }

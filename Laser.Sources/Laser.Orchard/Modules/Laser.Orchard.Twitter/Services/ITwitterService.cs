@@ -59,7 +59,7 @@ namespace Laser.Orchard.Twitter.Services {
         public List<TwitterAccountPart> GetValidTwitterAccount() {
             List<TwitterAccountVM> listaccount = new List<TwitterAccountVM>();
             Int32 currentiduser = _orchardServices.WorkContext.CurrentUser.Id;
-            return _orchardServices.ContentManager.Query().ForPart<TwitterAccountPart>().List().Where(x => x.Valid == true && (x.Shared || x.IdUser == currentiduser)).ToList();
+            return _orchardServices.ContentManager.Query().ForType(new string[] { "SocialTwitterAccount" }).ForPart<TwitterAccountPart>().List().Where(x => x.Valid == true && (x.Shared || x.IdUser == currentiduser)).ToList();
         }
 
         public ResponseAction PostTwitter(PostToTwitterViewModel message) {
@@ -83,8 +83,7 @@ namespace Laser.Orchard.Twitter.Services {
                         realmessage += " " + message.Link;
                     if (string.IsNullOrEmpty(message.Picture)) {
                         response = TwitterStatus.Update(accesstoken, realmessage.Trim());
-                    }
-                    else {
+                    } else {
                         var mediaPath = HostingEnvironment.IsHosted
                                 ? HostingEnvironment.MapPath("~/Media/") ?? ""
                                 : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
@@ -99,8 +98,7 @@ namespace Laser.Orchard.Twitter.Services {
                         if (response.ErrorMessage != null) {
                             Logger.Error("response.ErrorMessage:" + response.ErrorMessage);
                             _notifier.Add(NotifyType.Error, T("Can't post on twitter: {0} {1}", Faccount.DisplayAs, response.ErrorMessage));
-                        }
-                        else {
+                        } else {
                             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                             var jsondict = serializer.Deserialize<Dictionary<string, object>>(response.Content);
                             ArrayList errors = (ArrayList)jsondict["errors"];
@@ -113,8 +111,7 @@ namespace Laser.Orchard.Twitter.Services {
                             }
                         }
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Logger.Error("Twitter Posting Error Message::" + ex.Message);
                     rsp.Success = false;
                     rsp.Message = "Twitter Posting Error Message: " + ex.Message;
@@ -127,7 +124,7 @@ namespace Laser.Orchard.Twitter.Services {
         }
 
         private List<TwitterAccountPart> Twitter_GetAccessToken(Int32[] AccountList) {
-            List<TwitterAccountPart> allparts = _orchardServices.ContentManager.Query().ForPart<TwitterAccountPart>().List().Where(x => x.Valid == true).ToList();
+            List<TwitterAccountPart> allparts = _orchardServices.ContentManager.Query().ForType(new string[] { "SocialTwitterAccount" }).ForPart<TwitterAccountPart>().List().Where(x => x.Valid == true).ToList();
             return allparts.Where(x => AccountList.Contains(x.Id)).ToList();
         }
     }

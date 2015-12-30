@@ -1,18 +1,18 @@
-﻿using Laser.Orchard.CommunicationGateway.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
 using Orchard.Localization;
+using Orchard.Projections.Models;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
 
 namespace Laser.Orchard.CommunicationGateway.Controllers {
 
@@ -43,15 +43,12 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             if (id == 0) {
                 var newContent = _contentManager.New(contentType);
                 if (idCampaign > 0) {
-                    List<int> lids = new List<int>();
-                    lids.Add(idCampaign);
-                    ((dynamic)newContent).CommunicationAdvertisingPart.Campaign.Ids = lids.ToArray();
+                    newContent.As<CommunicationAdvertisingPart>().CampaignId = idCampaign;
                 }
                 //  model = _contentManager.BuildEditor(newContent);
                 //   _contentManager.Create(newContent);
                 model = _contentManager.BuildEditor(newContent);
-            }
-            else
+            } else
                 model = _contentManager.BuildEditor(_contentManager.Get(id, VersionOptions.Latest));
             return View((object)model);
         }
@@ -66,17 +63,14 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 var newContent = _contentManager.New(contentType);
                 _contentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
-            }
-            else
+            } else
                 content = _contentManager.Get(id, VersionOptions.Latest);
+            content.As<CommunicationAdvertisingPart>().CampaignId = idCampaign > 0 ? idCampaign : 0;
             if (idCampaign > 0) {
-                List<int> lids = new List<int>();
-                lids.Add(idCampaign);
-                ((dynamic)content).CommunicationAdvertisingPart.Campaign.Ids = lids.ToArray();
-                dynamic campaignContent = _contentManager.Get(lids.First());
+                dynamic campaignContent = _contentManager.Get(idCampaign);
 
                 // Controllo validità della campagna
-                if (campaignContent.CommunicationCampaignPart.ToDate.DateTime != null && campaignContent.CommunicationCampaignPart.ToDate.DateTime <= DateTime.UtcNow){
+                if (campaignContent.CommunicationCampaignPart.ToDate.DateTime != null && campaignContent.CommunicationCampaignPart.ToDate.DateTime <= DateTime.UtcNow) {
                     _notifier.Add(NotifyType.Error, T("Campaign validity has expired. No changes allowed."));
                     return RedirectToAction("Index", "AdvertisingAdmin", new { id = idCampaign });
                 }
@@ -138,34 +132,28 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             }
             var expression = search.Expression;
             IContentQuery<ContentItem> contentQuery = _contentManager.Query(VersionOptions.Latest).ForType(contentType).OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
-            IEnumerable<ContentItem> ListContent;
             /*Nel caso di flash advertising la campagna è -10, quindi il filtro è sempre valido.*/
             if (id > 0)
-                ListContent = contentQuery.List().Where(x => ((int[])((dynamic)x).CommunicationAdvertisingPart.Campaign.Ids).Contains(id));
+                contentQuery = contentQuery.Where<CommunicationAdvertisingPartRecord>(w =>
+                    w.CampaignId.Equals(id)
+                    );
             else
-                ListContent = contentQuery.List().Where(x => ((dynamic)x).CommunicationAdvertisingPart.Campaign.Ids.Length == 0);
+                contentQuery = contentQuery.Join<CommunicationAdvertisingPartRecord>().Where(w =>
+                    w.CampaignId == null || w.CampaignId.Equals(0)
+                    );
             if (!string.IsNullOrEmpty(search.Expression))
-                ListContent = from content in ListContent
-                              where
-                              ((content.As<TitlePart>().Title ?? "").Contains(expression, StringComparison.InvariantCultureIgnoreCase))
-                              select content;
-            IEnumerable<ContentIndexVM> listVM = ListContent.Select(p => new ContentIndexVM {
-                Id = p.Id,
-                Title = p.As<TitlePart>().Title,
-                ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
-                UserName = p.As<CommonPart>().Owner.UserName,
-                //        Option = p.As<FacebookPostPart>().FacebookMessageSent
-                ContentItem = p
-            });
+                contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(expression));
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
-            dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(listVM.Count());
-            var list = listVM.Skip(pager.GetStartIndex())
-                                .Take(pager.PageSize);
-            //_orchardServices.New.List();
-            //list.AddRange(listVM.Skip(pager.GetStartIndex())
-            //                    .Take(pager.PageSize)
-            //                    );
-            var model = new SearchIndexVM(list, search, pagerShape, Options);
+            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(contentQuery.Count());
+            var pageOfContentItems = contentQuery.Slice(pager.GetStartIndex(), pager.PageSize)
+                .Select(p => new ContentIndexVM {
+                    Id = p.Id,
+                    Title = ((dynamic)p).TitlePart.Title,
+                    ModifiedUtc = ((dynamic)p).CommonPart.ModifiedUtc,
+                    UserName = ((dynamic)p).CommonPart.Owner != null ? ((dynamic)p).CommonPart.Owner.UserName : "Anonymous",
+                    ContentItem = p
+                }).ToList();
+            var model = new SearchIndexVM(pageOfContentItems, search, pagerShape, Options);
             return View((object)model);
         }
 

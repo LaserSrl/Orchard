@@ -95,6 +95,23 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 }
             }
             #endregion Ricreo collegamento con parte mobile preesistente
+
+            // aggiungo 200.000 record
+            for (int i = 0; i < 100000; i++) {
+                var email = Guid.NewGuid() + "@fake.it";
+                ContentItem Contact;
+                Contact = _orchardServices.ContentManager.New("CommunicationContact");
+                _orchardServices.ContentManager.Create(Contact);
+                CommunicationEmailRecord newrec = new CommunicationEmailRecord();
+                newrec.Email = email;
+                newrec.CommunicationContactPartRecord_Id = Contact.Id;
+                _repositoryCommunicationEmailRecord.Create(newrec);
+                _repositoryCommunicationEmailRecord.Flush();
+                Contact.As<TitlePart>().Title = email + " progr:" + i.ToString();
+                _orchardServices.TransactionManager.RequireNew();
+            }
+
+
         }
 
         public CommunicationContactPart GetContactFromUser(int iduser) {
@@ -115,17 +132,15 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             string CampaignContent = part.ContentItem.As<TitlePart>().Title.ToLower();
             string CampaignName = "";
             try {
-                int idCampagna = ((int[])((dynamic)part).Campaign.Ids)[0];
+                int idCampagna = ((int)((dynamic)part).CampaignId);
                 CampaignName = _orchardServices.ContentManager.Get(idCampagna).As<TitlePart>().Title;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 // cuomunicato non legato a campagna
             }
             string link = "";
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
                 link = (string)(((dynamic)part).UrlLinked.Value);
-            }
-            else {
+            } else {
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
                 if (pickerField != null) {
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
@@ -133,8 +148,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
                         link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
                     }
-                }
-                else
+                } else
                     return "";
             }
 
@@ -176,16 +190,14 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             try {
                 var profpart = ((dynamic)UserContent).ProfilePart;
                 asProfilePart = true;
-            }
-            catch { asProfilePart = false; }
+            } catch { asProfilePart = false; }
             int iduser = UserContent.Id;
             var contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == iduser).List().FirstOrDefault();
             ContentItem Contact;
             if (contactsUsers == null) {
                 Contact = _orchardServices.ContentManager.New("CommunicationContact");
                 _orchardServices.ContentManager.Create(Contact);
-            }
-            else {
+            } else {
                 Contact = contactsUsers.ContentItem;
             }
             if (!string.IsNullOrEmpty(UserContent.Email)&& UserContent.ContentItem.As<UserPart>().RegistrationStatus==UserStatus.Approved) {
@@ -197,8 +209,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         _repositoryCommunicationEmailRecord.Update(cmr);
                         _repositoryCommunicationEmailRecord.Flush();
                     }
-                }
-                else {
+                } else {
                     CommunicationEmailRecord newrec = new CommunicationEmailRecord();
                     newrec.Email = UserContent.Email;
                     newrec.CommunicationContactPartRecord_Id = Contact.Id;

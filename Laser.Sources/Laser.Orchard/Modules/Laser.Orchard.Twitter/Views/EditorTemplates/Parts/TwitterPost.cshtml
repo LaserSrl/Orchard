@@ -9,24 +9,20 @@
 }
 
 <script type="text/javascript">
-    $(window).load(function () {
-        $("#@Html.FieldIdFor(m => m.SelectedList)").imagepicker(
-               { show_label: true }
-               );
-    }
-    );
-
     $(function () {
+        $("#@Html.FieldIdFor(m => m.SelectedList)").imagepicker({
+            show_label: true
+        });
+            @if (Model.ListOption.Count > 0) {
+                <text>
         $('.rcswitcher-checkbox-tw').rcSwitcher({
             theme: 'flat',
             blobOffset: 1,
             onText: '@T("YES")',
             offText: '@T("NO")'
-        })
-@*        @if (Model.TwitterMessageSent) { 
-            <text>$('#twitter-comm-container :input, #twitter-comm-container select').attr('readonly', 'readonly');</text>
-        }*@
-
+        });
+                </text>
+            }
         $("#@Html.FieldIdFor(model => model.TwitterMessage)").keypress(function (event) {
             // Check the keyCode and if the user pressed Enter (code = 13) 
             // disable it
