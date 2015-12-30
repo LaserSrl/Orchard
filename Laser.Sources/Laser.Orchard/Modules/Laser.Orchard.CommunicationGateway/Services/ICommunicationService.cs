@@ -130,7 +130,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             string CampaignContent = part.ContentItem.As<TitlePart>().Title.ToLower();
             string CampaignName = "";
             try {
-                int idCampagna = ((int[])((dynamic)part).Campaign.Ids)[0];
+                int idCampagna = ((int)((dynamic)part).CampaignId);
                 CampaignName = _orchardServices.ContentManager.Get(idCampagna).As<TitlePart>().Title;
             } catch (Exception ex) {
                 // cuomunicato non legato a campagna

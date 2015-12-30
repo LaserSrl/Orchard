@@ -85,7 +85,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             ContentItem content = _orchardServices.ContentManager.Get(id);
             IContentQuery<ContentItem> contentQuery = _orchardServices.ContentManager.Query().ForType("CommunicationAdvertising");
 
-            IEnumerable<ContentItem> ListContent = contentQuery.List().Where(x => ((int[])((dynamic)x).CommunicationAdvertisingPart.Campaign.Ids).Contains(id));
+            IEnumerable<ContentItem> ListContent = contentQuery.List().Where(x => (((dynamic)x).CommunicationAdvertisingPart.CampaignId.Equals(id)));
             if (ListContent.Count() == 0)
                 _orchardServices.ContentManager.Remove(content);
             else

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
@@ -42,15 +43,12 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             if (id == 0) {
                 var newContent = _contentManager.New(contentType);
                 if (idCampaign > 0) {
-                    List<int> lids = new List<int>();
-                    lids.Add(idCampaign);
-                    ((dynamic)newContent).CommunicationAdvertisingPart.Campaign.Ids = lids.ToArray();
+                    newContent.As<CommunicationAdvertisingPart>().CampaignId = idCampaign;
                 }
                 //  model = _contentManager.BuildEditor(newContent);
                 //   _contentManager.Create(newContent);
                 model = _contentManager.BuildEditor(newContent);
-            }
-            else
+            } else
                 model = _contentManager.BuildEditor(_contentManager.Get(id, VersionOptions.Latest));
             return View((object)model);
         }
@@ -65,17 +63,14 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 var newContent = _contentManager.New(contentType);
                 _contentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
-            }
-            else
+            } else
                 content = _contentManager.Get(id, VersionOptions.Latest);
+            content.As<CommunicationAdvertisingPart>().CampaignId = idCampaign > 0 ? idCampaign : 0;
             if (idCampaign > 0) {
-                List<int> lids = new List<int>();
-                lids.Add(idCampaign);
-                ((dynamic)content).CommunicationAdvertisingPart.Campaign.Ids = lids.ToArray();
-                dynamic campaignContent = _contentManager.Get(lids.First());
+                dynamic campaignContent = _contentManager.Get(idCampaign);
 
                 // Controllo validità della campagna
-                if (campaignContent.CommunicationCampaignPart.ToDate.DateTime != null && campaignContent.CommunicationCampaignPart.ToDate.DateTime <= DateTime.UtcNow){
+                if (campaignContent.CommunicationCampaignPart.ToDate.DateTime != null && campaignContent.CommunicationCampaignPart.ToDate.DateTime <= DateTime.UtcNow) {
                     _notifier.Add(NotifyType.Error, T("Campaign validity has expired. No changes allowed."));
                     return RedirectToAction("Index", "AdvertisingAdmin", new { id = idCampaign });
                 }
@@ -139,14 +134,12 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             IContentQuery<ContentItem> contentQuery = _contentManager.Query(VersionOptions.Latest).ForType(contentType).OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
             /*Nel caso di flash advertising la campagna è -10, quindi il filtro è sempre valido.*/
             if (id > 0)
-                contentQuery = contentQuery.Join<FieldIndexPartRecord>().Where(w=>
-                    w.StringFieldIndexRecords.Any(
-                    w2 => w2.PropertyName.Equals("CommunicationAdvertisingPart.Campaign.") && w2.Value.Contains("{" + id.ToString() + "}"))
+                contentQuery = contentQuery.Where<CommunicationAdvertisingPartRecord>(w =>
+                    w.CampaignId.Equals(id)
                     );
             else
-                contentQuery = contentQuery.Join<FieldIndexPartRecord>().Where(w =>
-                    w.StringFieldIndexRecords.Any(
-                    w2 => w2.PropertyName.Equals("CommunicationAdvertisingPart.Campaign.") && w2.Value=="")
+                contentQuery = contentQuery.Join<CommunicationAdvertisingPartRecord>().Where(w =>
+                    w.CampaignId == null || w.CampaignId.Equals(0)
                     );
             if (!string.IsNullOrEmpty(search.Expression))
                 contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(expression));
