@@ -1,18 +1,17 @@
-﻿using Laser.Orchard.CommunicationGateway.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
 using Orchard.Localization;
+using Orchard.Projections.Models;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
 
 namespace Laser.Orchard.CommunicationGateway.Controllers {
 
@@ -138,34 +137,30 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             }
             var expression = search.Expression;
             IContentQuery<ContentItem> contentQuery = _contentManager.Query(VersionOptions.Latest).ForType(contentType).OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
-            IEnumerable<ContentItem> ListContent;
             /*Nel caso di flash advertising la campagna è -10, quindi il filtro è sempre valido.*/
             if (id > 0)
-                ListContent = contentQuery.List().Where(x => ((int[])((dynamic)x).CommunicationAdvertisingPart.Campaign.Ids).Contains(id));
+                contentQuery = contentQuery.Join<FieldIndexPartRecord>().Where(w=>
+                    w.StringFieldIndexRecords.Any(
+                    w2 => w2.PropertyName.Equals("CommunicationAdvertisingPart.Campaign.") && w2.Value.Contains("{" + id.ToString() + "}"))
+                    );
             else
-                ListContent = contentQuery.List().Where(x => ((dynamic)x).CommunicationAdvertisingPart.Campaign.Ids.Length == 0);
+                contentQuery = contentQuery.Join<FieldIndexPartRecord>().Where(w =>
+                    w.StringFieldIndexRecords.Any(
+                    w2 => w2.PropertyName.Equals("CommunicationAdvertisingPart.Campaign.") && w2.Value=="")
+                    );
             if (!string.IsNullOrEmpty(search.Expression))
-                ListContent = from content in ListContent
-                              where
-                              ((content.As<TitlePart>().Title ?? "").Contains(expression, StringComparison.InvariantCultureIgnoreCase))
-                              select content;
-            IEnumerable<ContentIndexVM> listVM = ListContent.Select(p => new ContentIndexVM {
-                Id = p.Id,
-                Title = p.As<TitlePart>().Title,
-                ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
-                UserName = p.As<CommonPart>().Owner.UserName,
-                //        Option = p.As<FacebookPostPart>().FacebookMessageSent
-                ContentItem = p
-            });
+                contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(expression));
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
-            dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(listVM.Count());
-            var list = listVM.Skip(pager.GetStartIndex())
-                                .Take(pager.PageSize);
-            //_orchardServices.New.List();
-            //list.AddRange(listVM.Skip(pager.GetStartIndex())
-            //                    .Take(pager.PageSize)
-            //                    );
-            var model = new SearchIndexVM(list, search, pagerShape, Options);
+            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(contentQuery.Count());
+            var pageOfContentItems = contentQuery.Slice(pager.GetStartIndex(), pager.PageSize)
+                .Select(p => new ContentIndexVM {
+                    Id = p.Id,
+                    Title = ((dynamic)p).TitlePart.Title,
+                    ModifiedUtc = ((dynamic)p).CommonPart.ModifiedUtc,
+                    UserName = ((dynamic)p).CommonPart.Owner != null ? ((dynamic)p).CommonPart.Owner.UserName : "Anonymous",
+                    ContentItem = p
+                }).ToList();
+            var model = new SearchIndexVM(pageOfContentItems, search, pagerShape, Options);
             return View((object)model);
         }
 
