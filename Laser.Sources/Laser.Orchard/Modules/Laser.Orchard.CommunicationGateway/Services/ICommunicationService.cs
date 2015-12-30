@@ -95,19 +95,19 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             #endregion Ricreo collegamento con parte mobile preesistente
 
             // aggiungo 200.000 record
-            for (int i = 0; i < 100000; i++) {
-                var email = Guid.NewGuid() + "@fake.it";
-                ContentItem Contact;
-                Contact = _orchardServices.ContentManager.New("CommunicationContact");
-                _orchardServices.ContentManager.Create(Contact);
-                CommunicationEmailRecord newrec = new CommunicationEmailRecord();
-                newrec.Email = email;
-                newrec.CommunicationContactPartRecord_Id = Contact.Id;
-                _repositoryCommunicationEmailRecord.Create(newrec);
-                _repositoryCommunicationEmailRecord.Flush();
-                Contact.As<TitlePart>().Title = email + " progr:" + i.ToString();
-                _orchardServices.TransactionManager.RequireNew();
-            }
+            //for (int i = 0; i < 100000; i++) {
+            //    var email = Guid.NewGuid() + "@fake.it";
+            //    ContentItem Contact;
+            //    Contact = _orchardServices.ContentManager.New("CommunicationContact");
+            //    _orchardServices.ContentManager.Create(Contact);
+            //    CommunicationEmailRecord newrec = new CommunicationEmailRecord();
+            //    newrec.Email = email;
+            //    newrec.CommunicationContactPartRecord_Id = Contact.Id;
+            //    _repositoryCommunicationEmailRecord.Create(newrec);
+            //    _repositoryCommunicationEmailRecord.Flush();
+            //    Contact.As<TitlePart>().Title = email + " progr:" + i.ToString();
+            //    _orchardServices.TransactionManager.RequireNew();
+            //}
 
 
         }
