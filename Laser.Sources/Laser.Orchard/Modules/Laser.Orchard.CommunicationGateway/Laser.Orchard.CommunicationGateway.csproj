@@ -154,6 +154,7 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="ViewModels\View_EmailVM.cs" />
+    <Compile Include="ViewModels\View_SmsVM.cs" />
     <Content Include="Views\CampaignAdmin\Edit.cshtml" />
     <Content Include="Views\AdvertisingAdmin\Edit.cshtml" />
     <Content Include="Views\AdvertisingAdmin\index.cshtml" />
@@ -169,6 +170,7 @@
     </Content>
     <Content Include="Views\EditorTemplates\Parts\SmsContact_Edit.cshtml" />
     <Content Include="Views\EditorTemplates\View_EmailVM_element.cshtml" />
+    <Content Include="Views\EditorTemplates\View_SmsVM_element.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

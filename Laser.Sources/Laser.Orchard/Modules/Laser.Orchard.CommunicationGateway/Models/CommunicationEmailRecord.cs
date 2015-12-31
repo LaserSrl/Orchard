@@ -11,14 +11,5 @@ namespace Laser.Orchard.CommunicationGateway.Models {
         public virtual DateTime DataModifica { get; set; }
         public virtual string Email { get; set; }
         public virtual bool Produzione { get; set; }
-
-        public CommunicationEmailRecord() {
-            this.CommunicationContactPartRecord_Id = 0;
-            this.Id = 0;
-            this.Validated = true;
-            this.DataInserimento = DateTime.Now;
-            this.DataModifica = DateTime.Now;
-            this.Produzione = true;
-        }
     }
 }

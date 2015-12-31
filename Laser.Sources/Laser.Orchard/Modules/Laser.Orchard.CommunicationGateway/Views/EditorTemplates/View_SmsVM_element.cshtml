@@ -1,19 +1,22 @@
 ﻿@using Laser.Orchard.CommunicationGateway.ViewModels
 @using Orchard.Utility.Extensions
 @using Laser.Orchard.Commons.Helpers
-@model View_EmailVM_element
+@model View_SmsVM_element
 @{ 
-    MvcHtmlString answerBlock = Html.UniqueClientId("Email");
+    MvcHtmlString answerBlock = Html.UniqueClientId("Sms");
     var qid = "RedirectNum_" + answerBlock;
 }
-<div id="@qid" class="singleemail">
+<div id="@qid" class="singlesms">
         <div style="vertical-align:top;text-align: left; width: 35%;float:right">
         <i class="fa fa-times" style="color: red; margin-right: 2px;"></i>
-        @Html.LinkToRemoveNestedForm(T("Remove").Text, ".singleemail", "input.mark-for-delete", "")
+        @Html.LinkToRemoveNestedForm(T("Remove").Text, ".singlesms", "input.mark-for-delete", "")
     </div>
-    <div style="width: 64%">    
-    <span>Mail</span>
-    @Html.TextBoxFor(x => x.Email, new { @class = "text medium", @placeholder = T("Type a email") })
+    <div style="width: 64%"> 
+         <span>Prefix</span>
+    @Html.TextBoxFor(x => x.Prefix, new { @class = "text medium", @placeholder = T("Prefix") })   
+     <br />
+        <span>Number</span>
+    @Html.TextBoxFor(x => x.Sms, new { @class = "text medium", @placeholder = T("Type a number") })
     <br />
     <span>Valid:</span>    @Html.EditorFor(x => x.Validated)
     <br />
@@ -27,4 +30,3 @@
     <br /><br />
     </div>
 </div>
-
