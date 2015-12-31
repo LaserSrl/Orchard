@@ -5,6 +5,11 @@ using Orchard.Core.Title.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Projections.Models;
+using Orchard.Projections.Descriptors;
+using Orchard.Projections.Descriptors.Filter;
+using Orchard.Projections.Services;
+using Orchard.Tokens;
 
 namespace Laser.Orchard.Queries.Services {
 
@@ -34,5 +39,6 @@ namespace Laser.Orchard.Queries.Services {
         public IEnumerable<ContentItem> ListContent() {
             return _orchardServices.ContentManager.Query(VersionOptions.Latest).ForType(new string[] { "MyCustomQuery", "Query" }).OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc).List().Where(x => x.ContentType == "MyCustomQuery" || ((dynamic)x).QueryUserFilterExtensionPart.UserQuery.Value == true);
         }
+
     }
 }

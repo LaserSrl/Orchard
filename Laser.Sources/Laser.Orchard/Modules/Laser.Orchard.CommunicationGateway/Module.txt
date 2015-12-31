@@ -6,4 +6,4 @@ Version: 1.0
 OrchardVersion: 1.0
 Description: Description for feature Laser.Orchard.CommunicationGateway.
 Category: Social
-Dependencies: Orchard.PublishLater, Orchard.Modules, Orchard.ContentPicker, Orchard.Projections, Laser.Orchard.Queries,Orchard.Tags, Laser.Orchard.ShortLinks, Laser.Orchard.StartupConfig
+Dependencies: Orchard.PublishLater, Orchard.Modules, Orchard.ContentPicker, Orchard.Projections, Laser.Orchard.Queries, Orchard.Tags, Laser.Orchard.ShortLinks, Laser.Orchard.StartupConfig
