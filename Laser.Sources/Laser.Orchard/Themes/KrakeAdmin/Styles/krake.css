@@ -189,3 +189,13 @@ button.link {
 .ui-widget {
     font-size: 1em !important;
 }
+
+.breadcrumb {
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-bottom: 15px;
+    background-color: #eee;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}

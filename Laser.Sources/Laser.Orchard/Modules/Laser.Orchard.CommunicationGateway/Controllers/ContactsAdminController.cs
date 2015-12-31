@@ -48,7 +48,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         }
 
         [Admin]
-        public ActionResult Edit(int id, int idCampaign = 0) {
+        public ActionResult Edit(int id) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
             object model;
@@ -75,16 +75,11 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             ContentItem content;
             if (id == 0) {
                 var newContent = _contentManager.New(contentType);
-                _contentManager.Create(newContent);
+                _contentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
             } else
-                content = _contentManager.Get(id, VersionOptions.Latest);
+                content = _contentManager.Get(id, VersionOptions.DraftRequired);
             var model = _contentManager.UpdateEditor(content, this);
-            //if (idCampaign > 0) {
-            //    List<int> lids = new List<int>();
-            //    lids.Add(idCampaign);
-            //    ((dynamic)content).CommunicationAdvertisingPart.Campaign.Ids = lids.ToArray();
-            //}
             if (!ModelState.IsValid) {
                 foreach (string key in ModelState.Keys) {
                     if (ModelState[key].Errors.Count > 0)
@@ -93,18 +88,12 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 }
                 _orchardServices.TransactionManager.Cancel();
                 return View(model);
+            } else {
+                _contentManager.Publish(content);
             }
-            //  _contentManager.Unpublish(content);
             _notifier.Add(NotifyType.Information, T("Contact saved"));
-            //if (Request.Form["submit.Publish"] == "submit.Publish") {
-            //    // _contentManager.Unpublish(content);
-            //    _contentManager.Publish(content);
-            //    //  _contentManager.Unpublish(content); // inserito per permettere il publishlater
-
-            //}
-            return RedirectToAction("Index", "ContactsAdmin");//, new { id = idCampaign });
+            return RedirectToAction("Edit", new { id = content.Id });
         }
-
         [HttpPost]
         [Admin]
         public ActionResult Remove(Int32 id) {
@@ -137,7 +126,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             if (!string.IsNullOrEmpty(search.Expression))
                 contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(expression));
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
-                        var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(contentQuery.Count());
+            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(contentQuery.Count());
             var pageOfContentItems = contentQuery.Slice(pager.GetStartIndex(), pager.PageSize)
                 .Select(p => new ContentIndexVM {
                     Id = p.Id,
@@ -148,7 +137,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
             if (pageOfContentItems == null) {
                 pageOfContentItems = new List<ContentIndexVM>();
-            } 
+            }
             _orchardServices.New.List();
             var model = new SearchIndexVM(pageOfContentItems, search, pagerShape, Options);
             return View((object)model);

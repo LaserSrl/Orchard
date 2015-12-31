@@ -64,8 +64,7 @@ namespace Laser.Orchard.Facebook.Controllers {
                 //  model = _orchardServices.ContentManager.BuildEditor(newContent);
                 //   _contentManager.Create(newContent);
                 model = _contentManager.BuildEditor(newContent);
-            }
-            else
+            } else
                 model = _contentManager.BuildEditor(_orchardServices.ContentManager.Get(id));
             return View((object)model);
         }
@@ -78,11 +77,10 @@ namespace Laser.Orchard.Facebook.Controllers {
             ContentItem content;
             if (id == 0) {
                 var newContent = _orchardServices.ContentManager.New(contentType);
-                _orchardServices.ContentManager.Create(newContent);
+                _orchardServices.ContentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
-            }
-            else
-                content = _orchardServices.ContentManager.Get(id);
+            } else
+                content = _orchardServices.ContentManager.Get(id, VersionOptions.DraftRequired);
             var model = _orchardServices.ContentManager.UpdateEditor(content, this);
 
             if (!ModelState.IsValid) {
@@ -94,8 +92,9 @@ namespace Laser.Orchard.Facebook.Controllers {
                 _orchardServices.TransactionManager.Cancel();
                 return View(model);
             }
+            _contentManager.Publish(content);
             _notifier.Add(NotifyType.Information, T("Facebook Account Added"));
-            return RedirectToAction("Index", "FacebookAccount");
+            return RedirectToAction("Edit", new { id = content.Id });
         }
 
         [HttpPost]
@@ -181,8 +180,7 @@ namespace Laser.Orchard.Facebook.Controllers {
                     "https://graph.facebook.com/oauth/authorize?client_id={0}&redirect_uri={1}&scope={2}",
                     app_id, Request.Url.AbsoluteUri, scope);
                 Response.Redirect(url, false);
-            }
-            else {
+            } else {
                 Dictionary<string, string> tokens = new Dictionary<string, string>();
 
                 string url = string.Format("https://graph.facebook.com/oauth/access_token?client_id={0}&redirect_uri={1}&scope={2}&code={3}&client_secret={4}",
@@ -203,7 +201,7 @@ namespace Laser.Orchard.Facebook.Controllers {
 
                 string access_token = tokens["access_token"];
 
-           
+
 
                 var client = new FacebookClient(access_token);
 
@@ -228,7 +226,7 @@ namespace Laser.Orchard.Facebook.Controllers {
                     ? HostingEnvironment.MapPath("~/Media/") ?? ""
                     : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
                 WebClient webClient = new WebClient();
-                webClient.DownloadFile(profilePictureUrl, mediaPath +_shellSettings.Name+@"\facebook_"+facebookUserId + ".jpg");
+                webClient.DownloadFile(profilePictureUrl, mediaPath + _shellSettings.Name + @"\facebook_" + facebookUserId + ".jpg");
 
                 Dictionary<string, string> ElencoPagine = new Dictionary<string, string>();
                 foreach (var account in (JsonArray)jsonResponse["data"]) {
@@ -239,10 +237,10 @@ namespace Laser.Orchard.Facebook.Controllers {
                     fvm.PageToken = (string)(((JsonObject)account)["access_token"]);
                     fvm.IdPage = (string)(((JsonObject)account)["id"]);
                     profilePictureUrl = new Uri(string.Format("https://graph.facebook.com/{0}/picture?type={1}&access_token={2}", fvm.IdPage, "small", access_token));
-                     webClient = new WebClient();
-                     webClient.DownloadFile(profilePictureUrl, mediaPath + _shellSettings.Name + @"\facebook_" + fvm.IdPage + ".jpg");
-                     fvm.UserIdFacebook = fvm.IdPage;
-                     fvm.UserName = accountName;
+                    webClient = new WebClient();
+                    webClient.DownloadFile(profilePictureUrl, mediaPath + _shellSettings.Name + @"\facebook_" + fvm.IdPage + ".jpg");
+                    fvm.UserIdFacebook = fvm.IdPage;
+                    fvm.UserName = accountName;
                     OrchardRegister(fvm);
                 }
                 return RedirectToAction("Index", "FacebookAccount", new { area = "Laser.Orchard.Facebook", id = -10 });
@@ -257,8 +255,7 @@ namespace Laser.Orchard.Facebook.Controllers {
                 string json = new WebClient().DownloadString("https://graph.facebook.com/me?access_token=" + fvm.UserToken);
                 displayas = (JObject.Parse(json))["name"].ToString();
                 AccountType = "User";
-            }
-            else {
+            } else {
                 displayas = fvm.PageName;
                 AccountType = "Page";
             }
@@ -270,12 +267,10 @@ namespace Laser.Orchard.Facebook.Controllers {
             if (elementi > 0) {
                 if (string.IsNullOrEmpty(fvm.IdPage)) {
                     _notifier.Add(NotifyType.Warning, T("User Facebook Account can't be added, is duplicated"));
-                }
-                else {
+                } else {
                     _notifier.Add(NotifyType.Warning, T("Facebook Page {0} can't be added, is duplicated", fvm.PageName));
                 }
-            }
-            else {
+            } else {
 
 
                 var newContent = _orchardServices.ContentManager.New(contentType);
@@ -295,8 +290,7 @@ namespace Laser.Orchard.Facebook.Controllers {
 
                 if (string.IsNullOrEmpty(fvm.IdPage)) {
                     _notifier.Add(NotifyType.Warning, T("User Facebook Account added"));
-                }
-                else {
+                } else {
                     _notifier.Add(NotifyType.Warning, T("Facebook Page {0} added", fvm.PageName));
                 }
             }

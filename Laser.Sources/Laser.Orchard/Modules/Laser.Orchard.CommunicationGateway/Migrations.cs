@@ -198,8 +198,11 @@ namespace Laser.Orchard.CommunicationGateway {
                     .ContentPartRecord()
                     .Column<int>("CampaignId"));
             SchemaBuilder.AlterTable("CommunicationAdvertisingPartRecord",
-                table => table.CreateIndex("Ix_CampaignId", "CampaignId"));
-
+                table => table.CreateIndex("IX_CampaignId", "CampaignId"));
+            SchemaBuilder.AlterTable("CommunicationContactPartRecord",
+               table => table
+               .CreateIndex("IX_UserPartRecord_Id", "UserPartRecord_Id")
+             );
             return 10;
         }
     }

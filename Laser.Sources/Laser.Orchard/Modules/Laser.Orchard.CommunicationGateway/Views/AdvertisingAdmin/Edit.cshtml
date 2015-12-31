@@ -1,4 +1,4 @@
-﻿@{ Layout.Title = "Edit Advertising"; }
+﻿@{ Layout.Title = T("Edit Advertising"); }
 @{
     Style.Include("CommunicationGateway-admin.css").AtHead();
 
@@ -20,6 +20,7 @@
         });
     </script>
 }
+<p class="breadcrumb"><a href="@Url.Action("Index", new { id = Request.QueryString["idCampaign"]})">@T("Advertisings List")</a> &#62; @Layout.Title</p>
 @using (Html.BeginFormAntiForgeryPost()) {
     @Display(Model)
 }

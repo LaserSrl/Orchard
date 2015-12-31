@@ -56,8 +56,7 @@ namespace Laser.Orchard.Twitter.Controllers {
             if (id == 0) {
                 var newContent = _orchardServices.ContentManager.New(contentType);
                 model = _contentManager.BuildEditor(newContent);
-            }
-            else
+            } else
                 model = _contentManager.BuildEditor(_orchardServices.ContentManager.Get(id));
             return View((object)model);
         }
@@ -70,11 +69,10 @@ namespace Laser.Orchard.Twitter.Controllers {
             ContentItem content;
             if (id == 0) {
                 var newContent = _orchardServices.ContentManager.New(contentType);
-                _orchardServices.ContentManager.Create(newContent);
+                _orchardServices.ContentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
-            }
-            else
-                content = _orchardServices.ContentManager.Get(id);
+            } else
+                content = _orchardServices.ContentManager.Get(id, VersionOptions.DraftRequired);
             var model = _orchardServices.ContentManager.UpdateEditor(content, this);
 
             if (!ModelState.IsValid) {
@@ -86,8 +84,9 @@ namespace Laser.Orchard.Twitter.Controllers {
                 _orchardServices.TransactionManager.Cancel();
                 return View(model);
             }
+            _contentManager.Publish(content);
             _notifier.Add(NotifyType.Information, T("Twitter Account Added"));
-            return RedirectToAction("Index", "TwitterAccount");
+            return RedirectToAction("Edit", new { id = content.Id });
         }
 
         [HttpPost]
@@ -182,8 +181,7 @@ namespace Laser.Orchard.Twitter.Controllers {
                 string tmpreq = Request.Url.AbsoluteUri;
                 OAuthTokenResponse reqToken = OAuthUtility.GetRequestToken(consumerKey, consumerSecret, tmpreq);
                 Response.Redirect(string.Format("http://twitter.com/oauth/authorize?oauth_token={0}", reqToken.Token));
-            }
-            else {
+            } else {
                 string requestToken = Request["oauth_token"].ToString();
                 string verifier = Request["oauth_verifier"].ToString();
                 var tokens = OAuthUtility.GetAccessToken(consumerKey, consumerSecret, requestToken, verifier);
@@ -199,33 +197,33 @@ namespace Laser.Orchard.Twitter.Controllers {
                 accessToken.ConsumerSecret = consumerSecret;
 
                 TwitterResponse<TwitterUser> myTwitterUser = TwitterUser.Show(accessToken, tokens.ScreenName);
-                 TwitterUser user = myTwitterUser.ResponseObject;
-                 var profilePictureUrl = user.ProfileImageLocation;
-                 var mediaPath = HostingEnvironment.IsHosted
-                  ? HostingEnvironment.MapPath("~/Media/") ?? ""
-                  : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
-                 WebClient webClient = new WebClient();
-                 webClient.DownloadFile(profilePictureUrl, mediaPath + _shellSettings.Name + @"\twitter_" + vm.DisplayAs + ".jpg");
+                TwitterUser user = myTwitterUser.ResponseObject;
+                var profilePictureUrl = user.ProfileImageLocation;
+                var mediaPath = HostingEnvironment.IsHosted
+                 ? HostingEnvironment.MapPath("~/Media/") ?? ""
+                 : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
+                WebClient webClient = new WebClient();
+                webClient.DownloadFile(profilePictureUrl, mediaPath + _shellSettings.Name + @"\twitter_" + vm.DisplayAs + ".jpg");
                 #endregion
-                 // var avatarFormat = "https://api.twitter.com/1.1/users/show.json?screen_name={0}";
-               // var avatarUrl = string.Format(avatarFormat, vm.DisplayAs);
-               // HttpWebRequest avatarRequest = (HttpWebRequest)WebRequest.Create(avatarUrl);
-               // var timelineHeaderFormat = "{0} {1}";
-               // avatarRequest.Headers.Add("Authorization", String.Format("Bearer {0}", vm.UserToken));
-               //// avatarRequest.Headers.Add("Authorization",
-               ////                             string.Format(timelineHeaderFormat, "oauth_token", requestToken));
-               // avatarRequest.Method = "Get";
-               // WebResponse timeLineResponse = avatarRequest.GetResponse();
+                // var avatarFormat = "https://api.twitter.com/1.1/users/show.json?screen_name={0}";
+                // var avatarUrl = string.Format(avatarFormat, vm.DisplayAs);
+                // HttpWebRequest avatarRequest = (HttpWebRequest)WebRequest.Create(avatarUrl);
+                // var timelineHeaderFormat = "{0} {1}";
+                // avatarRequest.Headers.Add("Authorization", String.Format("Bearer {0}", vm.UserToken));
+                //// avatarRequest.Headers.Add("Authorization",
+                ////                             string.Format(timelineHeaderFormat, "oauth_token", requestToken));
+                // avatarRequest.Method = "Get";
+                // WebResponse timeLineResponse = avatarRequest.GetResponse();
 
-               // var reader = new StreamReader(timeLineResponse.GetResponseStream());
-               // var avatarJson = string.Empty;
+                // var reader = new StreamReader(timeLineResponse.GetResponseStream());
+                // var avatarJson = string.Empty;
                 //using (authResponse) {
                 //    using (var reader = new StreamReader(timeLineResponse.GetResponseStream())) {
                 //        avatarJson = reader.ReadToEnd();
                 //    }
                 //}
 
-               // Uri profilePictureUrl = new Uri(string.Format("https://api.twitter.com/1.1/users/show.json?screen_name={1}", vm.DisplayAs ));
+                // Uri profilePictureUrl = new Uri(string.Format("https://api.twitter.com/1.1/users/show.json?screen_name={1}", vm.DisplayAs ));
 
                 OrchardRegister(vm);
             }
@@ -239,8 +237,7 @@ namespace Laser.Orchard.Twitter.Controllers {
             Int32 elementi = contentQuery.List().Where(x => x.As<TwitterAccountPart>().IdUser == currentiduser && x.As<TwitterAccountPart>().DisplayAs == fvm.DisplayAs).Count();
             if (elementi > 0) {
                 _notifier.Add(NotifyType.Warning, T("User Twitter Account can't be added, is duplicated"));
-            }
-            else {
+            } else {
                 var newContent = _orchardServices.ContentManager.New(contentType);
                 _orchardServices.ContentManager.Create(newContent);
                 newContent.As<TwitterAccountPart>().AccountType = "User";

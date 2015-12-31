@@ -64,7 +64,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _contentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
             } else
-                content = _contentManager.Get(id, VersionOptions.Latest);
+                content = _contentManager.Get(id, VersionOptions.DraftRequired);
             content.As<CommunicationAdvertisingPart>().CampaignId = idCampaign > 0 ? idCampaign : 0;
             if (idCampaign > 0) {
                 dynamic campaignContent = _contentManager.Get(idCampaign);
@@ -86,14 +86,13 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _orchardServices.TransactionManager.Cancel();
                 return View(model);
             }
-            _contentManager.Unpublish(content);
             _notifier.Add(NotifyType.Information, T("Advertising saved"));
             if (Request.Form["submit.Publish"] == "submit.Publish") {
                 // _contentManager.Unpublish(content);
                 _contentManager.Publish(content);
                 //  _contentManager.Unpublish(content); // inserito per permettere il publishlater
             }
-            return RedirectToAction("Index", "AdvertisingAdmin", new { id = idCampaign });
+            return RedirectToAction("Edit", new { id = content.Id, idCampaign = idCampaign });
         }
 
         [HttpPost]
