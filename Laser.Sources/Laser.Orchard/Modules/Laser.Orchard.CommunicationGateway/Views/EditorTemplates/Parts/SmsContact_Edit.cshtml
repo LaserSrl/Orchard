@@ -1,27 +1,22 @@
-﻿@using Laser.Orchard.CommunicationGateway.Models
+﻿@using Laser.Orchard.CommunicationGateway.ViewModels
 @using Orchard.Security
+@using Laser.Orchard.Commons.Helpers
+@model View_SmsVM
 @*if (Authorizer.Authorize(StandardPermissions.SiteOwner)) {
 }
 *@
-@if (Model.Count > 0) {
-    <fieldset>
-        <legend>@T("Sms")</legend>
-        @{
-    foreach (CommunicationSmsRecord pnr in Model) {
-            <div>
-                <span>Phone</span> @Html.Raw(pnr.Prefix)    @Html.Raw(pnr.Sms)
-                <br />
-                <span>Language:</span>    @Html.Raw(pnr.Language)
-                <br />
-                <span>Valid:</span>    @Html.Raw(pnr.Validated)
-                <br />
-                <span>Produzione:</span>    @Html.Raw(pnr.Produzione)
-                <br />
-                <span>Data Creazione :</span>    @Html.Raw(pnr.DataInserimento)
-                <br />
-                <span>Ultima modifica:</span>    @Html.Raw(pnr.DataModifica)
-            </div>  <br />   
-    }
-        }
-    </fieldset>
-}
+@{    Script.Require("JQuery").AtHead();
+      Script.Require("jQueryUI").AtHead();
+      Script.Require("jQuery_NestedModels").AtHead();
+      Style.Require("FontAwesome430").AtHead();
+      }
+<br />
+<fieldset>
+    <legend> <i class="fa fa-mobile" style="color: green"></i> @T("Sms")</legend>
+        <div id="MasterSms">
+        @Html.EditorFor(x => x.Elenco)
+    </div>
+   <p id="AddSmsButton">
+   <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x=>x.Elenco, T("Add Sms").Text, "#MasterSms", ".singlesms", "", null)
+    </p>
+</fieldset>

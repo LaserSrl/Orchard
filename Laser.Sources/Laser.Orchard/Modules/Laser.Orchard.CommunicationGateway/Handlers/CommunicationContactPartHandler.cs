@@ -77,6 +77,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                         Id = x.Id,
                         Produzione = x.Produzione,
                         Sms = x.Sms,
+                        Prefix = x.Prefix,
                         CommunicationContactPartRecord_Id = x.CommunicationContactPartRecord_Id,
                         Validated = x.Validated
                     })
