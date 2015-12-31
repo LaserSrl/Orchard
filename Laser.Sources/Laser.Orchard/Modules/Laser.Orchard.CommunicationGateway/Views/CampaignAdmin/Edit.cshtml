@@ -1,4 +1,5 @@
-﻿@{ Layout.Title = "Edit Campaign"; }
+﻿@{ Layout.Title = T("Edit Campaign"); }
+<p class="breadcrumb"><a href="@Url.Action("Index")">@T("Campaigns List")</a> &#62; @Layout.Title</p>
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Display(Model)

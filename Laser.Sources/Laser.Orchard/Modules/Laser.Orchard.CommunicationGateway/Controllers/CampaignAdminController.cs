@@ -43,8 +43,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 //  model = _orchardServices.ContentManager.BuildEditor(newContent);
                 //   _contentManager.Create(newContent);
                 model = _contentManager.BuildEditor(newContent);
-            }
-            else
+            } else
                 model = _contentManager.BuildEditor(_orchardServices.ContentManager.Get(id));
             return View((object)model);
         }
@@ -57,11 +56,10 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             ContentItem content;
             if (id == 0) {
                 var newContent = _orchardServices.ContentManager.New(contentType);
-                _orchardServices.ContentManager.Create(newContent);
+                _orchardServices.ContentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
-            }
-            else
-                content = _orchardServices.ContentManager.Get(id);
+            } else
+                content = _orchardServices.ContentManager.Get(id, VersionOptions.DraftRequired);
             var model = _orchardServices.ContentManager.UpdateEditor(content, this);
 
             if (!ModelState.IsValid) {
@@ -73,8 +71,9 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _orchardServices.TransactionManager.Cancel();
                 return View(model);
             }
+            _contentManager.Publish(content);
             _notifier.Add(NotifyType.Information, T("Campaign saved"));
-            return RedirectToAction("Index", "CampaignAdmin");
+            return RedirectToAction("Edit",new { id = content.Id });
         }
 
         [HttpPost]
@@ -122,7 +121,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 }
             }
             if (!string.IsNullOrEmpty(search.Expression))
-                    contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(expression));
+                contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(expression));
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
             var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(contentQuery.Count());
             var pageOfContentItems = contentQuery.Slice(pager.GetStartIndex(), pager.PageSize)
