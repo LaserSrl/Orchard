@@ -13,11 +13,11 @@
     <fieldset class="bulk-actions">
         <h2>@T("Filters")</h2>
     </fieldset>
-
+@*
     <div class="manage">
-        @Html.ActionLink(T("Add a new Group").Text, "AddGroup", new { controller = "Filter", id = Model.Id }, new { @class = "button primaryAction" })
+       @Html.ActionLink(T("Add a new Group").Text, "AddGroup", new { controller = "Filter", id = Model.Id }, new { @class = "button primaryAction" })
     </div>
-
+*@
     foreach (var group in Model.FilterGroups) {
         bool isFirstGroup = group == Model.FilterGroups.First();
         if (!isFirstGroup) {
