@@ -54,5 +54,12 @@ namespace Laser.Orchard.Queries {
                     );
             return 1;
         }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition(
+         "QueryPickerPart",
+         p => p.Attachable(false));
+            return 2;
+        }
     }
 }

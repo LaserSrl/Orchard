@@ -259,7 +259,8 @@
 			{
 				string date_string = bookToModify.ChildNodes[0].Value;
 				DateTime myDate = DateTime.Parse(date_string);
-				bookToModify.ChildNodes[0].Value = "#" + myDate.ToString("MM/dd/yyyy HH:mm:ss") + "#";
+                bookToModify.ChildNodes[0].Value = ":laserDate" + myDate.ToUniversalTime().Subtract(
+new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + "laserDate:";
 			}
 			return doc;
 		}

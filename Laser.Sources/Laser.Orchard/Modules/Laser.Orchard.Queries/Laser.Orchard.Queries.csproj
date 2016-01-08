@@ -65,6 +65,10 @@
     <Reference Include="Orchard.Projections">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Tokens, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -94,15 +98,19 @@
     <Compile Include="Controllers\FilterController.cs" />
     <Compile Include="Controllers\MyQueryAdminController.cs" />
     <Compile Include="Controllers\UserQueryAdminController.cs" />
+    <Compile Include="Drivers\QueryPickerPartDriver.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\QueryPickerPart.cs" />
     <Compile Include="Models\QueryUserFilterExtensionPart.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Services\ICustomQuery.cs" />
+    <Compile Include="Services\IQueryPickerService.cs" />
     <Compile Include="Settings\QueryUserFilterExtensionPartEditEvents.cs" />
     <Compile Include="Settings\QueryUserFilterExtensionPartSettingVM.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
+    <Compile Include="ViewModels\QueryPickerVM.cs" />
     <Compile Include="ViewModels\SearchIndexVM.cs" />
     <Compile Include="ViewModels\SearchVM.cs" />
   </ItemGroup>
@@ -128,7 +136,12 @@
   <ItemGroup>
     <Content Include="Views\UserQueryAdmin\Preview.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\QueryPicker_Edit.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
