@@ -10,7 +10,8 @@ namespace Laser.Orchard.Mobile.Handlers {
     public class MobileContactPartHandler : ContentHandler {
         private readonly IRepository<PushNotificationRecord> _ProviderRepository;
 
-        public MobileContactPartHandler(IRepository<PushNotificationRecord> ProviderRepository) {
+        public MobileContactPartHandler(IRepository<MobileContactPartRecord>repository,IRepository<PushNotificationRecord> ProviderRepository) {
+            Filters.Add(StorageFilter.For(repository));
             _ProviderRepository = ProviderRepository;
             Filters.Add(new ActivatingFilter<MobileContactPart>("CommunicationContact"));
             OnLoaded<MobileContactPart>(LazyLoadHandlers);
@@ -23,7 +24,7 @@ namespace Laser.Orchard.Mobile.Handlers {
 
         private IList<PushNotificationRecord> OnLoader(LoadContentContext context) {
             return _ProviderRepository
-                    .Fetch(x => x.CommunicationContactPartRecord_Id == context.ContentItem.Id)
+                    .Fetch(x => x.MobileContactPartRecord_Id == context.ContentItem.Id)
                     .Select(x => new PushNotificationRecord {
                         DataInserimento=x.DataInserimento,
                         Device=x.Device,
@@ -32,7 +33,7 @@ namespace Laser.Orchard.Mobile.Handlers {
                         Id = x.Id,
                         Produzione=x.Produzione,
                         Token=x.Token,
-                        CommunicationContactPartRecord_Id = x.CommunicationContactPartRecord_Id,
+                        MobileContactPartRecord_Id = x.MobileContactPartRecord_Id,
                         UUIdentifier=x.UUIdentifier,
                         Validated=x.Validated
                     })

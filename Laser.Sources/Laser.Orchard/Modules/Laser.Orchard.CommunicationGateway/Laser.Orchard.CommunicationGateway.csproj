@@ -63,6 +63,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Fields, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Fields\bin\Orchard.Fields.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Framework, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
@@ -80,6 +84,10 @@
     </Reference>
     <Reference Include="Orchard.Tags">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tags\bin\Orchard.Tags.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Taxonomies, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Taxonomies\bin\Orchard.Taxonomies.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Users">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
@@ -135,6 +143,8 @@
     <Compile Include="Features\CommunicationFeature.cs" />
     <Compile Include="Handlers\CommunicationAdvertisingPartHandler.cs" />
     <Compile Include="Handlers\CommunicationContactPartHandler.cs" />
+    <Compile Include="Handlers\EmailContactPartHandler.cs" />
+    <Compile Include="Handlers\SmsContactPartHandler.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Models\CommunicationAdvertisingPart.cs" />
     <Compile Include="Models\CommunicationContactPart.cs" />

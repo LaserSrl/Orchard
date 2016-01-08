@@ -75,7 +75,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                             Mapper.Map(vm, cmr);
                             cmr.Email = vmel.Email;
                             cmr.Validated = vmel.Validated;
-                            cmr.CommunicationContactPartRecord_Id = part.Id;
+                            cmr.EmailContactPartRecord_Id = part.Id;
                             _repoEmail.Create(cmr);
 
                         }
@@ -85,6 +85,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                 _transaction.Cancel();
             else
                 _repoEmail.Flush();
+        //    _transaction.RequireNew();
             return Editor(part, shapeHelper);
         }
     }

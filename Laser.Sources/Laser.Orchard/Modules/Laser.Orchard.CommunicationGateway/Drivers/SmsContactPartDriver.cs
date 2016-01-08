@@ -101,7 +101,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                             cmr.Sms = vmel.Sms;
                             cmr.Validated = vmel.Validated;
                             cmr.Prefix = vmel.Prefix;
-                            cmr.CommunicationContactPartRecord_Id = part.Id;
+                            cmr.SmsContactPartRecord_Id = part.Id;
                             _repoSms.Create(cmr);
 
                         }

@@ -202,6 +202,7 @@
     <Compile Include="Drivers\MobileContactPartDriver.cs" />
     <Compile Include="Drivers\UserPwdRecoveryPartDriver.cs" />
     <Compile Include="Feature\MobileCommunicationImportFeature.cs" />
+    <Compile Include="Feature\SmsCommunicationImportFeature.cs" />
     <Compile Include="Handlers\MobileContactPartHandler.cs" />
     <Compile Include="Handlers\UserPwdRecoveryPartHandler.cs" />
     <Compile Include="Models\MobileContactPart.cs" />

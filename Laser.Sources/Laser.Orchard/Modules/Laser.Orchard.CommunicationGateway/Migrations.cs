@@ -165,7 +165,7 @@ namespace Laser.Orchard.CommunicationGateway {
             SchemaBuilder.CreateTable("CommunicationEmailRecord",
             table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<int>("CommunicationContactPartRecord_Id", column => column.WithDefault(0))
+                .Column<int>("EmailContactPartRecord_Id", column => column.WithDefault(0))
                 .Column<string>("Language", column => column.WithLength(10))
                 .Column<bool>("Validated", col => col.WithDefault(true))
                 .Column<DateTime>("DataInserimento", c => c.NotNull())
@@ -179,7 +179,7 @@ namespace Laser.Orchard.CommunicationGateway {
             SchemaBuilder.CreateTable("CommunicationSmsRecord",
             table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<int>("CommunicationContactPartRecord_Id", column => column.WithDefault(0))
+                .Column<int>("SmsContactPartRecord_Id", column => column.WithDefault(0))
                 .Column<string>("Language", column => column.WithLength(10))
                 .Column<bool>("Validated", col => col.WithDefault(true))
                 .Column<DateTime>("DataInserimento", c => c.NotNull())
@@ -207,13 +207,28 @@ namespace Laser.Orchard.CommunicationGateway {
         }
 
         public int UpdateFrom10() {
+             SchemaBuilder.CreateTable("EmailContactPartRecord",
+                table => table
+                    .ContentPartRecord()
+            );
+                return 11;
+        }
+        public int UpdateFrom11() {
+            SchemaBuilder.CreateTable("SmsContactPartRecord",
+               table => table
+                   .ContentPartRecord()
+           );
+            return 12;
+        }
+
+        public int UpdateFrom12() {
             SchemaBuilder.AlterTable("CommunicationEmailRecord",
                 table => table
                     .CreateIndex("IX_CommunicationEmailRecord_EmailContactPartRecord_Id", "EmailContactPartRecord_Id"));
             SchemaBuilder.AlterTable("CommunicationSmsRecord",
                 table => table
                     .CreateIndex("IX_CommunicationEmailRecord_SmsContactPartRecord_Id", "SmsContactPartRecord_Id"));
-            return 11;
+            return 13;
         }
 
     }

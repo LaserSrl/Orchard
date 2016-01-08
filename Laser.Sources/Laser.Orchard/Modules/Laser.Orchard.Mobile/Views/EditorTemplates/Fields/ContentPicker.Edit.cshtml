@@ -1,6 +1,6 @@
 ﻿@model Orchard.ContentPicker.ViewModels.ContentPickerFieldViewModel
 @using Orchard.ContentPicker.Settings;
-@if ((bool)TempData["HideRelated"]) {
+@if ((bool)(TempData["HideRelated"]??false)) {
     @Html.Raw("<div style='display:none'>")
 }else{
        @Html.Raw("<div>")
