@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.CommunicationGateway.ViewModels;
 using Laser.Orchard.ShortLinks.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard;
@@ -7,6 +8,7 @@ using Orchard.ContentPicker.Fields;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Localization;
+using Orchard.MediaLibrary.Fields;
 using Orchard.Modules.Services;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
@@ -92,6 +94,18 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         _moduleService.DisableFeatures(new string[] { "Laser.Orchard.MobileCommunicationImport" });
                     }
                     _moduleService.EnableFeatures(new string[] { "Laser.Orchard.MobileCommunicationImport" }, true);
+                }
+            }
+            #endregion Ricreo collegamento con parte mobile preesistente
+
+            #region Ricreo collegamento con parte sms preesistente
+
+            if (features.ContainsKey("Laser.Orchard.SmsCommunicationImport")) {
+                if (features.ContainsKey("Laser.Orchard.Sms") && features["Laser.Orchard.Sms"].IsEnabled) {
+                    if (features["Laser.Orchard.SmsCommunicationImport"].IsEnabled) {
+                        _moduleService.DisableFeatures(new string[] { "Laser.Orchard.SmsCommunicationImport" });
+                    }
+                    _moduleService.EnableFeatures(new string[] { "Laser.Orchard.SmsCommunicationImport" }, true);
                 }
             }
             #endregion Ricreo collegamento con parte mobile preesistente
@@ -203,8 +217,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             if (!string.IsNullOrEmpty(UserContent.Email)&& UserContent.ContentItem.As<UserPart>().RegistrationStatus==UserStatus.Approved) {
                 CommunicationEmailRecord cmr = _repositoryCommunicationEmailRecord.Fetch(x => x.Email == UserContent.Email).FirstOrDefault();
                 if (cmr != null) {
-                    if (cmr.CommunicationContactPartRecord_Id != Contact.Id) {
-                        cmr.CommunicationContactPartRecord_Id = Contact.Id;
+                    if (cmr.EmailContactPartRecord_Id != Contact.Id) {
+                        cmr.EmailContactPartRecord_Id = Contact.Id;
                         cmr.DataModifica = DateTime.Now;
                         _repositoryCommunicationEmailRecord.Update(cmr);
                         _repositoryCommunicationEmailRecord.Flush();
@@ -212,7 +226,12 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 } else {
                     CommunicationEmailRecord newrec = new CommunicationEmailRecord();
                     newrec.Email = UserContent.Email;
-                    newrec.CommunicationContactPartRecord_Id = Contact.Id;
+                    newrec.EmailContactPartRecord_Id = Contact.Id;
+                    newrec.Id = 0;
+                    newrec.Validated = true;
+                    newrec.DataInserimento = DateTime.Now;
+                    newrec.DataModifica = DateTime.Now;
+                    newrec.Produzione = true;
                     _repositoryCommunicationEmailRecord.Create(newrec);
                     _repositoryCommunicationEmailRecord.Flush();
                 }
@@ -224,7 +243,12 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 List<ContentPart> Lcp = new List<ContentPart>();
                 Lcp.Add(((ContentPart)((dynamic)Contact).ProfilePart));
                 foreach (dynamic cf in ((dynamic)UserContent).ProfilePart.Fields) {
-                    _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), ((object)(((dynamic)cf).Value)), Contact);
+                    if (cf.FieldDefinition.Name == typeof(MediaLibraryPickerField).Name || cf.FieldDefinition.Name == typeof(ContentPickerField).Name) {
+                        List<object> myval = cf.Ids;
+                        _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, Contact);
+                    }
+                    else
+                        _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), ((object)(((dynamic)cf).Value)), Contact);
                 }
             }
         }

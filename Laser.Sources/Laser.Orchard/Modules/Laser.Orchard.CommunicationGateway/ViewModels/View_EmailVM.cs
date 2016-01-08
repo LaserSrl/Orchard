@@ -12,7 +12,7 @@ namespace Laser.Orchard.CommunicationGateway.ViewModels {
     }
     public class View_EmailVM_element {
         public int Id { get; set; }
-        public int CommunicationContactPartRecord_Id { get; set; }
+        public int EmailContactPartRecord_Id { get; set; }
         public string Language { get; set; }
         public bool Validated { get; set; }
         public DateTime DataInserimento { get; set; }
@@ -23,7 +23,7 @@ namespace Laser.Orchard.CommunicationGateway.ViewModels {
         
 
         public View_EmailVM_element() {
-            this.CommunicationContactPartRecord_Id = 0;
+            this.EmailContactPartRecord_Id = 0;
             this.Id = 0;
             this.Validated = true;
             this.DataInserimento = DateTime.Now;

@@ -12,7 +12,7 @@ namespace Laser.Orchard.CommunicationGateway.ViewModels {
     }
     public class View_SmsVM_element {
         public int Id { get; set; }
-        public int CommunicationContactPartRecord_Id { get; set; }
+        public int SmsContactPartRecord_Id { get; set; }
         public string Language { get; set; }
         public bool Validated { get; set; }
         public DateTime DataInserimento { get; set; }
@@ -24,7 +24,7 @@ namespace Laser.Orchard.CommunicationGateway.ViewModels {
         
 
         public View_SmsVM_element() {
-            this.CommunicationContactPartRecord_Id = 0;
+            this.SmsContactPartRecord_Id = 0;
             this.Id = 0;
             this.Validated = true;
             this.DataInserimento = DateTime.Now;

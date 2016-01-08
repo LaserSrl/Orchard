@@ -47,7 +47,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
 
         private IList<CommunicationEmailRecord> OnEmailLoader(LoadContentContext context) {
             return _Emailrepository
-                    .Fetch(x => x.CommunicationContactPartRecord_Id == context.ContentItem.Id)
+                    .Fetch(x => x.EmailContactPartRecord_Id == context.ContentItem.Id)
                     .Select(x => new CommunicationEmailRecord {
                         DataInserimento = x.DataInserimento,
                         DataModifica = x.DataModifica,
@@ -55,7 +55,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                         Id = x.Id,
                         Produzione = x.Produzione,
                         Email = x.Email,
-                        CommunicationContactPartRecord_Id = x.CommunicationContactPartRecord_Id,
+                        EmailContactPartRecord_Id = x.EmailContactPartRecord_Id,
                         Validated = x.Validated
                     })
                     .ToList();
@@ -69,7 +69,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
 
         private IList<CommunicationSmsRecord> OnSmsLoader(LoadContentContext context) {
             return _Smsrepository
-                    .Fetch(x => x.CommunicationContactPartRecord_Id == context.ContentItem.Id)
+                    .Fetch(x => x.SmsContactPartRecord_Id == context.ContentItem.Id)
                     .Select(x => new CommunicationSmsRecord {
                         DataInserimento = x.DataInserimento,
                         DataModifica = x.DataModifica,
@@ -78,7 +78,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                         Produzione = x.Produzione,
                         Sms = x.Sms,
                         Prefix = x.Prefix,
-                        CommunicationContactPartRecord_Id = x.CommunicationContactPartRecord_Id,
+                        SmsContactPartRecord_Id = x.SmsContactPartRecord_Id,
                         Validated = x.Validated
                     })
                     .ToList();
