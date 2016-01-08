@@ -205,5 +205,16 @@ namespace Laser.Orchard.CommunicationGateway {
              );
             return 10;
         }
+
+        public int UpdateFrom10() {
+            SchemaBuilder.AlterTable("CommunicationEmailRecord",
+                table => table
+                    .CreateIndex("IX_CommunicationEmailRecord_EmailContactPartRecord_Id", "EmailContactPartRecord_Id"));
+            SchemaBuilder.AlterTable("CommunicationSmsRecord",
+                table => table
+                    .CreateIndex("IX_CommunicationEmailRecord_SmsContactPartRecord_Id", "SmsContactPartRecord_Id"));
+            return 11;
+        }
+
     }
 }

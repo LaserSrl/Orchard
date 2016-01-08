@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="Drivers\MailCommunicationPartDriver.cs" />
     <Compile Include="Handlers\MailCommunicationPartHandler.cs" />
+    <Compile Include="Services\IMailCommunicationService.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\MailCommunicationPart.cs" />
   </ItemGroup>
@@ -101,6 +102,14 @@
     <Content Include="Views\EditorTemplates\Parts\MailCommunicationActions_Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Laser.Orchard.CommunicationGateway\Laser.Orchard.CommunicationGateway.csproj">
+      <Project>{bb12e69f-0976-407d-a716-542b7d22ee5f}</Project>
+      <Name>Laser.Orchard.CommunicationGateway</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.Queries\Laser.Orchard.Queries.csproj">
+      <Project>{d494b57f-2ae6-460f-9785-565376409afc}</Project>
+      <Name>Laser.Orchard.Queries</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.TemplateManagement\Laser.Orchard.TemplateManagement.csproj">
       <Project>{ca85f4f3-216c-4eab-bfbc-4044ee307cd7}</Project>
       <Name>Laser.Orchard.TemplateManagement</Name>

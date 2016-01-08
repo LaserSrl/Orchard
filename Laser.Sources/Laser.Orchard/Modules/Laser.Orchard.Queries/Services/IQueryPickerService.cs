@@ -11,12 +11,12 @@ using Orchard.Tokens;
 using Orchard.Projections.Descriptors;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Forms.Services;
+using Orchard.Data;
 
 namespace Laser.Orchard.Queries.Services {
     public interface IQueryPickerService : IDependency {
         List<QueryPart> GetUserDefinedQueries();
-        IEnumerable<ContentItem> GetContentItemsAndCombined(int[] queryIds, int skip = 0, int count = 0);
-        IEnumerable<IHqlQuery> GetContentQueries(QueryPartRecord queryRecord, Dictionary<string, object> tokens = null);
+        IHqlQuery GetCombinedContentQuery(int[] queryIds, Dictionary<string, object> tokens = null, string[] contentTypesToFilter = null);
     }
 
 
@@ -26,16 +26,18 @@ namespace Laser.Orchard.Queries.Services {
         private readonly IContentManager _contentManager;
         private readonly ITokenizer _tokenizer;
         private readonly IProjectionManager _projectionManager;
+        private readonly IRepository<QueryPartRecord> _queryRepository;
 
         public QueryPickerDefault(IOrchardServices services, IContentManager contentManager,
                         ITokenizer tokenizer,
                         IProjectionManager projectionManager,
-                        IEnumerable<IFilterProvider> filterProviders) {
+                        IEnumerable<IFilterProvider> filterProviders,
+            IRepository<QueryPartRecord> queryRepository) {
             _services = services;
             _tokenizer = tokenizer;
             _contentManager = contentManager;
             _projectionManager = projectionManager;
-
+            _queryRepository = queryRepository;
             _filterProviders = filterProviders;
 
         }
@@ -47,26 +49,19 @@ namespace Laser.Orchard.Queries.Services {
             return availableQueries.ToList();
         }
 
-        public IEnumerable<ContentItem> GetContentItemsAndCombined(int[] queryIds, int skip = 0, int count = 0) {
-            IEnumerable<ContentItem> contentItems = new List<ContentItem>();
-
-            foreach (var queryId in queryIds) {
-                if (contentItems.Count() > 0) {
-                    contentItems = contentItems.Intersect(_projectionManager.GetContentItems(queryId, 0, 5000000));
-                } else {
-                    contentItems = _projectionManager.GetContentItems(queryId, 0, 5000000);
-                }
-            }
-            return contentItems.Skip(skip).Take(count);
-        }
-
-        public IEnumerable<IHqlQuery> GetContentQueries(QueryPartRecord queryRecord, Dictionary<string, object> tokens = null) {
+        public IHqlQuery GetCombinedContentQuery(int[] queryIds, Dictionary<string, object> tokens = null, string[] contentTypesToFilter = null) {
             var availableFilters = DescribeFilters().ToList();
 
-            // pre-executing all groups 
-            foreach (var group in queryRecord.FilterGroups) {
-
-                var contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Published);
+            IEnumerable<ContentItem> contentItems = new List<ContentItem>();
+            IHqlQuery contentQuery = null;
+            contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Published);
+            // Siccome sono in una Query Definita dallo User, devo anche filtrare per ContentType "CommunicationContact"
+            if (contentTypesToFilter != null)
+                contentQuery = contentQuery.ForType(contentTypesToFilter);
+            foreach (var queryId in queryIds) {
+                var queryRecord = _queryRepository.Get(queryId);
+                // Per un bug di Orchard non si devono usare i gruppi, quindi prendo solo il primo gruppo
+                var group = queryRecord.FilterGroups[0];
                 // fatto da HERMES
                 if (tokens == null) {
                     tokens = new Dictionary<string, object>();
@@ -98,13 +93,8 @@ namespace Laser.Orchard.Queries.Services {
 
                     contentQuery = filterContext.Query;
                 }
-                // Siccome sono in una Query Definita dallo User, devo anche filtrare per ContentType "CommunicationContact"
-                var contentTypesToFilter = "CommunicationContact";
-                contentQuery = contentQuery.ForType(contentTypesToFilter.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-
-                // iterate over each sort criteria to apply the alterations to the query object
-                yield return contentQuery;
             }
+            return contentQuery;
         }
         private IEnumerable<TypeDescriptor<FilterDescriptor>> DescribeFilters() {
             var context = new DescribeFilterContext();
