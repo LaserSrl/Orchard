@@ -87,8 +87,8 @@ namespace Laser.Orchard.Mobile.Handlers {
                 }
                 else {
                     var pushNotificationToLink=_pushNotificationRecord.Fetch(x => x.UUIdentifier == UUIdentifier).FirstOrDefault();
-                    if (pushNotificationToLink.CommunicationContactPartRecord_Id != recordContact.Id) {
-                        pushNotificationToLink.CommunicationContactPartRecord_Id = recordContact.Id;
+                    if (pushNotificationToLink.MobileContactPartRecord_Id != recordContact.Id) {
+                        pushNotificationToLink.MobileContactPartRecord_Id = recordContact.Id;
                         _pushNotificationRecord.Update(pushNotificationToLink);
                         _pushNotificationRecord.Flush();
                     }

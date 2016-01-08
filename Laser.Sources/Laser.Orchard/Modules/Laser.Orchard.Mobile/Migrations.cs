@@ -162,7 +162,7 @@ namespace Laser.Orchard.Mobile {
                 );
             SchemaBuilder.AlterTable("PushNotificationRecord",
                               table => table
-                              .AddColumn<int>("CommunicationContactPartRecord_Id")
+                              .AddColumn<int>("MobileContactPartRecord_Id")
                  );
             return 13;
         }
@@ -171,6 +171,13 @@ namespace Laser.Orchard.Mobile {
             _utilsServices.EnableFeature("Laser.Orchard.Queries");
             _utilsServices.EnableFeature("Laser.Orchard.CommunicationGateway");
             return 14;
+        }
+        public int UpdateFrom14() {
+            SchemaBuilder.CreateTable("MobileContactPartRecord",
+                             table => table
+                                 .ContentPartRecord()
+                );
+            return 15;
         }
     }
 }

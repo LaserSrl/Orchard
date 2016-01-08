@@ -20,4 +20,9 @@ Features:
         Description: Link existing data communication
 		Category: Social
 		Dependencies: Laser.Orchard.Mobile
+	Laser.Orchard.SmsCommunicationImport:
+		Name: Laser SMS  Communication Import
+        Description:  Link existing data communication
+		Category: Social
+		Dependencies: Laser.Orchard.Sms
 		
