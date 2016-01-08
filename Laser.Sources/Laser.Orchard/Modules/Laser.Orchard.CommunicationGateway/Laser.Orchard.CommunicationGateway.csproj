@@ -135,6 +135,8 @@
     <Compile Include="Features\CommunicationFeature.cs" />
     <Compile Include="Handlers\CommunicationAdvertisingPartHandler.cs" />
     <Compile Include="Handlers\CommunicationContactPartHandler.cs" />
+    <Compile Include="Handlers\EmailContactPartHandler.cs" />
+    <Compile Include="Handlers\SmsContactPartHandler.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Models\CommunicationAdvertisingPart.cs" />
     <Compile Include="Models\CommunicationContactPart.cs" />
