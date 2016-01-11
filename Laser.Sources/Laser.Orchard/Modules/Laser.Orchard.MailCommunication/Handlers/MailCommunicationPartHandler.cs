@@ -81,11 +81,27 @@ namespace Laser.Orchard.MailCommunication.Handlers {
 
                     // DA HQL A SQL
                     var stringHQL = ((DefaultHqlQuery)query).ToHql(false);
-                    
+
                     // Rimuovo la Order by per poter fare la query annidata
                     // TODO: trovare un modo migliore per rimuovere la order by
                     stringHQL = stringHQL.ToString().Replace("order by civ.Id", "");
-                    var queryForEmail = "SELECT TitlePart.Title as Title, EmailRecord.Email as EmailAddress FROM Orchard.Core.Title.Models.TitlePartRecord as TitlePart, Laser.Orchard.CommunicationGateway.Models.EmailContactPartRecord as EmailPart  join EmailPart.EmailRecord as EmailRecord  WHERE TitlePart.Id=EmailPart.Id AND EmailPart.Id in (" + stringHQL + ")";
+                    //var queryForEmail = "SELECT distinct EmailRecord.Id as id, TitlePart.Title as Title, EmailRecord.Email as EmailAddress FROM "+
+                    //    "Orchard.ContentManagement.Records.ContentItemVersionRecord as civr, "+
+                    //    "Orchard.Core.Title.Models.TitlePartRecord as TitlePart, "+
+                    //    "Laser.Orchard.CommunicationGateway.Models.EmailContactPartRecord as EmailPart "+
+                    //        "join EmailPart.EmailRecord as EmailRecord "+
+                    //    "WHERE civr.Published=1 AND civr.Id=TitlePart.Id AND civr.ContentItemRecord.Id=EmailPart.Id AND civr.Id in (" + stringHQL + ")";
+
+                    var queryForEmail = "SELECT distinct cir.Id as id, TitlePart.Title as Title, EmailRecord.Email as EmailAddress FROM " +
+                        "Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
+                        "civr.ContentItemRecord as cir join " +
+                        "civr.TitlePartRecord as TitlePart join " +
+                        "cir.EmailContactPartRecord as EmailPart join " +
+                            "EmailPart.EmailRecord as EmailRecord " +
+                        "WHERE civr.Published=1 AND civr.Id in (" + stringHQL + ")";
+                    
+                    
+                    
                     // Creo query ottimizzata per le performance
                     var secondQuery = _orchardServices.ContentManager.HqlQuery().ForVersion(VersionOptions.Published).Join(x => x.ContentPartRecord<TitlePartRecord>()).Join(y => y.ContentPartRecord<EmailContactPartRecord>());
                     var SQLStatement2 = _session.For(null)
