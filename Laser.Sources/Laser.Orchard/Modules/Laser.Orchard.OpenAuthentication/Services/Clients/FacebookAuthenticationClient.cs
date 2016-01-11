@@ -7,10 +7,15 @@ using DotNetOpenAuth.AspNet;
 using DotNetOpenAuth.AspNet.Clients;
 using DotNetOpenAuth.Messaging;
 using Laser.Orchard.OpenAuthentication.Models;
+using Orchard.Logging;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class FacebookAuthenticationClient : IExternalAuthenticationClient {
+        public ILogger _logger { get; set; }
 
+        public FacebookAuthenticationClient() {
+            _logger =NullLogger.Instance;
+        }
         public string ProviderName {
             get { return "Facebook"; }
         }
@@ -25,17 +30,17 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             FacebookGraphData graphData;
             var request =
                 WebRequest.Create(
-                    "https://graph.facebook.com/me?access_token=" + userAccessToken);
+                    "https://graph.facebook.com/me?fields=id,email,birthday,first_name,last_name,name,locale,link,gender,timezone,updated_time,verified&access_token=" + userAccessToken);
             try {
                 using (var response = request.GetResponse()) {
                     using (var responseStream = response.GetResponseStream()) {
+
                         graphData = (FacebookGraphData)serializer.ReadObject(responseStream);
                     }
                 }
             } catch {
                 return AuthenticationResult.Failed;
             }
-
             // this dictionary must contains 
             var userData = new Dictionary<string, string>();
             userData["id"] = graphData.Id;
