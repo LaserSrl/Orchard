@@ -53,11 +53,13 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             View_SmsVM viewModel = new View_SmsVM();
             View_SmsVM_element vm = new View_SmsVM_element();
             // viewModel.Elenco.Add(vm);
-            List<CommunicationSmsRecord> oldviewModel = part.SmsEntries.Value.ToList();
-            foreach (CommunicationSmsRecord cm in oldviewModel) {
-                vm = new View_SmsVM_element();
-                Mapper.Map(cm, vm);
-                viewModel.Elenco.Add(vm);
+            if (part.SmsEntries.Value != null) {
+                List<CommunicationSmsRecord> oldviewModel = part.SmsEntries.Value.ToList();
+                foreach (CommunicationSmsRecord cm in oldviewModel) {
+                    vm = new View_SmsVM_element();
+                    Mapper.Map(cm, vm);
+                    viewModel.Elenco.Add(vm);
+                }
             }
             return ContentShape("Parts_SmsContact_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/SmsContact_Edit", Model: viewModel, Prefix: Prefix));
         }

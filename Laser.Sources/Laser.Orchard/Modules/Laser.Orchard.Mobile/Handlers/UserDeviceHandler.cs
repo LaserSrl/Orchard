@@ -57,10 +57,11 @@ namespace Laser.Orchard.Mobile.Handlers {
         }
 
         public void LoggedIn(IUser user) {
-            var Email = _httpContextAccessor.Current().Request.QueryString["Email"];
-            if (!string.IsNullOrWhiteSpace(Email)) {
-                ((UserPart)user).Email = Email;
-            }
+            // codice spostato in startupconfig UserEventHandler    
+            //var Email = _httpContextAccessor.Current().Request.QueryString["Email"];
+            //if (!string.IsNullOrWhiteSpace(Email)) {
+            //    ((UserPart)user).Email = Email;
+            //}
             var UUIdentifier = _httpContextAccessor.Current().Request.QueryString["UUID"];
             if (!string.IsNullOrWhiteSpace(UUIdentifier)) {
                 var record = _userDeviceRecord.Fetch(x => x.UUIdentifier == UUIdentifier).FirstOrDefault();

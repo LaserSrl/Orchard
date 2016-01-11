@@ -40,12 +40,12 @@ namespace Laser.Orchard.CommunicationGateway.Navigation {
                             .Action("Index", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" })
                 //   .LocalNav()
                  )
-                    .Add(sub4 => sub4
-                     .Caption(T("Settings"))
-                          .Position("1.064")
-                // .Action("Index", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" })
-                //   .LocalNav()
-                 )
+                //    .Add(sub4 => sub4
+                //     .Caption(T("Settings"))
+                //          .Position("1.064")
+                //// .Action("Index", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" })
+                ////   .LocalNav()
+                // )
                 // .Add(sub2 => sub2
                 //     .Caption(T("Setting"))
                 //          .Position("1.064")

@@ -1,5 +1,4 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
-using Laser.Orchard.CommunicationGateway.ViewModels;
 using Laser.Orchard.ShortLinks.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard;
@@ -7,6 +6,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentPicker.Fields;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
+using Orchard.Fields.Fields;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Fields;
 using Orchard.Modules.Services;
@@ -14,6 +14,8 @@ using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
 using Orchard.Security;
 using Orchard.Tags.Models;
+using Orchard.Taxonomies.Fields;
+using Orchard.Taxonomies.Models;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
 using System;
@@ -21,10 +23,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Orchard.Fields;
-using Orchard.Fields.Fields;
-using Orchard.Taxonomies.Fields;
-using Orchard.Taxonomies.Models;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
 
@@ -63,7 +61,6 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
             #region Creazione di un Contact Master a cui agganciare tutte le parti che non hanno una profilazione
 
-
             if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
                 var Contact = _orchardServices.ContentManager.New("CommunicationContact");
                 _orchardServices.ContentManager.Create(Contact);
@@ -87,6 +84,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 UserToContact(user);
             }
             _notifier.Add(NotifyType.Information, T("Syncronized {0} user's profiles", users.Count().ToString()));
+
             #endregion Import dei profili degli utenti
 
             #region Ricreo collegamento con parte mobile preesistente
@@ -100,6 +98,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     _moduleService.EnableFeatures(new string[] { "Laser.Orchard.MobileCommunicationImport" }, true);
                 }
             }
+
             #endregion Ricreo collegamento con parte mobile preesistente
 
             #region Ricreo collegamento con parte sms preesistente
@@ -112,7 +111,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     _moduleService.EnableFeatures(new string[] { "Laser.Orchard.SmsCommunicationImport" }, true);
                 }
             }
-            #endregion Ricreo collegamento con parte mobile preesistente
+
+            #endregion Ricreo collegamento con parte sms preesistente
 
             // aggiungo 200.000 record
             //for (int i = 0; i < 100000; i++) {
@@ -128,8 +128,6 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             //    Contact.As<TitlePart>().Title = email + " progr:" + i.ToString();
             //    _orchardServices.TransactionManager.RequireNew();
             //}
-
-
         }
 
         public CommunicationContactPart GetContactFromUser(int iduser) {
@@ -268,7 +266,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                                     tv.flag = true;
                                     second.Add(tv);
                                 }
-                                myval =((object)( second.Select(x => (dynamic)x).ToList()));
+                                myval = ((object)(second.Select(x => (dynamic)x).ToList()));
                             }
                             else
                                 myval = ((object)(((dynamic)cf).Value));

@@ -29,13 +29,16 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             View_EmailVM viewModel = new View_EmailVM();
             View_EmailVM_element vm = new View_EmailVM_element();
             // viewModel.Elenco.Add(vm);
-            List<CommunicationEmailRecord> oldviewModel = part.EmailEntries.Value.ToList();
-            foreach (CommunicationEmailRecord cm in oldviewModel) {
-                vm = new View_EmailVM_element();
-                Mapper.Map(cm, vm);
-                viewModel.Elenco.Add(vm);
-            }
+            if (part.EmailEntries.Value != null) {
+                List<CommunicationEmailRecord> oldviewModel = part.EmailEntries.Value.ToList();
+                foreach (CommunicationEmailRecord cm in oldviewModel) {
+                    vm = new View_EmailVM_element();
+                    Mapper.Map(cm, vm);
+                    viewModel.Elenco.Add(vm);
+                }
+            }  
             return ContentShape("Parts_EmailContact_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/EmailContact_Edit", Model: viewModel, Prefix: Prefix));
+            
         }
 
 

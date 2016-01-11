@@ -12,15 +12,16 @@
         <a class="button primaryAction" href="@Url.Action("Synchronize", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" })" title="@T("Synchronize")">@T("Synchronize")</a>
     </div>
 }
-@using (Html.BeginForm("Index", "ContactsAdmin", FormMethod.Post)) {
-    @Html.AntiForgeryToken()
-    <fieldset class="bulk-actions">
+@using (Html.BeginForm("Index", "ContactsAdmin", FormMethod.Get)) {
+ @*   @Html.AntiForgeryToken()
+    *@<fieldset class="bulk-actions">
         <label for="search">@T("Search:")</label>
         @Html.TextBoxFor(m => m.Search.Expression)
 
         <button type="submit">@T("Search")</button>
         <a href="@Url.Action("Index")">@T("Clear")</a>
     </fieldset>
+       
 }
 <fieldset class="contentItems bulk-items">
     <ul>
@@ -68,6 +69,7 @@
     </ul>
 </fieldset>
 <br />
-@using (Html.BeginForm("Index", "Routes", FormMethod.Post)) {
-    @Display(Model.Pager)
+@Display(Model.Pager)
+@*@using (Html.BeginForm("Index", "Routes", FormMethod.Post)) {
 }
+ *@
