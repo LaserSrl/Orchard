@@ -64,35 +64,19 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                     dynamic content = context.ContentItem;
                     IHqlQuery query;
                     if (content.QueryPickerPart != null && content.QueryPickerPart.Ids.Length > 0) {
-                        query = _mailCommunicationService.IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(content.QueryPickerPart.Ids, null, new string[] { "CommunicationContact" }));
+                        query = _mailCommunicationService.IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(content.QueryPickerPart.Ids, null, new string[] { "CommunicationContact" }), content);
                     } else {
-                        query = _mailCommunicationService.IntegrateAdditionalConditions();
+                        query = _mailCommunicationService.IntegrateAdditionalConditions(null, content);
                     }
-                    var time1 = DateTime.Now;
-                    // List troppo impegnativo
-                    // var results = query.List().Select(s => new { Emails = s.As<EmailContactPart>().EmailRecord });
-                    // quindi ciclo a blocchi da 500 record
-                    var i = 0;
-                    var parts = new string[] { "TitlePart", "EmailContactPart" };
-                    //var results = query.Include(parts).Slice((500 * i), 500).Select(s => new RecipientData { 
-                    //    Email = ((dynamic)s).EmailContactPart.EmailRecord[0].Email,
-                    //    Title = ((dynamic)s).TitlePart.Title,
-                    //}).ToList();
 
-                    // DA HQL A SQL
+                    // Trasformo in stringa HQL
                     var stringHQL = ((DefaultHqlQuery)query).ToHql(false);
 
                     // Rimuovo la Order by per poter fare la query annidata
                     // TODO: trovare un modo migliore per rimuovere la order by
                     stringHQL = stringHQL.ToString().Replace("order by civ.Id", "");
-                    //var queryForEmail = "SELECT distinct EmailRecord.Id as id, TitlePart.Title as Title, EmailRecord.Email as EmailAddress FROM "+
-                    //    "Orchard.ContentManagement.Records.ContentItemVersionRecord as civr, "+
-                    //    "Orchard.Core.Title.Models.TitlePartRecord as TitlePart, "+
-                    //    "Laser.Orchard.CommunicationGateway.Models.EmailContactPartRecord as EmailPart "+
-                    //        "join EmailPart.EmailRecord as EmailRecord "+
-                    //    "WHERE civr.Published=1 AND civr.Id=TitlePart.Id AND civr.ContentItemRecord.Id=EmailPart.Id AND civr.Id in (" + stringHQL + ")";
 
-                    var queryForEmail = "SELECT distinct cir.Id as id, TitlePart.Title as Title, EmailRecord.Email as EmailAddress FROM " +
+                    var queryForEmail = "SELECT distinct cir.Id as Id, TitlePart.Title as Title, EmailRecord.Email as EmailAddress FROM " +
                         "Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
                         "civr.ContentItemRecord as cir join " +
                         "civr.TitlePartRecord as TitlePart join " +
@@ -103,19 +87,17 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                     
                     
                     // Creo query ottimizzata per le performance
-                    var secondQuery = _orchardServices.ContentManager.HqlQuery().ForVersion(VersionOptions.Published).Join(x => x.ContentPartRecord<TitlePartRecord>()).Join(y => y.ContentPartRecord<EmailContactPartRecord>());
-                    var SQLStatement2 = _session.For(null)
+                    var fullStatement = _session.For(null)
                         .CreateQuery(queryForEmail)
                         .SetCacheable(false)
                         ;
-                    var lista = SQLStatement2
+                    var lista = fullStatement
                         .SetResultTransformer(Transformers.AliasToEntityMap)
                         .List();
 
                     // 150000 record in < 5sec
                     // ELENCO IDS
 
-                    var timeSpan = DateTime.Now.Subtract(time1);
                 }
             });
         }
