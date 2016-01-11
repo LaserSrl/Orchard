@@ -47,14 +47,10 @@ namespace Laser.Orchard.Queries.Drivers {
             if (updater != null && updater.TryUpdateModel(model, Prefix, null, null)) {
                 part.Ids = model.SelectedIds;
             }
-            // da mettere poi in un service
             var resultRecordNumber = 0;
-            //TODO: Migliorare questa logica, da testare in situazioni complesse e per le performance.
-            IEnumerable<ContentItem> contents = _queryPickerService.GetContentItemsAndCombined(model.SelectedIds);
-            //foreach (int queryId in model.SelectedIds) {
-            //    var queries = _queryPickerService.GetContentQueries(_queryRepository.Get(queryId));
-            //    resultRecordNumber = Math.Min(queries.Sum(x => x.Where(w=>w.).Count()), resultRecordNumber);
-            //}
+            // TODO: rendere dinamico e injettabile l'array dei contenttypes
+            var combinedQueries = _queryPickerService.GetCombinedContentQuery(model.SelectedIds, null, null);
+            resultRecordNumber = combinedQueries.Count();
             model.TotalItemsCount = resultRecordNumber;
 
             return ContentShape("Parts_QueryPicker_Edit",

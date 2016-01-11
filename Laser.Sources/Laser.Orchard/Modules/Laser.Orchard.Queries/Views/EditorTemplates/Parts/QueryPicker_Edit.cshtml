@@ -12,7 +12,7 @@
 }
 <fieldset>
     <legend>@T("User defined queries picker")</legend>
-    @Html.LabelFor(m => m.SelectedIds, @T("Pick a user query"))
+    @Html.LabelFor(m => m.SelectedIds, @T("Pick a user defined query"))
     @Html.ListBoxFor(m => m.SelectedIds, Model.AvailableQueries)
-    @T("found {0:N0} items", Model.TotalItemsCount.Value)
+    @T("found {0:N0} content items", Model.TotalItemsCount.Value)
 </fieldset>
