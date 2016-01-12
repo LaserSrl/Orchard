@@ -25,27 +25,39 @@ namespace Laser.Orchard.Facebook.Handlers {
             Filters.Add(StorageFilter.For(repository));
             OnPublished<FacebookPostPart>((context, facebookpart) => {
                 try {
-                    PostToFacebookViewModel Fvm = new PostToFacebookViewModel();
-                    Fvm.Caption = facebookpart.FacebookCaption;
-                    Fvm.Description = facebookpart.FacebookDescription;
+                    bool publishEnabled = true;
+                    string linktosend = "";
                     if (facebookpart.ContentItem.ContentType == "CommunicationAdvertising") {
-                        ICommunicationService _communicationService;
-                        bool tryed = _orchardServices.WorkContext.TryResolve<ICommunicationService>(out _communicationService);
-                        if (tryed) {
-                            Fvm.Link = _communicationService.GetCampaignLink("Facebook", facebookpart);
+                            ICommunicationService _communicationService;
+                            bool tryed = _orchardServices.WorkContext.TryResolve<ICommunicationService>(out _communicationService);
+                            publishEnabled = _communicationService.AdvertisingIsAvailable(facebookpart.Id);
+                            if (tryed) {
+                                linktosend = _communicationService.GetCampaignLink("Facebook", facebookpart);
+                            }
+                            else
+                                linktosend = "";
+                            if (!publishEnabled) {
+                                _notifier.Add(NotifyType.Error, T("Advertising can't be published, see campaign validation date"));
+                            }
+                    }
+
+                    if (publishEnabled) {
+                        PostToFacebookViewModel Fvm = new PostToFacebookViewModel();
+                        Fvm.Caption = facebookpart.FacebookCaption;
+                        Fvm.Description = facebookpart.FacebookDescription;
+                        if (facebookpart.ContentItem.ContentType == "CommunicationAdvertising") {
+                            Fvm.Link = linktosend;
                         }
                         else
-                            Fvm.Link = "";
-                    }
-                    else
-                        Fvm.Link = facebookpart.FacebookLink;
-                    Fvm.Message = facebookpart.FacebookMessage;
-                    Fvm.Name = facebookpart.FacebookName;
-                    Fvm.Picture = facebookpart.FacebookPicture;
-                    if (facebookpart.SendOnNextPublish && !facebookpart.FacebookMessageSent) {
-                        ResponseAction rsp = _facebookService.PostFacebook(Fvm, facebookpart);
-                        if (rsp.Success) {
-                            facebookpart.FacebookMessageSent = true;
+                            Fvm.Link = facebookpart.FacebookLink;
+                        Fvm.Message = facebookpart.FacebookMessage;
+                        Fvm.Name = facebookpart.FacebookName;
+                        Fvm.Picture = facebookpart.FacebookPicture;
+                        if (facebookpart.SendOnNextPublish && !facebookpart.FacebookMessageSent) {
+                            ResponseAction rsp = _facebookService.PostFacebook(Fvm, facebookpart);
+                            if (rsp.Success) {
+                                facebookpart.FacebookMessageSent = true;
+                            }
                         }
                     }
                 }
