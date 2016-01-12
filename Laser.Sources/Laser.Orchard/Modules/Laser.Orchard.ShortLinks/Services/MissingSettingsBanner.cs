@@ -2,6 +2,7 @@
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Admin.Notification;
 using Orchard.UI.Notify;
 using System.Collections.Generic;
@@ -20,11 +21,13 @@ namespace Laser.Orchard.ShortLinks.Services {
         public Localizer T { get; set; }
 
         public IEnumerable<NotifyEntry> GetNotifications() {
-            var settings = _orchardServices.WorkContext.CurrentSite.As<ShortLinksSettingsPart>();
-            if (settings == null || string.IsNullOrWhiteSpace(settings.GoogleApiKey)) {
-                var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-                var url = urlHelper.Action("Index", "Admin", new { Area = "Settings", groupInfoId = "Index" });
-                yield return new NotifyEntry { Message = T("The <a href=\"{0}#shortlinksetting\">ShortLinks settings</a> need to be configured.", url), Type = NotifyType.Warning };
+            if (_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner)) {
+                var settings = _orchardServices.WorkContext.CurrentSite.As<ShortLinksSettingsPart>();
+                if (settings == null || string.IsNullOrWhiteSpace(settings.GoogleApiKey)) {
+                    var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                    var url = urlHelper.Action("Index", "Admin", new { Area = "Settings", groupInfoId = "Index" });
+                    yield return new NotifyEntry { Message = T("The <a href=\"{0}#shortlinksetting\">ShortLinks settings</a> need to be configured.", url), Type = NotifyType.Warning };
+                }
             }
         }
     }
