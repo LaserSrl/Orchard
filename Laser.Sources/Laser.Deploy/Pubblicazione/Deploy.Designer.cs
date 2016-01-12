@@ -30,9 +30,6 @@
             this.btnzip = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.clbThemes = new System.Windows.Forms.CheckedListBox();
             this.clbModules = new System.Windows.Forms.CheckedListBox();
             this.clbLibrary = new System.Windows.Forms.CheckedListBox();
@@ -60,6 +57,9 @@
             this.OperazioneTerminata = new System.Windows.Forms.Label();
             this.CheckAll = new System.Windows.Forms.CheckBox();
             this.btnFullDeploy = new System.Windows.Forms.Button();
+            this.chkAllLibrariesDev = new System.Windows.Forms.CheckBox();
+            this.chkModulesDev = new System.Windows.Forms.CheckBox();
+            this.chkThemesDev = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -133,9 +133,9 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.chkThemesDev);
+            this.tabPage1.Controls.Add(this.chkModulesDev);
+            this.tabPage1.Controls.Add(this.chkAllLibrariesDev);
             this.tabPage1.Controls.Add(this.clbThemes);
             this.tabPage1.Controls.Add(this.clbModules);
             this.tabPage1.Controls.Add(this.clbLibrary);
@@ -148,38 +148,11 @@
             this.tabPage1.UseVisualStyleBackColor = true;
             this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 381);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(45, 13);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "Themes";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 88);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(47, 13);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Modules";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 2);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Library";
-            // 
             // clbThemes
             // 
             this.clbThemes.CheckOnClick = true;
             this.clbThemes.FormattingEnabled = true;
-            this.clbThemes.Location = new System.Drawing.Point(8, 396);
+            this.clbThemes.Location = new System.Drawing.Point(6, 393);
             this.clbThemes.Name = "clbThemes";
             this.clbThemes.Size = new System.Drawing.Size(833, 94);
             this.clbThemes.TabIndex = 8;
@@ -188,16 +161,16 @@
             // 
             this.clbModules.CheckOnClick = true;
             this.clbModules.FormattingEnabled = true;
-            this.clbModules.Location = new System.Drawing.Point(8, 102);
+            this.clbModules.Location = new System.Drawing.Point(6, 120);
             this.clbModules.Name = "clbModules";
-            this.clbModules.Size = new System.Drawing.Size(833, 274);
+            this.clbModules.Size = new System.Drawing.Size(833, 244);
             this.clbModules.TabIndex = 7;
             // 
             // clbLibrary
             // 
             this.clbLibrary.CheckOnClick = true;
             this.clbLibrary.FormattingEnabled = true;
-            this.clbLibrary.Location = new System.Drawing.Point(8, 21);
+            this.clbLibrary.Location = new System.Drawing.Point(6, 27);
             this.clbLibrary.Name = "clbLibrary";
             this.clbLibrary.Size = new System.Drawing.Size(833, 64);
             this.clbLibrary.TabIndex = 6;
@@ -443,6 +416,39 @@
             this.btnFullDeploy.UseVisualStyleBackColor = true;
             this.btnFullDeploy.Click += new System.EventHandler(this.btnFullDeploy_Click);
             // 
+            // chkAllLibrariesDev
+            // 
+            this.chkAllLibrariesDev.AutoSize = true;
+            this.chkAllLibrariesDev.Location = new System.Drawing.Point(8, 4);
+            this.chkAllLibrariesDev.Name = "chkAllLibrariesDev";
+            this.chkAllLibrariesDev.Size = new System.Drawing.Size(65, 17);
+            this.chkAllLibrariesDev.TabIndex = 12;
+            this.chkAllLibrariesDev.Text = "Libraries";
+            this.chkAllLibrariesDev.UseVisualStyleBackColor = true;
+            this.chkAllLibrariesDev.CheckedChanged += new System.EventHandler(this.chkAllLibrariesDev_CheckedChanged);
+            // 
+            // chkModulesDev
+            // 
+            this.chkModulesDev.AutoSize = true;
+            this.chkModulesDev.Location = new System.Drawing.Point(6, 97);
+            this.chkModulesDev.Name = "chkModulesDev";
+            this.chkModulesDev.Size = new System.Drawing.Size(66, 17);
+            this.chkModulesDev.TabIndex = 13;
+            this.chkModulesDev.Text = "Modules";
+            this.chkModulesDev.UseVisualStyleBackColor = true;
+            this.chkModulesDev.CheckedChanged += new System.EventHandler(this.chkModulesDev_CheckedChanged);
+            // 
+            // chkThemesDev
+            // 
+            this.chkThemesDev.AutoSize = true;
+            this.chkThemesDev.Location = new System.Drawing.Point(6, 370);
+            this.chkThemesDev.Name = "chkThemesDev";
+            this.chkThemesDev.Size = new System.Drawing.Size(64, 17);
+            this.chkThemesDev.TabIndex = 14;
+            this.chkThemesDev.Text = "Themes";
+            this.chkThemesDev.UseVisualStyleBackColor = true;
+            this.chkThemesDev.CheckedChanged += new System.EventHandler(this.chkThemesDev_CheckedChanged);
+            // 
             // Deploy
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -484,9 +490,6 @@
         private System.Windows.Forms.Button btnzip;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckedListBox clbThemes;
         private System.Windows.Forms.CheckedListBox clbModules;
         private System.Windows.Forms.CheckedListBox clbLibrary;
@@ -514,6 +517,9 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnFullDeploy;
+        private System.Windows.Forms.CheckBox chkAllLibrariesDev;
+        private System.Windows.Forms.CheckBox chkThemesDev;
+        private System.Windows.Forms.CheckBox chkModulesDev;
     }
 }
 
