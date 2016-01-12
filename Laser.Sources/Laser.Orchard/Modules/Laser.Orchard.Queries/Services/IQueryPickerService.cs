@@ -54,7 +54,7 @@ namespace Laser.Orchard.Queries.Services {
 
             IEnumerable<ContentItem> contentItems = new List<ContentItem>();
             IHqlQuery contentQuery = null;
-            contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Published);
+            contentQuery = _contentManager.HqlQuery();
             // Siccome sono in una Query Definita dallo User, devo anche filtrare per ContentType "CommunicationContact"
             if (contentTypesToFilter != null)
                 contentQuery = contentQuery.ForType(contentTypesToFilter);
@@ -94,6 +94,8 @@ namespace Laser.Orchard.Queries.Services {
                     contentQuery = filterContext.Query;
                 }
             }
+            // Filtro sullo stato di pubblicato
+            contentQuery = contentQuery.ForVersion(VersionOptions.Published);
             return contentQuery;
         }
         private IEnumerable<TypeDescriptor<FilterDescriptor>> DescribeFilters() {
