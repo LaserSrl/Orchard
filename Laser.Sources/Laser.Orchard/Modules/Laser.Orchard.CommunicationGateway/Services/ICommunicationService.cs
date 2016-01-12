@@ -28,6 +28,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
     public interface ICommunicationService : IDependency {
 
+        bool AdvertisingIsAvailable(Int32 id);
+
         string GetCampaignLink(string CampaignSource, ContentPart part);
 
         void UserToContact(IUser UserContent);
@@ -56,6 +58,23 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             T = NullLocalizer.Instance;
             _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
         }
+
+
+        public bool AdvertisingIsAvailable(Int32 id) {
+            ContentItem ci=_orchardServices.ContentManager.Get(id);
+            if (ci.ContentType != "CommunicationAdvertising") {
+                return false;
+            }
+            if (ci.As<CommunicationAdvertisingPart>().CampaignId > 0) { // è legato ad una campagna
+                ContentItem campaign = _orchardServices.ContentManager.Get(ci.As<CommunicationAdvertisingPart>().CampaignId,VersionOptions.Latest);
+                DateTime from = ((DateTimeField)(((dynamic)campaign).CommunicationCampaignPart.FromDate)).DateTime;
+                DateTime to = ((DateTimeField)(((dynamic)campaign).CommunicationCampaignPart.ToDate)).DateTime;
+                if (from > DateTime.UtcNow || to < DateTime.UtcNow)
+                    return false;
+            }
+            return true;
+        }
+
 
         public void Synchronize() {
 
