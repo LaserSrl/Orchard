@@ -82,6 +82,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.PublishLater">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.PublishLater\bin\Orchard.PublishLater.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Tags">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tags\bin\Orchard.Tags.dll</HintPath>
     </Reference>
@@ -136,17 +139,20 @@
     <Compile Include="Controllers\AdvertisingAdminController.cs" />
     <Compile Include="Controllers\ContactsAdminController.cs" />
     <Compile Include="Drivers\CommunicationAdvertisingPartDriver.cs" />
+    <Compile Include="Drivers\CommunicationCampaignPartDriver.cs" />
     <Compile Include="Drivers\CommunicationContactDriver.cs" />
     <Compile Include="Drivers\EmailContactPartDriver.cs" />
     <Compile Include="Drivers\QueryFilterDriver.cs" />
     <Compile Include="Drivers\SmsContactPartDriver.cs" />
     <Compile Include="Features\CommunicationFeature.cs" />
     <Compile Include="Handlers\CommunicationAdvertisingPartHandler.cs" />
+    <Compile Include="Handlers\CommunicationCampaignPartHandler.cs" />
     <Compile Include="Handlers\CommunicationContactPartHandler.cs" />
     <Compile Include="Handlers\EmailContactPartHandler.cs" />
     <Compile Include="Handlers\SmsContactPartHandler.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Models\CommunicationAdvertisingPart.cs" />
+    <Compile Include="Models\CommunicationCampaignPart.cs" />
     <Compile Include="Models\CommunicationContactPart.cs" />
     <Compile Include="Models\CommunicationEmailRecord.cs" />
     <Compile Include="Models\CommunicationSmsRecord.cs" />
