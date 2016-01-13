@@ -13,6 +13,7 @@ using Orchard.Security;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
 
@@ -76,8 +77,9 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             List<string> sendTo = new List<string>();
             var templateId = 0;
             int.TryParse(properties["EmailTemplate"], out templateId);
+            var contentVersion = workflowContext.Content.ContentItem.Version;
             dynamic contentModel = new {
-                ContentItem = workflowContext.Content,
+                ContentItem = _orchardServices.ContentManager.GetAllVersions(workflowContext.Content.Id).Single(w => w.Version == contentVersion), // devo ricalcolare il content altrimenti MediaParts (e forse tutti i lazy fields!) è null!
                 FormCollection = _orchardServices.WorkContext.HttpContext.Request.Form,
                 QueryStringCollection = _orchardServices.WorkContext.HttpContext.Request.QueryString
             };

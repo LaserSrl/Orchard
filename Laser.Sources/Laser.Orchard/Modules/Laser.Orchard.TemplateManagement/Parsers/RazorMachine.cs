@@ -1,4 +1,5 @@
-﻿using Orchard;
+﻿using System;
+using Orchard;
 using Orchard.Environment.Extensions;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
@@ -19,7 +20,7 @@ namespace Laser.Orchard.TemplateManagement.Parsers {
         }
 
         public string ExecuteContent(string templateContent, object model = null, object viewBag = null) {
-            return _razorEngineService.RunCompile(templateContent, "RazorTemplate", null, model, (DynamicViewBag)viewBag);
+            return _razorEngineService.RunCompile(templateContent, Guid.NewGuid().ToString(), null, model, (DynamicViewBag)viewBag);
         }
 
         public void RegisterLayout(string virtualPath, string templateContent) {
