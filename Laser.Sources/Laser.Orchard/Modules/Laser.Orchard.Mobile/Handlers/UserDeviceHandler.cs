@@ -84,7 +84,7 @@ namespace Laser.Orchard.Mobile.Handlers {
                 var recordContact = _communicationContactPartRecord.Fetch(x => x.UserPartRecord_Id == user.Id).FirstOrDefault();
                 if (recordContact == null) {
                     // non dovrebbe mai accadere che esista un utente senza il record di profilazione
-                    throw new Exception("Nessun contatto possiede questa profile part");
+                    //   throw new Exception("Nessun contatto possiede questa profile part");
                 }
                 else {
                     var pushNotificationToLink=_pushNotificationRecord.Fetch(x => x.UUIdentifier == UUIdentifier).FirstOrDefault();
