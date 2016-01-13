@@ -84,8 +84,6 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                             "EmailPart.EmailRecord as EmailRecord " +
                         "WHERE civr.Published=1 AND civr.Id in (" + stringHQL + ")";
                     
-                    
-                    
                     // Creo query ottimizzata per le performance
                     var fullStatement = _session.For(null)
                         .CreateQuery(queryForEmail)
@@ -95,8 +93,16 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                         .SetResultTransformer(Transformers.AliasToEntityMap)
                         .List();
 
-                    // 150000 record in < 5sec
-                    // ELENCO IDS
+                    //TODO: Per Giuseppe
+                    // Creazione Blob per FTP
+
+                    // TemplateParser
+
+                    // FTP
+
+                    //Finisihed
+
+                    //TODO: End Per Giuseppe
 
                 }
             });

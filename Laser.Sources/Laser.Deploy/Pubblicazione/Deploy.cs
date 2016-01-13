@@ -9,7 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Data.SqlServerCe;
 namespace Pubblicazione {
-    public enum ExclusionFileOptions { None, Deploy, ModulesThemes};
+    public enum ExclusionFileOptions { None, Deploy, ModulesThemes };
     public partial class Deploy : Form {
         private BackgroundWorker bw = new BackgroundWorker();
 
@@ -344,7 +344,7 @@ namespace Pubblicazione {
             startInfo.UseShellExecute = false;
             startInfo.FileName = "xcopy";
             //      startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            if (exclusionFile== ExclusionFileOptions.Deploy) {
+            if (exclusionFile == ExclusionFileOptions.Deploy) {
                 startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + @" /S /Y /EXCLUDE:" + Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\deploy.excludelist.txt"); //@" /e /y /I";
             } else if (exclusionFile == ExclusionFileOptions.ModulesThemes) {
                 startInfo.Arguments = "\"" + SolutionDirectory + "\"" + " " + "\"" + TargetDirectory + "\"" + @" /S /Y /EXCLUDE:" + Path.Combine(basepath, @"Laser.Sources\Laser.Deploy\DeployScripts\modulesthemes.excludelist.txt"); //@" /e /y /I";
@@ -603,6 +603,26 @@ namespace Pubblicazione {
 
         private void btnReset_Click(object sender, EventArgs e) {
             tbOrchardDev.Text = Properties.Settings.Default.BasePlatformRootPath;
+        }
+
+        private void chkAllLibrariesDev_CheckedChanged(object sender, EventArgs e) {
+            for (int i = 0; i < this.clbLibrary.Items.Count; i++) {
+                this.clbLibrary.SetItemChecked(i, ((CheckBox)sender).Checked);
+            }
+        }
+
+        private void chkModulesDev_CheckedChanged(object sender, EventArgs e) {
+            for (int i = 0; i < this.clbModules.Items.Count; i++) {
+                this.clbModules.SetItemChecked(i, ((CheckBox)sender).Checked);
+            }
+
+        }
+
+        private void chkThemesDev_CheckedChanged(object sender, EventArgs e) {
+            for (int i = 0; i < this.clbThemes.Items.Count; i++) {
+                this.clbThemes.SetItemChecked(i, ((CheckBox)sender).Checked);
+            }
+
         }
 
     }
