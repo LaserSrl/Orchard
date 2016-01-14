@@ -104,7 +104,9 @@ namespace Orchard.PublishLater.Drivers {
                     updater.AddModelError(Prefix, T("Both the date and time need to be specified for when this is to be published. If you don't want to schedule publishing then click Save or Publish Now."));
                 }
             }
-
+            if (httpContext.Request.Form["submit.Save"] == "submit.RemovePublishLaterTasks") {
+                _publishLaterService.RemovePublishLaterTasks(model.ContentItem);
+            }
             return ContentShape("Parts_PublishLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }

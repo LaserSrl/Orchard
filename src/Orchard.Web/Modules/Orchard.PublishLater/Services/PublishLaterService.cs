@@ -8,12 +8,14 @@ using Orchard.Tasks.Scheduling;
 namespace Orchard.PublishLater.Services {
     public class PublishLaterService : IPublishLaterService {
         private readonly IPublishingTaskManager _publishingTaskManager;
+      
 
         public PublishLaterService(
             IOrchardServices services,  
             IPublishingTaskManager publishingTaskManager) {
             Services = services;
             _publishingTaskManager = publishingTaskManager;
+           
             T = NullLocalizer.Instance;
         }
 
@@ -30,6 +32,10 @@ namespace Orchard.PublishLater.Services {
         DateTime? IPublishLaterService.GetScheduledPublishUtc(PublishLaterPart publishLaterPart) {
             IScheduledTask task = _publishingTaskManager.GetPublishTask(publishLaterPart.ContentItem);
             return (task == null ? null : task.ScheduledUtc);
+        }
+
+        public void RemovePublishLaterTasks(ContentItem contentItem) {
+            _publishingTaskManager.DeleteTasks(contentItem);
         }
     }
 }
