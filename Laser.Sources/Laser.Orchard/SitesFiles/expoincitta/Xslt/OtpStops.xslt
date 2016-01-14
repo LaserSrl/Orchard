@@ -60,6 +60,9 @@ public string UnixTicks( string dtstring)
     <xsl:element name="OriginalId" namespace="">
       <xsl:value-of select="."/>
     </xsl:element>
+    <xsl:element name="Sid" namespace="">
+      <xsl:value-of select="concat('OtpStopItem:',.,'')"/>
+    </xsl:element>
   </xsl:template>
   <xsl:template match="lat">
     <xsl:element name="Lat" namespace="">

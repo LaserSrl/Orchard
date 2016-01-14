@@ -84,6 +84,9 @@
     <xsl:element name="Id" namespace="">
       <xsl:value-of select="concat(':lasernumeric',user:GeneratePatternID(../../pattern/id), count(../preceding-sibling::times) + 1,'lasernumeric:')"/>
     </xsl:element>
+    <xsl:element name="Sid" namespace="">
+      <xsl:value-of select="concat('StopTime:',../../pattern/id,'-', count(../preceding-sibling::times) + 1,'')"/>
+    </xsl:element>
   </xsl:template>
   <xsl:template match="times">
     <xsl:element name="StopTime" namespace="">
@@ -93,6 +96,9 @@
   <xsl:template match="pattern/id">
     <xsl:element name="PatternId" namespace="">
       <xsl:value-of select="."/>
+    </xsl:element>
+    <xsl:element name="Sid" namespace="">
+      <xsl:value-of select="concat('Pattern:',.,'')"/>
     </xsl:element>
     <xsl:element name="Id" namespace="">
       <xsl:value-of select="concat(':lasernumeric',user:GeneratePatternID(.),'lasernumeric:')"/>
