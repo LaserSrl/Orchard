@@ -230,6 +230,22 @@ namespace Laser.Orchard.CommunicationGateway {
                     .CreateIndex("IX_CommunicationEmailRecord_SmsContactPartRecord_Id", "SmsContactPartRecord_Id"));
             return 13;
         }
+        public int UpdateFrom13() {
+            ContentDefinitionManager.AlterTypeDefinition(
+            "CommunicationAdvertising",
+            type => type
+                .RemovePart("TagsPart")
+                );
+            return 14;
+        }
+                public int UpdateFrom14() {
+            ContentDefinitionManager.AlterTypeDefinition(
+            "CommunicationAdvertising",
+            type => type
+                .RemovePart("QueryFilterPart")
+                );
+            return 15;
+        }
 
     }
 }

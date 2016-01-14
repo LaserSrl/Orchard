@@ -1,10 +1,11 @@
-﻿<Placement>  
+﻿<Placement>
   <Match ContentType="CommunicationAdvertising">
     <Place Fields_ContentPicker_Edit__MobilePushPart-RelatedContent="-" />
     <Place Fields_ContentPicker_Edit-Campaign="-"/>
     <Place Parts_CommunicationAdvertising_Edit="Content:1"/>
   </Match>
+  <Place Fields_MediaLibraryPicker_Edit="Content:2"/>
   <Place Parts_EmailContact_Edit="Content:4"/>
   <Place Parts_SmsContact_Edit="Content:4.1"/>
-  <Place Parts_QueryFilter="Content:3" />
+  <Place Parts_Advertising_Edit="Content:4.2"/>
 </Placement>
