@@ -2,12 +2,12 @@
 @using (Script.Head()) {
     Script.Require("jQuery_textcounter").AtHead();
     Script.Require("jQuery_ImagePicker").AtHead();
-    Style.Require("jQuery_ImagePicker").AtHead();
+   Style.Require("jQuery_ImagePicker").AtHead();
     Script.Require("rcswitcher").AtHead();
     Style.Require("rcswitcher").AtHead();
 
 }
-
+@using (Script.Foot()) {
 <script type="text/javascript">
     $(function () {
         $("#@Html.FieldIdFor(m => m.SelectedList)").imagepicker({
@@ -54,11 +54,13 @@
         });
     });
 </script>
+}
 @model Laser.Orchard.Twitter.ViewModels.TwitterPostVM
 <div id="twitter-comm-container" class="comm-tabbed">
     @if (Model.ListOption.Count == 0) {
         <br />   <a href="@Url.Action("Index", "TwitterAccount", new { area = "Laser.Orchard.Twitter" })">@T("Insert a twitter account ")</a> <br /> 
-    } else {
+    }
+    else {
         <fieldset>
             @Html.HiddenFor(m => m.TwitterMessageSent)
             <div class="editor-label">@Html.LabelFor(m => m.TwitterMessage, T("Message"))</div>
@@ -76,13 +78,15 @@
             @if (Model.ShowTitle) {
                 <div class="editor-label">@Html.LabelFor(m => m.TwitterTitle, T("Meta twitter title"))</div>
                 <div class="editor-label">@Html.TextBoxFor(m => m.TwitterTitle, new { @class = "text large" })</div>
-            } else {
+            }
+            else {
                 @Html.HiddenFor(m => m.TwitterTitle)
             }
             @if (Model.ShowDescription) {
                 <div class="editor-label">@Html.LabelFor(m => m.TwitterDescription, T("Meta twitter description"))</div>
                 <div class="editor-label">@Html.TextAreaFor(m => m.TwitterDescription)</div>
-            } else {
+            }
+            else {
                 @Html.HiddenFor(m => m.TwitterDescription)
             }
 
@@ -113,7 +117,8 @@
                 @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-tw" })
                 <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet posted.")
 
-            } else {
+            }
+            else {
                 @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-tw", @disabled = "disabled" })
                 <i class="fa fa-check-circle" style="color: green"></i> @T("Message already posted.")
                 <div class="message message-Error">@T("This Twitter message has been already posted. You will be able to edit and save it, but it will not be posted anymore on next publish.")</div>
