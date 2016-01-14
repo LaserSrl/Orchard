@@ -8,5 +8,6 @@
     />
   <Match ContentType="CommunicationAdvertising">
     <Place Parts_CustomTemplatePicker_Edit="-" />
+    <Place Parts_MailCommunication_Edit="Content:5.3"/>
   </Match>
 </Placement>
