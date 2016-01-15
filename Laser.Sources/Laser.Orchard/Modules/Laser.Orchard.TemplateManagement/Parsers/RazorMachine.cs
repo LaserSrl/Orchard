@@ -16,6 +16,7 @@ namespace Laser.Orchard.TemplateManagement.Parsers {
 
         public RazorMachineWrapper() {
             var config = new TemplateServiceConfiguration();
+            config.Namespaces.Add("Orchard.ContentManagement");
             _razorEngineService = RazorEngineService.Create(config);
         }
 

@@ -12,6 +12,7 @@ using Laser.Orchard.Commons.Extensions;
 using Orchard.Messaging.Services;
 using Orchard.Email.Services;
 using Orchard.JobsQueue.Services;
+using RazorEngine.Templating;
 
 namespace Laser.Orchard.TemplateManagement.Services {
     public interface ITemplateService : IDependency {
@@ -23,7 +24,7 @@ namespace Laser.Orchard.TemplateManagement.Services {
         IEnumerable<IParserEngine> GetParsers();
         IParserEngine GetParser(string id);
         IParserEngine SelectParser(TemplatePart template);
-        void SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, bool queued = true);
+        void SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, object viewBag = null, bool queued = true);
    }
 
     [OrchardFeature("Laser.Orchard.TemplateManagement")]
@@ -87,7 +88,7 @@ namespace Laser.Orchard.TemplateManagement.Services {
             return _parsers;
         }
 
-        public void SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, bool queued = true) {
+        public void SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, object viewBag=null, bool queued = true) {
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = GetTemplate(templateId);
             var urlHelper = new UrlHelper(_services.WorkContext.HttpContext.Request.RequestContext);
@@ -101,6 +102,7 @@ namespace Laser.Orchard.TemplateManagement.Services {
                                         ? string.Empty
                                         : ":" + _services.WorkContext.HttpContext.Request.Url.Port);
             var dynamicModel = new {
+                WorkContext = _services.WorkContext,
                 Content = contentModel,
                 Urls = new {
                     //SubscriptionSubscribe = urlHelper.SubscriptionSubscribe(),
@@ -114,6 +116,7 @@ namespace Laser.Orchard.TemplateManagement.Services {
                 }.ToExpando()
             };
             templatectx.Model = dynamicModel;
+            templatectx.ViewBag = viewBag;
 
             var body = ParseTemplate(template, templatectx);
             var data = new Dictionary<string, object>();

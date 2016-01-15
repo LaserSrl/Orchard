@@ -30,8 +30,9 @@ namespace Laser.Orchard.TemplateManagement.Parsers {
             //var viewBag = context.ViewBag;
 
             if (layout != null) {
-                _razorMachine.RegisterLayout("~/shared/_layout.cshtml", layout.Text);
-                templateContent = "@{ Layout = \"~/shared/_layout.cshtml\"; }\r\n" + templateContent;
+                var layoutGuid = Guid.NewGuid();
+                _razorMachine.RegisterLayout("~/shared/_" + layoutGuid + ".cshtml", layout.Text);
+                templateContent = "@{ Layout = \"~/shared/_" + layoutGuid + ".cshtml\"; }\r\n" + templateContent;
             }
 
             try {
@@ -40,13 +41,13 @@ namespace Laser.Orchard.TemplateManagement.Parsers {
                 //    if (viewBag is IEnumerable<KeyValuePair<string, string>>)
                 //        viewBag = ((IEnumerable<KeyValuePair<string, string>>) viewBag).Select(x => new KeyValuePair<string, object>(x.Key, x.Value)).ToDictionary(x => x.Key, x => x.Value);
                 //}
-                var tmpl = _razorMachine.ExecuteContent(templateContent, context.Model, null);
+                
+                var tmpl = _razorMachine.ExecuteContent(templateContent, context.Model, context.ViewBag);
                 return tmpl;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Logger.Log(LogLevel.Error, ex, "Failed to parse the {0} Razor template with layout {1}", template.Title, layout != null ? layout.Title : "[none]");
                 return BuildErrorContent(ex, template, layout);
-            }   
+            }
         }
 
         private static string BuildErrorContent(Exception ex, TemplatePart templatePart, TemplatePart layout) {

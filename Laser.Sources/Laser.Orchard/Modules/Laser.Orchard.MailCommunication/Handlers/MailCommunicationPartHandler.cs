@@ -17,6 +17,7 @@ using Orchard.Data;
 using NHibernate;
 using NHibernate.Transform;
 using System.Collections;
+using Laser.Orchard.CommunicationGateway.Services;
 
 namespace Laser.Orchard.MailCommunication.Handlers {
 
@@ -32,10 +33,11 @@ namespace Laser.Orchard.MailCommunication.Handlers {
         private readonly IRepository<TitlePartRecord> _repoTitle;
         private readonly ITransactionManager _transactionManager;
         private readonly ISessionLocator _session;
+        private readonly ICommunicationService _communicationService;
 
 
         public MailCommunicationPartHandler(INotifier notifier, ITemplateService templateService, IOrchardServices orchardServices, IQueryPickerService queryPickerServices, IMailCommunicationService mailCommunicationService,
-            IRepository<CommunicationEmailRecord> repoMail, IRepository<TitlePartRecord> repoTitle, ITransactionManager transactionManager, ISessionLocator session) {
+            IRepository<CommunicationEmailRecord> repoMail, IRepository<TitlePartRecord> repoTitle, ITransactionManager transactionManager, ISessionLocator session, ICommunicationService communicationService) {
             _repoMail = repoMail;
             _repoTitle = repoTitle;
             _transactionManager = transactionManager;
@@ -44,6 +46,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
             _orchardServices = orchardServices;
             _queryPickerServices = queryPickerServices;
             _mailCommunicationService = mailCommunicationService;
+            _communicationService = communicationService;
             _session = session;
             T = NullLocalizer.Instance;
             OnUpdated<MailCommunicationPart>((context, part) => {
@@ -55,6 +58,9 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                             ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id,
                             null,
                             new List<string> { part.EmailForTest },
+                            new {
+                                CampaignLink = _communicationService.GetCampaignLink("Email", part)
+                            },
                             false);
                     }
                 }
@@ -83,7 +89,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                         "cir.EmailContactPartRecord as EmailPart join " +
                             "EmailPart.EmailRecord as EmailRecord " +
                         "WHERE civr.Published=1 AND civr.Id in (" + stringHQL + ")";
-                    
+
                     // Creo query ottimizzata per le performance
                     var fullStatement = _session.For(null)
                         .CreateQuery(queryForEmail)
