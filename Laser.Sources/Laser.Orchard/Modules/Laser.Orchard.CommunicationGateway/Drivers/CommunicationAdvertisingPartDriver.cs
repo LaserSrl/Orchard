@@ -13,14 +13,14 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class CommunicationAdvertisingPartDriver : ContentPartDriver<CommunicationAdvertisingPart> {
 
 
-        //private readonly IOrchardServices _orchardServices;
+        private readonly IOrchardServices _orchardServices;
 
-        //public ILogger Logger { get; set; }
-        //public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
-        //protected override string Prefix {
-        //    get { return "Laser.Orchard.CommunicationGateway"; }
-        //}
+        protected override string Prefix {
+            get { return "Laser.Orchard.CommunicationGateway"; }
+        }
 
         //public CommunicationAdvertisingPartDriver(IOrchardServices orchardServices) {
         //    _orchardServices = orchardServices;
@@ -29,20 +29,14 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         //}
 
 
-        //protected override DriverResult Editor(CommunicationAdvertisingPart part, dynamic shapeHelper) {
-        //    return null;
-        //}
+        protected override DriverResult Editor(CommunicationAdvertisingPart part, dynamic shapeHelper) {
+            return ContentShape("Parts_Advertising_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/Advertising_Edit", Model: null, Prefix: Prefix));
+    
+        }
 
-        //protected override DriverResult Editor(CommunicationAdvertisingPart part, IUpdateModel updater, dynamic shapeHelper) {
-        //    DateTime datepublish = ((DateTime)(((dynamic)part).ContentItem.PublishLaterPart.ScheduledPublishUtc.Value));
-        //    if (part.CampaignId > 0) {
-        //        ContentItem campaign = _orchardServices.ContentManager.Get(part.CampaignId, VersionOptions.Latest);
-        //        DateTime datelimitcampaign =(DateTime)( ((dynamic)campaign).CommunicationCampaignPart.ToDate.DateTime);
-        //        if (datepublish > datelimitcampaign) {
-        //            throw new Exception("Date in publish later is over date campaign");
-        //        }
-        //    }
-        //    return null;
-        //}
+        protected override DriverResult Editor(CommunicationAdvertisingPart part, IUpdateModel updater, dynamic shapeHelper) {
+
+            return null;
+        }
     }
 }
