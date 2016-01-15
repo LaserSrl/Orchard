@@ -18,6 +18,8 @@ using NHibernate;
 using NHibernate.Transform;
 using System.Collections;
 using Laser.Orchard.CommunicationGateway.Services;
+using Laser.Orchard.StartupConfig.Services;
+
 
 namespace Laser.Orchard.MailCommunication.Handlers {
 
@@ -34,12 +36,14 @@ namespace Laser.Orchard.MailCommunication.Handlers {
         private readonly ITransactionManager _transactionManager;
         private readonly ISessionLocator _session;
         private readonly ICommunicationService _communicationService;
+        private readonly IControllerContextAccessor _controllerContextAccessor;
 
 
-        public MailCommunicationPartHandler(INotifier notifier, ITemplateService templateService, IOrchardServices orchardServices, IQueryPickerService queryPickerServices, IMailCommunicationService mailCommunicationService,
+        public MailCommunicationPartHandler(IControllerContextAccessor controllerContextAccessor,INotifier notifier, ITemplateService templateService, IOrchardServices orchardServices, IQueryPickerService queryPickerServices, IMailCommunicationService mailCommunicationService,
             IRepository<CommunicationEmailRecord> repoMail, IRepository<TitlePartRecord> repoTitle, ITransactionManager transactionManager, ISessionLocator session, ICommunicationService communicationService) {
             _repoMail = repoMail;
             _repoTitle = repoTitle;
+            _controllerContextAccessor = controllerContextAccessor;
             _transactionManager = transactionManager;
             _notifier = notifier;
             _templateService = templateService;
@@ -51,9 +55,11 @@ namespace Laser.Orchard.MailCommunication.Handlers {
             T = NullLocalizer.Instance;
             OnUpdated<MailCommunicationPart>((context, part) => {
                 if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.MailTest") {
-
                     if (part.SendToTestEmail && part.EmailForTest != string.Empty) {
                         dynamic content = context.ContentItem;
+                        _controllerContextAccessor.Context.Controller.TempData.Add("CampaignLink", _communicationService.GetCampaignLink("Email", part));
+                
+                       
                         _templateService.SendTemplatedEmail(content,
                             ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id,
                             null,
