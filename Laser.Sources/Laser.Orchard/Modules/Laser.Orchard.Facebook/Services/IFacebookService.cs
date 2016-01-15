@@ -91,7 +91,7 @@ namespace Laser.Orchard.Facebook.Services {
         }
 
         private List<FacebookAccountPart> Facebook_GetAccessToken(FacebookPostPart facebookpart) {
-            List<FacebookAccountPart> allparts = _orchardServices.ContentManager.Query().ForType(new string[] { "SocialTwitterAccount" }).ForPart<FacebookAccountPart>().List().Where(x => x.Valid == true).ToList();
+            List<FacebookAccountPart> allparts = _orchardServices.ContentManager.Query().ForType(new string[] { "SocialFacebookAccount" }).ForPart<FacebookAccountPart>().List().Where(x => x.Valid == true).ToList();
             return allparts.Where(x => facebookpart.AccountList.Contains(x.Id)).ToList();
         }
     }
