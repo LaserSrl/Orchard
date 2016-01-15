@@ -246,6 +246,14 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 15;
         }
+                public int UpdateFrom15() {
+                    ContentDefinitionManager.AlterTypeDefinition(
+                    "CommunicationAdvertising",
+                    type => type
+                        .WithPart("TagsPart")
+                        );
+                    return 16;
+                }
 
     }
 }

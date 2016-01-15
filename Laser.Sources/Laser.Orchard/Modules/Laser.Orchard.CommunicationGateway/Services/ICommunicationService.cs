@@ -162,7 +162,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             //string CampaignSource = "email";
             string shortlink = "";
             ContentPart part = (ContentPart)(((dynamic)generalpart).ContentItem.CommunicationAdvertisingPart);
-            string CampaignTerm = string.Join("+", part.ContentItem.As<TagsPart>().CurrentTags.ToArray()).ToLower();
+            string CampaignTerm =  string.Join("+", part.ContentItem.As<TagsPart>().CurrentTags.ToArray()).ToLower();
             string CampaignMedium = CampaignSource;
             string CampaignContent = part.ContentItem.As<TitlePart>().Title.ToLower();
             string CampaignName = "";

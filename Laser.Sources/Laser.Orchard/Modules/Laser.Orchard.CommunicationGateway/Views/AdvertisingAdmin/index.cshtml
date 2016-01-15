@@ -21,8 +21,8 @@
     </div>
 }
 @using (Html.BeginForm("Index", "AdvertisingAdmin", FormMethod.Get)) {
- @*   @Html.AntiForgeryToken()
-    *@<fieldset class="bulk-actions">
+   @Html.AntiForgeryToken()
+    <fieldset class="bulk-actions">
         <label for="search">@T("Search:")</label>
         @Html.TextBoxFor(m => m.Search.Expression)
 
