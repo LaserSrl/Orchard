@@ -200,7 +200,8 @@ namespace Laser.Orchard.MailCommunication.Handlers {
             // token di sicurezza: contiene data e ora (senza minuti e secondi) e id del content item
             var token = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHH"), (contentModel as ContentItem).Id);
             token = Convert.ToBase64String(System.Text.Encoding.Unicode.GetBytes(token));
-            var url = string.Format("{0}/Laser.Orchard.MailCommunication/MailerResult?tk={1}", baseUrl, token);
+            //var url = string.Format("{0}/Laser.Orchard.MailCommunication/MailerResult?tk={1}", baseUrl, token);  // versione per il GET
+            var url = string.Format("{0}/api/Laser.Orchard.MailCommunication/MailerResultAPI?tk={1}", baseUrl, token);  // versione per il POST
             var data = new Dictionary<string, object>();
             data.Add("Subject", subject);
             data.Add("Body", body);

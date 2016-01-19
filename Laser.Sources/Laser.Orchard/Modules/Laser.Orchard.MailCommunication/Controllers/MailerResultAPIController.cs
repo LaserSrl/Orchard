@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard.ContentManagement;
@@ -12,21 +13,24 @@ using Laser.Orchard.MailCommunication.Models;
 
 namespace Laser.Orchard.MailCommunication.Controllers
 {
-    [OutputCache(NoStore = true, Duration = 0)]
-    public class MailerResultController : Controller
+    public class MailerResultAPIController : ApiController
     {
+        public class DatiPost
+        {
+            public int num { get; set; }
+        }
         private readonly IUtilsServices _utilsServices;
         private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;
 
-        public MailerResultController(IOrchardServices orchardServices, IUtilsServices utilsServices, IContentManager contentManager)
+        public MailerResultAPIController(IOrchardServices orchardServices, IUtilsServices utilsServices, IContentManager contentManager)
         {
             _orchardServices = orchardServices;
             _utilsServices = utilsServices;
             _contentManager = contentManager;
         }
 
-        public JsonResult Index(string tk, int num)
+        public System.Web.Http.Results.JsonResult<Laser.Orchard.StartupConfig.ViewModels.Response> Post([FromUri] string tk, [FromBody] DatiPost valori)
         {
             Response result = _utilsServices.GetResponse(ResponseType.Validation, "Validation error.");
             try
@@ -43,7 +47,7 @@ namespace Laser.Orchard.MailCommunication.Controllers
 
                         // aggiorna il dato su orchard
                         var item = _contentManager.Get<MailCommunicationPart>(id);
-                        item.SentMailsNumber += num;
+                        item.SentMailsNumber += valori.num;
 
                         result = _utilsServices.GetResponse(ResponseType.Success, "OK");
                     }
@@ -53,7 +57,7 @@ namespace Laser.Orchard.MailCommunication.Controllers
             {
                 // non fa nulla perché la risposta negativa è già il default e non si voglionon dare dettagli sul'errore a eventuali hacker
             }
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result);
         }
 	}
 }

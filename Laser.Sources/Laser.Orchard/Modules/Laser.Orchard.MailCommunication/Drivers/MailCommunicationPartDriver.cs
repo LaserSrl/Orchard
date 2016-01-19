@@ -27,6 +27,22 @@ namespace Laser.Orchard.MailCommunication.Drivers {
             get { return "MailCommunicationPart"; }
         }
 
+        protected override DriverResult Display(MailCommunicationPart part, string displayType, dynamic shapeHelper)
+        {
+            //var mapsSettings = _orchardServices.WorkContext.CurrentSite.As<MapsSiteSettingsPart>();
+
+            if (displayType == "Summary")
+                return ContentShape("Parts_MailCommunication",
+                    () => shapeHelper.Parts_MailCommunication(MailMessageSent: part.MailMessageSent));
+            if (displayType == "SummaryAdmin")
+                return ContentShape("Parts_MailCommunication",
+                    () => shapeHelper.Parts_MailCommunication(MailMessageSent: part.MailMessageSent));
+            if (displayType == "AdvSummary")
+                return ContentShape("Parts_MailCommunication",
+                    () => shapeHelper.Parts_MailCommunication(MailMessageSent: part.MailMessageSent));
+            return null;
+        }
+
         protected override DriverResult Editor(MailCommunicationPart part, dynamic shapeHelper) {
             return Editor(part, null, shapeHelper);
         }

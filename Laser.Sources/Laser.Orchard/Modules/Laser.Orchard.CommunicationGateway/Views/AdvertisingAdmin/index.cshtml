@@ -37,11 +37,34 @@
 
         @{
             foreach (var contentIndexVM in ContentsIndexVM) {
-
+                dynamic mail = null;
+                string aux = "";
+                foreach (var part1 in contentIndexVM.ContentItem.Parts)
+                {
+                    if (part1.PartDefinition.Name == "MailCommunicationPart")
+                    {
+                        mail = part1;
+                    }
+                }
             <li>
                 <div class="summary" itemscope="itemscope" itemid="@contentIndexVM.Id" itemtype="http://orchardproject.net/data/ContentItem">
                     <div class="properties">
-                        <h3><a href="@Url.Action("Edit", "AdvertisingAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id, idCampaign = Model.Option.Campaign.Id })">@contentIndexVM.Title</a></h3>
+                        <h3><a href="@Url.Action("Edit", "AdvertisingAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id, idCampaign = Model.Option.Campaign.Id })">@contentIndexVM.Title</a></h3><br />
+                        @*@Display(BuildDisplay(contentIndexVM.ContentItem, "AdvSummary"))  *@
+                        @if (mail != null) {
+                            if(mail.MailMessageSent)
+                            {
+                                aux = string.Format("Mail ({0}/{1})", mail.SentMailsNumber, mail.RecipientsNumber);
+                                <span style="color:green;font-weight:bold">@aux</span>
+                            }
+                            else if (mail.SendOnNextPublish)
+                            {
+                                <span style="color:yellow;font-weight:bold">Mail</span>
+                            }
+                            else {
+                                <span style="color:red;font-weight:bold">Mail</span>
+                            }
+                        }
                         <div class="contentType">
                         </div>
                         <div class="metadata">
