@@ -4,4 +4,7 @@
   <Match DisplayType="Detail">
     <Place Parts_TwitterPost_Detail="Content:after" />
   </Match>
+  <Match ContentType="CommunicationAdvertising">
+    <Place Parts_TwitterPostt="Content:5.2" />
+  </Match>
 </Placement>

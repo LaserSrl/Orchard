@@ -13,6 +13,6 @@ namespace Laser.Orchard.TemplateManagement.Parsers {
 		}
 
 		public abstract string LayoutBeacon { get; }
-		public abstract string ParseTemplate(TemplatePart template, ParseTemplateContext context);
+        public abstract string ParseTemplate(TemplatePart template, ParseTemplateContext context);
 	}
 }

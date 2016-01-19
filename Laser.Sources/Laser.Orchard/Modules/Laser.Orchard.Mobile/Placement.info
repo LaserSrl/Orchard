@@ -4,4 +4,7 @@
   <Place Parts_MobileContact_Edit="Content:5" />
   <Place Fields_ContentPicker_Edit__MobilePushPart-RelatedContent="Content:5.1" />
   <Place Parts_UserPwdRecoveryPart_Edit="Content:2" />
+  <Match ContentType="CommunicationAdvertising">
+    <Place Parts_MobilePush_Edit="Content:5.4" />
+  </Match>
 </Placement>

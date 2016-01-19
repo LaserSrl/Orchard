@@ -187,6 +187,7 @@
     <Content Include="Views\EditorTemplates\Parts\SmsContact_Edit.cshtml" />
     <Content Include="Views\EditorTemplates\View_EmailVM_element.cshtml" />
     <Content Include="Views\EditorTemplates\View_SmsVM_element.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Advertising_Edit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
