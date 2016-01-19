@@ -6,6 +6,7 @@
     Parts_MailCommunicationActions_Edit="Content:5.3.4;Wrapper=MailCommunicationWrapper"
     Parts_CustomTemplatePickerOverride_Edit="Content:5.3.3;Wrapper=MailCommunicationWrapper"
     />
+  <Place Parts_MailerSiteSettings_Edit="Content:1" />
   <Match ContentType="CommunicationAdvertising">
     <Place Parts_CustomTemplatePicker_Edit="-" />
   </Match>

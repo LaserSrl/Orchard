@@ -58,4 +58,11 @@
         <div class="message message-Error">@T("This E-mail message has been already sent. You will be able to edit and save it, but it will not be sent anymore on next publish.")</div>
     }
 </fieldset>
-
+<fieldset>
+    @Html.LabelFor(m => m.RecipientsNumber, T("Number of recipients").Text, new { @class = "forcheckbox" })
+    @Html.TextBoxFor(m => m.RecipientsNumber, new { @disabled = "disabled", @style = "text-align:right;margin-left:10px;padding-right:5px" })
+</fieldset> 
+<fieldset>
+    @Html.LabelFor(m => m.SentMailsNumber, T("Number of sent mails").Text, new { @class = "forcheckbox" })
+    @Html.TextBoxFor(m => m.SentMailsNumber, new { @disabled = "disabled", @style = "text-align:right;margin-left:10px;padding-right:5px" })
+</fieldset>

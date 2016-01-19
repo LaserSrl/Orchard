@@ -25,5 +25,22 @@ namespace Laser.Orchard.MailCommunication.Models {
             set { this.Store(r => r.EmailForTest, value); }
         }
 
+        /// <summary>
+        /// Initial number of recipients sent to mailer.
+        /// </summary>
+        public int RecipientsNumber
+        {
+            get { return this.Retrieve(r => r.RecipientsNumber); }
+            set { this.Store(r => r.RecipientsNumber, value); }
+        }
+
+        /// <summary>
+        /// Number of sent mails.
+        /// </summary>
+        public int SentMailsNumber
+        {
+            get { return this.Retrieve(r => r.SentMailsNumber); }
+            set { this.Store(r => r.SentMailsNumber, value); }
+        }
     }
 }
