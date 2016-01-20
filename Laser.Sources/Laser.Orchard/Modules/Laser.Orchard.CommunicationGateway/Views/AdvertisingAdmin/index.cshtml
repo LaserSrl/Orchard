@@ -37,11 +37,89 @@
 
         @{
             foreach (var contentIndexVM in ContentsIndexVM) {
-
+                dynamic mail = null;
+                dynamic twitter = null;
+                dynamic push = null;
+                dynamic facebook = null;
+                string aux = "";
+                foreach (var part1 in contentIndexVM.ContentItem.Parts)
+                {
+                    switch(part1.PartDefinition.Name) {
+                        case "MailCommunicationPart":
+                            mail = part1;
+                            break;
+                        case "TwitterPostPart":
+                            twitter = part1;
+                            break;
+                        case "FacebookPostPart":
+                            facebook = part1;
+                            break;
+                        case "MobilePushPart":
+                            push = part1;
+                            break;
+                    }
+                }
             <li>
                 <div class="summary" itemscope="itemscope" itemid="@contentIndexVM.Id" itemtype="http://orchardproject.net/data/ContentItem">
                     <div class="properties">
-                        <h3><a href="@Url.Action("Edit", "AdvertisingAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id, idCampaign = Model.Option.Campaign.Id })">@contentIndexVM.Title</a></h3>
+                        <h3><a href="@Url.Action("Edit", "AdvertisingAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id, idCampaign = Model.Option.Campaign.Id })">@contentIndexVM.Title</a></h3><br />
+                        @*@Display(BuildDisplay(contentIndexVM.ContentItem, "AdvSummary"))  *@
+                        @if (mail != null) 
+                        {
+                            if(mail.MailMessageSent)
+                            {
+                                aux = string.Format("Mail ({0}/{1})", mail.SentMailsNumber, mail.RecipientsNumber);
+                                <span style="color:green;font-weight:bold">@aux</span>
+                            }
+                            else if (mail.SendOnNextPublish)
+                            {
+                                <span style="color:yellow;font-weight:bold">Mail</span>
+                            }
+                            else {
+                                <span style="color:red;font-weight:bold">Mail</span>
+                            }
+                        }
+                        @if (twitter != null)
+                        {
+                            if (twitter.TwitterMessageSent)
+                            {
+                                <span style="color:green;font-weight:bold">Twitter</span>
+                            }
+                            else if (twitter.SendOnNextPublish)
+                            {
+                                <span style="color:yellow;font-weight:bold">Twitter</span>
+                            }
+                            else
+                            {
+                                <span style="color:red;font-weight:bold">Twitter</span>
+                            }
+                        }
+                        @if (facebook != null)
+                        {
+                            if (facebook.FacebookMessageSent)
+                            {
+                                <span style="color:green;font-weight:bold">Facebook</span>
+                            }
+                            else if (facebook.SendOnNextPublish)
+                            {
+                                <span style="color:yellow;font-weight:bold">Facebook</span>
+                            }
+                            else
+                            {
+                                <span style="color:red;font-weight:bold">Facebook</span>
+                            }
+                        }
+                        @if (push != null)
+                        {
+                            if (push.ToPush)
+                            {
+                                <span style="color:yellow;font-weight:bold">Push</span>
+                            }
+                            else
+                            {
+                                <span style="color:red;font-weight:bold">Push</span>
+                            }
+                        }
                         <div class="contentType">
                         </div>
                         <div class="metadata">
