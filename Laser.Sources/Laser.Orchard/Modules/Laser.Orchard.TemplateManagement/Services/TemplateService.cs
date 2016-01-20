@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -13,6 +14,8 @@ using Orchard.Messaging.Services;
 using Orchard.Email.Services;
 using Orchard.JobsQueue.Services;
 using RazorEngine.Templating;
+using Newtonsoft.Json;
+
 
 namespace Laser.Orchard.TemplateManagement.Services {
     public interface ITemplateService : IDependency {
@@ -116,7 +119,28 @@ namespace Laser.Orchard.TemplateManagement.Services {
                 }.ToExpando()
             };
             templatectx.Model = dynamicModel;
-            templatectx.ViewBag = viewBag;
+            var razorviewBag = viewBag;
+            RazorEngine.Templating.DynamicViewBag vb = new DynamicViewBag();
+            //try {
+            //    if (razorviewBag != null) {
+            //        if (razorviewBag is IEnumerable<KeyValuePair<string, string>>) {
+            //            var dirazorviewBag = ((IEnumerable<KeyValuePair<string, string>>)viewBag)
+            //                .ToDictionary(x => x.Key, x => (object)x.Value);
+            //            foreach(string key  in dirazorviewBag.Keys) {
+            //                vb.AddValue(key, dirazorviewBag[key]);
+            //            }
+            //        }
+            //    }
+               
+            //}
+           // catch { }
+            try {
+                foreach (string key in ((Dictionary<string, object>)viewBag).Keys) {
+                    vb.AddValue(key, ((IDictionary<string, object>)viewBag)["CampaignLink"]);
+                }
+            }
+            catch { }
+            templatectx.ViewBag = vb;
 
             var body = ParseTemplate(template, templatectx);
             var data = new Dictionary<string, object>();

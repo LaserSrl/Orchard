@@ -71,15 +71,22 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.MailTest") {
                     if (part.SendToTestEmail && part.EmailForTest != string.Empty) {
                         dynamic content = context.ContentItem;
-                        _controllerContextAccessor.Context.Controller.TempData.Add("CampaignLink", _communicationService.GetCampaignLink("Email", part));
-                                       
+                         Dictionary<string,object> similViewBag= new Dictionary<string,object>();
+                        similViewBag.Add("CampaignLink", _communicationService.GetCampaignLink("Email", part));
+                        //if (_controllerContextAccessor.Context.Controller.TempData.Keys.Contains("CampaignLink")) {
+                        //                    }else{
+                        //    _controllerContextAccessor.Context.Controller.TempData.Add("CampaignLink", _communicationService.GetCampaignLink("Email", part));
+                        //} 
                         _templateService.SendTemplatedEmail(content,
                             ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id,
                             null,
                             new List<string> { part.EmailForTest },
-                            new {
-                                CampaignLink = _communicationService.GetCampaignLink("Email", part)
-                            },
+                            similViewBag
+                            //_controllerContextAccessor.Context.Controller.ViewBag
+                            //new {
+                            //    CampaignLink = _communicationService.GetCampaignLink("Email", part)
+                            //}
+                            ,
                             false);
                     }
                 }

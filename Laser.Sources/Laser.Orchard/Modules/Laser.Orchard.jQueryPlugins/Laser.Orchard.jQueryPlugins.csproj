@@ -122,6 +122,7 @@
     <Content Include="Styles\accordion.css" />
     <Content Include="Styles\custom\divtablelayouts.css" />
     <Content Include="Styles\image-picker.css" />
+    <Content Include="Styles\image-picker_low.css" />
     <Content Include="Styles\images\autocomplete\fake_sel.gif" />
     <Content Include="Styles\images\autocomplete\fake_sel_pad.gif" />
     <Content Include="Styles\images\autocomplete\fake_sel_red.gif" />

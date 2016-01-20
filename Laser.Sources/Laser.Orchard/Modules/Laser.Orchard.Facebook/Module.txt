@@ -9,4 +9,4 @@ Features:
     Laser.Orchard.Facebook:
         Description: Description for feature Laser.Orchard.Facebook.
 		Category: Social
-		Dependencies: Laser.Orchard.OpenAuthentication, Orchard.Tokens, Orchard.MediaLibrary,  Laser.Orchard.CommunicationGateway, Title 
+		Dependencies: Laser.Orchard.OpenAuthentication, Orchard.Tokens, Orchard.MediaLibrary,  Laser.Orchard.CommunicationGateway, Laser.Orchard.jQueryPlugins 

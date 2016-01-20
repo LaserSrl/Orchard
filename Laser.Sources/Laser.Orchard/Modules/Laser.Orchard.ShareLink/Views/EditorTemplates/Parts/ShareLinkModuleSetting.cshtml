@@ -1,0 +1,22 @@
+﻿@model Laser.Orchard.ShareLink.ViewModels.ShareLinkModuleSettingVM
+
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.SharedLink)" >@T("Link") </label>
+        @Html.TextBoxFor(m => m.SharedLink, new { @class = "text medium tokenized" })
+        <span class="hint">@T("Link to share")</span>
+    </div>
+
+    <div>
+        <label for="@Html.FieldIdFor(m => m.SharedText)" >@T("Text") </label>
+        @Html.TextAreaFor(m => m.SharedText, new { @class = "text medium tokenized", rows = "5" })
+        <span class="hint">@T("Text to Share")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.SharedImage)" >@T("Picture") </label>
+        @Html.TextBoxFor(m => m.SharedImage, new { @class = "text medium tokenized", rows = "5" })
+        <span class="hint">@T("Picture to Share")</span>
+    </div>
+
+    @Display.TokenHint()
+</fieldset>
