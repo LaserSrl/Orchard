@@ -52,9 +52,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Autoroute\bin\Orchard.Autoroute.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.ContentPicker, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPicker\bin\Orchard.ContentPicker.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Core, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Fields, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Fields\bin\Orchard.Fields.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Framework, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -66,6 +74,10 @@
     </Reference>
     <Reference Include="Orchard.MediaLibrary">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.MediaLibrary\bin\Orchard.MediaLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Taxonomies, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Taxonomies\bin\Orchard.Taxonomies.dll</HintPath>
     </Reference>
     <Reference Include="RazorEngine, Version=3.5.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
