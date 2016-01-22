@@ -139,7 +139,7 @@ namespace Laser.Orchard.Facebook.Controllers {
             if (!string.IsNullOrEmpty(search.Expression))
                 ListContent = from content in ListContent
                               where
-                              ((content.As<TitlePart>().Title ?? "").Contains(expression, StringComparison.InvariantCultureIgnoreCase))
+                              ((content.As<FacebookAccountPart>().AccountType + " - " + content.As<FacebookAccountPart>().DisplayAs ?? "").Contains(expression, StringComparison.InvariantCultureIgnoreCase))
                               select content;
             IEnumerable<ContentIndexVM> listVM = ListContent.Select(p => new ContentIndexVM {
                 Id = p.Id,
