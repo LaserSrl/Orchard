@@ -28,6 +28,8 @@ using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Orchard.Environment.Configuration;
+using System.Web;
 
 
 namespace Laser.Orchard.MailCommunication.Handlers {
@@ -46,10 +48,12 @@ namespace Laser.Orchard.MailCommunication.Handlers {
         private readonly ISessionLocator _session;
         private readonly ICommunicationService _communicationService;
         private readonly IControllerContextAccessor _controllerContextAccessor;
+        private readonly ShellSettings _shellSettings;
         private MailerSiteSettingsPart _mailerConfig;
 
         public MailCommunicationPartHandler(IControllerContextAccessor controllerContextAccessor,INotifier notifier, ITemplateService templateService, IOrchardServices orchardServices, IQueryPickerService queryPickerServices, IMailCommunicationService mailCommunicationService,
-            IRepository<CommunicationEmailRecord> repoMail, IRepository<TitlePartRecord> repoTitle, ITransactionManager transactionManager, ISessionLocator session, ICommunicationService communicationService) {
+            IRepository<CommunicationEmailRecord> repoMail, IRepository<TitlePartRecord> repoTitle, ITransactionManager transactionManager, ISessionLocator session, ICommunicationService communicationService, ShellSettings shellSetting)
+        {
             _repoMail = repoMail;
             _repoTitle = repoTitle;
             _controllerContextAccessor = controllerContextAccessor;
@@ -60,6 +64,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
             _queryPickerServices = queryPickerServices;
             _mailCommunicationService = mailCommunicationService;
             _communicationService = communicationService;
+            _shellSettings = shellSetting;
             _session = session;
             T = NullLocalizer.Instance;
             OnUpdated<MailCommunicationPart>((context, part) => {
@@ -204,11 +209,12 @@ namespace Laser.Orchard.MailCommunication.Handlers {
             }
 
             var baseUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
+            var tenantPrefix = GetTenantUrlPrexix(_shellSettings);
             // token di sicurezza: contiene data e ora (senza minuti e secondi) e id del content item
             var token = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHH"), (contentModel as ContentItem).Id);
             token = Convert.ToBase64String(System.Text.Encoding.Unicode.GetBytes(token));
             //var url = string.Format("{0}/Laser.Orchard.MailCommunication/MailerResult?tk={1}", baseUrl, token);  // versione per il GET
-            var url = string.Format("{0}/api/Laser.Orchard.MailCommunication/MailerResultAPI?tk={1}", baseUrl, token);  // versione per il POST
+            var url = string.Format("{0}/{1}api/Laser.Orchard.MailCommunication/MailerResultAPI?tk={2}", baseUrl, tenantPrefix, token);  // versione per il POST
             var data = new Dictionary<string, object>();
             data.Add("Subject", subject);
             data.Add("Body", body);
@@ -256,6 +262,24 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                     ftpStream.Write(buffer, 0, buffer.Length);
                 }
             }
+        }
+
+        /// <summary>
+        /// Get the URL prefix of the current tenant.
+        /// If prefix is not empty, it ends with slash (/).
+        /// </summary>
+        /// <param name="shellSettings"></param>
+        /// <returns></returns>
+        public string GetTenantUrlPrexix(ShellSettings shellSettings)
+        {
+            // calcola il prefix del tenant corrente
+            string tenantPath = shellSettings.RequestUrlPrefix ?? "";
+
+            if (tenantPath != "")
+            {
+                tenantPath = tenantPath + "/";
+            }
+            return tenantPath;
         }
     }
 }

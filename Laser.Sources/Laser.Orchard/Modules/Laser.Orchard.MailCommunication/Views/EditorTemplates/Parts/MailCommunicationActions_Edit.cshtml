@@ -60,9 +60,9 @@
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.RecipientsNumber, T("Number of recipients").Text, new { @class = "forcheckbox" })
-    @Html.TextBoxFor(m => m.RecipientsNumber, new { @disabled = "disabled", @style = "text-align:right;margin-left:10px;padding-right:5px" })
+    <span style="margin-left:20px;font-weight:bold">@Model.RecipientsNumber</span>
 </fieldset> 
 <fieldset>
     @Html.LabelFor(m => m.SentMailsNumber, T("Number of sent mails").Text, new { @class = "forcheckbox" })
-    @Html.TextBoxFor(m => m.SentMailsNumber, new { @disabled = "disabled", @style = "text-align:right;margin-left:10px;padding-right:5px" })
+    <span style="margin-left:20px;font-weight:bold">@Model.SentMailsNumber</span>
 </fieldset>
