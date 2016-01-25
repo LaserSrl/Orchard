@@ -173,6 +173,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             return Json(eObj);
         }
 
+        #region private class/method for get
         private void AnnullaNonFoglie(ElementDetail myelement) {
             if (myelement.Children.Count > 0)
                 myelement.Value = null;
@@ -181,7 +182,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             }
         }
 
-        public class ResponseElement {
+        private class ResponseElement {
 
             //     public object Default { get; set; }
             public object Values { get; set; }
@@ -189,13 +190,13 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             public ResponseSetting Setting { get; set; }
         }
 
-        public class ResponseSetting {
+        private class ResponseSetting {
             public string Type { get; set; }
             public bool Required { get; set; }
             public bool SingleChoice { get; set; }
         }
 
-        public class ElementDetail {
+        private class ElementDetail {
 
             public ElementDetail() {
                 Name = "";
@@ -221,7 +222,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             else
                 return null;
         }
-
+        #endregion private class/method for get
         /// <summary>
         /// test in feedler
         /// User-Agent: Fiddler
@@ -260,17 +261,38 @@ namespace Laser.Orchard.ContentExtension.Controllers {
 
         private Response StoreNewContentItem(ExpandoObject eObj, ContentItem TheContentItem) {
             string tipoContent = ((dynamic)eObj).ContentType;
-            ContentItem NewContent = _orchardServices.ContentManager.New(tipoContent);
-            if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.EditContent, NewContent)) {
-                return _utilsServices.GetResponse(ResponseType.UnAuthorized);
-            }
-
+            Int32 IdContentToModify = 0; // new content
             // NewContent.As<TitlePart>.Title = "Creazione";
-            _orchardServices.ContentManager.Create(NewContent, VersionOptions.Draft);// se non faccio il create poi non vengono salvati i field
+            try {
+                if ((Int32)(((dynamic)eObj).Id) > 0) {
+                    IdContentToModify = (Int32)(((dynamic)eObj).Id);
+                }
+            }
+            catch {
+            }
+            ContentItem NewOrModifiedContent; 
             Response rsp = new Response();
-            string validateMessage = ValidateMessage(NewContent, "Created");
+            string validateMessage = "";
+            if (IdContentToModify > 0) {
+                NewOrModifiedContent = _orchardServices.ContentManager.Get(IdContentToModify, VersionOptions.Latest);
+                if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.EditContent, NewOrModifiedContent)) {
+                    return _utilsServices.GetResponse(ResponseType.UnAuthorized);
+                }
+                validateMessage = ValidateMessage(NewOrModifiedContent, "Modified");
+            }
+            else {
+                NewOrModifiedContent = _orchardServices.ContentManager.New(tipoContent);
+                if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.EditContent, NewOrModifiedContent)) {
+                    return _utilsServices.GetResponse(ResponseType.UnAuthorized);
+                }
+                _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.Draft);// se non faccio il create poi non vengono salvati i field
+                validateMessage = ValidateMessage(NewOrModifiedContent, "Created");
+            }
+           
+            
+
             if (string.IsNullOrEmpty(validateMessage)) {
-                rsp = _contentExtensionsServices.StoreInspectExpando(eObj, NewContent);
+                rsp = _contentExtensionsServices.StoreInspectExpando(eObj, NewOrModifiedContent);
             }
             else {
                 rsp = _utilsServices.GetResponse(ResponseType.None, validateMessage);
@@ -283,33 +305,33 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                         language = ((dynamic)eObj).Language;
                     }
                     catch { }
-                    if (NewContent.As<LocalizationPart>() != null) {
+                    if (NewOrModifiedContent.As<LocalizationPart>() != null) {
                         if (!string.IsNullOrEmpty(language))
-                            NewContent.As<LocalizationPart>().Culture = _cultureManager.GetCultureByName(language);
-                        NewContent.As<LocalizationPart>().MasterContentItem = NewContent;
+                            NewOrModifiedContent.As<LocalizationPart>().Culture = _cultureManager.GetCultureByName(language);
+                        NewOrModifiedContent.As<LocalizationPart>().MasterContentItem = NewOrModifiedContent;
                     }
-                    validateMessage = ValidateMessage(NewContent, "");
+                    validateMessage = ValidateMessage(NewOrModifiedContent, "");
                     if (string.IsNullOrEmpty(validateMessage)) {
-                        _orchardServices.ContentManager.Create(NewContent, VersionOptions.Draft);
+                        _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.Draft);
                     }
                     else {
                         rsp = _utilsServices.GetResponse(ResponseType.None, validateMessage);
                     }
 
                     // _localizationService.SetContentCulture(NewContent, language);
-                    if (((dynamic)NewContent).AutoroutePart != null) {
-                        ((dynamic)NewContent).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)NewContent).AutoroutePart);
-                        _autorouteService.Value.ProcessPath(((dynamic)NewContent).AutoroutePart);
-                        _autorouteService.Value.PublishAlias(((dynamic)NewContent).AutoroutePart);
+                    if (((dynamic)NewOrModifiedContent).AutoroutePart != null) {
+                        ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
+                        _autorouteService.Value.ProcessPath(((dynamic)NewOrModifiedContent).AutoroutePart);
+                        _autorouteService.Value.PublishAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
                         dynamic data = new ExpandoObject();
-                        data.DisplayAlias = ((dynamic)NewContent).AutoroutePart.DisplayAlias;
+                        data.DisplayAlias = ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias;
                         rsp.Data = data;
                     }
                     //   Handlers.Invoke(handler => handler.Updating(context), Logger);
                 }
                 catch (Exception ex) {
                     try {
-                        _orchardServices.ContentManager.Remove(NewContent);
+                        _orchardServices.ContentManager.Remove(NewOrModifiedContent);
                     }
                     catch (Exception ex2) {
                         rsp = _utilsServices.GetResponse(ResponseType.None, ex2.Message);
@@ -319,7 +341,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             }
             else {
                 try {
-                    _orchardServices.ContentManager.Remove(NewContent);
+                    _orchardServices.ContentManager.Remove(NewOrModifiedContent);
                 }
                 catch (Exception ex2) {
                     rsp = _utilsServices.GetResponse(ResponseType.None, ex2.Message);
