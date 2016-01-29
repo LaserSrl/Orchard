@@ -30,7 +30,7 @@ using System.Web.Http;
 using OrchardCore = Orchard.Core;
 
 namespace Laser.Orchard.ContentExtension.Controllers {
-
+    [Obsolete("Replaced by ContentItemController")]
     public class ContentController : ApiController {
         private readonly IAuthenticationService _authenticationService;
         private readonly ICsrfTokenHelper _csrfTokenHelper;
@@ -85,10 +85,12 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         /// <param name="Language"></param>
         /// <returns></returns>
         public dynamic Get(string ContentType, string Language = "it-IT") {
+            
             //var currentUser = _authenticationService.GetAuthenticatedUser();
             //if (currentUser == null){
             //       return (_utilsServices.GetResponse(ResponseType.InvalidUser));// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
             //}
+           var aa= _contentDefinitionManager.ListTypeDefinitions().Where(x=>x.DisplayName.Contains("eport"));
             ContentTypeDefinition contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(ContentType);
             var eObj = new ExpandoObject() as IDictionary<string, Object>;
 
@@ -126,7 +128,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                             catch { }
                             if (!term.Selectable)
                                 valore = null;
-                            if (term.FullPath == "/" + term.Id)
+                            if (term.FullPath == "/" + term.Id.ToString() || term.FullPath == term.Id.ToString())
                                 elements.Add(new ElementDetail() { Name = term.Name, Value = valore, ImageId = mediaid });
                             else {
                                 Int32 idtermfather = Convert.ToInt32(term.FullPath.Split('/')[term.FullPath.Split('/').Length - 2]);
@@ -194,6 +196,10 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             public string Type { get; set; }
             public bool Required { get; set; }
             public bool SingleChoice { get; set; }
+            public ResponseSetting() {
+                Required = false;
+                SingleChoice = false;
+            }
         }
 
         private class ElementDetail {
@@ -214,8 +220,11 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                 foreach (ElementDetail myterm in elements) {
                     if ((Int32)myterm.Value == idToFind)
                         return myterm;
-                    else
-                        return FindTaxoVM(myterm.Children, idToFind);
+                    else {
+                        var foundinchildren = FindTaxoVM(myterm.Children, idToFind);
+                        if (foundinchildren!=null)
+                            return FindTaxoVM(myterm.Children, idToFind);
+                    }
                 }
                 return null;
             }
@@ -275,6 +284,10 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             string validateMessage = "";
             if (IdContentToModify > 0) {
                 NewOrModifiedContent = _orchardServices.ContentManager.Get(IdContentToModify, VersionOptions.Latest);
+                //if (NewOrModifiedContent==null){
+                //    var pippo = _orchardServices.ContentManager.GetAllVersions(IdContentToModify);
+                //}
+              //  endif IdContentToModify).Where(x=>x.VersionRecord.Id>);
                 if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.EditContent, NewOrModifiedContent)) {
                     return _utilsServices.GetResponse(ResponseType.UnAuthorized);
                 }
@@ -312,7 +325,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     }
                     validateMessage = ValidateMessage(NewOrModifiedContent, "");
                     if (string.IsNullOrEmpty(validateMessage)) {
-                        _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.Draft);
+                        _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.DraftRequired);
                     }
                     else {
                         rsp = _utilsServices.GetResponse(ResponseType.None, validateMessage);
@@ -390,38 +403,38 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         #endregion private method
     }
 
-    internal class MyIReferenceResolver : IReferenceResolver {
+    //internal class MyIReferenceResolver : IReferenceResolver {
 
-        //public string FindLoaded(IEnumerable<string> refs, string find) {
-        //    return refs.First(r => r.EndsWith(System.IO.Path.DirectorySeparatorChar + find));
-        //}
-        public IEnumerable<CompilerReference> GetReferences(TypeContext context, IEnumerable<CompilerReference> includeAssemblies) {
-            return new[]{
-                 CompilerReference.From(HostingEnvironment.MapPath("~/")+  @"bin\Orchard.Framework.dll")
-                //CompilerReference.From(HostingEnvironment.MapPath("~/")+  @"App_Data\Dependencies\Orchard.dll")
-                        };
-            // TypeContext gives you some context for the compilation (which templates, which namespaces and types)
+    //    //public string FindLoaded(IEnumerable<string> refs, string find) {
+    //    //    return refs.First(r => r.EndsWith(System.IO.Path.DirectorySeparatorChar + find));
+    //    //}
+    //    public IEnumerable<CompilerReference> GetReferences(TypeContext context, IEnumerable<CompilerReference> includeAssemblies) {
+    //        return new[]{
+    //             CompilerReference.From(HostingEnvironment.MapPath("~/")+  @"bin\Orchard.Framework.dll")
+    //            //CompilerReference.From(HostingEnvironment.MapPath("~/")+  @"App_Data\Dependencies\Orchard.dll")
+    //                    };
+    //        // TypeContext gives you some context for the compilation (which templates, which namespaces and types)
 
-            // You must make sure to include all libraries that are required!
-            // Mono compiler does add more standard references than csc!
-            // If you want mono compatibility include ALL references here, including mscorlib!
-            // If you include mscorlib here the compiler is called with /nostdlib.
-            //IEnumerable<string> loadedAssemblies = (new UseCurrentAssembliesReferenceResolver())
-            //    .GetReferences(context, includeAssemblies)
-            //    .Select(r => r.GetFile())
-            //    .ToArray();
+    //        // You must make sure to include all libraries that are required!
+    //        // Mono compiler does add more standard references than csc!
+    //        // If you want mono compatibility include ALL references here, including mscorlib!
+    //        // If you include mscorlib here the compiler is called with /nostdlib.
+    //        //IEnumerable<string> loadedAssemblies = (new UseCurrentAssembliesReferenceResolver())
+    //        //    .GetReferences(context, includeAssemblies)
+    //        //    .Select(r => r.GetFile())
+    //        //    .ToArray();
 
-            //    yield return CompilerReference.From(FindLoaded(loadedAssemblies, "mscorlib.dll"));
-            //    yield return CompilerReference.From(FindLoaded(loadedAssemblies, "System.dll"));
-            //      yield return CompilerReference.From(FindLoaded(loadedAssemblies, "System.Core.dll"));
-            //     yield return CompilerReference.From(typeof(MyIReferenceResolver).Assembly); // Assembly
+    //        //    yield return CompilerReference.From(FindLoaded(loadedAssemblies, "mscorlib.dll"));
+    //        //    yield return CompilerReference.From(FindLoaded(loadedAssemblies, "System.dll"));
+    //        //      yield return CompilerReference.From(FindLoaded(loadedAssemblies, "System.Core.dll"));
+    //        //     yield return CompilerReference.From(typeof(MyIReferenceResolver).Assembly); // Assembly
 
-            // There are several ways to load an assembly:
-            //yield return CompilerReference.From("Path-to-my-custom-assembly"); // file path (string)
-            //byte[] assemblyInByteArray = --- Load your assembly ---;
-            //yield return CompilerReference.From(assemblyInByteArray); // byte array (roslyn only)
-            //string assemblyFile = --- Get the path to the assembly ---;
-            //yield return CompilerReference.From(File.OpenRead(assemblyFile)); // stream (roslyn only)
-        }
-    }
+    //        // There are several ways to load an assembly:
+    //        //yield return CompilerReference.From("Path-to-my-custom-assembly"); // file path (string)
+    //        //byte[] assemblyInByteArray = --- Load your assembly ---;
+    //        //yield return CompilerReference.From(assemblyInByteArray); // byte array (roslyn only)
+    //        //string assemblyFile = --- Get the path to the assembly ---;
+    //        //yield return CompilerReference.From(File.OpenRead(assemblyFile)); // stream (roslyn only)
+    //    }
+    //}
 }
