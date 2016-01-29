@@ -42,7 +42,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                 //   var csrfToken = context.Request.Headers.GetValues("X-XSRF-TOKEN").FirstOrDefault();
 
                 if (String.IsNullOrEmpty(csrfToken)) {
-                    throw new UnauthorizedAccessException("Unauthorized Method");
+                    return false;// throw new UnauthorizedAccessException("Unauthorized Method");
                 }
                 var currentUser = _orchardServices.WorkContext.CurrentUser;
                 if (currentUser == null) {
@@ -52,7 +52,8 @@ namespace Laser.Orchard.StartupConfig.Services {
 #if DEBUG
                     _Logger.Error("X-XSRF-TOKEN" + GenerateCookieFriendlyHash(authToken));            
 #endif
-                    throw new UnauthorizedAccessException("Unauthorized Method");
+                    return false;
+                   // throw new UnauthorizedAccessException("Unauthorized Method");
                 }
                 return csrfToken == GenerateCookieFriendlyHash(authToken);
             }
