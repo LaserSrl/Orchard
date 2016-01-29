@@ -1,7 +1,6 @@
 ﻿using Contrib.Widgets.Services;
 using Laser.Orchard.Commons.Services;
 using Laser.Orchard.Events.Services;
-using Laser.Orchard.Policy.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.WebServices.Models;
@@ -12,6 +11,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization.Models;
 using Orchard.Logging;
 using Orchard.Projections.Services;
+using Orchard.Security;
 using Orchard.Taxonomies.Services;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,6 @@ using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
-
 //using Newtonsoft.Json;
 using System.Xml;
 using System.Xml.Linq;
@@ -33,12 +32,13 @@ namespace Laser.Orchard.WebServices.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IProjectionManager _projectionManager;
         private readonly ITaxonomyService _taxonomyService;
-        private IPolicyServices _policyServices;
+
         private readonly ShellSettings _shellSetting;
         private readonly IUtilsServices _utilsServices;
         private IWidgetManager _widgetManager;
         private IEventsService _eventsService;
-
+        private readonly ICsrfTokenHelper _csrfTokenHelper;
+        private readonly IAuthenticationService _authenticationService;
         public ILogger Logger { get; set; }
 
         //
@@ -47,7 +47,9 @@ namespace Laser.Orchard.WebServices.Controllers {
             IProjectionManager projectionManager,
             ITaxonomyService taxonomyService,
             ShellSettings shellSetting,
-            IUtilsServices utilsServices
+            IUtilsServices utilsServices,
+            ICsrfTokenHelper csrfTokenHelper,
+            IAuthenticationService authenticationService
             ) {
             _orchardServices = orchardServices;
             _projectionManager = projectionManager;
@@ -55,6 +57,8 @@ namespace Laser.Orchard.WebServices.Controllers {
             _shellSetting = shellSetting;
             Logger = NullLogger.Instance;
             _utilsServices = utilsServices;
+            _csrfTokenHelper = csrfTokenHelper;
+            _authenticationService = authenticationService;
         }
 
         public ActionResult GetObjectById(int contentId = 0, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 1000, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, decimal version = 0) {
@@ -72,9 +76,9 @@ namespace Laser.Orchard.WebServices.Controllers {
                     return this.Content(xml, "text/xml");
                 }
                 else {
-                    if (item.As<AutoroutePart>()!=null)
-                    return GetObjectByAlias(item.As<AutoroutePart>().DisplayAlias, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, deeplevel, version);
-                    else{
+                    if (item.As<AutoroutePart>() != null)
+                        return GetObjectByAlias(item.As<AutoroutePart>().DisplayAlias, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, deeplevel, version);
+                    else {
                         Response rsp = _utilsServices.GetResponse(ResponseType.None);
                         rsp.Message = "Valore Id non valido";
                         XmlSerializer serializer = new XmlSerializer(typeof(Response));
@@ -85,7 +89,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                         var xml = sww.ToString();
                         return this.Content(xml, "text/xml");
                     }
-                     
+
                 }
             }
             else {
@@ -116,6 +120,7 @@ namespace Laser.Orchard.WebServices.Controllers {
 
         public ActionResult GetObjectByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 1000, bool tinyResponse = true, int deeplevel = 10, decimal version = 0) {
             try {
+
                 if (page < 1)
                     page = 1;
                 if (pageSize < 1)
@@ -262,20 +267,47 @@ namespace Laser.Orchard.WebServices.Controllers {
         // Attributes:
         // displayAlias: url di ingresso Es: displayAlias=produttore-hermes
         // filterSubItemsParts: elennco csv delle parti da estrarre in presenza di array di ContentItems Es: filterSubItemsParts=TitlePart,AutoroutePart,MapPart
-        public ContentResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour="") {
+        public ContentResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
             //   Logger.Error("inizio"+DateTime.Now.ToString());
-            var autoroutePart = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>()
-                .ForVersion(VersionOptions.Published)
-                .Where(w => w.DisplayAlias == displayAlias).List().SingleOrDefault();
             IContent item = null;
-            if (autoroutePart != null && autoroutePart.ContentItem != null) {
-                item = autoroutePart.ContentItem;
+
+            if (displayAlias.ToLower() == "user+info" || displayAlias.ToLower() == "user info") {
+                #region richiesta dati di uno user
+                var currentUser = _authenticationService.GetAuthenticatedUser();
+                if (currentUser == null) {
+                  //  return Content((Json(_utilsServices.GetResponse(ResponseType.InvalidUser))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
+                    var result = new ContentResult { ContentType = "application/json" };
+                    result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidUser));
+                    return result;
+                }
+                else
+                    if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
+                        var result = new ContentResult { ContentType = "application/json" };
+                        result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
+                        return result;
+                         //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
+                    }
+                    else {
+                        #region utente validato
+                        item = currentUser.ContentItem;
+
+                        #endregion
+                    }
+                #endregion
             }
             else {
-                new HttpException(404, ("Not found"));
-                return null;
-            }
+                var autoroutePart = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>()
+                    .ForVersion(VersionOptions.Published)
+                    .Where(w => w.DisplayAlias == displayAlias).List().SingleOrDefault();
 
+                if (autoroutePart != null && autoroutePart.ContentItem != null) {
+                    item = autoroutePart.ContentItem;
+                }
+                else {
+                    new HttpException(404, ("Not found"));
+                    return null;
+                }
+            }
             ContentResult cr = (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, complexBehaviour.Split(','));
             //    Logger.Error("Fine:"+DateTime.Now.ToString());
 
