@@ -29,7 +29,7 @@ namespace Laser.Orchard.CommunicationGateway.Navigation {
                 //   .LocalNav()
                  )
                 .Add(sub2 => sub2
-                     .Caption(T("Flash advertising"))
+                     .Caption(T("Flash Advertising"))
                           .Position("1.062")
                             .Action("Index", "AdvertisingAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = -10 })
                 //   .LocalNav()

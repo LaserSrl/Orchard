@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.CommunicationGateway.Helpers;
+using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
@@ -40,8 +41,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             object model;
             if (id == 0) {
                 var newContent = _orchardServices.ContentManager.New(contentType);
-                //  model = _orchardServices.ContentManager.BuildEditor(newContent);
-                //   _contentManager.Create(newContent);
+                ((dynamic)newContent).CommunicationCampaignPart.FromDate.DateTime = DateTime.Now;
+            //    ((dynamic)newContent).CommunicationCampaignPart.ToDate.DateTime = DateTime.Now.AddYears(1);
                 model = _contentManager.BuildEditor(newContent);
             } else
                 model = _contentManager.BuildEditor(_orchardServices.ContentManager.Get(id));

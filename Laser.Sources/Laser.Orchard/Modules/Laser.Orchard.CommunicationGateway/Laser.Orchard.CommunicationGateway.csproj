@@ -188,6 +188,8 @@
     <Content Include="Views\EditorTemplates\View_EmailVM_element.cshtml" />
     <Content Include="Views\EditorTemplates\View_SmsVM_element.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Advertising_Edit.cshtml" />
+    <Content Include="Views\switchurl.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\AdvertisingSwitcher.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
