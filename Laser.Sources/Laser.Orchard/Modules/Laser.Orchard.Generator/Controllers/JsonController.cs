@@ -1,32 +1,49 @@
 ﻿using Contrib.Widgets.Services;
 using Laser.Orchard.Commons.Services;
 using Laser.Orchard.Events.Services;
+
+//using Laser.Orchard.Commons.Services;
+//using Laser.Orchard.Events.Services;
+//using Laser.Orchard.Policy.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.WebServices;
 using Laser.Orchard.WebServices.Models;
 using Orchard;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
+
+//using Orchard.ContentManagement;
 using Orchard.Environment.Configuration;
-using Orchard.Localization.Models;
+
+//using Orchard.Localization.Models;
 using Orchard.Logging;
 using Orchard.Projections.Services;
 using Orchard.Security;
 using Orchard.Taxonomies.Services;
 using System;
 using System.Collections.Generic;
+
+//using System;
+//using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+//using System.Linq;
 using System.Text;
 using System.Web;
+
+//using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
+
+//using System.Web.Mvc;
 //using Newtonsoft.Json;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace Laser.Orchard.WebServices.Controllers {
+namespace Laser.Orchard.Generator.Controllers {
 
     public class JsonController : Controller {
         private readonly IOrchardServices _orchardServices;
@@ -41,16 +58,14 @@ namespace Laser.Orchard.WebServices.Controllers {
         private readonly IAuthenticationService _authenticationService;
         public ILogger Logger { get; set; }
 
-        //
-        // GET: /Json/
         public JsonController(IOrchardServices orchardServices,
-            IProjectionManager projectionManager,
-            ITaxonomyService taxonomyService,
-            ShellSettings shellSetting,
-            IUtilsServices utilsServices,
-            ICsrfTokenHelper csrfTokenHelper,
-            IAuthenticationService authenticationService
-            ) {
+    IProjectionManager projectionManager,
+    ITaxonomyService taxonomyService,
+    ShellSettings shellSetting,
+    IUtilsServices utilsServices,
+    ICsrfTokenHelper csrfTokenHelper,
+    IAuthenticationService authenticationService
+    ) {
             _orchardServices = orchardServices;
             _projectionManager = projectionManager;
             _taxonomyService = taxonomyService;
@@ -61,239 +76,40 @@ namespace Laser.Orchard.WebServices.Controllers {
             _authenticationService = authenticationService;
         }
 
-        public ActionResult GetObjectById(int contentId = 0, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 1000, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, decimal version = 0) {
-            if (contentId > 0) {
-                IContent item = _orchardServices.ContentManager.Get(contentId, VersionOptions.Published);
-                if (item == null) {
-                    Response rsp = _utilsServices.GetResponse(ResponseType.None, "Valore Id non valido");
-                    // rsp.Message = ;
-                    XmlSerializer serializer = new XmlSerializer(typeof(Response));
-                    XmlDocument doc = new XmlDocument();
-                    StringWriter sww = new StringWriter();
-                    XmlWriter writer = XmlWriter.Create(sww);
-                    serializer.Serialize(writer, rsp);
-                    var xml = sww.ToString();
-                    return this.Content(xml, "text/xml");
-                }
-                else {
-                    if (item.As<AutoroutePart>() != null)
-                        return GetObjectByAlias(item.As<AutoroutePart>().DisplayAlias, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, deeplevel, version);
-                    else {
-                        Response rsp = _utilsServices.GetResponse(ResponseType.None);
-                        rsp.Message = "Valore Id non valido";
-                        XmlSerializer serializer = new XmlSerializer(typeof(Response));
-                        XmlDocument doc = new XmlDocument();
-                        StringWriter sww = new StringWriter();
-                        XmlWriter writer = XmlWriter.Create(sww);
-                        serializer.Serialize(writer, rsp);
-                        var xml = sww.ToString();
-                        return this.Content(xml, "text/xml");
-                    }
-
-                }
-            }
-            else {
-                Response rsp = _utilsServices.GetResponse(ResponseType.None);
-                rsp.Message = "Valore Id non valido";
-                XmlSerializer serializer = new XmlSerializer(typeof(Response));
-                XmlDocument doc = new XmlDocument();
-                StringWriter sww = new StringWriter();
-                XmlWriter writer = XmlWriter.Create(sww);
-                serializer.Serialize(writer, rsp);
-                var xml = sww.ToString();
-                return this.Content(xml, "text/xml");
-            }
-            //if (item == null) {
-            //    new HttpException(404, ("Not found"));
-            //    Response rsp = _utilsServices.GetResponse(ResponseType.None);
-            //    rsp.Message = "Pagina non trovata";
-            //    XmlSerializer serializer = new XmlSerializer(typeof(Response));
-            //    XmlDocument doc = new XmlDocument();
-            //    StringWriter sww = new StringWriter();
-            //    XmlWriter writer = XmlWriter.Create(sww);
-            //    serializer.Serialize(writer, rsp);
-            //    var xml = sww.ToString();
-            //    return this.Content(xml, "text/xml");
-            //}
-            //return (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel);
-        }
-
-        public ActionResult GetObjectByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 1000, bool tinyResponse = true, int deeplevel = 10, decimal version = 0) {
-            try {
-
-                if (page < 1)
-                    page = 1;
-                if (pageSize < 1)
-                    pageSize = 1000;
-                var autoroutePart = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>()
-                    .ForVersion(VersionOptions.Published)
-                    .Where(w => w.DisplayAlias == displayAlias).List().SingleOrDefault();
-                IContent item = null;
-                if (autoroutePart != null && autoroutePart.ContentItem != null) {
-                    item = autoroutePart.ContentItem;
-                }
-                else {
-                    Response rsp = _utilsServices.GetResponse(ResponseType.None, "Pagina non trovata");
-
-                    XmlSerializer serializer = new XmlSerializer(typeof(Response));
-                    XmlDocument doc = new XmlDocument();
-                    StringWriter sww = new StringWriter();
-                    XmlWriter writer = XmlWriter.Create(sww);
-                    serializer.Serialize(writer, rsp);
-                    var xml = sww.ToString();
-                    return this.Content(xml, "text/xml");
-                    // return new HttpNotFoundResult();
-                }
-
-                List<dynamic> ListShape = new List<dynamic>();
-                string CiType = "";
-                if (item.ContentItem.ContentType == "ProjectionPage") {
-
-                    #region Projection
-
-                    var part = ((dynamic)item.ContentItem).ProjectionPart;
-                    if (part != null) {
-                        var queryId = part.Record.QueryPartRecord.Id;
-
-                        var queryItems = _projectionManager.GetContentItems(queryId, (page - 1) * pageSize, pageSize);
-
-                        //   int i = 0;
-                        if (queryItems.Count == 0) {
-                            return null;
-                        }
-                        foreach (var projitem in queryItems) {
-                            // autoroutePart = projitem.AutoroutePart;
-                            CiType = projitem.ContentType;
-                            List<dynamic> list2 = ItemsMultiLanguage(projitem.AutoroutePart);
-                            //  var merged = new List<dynamic>(ListShape);
-                            ListShape.AddRange(list2.Where(p2 =>
-                           ListShape.All(p1 => p1.ContentItem.Id != p2.ContentItem.Id)));
-                            // ListShape = merged;
-                        }
-
-                    #endregion Projection
-                    }
-                }
-                else {
-                    //  string tipoCI = item.ContentItem.ContentType;
-                    //   string CiType = ((ContentItem)autoroutePart.ContentItem).ContentType;
-                    //  int id = ((ContentItem)autoroutePart.ContentItem).Id;
-
-                    ListShape = ItemsMultiLanguage(autoroutePart);
-                    CiType = ((ContentItem)autoroutePart.ContentItem).ContentType;
-                }
-
-                //int masterid = 0;
-                //int teoric_masterid = 0;
-                //try {
-                //    teoric_masterid = ((ContentItem)autoroutePart.ContentItem).As<LocalizationPart>().MasterContentItem.Id;
-                //    masterid = teoric_masterid;
-                //}
-                //catch {
-                //    masterid = id;
-                //}
-                //var contentsLocalized = _orchardServices.ContentManager.Query(CiType).Where<LocalizationPartRecord>(l => l.MasterContentItemId == masterid || l.Id == masterid).List();
-                //List<dynamic> ListShape = new List<dynamic>();
-                //foreach (ContentItem singleCi in contentsLocalized) {
-                //    ListShape.Add(_orchardServices.ContentManager.BuildDisplay(singleCi));
-                //}
-
-                var namespaces = this.GetType().FullName.Split('.').AsEnumerable();
-                namespaces = namespaces.Except(new string[] { this.GetType().Name });
-                namespaces = namespaces.Except(new string[] { namespaces.Last() });
-                var area = string.Join(".", namespaces);
-                if (version > 0) {
-                    CiType += version.ToString();
-                }
-                string myview = "~/" + @"App_Data/Sites/" + _shellSetting.Name + "/WebServices/" + CiType + ".cshtml";
-                string myfile = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\WebServices\" + CiType + ".cshtml";
-                if (System.IO.File.Exists(myfile))
-                    return View(myview, (object)ListShape);
-                else {
-                    Response rsp = _utilsServices.GetResponse(ResponseType.None, "Contenuto non disponibile");
-                    //  rsp.Message =;
-                    XmlSerializer serializer = new XmlSerializer(typeof(Response));
-                    XmlDocument doc = new XmlDocument();
-                    StringWriter sww = new StringWriter();
-                    XmlWriter writer = XmlWriter.Create(sww);
-                    serializer.Serialize(writer, rsp);
-                    var xml = sww.ToString();
-                    return this.Content(xml, "text/xml");
-                }
-            }
-            catch (Exception ex) {
-                Response rsp = _utilsServices.GetResponse(ResponseType.None, ex.Message);
-                //   rsp.Message=;
-                XmlSerializer serializer = new XmlSerializer(typeof(Response));
-                XmlDocument doc = new XmlDocument();
-                StringWriter sww = new StringWriter();
-                XmlWriter writer = XmlWriter.Create(sww);
-                serializer.Serialize(writer, rsp);
-                var xml = sww.ToString();
-                return this.Content(xml, "text/xml");
-            }
-        }
-
-        private List<dynamic> ItemsMultiLanguage(AutoroutePart autoroutePart) {
-            string CiType = ((ContentItem)autoroutePart.ContentItem).ContentType;
-            int id = ((ContentItem)autoroutePart.ContentItem).Id;
-            //  string tipoCI = item.ContentItem.ContentType;
-            //  int id = ((ContentItem)autoroutePart.ContentItem).Id;
-
-            int masterid = 0;
-            int teoric_masterid = 0;
-            try {
-                teoric_masterid = ((ContentItem)autoroutePart.ContentItem).As<LocalizationPart>().MasterContentItem.Id;
-                masterid = teoric_masterid;
-            }
-            catch {
-                masterid = id;
-            }
-            var contentsLocalized = _orchardServices.ContentManager.Query(CiType).Where<LocalizationPartRecord>(l => l.MasterContentItemId == masterid || l.Id == masterid).List();
-            List<dynamic> ListShape = new List<dynamic>();
-            foreach (ContentItem singleCi in contentsLocalized) {
-                List<dynamic> list2 = new List<dynamic>();
-                list2.Add(_orchardServices.ContentManager.BuildDisplay(singleCi));
-                // var merged=new List<dynamic>(ListShape);
-                ListShape.AddRange(list2.Where(p2 =>
-                ListShape.All(p1 => p1.ContentItem.Id != p2.ContentItem.Id)));
-                // ListShape = merged;
-            }
-            return ListShape;
-        }
-
-        //
-        // GET: /Json/GetByAlias
-        // Attributes:
-        // displayAlias: url di ingresso Es: displayAlias=produttore-hermes
-        // filterSubItemsParts: elennco csv delle parti da estrarre in presenza di array di ContentItems Es: filterSubItemsParts=TitlePart,AutoroutePart,MapPart
         public ContentResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
             //   Logger.Error("inizio"+DateTime.Now.ToString());
             IContent item = null;
 
             if (displayAlias.ToLower() == "user+info" || displayAlias.ToLower() == "user info") {
-                #region richiesta dati di uno user
-                var currentUser = _authenticationService.GetAuthenticatedUser();
-                if (currentUser == null) {
-                  //  return Content((Json(_utilsServices.GetResponse(ResponseType.InvalidUser))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                    var result = new ContentResult { ContentType = "application/json" };
-                    result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidUser));
-                    return result;
-                }
-                else
-                    if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
-                        var result = new ContentResult { ContentType = "application/json" };
-                        result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
-                        return result;
-                         //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                    }
-                    else {
-                        #region utente validato
-                        item = currentUser.ContentItem;
 
-                        #endregion
-                    }
-                #endregion
+                #region richiesta dati di uno user
+
+                //  var currentUser = _authenticationService.GetAuthenticatedUser();
+                //if (currentUser == null) {
+                //    //  return Content((Json(_utilsServices.GetResponse(ResponseType.InvalidUser))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
+                //    var result = new ContentResult { ContentType = "application/json" };
+                //    result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidUser));
+                //    return result;
+                //}
+                //else
+                //if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
+                //    var result = new ContentResult { ContentType = "application/json" };
+                //    result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
+                //    return result;
+                //    //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
+                //}
+                //else {
+
+                #region utente validato
+
+                //         item = currentUser.ContentItem;
+                item = _orchardServices.ContentManager.Get(2);
+
+                #endregion utente validato
+
+                //                 }
+
+                #endregion richiesta dati di uno user
             }
             else {
                 var autoroutePart = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>()
@@ -315,20 +131,6 @@ namespace Laser.Orchard.WebServices.Controllers {
                 Logger.Error(cr.Content.ToString());
             }
             return cr;
-        }
-
-        //
-        // GET: /Json/GetById
-        // Attributes:
-        // contentId: id del content Es: contentId=1
-        // filterSubItemsParts: elennco csv delle parti da estrarre in presenza di array di ContentItems Es: filterSubItemsParts=TitlePart,AutoroutePart,MapPart
-        public ContentResult GetById(int contentId, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
-            IContent item = _orchardServices.ContentManager.Get(contentId, VersionOptions.Published);
-            if (item == null) {
-                new HttpException(404, ("Not found"));
-                return null;
-            }
-            return (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, complexBehaviour.Split(','));
         }
 
         private ActionResult GetContent(IContent content, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string fieldspartsFilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string[] complexBehaviour = null) {

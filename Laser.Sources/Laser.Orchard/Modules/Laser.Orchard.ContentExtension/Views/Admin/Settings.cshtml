@@ -1,0 +1,31 @@
+﻿@model Laser.Orchard.ContentExtension.Models.SettingsModel
+           
+@{ Layout.Title = T("ContentType Permission Settings").ToString(); }
+@using (Html.BeginFormAntiForgeryPost())
+{
+    var i=0;
+<div class="manage">
+    <button class="primaryAction" type="submit">@T("Update settings")</button>
+</div>
+<fieldset>
+    <legend>@T("ContentType Permission")</legend>
+    <table class="items">
+        <thead>
+            <tr>
+                <th>@T("ContentType")</th>
+                <th>@T("Permission Get")</th>
+               <th>@T("Permission Post")</th>
+                <th>@T("Permission Delete")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var culture in Model.ListContPermission)
+            {
+                @Html.EditorFor(settings=>settings.ListContPermission[i])
+                i++;
+            }
+        </tbody>
+    </table>
+   
+</fieldset>
+}

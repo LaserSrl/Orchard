@@ -6,9 +6,9 @@
 <div class="manage">
     <a class="button primaryAction" href="@Url.Action("GetPostTokenFacebook", "FacebookAccount", new { area = "Laser.Orchard.Facebook", id = 0 })" title="@T("Add Facebook Account")">@T("Add Facebook Account")</a>
 </div>
-@using (Html.BeginForm("Index", "FacebookAccount", FormMethod.Post)) {
-    @Html.AntiForgeryToken()
-    <fieldset class="bulk-actions">
+@using (Html.BeginForm("Index", "FacebookAccount", FormMethod.Get)) {
+ @*   @Html.AntiForgeryToken() *@
+   <fieldset class="bulk-actions">
         <label for="search">@T("Search:")</label>
         @Html.TextBoxFor(m => m.Search.Expression)
 
