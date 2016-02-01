@@ -28,7 +28,6 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         //    T = NullLocalizer.Instance;
         //}
 
-
         protected override DriverResult Editor(CommunicationAdvertisingPart part, dynamic shapeHelper) {
             return ContentShape("Parts_Advertising_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/Advertising_Edit", Model: null, Prefix: Prefix));
     

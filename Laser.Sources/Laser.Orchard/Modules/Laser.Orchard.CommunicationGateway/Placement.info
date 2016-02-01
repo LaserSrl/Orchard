@@ -1,9 +1,17 @@
 ﻿<Placement>
+  <Match DisplayType="Detail">
+    <Place Parts_Advertising="Content:before.1" />
+  </Match>
+  <Match ContentType="CommunicationAdvertising">
+    <Match DisplayType="Summary">
+      <Place Parts_Title_Summary="-" />
+    </Match>
+  </Match>
   <Match ContentType="CommunicationAdvertising">
     <Place Fields_ContentPicker_Edit__MobilePushPart-RelatedContent="-" />
     <Place Fields_ContentPicker_Edit-Campaign="-"/>
     <Place Parts_CommunicationAdvertising_Edit="Content:1"/>
-  </Match>
+  </Match>  
   <Place Fields_MediaLibraryPicker_Edit="Content:2"/>
   <Place Parts_EmailContact_Edit="Content:4"/>
   <Place Parts_SmsContact_Edit="Content:4.1"/>

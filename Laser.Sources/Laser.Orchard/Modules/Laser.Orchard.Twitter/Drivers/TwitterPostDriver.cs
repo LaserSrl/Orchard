@@ -30,8 +30,7 @@ using System.Web.UI.WebControls;
 using System.Xml.Linq;
 using System.Linq.Expressions;
 using Orchard.Environment.Configuration;
-
-
+using Orchard.UI.Admin;
 
 namespace Laser.Orchard.Twitter.Drivers {
 
@@ -67,49 +66,61 @@ namespace Laser.Orchard.Twitter.Drivers {
         }
 
         protected override DriverResult Display(TwitterPostPart part, string displayType, dynamic shapeHelper) {
-            if (displayType == "Detail") {
-                ProviderConfigurationRecord pcr = _providerConfigurationService.Get("Twitter");
-                TwitterOgVM vm = new TwitterOgVM();
-                if (pcr != null)
-                    vm.Site = pcr.UserIdentifier;
-                TwitterPostPartSettingVM setting = part.Settings.GetModel<TwitterPostPartSettingVM>();
-                var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
-                if (!string.IsNullOrEmpty(setting.Description))
-                    vm.Description = _tokenizer.Replace(setting.Description, tokens);
-                else
-                    vm.Description = part.TwitterDescription;
-                if (!string.IsNullOrEmpty(setting.Image)) {
-                    string ids = _tokenizer.Replace(setting.Image, tokens);
+            //Determine if we're on an admin page
+            bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            if (isAdmin)
+            {
+                if ((displayType == "Detail") || (displayType == "Summary"))
+                {
+                    ProviderConfigurationRecord pcr = _providerConfigurationService.Get("Twitter");
+                    TwitterOgVM vm = new TwitterOgVM();
+                    if (pcr != null)
+                        vm.Site = pcr.UserIdentifier;
+                    TwitterPostPartSettingVM setting = part.Settings.GetModel<TwitterPostPartSettingVM>();
+                    var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
+                    if (!string.IsNullOrEmpty(setting.Description))
+                        vm.Description = _tokenizer.Replace(setting.Description, tokens);
+                    else
+                        vm.Description = part.TwitterDescription;
+                    if (!string.IsNullOrEmpty(setting.Image))
+                    {
+                        string ids = _tokenizer.Replace(setting.Image, tokens);
 
-                    int idimage;
-                    Int32.TryParse(ids.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
-                    if (idimage > 0) {
-                        // _orchardServices.ContentManager.Get(id);
-                        // vm.Image = Url.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));
-                        var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-                        //       vm.Image = urlHelper.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));// get current display link
-                        //   Fvm.Link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(Twitterpart));// get current display link
-                        var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
-                        //   var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
-                        //  part.TwitterPicture = pathdocument;// 
-                        vm.Image = urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
-                        //   .ResizeMediaUrl(Width: previewWidth, Height: previewHeight, Mode: "crop", Alignment: "middlecenter", Path: Model.MediaData.MediaUrl)');
+                        int idimage;
+                        Int32.TryParse(ids.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
+                        if (idimage > 0)
+                        {
+                            // _orchardServices.ContentManager.Get(id);
+                            // vm.Image = Url.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));
+                            var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                            //       vm.Image = urlHelper.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));// get current display link
+                            //   Fvm.Link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(Twitterpart));// get current display link
+                            var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
+                            //   var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
+                            //  part.TwitterPicture = pathdocument;// 
+                            vm.Image = urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
+                            //   .ResizeMediaUrl(Width: previewWidth, Height: previewHeight, Mode: "crop", Alignment: "middlecenter", Path: Model.MediaData.MediaUrl)');
+                        }
+                        else
+                            vm.Image = "";
                     }
                     else
-                        vm.Image = "";
+                        vm.Image = part.TwitterPicture;
+                    if (!string.IsNullOrEmpty(setting.Title))
+                        vm.Title = _tokenizer.Replace(setting.Title, tokens);
+
+                    else
+                        vm.Title = part.TwitterTitle;
+                    return ContentShape("Parts_TwitterPost_Detail",
+                        () => shapeHelper.Parts_TwitterPost_Detail(Twitter: vm, SendOnNextPublish: part.SendOnNextPublish));
                 }
                 else
-                    vm.Image = part.TwitterPicture;
-                if (!string.IsNullOrEmpty(setting.Title))
-                    vm.Title = _tokenizer.Replace(setting.Title, tokens);
-
-                else
-                    vm.Title = part.TwitterTitle;
-                return ContentShape("Parts_TwitterPost_Detail",
-                    () => shapeHelper.Parts_TwitterPost_Detail(Twitter: vm));
+                    return null;
             }
             else
+            {
                 return null;
+            }
         }
         //private string DoTheResize(int Width, int Height, string path)
         //{

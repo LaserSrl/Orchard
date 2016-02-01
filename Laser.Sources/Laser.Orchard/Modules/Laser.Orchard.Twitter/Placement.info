@@ -5,6 +5,11 @@
     <Place Parts_TwitterPost_Detail="Content:after" />
   </Match>
   <Match ContentType="CommunicationAdvertising">
-    <Place Parts_TwitterPostt="Content:5.2" />
+    <Place Parts_TwitterPost="Content:5.2" />
+  </Match>
+  <Match ContentType="CommunicationAdvertising">
+    <Match DisplayType="Summary">
+      <Place Parts_TwitterPost_Detail="Content:2" />
+    </Match>
   </Match>
 </Placement>
