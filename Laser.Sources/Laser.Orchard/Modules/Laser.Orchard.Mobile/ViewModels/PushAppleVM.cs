@@ -13,5 +13,7 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public bool ValidPayload { get; set; }
         public string Ct { get; set; }
         public string Al { get; set; }
+        public string Eu { get; set; }
+        public string Iu { get; set; }
     }
 }

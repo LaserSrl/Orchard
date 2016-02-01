@@ -26,7 +26,6 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             T = NullLocalizer.Instance;
         }
 
-
         protected override DriverResult Editor(CommunicationAdvertisingPart part, dynamic shapeHelper) {
             bool linkinterno = true;
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {

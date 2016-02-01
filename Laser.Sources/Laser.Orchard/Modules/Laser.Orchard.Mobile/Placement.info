@@ -7,4 +7,9 @@
   <Match ContentType="CommunicationAdvertising">
     <Place Parts_MobilePush_Edit="Content:5.4" />
   </Match>
+  <Match ContentType="CommunicationAdvertising">
+    <Match DisplayType="Summary">
+      <Place Parts_MobilePush="Content:3" />
+    </Match>
+  </Match>
 </Placement>

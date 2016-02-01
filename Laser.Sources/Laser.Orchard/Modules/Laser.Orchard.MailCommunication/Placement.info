@@ -12,4 +12,11 @@
     <Place Parts_CustomTemplatePicker_Edit="-" />
     <Place Parts_MailCommunication_Edit="Content:5.3"/>
   </Match>
+  <Match ContentType="CommunicationAdvertising">
+    <Match DisplayType="Summary">
+      <Place Fields_Common_Text-Message="-" />
+      <Place Fields_Link="-" />
+      <Place Parts_MailCommunication="Content:1"/>
+    </Match>
+  </Match>
 </Placement>
