@@ -180,7 +180,7 @@ namespace Laser.Orchard.Twitter.Controllers {
             if (Request["oauth_token"] == null) {
                 string tmpreq = Request.Url.AbsoluteUri;
                 OAuthTokenResponse reqToken = OAuthUtility.GetRequestToken(consumerKey, consumerSecret, tmpreq);
-                Response.Redirect(string.Format("http://twitter.com/oauth/authorize?oauth_token={0}", reqToken.Token));
+                Response.Redirect(string.Format("https://api.twitter.com/oauth/authorize?oauth_token={0}", reqToken.Token));
             } else {
                 string requestToken = Request["oauth_token"].ToString();
                 string verifier = Request["oauth_verifier"].ToString();
