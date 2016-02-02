@@ -115,14 +115,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Styles\CommunicationGateway-admin.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -186,7 +178,6 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
     <None Include="Views\CampaignAdmin\index.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\QueryFilter.cshtml" />
     <Content Include="Views\ContactsAdmin\index.cshtml" />
