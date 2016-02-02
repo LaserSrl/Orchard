@@ -1,2 +1,51 @@
-﻿<ul class="comm-tabbed">
+﻿@using (Script.Head()) {
+    Script.Require("jQueryUI").AtHead();
+}
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('button[name="submit.Publish"]').click(function () {
+                var formtosubmit=  $(this).closest('form');
+                $("#dialog-confirm").dialog({
+                    resizable: false,
+                    height: 240,
+                    modal: true,
+                    buttons: {
+                        "Confirm Publish": function () {
+                            $(this).dialog("close");
+                            formtosubmit.submit();
+                        },
+                        Cancel: function () {
+                           $(this).dialog("close");
+                            
+                        }
+                    }
+                });
+                return false;
+
+@*                if (confirm('@T("Are you sure?/r/n this action will<br/>send").ToString()')) {
+                    
+                } else
+                    return false;*@
+            });
+        });
+
+
+      
+    </script>
+} 
+<div id="dialog-confirm" title="Publish action" style="display:none">
+  <p>
+      <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;">
+     </span>These action will make take this effect:<br />
+      <ul>
+          <li> Post on Facebook</li>
+          <li> Post on Twitter</li>
+           <li>Send Email</li>
+          <li>Send Sms</li>
+      </ul>
+       Are you sure?</p>
+</div>
+<ul class="comm-tabbed">
 </ul>

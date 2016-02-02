@@ -46,7 +46,7 @@
     <button type="submit" name="submit.Save" value="submit.MailTest">@T("Send for test")</button>
 </fieldset>
 <fieldset>
-    @Html.LabelFor(m => m.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
+    @Html.LabelFor(m => m.SendOnNextPublish, T("Approved").Text, new { @class = "forcheckbox" })
     @if (!disabledElements) { 
         @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-mail" }) 
         <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet sent.")

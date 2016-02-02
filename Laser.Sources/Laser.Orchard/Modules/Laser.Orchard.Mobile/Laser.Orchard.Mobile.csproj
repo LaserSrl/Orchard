@@ -165,7 +165,6 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-    <Content Include="packages.config" />
     <None Include="Service References\SmsServiceReference\configuration91.svcinfo" />
     <None Include="Service References\SmsServiceReference\configuration.svcinfo" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
