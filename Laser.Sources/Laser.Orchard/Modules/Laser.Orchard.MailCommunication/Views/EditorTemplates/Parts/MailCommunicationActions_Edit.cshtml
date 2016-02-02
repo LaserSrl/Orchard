@@ -41,7 +41,7 @@
     @Html.CheckBoxFor(model => model.SendToTestEmail, new { @class = "rcswitcher-checkbox-mail" })
 </fieldset>
 <fieldset id="test-email-container" style="@((!Model.SendToTestEmail) ? "display:none;" : "")">
-    @Html.LabelFor(m => m.SendOnNextPublish, T("Test Email").Text, new { @class = "forcheckbox" })
+    @Html.LabelFor(m => m.EmailForTest, T("Test Email").Text, new { @class = "forcheckbox" })
     @Html.TextBoxFor(model => model.EmailForTest, new { @class = "text medium" })
     <button type="submit" name="submit.Save" value="submit.MailTest">@T("Send for test")</button>
 </fieldset>
