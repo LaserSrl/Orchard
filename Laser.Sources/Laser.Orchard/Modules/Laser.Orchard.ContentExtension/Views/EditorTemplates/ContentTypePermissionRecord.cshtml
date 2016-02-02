@@ -1,0 +1,17 @@
+﻿@model Laser.Orchard.ContentExtension.Models.ContentTypePermissionRecord
+<tr>
+    <td>
+        @Html.EditorFor(settings => settings.ContentType)
+        @Html.HiddenFor(settings => settings.Id)
+
+    </td>
+    <td>
+        @Html.EditorFor(settings => settings.GetPermission)
+    </td>
+    <td>
+        @Html.EditorFor(settings => settings.PostPermission)
+    </td>
+    <td>
+        @Html.EditorFor(settings => settings.DeletePermission)
+    </td>
+</tr>

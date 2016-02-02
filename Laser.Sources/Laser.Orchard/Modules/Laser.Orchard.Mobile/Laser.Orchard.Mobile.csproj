@@ -152,6 +152,7 @@
   <ItemGroup>
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
     <Content Include="Placement.info" />
+    <Content Include="packages.config" />
     <None Include="Service References\SmsServiceReference\configuration91.svcinfo" />
     <None Include="Service References\SmsServiceReference\configuration.svcinfo" />
     <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.GetSmsStateByExternalIdResponse.datasource">
@@ -196,6 +197,7 @@
     <Content Include="Views\EditorTemplates\Parts\UserPwdRecoveryPart_Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Fields\ContentPicker.Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\MobileContact_Edit.cshtml" />
+    <Content Include="Views\Parts\MobilePush.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\TaxonomiePushController.cs" />

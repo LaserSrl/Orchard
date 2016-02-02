@@ -10,6 +10,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.UI.Admin;
 
 namespace Laser.Orchard.MailCommunication.Drivers {
     public class MailCommunicationPartDriver : ContentPartDriver<MailCommunicationPart> {
@@ -29,18 +30,22 @@ namespace Laser.Orchard.MailCommunication.Drivers {
 
         protected override DriverResult Display(MailCommunicationPart part, string displayType, dynamic shapeHelper)
         {
-            //var mapsSettings = _orchardServices.WorkContext.CurrentSite.As<MapsSiteSettingsPart>();
-
-            if (displayType == "Summary")
-                return ContentShape("Parts_MailCommunication",
-                    () => shapeHelper.Parts_MailCommunication(MailMessageSent: part.MailMessageSent));
-            if (displayType == "SummaryAdmin")
-                return ContentShape("Parts_MailCommunication",
-                    () => shapeHelper.Parts_MailCommunication(MailMessageSent: part.MailMessageSent));
-            if (displayType == "AdvSummary")
-                return ContentShape("Parts_MailCommunication",
-                    () => shapeHelper.Parts_MailCommunication(MailMessageSent: part.MailMessageSent));
-            return null;
+            //Determine if we're on an admin page
+            bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            if (isAdmin)
+            {
+                if (displayType == "Summary")
+                    return ContentShape("Parts_MailCommunication",
+                        () => shapeHelper.Parts_MailCommunication(MailMessageSent: part.MailMessageSent, SendOnNextPublish: part.SendOnNextPublish, RecipientsNumber: part.RecipientsNumber, SentMailsNumber: part.SentMailsNumber));
+                if (displayType == "SummaryAdmin")
+                    return ContentShape("Parts_MailCommunication",
+                        () => shapeHelper.Parts_MailCommunication(MailMessageSent: part.MailMessageSent, SendOnNextPublish: part.SendOnNextPublish, RecipientsNumber: part.RecipientsNumber, SentMailsNumber: part.SentMailsNumber));
+                return null;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         protected override DriverResult Editor(MailCommunicationPart part, dynamic shapeHelper) {

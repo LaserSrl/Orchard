@@ -114,6 +114,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="packages.config" />
     <Content Include="Styles\CommunicationGateway-admin.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />

@@ -1,0 +1,13 @@
+﻿Name: Laser.Orchard.Generator
+AntiForgery: enabled
+Author: Lorenzo Frediani - Laser.srl
+Website: http://orchardproject.net
+Version: 1.0
+OrchardVersion: 1.0
+Description: Description for the module
+Features:
+    Laser.Orchard.Generator:
+		Name: Laser Generator
+        Description: Enable only in development environment
+		Dependencies: Laser.Orchard.WebServices, Laser.Orchard.StartupConfig,Orchard.Autoroute,Orchard.Projections,Orchard.Taxonomies
+		Category: Services

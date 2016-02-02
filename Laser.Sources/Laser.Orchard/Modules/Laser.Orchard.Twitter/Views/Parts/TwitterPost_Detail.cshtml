@@ -11,3 +11,11 @@
 //  SetMeta("og:type", "article");
 //  SetMeta("twitter:site", "");
 }
+@if (Model.SendOnNextPublish)
+{
+    <span style="color:yellow;font-weight:bold"><i class="fa fa-twitter"></i></span>
+}
+else
+{
+    <span style="color:red;font-weight:bold"><i class="fa fa-twitter"></i></span>
+}
