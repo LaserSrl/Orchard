@@ -25,6 +25,9 @@ using System.Web;
 using System.Collections.Specialized;
 using System.Dynamic;
 using System.Data.Entity.Design.PluralizationServices;
+using System.Security.Cryptography.X509Certificates;
+using Laser.Orchard.ExternalContent.Settings;
+using Laser.Orchard.Commons.Helpers;
 
 //using System.Web.Razor;
 
@@ -33,7 +36,7 @@ using System.Data.Entity.Design.PluralizationServices;
 
 namespace Laser.Orchard.ExternalContent.Services {
     public interface IFieldExternalService : IDependency {
-        dynamic GetContentfromField(Dictionary<string, object> contesto, string field, string nomexlst, string contentType = "", HttpVerbOptions httpMethod = HttpVerbOptions.GET, HttpDataTypeOptions httpDataType = HttpDataTypeOptions.JSON, string bodyRequest = "");
+        dynamic GetContentfromField(Dictionary<string, object> contesto, string field, string nomexlst, FieldExternalSetting settings, string contentType = "", HttpVerbOptions httpMethod = HttpVerbOptions.GET, HttpDataTypeOptions httpDataType = HttpDataTypeOptions.JSON, string bodyRequest = "");
         string GetUrl(Dictionary<string, object> contesto, string externalUrl);
     }
 
@@ -57,7 +60,7 @@ namespace Laser.Orchard.ExternalContent.Services {
     }
 
     public class FieldExternalService : IFieldExternalService {
-    
+
         private readonly ITokenizer _tokenizer;
         private readonly ShellSettings _shellSetting;
         private readonly IWorkContextAccessor _workContext;
@@ -80,8 +83,7 @@ namespace Laser.Orchard.ExternalContent.Services {
             Uri tokenizedzedUri;
             try {
                 tokenizedzedUri = new Uri(tokenizedzedUrl);
-            }
-            catch {
+            } catch {
                 // gestisco il caso in cui passo un'url e non i parametri di un'url
                 tokenizedzedUrl = _tokenizer.Replace(externalUrl, contesto, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
                 tokenizedzedUri = new Uri(tokenizedzedUrl);
@@ -142,8 +144,7 @@ namespace Laser.Orchard.ExternalContent.Services {
                         }
                         newJsonObject.Add(property.Name, myjarray);
                         // newJsonObject.Add(property.Name, jsonflusher((JObject)property.Value));
-                    }
-                    else if (property.Value.GetType().Name == "JObject") {
+                    } else if (property.Value.GetType().Name == "JObject") {
                         newJsonObject.Add(property.Name.Replace(" ", ""), jsonflusher((JObject)property.Value));
                     }
                 }
@@ -151,12 +152,23 @@ namespace Laser.Orchard.ExternalContent.Services {
             return newJsonObject;
 
         }
-        public dynamic GetContentfromField(Dictionary<string, object> contesto, string externalUrl, string nomexlst, string contentType = "", HttpVerbOptions httpMethod = HttpVerbOptions.GET, HttpDataTypeOptions httpDataType = HttpDataTypeOptions.JSON, string bodyRequest = "") {
+        public dynamic GetContentfromField(Dictionary<string, object> contesto, string externalUrl, string nomexlst, FieldExternalSetting settings, string contentType = "", HttpVerbOptions httpMethod = HttpVerbOptions.GET, HttpDataTypeOptions httpDataType = HttpDataTypeOptions.JSON, string bodyRequest = "") {
             dynamic ci = null;
             string UrlToGet = "";
             try {
                 UrlToGet = GetUrl(contesto, externalUrl);
-                string webpagecontent = GetHttpPage(UrlToGet, httpMethod, httpDataType, bodyRequest).Trim();
+                string certPath;
+                string webpagecontent;
+                if (settings.CertificateRequired && !String.IsNullOrWhiteSpace(settings.CerticateFileName)){
+                    certPath = String.Format(HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\ExternalFields\{0}", settings.CerticateFileName);
+                    if (File.Exists(certPath)) {
+                        webpagecontent = GetHttpPage(UrlToGet, httpMethod, httpDataType, bodyRequest, certPath, settings.CertificatePrivateKey.DecryptString(_shellSetting.EncryptionKey)).Trim();
+                    } else { 
+                        throw new Exception(String.Format("File \"{0}\" not found! Upload certificate via FTP.", certPath));
+                    }
+                } else {
+                    webpagecontent = GetHttpPage(UrlToGet, httpMethod, httpDataType, bodyRequest).Trim();
+                }
                 if (!webpagecontent.StartsWith("<")) {
                     if (webpagecontent.StartsWith("[")) {
                         webpagecontent = String.Concat("{\"", nomexlst, "List", "\":", webpagecontent, "}");
@@ -176,8 +188,7 @@ namespace Laser.Orchard.ExternalContent.Services {
 
                 ci = RazorTransform(webpagecontent.Replace(" xmlns=\"\"", ""), nomexlst, contentType);
 
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Logger.Error(ex, UrlToGet);
             }
             return (ci);
@@ -232,21 +243,21 @@ namespace Laser.Orchard.ExternalContent.Services {
         //}
         public List<XmlNode> listanodi = new List<XmlNode>();
         private void correggiXML(XmlDocument xml) {
-          
+
             foreach (XmlNode nodo in xml.ChildNodes) {
                 doiteratenode(nodo, xml);
             }
             foreach (XmlNode sottonodo in listanodi) {
                 int n;
                 bool isNumeric = int.TryParse(sottonodo.Name, out n);
-                if (isNumeric ) {
+                if (isNumeric) {
                     RenameNode(xml, sottonodo, "lasernumeric");
                 }
-                if (sottonodo.Name.ToLower() == "description" || sottonodo.Name.ToLower() == "abstract" || sottonodo.Name.ToLower() == "extension"){
-                    RenameNode(xml, sottonodo, sottonodo.Name+"text");
+                if (sottonodo.Name.ToLower() == "description" || sottonodo.Name.ToLower() == "abstract" || sottonodo.Name.ToLower() == "extension") {
+                    RenameNode(xml, sottonodo, sottonodo.Name + "text");
                 }
             }
-  
+
         }
         private void doiteratenode(XmlNode nodo, XmlDocument xml) {
             foreach (XmlNode sottonodo in nodo.ChildNodes) {
@@ -254,12 +265,12 @@ namespace Laser.Orchard.ExternalContent.Services {
                 bool isNumeric = int.TryParse(sottonodo.Name, out n);
                 if (isNumeric || sottonodo.Name.ToLower() == "description" || sottonodo.Name.ToLower() == "abstract" || sottonodo.Name.ToLower() == "extension") {
                     listanodi.Add(sottonodo);
-                   // RenameNode(xml, sottonodo, "lasernumeric");
+                    // RenameNode(xml, sottonodo, "lasernumeric");
                 }
                 doiteratenode(sottonodo, xml);
             }
         }
-        void RenameNode(XmlDocument doc,XmlNode e, string newName) {
+        void RenameNode(XmlDocument doc, XmlNode e, string newName) {
             XmlNode newNode = doc.CreateNode(e.NodeType, newName, null);
             while (e.HasChildNodes) {
                 newNode.AppendChild(e.FirstChild);
@@ -279,11 +290,11 @@ namespace Laser.Orchard.ExternalContent.Services {
                 myfile = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\Xslt\" + xsltname + ".cshtml";
             }
             if (System.IO.File.Exists(myfile)) {
-                   string mytemplate = File.ReadAllText(myfile);
-                   string myfile2 = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\common.cshtml";
-                    if (System.IO.File.Exists(myfile)) {
-                        mytemplate= File.ReadAllText(myfile2)+mytemplate;;
-                    }
+                string mytemplate = File.ReadAllText(myfile);
+                string myfile2 = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\common.cshtml";
+                if (System.IO.File.Exists(myfile)) {
+                    mytemplate = File.ReadAllText(myfile2) + mytemplate; ;
+                }
                 if (!string.IsNullOrEmpty(mytemplate)) {
                     var config = new TemplateServiceConfiguration();
                     string result = "";
@@ -306,37 +317,36 @@ namespace Laser.Orchard.ExternalContent.Services {
                     //var robots = dp.GetElements("*");
                     var docwww = XDocument.Parse(xmlpage);
 
-               
-              //   temp er = new temp();
-              //  XmlDocument mydoc = er.ToXmlDocument(docwww);
-                //foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/_data/lasernumeric/film")) {
-                //    if (!bookToModify.HasChildNodes) {
-                //        bookToModify.ParentNode.ParentNode.RemoveChild(bookToModify.ParentNode);
-                //    }
-                //}
-                //    mydoc = er.aggiungipadre(mydoc, "root", "_dataList", "_data");
-                //    mydoc = er.aggiungipadre(mydoc, "root/_dataList/_data/media", "ImageList", "image");
-                //    mydoc = er.rendinumeric(mydoc, "root/_dataList/_data/id");
-                //    mydoc = er.cambianome(mydoc, "root/_dataList/_data/id", "OriginalId");
-                ////    mydoc = er.RimuoviNodo(mydoc, "root/_dataList");
-                //    mydoc = er.aggiungifiglio(mydoc, "root/_dataList/_data/media/ImageList", "image");
-                //    mydoc = er.RimuoviAlberaturaTranne(mydoc, "root/_dataList");
 
-             //     er.SpanXDocument(er.ToXDocument(mydoc).Root);
-                //   er.SpanXDocument(docwww.Root);
+                    //   temp er = new temp();
+                    //  XmlDocument mydoc = er.ToXmlDocument(docwww);
+                    //foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/_data/lasernumeric/film")) {
+                    //    if (!bookToModify.HasChildNodes) {
+                    //        bookToModify.ParentNode.ParentNode.RemoveChild(bookToModify.ParentNode);
+                    //    }
+                    //}
+                    //    mydoc = er.aggiungipadre(mydoc, "root", "_dataList", "_data");
+                    //    mydoc = er.aggiungipadre(mydoc, "root/_dataList/_data/media", "ImageList", "image");
+                    //    mydoc = er.rendinumeric(mydoc, "root/_dataList/_data/id");
+                    //    mydoc = er.cambianome(mydoc, "root/_dataList/_data/id", "OriginalId");
+                    ////    mydoc = er.RimuoviNodo(mydoc, "root/_dataList");
+                    //    mydoc = er.aggiungifiglio(mydoc, "root/_dataList/_data/media/ImageList", "image");
+                    //    mydoc = er.RimuoviAlberaturaTranne(mydoc, "root/_dataList");
+
+                    //     er.SpanXDocument(er.ToXDocument(mydoc).Root);
+                    //   er.SpanXDocument(docwww.Root);
                     using (var service = RazorEngineService.Create(config)) {
-                        
+
                         result = service.RunCompile(mytemplate, "htmlRawTemplatea", null, docwww);
                     }
                     output = result.Replace("\r\n", "");
                     //if (!string.IsNullOrEmpty(resultnobr)) {
 
                     // }
-                }
-                else
+                } else
                     output = "";
                 while (output.StartsWith("\t")) {
-                    output=output.Substring(1);
+                    output = output.Substring(1);
                 }
 
                 string xml = RemoveAllNamespaces(output);
@@ -354,13 +364,12 @@ namespace Laser.Orchard.ExternalContent.Services {
                 dynamic dynamiccontent = Json.Decode(JsonData, typeof(object));
                 return dynamiccontent;
 
-            }
-            else {
+            } else {
                 return XsltTransform(xmlpage, xsltname, contentType);
             }
         }
 
-       
+
 
         private dynamic XsltTransform(string xmlpage, string xsltname, string contentType = "") {
             string output = "", myXmlFileMoreSpecific, myXmlFileLessSpecific, myXmlFile;
@@ -432,8 +441,7 @@ namespace Laser.Orchard.ExternalContent.Services {
                 myXslTrans.Transform(myXPathDoc, argsList, xmlWriter);
 
                 output = sw.ToString();
-            }
-            else {
+            } else {
                 output = xmlpage;
                 Logger.Error("file not exist ->" + myXmlFile);
             }
@@ -454,7 +462,7 @@ namespace Laser.Orchard.ExternalContent.Services {
         }
 
 
-        private static string GetHttpPage(string uri, HttpVerbOptions httpMethod, HttpDataTypeOptions httpDataType, string bodyRequest) {
+        private static string GetHttpPage(string uri, HttpVerbOptions httpMethod, HttpDataTypeOptions httpDataType, string bodyRequest, string certificatePath = null, string privateKey = null) {
 
             //Uri uri = new Uri("https://mysite.com/auth");
             //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri) as HttpWebRequest;
@@ -472,7 +480,12 @@ namespace Laser.Orchard.ExternalContent.Services {
             Stream dataStream = null;
             String strResult;
             WebResponse objResponse;
-            WebRequest objRequest = (HttpWebRequest)WebRequest.Create(uri);
+            HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create(uri);
+            if (certificatePath != null) {
+                var bytes = File.ReadAllBytes(certificatePath);
+                X509Certificate2 cert = new X509Certificate2(bytes, privateKey);
+                objRequest.ClientCertificates.Add(cert);
+            }
             objRequest.Headers.Add(HttpRequestHeader.ContentEncoding, "gzip");
             //    objRequest.Method = WebRequestMethods.Http.Get;
             //  objRequest.Accept = "application/json";
@@ -562,8 +575,7 @@ namespace Laser.Orchard.ExternalContent.Services {
             if (node != null) {
                 if (node.HasElements) {
                     result = new DynamicXml(node);
-                }
-                else {
+                } else {
                     result = node.Value;
                 }
                 return true;
@@ -578,6 +590,6 @@ namespace Laser.Orchard.ExternalContent.Services {
 
 
 
-     
+
     }
 }

@@ -17,12 +17,43 @@
     <span class="hint">@T("Used only on mobile communication. If checked, the linked content will be put in l field")</span>
 </fieldset>
 <fieldset>
+    <legend>@T("Certificate informations")</legend>
+    <div class='row'>
+        <div class='col-sm-4'>
+            <div class='form-group'>
+                @Html.CheckBoxFor(m => m.CertificateRequired)
+                @Html.LabelFor(m => m.CertificateRequired, T("Attach certificate to request").Text, new { @class = "forcheckbox" })
+                <span class="hint">@T("If checked, a certificate will be attached to the request.")</span>
+            </div>
+        </div>
+        <div class='col-sm-4'>
+            <div class='form-group'>
+                @Html.LabelFor(m => m.CerticateFileName, T("Certificate file name."))
+                @Html.TextBoxFor(m => m.CerticateFileName, new { @class = "text medium" })
+                <span class="hint">@T("The certificate file name. You also have to FTP upload the certificate in folder /App_Data/Sites/[tenant]/externalfields/ ")</span>
+            </div>
+        </div>
+        <div class='col-sm-4'>
+            <div class='form-group'>
+                @Html.LabelFor(m => m.CertificatePrivateKey, T("Private key."))
+                @Html.TextBoxFor(m => m.CertificatePrivateKey, new { Value = "", @class = "text medium" })
+
+                @if (!String.IsNullOrEmpty(Model.CertificatePrivateKey)) {
+                    <span class="hint">@T("The certificate private key. Insert (none) if no key is required. A private key has already been set, leave empty to keep it unchanged.")</span>
+                } else {
+                    <span class="hint">@T("The certificate private key. The key is empty.")</span>
+                }
+            </div>
+        </div>
+    </div>
+</fieldset>
+<fieldset>
     <label for="@Html.FieldIdFor(m => m.ExternalURL)">@T("External URL")</label>
     @Html.TextBoxFor(m => m.ExternalURL, new { @class = "text large tokenized" })
     <span class="hint">@T("Insert url and token")</span>
     @Html.ValidationMessageFor(m => m.ExternalURL)
 </fieldset>
- @Display.TokenHint()
+@Display.TokenHint()
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.HttpVerb)">@T("Use this HttpVerb")</label>
     @Html.DropDownListFor(m => m.HttpVerb, new SelectList(Enum.GetValues(typeof(Laser.Orchard.ExternalContent.HttpVerbOptions)), Model.HttpVerb), new { @class = "text", onclick = "verbChanged(this)" })
@@ -39,7 +70,7 @@
         @Html.TextAreaFor(m => m.BodyRequest, new { @class = "text large tokenized" })
         <span class="hint">@T("Insert request body")</span>
     </fieldset>
-     @Display.TokenHint()
+    @Display.TokenHint()
     <script type="text/javascript">
         function verbChanged(e) {
             var aux = $("#" + e.id);
