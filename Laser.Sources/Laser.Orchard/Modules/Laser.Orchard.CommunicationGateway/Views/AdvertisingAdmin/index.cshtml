@@ -4,20 +4,24 @@
 
 @{
     var ContentsIndexVM = Model.ContentsIndexVM;
-    var contentIsActive = Model.Option.Campaign.Id <= 0 || (Model.Option.Campaign.CommunicationCampaignPart.ToDate.DateTime == null || Model.Option.Campaign.CommunicationCampaignPart.ToDate.DateTime > DateTime.UtcNow);
+    var contentIsActive = Model.Option.Campaign.Id <= 0 || (Model.Option.Campaign.CommunicationCampaignPart.ToDate.DateTime == DateTime.MinValue || Model.Option.Campaign.CommunicationCampaignPart.ToDate.DateTime == null || Model.Option.Campaign.CommunicationCampaignPart.ToDate.DateTime > DateTime.UtcNow);
 
     if (Model.Option.Campaign.Id > 0) {
-        Layout.Title = @T("Campaign") + " " + Model.Option.Campaign.TitlePart.Title + " - " + T("List Advertising");
-    } else {
-        Layout.Title = @T("Flash advertising") + " - " + T("List Advertising");
+        Layout.Title = Model.Option.Campaign.TitlePart.Title + " - " + T("List Advertisings");
+    }
+    else {
+        Layout.Title = @T("Flash Advertising") + " - " + T("List Advertisings");
     }
 }
 @if (Model.Option.Campaign.Id > 0) {
-    <p class="breadcrumb"><a href="@Url.Action("Index","CampaignAdmin")">@T("Campaigns List")</a> &#62; @Layout.Title</p>
+    <p class="breadcrumb"><a href="@Url.Action("Index", "CampaignAdmin")">@T("Campaigns List")</a> &#62; @Layout.Title</p>
 }
 @if (contentIsActive) {
     <div class="manage">
         <a class="button primaryAction" href="@Url.Action("Edit", "AdvertisingAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = 0, idCampaign = Model.Option.Campaign.Id })" title="@T("Create New Advertising")">@T("Create New Advertising")</a>
+        @if (Model.Option.Campaign.Id > 0) {
+            <a class="button primaryAction" href="@Url.Action("Edit", "CampaignAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = Model.Option.Campaign.Id })">@T("Edit Campaign")</a>
+        }
     </div>
 }
 @using (Html.BeginForm("Index", "AdvertisingAdmin", FormMethod.Get)) {
@@ -46,7 +50,7 @@
                         </div>
                         <div class="metadata">
                             <ul class="pageStatus">
-                                @*                                          @if  ((bool)contentIndexVM.Option){     
+                                @*                                          @if  ((bool)contentIndexVM.Option){
                                 <li> @T("Published")&nbsp;&vert;&nbsp;
                                 </li>
                                 }*@
@@ -55,11 +59,14 @@
 
                       if (tp.Days > 0) {
                         @Html.Raw(tp.Days.ToString() + " " + T("days ago"))
-                      } else if (tp.Hours > 0) {
+                      }
+                      else if (tp.Hours > 0) {
                         @Html.Raw(tp.Hours.ToString() + " " + T("hours ago"))
-                      } else if (tp.Minutes > 0) {
+                      }
+                      else if (tp.Minutes > 0) {
                         @Html.Raw(tp.Minutes.ToString() + " " + T("minutes ago"))
-                      } else if (tp.Seconds > 0) {
+                      }
+                      else if (tp.Seconds > 0) {
                         @Html.Raw(T("a moment ago"))
                       }
                         @Html.Raw("&nbsp;&vert;&nbsp;")
@@ -67,7 +74,6 @@
                                 </li>
                                 <li>@T("By") @contentIndexVM.UserName
                                 </li>
-
                             </ul>
                         </div>
                     </div>

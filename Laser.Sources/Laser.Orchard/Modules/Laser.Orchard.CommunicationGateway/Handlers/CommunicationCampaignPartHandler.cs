@@ -47,7 +47,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             DateTime? datepublish = _publishLaterService.GetScheduledPublishUtc(communicationAdvertisingPart.ContentItem.As<PublishLaterPart>());
             if (communicationAdvertisingPart.CampaignId > 0 && datepublish != null && campaign != null) {
                 DateTime datelimitcampaign = (DateTime)(((dynamic)campaign).CommunicationCampaignPart.ToDate.DateTime);
-                if (datepublish > datelimitcampaign) {
+                if (datepublish > datelimitcampaign && datelimitcampaign!=DateTime.MinValue) {
                     _notifier.Add(NotifyType.Error, T("Cannot Update! publish later date is after Campaign date"));
                     _transactions.Cancel();
                 }

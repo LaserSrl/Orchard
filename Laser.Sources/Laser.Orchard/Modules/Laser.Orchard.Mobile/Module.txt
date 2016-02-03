@@ -14,7 +14,7 @@ Features:
 		Name: Laser SMS
         Description: Extends Orchard with SMS functionality. Recovery password phone number will be added to users, in order to receive a Lost Passwrd link via SMS.
 		Category: Social
-		Dependencies: Laser.Orchard.StartupConfig
+		Dependencies: Laser.Orchard.StartupConfig,Laser.Orchard.CommunicationGateway
 	Laser.Orchard.MobileCommunicationImport
 		Name: Laser Mobile Communication Import
         Description: Link existing data communication

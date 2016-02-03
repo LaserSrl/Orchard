@@ -152,7 +152,6 @@
   <ItemGroup>
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
     <Content Include="Placement.info" />
-    <Content Include="packages.config" />
     <None Include="Service References\SmsServiceReference\configuration91.svcinfo" />
     <None Include="Service References\SmsServiceReference\configuration.svcinfo" />
     <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.GetSmsStateByExternalIdResponse.datasource">

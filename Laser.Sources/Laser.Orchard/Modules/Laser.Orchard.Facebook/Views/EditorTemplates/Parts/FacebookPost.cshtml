@@ -88,7 +88,7 @@
             }
         </fieldset>
         <fieldset>
-            @Html.LabelFor(m => m.SendOnNextPublish, T("Post on next publish").Text, new { @class = "forcheckbox" })
+            @Html.LabelFor(m => m.SendOnNextPublish, T("Approved").Text, new { @class = "forcheckbox" })
             @if (!Model.FacebookMessageSent) { 
                 @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-fb" })
                 <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet posted.")

@@ -20,7 +20,7 @@
         });
     </script>
 }
-<p class="breadcrumb"><a href="@Url.Action("Index", new { id = Request.QueryString["idCampaign"]})">@T("Advertisings List")</a> &#62; @Layout.Title</p>
+<p class="breadcrumb"><a href="@Url.Action("Index", new { id = Request.QueryString["idCampaign"]})">@T("List Advertising")</a> &#62; @Layout.Title</p>
 @using (Html.BeginFormAntiForgeryPost()) {
     @Display(Model)
 }
