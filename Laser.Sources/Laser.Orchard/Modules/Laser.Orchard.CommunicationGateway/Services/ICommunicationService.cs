@@ -69,7 +69,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 ContentItem campaign = _orchardServices.ContentManager.Get(ci.As<CommunicationAdvertisingPart>().CampaignId,VersionOptions.Latest);
                 DateTime from = ((DateTimeField)(((dynamic)campaign).CommunicationCampaignPart.FromDate)).DateTime;
                 DateTime to = ((DateTimeField)(((dynamic)campaign).CommunicationCampaignPart.ToDate)).DateTime;
-                if (from > DateTime.UtcNow || to < DateTime.UtcNow)
+                if (from > DateTime.UtcNow || (to < DateTime.UtcNow && to != DateTime.MinValue))
                     return false;
             }
             return true;

@@ -70,7 +70,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 dynamic campaignContent = _contentManager.Get(idCampaign);
 
                 // Controllo validità della campagna
-                if (campaignContent.CommunicationCampaignPart.ToDate.DateTime != null && campaignContent.CommunicationCampaignPart.ToDate.DateTime <= DateTime.UtcNow) {
+                if (campaignContent.CommunicationCampaignPart.ToDate.DateTime != null && campaignContent.CommunicationCampaignPart.ToDate.DateTime != DateTime.MinValue && campaignContent.CommunicationCampaignPart.ToDate.DateTime <= DateTime.UtcNow) {
                     _notifier.Add(NotifyType.Error, T("Campaign validity has expired. No changes allowed."));
                     return RedirectToAction("Index", "AdvertisingAdmin", new { id = idCampaign });
                 }

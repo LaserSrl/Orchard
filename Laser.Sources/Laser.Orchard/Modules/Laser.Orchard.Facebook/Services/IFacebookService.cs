@@ -90,6 +90,16 @@ namespace Laser.Orchard.Facebook.Services {
             return rsp;
         }
 
+        private void Postmultipleimages() {
+         //POST /me/books.reads?
+    //book=http://www.example.com/book/09485736/&amp;
+    //image[0][url]=http://www.example.com/09485736-cover.jpg&amp;
+    //image[0][user_generated]=true&amp;
+    //image[1][url]=http://www.example.com/recipes/09485736-art.jpg&amp;
+    //image[1][user_generated]=true&amp;
+    //access_token=VALID_ACCESS_TOKEN
+        }
+
         private List<FacebookAccountPart> Facebook_GetAccessToken(FacebookPostPart facebookpart) {
             List<FacebookAccountPart> allparts = _orchardServices.ContentManager.Query().ForType(new string[] { "SocialFacebookAccount" }).ForPart<FacebookAccountPart>().List().Where(x => x.Valid == true).ToList();
             return allparts.Where(x => facebookpart.AccountList.Contains(x.Id)).ToList();

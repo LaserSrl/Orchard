@@ -8,7 +8,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
-
+using Orchard.UI.Admin;
 
 namespace Laser.Orchard.Mobile.Drivers {
     public class MobilePushPartDriver : ContentPartDriver<MobilePushPart> {
@@ -26,7 +26,30 @@ namespace Laser.Orchard.Mobile.Drivers {
             _controllerContextAccessor = controllerContextAccessor;
         }
 
-        protected override DriverResult Editor(MobilePushPart part, dynamic shapeHelper) {
+        protected override DriverResult Display(MobilePushPart part, string displayType, dynamic shapeHelper)
+        {
+            //Determine if we're on an admin page
+            bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            if (isAdmin)
+            {
+                if (displayType == "Summary")
+                {
+                    return ContentShape("Parts_MobilePush",
+                        () => shapeHelper.Parts_MobilePush(SendOnNextPublish: part.ToPush));
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        protected override DriverResult Editor(MobilePushPart part, dynamic shapeHelper)
+        {
             return Editor(part, null, shapeHelper);
 
         }

@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.Mobile.Settings;
 using Laser.Orchard.Mobile.ViewModels;
@@ -21,6 +22,7 @@ using PushSharp.Windows;
 using PushSharp.WindowsPhone;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
@@ -44,7 +46,7 @@ namespace Laser.Orchard.Mobile.Services {
     public class PushNotificationService : IPushNotificationService {
         private readonly IRepository<PushNotificationRecord> _pushNotificationRepository;
         private readonly IRepository<UserDeviceRecord> _userDeviceRecord;
-        private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
+        //private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
 
         public Localizer T { get; set; }
         private readonly INotifier _notifier;
@@ -53,7 +55,7 @@ namespace Laser.Orchard.Mobile.Services {
         private readonly ShellSettings _shellSetting;
         private readonly ISessionLocator _sessionLocator;
 
-        //private readonly ICommunicationService _communicationService;
+        public ICommunicationService _communicationService;
         private readonly ITokenizer _tokenizer;
 
         private Int32 messageAppleSent;
@@ -67,11 +69,11 @@ namespace Laser.Orchard.Mobile.Services {
                 IMylogService myLog,
                 ShellSettings shellSetting,
                 ISessionLocator sessionLocator,
-                ITokenizer tokenizer,
-            IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord
-            //   ,ICommunicationService communicationService
+                ITokenizer tokenizer
+         //   IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord,
+         //      ICommunicationService communicationService non posso usare l'injection altrimenti vanno in errore i tenant che non hanno ancora la communication abilitata
          ) {
-            _repositoryCommunicationSmsRecord = repositoryCommunicationSmsRecord;
+      //      _repositoryCommunicationSmsRecord = repositoryCommunicationSmsRecord;
             _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
             _pushNotificationRepository = pushNotificationRepository;
@@ -83,7 +85,9 @@ namespace Laser.Orchard.Mobile.Services {
             QueryDevice = "";
             _tokenizer = tokenizer;
             _userDeviceRecord = userDeviceRecord;
-            //  _communicationService = communicationService;
+        //    _communicationService = communicationService;
+            _orchardServices.WorkContext.TryResolve<ICommunicationService>(out _communicationService);
+             
         }
 
         public void Synchronize() {
@@ -387,18 +391,54 @@ namespace Laser.Orchard.Mobile.Services {
 
         private void SendAllAndroidPart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, string queryDevice) {
             PushAndroidVM newpush = new PushAndroidVM();
-            string ctype = "";
-            string displayalias = "";
-            var extra = getextrainfo(idContentRelated > 0 ? idContentRelated : idcontent);
-            ctype = extra[0];
-            displayalias = extra[1];
-
-            newpush = GenerateAndroidPush(mpp, idcontent, idContentRelated, ctype, displayalias);
             bool produzione = true;
             if (_orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ShowTestOptions)
                 produzione = !(mpp.TestPush);
-            SendAllAndroid(newpush, produzione, language, queryDevice);
+
+            if (mpp.ContentItem.ContentType == "CommunicationAdvertising") {
+                SendAllAdvertisingAndroid(mpp, language, queryDevice, produzione);
+            }
+            else {
+                string ctype = "";
+                string displayalias = "";
+                var extra = getextrainfo(idContentRelated > 0 ? idContentRelated : idcontent);
+                ctype = extra[0];
+                displayalias = extra[1];
+                newpush = GenerateAndroidPush(mpp, idcontent, idContentRelated, ctype, displayalias);
+                SendAllAndroid(newpush, produzione, language, queryDevice);
+            }
         }
+
+        //private void SendAllAdvertisingApple(MobilePushPart mpp, string language, string queryDevice, bool produzione) {
+        //    Dictionary<string, string> pushexternal = new Dictionary<string, string>();
+        //    pushexternal.Add("Text", mpp.TextPush);
+        //    if (!string.IsNullOrEmpty(((dynamic)(mpp.ContentItem.As<CommunicationAdvertisingPart>())).UrlLinked.Value)) {
+        //        string shortlink = _communicationService.GetCampaignLink("Push", mpp);
+        //        pushexternal.Add("Eu", shortlink);
+        //    }
+        //    else {
+        //        string comunicatoid = mpp.ContentItem.Id.ToString();
+        //        pushexternal.Add("Iu", comunicatoid);
+        //    }
+        //    string message = JsonConvert.SerializeObject(pushexternal);
+        //    SendAllAndroidJson(message, produzione, language, queryDevice);
+        //}
+
+        private void SendAllAdvertisingAndroid(MobilePushPart mpp, string language, string queryDevice, bool produzione) {
+            Dictionary<string, string> pushexternal = new Dictionary<string, string>();
+            pushexternal.Add("Text", mpp.TextPush);
+            if (!string.IsNullOrEmpty(((dynamic)(mpp.ContentItem.As<CommunicationAdvertisingPart>())).UrlLinked.Value)) {
+                string shortlink = _communicationService.GetCampaignLink("Push", mpp);
+                pushexternal.Add("Eu", shortlink);
+            }
+            else {
+                string comunicatoid = mpp.ContentItem.Id.ToString();
+                pushexternal.Add("Iu", comunicatoid);
+            }
+            string message = JsonConvert.SerializeObject(pushexternal);
+            SendAllAndroidJson(message, produzione, language, queryDevice);
+        }
+
 
         private void SendAllAndroid(PushAndroidVM newpush, bool produzione, string language, string queryDevice = "") {
             string message = JsonConvert.SerializeObject(newpush);
@@ -490,6 +530,10 @@ namespace Laser.Orchard.Mobile.Services {
         //  }
 
         private void SendAllApplePart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, string queryDevice) {
+
+            bool produzione = true;
+            if (_orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ShowTestOptions)
+                produzione = !(mpp.TestPush);
             string ctype = "";
             string displayalias = "";
             var extra = getextrainfo(idContentRelated > 0 ? idContentRelated : idcontent);
@@ -497,10 +541,8 @@ namespace Laser.Orchard.Mobile.Services {
             displayalias = extra[1];
             PushAppleVM newpush = new PushAppleVM();
             newpush = GenerateApplePush(mpp, idcontent, idContentRelated, ctype, displayalias);
-            bool produzione = true;
-            if (_orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ShowTestOptions)
-                produzione = !(mpp.TestPush);
             SendAllApple(newpush, produzione, language, queryDevice);
+
         }
 
         private void SendAllApple(PushAppleVM newpush, bool produzione, string language, string queryDevice = "") {
@@ -540,26 +582,44 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         private PushAppleVM GenerateApplePush(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string ctype, string displayalias) {
+            AppleNotification appleNotification = new AppleNotification();
             PushAppleVM mypush = new PushAppleVM();
             mypush.Title = mpp.TitlePush;
             mypush.Text = mpp.TextPush;
-            mypush.idContent = idcontent;
-            mypush.idRelated = idContentRelated;
-            mypush.Ct = ctype;
-            mypush.Al = displayalias;
-            var partSettings = mpp.Settings.GetModel<PushMobilePartSettingVM>();
-            if (!(partSettings.AcceptZeroRelated) && mypush.idRelated == 0)
-                mypush.idRelated = mypush.idContent;
             mypush.ValidPayload = true;
-            AppleNotification appleNotification = new AppleNotification();
-            appleNotification.ForDeviceToken("TokenVirtualePerTestSuPayloadDimension")
-            .WithAlert(mypush.Text)
-                //        .WithCustomItem("Title", mypush.Title)
-            .WithCustomItem("Id", mypush.idContent)
-            .WithCustomItem("Rid", mypush.idRelated)
-            .WithCustomItem("Ct", mypush.Ct)
-            .WithCustomItem("Al", mypush.Al)
-            .WithSound(mypush.Sound);
+            if (mpp.ContentItem.ContentType == "CommunicationAdvertising") {
+                string chiave = "";
+                string valore = "";
+                if (!string.IsNullOrEmpty(((dynamic)(mpp.ContentItem.As<CommunicationAdvertisingPart>())).UrlLinked.Value)) {
+                    chiave = "Eu";
+                    valore = _communicationService.GetCampaignLink("Push", mpp);
+                }
+                else {
+                    chiave = "Iu";
+                    valore = mpp.ContentItem.Id.ToString();
+                }
+                appleNotification.ForDeviceToken("TokenVirtualePerTestSuPayloadDimension")
+                    .WithAlert(mypush.Text)
+                    .WithCustomItem(chiave, valore)
+                    .WithSound(mypush.Sound);
+            }
+            else {
+                mypush.idContent = idcontent;
+                mypush.idRelated = idContentRelated;
+                mypush.Ct = ctype;
+                mypush.Al = displayalias;
+                var partSettings = mpp.Settings.GetModel<PushMobilePartSettingVM>();
+                if (!(partSettings.AcceptZeroRelated) && mypush.idRelated == 0)
+                    mypush.idRelated = mypush.idContent;
+                appleNotification.ForDeviceToken("TokenVirtualePerTestSuPayloadDimension")
+                .WithAlert(mypush.Text)
+                    //        .WithCustomItem("Title", mypush.Title)
+                .WithCustomItem("Id", mypush.idContent)
+                .WithCustomItem("Rid", mypush.idRelated)
+                .WithCustomItem("Ct", mypush.Ct)
+                .WithCustomItem("Al", mypush.Al)
+                .WithSound(mypush.Sound);
+            }
             if (appleNotification.Payload.ToJson().Length > 255) {
                 _notifier.Information(T("Sent: message payload exceed the limit"));
                 mypush.ValidPayload = false;
@@ -676,15 +736,30 @@ namespace Laser.Orchard.Mobile.Services {
 
             foreach (PushNotificationRecord dispositivo in listdispositivo) {
                 AppleNotification appleNotification = new AppleNotification();
-                appleNotification.ForDeviceToken(dispositivo.Token)
-                .WithAlert(pushMessage.Text)
-                    //  .WithCustomItem("Title", pushMessage.Title)
-                .WithCustomItem("Id", pushMessage.idContent)
-                .WithCustomItem("Rid", pushMessage.idRelated)
-                .WithCustomItem("Ct", pushMessage.Ct)
-                .WithCustomItem("Al", pushMessage.Al)
-                .WithSound(pushMessage.Sound);
+                if (!string.IsNullOrEmpty(pushMessage.Eu)) {
+                    appleNotification.ForDeviceToken(dispositivo.Token)
+                        .WithAlert(pushMessage.Text)
+                        .WithCustomItem("Eu", pushMessage.Eu)
+                        .WithSound(pushMessage.Sound);
+                }
+                else
+                    if (!string.IsNullOrEmpty(pushMessage.Iu)) {
+                        appleNotification.ForDeviceToken(dispositivo.Token)
+                            .WithAlert(pushMessage.Text)
+                            .WithCustomItem("Iu", pushMessage.Iu)
+                            .WithSound(pushMessage.Sound);
+                    }
+                    else {
+                        appleNotification.ForDeviceToken(dispositivo.Token)
+                            .WithAlert(pushMessage.Text)
 
+                                //  .WithCustomItem("Title", pushMessage.Title)
+                            .WithCustomItem("Id", pushMessage.idContent)
+                            .WithCustomItem("Rid", pushMessage.idRelated)
+                            .WithCustomItem("Ct", pushMessage.Ct)
+                            .WithCustomItem("Al", pushMessage.Al)
+                            .WithSound(pushMessage.Sound);
+                    }
                 if (appleNotification.Payload.ToJson().Length > 255) {
                     _notifier.Information(T("Sent: message payload exceed the limit"));
                 }

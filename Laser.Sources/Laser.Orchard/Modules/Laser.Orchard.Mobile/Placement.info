@@ -8,4 +8,9 @@
     <Place Parts_MobilePush_Edit="Content:5.4" />
     <Place Parts_SmsGateway_Edit="Content:5.5" />
   </Match>
+  <Match ContentType="CommunicationAdvertising">
+    <Match DisplayType="Summary">
+      <Place Parts_MobilePush="Content:3" />
+    </Match>
+  </Match>
 </Placement>

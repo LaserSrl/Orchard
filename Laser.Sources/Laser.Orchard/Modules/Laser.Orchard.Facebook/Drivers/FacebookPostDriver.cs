@@ -16,6 +16,7 @@ using System.Web.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.MediaLibrary.Models;
 using Orchard.Environment.Configuration;
+using Orchard.UI.Admin;
 
 namespace Laser.Orchard.Facebook.Drivers {
 
@@ -40,7 +41,30 @@ namespace Laser.Orchard.Facebook.Drivers {
             T = NullLocalizer.Instance;
         }
 
-        protected override DriverResult Editor(FacebookPostPart part, dynamic shapeHelper) {
+        protected override DriverResult Display(FacebookPostPart part, string displayType, dynamic shapeHelper)
+        {
+            //Determine if we're on an admin page
+            bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            if (isAdmin)
+            {
+                if (displayType == "Summary")
+                {
+                    return ContentShape("Parts_FacebookPost",
+                        () => shapeHelper.Parts_FacebookPost(SendOnNextPublish: part.SendOnNextPublish, Sent: part.FacebookMessageSent));
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        protected override DriverResult Editor(FacebookPostPart part, dynamic shapeHelper)
+        {
             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
               
             FacebookPostVM vm = new FacebookPostVM();

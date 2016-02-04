@@ -9,5 +9,8 @@ namespace Laser.Orchard.ExternalContent.Settings {
         public HttpVerbOptions HttpVerb { get; set; }
         public HttpDataTypeOptions HttpDataType { get; set; }
         public string BodyRequest { get; set; }
+        public bool CertificateRequired { get; set; }
+        public string CerticateFileName { get; set; }
+        public string CertificatePrivateKey { get; set; }
     }
 }

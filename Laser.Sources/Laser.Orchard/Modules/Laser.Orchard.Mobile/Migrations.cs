@@ -179,5 +179,27 @@ namespace Laser.Orchard.Mobile {
                 );
             return 15;
         }
+         public int UpdateFrom15() {
+            return 16;
+        }
+         public int UpdateFrom16() {
+             return 17;
+         }
+        public int UpdateFrom17() {
+             ContentDefinitionManager.AlterTypeDefinition(
+           "CommunicationAdvertising",
+           type => type
+               .RemovePart("MobilePushPart")
+            );
+            ContentDefinitionManager.AlterTypeDefinition(
+           "CommunicationAdvertising",
+           type => type
+               .WithPart("MobilePushPart",y=>y
+                   .WithSetting("PushMobilePartSettingVM.HideRelated", "true")
+                   .WithSetting("PushMobilePartSettingVM.AcceptZeroRelated", "true")
+               )
+               );
+            return 18;
+        }
     }
 }
