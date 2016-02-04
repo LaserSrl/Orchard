@@ -33,4 +33,12 @@
     @Html.EditorFor(m=>m.SmsServiceEndPoint)
     @Html.ValidationMessageFor(m=>m.SmsServiceEndPoint)
 
+    @Html.LabelFor(m=>m.WsUsername, T("Web service username"))
+    @Html.EditorFor(m=>m.WsUsername)
+    @Html.ValidationMessageFor(m=>m.WsUsername)
+
+    @Html.LabelFor(m=>m.WsPassword, T("Web service password"))
+    @Html.EditorFor(m=>m.WsPassword)
+    @Html.ValidationMessageFor(m=>m.WsPassword)
+
 </fieldset>

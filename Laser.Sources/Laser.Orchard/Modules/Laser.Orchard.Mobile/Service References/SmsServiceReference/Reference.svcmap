@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="95a6c0d1-feb7-4a03-87a8-f21b1fd02aaa" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="27587434-0118-4f6a-87f7-98c4c9e0001b" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -19,10 +19,11 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://lcit.laser-group.com/wsOrchardSMS/SmsService.asmx?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://lcit.laser-group.com/wsOrchardSMS/SmsWebService.asmx" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="SmsService.wsdl" MetadataType="Wsdl" ID="bc817594-59eb-4895-8845-2f3f339c69da" SourceId="1" SourceUrl="http://lcit.laser-group.com/wsOrchardSMS/SmsService.asmx?wsdl" />
+    <MetadataFile FileName="SmsWebService.wsdl" MetadataType="Wsdl" ID="354919e5-a608-41f0-b056-42cd21e185c1" SourceId="1" SourceUrl="http://lcit.laser-group.com/wsOrchardSMS/SmsWebService.asmx?wsdl" />
+    <MetadataFile FileName="SmsWebService.disco" MetadataType="Disco" ID="bbc6f001-5895-43d2-ad23-11fbcc8d9d44" SourceId="1" SourceUrl="http://lcit.laser-group.com/wsOrchardSMS/SmsWebService.asmx?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

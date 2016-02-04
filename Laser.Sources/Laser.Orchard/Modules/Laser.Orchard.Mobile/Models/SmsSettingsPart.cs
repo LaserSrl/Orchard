@@ -80,5 +80,15 @@ namespace Laser.Orchard.Mobile.Models {
         }
 
 
+        public string WsUsername {
+            get { return this.Retrieve(x => x.WsUsername); }
+            set { this.Store(x => x.WsUsername, value); }
+        }
+
+        public string WsPassword {
+            get { return this.Retrieve(x => x.WsPassword); }
+            set { this.Store(x => x.WsPassword, value); }
+        }
+
     }
 }
