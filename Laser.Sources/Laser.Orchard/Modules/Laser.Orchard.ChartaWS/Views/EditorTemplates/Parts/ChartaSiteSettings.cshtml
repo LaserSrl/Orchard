@@ -1,0 +1,56 @@
+﻿@model Laser.Orchard.ChartaWS.Models.ChartaSiteSettingsPart
+
+<fieldset>
+    <legend>@T("Charta")</legend>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.ChartaId)">@T("Charta ID")</label>
+        @Html.TextBoxFor(m => m.ChartaId, new { @class = "text large" })
+        <span class="hint">@T("The ID used when sending request to Vivaticket web service(eg. LASER).")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.RemoteUrl)">@T("Remote URL")</label>
+        @Html.TextBoxFor(m => m.RemoteUrl, new { @class = "text large" })
+        <span class="hint">@T("URL of Vivaticket web service.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.SaveFilePath)">@T("Save path")</label>
+        @Html.TextBoxFor(m => m.SaveFilePath, new { @class = "text-medium" })
+        <span class="hint">@T("Directory where SMS files are saved (without trailing '\').")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.ReplyToPaypalUrl)">@T("PayPal URL")</label>
+        @Html.TextBoxFor(m => m.ReplyToPaypalUrl, new { @class = "text-medium" })
+        <span class="hint">@T("PayPal URL used to check PayPal IPN (Instant Payment Notification) (eg. https://www.sandbox.paypal.com/cgi-bin/webscr).")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.ServiceRetryCount)">@T("Service retry number")</label>
+        @Html.TextBoxFor(m => m.ServiceRetryCount, new { @class = "text-medium" })
+        <span class="hint">@T("Retry number for Charta Proxy PayPal (MovinBox) (eg. 3).")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.ChartaTranCommitUrl)">@T("Charta Tran commit URL")</label>
+        @Html.TextBoxFor(m => m.ChartaTranCommitUrl, new { @class = "text-medium" })
+        <span class="hint">@T("URL to commit Charta Transaction (MovinBox).")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.MailTo)">@T("Mail To")</label>
+        @Html.TextBoxFor(m => m.MailTo, new { @class = "text-medium" })
+        <span class="hint">@T("Recipients for notification mails (mail adresses separated by ',' or ';').")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.MailCc)">@T("Mail Cc")</label>
+        @Html.TextBoxFor(m => m.MailCc, new { @class = "text-medium" })
+        <span class="hint">@T("Cc adresses for notification mails (mail adresses separated by ',' or ';').")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.MailSubject)">@T("Mail subject")</label>
+        @Html.TextBoxFor(m => m.MailSubject, new { @class = "text-medium" })
+        <span class="hint">@T("Subject for notification mails.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.MailBody)">@T("Mail body")</label>
+        @Html.TextBoxFor(m => m.MailBody, new { @class = "text-medium" })
+        <span class="hint">@T("Body for notification mails.")</span>
+    </div>
+</fieldset>
+
