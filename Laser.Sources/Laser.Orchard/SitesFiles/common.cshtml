@@ -282,4 +282,19 @@ new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + "laserD
 			return doc;
 		}
 	
+    XmlDocument AggiungiShareLink(XmlDocument doc, XmlNode bookToModify, string titolo, string url, string image){
+        XmlNode newNode = doc.CreateElement("ShareLinkPart");
+        XmlNode textNode = doc.CreateElement("SharedText");
+        textNode.InnerXml= titolo;
+        XmlNode linkNode = doc.CreateElement("SharedLink");
+        linkNode.InnerXml= url;
+        XmlNode imageNode = doc.CreateElement("SharedImage");
+        imageNode.InnerXml= image;
+        newNode.AppendChild(textNode);
+        newNode.AppendChild(linkNode);
+        newNode.AppendChild(imageNode);
+        bookToModify.AppendChild(newNode);
+        return doc;
+    }
+	
 }
