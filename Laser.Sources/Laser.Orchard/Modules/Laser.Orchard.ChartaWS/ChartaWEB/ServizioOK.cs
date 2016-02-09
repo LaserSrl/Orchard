@@ -22,26 +22,27 @@ namespace ChartaWEB
             {
                 string sReturn = string.Empty;
                 
-                SupportTableAdapter tableAdapterSupport = new SupportTableAdapter();
-                DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'ServizioOk' ");
-                string svalue = dr1[0]["value"].ToString();
-                sReturn += "<reply>";
-                sReturn += "<ServizioOk>" + Util.ConvertWithANDReplace(svalue) + "</ServizioOk>";
-                sReturn += "</reply>";
+                //SupportTableAdapter tableAdapterSupport = new SupportTableAdapter();
+                //DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'ServizioOk' ");
+                //string svalue = dr1[0]["value"].ToString();
+                //sReturn += "<reply>";
+                //sReturn += "<ServizioOk>" + Util.ConvertWithANDReplace(svalue) + "</ServizioOk>";
+                //sReturn += "</reply>";
 
-                tableAdapterSupport.Dispose();
-
-
+                //tableAdapterSupport.Dispose();
+                //**************************************************
+                using (SupportTableAdapter tableAdapterSupport = new SupportTableAdapter())
+                {
+                    DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'ServizioOk' ");
+                    sReturn = string.Format("{{ \"n\":\"ServzioOk\",\"v\":\"{0}\" }}", dr1[0]["value"]);
+                }
                 return sReturn;
-
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
                 return Util.GestioneErrore("ServizioOK", "999", ex.Message);
             }
-            
-
         }
 
         public static string GetNumeroServizio ()
@@ -50,27 +51,27 @@ namespace ChartaWEB
             {
                 string sReturn = string.Empty;
 
-                SupportTableAdapter tableAdapterSupport = new SupportTableAdapter();
-                DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'NumeroServizio' ");
-                string svalue = dr1[0]["value"].ToString();
-                sReturn += "<reply>";
-                sReturn += "<NumeroServizio>" + Util.ConvertWithANDReplace(svalue) + "</NumeroServizio>";
-                sReturn += "</reply>";
+                //SupportTableAdapter tableAdapterSupport = new SupportTableAdapter();
+                //DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'NumeroServizio' ");
+                //string svalue = dr1[0]["value"].ToString();
+                //sReturn += "<reply>";
+                //sReturn += "<NumeroServizio>" + Util.ConvertWithANDReplace(svalue) + "</NumeroServizio>";
+                //sReturn += "</reply>";
 
-                tableAdapterSupport.Dispose();
-
-
+                //tableAdapterSupport.Dispose();
+                //*********************************************
+                using (SupportTableAdapter tableAdapterSupport = new SupportTableAdapter())
+                {
+                    DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'NumeroServizio' ");
+                    sReturn = string.Format("{{ \"n\":\"NumeroServizio\",\"v\":\"{0}\" }}", dr1[0]["value"]);
+                }
                 return sReturn;
-
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
                 return Util.GestioneErrore("GetNumeroServizio", "999", ex.Message);
             }
-
-
         }
-
     }
 }

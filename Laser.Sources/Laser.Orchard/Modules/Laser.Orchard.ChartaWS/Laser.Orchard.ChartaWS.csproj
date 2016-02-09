@@ -157,9 +157,13 @@
     <Compile Include="ChartaWEB\HotList.cs" />
     <Compile Include="ChartaWEB\LastMinute.cs" />
     <Compile Include="ChartaWEB\LatLongDiff.cs" />
+    <Compile Include="ChartaWEB\LocInfo.cs" />
+    <Compile Include="ChartaWEB\LocInfoDistinct.cs" />
     <Compile Include="ChartaWEB\LocInfoList.cs" />
     <Compile Include="ChartaWEB\News.cs" />
+    <Compile Include="ChartaWEB\OrgInfo.cs" />
     <Compile Include="ChartaWEB\OrgInfoList.cs" />
+    <Compile Include="ChartaWEB\Perform.cs" />
     <Compile Include="ChartaWEB\Security.cs" />
     <Compile Include="ChartaWEB\ServizioOK.cs" />
     <Compile Include="ChartaWEB\SMS.cs" />

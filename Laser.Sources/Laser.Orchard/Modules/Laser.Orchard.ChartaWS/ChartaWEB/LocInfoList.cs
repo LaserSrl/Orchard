@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Web;
 using log4net;
 using ChartaDb.ChartaTableAdapters;
+using Laser.Orchard.ChartaWS.ChartaWEB;
+using Laser.Orchard.Commons.Services;
+using System.Text;
 
 
 namespace ChartaWEB
@@ -15,44 +18,92 @@ namespace ChartaWEB
         {
             try
             {
-                LocInfoListTableAdapter objTALocInfo = new LocInfoListTableAdapter();
-                if (code == "") code = null;
-                if (comune == "") comune = null;
-                if (provincia == "") provincia = null;
+                //LocInfoListTableAdapter objTALocInfo = new LocInfoListTableAdapter();
+                //if (code == "") code = null;
+                //if (comune == "") comune = null;
+                //if (provincia == "") provincia = null;
 
-                ChartaDb.Charta.LocInfoListDataTable objDTLoc = objTALocInfo.GetData(code, comune, provincia);
+                //ChartaDb.Charta.LocInfoListDataTable objDTLoc = objTALocInfo.GetData(code, comune, provincia);
 
-                string sReturn = "<reply>";
-                sReturn += "<LocInfoList>";
+                //string sReturn = "<reply>";
+                //sReturn += "<LocInfoList>";
 
-                foreach (ChartaDb.Charta.LocInfoListRow dr in objDTLoc)
+                //foreach (ChartaDb.Charta.LocInfoListRow dr in objDTLoc)
+                //{
+                //    sReturn += "<LocInfo id=\"" + dr.id_org + "\" >";
+                //    sReturn += "<id_org>" + dr.id_org + "</id_org>";
+                //    sReturn += "<code>" + dr.code + "</code>";
+                //    sReturn += "<nome>" + Util.ConvertWithANDReplace(dr.nome) + "</nome>";
+                //    sReturn += "<tipologia>" + Util.ConvertWithANDReplace(dr.tipologia) + "</tipologia>";
+                //    sReturn += "<indirizzo>" + Util.ConvertWithANDReplace(dr.indirizzo) + "</indirizzo>";
+                //    sReturn += "<comune>" + Util.ConvertWithANDReplace(dr.comune) + "</comune>";
+                //    sReturn += "<provincia>" + Util.ConvertWithANDReplace(dr.provincia) + "</provincia>";
+                //    sReturn += "<cap>" + Util.ConvertWithANDReplace(dr.cap) + "</cap>";
+                //    sReturn += "<descrizione>" + Util.Convert(dr.descrizione) + "</descrizione>";
+                //    sReturn += "<telefono>" + Util.ConvertWithANDReplace(dr.telefono) + "</telefono>";
+                //    sReturn += "<fax>" + Util.ConvertWithANDReplace(dr.fax) + "</fax>";
+                //    sReturn += "<email>" + Util.ConvertWithANDReplace(dr.email) + "</email>";
+                //    sReturn += "<raggiungibilita>" + Util.Convert(dr.raggiungibilita) + "</raggiungibilita>";
+                //    sReturn += "<info_parcheggio>" + Util.Convert(dr.info_parcheggio) + "</info_parcheggio>";
+                //    sReturn += "<info_disabili>" + Util.Convert(dr.info_disabili) + "</info_disabili>";
+                //    sReturn += "<orari_apertura>" + Util.Convert(dr.info_disabili) + "</orari_apertura>";
+                //    sReturn += "<sito>" + Util.ConvertWithANDReplace(dr.sito) + "</sito>";
+                //    sReturn += "<immagine>" + Util.ConvertWithANDReplace(dr.immagine) + "</immagine>";
+                //    sReturn += "</LocInfo>";
+                //}
+                //objDTLoc.Dispose();
+                //objTALocInfo.Dispose();
+
+                //sReturn += "</LocInfoList></reply>";
+                //************************************************
+                var lista = new List<LocInfo>();
+                LocInfo locInfo = null;
+                using (LocInfoListTableAdapter objTALocInfo = new LocInfoListTableAdapter())
                 {
-                    sReturn += "<LocInfo id=\"" + dr.id_org  + "\" >";
-                    sReturn += "<id_org>" + dr.id_org  + "</id_org>";
-                    sReturn += "<code>" + dr.code + "</code>";
-                    sReturn += "<nome>" + Util.ConvertWithANDReplace(dr.nome) +  "</nome>";
-                    sReturn += "<tipologia>" + Util.ConvertWithANDReplace(dr.tipologia) + "</tipologia>";
-                    sReturn += "<indirizzo>" + Util.ConvertWithANDReplace(dr.indirizzo ) + "</indirizzo>"; 
-                    sReturn += "<comune>" + Util.ConvertWithANDReplace(dr.comune) + "</comune>";
-                    sReturn += "<provincia>" + Util.ConvertWithANDReplace(dr.provincia) + "</provincia>";
-                    sReturn += "<cap>" + Util.ConvertWithANDReplace(dr.cap) + "</cap>";
-                    sReturn += "<descrizione>" + Util.Convert(dr.descrizione) + "</descrizione>"; 
-                    sReturn += "<telefono>" + Util.ConvertWithANDReplace(dr.telefono) + "</telefono>";
-                    sReturn += "<fax>" + Util.ConvertWithANDReplace(dr.fax) + "</fax>";
-                    sReturn += "<email>" + Util.ConvertWithANDReplace(dr.email) + "</email>" ;
-                    sReturn += "<raggiungibilita>" + Util.Convert(dr.raggiungibilita) + "</raggiungibilita>";
-                    sReturn += "<info_parcheggio>" + Util.Convert(dr.info_parcheggio) + "</info_parcheggio>";
-                    sReturn += "<info_disabili>" + Util.Convert(dr.info_disabili) + "</info_disabili>";
-                    sReturn += "<orari_apertura>" + Util.Convert(dr.info_disabili) + "</orari_apertura>";
-                    sReturn += "<sito>" + Util.ConvertWithANDReplace(dr.sito) + "</sito>"; 
-                    sReturn += "<immagine>" + Util.ConvertWithANDReplace(dr.immagine) + "</immagine>";         
-                    sReturn += "</LocInfo>";
+                    if (code == "") code = null;
+                    if (comune == "") comune = null;
+                    if (provincia == "") provincia = null;
+
+                    using (ChartaDb.Charta.LocInfoListDataTable objDTLoc = objTALocInfo.GetData(code, comune, provincia))
+                    {
+                        foreach (ChartaDb.Charta.LocInfoListRow dr in objDTLoc)
+                        {
+                            locInfo = new LocInfo();
+                            locInfo.Id = dr.id_org;
+                            locInfo.IdOrg = dr.id_org;
+                            locInfo.Code = dr.code;
+                            locInfo.Nome = dr.nome;
+                            locInfo.Tipologia = dr.tipologia;
+                            locInfo.Indirizzo = dr.indirizzo;
+                            locInfo.Comune = dr.comune;
+                            locInfo.Provincia = dr.provincia;
+                            locInfo.Cap = dr.cap;
+                            locInfo.Descrizione = dr.descrizione;
+                            locInfo.Telefono = dr.telefono;
+                            locInfo.Fax = dr.fax;
+                            locInfo.Email = dr.email;
+                            locInfo.Raggiugibilita = dr.raggiungibilita;
+                            locInfo.InfoParcheggio = dr.info_parcheggio;
+                            locInfo.InfoDisabili = dr.info_disabili;
+                            locInfo.OrariApertura = dr.orari_apertura;
+                            locInfo.Sito = dr.sito;
+                            locInfo.Immagine = dr.immagine;
+                            lista.Add(locInfo);
+                        }
+                    }
                 }
-                objDTLoc.Dispose();
-                objTALocInfo.Dispose();
 
-                sReturn += "</LocInfoList></reply>";
-
+                // serializza il risultato
+                System.Xml.Linq.XElement dump = null;
+                ObjectDumper dumper = new ObjectDumper(10, null, false, true, null);
+                var sb = new StringBuilder();
+                sb.Append("{"); // json start
+                sb.Append("\"l\":[{"); // lista start
+                dump = dumper.Dump(lista.ToArray(), "LocInfoList");
+                JsonConverter.ConvertToJSon(dump, sb, false, true);
+                sb.Append("}]"); // lista end
+                sb.Append("}"); // json end
+                string sReturn = sb.ToString().Replace("\t", " ");
                 return sReturn;
             }
             catch (Exception ex)
@@ -60,132 +111,146 @@ namespace ChartaWEB
                 logger.Error(ex);
                 return Util.GestioneErrore("LocInfoList", "999", ex.Message); 
             }
-
         }
 
+        private static void serializzaLocinfoDistinct(int index, StringBuilder sb, LocInfoDistinct locInfoDistinct, List<string> lista)
+        {
+            if (index > 0)
+            {
+                sb.Append("},{");
+            }
+            // serializza la categoria precedente
+            var dumper = new ObjectDumper(10, null, false, true, null);
+            var dump = dumper.Dump(locInfoDistinct, string.Format("[{0}]", index));
+            JsonConverter.ConvertToJSon(dump, sb, false, true);
+
+            // serializza le sottocategorie precedenti
+            sb.Append(",\"l\":[{"); // lista start
+            dumper = new ObjectDumper(10, null, false, true, null);
+            dump = dumper.Dump(lista.ToArray(), "Codici");
+            JsonConverter.ConvertToJSon(dump, sb, false, true);
+            sb.Append("}]"); // lista end
+        }
 
         public static string ListaOrgInfoDistinct(string code, string comune, string provincia)
         {
             try
             {
-                LocInfoListDistinctTableAdapter objTALocInfo = new LocInfoListDistinctTableAdapter();
-                if (code == "") code = null;
-                if (comune == "") comune = null;
-                if (provincia == "") provincia = null;
+                //LocInfoListDistinctTableAdapter objTALocInfo = new LocInfoListDistinctTableAdapter();
+                //if (code == "") code = null;
+                //if (comune == "") comune = null;
+                //if (provincia == "") provincia = null;
 
-                ChartaDb.Charta.LocInfoListDistinctDataTable objDTLoc = objTALocInfo.GetData(code, comune, provincia);
+                //ChartaDb.Charta.LocInfoListDistinctDataTable objDTLoc = objTALocInfo.GetData(code, comune, provincia);
 
-                string sReturn = "<reply>";
-                sReturn += "<LocInfoListDistinct>";
+                //string sReturn = "<reply>";
+                //sReturn += "<LocInfoListDistinct>";
 
 
-                string lastNome = "";
-                string lastCom = "";
-                string comuni = "";
+                //string lastNome = "";
+                //string lastCom = "";
+                //string comuni = "";
 
-                bool firstNome = true;
-                int NCount = 0;
-                string phN = "";
+                //bool firstNome = true;
+                //int NCount = 0;
+                //string phN = "";
 
-                foreach (ChartaDb.Charta.LocInfoListDistinctRow dr in objDTLoc)
+                //foreach (ChartaDb.Charta.LocInfoListDistinctRow dr in objDTLoc)
+                //{
+                //    phN = "PH_N" + NCount.ToString();
+                //    if (dr.nome.CompareTo(lastNome) != 0)
+                //    {
+                //        if (!firstNome)
+                //        {
+                //            sReturn = sReturn.Replace(phN, comuni);
+                //            sReturn += "</N>";
+
+                //            lastCom = "";
+                //            comuni = "";
+                //            NCount++;
+                //            phN = "PH_N" + NCount.ToString();
+                //        }
+                //        else
+                //            firstNome = false;
+
+                //        sReturn += "<N n=\"" + Util.ConvertWithANDReplace(dr.nome) + "\" com=\"" + phN + "\">";
+                //        lastNome = dr.nome;
+                //    }
+
+                //    if (lastCom.CompareTo(dr.comune) != 0)
+                //    {
+                //        if (comuni.CompareTo("") == 0)
+                //            comuni += Util.ConvertWithANDReplace(dr.comune);
+                //        else
+                //            comuni += "," + Util.ConvertWithANDReplace(dr.comune);
+                //    }
+
+                //    lastCom = dr.comune;
+
+                //    sReturn += "<c>" + dr.code + "</c>";
+                //}
+
+                //sReturn = sReturn.Replace(phN, comuni);
+
+                //objDTLoc.Dispose();
+                //objTALocInfo.Dispose();
+
+                //if (!firstNome)
+                //    sReturn += "</N>";
+
+                //sReturn += "</LocInfoListDistinct></reply>";
+                //********************************************************
+                int index = 0;
+                List<string> lista = null;
+                LocInfoDistinct locInfoDistinct = null;
+                var sb = new StringBuilder();
+                sb.Append("{"); // json start
+                sb.Append("\"l\":[{ \"n\":\"LocInfoListDistinct\",\"v\":\"LocInfoDistinct[]\",\"m\":[{"); // lista start
+                using (LocInfoListDistinctTableAdapter objTALocInfo = new LocInfoListDistinctTableAdapter())
                 {
-                   
-                    phN = "PH_N" + NCount.ToString();
-                    if (dr.nome.CompareTo(lastNome) != 0)
+                    if (code == "") code = null;
+                    if (comune == "") comune = null;
+                    if (provincia == "") provincia = null;
+
+                    using (ChartaDb.Charta.LocInfoListDistinctDataTable objDTLoc = objTALocInfo.GetData(code, comune, provincia))
                     {
-                        if (!firstNome)
+                        string lastNome = "";
+                        string lastCom = "";
+                        //string comuni = "";
+
+                        //bool firstNome = true;
+                        //int NCount = 0;
+                        //string phN = "";
+
+                        foreach (ChartaDb.Charta.LocInfoListDistinctRow dr in objDTLoc)
                         {
-                            sReturn = sReturn.Replace(phN, comuni);
-                            sReturn += "</N>";
+                            //phN = "PH_N" + NCount.ToString();
+                            if ((dr.nome.CompareTo(lastNome) != 0) || (dr.comune.CompareTo(lastCom) != 0)) // rottura di chiave
+                            {
+                                if (lastNome != "")
+                                {
+                                    // serializza la locInfoDistinct precedente
+                                    serializzaLocinfoDistinct(index, sb, locInfoDistinct, lista);
+                                    index++;
+                                }
 
-                            lastCom = "";
-                            comuni = "";
-                            NCount++;
-                            phN = "PH_N" + NCount.ToString();
+                                locInfoDistinct = new LocInfoDistinct();
+                                locInfoDistinct.Nome = dr.nome;
+                                locInfoDistinct.Comune = dr.comune;
+                                lastNome = dr.nome;
+                                lastCom = dr.comune;
+                                lista = new List<string>();
+                            }
+                            lista.Add(dr.code);
                         }
-                        else
-                            firstNome = false;
-
-                        
-
-
-                        sReturn += "<N n=\"" + Util.ConvertWithANDReplace(dr.nome) + "\" com=\"" + phN + "\">";
-
-                        lastNome = dr.nome;
-                       
+                        // serializza l'ultima locInfoDistinct
+                        serializzaLocinfoDistinct(index, sb, locInfoDistinct, lista);
                     }
-
-                    if (lastCom.CompareTo(dr.comune) != 0)
-                    {
-                        if (comuni.CompareTo("") == 0)
-                            comuni += Util.ConvertWithANDReplace(dr.comune);
-                        else
-                            comuni += "," + Util.ConvertWithANDReplace(dr.comune);
-                    }
-
-                    lastCom = dr.comune;
-
-                    sReturn += "<c>" + dr.code + "</c>";
-
-
-                    //se ho solo un record rimaneva il placeholder PH_N0
-                    /*if (objDTLoc.Rows.Count == 1)
-                    {
-                        sReturn = sReturn.Replace(phN, comuni);
-                    }*/
-
-
                 }
+                sb.Append("}]}]"); // lista end
+                sb.Append("}"); // json end
 
-
-                sReturn = sReturn.Replace(phN, comuni);
-
-               /* foreach (ChartaDb.Charta.LocInfoListDistinctRow dr in objDTLoc)
-                {
-                    if (dr.comune.CompareTo(lastComune) != 0)
-                    {
-                        if (!firstNome)
-                        {
-                            sReturn += "</N>";
-                            firstNome = true;
-                        }
-
-                        if (!firstComune)
-                            sReturn += "</Com>";
-                        else
-                            firstComune = false;
-
-                        sReturn += "<Com c=\"" + Util.Convert(dr.comune) + "\" >";
-                        lastComune = dr.comune;
-
-                    }
-
-                    if (dr.nome.CompareTo(lastNome) != 0)
-                    {
-                        if (!firstNome)
-                            sReturn += "</N>";
-                        else
-                            firstNome = false;
-
-                        sReturn += "<N n=\"" + Util.Convert(dr.nome) + "\" >";
-                        lastNome = dr.nome;
-                    }
-                    
-                    sReturn += "<c>" + dr.code + "</c>";
-
-                    
-                }  */
-                objDTLoc.Dispose();
-                objTALocInfo.Dispose();
-
-                if (!firstNome)
-                    sReturn += "</N>";
-
-               /* if (!firstComune)
-                    sReturn += "</Com>";*/
-
-                sReturn += "</LocInfoListDistinct></reply>";
-
+                string sReturn = sb.ToString().Replace("\t", " ");
                 return sReturn;
             }
             catch (Exception ex)
@@ -193,9 +258,6 @@ namespace ChartaWEB
                 logger.Error(ex);
                 return Util.GestioneErrore("LocInfoListDistinct", "999", ex.Message);
             }
-
         }
-
-
     }
 }

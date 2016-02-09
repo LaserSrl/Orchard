@@ -211,8 +211,17 @@ namespace Laser.Orchard.ChartaWS.Controllers
             logger.Info("****** Fine gestione Chiamata");
 
             // create response and return 
+            // TODO: vedere se conviene elminare il caso xml
             var result = new HttpResponseMessage(HttpStatusCode.OK);
-            result.Content = new System.Net.Http.StringContent(xml, Encoding.GetEncoding(1252), "text/xml");
+            if (xml.StartsWith("<"))
+            {
+                result.Content = new System.Net.Http.StringContent(xml, Encoding.GetEncoding(1252), "text/xml");
+            }
+            else
+            {
+                result.Content = new System.Net.Http.StringContent(xml, Encoding.UTF8, "application/json");
+            }
+            
             return result;
         }
 
