@@ -3,13 +3,13 @@
 
 XmlDocument mydoc=ToXmlDocument(Model);
 
-mydoc=cambianome(mydoc,"root/Item","ExternalGuests");
-mydoc=aggiungipadre(mydoc,"root","lista","ExternalGuests");
+mydoc=cambianome(mydoc,"root/Item","ExternalGuest");
+mydoc=aggiungipadre(mydoc,"root","lista","ExternalGuest");
 mydoc=RimuoviFratelli(mydoc,"root/lista");
 
 
 
-foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/ExternalGuests")){
+foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/ExternalGuest")){
 
 
 XmlNodeList cognome = bookToModify.SelectNodes("cognome/textblock");
@@ -76,7 +76,7 @@ if (oraString.Length == 5){
     originalID.InnerXml= bookToModify.Attributes["uid"].Value;
     bookToModify.AppendChild(originalID);
     XmlNode sid = mydoc.CreateElement("Sid");
-    sid.InnerText= "ExternalGuests:" + bookToModify.Attributes["uid"].Value;
+    sid.InnerText= "ExternalGuest:" + bookToModify.Attributes["uid"].Value;
     bookToModify.AppendChild(sid);
 
     string artista = bookToModify.SelectSingleNode("nome").InnerText + " " + bookToModify.SelectSingleNode("cognome").InnerText;
@@ -92,15 +92,15 @@ if (oraString.Length == 5){
 }
 
 
-//mydoc=ConvertDateWithFormat(mydoc,"root/lista/ExternalGuests/DateTime");
-mydoc=cambianome(mydoc,"root/lista/ExternalGuests/cognome", "LastName");
-mydoc=cambianome(mydoc,"root/lista/ExternalGuests/nome", "FirstName");
-mydoc=cambianome(mydoc,"root/lista/ExternalGuests/desc1", "AbstractText");
-mydoc=cambianome(mydoc,"root/lista/ExternalGuests/desc2", "DescriptionText");
-mydoc=cambianome(mydoc,"root/lista/ExternalGuests/foto", "MediaURL");
-mydoc=cambianome(mydoc,"root/lista/ExternalGuests/link", "LinkURL");
-mydoc=cambianome(mydoc,"root/lista/ExternalGuests/data", "ToRemove");
-mydoc=cambianome(mydoc,"root/lista/ExternalGuests/orario", "ToRemove");
+//mydoc=ConvertDateWithFormat(mydoc,"root/lista/ExternalGuest/DateTime");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/cognome", "LastName");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/nome", "FirstName");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/desc1", "AbstractText");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/desc2", "DescriptionText");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/foto", "MediaURL");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/link", "LinkURL");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/data", "ToRemove");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/orario", "ToRemove");
 
 
 mydoc=cambianome(mydoc,"root/lista", "ToRemove");
