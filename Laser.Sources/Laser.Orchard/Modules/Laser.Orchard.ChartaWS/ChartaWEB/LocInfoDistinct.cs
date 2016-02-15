@@ -9,5 +9,6 @@ namespace Laser.Orchard.ChartaWS.ChartaWEB
     {
         public string Nome { get; set; }
         public string Comune { get; set; }
+        public string Sid { get; set; }
     }
 }

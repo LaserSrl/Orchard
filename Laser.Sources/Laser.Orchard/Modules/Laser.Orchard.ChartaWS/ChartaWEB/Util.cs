@@ -135,6 +135,23 @@ namespace ChartaWEB
         }
 
         /// <summary>
+        /// Concatena due path di un URL: aggiunge uno slash solo se necessario.
+        /// </summary>
+        /// <param name="urlPath1"></param>
+        /// <param name="urlPath2"></param>
+        /// <returns></returns>
+        public static string ConcatUrlPath(string urlPath1, string urlPath2)
+        {
+            string risultato = urlPath1;
+            if (risultato.EndsWith("/") == false)
+            {
+                risultato += "/";
+            }
+            risultato += urlPath2;
+            return risultato;
+        }
+
+        /// <summary>
         /// Converte una stringa XML in una stringa JSON secondo la logica seguente.
         /// Viene parsificato tutto l'xml.
         /// Ogni nodo viene convertito in un oggetto JSON di tipo {n:"tagName", v:"value", m:[{n:"attributo",v:"valore"}]}.

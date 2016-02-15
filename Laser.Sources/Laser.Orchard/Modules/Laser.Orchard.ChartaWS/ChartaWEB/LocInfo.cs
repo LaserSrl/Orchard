@@ -8,6 +8,7 @@ namespace Laser.Orchard.ChartaWS.ChartaWEB
     public class LocInfo
     {
         public long Id { get; set; }
+        public string Sid { get; set; }
         public long IdOrg { get; set; }
         public string Code { get; set; }
         public string Nome { get; set; }

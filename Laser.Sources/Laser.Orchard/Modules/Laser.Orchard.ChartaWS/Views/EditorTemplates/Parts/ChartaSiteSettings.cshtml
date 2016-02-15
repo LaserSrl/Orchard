@@ -23,6 +23,11 @@
         <span class="hint">@T("PayPal URL used to check PayPal IPN (Instant Payment Notification) (eg. https://www.sandbox.paypal.com/cgi-bin/webscr).")</span>
     </div>
     <div>
+        <label for="@Html.FieldIdFor(m => m.PaypalMerchantMail)">@T("PayPal Merchant Mail")</label>
+        @Html.TextBoxFor(m => m.PaypalMerchantMail, new { @class = "text-medium" })
+        <span class="hint">@T("Mail (user) of the merchant in PayPal.")</span>
+    </div>
+    <div>
         <label for="@Html.FieldIdFor(m => m.ServiceRetryCount)">@T("Service retry number")</label>
         @Html.TextBoxFor(m => m.ServiceRetryCount, new { @class = "text-medium" })
         <span class="hint">@T("Retry number for Charta Proxy PayPal (MovinBox) (eg. 3).")</span>

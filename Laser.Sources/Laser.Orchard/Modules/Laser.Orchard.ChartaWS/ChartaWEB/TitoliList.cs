@@ -8,14 +8,13 @@ using System.Configuration;
 using Laser.Orchard.ChartaWS.ChartaWEB;
 using Laser.Orchard.Commons.Services;
 using System.Text;
+using System.Globalization;
 
 namespace ChartaWEB
 {
     public class TitoliList
     {
         private static readonly ILog logger = LogManager.GetLogger("TitoliList");
-
-        public string BaseImagePath { get; set; }
 
         /// <summary>
         /// 
@@ -193,12 +192,18 @@ namespace ChartaWEB
                 //objDTTitoli.Dispose();
                 //objTATitoli.Dispose();
                 //***************************************************
+                CultureInfo culture = CultureInfo.InvariantCulture;
                 Titolo titolo = null;
                 var lista = new List<Titolo>();
-                TitoliList objResult = new TitoliList();
                 int idTitolo = -1;
                 int idCat = -1;
                 int idSottCat = -1;
+                string baseImagePath = "";
+                using (SupportTableAdapter tableAdapterSupport = new SupportTableAdapter())
+                {
+                    DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'baseImagePath'  ");
+                    baseImagePath = dr1[0]["value"].ToString();
+                }
                 using (TitoliShortWithSearchTableAdapter objTATitoli = new TitoliShortWithSearchTableAdapter())
                 {
                     if (pidTitolo != null)
@@ -230,22 +235,23 @@ namespace ChartaWEB
                         {
                             titolo = new Titolo();
                             titolo.IdTitolo = dr.id_titolo;
+                            titolo.Sid = "Titolo-" + dr.id_titolo;
                             titolo.VCode = dr.vcode;
                             titolo.VName = dr.vname;
                             titolo.VCity = dr.vcity;
                             titolo.TitoloOriginale = dr.titolo_originale;
                             titolo.TitoloEditato = dr.titolo_editato;
-                            titolo.DataInizio = dr.datainizio;
-                            titolo.DataFine = dr.datafine;
+                            titolo.DataInizio = DateTime.ParseExact(dr.datainizio, "dd/MM/yyyy", culture);
+                            titolo.DataFine = DateTime.ParseExact(dr.datafine, "dd/MM/yyyy", culture);
                             titolo.NumPerf = dr.numPerf;
                             titolo.Cat = dr.cat;
                             titolo.Sottocat = dr.sottocat;
                             titolo.Descrizione = dr.descrizione;
-                            titolo.Img = dr.immagine;
-                            titolo.ImgMini = dr.immagine_mini;
+                            titolo.Img =  Util.ConcatUrlPath(baseImagePath, dr.immagine);
+                            titolo.ImgMini = Util.ConcatUrlPath(baseImagePath, dr.immagine_mini);
                             titolo.Artista = dr.artista;
-                            titolo.Lat = dr.LAT;
-                            titolo.Lon = dr.LON;
+                            titolo.Lat = decimal.Parse(dr.LAT, culture);
+                            titolo.Lng = decimal.Parse(dr.LON, culture);
                             titolo.Exact = (dr.EXACT)? 1 : 0;
                             titolo.FasceOrarie = dr.fasceOrarie;
                             lista.Add(titolo);
@@ -256,28 +262,15 @@ namespace ChartaWEB
                         objDTTitoli.Dispose();
                     }
                 }
-                using (SupportTableAdapter tableAdapterSupport = new SupportTableAdapter())
-                {
-                    DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'baseImagePath'  ");
-                    objResult.BaseImagePath = dr1[0]["value"].ToString();
-                }
 
                 // serializza il risultato
-                System.Xml.Linq.XElement dump = null;
-                ObjectDumper dumper = new ObjectDumper(10, null, false, true, null);
-                dump = dumper.Dump(objResult, "Titoli");
                 var sb = new StringBuilder();
-                sb.Append("{"); // json start
+                sb.Append("{\"m\":[{\"n\":\"Reply\",\"v\":\"Reply\"}], \"l\":[{"); // lista start
+                var dumper = new ObjectDumper(10, null, false, true, null);
+                var dump = dumper.Dump(lista.ToArray(), "TitoliList");
                 JsonConverter.ConvertToJSon(dump, sb, false, true);
+                sb.Append("}]}"); // lista end
 
-                // aggiunge la lista
-                sb.Append(", \"l\":[{"); // lista start
-                dumper = new ObjectDumper(10, null, false, true, null);
-                dump = dumper.Dump(lista.ToArray(), "TitoliList");
-                JsonConverter.ConvertToJSon(dump, sb, false, true);
-                sb.Append("}]"); // lista end
-
-                sb.Append("}"); // json end
                 string sReturn = sb.ToString().Replace("\t", " ");
                 return sReturn;
             }
@@ -354,10 +347,15 @@ namespace ChartaWEB
 
                 ////logger.Debug("sReturn: " + sReturn);
                 //********************************************************
+                CultureInfo culture = CultureInfo.InvariantCulture;
                 Titolo titolo = null;
                 var lista = new List<Titolo>();
-                TitoliAroundMe objResult = new TitoliAroundMe();
-                objResult.MetersAroundMe = metersAroundMe;
+                string baseImagePath = "";
+                using (SupportTableAdapter tableAdapterSupport = new SupportTableAdapter())
+                {
+                    DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'baseImagePath'  ");
+                    baseImagePath = dr1[0]["value"].ToString();
+                }
                 using (TitoliShortAroundMeTableAdapter objTATitoli = new TitoliShortAroundMeTableAdapter())
                 {
                     var invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
@@ -377,50 +375,38 @@ namespace ChartaWEB
                         {
                             titolo = new Titolo();
                             titolo.IdTitolo = dr.id_titolo;
+                            titolo.Sid = "Titolo-" + dr.id_titolo;
                             titolo.VCode = dr.vcode;
                             titolo.VName = dr.vname;
                             titolo.VCity = dr.vcity;
                             titolo.TitoloOriginale = dr.titolo_originale;
                             titolo.TitoloEditato = dr.titolo_editato;
-                            titolo.DataInizio = dr.datainizio;
-                            titolo.DataFine = dr.datafine;
+                            titolo.DataInizio = DateTime.ParseExact(dr.datainizio, "dd/MM/yyyy", culture);
+                            titolo.DataFine = DateTime.ParseExact(dr.datafine, "dd/MM/yyyy", culture);
                             titolo.NumPerf = dr.numPerf;
                             titolo.Cat = dr.cat;
                             titolo.Sottocat = dr.sottocat;
                             titolo.Descrizione = dr.descrizione;
-                            titolo.Img = dr.immagine;
-                            titolo.ImgMini = dr.immagine_mini;
+                            titolo.Img = Util.ConcatUrlPath(baseImagePath, dr.immagine);
+                            titolo.ImgMini = Util.ConcatUrlPath(baseImagePath, dr.immagine_mini);
                             titolo.Artista = dr.artista;
-                            titolo.Lat = dr.lat;
-                            titolo.Lon = dr.lon;
+                            titolo.Lat = decimal.Parse(dr.lat, culture);
+                            titolo.Lng = decimal.Parse(dr.lon, culture);
                             titolo.Exact = dr.EXACT;
                             titolo.FasceOrarie = dr.fasceOrarie;
                             lista.Add(titolo);
                         }
                     }
                 }
-                using (SupportTableAdapter tableAdapterSupport = new SupportTableAdapter())
-                {
-                    DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'baseImagePath'  ");
-                    objResult.BaseImagePath = dr1[0]["value"].ToString();
-                }
 
                 // serializza il risultato
-                System.Xml.Linq.XElement dump = null;
-                ObjectDumper dumper = new ObjectDumper(10, null, false, true, null);
-                dump = dumper.Dump(objResult, "Titoli");
                 var sb = new StringBuilder();
-                sb.Append("{"); // json start
+                sb.Append("{\"m\":[{\"n\":\"Reply\",\"v\":\"Reply\"}], \"l\":[{"); // lista start
+                var dumper = new ObjectDumper(10, null, false, true, null);
+                var dump = dumper.Dump(lista.ToArray(), "TitoliList");
                 JsonConverter.ConvertToJSon(dump, sb, false, true);
+                sb.Append("}]}"); // lista end
 
-                // aggiunge la lista
-                sb.Append(", \"l\":[{"); // lista start
-                dumper = new ObjectDumper(10, null, false, true, null);
-                dump = dumper.Dump(lista.ToArray(), "TitoliList");
-                JsonConverter.ConvertToJSon(dump, sb, false, true);
-                sb.Append("}]"); // lista end
-
-                sb.Append("}"); // json end
                 string sReturn = sb.ToString().Replace("\t", " ");
                 return sReturn;
             }

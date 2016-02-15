@@ -16,32 +16,51 @@ namespace ChartaWEB
         {
             public long Id { get; set; }
             public string Nome { get; set; }
+            public string Sid { get; set; }
         }
 
         public class Categoria
         {
             public long Id { get; set; }
             public string Nome { get; set; }
-
+            public string Sid { get; set; }
         }
 
         private static void serializzaCategoria(int index, StringBuilder sb, Categoria categoria, List<Sottocategoria> lista)
         {
-            if (index > 0)
-            {
-                sb.Append("},{");
-            }
-            // serializza la categoria precedente
-            var dumper = new ObjectDumper(10, null, false, true, null);
-            var dump = dumper.Dump(categoria, string.Format("[{0}]", index));
-            JsonConverter.ConvertToJSon(dump, sb, false, true);
+            //if (index > 0)
+            //{
+            //    sb.Append("},{");
+            //}
+            //// serializza la categoria
+            //var dumper = new ObjectDumper(10, null, false, true, null);
+            //var dump = dumper.Dump(categoria, string.Format("[{0}]", index));
+            //JsonConverter.ConvertToJSon(dump, sb, false, true);
 
-            // serializza le sottocategorie precedenti
-            sb.Append(",\"l\":[{"); // lista start
-            dumper = new ObjectDumper(10, null, false, true, null);
-            dump = dumper.Dump(lista.ToArray(), "Sottocategorie");
-            JsonConverter.ConvertToJSon(dump, sb, false, true);
-            sb.Append("}]"); // lista end
+            //// serializza le sottocategorie
+            //sb.Append(",\"l\":[{"); // lista start
+            //dumper = new ObjectDumper(10, null, false, true, null);
+            //dump = dumper.Dump(lista.ToArray(), "Sottocategorie");
+            //JsonConverter.ConvertToJSon(dump, sb, false, true);
+            //sb.Append("}]"); // lista end
+
+            // serializza la categoria
+            sb.AppendFormat("{{\"n\":\"[{0}]\",\"v\":\"Categoria\",\"m\":[", index);
+            sb.AppendFormat("{{\"n\":\"Nome\",\"v\":{0}}}", Util.EncodeForJson(categoria.Nome));
+            sb.AppendFormat(",{{\"n\":\"Sid\",\"v\":{0}}}", Util.EncodeForJson(categoria.Sid));
+            sb.AppendFormat(",{{\"n\":\"Id\",\"v\":{0}}}", categoria.Id);
+
+            // serializza le sottocategorie come attributi multipli
+            sb.Append(",{\"n\":\"Sottocategorie\",\"v\":\"Sottocategoria[]\",\"m\":[");
+            for (int idx = 0; idx < lista.Count; idx++)
+            {
+                sb.AppendFormat("{{\"n\":\"[{0}]\",\"v\":\"Sottocategoria\",\"m\":[", idx);
+                sb.AppendFormat("{{\"n\":\"Nome\",\"v\":{0}}}", Util.EncodeForJson(lista[idx].Nome));
+                sb.AppendFormat(",{{\"n\":\"Sid\",\"v\":{0}}}", Util.EncodeForJson(lista[idx].Sid));
+                sb.AppendFormat(",{{\"n\":\"Id\",\"v\":{0}}}", lista[idx].Id);
+                sb.Append("]}");
+            }
+            sb.Append("]}]}");
         }
 
         public static string ListaCat ()
@@ -82,8 +101,8 @@ namespace ChartaWEB
                 Categoria categoria = null;
                 Sottocategoria sottocategoria = null;
                 var sb = new StringBuilder();
-                sb.Append("{"); // json start
-                sb.Append("\"l\":[{ \"n\":\"Categorie\",\"v\":\"Categoria[]\",\"m\":[{"); // lista start
+                sb.Append("{\"m\":[{\"n\":\"Reply\", \"v\":\"Reply\"}]"); // json start
+                sb.Append(",\"l\":[{ \"n\":\"Categorie\",\"v\":\"Categoria[]\",\"m\":["); // lista start
                 using (CatTableAdapter objTACat = new CatTableAdapter())
                 {
                     using (ChartaDb.Charta.CatDataTable objDTCat = objTACat.GetData())
@@ -102,12 +121,14 @@ namespace ChartaWEB
 
                                 categoria = new Categoria();
                                 categoria.Id = dr.cod_categoria;
+                                categoria.Sid = "Categoria-" + dr.cod_categoria;
                                 categoria.Nome = dr.nome_cat;
                                 idCatOld = dr.cod_categoria;
                                 lista = new List<Sottocategoria>();
                             }
                             sottocategoria = new Sottocategoria();
                             sottocategoria.Id = dr.cod_sottocat;
+                            sottocategoria.Sid = "Sottocategoria-" + dr.cod_categoria + "-" + dr.cod_sottocat;
                             sottocategoria.Nome = dr.nome_sottocat;
                             lista.Add(sottocategoria);
                         }
@@ -115,10 +136,10 @@ namespace ChartaWEB
                         serializzaCategoria(index, sb, categoria, lista);
                     }
                 }
-                sb.Append("}]}]"); // lista end
+                sb.Append("]}]"); // lista end
                 sb.Append("}"); // json end
 
-                string sReturn = sb.ToString().Replace("\t", " ");
+                string sReturn = sb.ToString().Replace("}{", "},{");
                 return sReturn;
             }
             catch ( Exception ex)

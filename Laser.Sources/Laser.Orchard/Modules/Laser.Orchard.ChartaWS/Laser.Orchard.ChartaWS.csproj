@@ -124,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChartaWEB\Cat.cs" />
+    <Compile Include="ChartaWEB\City.cs" />
     <Compile Include="ChartaWEB\CityList.cs" />
     <Compile Include="ChartaWEB\Command.cs" />
     <Compile Include="ChartaWEB\GestioneDeviceToken.cs" />
@@ -144,7 +145,6 @@
     <Compile Include="ChartaWEB\SMS.cs" />
     <Compile Include="ChartaWEB\Spettacoli.cs" />
     <Compile Include="ChartaWEB\Spettacolo.cs" />
-    <Compile Include="ChartaWEB\TitoliAroundMe.cs" />
     <Compile Include="ChartaWEB\TitoliList.cs" />
     <Compile Include="ChartaWEB\Titolo.cs" />
     <Compile Include="ChartaWEB\Util.cs" />

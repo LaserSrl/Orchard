@@ -24,7 +24,11 @@ namespace Laser.Orchard.ChartaWS.Models
             get { return this.Retrieve(x => x.ReplyToPaypalUrl); }
             set { this.Store(x => x.ReplyToPaypalUrl, value); }
         }
-
+        public string PaypalMerchantMail
+        {
+            get { return this.Retrieve(x => x.PaypalMerchantMail); }
+            set { this.Store(x => x.PaypalMerchantMail, value); }
+        }
         public int ServiceRetryCount
         {
             get { return this.Retrieve(x => x.ServiceRetryCount); }
