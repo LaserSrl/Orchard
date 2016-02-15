@@ -169,8 +169,13 @@ namespace ChartaWEB
                 else
                     sReturn = xml;
 
-                return sReturn ;
+                // converte il risultato in formato json se necessario
+                if (sReturn.StartsWith("<"))
+                {
+                    sReturn = Util.XmlToJson(sReturn);
+                }
 
+                return sReturn ;
             }
             catch (Exception ex)
             {
@@ -247,8 +252,12 @@ namespace ChartaWEB
                         break;
                 }
 
+                // converte il risultato in formato json se necessario
+                if (sReturn.StartsWith("<"))
+                {
+                    sReturn = Util.XmlToJson(sReturn);
+                }
                 return sReturn;
-                
             }
             catch (Exception ex)
             {
@@ -267,7 +276,7 @@ namespace ChartaWEB
             try
             {
                 string sReturn = string.Empty;
-                string svalue = "-1";
+                int stato = -1;
                 string smsg = "";
 
                 if ( ! string.IsNullOrEmpty(idTran) )
@@ -277,28 +286,13 @@ namespace ChartaWEB
 
                     foreach (ChartaDb.Charta.StatoTranRow r in objDt)
                     {
-                        svalue = r.Stato.ToString();
+                        stato = r.Stato;
                         smsg = r.messaggio;
                     }
-
-                    // Vecchia gestione comenado transazione
-                    //TransactionsTableAdapter tableAdapterTran = new TransactionsTableAdapter();
-                    //DataRow[] dr = tableAdapterTran.GetData().Select(" transaction_id = '" + idTran + "' ");
-                    //if (dr.Length >0 )
-                    //{
-                    //    svalue = dr[0]["stato"].ToString();
-                    //}
-                    //tableAdapterTran.Dispose();
-
                 }
-                
-                sReturn += "<reply>";
-                sReturn += "<StatoTran>" + Util.ConvertWithANDReplace(svalue) + "</StatoTran>";
-                sReturn += "<Messaggio>" + Util.ConvertWithANDReplace(smsg) + "</Messaggio>";
-                sReturn += "</reply>";
 
+                sReturn = string.Format("{{ \"StatoTran\":{0}, \"Messaggio\":{1} }}", stato, Util.EncodeForJson(smsg));
                 return sReturn;
-
             }
             catch (Exception ex)
             {

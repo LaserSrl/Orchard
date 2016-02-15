@@ -4,6 +4,9 @@ using System.Web;
 using log4net;
 using ChartaDb.ChartaTableAdapters;
 using System.Globalization;
+using Laser.Orchard.ChartaWS.ChartaWEB;
+using Laser.Orchard.Commons.Services;
+using System.Text;
 
 namespace ChartaWEB
 {
@@ -15,51 +18,105 @@ namespace ChartaWEB
         {
             try
             {
-                SpettacoliTableAdapter  objTASpett = new SpettacoliTableAdapter ();
-                ChartaDb.Charta.SpettacoliDataTable  objDtSpett;
+                //SpettacoliTableAdapter  objTASpett = new SpettacoliTableAdapter ();
+                //ChartaDb.Charta.SpettacoliDataTable  objDtSpett;
 
-                if (string.IsNullOrEmpty(pIdTitolo))
-                {
-                    objDtSpett = objTASpett.GetData(null);
+                //if (string.IsNullOrEmpty(pIdTitolo))
+                //{
+                //    objDtSpett = objTASpett.GetData(null);
                    
-                }
-                else
-                {
-                    objDtSpett = objTASpett.GetData(int.Parse(pIdTitolo));
-                }
+                //}
+                //else
+                //{
+                //    objDtSpett = objTASpett.GetData(int.Parse(pIdTitolo));
+                //}
 
-                string sReturn = "<reply>";
-                sReturn += "<Spettacoli>";
-                IFormatProvider culture = System.Globalization.CultureInfo.CurrentCulture;
+                //string sReturn = "<reply>";
+                //sReturn += "<Spettacoli>";
+                //IFormatProvider culture = System.Globalization.CultureInfo.CurrentCulture;
                 
 
-                foreach (ChartaDb.Charta.SpettacoliRow  dr in objDtSpett)
-                {
+                //foreach (ChartaDb.Charta.SpettacoliRow  dr in objDtSpett)
+                //{
                      
-                    DateTime dateSpettacolo = DateTime.ParseExact(dr.date, "yyyyMMdd", culture);
-                    DateTime timeSpettacolo = DateTime.ParseExact(dr.time, "HH.mm", culture);
-                    dateSpettacolo = dateSpettacolo.AddHours(timeSpettacolo.Hour).AddMinutes(timeSpettacolo.Minute);
+                //    DateTime dateSpettacolo = DateTime.ParseExact(dr.date, "yyyyMMdd", culture);
+                //    DateTime timeSpettacolo = DateTime.ParseExact(dr.time, "HH.mm", culture);
+                //    dateSpettacolo = dateSpettacolo.AddHours(timeSpettacolo.Hour).AddMinutes(timeSpettacolo.Minute);
                   
 
-                    if (dateSpettacolo >= DateTime.Now)
+                //    if (dateSpettacolo >= DateTime.Now)
+                //    {
+                //        sReturn += "<Spteccolo pcode=\"" + dr.pcode + "\" >";
+                //        sReturn += "<vcode>" + dr.vcode + "</vcode>";
+                //        sReturn += "<date>" + Util.ConvertWithANDReplace(dr.date.ToString()) + "</date>";
+                //        sReturn += "<time>" + Util.ConvertWithANDReplace(dr.time.ToString()) + "</time>";
+                //        sReturn += "<title>" + Util.ConvertWithANDReplace(dr.title.ToString()) + "</title>";
+                //        sReturn += "<starttime>" + Util.ConvertWithANDReplace(dr.start_time.ToString()) + "</starttime>";
+                //        sReturn += "<retired>" + Util.ConvertWithANDReplace(dr.retired.ToString()) + "</retired>";
+                //        sReturn += "<stato>" + Util.ConvertWithANDReplace(dr.stato.ToString()) + "</stato>";
+                //        sReturn += "</Spteccolo>";
+                //    }
+
+                //}
+                //objDtSpett.Dispose();
+                //objTASpett.Dispose();
+
+                //sReturn += "</Spettacoli></reply>";
+                //*****************************************************
+                var lista = new List<Spettacolo>();
+                Spettacolo spettacolo = null;
+                using (SpettacoliTableAdapter objTASpett = new SpettacoliTableAdapter())
+                {
+                    ChartaDb.Charta.SpettacoliDataTable objDtSpett;
+
+                    if (string.IsNullOrEmpty(pIdTitolo))
                     {
-                        sReturn += "<Spteccolo pcode=\"" + dr.pcode + "\" >";
-                        sReturn += "<vcode>" + dr.vcode + "</vcode>";
-                        sReturn += "<date>" + Util.ConvertWithANDReplace(dr.date.ToString()) + "</date>";
-                        sReturn += "<time>" + Util.ConvertWithANDReplace(dr.time.ToString()) + "</time>";
-                        sReturn += "<title>" + Util.ConvertWithANDReplace(dr.title.ToString()) + "</title>";
-                        sReturn += "<starttime>" + Util.ConvertWithANDReplace(dr.start_time.ToString()) + "</starttime>";
-                        sReturn += "<retired>" + Util.ConvertWithANDReplace(dr.retired.ToString()) + "</retired>";
-                        sReturn += "<stato>" + Util.ConvertWithANDReplace(dr.stato.ToString()) + "</stato>";
-                        sReturn += "</Spteccolo>";
+                        objDtSpett = objTASpett.GetData(null);
                     }
-
+                    else
+                    {
+                        objDtSpett = objTASpett.GetData(int.Parse(pIdTitolo));
+                    }
+                    try
+                    {
+                        IFormatProvider culture = System.Globalization.CultureInfo.CurrentCulture;
+                        foreach (ChartaDb.Charta.SpettacoliRow dr in objDtSpett)
+                        {
+                            DateTime dateSpettacolo = DateTime.ParseExact(dr.date, "yyyyMMdd", culture);
+                            DateTime timeSpettacolo = DateTime.ParseExact(dr.time, "HH.mm", culture);
+                            dateSpettacolo = dateSpettacolo.AddHours(timeSpettacolo.Hour).AddMinutes(timeSpettacolo.Minute);
+                            if (dateSpettacolo >= DateTime.Now)
+                            {
+                                spettacolo = new Spettacolo();
+                                spettacolo.PCode = dr.pcode;
+                                spettacolo.VCode = dr.vcode;
+                                spettacolo.Date = dr.date;
+                                spettacolo.Time = dr.time;
+                                spettacolo.Title = dr.title;
+                                spettacolo.StartTime = dr.start_time;
+                                spettacolo.Retired = dr.retired;
+                                spettacolo.Stato = dr.stato;
+                                lista.Add(spettacolo);
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        objDtSpett.Dispose();
+                    }
                 }
-                objDtSpett.Dispose();
-                objTASpett.Dispose();
 
-                sReturn += "</Spettacoli></reply>";
-
+                // serializza il risultato
+                System.Xml.Linq.XElement dump = null;
+                ObjectDumper dumper = new ObjectDumper(10, null, false, true, null);
+                var sb = new StringBuilder();
+                sb.Append("{"); // json start
+                sb.Append("\"l\":[{"); // lista start
+                dump = dumper.Dump(lista.ToArray(), "Spettacoli");
+                JsonConverter.ConvertToJSon(dump, sb, false, true);
+                sb.Append("}]"); // lista end
+                sb.Append("}"); // json end
+                string sReturn = sb.ToString().Replace("\t", " ");
                 return sReturn;
             }
             catch (Exception ex)

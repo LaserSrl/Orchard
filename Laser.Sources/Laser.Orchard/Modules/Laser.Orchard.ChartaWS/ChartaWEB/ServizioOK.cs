@@ -34,7 +34,7 @@ namespace ChartaWEB
                 using (SupportTableAdapter tableAdapterSupport = new SupportTableAdapter())
                 {
                     DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'ServizioOk' ");
-                    sReturn = string.Format("{{ \"n\":\"ServzioOk\",\"v\":\"{0}\" }}", dr1[0]["value"]);
+                    sReturn = string.Format("{{ \"ServzioOk\":{0} }}", Util.EncodeForJson(dr1[0]["value"].ToString()));
                 }
                 return sReturn;
             }
@@ -63,7 +63,7 @@ namespace ChartaWEB
                 using (SupportTableAdapter tableAdapterSupport = new SupportTableAdapter())
                 {
                     DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'NumeroServizio' ");
-                    sReturn = string.Format("{{ \"n\":\"NumeroServizio\",\"v\":\"{0}\" }}", dr1[0]["value"]);
+                    sReturn = string.Format("{{ \"NumeroServizio\":{0} }}", Util.EncodeForJson(dr1[0]["value"].ToString()));
                 }
                 return sReturn;
             }

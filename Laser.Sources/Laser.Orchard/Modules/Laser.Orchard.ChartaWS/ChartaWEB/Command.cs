@@ -33,7 +33,6 @@ namespace ChartaWEB
         const string CMDDELPROFILA = "DelProfila";
         const string CMDDELREGTOKEN = "DelRegToken";
 
-
         string _idorg;
         string _code;
         string _comune;
@@ -70,50 +69,41 @@ namespace ChartaWEB
             get { return _pcode; }
             set { _pcode = value; }
         }
-
         public string Pdata
         {
             get { return _data; }
             set { _data = value; }
         }
-
-
         public string Email
         {
             get { return _email; }
             set { _email = value; }
         }
-
         public string IdTransazione
         {
             get { return _idTransazione; }
             set { _idTransazione = value; }
         }
-
         public string Telefono
         {
             get { return _telefono; }
             set { _telefono = value; }
         }
-
         public string Cognome
         {
             get { return _cognome; }
             set { _cognome = value; }
         }
-
         public string Nome
         {
             get { return _nome; }
             set { _nome = value; }
         }
-
         public string Idorg
         {
             get { return _idorg; }
             set { _idorg = value; }
         }
-
         public string Code
         {
             get { return _code; }
@@ -124,109 +114,88 @@ namespace ChartaWEB
             get { return _comune; }
             set { _comune = value; }
         }
-
         public string Provincia
         {
             get { return _provincia; }
             set { _provincia = value; }
         }
-
         public string Idtitolo
         {
             get { return _idtitolo; }
             set { _idtitolo = value; }
         }
-
         public string Citta
         {
             get { return _citta; }
             set { _citta = value; }
         }
-
         public string Quando
         {
             get { return _quando; }
             set { _quando = value; }
         }
-
         public string Catid
         {
             get { return _catid; }
             set { _catid = value; }
         }
-
         public string Sottocatid
         {
             get { return _sottocatid; }
             set { _sottocatid = value; }
         }
-
         public string TitoloArtista
         {
             get { return _titoloartista; }
             set { _titoloartista = value; }
         }
-
         public string QueryRequest
         {
             get { return _queryRequest; }
             set { _queryRequest = value; }
         }
-
         public HttpResponse Response
         {
             get { return _Response; }
             set { _Response = value; }
         }
-
         public string DeviceToken
         {
             get { return _deviceToken; }
             set { _deviceToken = value; }
         }
-
         public string TipoDevice
         {
             get { return _tipoDevice; }
             set { _tipoDevice = value; }
         }
-
         public string Lat
         {
             get { return _lat; }
             set { _lat = value; }
         }
-
-
         public string Lon
         {
             get { return _lon; }
             set { _lon = value; }
         }
-
         public string Idprofila
         {
             get { return _idprofila; }
             set { _idprofila = value; }
         }
-
         public string Luogo
         {
             get { return _luogo; }
             set { _luogo = value; }
         }
-
-        
         public string Prod
         {
             get { return _prod; }
             set { _prod = value; }
         }
 
-
         #endregion
-
-
 
         public Command(ChartaSiteSettingsPart config)
         {
@@ -268,7 +237,6 @@ namespace ChartaWEB
                     return true;
                 default:
                     return false;
-
             }
         }
 
@@ -282,18 +250,24 @@ namespace ChartaWEB
             switch (pCommand)
             {
                 case CMDCITYLIST:
+                    //http://localhost/Laser.Orchard/charta?cmd=CityList&id=LASER
                     return CityList.ListaCity();
 
                 case CMDORGINFOLIST:
+                    //http://localhost/Laser.Orchard/charta?cmd=OrgInfoList&id=LASER   
+                    //http://localhost/Laser.Orchard/charta?cmd=OrgInfoList&id=LASER&idOrg=497
                     return OrgInfoList.ListaOrgInfo(_idorg);
 
                 case CMDLOCINFOLIST:
+                    //http://localhost/Laser.Orchard/charta?cmd=LocInfoList&id=LASER
                     return LocInfoList.ListaOrgInfo(Code, Comune, Provincia);
 
                 case CMDLOCINFOLISTDISTINCT:
+                    //http://localhost/Laser.Orchard/charta?cmd=LocInfoListDistinct&id=LASER
                     return LocInfoList.ListaOrgInfoDistinct(Code, Comune, Provincia);
 
                 case CMDCAT:
+                    //http://localhost/Laser.Orchard/charta?cmd=Cat&id=LASER
                     return Cat.ListaCat();
 
                  //TITOLI -> non viene più chiamata da nuove versioni mobile
@@ -301,50 +275,52 @@ namespace ChartaWEB
                     return TitoliList.ListaTitoli(_idtitolo, _code, _citta, _quando, _catid, _sottocatid, _pcode, _data, _titoloartista);
 
                 case CMDTITOLISHORT:
+                    //http://localhost/Laser.Orchard/charta?cmd=TitoliShort&id=LASER
                     return TitoliList.ListaTitoliShort(_idtitolo, _code, _citta, _quando, _catid, _sottocatid, _pcode, _data, _titoloartista);
 
                 case CMDSPETTACOLI:
+                    //http://localhost/Laser.Orchard/charta?cmd=Spettacoli&id=LASER
                     return Spettacoli.ListaSpettacoli(_idtitolo);
 
                 case CMDRICHIESTAPOSTI:
                     {
                         //modifica per timeout configurabile
-
                         string requestOriginal = _queryRequest;
                         int index1 = _queryRequest.IndexOf("timeout=");
                         int index2 = _queryRequest.IndexOf("&macrozone");
                         string subStringRequest = requestOriginal.Substring(index1, (index2 - index1));
-                        string requestModified = requestOriginal.Replace(subStringRequest, "timeout=" + ConfigurationManager.AppSettings["_TIMEOUT"]);
-
-                        //return GestioneTransazioni.RichiediPosti(_Response, _queryRequest);
-                        //logger.Debug("CMDRICHIESTAPOSTI: timeout modificato. RequestString modificata = " + requestModified);
-
+                        string requestModified = requestOriginal.Replace(subStringRequest, "timeout=" + _config.Timeout);
                         return GestioneTransazioni.RichiediPosti(_Response, requestModified, _config.RemoteUrl);
                     }
                 case CMDINVIOANAGRAFICA:
                     return GestioneTransazioni.InvioAnagrafica(_Response, _queryRequest, _idTransazione, _nome, _cognome, _telefono, _email, _config.RemoteUrl);
 
                 case CMDHOTLIST:
+                    //http://localhost/Laser.Orchard/charta?cmd=HotList&id=LASER
                     return HotList.ListaHotList();
 
                 case CMDLASTMINUTE:
+                    //http://localhost/Laser.Orchard/charta?cmd=LastMinute&id=LASER
                     return LastMinute.ListaLastMinute();
 
                 case CMDNEWS:
+                    //http://localhost/Laser.Orchard/charta?cmd=News&id=LASER
                     return News.ListaNews();
 
                 case CMDSERVIZIOOK:
+                    //http://localhost/Laser.Orchard/charta?cmd=ServizioOk&id=LASER
                     return ServizioOK.GetServizioOK();
 
                 case CMDSTATOTRAN:
                     return GestioneTransazioni.StatoTran(_idTransazione);
 
                 case CMDNUMEROSERVIZIO:
+                    //http://localhost/Laser.Orchard/charta?cmd=NumeroServizio&id=LASER
                     return ServizioOK.GetNumeroServizio();
 
                 case CMDAROUNDME:
                     //http://localhost:50832/Default.aspx?id=LASER&cmd=AroundMe&lat=45.467&lon=7.867
-                    return TitoliList.ListaTitoliAroundMe(_lat, _lon);
+                    return TitoliList.ListaTitoliAroundMe(_lat, _lon, (double)(_config.MetersAroundMe));
 
                 case CMDREGTOKEN:
                     //http://localhost:50832/Default.aspx?id=LASER&cmd=RegToken&device_token=9656f90ab69e426c7f6d3b9c296a25f92315ef50d1652b2d14ffa45e63ea3f90&tipo_device=android&prod=1
@@ -361,7 +337,6 @@ namespace ChartaWEB
                 case CMDDELPROFILA:
                     //http://localhost:50832/Default.aspx?id=LASER&cmd=DelProfila&device_token=9656f90ab69e426c7f6d3b9c296a25f92315ef50d1652b2d14ffa45e63ea3f90&idprofila=1
                     return GestioneProfilazione.DeleteProfilazione (_deviceToken, _idprofila);
-                    
             } 
 
             return "";

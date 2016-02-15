@@ -52,5 +52,15 @@
         @Html.TextBoxFor(m => m.MailBody, new { @class = "text-medium" })
         <span class="hint">@T("Body for notification mails.")</span>
     </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Timeout)">@T("Timeout")</label>
+        @Html.TextBoxFor(m => m.Timeout, new { @class = "text-medium" })
+        <span class="hint">@T("Timeout per la richiesta ai web service Vivaticket.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.MetersAroundMe)">@T("Meters Around Me")</label>
+        @Html.TextBoxFor(m => m.MetersAroundMe, new { @class = "text-medium" })
+        <span class="hint">@T("Dimension of search area.")</span>
+    </div>
 </fieldset>
 

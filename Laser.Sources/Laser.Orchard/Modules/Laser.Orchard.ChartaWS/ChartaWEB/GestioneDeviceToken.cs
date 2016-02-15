@@ -15,13 +15,11 @@ namespace ChartaWEB
     {
         private static readonly ILog logger = LogManager.GetLogger("GestioneDeviceToken");
 
-
         public static string RegistraToken (string token, string tipoDevice, string prod )
         {
             try
             {
                 string sReturn = string.Empty;
-
                 byte tipoDeviceByte = 0;
                 switch (tipoDevice)
                 {
@@ -45,31 +43,26 @@ namespace ChartaWEB
                     default:
                         isprod = false;
                         break;
-
                 }
 
-                DEVICE_TOKENTableAdapter ta = new DEVICE_TOKENTableAdapter();
-                ChartaDb.Charta.DEVICE_TOKENRow[] dr1 = (ChartaDb.Charta.DEVICE_TOKENRow[])ta.GetData().Select("DEVICE_TOKEN = '" + token + "' ");
-                if (dr1.Length == 0)
-                {                    
-                    ta.Insert(token, tipoDeviceByte, true, isprod, DateTime.Now, null);
-                }
-                else
+                using (DEVICE_TOKENTableAdapter ta = new DEVICE_TOKENTableAdapter())
                 {
-                    ChartaDb.Charta.DEVICE_TOKENRow row = dr1[0];
-                    row.VALIDO = true;
-                    row.DATA_AGGIORNAMENTO = DateTime.Now;
-                    row.ISPROD = isprod;
-                    ta.Update(row);
+                    ChartaDb.Charta.DEVICE_TOKENRow[] dr1 = (ChartaDb.Charta.DEVICE_TOKENRow[])ta.GetData().Select("DEVICE_TOKEN = '" + token + "' ");
+                    if (dr1.Length == 0)
+                    {
+                        ta.Insert(token, tipoDeviceByte, true, isprod, DateTime.Now, null);
+                    }
+                    else
+                    {
+                        ChartaDb.Charta.DEVICE_TOKENRow row = dr1[0];
+                        row.VALIDO = true;
+                        row.DATA_AGGIORNAMENTO = DateTime.Now;
+                        row.ISPROD = isprod;
+                        ta.Update(row);
+                    }
                 }
 
-
-                sReturn += "<reply>";
-                sReturn += "<Esito>OK</Esito>";
-                sReturn += "</reply>";
-
-                ta.Dispose();
-
+                sReturn = "{\"Esito\":\"OK\"}";
                 return sReturn;
             }
             catch (Exception ex)
@@ -77,38 +70,22 @@ namespace ChartaWEB
                 logger.Error(ex);
                 return Util.GestioneErrore("RegistraToken", "999", ex.Message);
             }
-            
-
         }
-
 
         public static string DelRegistraToken(string token, string tipoDevice, string prod)
         {
             try
             {
                 string sReturn = string.Empty;
-
-                PROFILAZIONETableAdapter taP = new PROFILAZIONETableAdapter();
-                taP.DeleteTokenProfilazioni(token);
-
-                DEVICE_TOKENTableAdapter ta = new DEVICE_TOKENTableAdapter();
-                ta.UpdateValiditaToken(false, DateTime.Now, token); 
-               /* ChartaDb.Charta.DEVICE_TOKENRow[] dr1 = (ChartaDb.Charta.DEVICE_TOKENRow[])ta.GetData().Select("DEVICE_TOKEN = '" + token + "' ");
-                if (dr1.Length != 0)
+                using (PROFILAZIONETableAdapter taP = new PROFILAZIONETableAdapter())
                 {
-                    ChartaDb.Charta.DEVICE_TOKENRow row = dr1[0];
-                    row.VALIDO = false ;
-                    row.DATA_AGGIORNAMENTO = DateTime.Now;
-                    ta.Update(row);
-                }*/
-
-
-                sReturn += "<reply>";
-                sReturn += "<Esito>OK</Esito>";
-                sReturn += "</reply>";
-
-                ta.Dispose();
-
+                    taP.DeleteTokenProfilazioni(token);
+                    using (DEVICE_TOKENTableAdapter ta = new DEVICE_TOKENTableAdapter())
+                    {
+                        ta.UpdateValiditaToken(false, DateTime.Now, token);
+                    }
+                }
+                sReturn = "{\"Esito\":\"OK\"}";
                 return sReturn;
             }
             catch (Exception ex)
@@ -116,37 +93,6 @@ namespace ChartaWEB
                 logger.Error(ex);
                 return Util.GestioneErrore("RegistraToken", "999", ex.Message);
             }
-
-
         }
-
-        /*public static string GetNumeroServizio ()
-        {
-            try
-            {
-                string sReturn = string.Empty;
-
-                SupportTableAdapter tableAdapterSupport = new SupportTableAdapter();
-                DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'NumeroServizio' ");
-                string svalue = dr1[0]["value"].ToString();
-                sReturn += "<reply>";
-                sReturn += "<NumeroServizio>" + Util.Convert(svalue) + "</NumeroServizio>";
-                sReturn += "</reply>";
-
-                tableAdapterSupport.Dispose();
-
-
-                return sReturn;
-
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                return Util.GestioneErrore("GetNumeroServizio", "999", ex.Message);
-            }
-
-        
-        }*/
-
     }
 }

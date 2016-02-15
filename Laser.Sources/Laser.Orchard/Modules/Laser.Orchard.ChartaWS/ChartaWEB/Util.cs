@@ -7,27 +7,22 @@ using System.Net;
 using System.Text;
 using System.Reflection; 
 
-
-
 namespace ChartaWEB
 {
     static public class Util
     {
         public static string ConvertWithANDReplace (string str)
         {
-
             StringWriter sw = new StringWriter();
             XmlTextWriter xmlTw = new XmlTextWriter(sw);
             xmlTw.WriteString(str);
 
             //return sw.ToString();
             return sw.ToString().Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;").Replace("<", "&lt;").Replace(">", "&gt;");
-
         }
 
         public static string Convert(string str)
         {
-
             StringWriter sw = new StringWriter();
             XmlTextWriter xmlTw = new XmlTextWriter(sw);
             xmlTw.WriteString(str);
@@ -66,10 +61,8 @@ namespace ChartaWEB
                 sReturn = sb.ToString();
             }
 
-
             remoteResp.Close();
             return sReturn;
-
         }
 
         /// <summary>
@@ -81,13 +74,13 @@ namespace ChartaWEB
         /// <returns></returns>
         public static string GestioneErrore (string cmd, string ErrorCode, string Error)
         {
-            StringBuilder outputBuilder = new StringBuilder();
+            //StringBuilder outputBuilder = new StringBuilder();
+            //string a = "<reply command=\"{0}\" errcode=\"{1}\" errstring=\"{2}\" /> ";
+            //outputBuilder.AppendFormat(a, cmd, ErrorCode, Error);
+            //return outputBuilder.ToString();
 
-            string a = "<reply command=\"{0}\" errcode=\"{1}\" errstring=\"{2}\" /> ";
-            outputBuilder.AppendFormat(a, cmd, ErrorCode, Error);
-
-            return outputBuilder.ToString();
-
+            string sReturn = string.Format("{{\"command\":{0}, \"errcode\":{1}, \"errstring\":{2} }}", Util.EncodeForJson(cmd), Util.EncodeForJson(ErrorCode), Util.EncodeForJson(Error));
+            return sReturn;
         }
 
         /// <summary>
@@ -122,8 +115,6 @@ namespace ChartaWEB
 
                 DateTime dData = new DateTime(Y, M, D, H, m, s);
                 return dData;
-
-
             }
             catch
             {
@@ -131,7 +122,79 @@ namespace ChartaWEB
             }
         }
 
-       
+        /// <summary>
+        /// Data na string ala converte in formato compatibile con JSON, già delimitata da doppi apici.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string EncodeForJson(string s)
+        {
+            // sostituisce i doppi apici (") con \"
+            //return string.Format("\"{0}\"", s.Replace("\"", "\\\""));
+            return Newtonsoft.Json.JsonConvert.SerializeObject(s);
+        }
 
+        /// <summary>
+        /// Converte una stringa XML in una stringa JSON secondo la logica seguente.
+        /// Viene parsificato tutto l'xml.
+        /// Ogni nodo viene convertito in un oggetto JSON di tipo {n:"tagName", v:"value", m:[{n:"attributo",v:"valore"}]}.
+        /// Se un nodo XML ne contiene un altro, quest'ultimo diventa un suo membro:
+        /// {n:"tagName", v:"value", m:[{n:"attributo",v:"valore"}, {n:"childTagName", v:"childValue", m:[{n:"childAttribute", v:"childAttributeValue"}  ] }]}.
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns></returns>
+        public static string XmlToJson(string xml)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            return XmlNodeToJson(doc.DocumentElement);
+        }
+
+        /// <summary>
+        /// Funzione ricorsiva per convertire un nodo xml in una stringa json.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private static string XmlNodeToJson(XmlNode node)
+        {
+            string risultato = "";
+            StringBuilder sb = new StringBuilder();
+            bool isFirst = true;
+            // se il nodo ha la proprietà Attributes a null, allora è un testo o qualcosa di strano e non lo considero
+            if (node.Attributes != null)
+            {
+                sb.AppendFormat("{{\"n\":\"{0}\",\"v\":\"{1}\",\"m\":[", node.Name, node.InnerText); // json start
+                foreach (XmlAttribute attr in node.Attributes)
+                {
+                    if (isFirst == false)
+                    {
+                        sb.Append(",");
+                    }
+                    else
+                    {
+                        isFirst = false;
+                    }
+                    sb.AppendFormat("{{\"n\":\"{0}\",\"v\":\"{1}\"}}", attr.Name, attr.Value);
+                }
+                foreach (XmlNode child in node.ChildNodes)
+                {
+                    if (isFirst == false)
+                    {
+                        sb.Append(",");
+                    }
+                    else
+                    {
+                        isFirst = false;
+                    }
+                    sb.Append(XmlNodeToJson(child));
+                }
+                sb.Append("]}"); // json end
+            }
+            risultato = sb.ToString();
+
+            //elimina eventuali elenchi vuoti di membri
+            risultato = risultato.Replace(",\"m\":[]", "");
+            return risultato;
+        }
     }
 }

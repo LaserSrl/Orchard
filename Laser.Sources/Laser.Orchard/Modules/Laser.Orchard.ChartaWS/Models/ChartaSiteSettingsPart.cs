@@ -55,5 +55,15 @@ namespace Laser.Orchard.ChartaWS.Models
             get { return this.Retrieve(x => x.MailBody); }
             set { this.Store(x => x.MailBody, value); }
         }
+        public int Timeout
+        {
+            get { return this.Retrieve(x => x.Timeout); }
+            set { this.Store(x => x.Timeout, value); }
+        }
+        public int MetersAroundMe
+        {
+            get { return this.Retrieve(x => x.MetersAroundMe); }
+            set { this.Store(x => x.MetersAroundMe, value); }
+        }
     }
 }
