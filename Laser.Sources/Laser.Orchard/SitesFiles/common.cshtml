@@ -5,6 +5,9 @@
 @using System.Xml;
 @using System.Xml.Linq;
 @using System.Web;
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+
 @functions{
      enum NodeTypes
         {
@@ -14,7 +17,6 @@
         }
 		void SpanXDocument(XElement elements)
         {
-		string test="";
             NodeTypes nodeType;
 			 foreach (XElement element in elements.Elements())
             {
@@ -259,8 +261,9 @@
 			{
 				string date_string = bookToModify.ChildNodes[0].Value;
 				DateTime myDate = DateTime.Parse(date_string);
-                bookToModify.ChildNodes[0].Value = ":laserDate" + myDate.ToUniversalTime().Subtract(
-new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + "laserDate:";
+				bookToModify.ChildNodes[0].Value = ":laserDate" + myDate.ToUniversalTime().Subtract(
+    new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+    ).TotalMilliseconds + "laserDate:";
 			}
 			return doc;
 		}
@@ -282,4 +285,35 @@ new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + "laserD
 			return doc;
 		}
 	
-}
+    XmlDocument AggiungiShareLink(XmlDocument doc, XmlNode bookToModify, string titolo, string url, string image){
+        XmlNode newNode = doc.CreateElement("ShareLinkPart");
+        XmlNode textNode = doc.CreateElement("SharedText");
+        textNode.InnerXml= titolo;
+        XmlNode linkNode = doc.CreateElement("SharedLink");
+        linkNode.InnerXml= url;
+        XmlNode imageNode = doc.CreateElement("SharedImage");
+        imageNode.InnerXml= image;
+        newNode.AppendChild(textNode);
+        newNode.AppendChild(linkNode);
+        newNode.AppendChild(imageNode);
+        bookToModify.AppendChild(newNode);
+        return doc;
+    }
+
+
+    string StripHTML(string htmlString)
+    {
+     string pattern = @"<(.|\n)*?>";
+     return Regex.Replace(htmlString, pattern, string.Empty);
+    }
+        
+    DateTime? toDate(string dateTimeStr, string dateFmt)
+    {
+        const DateTimeStyles style=DateTimeStyles.AllowWhiteSpaces;
+        DateTime? result = null;
+        DateTime dt;
+        if (DateTime.TryParseExact(dateTimeStr, dateFmt, 
+            CultureInfo.InvariantCulture, style, out dt)) result=dt;
+        return result;
+    }                               
+}        

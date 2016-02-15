@@ -61,9 +61,9 @@ namespace Laser.Orchard.ExternalContent.Handlers {
                             }
                             else
                                 if (string.IsNullOrEmpty(settings.ExternalURL))
-                                    field.ContentObject = _fieldExternalService.GetContentfromField(Myobject, field.ExternalUrl, field.Name, context.ContentItem.ContentType, field.HttpVerb, field.HttpDataType, field.BodyRequest);
+                                    field.ContentObject = _fieldExternalService.GetContentfromField(Myobject, field.ExternalUrl, field.Name, settings, context.ContentItem.ContentType, field.HttpVerb, field.HttpDataType, field.BodyRequest);
                                 else
-                                    field.ContentObject = _fieldExternalService.GetContentfromField(Myobject, settings.ExternalURL, field.Name, context.ContentItem.ContentType, settings.HttpVerb, settings.HttpDataType, settings.BodyRequest);
+                                    field.ContentObject = _fieldExternalService.GetContentfromField(Myobject, settings.ExternalURL, field.Name, settings, context.ContentItem.ContentType, settings.HttpVerb, settings.HttpDataType, settings.BodyRequest);
              //               Logger.Error("Field get fine:" + DateTime.Now.ToString());
                         }
                     }

@@ -72,6 +72,7 @@
 	}
 	//genero id univoco per istanza
 	mydoc=rendinumeric(mydoc, "root/lista/data/Id");
+	mydoc=cambianome(mydoc,"root/lista/data/location", "ToRemove");
 	
 	mydoc=cambianome(mydoc,"root/lista/data/created_time", "DateCreation");
 	mydoc=cambianome(mydoc,"root/lista/data/link", "LinkURL");

@@ -1,0 +1,110 @@
+@{
+
+
+XmlDocument mydoc=ToXmlDocument(Model);
+
+mydoc=cambianome(mydoc,"root/Item","ExternalGuest");
+mydoc=aggiungipadre(mydoc,"root","lista","ExternalGuest");
+mydoc=RimuoviFratelli(mydoc,"root/lista");
+
+
+
+foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/ExternalGuest")){
+
+
+XmlNodeList cognome = bookToModify.SelectNodes("cognome/textblock");
+if (cognome.Count > 0){
+cognome[0].ParentNode.InnerText = StripHTML(cognome[0].InnerText);
+}
+
+XmlNodeList nome = bookToModify.SelectNodes("nome/textblock");
+if (nome.Count > 0){
+nome[0].ParentNode.InnerText = StripHTML(nome[0].InnerText);
+}
+
+
+XmlNodeList desc1 = bookToModify.SelectNodes("desc1/textblock");
+if (desc1.Count > 0){
+desc1[0].ParentNode.InnerText = desc1[0].InnerText;
+}
+
+XmlNodeList desc2 = bookToModify.SelectNodes("desc2/textblock");
+if (desc2.Count > 0){
+desc2[0].ParentNode.InnerText = desc2[0].InnerText;
+}
+
+
+XmlNodeList link = bookToModify.SelectNodes("link/textblock");
+if (link.Count > 0){
+link[0].ParentNode.InnerText = "http://www.festivaldellatv.it" + StripHTML(link[0].InnerText);
+}
+
+XmlNodeList foto = bookToModify.SelectNodes("foto/path");
+if (foto.Count > 0){
+foto[0].ParentNode.InnerText = "http://www.festivaldellatv.it" + StripHTML(foto[0].InnerText);
+}
+
+string dataString = null;
+string oraString = null;
+
+XmlNodeList data = bookToModify.SelectNodes("data/value");
+if (data.Count > 0){
+dataString = StripHTML(data[0].InnerText);
+data[0].ParentNode.InnerText =  dataString;
+}
+
+XmlNodeList orario = bookToModify.SelectNodes("orario/textblock");
+if (orario.Count > 0){
+oraString = StripHTML(orario[0].InnerText);
+orario[0].ParentNode.InnerText = oraString;
+}
+string dateTimeString = dataString.Trim().Replace("/", "-");
+string dateTimeFormat = "dd-MM-yyyy";
+if (oraString.Length == 5){
+    dateTimeString = dateTimeString + oraString.Trim().Replace(".", ":");
+    dateTimeFormat = dateTimeFormat + "HH:mm";
+}
+    XmlNode dateTime = mydoc.CreateElement("DateTime");
+    DateTime? myDate;
+    myDate = toDate(dateTimeString, dateTimeFormat);
+    if (myDate != null){
+        dateTime.InnerText = ":laserDate" + myDate.Value.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + "laserDate:";
+    }
+    bookToModify.AppendChild(dateTime);
+
+    XmlNode originalID = mydoc.CreateElement("OriginalId");
+    originalID.InnerXml= bookToModify.Attributes["uid"].Value;
+    bookToModify.AppendChild(originalID);
+    XmlNode sid = mydoc.CreateElement("Sid");
+    sid.InnerText= "ExternalGuest:" + bookToModify.Attributes["uid"].Value;
+    bookToModify.AppendChild(sid);
+
+    string artista = bookToModify.SelectSingleNode("nome").InnerText + " " + bookToModify.SelectSingleNode("cognome").InnerText;
+    string linkURL = "http://www.festivaldellatv.it/";
+    if (bookToModify.SelectSingleNode("link").InnerText != null) {
+        linkURL = StripHTML(bookToModify.SelectSingleNode("link").InnerText);
+    }
+    string immagine = "http://www.festivaldellatv.it/www.festivaldellatv.it/img/fdtv_logo_2015.png";
+    if (bookToModify.SelectSingleNode("foto").InnerText != null) {
+        immagine = StripHTML(bookToModify.SelectSingleNode("foto").InnerText);
+    }
+	mydoc=AggiungiShareLink(mydoc, bookToModify, "Vieni anche tu a trovare " + artista + " al #FestivaldellaTV2016", linkURL, immagine);
+}
+
+
+//mydoc=ConvertDateWithFormat(mydoc,"root/lista/ExternalGuest/DateTime");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/cognome", "LastName");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/nome", "FirstName");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/desc1", "AbstractText");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/desc2", "DescriptionText");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/foto", "MediaURL");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/link", "LinkURL");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/data", "ToRemove");
+mydoc=cambianome(mydoc,"root/lista/ExternalGuest/orario", "ToRemove");
+
+
+mydoc=cambianome(mydoc,"root/lista", "ToRemove");
+mydoc=cambianome(mydoc,"root", "ToRemove");
+
+SpanXDocument(ToXDocument(mydoc).Root);
+}

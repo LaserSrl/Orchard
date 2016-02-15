@@ -6,6 +6,7 @@
   <Place Parts_UserPwdRecoveryPart_Edit="Content:2" />
   <Match ContentType="CommunicationAdvertising">
     <Place Parts_MobilePush_Edit="Content:5.4" />
+    <Place Parts_SmsGateway_Edit="Content:5.5" />
   </Match>
   <Match ContentType="CommunicationAdvertising">
     <Match DisplayType="Summary">

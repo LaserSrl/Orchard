@@ -142,6 +142,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
         public string SendLostPasswordSms(string internationalPrefix, string phoneNumber, Func<string, string> createUrl) {
             _orchardServices.WorkContext.TryResolve<ISmsServices>(out _smsServices);
             if (_smsServices == null) return "FALSE";
+
             var user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>()
                 .Join < UserPwdRecoveryPartRecord>()
                 .Where(u => u.InternationalPrefix == internationalPrefix.ToString() && u.PhoneNumber == phoneNumber.ToString())
@@ -162,10 +163,11 @@ namespace Laser.Orchard.UsersExtensions.Services {
                 //            {"Body", _shapeDisplay.Display(template)},
                 //            {"Recipients", user.Email }
                 //        };
+                var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
 
                 long phoneNumberComplete = 0;
                 if (long.TryParse(String.Concat(internationalPrefix.Trim(), phoneNumber.Trim()), out phoneNumberComplete)) {
-                    return _smsServices.SendSms(new long[] { phoneNumberComplete }, user.UserName + "\r\n" + url);
+                    return _smsServices.SendSms(new long[] { phoneNumberComplete }, user.UserName + "\r\n" + url, smsSettings.MamHaveAlias? smsSettings.SmsFrom : null);
                 }
             }
 

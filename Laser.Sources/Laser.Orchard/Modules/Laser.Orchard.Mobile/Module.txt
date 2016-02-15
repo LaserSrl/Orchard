@@ -25,4 +25,9 @@ Features:
         Description:  Link existing data communication
 		Category: Social
 		Dependencies: Laser.Orchard.Sms
+	Laser.Orchard.SmsGateway:
+		Name: Laser SMS Gateway
+        Description:  SMS Gateway integration
+		Category: Social
+		Dependencies: Laser.Orchard.CommunicationGateway, Laser.Orchard.Sms, Laser.Orchard.jQueryPlugins, Orchard.Localization, Laser.Orchard.Queries
 		

@@ -80,6 +80,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Localization, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Localization\bin\Orchard.Localization.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Projections, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
@@ -151,13 +155,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
-    <Content Include="Placement.info" />
-    <None Include="Service References\SmsServiceReference\configuration91.svcinfo" />
-    <None Include="Service References\SmsServiceReference\configuration.svcinfo" />
-    <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.GetSmsStateByExternalIdResponse.datasource">
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Scripts\smsScript.js" />
+    <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.Config.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
-    <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.GetSmsStateBySmsNumberResponse.datasource">
+    <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.GetConfigResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.GetSmsStateByExternalIdResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
     <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.SendSMSResponse.datasource">
@@ -166,9 +177,9 @@
     <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.StatusByExtId.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
-    <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.StatusByNum.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Content>
+    <None Include="Service References\SmsServiceReference\SmsWebService.disco" />
+    <None Include="Service References\SmsServiceReference\configuration91.svcinfo" />
+    <None Include="Service References\SmsServiceReference\configuration.svcinfo" />
     <None Include="Service References\SmsServiceReference\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -192,37 +203,45 @@
     <None Include="Properties\PublishProfiles\Orchard_Module_Release.pubxml" />
     <Content Include="Views\DefinitionTemplates\PushMobilePartSettingVM.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\SmsSettingsPart_Edit.cshtml" />
-    <None Include="Service References\SmsServiceReference\SmsService.wsdl" />
     <Content Include="Views\EditorTemplates\Parts\UserPwdRecoveryPart_Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Fields\ContentPicker.Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\MobileContact_Edit.cshtml" />
     <Content Include="Views\Parts\MobilePush.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\SmsGateway_Edit.cshtml" />
+    <None Include="Service References\SmsServiceReference\SmsWebService.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\TaxonomiePushController.cs" />
     <Compile Include="Drivers\MobileContactPartDriver.cs" />
+    <Compile Include="Drivers\SmsGatewayPartDriver.cs" />
     <Compile Include="Drivers\UserPwdRecoveryPartDriver.cs" />
     <Compile Include="Feature\MobileCommunicationImportFeature.cs" />
     <Compile Include="Feature\SmsCommunicationImportFeature.cs" />
     <Compile Include="Handlers\MobileContactPartHandler.cs" />
+    <Compile Include="Handlers\SmsGatewayPartHandler.cs" />
     <Compile Include="Handlers\UserPwdRecoveryPartHandler.cs" />
     <Compile Include="Models\MobileContactPart.cs" />
+    <Compile Include="Models\SmsGatewayPart.cs" />
     <Compile Include="Models\UserPwdRecoveryPart.cs" />
-    <Compile Include="Services\MissingSmsSettingsBanner.cs" />
-    <Compile Include="SmsMigrations.cs" />
-    <Compile Include="Handlers\DeviceFilter.cs" />
-    <Compile Include="Handlers\SmsSettingsPartHandler.cs" />
-    <Compile Include="Handlers\UserDeviceHandler.cs" />
-    <Compile Include="Models\UserDeviceRecord.cs" />
+    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Service References\SmsServiceReference\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Services\MissingSmsSettingsBanner.cs" />
+    <Compile Include="Services\SmsCommunicationService.cs" />
+    <Compile Include="SMSGatewayMigration.cs" />
+    <Compile Include="SmsMigrations.cs" />
+    <Compile Include="Handlers\DeviceFilter.cs" />
+    <Compile Include="Handlers\SmsSettingsPartHandler.cs" />
+    <Compile Include="Handlers\UserDeviceHandler.cs" />
+    <Compile Include="Models\UserDeviceRecord.cs" />
     <Compile Include="Services\SmsServices.cs" />
     <Compile Include="Models\SmsSettingsPart.cs" />
     <Compile Include="Settings\SmsSettingsPartHooks.cs" />
     <Compile Include="ViewModels\PhoneNumberViewModel.cs" />
+    <Compile Include="ViewModels\SmsGatewayVM.cs" />
     <Compile Include="WorkFlows\PushEditForm.cs" />
     <Compile Include="Controllers\DeviceController.cs" />
     <Compile Include="Controllers\PushNotificationController.cs" />
@@ -271,6 +290,10 @@
     <ProjectReference Include="..\Laser.Orchard.CommunicationGateway\Laser.Orchard.CommunicationGateway.csproj">
       <Project>{bb12e69f-0976-407d-a716-542b7d22ee5f}</Project>
       <Name>Laser.Orchard.CommunicationGateway</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.Queries\Laser.Orchard.Queries.csproj">
+      <Project>{d494b57f-2ae6-460f-9785-565376409afc}</Project>
+      <Name>Laser.Orchard.Queries</Name>
     </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
       <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
