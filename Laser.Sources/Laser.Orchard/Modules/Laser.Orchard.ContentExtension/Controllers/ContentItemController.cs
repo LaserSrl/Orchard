@@ -55,15 +55,15 @@ namespace Laser.Orchard.ContentExtension.Controllers {
            ICsrfTokenHelper csrfTokenHelper,
            IOrchardServices orchardServices,
            IAuthenticationService authenticationService,
-         IContentExtensionService contentExtensionService,
+           IContentExtensionService contentExtensionService,
            Lazy<IAutorouteService> autorouteService,
            ILocalizationService localizationService,
            ICultureManager cultureManager,
            IUtilsServices utilsServices,
            IContentDefinitionManager contentDefinitionManager,
-            ITaxonomyService taxonomyService,
+           ITaxonomyService taxonomyService,
            ILocalizedStringManager localizedStringManager,
-            ITransactionManager transactionManager
+           ITransactionManager transactionManager
            ) {
             _localizedStringManager = localizedStringManager;
             _taxonomyService = taxonomyService;
@@ -82,6 +82,41 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             _transactionManager = transactionManager;
         }
 
+
+        public dynamic Get(Int32 id) {
+            ContentItem ContentToView;
+            Response rsp = new Response();
+            if (id > 0) {
+                List<ContentItem> li = _orchardServices.ContentManager.GetAllVersions(id).ToList();
+                if (li.Count() == 0)
+                    return _utilsServices.GetResponse(ResponseType.Validation, T("No content with this Id").ToString());
+                else
+                    if (li.Count() == 1)
+                        ContentToView = li[0];
+                    else
+                        ContentToView = _orchardServices.ContentManager.Get(id, VersionOptions.Latest);
+                if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.ViewContent, ContentToView))
+                    if (!_contentExtensionService.HasPermission(ContentToView.ContentType, Methods.Get, ContentToView))
+                        return _utilsServices.GetResponse(ResponseType.UnAuthorized);
+                if (((dynamic)ContentToView).AutoroutePart != null) {
+                    string tenantname = "";
+                    if (_shellSettings.Name != "Default") {
+                        tenantname = _shellSettings.Name + "/";
+                    }
+                    return Redirect("~/" + tenantname + "WebServices/Alias?displayAlias=" + ((dynamic)ContentToView).AutoroutePart.DisplayAlias);
+                }
+                else {
+                    throw new Exception("Method not implemented, content without AutoroutePart");
+                }
+
+            }
+            else
+                return _utilsServices.GetResponse(ResponseType.None, T("No content with this Id").ToString());
+            return (_utilsServices.GetResponse(ResponseType.Success));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
+
+
+        }
+
         /// <summary>
         /// esempio http://localhost/Laser.Orchard/expoincitta/api/Laser.Orchard.ContentExtension/Content?ContentType=User
         /// da richiamare come application/json e non come form
@@ -96,7 +131,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             //if (currentUser == null){
             //       return (_utilsServices.GetResponse(ResponseType.InvalidUser));// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
             //}
-            var aa = _contentDefinitionManager.ListTypeDefinitions().Where(x => x.DisplayName.Contains("eport"));
+            //   var aa = _contentDefinitionManager.ListTypeDefinitions().Where(x => x.DisplayName.Contains("eport"));
             ContentTypeDefinition contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(ContentType);
             if (contentTypeDefinition == null) {
                 Response resp = new Response() {
@@ -251,6 +286,60 @@ namespace Laser.Orchard.ContentExtension.Controllers {
 
         #endregion private class/method for get
 
+        private Response DeleteContent(Int32 id) {
+            ContentItem ContentToDelete;
+            Response rsp = new Response();
+            if (id > 0) {
+                List<ContentItem> li = _orchardServices.ContentManager.GetAllVersions(id).ToList();
+                if (li.Count() == 0)
+                    return _utilsServices.GetResponse(ResponseType.Validation, T("No content with this Id").ToString());
+                else
+                    if (li.Count() == 1)
+                        ContentToDelete = li[0];
+                    else
+                        ContentToDelete = _orchardServices.ContentManager.Get(id, VersionOptions.Latest);
+                if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.DeleteContent, ContentToDelete))
+                    if (!_contentExtensionService.HasPermission(ContentToDelete.ContentType, Methods.Delete, ContentToDelete))
+                        return _utilsServices.GetResponse(ResponseType.UnAuthorized);
+                try {
+                    _orchardServices.ContentManager.Remove(ContentToDelete);
+                }
+                catch (Exception ex) {
+                    return _utilsServices.GetResponse(ResponseType.None, ex.Message);
+                }
+            }
+            else
+                return _utilsServices.GetResponse(ResponseType.None, T("No content with this Id").ToString());
+            return (_utilsServices.GetResponse(ResponseType.Success));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
+        }
+
+        /// <summary>
+        /// http://localhost/Laser.Orchard/expoincitta/Api/Laser.Orchard.ContentExtension/ContentItem/2925
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Response Delete(Int32 id) {
+            var currentUser = _orchardServices.WorkContext.CurrentUser;
+            if (currentUser == null)
+                return DeleteContent(id);
+            else
+                if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken())
+                    return DeleteContent(id);
+                else
+                    return (_utilsServices.GetResponse(ResponseType.InvalidXSRF));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
+        }
+
+        /// <summary>
+        /// http://localhost/Laser.Orchard/expoincitta/Api/Laser.Orchard.ContentExtension/ContentItem/2940
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="eObj"></param>
+        /// <returns></returns>
+        public Response Put(Int32 id, ExpandoObject eObj) {
+            ((dynamic)eObj).Id = id;
+            return Post(eObj);
+        }
+
         /// <summary>
         /// test in feedler
         /// User-Agent: Fiddler
@@ -350,15 +439,14 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     rsp = _utilsServices.GetResponse(ResponseType.None, ex.Message);
                 }
             }
-         //   else {
-               
-                //try {
-                //    _orchardServices.ContentManager.Remove(NewOrModifiedContent);
-                //}
-                //catch (Exception ex2) {
-                //    rsp = _utilsServices.GetResponse(ResponseType.None, ex2.Message);
-                //}
-      //      }
+            //   else {
+            //try {
+            //    _orchardServices.ContentManager.Remove(NewOrModifiedContent);
+            //}
+            //catch (Exception ex2) {
+            //    rsp = _utilsServices.GetResponse(ResponseType.None, ex2.Message);
+            //}
+            //      }
             if (!rsp.Success)
                 _transactionManager.Cancel();
             return rsp;
