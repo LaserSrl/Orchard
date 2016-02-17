@@ -81,8 +81,9 @@
         </div>
     </div>
 
-    <button type="submit" name="submit.nomePH" id="btnPHNome" onclick="$('#txtTesto').insertAtCaret('[PH_' + $(this).text().toUpperCase() + ']');return false;">@T("Name")</button>
-    <button type="submit" name="submit.cognomePH" id="btnPHCognome" onclick="$('#txtTesto').insertAtCaret('[PH_' + $(this).text().toUpperCase() + ']');return false;">@T("Surname")</button>
+    @foreach (var ph in Model.Settings.PlaceholdersList.Placeholders) {
+        <button name="submit.@ph.Name" id="btn_@ph.Name" onclick="$('#txtTesto').insertAtCaret('[PH_@ph.Name]');return false;">@ph.DisplayName</button>
+    }
 
     <div>
         @Html.LabelFor(m => m.SmsGateway.HaveAlias, T("Have Alias").Text, new { @class = "forcheckbox" })

@@ -9,5 +9,6 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public List<string> AliasList { get; set; }
         public int MaxLenghtSms { get; set; }
         public SmsGatewayPart SmsGateway { get; set; }
+        public SmsPlaceholdersSettingsPart Settings { get; set; }
     }
 }

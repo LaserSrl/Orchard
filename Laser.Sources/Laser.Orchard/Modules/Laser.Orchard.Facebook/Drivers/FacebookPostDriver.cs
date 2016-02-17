@@ -32,7 +32,7 @@ namespace Laser.Orchard.Facebook.Drivers {
             get { return "Laser.Orchard.Facebook"; }
         }
 
-        public FacebookPostDriver(ShellSettings shellSettings,IOrchardServices orchardServices, IFacebookService facebookService, ITokenizer tokenizer) {
+        public FacebookPostDriver(ShellSettings shellSettings, IOrchardServices orchardServices, IFacebookService facebookService, ITokenizer tokenizer) {
             _orchardServices = orchardServices;
             _facebookService = facebookService;
             _shellSettings = shellSettings;
@@ -41,32 +41,24 @@ namespace Laser.Orchard.Facebook.Drivers {
             T = NullLocalizer.Instance;
         }
 
-        protected override DriverResult Display(FacebookPostPart part, string displayType, dynamic shapeHelper)
-        {
+        protected override DriverResult Display(FacebookPostPart part, string displayType, dynamic shapeHelper) {
             //Determine if we're on an admin page
             bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-            if (isAdmin)
-            {
-                if (displayType == "Summary")
-                {
+            if (isAdmin) {
+                if (displayType == "Summary") {
                     return ContentShape("Parts_FacebookPost",
                         () => shapeHelper.Parts_FacebookPost(SendOnNextPublish: part.SendOnNextPublish, Sent: part.FacebookMessageSent));
-                }
-                else
-                {
+                } else {
                     return null;
                 }
-            }
-            else
-            {
+            } else {
                 return null;
             }
         }
 
-        protected override DriverResult Editor(FacebookPostPart part, dynamic shapeHelper)
-        {
+        protected override DriverResult Editor(FacebookPostPart part, dynamic shapeHelper) {
             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-              
+
             FacebookPostVM vm = new FacebookPostVM();
             Mapper.CreateMap<FacebookPostPart, FacebookPostVM>();
             Mapper.Map(part, vm);
@@ -92,16 +84,16 @@ namespace Laser.Orchard.Facebook.Drivers {
                 vm.FacebookName = _tokenizer.Replace(setting.FacebookName, tokens);
                 vm.ShowFacebookName = false;
             }
-            if (!string.IsNullOrEmpty(setting.FacebookPicture)){
+            if (!string.IsNullOrEmpty(setting.FacebookPicture)) {
                 vm.ShowFacebookPicture = false;
                 string idimg = _tokenizer.Replace(setting.FacebookPicture, tokens);
                 Int32 idimage = 0;
-             
-                    Int32.TryParse(idimg.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
-                    if (idimage > 0) { 
-                // _orchardServices.ContentManager.Get(id);
+
+                Int32.TryParse(idimg.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
+                if (idimage > 0) {
+                    // _orchardServices.ContentManager.Get(id);
                     // vm.Image = Url.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));
-                       //       vm.Image = urlHelper.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));// get current display link
+                    //       vm.Image = urlHelper.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));// get current display link
                     //   Fvm.Link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(Twitterpart));// get current display link
                     var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
                     //   var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
@@ -110,32 +102,30 @@ namespace Laser.Orchard.Facebook.Drivers {
                     //   .ResizeMediaUrl(Width: previewWidth, Height: previewHeight, Mode: "crop", Alignment: "middlecenter", Path: Model.MediaData.MediaUrl)');
 
                     vm.FacebookPicture = urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
-                }
-                else
+                } else
                     vm.FacebookPicture = "";
 
-            }
-            else
+            } else
                 vm.FacebookPicture = part.FacebookPicture;
             List<FacebookAccountPart> listaccount = _facebookService.GetValidFacebookAccount();
-         //   List<SelectListItem> lSelectList = new List<SelectListItem>();
+            //   List<SelectListItem> lSelectList = new List<SelectListItem>();
             List<OptionList> optionList = new List<OptionList>();
-           foreach (FacebookAccountPart fa in listaccount) {
-              //  lSelectList.Insert(0, new SelectListItem() { Value = fa.Id.ToString(), Text = fa.AccountType + " - " + fa.DisplayAs });
-                   OptionList ol = new OptionList {
+            foreach (FacebookAccountPart fa in listaccount) {
+                //  lSelectList.Insert(0, new SelectListItem() { Value = fa.Id.ToString(), Text = fa.AccountType + " - " + fa.DisplayAs });
+                OptionList ol = new OptionList {
                     Value = fa.Id.ToString(),
                     Text = fa.AccountType + " - " + fa.DisplayAs,
-                    ImageUrl =  urlHelper.Content("~/Media/" + _shellSettings.Name + "/facebook_" +fa.UserIdFacebook + ".jpg"),
-                    Selected = part.AccountList.Contains(fa.Id)?"selected=\"selected\"":""
+                    ImageUrl = urlHelper.Content("~/Media/" + _shellSettings.Name + "/facebook_" + fa.UserIdFacebook + ".jpg"),
+                    Selected = part.AccountList.Contains(fa.Id) ? "selected=\"selected\"" : ""
                 };
                 optionList.Add(ol);
             }
-           vm.ListOption = optionList;
-         //   if (lSelectList.Count > 0) {
-          //      vm.SelectedList = part.AccountList.Select(x => x.ToString()).ToArray();
+            vm.ListOption = optionList;
+            //   if (lSelectList.Count > 0) {
+            //      vm.SelectedList = part.AccountList.Select(x => x.ToString()).ToArray();
 
             //    vm.FacebookAccountList = new SelectList((IEnumerable<SelectListItem>)lSelectList, "Value", "Text", vm.SelectedList);
-         //   }
+            //   }
 
             return ContentShape("Parts_FacebookPost",
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts/FacebookPost",
@@ -148,7 +138,9 @@ namespace Laser.Orchard.Facebook.Drivers {
             updater.TryUpdateModel(vm, Prefix, null, null);
             Mapper.CreateMap<FacebookPostVM, FacebookPostPart>();
             Mapper.Map(vm, part);
-            part.AccountList = vm.SelectedList.Select(x => Int32.Parse(x)).ToArray();
+            if (vm.SelectedList != null && vm.SelectedList.Count() > 0) {
+                part.AccountList = vm.SelectedList.Select(x => Int32.Parse(x)).ToArray();
+            }
             return Editor(part, shapeHelper);
         }
     }
