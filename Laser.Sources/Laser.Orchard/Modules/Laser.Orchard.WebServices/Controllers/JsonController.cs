@@ -322,14 +322,15 @@ namespace Laser.Orchard.WebServices.Controllers {
         // Attributes:
         // contentId: id del content Es: contentId=1
         // filterSubItemsParts: elennco csv delle parti da estrarre in presenza di array di ContentItems Es: filterSubItemsParts=TitlePart,AutoroutePart,MapPart
-        //public ContentResult GetById(int contentId, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
-        //    IContent item = _orchardServices.ContentManager.Get(contentId, VersionOptions.Published);
-        //    if (item == null) {
-        //        new HttpException(404, ("Not found"));
-        //        return null;
-        //    }
-        //    return (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, complexBehaviour.Split(','));
-        //}
+         [Obsolete("Wil be removed for security problem")]
+        public ContentResult GetById(int contentId, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
+            IContent item = _orchardServices.ContentManager.Get(contentId, VersionOptions.Published);
+            if (item == null) {
+                new HttpException(404, ("Not found"));
+                return null;
+            }
+            return (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, complexBehaviour.Split(','));
+        }
 
         private ActionResult GetContent(IContent content, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string fieldspartsFilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string[] complexBehaviour = null) {
             var result = new ContentResult { ContentType = "application/json" };
