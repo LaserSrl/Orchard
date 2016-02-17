@@ -71,8 +71,6 @@ namespace Laser.Orchard.Mobile.Handlers {
                             _smsServices.SendSms(
                                 part.NumberForTest.Split(';').Select(x => Convert.ToInt64(x)).ToArray(), 
                                 messageToSms, part.Alias);
-
-                            part.SmsMessageSent = true;
                         }
                     }
                 }

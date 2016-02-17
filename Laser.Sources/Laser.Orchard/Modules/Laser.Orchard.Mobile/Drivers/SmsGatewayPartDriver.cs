@@ -8,17 +8,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Orchard;
 
 namespace Laser.Orchard.Mobile.Drivers {
 
     [OrchardFeature("Laser.Orchard.SmsGateway")]
     public class SmsGatewayPartDriver : ContentPartDriver<SmsGatewayPart> {
         private readonly ISmsServices _smsServices;
-        
-        public SmsGatewayPartDriver(ISmsServices smsServices) {
+        private readonly IOrchardServices _orchardServices;
+
+        public SmsGatewayPartDriver(ISmsServices smsServices, IOrchardServices orchardServices) {
             _smsServices = smsServices;
+            _orchardServices = orchardServices;
         }
-        
+
         protected override string Prefix {
             get { return "Laser.Mobile.SmsGateway"; }
         }
@@ -34,11 +37,14 @@ namespace Laser.Orchard.Mobile.Drivers {
             // Dimensione massima caratteri
             int MaxLenght = MSG_MAX_CHAR_NUMBER_SINGOLO;
             if (SmsConfig.MaxLenghtSms > 1) {
-                MaxLenght = MSG_MAX_CHAR_NUMBER_CONCATENATI;  
+                MaxLenght = MSG_MAX_CHAR_NUMBER_CONCATENATI;
             }
+
+            var smsPlaceholdersSettingsPart = _orchardServices.WorkContext.CurrentSite.As<SmsPlaceholdersSettingsPart>();
 
             var model = new SmsGatewayVM {
                 AliasList = SmsConfig.ListaAlias,
+                Settings = smsPlaceholdersSettingsPart,
                 MaxLenghtSms = MaxLenght,
                 SmsGateway = part
             };
@@ -53,7 +59,7 @@ namespace Laser.Orchard.Mobile.Drivers {
                 SmsGateway = part
             };
 
-            updater.TryUpdateModel(model, Prefix, null, null);
+            updater.TryUpdateModel(model, Prefix, null, new string[] { "Settings" });
 
             // reset Alias
             if (!part.HaveAlias)
