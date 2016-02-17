@@ -37,7 +37,7 @@ namespace Laser.Orchard.ContentExtension.Services {
         public SettingsModel ReadSettings() {
             //  var settingsRecord = _settingsRepository.Table.Count();
             var settings = new SettingsModel();
-            var gri = _settingsRepository.Fetch(x => x.Id > 0).Select(x=>x);
+            var gri = _settingsRepository.Fetch(x => x.Id > 0).Select(x => x);
             settings.ListContPermission = gri.ToList();//.Single();
             return settings;
         }
@@ -54,10 +54,14 @@ namespace Laser.Orchard.ContentExtension.Services {
             _settingsRepository.Flush();
             var record = _settingsRepository.Get(o => o.Id.Equals(contpermrec.Id));
             if (record != null) {
-                _settingsRepository.Update(contpermrec);
+                if (contpermrec.ContentType == " ")
+                    _settingsRepository.Delete(record);
+                else
+                    _settingsRepository.Update(contpermrec);
+
             }
             else {
-
+                if (contpermrec.ContentType != " ")
                 _settingsRepository.Create(contpermrec);
             }
 

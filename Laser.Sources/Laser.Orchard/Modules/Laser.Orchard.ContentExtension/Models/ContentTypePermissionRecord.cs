@@ -16,6 +16,7 @@ namespace Laser.Orchard.ContentExtension.Models {
         public virtual string PostPermission { get; set; }
         public virtual string GetPermission { get; set; }
         public virtual string DeletePermission { get; set; }
+        public virtual string PublishPermission { get; set; }
     }
     public class SettingsModel {
          public virtual IList<ContentTypePermissionRecord> ListContPermission { get; set; }

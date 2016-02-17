@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.StartupConfig.Services;
+﻿using Laser.Orchard.ContentExtension.Models;
+using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
@@ -8,7 +9,8 @@ using Orchard.Fields.Settings;
 using Orchard.Localization.Models;
 using Orchard.Logging;
 using Orchard.MediaLibrary.Fields;
-//using Orchard.Projections.Models;
+using Orchard.Roles.Services;
+using Orchard.Security.Permissions;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
@@ -19,12 +21,24 @@ using System.Linq;
 
 namespace Laser.Orchard.ContentExtension.Services {
 
-    public interface IContentExtensionService : IDependency {
-        //  IEnumerable<ParentContent> ContentPickerParents(int contentId, string[] contentTypes);
+    public enum Methods { Get, Post, Delete, Publish };
 
+    public interface IContentExtensionService : IDependency {
+  
         Response StoreInspectExpando(ExpandoObject theExpando, ContentItem TheContentItem);
+
         void StoreInspectExpandoFields(List<ContentPart> listpart, string key, object value, ContentItem theContentItem);
+
         bool FileAllowed(string filename);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="ContentType"></param>
+        /// <param name="method">Get,Post,Delete,Publish</param>
+        /// <param name="mycontent">Default null, da valorizzare nel caso in cui voglio testare own permission</param>
+        /// <returns></returns>
+        bool HasPermission(string ContentType, Methods method, IContent mycontent = null);
     }
 
     public class ContentExtensionService : IContentExtensionService {
@@ -37,17 +51,144 @@ namespace Laser.Orchard.ContentExtension.Services {
         private readonly ITaxonomyService _taxonomyService;
 
         private readonly IUtilsServices _utilsServices;
-
+        private readonly IContentTypePermissionSettingsService _contentTypePermissionSettingsService;
         public ILogger Log { get; set; }
+        private readonly IOrchardServices _orchardServices;
+        private readonly IRoleService _roleService;
 
         public ContentExtensionService(IContentManager contentManager,
             ITaxonomyService taxonomyService,
-            IUtilsServices utilsServices) {
+            IUtilsServices utilsServices,
+             IContentTypePermissionSettingsService contentTypePermissionSettingsService,
+             IOrchardServices orchardServices,
+            IRoleService roleService) {
             _contentManager = contentManager;
             _taxonomyService = taxonomyService;
             Log = NullLogger.Instance;
             _utilsServices = utilsServices;
+            _contentTypePermissionSettingsService = contentTypePermissionSettingsService;
+            _orchardServices = orchardServices;
+            _roleService = roleService;
         }
+
+        #region [Content Permission]
+
+        //private static bool HasOwnership(IUser user, IContent content) {
+        //    if (user == null || content == null)
+        //        return false;
+
+        //    if (HasOwnershipOnContainer(user, content)) {
+        //        return true;
+        //    }
+
+        //    var common = content.As<ICommonPart>();
+        //    if (common == null || common.Owner == null)
+        //        return false;
+
+        //    return user.Id == common.Owner.Id;
+        //}
+        //private static bool HasOwnershipOnContainer(IUser user, IContent content) {
+        //    if (user == null || content == null)
+        //        return false;
+
+        //    var common = content.As<ICommonPart>();
+        //    if (common == null || common.Container == null)
+        //        return false;
+
+        //    common = common.Container.As<ICommonPart>();
+        //    if (common == null || common.Container == null)
+        //        return false;
+
+        //    return user.Id == common.Owner.Id;
+        //}
+
+        private Permission GetPermissionByName(string permission) {
+            if (!string.IsNullOrEmpty(permission)) {
+                var listpermissions = _roleService.GetInstalledPermissions().Values;
+                foreach (IEnumerable<Permission> sad in listpermissions) {
+                    foreach (Permission perm in sad) {
+                        if (perm.Name == permission) {
+                            return perm;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        private bool TestPermission(string permission, IContent mycontent = null) {
+            bool testpermission = false;
+            if (!string.IsNullOrEmpty(permission)) {
+                Permission Permissiontotest = GetPermissionByName(permission);
+                if (Permissiontotest != null) {
+                    if (mycontent != null)
+                        testpermission = _orchardServices.Authorizer.Authorize(Permissiontotest, mycontent);
+                    else
+                        testpermission = _orchardServices.Authorizer.Authorize(Permissiontotest);
+                    //if (testpermission && (permission.Contains("Own") && permission != "SiteOwner")) {
+                    //    testpermission = HasOwnership(_orchardServices.WorkContext.CurrentUser, mycontent);
+                    //}
+                }
+            }
+            return testpermission;
+        }
+
+        public bool HasPermission(string ContentType, Methods method, IContent mycontent = null) {
+            bool haspermission = false;
+            List<ContentTypePermissionRecord> settings = _contentTypePermissionSettingsService.ReadSettings().ListContPermission.Where(x => x.ContentType == ContentType).ToList();
+            if (settings != null && settings.Count > 0) {
+                // test if exist one record in permission setting that enable user
+
+                foreach (ContentTypePermissionRecord ctpr in settings) {
+                    switch (method) {
+                        case Methods.Get:
+                            if (TestPermission(ctpr.GetPermission, mycontent))
+                                return true;
+                            break;
+
+                        case Methods.Post:
+                            if (TestPermission(ctpr.PostPermission, mycontent))
+                                return true;
+                            break;
+
+                        case Methods.Publish:
+                            if (TestPermission(ctpr.PublishPermission, mycontent))
+                                return true;
+                            break;
+
+                        case Methods.Delete:
+                            if (TestPermission(ctpr.DeletePermission, mycontent))
+                                return true;
+                            break;
+                    }
+                }
+            }
+            else {
+                // test generic permission for contenttype
+
+                switch (method) {
+                    case Methods.Get:
+                        return TestPermission("ViewContent", mycontent);
+                        break;
+
+                    case Methods.Post:
+                        return TestPermission("EditContent", mycontent);
+                        break;
+
+                    case Methods.Publish:
+                        return TestPermission("PublishContent", mycontent);
+                        break;
+
+                    case Methods.Delete:
+                        return TestPermission("DeleteContent", mycontent);
+                        break;
+                }
+            }
+
+            return haspermission;
+        }
+
+        #endregion [Content Permission]
 
         public void StoreInspectExpandoFields(List<ContentPart> listpart, string key, object value, ContentItem theContentItem) {
             var fields = listpart.SelectMany(x => x.Fields.Where(f => f.Name == key));
@@ -77,31 +218,36 @@ namespace Laser.Orchard.ContentExtension.Services {
                                     List<TaxoVM> second = ConvertToVM((List<dynamic>)value);
 
                                     List<Int32> ElencoCategorie = second.Select(x => x.Id).ToList();
-                                    var taxo_sended_user = _taxonomyService.GetTaxonomy(_taxonomyService.GetTerm(ElencoCategorie.FirstOrDefault()).TaxonomyId);
                                     List<TermPart> ListTermPartToAdd = new List<TermPart>();
-                                    foreach (Int32 idtermine in ElencoCategorie) {
-                                        TermPart termine_selezionato = taxo_sended_user.Terms.Where(x => x.Id == idtermine).FirstOrDefault();
+                                    if (_taxonomyService.GetTerm(ElencoCategorie.FirstOrDefault()) == null && ElencoCategorie.Count > 0)
+                                        throw new Exception("Field " + key + " Taxonomy term with id=" + ElencoCategorie[0].ToString() + " not exist");
+                                    else {
+                                        var taxo_sended_user = _taxonomyService.GetTaxonomy(_taxonomyService.GetTerm(ElencoCategorie.FirstOrDefault()).TaxonomyId);
 
-                                        #region [ Tassonomia in Lingua ]
+                                        foreach (Int32 idtermine in ElencoCategorie) {
+                                            TermPart termine_selezionato = taxo_sended_user.Terms.Where(x => x.Id == idtermine).FirstOrDefault();
 
-                                        if (theContentItem.As<LocalizationPart>() == null || theContentItem.ContentType == "User") { // se il contenuto non ha localization oppure è user salvo il mastercontent del termine
-                                            Int32 idmaster = 0;
-                                            if (termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem == null)
-                                                idmaster = termine_selezionato.ContentItem.As<LocalizationPart>().Id;
-                                            else
-                                                idmaster = termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem.Id;
-                                            TermPart toAdd = taxobase.Terms.Where(x => x.Id == idmaster).FirstOrDefault();
-                                            if (toAdd == null)
-                                                toAdd = taxobase.Terms.Where(x => x.ContentItem.As<LocalizationPart>().MasterContentItem.Id == idmaster).FirstOrDefault();
-                                            ListTermPartToAdd.Add(toAdd);
+                                            #region [ Tassonomia in Lingua ]
+
+                                            if (theContentItem.As<LocalizationPart>() == null || theContentItem.ContentType == "User") { // se il contenuto non ha localization oppure è user salvo il mastercontent del termine
+                                                Int32 idmaster = 0;
+                                                if (termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem == null)
+                                                    idmaster = termine_selezionato.ContentItem.As<LocalizationPart>().Id;
+                                                else
+                                                    idmaster = termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem.Id;
+                                                TermPart toAdd = taxobase.Terms.Where(x => x.Id == idmaster).FirstOrDefault();
+                                                if (toAdd == null)
+                                                    toAdd = taxobase.Terms.Where(x => x.ContentItem.As<LocalizationPart>().MasterContentItem.Id == idmaster).FirstOrDefault();
+                                                ListTermPartToAdd.Add(toAdd);
+                                            }
+                                            else { // se il contenuto ha localization e non è user salvo il termine come mi viene passato
+                                                // TODO: testare pertinenza della lingua Contenuto in italianao=>termine in italiano
+                                                TermPart toAdd = termine_selezionato;
+                                                ListTermPartToAdd.Add(toAdd);
+                                            }
+
+                                            #endregion [ Tassonomia in Lingua ]
                                         }
-                                        else { // se il contenuto ha localization e non è user salvo il termine come mi viene passato
-                                            // TODO: testare pertinenza della lingua Contenuto in italianao=>termine in italiano
-                                            TermPart toAdd = termine_selezionato;
-                                            ListTermPartToAdd.Add(toAdd);
-                                        }
-
-                                        #endregion [ Tassonomia in Lingua ]
                                     }
                                     _taxonomyService.UpdateTerms(theContentItem, ListTermPartToAdd, fieldObj.Name);
                                 }
@@ -153,9 +299,7 @@ namespace Laser.Orchard.ContentExtension.Services {
                 Log.Error("ContentExtension -> ContentExtensionService -> StoreInspectExpando : " + ex.Message + " <Stack> " + ex.StackTrace);
                 return (_utilsServices.GetResponse(ResponseType.None, "Error:" + ex.Message));
             }
-            //    if (TheContentItem.ContentType != "User")
             return StoreInspectExpandoPart(theExpando, theContentItem);
-            //  return (_utilsServices.GetResponse(ResponseType.Success));
         }
 
         private Response StoreInspectExpandoPart(ExpandoObject theExpando, ContentItem TheContentItem) {
@@ -165,18 +309,12 @@ namespace Laser.Orchard.ContentExtension.Services {
                     if (key.IndexOf(".") > 0) {
                         string valueType = kvp.Value.GetType().Name;
                         object value = kvp.Value;
-                        //if (kvp.Value is ExpandoObject) {
-                        //    StoreInspectExpandoPart(kvp.Value as ExpandoObject, TheContentItem);
-                        //}
-
-                        //if (key.IndexOf(".") > 0) {
                         StoreLikeDynamic(key, value, TheContentItem);
-
-                        //}
                     }
                 }
             }
             catch (Exception ex) {
+                Log.Error("ContentExtension -> ContentExtensionService -> StoreInspectExpandoPart : " + ex.Message + " <Stack> " + ex.StackTrace);
                 return _utilsServices.GetResponse(ResponseType.None, ex.Message);
             }
             return (_utilsServices.GetResponse(ResponseType.Success));
@@ -186,6 +324,8 @@ namespace Laser.Orchard.ContentExtension.Services {
             string[] ListProperty = key.Split('.');
             if (!ProtectedPart.Contains(ListProperty[0].ToLower())) {
                 dynamic subobject = TheContentItem.Parts.Where(x => x.PartDefinition.Name == ListProperty[0]).FirstOrDefault();
+                if (subobject == null)
+                    throw new Exception("Part " + ListProperty[0] + " not exist");
                 Int32 numparole = ListProperty.Count();
                 for (int i = 1; i < numparole; i++) {
                     string property = ListProperty[i];
@@ -287,29 +427,8 @@ namespace Laser.Orchard.ContentExtension.Services {
             List<TaxoVM> listatvm = new List<TaxoVM>();
             foreach (dynamic el in obj) {
                 TaxoVM newel = new TaxoVM();
-
-                newel.Id = Convert.ToInt32(el.Id);
-                try {
-                    newel.testo = el.testo ?? "";
-                }
-                catch {
-                }
-                try {
-                    newel.valore = (string)el.valore ?? "";
-                }
-                catch {
-                }
-                //  newel.child = ConvertToVM((List < dynamic >)  el.child);
+                newel.Id = Convert.ToInt32(el);
                 listatvm.Add(newel);
-                try {
-                    if (el.child != null) {
-                        foreach (TaxoVM tv in ConvertToVM((List<dynamic>)el.child)) {
-                            listatvm.Add(tv);
-                        }
-                    }
-                }
-                catch {
-                }
             }
             return listatvm;
         }
