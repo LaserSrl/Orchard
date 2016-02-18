@@ -60,7 +60,6 @@ namespace Laser.Orchard.Mobile.Drivers {
             var model = new SmsGatewayVM {
                 Protocollo = SmsConfig.Protocollo,
                 AliasList = SmsConfig.ListaAlias,
-                Settings = smsPlaceholdersSettingsPart,
                 MaxLenghtSms = MaxLenght,
                 SmsGateway = part,
                 ShortlinkExist = shortlinkExist
