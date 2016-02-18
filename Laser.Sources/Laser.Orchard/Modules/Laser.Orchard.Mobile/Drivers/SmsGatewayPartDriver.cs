@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Orchard;
 
 namespace Laser.Orchard.Mobile.Drivers {
 
@@ -59,6 +60,7 @@ namespace Laser.Orchard.Mobile.Drivers {
             var model = new SmsGatewayVM {
                 Protocollo = SmsConfig.Protocollo,
                 AliasList = SmsConfig.ListaAlias,
+                Settings = smsPlaceholdersSettingsPart,
                 MaxLenghtSms = MaxLenght,
                 SmsGateway = part,
                 ShortlinkExist = shortlinkExist
@@ -74,7 +76,7 @@ namespace Laser.Orchard.Mobile.Drivers {
                 SmsGateway = part
             };
 
-            updater.TryUpdateModel(model, Prefix, null, null);
+            updater.TryUpdateModel(model, Prefix, null, new string[] { "Settings" });
 
             // reset Alias
             if (!part.HaveAlias)

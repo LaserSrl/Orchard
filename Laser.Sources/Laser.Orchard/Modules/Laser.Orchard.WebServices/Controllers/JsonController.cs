@@ -322,6 +322,7 @@ namespace Laser.Orchard.WebServices.Controllers {
         // Attributes:
         // contentId: id del content Es: contentId=1
         // filterSubItemsParts: elennco csv delle parti da estrarre in presenza di array di ContentItems Es: filterSubItemsParts=TitlePart,AutoroutePart,MapPart
+         [Obsolete("Wil be removed for security problem")]
         public ContentResult GetById(int contentId, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
             IContent item = _orchardServices.ContentManager.Get(contentId, VersionOptions.Published);
             if (item == null) {
