@@ -1,6 +1,10 @@
 ﻿function ControllaMessaggio(event) {
 
     var maxLength = event.data.maxLength;
+    var shortlinkExist = event.data.shortlinkExist;
+
+    //console.log("maxLength=" + maxLength);
+    //console.log("shortlinkExist=" + shortlinkExist);
 
     var $txtTesto = $(event.data.txtTesto);
     var $lblnumeroMessaggi = $(event.data.lblnumeroMessaggi);
@@ -15,6 +19,12 @@
     var maxchar = 160
     var oldCount = 0;
     var IsNumber = 0;
+
+    if (shortlinkExist == 'True') {
+        maxchar = maxchar - 16;
+    }
+
+    //console.log("maxchar=" + maxchar);
 
     var Char;
     var conteggiocaratteri = 0;
@@ -47,9 +57,8 @@
         } else {
             IsNumber = IsNumber + 1;
         }
-
-        numberOfSpedizioni = CalcolaSpedizioni(IsNumber, maxLength, $lblnumeroChar, false);
-
+        //console.log("IsNumber=" + IsNumber);
+        numberOfSpedizioni = CalcolaSpedizioni(IsNumber, maxLength, $lblnumeroChar, false, shortlinkExist);
         if (numberOfSpedizioni > MaxnumberOfSpedizioni) {
             //console.log("numberOfSpedizioni=" + numberOfSpedizioni);
             IsNumber = PulisciTesto(numberOfSpedizioni, IsNumber, maxLength, conteggiocaratteri, $txtTesto);
@@ -78,27 +87,36 @@
     */
 
     //Calcola numero Spedizioni
-    numberOfSpedizioni = CalcolaSpedizioni(IsNumber, maxLength, $lblnumeroChar, true)
+    numberOfSpedizioni = CalcolaSpedizioni(IsNumber, maxLength, $lblnumeroChar, true, shortlinkExist)
     $lblnumeroMessaggi.text(numberOfSpedizioni);
-
+    
     IsNumber = PulisciTesto(numberOfSpedizioni, IsNumber, maxLength, conteggiocaratteri, $txtTesto);
 
-    $lblnumeroChar.text(IsNumber);
-
+    $lblnumeroChar.val(IsNumber);
+    
     if (IsNumber >= 0 && IsNumber <= 160)
         $lblnumeroMessaggi.removeClass("btn-danger");
     else
         $lblnumeroMessaggi.addClass("btn-danger");
 }
 
-function CalcolaSpedizioni(IsNumber, maxLength, $lblnumeroChar, bsetlblNumChar) {
+function CalcolaSpedizioni(IsNumber, maxLength, $lblnumeroChar, bsetlblNumChar, shortlinkExist) {
     var MAX_CHAR = 160;
-    var MAX_CHAR_CONCATENATO = 153
+    var MAX_CHAR_CONCATENATO = 153;
 
-    var numberOfSpedizioni = (IsNumber / MAX_CHAR);
-    if (IsNumber > MAX_CHAR) {
-        numberOfSpedizioni = (IsNumber / MAX_CHAR_CONCATENATO);
-        if (IsNumber % MAX_CHAR_CONCATENATO > 0) {
+    var CharNumber = IsNumber;
+
+    if (shortlinkExist == 'True') {
+        CharNumber = CharNumber + 16;
+    }
+
+    //console.log("IsNumber=" + IsNumber);
+    //console.log("CharNumber=" + CharNumber);
+
+    var numberOfSpedizioni = (CharNumber / MAX_CHAR);
+    if (CharNumber > MAX_CHAR) {
+        numberOfSpedizioni = (CharNumber / MAX_CHAR_CONCATENATO);
+        if (CharNumber % MAX_CHAR_CONCATENATO > 0) {
             //se avessi modulo 0 significa che è lungo esattamente 2,3,4... SMS
             //se il modulo è maggiore di 0 significa che ho più testo es. ho il 3o SMS
             numberOfSpedizioni++;
@@ -109,8 +127,7 @@ function CalcolaSpedizioni(IsNumber, maxLength, $lblnumeroChar, bsetlblNumChar) 
             else
                 $lblnumeroChar.text(IsNumber);
         }
-    }
-    else {
+    } else {
         if (IsNumber > 0) numberOfSpedizioni = 1;
         else numberOfSpedizioni = 0;
         if (bsetlblNumChar) $lblnumeroChar.text(IsNumber);
@@ -122,10 +139,13 @@ function CalcolaSpedizioni(IsNumber, maxLength, $lblnumeroChar, bsetlblNumChar) 
 }
 
 function PulisciTesto(numberOfSpedizioni, IsNumber, maxLength, conteggiocaratteri, $txtTesto) {
+    //console.log("call PulisciTesto");
     var CaratteriHeader = 0
     if (numberOfSpedizioni > 1)
         CaratteriHeader = ((numberOfSpedizioni) * 12)
-    // console.log("conteggiocaratteri:" + conteggiocaratteri + " - IsNumber:" + IsNumber + " - maxLength:" + maxLength + " - CaratteriHeader:" + CaratteriHeader + " - (IsNumber + CaratteriHeader):" + (IsNumber + CaratteriHeader))
+
+    //console.log("conteggiocaratteri:" + conteggiocaratteri + " - IsNumber:" + IsNumber + " - maxLength:" + maxLength + " - CaratteriHeader:" + CaratteriHeader + " - (IsNumber + CaratteriHeader):" + (IsNumber + CaratteriHeader))
+
     if ((IsNumber + CaratteriHeader) >= maxLength || conteggiocaratteri >= maxLength) {
         if (IsNumber == maxLength) {
             $txtTesto.val($txtTesto.val().substring(0, conteggiocaratteri));

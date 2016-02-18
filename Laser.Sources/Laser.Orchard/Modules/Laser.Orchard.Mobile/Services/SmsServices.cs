@@ -18,7 +18,7 @@ using Laser.Orchard.CommunicationGateway.Services;
 namespace Laser.Orchard.Mobile.Services {
 
     public interface ISmsServices : IDependency {
-        string SendSms(long[] TelDestArr, string TestoSMS, string alias);
+        string SendSms(long[] TelDestArr, string TestoSMS, string alias = null, string IdSMS = null);
         Config GetConfig();
         void Synchronize();
     }
@@ -84,7 +84,7 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
 
-        public string SendSms(long[] telDestArr, string testoSMS, string alias) {
+        public string SendSms(long[] telDestArr, string testoSMS, string alias = null, string IdSMS = null) {
             var bRet = "FALSE";
 
             ArrayOfLong numbers = new ArrayOfLong();
@@ -92,6 +92,16 @@ namespace Laser.Orchard.Mobile.Services {
 
             try {
                 var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
+
+                // Imposto Guid univoco se la richiesta non arriva da SmsGateway
+                if (String.IsNullOrEmpty(IdSMS)) {
+                    IdSMS = new Guid().ToString();
+                }
+
+                if (String.IsNullOrEmpty(alias) && smsSettings.MamHaveAlias) {
+                    alias = smsSettings.SmsFrom;
+                }
+
                 SmsServiceReference.Sms sms = new SmsServiceReference.Sms {
                     DriverId = smsSettings.MamDriverIdentifier,
                     SmsFrom = smsSettings.SmsFrom,
@@ -99,11 +109,12 @@ namespace Laser.Orchard.Mobile.Services {
                     Alias = alias,
                     SmsPrority = smsSettings.SmsPrority ?? 0,
                     SmsValidityPeriod = smsSettings.SmsValidityPeriod ?? 3600,
-                    ExternalId = new Guid().ToString(),
+                    ExternalId = IdSMS,
                     SmsBody = testoSMS,
                     SmsTipoCodifica = 0,
                     SmsNumber = numbers,
                 };
+
                 //Specify the binding to be used for the client.
                 EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
                 SmsServiceReference.SmsWebServiceSoapClient _service;

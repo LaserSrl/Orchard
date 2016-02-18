@@ -57,7 +57,7 @@ namespace Laser.Orchard.Mobile.Handlers {
                 if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Test"] == "submit.SmsTest") {
                     if (part.SendToTestNumber && part.NumberForTest != string.Empty) {
                         if (part.ContentItem.ContentType == "CommunicationAdvertising") {
-                            
+
                             string linktosend = "";
                             ICommunicationService _communicationService;
 
@@ -65,14 +65,12 @@ namespace Laser.Orchard.Mobile.Handlers {
                             if (tryed) {
                                 linktosend = _communicationService.GetCampaignLink("Sms", part);
                             }
-                            var messageToSms = part.Message + " " + linktosend;
+                            string messageToSms = part.Message + " " + linktosend;
                             
                             // Invio SMS a NumberForTest
                             _smsServices.SendSms(
-                                part.NumberForTest.Split(';').Select(x => Convert.ToInt64(x)).ToArray(), 
-                                messageToSms, part.Alias);
-
-                            part.SmsMessageSent = true;
+                                part.NumberForTest.Split(';').Select(x => Convert.ToInt64(x)).ToArray(),
+                                messageToSms, part.Alias, part.Id.ToString());
                         }
                     }
                 }
@@ -129,11 +127,11 @@ namespace Laser.Orchard.Mobile.Handlers {
                         if (tryed) {
                             linktosend = _communicationService.GetCampaignLink("Sms", part);
                         }
-                        var messageToSms = part.Message + " " + linktosend;
+                        string messageToSms = part.Message + " " + linktosend;
 
                         // Invio SMS
-                        _smsServices.SendSms(listaNumeri.Select(x => Convert.ToInt64(x)).ToArray(), 
-                                             messageToSms, part.Alias);
+                        _smsServices.SendSms(listaNumeri.Select(x => Convert.ToInt64(x)).ToArray(),
+                                             messageToSms, part.Alias, part.Id.ToString());
 
                         part.SmsMessageSent = true;
                     }

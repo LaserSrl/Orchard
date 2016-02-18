@@ -1,6 +1,8 @@
-﻿using Laser.Orchard.Mobile.Models;
+﻿using Laser.Orchard.CommunicationGateway.Services;
+using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.Mobile.Services;
 using Laser.Orchard.Mobile.ViewModels;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Extensions;
@@ -13,14 +15,17 @@ namespace Laser.Orchard.Mobile.Drivers {
 
     [OrchardFeature("Laser.Orchard.SmsGateway")]
     public class SmsGatewayPartDriver : ContentPartDriver<SmsGatewayPart> {
+
         private readonly ISmsServices _smsServices;
-        
-        public SmsGatewayPartDriver(ISmsServices smsServices) {
+        private readonly IOrchardServices _orchardServices;
+
+        public SmsGatewayPartDriver(ISmsServices smsServices, IOrchardServices orchardServices) {
             _smsServices = smsServices;
+            _orchardServices = orchardServices;
         }
-        
+
         protected override string Prefix {
-            get { return "Laser.Mobile.SmsGateway"; }
+            get { return "Laser.Orchard.SmsGateway"; }
         }
 
         // GET
@@ -31,16 +36,32 @@ namespace Laser.Orchard.Mobile.Drivers {
 
             SmsServiceReference.Config SmsConfig = _smsServices.GetConfig();
 
+            // Controllo se conteggiare lo shortilink all'interno del messaggio
+            bool shortlinkExist = false;
+
+            ICommunicationService _communicationService;
+            bool tryed = _orchardServices.WorkContext.TryResolve<ICommunicationService>(out _communicationService);
+            if (tryed) {
+                shortlinkExist = _communicationService.CampaignLinkExist(part);
+            }
+
             // Dimensione massima caratteri
             int MaxLenght = MSG_MAX_CHAR_NUMBER_SINGOLO;
             if (SmsConfig.MaxLenghtSms > 1) {
-                MaxLenght = MSG_MAX_CHAR_NUMBER_CONCATENATI;  
+                MaxLenght = MSG_MAX_CHAR_NUMBER_CONCATENATI;
+            }
+
+            // Tolgo 16 caratteri necessari per lo shortlink
+            if (shortlinkExist) {
+                MaxLenght = MaxLenght - 16;
             }
 
             var model = new SmsGatewayVM {
+                Protocollo = SmsConfig.Protocollo,
                 AliasList = SmsConfig.ListaAlias,
                 MaxLenghtSms = MaxLenght,
-                SmsGateway = part
+                SmsGateway = part,
+                ShortlinkExist = shortlinkExist
             };
 
             return ContentShape("Parts_SmsGateway_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/SmsGateway_Edit", Model: model, Prefix: Prefix));
