@@ -101,7 +101,7 @@
             @Html.ValidationMessageFor(model => model.SmsGateway.Message)
         </div>
     </div>
-
+    
     @foreach (var ph in Model.Settings.PlaceholdersList.Placeholders) {
         <button name="submit.@ph.Name" id="btn_@ph.Name" onclick="$('#txtTesto').insertAtCaret('[PH_@ph.Name]');return false;">@ph.DisplayName</button>
     }
@@ -134,7 +134,7 @@
     </div>
 
     <div>
-        @Html.LabelFor(m => m.SmsGateway.SendOnNextPublish, T("Send on next publish").Text, new { @class = "forcheckbox" })
+        @Html.LabelFor(m => m.SmsGateway.SendOnNextPublish, T("Approved").Text, new { @class = "forcheckbox" })
         @if (!disabledElements) { 
             @Html.CheckBoxFor(model => model.SmsGateway.SendOnNextPublish, new { @class = "rcswitcher-checkbox-sms" }) 
             <i class="fa fa-times-circle" style="color: red"></i> @T("SMS not yet sent.")

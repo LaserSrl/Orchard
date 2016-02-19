@@ -32,10 +32,8 @@ namespace Laser.Orchard.Mobile.Drivers {
         // GET
         protected override DriverResult Editor(SmsGatewayPart part, dynamic shapeHelper) {
 
-            const int MSG_MAX_CHAR_NUMBER_SINGOLO = 160;
-            const int MSG_MAX_CHAR_NUMBER_CONCATENATI = 1530;
-
-            SmsServiceReference.Config SmsConfig = _smsServices.GetConfig();
+            var smsPlaceholdersSettingsPart = _orchardServices.WorkContext.CurrentSite.As<SmsPlaceholdersSettingsPart>();
+            var smsSettingsPart = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
 
             // Controllo se conteggiare lo shortilink all'interno del messaggio
             bool shortlinkExist = false;
@@ -46,22 +44,27 @@ namespace Laser.Orchard.Mobile.Drivers {
                 shortlinkExist = _communicationService.CampaignLinkExist(part);
             }
 
-            // Dimensione massima caratteri
-            int MaxLenght = MSG_MAX_CHAR_NUMBER_SINGOLO;
-            if (SmsConfig.MaxLenghtSms > 1) {
-                MaxLenght = MSG_MAX_CHAR_NUMBER_CONCATENATI;
-            }
-
             // Tolgo 16 caratteri necessari per lo shortlink
+            int MaxLenght = smsSettingsPart.MaxLenghtSms;
             if (shortlinkExist) {
                 MaxLenght = MaxLenght - 16;
             }
 
+            if (!smsSettingsPart.MamHaveAlias) {
+                part.HaveAlias = false;
+            }
+
+            List<string> ListaAlias = null;
+            if (smsSettingsPart.SmsFrom != "") {
+                ListaAlias = new List<string>(smsSettingsPart.SmsFrom.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+            }
+            
             var model = new SmsGatewayVM {
-                Protocollo = SmsConfig.Protocollo,
-                AliasList = SmsConfig.ListaAlias,
+                Protocollo = smsSettingsPart.Protocollo,
+                AliasList = ListaAlias,
                 MaxLenghtSms = MaxLenght,
                 SmsGateway = part,
+                Settings = smsPlaceholdersSettingsPart,
                 ShortlinkExist = shortlinkExist
             };
 
