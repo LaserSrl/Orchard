@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2015 Laser s.r.l.
+# Copyright (c) 2016 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -52,9 +52,17 @@ msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/AppStoreEdit.cshtm
 msgid "Type the mobile App url"
 msgstr "Inserisci l'URL della app mobile"
 
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobileContact_Edit.cshtml"
+msgid "Mobile"
+msgstr "Mobile"
+
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Mask to make test for Push... this option is set by settings of module"
 msgstr "Mask per effettuare test di push... questa opzione viene valorizzata dalle impostazioni del modulo"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "Mobile"
+msgstr "Mobile"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Mobile Push"
@@ -160,6 +168,70 @@ msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSe
 msgid "Windows EndPoint"
 msgstr "Windows EndPoint"
 
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid " + 16 chars campaign shortlink"
+msgstr "+ 16 caratteri per lo short link della campagna"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Alias"
+msgstr "Alias"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Have Alias"
+msgstr "Ha almeno un Alias"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "NO"
+msgstr "NO"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Number of chars:"
+msgstr "Numero di caratteri:"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Number of messages:"
+msgstr "Numero di messaggi:"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Send for test"
+msgstr "Invio di test"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Send on next publish"
+msgstr "Invia alla prossima pubblicazione"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Sms"
+msgstr "SMS"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "SMS already sent."
+msgstr "SMS già inoltrato."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "SMS not yet sent."
+msgstr "SMS non ancora inoltrato."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Test Sms number"
+msgstr "Numero di cellulare per l'invio del SMS di test"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "This SMS has been already sent. You will be able to edit and save it, but it will not be sent anymore on next publish."
+msgstr "Questo SMS è già stato inoltrato. Sarà possibile modificarlo e salvarlo, ma non sarà più reinoltrarlo."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "YES"
+msgstr "SI"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsPlaceholders.Settings.cshtml"
+msgid "Add Placeholder"
+msgstr "Aggiungi segnaposto"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsPlaceholders.Settings.cshtml"
+msgid "Settings - Sms Placeholders"
+msgstr "Impostazioni - Segnaposti per SMS"
+
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
 msgid "Mam driver identifier"
 msgstr "Identificativo driver Mam"
@@ -192,6 +264,14 @@ msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsP
 msgid "Total max retry"
 msgstr "Numero massimo di tentativi totali"
 
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "Web service password"
+msgstr "Password del Web Service"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "Web service username"
+msgstr "Utente del Web Service"
+
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/UserAgentRedirect_Edit.cshtml"
 msgid "Add Redirect"
 msgstr "Aggiungi Rimando"
@@ -219,6 +299,22 @@ msgstr "Telefono per recupero password"
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/UserPwdRecoveryPart_Edit.cshtml"
 msgid "Phone number"
 msgstr "Telefono"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/SmsPlaceholder.cshtml"
+msgid "Display Name"
+msgstr "Nome Visualizzato"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/SmsPlaceholder.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/SmsPlaceholder.cshtml"
+msgid "Remove"
+msgstr "Rimuovi"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/SmsPlaceholder.cshtml"
+msgid "Value"
+msgstr "Valore"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/Parts/UserAgentRedirect.cshtml"
 msgid "For this site exists the '{0}' mobile App on {1}. Do you want to download it?"
@@ -363,6 +459,14 @@ msgstr "Sottoscrizione del device scaduta:"
 msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
 msgid "Failure: "
 msgstr "Fallito:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Linked {0} device To Master contact"
+msgstr "Dispositivo {0} collegato al contatto Master"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
+msgid "Linked {0} user's mobile device"
+msgstr "Dispositivo mobile collegato all'Utente {0}"
 
 msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
 msgid "No push will be sent, related content must be published"
