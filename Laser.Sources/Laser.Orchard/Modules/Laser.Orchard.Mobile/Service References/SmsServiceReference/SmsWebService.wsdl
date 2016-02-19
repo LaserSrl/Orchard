@@ -83,6 +83,7 @@
       <s:complexType name="Config">
         <s:sequence>
           <s:element minOccurs="1" maxOccurs="1" name="Protocollo" type="tns:enumProtocollo" />
+          <s:element minOccurs="0" maxOccurs="1" name="Multialias" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="ListaAlias" type="tns:ArrayOfString" />
           <s:element minOccurs="1" maxOccurs="1" name="MaxLenghtSms" type="s:int" />
         </s:sequence>
