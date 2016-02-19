@@ -4,6 +4,6 @@
 ::  2. Entrare nella cartella Orchard.Web e unzippare il file
 
 pushd %~dp0
-del localizations.zip
-7z a -tzip localizations.zip -r ..\..\..\Orchard.Sources\src\Orchard.Web\*.po -mx5 -xr!bin -xr!obj
+del localizations-laser.zip
+7z a -tzip localizations-laser.zip -r ..\..\Laser.Orchard\*.po -mx5 -xr!bin -xr!obj
 pause
