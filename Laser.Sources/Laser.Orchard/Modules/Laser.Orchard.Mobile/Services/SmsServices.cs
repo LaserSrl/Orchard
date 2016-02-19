@@ -155,31 +155,27 @@ namespace Laser.Orchard.Mobile.Services {
         private List<SmsServiceReference.PlaceHolderMessaggio> GetPlaceHolder(long[] telDestArr, string testoSMS) {
             List<SmsServiceReference.PlaceHolderMessaggio> listaPH = null;
 
-            if (testoSMS.Contains(PREFISSO_PLACE_HOLDER)) {
-                listaPH = new List<SmsServiceReference.PlaceHolderMessaggio>();
+            var smsPlaceholdersSettingsPart = _orchardServices.WorkContext.CurrentSite.As<SmsPlaceholdersSettingsPart>();
 
+            if (smsPlaceholdersSettingsPart.PlaceholdersList.Placeholders.Count() > 0 && testoSMS.Contains(PREFISSO_PLACE_HOLDER)) {
+                listaPH = new List<SmsServiceReference.PlaceHolderMessaggio>();
+                
                 foreach (long numTel in telDestArr) {
                     SmsServiceReference.PlaceHolderMessaggio ph = new SmsServiceReference.PlaceHolderMessaggio();
-
                     ph.Telefono = numTel.ToString();
 
-                    // TODO: 
-                    // Recuperare Chiave [PH_' + $(this).text().toUpperCase() + ']
-                    // Recuperare Valore dai Contatti
                     List<SmsServiceReference.PHChiaveValore> listaCV = new List<SmsServiceReference.PHChiaveValore>();
 
-                    // Per ogni Place Holder presente
-                    SmsServiceReference.PHChiaveValore ph_Nome = new SmsServiceReference.PHChiaveValore();
-                    ph_Nome.Chiave = "[PH_NAME]";
-                    ph_Nome.Valore = "Pippo";
+                    foreach(var settingsPH in smsPlaceholdersSettingsPart.PlaceholdersList.Placeholders) {
 
-                    listaCV.Add(ph_Nome);
+                        SmsServiceReference.PHChiaveValore ph_SettingsCV = new SmsServiceReference.PHChiaveValore();
 
-                    SmsServiceReference.PHChiaveValore ph_Cognome = new SmsServiceReference.PHChiaveValore();
-                    ph_Cognome.Chiave = "[PH_SURNAME]";
-                    ph_Cognome.Valore = "Pluto";
+                        ph_SettingsCV.Chiave = "[PH_" + settingsPH.Name + "]";
+                        ph_SettingsCV.Valore = settingsPH.Value;
 
-                    listaCV.Add(ph_Cognome);
+                        listaCV.Add(ph_SettingsCV);
+                    }
+
                     ph.ListaPHChiaveValore = listaCV.ToArray();
 
                     listaPH.Add(ph);
