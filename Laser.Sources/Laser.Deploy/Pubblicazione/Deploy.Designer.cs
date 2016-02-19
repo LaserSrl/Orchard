@@ -30,14 +30,14 @@
             this.btnzip = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.chkThemesDev = new System.Windows.Forms.CheckBox();
+            this.chkModulesDev = new System.Windows.Forms.CheckBox();
+            this.chkAllLibrariesDev = new System.Windows.Forms.CheckBox();
             this.clbThemes = new System.Windows.Forms.CheckedListBox();
             this.clbModules = new System.Windows.Forms.CheckedListBox();
             this.clbLibrary = new System.Windows.Forms.CheckedListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label8 = new System.Windows.Forms.Label();
             this.clbLibraryOrchard = new System.Windows.Forms.CheckedListBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.clbThemesOrchard = new System.Windows.Forms.CheckedListBox();
             this.clbModulesOrchard = new System.Windows.Forms.CheckedListBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -57,9 +57,9 @@
             this.OperazioneTerminata = new System.Windows.Forms.Label();
             this.CheckAll = new System.Windows.Forms.CheckBox();
             this.btnFullDeploy = new System.Windows.Forms.Button();
-            this.chkAllLibrariesDev = new System.Windows.Forms.CheckBox();
-            this.chkModulesDev = new System.Windows.Forms.CheckBox();
-            this.chkThemesDev = new System.Windows.Forms.CheckBox();
+            this.chkAllCoreModules = new System.Windows.Forms.CheckBox();
+            this.chkAllCoreThemes = new System.Windows.Forms.CheckBox();
+            this.chkAllCoreLibraries = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -148,6 +148,39 @@
             this.tabPage1.UseVisualStyleBackColor = true;
             this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
             // 
+            // chkThemesDev
+            // 
+            this.chkThemesDev.AutoSize = true;
+            this.chkThemesDev.Location = new System.Drawing.Point(6, 370);
+            this.chkThemesDev.Name = "chkThemesDev";
+            this.chkThemesDev.Size = new System.Drawing.Size(64, 17);
+            this.chkThemesDev.TabIndex = 14;
+            this.chkThemesDev.Text = "Themes";
+            this.chkThemesDev.UseVisualStyleBackColor = true;
+            this.chkThemesDev.CheckedChanged += new System.EventHandler(this.chkThemesDev_CheckedChanged);
+            // 
+            // chkModulesDev
+            // 
+            this.chkModulesDev.AutoSize = true;
+            this.chkModulesDev.Location = new System.Drawing.Point(6, 97);
+            this.chkModulesDev.Name = "chkModulesDev";
+            this.chkModulesDev.Size = new System.Drawing.Size(66, 17);
+            this.chkModulesDev.TabIndex = 13;
+            this.chkModulesDev.Text = "Modules";
+            this.chkModulesDev.UseVisualStyleBackColor = true;
+            this.chkModulesDev.CheckedChanged += new System.EventHandler(this.chkModulesDev_CheckedChanged);
+            // 
+            // chkAllLibrariesDev
+            // 
+            this.chkAllLibrariesDev.AutoSize = true;
+            this.chkAllLibrariesDev.Location = new System.Drawing.Point(8, 4);
+            this.chkAllLibrariesDev.Name = "chkAllLibrariesDev";
+            this.chkAllLibrariesDev.Size = new System.Drawing.Size(65, 17);
+            this.chkAllLibrariesDev.TabIndex = 12;
+            this.chkAllLibrariesDev.Text = "Libraries";
+            this.chkAllLibrariesDev.UseVisualStyleBackColor = true;
+            this.chkAllLibrariesDev.CheckedChanged += new System.EventHandler(this.chkAllLibrariesDev_CheckedChanged);
+            // 
             // clbThemes
             // 
             this.clbThemes.CheckOnClick = true;
@@ -177,10 +210,10 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.label8);
+            this.tabPage2.Controls.Add(this.chkAllCoreLibraries);
+            this.tabPage2.Controls.Add(this.chkAllCoreThemes);
+            this.tabPage2.Controls.Add(this.chkAllCoreModules);
             this.tabPage2.Controls.Add(this.clbLibraryOrchard);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.clbThemesOrchard);
             this.tabPage2.Controls.Add(this.clbModulesOrchard);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
@@ -191,41 +224,14 @@
             this.tabPage2.Text = "Orchard";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 1);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(38, 13);
-            this.label8.TabIndex = 17;
-            this.label8.Text = "Library";
-            // 
             // clbLibraryOrchard
             // 
             this.clbLibraryOrchard.CheckOnClick = true;
             this.clbLibraryOrchard.FormattingEnabled = true;
-            this.clbLibraryOrchard.Location = new System.Drawing.Point(6, 20);
+            this.clbLibraryOrchard.Location = new System.Drawing.Point(8, 35);
             this.clbLibraryOrchard.Name = "clbLibraryOrchard";
             this.clbLibraryOrchard.Size = new System.Drawing.Size(833, 64);
             this.clbLibraryOrchard.TabIndex = 16;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(8, 380);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(45, 13);
-            this.label6.TabIndex = 15;
-            this.label6.Text = "Themes";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(8, 87);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(47, 13);
-            this.label7.TabIndex = 14;
-            this.label7.Text = "Modules";
             // 
             // clbThemesOrchard
             // 
@@ -240,9 +246,9 @@
             // 
             this.clbModulesOrchard.CheckOnClick = true;
             this.clbModulesOrchard.FormattingEnabled = true;
-            this.clbModulesOrchard.Location = new System.Drawing.Point(8, 101);
+            this.clbModulesOrchard.Location = new System.Drawing.Point(8, 124);
             this.clbModulesOrchard.Name = "clbModulesOrchard";
-            this.clbModulesOrchard.Size = new System.Drawing.Size(833, 274);
+            this.clbModulesOrchard.Size = new System.Drawing.Size(833, 244);
             this.clbModulesOrchard.TabIndex = 12;
             // 
             // tabPage4
@@ -416,38 +422,38 @@
             this.btnFullDeploy.UseVisualStyleBackColor = true;
             this.btnFullDeploy.Click += new System.EventHandler(this.btnFullDeploy_Click);
             // 
-            // chkAllLibrariesDev
+            // chkAllCoreModules
             // 
-            this.chkAllLibrariesDev.AutoSize = true;
-            this.chkAllLibrariesDev.Location = new System.Drawing.Point(8, 4);
-            this.chkAllLibrariesDev.Name = "chkAllLibrariesDev";
-            this.chkAllLibrariesDev.Size = new System.Drawing.Size(65, 17);
-            this.chkAllLibrariesDev.TabIndex = 12;
-            this.chkAllLibrariesDev.Text = "Libraries";
-            this.chkAllLibrariesDev.UseVisualStyleBackColor = true;
-            this.chkAllLibrariesDev.CheckedChanged += new System.EventHandler(this.chkAllLibrariesDev_CheckedChanged);
+            this.chkAllCoreModules.AutoSize = true;
+            this.chkAllCoreModules.Location = new System.Drawing.Point(11, 107);
+            this.chkAllCoreModules.Name = "chkAllCoreModules";
+            this.chkAllCoreModules.Size = new System.Drawing.Size(82, 17);
+            this.chkAllCoreModules.TabIndex = 17;
+            this.chkAllCoreModules.Text = "Moduli Core";
+            this.chkAllCoreModules.UseVisualStyleBackColor = true;
+            this.chkAllCoreModules.CheckedChanged += new System.EventHandler(this.chkAllCoreModules_CheckedChanged);
             // 
-            // chkModulesDev
+            // chkAllCoreThemes
             // 
-            this.chkModulesDev.AutoSize = true;
-            this.chkModulesDev.Location = new System.Drawing.Point(6, 97);
-            this.chkModulesDev.Name = "chkModulesDev";
-            this.chkModulesDev.Size = new System.Drawing.Size(66, 17);
-            this.chkModulesDev.TabIndex = 13;
-            this.chkModulesDev.Text = "Modules";
-            this.chkModulesDev.UseVisualStyleBackColor = true;
-            this.chkModulesDev.CheckedChanged += new System.EventHandler(this.chkModulesDev_CheckedChanged);
+            this.chkAllCoreThemes.AutoSize = true;
+            this.chkAllCoreThemes.Location = new System.Drawing.Point(11, 378);
+            this.chkAllCoreThemes.Name = "chkAllCoreThemes";
+            this.chkAllCoreThemes.Size = new System.Drawing.Size(74, 17);
+            this.chkAllCoreThemes.TabIndex = 18;
+            this.chkAllCoreThemes.Text = "Temi Core";
+            this.chkAllCoreThemes.UseVisualStyleBackColor = true;
+            this.chkAllCoreThemes.CheckedChanged += new System.EventHandler(this.chkAllCoreThemes_CheckedChanged);
             // 
-            // chkThemesDev
+            // chkAllCoreLibraries
             // 
-            this.chkThemesDev.AutoSize = true;
-            this.chkThemesDev.Location = new System.Drawing.Point(6, 370);
-            this.chkThemesDev.Name = "chkThemesDev";
-            this.chkThemesDev.Size = new System.Drawing.Size(64, 17);
-            this.chkThemesDev.TabIndex = 14;
-            this.chkThemesDev.Text = "Themes";
-            this.chkThemesDev.UseVisualStyleBackColor = true;
-            this.chkThemesDev.CheckedChanged += new System.EventHandler(this.chkThemesDev_CheckedChanged);
+            this.chkAllCoreLibraries.AutoSize = true;
+            this.chkAllCoreLibraries.Location = new System.Drawing.Point(10, 16);
+            this.chkAllCoreLibraries.Name = "chkAllCoreLibraries";
+            this.chkAllCoreLibraries.Size = new System.Drawing.Size(85, 17);
+            this.chkAllCoreLibraries.TabIndex = 19;
+            this.chkAllCoreLibraries.Text = "Librerie Core";
+            this.chkAllCoreLibraries.UseVisualStyleBackColor = true;
+            this.chkAllCoreLibraries.CheckedChanged += new System.EventHandler(this.chkAllCoreLibraries_CheckedChanged);
             // 
             // Deploy
             // 
@@ -499,11 +505,8 @@
         private System.Windows.Forms.TextBox tbOrchardDev;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button SaveSetting;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckedListBox clbThemesOrchard;
         private System.Windows.Forms.CheckedListBox clbModulesOrchard;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.CheckedListBox clbLibraryOrchard;
         private System.Windows.Forms.ProgressBar TheprogressBar;
         private System.Windows.Forms.Label OperazioneTerminata;
@@ -520,6 +523,9 @@
         private System.Windows.Forms.CheckBox chkAllLibrariesDev;
         private System.Windows.Forms.CheckBox chkThemesDev;
         private System.Windows.Forms.CheckBox chkModulesDev;
+        private System.Windows.Forms.CheckBox chkAllCoreLibraries;
+        private System.Windows.Forms.CheckBox chkAllCoreThemes;
+        private System.Windows.Forms.CheckBox chkAllCoreModules;
     }
 }
 
