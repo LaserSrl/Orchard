@@ -20,17 +20,17 @@
 
   <!-- Display terms in front-end summaries -->
   <Match DisplayType="Summary">
-    <Place Fields_TaxonomyField="Content:after"/>
+    <Place Fields_TaxonomyField="Content:after" Fields_TaxonomyField_Localized="Content:after"/>
   </Match>
 
   <!-- Display terms in content item details -->
   <Match DisplayType="Detail">
-    <Place Fields_TaxonomyField="Content:5"/>
+    <Place Fields_TaxonomyField="Content:5" Fields_TaxonomyField_Localized="Content:5"/>
   </Match>
 
   <!-- Display terms in admin summaries -->
   <Match DisplayType="SummaryAdmin">
-    <Place Fields_TaxonomyField="Content:5"/>
+    <Place Fields_TaxonomyField="Content:5" Fields_TaxonomyField_Localized="Content:5"/>
   </Match>
 
   <!-- Display in admin -->
