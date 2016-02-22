@@ -1,5 +1,6 @@
 ﻿<Placement>
-  <Place Parts_PushMobileSettings_Edit="Content:0" Parts_UserAgentRedirect_Edit="Content:1" Parts_UserAgentRedirect="Content"/>
+  <Place Parts_PushMobileSettings_Edit="Content:0" SmsSettingsPart_Edit="Content:1" SmsPlaceholdersSettings_Edit="Content:2" />
+  <Place Parts_UserAgentRedirect_Edit="Content:1" Parts_UserAgentRedirect="Content"/>
   <Place Parts_MobilePush_Edit="Content:5" />
   <Place Parts_MobileContact_Edit="Content:5" />
   <Place Fields_ContentPicker_Edit__MobilePushPart-RelatedContent="Content:5.1" />

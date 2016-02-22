@@ -625,6 +625,25 @@ namespace Pubblicazione {
 
         }
 
+        private void chkAllCoreModules_CheckedChanged(object sender, EventArgs e) {
+            for (int i = 0; i < this.clbModulesOrchard.Items.Count; i++) {
+                this.clbModulesOrchard.SetItemChecked(i, ((CheckBox)sender).Checked);
+            }
+        }
+
+        private void chkAllCoreLibraries_CheckedChanged(object sender, EventArgs e) {
+            for (int i = 0; i < this.clbLibraryOrchard.Items.Count; i++) {
+                this.clbLibraryOrchard.SetItemChecked(i, ((CheckBox)sender).Checked);
+            }
+
+        }
+
+        private void chkAllCoreThemes_CheckedChanged(object sender, EventArgs e) {
+            for (int i = 0; i < this.clbThemesOrchard.Items.Count; i++) {
+                this.clbThemesOrchard.SetItemChecked(i, ((CheckBox)sender).Checked);
+            }
+        }
+
     }
 
     public class ProjectClass {

@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2015 Laser s.r.l.
+# Copyright (c) 2016 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -9,8 +9,20 @@
 # > msgstr "{ messaggio }"
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Attach certificate to request"
+msgstr "Usa un certificato per la richiesta HTTP"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "Body Request"
 msgstr "Corpo della richiesta"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Certificate file name."
+msgstr "Nome del certificato."
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Certificate informations"
+msgstr "Informazioni sul certificato"
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "Default is GET"
@@ -27,6 +39,10 @@ msgstr "URL Esterno"
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "Generate on L For Mobile"
 msgstr "Genera su L For Mobile"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "If checked, a certificate will be attached to the request."
+msgstr "Se selezionato, contestualmente alla richiesta HTTP sarà inoltrato un certificato."
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "If checked, the field will be mandatory."
@@ -49,8 +65,24 @@ msgid "No Follow"
 msgstr "Non Seguire"
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Private key."
+msgstr "Chiave privata."
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "Required"
 msgstr "Richiesto"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "The certificate file name. You also have to FTP upload the certificate in folder /App_Data/Sites/[tenant]/externalfields/ "
+msgstr "Il nome del file del certificato. Sarà necessario uploadare il certificato via FTP nella cartella /App_Data/Sites/[tenant]/externalfields/"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "The certificate private key. Insert (none) if no key is required. A private key has already been set, leave empty to keep it unchanged."
+msgstr "La chiave privata del certificato. Inserire (none) se non è richiesta nessuna chiave. Una chiave privata è già stata impostata, lascia il campo vuoto per lasciare la chiave inalterata."
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "The certificate private key. The key is empty."
+msgstr "La chiave privata del certificato. La chiave al momento non è impostata."
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "Use this content type"

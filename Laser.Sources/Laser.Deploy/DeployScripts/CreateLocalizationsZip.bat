@@ -5,5 +5,5 @@
 
 pushd %~dp0
 del localizations.zip
-7z a -tzip localizations.zip -r ..\Orchard.Source\src\Orchard.Web\*.po -mx5 -xr!bin -xr!obj
+7z a -tzip localizations.zip -r ..\..\..\Orchard.Sources\src\Orchard.Web\*.po -mx5 -xr!bin -xr!obj
 pause

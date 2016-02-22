@@ -17,7 +17,7 @@ namespace Laser.Orchard.Mobile.Handlers {
         public SmsSettingsPartHandler() {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<SmsSettingsPart>("Site"));
-            Filters.Add(new TemplateFilterForPart<SmsSettingsPart>("SmsSettingsPart_Edit", "Parts/SmsSettingsPart_Edit", "SMS"));
+            //Filters.Add(new TemplateFilterForPart<SmsSettingsPart>("SmsSettingsPart_Edit", "Parts/SmsSettingsPart_Edit", "SMS"));
         }
 
         public Localizer T { get; set; }

@@ -32,6 +32,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         string GetCampaignLink(string CampaignSource, ContentPart part);
 
+        bool CampaignLinkExist(ContentPart part);
+
         void UserToContact(IUser UserContent);
 
         CommunicationContactPart GetContactFromUser(int iduser);
@@ -61,12 +63,12 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
 
         public bool AdvertisingIsAvailable(Int32 id) {
-            ContentItem ci=_orchardServices.ContentManager.Get(id);
+            ContentItem ci = _orchardServices.ContentManager.Get(id);
             if (ci.ContentType != "CommunicationAdvertising") {
                 return false;
             }
             if (ci.As<CommunicationAdvertisingPart>().CampaignId > 0) { // è legato ad una campagna
-                ContentItem campaign = _orchardServices.ContentManager.Get(ci.As<CommunicationAdvertisingPart>().CampaignId,VersionOptions.Latest);
+                ContentItem campaign = _orchardServices.ContentManager.Get(ci.As<CommunicationAdvertisingPart>().CampaignId, VersionOptions.Latest);
                 DateTime from = ((DateTimeField)(((dynamic)campaign).CommunicationCampaignPart.FromDate)).DateTime;
                 DateTime to = ((DateTimeField)(((dynamic)campaign).CommunicationCampaignPart.ToDate)).DateTime;
                 if (from > DateTime.UtcNow || (to < DateTime.UtcNow && to != DateTime.MinValue))
@@ -162,22 +164,20 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             //string CampaignSource = "email";
             string shortlink = "";
             ContentPart part = (ContentPart)(((dynamic)generalpart).ContentItem.CommunicationAdvertisingPart);
-            string CampaignTerm =  string.Join("+", part.ContentItem.As<TagsPart>().CurrentTags.ToArray()).ToLower();
+            string CampaignTerm = string.Join("+", part.ContentItem.As<TagsPart>().CurrentTags.ToArray()).ToLower();
             string CampaignMedium = CampaignSource;
             string CampaignContent = part.ContentItem.As<TitlePart>().Title.ToLower();
             string CampaignName = "";
             try {
                 int idCampagna = ((int)((dynamic)part).CampaignId);
                 CampaignName = _orchardServices.ContentManager.Get(idCampagna).As<TitlePart>().Title;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 // cuomunicato non legato a campagna
             }
             string link = "";
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
                 link = (string)(((dynamic)part).UrlLinked.Value);
-            }
-            else {
+            } else {
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
                 if (pickerField != null) {
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
@@ -185,8 +185,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
                         link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
                     }
-                }
-                else
+                } else
                     return "";
             }
 
@@ -199,6 +198,30 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             return shortlink;
         }
+
+
+        public bool CampaignLinkExist(ContentPart generalpart) {
+            bool linkExist = false;
+
+            ContentPart part = (ContentPart)(((dynamic)generalpart).ContentItem.CommunicationAdvertisingPart);
+
+            if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
+                linkExist = true;
+
+            } else {
+                var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
+
+                if (pickerField != null) {
+                    var firstItem = pickerField.ContentItems.FirstOrDefault();
+                    if (firstItem != null) {
+                        linkExist = true;
+                    }
+                }
+            }
+
+            return linkExist;
+        }
+
 
         /// <summary>
         ///
@@ -228,16 +251,14 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             try {
                 var profpart = ((dynamic)UserContent).ProfilePart;
                 asProfilePart = true;
-            }
-            catch { asProfilePart = false; }
+            } catch { asProfilePart = false; }
             int iduser = UserContent.Id;
             var contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == iduser).List().FirstOrDefault();
             ContentItem Contact;
             if (contactsUsers == null) {
                 Contact = _orchardServices.ContentManager.New("CommunicationContact");
                 _orchardServices.ContentManager.Create(Contact);
-            }
-            else {
+            } else {
                 Contact = contactsUsers.ContentItem;
             }
             if (!string.IsNullOrEmpty(UserContent.Email) && UserContent.ContentItem.As<UserPart>().RegistrationStatus == UserStatus.Approved) {
@@ -249,8 +270,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         _repositoryCommunicationEmailRecord.Update(cmr);
                         _repositoryCommunicationEmailRecord.Flush();
                     }
-                }
-                else {
+                } else {
                     CommunicationEmailRecord newrec = new CommunicationEmailRecord();
                     newrec.Email = UserContent.Email;
                     newrec.EmailContactPartRecord_Id = Contact.Id;
@@ -286,8 +306,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                                     second.Add(tv);
                                 }
                                 myval = ((object)(second.Select(x => (dynamic)x).ToList()));
-                            }
-                            else
+                            } else
                                 myval = ((object)(((dynamic)cf).Value));
                     _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, Contact);
                 }

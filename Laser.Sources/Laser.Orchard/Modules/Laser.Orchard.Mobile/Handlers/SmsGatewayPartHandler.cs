@@ -57,22 +57,22 @@ namespace Laser.Orchard.Mobile.Handlers {
                 if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Test"] == "submit.SmsTest") {
                     if (part.SendToTestNumber && part.NumberForTest != string.Empty) {
                         if (part.ContentItem.ContentType == "CommunicationAdvertising") {
-                            
+
                             string linktosend = "";
                             ICommunicationService _communicationService;
 
                             bool tryed = _orchardServices.WorkContext.TryResolve<ICommunicationService>(out _communicationService);
                             if (tryed) {
-                                linktosend = _communicationService.GetCampaignLink("Sms", part);
+                                if (_communicationService.CampaignLinkExist(part)) {
+                                    linktosend = _communicationService.GetCampaignLink("Sms", part);
+                                }
                             }
-                            var messageToSms = part.Message + " " + linktosend;
-                            
+                            string messageToSms = part.Message + " " + linktosend;
+
                             // Invio SMS a NumberForTest
                             _smsServices.SendSms(
-                                part.NumberForTest.Split(';').Select(x => Convert.ToInt64(x)).ToArray(), 
-                                messageToSms, part.Alias);
-
-                            part.SmsMessageSent = true;
+                                part.NumberForTest.Split(';').Select(x => Convert.ToInt64(x)).ToArray(),
+                                messageToSms, part.Alias, part.Id.ToString(), part.HaveAlias);
                         }
                     }
                 }
@@ -127,13 +127,15 @@ namespace Laser.Orchard.Mobile.Handlers {
 
                         bool tryed = _orchardServices.WorkContext.TryResolve<ICommunicationService>(out _communicationService);
                         if (tryed) {
-                            linktosend = _communicationService.GetCampaignLink("Sms", part);
+                            if (_communicationService.CampaignLinkExist(part)) {
+                                linktosend = _communicationService.GetCampaignLink("Sms", part);
+                            }
                         }
-                        var messageToSms = part.Message + " " + linktosend;
+                        string messageToSms = part.Message + " " + linktosend;
 
                         // Invio SMS
-                        _smsServices.SendSms(listaNumeri.Select(x => Convert.ToInt64(x)).ToArray(), 
-                                             messageToSms, part.Alias);
+                        _smsServices.SendSms(listaNumeri.Select(x => Convert.ToInt64(x)).ToArray(),
+                                             messageToSms, part.Alias, part.Id.ToString(), part.HaveAlias);
 
                         part.SmsMessageSent = true;
                     }

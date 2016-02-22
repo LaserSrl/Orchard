@@ -167,7 +167,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
 
                 long phoneNumberComplete = 0;
                 if (long.TryParse(String.Concat(internationalPrefix.Trim(), phoneNumber.Trim()), out phoneNumberComplete)) {
-                    return _smsServices.SendSms(new long[] { phoneNumberComplete }, user.UserName + "\r\n" + url, smsSettings.MamHaveAlias? smsSettings.SmsFrom : null);
+                    return _smsServices.SendSms(new long[] { phoneNumberComplete }, user.UserName + "\r\n" + url);
                 }
             }
 

@@ -209,19 +209,24 @@
     <Content Include="Views\Parts\MobilePush.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\SmsGateway_Edit.cshtml" />
     <None Include="Service References\SmsServiceReference\SmsWebService.wsdl" />
+    <Content Include="Views\EditorTemplates\Parts\SmsPlaceholders.Settings.cshtml" />
+    <Content Include="Views\EditorTemplates\SmsPlaceholder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\TaxonomiePushController.cs" />
     <Compile Include="Drivers\MobileContactPartDriver.cs" />
     <Compile Include="Drivers\SmsGatewayPartDriver.cs" />
+    <Compile Include="Drivers\SmsSettingsPartDriver.cs" />
     <Compile Include="Drivers\UserPwdRecoveryPartDriver.cs" />
     <Compile Include="Feature\MobileCommunicationImportFeature.cs" />
     <Compile Include="Feature\SmsCommunicationImportFeature.cs" />
     <Compile Include="Handlers\MobileContactPartHandler.cs" />
     <Compile Include="Handlers\SmsGatewayPartHandler.cs" />
+    <Compile Include="Handlers\SmsPlaceholdersSettingsHandler.cs" />
     <Compile Include="Handlers\UserPwdRecoveryPartHandler.cs" />
     <Compile Include="Models\MobileContactPart.cs" />
     <Compile Include="Models\SmsGatewayPart.cs" />
+    <Compile Include="Models\SmsPlaceholdersSettingsPart.cs" />
     <Compile Include="Models\UserPwdRecoveryPart.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Service References\SmsServiceReference\Reference.cs">

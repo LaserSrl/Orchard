@@ -10,13 +10,9 @@ namespace Laser.Orchard.ContentExtension {
                      .Column<string>("PostPermission")
                      .Column<string>("GetPermission")
                      .Column<string>("DeletePermission")
+                     .Column<string>("PublishPermission")
                   );
             return 1;
         }
-        //public int  UpdateFrom1(){
-
-        //    );
-        //    return 2;
-        //}
     }
 }

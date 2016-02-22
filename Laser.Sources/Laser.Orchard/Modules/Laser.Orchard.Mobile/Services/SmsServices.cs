@@ -18,7 +18,7 @@ using Laser.Orchard.CommunicationGateway.Services;
 namespace Laser.Orchard.Mobile.Services {
 
     public interface ISmsServices : IDependency {
-        string SendSms(long[] TelDestArr, string TestoSMS, string alias);
+        string SendSms(long[] TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
         Config GetConfig();
         void Synchronize();
     }
@@ -84,7 +84,7 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
 
-        public string SendSms(long[] telDestArr, string testoSMS, string alias) {
+        public string SendSms(long[] telDestArr, string testoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false) {
             var bRet = "FALSE";
 
             ArrayOfLong numbers = new ArrayOfLong();
@@ -92,18 +92,33 @@ namespace Laser.Orchard.Mobile.Services {
 
             try {
                 var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
+
+                // Imposto Guid univoco se la richiesta non arriva da SmsGateway
+                if (String.IsNullOrEmpty(IdSMS)) {
+                    IdSMS = new Guid().ToString();
+                }
+
+                if (InviaConAlias) {
+                    if (String.IsNullOrEmpty(alias)) {
+                        alias = smsSettings.SmsFrom;
+                    }
+                } else {
+                    alias = null;
+                }
+
                 SmsServiceReference.Sms sms = new SmsServiceReference.Sms {
                     DriverId = smsSettings.MamDriverIdentifier,
                     SmsFrom = smsSettings.SmsFrom,
-                    MamHaveAlias = smsSettings.MamHaveAlias,
+                    MamHaveAlias = InviaConAlias,
                     Alias = alias,
                     SmsPrority = smsSettings.SmsPrority ?? 0,
                     SmsValidityPeriod = smsSettings.SmsValidityPeriod ?? 3600,
-                    ExternalId = new Guid().ToString(),
+                    ExternalId = IdSMS,
                     SmsBody = testoSMS,
                     SmsTipoCodifica = 0,
                     SmsNumber = numbers,
                 };
+
                 //Specify the binding to be used for the client.
                 EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
                 SmsServiceReference.SmsWebServiceSoapClient _service;
@@ -140,31 +155,27 @@ namespace Laser.Orchard.Mobile.Services {
         private List<SmsServiceReference.PlaceHolderMessaggio> GetPlaceHolder(long[] telDestArr, string testoSMS) {
             List<SmsServiceReference.PlaceHolderMessaggio> listaPH = null;
 
-            if (testoSMS.Contains(PREFISSO_PLACE_HOLDER)) {
+            var smsPlaceholdersSettingsPart = _orchardServices.WorkContext.CurrentSite.As<SmsPlaceholdersSettingsPart>();
+
+            if (smsPlaceholdersSettingsPart.PlaceholdersList.Placeholders.Count() > 0 && testoSMS.Contains(PREFISSO_PLACE_HOLDER)) {
                 listaPH = new List<SmsServiceReference.PlaceHolderMessaggio>();
-
-                foreach(long numTel in telDestArr) {
+                
+                foreach (long numTel in telDestArr) {
                     SmsServiceReference.PlaceHolderMessaggio ph = new SmsServiceReference.PlaceHolderMessaggio();
-
                     ph.Telefono = numTel.ToString();
-                    
-                    // TODO: 
-                    // Recuperare Chiave [PH_' + $(this).text().toUpperCase() + ']
-                    // Recuperare Valore dai Contatti
+
                     List<SmsServiceReference.PHChiaveValore> listaCV = new List<SmsServiceReference.PHChiaveValore>();
 
-                    // Per ogni Place Holder presente
-                    SmsServiceReference.PHChiaveValore ph_Nome = new SmsServiceReference.PHChiaveValore();
-                    ph_Nome.Chiave = "[PH_NAME]";
-                    ph_Nome.Valore = "Pippo";
+                    foreach(var settingsPH in smsPlaceholdersSettingsPart.PlaceholdersList.Placeholders) {
 
-                    listaCV.Add(ph_Nome);
+                        SmsServiceReference.PHChiaveValore ph_SettingsCV = new SmsServiceReference.PHChiaveValore();
 
-                    SmsServiceReference.PHChiaveValore ph_Cognome = new SmsServiceReference.PHChiaveValore();
-                    ph_Cognome.Chiave = "[PH_SURNAME]";
-                    ph_Cognome.Valore = "Pluto";
+                        ph_SettingsCV.Chiave = "[PH_" + settingsPH.Name + "]";
+                        ph_SettingsCV.Valore = settingsPH.Value;
 
-                    listaCV.Add(ph_Cognome);
+                        listaCV.Add(ph_SettingsCV);
+                    }
+
                     ph.ListaPHChiaveValore = listaCV.ToArray();
 
                     listaPH.Add(ph);
