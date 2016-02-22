@@ -426,7 +426,7 @@ msgstr "Dispositivo utente"
 
 msgctxt "Laser.Orchard.Mobile.Services.MissingSmsSettingsBanner"
 msgid "The <a href=\"{0}\">SMS settings</a> need to be configured."
-msgstr "E' necessario configurare le <a href=\"{0}\">inpostazioni SMS</a>."
+msgstr "E' necessario configurare le <a href=\"{0}\">impostazioni SMS</a>."
 
 msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
 msgid "Channel Created for: "
