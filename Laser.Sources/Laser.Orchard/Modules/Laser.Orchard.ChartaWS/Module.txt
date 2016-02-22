@@ -8,4 +8,4 @@ Features:
     Laser.Orchard.ChartaWS:
 		Name: Charta Web Services
         Description: Web Services for Charta Project.
-		Dependencies: Laser.Orchard.StartupConfig.MailExtensions
+		Dependencies: Laser.Orchard.StartupConfig.MailExtensions, Laser.Orchard.Braintree

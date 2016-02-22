@@ -6,12 +6,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5279F7EA-8309-4B1C-A089-68ACF917C519}</ProjectGuid>
+    <ProjectGuid>{DDF6FDC9-29A3-43E6-8724-3CE9E26289B6}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laser.Orchard.ChartaWS</RootNamespace>
-    <AssemblyName>Laser.Orchard.ChartaWS</AssemblyName>
+    <RootNamespace>Laser.Orchard.Braintree</RootNamespace>
+    <AssemblyName>Laser.Orchard.Braintree</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
@@ -33,7 +33,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>ExtendedDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -47,46 +47,19 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ChartaDb, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\ChartaDb.dll</HintPath>
-    </Reference>
-    <Reference Include="EventViewer, Version=6.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\EventViewer.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\lib\log4net\log4net.dll</HintPath>
+    <Reference Include="Braintree-2.54.0">
+      <HintPath>Lib\Braintree-2.54.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MobiPlusLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\MobiPlusLib.dll</HintPath>
-    </Reference>
-    <Reference Include="MovinBoxHandler, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\MovinBoxHandler.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Email">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Email\bin\Orchard.Email.dll</HintPath>
-    </Reference>
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Localization">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Localization\bin\Orchard.Localization.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -106,20 +79,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\ChartaDb.dll" />
-    <Content Include="Lib\EventViewer.dll" />
-    <Content Include="Lib\MobiPlusLib.dll" />
-    <Content Include="Lib\MovinBoxHandler.dll" />
+    <Content Include="Lib\Braintree-2.54.0.dll" />
+    <None Include="Placement.info" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -127,55 +94,23 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChartaWEB\Cat.cs" />
-    <Compile Include="ChartaWEB\City.cs" />
-    <Compile Include="ChartaWEB\CityList.cs" />
-    <Compile Include="ChartaWEB\Command.cs" />
-    <Compile Include="ChartaWEB\GestioneDeviceToken.cs" />
-    <Compile Include="ChartaWEB\GestioneProfilazione.cs" />
-    <Compile Include="ChartaWEB\GestioneTransazioni.cs" />
-    <Compile Include="ChartaWEB\HotList.cs" />
-    <Compile Include="ChartaWEB\LastMinute.cs" />
-    <Compile Include="ChartaWEB\LatLongDiff.cs" />
-    <Compile Include="ChartaWEB\LocInfo.cs" />
-    <Compile Include="ChartaWEB\LocInfoDistinct.cs" />
-    <Compile Include="ChartaWEB\LocInfoList.cs" />
-    <Compile Include="ChartaWEB\News.cs" />
-    <Compile Include="ChartaWEB\OrgInfo.cs" />
-    <Compile Include="ChartaWEB\OrgInfoList.cs" />
-    <Compile Include="ChartaWEB\Perform.cs" />
-    <Compile Include="ChartaWEB\Security.cs" />
-    <Compile Include="ChartaWEB\ServizioOK.cs" />
-    <Compile Include="ChartaWEB\SMS.cs" />
-    <Compile Include="ChartaWEB\Spettacoli.cs" />
-    <Compile Include="ChartaWEB\Spettacolo.cs" />
-    <Compile Include="ChartaWEB\TitoliList.cs" />
-    <Compile Include="ChartaWEB\Titolo.cs" />
-    <Compile Include="ChartaWEB\Util.cs" />
-    <Compile Include="Controllers\ChartaApiController.cs" />
-    <Compile Include="Drivers\ChartaSiteSettingsPartDriver.cs" />
-    <Compile Include="Handlers\ChartaSiteSettingsHandler.cs" />
-    <Compile Include="Models\ChartaSiteSettingsPart.cs" />
+    <Content Include="Views\EditorTemplates\Parts\BraintreeSiteSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\Paypal.cs" />
+    <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Drivers\BraintreeSiteSettingsPartDriver.cs" />
+    <Compile Include="Handlers\BraintreeSiteSettingsHandler.cs" />
+    <Compile Include="Models\BraintreeSiteSettingsPart.cs" />
+    <Compile Include="Models\TransactionResult.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Services\DefaultBraintreeService.cs" />
+    <Compile Include="Services\IBraintreeService.cs" />
     <Compile Include="Services\MissingSettingsBanner.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
-      <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
-      <Name>Laser.Orchard.Commons</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Laser.Orchard.Braintree\Laser.Orchard.Braintree.csproj">
-      <Project>{ddf6fdc9-29a3-43e6-8724-3ce9e26289b6}</Project>
-      <Name>Laser.Orchard.Braintree</Name>
-    </ProjectReference>
+    <Content Include="Views\Test\Index.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Placement.info" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\ChartaSiteSettings.cshtml" />
-  </ItemGroup>
-  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

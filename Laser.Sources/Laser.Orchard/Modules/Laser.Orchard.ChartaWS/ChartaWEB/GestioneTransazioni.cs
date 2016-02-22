@@ -185,7 +185,7 @@ namespace ChartaWEB
         }
 
         /// <summary>
-        /// Gestisce ilcomando richiesta Anagrafica.
+        /// Gestisce il comando richiesta Anagrafica.
         /// </summary>
         /// <param name="_Response">Oggetto response della pagina chiamante</param>
         /// <param name="_queryRequest">Parametri da inviare a Charta</param>
