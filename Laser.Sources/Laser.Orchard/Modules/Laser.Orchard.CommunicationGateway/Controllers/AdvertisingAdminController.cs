@@ -48,7 +48,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 //  model = _contentManager.BuildEditor(newContent);
                 //   _contentManager.Create(newContent);
                 model = _contentManager.BuildEditor(newContent);
-            } else
+            }
+            else
                 model = _contentManager.BuildEditor(_contentManager.Get(id, VersionOptions.Latest));
             return View((object)model);
         }
@@ -63,7 +64,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 var newContent = _contentManager.New(contentType);
                 _contentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
-            } else
+            }
+            else
                 content = _contentManager.Get(id, VersionOptions.DraftRequired);
             content.As<CommunicationAdvertisingPart>().CampaignId = idCampaign > 0 ? idCampaign : 0;
             if (idCampaign > 0) {
@@ -100,7 +102,14 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         public ActionResult Remove(Int32 id, int idCampaign = 0) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
-            ContentItem content = _contentManager.Get(id);
+            ContentItem content = _contentManager.Get(id, VersionOptions.DraftRequired);
+            //ContentItem content;// = _contentManager.Get(id, VersionOptions.DraftRequired);
+            //List<ContentItem> li = _orchardServices.ContentManager.GetAllVersions(id).ToList();
+            //      if (li.Count() == 1)
+            //          content = li[0];
+            //    else
+            //          content = _orchardServices.ContentManager.Get(id, VersionOptions.Latest);
+           
             _contentManager.Remove(content);
             return RedirectToAction("Index", "AdvertisingAdmin", new { id = idCampaign });
         }

@@ -4,48 +4,77 @@
 
 @using (Script.Foot()) {
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('button[name="submit.Publish"]').click(function () {
-                var formtosubmit=  $(this).closest('form');
-                $("#dialog-confirm").dialog({
-                    resizable: false,
-                    height: 240,
-                    modal: true,
-                    buttons: {
-                        "Confirm Publish": function () {
-                            $(this).dialog("close");
-                            formtosubmit.submit();
-                        },
-                        Cancel: function () {
-                           $(this).dialog("close");
-                            
-                        }
-                    }
-                });
-                return false;
+        function GetMessage() {
+            message = "<ul>";
+            messageSomething=false;
+            try{
+                if ($("#Laser_Orchard_Facebook_SendOnNextPublish").is(':checked') && $("#Laser_Orchard_Facebook_FacebookMessageSent").val() != "True" && $("#Laser_Orchard_Facebook_SelectedList").val()!=null) {
+                    message += "<li><i class='fa fa-facebook'></i> Post on Facebook " + $('#Laser_Orchard_Facebook_SelectedList').find(":selected").text() + "</li>";
+                    messageSomething = true;
+                }
+            }catch(e){}
+            try{
+                if ($("#Laser_Orchard_Twitter_SendOnNextPublish").is(':checked') && $("#Laser_Orchard_Twitter_TwitterMessageSent").val() != "True" && $("#Laser_Orchard_Twitter_SelectedList").val()!=null) {
+                    message += "<li><i class='fa fa-twitter'></i> Post on Twitter " + $('#Laser_Orchard_Twitter_SelectedList').find(":selected").text() + "</li>";
+                    messageSomething = true;
+                }
+            }catch(e){}
+           
+            try{
+                if ($("#MailCommunicationPart_SendOnNextPublish").is(':checked') && $("#MailCommunicationPart_MailMessageSent").val() != "True" ) {
+                    message += "<li><i class='fa fa-envelope'></i> Send Email</li>";
+                    messageSomething = true;
+                }
+            } catch (e) { }
+            // message += "<li>Send Sms</li>";
 
-@*                if (confirm('@T("Are you sure?/r/n this action will<br/>send").ToString()')) {
-                    
-                } else
-                    return false;*@
+            message += "</ul><br/>";
+            message += "@T("Are you sure?")";
+            if (!messageSomething) {
+                message = "";
+            }
+            return message;
+        }
+        $(document).ready(function () {
+            $('button[name="submit.Publish"]').on("click", function (e) {
+                var formtosubmit = $(this).closest('form');
+                message = GetMessage();
+             
+                if (message != "") {
+
+                    $("#dialog-message").html(GetMessage());
+
+                    $("#dialog-confirm").dialog({
+                        resizable: false,
+                        height: 240,
+                        modal: true,
+                        buttons: {
+                            "Confirm Publish": function () {
+                                formtosubmit.append("<input type='hidden' name='submit.Publish' value='submit.Publish' />");
+                                $(this).dialog("close");
+                                formtosubmit.submit();
+
+                            },
+                            Cancel: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                    return false;
+                } else {
+                    return true;
+                }
             });
         });
-
-
-      
     </script>
-} 
-<div id="dialog-confirm" title="Publish action" style="display:none">
-  <p>
-      <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;">
-     </span>These action will make take this effect:<br />
-      <ul>
-          <li> Post on Facebook</li>
-          <li> Post on Twitter</li>
-           <li>Send Email</li>
-          <li>Send Sms</li>
-      </ul>
-       Are you sure?</p>
+}
+<div id="dialog-confirm" title="Publish action" style="display: none">
+    
+       @T("Actions to be performed:")<br />
+        
+        <div id="dialog-message"></div>
+
+    
 </div>
 <ul class="comm-tabbed">
 </ul>
