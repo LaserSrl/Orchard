@@ -20,6 +20,7 @@ namespace Laser.Orchard.Mobile.Services {
     public interface ISmsServices : IDependency {
         string SendSms(long[] TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
         Config GetConfig();
+        string GetReportSmsStatus(string IdSMS);
         void Synchronize();
     }
 
@@ -170,6 +171,7 @@ namespace Laser.Orchard.Mobile.Services {
 
                         SmsServiceReference.PHChiaveValore ph_SettingsCV = new SmsServiceReference.PHChiaveValore();
 
+                        // TODO: Si dovrà recuperare anche il valore dei Place Holder che non hanno value fisso - es.{ User.Name }
                         ph_SettingsCV.Chiave = "[PH_" + settingsPH.Name + "]";
                         ph_SettingsCV.Valore = settingsPH.Value;
 
@@ -211,5 +213,49 @@ namespace Laser.Orchard.Mobile.Services {
 
             return result;
         }
+
+        public string GetReportSmsStatus(string IdSMS) {
+            string reportStatus = "prova";
+
+            //Specify the binding to be used for the client.
+            var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
+
+            EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
+            SmsServiceReference.SmsWebServiceSoapClient _service;
+
+            if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
+                WSHttpBinding binding = new WSHttpBinding();
+                binding.Security.Mode = SecurityMode.Transport;
+                _service = new SmsWebServiceSoapClient(binding, address);
+            } else {
+                BasicHttpBinding binding = new BasicHttpBinding();
+                _service = new SmsWebServiceSoapClient(binding, address);
+            }
+
+            SmsServiceReference.Login login = new SmsServiceReference.Login();
+            login.User = smsSettings.WsUsername;
+            login.Password = smsSettings.WsPassword;
+            login.DriverId = smsSettings.MamDriverIdentifier;
+
+            SmsServiceReference.StatusByExtId[] ret = _service.GetSmsStateByExternalId(login, IdSMS);
+
+            int contACCEPTED = (from sms in ret where sms.SmsState.CompareTo("ACCEPTED") == 0 select sms).Count();
+            int contDELIVERED = (from sms in ret where sms.SmsState.CompareTo("DELIVERED") == 0 select sms).Count();
+            int contEXPIRED = (from sms in ret where sms.SmsState.CompareTo("EXPIRED") == 0 select sms).Count();
+            int contREJECTED = (from sms in ret where sms.SmsState.CompareTo("REJECTED") == 0 select sms).Count();
+
+            int contSmsTotali = contACCEPTED + contDELIVERED + contEXPIRED + contREJECTED;
+            int contSmsInviati = contACCEPTED + contDELIVERED;
+            int contSmsFalliti = contEXPIRED + contREJECTED;
+
+            reportStatus = "Tot Utenti: " + contSmsTotali.ToString();
+            reportStatus += " - Inviati: " + contSmsInviati.ToString();
+            reportStatus += " (Consegnati al terminale: " + contDELIVERED.ToString() + " - Consegnati all'operatore: " + contACCEPTED.ToString() + ")";
+            reportStatus += " - Falliti: " + contSmsFalliti.ToString();
+            reportStatus += " (Rejected: " + contREJECTED.ToString() + " - Expired: " + contEXPIRED.ToString() + ")";
+
+            return reportStatus;
+        }
+
     }
 }
