@@ -1,7 +1,16 @@
-﻿@{
+﻿@using System.Linq
+@{
     string name = Model.ContentField.DisplayName;
 }
 
 @if (HasText(name) && HasText(Model.Value)) {
-    <iframe width="560" height="315" src="@Model.Value" frameborder="0" allowfullscreen></iframe>
+    string link = Model.Value.ToString();
+    var codiceYoutube = "";
+    if (link.Contains("v=")) {
+        codiceYoutube = link.Split(new string[] { "v=" }, StringSplitOptions.RemoveEmptyEntries)[1];
+        link = String.Format("https://www.youtube.com/embed/{0}",codiceYoutube);
+    } else if (link.Contains("/embed/")) {
+
+    }
+    <iframe width="560" height="315" src="@link" frameborder="0" allowfullscreen></iframe>
 }
