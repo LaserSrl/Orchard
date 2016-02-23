@@ -134,10 +134,25 @@ namespace Laser.Orchard.Facebook.Drivers {
         }
 
         protected override DriverResult Editor(FacebookPostPart part, IUpdateModel updater, dynamic shapeHelper) {
+              FacebookPostPartSettingVM setting = part.Settings.GetModel<FacebookPostPartSettingVM>();
+              var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
             FacebookPostVM vm = new FacebookPostVM();
             updater.TryUpdateModel(vm, Prefix, null, null);
             Mapper.CreateMap<FacebookPostVM, FacebookPostPart>();
             Mapper.Map(vm, part);
+           
+            if (!string.IsNullOrEmpty(setting.FacebookPicture)) {
+             
+                string idimg = _tokenizer.Replace(setting.FacebookPicture, tokens);
+                Int32 idimage = 0;
+
+                Int32.TryParse(idimg.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
+                if (idimage > 0) {
+                    part.FacebookIdPicture = idimage.ToString();
+                       } else
+                     part.FacebookIdPicture =  "";
+            }
+         
             if (vm.SelectedList != null && vm.SelectedList.Count() > 0) {
                 part.AccountList = vm.SelectedList.Select(x => Int32.Parse(x)).ToArray();
             }

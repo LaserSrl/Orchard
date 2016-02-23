@@ -70,5 +70,10 @@ namespace Laser.Orchard.Facebook {
                 .AddColumn<bool>("SendOnNextPublish", col => col.WithDefault(false)));
             return 3;
         }
+         public int UpdateFrom3() {
+             SchemaBuilder.AlterTable("FacebookPostPartRecord", table => table
+                      .AddColumn<string>("FacebookIdPicture"));
+                     return 4;
+         }
     }
 }

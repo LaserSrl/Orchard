@@ -12,6 +12,7 @@
         public string Description { get; set; }
         public string Name { get; set; }
         public string Picture { get; set; }
+        public string IdPicture { get; set; }
         public string Link { get; set; }
     }
 }

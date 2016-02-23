@@ -39,6 +39,10 @@ namespace Laser.Orchard.Facebook.Models {
             get { return this.Retrieve(r => r.FacebookPicture); }
             set { this.Store(r => r.FacebookPicture, value); }
         }
+        public string FacebookIdPicture {
+            get { return this.Retrieve(r => r.FacebookIdPicture); }
+            set { this.Store(r => r.FacebookIdPicture, value); }
+        }
 
         public string FacebookLink {
             get { return this.Retrieve(r => r.FacebookLink); }
@@ -77,6 +81,7 @@ namespace Laser.Orchard.Facebook.Models {
 
         public virtual string FacebookName { get; set; }
         public virtual string FacebookPicture { get; set; }
+        public virtual string FacebookIdPicture { get; set; }
         public virtual string FacebookLink { get; set; }
         public virtual string AccountList { get; set; }
         public virtual bool SendOnNextPublish { get; set; }

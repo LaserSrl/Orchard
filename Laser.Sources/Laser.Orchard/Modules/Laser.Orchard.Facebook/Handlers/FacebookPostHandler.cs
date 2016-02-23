@@ -57,7 +57,7 @@ namespace Laser.Orchard.Facebook.Handlers {
 
                         Fvm.Message = facebookpart.FacebookMessage;
                         Fvm.Name = facebookpart.FacebookName;
-            
+                        Fvm.IdPicture = facebookpart.FacebookIdPicture;
                             Fvm.Picture = facebookpart.FacebookPicture;
                         if (facebookpart.SendOnNextPublish && !facebookpart.FacebookMessageSent) {
                             ResponseAction rsp = _facebookService.PostFacebook(Fvm, facebookpart);
