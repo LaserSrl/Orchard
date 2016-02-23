@@ -36,6 +36,7 @@
         });
     </script>
 }
+@Html.HiddenFor(m => m.MailMessageSent)
 <fieldset>
     @Html.LabelFor(m => m.SendToTestEmail, T("Send for test").Text, new { @class = "forcheckbox" })
     @Html.CheckBoxFor(model => model.SendToTestEmail, new { @class = "rcswitcher-checkbox-mail" })
