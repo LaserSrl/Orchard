@@ -184,9 +184,12 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     if (firstItem != null) {
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
                         link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
+                    } else {
+                        return "";
                     }
-                } else
+                } else {
                     return "";
+                }
             }
 
             string linkelaborated = ElaborateLink(link, CampaignSource, CampaignMedium, CampaignTerm, CampaignContent, CampaignName);
