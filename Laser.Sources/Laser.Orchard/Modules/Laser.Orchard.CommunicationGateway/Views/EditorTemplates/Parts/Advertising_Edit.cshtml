@@ -6,21 +6,32 @@
     <script type="text/javascript">
         function GetMessage() {
             message = "<ul>";
-            if (($("#CommunicationAdvertisingPart_UrlLinked_Value").val == "" || $("#CommunicationAdvertisingPart_UrlLinked_Value").val() == null) && ($("#CommunicationAdvertisingPart.ContentLinked.SelectedIds").val == "" || $("#CommunicationAdvertisingPart.ContentLinked.SelectedIds").val() == null)) {
-                message = "<li><span style='color:red;font-weight:bold'><i class='fa fa-exclamation-triangle'></i><span>Campaign link not inserted</li>";
+            if (($("#CommunicationAdvertisingPart_UrlLinked_Value").val() == "" || $("#CommunicationAdvertisingPart_UrlLinked_Value").val() == null) && ($("#CommunicationAdvertisingPart.ContentLinked.SelectedIds").val() == "" || $("#CommunicationAdvertisingPart.ContentLinked.SelectedIds").val() == null)) {
+                message = "<li><i class='fa fa-exclamation-triangle' style='color:red;'></i> Campaign link not inserted</li>";
             }
             
             messageSomething=false;
             try{
                 if ($("#Laser_Orchard_Facebook_SendOnNextPublish").is(':checked') && $("#Laser_Orchard_Facebook_FacebookMessageSent").val() != "True" && $("#Laser_Orchard_Facebook_SelectedList").val()!=null) {
-                    message += "<li><i class='fa fa-facebook'></i> Post on Facebook " + $('#Laser_Orchard_Facebook_SelectedList').find(":selected").text() + "</li>";
-                    messageSomething = true;
+                    list_account = $('#Laser_Orchard_Facebook_SelectedList').find(":selected").map(function () {
+                        return $(this).text();
+                    }).get().join().split(',');
+                    for (var account in list_account) {
+                        message += "<li><i class='fa fa-facebook'></i> Post on Facebook " +list_account[account] + "</li>";
+                        messageSomething = true;
+                    }
+                   
                 }
             }catch(e){}
             try{
                 if ($("#Laser_Orchard_Twitter_SendOnNextPublish").is(':checked') && $("#Laser_Orchard_Twitter_TwitterMessageSent").val() != "True" && $("#Laser_Orchard_Twitter_SelectedList").val()!=null) {
-                    message += "<li><i class='fa fa-twitter'></i> Post on Twitter " + $('#Laser_Orchard_Twitter_SelectedList').find(":selected").text() + "</li>";
-                    messageSomething = true;
+                    list_account = $('#Laser_Orchard_Twitter_SelectedList').find(":selected").map(function () {
+                        return $(this).text();
+                    }).get().join().split(',');
+                    for (var account in list_account) {
+                        message += "<li><i class='fa fa-twitter'></i> Post on twitter " + list_account[account] + "</li>";
+                        messageSomething = true;
+                    }
                 }
             }catch(e){}
            

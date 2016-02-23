@@ -179,7 +179,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 link = (string)(((dynamic)part).UrlLinked.Value);
             } else {
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
-                if (pickerField != null) {
+                if (pickerField != null && pickerField.ContentItems!=null) {
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
                     if (firstItem != null) {
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
