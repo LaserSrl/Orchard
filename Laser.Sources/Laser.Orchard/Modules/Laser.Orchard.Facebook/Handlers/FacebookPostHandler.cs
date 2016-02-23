@@ -58,6 +58,8 @@ namespace Laser.Orchard.Facebook.Handlers {
                             if (rsp.Success) {
                                 facebookpart.FacebookMessageSent = true;
                             }
+                            else
+                                _notifier.Add(NotifyType.Error, T("Facebook error:" + rsp.Message));
                         }
                     }
                 }
