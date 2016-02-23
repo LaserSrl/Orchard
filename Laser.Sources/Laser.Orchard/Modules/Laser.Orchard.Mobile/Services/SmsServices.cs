@@ -134,6 +134,10 @@ namespace Laser.Orchard.Mobile.Services {
 
                 // Place Holder
                 List<SmsServiceReference.PlaceHolderMessaggio> listPH = GetPlaceHolder(telDestArr, testoSMS);
+                SmsServiceReference.PlaceHolderMessaggio[] SmsPlaceHolder = null;
+                if (listPH != null && listPH.Count > 0) {
+                    SmsPlaceHolder = listPH.ToArray();
+                }
 
                 // Login
                 SmsServiceReference.Login login = new SmsServiceReference.Login();
@@ -141,7 +145,7 @@ namespace Laser.Orchard.Mobile.Services {
                 login.Password = smsSettings.WsPassword;
                 login.DriverId = smsSettings.MamDriverIdentifier;
 
-                var result = _service.SendSMS(login, sms, listPH.ToArray());
+                var result = _service.SendSMS(login, sms, SmsPlaceHolder);
 
                 //Log.Info(Metodo + " Inviato SMS ID: " + idSmsComponent);
                 bRet = result;
@@ -215,7 +219,7 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         public string GetReportSmsStatus(string IdSMS) {
-            string reportStatus = "prova";
+            string reportStatus = null;
 
             //Specify the binding to be used for the client.
             var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
