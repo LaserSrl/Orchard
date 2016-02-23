@@ -31,7 +31,6 @@ using Newtonsoft.Json.Linq;
 using Orchard.Environment.Configuration;
 using System.Web;
 
-
 namespace Laser.Orchard.MailCommunication.Handlers {
 
 
@@ -129,7 +128,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
 
                     // ricava i settings e li invia tramite FTP
                     var templateId = ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id;
-                    Dictionary<string, object> settings = GetSettings(content, templateId);
+                    Dictionary<string, object> settings = GetSettings(content, templateId, part);
                     SendSettings(settings, part.Id);
 
                     // impagina e invia i recipiens tramite FTP
@@ -160,7 +159,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
             });
         }
 
-        private Dictionary<string, object> GetSettings(dynamic contentModel, int templateId)
+        private Dictionary<string, object> GetSettings(dynamic contentModel, int templateId, MailCommunicationPart part)
         {
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = _orchardServices.ContentManager.Get<TemplatePart>(templateId);
@@ -176,6 +175,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                                         : ":" + _orchardServices.WorkContext.HttpContext.Request.Url.Port);
             var dynamicModel = new
             {
+                WorkContext = _orchardServices.WorkContext,
                 Content = contentModel,
                 Urls = new
                 {
@@ -190,6 +190,21 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 }.ToExpando()
             };
             templatectx.Model = dynamicModel;
+
+            Dictionary<string, object> similViewBag = new Dictionary<string, object>();
+            similViewBag.Add("CampaignLink", _communicationService.GetCampaignLink("Email", part));
+
+            // converte similViewBag in un oggetto DynamicViewBag richiesto dal parser Razor
+            RazorEngine.Templating.DynamicViewBag vb = new RazorEngine.Templating.DynamicViewBag();
+            try
+            {
+                foreach (string key in ((Dictionary<string, object>)similViewBag).Keys)
+                {
+                    vb.AddValue(key, ((IDictionary<string, object>)similViewBag)["CampaignLink"]);
+                }
+            }
+            catch { }
+            templatectx.ViewBag = vb;
 
             var body = _templateService.ParseTemplate(template, templatectx);
             var subject = (contentModel as ContentItem).As<TitlePart>().Title;
