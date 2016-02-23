@@ -1,12 +1,15 @@
-﻿    using Facebook;
+﻿using Facebook;
 using Laser.Orchard.Facebook.Models;
 using Laser.Orchard.Facebook.ViewModels;
 using Orchard;
+using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.UI.Notify;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web.Hosting;
 
 namespace Laser.Orchard.Facebook.Services {
 
@@ -32,12 +35,14 @@ namespace Laser.Orchard.Facebook.Services {
         private readonly INotifier _notifier;
         private readonly IOrchardServices _orchardServices;
         private readonly IWorkContextAccessor _workContext;
+        private readonly ShellSettings _shellSettings;
 
-        public FacebookService(IOrchardServices orchardServices, INotifier notifier, IWorkContextAccessor workContext) {
+        public FacebookService(ShellSettings shellSettings,IOrchardServices orchardServices, INotifier notifier, IWorkContextAccessor workContext) {
             _orchardServices = orchardServices;
             _notifier = notifier;
             T = NullLocalizer.Instance;
             _workContext = workContext;
+            _shellSettings = shellSettings;
         }
 
         public List<FacebookAccountPart> GetValidFacebookAccount() {
@@ -61,6 +66,8 @@ namespace Laser.Orchard.Facebook.Services {
                         accessToken = Faccount.PageToken;
                         pageId = "";
                     }
+
+
                     var objFacebookClient = new FacebookClient(accessToken);
                     var parameters = new Dictionary<string, object>();
                     if (!string.IsNullOrEmpty(message.Message))
@@ -71,10 +78,26 @@ namespace Laser.Orchard.Facebook.Services {
                         parameters["description"] = message.Description;
                     if (!string.IsNullOrEmpty(message.Name))
                         parameters["name"] = message.Name;
-                    if (!string.IsNullOrEmpty(message.Picture))
-                        parameters["picture"] = message.Picture;
-                    if (!string.IsNullOrEmpty(message.Link))
+                    if (!string.IsNullOrEmpty(message.Link)) {
                         parameters["link"] = message.Link;
+                        if (!string.IsNullOrEmpty(message.Picture))
+                            parameters["picture"] = message.Picture;
+                    }
+                    else {
+                        if (!string.IsNullOrEmpty(message.Picture)) {
+                            var mediaPath = HostingEnvironment.IsHosted
+                                         ? HostingEnvironment.MapPath("~/Media/") ?? ""
+                                         : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
+                            string physicalPath = mediaPath + _shellSettings.Name + "\\" + message.Picture;
+                            byte[] photo = System.IO.File.ReadAllBytes(physicalPath);
+                            parameters["source"] = new FacebookMediaObject {
+                                ContentType = "image/jpeg",
+                                FileName = Path.GetFileName("ffdsfsa")
+                            }.SetValue(photo);
+                        }
+                    }
+                 
+                    
                     if (pageId != "") {
                         pageId += "/";
                     }

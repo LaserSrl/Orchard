@@ -94,6 +94,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             _notifier.Add(NotifyType.Information, T("Contact saved"));
             return RedirectToAction("Edit", new { id = content.Id });
         }
+
         [HttpPost]
         [Admin]
         public ActionResult Remove(Int32 id) {

@@ -9,11 +9,15 @@ using Orchard.ContentManagement;
 using Orchard.UI.Notify;
 using Orchard.Localization;
 using System;
+using System.Web.Hosting;
+using System.IO;
+using Orchard.Environment.Configuration;
 
 namespace Laser.Orchard.Facebook.Handlers {
 
     public class FacebookPostHandler : ContentHandler {
         private readonly IFacebookService _facebookService;
+
         private readonly INotifier _notifier;
         public Localizer T { get; set; }
         private readonly IOrchardServices _orchardServices;
@@ -21,7 +25,7 @@ namespace Laser.Orchard.Facebook.Handlers {
             _facebookService = facebookService;
             _orchardServices = orchardServices;
             _notifier=notifier;
-            T = NullLocalizer.Instance;
+              T = NullLocalizer.Instance;
             Filters.Add(StorageFilter.For(repository));
             OnPublished<FacebookPostPart>((context, facebookpart) => {
                 try {
@@ -50,9 +54,11 @@ namespace Laser.Orchard.Facebook.Handlers {
                         }
                         else
                             Fvm.Link = facebookpart.FacebookLink;
+
                         Fvm.Message = facebookpart.FacebookMessage;
                         Fvm.Name = facebookpart.FacebookName;
-                        Fvm.Picture = facebookpart.FacebookPicture;
+            
+                            Fvm.Picture = facebookpart.FacebookPicture;
                         if (facebookpart.SendOnNextPublish && !facebookpart.FacebookMessageSent) {
                             ResponseAction rsp = _facebookService.PostFacebook(Fvm, facebookpart);
                             if (rsp.Success) {

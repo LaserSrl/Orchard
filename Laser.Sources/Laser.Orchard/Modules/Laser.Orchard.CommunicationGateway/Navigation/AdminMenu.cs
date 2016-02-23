@@ -38,7 +38,7 @@ namespace Laser.Orchard.CommunicationGateway.Navigation {
                      .Caption(T("Flash Advertising"))
                           .Position("1.062")
                             .Action("Index", "AdvertisingAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = -10 })
-                    .Permission(Permissions.ManageCampaigns)
+                    .Permission(Permissions.ManageCommunicationAdv)
                             //   .LocalNav()
                  )
                  .Add(sub3 => sub3

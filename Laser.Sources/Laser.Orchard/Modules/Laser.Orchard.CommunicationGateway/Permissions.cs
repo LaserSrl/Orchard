@@ -5,9 +5,9 @@ using System.Collections.Generic;
 namespace Laser.Orchard.CommunicationGateway {
 
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageCampaigns = new Permission { Description = "Manage Comunication Campaigns", Name = "ManageCampaigns" };
-        public static readonly Permission ManageCommunicationAdv = new Permission { Description = "Manage Comunication Messages", Name = "ManageCommunicationAdv" };
-        public static readonly Permission ManageContact = new Permission { Description = "Manage Comunication Contact", Name = "ManageContact" };
+        public static readonly Permission ManageCampaigns = new Permission { Description = "Manage Comunication Campaigns", Name = "ManageCampaigns"};
+        public static readonly Permission ManageCommunicationAdv = new Permission { Description = "Manage Comunication Messages", Name = "ManageCommunicationAdv", ImpliedBy = new[] {ManageCampaigns} };
+        public static readonly Permission ManageContact = new Permission { Description = "Manage Comunication Contact", Name = "ManageContact", ImpliedBy = new[] { ManageCampaigns } };
         public static readonly Permission ShowMenuCommunication = new Permission { Description = "Show Menu Communication", Name = "ShowMenuCommunication", ImpliedBy = new[] { ManageCampaigns, ManageCommunicationAdv, ManageContact } };
 
 

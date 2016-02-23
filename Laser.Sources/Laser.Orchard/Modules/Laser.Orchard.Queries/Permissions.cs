@@ -6,7 +6,7 @@ namespace Laser.Orchard.Queries {
 
     public class Permissions : IPermissionProvider {
      //   public static readonly Permission CustomQuery = new Permission { Description = "Manage CustomQuery", Name = "CustomQuery" };
-        public static readonly Permission UserQuery = new Permission { Description = "Manage CustomQuery", Name = "UserQuery" };
+        public static readonly Permission UserQuery = new Permission { Description = "Manage UserQuery", Name = "UserQuery"} ;
 
         public virtual Feature Feature { get; set; }
 

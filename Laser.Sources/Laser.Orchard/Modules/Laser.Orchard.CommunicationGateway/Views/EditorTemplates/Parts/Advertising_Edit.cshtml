@@ -6,6 +6,10 @@
     <script type="text/javascript">
         function GetMessage() {
             message = "<ul>";
+            if (($("#CommunicationAdvertisingPart_UrlLinked_Value").val == "" || $("#CommunicationAdvertisingPart_UrlLinked_Value").val() == null) && ($("#CommunicationAdvertisingPart.ContentLinked.SelectedIds").val == "" || $("#CommunicationAdvertisingPart.ContentLinked.SelectedIds").val() == null)) {
+                message = "<li><span style='color:red;font-weight:bold'><i class='fa fa-exclamation-triangle'></i><span>Campaign link not inserted</li>";
+            }
+            
             messageSomething=false;
             try{
                 if ($("#Laser_Orchard_Facebook_SendOnNextPublish").is(':checked') && $("#Laser_Orchard_Facebook_FacebookMessageSent").val() != "True" && $("#Laser_Orchard_Facebook_SelectedList").val()!=null) {

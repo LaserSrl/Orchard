@@ -18,7 +18,7 @@ namespace Laser.Orchard.Twitter.Navigation {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(item => item
                 .Caption(T("Social Twitter Account"))
-                .Position("1.07")
+                .Position("1.064")
                 .Action("Index", "TwitterAccount", new { area = "Laser.Orchard.Twitter" })
                 .Permission(Permissions.ManageTwitterAccount)
        );

@@ -87,7 +87,7 @@ namespace Laser.Orchard.Queries.Controllers {
         }
 
         public ActionResult Delete(int id) {
-            if (!_orchardServices.Authorizer.Authorize(Permissions.UserQuery, T("Not authorized to manage queries")))
+            if (!_orchardServices.Authorizer.Authorize(TestPermission, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var query = _queryService.GetQuery(id);
@@ -104,7 +104,7 @@ namespace Laser.Orchard.Queries.Controllers {
 
         [Admin]
         public ActionResult Edit(int id) {
-            if (!_orchardServices.Authorizer.Authorize(Permissions.UserQuery, T("Not authorized to edit queries")))
+            if (!_orchardServices.Authorizer.Authorize(TestPermission, T("Not authorized to edit queries")))
                 return new HttpUnauthorizedResult();
 
             var query = _queryService.GetQuery(id);
