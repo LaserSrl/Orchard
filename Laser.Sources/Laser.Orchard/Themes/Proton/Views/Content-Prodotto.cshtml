@@ -55,6 +55,7 @@
                     <span class="image-overlay-bg"><a href="@imageMediaPart.MediaUrl" data-rel="prettyPhoto[portfolio-slider]" title="@imageMediaPart.Title" class="image-lightbox"></a></span>
                 </li>
             }
+
         </ul>
     </section>
     <!-- End Portfolio Detail Slider -->
@@ -76,8 +77,15 @@
     <!-- End Portfolio Detail Description -->
 
     <div class="clearfix"></div>
+    @if (Model.ContentItem.Prodotto.Video != null && Model.ContentItem.Prodotto.Video.Ids.Length > 0) {
+        <section class="span12 portfolio-related">
+            <h3 class="section-title">@Model.ContentItem.Prodotto.Video.ContentItems[0].TitlePart.Title</h3>
 
-    @*<!-- Related Portfolio -->
+            <iframe width="560" height="315" src="@Model.ContentItem.Prodotto.Video.ContentItems[0].YoutubeVideo.VideoUrl.Value" frameborder="0" allowfullscreen></iframe>
+        </section>
+    }
+
+@*<!-- Related Portfolio -->
     <section class="span12 portfolio-related">
 
         <h3 class="section-title">Related Works</h3>

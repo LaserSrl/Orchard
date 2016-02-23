@@ -1,0 +1,7 @@
+﻿@{
+    string name = Model.ContentField.DisplayName;
+}
+
+@if (HasText(name) && HasText(Model.Value)) {
+    <iframe width="560" height="315" src="@Model.Value" frameborder="0" allowfullscreen></iframe>
+}
