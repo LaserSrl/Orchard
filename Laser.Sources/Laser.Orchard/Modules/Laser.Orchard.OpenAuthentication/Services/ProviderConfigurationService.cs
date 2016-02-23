@@ -30,7 +30,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         }
 
         public ProviderConfigurationRecord Get(string providerName) {
-            return _repository.Get(o => o.ProviderName == providerName);
+            return _repository.Fetch(o => o.ProviderName == providerName).FirstOrDefault();
+           //return _repository.Get(o => o.ProviderName == providerName);
         }
 
         public void Delete(int id) {

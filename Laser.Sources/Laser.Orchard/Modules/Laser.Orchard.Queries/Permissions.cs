@@ -5,14 +5,14 @@ using System.Collections.Generic;
 namespace Laser.Orchard.Queries {
 
     public class Permissions : IPermissionProvider {
-        public static readonly Permission CustomQuery = new Permission { Description = "Manage CustomQuery", Name = "CustomQuery" };
+     //   public static readonly Permission CustomQuery = new Permission { Description = "Manage CustomQuery", Name = "CustomQuery" };
         public static readonly Permission UserQuery = new Permission { Description = "Manage CustomQuery", Name = "UserQuery" };
 
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new[] {
-                CustomQuery,
+      //          CustomQuery,
                 UserQuery
             };
         }
@@ -21,7 +21,8 @@ namespace Laser.Orchard.Queries {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                 Permissions = new[] {CustomQuery,UserQuery}
+                // Permissions = new[] {CustomQuery,UserQuery}
+                   Permissions = new[] {UserQuery}
                 },
                 new PermissionStereotype {
                     Name = "Editor",

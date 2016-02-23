@@ -56,13 +56,11 @@
         });
 
         $(function () {
-            $('#sms-comm-container').on('mousedown mouseup mouseover mousemove mouseout', {
-                maxLength: '@Model.MaxLenghtSms',
-                txtTesto: $('#txtTesto'),
-                lblnumeroMessaggi: $('#lblnumeroMessaggi'),
-                lblnumeroChar: $('#lblnumeroChar'),
-                shortlinkExist: '@Model.ShortlinkExist'
-            }, ControllaMessaggio);
+            $("#tab-folder-container ul li a").on('click', function () {
+                if ($(this).attr("href") == '#sms-comm-container') {
+                    $('#txtTesto').focus();
+                }
+            });
         });
 
         $(function () {

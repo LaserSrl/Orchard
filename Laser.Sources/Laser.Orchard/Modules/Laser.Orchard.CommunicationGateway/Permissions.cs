@@ -8,6 +8,8 @@ namespace Laser.Orchard.CommunicationGateway {
         public static readonly Permission ManageCampaigns = new Permission { Description = "Manage Comunication Campaigns", Name = "ManageCampaigns" };
         public static readonly Permission ManageCommunicationAdv = new Permission { Description = "Manage Comunication Messages", Name = "ManageCommunicationAdv" };
         public static readonly Permission ManageContact = new Permission { Description = "Manage Comunication Contact", Name = "ManageContact" };
+        public static readonly Permission ShowMenuCommunication = new Permission { Description = "Show Menu Communication", Name = "ShowMenuCommunication", ImpliedBy = new[] { ManageCampaigns, ManageCommunicationAdv, ManageContact } };
+
 
         public virtual Feature Feature { get; set; }
 
@@ -15,7 +17,8 @@ namespace Laser.Orchard.CommunicationGateway {
             return new[] {
                 ManageCampaigns,
                 ManageCommunicationAdv,
-                ManageContact
+                ManageContact,
+                ShowMenuCommunication
             };
         }
 
@@ -23,7 +26,7 @@ namespace Laser.Orchard.CommunicationGateway {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                 Permissions = new[] {ManageCampaigns,ManageCommunicationAdv,ManageContact}
+                 Permissions = new[] {ManageCampaigns,ManageCommunicationAdv,ManageContact,ShowMenuCommunication}
                 },
                 new PermissionStereotype {
                     Name = "Editor",

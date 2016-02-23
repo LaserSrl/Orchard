@@ -118,6 +118,11 @@ select, textarea, input.text, input.textMedium, input.text-medium, input.text-sm
     color: #3b829a !important;
 }
 
+fieldset.taxonomy-wrapper .expando-glyph {
+    position: initial;
+    display: inline-block;
+}
+
 #page-title {
     color: #3b829a !important;
 }
