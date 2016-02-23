@@ -215,10 +215,12 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
 
                 if (pickerField != null) {
-                    var firstItem = pickerField.ContentItems.FirstOrDefault();
-                    if (firstItem != null) {
-                        linkExist = true;
-                    }
+                    try {
+                        var firstItem = pickerField.ContentItems.FirstOrDefault();
+                        if (firstItem != null) {
+                            linkExist = true;
+                        }
+                    } catch { }
                 }
             }
 
