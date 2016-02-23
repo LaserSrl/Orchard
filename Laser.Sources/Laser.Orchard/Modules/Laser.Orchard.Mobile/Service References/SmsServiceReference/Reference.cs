@@ -416,6 +416,9 @@ namespace Laser.Orchard.Mobile.SmsServiceReference {
         private Laser.Orchard.Mobile.SmsServiceReference.enumProtocollo ProtocolloField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MultialiasField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private Laser.Orchard.Mobile.SmsServiceReference.ArrayOfString ListaAliasField;
         
         private int MaxLenghtSmsField;
@@ -444,6 +447,19 @@ namespace Laser.Orchard.Mobile.SmsServiceReference {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
+        public string Multialias {
+            get {
+                return this.MultialiasField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MultialiasField, value) != true)) {
+                    this.MultialiasField = value;
+                    this.RaisePropertyChanged("Multialias");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=2)]
         public Laser.Orchard.Mobile.SmsServiceReference.ArrayOfString ListaAlias {
             get {
                 return this.ListaAliasField;
@@ -456,7 +472,7 @@ namespace Laser.Orchard.Mobile.SmsServiceReference {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=2)]
+        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=3)]
         public int MaxLenghtSms {
             get {
                 return this.MaxLenghtSmsField;

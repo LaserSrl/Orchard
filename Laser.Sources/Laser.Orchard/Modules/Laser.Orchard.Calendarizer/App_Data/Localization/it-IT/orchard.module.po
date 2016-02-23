@@ -1,0 +1,94 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2016 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.Calendarizer/Views/DefinitionTemplates/CalendarizerSettings.cshtml"
+msgid "Use Date and Time"
+msgstr "Usa Data e Ora"
+
+msgctxt "~/Modules/Laser.Orchard.Calendarizer/Views/EditorTemplates/Parts/Scheduler.cshtml"
+msgid "All days"
+msgstr "Tutti i giorni"
+
+msgctxt "~/Modules/Laser.Orchard.Calendarizer/Views/EditorTemplates/Parts/Scheduler.cshtml"
+msgid "From date"
+msgstr "Dalla data"
+
+msgctxt "~/Modules/Laser.Orchard.Calendarizer/Views/EditorTemplates/Parts/Scheduler.cshtml"
+msgid "Scheduling infos"
+msgstr "Informazioni di pianificazione"
+
+msgctxt "~/Modules/Laser.Orchard.Calendarizer/Views/EditorTemplates/Parts/Scheduler.cshtml"
+msgid "To date"
+msgstr "Alla data"
+
+msgctxt "~/Modules/Laser.Orchard.Calendarizer/Views/Parts/Scheduler.cshtml"
+msgid "Not yet defined"
+msgstr "Non ancora definito"
+
+msgctxt "~/Modules/Laser.Orchard.Calendarizer/Views/Parts/Scheduler.Summary.cshtml"
+msgid "Not yet defined"
+msgstr "Non ancora definito"
+
+msgctxt "~/Modules/Laser.Orchard.Calendarizer/Views/Parts/Scheduler.Summary.cshtml"
+msgid "When"
+msgstr "Quando"
+
+msgctxt "~/Modules/Laser.Orchard.Calendarizer/Views/Parts/Scheduler.SummaryAdmin.cshtml"
+msgid "Not yet defined"
+msgstr "Non ancora definito"
+
+msgctxt "~/Modules/Laser.Orchard.Calendarizer/Views/Parts/Scheduler.SummaryAdmin.cshtml"
+msgid "When"
+msgstr "Quando"
+
+msgctxt "Laser.Orchard.Calendarizer.Drivers.SchedulerPartDriver"
+msgid "Cannot Update!"
+msgstr "Impossibile aggiornare!"
+
+msgctxt "Laser.Orchard.Calendarizer.Pojections.TimeSpanFilter"
+msgid "Calendar"
+msgstr "Calendario"
+
+msgctxt "Laser.Orchard.Calendarizer.Pojections.TimeSpanFilter"
+msgid "Content Items scheduled in a range of date/time"
+msgstr "Contenuti pianificati in un intervallo di data/ora"
+
+msgctxt "Laser.Orchard.Calendarizer.Pojections.TimeSpanFilter"
+msgid "DateTime range"
+msgstr "Intervallo DateTime"
+
+msgctxt "Laser.Orchard.Calendarizer.Pojections.TimeSpanForm"
+msgid "For next n-days"
+msgstr "Per i prossimi n giorni"
+
+msgctxt "Laser.Orchard.Calendarizer.Pojections.TimeSpanForm"
+msgid "Number of days from today."
+msgstr "Numero di giorni da oggi."
+
+msgctxt "Laser.Orchard.Calendarizer.Pojections.TimeSpanForm"
+msgid "Number of days to query."
+msgstr "Numero di giorni da ricercare."
+
+msgctxt "Laser.Orchard.Calendarizer.Pojections.TimeSpanForm"
+msgid "Starting from date (Days from today)"
+msgstr "A partire dalla data (Numero di giorni da oggi)"
+
+msgctxt "Laser.Orchard.Calendarizer.Projections.TimeSpanSortCriterionProvider"
+msgid "Calendar"
+msgstr "Calendario"
+
+msgctxt "Laser.Orchard.Calendarizer.Projections.TimeSpanSortCriterionProvider"
+msgid "Ordered by {0}, ascending"
+msgstr "Ordinato per {0}, crescente"
+
+msgctxt "Laser.Orchard.Calendarizer.Projections.TimeSpanSortCriterionProvider"
+msgid "Starting date"
+msgstr "Data di partenza"
+

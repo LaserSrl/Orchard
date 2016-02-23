@@ -216,6 +216,7 @@
     <Compile Include="Controllers\TaxonomiePushController.cs" />
     <Compile Include="Drivers\MobileContactPartDriver.cs" />
     <Compile Include="Drivers\SmsGatewayPartDriver.cs" />
+    <Compile Include="Drivers\SmsSettingsPartDriver.cs" />
     <Compile Include="Drivers\UserPwdRecoveryPartDriver.cs" />
     <Compile Include="Feature\MobileCommunicationImportFeature.cs" />
     <Compile Include="Feature\SmsCommunicationImportFeature.cs" />
