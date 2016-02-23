@@ -2,6 +2,7 @@
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Orchard;
+using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
@@ -399,7 +400,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     if (!_contentExtensionService.HasPermission(tipoContent, Methods.Post))
                         return _utilsServices.GetResponse(ResponseType.UnAuthorized);
                 }
-                _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.Draft);// se non faccio il create poi non vengono salvati i field
+                _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.DraftRequired);// se non faccio il create poi non vengono salvati i field
                 validateMessage = ValidateMessage(NewOrModifiedContent, "Created");
             }
             if (string.IsNullOrEmpty(validateMessage))
@@ -420,12 +421,12 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     }
                     validateMessage = ValidateMessage(NewOrModifiedContent, "");
                     if (string.IsNullOrEmpty(validateMessage)) {
-                        _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.DraftRequired);
+                    //    _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.DraftRequired);
                     }
                     else {
                         rsp = _utilsServices.GetResponse(ResponseType.None, validateMessage);
                     }
-                    if (((dynamic)NewOrModifiedContent).AutoroutePart != null) {
+                    if (NewOrModifiedContent.As<AutoroutePart>() != null) {
                         ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
                         _autorouteService.Value.ProcessPath(((dynamic)NewOrModifiedContent).AutoroutePart);
                         _autorouteService.Value.PublishAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
