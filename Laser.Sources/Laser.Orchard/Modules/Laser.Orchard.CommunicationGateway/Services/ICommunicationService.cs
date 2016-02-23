@@ -184,9 +184,12 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     if (firstItem != null) {
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
                         link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
+                    } else {
+                        return "";
                     }
-                } else
+                } else {
                     return "";
+                }
             }
 
             string linkelaborated = ElaborateLink(link, CampaignSource, CampaignMedium, CampaignTerm, CampaignContent, CampaignName);
@@ -212,10 +215,12 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
 
                 if (pickerField != null) {
-                    var firstItem = pickerField.ContentItems.FirstOrDefault();
-                    if (firstItem != null) {
-                        linkExist = true;
-                    }
+                    try {
+                        var firstItem = pickerField.ContentItems.FirstOrDefault();
+                        if (firstItem != null) {
+                            linkExist = true;
+                        }
+                    } catch { }
                 }
             }
 
