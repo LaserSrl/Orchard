@@ -7,6 +7,7 @@ using System.Data;
 using Laser.Orchard.ChartaWS.ChartaWEB;
 using Laser.Orchard.Commons.Services;
 using System.Text;
+using System.Globalization;
 
 
 namespace ChartaWEB
@@ -14,9 +15,6 @@ namespace ChartaWEB
     public class News
     {
         private static readonly ILog logger = LogManager.GetLogger("News");
-
-        public string BaseImagePath { get; set; }
-        public int NumLastMinute { get; set; }
 
         public static string ListaNews ()
         {
@@ -64,9 +62,15 @@ namespace ChartaWEB
                 //objTaNews.Dispose();
 
                 //***********************************************************
+                var culture = CultureInfo.InvariantCulture;
                 Perform perf = null;
                 var lista = new List<Perform>();
-                News objResult = new News();
+                string baseImagePath = "";
+                using (SupportTableAdapter tableAdapterSupport = new SupportTableAdapter())
+                {
+                    DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'baseImagePath'  ");
+                    baseImagePath = dr1[0]["value"].ToString();
+                }
                 using (ChartaDb.Charta.GetNewsDataTable objDtNews = new ChartaDb.Charta.GetNewsDataTable())
                 {
                     using (GetNewsTableAdapter objTaNews = new GetNewsTableAdapter())
@@ -95,47 +99,31 @@ namespace ChartaWEB
                             perf.IdEvento = dr.id_evento;
                             perf.Comune = dr.comune;
                             perf.Provincia = dr.provincia;
-                            perf.Data = dr.data;
-                            perf.Ora = dr.ora;
-                            perf.Img = dr.immagine_mini;
-                            perf.Lat = dr.LAT;
-                            perf.Lon = dr.LON;
+                            perf.DataEOra = DateTime.ParseExact(dr.data + dr.ora, "yyyyMMddHH.mm", culture);
+                            perf.Img = Util.ConcatUrlPath(baseImagePath, dr.immagine_mini);
+                            perf.Lat = decimal.Parse(dr.LAT, culture);
+                            perf.Lng = decimal.Parse(dr.LON, culture);
                             perf.Exact = dr.EXACT;
-
                             lista.Add(perf);
                         }
                     }
                 }
-                using (SupportTableAdapter tableAdapterSupport = new SupportTableAdapter())
-                {
-                    DataRow[] dr1 = tableAdapterSupport.GetData().Select("key = 'baseImagePath'  ");
-                    objResult.BaseImagePath = dr1[0]["value"].ToString();
-                }
-                objResult.NumLastMinute = lista.Count;
 
                 // serializza il risultato
-                System.Xml.Linq.XElement dump = null;
-                ObjectDumper dumper = new ObjectDumper(10, null, false, true, null);
-                dump = dumper.Dump(objResult, "reply");
                 var sb = new StringBuilder();
+                sb.Append("{\"m\":[{\"n\":\"Reply\",\"v\":\"Reply\"}], \"l\":[{"); // lista start
+                var dumper = new ObjectDumper(10, null, false, true, null);
+                var dump = dumper.Dump(lista.ToArray(), "News");
                 JsonConverter.ConvertToJSon(dump, sb, false, true);
-                sb.Insert(0, "{"); // json start
+                sb.Append("}]}"); // lista end
 
-                // aggiunge la lista
-                sb.Append(", \"l\":[{"); // lista start
-                ObjectDumper dumper2 = new ObjectDumper(10, null, false, true, null);
-                dump = dumper2.Dump(lista.ToArray(), "PerformList");
-                JsonConverter.ConvertToJSon(dump, sb, false, true);
-                sb.Append("}]"); // lista end
-
-                sb.Append("}"); // json end
                 string sReturn = sb.ToString().Replace("\t", " ");
                 return sReturn;
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
-                return Util.GestioneErrore("ListaLastMinute", "999", ex.Message);
+                return Util.GestioneErrore("ListaNews", "999", ex.Message);
             }
         }
     }

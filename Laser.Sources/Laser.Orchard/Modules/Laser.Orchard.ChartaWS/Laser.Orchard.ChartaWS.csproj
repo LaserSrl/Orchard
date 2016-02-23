@@ -116,6 +116,10 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Lib\ChartaDb.dll" />
+    <Content Include="Lib\EventViewer.dll" />
+    <Content Include="Lib\MobiPlusLib.dll" />
+    <Content Include="Lib\MovinBoxHandler.dll" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -124,6 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChartaWEB\Cat.cs" />
+    <Compile Include="ChartaWEB\City.cs" />
     <Compile Include="ChartaWEB\CityList.cs" />
     <Compile Include="ChartaWEB\Command.cs" />
     <Compile Include="ChartaWEB\GestioneDeviceToken.cs" />
@@ -144,7 +149,6 @@
     <Compile Include="ChartaWEB\SMS.cs" />
     <Compile Include="ChartaWEB\Spettacoli.cs" />
     <Compile Include="ChartaWEB\Spettacolo.cs" />
-    <Compile Include="ChartaWEB\TitoliAroundMe.cs" />
     <Compile Include="ChartaWEB\TitoliList.cs" />
     <Compile Include="ChartaWEB\Titolo.cs" />
     <Compile Include="ChartaWEB\Util.cs" />
@@ -160,9 +164,10 @@
       <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
       <Name>Laser.Orchard.Commons</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="packages.config" />
+    <ProjectReference Include="..\Laser.Orchard.Braintree\Laser.Orchard.Braintree.csproj">
+      <Project>{ddf6fdc9-29a3-43e6-8724-3ce9e26289b6}</Project>
+      <Name>Laser.Orchard.Braintree</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />
@@ -170,9 +175,7 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\ChartaSiteSettings.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Lib\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

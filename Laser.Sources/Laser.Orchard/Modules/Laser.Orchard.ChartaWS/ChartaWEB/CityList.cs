@@ -5,6 +5,7 @@ using log4net;
 using ChartaDb.ChartaTableAdapters;
 using Laser.Orchard.Commons.Services;
 using System.Text;
+using Laser.Orchard.ChartaWS.ChartaWEB;
 
 
 namespace ChartaWEB
@@ -18,6 +19,7 @@ namespace ChartaWEB
             try
             {
                 var lista = new List<string>();
+                City city = null;
                 using (CityListTableAdapter objTACity = new CityListTableAdapter())
                 {
                     using (ChartaDb.Charta.CityListDataTable objDtCity = objTACity.GetData())
@@ -42,16 +44,20 @@ namespace ChartaWEB
                     }
                 }
                 // serializza il risultato
-                System.Xml.Linq.XElement dump = null;
-                ObjectDumper dumper = new ObjectDumper(10, null, false, true, null);
+                //System.Xml.Linq.XElement dump = null;
+                //ObjectDumper dumper = new ObjectDumper(10, null, false, true, null);
                 var sb = new StringBuilder();
-                sb.Append("{"); // json start
-                sb.Append("\"l\":[{"); // lista start
-                dump = dumper.Dump(lista.ToArray(), "CityList");
-                JsonConverter.ConvertToJSon(dump, sb, false, true);
-                sb.Append("}]"); // lista end
-                sb.Append("}"); // json end
-                string sReturn = sb.ToString().Replace("\t", " ");
+                sb.Append("{\"m\":["); // json start
+
+                for (int idx = 0; idx < lista.Count; idx++)
+                {
+                    sb.AppendFormat("{{ \"n\":\"[{1}]\", \"v\":\"City\", \"m\":[ {{\"n\":\"Name\", \"v\":{0} }},{{\"n\":\"Sid\", \"v\":{0} }}]}}", Util.EncodeForJson(lista[idx]), idx); 
+                }
+
+                //dump = dumper.Dump(lista.ToArray(), "CityList");
+                //JsonConverter.ConvertToJSon(dump, sb, false, true);
+                sb.Append("]}"); // json end
+                string sReturn = sb.ToString().Replace("}{", "},{");
 
                 return sReturn;
             }

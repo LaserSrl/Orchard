@@ -70,6 +70,7 @@ namespace ChartaWEB
                         {
                             locInfo = new LocInfo();
                             locInfo.Id = dr.id_org;
+                            locInfo.Sid = "LocInfo-" + dr.id_org;
                             locInfo.IdOrg = dr.id_org;
                             locInfo.Code = dr.code;
                             locInfo.Nome = dr.nome;
@@ -97,8 +98,8 @@ namespace ChartaWEB
                 System.Xml.Linq.XElement dump = null;
                 ObjectDumper dumper = new ObjectDumper(10, null, false, true, null);
                 var sb = new StringBuilder();
-                sb.Append("{"); // json start
-                sb.Append("\"l\":[{"); // lista start
+                sb.Append("{\"m\":[{\"n\":\"Reply\", \"v\":\"Reply\"}]"); // json start
+                sb.Append(",\"l\":[{"); // lista start
                 dump = dumper.Dump(lista.ToArray(), "LocInfoList");
                 JsonConverter.ConvertToJSon(dump, sb, false, true);
                 sb.Append("}]"); // lista end
@@ -115,21 +116,35 @@ namespace ChartaWEB
 
         private static void serializzaLocinfoDistinct(int index, StringBuilder sb, LocInfoDistinct locInfoDistinct, List<string> lista)
         {
-            if (index > 0)
-            {
-                sb.Append("},{");
-            }
-            // serializza la categoria precedente
-            var dumper = new ObjectDumper(10, null, false, true, null);
-            var dump = dumper.Dump(locInfoDistinct, string.Format("[{0}]", index));
-            JsonConverter.ConvertToJSon(dump, sb, false, true);
+            //if (index > 0)
+            //{
+            //    sb.Append("},{");
+            //}
+            //// serializza la LocInfodistinct
+            //var dumper = new ObjectDumper(10, null, false, true, null);
+            //var dump = dumper.Dump(locInfoDistinct, string.Format("[{0}]", index));
+            //JsonConverter.ConvertToJSon(dump, sb, false, true);
 
-            // serializza le sottocategorie precedenti
-            sb.Append(",\"l\":[{"); // lista start
-            dumper = new ObjectDumper(10, null, false, true, null);
-            dump = dumper.Dump(lista.ToArray(), "Codici");
-            JsonConverter.ConvertToJSon(dump, sb, false, true);
-            sb.Append("}]"); // lista end
+            //// serializza i codici
+            //sb.Append(",\"l\":[{"); // lista start
+            //dumper = new ObjectDumper(10, null, false, true, null);
+            //dump = dumper.Dump(lista.ToArray(), "Codici");
+            //JsonConverter.ConvertToJSon(dump, sb, false, true);
+            //sb.Append("}]"); // lista end
+
+            // serializza la LocInfodistinct
+            sb.AppendFormat("{{\"n\":\"[{0}]\",\"v\":\"LocInfoDistinct\",\"m\":[", index);
+            sb.AppendFormat("{{\"n\":\"Nome\",\"v\":{0}}}", Util.EncodeForJson(locInfoDistinct.Nome));
+            sb.AppendFormat(",{{\"n\":\"Sid\",\"v\":{0}}}", Util.EncodeForJson(locInfoDistinct.Sid));
+            sb.AppendFormat(",{{\"n\":\"Comune\",\"v\":{0}}}", Util.EncodeForJson(locInfoDistinct.Comune));
+
+            // serializza i codici come attributi multipli
+            sb.Append(",{\"n\":\"Codici\",\"v\":\"Codice[]\",\"m\":[");
+            for (int idx = 0; idx < lista.Count; idx++)
+            {
+                sb.AppendFormat("{{\"n\":\"[{0}]\",\"v\":{1}}}", idx, Util.EncodeForJson(lista[idx]));
+            }
+            sb.Append("]}]}");
         }
 
         public static string ListaOrgInfoDistinct(string code, string comune, string provincia)
@@ -204,8 +219,8 @@ namespace ChartaWEB
                 List<string> lista = null;
                 LocInfoDistinct locInfoDistinct = null;
                 var sb = new StringBuilder();
-                sb.Append("{"); // json start
-                sb.Append("\"l\":[{ \"n\":\"LocInfoListDistinct\",\"v\":\"LocInfoDistinct[]\",\"m\":[{"); // lista start
+                sb.Append("{\"m\":[{\"n\":\"Reply\", \"v\":\"Reply\"}]"); // json start
+                sb.Append(",\"l\":[{ \"n\":\"LocInfoListDistinct\",\"v\":\"LocInfoDistinct[]\",\"m\":["); // lista start
                 using (LocInfoListDistinctTableAdapter objTALocInfo = new LocInfoListDistinctTableAdapter())
                 {
                     if (code == "") code = null;
@@ -216,15 +231,9 @@ namespace ChartaWEB
                     {
                         string lastNome = "";
                         string lastCom = "";
-                        //string comuni = "";
-
-                        //bool firstNome = true;
-                        //int NCount = 0;
-                        //string phN = "";
 
                         foreach (ChartaDb.Charta.LocInfoListDistinctRow dr in objDTLoc)
                         {
-                            //phN = "PH_N" + NCount.ToString();
                             if ((dr.nome.CompareTo(lastNome) != 0) || (dr.comune.CompareTo(lastCom) != 0)) // rottura di chiave
                             {
                                 if (lastNome != "")
@@ -237,6 +246,7 @@ namespace ChartaWEB
                                 locInfoDistinct = new LocInfoDistinct();
                                 locInfoDistinct.Nome = dr.nome;
                                 locInfoDistinct.Comune = dr.comune;
+                                locInfoDistinct.Sid = "LocInfoDistinct-" + dr.nome;
                                 lastNome = dr.nome;
                                 lastCom = dr.comune;
                                 lista = new List<string>();
@@ -247,10 +257,10 @@ namespace ChartaWEB
                         serializzaLocinfoDistinct(index, sb, locInfoDistinct, lista);
                     }
                 }
-                sb.Append("}]}]"); // lista end
+                sb.Append("]}]"); // lista end
                 sb.Append("}"); // json end
 
-                string sReturn = sb.ToString().Replace("\t", " ");
+                string sReturn = sb.ToString().Replace("}{", "},{");
                 return sReturn;
             }
             catch (Exception ex)

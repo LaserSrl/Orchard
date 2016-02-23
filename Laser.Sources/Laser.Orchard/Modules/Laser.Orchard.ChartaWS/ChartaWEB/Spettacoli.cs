@@ -90,8 +90,7 @@ namespace ChartaWEB
                                 spettacolo = new Spettacolo();
                                 spettacolo.PCode = dr.pcode;
                                 spettacolo.VCode = dr.vcode;
-                                spettacolo.Date = dr.date;
-                                spettacolo.Time = dr.time;
+                                spettacolo.DateAndTime = DateTime.ParseExact(dr.date + dr.time, "yyyyMMddHH.mm", culture);
                                 spettacolo.Title = dr.title;
                                 spettacolo.StartTime = dr.start_time;
                                 spettacolo.Retired = dr.retired;
@@ -107,15 +106,13 @@ namespace ChartaWEB
                 }
 
                 // serializza il risultato
-                System.Xml.Linq.XElement dump = null;
-                ObjectDumper dumper = new ObjectDumper(10, null, false, true, null);
                 var sb = new StringBuilder();
-                sb.Append("{"); // json start
-                sb.Append("\"l\":[{"); // lista start
-                dump = dumper.Dump(lista.ToArray(), "Spettacoli");
+                sb.Append("{\"m\":[{\"n\":\"Reply\",\"v\":\"Reply\"}], \"l\":[{"); // lista start
+                var dumper = new ObjectDumper(10, null, false, true, null);
+                var dump = dumper.Dump(lista.ToArray(), "Spettacoli");
                 JsonConverter.ConvertToJSon(dump, sb, false, true);
-                sb.Append("}]"); // lista end
-                sb.Append("}"); // json end
+                sb.Append("}]}"); // lista end
+
                 string sReturn = sb.ToString().Replace("\t", " ");
                 return sReturn;
             }

@@ -37,6 +37,24 @@ namespace Laser.Orchard.ChartaWS
                     }
                 },
                 new HttpRouteDescriptor {
+                    Priority = 6,
+                    RouteTemplate = "charta-token",
+                    Defaults = new {
+                        area = "Laser.Orchard.ChartaWS",
+                        controller = "ChartaApi",
+                        action = "GetClientToken"
+                    }
+                },
+                new HttpRouteDescriptor {
+                    Priority = 6,
+                    RouteTemplate = "charta-pay",
+                    Defaults = new {
+                        area = "Laser.Orchard.ChartaWS",
+                        controller = "ChartaApi",
+                        action = "Pay"
+                    }
+                },
+                new HttpRouteDescriptor {
                     Priority = 7,
                     RouteTemplate = "charta-paypalnotification",
                     Defaults = new {

@@ -69,6 +69,7 @@ namespace ChartaWEB
                         foreach (ChartaDb.Charta.OrgInfoListRow dr in objDtOrgInfo)
                         {
                             orgInfo = new OrgInfo();
+                            orgInfo.Sid = "OrgInfo-" + dr.id_org;
                             orgInfo.Id = dr.id_org;
                             orgInfo.Nome = dr.nome;
                             orgInfo.Indirizzo = dr.indirizzo;
@@ -89,8 +90,8 @@ namespace ChartaWEB
                 System.Xml.Linq.XElement dump = null;
                 ObjectDumper dumper = new ObjectDumper(10, null, false, true, null);
                 var sb = new StringBuilder();
-                sb.Append("{"); // json start
-                sb.Append("\"l\":[{"); // lista start
+                sb.Append("{\"m\":[{\"n\":\"Reply\", \"v\":\"Reply\"}]"); // json start
+                sb.Append(",\"l\":[{"); // lista start
                 dump = dumper.Dump(lista.ToArray(), "OrgInfoList");
                 JsonConverter.ConvertToJSon(dump, sb, false, true);
                 sb.Append("}]"); // lista end

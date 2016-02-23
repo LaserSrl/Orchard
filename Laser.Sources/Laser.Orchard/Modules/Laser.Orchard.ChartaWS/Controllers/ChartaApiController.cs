@@ -17,6 +17,8 @@ using Orchard.ContentManagement;
 using Orchard.Email.Services;
 using System.Collections.Generic;
 using Laser.Orchard.ChartaWS.Models;
+using System.Globalization;
+using Laser.Orchard.Braintree.Services;
 
 namespace Laser.Orchard.ChartaWS.Controllers
 {
@@ -25,11 +27,13 @@ namespace Laser.Orchard.ChartaWS.Controllers
         private static readonly ILog logger = LogManager.GetLogger(typeof(ChartaApiController));
         private readonly IOrchardServices _orchardServices;
         private readonly IMessageService _messageService;
+        private readonly IBraintreeService _braintreeService;
 
-        public ChartaApiController(IOrchardServices orchardServices, IMessageService messageService)
+        public ChartaApiController(IOrchardServices orchardServices, IMessageService messageService, IBraintreeService braintreeService)
         {
             _orchardServices = orchardServices;
             _messageService = messageService;
+            _braintreeService = braintreeService;
         }
 
         public HttpResponseMessage Get()
@@ -210,7 +214,7 @@ namespace Laser.Orchard.ChartaWS.Controllers
 
             logger.Info("****** Fine gestione Chiamata");
 
-            // create response and return 
+            // restituisce il risultato
             var result = new HttpResponseMessage(HttpStatusCode.OK);
 
             // converte il risultato in formato json se necessario
@@ -307,9 +311,72 @@ namespace Laser.Orchard.ChartaWS.Controllers
                 message = "Code=[-3] Errore durante il trasferimento del file";
             }
 
-            // create response and return 
+            // restituisce l'esito 
             var result = new HttpResponseMessage(HttpStatusCode.OK);
             result.Content = new System.Net.Http.StringContent(message, Encoding.UTF8, "text/plain");
+            return result;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetClientToken()
+        {
+            var clientToken = _braintreeService.GetClientToken();
+
+            // restituisce il token
+            var result = new HttpResponseMessage(HttpStatusCode.OK);
+            result.Content = new System.Net.Http.StringContent(clientToken, Encoding.UTF8, "text/plain");
+            return result;
+        }
+
+        [HttpPost]
+        public HttpResponseMessage Pay()
+        {
+            string esito = "";
+            var locRequest = HttpContext.Current.Request;
+            string nonce = locRequest["payment_method_nonce"];
+            string sAmount = locRequest["amount"];
+            decimal amount = decimal.Parse(sAmount, CultureInfo.InvariantCulture);
+            Dictionary<string, string> customFields = new Dictionary<string, string>();
+
+            // TODO: aggiungere eventuali altri campi utilizzando i custom fields che però devono essere creati anche
+            // dal Control Panel di Braintree
+            //customFields.Add("invoiceid", "qweq");
+            //customFields.Add("prova", "9877");
+
+            var payResult = _braintreeService.Pay(nonce, amount, customFields);
+
+            // salva le infomazioni sulla transazione nel db
+            using (ChartaDb.Charta.PaymentsLogDataTable dt = new ChartaDb.Charta.PaymentsLogDataTable())
+            {
+                var dr = dt.NewPaymentsLogRow();
+                dt.Rows.Add(dr);
+                dr.amount = payResult.Amount;
+                dr.authorization_code = payResult.AuthorizationCode;
+                dr.billing_address = payResult.BillingAddress;
+                dr.curency = payResult.CurrencyIsoCode;
+                dr.customer = payResult.Customer;
+                dr.details = payResult.Details;
+                dr.log_date = DateTime.Now;
+                dr.merchant_account_id = payResult.MerchantAccountId;
+                dr.order_id = payResult.OrderId;
+                dr.purchase_order_number = payResult.PurchaseOrderNumber;
+                dr.response_code = payResult.ResponseCode;
+                dr.response_text = payResult.ResponseText;
+                dr.status = payResult.Status;
+                dr.success = payResult.Success;
+                dr.transaction_id = payResult.TransactionId;
+                dr.type = payResult.Type;
+
+                using (ChartaDb.ChartaTableAdapters.PaymentsLogTableAdapter ta = new ChartaDb.ChartaTableAdapters.PaymentsLogTableAdapter())
+                {
+                    ta.Update(dt);
+                }
+            }
+
+            // restituisce l'esito 
+            esito = (payResult.Success) ? "OK" : "KO";
+            var result = new HttpResponseMessage(HttpStatusCode.OK);
+            result.Content = new System.Net.Http.StringContent(esito, Encoding.UTF8, "text/plain");
             return result;
         }
 
@@ -500,7 +567,7 @@ namespace Laser.Orchard.ChartaWS.Controllers
                 //EventViewer.EventViewer.EventViewerError("ChartaWEB PaypalNotification: " + ex.Message + " " + ex.StackTrace);
             }
 
-            // create response and return 
+            // restituisce l'esito a PayPal (richiesto dalle specifiche PayPal)
             var result = new HttpResponseMessage(HttpStatusCode.OK);
             result.Content = new System.Net.Http.StringContent(message, Encoding.UTF8, "text/plain");
             return result;
