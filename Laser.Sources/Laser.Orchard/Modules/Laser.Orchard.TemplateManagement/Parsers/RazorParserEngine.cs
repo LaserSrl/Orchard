@@ -53,7 +53,7 @@ namespace Laser.Orchard.TemplateManagement.Parsers {
         private static string BuildErrorContent(Exception ex, TemplatePart templatePart, TemplatePart layout) {
             var sb = new StringBuilder();
             var currentException = ex;
-
+            sb.AppendLine("Error On Template");
             while (currentException != null) {
                 sb.AppendLine(currentException.Message);
                 currentException = currentException.InnerException;
