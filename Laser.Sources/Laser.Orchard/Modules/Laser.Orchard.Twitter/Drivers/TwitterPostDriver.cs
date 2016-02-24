@@ -112,7 +112,7 @@ namespace Laser.Orchard.Twitter.Drivers {
                     else
                         vm.Title = part.TwitterTitle;
                     return ContentShape("Parts_TwitterPost_Detail",
-                        () => shapeHelper.Parts_TwitterPost_Detail(Twitter: vm, SendOnNextPublish: part.SendOnNextPublish));
+                        () => shapeHelper.Parts_TwitterPost_Detail(Twitter: vm, SendOnNextPublish: part.SendOnNextPublish, TwitterMessageSent: part.TwitterMessageSent));
                 }
                 else
                     return null;
