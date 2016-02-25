@@ -63,7 +63,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
 
         public bool AdvertisingIsAvailable(Int32 id) {
-            ContentItem ci = _orchardServices.ContentManager.Get(id);
+            ContentItem ci = _orchardServices.ContentManager.Get(id,VersionOptions.DraftRequired);
             if (ci.ContentType != "CommunicationAdvertising") {
                 return false;
             }
