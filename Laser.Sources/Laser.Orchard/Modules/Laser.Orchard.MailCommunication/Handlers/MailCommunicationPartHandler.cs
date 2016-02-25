@@ -160,7 +160,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                     }
                     else
                     {
-                        _notifier.Error(T("Error parsing template."));
+                        _notifier.Error(T("Error parsing mail template."));
                     }
                 }
             });
