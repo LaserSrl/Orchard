@@ -51,10 +51,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="Laser.Orchard.Commons, Version=1.0.5841.19763, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\Laser.Orchard.Commons\bin\Debug\Laser.Orchard.Commons.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Orchard.ContentPicker">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPicker\bin\Orchard.ContentPicker.dll</HintPath>
@@ -122,6 +118,10 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
+      <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
+      <Name>Laser.Orchard.Commons</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.Queries\Laser.Orchard.Queries.csproj">
       <Project>{d494b57f-2ae6-460f-9785-565376409afc}</Project>
       <Name>Laser.Orchard.Queries</Name>
