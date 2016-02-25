@@ -49,9 +49,17 @@ namespace Laser.Orchard.Twitter.Handlers {
 
                     Fvm.AccountList = Twitterpart.AccountList;
                     if (Twitterpart.SendOnNextPublish && !Twitterpart.TwitterMessageSent) {
-                        ResponseAction rsp = _TwitterService.PostTwitter(Fvm);
-                        if (rsp.Success) {
-                            Twitterpart.TwitterMessageSent = true;
+                        if (Twitterpart.AccountList.Length == 0)
+                        {
+                            _notifier.Add(NotifyType.Warning, T("No Twitter account specified."));
+                        }
+                        else
+                        {
+                            ResponseAction rsp = _TwitterService.PostTwitter(Fvm);
+                            if (rsp.Success)
+                            {
+                                Twitterpart.TwitterMessageSent = true;
+                            }
                         }
                     }
                 } catch (Exception ex) {
