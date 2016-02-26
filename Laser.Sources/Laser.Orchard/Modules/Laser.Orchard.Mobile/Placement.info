@@ -11,7 +11,7 @@
   </Match>
   <Match ContentType="CommunicationAdvertising">
     <Match DisplayType="Summary">
-      <Place Parts_MobilePush="Content:3" />
+      <Place Parts_MobilePush="Content:3" Parts_SmsGateway_SummaryAdmin="4"/>
     </Match>
   </Match>
 </Placement>
