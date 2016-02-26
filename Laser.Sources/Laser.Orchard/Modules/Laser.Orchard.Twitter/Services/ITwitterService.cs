@@ -82,14 +82,14 @@ namespace Laser.Orchard.Twitter.Services {
                     if (!string.IsNullOrEmpty(message.Link))
                         realmessage += " " + message.Link;
                     if (string.IsNullOrEmpty(message.Picture)) {
-                        response = TwitterStatus.Update(accesstoken, realmessage.Trim());
+                        response = TwitterStatus.Update(accesstoken, realmessage.Trim() );
                     } else {
                         var mediaPath = HostingEnvironment.IsHosted
                                 ? HostingEnvironment.MapPath("~/Media/") ?? ""
                                 : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
                         string physicalPath = mediaPath + _shellsettings.Name + "\\" + message.Picture;
                         byte[] photo = System.IO.File.ReadAllBytes(physicalPath);
-                        response = TwitterStatus.UpdateWithMedia(accesstoken, realmessage.Trim(), photo, new StatusUpdateOptions() { UseSSL = true, APIBaseAddress = "http://api.twitter.com/1.1/" });
+                        response = TwitterStatus.UpdateWithMedia(accesstoken, realmessage.Trim(), photo, new StatusUpdateOptions() {  UseSSL = true, APIBaseAddress = "http://api.twitter.com/1.1/" });
                     }
                     if (response.Result != RequestResult.Success) {
                         if (response.Content != null)

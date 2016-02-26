@@ -155,9 +155,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Site.css" />
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
@@ -214,6 +211,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\TaxonomiePushController.cs" />
+    <Compile Include="Controllers\TransferDeliveryReportController.cs" />
     <Compile Include="Drivers\MobileContactPartDriver.cs" />
     <Compile Include="Drivers\SmsGatewayPartDriver.cs" />
     <Compile Include="Drivers\SmsSettingsPartDriver.cs" />
@@ -245,6 +243,7 @@
     <Compile Include="Services\SmsServices.cs" />
     <Compile Include="Models\SmsSettingsPart.cs" />
     <Compile Include="Settings\SmsSettingsPartHooks.cs" />
+    <Compile Include="ViewModels\DeliveryReportVM.cs" />
     <Compile Include="ViewModels\PhoneNumberViewModel.cs" />
     <Compile Include="ViewModels\SmsGatewayVM.cs" />
     <Compile Include="WorkFlows\PushEditForm.cs" />
@@ -283,6 +282,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Lib\" />
+    <Folder Include="Views\TransferDeliveryReport\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PushNotification\Index.cshtml" />

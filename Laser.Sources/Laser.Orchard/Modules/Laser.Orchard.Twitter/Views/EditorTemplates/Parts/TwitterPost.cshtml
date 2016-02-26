@@ -103,11 +103,7 @@
                     @foreach (var item in Model.ListOption) {
                         <option data-img-src="@item.ImageUrl" data-img-label="@item.Text" value="@item.Value" @(item.Selected)>@item.Text</option>
                     }
-
                 </select>
-      
-        
-        
             }
             }
         </fieldset>
@@ -124,7 +120,7 @@
                 <div class="message message-Error">@T("This Twitter message has been already posted. You will be able to edit and save it, but it will not be posted anymore on next publish.")</div>
             }
         </fieldset>
-    }
+    }  
 </div>
 <div class="tab-folder">
     <a href="#twitter-comm-container"><i class="fa fa-twitter"></i>@T("Twitter")</a>
