@@ -14,23 +14,22 @@ foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/ExternalGuest"))
 
 XmlNodeList cognome = bookToModify.SelectNodes("cognome/textblock");
 if (cognome.Count > 0){
-cognome[0].ParentNode.InnerText = StripHTML(cognome[0].InnerText);
+cognome[0].ParentNode.InnerText = HttpUtility.HtmlDecode(StripHTML(cognome[0].InnerText));
 }
 
 XmlNodeList nome = bookToModify.SelectNodes("nome/textblock");
 if (nome.Count > 0){
-nome[0].ParentNode.InnerText = StripHTML(nome[0].InnerText);
+nome[0].ParentNode.InnerText = HttpUtility.HtmlDecode(StripHTML(nome[0].InnerText));
 }
-
 
 XmlNodeList desc1 = bookToModify.SelectNodes("desc1/textblock");
 if (desc1.Count > 0){
-desc1[0].ParentNode.InnerText = desc1[0].InnerText;
+desc1[0].ParentNode.InnerText = StripHTML(HttpUtility.HtmlDecode(desc1[0].InnerText));
 }
 
 XmlNodeList desc2 = bookToModify.SelectNodes("desc2/textblock");
 if (desc2.Count > 0){
-desc2[0].ParentNode.InnerText = desc2[0].InnerText;
+desc2[0].ParentNode.InnerText = HttpUtility.HtmlDecode(desc2[0].InnerText);
 }
 
 
