@@ -1,21 +1,27 @@
 ﻿@model Laser.Orchard.MailCommunication.Models.MailCommunicationPart
 @{
+    Script.Require("jQuery");
     Script.Require("rcswitcher").AtHead();
     Style.Require("rcswitcher").AtHead();
     bool disabledElements = Model.MailMessageSent;
 }
 @using (Script.Foot()) {
     <script type="text/javascript">
-        $(function () {
-@*                    @if (disabledElements) { 
-            <text>
-            $('#mail-comm-container :input').attr('readonly', 'readonly');
-            $('#mail-comm-container .button.add').remove();
-            $('#mail-comm-container .content-picker-remove').remove();
-            </text>
-                    }*@
+       
+        //$(document).ready(function () {
+        //    $.ajax({
+        //        url: '/Laser.Orchard/expoincitta/Laser.Orchard.MailCommunication/CountPanel/GetTotal/2978',
+        //     success: function (result) {
+        //         $("#mailcount").val(result.Total);
+        //     },
+        //     type: 'GET',
+        //     data: {format: 'json'},
+        // });
+        //});
 
 
+
+     $(function () {
             $('.rcswitcher-checkbox-mail').rcSwitcher({
                 theme: 'flat',
                 blobOffset: 1,
@@ -51,7 +57,8 @@
     @if (!disabledElements) { 
         @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-mail" }) 
         <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet sent.")
-    } else {
+    }
+    else {
         @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-mail", @disabled = "disabled" }) 
         <i class="fa fa-check-circle" style="color: green"></i> @T("Message already sent.")
     }
@@ -61,9 +68,10 @@
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.RecipientsNumber, T("Number of recipients").Text, new { @class = "forcheckbox" })
-    <span style="margin-left:20px;font-weight:bold">@Model.RecipientsNumber</span>
-</fieldset> 
+    <span style="margin-left: 20px; font-weight: bold">@Model.RecipientsNumber</span>
+</fieldset>
 <fieldset>
     @Html.LabelFor(m => m.SentMailsNumber, T("Number of sent mails").Text, new { @class = "forcheckbox" })
-    <span style="margin-left:20px;font-weight:bold">@Model.SentMailsNumber</span>
+    <span style="margin-left: 20px; font-weight: bold">@Model.SentMailsNumber</span>
 </fieldset>
+<input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotal", new { area = "Laser.Orchard.MailCommunication" })"/>

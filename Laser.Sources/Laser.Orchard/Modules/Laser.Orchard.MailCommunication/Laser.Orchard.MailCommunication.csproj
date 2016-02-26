@@ -123,6 +123,7 @@
     <Folder Include="Views\MailerResult\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CountPanelController.cs" />
     <Compile Include="Controllers\MailerResultController.cs" />
     <Compile Include="Controllers\MailerResultAPIController.cs" />
     <Compile Include="Drivers\MailCommunicationPartDriver.cs" />
