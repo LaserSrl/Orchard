@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using Orchard.UI.Notify;
 
 namespace Laser.Orchard.TemplateManagement.Activities {
     [OrchardFeature("Laser.Orchard.TemplateEmailActivities")]
@@ -24,6 +25,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
         private readonly IMessageService _messageService;
         private readonly IMembershipService _membershipService;
         private readonly ITemplateService _templateServices;
+        private readonly INotifier _notifier;
 
 
         public const string MessageType = "ActionTemplatedEmail";
@@ -32,12 +34,14 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             IMessageService messageService,
             IOrchardServices orchardServices,
             IMembershipService membershipService,
-            ITemplateService templateServices) {
+            ITemplateService templateServices,
+            INotifier notifier) {
             _messageService = messageService;
             _orchardServices = orchardServices;
             _membershipService = membershipService;
             _templateServices = templateServices;
             T = NullLocalizer.Instance;
+            _notifier = notifier; ;
         }
 
         public Localizer T { get; set; }
@@ -93,14 +97,16 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                     }
                     sendTo.AddRange(SplitEmail(owner.As<IUser>().Email));
                 }
-            } else if (recipient == "author") {
+            }
+            else if (recipient == "author") {
                 var user = _orchardServices.WorkContext.CurrentUser;
 
                 // can be null if user is anonymous
                 if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
                     sendTo.AddRange(SplitEmail(user.Email));
                 }
-            } else if (recipient == "admin") {
+            }
+            else if (recipient == "admin") {
                 var username = _orchardServices.WorkContext.CurrentSite.SuperUser;
                 var user = _membershipService.GetUser(username);
 
@@ -108,11 +114,14 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                 if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
                     sendTo.AddRange(SplitEmail(user.As<IUser>().Email));
                 }
-            } else if (recipient == "other") {
+            }
+            else if (recipient == "other") {
                 sendTo.AddRange(SplitEmail(activityContext.GetState<string>("RecipientOther")));
             }
-            SendEmail(contentModel, templateId, sendTo, null);
-            yield return T("Sent");
+            if (SendEmail(contentModel, templateId, sendTo, null))
+                yield return T("Sent");
+            else
+                yield return T("Not Sent");
         }
 
         private static IEnumerable<string> SplitEmail(string commaSeparated) {
@@ -120,7 +129,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             return commaSeparated.Split(new[] { ',', ';' });
         }
 
-        private void SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc) {
+        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc) {
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = _templateServices.GetTemplate(templateId);
             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
@@ -144,6 +153,10 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             };
             templatectx.Model = dynamicModel;
             var body = _templateServices.ParseTemplate(template, templatectx);
+            if (body.StartsWith("Error On Template")) {
+                _notifier.Add(NotifyType.Error, T("Error on template, mail not sended"));
+                return false;
+            }
             var data = new Dictionary<string, object>();
             var smtp = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
             var recipient = sendTo != null ? sendTo : new List<string> { smtp.Address };
@@ -155,7 +168,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                 data.Add("Bcc", String.Join(",", bcc));
             }
             _messageService.Send(SmtpMessageChannel.MessageType, data);
-
+            return true;
         }
 
     }

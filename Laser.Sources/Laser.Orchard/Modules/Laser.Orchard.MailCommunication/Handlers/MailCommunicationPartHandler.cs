@@ -94,7 +94,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 _mailerConfig = _orchardServices.WorkContext.CurrentSite.As<MailerSiteSettingsPart>();
                 if (part.SendOnNextPublish && !part.MailMessageSent)
                 {
-                    dynamic content = context.ContentItem;
+                    dynamic content = _orchardServices.ContentManager.Get(part.ContentItem.Id); //context.ContentItem;
                     IHqlQuery query;
                     if (content.QueryPickerPart != null && content.QueryPickerPart.Ids.Length > 0) {
                         query = _mailCommunicationService.IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(content.QueryPickerPart.Ids, null, new string[] { "CommunicationContact" }), content);
@@ -129,38 +129,46 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                     // ricava i settings e li invia tramite FTP
                     var templateId = ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id;
                     Dictionary<string, object> settings = GetSettings(content, templateId, part);
-                    SendSettings(settings, part.Id);
-
-                    // impagina e invia i recipiens tramite FTP
-                    int pageNum = 0;
-                    List<object> pagina = new List<object>();
-                    int pageSize = _mailerConfig.RecipientsPerJsonFile;
-                    for (int i = 0; i < lista.Count; i++)
+                    if (settings.Count > 0)
                     {
-                        if (((i+1) % pageSize) == 0)
+                        SendSettings(settings, part.Id);
+
+                        // impagina e invia i recipiens tramite FTP
+                        int pageNum = 0;
+                        List<object> pagina = new List<object>();
+                        int pageSize = _mailerConfig.RecipientsPerJsonFile;
+                        for (int i = 0; i < lista.Count; i++)
+                        {
+                            if (((i + 1) % pageSize) == 0)
+                            {
+                                SendRecipients(pagina, part.Id, pageNum);
+                                pageNum++;
+                                pagina = new List<object>();
+                            }
+                            pagina.Add(lista[i]);
+                        }
+                        // invia l'ultima pagina se non è vuota
+                        if (pagina.Count > 0)
                         {
                             SendRecipients(pagina, part.Id, pageNum);
-                            pageNum++;
-                            pagina = new List<object>();
                         }
-                        pagina.Add(lista[i]);
-                    }
-                    // invia l'ultima pagina se non è vuota
-                    if (pagina.Count > 0)
-                    {
-                        SendRecipients(pagina, part.Id, pageNum);
-                    }
 
-                    // inizializza RecipientsNumber, SentMailsNumber e MailMessageSent
-                    part.RecipientsNumber = lista.Count;
-                    part.SentMailsNumber = 0;
-                    part.MailMessageSent = true;
+                        // inizializza RecipientsNumber, SentMailsNumber e MailMessageSent
+                        part.RecipientsNumber = lista.Count;
+                        part.SentMailsNumber = 0;
+                        part.MailMessageSent = true;
+                    }
+                    else
+                    {
+                        _notifier.Error(T("Error parsing mail template."));
+                    }
                 }
             });
         }
 
         private Dictionary<string, object> GetSettings(dynamic contentModel, int templateId, MailCommunicationPart part)
         {
+            var data = new Dictionary<string, object>();
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = _orchardServices.ContentManager.Get<TemplatePart>(templateId);
             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
@@ -207,37 +215,38 @@ namespace Laser.Orchard.MailCommunication.Handlers {
             templatectx.ViewBag = vb;
 
             var body = _templateService.ParseTemplate(template, templatectx);
-            var subject = (contentModel as ContentItem).As<TitlePart>().Title;
-            var smtp = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
-            string priority = "L";
-            switch (_mailerConfig.MailPriority)
+            if (body.StartsWith("Error On Template") == false)
             {
-                case MailPriorityValues.High:
-                    priority = "H";
-                    break;
-                case MailPriorityValues.Normal:
-                    priority = "N";
-                    break;
-                default:
-                    priority = "L";
-                    break;
+                var subject = (contentModel as ContentItem).As<TitlePart>().Title;
+                var smtp = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
+                string priority = "L";
+                switch (_mailerConfig.MailPriority)
+                {
+                    case MailPriorityValues.High:
+                        priority = "H";
+                        break;
+                    case MailPriorityValues.Normal:
+                        priority = "N";
+                        break;
+                    default:
+                        priority = "L";
+                        break;
+                }
+
+                var baseUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
+                var tenantPrefix = GetTenantUrlPrexix(_shellSettings);
+                // token di sicurezza: contiene data e ora (senza minuti e secondi) e id del content item
+                var token = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHH"), (contentModel as ContentItem).Id);
+                token = Convert.ToBase64String(System.Text.Encoding.Unicode.GetBytes(token));
+                //var url = string.Format("{0}/Laser.Orchard.MailCommunication/MailerResult?tk={1}", baseUrl, token);  // versione per il GET
+                var url = string.Format("{0}/{1}api/Laser.Orchard.MailCommunication/MailerResultAPI?tk={2}", baseUrl, tenantPrefix, token);  // versione per il POST
+                data.Add("Subject", subject);
+                data.Add("Body", body);
+                data.Add("Sender", smtp.Address);
+                data.Add("Priority", priority);
+                data.Add("Url", url);  // url di ritorno per comunicare a Orchard il numero di mail inviate con successo
+                data.Add("Attachments", ""); // TODO esempio: "[\"prova.pdf\",\"prova.docx\"]" 2016-01-14: per ora non li gestiamo
             }
-
-            var baseUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
-            var tenantPrefix = GetTenantUrlPrexix(_shellSettings);
-            // token di sicurezza: contiene data e ora (senza minuti e secondi) e id del content item
-            var token = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHH"), (contentModel as ContentItem).Id);
-            token = Convert.ToBase64String(System.Text.Encoding.Unicode.GetBytes(token));
-            //var url = string.Format("{0}/Laser.Orchard.MailCommunication/MailerResult?tk={1}", baseUrl, token);  // versione per il GET
-            var url = string.Format("{0}/{1}api/Laser.Orchard.MailCommunication/MailerResultAPI?tk={2}", baseUrl, tenantPrefix, token);  // versione per il POST
-            var data = new Dictionary<string, object>();
-            data.Add("Subject", subject);
-            data.Add("Body", body);
-            data.Add("Sender", smtp.Address);
-            data.Add("Priority", priority);
-            data.Add("Url", url);  // url di ritorno per comunicare a Orchard il numero di mail inviate con successo
-            data.Add("Attachments", ""); // TODO esempio: "[\"prova.pdf\",\"prova.docx\"]" 2016-01-14: per ora non li gestiamo
-
             return data;
         }
 

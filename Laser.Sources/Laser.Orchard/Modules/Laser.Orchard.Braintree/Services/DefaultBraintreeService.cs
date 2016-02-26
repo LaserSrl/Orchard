@@ -1,12 +1,13 @@
 ﻿using Laser.Orchard.Braintree.Models;
+using Newtonsoft.Json;
 using Orchard;
 using Orchard.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Newtonsoft.Json;
 using Bt = Braintree;
+
 
 namespace Laser.Orchard.Braintree.Services
 {
