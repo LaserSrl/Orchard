@@ -160,6 +160,7 @@
     <Compile Include="Models\QueryFilterPart.cs" />
     <Compile Include="Models\SmsContactPart.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Security\AdvertisingEventHandler.cs" />
     <Compile Include="Services\ICommunicationService.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
     <Compile Include="ViewModels\ListVM.cs" />
