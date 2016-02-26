@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Orchard;
+using Orchard.UI.Admin;
 
 namespace Laser.Orchard.Mobile.Drivers {
 
@@ -28,6 +29,24 @@ namespace Laser.Orchard.Mobile.Drivers {
         protected override string Prefix {
             get { return "Laser.Orchard.SmsGateway"; }
         }
+
+        protected override DriverResult Display(SmsGatewayPart part, string displayType, dynamic shapeHelper) {
+            //Determine if we're on an admin page
+            bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            if (isAdmin) {
+                if (displayType == "Summary")
+                    return ContentShape("Parts_SmsGateway_SummaryAdmin",
+                        () => shapeHelper.Parts_SmsGateway_SummaryAdmin(SmsMessageSent: part.SmsMessageSent, SendOnNextPublish: part.SendOnNextPublish, RecipientsNumber: part.SmsRecipientsNumber, SmsDeliveredOrAcceptedNumber: part.SmsDeliveredOrAcceptedNumber, SmsRejectedOrExpiredNumber: part.SmsRejectedOrExpiredNumber));
+                if (displayType == "SummaryAdmin")
+                    return ContentShape("Parts_SmsGateway_SummaryAdmin",
+                        () => shapeHelper.Parts_SmsGateway_SummaryAdmin(SmsMessageSent: part.SmsMessageSent, SendOnNextPublish: part.SendOnNextPublish, RecipientsNumber: part.SmsRecipientsNumber, SmsDeliveredOrAcceptedNumber: part.SmsDeliveredOrAcceptedNumber, SmsRejectedOrExpiredNumber: part.SmsRejectedOrExpiredNumber));
+                return null;
+            } else {
+                return null;
+            }
+
+        }
+
 
         // GET
         protected override DriverResult Editor(SmsGatewayPart part, dynamic shapeHelper) {
@@ -58,7 +77,7 @@ namespace Laser.Orchard.Mobile.Drivers {
             if (smsSettingsPart.SmsFrom != "") {
                 ListaAlias = new List<string>(smsSettingsPart.SmsFrom.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
             }
-            
+
             var model = new SmsGatewayVM {
                 Protocollo = smsSettingsPart.Protocollo,
                 AliasList = ListaAlias,

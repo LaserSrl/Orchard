@@ -208,6 +208,7 @@
     <None Include="Service References\SmsServiceReference\SmsWebService.wsdl" />
     <Content Include="Views\EditorTemplates\Parts\SmsPlaceholders.Settings.cshtml" />
     <Content Include="Views\EditorTemplates\SmsPlaceholder.cshtml" />
+    <Content Include="Views\Parts\SmsGateway_SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\TaxonomiePushController.cs" />
