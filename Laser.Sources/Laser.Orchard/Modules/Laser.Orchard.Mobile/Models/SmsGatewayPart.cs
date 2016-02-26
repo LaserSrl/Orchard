@@ -17,6 +17,9 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual bool SendToTestNumber { get; set; }
         public virtual string NumberForTest { get; set; }
         public virtual bool SendOnNextPublish { get; set; }
+        public virtual int SmsDeliveredOrAcceptedNumber { get; set; }
+        public virtual int SmsRejectedOrExpiredNumber { get; set; }
+        public virtual int SmsRecipientsNumber { get; set; }
     }
 
     [OrchardFeature("Laser.Orchard.SmsGateway")]
@@ -55,6 +58,18 @@ namespace Laser.Orchard.Mobile.Models {
         public bool SendOnNextPublish {
             get { return this.Retrieve(x => x.SendOnNextPublish); }
             set { this.Store(x => x.SendOnNextPublish, value); }
+        }
+        public int SmsDeliveredOrAcceptedNumber {
+            get { return this.Retrieve(x => x.SmsDeliveredOrAcceptedNumber); }
+            set { this.Store(x => x.SmsDeliveredOrAcceptedNumber, value); }
+        }
+        public int SmsRejectedOrExpiredNumber {
+            get { return this.Retrieve(x => x.SmsRejectedOrExpiredNumber); }
+            set { this.Store(x => x.SmsRejectedOrExpiredNumber, value); }
+        }
+        public int SmsRecipientsNumber {
+            get { return this.Retrieve(x => x.SmsRecipientsNumber); }
+            set { this.Store(x => x.SmsRecipientsNumber, value); }
         }
 
     }

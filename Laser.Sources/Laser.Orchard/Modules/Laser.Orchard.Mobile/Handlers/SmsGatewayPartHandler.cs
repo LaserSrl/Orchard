@@ -70,7 +70,7 @@ namespace Laser.Orchard.Mobile.Handlers {
                             string messageToSms = part.Message + " " + linktosend;
 
                             // Id deve essere univoco - Utilizzo part.Id per il Publish e lo modifico per SendToTestNumber
-                            string IdSendToTest = part.Id.ToString() + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+                            string IdSendToTest = "OrchardTest_" + part.Id.ToString() + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
 
                             // Invio SMS a NumberForTest
                             _smsServices.SendSms(
@@ -138,8 +138,8 @@ namespace Laser.Orchard.Mobile.Handlers {
 
                         // Invio SMS
                         _smsServices.SendSms(listaNumeri.Select(x => Convert.ToInt64(x)).ToArray(),
-                                             messageToSms, part.Alias, part.Id.ToString(), part.HaveAlias);
-
+                                             messageToSms, part.Alias, "Orchard_" + part.Id.ToString(), part.HaveAlias);
+                        part.SmsRecipientsNumber = listaNumeri.Count;
                         part.SmsMessageSent = true;
                     }
                 }

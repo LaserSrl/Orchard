@@ -188,7 +188,10 @@ namespace Pubblicazione {
                     break;
 
                 case "OnlyDll":
-                    totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count);
+                    totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count 
+                        + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count
+                        + this.clbLibrary.CheckedItems.Count + this.clbLibraryOrchard.CheckedItems.Count
+                        );
                     action = () => button1.Enabled = false;
                     button1.Invoke(action);
                     break;
