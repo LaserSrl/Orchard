@@ -34,7 +34,9 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             }
 
             var shapes = new List<DriverResult>();
-            shapes.Add(ContentShape("Parts_Advertising_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/Advertising_Edit", Model: null, Prefix: Prefix, LocalizationId: part.ContentItem.As<LocalizationPart>().Culture.Id)));
+            Dictionary<string,Int32> model = new Dictionary<string,int>();
+           model.Add("LocalizationId",part.ContentItem.As<LocalizationPart>().Culture.Id);
+           shapes.Add(ContentShape("Parts_Advertising_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/Advertising_Edit", Model: model, Prefix: Prefix)));//
             shapes.Add(ContentShape("Parts_AdvertisingSwitcher", () => shapeHelper.EditorTemplate(TemplateName: "Parts/AdvertisingSwitcher", Model: linkinterno, Prefix: Prefix)));
 
             return new CombinedResult(shapes);

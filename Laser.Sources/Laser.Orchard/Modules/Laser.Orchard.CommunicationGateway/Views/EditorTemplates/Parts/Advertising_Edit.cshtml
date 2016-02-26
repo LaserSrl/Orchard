@@ -93,9 +93,11 @@
 </div>
 <ul class="comm-tabbed">
 </ul>
-
+  
 <script type="text/javascript">
+
     $(document).ready(function () {
+        $("#QueriesTotal").hide();
         var locCtrl = $("#QueryPickerPart_SelectedIds");
         locCtrl.parent().after("<div id='summary-totals'></div>");
         updateSummary();
@@ -105,9 +107,11 @@
 
         function updateSummary() {
             var locSelected = locCtrl.find("option:checked");
-            var elencoIds = [];
+           var elencoIds = [];
+         //   elencoIds="";
             for (var i = 0; i < locSelected.length; i++) {
-                elencoIds[i] = locSelected.eq(i).val();
+              //  elencoIds +=locSelected.eq(i).val()+","
+                elencoIds[i] = parseInt(locSelected.eq(i).val());
             }
             //alert(elencoIds);
 
@@ -115,16 +119,18 @@
             var arrUrl = [];
             var locMsg = "Totals: ";
             for (var i = 0; i < locUrls.length; i++) {
+              
                 arrUrl[i] = locUrls.eq(i).val();
                 $.ajax({
                     type: "GET",
                     url: arrUrl[i],
-                    data: {Ids:elencoIds, IdLocalization:@Model.LocalizationId},
+                    traditional: true,
+                    data:{ids:elencoIds, idlocalization:@Model["LocalizationId"]},
                     dataType: "json",
                     success: function (data, status) {
                         locMsg = locMsg + data.Key + ": " + data.Value + " ";
                         var locSummary = $("#summary-totals");
-                        locSummary.text("msg: " + locMsg);
+                        locSummary.text( locMsg);
                     }//,
                     //error: function (jqXHR, textStatus) {
                     //    locMsg = locMsg + textStatus;

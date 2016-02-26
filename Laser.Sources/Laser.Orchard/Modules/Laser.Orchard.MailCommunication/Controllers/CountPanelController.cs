@@ -13,10 +13,11 @@ namespace Laser.Orchard.MailCommunication.Controllers {
             _mailCommunicationService = mailCommunicationService;
         }
         [HttpGet]
-        public JsonResult GetTotal(Int32[] ids,Int32? idlocalization) {
+        public JsonResult GetTotal(Int32[] ids, Int32? idlocalization) {
+         //   Int32[] Ids = ids.Split(',').Where(tag => !string.IsNullOrEmpty(tag)).Select(x => int.Parse(x)).ToArray();
             Dictionary<string,string> Total=new Dictionary<string,string>();
             Total.Add("Key","Mail");
-            Total.Add("Total", _mailCommunicationService.GetMailQueryResult(ids, idlocalization).Count.ToString());
+            Total.Add("Value", _mailCommunicationService.GetMailQueryResult(ids, idlocalization).Count.ToString());
             return Json(Total, JsonRequestBehavior.AllowGet);
         }
     }
