@@ -51,6 +51,9 @@ public int val_selezionato=0;
 <xsl:template match="root/layout|root/name">
     
 </xsl:template>
+<xsl:template match="root/layout|root/metaDescription">
+    
+</xsl:template>
 <xsl:template match="*">
 	<xsl:element name="{local-name()}" namespace="">
 			<xsl:apply-templates select="node()"/>
