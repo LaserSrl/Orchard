@@ -93,3 +93,47 @@
 </div>
 <ul class="comm-tabbed">
 </ul>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var locCtrl = $("#QueryPickerPart_SelectedIds");
+        locCtrl.parent().after("<div id='summary-totals'></div>");
+        updateSummary();
+        var aux1 = locCtrl.change(function () {
+            updateSummary();
+        });
+
+        function updateSummary() {
+            var locSelected = locCtrl.find("option:checked");
+            var elencoIds = [];
+            for (var i = 0; i < locSelected.length; i++) {
+                elencoIds[i] = locSelected.eq(i).val();
+            }
+            //alert(elencoIds);
+
+            var locUrls = $("input[name=CountUrl]");
+            var arrUrl = [];
+            var locMsg = "Totals: ";
+            for (var i = 0; i < locUrls.length; i++) {
+                arrUrl[i] = locUrls.eq(i).val();
+                $.ajax({
+                    type: "GET",
+                    url: arrUrl[i],
+                    data: {Ids:elencoIds, IdLocalization:@Model.LocalizationId},
+                    dataType: "json",
+                    success: function (data, status) {
+                        locMsg = locMsg + data.Key + ": " + data.Value + " ";
+                        var locSummary = $("#summary-totals");
+                        locSummary.text("msg: " + locMsg);
+                    }//,
+                    //error: function (jqXHR, textStatus) {
+                    //    locMsg = locMsg + textStatus;
+                    //    var locSummary = $("#summary-totals");
+                    //    //locSummary.text(aux3 + "; urls: " + aux4 + "; msg: " + locMsg);
+                    //    locSummary.text("msg: " + locMsg);
+                    //}
+                });
+            }
+        }
+    });
+</script>
