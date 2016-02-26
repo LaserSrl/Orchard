@@ -1,4 +1,7 @@
-﻿using Laser.Orchard.Mobile.ViewModels;
+﻿using Laser.Orchard.Mobile.Models;
+using Laser.Orchard.Mobile.ViewModels;
+using Orchard;
+using Orchard.ContentManagement;
 using Orchard.Logging;
 using System;
 using System.Collections.Generic;
@@ -9,24 +12,27 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 
-namespace Laser.Orchard.Mobile.Controllers
-{
-    public class TransferDeliveryReportController : Controller
-    {
-        public ILogger Logger { get; set; }
+namespace Laser.Orchard.Mobile.Controllers {
+    public class TransferDeliveryReportController : Controller {
+        private readonly IContentManager _contentManager;
 
-        public TransferDeliveryReportController() {
-            Logger = NullLogger.Instance;
+        public TransferDeliveryReportController(IContentManager contentManager) {
+            Log = NullLogger.Instance;
+            _contentManager = contentManager;
         }
 
 
+        public ILogger Log { get; set; }
+
         //
         // GET: /TransferDeliveryReport/
-        public ContentResult Update()
-        {
+        public ContentResult Update() {
             string strResp = "OK";
 
+            Log.Error("Contenuto richiesta: {0}", "InizioErr");
+
             try {
+                Log.Error("InputStream: {0}", Request.InputStream.ToString());
 
                 if (Request.InputStream != null && Request.InputStream.ToString().CompareTo("") != 0) {
 
@@ -36,36 +42,49 @@ namespace Laser.Orchard.Mobile.Controllers
                     String xmlData = reader.ReadToEnd();
                     reader.Close();
 
-                    Logger.Debug("Contenuto richiesta: " + xmlData);
+                    Log.Error("Contenuto richiesta: {0}", xmlData);
 
                     if (xmlData.CompareTo("") != 0) {
                         Encoding usedEncoding = Encoding.UTF8;
-                        
+
                         // Deserializza oggetto postato
-                        Logger.Debug("deserializzo il messaggio");
+                        Log.Error("deserializzo il messaggio");
                         XmlSerializer serializer = new XmlSerializer(typeof(DeliveryReportVM));
 
                         MemoryStream ms = new MemoryStream(usedEncoding.GetBytes(xmlData));
                         object objReport = serializer.Deserialize(ms);
 
-                        Logger.Debug("messaggio deserializzato");
+                        Log.Error("messaggio deserializzato");
 
                         DeliveryReportVM report = (DeliveryReportVM)objReport;
+                        
+                        Log.Error("Driver Id: " + report.DriverId);
+                        Log.Error("Id Sms: " + report.MessageId + " Identifier: " + report.MessageIdentifier);
+                        Log.Error("Testo Sms: " + report.TestoSms);
+                        Log.Error("Stato Sms: " + report.Stato);
 
-                        Logger.Debug("Driver Id: " + report.DriverId);
-                        Logger.Debug("Id Sms: " + report.MessageId + " Identifier: " + report.MessageIdentifier);
-                        Logger.Debug("Testo Sms: " + report.TestoSms);
-                        Logger.Debug("Stato Sms: " + report.Stato);
+                        if (!report.MessageIdentifier.StartsWith("Orchard_")) return Content("OK");
+
+                        var messageId = 0;
+
+                        if (int.TryParse(report.MessageIdentifier.Split('_')[1], out messageId)) {
+                            var smsPart = _contentManager.Get<SmsGatewayPart>(messageId);
+                            if (report.Stato == "DELIVERED" || report.Stato == "ACCEPTED") {
+                                smsPart.SmsDeliveredOrAcceptedNumber += 1;
+                            } else {
+                                smsPart.SmsRejectedOrExpiredNumber += 1;
+                            }
+                        } else {
+                            strResp = "KO";
+                        }
                     }
                 }
-            } 
-            catch (Exception ex) 
-            {
+            } catch (Exception ex) {
                 strResp = "KO";
-                Logger.Error("TransferDeliveryReportController Update: " + ex);
+                Log.Error("TransferDeliveryReportController Update: " + ex);
             }
 
             return Content(strResp);
         }
-	}
+    }
 }

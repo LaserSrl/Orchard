@@ -241,6 +241,7 @@ namespace Laser.Orchard.Mobile.Services {
             login.Password = smsSettings.WsPassword;
             login.DriverId = smsSettings.MamDriverIdentifier;
 
+            // TODO - Dettaglio Utenti + Stato Sms
             SmsServiceReference.StatusByExtId[] ret = _service.GetSmsStateByExternalId(login, IdSMS);
 
             int contACCEPTED = (from sms in ret where sms.SmsState.CompareTo("ACCEPTED") == 0 select sms).Count();
