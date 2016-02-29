@@ -200,8 +200,10 @@ namespace Pubblicazione {
             // this.TheprogressBar.Value = 0;
             // this.TheprogressBar.Maximum = (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count) * 2;
             // this.TheprogressBar.Step = 1;
-            if (Directory.Exists(deploypath) && this.chkDeleteFolder.Checked)
+            if (Directory.Exists(deploypath) && this.chkDeleteFolder.Checked) {
                 Directory.Delete(deploypath, true);
+                Thread.Sleep(1);
+            }
             Directory.CreateDirectory(deploypath);
             //foreach (var a in this.clbLibrary.CheckedItems) {
             //    DirectoryInfo parentDir = Directory.GetParent(elencoModuli[this.clbModules.Items[0].ToString()]);
