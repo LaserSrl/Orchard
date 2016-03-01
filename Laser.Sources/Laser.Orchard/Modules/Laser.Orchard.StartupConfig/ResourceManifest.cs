@@ -12,6 +12,7 @@ namespace Laser.Orchard.StartupConfig
             var manifest = builder.Add();
             //manifest.DefineStyle("FontAwesome").SetUrl("font-awesome/css/font-awesome.min.css");
             manifest.DefineStyle("FontAwesome430").SetUrl("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
+            manifest.DefineStyle("FontAwesome430.ie7").SetUrl("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome-ie7.min.css");
 
             //maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css
         }
