@@ -47,8 +47,7 @@
         <fieldset class="FacebookPost">
             <div class="editor-label">@Html.LabelFor(m => m.FacebookMessageToPost, T("Message"))</div>
             <div class="editor-label">@Html.TextAreaFor(m => m.FacebookMessageToPost)</div>
-            <div class="editor-label">@Html.LabelFor(m => m.HasImage, T("With Image"))</div>
-            <div class="editor-label">@Html.CheckBoxFor(m => m.HasImage)</div>
+            <div class="editor-label">@Html.LabelFor(m => m.HasImage, T("With Image"))@Html.CheckBoxFor(m => m.HasImage)</div>
         </fieldset>
         
         <fieldset class="FacebookShareLink">
