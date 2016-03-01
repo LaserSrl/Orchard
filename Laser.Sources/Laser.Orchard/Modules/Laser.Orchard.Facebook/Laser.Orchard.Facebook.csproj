@@ -115,7 +115,6 @@
     <Compile Include="ViewModels\ContentIndexVM.cs" />
     <Compile Include="ViewModels\FacebookPostVM.cs" />
     <Compile Include="ViewModels\ListVM.cs" />
-    <Compile Include="ViewModels\PostToFacebookViewModel.cs" />
     <Compile Include="ViewModels\SearchIndexVM.cs" />
     <Compile Include="ViewModels\SearchVM.cs" />
     <Compile Include="ViewModels\FacebookAccountVM.cs" />

@@ -339,6 +339,13 @@ new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
         mydoc=cambianome(mydoc,"root/lista/data/filter", "ToRemove");
         mydoc=cambianome(mydoc,"root/lista/data/comments", "ToRemove");
         mydoc=cambianome(mydoc,"root/lista/data/likes", "ToRemove");
+        
+        foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/data/caption")) {
+            var captionText = bookToModify.SelectSingleNode("text").InnerText;
+            XmlNode caption = mydoc.CreateElement("CaptionText");
+            caption.InnerXml = captionText;
+            bookToModify.ParentNode.AppendChild(caption);
+        }
         mydoc=cambianome(mydoc,"root/lista/data/caption", "ToRemove");
         //scelgo i tipi giusti
         foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/data/type")) {

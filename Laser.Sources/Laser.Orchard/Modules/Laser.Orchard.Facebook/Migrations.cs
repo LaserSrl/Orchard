@@ -70,10 +70,23 @@ namespace Laser.Orchard.Facebook {
                 .AddColumn<bool>("SendOnNextPublish", col => col.WithDefault(false)));
             return 3;
         }
-         public int UpdateFrom3() {
-             SchemaBuilder.AlterTable("FacebookPostPartRecord", table => table
-                      .AddColumn<string>("FacebookIdPicture"));
-                     return 4;
-         }
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("FacebookPostPartRecord", table => table
+                     .AddColumn<string>("FacebookIdPicture"));
+            return 4;
+        }
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("FacebookPostPartRecord", table => table
+                     .AddColumn<string>("FacebookType"));
+            return 5;
+        }
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("FacebookPostPartRecord", table => table
+                     .AddColumn<string>("FacebookMessageToPost", col => col.Unlimited()));
+            SchemaBuilder.AlterTable("FacebookPostPartRecord", table => table
+                .AddColumn<bool>("HasImage", x => x.WithDefault(true)));
+            return 6;
+        }
+
     }
 }

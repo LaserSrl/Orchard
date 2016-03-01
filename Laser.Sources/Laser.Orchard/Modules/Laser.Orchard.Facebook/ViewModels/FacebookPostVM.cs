@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
+using Laser.Orchard.Facebook.Models;
 
 namespace Laser.Orchard.Facebook.ViewModels {
-
+  
     public class FacebookPostVM {
 
         public FacebookPostVM() {
@@ -31,6 +32,9 @@ namespace Laser.Orchard.Facebook.ViewModels {
         public bool ShowFacebookName { get; set; }
         public bool ShowFacebookPicture { get; set; }
         public bool SendOnNextPublish { get; set; }
+        public FacebookType FacebookType { get; set; }
+        public string FacebookMessageToPost { get; set; }
+        public bool HasImage { get; set; }
     }
 
     public class OptionList {
