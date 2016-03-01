@@ -99,7 +99,16 @@
     $(document).ready(function () {
         $("#QueriesTotal").hide();
         var locCtrl = $("#QueryPickerPart_SelectedIds");
-        locCtrl.parent().after("<div id='summary-totals'></div>");
+        locCtrl.parent().after("<div id='summary-totals' style='border: solid 1px rgb(189, 188, 188)'></div>");
+        var locSummary = $("#summary-totals");
+        var locUrls = $("input[name=CountUrl]");
+        var arrUrl = [];
+        var arrOutput = [];
+        var arrFunc = [];
+        for (var i = 0; i < locUrls.length; i++) {
+            arrUrl[i] = locUrls.eq(i).val();
+            arrOutput[i] = 0;
+        }
         updateSummary();
         var aux1 = locCtrl.change(function () {
             updateSummary();
@@ -107,30 +116,23 @@
 
         function updateSummary() {
             var locSelected = locCtrl.find("option:checked");
-           var elencoIds = [];
-         //   elencoIds="";
+            var elencoIds = [];
             for (var i = 0; i < locSelected.length; i++) {
-              //  elencoIds +=locSelected.eq(i).val()+","
                 elencoIds[i] = parseInt(locSelected.eq(i).val());
             }
             //alert(elencoIds);
 
-            var locUrls = $("input[name=CountUrl]");
-            var arrUrl = [];
-            var locMsg = "Totals: ";
-            for (var i = 0; i < locUrls.length; i++) {
-              
-                arrUrl[i] = locUrls.eq(i).val();
+            for (var i = 0; i < arrUrl.length; i++) {
                 $.ajax({
+                    myIdx: i, // parametro custom per la function success
                     type: "GET",
                     url: arrUrl[i],
                     traditional: true,
                     data:{ids:elencoIds, idlocalization:@Model["LocalizationId"]},
                     dataType: "json",
-                    success: function (data, status) {
-                        locMsg = locMsg + data.Key + ": " + data.Value + " ";
-                        var locSummary = $("#summary-totals");
-                        locSummary.text( locMsg);
+                    success: function (data, status, jqXHR) {
+                        arrOutput[this.myIdx] = data.Key + " " + data.Value;
+                        refresh();
                     }//,
                     //error: function (jqXHR, textStatus) {
                     //    locMsg = locMsg + textStatus;
@@ -140,6 +142,14 @@
                     //}
                 });
             }
+        }
+
+        function refresh() {
+            var locMsg = "Totals: ";
+            for(var i=0; i<arrOutput.length;i++) {
+                locMsg = locMsg + arrOutput[i] + " ";
+            }
+            locSummary.html(locMsg);
         }
     });
 </script>

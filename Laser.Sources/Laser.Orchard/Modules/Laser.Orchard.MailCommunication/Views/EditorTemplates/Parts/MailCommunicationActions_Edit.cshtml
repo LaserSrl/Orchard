@@ -74,4 +74,11 @@
     @Html.LabelFor(m => m.SentMailsNumber, T("Number of sent mails").Text, new { @class = "forcheckbox" })
     <span style="margin-left: 20px; font-weight: bold">@Model.SentMailsNumber</span>
 </fieldset>
-<input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotal","CountPanel", new { area = "Laser.Orchard.MailCommunication" })"/>
+@if (Model.MailMessageSent)
+{
+    <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotal","CountPanel", new { area = "Laser.Orchard.MailCommunication", tot=Model.RecipientsNumber })"/>
+}
+else
+{
+    <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotal","CountPanel", new { area = "Laser.Orchard.MailCommunication" })"/>
+}

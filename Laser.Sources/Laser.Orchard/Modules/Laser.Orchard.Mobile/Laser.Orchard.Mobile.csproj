@@ -211,6 +211,7 @@
     <Content Include="Views\Parts\SmsGateway_SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CountPanelController.cs" />
     <Compile Include="Controllers\TaxonomiePushController.cs" />
     <Compile Include="Controllers\TransferDeliveryReportController.cs" />
     <Compile Include="Drivers\MobileContactPartDriver.cs" />
