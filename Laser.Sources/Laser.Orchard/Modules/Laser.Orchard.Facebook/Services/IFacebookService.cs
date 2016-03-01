@@ -4,6 +4,7 @@ using Laser.Orchard.Facebook.Models;
 using Laser.Orchard.Facebook.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Core.Title.Models;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Models;
@@ -56,6 +57,10 @@ namespace Laser.Orchard.Facebook.Services {
             return _orchardServices.ContentManager.Query().ForType(new string[] { "SocialFacebookAccount" }).ForPart<FacebookAccountPart>().List().Where(x => x.Valid == true && (x.Shared || x.IdUser == currentiduser)).ToList();
         }
 
+
+
+
+
         public ResponseAction PostFacebook(FacebookPostPart facebookpart) {
             ResponseAction rsp = new ResponseAction();
             List<FacebookAccountPart> FacebookAccountSettings = Facebook_GetAccessToken(facebookpart);
@@ -63,6 +68,7 @@ namespace Laser.Orchard.Facebook.Services {
             string pageId = "";
             foreach (FacebookAccountPart Faccount in FacebookAccountSettings) {
                 try {
+                    string idalbum = "";
                     string linktosend = "";
                     string PostInArea = "feed";
                     if (string.IsNullOrEmpty(Faccount.IdPage)) {
@@ -74,6 +80,38 @@ namespace Laser.Orchard.Facebook.Services {
                         pageId = "";
                     }
                     var objFacebookClient = new FacebookClient(accessToken);
+
+                    #region [Get List of Album and if no album create one]
+                    if (facebookpart.ContentItem.ContentType == "CommunicationAdvertising") {
+                        string TitoloAlbum = "Nessun Album";
+                        Int32 idcampagna = (Int32)(((dynamic)facebookpart.ContentItem).CommunicationAdvertisingPart.CampaignId);
+                        if (idcampagna > 0) {
+                            ContentItem campagna = _orchardServices.ContentManager.Get(idcampagna);
+                            TitoloAlbum = campagna.As<TitlePart>().Title;
+                        }
+                        else {
+                            TitoloAlbum = "Flash";
+                        }
+
+                        
+                        dynamic albums = objFacebookClient.Get("me/albums");
+                        foreach (dynamic albumInfo in albums.data) {
+                            if (TitoloAlbum == albumInfo.name) {
+                                idalbum = albumInfo.id;
+                                break;
+                            }
+                        }
+                        if (string.IsNullOrEmpty(idalbum)) {
+                            #region [crea album]
+                            var albumParameters = new Dictionary<string, object>();
+                            albumParameters["name"] = TitoloAlbum;
+                            dynamic myalbum = objFacebookClient.Post("/me/albums", albumParameters);
+                            idalbum = myalbum.id;
+                            #endregion
+                        }
+                    }
+                    #endregion
+
                     var parameters = new Dictionary<string, object>();
                     if (facebookpart.FacebookType == FacebookType.Post) {
                         #region [Post Style]
@@ -111,9 +149,10 @@ namespace Laser.Orchard.Facebook.Services {
                                     FileName = Path.GetFileName(Media_FileName)
                                 }.SetValue(photo);
                                 parameters["access_token"] = accessToken;
-                                if (!string.IsNullOrEmpty(Faccount.IdPage))
-                                    pageId = Faccount.IdPage;
-                                PostInArea = "photos";
+                               // if (!string.IsNullOrEmpty(Faccount.IdPage))
+                               //     pageId = Faccount.IdPage;
+
+                                PostInArea = idalbum+"/photos";
                             }
                         }
                         #endregion
@@ -164,9 +203,9 @@ namespace Laser.Orchard.Facebook.Services {
                                     FileName = Path.GetFileName(Media_FileName)
                                 }.SetValue(photo);
                                 parameters["access_token"] = accessToken;
-                                if (!string.IsNullOrEmpty(Faccount.IdPage))
-                                    pageId = Faccount.IdPage;
-                                PostInArea = "photos";
+                              //  if (!string.IsNullOrEmpty(Faccount.IdPage))
+                              //      pageId = Faccount.IdPage;
+                                PostInArea = idalbum + "/photos";
                             }
                         }
                         #endregion
