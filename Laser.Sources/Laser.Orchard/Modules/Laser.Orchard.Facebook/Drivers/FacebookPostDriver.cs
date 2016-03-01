@@ -48,10 +48,12 @@ namespace Laser.Orchard.Facebook.Drivers {
                 if (displayType == "Summary") {
                     return ContentShape("Parts_FacebookPost",
                         () => shapeHelper.Parts_FacebookPost(SendOnNextPublish: part.SendOnNextPublish, Sent: part.FacebookMessageSent));
-                } else {
+                }
+                else {
                     return null;
                 }
-            } else {
+            }
+            else {
                 return null;
             }
         }
@@ -64,11 +66,11 @@ namespace Laser.Orchard.Facebook.Drivers {
             Mapper.CreateMap<FacebookPostPart, FacebookPostVM>();
             Mapper.Map(part, vm);
             if (string.IsNullOrEmpty(vm.FacebookType.ToString()))
-                vm.FacebookType=FacebookType.Post;
+                vm.FacebookType = FacebookType.Post;
             FacebookPostPartSettingVM setting = part.Settings.GetModel<FacebookPostPartSettingVM>();
             var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
             if (!string.IsNullOrEmpty(setting.FacebookCaption)) {
-                 vm.ShowFacebookCaption = false;
+                vm.ShowFacebookCaption = false;
             }
             if (!string.IsNullOrEmpty(setting.FacebookDescription)) {
                 vm.ShowFacebookDescription = false;
@@ -108,15 +110,20 @@ namespace Laser.Orchard.Facebook.Drivers {
                                     Prefix: Prefix));
         }
 
-        
+
 
         protected override DriverResult Editor(FacebookPostPart part, IUpdateModel updater, dynamic shapeHelper) {
-              FacebookPostPartSettingVM setting = part.Settings.GetModel<FacebookPostPartSettingVM>();
-              var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
+            FacebookPostPartSettingVM setting = part.Settings.GetModel<FacebookPostPartSettingVM>();
+            var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
             FacebookPostVM vm = new FacebookPostVM();
             updater.TryUpdateModel(vm, Prefix, null, null);
             Mapper.CreateMap<FacebookPostVM, FacebookPostPart>();
             Mapper.Map(vm, part);
+            if (_orchardServices.WorkContext.HttpContext.Request.Form["FacebookType"] != null && _orchardServices.WorkContext.HttpContext.Request.Form["FacebookType"] == "1")
+                part.FacebookType = FacebookType.Post;
+            else
+                part.FacebookType = FacebookType.ShareLink;
+
             if (vm.SelectedList != null && vm.SelectedList.Count() > 0) {
                 part.AccountList = vm.SelectedList.Select(x => Int32.Parse(x)).ToArray();
             }
