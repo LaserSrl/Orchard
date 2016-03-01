@@ -79,42 +79,27 @@ namespace Laser.Orchard.Facebook.Handlers {
             OnPublished<FacebookPostPart>((context, facebookpart) => {
                 try {
                     bool publishEnabled = true;
-                    string linktosend = "";
+                  //  string linktosend = "";
                     if (facebookpart.ContentItem.ContentType == "CommunicationAdvertising") {
                             ICommunicationService _communicationService;
                             bool tryed = _orchardServices.WorkContext.TryResolve<ICommunicationService>(out _communicationService);
                             publishEnabled = _communicationService.AdvertisingIsAvailable(facebookpart.Id);
-                            if (tryed) {
-                                linktosend = _communicationService.GetCampaignLink("Facebook", facebookpart);
-                            }
-                            else
-                                linktosend = "";
                             if (!publishEnabled) {
                                 _notifier.Add(NotifyType.Error, T("Advertising can't be published, see campaign validation date"));
                             }
                     }
 
                     if (publishEnabled) {
-                        PostToFacebookViewModel Fvm = new PostToFacebookViewModel();
-                        Fvm.Caption = facebookpart.FacebookCaption;
-                        Fvm.Description = facebookpart.FacebookDescription;
-                        if (facebookpart.ContentItem.ContentType == "CommunicationAdvertising") {
-                            Fvm.Link = linktosend;
-                        }
-                        else
-                            Fvm.Link = facebookpart.FacebookLink;
-
-                        Fvm.Message = facebookpart.FacebookMessage;
-                        Fvm.Name = facebookpart.FacebookName;
-                        Fvm.IdPicture = facebookpart.FacebookIdPicture;
-                            Fvm.Picture = facebookpart.FacebookPicture;
-                        if (facebookpart.SendOnNextPublish && !facebookpart.FacebookMessageSent) {
-                            ResponseAction rsp = _facebookService.PostFacebook(Fvm, facebookpart);
-                            if (rsp.Success) {
-                                facebookpart.FacebookMessageSent = true;
-                            }
-                            else
-                                _notifier.Add(NotifyType.Error, T("Facebook error:" + rsp.Message));
+                          if (facebookpart.SendOnNextPublish && !facebookpart.FacebookMessageSent) {
+                              List<FacebookAccountPart> FacebookAccountSettings = _facebookService.Facebook_GetAccessToken(facebookpart);
+                              if (FacebookAccountSettings.Count > 0) {
+                                  ResponseAction rsp = _facebookService.PostFacebook(facebookpart);
+                                  if (rsp.Success) {
+                                      facebookpart.FacebookMessageSent = true;
+                                  }
+                                  else
+                                      _notifier.Add(NotifyType.Error, T("Facebook error:" + rsp.Message));
+                              }
                         }
                     }
                 }

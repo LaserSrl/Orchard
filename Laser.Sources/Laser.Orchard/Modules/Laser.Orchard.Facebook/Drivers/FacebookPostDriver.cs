@@ -63,50 +63,27 @@ namespace Laser.Orchard.Facebook.Drivers {
             FacebookPostVM vm = new FacebookPostVM();
             Mapper.CreateMap<FacebookPostPart, FacebookPostVM>();
             Mapper.Map(part, vm);
+            if (string.IsNullOrEmpty(vm.FacebookType.ToString()))
+                vm.FacebookType=FacebookType.Post;
             FacebookPostPartSettingVM setting = part.Settings.GetModel<FacebookPostPartSettingVM>();
             var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
             if (!string.IsNullOrEmpty(setting.FacebookCaption)) {
-    //            vm.FacebookCaption = _tokenizer.Replace(setting.FacebookCaption, tokens);
-                vm.ShowFacebookCaption = false;
+                 vm.ShowFacebookCaption = false;
             }
             if (!string.IsNullOrEmpty(setting.FacebookDescription)) {
-   //             vm.FacebookDescription = _tokenizer.Replace(setting.FacebookDescription, tokens);
                 vm.ShowFacebookDescription = false;
             }
             if (!string.IsNullOrEmpty(setting.FacebookLink)) {
-  //              vm.FacebookLink = _tokenizer.Replace(setting.FacebookLink, tokens);
                 vm.ShowFacebookLink = false;
             }
             if (!string.IsNullOrEmpty(setting.FacebookMessage)) {
-   //             vm.FacebookMessage = _tokenizer.Replace(setting.FacebookMessage, tokens);
                 vm.ShowFacebookMessage = false;
             }
             if (!string.IsNullOrEmpty(setting.FacebookName)) {
-   //             vm.FacebookName = _tokenizer.Replace(setting.FacebookName, tokens);
                 vm.ShowFacebookName = false;
             }
             if (!string.IsNullOrEmpty(setting.FacebookPicture)) {
                 vm.ShowFacebookPicture = false;
-                //string idimg = _tokenizer.Replace(setting.FacebookPicture, tokens);
-                //Int32 idimage = 0;
-
-                //Int32.TryParse(idimg.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
-                //if (idimage > 0) {
-                //    // _orchardServices.ContentManager.Get(id);
-                //    // vm.Image = Url.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));
-                //    //       vm.Image = urlHelper.ItemDisplayUrl(_orchardServices.ContentManager.Get(id));// get current display link
-                //    //   Fvm.Link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(Twitterpart));// get current display link
-                //    var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
-                //    //   var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
-                //    //  part.TwitterPicture = pathdocument;// 
-                //    //  vm.Image =
-                //    //   .ResizeMediaUrl(Width: previewWidth, Height: previewHeight, Mode: "crop", Alignment: "middlecenter", Path: Model.MediaData.MediaUrl)');
-
-                //    vm.FacebookPicture = urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
-                //}
-                //else
-                //    vm.FacebookPicture = "";
-
             }
             else
                 vm.FacebookPicture = part.FacebookPicture;
@@ -140,19 +117,6 @@ namespace Laser.Orchard.Facebook.Drivers {
             updater.TryUpdateModel(vm, Prefix, null, null);
             Mapper.CreateMap<FacebookPostVM, FacebookPostPart>();
             Mapper.Map(vm, part);
-           
-            //if (!string.IsNullOrEmpty(setting.FacebookPicture)) {
-             
-            //    string idimg = _tokenizer.Replace(setting.FacebookPicture, tokens);
-            //    Int32 idimage = 0;
-
-            //    Int32.TryParse(idimg.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
-            //    if (idimage > 0) {
-            //        part.FacebookIdPicture = idimage.ToString();
-            //           } else
-            //         part.FacebookIdPicture =  "";
-            //}
-         
             if (vm.SelectedList != null && vm.SelectedList.Count() > 0) {
                 part.AccountList = vm.SelectedList.Select(x => Int32.Parse(x)).ToArray();
             }
