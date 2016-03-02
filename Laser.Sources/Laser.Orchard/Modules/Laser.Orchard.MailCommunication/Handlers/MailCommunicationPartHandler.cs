@@ -87,7 +87,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                     if (content.QueryPickerPart != null && content.QueryPickerPart.Ids.Length > 0)
                         ids = content.QueryPickerPart.Ids;
 
-                    var localizedPart = content.As<LocalizationPart>();
+                    var localizedPart = content.LocalizationPart;
                     if (localizedPart != null && localizedPart.Culture != null)
                         idLocalization = localizedPart.Culture.Id;
 
@@ -170,7 +170,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
 
             var body = _templateService.ParseTemplate(template, templatectx);
             if (body.StartsWith("Error On Template") == false) {
-                var subject = (contentModel as ContentItem).As<TitlePart>().Title;
+                var subject = contentModel.TitlePart.Title;
                 var smtp = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
                 string priority = "L";
                 switch (_mailerConfig.MailPriority) {
