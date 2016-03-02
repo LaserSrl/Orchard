@@ -207,13 +207,13 @@ namespace Laser.Orchard.MailCommunication.Handlers {
         private void SendRecipients(List<object> recipients, int communicationId, int pageNum) {
             string pathFtp = _mailerConfig.FtpPath;
             string jsonDestinatari = JsonConvert.SerializeObject(recipients);
-            SendFtp(jsonDestinatari, _mailerConfig.FtpHost, _mailerConfig.FtpUser, _mailerConfig.FtpPassword, string.Format("{0}adv{1}-{2}-recipients.json", pathFtp, communicationId, pageNum));
+            SendFtp(jsonDestinatari, _mailerConfig.FtpHost, _mailerConfig.FtpUser, _mailerConfig.FtpPassword, string.Format("{0}adv{1}.{2}-{3}-recipients.json", pathFtp, _shellSettings.Name, communicationId, pageNum));
         }
 
         private void SendSettings(object settings, int communicationId) {
             string pathFtp = _mailerConfig.FtpPath;
             string jsonSettings = JsonConvert.SerializeObject(settings);
-            SendFtp(jsonSettings, _mailerConfig.FtpHost, _mailerConfig.FtpUser, _mailerConfig.FtpPassword, string.Format("{0}adv{1}-settings.json", pathFtp, communicationId));
+            SendFtp(jsonSettings, _mailerConfig.FtpHost, _mailerConfig.FtpUser, _mailerConfig.FtpPassword, string.Format("{0}adv{1}.{2}-settings.json", pathFtp, _shellSettings.Name, communicationId));
         }
 
         /// <summary>
