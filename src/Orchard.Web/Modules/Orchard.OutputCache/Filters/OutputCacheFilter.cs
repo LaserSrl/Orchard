@@ -22,8 +22,13 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.Events;
 
 namespace Orchard.OutputCache.Filters {
+
+    public interface ICachingEventHandler : IEventHandler {
+        StringBuilder InflatingCacheKey(StringBuilder key);
+    }
 
     public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter {
         private readonly ICacheManager _cacheManager;
@@ -37,6 +42,7 @@ namespace Orchard.OutputCache.Filters {
         private readonly ISignals _signals;
         private readonly ShellSettings _shellSettings;
         private readonly ICacheControlStrategy _cacheControlStrategy;
+        private readonly ICachingEventHandler _chachingEvents;
 
         private TextWriter _originalWriter;
         private StringWriter _cachingWriter;
@@ -53,6 +59,7 @@ namespace Orchard.OutputCache.Filters {
             IThemeManager themeManager,
             IClock clock,
             ICacheService cacheService,
+            ICachingEventHandler chachingEvents,
             ISignals signals,
             ShellSettings shellSettings,
             ICacheControlStrategy cacheControlStrategy) {
@@ -67,6 +74,7 @@ namespace Orchard.OutputCache.Filters {
             _signals = signals;
             _shellSettings = shellSettings;
             _cacheControlStrategy = cacheControlStrategy;
+            _chachingEvents = chachingEvents;
 
             Logger = NullLogger.Instance;
         }
@@ -236,7 +244,7 @@ namespace Orchard.OutputCache.Filters {
 
                 parameters[key] = queryString[key];
             }
-            
+
             if (_varyCookieStringParameters != null) {
                 foreach (var key in cookieCollection.AllKeys) {
                     if (_varyCookieStringParameters.Contains(key)) {
@@ -266,8 +274,7 @@ namespace Orchard.OutputCache.Filters {
                 if (_cacheItem == null) {
                     Logger.Debug("Cached version not found");
                 }
-            }
-            else {
+            } else {
                 Logger.Debug("Cache-Control = no-cache requested");
             }
 
@@ -464,8 +471,7 @@ namespace Orchard.OutputCache.Filters {
 
                 if (epIndex > 0) {
                     redirectUrl = redirectUrl.Substring(0, epIndex) + querystring;
-                }
-                else {
+                } else {
                     redirectUrl = redirectUrl + querystring;
                 }
             }
@@ -509,8 +515,7 @@ namespace Orchard.OutputCache.Filters {
 
             if (_varyQueryStringParameters == null) {
                 response.Cache.VaryByParams["*"] = true;
-            }
-            else {
+            } else {
                 foreach (var queryStringParam in _varyQueryStringParameters) {
                     response.Cache.VaryByParams[queryStringParam] = true;
                 }
@@ -546,6 +551,13 @@ namespace Orchard.OutputCache.Filters {
                     keyBuilder.AppendFormat("{0}={1};", pair.Key.ToLowerInvariant(), Convert.ToString(pair.Value).ToLowerInvariant());
                 }
             }
+            //make CacheKey morphable by external modules
+            try {
+                keyBuilder = _chachingEvents.InflatingCacheKey(keyBuilder);
+            } catch (UnauthorizedAccessException Exception) {
+                throw new UnauthorizedAccessException();
+            } catch { }
+
             return keyBuilder.ToString();
         }
 
