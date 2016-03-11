@@ -17,12 +17,14 @@
   <Place Parts_Common_Metadata="-"/>
   <Place Fields_Input__WidgetContatto-Email="-" Fields_Input__WidgetContatto-Telefono="-" Fields_Input__WidgetContatto-Telefono2="-"  Fields_Common_Text__WidgetContatto-Indirizzo2="-" Fields_Common_Text-EtichettaProdotti="-"/>
   <Match DisplayType="Summary">
+    <Place Fields_MediaLibraryPicker-Gallery="Content:2" />
     <Match ContentType="BlogPost">
       <Place Parts_Common_Metadata="Content:1" Fields_MediaLibraryPicker="Content:2" Parts_Title="Content:3" Parts_Body="Content:4"/>
     </Match>
   </Match>
   <Match DisplayType="Detail">
-    <Place Parts_Title="/InfoBox:1" Fields_Common_Text-Sottotitolo="/InfoBox:2" Fields_ContentPicker-Prodottiassociati="/AfterContent:1"/>
+    <Place Parts_Title="/InfoBox:1" Fields_Common_Text-Sottotitolo="/InfoBox:2" Fields_ContentPicker-Prodottiassociati="/AfterContent:1"
+           Fields_MediaLibraryPicker-Gallery="Content:1" />
     <Match ContentType="BlogPost">
       <Place Parts_Title="Header:1" />
     </Match>

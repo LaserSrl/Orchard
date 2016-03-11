@@ -14,5 +14,6 @@
     <label>@T("User defined queries picker")</label>
     @Html.LabelFor(m => m.SelectedIds, @T("Pick a user defined query"))
     @Html.ListBoxFor(m => m.SelectedIds, Model.AvailableQueries)
-    @T("found {0:N0} content items", Model.TotalItemsCount.Value)
+    <span id="QueriesTotal">
+    @T("found {0:N0} content items", Model.TotalItemsCount.Value)</span>
 </fieldset>

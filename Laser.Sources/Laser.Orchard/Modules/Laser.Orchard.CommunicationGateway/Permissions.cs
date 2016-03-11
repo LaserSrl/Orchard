@@ -5,9 +5,16 @@ using System.Collections.Generic;
 namespace Laser.Orchard.CommunicationGateway {
 
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageCampaigns = new Permission { Description = "Manage Comunication Campaigns", Name = "ManageCampaigns" };
-        public static readonly Permission ManageCommunicationAdv = new Permission { Description = "Manage Comunication Messages", Name = "ManageCommunicationAdv" };
-        public static readonly Permission ManageContact = new Permission { Description = "Manage Comunication Contact", Name = "ManageContact" };
+        public static readonly Permission ManageCampaigns = new Permission { Description = "Manage Comunication Campaigns", Name = "ManageCampaigns"};
+        public static readonly Permission ManageCommunicationAdv = new Permission { Description = "Manage Comunication Messages", Name = "ManageCommunicationAdv", ImpliedBy = new[] {ManageCampaigns} };
+        public static readonly Permission ManageContact = new Permission { Description = "Manage Comunication Contact", Name = "ManageContact", ImpliedBy = new[] { ManageCampaigns } };
+        public static readonly Permission ShowMenuCommunication = new Permission { Description = "Show Menu Communication", Name = "ShowMenuCommunication", ImpliedBy = new[] { ManageCampaigns, ManageCommunicationAdv, ManageContact } };
+        public static readonly Permission ManageOwnCampaigns = new Permission { Description = "Manage Own Comunication Campaigns", Name = "ManageOwnCampaigns" , ImpliedBy = new[] { ManageCampaigns } };
+        public static readonly Permission ManageOwnCommunicationAdv = new Permission { Description = "Manage Own Comunication Messages", Name = "ManageOwnCommunicationAdv", ImpliedBy = new[] { ManageCampaigns, ManageCommunicationAdv } };
+        public static readonly Permission ManageOwnContact = new Permission { Description = "Manage Own Comunication Contact", Name = "ManageOwnContact", ImpliedBy = new[] { ManageCampaigns, ManageContact } };
+        public static readonly Permission PublishCommunicationAdv = new Permission { Description = "Publish Comunication Messages", Name = "PublishCommunicationAdv", ImpliedBy = new[] { ManageCampaigns, ManageCommunicationAdv } };
+        public static readonly Permission PublishOwnCommunicationAdv = new Permission { Description = "Publish Own Comunication Messages", Name = "PublishOwnCommunicationAdv", ImpliedBy = new[] { PublishCommunicationAdv,ManageCampaigns, ManageCommunicationAdv } };
+    
 
         public virtual Feature Feature { get; set; }
 
@@ -15,7 +22,13 @@ namespace Laser.Orchard.CommunicationGateway {
             return new[] {
                 ManageCampaigns,
                 ManageCommunicationAdv,
-                ManageContact
+                ManageContact,
+                ShowMenuCommunication,
+                ManageOwnCampaigns,
+                ManageOwnCommunicationAdv,
+                ManageOwnContact,
+                PublishOwnCommunicationAdv,
+                PublishCommunicationAdv
             };
         }
 
@@ -23,7 +36,7 @@ namespace Laser.Orchard.CommunicationGateway {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                 Permissions = new[] {ManageCampaigns,ManageCommunicationAdv,ManageContact}
+                 Permissions = new[] {ManageCampaigns,ManageCommunicationAdv,ManageContact,ShowMenuCommunication,PublishCommunicationAdv}
                 },
                 new PermissionStereotype {
                     Name = "Editor",

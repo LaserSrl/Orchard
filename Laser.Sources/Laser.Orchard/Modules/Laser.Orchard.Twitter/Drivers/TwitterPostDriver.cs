@@ -112,7 +112,7 @@ namespace Laser.Orchard.Twitter.Drivers {
                     else
                         vm.Title = part.TwitterTitle;
                     return ContentShape("Parts_TwitterPost_Detail",
-                        () => shapeHelper.Parts_TwitterPost_Detail(Twitter: vm, SendOnNextPublish: part.SendOnNextPublish));
+                        () => shapeHelper.Parts_TwitterPost_Detail(Twitter: vm, SendOnNextPublish: part.SendOnNextPublish, TwitterMessageSent: part.TwitterMessageSent));
                 }
                 else
                     return null;
@@ -216,41 +216,25 @@ namespace Laser.Orchard.Twitter.Drivers {
 
 
 
-            TwitterPostPartSettingVM setting = part.Settings.GetModel<TwitterPostPartSettingVM>();
-            var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-            if (string.IsNullOrEmpty(setting.Image)) {
-                //MediaLibraryPickerField mediaPicker = (MediaLibraryPickerField)part.Fields.Where(f => f.Name == "TwitterImage").FirstOrDefault();
-                //if (mediaPicker != null && mediaPicker.Ids.Count() > 0) {
-                //    try {
-                //        var ContentImage = _orchardServices.ContentManager.Get(mediaPicker.Ids[0], VersionOptions.Published);
-                //        var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
-                //        part.TwitterPicture = pathdocument;//  urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
-
-                //    }
-                //    catch {
-                //        part.TwitterPicture = "";
-                //    }
-                //}
-                //else
-                    part.TwitterPicture = "";
-            }
-            else {
-                    var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
-                    string listid = _tokenizer.Replace(setting.Image, tokens);
-                    listid = listid.Replace("{", "").Replace("}", "");
-                    Int32 idimage = 0;
-                    Int32.TryParse(listid.Split(',')[0], out idimage);
-                    if (idimage > 0) {
-                        var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
-                        var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
-                        part.TwitterPicture = pathdocument;
-                    }
-                    else
-                        part.TwitterPicture = "";
-                
-                // _orchardServices.ContentManager.Get(
-              //  part.TwitterPicture = urlHelper.MakeAbsolute(_tokenizer.Replace(setting.Image, tokens));
-            }
+            //TwitterPostPartSettingVM setting = part.Settings.GetModel<TwitterPostPartSettingVM>();
+            //var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            //if (string.IsNullOrEmpty(setting.Image)) {
+            //        part.TwitterPicture = "";
+            //}
+            //else {
+            //        var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
+            //        string listid = _tokenizer.Replace(setting.Image, tokens);
+            //        listid = listid.Replace("{", "").Replace("}", "");
+            //        Int32 idimage = 0;
+            //        Int32.TryParse(listid.Split(',')[0], out idimage);
+            //        if (idimage > 0) {
+            //            var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
+            //            var pathdocument = Path.Combine(ContentImage.As<MediaPart>().FolderPath, ContentImage.As<MediaPart>().FileName);
+            //            part.TwitterPicture = pathdocument;
+            //        }
+            //        else
+            //            part.TwitterPicture = "";
+            //  }
             return Editor(part, shapeHelper);
         }
        

@@ -13,9 +13,14 @@ using Orchard.Logging;
 using Orchard.Users.Models;
 using Laser.Orchard.CommunicationGateway.Models;
 using Orchard.Data;
+using Laser.Orchard.CommunicationGateway.Services;
+
 namespace Laser.Orchard.Mobile.Services {
+
     public interface ISmsServices : IDependency {
-        string SendSms(long[] TelDestArr, string TestoSMS);
+        string SendSms(long[] TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
+        Config GetConfig();
+        string GetReportSmsStatus(string IdSMS);
         void Synchronize();
     }
 
@@ -23,6 +28,12 @@ namespace Laser.Orchard.Mobile.Services {
     public class SmsServices : ISmsServices {
         private readonly IOrchardServices _orchardServices;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
+
+        public const int MSG_MAX_CHAR_NUMBER_SINGOLO = 160;
+        public const int MSG_MAX_CHAR_NUMBER_CONCATENATI = 1530;
+
+        private const string PREFISSO_PLACE_HOLDER = "[PH_";
+
         public SmsServices(IOrchardServices orchardServices, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord) {
             _repositoryCommunicationSmsRecord = repositoryCommunicationSmsRecord;
             _orchardServices = orchardServices;
@@ -46,8 +57,7 @@ namespace Laser.Orchard.Mobile.Services {
                         // Una contact part dovrebbe esserci in quanto questo codice viene eseguito dopo la sincronizzazione utenti
                         // Se non vi è una contartpart deduco che il dato sia sporco (es: UUid di un utente che è stato cancellato quindi non sincronizzo il dato con contactpart, verrà legato come se fosse scollegato al contentitem che raggruppa tutti i scollegati)
                         //throw new Exception("Utente senza associazione alla profilazione");
-                    }
-                    else {
+                    } else {
                         if (csr == null) {
                             CommunicationSmsRecord newsms = new CommunicationSmsRecord();
                             newsms.Prefix = pref;
@@ -57,11 +67,10 @@ namespace Laser.Orchard.Mobile.Services {
                             newsms.Validated = true;
                             newsms.DataInserimento = DateTime.Now;
                             newsms.DataModifica = DateTime.Now;
-                            newsms.Produzione = true;                     
+                            newsms.Produzione = true;
                             _repositoryCommunicationSmsRecord.Create(newsms);
                             _repositoryCommunicationSmsRecord.Flush();
-                        }
-                        else {
+                        } else {
                             if (csr.SmsContactPartRecord_Id != ciCommunication.ContentItem.Id) {
                                 csr.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
                                 csr.DataModifica = DateTime.Now;
@@ -76,37 +85,67 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
 
-
-        public string SendSms(long[] telDestArr, string testoSMS) {
+        public string SendSms(long[] telDestArr, string testoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false) {
             var bRet = "FALSE";
+
             ArrayOfLong numbers = new ArrayOfLong();
             numbers.AddRange(telDestArr);
+
             try {
                 var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
-                Sms sms = new Sms {
+
+                // Imposto Guid univoco se la richiesta non arriva da SmsGateway
+                if (String.IsNullOrEmpty(IdSMS)) {
+                    IdSMS = new Guid().ToString();
+                }
+
+                if (InviaConAlias) {
+                    if (String.IsNullOrEmpty(alias)) {
+                        alias = smsSettings.SmsFrom;
+                    }
+                } else {
+                    alias = null;
+                }
+
+                SmsServiceReference.Sms sms = new SmsServiceReference.Sms {
                     DriverId = smsSettings.MamDriverIdentifier,
-                    SmsFrom = smsSettings.SmsFrom,
-                    MamHaveAlias = smsSettings.MamHaveAlias,
+                    SmsFrom = (_orchardServices.WorkContext.CurrentUser!=null?_orchardServices.WorkContext.CurrentUser.UserName:"system"),
+                    MamHaveAlias = InviaConAlias,
+                    Alias = alias,
                     SmsPrority = smsSettings.SmsPrority ?? 0,
                     SmsValidityPeriod = smsSettings.SmsValidityPeriod ?? 3600,
-                    ExternalId = new Guid().ToString(),
+                    ExternalId = IdSMS,
                     SmsBody = testoSMS,
                     SmsTipoCodifica = 0,
                     SmsNumber = numbers,
                 };
+
                 //Specify the binding to be used for the client.
                 EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
-                SmsServiceReference.SmsServiceSoapClient _service;
+                SmsServiceReference.SmsWebServiceSoapClient _service;
                 if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
                     WSHttpBinding binding = new WSHttpBinding();
                     binding.Security.Mode = SecurityMode.Transport;
-                    _service = new SmsServiceSoapClient(binding, address);
+                    _service = new SmsWebServiceSoapClient(binding, address);
                 } else {
                     BasicHttpBinding binding = new BasicHttpBinding();
-                    _service = new SmsServiceSoapClient(binding, address);
+                    _service = new SmsWebServiceSoapClient(binding, address);
                 }
-                
-                var result = _service.SendSMS(sms);
+
+                // Place Holder
+                List<SmsServiceReference.PlaceHolderMessaggio> listPH = GetPlaceHolder(telDestArr, testoSMS);
+                SmsServiceReference.PlaceHolderMessaggio[] SmsPlaceHolder = null;
+                if (listPH != null && listPH.Count > 0) {
+                    SmsPlaceHolder = listPH.ToArray();
+                }
+
+                // Login
+                SmsServiceReference.Login login = new SmsServiceReference.Login();
+                login.User = smsSettings.WsUsername;
+                login.Password = smsSettings.WsPassword;
+                login.DriverId = smsSettings.MamDriverIdentifier;
+
+                var result = _service.SendSMS(login, sms, SmsPlaceHolder);
 
                 //Log.Info(Metodo + " Inviato SMS ID: " + idSmsComponent);
                 bRet = result;
@@ -114,7 +153,113 @@ namespace Laser.Orchard.Mobile.Services {
             } catch (Exception ex) {
                 Logger.Error(ex, ex.Message + " :: " + ex.StackTrace);
             }
+
             return bRet;
+        }
+
+        private List<SmsServiceReference.PlaceHolderMessaggio> GetPlaceHolder(long[] telDestArr, string testoSMS) {
+            List<SmsServiceReference.PlaceHolderMessaggio> listaPH = null;
+
+            var smsPlaceholdersSettingsPart = _orchardServices.WorkContext.CurrentSite.As<SmsPlaceholdersSettingsPart>();
+
+            if (smsPlaceholdersSettingsPart.PlaceholdersList.Placeholders.Count() > 0 && testoSMS.Contains(PREFISSO_PLACE_HOLDER)) {
+                listaPH = new List<SmsServiceReference.PlaceHolderMessaggio>();
+                
+                foreach (long numTel in telDestArr) {
+                    SmsServiceReference.PlaceHolderMessaggio ph = new SmsServiceReference.PlaceHolderMessaggio();
+                    ph.Telefono = numTel.ToString();
+
+                    List<SmsServiceReference.PHChiaveValore> listaCV = new List<SmsServiceReference.PHChiaveValore>();
+
+                    foreach(var settingsPH in smsPlaceholdersSettingsPart.PlaceholdersList.Placeholders) {
+
+                        SmsServiceReference.PHChiaveValore ph_SettingsCV = new SmsServiceReference.PHChiaveValore();
+
+                        // TODO: Si dovrà recuperare anche il valore dei Place Holder che non hanno value fisso - es.{ User.Name }
+                        ph_SettingsCV.Chiave = "[PH_" + settingsPH.Name + "]";
+                        ph_SettingsCV.Valore = settingsPH.Value;
+
+                        listaCV.Add(ph_SettingsCV);
+                    }
+
+                    ph.ListaPHChiaveValore = listaCV.ToArray();
+
+                    listaPH.Add(ph);
+                }
+            }
+
+            return listaPH;
+        }
+
+
+        public Config GetConfig() {
+            //Specify the binding to be used for the client.
+            var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
+
+            EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
+            SmsServiceReference.SmsWebServiceSoapClient _service;
+
+            if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
+                WSHttpBinding binding = new WSHttpBinding();
+                binding.Security.Mode = SecurityMode.Transport;
+                _service = new SmsWebServiceSoapClient(binding, address);
+            } else {
+                BasicHttpBinding binding = new BasicHttpBinding();
+                _service = new SmsWebServiceSoapClient(binding, address);
+            }
+
+            SmsServiceReference.Login login = new SmsServiceReference.Login();
+            login.User = smsSettings.WsUsername;
+            login.Password = smsSettings.WsPassword;
+            login.DriverId = smsSettings.MamDriverIdentifier;
+
+            var result = _service.GetConfig(login);
+
+            return result;
+        }
+
+        public string GetReportSmsStatus(string IdSMS) {
+            string reportStatus = null;
+
+            //Specify the binding to be used for the client.
+            var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
+
+            EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
+            SmsServiceReference.SmsWebServiceSoapClient _service;
+
+            if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
+                WSHttpBinding binding = new WSHttpBinding();
+                binding.Security.Mode = SecurityMode.Transport;
+                _service = new SmsWebServiceSoapClient(binding, address);
+            } else {
+                BasicHttpBinding binding = new BasicHttpBinding();
+                _service = new SmsWebServiceSoapClient(binding, address);
+            }
+
+            SmsServiceReference.Login login = new SmsServiceReference.Login();
+            login.User = smsSettings.WsUsername;
+            login.Password = smsSettings.WsPassword;
+            login.DriverId = smsSettings.MamDriverIdentifier;
+
+            // TODO - Dettaglio Utenti + Stato Sms
+            SmsServiceReference.StatusByExtId[] ret = _service.GetSmsStateByExternalId(login, IdSMS);
+
+            int contACCEPTED = (from sms in ret where sms.SmsState.CompareTo("ACCEPTED") == 0 select sms).Count();
+            int contDELIVERED = (from sms in ret where sms.SmsState.CompareTo("DELIVERED") == 0 select sms).Count();
+            int contEXPIRED = (from sms in ret where sms.SmsState.CompareTo("EXPIRED") == 0 select sms).Count();
+            int contREJECTED = (from sms in ret where sms.SmsState.CompareTo("REJECTED") == 0 select sms).Count();
+
+            int contSmsTotali = contACCEPTED + contDELIVERED + contEXPIRED + contREJECTED;
+            int contSmsInviati = contACCEPTED + contDELIVERED;
+            int contSmsFalliti = contEXPIRED + contREJECTED;
+
+            reportStatus = "Tot Utenti: " + contSmsTotali.ToString();
+            reportStatus += " - Inviati: " + contSmsInviati.ToString();
+            reportStatus += " (Consegnati al terminale: " + contDELIVERED.ToString() + " - Consegnati all'operatore: " + contACCEPTED.ToString() + ")";
+            reportStatus += " - Falliti: " + contSmsFalliti.ToString();
+            reportStatus += " (Rejected: " + contREJECTED.ToString() + " - Expired: " + contEXPIRED.ToString() + ")";
+
+            return reportStatus;
         }
 
     }

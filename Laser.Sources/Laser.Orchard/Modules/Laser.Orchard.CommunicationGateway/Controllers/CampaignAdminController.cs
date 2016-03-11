@@ -108,6 +108,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         [HttpPost]
         [Admin]
         public ActionResult Index(PagerParameters pagerParameters, SearchVM search, bool ShowVideo = false) {
+            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+                return new HttpUnauthorizedResult();
             dynamic Options = new System.Dynamic.ExpandoObject();
             Options.ShowVideo = false;
             if (!_orchardServices.Authorizer.Authorize(TestPermission))

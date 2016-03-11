@@ -111,6 +111,9 @@
     <Reference Include="Orchard.Modules">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Modules\bin\Orchard.Modules.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.OutputCache">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.OutputCache\bin\Orchard.OutputCache.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Projections">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
     </Reference>
@@ -290,6 +293,7 @@
     <Compile Include="Tokens\TaxonomyTokens.cs" />
     <Compile Include="ViewModels\UsersGroupsSettingsVM.cs" />
     <Compile Include="ViewModels\UsersGroupsVM.cs" />
+    <Compile Include="WebApiProtection\Filters\ApiKeyFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity-RequestInspector.cshtml" />
@@ -319,6 +323,10 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="WebApiProtection\Models\" />
+    <Folder Include="WebApiProtection\Settings\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

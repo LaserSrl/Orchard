@@ -15,6 +15,7 @@ using Orchard.Email.Services;
 using Orchard.JobsQueue.Services;
 using RazorEngine.Templating;
 using Newtonsoft.Json;
+using Orchard.UI.Notify;
 
 
 namespace Laser.Orchard.TemplateManagement.Services {
@@ -27,7 +28,7 @@ namespace Laser.Orchard.TemplateManagement.Services {
         IEnumerable<IParserEngine> GetParsers();
         IParserEngine GetParser(string id);
         IParserEngine SelectParser(TemplatePart template);
-        void SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, object viewBag = null, bool queued = true);
+        bool SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, object viewBag = null, bool queued = true);
    }
 
     [OrchardFeature("Laser.Orchard.TemplateManagement")]
@@ -37,13 +38,15 @@ namespace Laser.Orchard.TemplateManagement.Services {
         private readonly IOrchardServices _services;
         private readonly IMessageService _messageService;
         private readonly IJobsQueueService _jobsQueueService;
+        private readonly INotifier _notifier;
 
-        public TemplateService(IEnumerable<IParserEngine> parsers, IOrchardServices services, IMessageService messageService, IJobsQueueService jobsQueueService) {
+        public TemplateService(INotifier notifier,IEnumerable<IParserEngine> parsers, IOrchardServices services, IMessageService messageService, IJobsQueueService jobsQueueService) {
             _contentManager = services.ContentManager;
             _parsers = parsers;
             _services = services;
             _messageService = messageService;
             _jobsQueueService = jobsQueueService;
+            _notifier = notifier;
         }
 
         public IEnumerable<TemplatePart> GetLayouts() {
@@ -91,7 +94,7 @@ namespace Laser.Orchard.TemplateManagement.Services {
             return _parsers;
         }
 
-        public void SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, object viewBag=null, bool queued = true) {
+        public bool SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, object viewBag=null, bool queued = true) {
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = GetTemplate(templateId);
             var urlHelper = new UrlHelper(_services.WorkContext.HttpContext.Request.RequestContext);
@@ -121,28 +124,19 @@ namespace Laser.Orchard.TemplateManagement.Services {
             templatectx.Model = dynamicModel;
             var razorviewBag = viewBag;
             RazorEngine.Templating.DynamicViewBag vb = new DynamicViewBag();
-            //try {
-            //    if (razorviewBag != null) {
-            //        if (razorviewBag is IEnumerable<KeyValuePair<string, string>>) {
-            //            var dirazorviewBag = ((IEnumerable<KeyValuePair<string, string>>)viewBag)
-            //                .ToDictionary(x => x.Key, x => (object)x.Value);
-            //            foreach(string key  in dirazorviewBag.Keys) {
-            //                vb.AddValue(key, dirazorviewBag[key]);
-            //            }
-            //        }
-            //    }
-               
-            //}
-           // catch { }
             try {
                 foreach (string key in ((Dictionary<string, object>)viewBag).Keys) {
-                    vb.AddValue(key, ((IDictionary<string, object>)viewBag)["CampaignLink"]);
+                    vb.AddValue(key, ((IDictionary<string, object>)viewBag)[key]);
                 }
             }
             catch { }
             templatectx.ViewBag = vb;
-
             var body = ParseTemplate(template, templatectx);
+            if (body.StartsWith("Error On Template")) {
+                _notifier.Add(NotifyType.Error,T("Error on template, mail not sended"));
+                return false;
+            }
+
             var data = new Dictionary<string, object>();
             var smtp = _services.WorkContext.CurrentSite.As<SmtpSettingsPart>();
             var recipient = sendTo != null ? sendTo : new List<string> { smtp.Address };
@@ -171,7 +165,7 @@ namespace Laser.Orchard.TemplateManagement.Services {
                 _jobsQueueService.Enqueue("IMessageService.Send", new { type = SmtpMessageChannel.MessageType, parameters = data }, priority);
             }
 
-
+            return true;
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.ShortLinks.Services;
+using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard;
 using Orchard.ContentManagement;
@@ -32,6 +33,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         string GetCampaignLink(string CampaignSource, ContentPart part);
 
+        bool CampaignLinkExist(ContentPart part);
+
         void UserToContact(IUser UserContent);
 
         CommunicationContactPart GetContactFromUser(int iduser);
@@ -59,14 +62,13 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
         }
 
-
         public bool AdvertisingIsAvailable(Int32 id) {
-            ContentItem ci=_orchardServices.ContentManager.Get(id);
+            ContentItem ci = _orchardServices.ContentManager.Get(id, VersionOptions.DraftRequired);
             if (ci.ContentType != "CommunicationAdvertising") {
                 return false;
             }
             if (ci.As<CommunicationAdvertisingPart>().CampaignId > 0) { // è legato ad una campagna
-                ContentItem campaign = _orchardServices.ContentManager.Get(ci.As<CommunicationAdvertisingPart>().CampaignId,VersionOptions.Latest);
+                ContentItem campaign = _orchardServices.ContentManager.Get(ci.As<CommunicationAdvertisingPart>().CampaignId, VersionOptions.Latest);
                 DateTime from = ((DateTimeField)(((dynamic)campaign).CommunicationCampaignPart.FromDate)).DateTime;
                 DateTime to = ((DateTimeField)(((dynamic)campaign).CommunicationCampaignPart.ToDate)).DateTime;
                 if (from > DateTime.UtcNow || (to < DateTime.UtcNow && to != DateTime.MinValue))
@@ -74,7 +76,6 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             return true;
         }
-
 
         public void Synchronize() {
 
@@ -162,10 +163,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             //string CampaignSource = "email";
             string shortlink = "";
             ContentPart part = (ContentPart)(((dynamic)generalpart).ContentItem.CommunicationAdvertisingPart);
-            string CampaignTerm =  string.Join("+", part.ContentItem.As<TagsPart>().CurrentTags.ToArray()).ToLower();
+            string CampaignTerm = string.Join("+", part.ContentItem.As<TagsPart>().CurrentTags.ToArray()).ToLower();
             string CampaignMedium = CampaignSource;
             string CampaignContent = part.ContentItem.As<TitlePart>().Title.ToLower();
-            string CampaignName = "";
+            string CampaignName = "Flash";
             try {
                 int idCampagna = ((int)((dynamic)part).CampaignId);
                 CampaignName = _orchardServices.ContentManager.Get(idCampagna).As<TitlePart>().Title;
@@ -179,15 +180,19 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             else {
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
-                if (pickerField != null) {
+                if (pickerField != null && pickerField.ContentItems != null) {
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
                     if (firstItem != null) {
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
                         link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
                     }
+                    else {
+                        return "";
+                    }
                 }
-                else
+                else {
                     return "";
+                }
             }
 
             string linkelaborated = ElaborateLink(link, CampaignSource, CampaignMedium, CampaignTerm, CampaignContent, CampaignName);
@@ -198,6 +203,31 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 }
             }
             return shortlink;
+        }
+
+        public bool CampaignLinkExist(ContentPart generalpart) {
+            bool linkExist = false;
+
+            ContentPart part = (ContentPart)(((dynamic)generalpart).ContentItem.CommunicationAdvertisingPart);
+
+            if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
+                linkExist = true;
+            }
+            else {
+                var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
+
+                if (pickerField != null) {
+                    try {
+                        var firstItem = pickerField.ContentItems.FirstOrDefault();
+                        if (firstItem != null) {
+                            linkExist = true;
+                        }
+                    }
+                    catch { }
+                }
+            }
+
+            return linkExist;
         }
 
         /// <summary>
@@ -240,6 +270,14 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             else {
                 Contact = contactsUsers.ContentItem;
             }
+            try {
+                if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != Contact.As<FavoriteCulturePart>().Culture_Id) {
+                    Contact.As<FavoriteCulturePart>().Culture_Id = UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id;
+                }
+            }
+            catch (Exception ex) { // non si ha l'estensione per favorite culture
+            }
+
             if (!string.IsNullOrEmpty(UserContent.Email) && UserContent.ContentItem.As<UserPart>().RegistrationStatus == UserStatus.Approved) {
                 CommunicationEmailRecord cmr = _repositoryCommunicationEmailRecord.Fetch(x => x.Email == UserContent.Email).FirstOrDefault();
                 if (cmr != null) {

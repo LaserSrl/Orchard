@@ -1,29 +1,46 @@
-﻿# Orchard resource strings - fr-FR
-# Copyright (c) 2015 Laser s.r.l.
+# Orchard resource strings - it-IT
+# Copyright (c) 2016 Laser s.r.l.
 
-# > #: msgctxt  { contesto del messaggio - Originale ITA }
-# > #| msgid  	{ identificativo del messaggio - Originale ITA }
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
 # > msgctxt  "{ contesto del messaggio }"
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
 
+msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
+msgid "Test Short Link"
+msgstr "L'Url breve"
+
+msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
+msgid "Valid for:"
+msgstr "Valido per:"
+
 msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinksSettings.cshtml"
-msgid "Short Link Settings"
-msgstr "Impostazioni Short Link"
+msgid "Set the <a target=\"_blank\" href=\"{0}\">apikey</a> , on the google site select the project from upside menu's dropdownlist and create a Server Keys, remember to enable the service by going to Overview -> Other popular APIs ->URL Shortener Api"
+msgstr "Controlla la <a target=\"_blank\" href=\"{0}\">apikey</a>: sul sito google di riferimento seleziona il progetto dalla lista del menu in alto e crea una Chiave Server ("Server Keys"). Ricordati di abilitare anche l'opportuno servizio andando su Overview -> Other popular APIs ->URL Shortener Api"
 
-msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
+msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/Parts/ShortLinks.cshtml"
 msgid "Short Link"
-msgstr "Short Link"
+msgstr "Link breve"
 
-msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
-msgid "Ask New Short Link"
-msgstr "Chiedi nuovo Short Link"
+msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/Parts/ShortLinks.SummaryAdmin.cshtml"
+msgid "no Short link"
+msgstr "Nessun short link"
 
-msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
-msgid "You must save content before be able to create short link."
-msgstr "Per chiedere lo short link è necessario salvare il contenuto."
+msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/Parts/ShortLinks.SummaryAdmin.cshtml"
+msgid "Short Link"
+msgstr "Link breve"
 
-msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
-msgid "You must save a valid Google API KEY on settings before be able to create short link."
-msgstr "È necessario salvare una Google API KEY nelle impostazioni prima di poter di creare uno short link."
+msgctxt "Laser.Orchard.ShortLinks.Handlers.ShortLinksHandler"
+msgid "The short link is not associated to this page!"
+msgstr "Questo shortlink non è attualmente associato alla presente pagina!"
+
+msgctxt "Laser.Orchard.ShortLinks.Services.MissingSettingsBanner"
+msgid "The <a href=\"{0}#shortlinksetting\">ShortLinks settings</a> need to be configured."
+msgstr "Le impostazioni del <a href=\"{0}#shortlinksetting\">modulo ShortLink</a> devono ancora essere configurate."
+
+msgctxt "Laser.Orchard.ShortLinks.Services.ShortLinksService"
+msgid "No Shorturl Setting Found"
+msgstr "Nessuna impostazione per lo ShortUrl trovata"
 

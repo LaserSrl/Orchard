@@ -59,6 +59,7 @@ namespace Laser.Orchard.ShortLinks.Services {
         }
 
         public string GetShortLink(string myurl) {
+            if (String.IsNullOrWhiteSpace(myurl)) return "";
             string shorturl = "";
             string longuri = myurl;// GetFullAbsoluteUrl(part);
             string apiKey = _orchardServices.WorkContext.CurrentSite.As<Laser.Orchard.ShortLinks.Models.ShortLinksSettingsPart>().GoogleApiKey;

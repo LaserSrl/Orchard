@@ -74,7 +74,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\Laser.Orchard.Commons\bin\Release\System.Net.Http.Formatting.dll</HintPath>
+      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetwebapi\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web" />

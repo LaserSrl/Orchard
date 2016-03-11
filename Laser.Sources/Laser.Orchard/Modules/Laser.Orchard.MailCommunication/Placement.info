@@ -16,7 +16,7 @@
     <Match DisplayType="Summary">
       <Place Fields_Common_Text-Message="-" />
       <Place Fields_Link="-" />
-      <Place Parts_MailCommunication="Content:1"/>
+      <Place Parts_MailCommunication="Content:5.1"/>
     </Match>
   </Match>
 </Placement>

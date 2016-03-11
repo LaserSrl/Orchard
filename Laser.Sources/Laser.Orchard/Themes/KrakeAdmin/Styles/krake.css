@@ -160,6 +160,11 @@ select {
     min-width: 300px;
 }
 
+fieldset.taxonomy-wrapper .expando-glyph {
+    position: initial;
+    display: inline-block;
+}
+
 #page-title {
     color: #2b3039 !important;
     /*font-weight: 400;*/

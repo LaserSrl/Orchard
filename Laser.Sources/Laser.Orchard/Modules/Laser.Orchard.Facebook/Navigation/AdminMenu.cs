@@ -18,7 +18,7 @@ namespace Laser.Orchard.Facebook.Navigation {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(item => item
                 .Caption(T("Social Facebook Account"))
-                .Position("1.07")
+                .Position("1.064")
                 .Action("Index", "FacebookAccount", new { area = "Laser.Orchard.Facebook" })
                 .Permission(Permissions.ManageFacebookAccount)
        );

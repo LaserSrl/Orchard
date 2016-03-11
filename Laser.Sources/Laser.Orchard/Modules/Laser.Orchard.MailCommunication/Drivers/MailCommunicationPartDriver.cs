@@ -28,12 +28,10 @@ namespace Laser.Orchard.MailCommunication.Drivers {
             get { return "MailCommunicationPart"; }
         }
 
-        protected override DriverResult Display(MailCommunicationPart part, string displayType, dynamic shapeHelper)
-        {
+        protected override DriverResult Display(MailCommunicationPart part, string displayType, dynamic shapeHelper) {
             //Determine if we're on an admin page
             bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-            if (isAdmin)
-            {
+            if (isAdmin) {
                 if (displayType == "Summary")
                     return ContentShape("Parts_MailCommunication",
                         () => shapeHelper.Parts_MailCommunication(MailMessageSent: part.MailMessageSent, SendOnNextPublish: part.SendOnNextPublish, RecipientsNumber: part.RecipientsNumber, SentMailsNumber: part.SentMailsNumber));
@@ -41,9 +39,7 @@ namespace Laser.Orchard.MailCommunication.Drivers {
                     return ContentShape("Parts_MailCommunication",
                         () => shapeHelper.Parts_MailCommunication(MailMessageSent: part.MailMessageSent, SendOnNextPublish: part.SendOnNextPublish, RecipientsNumber: part.RecipientsNumber, SentMailsNumber: part.SentMailsNumber));
                 return null;
-            }
-            else
-            {
+            } else {
                 return null;
             }
         }

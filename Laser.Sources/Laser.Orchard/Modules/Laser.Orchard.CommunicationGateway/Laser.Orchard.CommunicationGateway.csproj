@@ -51,10 +51,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="Laser.Orchard.Commons, Version=1.0.5841.19763, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\Laser.Orchard.Commons\bin\Debug\Laser.Orchard.Commons.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Orchard.ContentPicker">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPicker\bin\Orchard.ContentPicker.dll</HintPath>
@@ -70,6 +66,10 @@
     <Reference Include="Orchard.Framework, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Localization, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Localization\bin\Orchard.Localization.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.MediaLibrary">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.MediaLibrary\bin\Orchard.MediaLibrary.dll</HintPath>
@@ -114,7 +114,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
     <Content Include="Styles\CommunicationGateway-admin.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -123,6 +122,10 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
+      <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
+      <Name>Laser.Orchard.Commons</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.Queries\Laser.Orchard.Queries.csproj">
       <Project>{d494b57f-2ae6-460f-9785-565376409afc}</Project>
       <Name>Laser.Orchard.Queries</Name>
@@ -161,6 +164,7 @@
     <Compile Include="Models\QueryFilterPart.cs" />
     <Compile Include="Models\SmsContactPart.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Security\AdvertisingEventHandler.cs" />
     <Compile Include="Services\ICommunicationService.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
     <Compile Include="ViewModels\ListVM.cs" />

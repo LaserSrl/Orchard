@@ -188,7 +188,10 @@ namespace Pubblicazione {
                     break;
 
                 case "OnlyDll":
-                    totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count);
+                    totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count 
+                        + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count
+                        + this.clbLibrary.CheckedItems.Count + this.clbLibraryOrchard.CheckedItems.Count
+                        );
                     action = () => button1.Enabled = false;
                     button1.Invoke(action);
                     break;
@@ -197,8 +200,10 @@ namespace Pubblicazione {
             // this.TheprogressBar.Value = 0;
             // this.TheprogressBar.Maximum = (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count) * 2;
             // this.TheprogressBar.Step = 1;
-            if (Directory.Exists(deploypath) && this.chkDeleteFolder.Checked)
+            if (Directory.Exists(deploypath) && this.chkDeleteFolder.Checked) {
                 Directory.Delete(deploypath, true);
+                Thread.Sleep(1);
+            }
             Directory.CreateDirectory(deploypath);
             //foreach (var a in this.clbLibrary.CheckedItems) {
             //    DirectoryInfo parentDir = Directory.GetParent(elencoModuli[this.clbModules.Items[0].ToString()]);
@@ -623,6 +628,25 @@ namespace Pubblicazione {
                 this.clbThemes.SetItemChecked(i, ((CheckBox)sender).Checked);
             }
 
+        }
+
+        private void chkAllCoreModules_CheckedChanged(object sender, EventArgs e) {
+            for (int i = 0; i < this.clbModulesOrchard.Items.Count; i++) {
+                this.clbModulesOrchard.SetItemChecked(i, ((CheckBox)sender).Checked);
+            }
+        }
+
+        private void chkAllCoreLibraries_CheckedChanged(object sender, EventArgs e) {
+            for (int i = 0; i < this.clbLibraryOrchard.Items.Count; i++) {
+                this.clbLibraryOrchard.SetItemChecked(i, ((CheckBox)sender).Checked);
+            }
+
+        }
+
+        private void chkAllCoreThemes_CheckedChanged(object sender, EventArgs e) {
+            for (int i = 0; i < this.clbThemesOrchard.Items.Count; i++) {
+                this.clbThemesOrchard.SetItemChecked(i, ((CheckBox)sender).Checked);
+            }
         }
 
     }

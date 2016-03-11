@@ -3,7 +3,9 @@ using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.Mobile.Settings;
 using Laser.Orchard.Mobile.ViewModels;
+using Laser.Orchard.Queries.Services;
 using Newtonsoft.Json;
+using NHibernate.Transform;
 using Orchard;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
@@ -21,6 +23,7 @@ using PushSharp.Core;
 using PushSharp.Windows;
 using PushSharp.WindowsPhone;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
@@ -31,6 +34,7 @@ namespace Laser.Orchard.Mobile.Services {
 
     public interface IPushNotificationService : IDependency {
 
+        IList GetPushQueryResult(Int32[] ids);
         void StorePushNotification(PushNotificationRecord pushElement);
 
         IEnumerable<PushNotificationRecord> SearchPushNotification(string texttosearch);
@@ -47,6 +51,7 @@ namespace Laser.Orchard.Mobile.Services {
         private readonly IRepository<PushNotificationRecord> _pushNotificationRepository;
         private readonly IRepository<UserDeviceRecord> _userDeviceRecord;
         //private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
+        private readonly IQueryPickerService _queryPickerServices;
 
         public Localizer T { get; set; }
         private readonly INotifier _notifier;
@@ -69,7 +74,8 @@ namespace Laser.Orchard.Mobile.Services {
                 IMylogService myLog,
                 ShellSettings shellSetting,
                 ISessionLocator sessionLocator,
-                ITokenizer tokenizer
+                ITokenizer tokenizer,
+                IQueryPickerService queryPickerService
          //   IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord,
          //      ICommunicationService communicationService non posso usare l'injection altrimenti vanno in errore i tenant che non hanno ancora la communication abilitata
          ) {
@@ -87,7 +93,58 @@ namespace Laser.Orchard.Mobile.Services {
             _userDeviceRecord = userDeviceRecord;
         //    _communicationService = communicationService;
             _orchardServices.WorkContext.TryResolve<ICommunicationService>(out _communicationService);
-             
+            _queryPickerServices = queryPickerService; 
+        }
+
+        public IList GetPushQueryResult(Int32[] ids)
+        {
+            IHqlQuery query;
+            if (ids != null && ids.Count() > 0)
+            {
+                query = IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(ids, null, new string[] { "CommunicationContact" }));
+            }
+            else
+            {
+                query = IntegrateAdditionalConditions(null);
+            }
+
+            // Trasformo in stringa HQL
+            var stringHQL = ((DefaultHqlQuery)query).ToHql(false);
+
+            // Rimuovo la Order by per poter fare la query annidata
+            // TODO: trovare un modo migliore per rimuovere la order by
+            // provare a usare: query.OrderBy(null, null);
+            stringHQL = stringHQL.ToString().Replace("order by civ.Id", "");
+
+            var queryForEmail = "SELECT distinct cir.Id as Id, TitlePart.Title as Title, MobileRecord.UUIdentifier as UUIdentifier FROM " +
+                "Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
+                "civr.ContentItemRecord as cir join " +
+                "civr.TitlePartRecord as TitlePart join " +
+                "cir.MobileContactPartRecord as MobileContact " +
+                "join MobileContact.MobileRecord as MobileRecord " +
+                "WHERE civr.Published=1 AND MobileRecord.Validated AND civr.Id in (" + stringHQL + ")";
+
+            // Creo query ottimizzata per le performance
+            var fullStatement = _sessionLocator.For(null)
+                .CreateQuery(queryForEmail)
+                .SetCacheable(false)
+                ;
+            IList lista = fullStatement
+                    .SetResultTransformer(Transformers.AliasToEntityMap)
+                    .List();
+            return lista;
+        }
+
+        private IHqlQuery IntegrateAdditionalConditions(IHqlQuery query)
+        {
+            if (query == null)
+            {
+                query = _orchardServices.ContentManager.HqlQuery().ForType(new string[] { "MobileContact" });
+            }
+            query = query
+                .Where(x => x.ContentPartRecord<MobileContactPartRecord>(), x => x.IsNotEmpty("MobileRecord"));
+
+            return query;
         }
 
         public void Synchronize() {

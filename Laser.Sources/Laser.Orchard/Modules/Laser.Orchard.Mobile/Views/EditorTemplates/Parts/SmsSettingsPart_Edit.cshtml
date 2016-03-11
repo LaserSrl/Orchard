@@ -1,4 +1,5 @@
 ﻿@model Laser.Orchard.Mobile.Models.SmsSettingsPart
+
 <fieldset>
     <legend>@T("Sms Settings")</legend>
     
@@ -7,12 +8,20 @@
     @Html.ValidationMessageFor(m=>m.MamDriverIdentifier)
 
     @Html.LabelFor(m=>m.MamHaveAlias, T("Mam has alias"))
-    @Html.EditorFor(m=>m.MamHaveAlias)
+    @Html.CheckBoxFor(m => m.MamHaveAlias, new { @disabled = "disabled" })
     @Html.ValidationMessageFor(m=>m.MamHaveAlias)
 
     @Html.LabelFor(m=>m.SmsFrom, T("Sms sender name"))
-    @Html.EditorFor(m=>m.SmsFrom)
+    @Html.TextBoxFor(m=>m.SmsFrom, new { @readonly = "readonly" })
     @Html.ValidationMessageFor(m=>m.SmsFrom)
+
+    @Html.LabelFor(m=>m.MaxLenghtSms, T("Sms max lenght"))
+    @Html.TextBoxFor(m=>m.MaxLenghtSms, new { @readonly = "readonly" })
+    @Html.ValidationMessageFor(m=>m.MaxLenghtSms)
+
+    @Html.LabelFor(m=>m.Protocollo, T("Protocol"))
+    @Html.TextBoxFor(m=>m.Protocollo, new { @readonly = "readonly" })
+    @Html.ValidationMessageFor(m=>m.Protocollo)
 
     @Html.LabelFor(m=>m.SmsPrority, T("SMS priority"))
     @Html.EditorFor(m=>m.SmsPrority)
@@ -32,5 +41,13 @@
     @Html.LabelFor(m=>m.SmsServiceEndPoint, T("Sms web service url end-point"))
     @Html.EditorFor(m=>m.SmsServiceEndPoint)
     @Html.ValidationMessageFor(m=>m.SmsServiceEndPoint)
+
+    @Html.LabelFor(m=>m.WsUsername, T("Web service username"))
+    @Html.EditorFor(m=>m.WsUsername)
+    @Html.ValidationMessageFor(m=>m.WsUsername)
+
+    @Html.LabelFor(m=>m.WsPassword, T("Web service password"))
+    @Html.EditorFor(m=>m.WsPassword)
+    @Html.ValidationMessageFor(m=>m.WsPassword)
 
 </fieldset>

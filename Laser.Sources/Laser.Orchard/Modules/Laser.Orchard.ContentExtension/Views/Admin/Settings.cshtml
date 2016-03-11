@@ -8,13 +8,14 @@
     <button class="primaryAction" type="submit">@T("Update settings")</button>
 </div>
 <fieldset>
-    <legend>@T("ContentType Permission")</legend>
-    <table class="items">
+    <legend>@T("ContentType Permission Settings")</legend>
+    <table class="items" >
         <thead>
             <tr>
                 <th>@T("ContentType")</th>
                 <th>@T("Permission Get")</th>
                <th>@T("Permission Post")</th>
+                 <th>@T("Permission Publish")</th>
                 <th>@T("Permission Delete")</th>
             </tr>
         </thead>
@@ -26,6 +27,11 @@
             }
         </tbody>
     </table>
-   
+    <ul>
+    <li>@T("Replace ContentType with empty value to delete element")</li>
+    <li>@T("Set the permission in orchard style es: don't set EditOwnUserReport permission at UserReport contenttype but EditUserReport (and assign at users EditOwnUserReport permission)")</li>
+   <li>@T("If multiple permissions are set for same ContentType then, if one permission is matched, ContentType access is enabled")</li>
+       <li>@T("The workflow authorization is: if (test orchardauthorization) then authorized else { if (test this ContentType Permission Settings) then authorized else {if (test generic permission for contentitem) then authorized else unauthorized}}")</li>
+</ul>
 </fieldset>
 }

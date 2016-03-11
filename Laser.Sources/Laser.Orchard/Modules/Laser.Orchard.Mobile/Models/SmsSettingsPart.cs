@@ -43,7 +43,6 @@ namespace Laser.Orchard.Mobile.Models {
         /// <summary>
         /// Sm sFrom
         /// </summary>
-        [Required]
         public string SmsFrom {
             get { return this.Retrieve(x => x.SmsFrom); }
             set { this.Store(x => x.SmsFrom, value); }
@@ -62,6 +61,17 @@ namespace Laser.Orchard.Mobile.Models {
             get { return this.Retrieve(x => x.MamHaveAlias); }
             set { this.Store(x => x.MamHaveAlias, value); }
         }
+
+        public int MaxLenghtSms {
+            get { return this.Retrieve(x => x.MaxLenghtSms); }
+            set { this.Store(x => x.MaxLenghtSms, value); }
+        }
+
+        public SmsServiceReference.enumProtocollo Protocollo {
+            get { return this.Retrieve(x => x.Protocollo); }
+            set { this.Store(x => x.Protocollo, value); }
+        }
+
         /// <summary>
         /// Sms Prority
         /// </summary>
@@ -79,6 +89,16 @@ namespace Laser.Orchard.Mobile.Models {
             set { this.Store(x => x.SmsServiceEndPoint, value); }
         }
 
+
+        public string WsUsername {
+            get { return this.Retrieve(x => x.WsUsername); }
+            set { this.Store(x => x.WsUsername, value); }
+        }
+
+        public string WsPassword {
+            get { return this.Retrieve(x => x.WsPassword); }
+            set { this.Store(x => x.WsPassword, value); }
+        }
 
     }
 }

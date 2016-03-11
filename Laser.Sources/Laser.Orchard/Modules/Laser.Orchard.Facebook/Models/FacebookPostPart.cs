@@ -4,7 +4,7 @@ using Orchard.Data.Conventions;
 using System;
 using System.ComponentModel;
 using System.Linq;
-
+public enum FacebookType { Post, ShareLink };
 namespace Laser.Orchard.Facebook.Models {
 
     public class FacebookPostPart : ContentPart<FacebookPostPartRecord> {
@@ -39,6 +39,10 @@ namespace Laser.Orchard.Facebook.Models {
             get { return this.Retrieve(r => r.FacebookPicture); }
             set { this.Store(r => r.FacebookPicture, value); }
         }
+        public string FacebookIdPicture {
+            get { return this.Retrieve(r => r.FacebookIdPicture); }
+            set { this.Store(r => r.FacebookIdPicture, value); }
+        }
 
         public string FacebookLink {
             get { return this.Retrieve(r => r.FacebookLink); }
@@ -62,6 +66,21 @@ namespace Laser.Orchard.Facebook.Models {
             }
             set { this.Store(r => r.AccountList, string.Join(",", value)); }
         }
+
+        public FacebookType FacebookType {
+            get { return this.Retrieve(r => r.FacebookType); }
+            set { this.Store(r => r.FacebookType, value); }
+        }
+        
+        public string FacebookMessageToPost {
+            get { return this.Retrieve(r => r.FacebookMessageToPost); }
+            set { this.Store(r => r.FacebookMessageToPost, value); }
+        }
+        public bool HasImage {
+            get { return this.Retrieve(r => r.HasImage); }
+            set { this.Store(r => r.HasImage, value); }
+        }
+        
     }
 
     public class FacebookPostPartRecord : ContentPartRecord {
@@ -77,9 +96,13 @@ namespace Laser.Orchard.Facebook.Models {
 
         public virtual string FacebookName { get; set; }
         public virtual string FacebookPicture { get; set; }
+        public virtual string FacebookIdPicture { get; set; }
         public virtual string FacebookLink { get; set; }
         public virtual string AccountList { get; set; }
         public virtual bool SendOnNextPublish { get; set; }
+        public virtual FacebookType FacebookType { get; set; }
+        public virtual string FacebookMessageToPost { get; set; }
+        public virtual bool HasImage { get; set; }
 
     }
 }

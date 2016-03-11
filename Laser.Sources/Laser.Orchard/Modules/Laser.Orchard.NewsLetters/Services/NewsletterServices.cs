@@ -37,7 +37,7 @@ namespace Laser.Orchard.NewsLetters.Services {
         private readonly IMessageService _messageService;
         private readonly INotifier _notifier;
         public NewsletterServices(
-        
+
             IJobsQueueService jobsQueueService,
             IContentManager contentManager,
             IOrchardServices orchardServices,
@@ -47,7 +47,7 @@ namespace Laser.Orchard.NewsLetters.Services {
             IRepository<NewsletterDefinitionPartRecord> repositoryNewsletterDefinition,
             IRepository<NewsletterEditionPartRecord> repositoryNewsletterEdition,
              INotifier notifier) {
-                 _notifier = notifier;
+            _notifier = notifier;
             _contentManager = contentManager;
             _orchardServices = orchardServices;
             _messageService = messageService;
@@ -131,7 +131,8 @@ namespace Laser.Orchard.NewsLetters.Services {
                         AnnouncementPart = s,
                         DisplayUrl = urlHelper.ItemDisplayUrl(s)
                     }.ToExpando());
-            } else {
+            }
+            else {
                 fullyItems = null;
             }
             var model = new {
@@ -140,25 +141,29 @@ namespace Laser.Orchard.NewsLetters.Services {
             }.ToExpando();
             if (!isTest) {
                 var subscribersEmails = subscribers.Select(s => s.Email);
-                SendEmail((dynamic)model,
+                if (SendEmail((dynamic)model,
                     GetNewsletterDefinition(newsletterEdition.NewsletterDefinitionPartRecord_Id,
                         VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id,
-                        null, subscribersEmails);
-                // Aggiorno la newsletter edition, e rimuovo la relazione tra Newletter e Announcement 
-                newsletterEdition.Dispatched = true;
-                newsletterEdition.DispatchDate = DateTime.Now;
-                newsletterEdition.Number = GetNextNumber(newsletterEdition.NewsletterDefinitionPartRecord_Id); ;
-                foreach (var item in items) {
-                    var ids = ("," + item.AttachToNextNewsletterIds + ",").Replace("," + newsletterEdition.NewsletterDefinitionPartRecord_Id + ",", "");
-                    item.AttachToNextNewsletterIds = ids;
+                        null, subscribersEmails)) {
+
+                    // Aggiorno la newsletter edition, e rimuovo la relazione tra Newletter e Announcement 
+                    newsletterEdition.Dispatched = true;
+                    newsletterEdition.DispatchDate = DateTime.Now;
+                    newsletterEdition.Number = GetNextNumber(newsletterEdition.NewsletterDefinitionPartRecord_Id); ;
+                    foreach (var item in items) {
+                        var ids = ("," + item.AttachToNextNewsletterIds + ",").Replace("," + newsletterEdition.NewsletterDefinitionPartRecord_Id + ",", "");
+                        item.AttachToNextNewsletterIds = ids;
+                    }
                 }
-            } else if (!String.IsNullOrWhiteSpace(testEmail)) {
-                SendEmail((dynamic)model,
+            }
+            else if (!String.IsNullOrWhiteSpace(testEmail)) {
+                if (SendEmail((dynamic)model,
                     GetNewsletterDefinition(newsletterEdition.NewsletterDefinitionPartRecord_Id,
                         VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id,
-                        new List<string> { testEmail }, null);
-                _orchardServices.Notifier.Information(T("Newsletter edition sent to a test email!"));
-            } else if (String.IsNullOrWhiteSpace(testEmail)) {
+                        new List<string> { testEmail }, null))
+                    _orchardServices.Notifier.Information(T("Newsletter edition sent to a test email!"));
+            }
+            else if (String.IsNullOrWhiteSpace(testEmail)) {
                 _orchardServices.Notifier.Error(T("Enter a test email!"));
             }
         }
@@ -226,23 +231,27 @@ namespace Laser.Orchard.NewsLetters.Services {
                     try {
                         _repositorySubscribers.Create(subs);
                         returnValue = subs;
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex) {
                         _orchardServices.Notifier.Error(T(ex.Message));
                         returnValue = null;
                     }
 
-                } else if (!subs.Confirmed) {
+                }
+                else if (!subs.Confirmed) {
                     subs.SubscriptionDate = DateTime.Now;
                     subs.Name = subscriber.Name;
                     subs.Guid = Guid.NewGuid().ToString();
                     try {
                         _repositorySubscribers.Update(subs);
                         returnValue = subs;
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex) {
                         _orchardServices.Notifier.Error(T(ex.Message));
                         returnValue = null;
                     }
-                } else {
+                }
+                else {
                     _orchardServices.Notifier.Information(T("Email already registered!"));
                 }
                 if (returnValue != null) {
@@ -256,7 +265,8 @@ namespace Laser.Orchard.NewsLetters.Services {
                     SendEmail(viewModel, subs.NewsletterDefinition.ConfirmSubscrptionTemplateRecord_Id, new List<string> { subs.Email }, null);
 
                 }
-            } catch {
+            }
+            catch {
                 returnValue = null;
             }
 
@@ -273,15 +283,18 @@ namespace Laser.Orchard.NewsLetters.Services {
                     try {
                         _repositorySubscribers.Update(subs);
                         return subs;
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex) {
                         _orchardServices.Notifier.Error(T(ex.Message));
                         return null;
                     }
-                } else if (subs != null && subs.Confirmed) {
+                }
+                else if (subs != null && subs.Confirmed) {
                     _orchardServices.Notifier.Information(T("Email already registered!"));
                     return null;
                 }
-            } catch {
+            }
+            catch {
             }
 
             return null;
@@ -295,9 +308,11 @@ namespace Laser.Orchard.NewsLetters.Services {
                 if (subs == null) {
                     _orchardServices.Notifier.Information(T("Email not found!"));
                     return null;
-                } else if (subs.Confirmed) {
+                }
+                else if (subs.Confirmed) {
                     returnValue = subs;
-                } else {
+                }
+                else {
                     _orchardServices.Notifier.Information(T("Email not found!"));
                     return null;
                 }
@@ -312,7 +327,8 @@ namespace Laser.Orchard.NewsLetters.Services {
                     SendEmail(viewModel, subs.NewsletterDefinition.DeleteSubscrptionTemplateRecord_Id, new List<string> { subs.Email }, null);
 
                 }
-            } catch {
+            }
+            catch {
                 returnValue = null;
             }
 
@@ -329,22 +345,25 @@ namespace Laser.Orchard.NewsLetters.Services {
                     try {
                         _repositorySubscribers.Update(subs);
                         return subs;
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex) {
                         _orchardServices.Notifier.Error(T(ex.Message));
                         return null;
                     }
-                } else if (subs != null && !subs.Confirmed) {
+                }
+                else if (subs != null && !subs.Confirmed) {
                     _orchardServices.Notifier.Information(T("Email not yet registered!"));
                     return null;
                 }
-            } catch {
+            }
+            catch {
 
             }
             return null;
         }
         #endregion
 
-        private void SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, bool queued=true) {
+        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, bool queued = true) {
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = _templateService.GetTemplate(templateId);
             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
@@ -373,6 +392,10 @@ namespace Laser.Orchard.NewsLetters.Services {
             templatectx.Model = dynamicModel;
 
             var body = _templateService.ParseTemplate(template, templatectx);
+            if (body.StartsWith("Error On Template")) {
+                _notifier.Add(NotifyType.Error, T("Error on template, mail not sended"));
+                return false;
+            }
             var data = new Dictionary<string, object>();
             var smtp = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
             var recipient = sendTo != null ? sendTo : new List<string> { smtp.Address };
@@ -384,7 +407,7 @@ namespace Laser.Orchard.NewsLetters.Services {
             }
             //var watch = Stopwatch.StartNew();
             //int msgsent = 0;
-      
+
             //for(int i=0;i<20;i++) {
             //    msgsent++;
             //    data["Subject"] = msgsent.ToString();
@@ -402,7 +425,7 @@ namespace Laser.Orchard.NewsLetters.Services {
                 _jobsQueueService.Enqueue("IMessageService.Send", new { type = SmtpMessageChannel.MessageType, parameters = data }, priority);
             }
 
-
+            return true;
         }
 
     }
