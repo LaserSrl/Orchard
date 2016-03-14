@@ -1,31 +1,41 @@
-﻿@**@
-<table style="border: 1px solid black;">
+﻿@using (Script.Head()) {
+    Script.Require("jQuery_DataTables").AtHead();
+    Style.Require("jQuery_DataTables").AtHead();
+}
+@using (Script.Foot()) {
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#jquerytable').DataTable();
+    });
+</script>
+}
+<table id="jquerytable"  class="display" cellspacing="0" width="100%">
 <thead>
-<tr style="border: 1px solid black;">
-<th style="border: 1px solid black;">Id - schedule</th>
-<th style="border: 1px solid black;">ScheduledUtc</th>
-<th style="border: 1px solid black;">TaskType</th>
-<th style="border: 1px solid black;">Id Content</th>
-<th style="border: 1px solid black;">Data</th>
+<tr>
+<th>Id - schedule</th>
+<th>ScheduledUtc</th>
+<th>TaskType</th>
+<th>Id Content</th>
+<th>Data</th>
 </tr>
 </thead>
     @foreach (Orchard.Core.Scheduling.Models.ScheduledTaskRecord sc in Model) {
-        <tr style="border: 1px solid black;">
-<td style="border: 1px solid black;">@sc.Id&nbsp</td>
-<td style="border: 1px solid black;">@sc.ScheduledUtc&nbsp</td>
-  <td style="border: 1px solid black;">  @sc.TaskType&nbsp  </td>  
+        <tr >
+<td >@sc.Id&nbsp</td>
+<td >@sc.ScheduledUtc&nbsp</td>
+  <td >  @sc.TaskType&nbsp  </td>  
       
        @if (sc.ContentItemVersionRecord!=null){
            if (sc.ContentItemVersionRecord.Infoset!=null){
-               <td style="border: 1px solid black;">  @sc.ContentItemVersionRecord.Id</td>
-         <td style="border: 1px solid black;">  @sc.ContentItemVersionRecord.Infoset.Data</td>
+               <td >  @sc.ContentItemVersionRecord.Id</td>
+         <td >  @sc.ContentItemVersionRecord.Infoset.Data</td>
     }
-    else { <td style="border: 1px solid black;">  </td>
-           <td style="border: 1px solid black;">  </td>
+    else { <td>  </td>
+           <td>  </td>
            }
     }
-        else { <td style="border: 1px solid black;">  </td>
-           <td style="border: 1px solid black;">  </td>
+        else { <td >  </td>
+           <td >  </td>
            }
 
 </tr>

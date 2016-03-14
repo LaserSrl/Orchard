@@ -1,2 +1,11 @@
-﻿ <a class="button primaryAction" href="@Url.Action("Getcsrf", "Admin", new { area = "Laser.Orchard.DevTools"})" title="@T("Get my CsrfToken")">@T("Get my CsrfToken")</a>
- <a class="button primaryAction" href="@Url.Action("ShowScheduledTask", "Admin", new { area = "Laser.Orchard.DevTools"})" title="@T("Show scheduled task")">@T("Show scheduled task")</a>
+﻿@model Laser.Orchard.DevTools.ViewModels.Segnalazione
+<a class="button primaryAction" href="@Url.Action("Getcsrf", "Admin", new { area = "Laser.Orchard.DevTools" })" title="@T("Get my CsrfToken")">@T("Get my CsrfToken")</a>
+<a class="button primaryAction" href="@Url.Action("ShowScheduledTask", "Admin", new { area = "Laser.Orchard.DevTools" })" title="@T("Show scheduled task")">@T("Show scheduled task")</a>
+<a class="button primaryAction" href="@Url.Action("ShowCachedData", "Admin", new { area = "Laser.Orchard.DevTools" })" title="@T("Show Cached Data")">@T("Show Cached Data")</a>
+<a class="button primaryAction" href="@Url.Action("ShowLog", "Admin", new { area = "Laser.Orchard.DevTools" })" title="@T("Show Log")">@T("Show Log")</a>
+<br />
+<fieldset>
+    @if (!string.IsNullOrEmpty(Model.Testo)){
+    @Html.TextAreaFor(x => x.Testo,  new { style = "width: 100%; height: 600px;" })
+    }
+</fieldset>
