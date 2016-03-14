@@ -1,4 +1,8 @@
-﻿using Laser.Orchard.Commons.Extensions;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Web.Mvc;
+using Laser.Orchard.Commons.Extensions;
 using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.MailCommunication.Models;
@@ -18,10 +22,6 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Localization.Models;
 using Orchard.UI.Notify;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Web.Mvc;
 
 namespace Laser.Orchard.MailCommunication.Handlers {
 
@@ -87,14 +87,14 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                     if (content.QueryPickerPart != null && content.QueryPickerPart.Ids.Length > 0)
                         ids = content.QueryPickerPart.Ids;
 
-                    var localizedPart = content.As<LocalizationPart>();
+                    var localizedPart = content.LocalizationPart;
                     if (localizedPart != null && localizedPart.Culture != null)
                         idLocalization = localizedPart.Culture.Id;
 
                     IList lista = _mailCommunicationService.GetMailQueryResult(ids, idLocalization);
 
                     // ricava i settings e li invia tramite FTP
-                    var templateId = part.ContentItem.As<CustomTemplatePickerPart>().SelectedTemplate.Id;
+                    var templateId = ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id;
                     Dictionary<string, object> settings = GetSettings(part.ContentItem, templateId, part);
                     if (settings.Count > 0) {
                         SendSettings(settings, part.Id);
@@ -120,8 +120,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                         part.RecipientsNumber = lista.Count;
                         part.SentMailsNumber = 0;
                         part.MailMessageSent = true;
-                    }
-                    else {
+                    } else {
                         _notifier.Error(T("Error parsing mail template."));
                     }
                 }
@@ -166,13 +165,12 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 foreach (string key in ((Dictionary<string, object>)similViewBag).Keys) {
                     vb.AddValue(key, ((IDictionary<string, object>)similViewBag)["CampaignLink"]);
                 }
-            }
-            catch { }
+            } catch { }
             templatectx.ViewBag = vb;
 
             var body = _templateService.ParseTemplate(template, templatectx);
             if (body.StartsWith("Error On Template") == false) {
-                var subject = (contentModel as ContentItem).As<TitlePart>().Title;
+                var subject = contentModel.TitlePart.Title;
                 var smtp = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
                 string priority = "L";
                 switch (_mailerConfig.MailPriority) {
@@ -209,13 +207,13 @@ namespace Laser.Orchard.MailCommunication.Handlers {
         private void SendRecipients(List<object> recipients, int communicationId, int pageNum) {
             string pathFtp = _mailerConfig.FtpPath;
             string jsonDestinatari = JsonConvert.SerializeObject(recipients);
-            SendFtp(jsonDestinatari, _mailerConfig.FtpHost, _mailerConfig.FtpUser, _mailerConfig.FtpPassword, string.Format("{0}adv{1}-{2}-recipients.json", pathFtp, communicationId, pageNum));
+            SendFtp(jsonDestinatari, _mailerConfig.FtpHost, _mailerConfig.FtpUser, _mailerConfig.FtpPassword, string.Format("{0}adv{1}.{2}-{3}-recipients.json", pathFtp, _shellSettings.Name, communicationId, pageNum));
         }
 
         private void SendSettings(object settings, int communicationId) {
             string pathFtp = _mailerConfig.FtpPath;
             string jsonSettings = JsonConvert.SerializeObject(settings);
-            SendFtp(jsonSettings, _mailerConfig.FtpHost, _mailerConfig.FtpUser, _mailerConfig.FtpPassword, string.Format("{0}adv{1}-settings.json", pathFtp, communicationId));
+            SendFtp(jsonSettings, _mailerConfig.FtpHost, _mailerConfig.FtpUser, _mailerConfig.FtpPassword, string.Format("{0}adv{1}.{2}-settings.json", pathFtp, _shellSettings.Name, communicationId));
         }
 
         /// <summary>

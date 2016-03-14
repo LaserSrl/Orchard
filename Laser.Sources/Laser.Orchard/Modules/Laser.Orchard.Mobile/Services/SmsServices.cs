@@ -109,7 +109,7 @@ namespace Laser.Orchard.Mobile.Services {
 
                 SmsServiceReference.Sms sms = new SmsServiceReference.Sms {
                     DriverId = smsSettings.MamDriverIdentifier,
-                    SmsFrom = smsSettings.SmsFrom,
+                    SmsFrom = (_orchardServices.WorkContext.CurrentUser!=null?_orchardServices.WorkContext.CurrentUser.UserName:"system"),
                     MamHaveAlias = InviaConAlias,
                     Alias = alias,
                     SmsPrority = smsSettings.SmsPrority ?? 0,

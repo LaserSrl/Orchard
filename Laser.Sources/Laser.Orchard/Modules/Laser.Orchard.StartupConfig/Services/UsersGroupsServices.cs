@@ -55,7 +55,7 @@ namespace Laser.Orchard.StartupConfig.Services {
             var model = (UsersGroupsVM)value;
             if (model.Required) { // Required
                 if (model.GroupNumber==null || model.GroupNumber.Count()<=0){
-                    return new ValidationResult("You have select a group");
+                    return new ValidationResult("You have to select at least one group");
                 }
             }
             return ValidationResult.Success;
