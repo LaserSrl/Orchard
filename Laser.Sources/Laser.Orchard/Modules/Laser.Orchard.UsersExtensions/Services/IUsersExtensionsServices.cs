@@ -21,6 +21,7 @@ using Orchard.Users.Events;
 using Orchard.DisplayManagement;
 using Laser.Orchard.Mobile.Services;
 using Laser.Orchard.Mobile.Models;
+using Laser.Orchard.Mobile.Handlers;
 
 
 namespace Laser.Orchard.UsersExtensions.Services {
@@ -167,7 +168,10 @@ namespace Laser.Orchard.UsersExtensions.Services {
 
                 long phoneNumberComplete = 0;
                 if (long.TryParse(String.Concat(internationalPrefix.Trim(), phoneNumber.Trim()), out phoneNumberComplete)) {
-                    return _smsServices.SendSms(new long[] { phoneNumberComplete }, user.UserName + "\r\n" + url);
+                    //return _smsServices.SendSms(new long[] { phoneNumberComplete }, user.UserName + "\r\n" + url);
+                    var smsHqlList = new List<SmsHQL>();
+                    smsHqlList.Add(new SmsHQL { SmsPrefix = "", SmsNumber = phoneNumberComplete.ToString(), Id = 0, Title = "" });
+                    return _smsServices.SendSms(smsHqlList, user.UserName + "\r\n" + url);
                 }
             }
 

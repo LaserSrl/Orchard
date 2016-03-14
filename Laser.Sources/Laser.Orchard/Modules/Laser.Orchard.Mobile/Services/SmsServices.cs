@@ -14,11 +14,14 @@ using Orchard.Users.Models;
 using Laser.Orchard.CommunicationGateway.Models;
 using Orchard.Data;
 using Laser.Orchard.CommunicationGateway.Services;
+using Orchard.Tokens;
+using Laser.Orchard.Mobile.Handlers;
 
 namespace Laser.Orchard.Mobile.Services {
 
     public interface ISmsServices : IDependency {
-        string SendSms(long[] TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
+        //string SendSms(long[] TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
+        string SendSms(IList<SmsHQL> TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
         Config GetConfig();
         string GetReportSmsStatus(string IdSMS);
         void Synchronize();
@@ -28,15 +31,18 @@ namespace Laser.Orchard.Mobile.Services {
     public class SmsServices : ISmsServices {
         private readonly IOrchardServices _orchardServices;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
+        private readonly ITokenizer _tokenizer;
 
         public const int MSG_MAX_CHAR_NUMBER_SINGOLO = 160;
         public const int MSG_MAX_CHAR_NUMBER_CONCATENATI = 1530;
 
         private const string PREFISSO_PLACE_HOLDER = "[PH_";
 
-        public SmsServices(IOrchardServices orchardServices, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord) {
+        public SmsServices(IOrchardServices orchardServices, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, ITokenizer tokenizer)
+        {
             _repositoryCommunicationSmsRecord = repositoryCommunicationSmsRecord;
             _orchardServices = orchardServices;
+            _tokenizer = tokenizer;
             Logger = NullLogger.Instance;
         }
 
@@ -84,12 +90,12 @@ namespace Laser.Orchard.Mobile.Services {
             #endregion
         }
 
-
-        public string SendSms(long[] telDestArr, string testoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false) {
+        //public string SendSms(long[] telDestArr, string testoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false) {
+        public string SendSms(IList<SmsHQL> telDestArr, string testoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false) {
             var bRet = "FALSE";
 
             ArrayOfLong numbers = new ArrayOfLong();
-            numbers.AddRange(telDestArr);
+            numbers.AddRange(telDestArr.Select(x => Convert.ToInt64(x.SmsPrefix + x.SmsNumber)).ToArray());
 
             try {
                 var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
@@ -157,7 +163,8 @@ namespace Laser.Orchard.Mobile.Services {
             return bRet;
         }
 
-        private List<SmsServiceReference.PlaceHolderMessaggio> GetPlaceHolder(long[] telDestArr, string testoSMS) {
+        //private List<SmsServiceReference.PlaceHolderMessaggio> GetPlaceHolder(long[] telDestArr, string testoSMS) {
+        private List<SmsServiceReference.PlaceHolderMessaggio> GetPlaceHolder(IList<SmsHQL> telDestArr, string testoSMS) {
             List<SmsServiceReference.PlaceHolderMessaggio> listaPH = null;
 
             var smsPlaceholdersSettingsPart = _orchardServices.WorkContext.CurrentSite.As<SmsPlaceholdersSettingsPart>();
@@ -165,9 +172,9 @@ namespace Laser.Orchard.Mobile.Services {
             if (smsPlaceholdersSettingsPart.PlaceholdersList.Placeholders.Count() > 0 && testoSMS.Contains(PREFISSO_PLACE_HOLDER)) {
                 listaPH = new List<SmsServiceReference.PlaceHolderMessaggio>();
                 
-                foreach (long numTel in telDestArr) {
+                foreach (SmsHQL dest in telDestArr) {
                     SmsServiceReference.PlaceHolderMessaggio ph = new SmsServiceReference.PlaceHolderMessaggio();
-                    ph.Telefono = numTel.ToString();
+                    ph.Telefono = dest.SmsPrefix + dest.SmsNumber;
 
                     List<SmsServiceReference.PHChiaveValore> listaCV = new List<SmsServiceReference.PHChiaveValore>();
 
@@ -175,9 +182,14 @@ namespace Laser.Orchard.Mobile.Services {
 
                         SmsServiceReference.PHChiaveValore ph_SettingsCV = new SmsServiceReference.PHChiaveValore();
 
-                        // TODO: Si dovrà recuperare anche il valore dei Place Holder che non hanno value fisso - es.{ User.Name }
                         ph_SettingsCV.Chiave = "[PH_" + settingsPH.Name + "]";
-                        ph_SettingsCV.Valore = settingsPH.Value;
+
+                        // TODO: Si dovrà recuperare anche il valore dei Place Holder che non hanno value fisso - es.{ User.Name }
+                        // bisognerebbe passare il content item:
+                        //var part = _orchardServices.ContentManager.Get<SmsContactPart>(dest.Id);
+                        //var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } }; 
+                        ph_SettingsCV.Valore = _tokenizer.Replace(settingsPH.Value, null);
+                        //ph_SettingsCV.Valore = settingsPH.Value;
 
                         listaCV.Add(ph_SettingsCV);
                     }

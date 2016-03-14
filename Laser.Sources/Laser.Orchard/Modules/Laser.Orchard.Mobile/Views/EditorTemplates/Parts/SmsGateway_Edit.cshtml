@@ -150,3 +150,11 @@
 <div class="tab-folder">
     <a href="#sms-comm-container"><i class="fa fa-phone"></i>@T("Sms")</a>
 </div>
+@if (Model.SmsGateway.SmsMessageSent)
+{
+    <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalSms","CountPanel", new { area = "Laser.Orchard.Mobile", tot=Model.SmsGateway.SmsRecipientsNumber })"/>
+}
+else
+{
+    <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalSms","CountPanel", new { area = "Laser.Orchard.Mobile" })"/>
+}
