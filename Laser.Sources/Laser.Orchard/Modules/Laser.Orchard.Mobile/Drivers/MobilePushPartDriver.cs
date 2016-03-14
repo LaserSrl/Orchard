@@ -35,7 +35,7 @@ namespace Laser.Orchard.Mobile.Drivers {
                 if (displayType == "Summary")
                 {
                     return ContentShape("Parts_MobilePush",
-                        () => shapeHelper.Parts_MobilePush(SendOnNextPublish: part.ToPush));
+                        () => shapeHelper.Parts_MobilePush(ToPush: part.ToPush, PushSent: part.PushSent, TargetDeviceNumber: part.TargetDeviceNumber, PushSentNumber: part.PushSentNumber));
                 }
                 else
                 {
@@ -78,6 +78,9 @@ namespace Laser.Orchard.Mobile.Drivers {
                 viewModel.ToPush = part.ToPush;
                 viewModel.TestPush = part.TestPush;
                 viewModel.DevicePush = part.DevicePush;
+                viewModel.PushSent = part.PushSent;
+                viewModel.TargetDeviceNumber = part.TargetDeviceNumber;
+                viewModel.PushSentNumber = part.PushSentNumber;
             }
 
             viewModel.HideRelated = part.Settings.GetModel<PushMobilePartSettingVM>().HideRelated;
@@ -101,6 +104,15 @@ namespace Laser.Orchard.Mobile.Drivers {
             var DevicePush = context.Attribute(part.PartDefinition.Name, "DevicePush");
             if (DevicePush != null)
                 part.DevicePush = DevicePush;
+            var PushSent = context.Attribute(part.PartDefinition.Name, "PushSent");
+            if (PushSent != null)
+                part.PushSent = bool.Parse(PushSent);
+            var TargetDeviceNumber = context.Attribute(part.PartDefinition.Name, "TargetDeviceNumber");
+            if (TargetDeviceNumber != null)
+                part.TargetDeviceNumber = int.Parse(TargetDeviceNumber);
+            var PushSentNumber = context.Attribute(part.PartDefinition.Name, "PushSentNumber");
+            if (PushSentNumber != null)
+                part.PushSentNumber = int.Parse(PushSentNumber);
         }
 
         protected override void Exporting(MobilePushPart part, ExportContentContext context) {
@@ -110,6 +122,9 @@ namespace Laser.Orchard.Mobile.Drivers {
             root.SetAttributeValue("ToPush", part.ToPush);
             root.SetAttributeValue("TestPush", part.TestPush);
             root.SetAttributeValue("DevicePush", part.DevicePush);
+            root.SetAttributeValue("PushSent", part.PushSent);
+            root.SetAttributeValue("TargetDeviceNumber", part.TargetDeviceNumber);
+            root.SetAttributeValue("PushSentNumber", part.PushSentNumber);
         }
     }
 }

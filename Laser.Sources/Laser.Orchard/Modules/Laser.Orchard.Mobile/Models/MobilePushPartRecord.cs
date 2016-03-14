@@ -28,7 +28,22 @@ namespace Laser.Orchard.Mobile.Models {
             get { return Record.DevicePush; }
             set { Record.DevicePush = value; }
         }
-
+        // proprietà aggiuntive
+        public bool PushSent
+        {
+            get { return Record.PushSent; }
+            set { Record.PushSent = value; }
+        }
+        public int TargetDeviceNumber
+        {
+            get { return Record.TargetDeviceNumber; }
+            set { Record.TargetDeviceNumber = value; }
+        }
+        public int PushSentNumber
+        {
+            get { return Record.PushSentNumber; }
+            set { Record.PushSentNumber = value; }
+        }
     }
 
     public class MobilePushPartRecord: ContentPartRecord {
@@ -37,5 +52,9 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual bool ToPush { get; set; }
         public virtual bool TestPush { get; set; }
         public virtual string DevicePush { get; set; }
+        // proprietà aggiuntive
+        public virtual bool PushSent { get; set; }
+        public virtual int TargetDeviceNumber { get; set; }
+        public virtual int PushSentNumber { get; set; }
     }
 }

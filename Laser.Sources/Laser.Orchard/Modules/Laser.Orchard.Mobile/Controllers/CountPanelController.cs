@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.Mobile.Services;
+﻿using Laser.Orchard.Mobile.Models;
+using Laser.Orchard.Mobile.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,11 @@ namespace Laser.Orchard.Mobile.Controllers
             }
             else
             {
-                Total.Add("Value", _pushNotificationService.GetPushQueryResult(ids).Count.ToString());
+                var elenco = _pushNotificationService.GetPushQueryResult(ids);
+                var android = elenco.Where(x => x.Device == TipoDispositivo.Android).Count();
+                var apple = elenco.Where(x => x.Device == TipoDispositivo.Apple).Count();
+                var win = elenco.Where(x => x.Device == TipoDispositivo.WindowsMobile).Count();
+                Total.Add("Value", string.Format("{0} (<i class=\"fa fa-android\"></i> {1}, <i class=\"fa fa-apple\"></i> {2}, <i class=\"fa fa-windows\"></i> {3})", elenco.Count, android, apple, win));
             }
             return Json(Total, JsonRequestBehavior.AllowGet);
         }

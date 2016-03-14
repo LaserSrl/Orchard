@@ -13,12 +13,21 @@ namespace Laser.Orchard.Mobile.ViewModels {
             ToPush = false;
             TestPush = false;
             DevicePush = "All";
+            PushSent = false;
+            TargetDeviceNumber = 0;
+            PushSentNumber = 0;
         }
         public string TitlePush { get; set; }
         public string TextPush { get; set; }
         public bool ToPush { get; set; }
         public bool TestPush { get; set; }
         public string DevicePush { get; set; }
+
+        // proprietà aggiuntive
+        public bool PushSent { get; set; }
+        public int TargetDeviceNumber { get; set; }
+        public int PushSentNumber { get; set; }
+
         public SelectList ListOfDevice {
             get {
                 SelectList enumToList = new SelectList(Enum.GetValues(typeof(TipoDispositivo)).Cast<TipoDispositivo>().Select(v => new SelectListItem {
