@@ -29,6 +29,7 @@ namespace Laser.Orchard.ExternalContent.Settings {
             var model = new FieldExternalSetting();
             if (updateModel.TryUpdateModel(model, "FieldExternalSetting", null, null)) {
                 builder.WithSetting("FieldExternalSetting.Required", model.Required.ToString());
+                builder.WithSetting("FieldExternalSetting.CacheMinute", model.CacheMinute.ToString());
                 builder.WithSetting("FieldExternalSetting.ExternalURL", model.ExternalURL);
                 builder.WithSetting("FieldExternalSetting.NoFollow", model.NoFollow.ToString());
                 builder.WithSetting("FieldExternalSetting.GenerateL", model.GenerateL.ToString());
@@ -37,6 +38,10 @@ namespace Laser.Orchard.ExternalContent.Settings {
                 builder.WithSetting("FieldExternalSetting.BodyRequest", model.BodyRequest);
                 builder.WithSetting("FieldExternalSetting.CertificateRequired", model.CertificateRequired.ToString());
                 builder.WithSetting("FieldExternalSetting.CerticateFileName", model.CerticateFileName);
+                builder.WithSetting("FieldExternalSetting.CacheInput", model.CacheInput);
+                builder.WithSetting("FieldExternalSetting.CacheToFileSystem", model.CacheToFileSystem.ToString());
+                
+                
                 if (model.CertificatePrivateKey == "(none)") { // empty private key
                     builder.WithSetting("FieldExternalSetting.CertificatePrivateKey", "");
                 } else if (!String.IsNullOrEmpty(model.CertificatePrivateKey)) { //save new key

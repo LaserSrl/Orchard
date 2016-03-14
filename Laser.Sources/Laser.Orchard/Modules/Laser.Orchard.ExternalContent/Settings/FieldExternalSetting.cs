@@ -1,7 +1,12 @@
 ﻿
+using System;
 using System.Web.Mvc;
 namespace Laser.Orchard.ExternalContent.Settings {
     public class FieldExternalSetting {
+        public FieldExternalSetting() {
+            CacheMinute = 5;
+            CacheToFileSystem = false;
+        }
         public bool Required { get; set; }
         public string ExternalURL { get; set; }
         public bool NoFollow { get; set; }
@@ -12,5 +17,8 @@ namespace Laser.Orchard.ExternalContent.Settings {
         public bool CertificateRequired { get; set; }
         public string CerticateFileName { get; set; }
         public string CertificatePrivateKey { get; set; }
+        public Int32 CacheMinute { get; set; }
+        public string CacheInput { get; set; }
+        public bool CacheToFileSystem { get; set; } 
     }
 }
