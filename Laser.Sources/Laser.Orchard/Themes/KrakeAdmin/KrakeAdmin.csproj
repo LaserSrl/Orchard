@@ -97,6 +97,9 @@
   <ItemGroup>
     <Content Include="Views\OrchardVersion.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Styles\fonts\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

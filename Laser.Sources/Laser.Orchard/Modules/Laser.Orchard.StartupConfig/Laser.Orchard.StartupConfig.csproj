@@ -111,6 +111,9 @@
     <Reference Include="Orchard.Modules">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Modules\bin\Orchard.Modules.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.OutputCache">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.OutputCache\bin\Orchard.OutputCache.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Projections">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
     </Reference>
@@ -290,6 +293,10 @@
     <Compile Include="Tokens\TaxonomyTokens.cs" />
     <Compile Include="ViewModels\UsersGroupsSettingsVM.cs" />
     <Compile Include="ViewModels\UsersGroupsVM.cs" />
+    <Compile Include="WebApiProtection\Filters\ApiKeyFilter.cs" />
+    <Compile Include="WebApiProtection\Handlers\ProtectionSettingsHandler.cs" />
+    <Compile Include="WebApiProtection\Migrations.cs" />
+    <Compile Include="WebApiProtection\Models\ProtectionSettingsPart.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity-RequestInspector.cshtml" />
@@ -313,13 +320,16 @@
     <Content Include="Views\MaintenanceAdmin\index.cshtml" />
     <Content Include="Views\MaintenanceAdmin\Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\FavoriteCulturePart_Edit.cshtml" />
+    <Content Include="Views\EditorTemplates\ExternalApplication.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <None Include="Views\EditorTemplates\Parts\ProtectionSettingsPart.Edit.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
