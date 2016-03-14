@@ -9,6 +9,7 @@ namespace Laser.Orchard.jQueryPlugins {
             var manifest = builder.Add();
 
             //Scripts
+            manifest.DefineScript("jQuery_DataTables").SetUrl("jquery.dataTables.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_textcounter").SetUrl("textcounter.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_ImagePicker").SetUrl("image-picker.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_Print").SetUrl("jquery.print.js").SetDependencies("jQuery");
@@ -47,6 +48,8 @@ namespace Laser.Orchard.jQueryPlugins {
             manifest.DefineScript("rcswitcher").SetUrl("rcswitcher.min.js").SetDependencies("jQuery");
 
             //Styles
+
+            manifest.DefineStyle("jQuery_DataTables").SetUrl("jquery.dataTables.min.css");
             manifest.DefineStyle("jQuery_ImagePicker_Low").SetUrl("image-picker_low.css");
             manifest.DefineStyle("jQuery_ImagePicker").SetUrl("image-picker.css");
             manifest.DefineStyle("jQuery_MultiSelect").SetUrl("jquery.multiSelect.css");
