@@ -77,7 +77,7 @@
 }
 
 <div id="sms-comm-container" class="comm-tabbed">
-
+    @Html.HiddenFor(m => m.SmsGateway.SmsMessageSent)
     <div>
         <label for="contChar">@T("Number of chars:")</label>
         <span style="margin-left: 20px">

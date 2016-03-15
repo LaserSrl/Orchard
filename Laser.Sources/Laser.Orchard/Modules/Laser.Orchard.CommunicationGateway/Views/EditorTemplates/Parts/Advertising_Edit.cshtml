@@ -5,9 +5,9 @@
 @using (Script.Foot()) {
     <script type="text/javascript">
         function GetMessage() {
-            message = "<ul>";
+            message = "<ul style='list-style-type:disc;padding-left:18px'>";
             if (($("#CommunicationAdvertisingPart_UrlLinked_Value").val() == "" || $("#CommunicationAdvertisingPart_UrlLinked_Value").val() == null) && ($("#CommunicationAdvertisingPart.ContentLinked.SelectedIds").val() == "" || $("#CommunicationAdvertisingPart.ContentLinked.SelectedIds").val() == null)) {
-                message = "<li><i class='fa fa-exclamation-triangle' style='color:red;'></i> Campaign link not inserted</li>";
+                message += "<li><i class='fa fa-exclamation-triangle' style='color:red;'></i> Campaign link not inserted</li>";
             }
             
             messageSomething=false;
@@ -41,7 +41,20 @@
                     messageSomething = true;
                 }
             } catch (e) { }
-            // message += "<li>Send Sms</li>";
+
+            try{
+                if ($("#Laser_Orchard_SmsGateway_SmsGateway_SendOnNextPublish").is(':checked') && $("#Laser_Orchard_SmsGateway_SmsGateway_SmsMessageSent").val() != "True" ) {
+                    message += "<li><i class='fa fa-phone'></i> Send SMS</li>";
+                    messageSomething = true;
+                }
+            } catch (e) { }
+
+            try{
+                if ($("#Laser_Mobile_MobilePush_ToPush").is(':checked') && $("#Laser_Mobile_MobilePush_PushSent").val() != "True" ) {
+                    message += "<li><i class='fa fa-mobile'></i> Send Push</li>";
+                    messageSomething = true;
+                }
+            } catch (e) { }
 
             message += "</ul><br/>";
             message += "@T("Are you sure?")";
