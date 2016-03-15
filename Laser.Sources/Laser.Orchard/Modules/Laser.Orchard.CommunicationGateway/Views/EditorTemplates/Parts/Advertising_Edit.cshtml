@@ -43,15 +43,15 @@
             } catch (e) { }
 
             try{
-                if ($("#Laser_Orchard_SmsGateway_SmsGateway_SendOnNextPublish").is(':checked') && $("#Laser_Orchard_SmsGateway_SmsGateway_SmsMessageSent").val() != "True" ) {
-                    message += "<li><i class='fa fa-phone'></i> Send SMS</li>";
+                if ($("#Laser_Mobile_MobilePush_ToPush").is(':checked') && $("#Laser_Mobile_MobilePush_PushSent").val() != "True" ) {
+                    message += "<li><i class='fa fa-mobile'></i> Send Push</li>";
                     messageSomething = true;
                 }
             } catch (e) { }
 
             try{
-                if ($("#Laser_Mobile_MobilePush_ToPush").is(':checked') && $("#Laser_Mobile_MobilePush_PushSent").val() != "True" ) {
-                    message += "<li><i class='fa fa-mobile'></i> Send Push</li>";
+                if ($("#Laser_Orchard_SmsGateway_SmsGateway_SendOnNextPublish").is(':checked') && $("#Laser_Orchard_SmsGateway_SmsGateway_SmsMessageSent").val() != "True" ) {
+                    message += "<li><i class='fa fa-phone'></i> Send SMS</li>";
                     messageSomething = true;
                 }
             } catch (e) { }
