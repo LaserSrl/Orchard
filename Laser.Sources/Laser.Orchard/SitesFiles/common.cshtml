@@ -74,7 +74,6 @@
         chiudinodo( nodo );
     }
 
-
     bool Hafiglio(XmlNode nodo, string figlio) {
         bool hafiglio = false;
         foreach (XmlNode nodofiglio in nodo.ChildNodes) {
@@ -232,7 +231,7 @@
 
 //Patrick
 		
-    XmlDocument ConvertStringTimeStampToDate(XmlDocument doc, string dalnodo){
+    XmlDocument ConvertStringTimeStampToDate(XmlDocument doc, string dalnodo,bool hasMilliseconds=false){
         foreach (XmlNode bookToModify in doc.SelectNodes("/"+dalnodo)) 
         {
             string string_timestamp = bookToModify.ChildNodes[0].Value;
@@ -241,7 +240,10 @@
             {
                 result = Convert.ToDouble(string_timestamp);
                 System.DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
-                dtDateTime = dtDateTime.AddSeconds(result).ToLocalTime();
+				if (hasMilliseconds){
+					result=result/1000;     
+				}      
+			   dtDateTime = dtDateTime.AddSeconds(result).ToLocalTime();
                 bookToModify.ChildNodes[0].Value = "#" + dtDateTime.ToString("MM/dd/yyyy HH:mm:ss") + "#";
             }
             catch (FormatException) 
@@ -259,27 +261,35 @@
     XmlDocument ConvertDateWithFormat(XmlDocument doc, string dalnodo)
     {
         foreach (XmlNode bookToModify in doc.SelectNodes("/"+dalnodo)) 
-        {
+        { 
+            DateTime dateValue;
             string date_string = bookToModify.ChildNodes[0].Value;
-            DateTime myDate = DateTime.Parse(date_string);
-            bookToModify.ChildNodes[0].Value = ":laserDate" + myDate.ToUniversalTime().Subtract(
-new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-).TotalMilliseconds + "laserDate:";
+            if (DateTime.TryParse(date_string, out dateValue)) 
+            {
+                bookToModify.ChildNodes[0].Value = ":laserDate" + dateValue.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + "laserDate:";
+            }else{
+                bookToModify.ChildNodes[0].Value = null;
+            }
         }
         return doc;
     }
 		
-    XmlDocument ConvertArrayOfStringToString(XmlDocument doc, string dalnodo, string nodeName, string newNodeName)
+    XmlDocument ConvertArrayOfStringToString(XmlDocument doc, string dalnodo, string nodeName, string newNodeName,bool IsHtml=false)
     {
+		string charconcat=",";
+		if (IsHtml){
+			charconcat="&lt;br/&gt;";
+		}
         foreach (XmlNode bookToModify in doc.SelectNodes("/"+dalnodo)) 
         {			
             string mainString = "";
             foreach (XmlNode nodofiglio in bookToModify.SelectNodes(nodeName)) {
-                mainString += "," + nodofiglio.InnerXml;
+                mainString += charconcat + nodofiglio.InnerXml;
+				
                 nodofiglio.ParentNode.RemoveChild(nodofiglio);
             }
             if (mainString != "") {
-            mainString = mainString.Substring(1);
+            mainString = mainString.Substring(charconcat.Length);
             XmlNode newString = doc.CreateElement(newNodeName);
             newString.InnerXml=mainString;
             bookToModify.AppendChild(newString);
@@ -332,6 +342,81 @@ new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
     }
 
 
+	// esempio di utilizzo
+	//	string child_node_name="";
+	//string child_node_uri="";
+	//string child_node_mimeType="";
+	//foreach (XmlNode child_node in mydoc.SelectNodes("//venue/mediaResource")) {
+	//	child_node_name="";
+	//	child_node_uri="";
+	//	child_node_mimeType="";
+	//	if (child_node.SelectSingleNode("name")!=null){
+	//		child_node_name=child_node.SelectSingleNode("name").InnerText;
+	//	}
+	//	if (child_node.SelectSingleNode("uri")!=null){
+	//		child_node_uri=child_node.SelectSingleNode("uri").InnerText;
+	//	}
+	//	if (child_node.SelectSingleNode("mimeType")!=null){
+	//		child_node_mimeType=child_node.SelectSingleNode("mimeType").InnerText;
+	//	}
+	//	XmlNode map = InsertImage(mydoc,child_node_uri,child_node_name,child_node_mimeType,"","");
+	//	child_node.ParentNode.AppendChild(map);
+	//	child_node.ParentNode.RemoveChild(child_node);
+	//}
+	XmlNode InsertImage(XmlDocument mydoc,string mediaUrl, string title="",string mimeType="",string caption="",string logicalType=""){
+		XmlNode MediaPart=mydoc.CreateElement("MediaPart");
+		if (title!=""){
+			XmlNode Title = mydoc.CreateElement("Title");
+			Title.InnerXml=title;
+			MediaPart.AppendChild(Title);
+		}
+		if (mimeType!=""){
+			XmlNode MimeType = mydoc.CreateElement("MimeType");
+			MimeType.InnerXml=mimeType;
+			MediaPart.AppendChild(MimeType);
+		}
+		if (caption!=""){
+			XmlNode Caption = mydoc.CreateElement("Caption");
+			Caption.InnerXml=caption;
+			MediaPart.AppendChild(Caption);
+		}
+		if (mediaUrl!=""){
+			XmlNode MediaUrl = mydoc.CreateElement("MediaUrl");
+			MediaUrl.InnerXml=mediaUrl;
+			MediaPart.AppendChild(MediaUrl);
+		}
+		if (logicalType!=""){
+			XmlNode LogicalType = mydoc.CreateElement("LogicalType");
+			LogicalType.InnerXml=logicalType;
+			MediaPart.AppendChild(LogicalType);
+		}
+		return MediaPart;
+	}
+	
+	
+	
+	XmlNode InsertMap(XmlDocument mydoc,string latitude="", string longitude="",string locationInfo=""){
+		XmlNode MapPart = mydoc.CreateElement("MapPart");
+		if (latitude!=""){
+			XmlNode Latitude = mydoc.CreateElement("Latitude");
+			Latitude.InnerXml=latitude;
+			MapPart.AppendChild(Latitude);
+		}
+		if (longitude!=""){
+			XmlNode Longitude = mydoc.CreateElement("Longitude");
+			Longitude.InnerXml=longitude;
+			MapPart.AppendChild(Longitude);
+		}
+		if (locationInfo!=""){
+			XmlNode LocationInfo = mydoc.CreateElement("LocationInfo");
+			LocationInfo.InnerXml=locationInfo;
+			MapPart.AppendChild(LocationInfo);
+		}
+		return MapPart;
+	}
+	
+	
+	
     void instagramParser(){
         XmlDocument mydoc=ToXmlDocument(Model);
         mydoc=aggiungipadre(mydoc,"root","lista","data");
