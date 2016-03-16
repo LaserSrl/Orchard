@@ -212,18 +212,23 @@ namespace Laser.Orchard.ExternalContent.Services {
                         correggiXML(newdoc);
                         webpagecontent = newdoc.InnerXml;
                     }
-                    object elementcached = null;
+                    Dictionary<string,object> elementcached = null;
 
                     DynamicViewBag dvb = new DynamicViewBag();
                     // dvb.AddValue(settings.CacheInput, _cacheStorageProvider.Get(settings.CacheInput));
                     if (!string.IsNullOrEmpty(settings.CacheInput)) {
-                        elementcached = _cacheStorageProvider.Get(settings.CacheInput);
+                       var mycache= _cacheStorageProvider.Get(settings.CacheInput);
+                     string  tmpelementcached = JsonConvert.SerializeObject(mycache, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                        JavaScriptSerializer sera = new JavaScriptSerializer();
+                                sera.MaxJsonLength = Int32.MaxValue;
+                                elementcached = (Dictionary<string,object>)sera.Deserialize(tmpelementcached, typeof(object));
+                       
                         if (elementcached == null) {
                             if (File.Exists(String.Format(HostingEnvironment.MapPath("~/") + "Media/Cache/" + settings.CacheInput))) {
                                 string filecontent = File.ReadAllText(String.Format(HostingEnvironment.MapPath("~/") + "Media/Cache/" + settings.CacheInput));
                                 JavaScriptSerializer ser = new JavaScriptSerializer();
                                 ser.MaxJsonLength = Int32.MaxValue;
-                                elementcached = ser.Deserialize(filecontent, typeof(object));
+                                elementcached = (Dictionary<string, object>)ser.Deserialize(filecontent, typeof(object));
                                 _cacheStorageProvider.Put(settings.CacheInput, elementcached);
                                 //elementcached = JsonConvert.DeserializeObject<dynamic>(filecontent);
 
@@ -233,11 +238,13 @@ namespace Laser.Orchard.ExternalContent.Services {
                             }
                         }
                     }
-                    if (elementcached == null)
-                        elementcached = new { NoElement = true };
+                   // if (elementcached == null)
+                   //     elementcached.Add("NoElement", new {value="true"});
 
                     dvb.AddValue("CachedData", elementcached);
- //                   string a = codifica((Dictionary<string,object>)elementcached);
+//                    if (elementcached != null) {
+                        //              string a = codifica((Dictionary<string,object>)elementcached);
+//                    }
                     ci = RazorTransform(webpagecontent.Replace(" xmlns=\"\"", ""), nomexlst, contentType, dvb);
 
                     _cacheStorageProvider.Remove(chiavecache);
@@ -253,7 +260,7 @@ namespace Laser.Orchard.ExternalContent.Services {
                         if (!Directory.Exists(HostingEnvironment.MapPath("~/") + "Media/Cache"))
                             Directory.CreateDirectory(HostingEnvironment.MapPath("~/") + "Media/Cache");
                         using (StreamWriter sw = File.CreateText(String.Format(HostingEnvironment.MapPath("~/") + "Media/Cache/" + chiavecache))) {
-                            sw.WriteLine(JsonConvert.SerializeObject(ci));
+                            sw.WriteLine(JsonConvert.SerializeObject(ci, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
                         }
                     }
 
