@@ -224,8 +224,8 @@ namespace Laser.Orchard.ExternalContent.Services {
                                 elementcached = (Dictionary<string,object>)sera.Deserialize(tmpelementcached, typeof(object));
                        
                         if (elementcached == null) {
-                            if (File.Exists(String.Format(HostingEnvironment.MapPath("~/") + "Media/Cache/" + settings.CacheInput))) {
-                                string filecontent = File.ReadAllText(String.Format(HostingEnvironment.MapPath("~/") + "Media/Cache/" + settings.CacheInput));
+                            if (File.Exists(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + settings.CacheInput))) {
+                                string filecontent = File.ReadAllText(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + settings.CacheInput));
                                 JavaScriptSerializer ser = new JavaScriptSerializer();
                                 ser.MaxJsonLength = Int32.MaxValue;
                                 elementcached = (Dictionary<string, object>)ser.Deserialize(filecontent, typeof(object));
@@ -257,9 +257,9 @@ namespace Laser.Orchard.ExternalContent.Services {
                         _cacheStorageProvider.Put(chiavedate, new { When = DateTime.UtcNow }, new TimeSpan(0, 0, settings.CacheMinute, 0, 0));
                     }
                     if (settings.CacheToFileSystem) {
-                        if (!Directory.Exists(HostingEnvironment.MapPath("~/") + "Media/Cache"))
-                            Directory.CreateDirectory(HostingEnvironment.MapPath("~/") + "Media/Cache");
-                        using (StreamWriter sw = File.CreateText(String.Format(HostingEnvironment.MapPath("~/") + "Media/Cache/" + chiavecache))) {
+                        if (!Directory.Exists(HostingEnvironment.MapPath("~/") + "App_Data/Cache"))
+                            Directory.CreateDirectory(HostingEnvironment.MapPath("~/") + "App_Data/Cache");
+                        using (StreamWriter sw = File.CreateText(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + chiavecache))) {
                             sw.WriteLine(JsonConvert.SerializeObject(ci, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
                         }
                     }

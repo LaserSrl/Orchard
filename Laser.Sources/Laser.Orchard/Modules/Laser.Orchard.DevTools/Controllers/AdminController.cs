@@ -145,13 +145,13 @@ namespace Laser.Orchard.DevTools.Controllers {
             if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
                 return new HttpUnauthorizedResult();
             if (string.IsNullOrEmpty(key)) {
-                string[] all = Directory.GetFiles(String.Format(HostingEnvironment.MapPath("~/") + "Media/Cache/", _shellSetting.Name + "_*"));
+                string[] all = Directory.GetFiles(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/", _shellSetting.Name + "_*"));
                 foreach (string thekey in all) {
                     System.IO.File.Delete(thekey);
                 }
             }
             else
-                System.IO.File.Delete(String.Format(HostingEnvironment.MapPath("~/") + "Media/Cache/" + key));
+                System.IO.File.Delete(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + key));
             return RedirectToAction("ShowCachedData", "Admin");
         }
 
