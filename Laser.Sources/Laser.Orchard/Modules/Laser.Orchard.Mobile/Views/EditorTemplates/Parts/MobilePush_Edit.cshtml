@@ -11,21 +11,28 @@
         <div class="editor-label">@Html.LabelFor(m => m.TextPush, T("Text"))</div>
         <div class="editor-field">@Html.TextAreaFor(m => m.TextPush, new { @class = "text large" })</div>
         <br />
-        <div class="checkbox-and-label">
-            @Html.CheckBoxFor(m => m.ToPush)
-            <label for="@Html.FieldIdFor(m => m.ToPush)" class="forcheckbox">@T("Push on next Publish") </label>
-            <span class="hint">@T("Push will be sent to devices when ContentItem will published")</span>
-        </div>
-        <br />
-        @if (Model.ShowTestOptions){
-        <div class="checkbox-and-label">
-            @Html.CheckBoxFor(m => m.TestPush, new { @class = "checkbox" })
-            <label for="@Html.FieldIdFor(m => m.TestPush)" class="forcheckbox">@T("Test Push on device") </label>
-            <span class="hint">@T("Mask to make test for Push... this option is set by settings of module")</span>
-        </div>
-        }else{
-        @Html.HiddenFor(m=>m.TestPush)
-        }
+            @if (Model.PushSent)
+            {
+                <div class="message message-Error">@T("This Push message has been already sent. You will be able to edit and save it, but it will not be sent anymore on next publish.")</div>
+            }
+            else
+            {
+                <div class="checkbox-and-label">
+                    @Html.CheckBoxFor(m => m.ToPush)
+                    <label for="@Html.FieldIdFor(m => m.ToPush)" class="forcheckbox">@T("Push on next Publish") </label>
+                    <span class="hint">@T("Push will be sent to devices when ContentItem will published")</span>
+                </div>
+                <br />
+                if (Model.ShowTestOptions){
+                <div class="checkbox-and-label">
+                    @Html.CheckBoxFor(m => m.TestPush, new { @class = "checkbox" })
+                    <label for="@Html.FieldIdFor(m => m.TestPush)" class="forcheckbox">@T("Test Push on device") </label>
+                    <span class="hint">@T("Mask to make test for Push... this option is set by settings of module")</span>
+                </div>
+                }else{
+                @Html.HiddenFor(m=>m.TestPush)
+                }
+            }
         <div class="editor-label">@Html.LabelFor(m => m.DevicePush, T("To Device"))</div>
         <div class="editor-field">@Html.DropDownListFor(m => m.DevicePush, Model.ListOfDevice)
             <span class="hint">@T("Select Devices")</span>
@@ -36,4 +43,11 @@
 <div class="tab-folder">
     <a href="#mobile-comm-container"><i class="fa fa-mobile"></i>@T("Mobile")</a>
 </div>
-<input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotal","CountPanel", new { area = "Laser.Orchard.Mobile" })"/>
+@if (Model.PushSent)
+{
+    <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalPush","CountPanel", new { area = "Laser.Orchard.Mobile", tot=Model.TargetDeviceNumber })"/>
+}
+else
+{
+    <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalPush","CountPanel", new { area = "Laser.Orchard.Mobile" })"/>
+}

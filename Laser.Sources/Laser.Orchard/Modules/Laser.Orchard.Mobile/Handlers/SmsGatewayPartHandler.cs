@@ -74,7 +74,7 @@ namespace Laser.Orchard.Mobile.Handlers {
 
                             // Invio SMS a NumberForTest
                             _smsServices.SendSms(
-                                part.NumberForTest.Split(';').Select(x => Convert.ToInt64(x)).ToArray(),
+                                part.NumberForTest.Split(';').Select(x => new SmsHQL { SmsPrefix = "", SmsNumber = x, Id = 0, Title = "Test" }).ToArray(),
                                 messageToSms, part.Alias, IdSendToTest, part.HaveAlias);
                         }
                     }
@@ -83,48 +83,24 @@ namespace Laser.Orchard.Mobile.Handlers {
 
             OnPublished<SmsGatewayPart>((context, part) => {
                 if (part.SendOnNextPublish && !part.SmsMessageSent) {
-                    dynamic content = context.ContentItem;
-
-                    IHqlQuery query;
-                    if (content.QueryPickerPart != null && content.QueryPickerPart.Ids.Length > 0) {
-                        query = _smsCommunicationService.IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(content.QueryPickerPart.Ids, null, new string[] { "CommunicationContact" }), content);
-                    } else {
-                        query = _smsCommunicationService.IntegrateAdditionalConditions(null, content);
+                    dynamic content = _orchardServices.ContentManager.Get(part.ContentItem.Id);
+                    Int32[] ids = null;
+                    Int32? idLocalization = null;
+                    if (content.QueryPickerPart != null && content.QueryPickerPart.Ids.Length > 0)
+                    {
+                        ids = content.QueryPickerPart.Ids;
                     }
 
-                    // Trasformo in stringa HQL
-                    var stringHQL = ((DefaultHqlQuery)query).ToHql(false);
+                    var localizedPart = content.LocalizationPart;
+                    if (localizedPart != null && localizedPart.Culture != null)
+                    {
+                        idLocalization = localizedPart.Culture.Id;
+                    }
+                    //var listaNumeri = _smsCommunicationService.GetSmsNumbersQueryResult(ids, idLocalization);
+                    var listaDestinatari = _smsCommunicationService.GetSmsQueryResult(ids, idLocalization);
 
-                    // Rimuovo la Order by per poter fare la query annidata
-                    // TODO: trovare un modo migliore per rimuovere la order by
-                    stringHQL = stringHQL.ToString().Replace("order by civ.Id", "");
-
-                    var queryForSms = "SELECT distinct cir.Id as Id, TitlePart.Title as Title, SmsRecord.Prefix as SmsPrefix, SmsRecord.Sms as SmsNumber FROM " +
-                        "Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
-                        "civr.ContentItemRecord as cir join " +
-                        "civr.TitlePartRecord as TitlePart join " +
-                        "cir.SmsContactPartRecord as SmsPart join " +
-                            "SmsPart.SmsRecord as SmsRecord " +
-                        "WHERE civr.Published=1 AND civr.Id in (" + stringHQL + ")";
-
-                    // Creo query ottimizzata per le performance
-                    var fullStatement = _session.For(null)
-                        .CreateQuery(queryForSms)
-                        .SetCacheable(false);
-
-                    var lista = fullStatement
-                        .SetResultTransformer(Transformers.AliasToBean<SmsHQL>())  //(Transformers.AliasToEntityMap)
-                        .List<SmsHQL>();
-
-                    if (lista.Count > 0) {
-                        // Recupero elenco dei numeri di telefono
-                        List<string> listaNumeri = new List<string>();
-
-                        foreach (var item in lista) {
-                            string numeroTelefono = ((SmsHQL)item).SmsPrefix + ((SmsHQL)item).SmsNumber;
-                            listaNumeri.Add(numeroTelefono);
-                        }
-
+                    if (listaDestinatari.Count > 0)
+                    {
                         string linktosend = "";
                         ICommunicationService _communicationService;
 
@@ -137,17 +113,15 @@ namespace Laser.Orchard.Mobile.Handlers {
                         string messageToSms = part.Message + " " + linktosend;
 
                         // Invio SMS
-                        _smsServices.SendSms(listaNumeri.Select(x => Convert.ToInt64(x)).ToArray(),
+                        //_smsServices.SendSms(listaDestinatari.Select(x => Convert.ToInt64(x.SmsPrefix + x.SmsNumber)).ToArray(),
+                        //                     messageToSms, part.Alias, "Orchard_" + part.Id.ToString(), part.HaveAlias);
+                        _smsServices.SendSms(listaDestinatari,
                                              messageToSms, part.Alias, "Orchard_" + part.Id.ToString(), part.HaveAlias);
-                        part.SmsRecipientsNumber = listaNumeri.Count;
+                        part.SmsRecipientsNumber = listaDestinatari.Count;
                         part.SmsMessageSent = true;
                     }
                 }
             });
-
-
-
         }
-
     }
 }
