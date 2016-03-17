@@ -19,8 +19,8 @@
     Model.OrchardServices.WorkContext.TryResolve<IFieldIndexService>(out _fieldIndexService);
 
     // Lettura del file
-    var localFileInd = HostingEnvironment.MapPath("~/Media/PrivacyTest/indi.xml");
-    var localFileOsp = HostingEnvironment.MapPath("~/Media/PrivacyTest/osp.xml");
+    var localFileInd = HostingEnvironment.MapPath("~/Media/RomaMunicipioII/indi.xml");
+    var localFileOsp = HostingEnvironment.MapPath("~/Media/RomaMunicipioII/osp.xml");
     XmlDocument docOsp = new XmlDocument();
     XmlDocument docInd = new XmlDocument();
     docInd.Load(localFileInd);
