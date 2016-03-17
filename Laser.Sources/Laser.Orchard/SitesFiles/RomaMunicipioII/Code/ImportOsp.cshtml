@@ -64,7 +64,7 @@
             Model.OrchardServices.ContentManager.Create(ci, VersionOptions.Latest);
         }
 
-        Decimal.TryParse(supe.Replace(",", "."), out superficie);
+        Decimal.TryParse(supe.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out superficie);
         ci.TitlePart.Title = title;
         ci.Osp.Superficie.Value = superficie;
         ci.Osp.Note.Value = note;
