@@ -31,6 +31,9 @@ using Laser.Orchard.Commons.Helpers;
 using Orchard.Caching;
 using Orchard.Caching.Services;
 using System.Web.Script.Serialization;
+using System.Xml.Schema;
+using System.Configuration;
+using System.Web.Configuration;
 
 //using System.Web.Razor;
 
@@ -212,20 +215,29 @@ namespace Laser.Orchard.ExternalContent.Services {
                         correggiXML(newdoc);
                         webpagecontent = newdoc.InnerXml;
                     }
-                    Dictionary<string,object> elementcached = null;
+                    Dictionary<string, object> elementcached = null;
 
                     DynamicViewBag dvb = new DynamicViewBag();
                     // dvb.AddValue(settings.CacheInput, _cacheStorageProvider.Get(settings.CacheInput));
                     if (!string.IsNullOrEmpty(settings.CacheInput)) {
-                       var mycache= _cacheStorageProvider.Get(settings.CacheInput);
-                     string  tmpelementcached = JsonConvert.SerializeObject(mycache, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                        var mycache = _cacheStorageProvider.Get(settings.CacheInput);
+                        // var Jsettings = new JsonSerializerSettings();
+                        // Jsettings.TypeNameHandling = TypeNameHandling.Arrays;
+                        string tmpelementcached = JsonConvert.SerializeObject(mycache);//, Jsettings);//, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                         JavaScriptSerializer sera = new JavaScriptSerializer();
-                                sera.MaxJsonLength = Int32.MaxValue;
-                                elementcached = (Dictionary<string,object>)sera.Deserialize(tmpelementcached, typeof(object));
-                       
+                        sera.MaxJsonLength = Int32.MaxValue;
+                        elementcached = (Dictionary<string, object>)sera.Deserialize(tmpelementcached, typeof(object));
+
                         if (elementcached == null) {
                             if (File.Exists(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + settings.CacheInput))) {
                                 string filecontent = File.ReadAllText(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + settings.CacheInput));
+
+                                //var setdeserialize = new JsonSerializerSettings {
+                                //    TypeNameHandling = TypeNameHandling.Arrays,
+                                //    TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Full
+                                //};
+                                //var aaa = JsonConvert.DeserializeObject(filecontent, setdeserialize);
+
                                 JavaScriptSerializer ser = new JavaScriptSerializer();
                                 ser.MaxJsonLength = Int32.MaxValue;
                                 elementcached = (Dictionary<string, object>)ser.Deserialize(filecontent, typeof(object));
@@ -238,13 +250,13 @@ namespace Laser.Orchard.ExternalContent.Services {
                             }
                         }
                     }
-                   // if (elementcached == null)
-                   //     elementcached.Add("NoElement", new {value="true"});
+                    // if (elementcached == null)
+                    //     elementcached.Add("NoElement", new {value="true"});
 
                     dvb.AddValue("CachedData", elementcached);
-//                    if (elementcached != null) {
-                        //              string a = codifica((Dictionary<string,object>)elementcached);
-//                    }
+                    //                    if (elementcached != null) {
+                    //              string a = codifica((Dictionary<string,object>)elementcached);
+                    //                    }
                     ci = RazorTransform(webpagecontent.Replace(" xmlns=\"\"", ""), nomexlst, contentType, dvb);
 
                     _cacheStorageProvider.Remove(chiavecache);
@@ -259,8 +271,10 @@ namespace Laser.Orchard.ExternalContent.Services {
                     if (settings.CacheToFileSystem) {
                         if (!Directory.Exists(HostingEnvironment.MapPath("~/") + "App_Data/Cache"))
                             Directory.CreateDirectory(HostingEnvironment.MapPath("~/") + "App_Data/Cache");
+                        //var Jsettings = new JsonSerializerSettings();
+                        //Jsettings.TypeNameHandling = TypeNameHandling.Arrays;
                         using (StreamWriter sw = File.CreateText(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + chiavecache))) {
-                            sw.WriteLine(JsonConvert.SerializeObject(ci, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+                            sw.WriteLine(JsonConvert.SerializeObject(ci));//, Jsettings));// new JsonSerializerSettings {  EmptyArrayHandling = EmptyArrayHandling.Set }));
                         }
                     }
 
@@ -463,10 +477,38 @@ namespace Laser.Orchard.ExternalContent.Services {
                 }
 
                 string xml = RemoveAllNamespaces(output);
+
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(xml);
+
+                //  doc.DocumentElement.SetAttribute("xmlns:json", "http://www.w3.org/1999/xhtml");
+
                 XmlNode newNode = doc.DocumentElement;
+
+
+                //foreach (XmlNode node in newNode){
+                //    foreach (XmlNode childNode in node.ChildNodes) {
+                //    }
+                //}
+
+
+
+
+                newNode = XmlWithJsonArrayTag(newNode, doc);
+
+
+
+                //XmlDocument docc = new XmlDocument();
+                //XmlSchema schema = new XmlSchema();
+                //schema.Namespaces.Add("xmlns:json", "http://www.w3.org/1999/xhtml");
+                //docc.Schemas.Add(schema);
+                //docc.ImportNode(newNode,true);
+
+                // string JsonDataxxx = JsonConvert.SerializeXmlNode(doc);
+
                 string JsonData = JsonConvert.SerializeXmlNode(newNode);
+
+
                 JsonData = JsonData.Replace("\":lasernumeric", "");
                 JsonData = JsonData.Replace("lasernumeric:\"", "");
                 JsonData = JsonData.Replace("\":laserboolean", "");
@@ -474,18 +516,60 @@ namespace Laser.Orchard.ExternalContent.Services {
                 JsonData = JsonData.Replace(@"\r\n", "");
                 JsonData = JsonData.Replace("\":laserDate", "\"\\/Date(");
                 JsonData = JsonData.Replace("laserDate:\"", ")\\/\"");
-                JavaScriptSerializer ser = new JavaScriptSerializer() {
-                    MaxJsonLength = Int32.MaxValue
-                };
-                dynamic dynamiccontent_tmp = ser.Deserialize(JsonData, typeof(object));
-                dynamic dynamiccontent = new DynamicJsonObject(dynamiccontent_tmp);
+               JavaScriptSerializer ser = new JavaScriptSerializer() {
+                   MaxJsonLength = Int32.MaxValue
+               };
+               dynamic dynamiccontent_tmp = ser.Deserialize(JsonData, typeof(object));
+               dynamic dynamiccontent = new DynamicJsonObject(dynamiccontent_tmp);
+
+
+
+             // return  Json.Decode(JsonData);
+              //  return JObject.Parse(JsonData);
                 return dynamiccontent;
+
 
             }
             else {
                 return XsltTransform(xmlpage, xsltname, contentType);
             }
         }
+
+        private XmlNode XmlWithJsonArrayTag(XmlNode xn, XmlDocument doc) {
+
+            if (xn.ChildNodes.Count > 1) {
+
+                if (xn.ChildNodes[0].Name == xn.ChildNodes[1].Name) {
+                    XmlAttribute xattr = doc.CreateAttribute("json", "Array", "http://james.newtonking.com/projects/json");
+                    xattr.Value = "true";
+                    xn.Attributes.Append(xattr);
+                }
+            }
+
+
+
+            //   foreach( XmlNode iteratenode in xn.ChildNodes) {
+           // for (Int32 i = xn.ChildNodes.Count - 1; i >= 0; i--) {// XmlNode iteratenode in xn.ChildNodes) {
+                   for (Int32 i = 0; i < xn.ChildNodes.Count; i++) {
+                XmlNode childnode = XmlWithJsonArrayTag(xn.ChildNodes[i], doc);
+                if (!string.IsNullOrEmpty(childnode.InnerText)) {
+                    xn.InsertBefore(childnode, xn.ChildNodes[i]);
+                }
+                xn.ChildNodes[i].ParentNode.RemoveChild(xn.ChildNodes[i]);
+              // for (Int32 i = xn.ChildNodes.Count - 1; i >= 0; i--) {// XmlNode iteratenode in xn.ChildNodes) {
+              // XmlNode childnode = XmlWithJsonArrayTag(xn.ChildNodes[i], doc);
+              // xn.ChildNodes[i].ParentNode.RemoveChild(xn.ChildNodes[i]);
+              // if (!string.IsNullOrEmpty(childnode.InnerText)) {
+              //     xn.AppendChild(childnode);
+              // }
+            }
+            //    }
+
+            return xn;
+
+        }
+
+
 
 
 

@@ -52,6 +52,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Autoroute, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Autoroute\bin\Orchard.Autoroute.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Caching">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Caching\bin\Orchard.Caching.dll</HintPath>
     </Reference>
@@ -109,6 +113,7 @@
     <Compile Include="Services\FieldExternalService.cs" />
     <Compile Include="Settings\FieldExternalEditorEvents.cs" />
     <Compile Include="Settings\FieldExternalSetting.cs" />
+    <Compile Include="Tasks\ToolScheduledTaskHandler.cs" />
     <Compile Include="ViewModels\FieldExternalVM.cs" />
   </ItemGroup>
   <ItemGroup>

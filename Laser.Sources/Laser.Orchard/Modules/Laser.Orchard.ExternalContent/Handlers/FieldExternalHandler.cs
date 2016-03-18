@@ -30,6 +30,7 @@ namespace Laser.Orchard.ExternalContent.Handlers {
             _fieldExternalService = fieldExternalService;
             _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
+            
         }
   
       

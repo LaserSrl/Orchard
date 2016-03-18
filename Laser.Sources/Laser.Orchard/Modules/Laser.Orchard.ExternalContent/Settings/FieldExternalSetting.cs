@@ -6,6 +6,7 @@ namespace Laser.Orchard.ExternalContent.Settings {
         public FieldExternalSetting() {
             CacheMinute = 5;
             CacheToFileSystem = false;
+            ScheduledMinute = 0;
         }
         public bool Required { get; set; }
         public string ExternalURL { get; set; }
@@ -19,6 +20,7 @@ namespace Laser.Orchard.ExternalContent.Settings {
         public string CertificatePrivateKey { get; set; }
         public Int32 CacheMinute { get; set; }
         public string CacheInput { get; set; }
-        public bool CacheToFileSystem { get; set; } 
+        public bool CacheToFileSystem { get; set; }
+        public Int32 ScheduledMinute { get; set; } 
     }
 }
