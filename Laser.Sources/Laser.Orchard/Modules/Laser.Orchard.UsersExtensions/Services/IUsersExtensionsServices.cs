@@ -22,6 +22,9 @@ using Orchard.DisplayManagement;
 using Laser.Orchard.Mobile.Services;
 using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.Mobile.Handlers;
+using Laser.Orchard.StartupConfig.Models;
+using Orchard.Data;
+using Orchard.Localization.Records;
 
 
 namespace Laser.Orchard.UsersExtensions.Services {
@@ -48,9 +51,10 @@ namespace Laser.Orchard.UsersExtensions.Services {
         private ISmsServices _smsServices;
 
         private static readonly TimeSpan DelayToResetPassword = new TimeSpan(1, 0, 0, 0); // 24 hours to reset password
+        private readonly IRepository<CultureRecord> _repositoryCultures;
 
-  
-        public UsersExtensionsServices(IOrchardServices orchardServices, IPolicyServices policySerivces, IMembershipService membershipService, IUtilsServices utilsServices, IAuthenticationService authenticationService, IUserService userService, IUserEventHandler userEventHandler, IShapeFactory shapeFactory) {
+
+        public UsersExtensionsServices(IOrchardServices orchardServices, IPolicyServices policySerivces, IMembershipService membershipService, IUtilsServices utilsServices, IAuthenticationService authenticationService, IUserService userService, IUserEventHandler userEventHandler, IShapeFactory shapeFactory, IRepository<CultureRecord> repositoryCultures) {
             T = NullLocalizer.Instance;
             Log = NullLogger.Instance;
             _policySerivces = policySerivces;
@@ -61,6 +65,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
             _userService = userService;
             _userEventHandler = userEventHandler;
             _shapeFactory = shapeFactory;
+            _repositoryCultures = repositoryCultures;
         }
 
         public Localizer T { get; set; }
@@ -114,6 +119,13 @@ namespace Laser.Orchard.UsersExtensions.Services {
                         userRegistrationParams.PasswordAnswer,
                         !(RegistrationSettings.UsersAreModerated)
                         ));
+                    var favCulture = createdUser.As<FavoriteCulturePart>();
+                    if (favCulture != null) {
+                        var culture = _repositoryCultures.Fetch(x => x.Culture.Equals(userRegistrationParams.Culture)).SingleOrDefault();
+                        if (culture != null) {
+                            favCulture.Culture_Id = culture.Id;
+                        }
+                    }
                     _authenticationService.SignIn(createdUser, true);
                     if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
                         _policySerivces.PolicyForUserMassiveUpdate(policyAnswers);
@@ -145,7 +157,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
             if (_smsServices == null) return "FALSE";
 
             var user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>()
-                .Join < UserPwdRecoveryPartRecord>()
+                .Join<UserPwdRecoveryPartRecord>()
                 .Where(u => u.InternationalPrefix == internationalPrefix.ToString() && u.PhoneNumber == phoneNumber.ToString())
                 .List().FirstOrDefault();
 

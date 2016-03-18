@@ -32,9 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="AutoMotoEpoca\Mobile\AME_DEV.p12" />
+    <None Include="AutoMotoEpoca\Mobile\AME_PROD.p12" />
     <None Include="common.cshtml" />
     <None Include="expoincitta\Mobile\EXPO_dev.p12" />
     <None Include="expoincitta\Mobile\EXPO_prod.p12" />
+    <None Include="FestivalTV\Xslt\instagram.cshtml" />
+    <None Include="FestivalTV\Xslt\ospiti.cshtml" />
     <None Include="FondationGP\Mobile\pushProdMorgex.p12" />
     <None Include="FondationGP\Mobile\pushSvilMorgex.p12" />
     <None Include="FondationGP\Mobile\pushsviluppoAME.p12" />
@@ -47,6 +51,7 @@
     <None Include="IvreaTerritorio\WebServices\Itinerario1.cshtml" />
     <None Include="IvreaTerritorio\WebServices\POI.cshtml" />
     <None Include="IvreaTerritorio\WebServices\POI1.cshtml" />
+    <None Include="RomaMunicipioII\Code\ImportOsp.cshtml" />
     <None Include="TerritorioMorgex\Mobile\pushProdMorgex.p12" />
     <None Include="TerritorioMorgex\Mobile\pushSvilMorgex.p12" />
     <None Include="Tff\Xslt\getfilm.cshtml" />
@@ -99,6 +104,8 @@
     <Content Include="WakeUp.hta" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="RomaMunicipioII\Mobile\" />
+    <Folder Include="RomaMunicipioII\Xslt\" />
     <Folder Include="ViviIlBiellese\Mobile\" />
   </ItemGroup>
   <ItemGroup>

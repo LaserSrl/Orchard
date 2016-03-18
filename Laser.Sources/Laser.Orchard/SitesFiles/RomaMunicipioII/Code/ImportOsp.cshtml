@@ -1,0 +1,169 @@
+@using System.IO
+@using System.Web.Hosting
+@using System.Xml
+@using System.Globalization
+@using Orchard.ContentManagement
+@using Orchard.Projections.Models
+@using Orchard.Projections.Services
+@using Orchard.Data
+@using Orchard.Core.Title.Models
+@using Orchard.Autoroute.Services
+@{
+    string importId, title;
+    IRepository<FieldIndexPartRecord> _fieldIndexRecord;
+    IRepository<StringFieldIndexRecord> _stringFieldIndexRecord;
+    IRepository<TitlePartRecord> _titleRecord;
+    IFieldIndexService _fieldIndexService;
+    Lazy<IAutorouteService> _autorouteService;
+
+    Model.OrchardServices.WorkContext.TryResolve<IRepository<FieldIndexPartRecord>>(out _fieldIndexRecord);
+    Model.OrchardServices.WorkContext.TryResolve<IRepository<StringFieldIndexRecord>>(out _stringFieldIndexRecord);
+    Model.OrchardServices.WorkContext.TryResolve<IRepository<TitlePartRecord>>(out _titleRecord);
+    Model.OrchardServices.WorkContext.TryResolve<IFieldIndexService>(out _fieldIndexService);
+    Model.OrchardServices.WorkContext.TryResolve<Lazy<IAutorouteService>>(out _autorouteService);
+    // Lettura del file
+    var localFileInd = HostingEnvironment.MapPath("~/Media/RomaMunicipioII/indi.xml");
+    var localFileOsp = HostingEnvironment.MapPath("~/Media/RomaMunicipioII/osp.xml");
+    XmlDocument docOsp = new XmlDocument();
+    XmlDocument docInd = new XmlDocument();
+    docInd.Load(localFileInd);
+    docOsp.Load(localFileOsp);
+
+
+    var rowsOsp = docOsp.SelectNodes("//database/table_data/row");
+    dynamic ci;
+    var i = 0;
+
+    // Valuto le righe degli Osp
+    foreach (XmlNode node in rowsOsp) {
+        i++;
+        string dd = "";
+        string anno = "";
+        string supe = "";
+        string note = "";
+        decimal superficie = (decimal)0.00;
+        foreach (XmlElement field in node.ChildNodes) {
+            if (field.Attributes["name"].Value == "dd") {
+                dd = field.InnerText.Trim();
+            } else if (field.Attributes["name"].Value == "anno") {
+                anno = field.InnerText.Trim();
+            } else if (field.Attributes["name"].Value == "superfice") {
+                supe = field.InnerText.Trim();
+            } else if (field.Attributes["name"].Value == "note") {
+                note = field.InnerText.Trim();
+            }
+        }
+        title = importId = dd + "-" + anno;
+
+        var contentId = 0;
+        contentId = _titleRecord
+            .Fetch(f => f.Title.Equals(title))
+            .Select(c => c.ContentItemRecord.Id).LastOrDefault();
+
+
+        ci = Model.OrchardServices.ContentManager.Get(contentId);
+        if (ci == null) {
+            ci = Model.OrchardServices.ContentManager.New("Osp");
+            Model.OrchardServices.ContentManager.Create(ci, VersionOptions.Latest);
+        }
+
+
+        ci.TitlePart.Title = title;
+        if (Decimal.TryParse(supe.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out superficie)) {
+            ci.Osp.Superficie.Value = superficie;
+        }
+        ci.Osp.Note.Value = note;
+        ci.Osp.Indirizzi.Ids = new List<int>().ToArray();
+
+        //if (i >= 5) {
+        //    break;
+        //}
+        if (String.IsNullOrWhiteSpace(((dynamic)ci).AutoroutePart.DisplayAlias)) {
+            ((dynamic)ci).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)ci).AutoroutePart);
+            _autorouteService.Value.PublishAlias(((dynamic)ci).AutoroutePart);
+        }
+
+        Model.OrchardServices.ContentManager.Publish(ci);
+    }
+
+
+    var rowsInd = docInd.SelectNodes("//database/table_data/row");
+
+    // Valuto le righe degli indirizzi
+    i = 0;
+    foreach (XmlNode node in rowsInd) {
+        i++;
+        string dd = "";
+        string anno = "";
+        string indirizzo = "";
+        string civico = "";
+        foreach (XmlElement field in node.ChildNodes) {
+            if (field.Attributes["name"].Value == "dd") {
+                dd = field.InnerText.Trim();
+            } else if (field.Attributes["name"].Value == "anno") {
+                anno = field.InnerText.Trim();
+            } else if (field.Attributes["name"].Value == "via") {
+                indirizzo = field.InnerText.Trim();
+            } else if (field.Attributes["name"].Value == "numero") {
+                civico = field.InnerText.Trim();
+            }
+        }
+        importId = dd + "-" + anno;
+        title = indirizzo + ", " + civico;
+        var contentId = 0;
+        contentId = _titleRecord
+            .Fetch(f => f.Title.Equals(title))
+            .Select(c => c.ContentItemRecord.Id).LastOrDefault();
+
+
+        ci = Model.OrchardServices.ContentManager.Get(contentId);
+        if (ci == null) {
+            ci = Model.OrchardServices.ContentManager.New("OspIndirizzo");
+            Model.OrchardServices.ContentManager.Create(ci, VersionOptions.Latest);
+        }
+
+        ci.TitlePart.Title = indirizzo + ", " + civico;
+
+        if (ci.MapPart.LocationAddress != indirizzo + ", " + civico + " ROMA (RM)" || ci.MapPart.Latitude == 0) {
+            // Geocoding
+            XmlDocument docgeo = new XmlDocument();
+            docgeo.Load(String.Format("http://maps.googleapis.com/maps/api/geocode/xml?address=ROMA, {0}", indirizzo + ", " + civico));
+            try {
+                var lat = docgeo.SelectSingleNode("//GeocodeResponse/result/geometry/location/lat").InnerText;
+                var lng = docgeo.SelectSingleNode("//GeocodeResponse/result/geometry/location/lng").InnerText;
+                ci.MapPart.Latitude = float.Parse(lat, CultureInfo.InvariantCulture.NumberFormat);
+                ci.MapPart.Longitude = float.Parse(lng, CultureInfo.InvariantCulture.NumberFormat);
+            } catch {
+
+            }
+            ci.MapPart.LocationAddress = indirizzo + ", " + civico + " ROMA (RM)";
+            docgeo = null;
+        }
+
+        if (String.IsNullOrWhiteSpace(((dynamic)ci).AutoroutePart.DisplayAlias)) {
+            ((dynamic)ci).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)ci).AutoroutePart);
+            _autorouteService.Value.PublishAlias(((dynamic)ci).AutoroutePart);
+        }
+
+        Model.OrchardServices.ContentManager.Publish(ci);
+
+
+        // lo aggancio al content Osp
+        var parentId = 0;
+        parentId = _titleRecord
+            .Fetch(f => f.Title.Equals(importId))
+            .Select(c => c.ContentItemRecord.Id).LastOrDefault();
+
+        var parentCi = Model.OrchardServices.ContentManager.Get(parentId);
+        if (parentCi != null) {
+            int[] ids = parentCi.Osp.Indirizzi.Ids;
+            parentCi.Osp.Indirizzi.Ids = ids.Concat(new int[] { ci.Id }).ToArray();
+            Model.OrchardServices.ContentManager.Publish(parentCi);
+        }
+        //if (i >= 5) {
+        //    break;
+        //}
+    }
+    
+}
+Success
