@@ -398,8 +398,9 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         public void PublishedPushEvent(dynamic mycontext, ContentItem ci) {
+            ContentItem savedCi = _orchardServices.ContentManager.Get(ci.Id);
             MobilePushPart mpp = ci.As<MobilePushPart>();
-            if (mpp.ToPush) {
+            if ((mpp.ToPush)&&(mpp.PushSent == false)) {
                 bool stopPush = false;
                 Int32 idContent = mpp.Id;
                 var relatedContent = ((dynamic)ci).MobilePushPart.RelatedContent;
@@ -407,7 +408,7 @@ namespace Laser.Orchard.Mobile.Services {
                 // nel caso in cui la MobilePushPart sia contenuta nel content type CommunicationAdvertising, usa il related content di quest'ultimo
                 if (ci.ContentType == "CommunicationAdvertising")
                 {
-                    relatedContent = ((dynamic)ci).CommunicationAdvertisingPart.ContentLinked;
+                    relatedContent = ((dynamic)savedCi).CommunicationAdvertisingPart.ContentLinked;
                 }
                 ContentItem relatedContentItem = null;
                 Int32 idContentRelated = 0;
@@ -417,6 +418,10 @@ namespace Laser.Orchard.Mobile.Services {
                     //contentForPush = (dynamic)relatedContentItem;
                     idContentRelated = relatedContent.Ids[0];
                     relatedContentItem = _orchardServices.ContentManager.Get(idContentRelated);
+                    if (relatedContentItem == null)
+                    {
+                        relatedContentItem = _orchardServices.ContentManager.GetLatest(idContentRelated);
+                    }
                     contentForPush = (dynamic)relatedContentItem;
                     if (!relatedContentItem.IsPublished()) {
                         _notifier.Information(T("No push will be sent, related content must be published"));
@@ -497,7 +502,6 @@ namespace Laser.Orchard.Mobile.Services {
                     _notifier.Information(T("Notification sent: " + messageSent.ToString()));
                 }
             }
-            //      }
         }
 
         #region Send push to Devices
@@ -519,7 +523,7 @@ namespace Laser.Orchard.Mobile.Services {
         {
             PushAndroidVM newpush = new PushAndroidVM();
             if (mpp.ContentItem.ContentType == "CommunicationAdvertising") {
-                SendAllAdvertisingAndroid(mpp, language, queryDevice, produzione, queryIds);
+                SendAllAdvertisingAndroid(mpp, idContentRelated, language, queryDevice, produzione, queryIds);
             }
             else {
                 string ctype = "";
@@ -547,17 +551,22 @@ namespace Laser.Orchard.Mobile.Services {
         //    SendAllAndroidJson(message, produzione, language, queryDevice);
         //}
 
-        private void SendAllAdvertisingAndroid(MobilePushPart mpp, string language, string queryDevice, bool produzione, int[] queryIds) {
+        private void SendAllAdvertisingAndroid(MobilePushPart mpp, int idContentRelated, string language, string queryDevice, bool produzione, int[] queryIds) {
             Dictionary<string, string> pushexternal = new Dictionary<string, string>();
             pushexternal.Add("Text", mpp.TextPush);
-            if (!string.IsNullOrEmpty(((dynamic)(mpp.ContentItem.As<CommunicationAdvertisingPart>())).UrlLinked.Value)) {
+
+            if (idContentRelated > 0)
+            {
+                pushexternal.Add("Iu", idContentRelated.ToString());
+            }
+            else if (!string.IsNullOrEmpty(((dynamic)(mpp.ContentItem.As<CommunicationAdvertisingPart>())).UrlLinked.Value)) {
                 string shortlink = _communicationService.GetCampaignLink("Push", mpp);
                 pushexternal.Add("Eu", shortlink);
             }
-            else {
-                string comunicatoid = mpp.ContentItem.Id.ToString();
-                pushexternal.Add("Iu", comunicatoid);
-            }
+            //else {
+            //    string comunicatoid = mpp.ContentItem.Id.ToString();
+            //    pushexternal.Add("Iu", comunicatoid);
+            //}
             string message = JsonConvert.SerializeObject(pushexternal);
             SendAllAndroidJson(message, produzione, language, queryDevice, queryIds);
         }
