@@ -7,17 +7,20 @@
 @using Orchard.Projections.Services
 @using Orchard.Data
 @using Orchard.Core.Title.Models
+@using Orchard.Autoroute.Services
 @{
     string importId, title;
     IRepository<FieldIndexPartRecord> _fieldIndexRecord;
     IRepository<StringFieldIndexRecord> _stringFieldIndexRecord;
     IRepository<TitlePartRecord> _titleRecord;
     IFieldIndexService _fieldIndexService;
+    Lazy<IAutorouteService> _autorouteService;
+
     Model.OrchardServices.WorkContext.TryResolve<IRepository<FieldIndexPartRecord>>(out _fieldIndexRecord);
     Model.OrchardServices.WorkContext.TryResolve<IRepository<StringFieldIndexRecord>>(out _stringFieldIndexRecord);
     Model.OrchardServices.WorkContext.TryResolve<IRepository<TitlePartRecord>>(out _titleRecord);
     Model.OrchardServices.WorkContext.TryResolve<IFieldIndexService>(out _fieldIndexService);
-
+    Model.OrchardServices.WorkContext.TryResolve<Lazy<IAutorouteService>>(out _autorouteService);
     // Lettura del file
     var localFileInd = HostingEnvironment.MapPath("~/Media/RomaMunicipioII/indi.xml");
     var localFileOsp = HostingEnvironment.MapPath("~/Media/RomaMunicipioII/osp.xml");
@@ -64,7 +67,7 @@
             Model.OrchardServices.ContentManager.Create(ci, VersionOptions.Latest);
         }
 
-        
+
         ci.TitlePart.Title = title;
         if (Decimal.TryParse(supe.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out superficie)) {
             ci.Osp.Superficie.Value = superficie;
@@ -75,6 +78,10 @@
         //if (i >= 5) {
         //    break;
         //}
+        if (String.IsNullOrWhiteSpace(((dynamic)ci).AutoroutePart.DisplayAlias)) {
+            ((dynamic)ci).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)ci).AutoroutePart);
+            _autorouteService.Value.PublishAlias(((dynamic)ci).AutoroutePart);
+        }
 
         Model.OrchardServices.ContentManager.Publish(ci);
     }
@@ -114,10 +121,10 @@
             ci = Model.OrchardServices.ContentManager.New("OspIndirizzo");
             Model.OrchardServices.ContentManager.Create(ci, VersionOptions.Latest);
         }
-        
+
         ci.TitlePart.Title = indirizzo + ", " + civico;
 
-        if (ci.MapPart.LocationAddress != indirizzo + ", " + civico + " ROMA (RM)") {
+        if (ci.MapPart.LocationAddress != indirizzo + ", " + civico + " ROMA (RM)" || ci.MapPart.Latitude == 0) {
             // Geocoding
             XmlDocument docgeo = new XmlDocument();
             docgeo.Load(String.Format("http://maps.googleapis.com/maps/api/geocode/xml?address=ROMA, {0}", indirizzo + ", " + civico));
@@ -132,8 +139,15 @@
             ci.MapPart.LocationAddress = indirizzo + ", " + civico + " ROMA (RM)";
             docgeo = null;
         }
+
+        if (String.IsNullOrWhiteSpace(((dynamic)ci).AutoroutePart.DisplayAlias)) {
+            ((dynamic)ci).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)ci).AutoroutePart);
+            _autorouteService.Value.PublishAlias(((dynamic)ci).AutoroutePart);
+        }
+
         Model.OrchardServices.ContentManager.Publish(ci);
-        
+
+
         // lo aggancio al content Osp
         var parentId = 0;
         parentId = _titleRecord
@@ -152,3 +166,4 @@
     }
     
 }
+Success

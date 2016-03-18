@@ -53,7 +53,12 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Activities {
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            var result = _razorExecuteService.Execute(activityContext.GetState<string>("RazorExecuteActivity_RazorView"), workflowContext.Content);
+            var result = _razorExecuteService.Execute(activityContext.GetState<string>("RazorExecuteActivity_RazorView"), workflowContext.Content).Trim();
+            if (result == null) {
+                result = "Error";
+            } else if (result == "") {
+                result = "Empty";
+            }
             yield return T(result);
         }
 
@@ -67,10 +72,11 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Activities {
             var outcomes = context.GetState<string>("RazorExecuteActivity_Outcomes");
 
             if (String.IsNullOrEmpty(outcomes)) {
-                return Enumerable.Empty<string>();
+                return new List<string> {"Error","Empty"};
             }
-
-            return outcomes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+            var defoutcomes = outcomes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+            defoutcomes.AddRange(new List<string> { "Error", "Empty" });
+            return defoutcomes;
 
         }
 
