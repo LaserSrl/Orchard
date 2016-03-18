@@ -64,9 +64,11 @@
             Model.OrchardServices.ContentManager.Create(ci, VersionOptions.Latest);
         }
 
-        Decimal.TryParse(supe.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out superficie);
+        
         ci.TitlePart.Title = title;
-        ci.Osp.Superficie.Value = superficie;
+        if (Decimal.TryParse(supe.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out superficie)) {
+            ci.Osp.Superficie.Value = superficie;
+        }
         ci.Osp.Note.Value = note;
         ci.Osp.Indirizzi.Ids = new List<int>().ToArray();
 
@@ -115,15 +117,21 @@
         
         ci.TitlePart.Title = indirizzo + ", " + civico;
 
-        // Geocoding
-        XmlDocument docgeo = new XmlDocument();
-        docgeo.Load(String.Format("http://maps.googleapis.com/maps/api/geocode/xml?address=ROMA, {0}", indirizzo + ", " + civico));
-        var lat = docgeo.SelectSingleNode("//GeocodeResponse/result/geometry/location/lat").InnerText;
-        var lng = docgeo.SelectSingleNode("//GeocodeResponse/result/geometry/location/lng").InnerText;
-        ci.MapPart.LocationAddress = indirizzo + ", " + civico + " ROMA (RM)";
-        ci.MapPart.Latitude = float.Parse(lat, CultureInfo.InvariantCulture.NumberFormat);
-        ci.MapPart.Longitude = float.Parse(lng, CultureInfo.InvariantCulture.NumberFormat);
-        docgeo = null;
+        if (ci.MapPart.LocationAddress != indirizzo + ", " + civico + " ROMA (RM)") {
+            // Geocoding
+            XmlDocument docgeo = new XmlDocument();
+            docgeo.Load(String.Format("http://maps.googleapis.com/maps/api/geocode/xml?address=ROMA, {0}", indirizzo + ", " + civico));
+            try {
+                var lat = docgeo.SelectSingleNode("//GeocodeResponse/result/geometry/location/lat").InnerText;
+                var lng = docgeo.SelectSingleNode("//GeocodeResponse/result/geometry/location/lng").InnerText;
+                ci.MapPart.Latitude = float.Parse(lat, CultureInfo.InvariantCulture.NumberFormat);
+                ci.MapPart.Longitude = float.Parse(lng, CultureInfo.InvariantCulture.NumberFormat);
+            } catch {
+
+            }
+            ci.MapPart.LocationAddress = indirizzo + ", " + civico + " ROMA (RM)";
+            docgeo = null;
+        }
         Model.OrchardServices.ContentManager.Publish(ci);
         
         // lo aggancio al content Osp
