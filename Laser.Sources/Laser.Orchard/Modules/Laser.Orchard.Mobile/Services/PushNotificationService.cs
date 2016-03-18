@@ -490,7 +490,7 @@ namespace Laser.Orchard.Mobile.Services {
                         SendAllWindowsMobilePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
                     }
                     // aggiorna la MobilePushPart
-                    mpp.ToPush = false;
+                    //mpp.ToPush = false;
                     mpp.PushSent = true;
                     mpp.PushSentNumber = messageSent;
                     mpp.TargetDeviceNumber = GetPushQueryResult(ids, locTipoDispositivo, produzione, language).Count;
