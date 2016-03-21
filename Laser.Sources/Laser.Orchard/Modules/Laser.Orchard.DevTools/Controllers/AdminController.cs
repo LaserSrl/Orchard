@@ -51,7 +51,7 @@ namespace Laser.Orchard.DevTools.Controllers {
 
         [HttpGet]
         [Admin]
-        public ActionResult Index(string testo="") {
+        public ActionResult Index(string testo = "") {
             Segnalazione se = new Segnalazione();
             se.Testo = testo;
             return View(se);
@@ -68,15 +68,15 @@ namespace Laser.Orchard.DevTools.Controllers {
                 var authCookie = System.Web.HttpContext.Current.Request.Cookies[".ASPXAUTH"];
                 if (authCookie != null) {
                     var authToken = authCookie.Value;
-                     csrfToken = _csrfTokenHelper.GenerateCsrfTokenFromAuthToken(authToken);
-                  //  Segnalazione se = new Segnalazione();
+                    csrfToken = _csrfTokenHelper.GenerateCsrfTokenFromAuthToken(authToken);
+                    //  Segnalazione se = new Segnalazione();
                     //se.Testo = csrfToken;
-                   // _notifier.Add(NotifyType.Information, T(csrfToken));
+                    // _notifier.Add(NotifyType.Information, T(csrfToken));
                 }
             }
-          //  return RedirectToAction("Index", "Admin", new { testo = csrfToken });
-            Segnalazione se = new Segnalazione { Testo =  csrfToken };
-            return View("Index",se);
+            //  return RedirectToAction("Index", "Admin", new { testo = csrfToken });
+            Segnalazione se = new Segnalazione { Testo = csrfToken };
+            return View("Index", se);
         }
 
 
@@ -101,7 +101,20 @@ namespace Laser.Orchard.DevTools.Controllers {
             if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
                 return new HttpUnauthorizedResult();
             IEnumerable<ScheduledTaskRecord> st = _repositoryScheduledTask.Fetch(t => t.ScheduledUtc > DateTime.UtcNow).OrderBy(x => x.ScheduledUtc);
-            return View((object)st);
+
+
+            return View("ShowScheduledTask", (object)st);
+        }
+
+        [HttpGet]
+        [Admin]
+        public ActionResult DeleteScheduledTask(Int32 key) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
+                return new HttpUnauthorizedResult();
+            ScheduledTaskRecord st = _repositoryScheduledTask.Fetch(t => t.ScheduledUtc > DateTime.UtcNow).Where(x => x.Id == key).FirstOrDefault();
+            _repositoryScheduledTask.Delete(st);
+          //  st.ContentItemVersionRecord.ContentItemRecord.Id;
+            return RedirectToAction("ShowScheduledTask", "Admin");
         }
 
         [HttpGet]
@@ -160,10 +173,10 @@ namespace Laser.Orchard.DevTools.Controllers {
         public ActionResult ShowCachedDataEdit(string key) {
             if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
                 return new HttpUnauthorizedResult();
-          //  _notifier.Add(NotifyType.Information, T());
-          //  return RedirectToAction("index", "Admin", new { testo = JsonConvert.SerializeObject(_cacheStorageProvider.Get(key)) });
-         Segnalazione se= new Segnalazione{Testo= JsonConvert.SerializeObject(_cacheStorageProvider.Get(key)) };
-            return View("index",se);
+            //  _notifier.Add(NotifyType.Information, T());
+            //  return RedirectToAction("index", "Admin", new { testo = JsonConvert.SerializeObject(_cacheStorageProvider.Get(key)) });
+            Segnalazione se = new Segnalazione { Testo = JsonConvert.SerializeObject(_cacheStorageProvider.Get(key)) };
+            return View("index", se);
         }
 
     }

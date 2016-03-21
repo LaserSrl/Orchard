@@ -15,8 +15,9 @@
 <th>Id - schedule</th>
 <th>ScheduledUtc</th>
 <th>TaskType</th>
-<th>Id Content</th>
+<th>Id Content Version</th>
 <th>Data</th>
+<th>Action</th>
 </tr>
 </thead>
     @foreach (Orchard.Core.Scheduling.Models.ScheduledTaskRecord sc in Model) {
@@ -27,7 +28,7 @@
       
        @if (sc.ContentItemVersionRecord!=null){
            if (sc.ContentItemVersionRecord.Infoset!=null){
-               <td >  @sc.ContentItemVersionRecord.Id</td>
+               <td >@sc.ContentItemVersionRecord.ContentItemRecord.Id  versione @sc.ContentItemVersionRecord.Id</td>
          <td >  @sc.ContentItemVersionRecord.Infoset.Data</td>
     }
     else { <td>  </td>
@@ -37,6 +38,7 @@
         else { <td >  </td>
            <td >  </td>
            }
+            <td>  <a class="button primaryAction" href="@Url.Action("DeleteScheduledTask", "Admin", new { area = "Laser.Orchard.DevTools", key = sc.Id })" title="@T("Remove")">@T("Remove Task")</a>  </td>
 
 </tr>
 }
