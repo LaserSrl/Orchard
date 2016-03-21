@@ -67,7 +67,7 @@
 
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.CacheInput)">@T("Cache Input")</label>
-    @Html.TextBoxFor(m => m.CacheInput)
+    @Html.TextBoxFor(m => m.CacheInput, new { @class = "text large tokenized" })
     <span class="hint">@T("Insert Cached data to Input")</span>
 </fieldset>
 <fieldset>

@@ -1,5 +1,6 @@
-﻿
+﻿using Orchard.Mvc.Html;
 using Laser.Orchard.ExternalContent.Fields;
+using Laser.Orchard.ExternalContent.Services;
 using Laser.Orchard.ExternalContent.Settings;
 using Orchard;
 using Orchard.Autoroute.Models;
@@ -13,6 +14,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.Hosting;
+using System.Web.Mvc;
+using Orchard.Mvc;
 
 namespace Laser.Orchard.ExternalContent.Tasks {
     public class ToolScheduledTaskHandler : IScheduledTaskHandler {
@@ -21,15 +24,22 @@ namespace Laser.Orchard.ExternalContent.Tasks {
         private readonly IOrchardServices _orchardServices;
         private readonly IScheduledTaskManager _scheduledTaskManager;
         private readonly ShellSettings _shellSettings;
+        private readonly IFieldExternalService _fieldExternalService;
+        private readonly IWorkContextAccessor _workContextAccessor;
+
 
         public ILogger Logger { get; set; }
 
         public ToolScheduledTaskHandler(
             IOrchardServices orchardServices,
             IScheduledTaskManager scheduledTaskManager,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings,
+            IFieldExternalService fieldExternalService,
+            IWorkContextAccessor workContextAccessor) {
+            _workContextAccessor = workContextAccessor;
             _orchardServices = orchardServices;
             _scheduledTaskManager = scheduledTaskManager;
+            _fieldExternalService = fieldExternalService;
             Logger = NullLogger.Instance;
             _shellSettings = shellSettings;
         }
@@ -42,7 +52,31 @@ namespace Laser.Orchard.ExternalContent.Tasks {
                          context.Task.ContentItem.Version,
                          context.Task.ScheduledUtc);
                     var displayalias = context.Task.ContentItem.As<AutoroutePart>().DisplayAlias;
-                    var CallUrl = HostingEnvironment.MapPath("~/") + _shellSettings.Name + "\\Webservices\\Alias?displayalias=" + displayalias;
+                    //    //   using (var wc = _  using (var wc = shellContext.LifetimeScope.Resolve<IWorkContextAccessor>().CreateWorkContextScope()) {
+                    ////     var tenantSiteName = wc.Resolve<ISiteService>().GetSiteSettings().SiteName;
+                    //     var wc = _workContextAccessor.CreateWorkContextScope();
+                    //     var workcontext = WorkContextExtensions.GetWorkContext(wc);
+                    ////     var tenantSiteName = wc.Resolve<ISiteService>().GetSiteSettings().SiteName;
+                    //     var settings = workContext.Resolve<ShellSettings>();
+                    //     _shellSettings.
+
+                    //var httpContextAccessor = GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IHttpContextAccessor)) as IHttpContextAccessor;
+                    //var workContext = WorkContextExtensions.GetWorkContext(httpContextAccessor.Current().Request.RequestContext);
+                    //return workContext.CurrentSite.BaseUrl;
+                  
+                    string CallUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
+                    //var host = _shellSettings.RequestUrlHost;
+                    var prefix = _shellSettings.RequestUrlPrefix;
+                    //if (!string.IsNullOrEmpty(host))
+                    //    CallUrl += host;
+                    if (!string.IsNullOrEmpty(prefix) && prefix.ToLower()!="default")
+                        CallUrl += "/" + prefix;
+                    CallUrl += @"/Webservices/Alias?displayalias=" + displayalias;
+
+
+                    // var urlHelper = new UrlHelper(wc.HttpContext.Request.RequestContext);
+                    //      var CallUrl = urlHelper.ItemDisplayUrl(context.Task.ContentItem);
+                    // HostingEnvironment.MapPath("~/") + _shellSettings.Name + "\\Webservices\\Alias?displayalias=" + displayalias;
                     WebClient myClient = new WebClient();
                     Stream response = myClient.OpenRead(CallUrl);
                     response.Close();
@@ -61,7 +95,7 @@ namespace Laser.Orchard.ExternalContent.Tasks {
                             }
                         }
                         if (minuti > 0)
-                            this.ScheduleNextTask(minuti, context.Task.ContentItem);
+                            _fieldExternalService.ScheduleNextTask(minuti, context.Task.ContentItem);
                     }
                     catch (Exception e) {
                         Logger.Error(e, e.Message);
@@ -70,11 +104,11 @@ namespace Laser.Orchard.ExternalContent.Tasks {
             }
         }
 
-        private void ScheduleNextTask(Int32 minute, ContentItem ci) {
-            if (minute > 0) {
-                DateTime date = DateTime.UtcNow.AddMinutes(minute);
-                _scheduledTaskManager.CreateTask(TaskType, date, ci);
-            }
-        }
+        //private void ScheduleNextTask(Int32 minute, ContentItem ci) {
+        //    if (minute > 0) {
+        //        DateTime date = DateTime.UtcNow.AddMinutes(minute);
+        //        _scheduledTaskManager.CreateTask(TaskType, date, ci);
+        //    }
+        //}
     }
 }
