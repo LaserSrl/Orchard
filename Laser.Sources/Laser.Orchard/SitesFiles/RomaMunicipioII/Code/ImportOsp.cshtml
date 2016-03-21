@@ -64,7 +64,7 @@
         ci = Model.OrchardServices.ContentManager.Get(contentId);
         if (ci == null) {
             ci = Model.OrchardServices.ContentManager.New("Osp");
-            Model.OrchardServices.ContentManager.Create(ci, VersionOptions.Latest);
+            Model.OrchardServices.ContentManager.Create(ci, VersionOptions.DraftRequired);
         }
 
 
@@ -82,7 +82,9 @@
             ((dynamic)ci).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)ci).AutoroutePart);
             _autorouteService.Value.PublishAlias(((dynamic)ci).AutoroutePart);
         }
-
+        
+        // tabella degli indici per le projection
+        _fieldIndexService.Set(((dynamic)ci).FieldIndexPart, "Osp", "Note", "", (string)note, typeof(string));
         Model.OrchardServices.ContentManager.Publish(ci);
     }
 
@@ -119,7 +121,7 @@
         ci = Model.OrchardServices.ContentManager.Get(contentId);
         if (ci == null) {
             ci = Model.OrchardServices.ContentManager.New("OspIndirizzo");
-            Model.OrchardServices.ContentManager.Create(ci, VersionOptions.Latest);
+            Model.OrchardServices.ContentManager.Create(ci, VersionOptions.DraftRequired);
         }
 
         ci.TitlePart.Title = indirizzo + ", " + civico;
@@ -145,7 +147,6 @@
             _autorouteService.Value.PublishAlias(((dynamic)ci).AutoroutePart);
         }
 
-        Model.OrchardServices.ContentManager.Publish(ci);
 
 
         // lo aggancio al content Osp
@@ -157,9 +158,16 @@
         var parentCi = Model.OrchardServices.ContentManager.Get(parentId);
         if (parentCi != null) {
             int[] ids = parentCi.Osp.Indirizzi.Ids;
-            parentCi.Osp.Indirizzi.Ids = ids.Concat(new int[] { ci.Id }).ToArray();
+            
+            parentCi.Osp.Indirizzi.Ids = ids = ids.Concat(new int[] { ci.Id }).ToArray();
+            // tabella degli indici per le projection
+            
+            _fieldIndexService.Set(((dynamic)parentCi).FieldIndexPart, "Osp", "Indirizzi", "", (string)"{" + string.Join("},{", ids) + "}", typeof(string));
             Model.OrchardServices.ContentManager.Publish(parentCi);
         }
+
+        Model.OrchardServices.ContentManager.Publish(ci);
+        
         //if (i >= 5) {
         //    break;
         //}
