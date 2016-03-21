@@ -152,12 +152,14 @@
             });
         });
         function changefacebooktype(element) {
-            if (element.checked) {
-                $(".FacebookShareLink").hide();
-                $(".FacebookPost").show();
-            } else {
-                $(".FacebookShareLink").show();
-                $(".FacebookPost").hide();
+            if (element != null) {
+                if (element.checked) {
+                    $(".FacebookShareLink").hide();
+                    $(".FacebookPost").show();
+                } else {
+                    $(".FacebookShareLink").show();
+                    $(".FacebookPost").hide();
+                }
             }
         }
     </script>

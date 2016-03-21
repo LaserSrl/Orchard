@@ -5,11 +5,13 @@ using Laser.Orchard.StartupConfig.Models;
 using NHibernate.Transform;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -19,7 +21,8 @@ namespace Laser.Orchard.Mobile.Services {
     public interface ISmsCommunicationService : IDependency {
         //IHqlQuery IntegrateAdditionalConditions(IHqlQuery query = null, IContent content = null);
         //IHqlQuery IntegrateAdditionalConditions(IHqlQuery query, Int32? idlocalization);
-        IList<SmsHQL> GetSmsQueryResult(Int32[] ids, Int32? idlingua);
+        //IList<SmsHQL> GetSmsQueryResult(Int32[] ids, Int32? idlingua);
+        IList GetSmsQueryResult(Int32[] ids, Int32? idlingua);
         //List<string> GetSmsNumbersQueryResult(Int32[] ids, Int32? idlingua);
     }
 
@@ -54,8 +57,9 @@ namespace Laser.Orchard.Mobile.Services {
         //    }
         //    return listaNumeri;
         //}
-
-        public IList<SmsHQL> GetSmsQueryResult(Int32[] ids, Int32? idlingua)
+        
+        //public IList<SmsHQL> GetSmsQueryResult(Int32[] ids, Int32? idlingua)
+        public IList GetSmsQueryResult(Int32[] ids, Int32? idlingua)
         {
             IHqlQuery query;
             if (ids != null && ids.Length > 0)
@@ -67,6 +71,16 @@ namespace Laser.Orchard.Mobile.Services {
                 query = IntegrateAdditionalConditions(null, idlingua);
             }
 
+            //// prove #GM
+            //var ris1 = _orchardServices.ContentManager.HqlQuery()
+            //    .ForType(new string[] { "CommunicationContact" })
+            //    .Join(alias => alias.ContentPartRecord<SmsContactPartRecord>().Property("SmsRecord", "smsrecord")) 
+            //    .Join(alias => alias.ContentPartRecord<TitlePartRecord>())
+            //    ;
+            
+            //var ris2 = ris1.List();
+            //return ris2.ToList();
+
             // Trasformo in stringa HQL
             var stringHQL = ((DefaultHqlQuery)query).ToHql(false);
 
@@ -74,7 +88,14 @@ namespace Laser.Orchard.Mobile.Services {
             // TODO: trovare un modo migliore per rimuovere la order by
             stringHQL = stringHQL.ToString().Replace("order by civ.Id", "");
 
-            var queryForSms = "SELECT distinct cir.Id as Id, TitlePart.Title as Title, SmsRecord.Prefix as SmsPrefix, SmsRecord.Sms as SmsNumber FROM " +
+            //var queryForSms = "SELECT distinct cir.Id as Id, TitlePart.Title as Title, SmsRecord.Prefix as SmsPrefix, SmsRecord.Sms as SmsNumber FROM " +
+            //    "Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
+            //    "civr.ContentItemRecord as cir join " +
+            //    "civr.TitlePartRecord as TitlePart join " +
+            //    "cir.SmsContactPartRecord as SmsPart join " +
+            //        "SmsPart.SmsRecord as SmsRecord " +
+            //    "WHERE civr.Published=1 AND civr.Id in (" + stringHQL + ")";
+            var queryForSms = "SELECT civr as ContentItemVersionRecord, cir as ContentItemRecord, TitlePart as TitlePartRecord, SmsPart as SmsContactPartRecord, SmsRecord as SmsRecord FROM " +
                 "Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
                 "civr.ContentItemRecord as cir join " +
                 "civr.TitlePartRecord as TitlePart join " +
@@ -88,8 +109,8 @@ namespace Laser.Orchard.Mobile.Services {
                 .SetCacheable(false);
 
             var lista = fullStatement
-                .SetResultTransformer(Transformers.AliasToBean<SmsHQL>())  //(Transformers.AliasToEntityMap)
-                .List<SmsHQL>();
+                .SetResultTransformer(Transformers.AliasToEntityMap)  //(Transformers.AliasToEntityMap) //(Transformers.AliasToBean<SmsHQL>())
+                .List(); // .List<SmsHQL>();
             return lista;
         }
 
