@@ -55,6 +55,30 @@
 </fieldset>
 @Display.TokenHint()
 <fieldset>
+    <label for="@Html.FieldIdFor(m => m.CacheMinute)">@T("Cache Refresh")</label>
+    @Html.TextBoxFor(m => m.CacheMinute)
+    <span class="hint">@T("Insert minute to try refresh cache")</span>
+</fieldset>
+<fieldset>
+    @Html.CheckBoxFor(m => m.CacheToFileSystem)
+    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CacheToFileSystem)">@T("Cache To FileSystem")</label>
+    <span class="hint">@T("If checked cache will be stored also in filesystem (in folder/App_Data/cache).")</span>
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.CacheInput)">@T("Cache Input")</label>
+    @Html.TextBoxFor(m => m.CacheInput, new { @class = "text large tokenized" })
+    <span class="hint">@T("Insert Cached data to Input")</span>
+</fieldset>
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.ScheduledMinute)">@T("Scheduled Minute")</label>
+    @Html.TextBoxFor(m => m.ScheduledMinute)
+    <span class="hint">@T("Scheduled request Minute")</span>
+</fieldset>
+
+
+
+<fieldset>
     <label for="@Html.FieldIdFor(m => m.HttpVerb)">@T("Use this HttpVerb")</label>
     @Html.DropDownListFor(m => m.HttpVerb, new SelectList(Enum.GetValues(typeof(Laser.Orchard.ExternalContent.HttpVerbOptions)), Model.HttpVerb), new { @class = "text", onclick = "verbChanged(this)" })
     <span class="hint">@T("Default is GET")</span>

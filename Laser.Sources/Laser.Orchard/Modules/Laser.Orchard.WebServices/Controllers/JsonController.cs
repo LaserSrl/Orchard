@@ -638,9 +638,11 @@ namespace Laser.Orchard.WebServices.Controllers {
 
         private dynamic cleanobj(dynamic objec) {
             if (objec != null)
-                if (objec.ToRemove != null) {
-                    return cleanobj(objec.ToRemove);
-                }
+                try {
+                    if (objec.ToRemove != null) {
+                        return cleanobj(objec.ToRemove);
+                    }
+                }catch{};
             return objec;
         }
     }

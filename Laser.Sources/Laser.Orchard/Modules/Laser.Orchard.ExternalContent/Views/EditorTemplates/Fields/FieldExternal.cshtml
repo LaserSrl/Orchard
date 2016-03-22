@@ -5,6 +5,8 @@
     Script.Require("jQuery").AtFoot();
     var name = Model.Field.Name;
     var required = ((bool?)Model.Setting.Required) ?? false;
+
+    Int32 ScheduledMinute = Model.Setting.ScheduledMinute;
 }
 @if (String.IsNullOrEmpty(Model.Setting.ExternalURL))
 {
@@ -13,6 +15,10 @@
                 { <text>class="required"</text> } for="@Html.FieldIdFor(m => "FieldExternal-" + name)">@name.CamelFriendly()</label>
         @Html.TextBoxFor(m => m.Field.ExternalUrl, new { @class = "text large tokenized" })
          <span class="hint">@T("Insert url and token")</span>
+     @if (ScheduledMinute > 0) {
+    <br /> 
+     @Html.Raw("&nbsp;")<button   type="submit" name="submit.Save" value="@Html.Raw("submit.StartSchedule" )">@T("Start Schedule")</button>
+  }  
 </fieldset>
         @Display.TokenHint()
 <fieldset>
@@ -20,6 +26,9 @@
     @Html.DropDownListFor(m => m.Field.HttpVerbCode, new SelectList(Enum.GetValues(typeof(Laser.Orchard.ExternalContent.HttpVerbOptions)), Model.Field.HttpVerbCode), new { @class = "text", onchange = "verbChanged(this);" })
     <span class="hint">@T("Default is GET")</span>
 </fieldset>
+
+ 
+    
 <div @if (Model.Field.HttpVerbCode != "POST") { <text> style="display:none" </text> } >
     <fieldset>
         <label for="@Html.FieldIdFor(m => m.Field.HttpDataType)">@T("Use this content type")</label>
