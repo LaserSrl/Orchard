@@ -17,6 +17,9 @@ using Orchard.Security;
 using Orchard.Utility.Extensions;
 using Orchard.ContentManagement;
 using Laser.Orchard.StartupConfig.WebApiProtection.Models;
+using Laser.Orchard.StartupConfig.Services;
+using Newtonsoft.Json;
+using Laser.Orchard.StartupConfig.ViewModels;
 
 namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
 
@@ -30,21 +33,42 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
         private readonly IOrchardServices _orchardServices;
         private readonly ShellSettings _shellSettings;
         private readonly HttpRequest _request;
+        private readonly IUtilsServices _utilsServices;
         private string _additionalCacheKey;
 
-        public ApiKeyFilter(ShellSettings shellSettings, IOrchardServices orchardServices) {
+        public ApiKeyFilter(ShellSettings shellSettings, IOrchardServices orchardServices, IUtilsServices utilsServices) {
             _shellSettings = shellSettings;
             _request = HttpContext.Current.Request;
             Logger = NullLogger.Instance;
             _orchardServices = orchardServices;
+            _utilsServices = utilsServices;
         }
 
         public ILogger Logger;
 
+        private void ErrorResult(ActionExecutingContext filterContext) {
+            if (filterContext == null) return;
+            filterContext.HttpContext.Response.Clear();
+            filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+            filterContext.HttpContext.Response.StatusCode = (int)System.Net.HttpStatusCode.Forbidden;
+            filterContext.Result = new JsonResult {
+                Data = _utilsServices.GetResponse(ViewModels.ResponseType.UnAuthorized),
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+            return;
 
-        private void ValidateRequestByApiKey() {
-            if (_additionalCacheKey != null)
-                return;
+        }
+
+        private void ValidateRequestByApiKey(ActionExecutingContext filterContext) {
+            if (_additionalCacheKey != null) {
+                if (_additionalCacheKey == "UnauthorizedApi") {
+                    if (filterContext != null) {
+                        ErrorResult(filterContext);
+                        return;
+                    }
+                } else { return; }
+            }
+
 
 
             var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
@@ -58,11 +82,12 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
 
             if (protectedControllers.Contains(String.Format("{0}.{1}.{2}", area, controller, action), StringComparer.InvariantCultureIgnoreCase)) {
                 if (!TryValidateKey(_request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"], (_request.QueryString["ApiKey"] != null && _request.QueryString["clear"] != "false"))) {
+                    Logger.Error(String.Format("UnauthorizedApi: {0}", _request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"]));
                     _additionalCacheKey = "UnauthorizedApi";
-                    HttpContext.Current.Response.Clear();
-                    HttpContext.Current.Response.StatusCode = 401;
-                    HttpContext.Current.Response.Write("Error");
-                    HttpContext.Current.Response.End();
+                    if (filterContext != null) {
+                        ErrorResult(filterContext);
+                        return;
+                    }
                 } else {
                     _additionalCacheKey = "AuthorizedApi";
                 }
@@ -198,7 +223,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
-            ValidateRequestByApiKey();
+            ValidateRequestByApiKey(filterContext);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
@@ -213,7 +238,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
         /// <param name="key">default cache key such as defined in Orchard.OutpuCache</param>
         /// <returns>The new cache key</returns>
         public System.Text.StringBuilder InflatingCacheKey(System.Text.StringBuilder key) {
-            ValidateRequestByApiKey();
+            ValidateRequestByApiKey(null);
             key.Append(_additionalCacheKey);
             return key;
         }
