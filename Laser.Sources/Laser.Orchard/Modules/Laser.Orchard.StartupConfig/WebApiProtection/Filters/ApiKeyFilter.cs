@@ -46,13 +46,15 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
 
         public ILogger Logger;
 
-        private void ErrorResult(ActionExecutingContext filterContext) {
+        private void ErrorResult(ActionExecutingContext filterContext, string errorData) {
             if (filterContext == null) return;
             filterContext.HttpContext.Response.Clear();
             filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
             filterContext.HttpContext.Response.StatusCode = (int)System.Net.HttpStatusCode.Forbidden;
+            var response = _utilsServices.GetResponse(ViewModels.ResponseType.UnAuthorized);
+            response.Data = errorData;
             filterContext.Result = new JsonResult {
-                Data = _utilsServices.GetResponse(ViewModels.ResponseType.UnAuthorized),
+                Data = response,
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
             return;
@@ -63,7 +65,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
             if (_additionalCacheKey != null) {
                 if (_additionalCacheKey == "UnauthorizedApi") {
                     if (filterContext != null) {
-                        ErrorResult(filterContext);
+                        ErrorResult(filterContext, String.Format("UnauthorizedApi: {0}", _request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"]));
                         return;
                     }
                 } else { return; }
@@ -85,7 +87,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
                     Logger.Error(String.Format("UnauthorizedApi: {0}", _request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"]));
                     _additionalCacheKey = "UnauthorizedApi";
                     if (filterContext != null) {
-                        ErrorResult(filterContext);
+                        ErrorResult(filterContext, String.Format("UnauthorizedApi: {0}", _request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"]));
                         return;
                     }
                 } else {
