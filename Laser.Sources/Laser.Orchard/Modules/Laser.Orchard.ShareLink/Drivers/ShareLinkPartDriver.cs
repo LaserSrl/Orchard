@@ -45,12 +45,12 @@ namespace Laser.Orchard.ShareLink.Drivers {
             var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
             if ((!partSetting.ShowTextChoise) || part.SharedText == "") {
                 if (!string.IsNullOrEmpty(partSetting.SharedText)) {
-                    vm.SharedText = _tokenizer.Replace(partSetting.SharedText, tokens);
+ //                   vm.SharedText = _tokenizer.Replace(partSetting.SharedText, tokens);
                     vm.ShowSharedText = false;
                 }
                 else {
                     if (!string.IsNullOrEmpty(moduleSetting.SharedText)) {
-                        vm.SharedText = _tokenizer.Replace(moduleSetting.SharedText, tokens);
+ //                       vm.SharedText = _tokenizer.Replace(moduleSetting.SharedText, tokens);
                         vm.ShowSharedText = false;
                     }
                 }
@@ -61,12 +61,12 @@ namespace Laser.Orchard.ShareLink.Drivers {
 
             if ((!partSetting.ShowLinkChoise) || part.SharedLink == "") {
                 if (!string.IsNullOrEmpty(partSetting.SharedLink)) {
-                    vm.SharedLink = _tokenizer.Replace(partSetting.SharedLink, tokens);
+//                    vm.SharedLink = _tokenizer.Replace(partSetting.SharedLink, tokens);
                     vm.ShowSharedLink = false;
                 }
                 else {
                     if (!string.IsNullOrEmpty(moduleSetting.SharedLink)) {
-                        vm.SharedLink = _tokenizer.Replace(moduleSetting.SharedLink, tokens);
+//                        vm.SharedLink = _tokenizer.Replace(moduleSetting.SharedLink, tokens);
                         vm.ShowSharedLink = false;
                     }
                 }
@@ -83,7 +83,7 @@ namespace Laser.Orchard.ShareLink.Drivers {
             }
             else {
                 if (!string.IsNullOrEmpty(moduleSetting.SharedImage)) {
-                    ListId = _tokenizer.Replace(moduleSetting.SharedImage, tokens);
+                   ListId = _tokenizer.Replace(moduleSetting.SharedImage, tokens);
                     vm.SharedImage = getimgurl(ListId);
                     vm.ShowSharedImage = false;
                 }
