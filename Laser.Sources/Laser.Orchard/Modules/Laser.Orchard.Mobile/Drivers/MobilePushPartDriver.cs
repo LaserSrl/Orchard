@@ -62,6 +62,11 @@ namespace Laser.Orchard.Mobile.Drivers {
                     viewModel.TestPush = false;
                 // We are in "postback" mode, so update our part
                 if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+                    // forza il valore di ToPush che altrimenti sembra non venir aggiornato correttamente
+                    if (viewModel.PushSent)
+                    {
+                        viewModel.ToPush = true;
+                    }
                     Mapper.CreateMap<MobilePushVM, MobilePushPart>();
                     Mapper.Map(viewModel, part);
 

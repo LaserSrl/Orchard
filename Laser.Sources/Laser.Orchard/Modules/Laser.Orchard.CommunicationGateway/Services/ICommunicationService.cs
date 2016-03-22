@@ -9,6 +9,7 @@ using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Fields.Fields;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.MediaLibrary.Fields;
 using Orchard.Modules.Services;
 using Orchard.Mvc.Extensions;
@@ -49,6 +50,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly IModuleService _moduleService;
         private readonly INotifier _notifier;
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
 
@@ -161,30 +163,52 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         /// <returns></returns>
         public string GetCampaignLink(string CampaignSource, ContentPart generalpart) {
             //string CampaignSource = "email";
+            //Logger.Error("GetCampaignLink: 01");
             string shortlink = "";
             ContentPart part = (ContentPart)(((dynamic)generalpart).ContentItem.CommunicationAdvertisingPart);
-            string CampaignTerm = string.Join("+", part.ContentItem.As<TagsPart>().CurrentTags.ToArray()).ToLower();
+            //Logger.Error("GetCampaignLink: 01.01");
+            string CampaignTerm = "";
+            var tagPart = part.ContentItem.As<TagsPart>();
+            if (tagPart != null)
+            {
+                CampaignTerm = string.Join("+", tagPart.CurrentTags.ToArray()).ToLower();
+            }
+            //Logger.Error("GetCampaignLink: 01.02");
             string CampaignMedium = CampaignSource;
             string CampaignContent = part.ContentItem.As<TitlePart>().Title.ToLower();
+            //Logger.Error("GetCampaignLink: 01.03");
             string CampaignName = "Flash";
-            try {
+            //Logger.Error("GetCampaignLink: 02");
+            try
+            {
                 int idCampagna = ((int)((dynamic)part).CampaignId);
                 CampaignName = _orchardServices.ContentManager.Get(idCampagna).As<TitlePart>().Title;
             }
             catch (Exception ex) {
                 // cuomunicato non legato a campagna
             }
+            //Logger.Error("GetCampaignLink: 03");
             string link = "";
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
+                //Logger.Error("GetCampaignLink: 03.01");
                 link = (string)(((dynamic)part).UrlLinked.Value);
             }
             else {
+                //Logger.Error("GetCampaignLink: 03.02");
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
-                if (pickerField != null && pickerField.ContentItems != null) {
+                //Logger.Error("GetCampaignLink: 03.03");
+                if (pickerField != null && pickerField.ContentItems != null)
+                {
+                    //Logger.Error("GetCampaignLink: 03.04");
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
-                    if (firstItem != null) {
+                    //Logger.Error("GetCampaignLink: 03.05");
+                    if (firstItem != null)
+                    {
+                        //Logger.Error("GetCampaignLink: 03.06");
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                        //Logger.Error("GetCampaignLink: 03.07");
                         link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
+                        //Logger.Error("GetCampaignLink: 03.08");
                     }
                     else {
                         return "";
@@ -194,14 +218,21 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     return "";
                 }
             }
+            //Logger.Error("GetCampaignLink: 04");
 
             string linkelaborated = ElaborateLink(link, CampaignSource, CampaignMedium, CampaignTerm, CampaignContent, CampaignName);
-            if (!string.IsNullOrEmpty(linkelaborated)) {
+            //Logger.Error("GetCampaignLink: 04.01");
+            if (!string.IsNullOrEmpty(linkelaborated))
+            {
+                //Logger.Error("GetCampaignLink: 04.02");
                 shortlink = _shortLinksService.GetShortLink(linkelaborated);
-                if (string.IsNullOrEmpty(shortlink)) {
+                //Logger.Error("GetCampaignLink: 04.03");
+                if (string.IsNullOrEmpty(shortlink))
+                {
                     throw new Exception("Url Creation Failed");
                 }
             }
+            //Logger.Error("GetCampaignLink: 05");
             return shortlink;
         }
 

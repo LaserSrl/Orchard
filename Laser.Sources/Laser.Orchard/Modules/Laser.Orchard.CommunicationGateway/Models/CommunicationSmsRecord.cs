@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Orchard.ContentManagement.Records;
+using System;
 
 namespace Laser.Orchard.CommunicationGateway.Models {
 
-    public class CommunicationSmsRecord {
+    public class CommunicationSmsRecord
+    {
         public virtual int Id { get; set; }
         public virtual int SmsContactPartRecord_Id { get; set; }
         public virtual string Language { get; set; }
