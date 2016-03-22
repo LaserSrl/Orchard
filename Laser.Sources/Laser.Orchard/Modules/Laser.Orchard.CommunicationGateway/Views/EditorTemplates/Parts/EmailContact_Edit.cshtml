@@ -11,11 +11,11 @@
       Style.Require("FontAwesome430").AtHead();
       }
 <fieldset>
-    <legend> <i class="fa fa-envelope" style="color: green"></i> @T("Email")</legend>
+    <legend> @T("Email")</legend>
         <div id="MasterEmail">
         @Html.EditorFor(x => x.Elenco)
     </div>
    <p id="AddEmailButton">
-   <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x=>x.Elenco, T("Add Email").Text, "#MasterEmail", ".singleemail", "", null)
+   <i class="fa fa-plus" style="color: #6db7e5;"></i> @Html.LinkToAddNestedForm(x=>x.Elenco, T("Add Email").Text, "#MasterEmail", ".singleemail", "", null)
     </p>
 </fieldset>
