@@ -388,7 +388,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     if (li.Count() == 1)
                         NewOrModifiedContent = li[0];
                     else
-                        NewOrModifiedContent = _orchardServices.ContentManager.Get(IdContentToModify, VersionOptions.Latest);
+                        NewOrModifiedContent = _orchardServices.ContentManager.Get(IdContentToModify, VersionOptions.DraftRequired); // quando edito estraggo sempre il draftrequired (come in Orchard.Core.Contents.Controllers)
                 if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.EditContent, NewOrModifiedContent))
                     if (!_contentExtensionService.HasPermission(tipoContent, Methods.Post, NewOrModifiedContent))
                         return _utilsServices.GetResponse(ResponseType.UnAuthorized);
@@ -400,7 +400,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     if (!_contentExtensionService.HasPermission(tipoContent, Methods.Post))
                         return _utilsServices.GetResponse(ResponseType.UnAuthorized);
                 }
-                _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.DraftRequired);// se non faccio il create poi non vengono salvati i field
+                _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.Draft); // quando creo creo sempre in draft (come in Orchard.Core.Contents.Controllers), se non faccio il create poi non vengono salvati i field
                 validateMessage = ValidateMessage(NewOrModifiedContent, "Created");
             }
             if (string.IsNullOrEmpty(validateMessage))
