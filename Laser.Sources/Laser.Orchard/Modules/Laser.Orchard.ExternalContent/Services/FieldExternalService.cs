@@ -579,10 +579,8 @@ namespace Laser.Orchard.ExternalContent.Services {
         private XmlNode XmlWithJsonArrayTag(XmlNode xn, XmlDocument doc) {
             bool ForceChildBeArray = false;
             if (xn.ChildNodes.Count > 1) {
-
-                if (xn.ChildNodes[0].Name == xn.ChildNodes[1].Name) {
+                if (xn.ChildNodes[0].Name == xn.ChildNodes[1].Name && xn.ChildNodes[0].Name!="ToRemove") {
                     ForceChildBeArray = true;
-                   
                 }
             }
 
