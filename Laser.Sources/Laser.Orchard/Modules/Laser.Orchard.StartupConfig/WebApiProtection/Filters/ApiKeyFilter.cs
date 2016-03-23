@@ -239,12 +239,11 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
         /// </summary>
         /// <param name="key">default cache key such as defined in Orchard.OutpuCache</param>
         /// <returns>The new cache key</returns>
-        public System.Text.StringBuilder InflatingCacheKey(System.Text.StringBuilder key) {
+        public StringBuilder InflatingCacheKey(StringBuilder key) {
             ValidateRequestByApiKey(null);
             key.Append(_additionalCacheKey);
             return key;
         }
-
     }
 
 }

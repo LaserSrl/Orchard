@@ -25,13 +25,16 @@ using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Orchard.OutputCache.Filters;
 
 namespace Laser.Orchard.WebServices.Controllers {
 
-    public class JsonController : Controller {
+    public class JsonController : Controller, ICachingEventHandler {
         private readonly IOrchardServices _orchardServices;
         private readonly IProjectionManager _projectionManager;
         private readonly ITaxonomyService _taxonomyService;
+
+
 
         private readonly ShellSettings _shellSetting;
         private readonly IUtilsServices _utilsServices;
@@ -39,7 +42,8 @@ namespace Laser.Orchard.WebServices.Controllers {
         private IEventsService _eventsService;
         private readonly ICsrfTokenHelper _csrfTokenHelper;
         private readonly IAuthenticationService _authenticationService;
-        public ILogger Logger { get; set; }
+
+        private readonly HttpRequest _request;
 
         //
         // GET: /Json/
@@ -49,8 +53,9 @@ namespace Laser.Orchard.WebServices.Controllers {
             ShellSettings shellSetting,
             IUtilsServices utilsServices,
             ICsrfTokenHelper csrfTokenHelper,
-            IAuthenticationService authenticationService
-            ) {
+            IAuthenticationService authenticationService) {
+            _request = System.Web.HttpContext.Current.Request;
+
             _orchardServices = orchardServices;
             _projectionManager = projectionManager;
             _taxonomyService = taxonomyService;
@@ -60,6 +65,8 @@ namespace Laser.Orchard.WebServices.Controllers {
             _csrfTokenHelper = csrfTokenHelper;
             _authenticationService = authenticationService;
         }
+
+        public ILogger Logger { get; set; }
 
         public ActionResult GetObjectById(int contentId = 0, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 1000, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, decimal version = 0) {
             if (contentId > 0) {
@@ -74,8 +81,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                     serializer.Serialize(writer, rsp);
                     var xml = sww.ToString();
                     return this.Content(xml, "text/xml");
-                }
-                else {
+                } else {
                     if (item.As<AutoroutePart>() != null)
                         return GetObjectByAlias(item.As<AutoroutePart>().DisplayAlias, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, deeplevel, version);
                     else {
@@ -91,8 +97,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                     }
 
                 }
-            }
-            else {
+            } else {
                 Response rsp = _utilsServices.GetResponse(ResponseType.None);
                 rsp.Message = "Valore Id non valido";
                 XmlSerializer serializer = new XmlSerializer(typeof(Response));
@@ -131,8 +136,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                 IContent item = null;
                 if (autoroutePart != null && autoroutePart.ContentItem != null) {
                     item = autoroutePart.ContentItem;
-                }
-                else {
+                } else {
                     Response rsp = _utilsServices.GetResponse(ResponseType.None, "Pagina non trovata");
 
                     XmlSerializer serializer = new XmlSerializer(typeof(Response));
@@ -173,8 +177,7 @@ namespace Laser.Orchard.WebServices.Controllers {
 
                     #endregion Projection
                     }
-                }
-                else {
+                } else {
                     //  string tipoCI = item.ContentItem.ContentType;
                     //   string CiType = ((ContentItem)autoroutePart.ContentItem).ContentType;
                     //  int id = ((ContentItem)autoroutePart.ContentItem).Id;
@@ -220,8 +223,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                     var xml = sww.ToString();
                     return this.Content(xml, "text/xml");
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Response rsp = _utilsServices.GetResponse(ResponseType.None, ex.Message);
                 //   rsp.Message=;
                 XmlSerializer serializer = new XmlSerializer(typeof(Response));
@@ -245,8 +247,7 @@ namespace Laser.Orchard.WebServices.Controllers {
             try {
                 teoric_masterid = ((ContentItem)autoroutePart.ContentItem).As<LocalizationPart>().MasterContentItem.Id;
                 masterid = teoric_masterid;
-            }
-            catch {
+            } catch {
                 masterid = id;
             }
             var contentsLocalized = _orchardServices.ContentManager.Query(CiType).Where<LocalizationPartRecord>(l => l.MasterContentItemId == masterid || l.Id == masterid).List();
@@ -275,38 +276,25 @@ namespace Laser.Orchard.WebServices.Controllers {
                 #region richiesta dati di uno user
                 var currentUser = _authenticationService.GetAuthenticatedUser();
                 if (currentUser == null) {
-                  //  return Content((Json(_utilsServices.GetResponse(ResponseType.InvalidUser))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
+                    //  return Content((Json(_utilsServices.GetResponse(ResponseType.InvalidUser))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
                     var result = new ContentResult { ContentType = "application/json" };
                     result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidUser));
                     return result;
-                }
-                else
+                } else
                     if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
                         var result = new ContentResult { ContentType = "application/json" };
                         result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
                         return result;
-                         //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                    }
-                    else {
+                        //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
+                    } else {
                         #region utente validato
                         item = currentUser.ContentItem;
 
                         #endregion
                     }
                 #endregion
-            }
-            else {
-                var autoroutePart = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>()
-                    .ForVersion(VersionOptions.Published)
-                    .Where(w => w.DisplayAlias == displayAlias).List().SingleOrDefault();
-
-                if (autoroutePart != null && autoroutePart.ContentItem != null) {
-                    item = autoroutePart.ContentItem;
-                }
-                else {
-                    new HttpException(404, ("Not found"));
-                    return null;
-                }
+            } else {
+                item = GetContentByAlias(displayAlias);
             }
             ContentResult cr = (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, complexBehaviour.Split(','));
             //    Logger.Error("Fine:"+DateTime.Now.ToString());
@@ -322,7 +310,7 @@ namespace Laser.Orchard.WebServices.Controllers {
         // Attributes:
         // contentId: id del content Es: contentId=1
         // filterSubItemsParts: elennco csv delle parti da estrarre in presenza di array di ContentItems Es: filterSubItemsParts=TitlePart,AutoroutePart,MapPart
-         [Obsolete("Wil be removed for security problem")]
+        [Obsolete("Wil be removed for security problem")]
         public ContentResult GetById(int contentId, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
             IContent item = _orchardServices.ContentManager.Get(contentId, VersionOptions.Published);
             if (item == null) {
@@ -347,20 +335,19 @@ namespace Laser.Orchard.WebServices.Controllers {
 
             // verifico se l'oggetto è soggetto all'accettazione delle policies
             var policy = content.As<Policy.Models.PolicyPart>();
-            if (policy != null) {
-                if ((String.IsNullOrWhiteSpace(_orchardServices.WorkContext.HttpContext.Request.QueryString["v"]))) {// E' soggetto a privacy, quindi faccio sempre il redirect se manca il parametro in querystring v=
-                    if (policy.HasPendingPolicies ?? false) { // se ha delle pending policies deve restituire le policy text, legate al contenuto, qui ndi non deve mai servire cache
-                        var redirectUrl = String.Format("{0}{1}v={2}", _orchardServices.WorkContext.HttpContext.Request.RawUrl, (_orchardServices.WorkContext.HttpContext.Request.RawUrl.Contains("?") ? "&" : "?"), Guid.NewGuid());
-                        _orchardServices.WorkContext.HttpContext.Response.Redirect(redirectUrl, true);
-                    }
-                    else {// se NON ha delle pending policies deve restituire un url non cacheato (quindi aggiungo v=),
-                        var redirectUrl = String.Format("{0}{1}v={2}", _orchardServices.WorkContext.HttpContext.Request.RawUrl, (_orchardServices.WorkContext.HttpContext.Request.RawUrl.Contains("?") ? "&" : "?"), "cached-content");
-                        _orchardServices.WorkContext.HttpContext.Response.Redirect(redirectUrl, true);
-                        //_orchardServices.WorkContext.HttpContext.Response.Redirect(redirectUrl, true);
-                    }
-                    return null; // in entrambi i casi ritorno null come risultato della current request
-                }
-            }
+            //if (policy != null) {
+            //    if ((String.IsNullOrWhiteSpace(_orchardServices.WorkContext.HttpContext.Request.QueryString["v"]))) {// E' soggetto a privacy, quindi faccio sempre il redirect se manca il parametro in querystring v=
+            //        if (policy.HasPendingPolicies ?? false) { // se ha delle pending policies deve restituire le policy text, legate al contenuto, qui ndi non deve mai servire cache
+            //            var redirectUrl = String.Format("{0}{1}v={2}", _orchardServices.WorkContext.HttpContext.Request.RawUrl, (_orchardServices.WorkContext.HttpContext.Request.RawUrl.Contains("?") ? "&" : "?"), Guid.NewGuid());
+            //            _orchardServices.WorkContext.HttpContext.Response.Redirect(redirectUrl, true);
+            //        } else {// se NON ha delle pending policies deve restituire un url non cacheato (quindi aggiungo v=),
+            //            var redirectUrl = String.Format("{0}{1}v={2}", _orchardServices.WorkContext.HttpContext.Request.RawUrl, (_orchardServices.WorkContext.HttpContext.Request.RawUrl.Contains("?") ? "&" : "?"), "cached-content");
+            //            _orchardServices.WorkContext.HttpContext.Response.Redirect(redirectUrl, true);
+            //            //_orchardServices.WorkContext.HttpContext.Response.Redirect(redirectUrl, true);
+            //        }
+            //        return null; // in entrambi i casi ritorno null come risultato della current request
+            //    }
+            //}
             if (policy != null && (policy.HasPendingPolicies ?? false)) { // Se l'oggetto ha delle pending policies allora devo serivre la lista delle pending policies
                 //policy.PendingPolicies
                 sb.Insert(0, "{");
@@ -395,13 +382,11 @@ namespace Laser.Orchard.WebServices.Controllers {
 
                 sb.Append("]"); // l : [
                 sb.Append("}");
-            }
-            else { // Se l'oggetto NON ha delle pending policies allora posso servire l'oggetto stesso
+            } else { // Se l'oggetto NON ha delle pending policies allora posso servire l'oggetto stesso
                 shape = _orchardServices.ContentManager.BuildDisplay(content);
                 if (sourceType == SourceTypes.ContentItem) {
                     dump = dumper.Dump(content, "Model");
-                }
-                else {
+                } else {
                     dump = dumper.Dump(shape, "Model");
                 }
                 //dump.XPathSelectElements("");
@@ -419,8 +404,7 @@ namespace Laser.Orchard.WebServices.Controllers {
 
                 try {
                     part = shape.ContentItem.ProjectionPart;
-                }
-                catch {
+                } catch {
                     part = null;
                 }
                 if (part != null) {
@@ -458,8 +442,7 @@ namespace Laser.Orchard.WebServices.Controllers {
 
                 try {
                     part = shape.ContentItem.CalendarPart;
-                }
-                catch {
+                } catch {
                     part = null;
                 }
                 if (part != null) {
@@ -528,8 +511,7 @@ namespace Laser.Orchard.WebServices.Controllers {
 
                 try {
                     part = shape.ContentItem.WidgetsContainerPart;
-                }
-                catch {
+                } catch {
                     part = null;
                 }
                 if (part != null) {
@@ -571,8 +553,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                     if (shape.ContentItem.ContentType.EndsWith("Term") || !String.IsNullOrWhiteSpace(shape.ContentItem.TypeDefinition.Settings["Taxonomy"])) {
                         part = shape.ContentItem.TermPart;
                     }
-                }
-                catch {
+                } catch {
                     part = null;
                 }
                 if (part != null) {
@@ -583,11 +564,9 @@ namespace Laser.Orchard.WebServices.Controllers {
                     dynamic termContentItems;
                     if (resultTarget == ResultTarget.Terms) {
                         termContentItems = _taxonomyService.GetChildren(part, true);
-                    }
-                    else if (resultTarget == ResultTarget.SubTerms) {
+                    } else if (resultTarget == ResultTarget.SubTerms) {
                         termContentItems = _taxonomyService.GetChildren(part, false);
-                    }
-                    else {
+                    } else {
                         termContentItems = _taxonomyService.GetContentItems(part, (page - 1) * pageSize, pageSize);
                     }
 
@@ -596,8 +575,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                     if (resultTarget == ResultTarget.Contents) {
                         sb.AppendFormat("\"n\": \"{0}\"", "TaxonomyTermList");
                         sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
-                    }
-                    else {
+                    } else {
                         sb.AppendFormat("\"n\": \"{0}\"", "TermPartList");
                         sb.AppendFormat(", \"v\": \"{0}\"", "TermPart[]");
                     }
@@ -612,8 +590,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                         if (resultTarget == ResultTarget.Contents) {
                             projectionDump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
                             JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
-                        }
-                        else {
+                        } else {
                             var dumperForPart = new ObjectDumper(deeplevel, _filterContentFieldsParts, true, tinyResponse, complexBehaviour);
                             projectionDump = dumperForPart.Dump(item, "TermPart");
                             JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
@@ -642,8 +619,48 @@ namespace Laser.Orchard.WebServices.Controllers {
                     if (objec.ToRemove != null) {
                         return cleanobj(objec.ToRemove);
                     }
-                }catch{};
+                } catch { };
             return objec;
         }
+
+        private IContent GetContentByAlias(string displayAlias) {
+            IContent item = null;
+            var autoroutePart = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>()
+                .ForVersion(VersionOptions.Published)
+                .Where(w => w.DisplayAlias == displayAlias).List().SingleOrDefault();
+
+            if (autoroutePart != null && autoroutePart.ContentItem != null) {
+                item = autoroutePart.ContentItem;
+            } else {
+                new HttpException(404, ("Not found"));
+                return null;
+            }
+            return item;
+
+        }
+        /// <summary>
+        /// Called by OutpuCache after the default cache key has been defined
+        /// </summary>
+        /// <param name="key">default cache key such as defined in Orchard.OutpuCache</param>
+        /// <returns>The new cache key</returns>
+        public StringBuilder InflatingCacheKey(StringBuilder key) {
+            var area = _request.RequestContext.RouteData.Values["area"];
+            var controller = _request.RequestContext.RouteData.Values["controller"];
+            var action = _request.RequestContext.RouteData.Values["action"];
+            if (area == "Laser.Orchard.WebServices" && controller == "Json") {
+                if (action == "GetByAlias") {
+                    IContent item = GetContentByAlias(_request.QueryString["displayalias"]);
+                    var policy = item.As<Policy.Models.PolicyPart>();
+                    if (policy != null && (policy.HasPendingPolicies ?? false)) {
+                        key.Append("policy-not-accepted");
+                    } else if (policy != null && !(policy.HasPendingPolicies ?? false)) {
+                        key.Append("policy-accepted");
+                    }
+                }
+            }
+            return key;
+        }
+
+
     }
 }
