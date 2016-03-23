@@ -647,7 +647,7 @@ namespace Laser.Orchard.WebServices.Controllers {
             var area = _request.RequestContext.RouteData.Values["area"];
             var controller = _request.RequestContext.RouteData.Values["controller"];
             var action = _request.RequestContext.RouteData.Values["action"];
-            if (area == "Laser.Orchard.WebServices" && controller == "Json") {
+            if (area.ToString().ToLowerInvariant().Equals("laser.orchard.webservices") && controller.ToString().ToLowerInvariant().Equals("json")) {
                 if (action == "GetByAlias") {
                     IContent item = GetContentByAlias(_request.QueryString["displayalias"]);
                     var policy = item.As<Policy.Models.PolicyPart>();
