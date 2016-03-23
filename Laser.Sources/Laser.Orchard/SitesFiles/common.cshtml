@@ -264,11 +264,14 @@
         { 
             DateTime dateValue;
             string date_string = bookToModify.ChildNodes[0].Value;
-            if (DateTime.TryParse(date_string, out dateValue)) 
+            bookToModify.ChildNodes[0].Value = null;
+            foreach (CultureInfo cultureInfo in CultureInfo.GetCultures(CultureTypes.AllCultures))
             {
-                bookToModify.ChildNodes[0].Value = ":laserDate" + dateValue.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + "laserDate:";
-            }else{
-                bookToModify.ChildNodes[0].Value = null;
+                if (DateTime.TryParse(date_string, cultureInfo, DateTimeStyles.None, out dateValue))
+                {
+                    bookToModify.ChildNodes[0].Value = ":laserDate" + dateValue.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + "laserDate:";
+                    break;
+                }
             }
         }
         return doc;
