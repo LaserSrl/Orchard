@@ -144,9 +144,9 @@ namespace Laser.Orchard.Policy.Drivers {
             var part = _currentContentAccessor.CurrentContentItem.As<PolicyPart>();
             if (part == null) return key;
             if (part.HasPendingPolicies ?? false) {
-                _additionalCacheKey = "policy-not-accepted";
+                _additionalCacheKey = "policy-not-accepted;";
             } else {
-                _additionalCacheKey = "policy-accepted";
+                _additionalCacheKey = "policy-accepted;";
             }
 
             key.Append(_additionalCacheKey);

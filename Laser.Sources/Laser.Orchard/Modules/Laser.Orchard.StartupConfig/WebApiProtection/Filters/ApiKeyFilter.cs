@@ -63,7 +63,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
 
         private void ValidateRequestByApiKey(ActionExecutingContext filterContext) {
             if (_additionalCacheKey != null) {
-                if (_additionalCacheKey == "UnauthorizedApi") {
+                if (_additionalCacheKey == "UnauthorizedApi;") {
                     if (filterContext != null) {
                         ErrorResult(filterContext, String.Format("UnauthorizedApi: {0}", _request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"]));
                         return;
@@ -85,13 +85,13 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
             if (protectedControllers.Contains(String.Format("{0}.{1}.{2}", area, controller, action), StringComparer.InvariantCultureIgnoreCase)) {
                 if (!TryValidateKey(_request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"], (_request.QueryString["ApiKey"] != null && _request.QueryString["clear"] != "false"))) {
                     Logger.Error(String.Format("UnauthorizedApi: {0}", _request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"]));
-                    _additionalCacheKey = "UnauthorizedApi";
+                    _additionalCacheKey = "UnauthorizedApi;";
                     if (filterContext != null) {
                         ErrorResult(filterContext, String.Format("UnauthorizedApi: {0}", _request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"]));
                         return;
                     }
                 } else {
-                    _additionalCacheKey = "AuthorizedApi";
+                    _additionalCacheKey = "AuthorizedApi;";
                 }
             }
 

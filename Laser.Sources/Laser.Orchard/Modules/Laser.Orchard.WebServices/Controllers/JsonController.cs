@@ -648,13 +648,15 @@ namespace Laser.Orchard.WebServices.Controllers {
             var controller = _request.RequestContext.RouteData.Values["controller"];
             var action = _request.RequestContext.RouteData.Values["action"];
             if (area.ToString().ToLowerInvariant().Equals("laser.orchard.webservices") && controller.ToString().ToLowerInvariant().Equals("json")) {
-                if (action == "GetByAlias") {
+                if (action.ToString().ToLowerInvariant() == "getbyalias") {
                     IContent item = GetContentByAlias(_request.QueryString["displayalias"]);
-                    var policy = item.As<Policy.Models.PolicyPart>();
-                    if (policy != null && (policy.HasPendingPolicies ?? false)) {
-                        key.Append("policy-not-accepted");
-                    } else if (policy != null && !(policy.HasPendingPolicies ?? false)) {
-                        key.Append("policy-accepted");
+                    if (item != null) {
+                        var policy = item.As<Policy.Models.PolicyPart>();
+                        if (policy != null && (policy.HasPendingPolicies ?? false)) {
+                            key.Append("policy-not-accepted;");
+                        } else if (policy != null && !(policy.HasPendingPolicies ?? false)) {
+                            key.Append("policy-accepted;");
+                        }
                     }
                 }
             }
