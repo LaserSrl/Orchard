@@ -244,7 +244,7 @@
 					result=result/1000;     
 				}      
 			   dtDateTime = dtDateTime.AddSeconds(result).ToLocalTime();
-                bookToModify.ChildNodes[0].Value = "#" + dtDateTime.ToString("MM/dd/yyyy HH:mm:ss") + "#";
+                bookToModify.ChildNodes[0].Value = "#" + dtDateTime.ToString("MM/dd/yyyy HH:mm:ss",CultureInfo.InvariantCulture) + "#";
             }
             catch (FormatException) 
             {
