@@ -18,6 +18,7 @@ using Orchard.Localization;
 
 namespace Laser.Orchard.StartupConfig.WebApiProtection {
 
+    [OrchardFeature("Laser.Orchard.StartupConfig.WebApiProtection")]
     public class Migration : DataMigrationImpl, IFeatureEventHandler {
         private readonly IOrchardServices _services;
         private readonly ShellSettings _settings;
