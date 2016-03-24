@@ -10,6 +10,11 @@
   <Place Fields_Numeric__CommonPart-Creator="-"/>
   <Place Fields_Numeric__CommonPart-LastModifier="-"/>
 
+  <Place Fields_Numeric_Edit__CommonPart-Creator="Content:10;Wrapper=displaynone"/>
+  <Place Fields_Numeric_Edit__CommonPart-LastModifier="Content:10;Wrapper=displaynone"/>
+  <Place Parts_Common_Container_Edit="Content:5;Wrapper=displaynone"/>
+
+
   <Place Parts_ContentPickerConnector="Content:1"/>
 
   <!-- Taxonomies: Start -->
