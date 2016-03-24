@@ -321,6 +321,7 @@
     <Content Include="Views\MaintenanceAdmin\Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\FavoriteCulturePart_Edit.cshtml" />
     <Content Include="Views\EditorTemplates\ExternalApplication.cshtml" />
+    <Content Include="Views\displaynone.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
