@@ -8,6 +8,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Http.Filters;
 using Orchard.ContentManagement;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
 
 namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
     public class WebApiKeyFilter : ActionFilterAttribute {
@@ -23,7 +26,12 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
             var workContext = actionContext.ControllerContext.GetWorkContext();
             var apiKeyService = workContext.Resolve<IApiKeyService>();
             _additionalCacheKey = apiKeyService.ValidateRequestByApiKey(_additionalCacheKey, _protectAlways);
-            base.OnActionExecuting(actionContext);
+            if ((_additionalCacheKey != null) && (_additionalCacheKey != "AuthorizedApi")) {
+                actionContext.Response = actionContext.ControllerContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
+            }
+            else {
+                base.OnActionExecuting(actionContext);
+            }
         }
     }
 }

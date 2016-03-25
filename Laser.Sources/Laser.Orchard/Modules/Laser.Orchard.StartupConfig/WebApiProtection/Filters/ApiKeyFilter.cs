@@ -18,6 +18,9 @@ using Orchard.Utility.Extensions;
 using Orchard.ContentManagement;
 using Laser.Orchard.StartupConfig.WebApiProtection.Models;
 using Laser.Orchard.StartupConfig.Services;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
 
 namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
 
@@ -28,17 +31,13 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
     /// </summary>
     [OrchardFeature("Laser.Orchard.StartupConfig.WebApiProtection")]
     public class ApiKeyFilter : FilterProvider, IActionFilter, IResultFilter, ICachingEventHandler  {
-        //private readonly IOrchardServices _orchardServices;
-        //private readonly ShellSettings _shellSettings;
         private readonly IApiKeyService _apiKeyService;
         private readonly HttpRequest _request;
         private string _additionalCacheKey;
 
         public ApiKeyFilter(IApiKeyService apiKeyService) {
-            //_shellSettings = shellSettings;
             _request = HttpContext.Current.Request;
             Logger = NullLogger.Instance;
-            //_orchardServices = orchardServices;
             _apiKeyService = apiKeyService;
         }
 
@@ -49,6 +48,15 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
             _additionalCacheKey = _apiKeyService.ValidateRequestByApiKey(_additionalCacheKey);
+            if ((_additionalCacheKey != null)&&(_additionalCacheKey != "AuthorizedApi")) {
+                filterContext.Result = new EmptyResult();
+
+                // il codice seguente non impedisce l'esecuzione della action
+                //HttpContext.Current.Response.Clear();
+                //HttpContext.Current.Response.StatusCode = 401;
+                //HttpContext.Current.Response.Write("Error");
+                //HttpContext.Current.Response.End();
+            }
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

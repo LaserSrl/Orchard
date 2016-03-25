@@ -58,10 +58,10 @@ namespace Laser.Orchard.StartupConfig.Services {
             if (check == true) {
                 if (!TryValidateKey(_request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"], (_request.QueryString["ApiKey"] != null && _request.QueryString["clear"] != "false"))) {
                     additionalCacheKey = "UnauthorizedApi";
-                    HttpContext.Current.Response.Clear();
-                    HttpContext.Current.Response.StatusCode = 401;
-                    HttpContext.Current.Response.Write("Error");
-                    HttpContext.Current.Response.End();
+                    //HttpContext.Current.Response.Clear();
+                    //HttpContext.Current.Response.StatusCode = 401;
+                    //HttpContext.Current.Response.Write("Error");
+                    //HttpContext.Current.Response.End();
                 }
                 else {
                     additionalCacheKey = "AuthorizedApi";
