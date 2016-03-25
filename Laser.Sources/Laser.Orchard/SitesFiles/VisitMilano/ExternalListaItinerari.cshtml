@@ -37,8 +37,13 @@
 	foreach (XmlNode child_node in mydoc.SelectNodes("//itinerary/Sid")) {
 		child_node.InnerText="Itinerary:"+child_node.InnerText;
 	}
-	GetChildValue(mydoc,"//itinerary/name");
-	GetChildValue(mydoc,"//itinerary/headline");
+    //Hermes
+    GetChildValue(mydoc, "//itinerary/name");
+    mydoc = ConvertArrayOfStringToString(mydoc, "/itinerary", "name", "Name", true);
+    foreach (System.Xml.XmlNode child_node in mydoc.SelectNodes("//itinerary")) {
+        mydoc = AggiungiShareLink(mydoc, child_node, child_node.SelectSingleNode("Name") != null ? HttpUtility.HtmlEncode(child_node.SelectSingleNode("Name").InnerText) : "", "http://www.turismo.milano.it/", child_node.SelectSingleNode("mediaResource/uri") != null ? child_node.SelectSingleNode("mediaResource/uri").InnerText : "");
+    }
+    GetChildValue(mydoc, "//itinerary/headline");
 	
 	GetChildValue(mydoc,"//itinerary/descriptiontext",true);
 	
@@ -83,15 +88,34 @@ mydoc=cambianome(mydoc,"/address", "Address");
 	
 
 	foreach (XmlNode child_node in mydoc.SelectNodes("//itinerary/geolocation")) {
+	if (child_node.SelectSingleNode("geocoordinates")!=null){
+			if (child_node.SelectSingleNode("geocoordinates").SelectSingleNode("ycoord")!=null && child_node.SelectSingleNode("geocoordinates").SelectSingleNode("xcoord")!=null){
+	
 		XmlNode map = InsertMap(mydoc,child_node.SelectSingleNode("geocoordinates").SelectSingleNode("ycoord").InnerText, child_node.SelectSingleNode("geocoordinates").SelectSingleNode("xcoord").InnerText,"");
 		child_node.ParentNode.AppendChild(map);
 		child_node.ParentNode.RemoveChild(child_node);
 	}
-	
-	foreach (XmlNode child_node in mydoc.SelectNodes("//itineraryStep")) {
-		XmlNode map = InsertMap(mydoc,"0", "0","");
-		child_node.AppendChild(map);
 	}
+	}
+	//lo
+	foreach (XmlNode child_node in mydoc.SelectNodes("//venueOrVenueIdOrGeocoordinates")) {
+		if (child_node.SelectSingleNode("geocoordinates")!=null){
+			if (child_node.SelectSingleNode("geocoordinates").SelectSingleNode("ycoord")!=null && child_node.SelectSingleNode("geocoordinates").SelectSingleNode("xcoord")!=null){
+				XmlNode map = InsertMap(mydoc,child_node.SelectSingleNode("geocoordinates").SelectSingleNode("ycoord").InnerText, child_node.SelectSingleNode("geocoordinates").SelectSingleNode("xcoord").InnerText,"");
+				child_node.ParentNode.AppendChild(map);
+				child_node.ParentNode.RemoveChild(child_node);
+			}
+		}
+	}
+	mydoc=cambianome(mydoc,"/venueOrVenueIdOrGeocoordinates", "VenueOrVenueIdOrGeocoordinates");
+
+	GetChildValue(mydoc,"//itineraryStep/descriptiontext",true);
+	
+	
+//	foreach (XmlNode child_node in mydoc.SelectNodes("//itineraryStep")) {
+//		XmlNode map = InsertMap(mydoc,"0", "0","");
+//		child_node.AppendChild(map);
+//	}
 	
 	mydoc=aggiungipadre(mydoc,"/itinerary","ItinerarySteps","itineraryStep");
 	mydoc=aggiungifiglio(mydoc,"/ItinerarySteps","itineraryStep");
@@ -101,7 +125,15 @@ mydoc=cambianome(mydoc,"/address", "Address");
 	
 	
 	
-	
+	//lo
+	foreach (XmlNode child_node in mydoc.SelectNodes("//itineraryStep/id")) {
+
+
+		child_node.InnerText="ItineraryStep:"+child_node.InnerText;
+	}
+	mydoc=cambianome(mydoc,"/itineraryStep", "ItineraryStep");
+	mydoc=cambianome(mydoc,"/ItineraryStep/id", "Sid");
+	GetChildValue(mydoc,"//ItineraryStep/name");
 	
 	//category
 	GetChildValue(mydoc,"//itinerary/category");
