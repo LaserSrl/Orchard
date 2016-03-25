@@ -212,12 +212,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CountPanelController.cs" />
+    <Compile Include="Controllers\ExternalPushController.cs" />
     <Compile Include="Controllers\TaxonomiePushController.cs" />
     <Compile Include="Controllers\TransferDeliveryReportController.cs" />
     <Compile Include="Drivers\MobileContactPartDriver.cs" />
     <Compile Include="Drivers\SmsGatewayPartDriver.cs" />
     <Compile Include="Drivers\SmsSettingsPartDriver.cs" />
     <Compile Include="Drivers\UserPwdRecoveryPartDriver.cs" />
+    <Compile Include="Feature\ExternalPushFeature.cs" />
     <Compile Include="Feature\MobileCommunicationImportFeature.cs" />
     <Compile Include="Feature\SmsCommunicationImportFeature.cs" />
     <Compile Include="Handlers\MobileContactPartHandler.cs" />

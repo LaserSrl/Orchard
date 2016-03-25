@@ -61,6 +61,14 @@ namespace Laser.Orchard.DevTools.Controllers {
            IEnumerable<ScheduledTaskRecord> st= _repositoryScheduledTask.Fetch(t => t.ScheduledUtc > DateTime.UtcNow).OrderBy(x=>x.ScheduledUtc);
             return View((object) st);
         }
-        
+
+        [HttpGet]
+        [Admin]
+        public ActionResult GetValidApiKey() {
+            var apiKeyService = _orchardServices.WorkContext.Resolve<IApiKeyService>();
+            var key = apiKeyService.GetValidApiKey();
+            _notifier.Add(NotifyType.Information, T(key));
+            return RedirectToAction("Index", "Admin");
+        }
     }
 }

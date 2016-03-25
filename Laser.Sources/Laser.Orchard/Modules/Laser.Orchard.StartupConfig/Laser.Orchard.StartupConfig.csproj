@@ -238,6 +238,8 @@
     <Compile Include="Projections\FavoriteCultureFilter.cs" />
     <Compile Include="Projections\FavoriteCultureForm.cs" />
     <Compile Include="Projections\IProviderForProections.cs" />
+    <Compile Include="Services\ApiKeyService.cs" />
+    <Compile Include="Services\IApiKeyService.cs" />
     <Compile Include="Services\IMaintenanceService.cs" />
     <Compile Include="Services\MaintenanceBanner.cs" />
     <Compile Include="Services\MaintenanceService.cs" />
@@ -294,6 +296,7 @@
     <Compile Include="ViewModels\UsersGroupsSettingsVM.cs" />
     <Compile Include="ViewModels\UsersGroupsVM.cs" />
     <Compile Include="WebApiProtection\Filters\ApiKeyFilter.cs" />
+    <Compile Include="WebApiProtection\Filters\WebApiKeyFilter.cs" />
     <Compile Include="WebApiProtection\Handlers\ProtectionSettingsHandler.cs" />
     <Compile Include="WebApiProtection\Migrations.cs" />
     <Compile Include="WebApiProtection\Models\ProtectionSettingsPart.cs" />
