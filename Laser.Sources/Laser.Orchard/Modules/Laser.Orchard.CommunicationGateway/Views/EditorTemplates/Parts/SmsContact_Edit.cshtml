@@ -12,11 +12,11 @@
       }
 <br />
 <fieldset>
-    <legend> <i class="fa fa-mobile" style="color: green"></i> @T("Sms")</legend>
+    <legend> @T("Sms")</legend>
         <div id="MasterSms">
         @Html.EditorFor(x => x.Elenco)
     </div>
    <p id="AddSmsButton">
-   <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x=>x.Elenco, T("Add Sms").Text, "#MasterSms", ".singlesms", "", null)
+   <i class="fa fa-plus" style="color: #6db7e5;"></i> @Html.LinkToAddNestedForm(x=>x.Elenco, T("Add Sms").Text, "#MasterSms", ".singlesms", "", null)
     </p>
 </fieldset>

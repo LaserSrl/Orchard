@@ -137,6 +137,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Workflows\bin\Orchard.Workflows.dll</HintPath>
     </Reference>
+    <Reference Include="RazorEngine">
+      <HintPath>..\..\..\packages\RazorEngine.3.7.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -242,8 +245,11 @@
     <Compile Include="Projections\FavoriteCultureFilter.cs" />
     <Compile Include="Projections\FavoriteCultureForm.cs" />
     <Compile Include="Projections\IProviderForProections.cs" />
+    <Compile Include="RazorCodeExecution\Activities\RazorExecuteActivity.cs" />
+    <Compile Include="RazorCodeExecution\Forms\RazorExecuteForm.cs" />
     <Compile Include="Services\ApiKeyService.cs" />
     <Compile Include="Services\IApiKeyService.cs" />
+    <Compile Include="RazorCodeExecution\Services\IRazorExecuteService.cs" />
     <Compile Include="Services\IMaintenanceService.cs" />
     <Compile Include="Services\MaintenanceBanner.cs" />
     <Compile Include="Services\MaintenanceService.cs" />
@@ -328,6 +334,7 @@
     <Content Include="Views\MaintenanceAdmin\Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\FavoriteCulturePart_Edit.cshtml" />
     <Content Include="Views\EditorTemplates\ExternalApplication.cshtml" />
+    <Content Include="Views\Activity-RazorExecute.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

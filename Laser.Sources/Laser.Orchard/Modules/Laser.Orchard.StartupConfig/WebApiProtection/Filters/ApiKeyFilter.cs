@@ -18,7 +18,9 @@ using Orchard.Utility.Extensions;
 using Orchard.ContentManagement;
 using Laser.Orchard.StartupConfig.WebApiProtection.Models;
 using Laser.Orchard.StartupConfig.Services;
+using Newtonsoft.Json;
 using System.Net;
+using Laser.Orchard.StartupConfig.ViewModels;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 
@@ -33,30 +35,40 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
     public class ApiKeyFilter : FilterProvider, IActionFilter, IResultFilter, ICachingEventHandler  {
         private readonly IApiKeyService _apiKeyService;
         private readonly HttpRequest _request;
+        private readonly IUtilsServices _utilsServices;
         private string _additionalCacheKey;
 
-        public ApiKeyFilter(IApiKeyService apiKeyService) {
+        public ApiKeyFilter(IApiKeyService apiKeyService, IUtilsServices utilsServices) {
             _request = HttpContext.Current.Request;
             Logger = NullLogger.Instance;
             _apiKeyService = apiKeyService;
+            _utilsServices = utilsServices;
         }
 
         public ILogger Logger;
 
-        public void OnActionExecuted(ActionExecutedContext filterContext) {
+        private void ErrorResult(ActionExecutingContext filterContext, string errorData) {
+            if (filterContext == null) return;
+            filterContext.HttpContext.Response.Clear();
+            filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+            filterContext.HttpContext.Response.StatusCode = (int)System.Net.HttpStatusCode.Forbidden;
+            var response = _utilsServices.GetResponse(ViewModels.ResponseType.UnAuthorized);
+            response.Data = errorData;
+            filterContext.Result = new JsonResult {
+                Data = response,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+            return;
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
             _additionalCacheKey = _apiKeyService.ValidateRequestByApiKey(_additionalCacheKey);
             if ((_additionalCacheKey != null)&&(_additionalCacheKey != "AuthorizedApi")) {
-                filterContext.Result = new EmptyResult();
-
-                // il codice seguente non impedisce l'esecuzione della action
-                //HttpContext.Current.Response.Clear();
-                //HttpContext.Current.Response.StatusCode = 401;
-                //HttpContext.Current.Response.Write("Error");
-                //HttpContext.Current.Response.End();
+                ErrorResult(filterContext, "Error");
             }
+        }
+
+        public void OnActionExecuted(ActionExecutedContext filterContext) {
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

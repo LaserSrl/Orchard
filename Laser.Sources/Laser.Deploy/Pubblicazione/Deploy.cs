@@ -31,8 +31,14 @@ namespace Pubblicazione {
         private Int32 totaleprogress = 0;
         private Int32 progressstep = 0;
 
+        private string[] additionalFiles;
+
+
         public Deploy() {
             InitializeComponent();
+            additionalFiles = new string[] {
+                "*System.Net.FtpClient.dll"
+            };
         }
         private void btnFullDeploy_Click(object sender, EventArgs e) {
             bw.RunWorkerAsync("btnFullDeploy");
@@ -173,7 +179,7 @@ namespace Pubblicazione {
             switch (e.Argument.ToString()) {
                 case "btnFullDeploy":
 
-                    totaleprogress = 1 + 10;
+                    totaleprogress = 1 + 10 + additionalFiles.Count();
 
                     action = () => btnFullDeploy.Enabled = false;
                     btnFullDeploy.Invoke(action);
@@ -188,7 +194,7 @@ namespace Pubblicazione {
                     break;
 
                 case "OnlyDll":
-                    totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count 
+                    totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count
                         + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count
                         + this.clbLibrary.CheckedItems.Count + this.clbLibraryOrchard.CheckedItems.Count
                         );
@@ -255,12 +261,22 @@ namespace Pubblicazione {
                 progressstep++;
                 bw.ReportProgress(100 * progressstep / totaleprogress);
                 Thread.Sleep(100);
+                foreach (var additionalFile in additionalFiles) {
+                    ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules", additionalFile), deploypath, ExclusionFileOptions.None);
+                    ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes", additionalFile), deploypath, ExclusionFileOptions.None);
+                    progressstep++;
+                    bw.ReportProgress(100 * progressstep / totaleprogress);
+                    Thread.Sleep(100);
+                }
             } else {
                 if (e.Argument == "btnAll") {
                     foreach (var a in this.clbModules.CheckedItems) {
                         DirectoryInfo parentDir = Directory.GetParent(elencoModuli[a.ToString()]);
                         ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
                         ProcessXcopy(parentDir.FullName + @"\*.recipe.xml", deploypath + @"\Modules\" + a.ToString(), ExclusionFileOptions.None);
+                        foreach (var additionalFile in additionalFiles) {
+                            ProcessXcopy(Path.Combine(parentDir.FullName, additionalFile), Path.Combine(deploypath, "Modules", a.ToString()), ExclusionFileOptions.None);
+                        }
                         progressstep++;
                         bw.ReportProgress(100 * progressstep / totaleprogress);
                         Thread.Sleep(100);
@@ -269,22 +285,32 @@ namespace Pubblicazione {
                         DirectoryInfo parentDir = Directory.GetParent(elencoModuliOrchard[a.ToString()]);
                         ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
                         ProcessXcopy(parentDir.FullName + @"\*.recipe.xml", deploypath + @"\Modules\" + a.ToString(), ExclusionFileOptions.None);
+                        foreach (var additionalFile in additionalFiles) {
+                            ProcessXcopy(Path.Combine(parentDir.FullName, additionalFile), Path.Combine(deploypath, "Modules", a.ToString()), ExclusionFileOptions.None);
+                        }
                         progressstep++;
                         bw.ReportProgress(100 * progressstep / totaleprogress);
                         Thread.Sleep(100);
                     }
                     foreach (var a in this.clbThemes.CheckedItems) {
                         ProcessXcopy(Path.Combine(elencoTemi[a.ToString()], "*.*"), Path.Combine(deploypath, @"Themes", a.ToString()));
+                        foreach (var additionalFile in additionalFiles) {
+                            ProcessXcopy(Path.Combine(elencoTemi[a.ToString()], additionalFile), Path.Combine(deploypath, "Themes", a.ToString()), ExclusionFileOptions.None);
+                        }
                         progressstep++;
                         bw.ReportProgress(100 * progressstep / totaleprogress);
                         Thread.Sleep(100);
                     }
-                    if (this.clbThemesOrchard.CheckedItems.Count > 0) { // se ho sceelto almeno un tema Orchard, allora devo copiare anche \Themes\bin\*.*
+                    if (this.clbThemesOrchard.CheckedItems.Count > 0) { // se ho scelto almeno un tema Orchard, allora devo copiare anche \Themes\bin\*.*
                         File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes\web.config"), Path.Combine(deploypath, @"Themes\web.config"));
                         ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes\bin", "*.*"), Path.Combine(deploypath, @"Themes\bin"));
                     }
                     foreach (var a in this.clbThemesOrchard.CheckedItems) {
                         ProcessXcopy(Path.Combine(elencoTemiOrchard[a.ToString()], "*.*"), Path.Combine(deploypath, @"Themes", a.ToString()));
+                        foreach (var additionalFile in additionalFiles) {
+                            ProcessXcopy(Path.Combine(elencoTemiOrchard[a.ToString()], additionalFile), Path.Combine(deploypath, "Themes", a.ToString()), ExclusionFileOptions.None);
+                        }
+
                         progressstep++;
                         bw.ReportProgress(100 * progressstep / totaleprogress);
                         Thread.Sleep(100);

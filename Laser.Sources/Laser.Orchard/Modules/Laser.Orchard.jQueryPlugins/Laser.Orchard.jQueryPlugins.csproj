@@ -88,6 +88,7 @@
     <Content Include="Scripts\jquery.contactable.min.js" />
     <Content Include="Scripts\jquery.cycle.all.min.js" />
     <Content Include="Scripts\jquery.cycle2.min.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.multiSelect.js" />
     <Content Include="Scripts\jquery.print.js" />
     <Content Include="Scripts\jquery.tools.min.js" />
@@ -145,6 +146,7 @@
     <Content Include="Styles\jquery.cycle.css" />
     <Content Include="Styles\jquery.autocomplete.css" />
     <Content Include="Styles\jquery.colorbox.css" />
+    <Content Include="Styles\jquery.dataTables.min.css" />
     <Content Include="Styles\jquery.multiSelect.css" />
     <Content Include="Styles\jquery.ui.multiselect.widget.css" />
     <Content Include="Styles\Jssor\img\a17.png" />
