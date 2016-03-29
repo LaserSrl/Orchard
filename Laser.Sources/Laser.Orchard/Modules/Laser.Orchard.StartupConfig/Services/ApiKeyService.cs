@@ -88,8 +88,8 @@ namespace Laser.Orchard.StartupConfig.Services {
 
         private bool TryValidateKey(string token, string akiv, bool clearText) {
             byte[] mykey = _shellSettings.EncryptionKey.ToByteArray();
-            byte[] myiv = Convert.FromBase64String(akiv);
             try {
+                byte[] myiv = Convert.FromBase64String(akiv);
                 if (String.IsNullOrWhiteSpace(token)) {
                     Logger.Error("Empty Token");
                     return false;
