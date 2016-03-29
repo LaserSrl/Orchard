@@ -184,9 +184,16 @@ namespace Laser.Orchard.DevTools.Controllers {
         [Admin]
         public ActionResult GetValidApiKey() {
             var apiKeyService = _orchardServices.WorkContext.Resolve<IApiKeyService>();
-            var key = apiKeyService.GetValidApiKey();
-            _notifier.Add(NotifyType.Information, T(key));
-            return RedirectToAction("Index", "Admin");
+            var iv = GetRandomIV();
+            var key = apiKeyService.GetValidApiKey(iv);
+            Segnalazione se = new Segnalazione { Testo = string.Format("ApiKey: {0} \r\nAKIV: {1}", key, iv) };
+            return View("index", se);
+        }
+
+        private string GetRandomIV() {
+            string iv = string.Format("{0}{0}", DateTime.UtcNow.ToString("ddMMyyyy").Substring(0, 8));
+            byte[] arr = Encoding.UTF8.GetBytes(iv);
+            return Convert.ToBase64String(arr);
         }
     }
 }

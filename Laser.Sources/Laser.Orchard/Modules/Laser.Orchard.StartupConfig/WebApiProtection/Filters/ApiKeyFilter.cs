@@ -64,7 +64,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
         public void OnActionExecuting(ActionExecutingContext filterContext) {
             _additionalCacheKey = _apiKeyService.ValidateRequestByApiKey(_additionalCacheKey);
             if ((_additionalCacheKey != null)&&(_additionalCacheKey != "AuthorizedApi")) {
-                ErrorResult(filterContext, "Error");
+                ErrorResult(filterContext, String.Format("UnauthorizedApi: {0}", _request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"]));
             }
         }
 

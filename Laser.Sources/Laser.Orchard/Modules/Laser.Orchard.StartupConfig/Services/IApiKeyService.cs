@@ -7,6 +7,6 @@ using System.Web;
 namespace Laser.Orchard.StartupConfig.Services {
     public interface IApiKeyService : IDependency {
         string ValidateRequestByApiKey(string additionalCacheKey, bool protectAlways = false);
-        string GetValidApiKey();
+        string GetValidApiKey(string sIV);
     }
 }

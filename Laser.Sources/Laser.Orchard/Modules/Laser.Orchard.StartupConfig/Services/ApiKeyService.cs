@@ -56,12 +56,10 @@ namespace Laser.Orchard.StartupConfig.Services {
             }
 
             if (check == true) {
-                if (!TryValidateKey(_request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"], (_request.QueryString["ApiKey"] != null && _request.QueryString["clear"] != "false"))) {
+                var myApikey = _request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"];
+                var myAkiv = _request.QueryString["AKIV"] ?? _request.Headers["AKIV"];
+                if (!TryValidateKey(myApikey, myAkiv, (_request.QueryString["ApiKey"] != null && _request.QueryString["clear"] != "false"))) {
                     additionalCacheKey = "UnauthorizedApi";
-                    //HttpContext.Current.Response.Clear();
-                    //HttpContext.Current.Response.StatusCode = 401;
-                    //HttpContext.Current.Response.Write("Error");
-                    //HttpContext.Current.Response.End();
                 }
                 else {
                     additionalCacheKey = "AuthorizedApi";
@@ -70,10 +68,10 @@ namespace Laser.Orchard.StartupConfig.Services {
             return additionalCacheKey;
         }
 
-        public string GetValidApiKey() {
+        public string GetValidApiKey(string sIV) {
             string key = "";
             byte[] mykey = _shellSettings.EncryptionKey.ToByteArray();
-            byte[] myiv = Encoding.UTF8.GetBytes(string.Format("{0}{0}", DateTime.UtcNow.ToString("ddMMyyyy").Substring(0, 8)));
+            byte[] myiv = Convert.FromBase64String(sIV);
             try {
                 var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
                 var defaulApp = settings.ExternalApplicationList.ExternalApplications.First();
@@ -88,9 +86,9 @@ namespace Laser.Orchard.StartupConfig.Services {
             return key;
         }
 
-        private bool TryValidateKey(string token, bool clearText) {
+        private bool TryValidateKey(string token, string akiv, bool clearText) {
             byte[] mykey = _shellSettings.EncryptionKey.ToByteArray();
-            byte[] myiv = Encoding.UTF8.GetBytes(string.Format("{0}{0}", DateTime.UtcNow.ToString("ddMMyyyy").Substring(0, 8)));
+            byte[] myiv = Convert.FromBase64String(akiv);
             try {
                 if (String.IsNullOrWhiteSpace(token)) {
                     Logger.Error("Empty Token");
@@ -112,7 +110,6 @@ namespace Laser.Orchard.StartupConfig.Services {
                         HttpContext.Current.Response.Write("Encoded: " + HttpContext.Current.Server.UrlEncode(base64EncryptedAES) + "<br/>");
                         HttpContext.Current.Response.Write("Clear: " + base64EncryptedAES);
                         HttpContext.Current.Response.End();
-
                     }
                 }
 
