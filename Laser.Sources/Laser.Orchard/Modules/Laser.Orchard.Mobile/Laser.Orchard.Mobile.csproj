@@ -224,6 +224,7 @@
     <Compile Include="Handlers\MobileContactPartHandler.cs" />
     <Compile Include="Handlers\SmsGatewayPartHandler.cs" />
     <Compile Include="Handlers\SmsPlaceholdersSettingsHandler.cs" />
+    <Compile Include="Handlers\SmsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\UserPwdRecoveryPartHandler.cs" />
     <Compile Include="Models\MobileContactPart.cs" />
     <Compile Include="Models\SmsGatewayPart.cs" />
