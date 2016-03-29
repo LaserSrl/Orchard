@@ -1,0 +1,84 @@
+﻿@{
+    var icone = new Dictionary<string, string>();
+    icone.Add("Stella", "icon-prima-squadra");
+    icone.Add("Calciatore", "icon-allievi");
+
+}
+
+<div class="elenco-dettaglio">
+    <div class="row">
+        @foreach (var content in Model.ContentItems) { 
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <a class="square" href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)content)">
+                    <span class="square-small">
+                        <span class="titolo-menu">@content.TitlePart.Title</span>
+                        <i class="icone-menu @icone[content.Squadra.Icona.Value]"></i>
+                    </span>
+                </a>
+            </div>
+
+
+
+        }
+    </div>
+</div>
+
+@*<div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-4">
+        <a class="square" href="squadra-dettaglio.html">
+            <span class="square-small">
+                <span class="titolo-menu">Prima Squadra</span>
+                <i class="icone-menu icon-prima-squadra"></i>
+            </span>
+        </a>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4">
+        <a class="square" href="squadra-dettaglio.html">
+            <span class="square-small">
+                <span class="titolo-menu">Allievi</span>
+                <i class="icone-menu icon-allievi"></i>
+            </span>
+        </a>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4">
+        <a class="square" href="squadra-dettaglio.html">
+            <span class="square-small">
+                <span class="titolo-menu">Giovanissimi</span>
+                <i class="icone-menu icon-giovanissimi"></i>
+            </span>
+        </a>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4">
+        <a class="square" href="squadra-dettaglio.html">
+            <span class="square-small">
+                <span class="titolo-menu">Giovanissimi FB</span>
+                <i class="icone-menu icon-giovanissimi"></i>
+            </span>
+        </a>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4">
+        <a class="square" href="squadra-dettaglio.html">
+            <span class="square-small">
+                <span class="titolo-menu">Esordienti</span>
+                <i class="icone-menu icon-esordienti"></i>
+            </span>
+        </a>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4">
+        <a class="square" href="squadra-dettaglio.html">
+            <span class="square-small">
+                <span class="titolo-menu">Esordienti FB</span>
+                <i class="icone-menu icon-esordienti"></i>
+            </span>
+        </a>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4">
+        <a class="square" href="squadra-dettaglio.html">
+            <span class="square-small">
+                <span class="titolo-menu">Pulcini</span>
+                <i class="icone-menu icon-pulcini"></i>
+            </span>
+        </a>
+    </div>
+</div>
+</div>*@
