@@ -13,14 +13,15 @@
     <div class="box-giocatori">
         <!-- Tab panes -->
         <div class="tab-content">
-
+            @{var classToRenderImg = "active";}
             @foreach (var contentItem in contentItems) {
-                <div role="tabpanel" class="tab-pane active" id="giocatore-@contentItem.Id">
+                <div role="tabpanel" class="tab-pane @classToRenderImg" id="giocatore-@contentItem.Id">
                     <div class="box-img-giocatore">
                         <img src="@Display.ResizeMediaUrl(Width: 193, Height: 223, Mode: "crop", Alignment: "middlecenter", Path: ((dynamic)contentItem).Componenti.Gallery.FirstMediaUrl)" class="img-responsive">
                         <p class="ruolo">@(((dynamic)contentItem).Componenti.Ruolo.Terms[0].Name)</p>
                     </div>
                 </div>
+                classToRenderImg = "";
             }
         </div>
 

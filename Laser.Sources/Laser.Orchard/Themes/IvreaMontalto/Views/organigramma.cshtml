@@ -1,0 +1,12 @@
+﻿@foreach (dynamic content in Model.ContentItems) {
+    <div class="col-xs-12 col-sm-6 col-md-3">
+        <div class="box-team-societa">
+            <img src="@Display.ResizeMediaUrl(Width: 400, Height: 466, Mode: "crop", Alignment: "middlecenter", Path: content.Componenti.Gallery.FirstMediaUrl)" class="img-responsive img-team-societa">
+            <div class="box-dati-team-societa">
+                <span class="titolo-team-societa">Ruolo:</span> <span class="dato-team-societa">@content.Componenti.Ruolo.Terms[0].Name</span><br />
+                <span class="titolo-team-societa">Nome:</span> <span class="dato-team-societa">@content.Componenti.Nome.Value</span><br />
+                <span class="titolo-team-societa">Cognome:</span> <span class="dato-team-societa">@content.Componenti.Cognome.Value</span><br />
+            </div>
+        </div>
+    </div>
+}

@@ -1,12 +1,24 @@
 <Placement>
-  <Place EditorTemplate-Creator="-" />
+  <Place EditorTemplate-Creator="-" Parts_Common_Metadata="-" />
   <Match ContentType="Squadra">
     <Match DisplayType="Detail">
-      <Place Parts_Common_Metadata="-" 
+      <Place 
              Fields_MediaLibraryPicker-Gallery="Content:1" 
              Parts_Common_Body="Content:2" 
              Fields_ContentPicker-Giocatori="/AsideSecond:1" 
-             Fields_MediaLibraryPicker-Icona="-" />
+             Fields_MediaLibraryPicker-Icona="-"
+             Fields_Numeric-Ordinamento="-"
+             Fields_Enumeration-Icona="-"/>
+    </Match>
+  </Match>
+
+  <Match ContentType="BlogPost">
+    <Place Fields_MediaLibraryPicker-Gallery="Content:1" Fields_TaxonomyField_Localized="-" />
+    <Match DisplayType="Summary">
+      <Place Parts_Comments_Count="-" />
+    </Match>
+    <Match DisplayType="Detail">
+      <Place Parts_Common_Metadata="Content:2" />
     </Match>
   </Match>
   <!-- Customize where the shapes are rendered -->

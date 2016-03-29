@@ -1,0 +1,26 @@
+﻿@using Orchard.Comments.Models
+@using Orchard.ContentManagement
+
+@{
+    var subthemePath = Url.Content("~/Themes/IvreaMontalto/Styles");
+
+    CommentPart comment = Model.ContentPart;
+    CommentsPart comments = comment.CommentedOnContentItem.As<CommentsPart>();
+
+    var children = New.List(Items: Model.Items);
+    children.Classes.Add("comments");
+}
+
+<div class="col-xs-2">
+    <div class="container-img-utente pull-right">
+        <img class="img-responsive" src="@subthemePath/images/utente.jpg">
+    </div>
+</div>
+<div class="col-xs-10">
+    <p class="nome-blog">@Display.CommentAuthor(ContentPart: comment) <span class="data-blog">@Display.CommentMetadata(ContentPart: comment)</span></p>
+    <p>    @Display.CommentText(ContentPart: Model.ContentPart, ContentItem: Model.ContentItem)
+</p>
+</div>
+
+
+
