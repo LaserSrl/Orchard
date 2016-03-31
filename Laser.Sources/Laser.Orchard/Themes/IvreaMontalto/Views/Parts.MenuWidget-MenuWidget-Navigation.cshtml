@@ -1,0 +1,125 @@
+﻿@{
+    var Menu = Model.Menu;
+
+    var items = (IList<dynamic>)Enumerable.Cast<dynamic>(Menu.Items);
+
+    if (items.Any()) {
+    }
+
+    int position = 0;
+    var icon = "";
+    
+}
+<div class="row no-margin row-menu">
+    @foreach (var item in items) {
+        switch (position) {
+            case 0:
+                icon = "icon-societa";
+                break;
+            case 1:
+                icon = "icon-squadre";
+                break;
+            case 2:
+                icon = "icon-risultati";
+                break;
+            case 3:
+                icon = "icon-blog";
+                break;
+            case 4:
+                icon = "icon-news";
+                break;
+        }
+        <div class="col-xs-6 col-sm-2 col-md-2 text-center no-padding">
+             <a class="circle @(((bool)item.Selected)?"active":"")" href="@item.Href">
+                 <span class="circle-small">
+                    <i class="icone-menu @icon"></i>
+                    <span class="titolo-menu">@item.Text</span>
+                </span>
+             </a>
+        </div>
+        position = position + 1;
+    }
+    <div class="space-menu bg-white"></div>
+</div>
+
+@*@{
+    var Menu = Model.Menu;
+
+    var items = (IList<dynamic>)Enumerable.Cast<dynamic>(Menu.Items);
+
+    if (items.Any()) {
+    }
+
+    var icone = new Dictionary<string, string>();
+    icone.Add("Società", "icon-societa");
+    icone.Add("Le Squadre", "icon-squadre");
+    icone.Add("Risultati", "icon-risultati");
+    icone.Add("Blog", "icon-blog");
+    icone.Add("News", "icon-blog");
+}
+<div class="row no-margin row-menu">
+    @foreach (var item in items) {
+        <div class="col-xs-6 col-sm-2 col-md-2 text-center no-padding">
+             <a class="circle" href="@item.Href">
+                 <span class="circle-small">
+                    <i class="icone-menu @icone[item.Text]"></i>
+                    <span class="titolo-menu">@item.Text</span>
+                </span>
+             </a>
+        </div>
+    }
+    <div class="space-menu bg-white"></div>
+</div>
+<div class="row no-margin row-menu">
+    <div class="col-xs-6 col-sm-2 col-md-2 text-center no-padding">
+        <a class="circle" href="societa.html">
+            <span class="circle-small">
+                <i class="icone-menu icon-societa"></i>
+                <span class="titolo-menu">Società</span>
+            </span>
+        </a>
+    </div>
+    <div class="col-xs-6 col-sm-2 col-md-2 text-center no-padding">
+        <a class="circle" href="squadre.html">
+            <span class="circle-small">
+                <i class="icone-menu icon-squadre"></i>
+                <span class="titolo-menu">Le squadre</span>
+            </span>
+        </a>
+    </div>
+    <div class="col-xs-6 col-sm-2 col-md-2 text-center no-padding">
+        <a class="circle" href="risultati.html">
+            <span class="circle-small">
+                <i class="icone-menu icon-risultati"></i>
+                <span class="titolo-menu">Risultati</span>
+            </span>
+        </a>
+    </div>
+    <div class="col-xs-6 col-sm-2 col-md-2 text-center no-padding">
+        <a class="circle" href="blog.html">
+            <span class="circle-small">
+                <i class="icone-menu icon-blog"></i>
+                <span class="titolo-menu">Blog</span>
+            </span>
+        </a>
+    </div>
+    <div class="col-xs-6 col-sm-2 col-md-2 text-center no-padding">
+        <a class="circle" href="blog.html">
+            <span class="circle-small">
+                <i class="icone-menu icon-news"></i>
+                <span class="titolo-menu">News</span>
+            </span>
+        </a>
+    </div>
+    <div class="col-xs-6 col-sm-2 col-md-2 text-center no-padding">
+        <a class="circle" href="juve.html">
+            <span class="circle-small circle-juve">
+                <img src="@subthemePath/images/juve.png" class="img-responsive menu-juve">
+            </span>
+        </a>
+    </div>
+    <div class="space-menu bg-white"></div>
+</div>
+</div>*@
+
+@*@Display(Model.Menu)*@

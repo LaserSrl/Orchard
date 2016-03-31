@@ -207,5 +207,49 @@ input{ height:35px; width:100%; padding:0 12px;}
 textarea{ width:100%; padding:6px 12px;}
 input:focus {outline: none !important; border:none; box-shadow: 0 0 3px #ED8232; }
 textarea:focus { outline: none !important; border:none; box-shadow: 0 0 3px #ED8232;}
-.btn-invia{background:#ED8232; padding:3px 20px; border-radius:0; border:1px solid #ED8232; color:#FFF; width:auto;}
+.btn-invia{background:#ED8232; padding:3px 20px; border-radius:0; border:1px solid #ED8232; color:#FFF; width:auto; margin-bottom:  20px;}
 .btn-invia:hover, .btn-invia:focus{background:#CB5F10; color:#FFF; border:1px solid #CB5F10;}
+
+/* ----- CAPCHA ----- */
+#recaptcha_widget_div {
+    float: right;
+    right: 0px;
+    margin-bottom: 20px;
+}
+
+/* ----- MESSAGE ----- */
+.message {
+    padding: 7px 7px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.message-Error {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+
+.message-Warning {
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+  color: #8a6d3b;
+}
+
+.message-Info {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #31708f;
+}
+
+.message-Success {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #3c763d;
+}
+
+.widget-aside-second h1 {
+   font-weight: 700 !important;
+   margin: 5px 15px !important;
+   font-size: 30px;
+}
