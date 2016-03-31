@@ -172,145 +172,152 @@
                     colmd = 8;
                 }
             }
-            <div class="row">
-                @if (Model.Content != null) {
-                    <div class="col-xs-12 col-sm-12 col-md-@colmd">
-                        @Zone(Model.Content)
-                    </div>
-                }
-                @if (Model.AsideSecond != null) {
-
-                    <div class="col-xs-12 col-sm-12 col-md-4">
-                        @Zone(Model.AsideSecond)
-
-                    </div>
-                }
-            </div>
-
-        </div>
-    </div>
-
-    <script src="http://maps.googleapis.com/maps/api/js"></script>
-    <script>
-        function resize() {
-            var dim = jQuery(".container-map").width();
-            jQuery(".container-map").height(dim);
-        }
-
-        jQuery(window).resize(function () {
-            resize();
-        });
-
-        jQuery(document).ready(function () {
-            resize();
-        });
-    </script>
-
-    <div id="footer">
-        <div class="bg-scuro">
-            <div class="space-40"></div>
-            <div class="container">
+            @if (Model.Messages != null) {
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-3">
-                        <div class="container-map">
-                            <div id="mappa1" class="mappa"></div>
-                            <script>
-                                var map;
-                                var image = 'images/marker.png';
-                                var marker;
-
-                                function initialize() {
-                                    var mapProp = {
-                                        center: new google.maps.LatLng(45.4656434, 7.8825268),
-                                        zoom: 12,
-                                        mapTypeId: google.maps.MapTypeId.ROADMAP,
-                                        scrollwheel: true,
-                                        draggable: true,
-                                        disableDefaultUI: true
-                                    };
-
-                                    map = new google.maps.Map(document.getElementById("mappa1"), mapProp);
-
-                                    marker = new google.maps.Marker({
-                                        position: new google.maps.LatLng(45.4656434, 7.8825268),
-                                        map: map,
-                                        title: 'Campo Sportivo G. Pistoni',
-                                        animation: google.maps.Animation.DROP,
-                                        icon: image
-                                    });
-                                }
-                                google.maps.event.addDomListener(window, 'load', initialize);
-                            </script>
-                        </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        @Zone(Model.Messages)
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-3">
-                        <div class="box-dati-mappe">
-                            <h3 class="titolo-mappe">U.S.D. Ivrea Montalto<br />
-                                Campo Sportivo G. Pistoni
-                            </h3>
-                            <p class="testo-mappe">
-                                Ingresso consentito a:<br />
-                                Giocatori, Allenatori, Dirigenti<br />
-                                e per informazioni<br />
-                                Via Grande Torino snc<br />
-                                Ivrea 10015 - TO
-                            </p>
-                        </div>
+                </div>
+            }
+
+            @if (Model.Content != null) {
+                <div class="col-xs-12 col-sm-12 col-md-@colmd">
+                    @Zone(Model.Content)
+                </div>
+            }
+            @if (Model.AsideSecond != null) {
+
+                <div class="col-xs-12 col-sm-12 col-md-4">
+                    @Zone(Model.AsideSecond)
+
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script>
+    function resize() {
+        var dim = jQuery(".container-map").width();
+        jQuery(".container-map").height(dim);
+    }
+
+    jQuery(window).resize(function () {
+        resize();
+    });
+
+    jQuery(document).ready(function () {
+        resize();
+    });
+</script>
+
+<div id="footer">
+    <div class="bg-scuro">
+        <div class="space-40"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="container-map">
+                        <div id="mappa1" class="mappa"></div>
+                        <script>
+                            var map;
+                            var image = 'images/marker.png';
+                            var marker;
+
+                            function initialize() {
+                                var mapProp = {
+                                    center: new google.maps.LatLng(45.4656434, 7.8825268),
+                                    zoom: 12,
+                                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                                    scrollwheel: true,
+                                    draggable: true,
+                                    disableDefaultUI: true
+                                };
+
+                                map = new google.maps.Map(document.getElementById("mappa1"), mapProp);
+
+                                marker = new google.maps.Marker({
+                                    position: new google.maps.LatLng(45.4656434, 7.8825268),
+                                    map: map,
+                                    title: 'Campo Sportivo G. Pistoni',
+                                    animation: google.maps.Animation.DROP,
+                                    icon: image
+                                });
+                            }
+                            google.maps.event.addDomListener(window, 'load', initialize);
+                        </script>
                     </div>
-                    <div class="space-20 visible-sm"></div>
-                    <div class="col-xs-12 col-sm-6 col-md-3">
-                        <div class="container-map">
-                            <div id="mappa2" class="mappa"></div>
-                            <script>
-                                var map;
-                                var image = 'images/marker.png';
-                                var marker;
-
-                                function initialize() {
-                                    var mapProp = {
-                                        center: new google.maps.LatLng(45.4910237, 7.8592413),
-                                        zoom: 12,
-                                        mapTypeId: google.maps.MapTypeId.ROADMAP,
-                                        scrollwheel: true,
-                                        draggable: true,
-                                        disableDefaultUI: true
-                                    };
-
-                                    map = new google.maps.Map(document.getElementById("mappa2"), mapProp);
-
-                                    marker = new google.maps.Marker({
-                                        position: new google.maps.LatLng(45.4910237, 7.8592413),
-                                        map: map,
-                                        title: 'Campo Sportivo D. Accotto',
-                                        animation: google.maps.Animation.DROP,
-                                        icon: image
-                                    });
-                                }
-                                google.maps.event.addDomListener(window, 'load', initialize);
-                            </script>
-                        </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="box-dati-mappe">
+                        <h3 class="titolo-mappe">U.S.D. Ivrea Montalto<br />
+                            Campo Sportivo G. Pistoni
+                        </h3>
+                        <p class="testo-mappe">
+                            Ingresso consentito a:<br />
+                            Giocatori, Allenatori, Dirigenti<br />
+                            e per informazioni<br />
+                            Via Grande Torino snc<br />
+                            Ivrea 10015 - TO
+                        </p>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-3">
-                        <div class="box-dati-mappe">
-                            <h3 class="titolo-mappe">Campo Sportivo<br />
-                                D. Accotto
-                            </h3>
-                            <p class="testo-mappe">
-                                Ingresso<br />
-                                Regione Ghiare<br />
-                                Montalto Dora<br />
-                                10016 - TO
-                            </p>
-                        </div>
+                </div>
+                <div class="space-20 visible-sm"></div>
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="container-map">
+                        <div id="mappa2" class="mappa"></div>
+                        <script>
+                            var map;
+                            var image = 'images/marker.png';
+                            var marker;
+
+                            function initialize() {
+                                var mapProp = {
+                                    center: new google.maps.LatLng(45.4910237, 7.8592413),
+                                    zoom: 12,
+                                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                                    scrollwheel: true,
+                                    draggable: true,
+                                    disableDefaultUI: true
+                                };
+
+                                map = new google.maps.Map(document.getElementById("mappa2"), mapProp);
+
+                                marker = new google.maps.Marker({
+                                    position: new google.maps.LatLng(45.4910237, 7.8592413),
+                                    map: map,
+                                    title: 'Campo Sportivo D. Accotto',
+                                    animation: google.maps.Animation.DROP,
+                                    icon: image
+                                });
+                            }
+                            google.maps.event.addDomListener(window, 'load', initialize);
+                        </script>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="box-dati-mappe">
+                        <h3 class="titolo-mappe">Campo Sportivo<br />
+                            D. Accotto
+                        </h3>
+                        <p class="testo-mappe">
+                            Ingresso<br />
+                            Regione Ghiare<br />
+                            Montalto Dora<br />
+                            10016 - TO
+                        </p>
                     </div>
                 </div>
             </div>
-            <div class="space-40 hidden-xs"></div>
         </div>
-        <div class="credits">
-            <div class="container">
-                Unione Sportiva Dilettantistica Ivrea Montalto | <a href="#">Normativa Privacy</a> | e-mail: <a href="mailto:usdivrea@libero.it">usdivrea@libero.it</a>
-            </div>
+        <div class="space-40 hidden-xs"></div>
+    </div>
+    <div class="credits">
+        <div class="container">
+            Unione Sportiva Dilettantistica Ivrea Montalto | <a href="#">Normativa Privacy</a> | e-mail: <a href="mailto:usdivrea@libero.it">usdivrea@libero.it</a>
         </div>
     </div>
+</div>
 </div>
