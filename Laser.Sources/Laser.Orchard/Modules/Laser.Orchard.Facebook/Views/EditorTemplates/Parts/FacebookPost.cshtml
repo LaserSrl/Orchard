@@ -18,8 +18,8 @@
                 theme: 'flat',
                 blobOffset: 1,
                 onText: '@T("YES")',
-            offText: '@T("NO")'
-        });
+                offText: '@T("NO")'
+            });
             </text>
             }
 
@@ -31,7 +31,7 @@
 <div id="facebook-comm-container" class="comm-tabbed">
     @if (Model.ListOption.Count == 0) {
         <br />   <a href="@Url.Action("Index", "FacebookAccount", new { area = "Laser.Orchard.Facebook" })">@T("Insert a facebook account ")</a> <br /> 
-    }
+    } 
     else {
 
 
@@ -39,7 +39,7 @@
         if (Model.FacebookType == FacebookType.Post) {
            
         <input type="checkbox" name="FacebookType" value="1" id="rcswitcher-checkbox-facebooktype" checked="checked" onchange="javascript:changefacebooktype(this)" />
-        }
+        } 
         else {
         <input type="checkbox" name="FacebookType" value="1" id="rcswitcher-checkbox-facebooktype" onchange="javascript: changefacebooktype(this)" />
         }
@@ -55,35 +55,35 @@
             @if (Model.ShowFacebookMessage) {
                 <div class="editor-label">@Html.LabelFor(m => m.FacebookMessage, T("Message"))</div>
                 <div class="editor-label">@Html.TextAreaFor(m => m.FacebookMessage)</div>
-            }
+            } 
             else {
                 @Html.HiddenFor(m => m.FacebookMessage)
             }
             @if (Model.ShowFacebookCaption) {
                 <div class="editor-label">@Html.LabelFor(m => m.FacebookCaption, T("Caption"))</div>
                 <div class="editor-label">@Html.TextBoxFor(m => m.FacebookCaption, new { @class = "text large" })</div>
-            }
+            } 
             else {
                 @Html.HiddenFor(m => m.FacebookCaption)
             }
             @if (Model.ShowFacebookDescription) {
                 <div class="editor-label">@Html.LabelFor(m => m.FacebookDescription, T("Description"))</div>
                 <div class="editor-label">@Html.TextAreaFor(m => m.FacebookDescription)</div>
-            }
+            } 
             else {
                 @Html.HiddenFor(m => m.FacebookDescription)
             }
             @if (Model.ShowFacebookLink) {
                 <div class="editor-label">@Html.LabelFor(m => m.FacebookLink, T("Link"))</div>
                 <div class="editor-label">@Html.TextBoxFor(m => m.FacebookLink, new { @class = "text large" })</div>
-            }
+            } 
             else {
                 @Html.HiddenFor(m => m.FacebookLink)
             }
             @if (Model.ShowFacebookName) {
                 <div class="editor-label">@Html.LabelFor(m => m.FacebookName, T("Name"))</div>
                 <div class="editor-label">@Html.TextBoxFor(m => m.FacebookName, new { @class = "text large" })</div>
-            }
+            } 
             else {
                 @Html.HiddenFor(m => m.FacebookName)
             }
@@ -118,7 +118,7 @@
             @if (!Model.FacebookMessageSent) { 
                 @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-fb" })
                 <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet posted.")
-            }
+            } 
             else {
                 @Html.CheckBoxFor(model => model.SendOnNextPublish, new { @class = "rcswitcher-checkbox-fb", @disabled = "disabled" })
                 <i class="fa fa-check-circle" style="color: green"></i> @T("Message already posted.")
@@ -137,11 +137,15 @@
 @using (Script.Foot()) {
     <script type="text/javascript">
         $(function () {
-            changefacebooktype(document.getElementById("rcswitcher-checkbox-facebooktype"));
+            if ('@Model.ListOption.Count' > 0) {
+                changefacebooktype(document.getElementById("rcswitcher-checkbox-facebooktype"));
+            }
         });
     </script>
 
     <script type="text/javascript">
+        @if (Model.ListOption.Count > 0) {
+                <text>
         $(function () {
             $('#rcswitcher-checkbox-facebooktype').rcSwitcher({
                 theme: 'flat',
@@ -151,6 +155,9 @@
                 width: 150
             });
         });
+         </text>
+        }
+
         function changefacebooktype(element) {
             if (element != null) {
                 if (element.checked) {
