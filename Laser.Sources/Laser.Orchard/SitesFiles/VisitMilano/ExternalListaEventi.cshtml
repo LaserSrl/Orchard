@@ -48,6 +48,7 @@
     }
 
     //Hermes
+    mydoc = ConvertArrayOfStringToString(mydoc, "/event", "priceInfo", "PriceInfo", true);
     GetChildValue(mydoc, "//event/name");
     mydoc = ConvertArrayOfStringToString(mydoc, "/event", "name", "Name", true);
     foreach (System.Xml.XmlNode child_node in mydoc.SelectNodes("//event")) {
@@ -71,7 +72,7 @@
 
     mydoc = aggiungipadre(mydoc, "/event", "MoreInfos", "moreInfo");
     mydoc = aggiungifiglio(mydoc, "/event/MoreInfos", "moreInfo");
-    mydoc = cambianome(mydoc, "/MoreInfo", "MoreInfo");
+    mydoc = cambianome(mydoc, "/moreInfo", "MoreInfo");
 
     //rendi array mediaResource
 
@@ -167,14 +168,6 @@
 
 
     // rendo le occurrences un array sotto schedule e per retrocompatibilità lascio un noto occurrence sotto schedule
-    //foreach (System.Xml.XmlNode desc in mydoc.SelectNodes("//Event/Schedule/Descriptiontext")) {
-    //    var value = desc.InnerXml;
-    //    XmlNode descNode = mydoc.CreateElement("ScheduleDescriptionText");
-    //    descNode.Value = value;
-    //    desc.ParentNode.ParentNode.AppendChild(descNode);
-    //    desc.ParentNode.RemoveChild(desc);
-    //}
-
     mydoc = aggiungipadre(mydoc, "/Event/Schedule", "Occurrences", "occurrence");
     foreach (System.Xml.XmlNode occurrences in mydoc.SelectNodes("//Event/Schedule/Occurrences")) {
         var firstChild = occurrences.FirstChild.CloneNode(true);
