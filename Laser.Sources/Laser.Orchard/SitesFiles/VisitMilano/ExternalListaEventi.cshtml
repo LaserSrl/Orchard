@@ -53,6 +53,7 @@
     foreach (System.Xml.XmlNode child_node in mydoc.SelectNodes("//event")) {
         mydoc = AggiungiShareLink(mydoc, child_node, child_node.SelectSingleNode("Name") != null ? HttpUtility.HtmlEncode(child_node.SelectSingleNode("Name").InnerText) : "", "http://www.turismo.milano.it/", child_node.SelectSingleNode("mediaResource/uri") != null ? child_node.SelectSingleNode("mediaResource/uri").InnerText : "");
     }
+
     GetChildValue(mydoc, "//event/headline");
     GetChildValue(mydoc, "//event/descriptiontext", true);
     mydoc = ConvertArrayOfStringToString(mydoc, "/event", "descriptiontext", "Descriptiontext", true);
@@ -163,6 +164,26 @@
     mydoc = aggiungifiglio(mydoc, "/Venue/GalleryLuoghi", "MediaPart");
     mydoc = aggiungipadre(mydoc, "/Event", "Venues", "Venue");
     mydoc = aggiungifiglio(mydoc, "/Event/Venues", "Venue");
+
+
+    // rendo le occurrences un array sotto schedule e per retrocompatibilità lascio un noto occurrence sotto schedule
+    //foreach (System.Xml.XmlNode desc in mydoc.SelectNodes("//Event/Schedule/Descriptiontext")) {
+    //    var value = desc.InnerXml;
+    //    XmlNode descNode = mydoc.CreateElement("ScheduleDescriptionText");
+    //    descNode.Value = value;
+    //    desc.ParentNode.ParentNode.AppendChild(descNode);
+    //    desc.ParentNode.RemoveChild(desc);
+    //}
+
+    mydoc = aggiungipadre(mydoc, "/Event/Schedule", "Occurrences", "occurrence");
+    foreach (System.Xml.XmlNode occurrences in mydoc.SelectNodes("//Event/Schedule/Occurrences")) {
+        var firstChild = occurrences.FirstChild.CloneNode(true);
+        if (firstChild != null) {
+            var parent = occurrences.ParentNode;
+            parent.AppendChild(firstChild);
+        }
+    }
+    mydoc = aggiungifiglio(mydoc, "/Event/Schedule/Occurrences", "occurrence");
 
     SpanXDocument(ToXDocument(mydoc).Root);
 }
