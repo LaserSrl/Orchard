@@ -7,11 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using System.Net.Http;
-
-
-
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 
 namespace Laser.Orchard.Mobile.Controllers {
+    [WebApiKeyFilter(false)]
     public class DeviceController : ApiController {
 
         private readonly IOrchardServices _orchardServices;

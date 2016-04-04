@@ -24,7 +24,7 @@ namespace Laser.Orchard.Braintree
                     Defaults = new {
                         area = "Laser.Orchard.Braintree",
                         controller = "Paypal",
-                        action = "GetClientToken"
+                        action = "Get"
                     }
                 },
                 new HttpRouteDescriptor {
@@ -33,7 +33,7 @@ namespace Laser.Orchard.Braintree
                     Defaults = new {
                         area = "Laser.Orchard.Braintree",
                         controller = "Paypal",
-                        action = "Pay"
+                        action = "Post"
                     }
                 }
             };

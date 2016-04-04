@@ -8,3 +8,4 @@ Description: This module enable Braintree-PayPal payment method.
 Features:
     Laser.Orchard.Braintree:
         Description: This module enable Braintree-PayPal payment method.
+			Dependencies: Laser.Orchard.StartupConfig

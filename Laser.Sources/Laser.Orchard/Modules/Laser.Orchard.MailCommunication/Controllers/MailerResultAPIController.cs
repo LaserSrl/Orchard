@@ -13,6 +13,7 @@ using Laser.Orchard.MailCommunication.Models;
 
 namespace Laser.Orchard.MailCommunication.Controllers
 {
+    // questa API utilizza un proprio token per la protezione
     public class MailerResultAPIController : ApiController
     {
         public class DatiPost
