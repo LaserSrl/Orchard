@@ -30,4 +30,9 @@ Features:
         Description:  SMS Gateway integration
 		Category: Social
 		Dependencies: Laser.Orchard.CommunicationGateway, Laser.Orchard.Sms, Laser.Orchard.jQueryPlugins, Orchard.Localization, Laser.Orchard.Queries
+    Laser.Orchard.Mobile.ExternalPush:
+		Name: Laser Mobile External Push
+        Description: Web API to send push from outside Orchard
+		Category: Social
+		Dependencies: Laser.Orchard.Mobile, Laser.Orchard.StartupConfig.WebApiProtection
 		

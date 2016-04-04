@@ -4,6 +4,7 @@ using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Contents.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.Security;
@@ -72,13 +73,31 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
 
+            var typeDef = _contentManager.GetContentTypeDefinitions().FirstOrDefault(x => x.Name == contentType);
+            bool draftable = typeDef.Settings.GetModel<ContentTypeSettings>().Draftable;
+
             ContentItem content;
             if (id == 0) {
                 var newContent = _contentManager.New(contentType);
-                _contentManager.Create(newContent, VersionOptions.Draft);
+
+                if (draftable) {
+                    _contentManager.Create(newContent, VersionOptions.Draft);
+                }
+                else {
+                    _contentManager.Create(newContent);
+                }
+
                 content = newContent;
-            } else
-                content = _contentManager.Get(id, VersionOptions.DraftRequired);
+            }
+            else {
+                if (draftable) {
+                    content = _contentManager.Get(id, VersionOptions.DraftRequired);
+                }
+                else {
+                    content = _contentManager.Get(id);
+                }
+            }
+
             var model = _contentManager.UpdateEditor(content, this);
             if (!ModelState.IsValid) {
                 foreach (string key in ModelState.Keys) {
@@ -89,7 +108,9 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _orchardServices.TransactionManager.Cancel();
                 return View(model);
             } else {
-                _contentManager.Publish(content);
+                if (draftable) {
+                    _contentManager.Publish(content);
+                }
             }
             _notifier.Add(NotifyType.Information, T("Contact saved"));
             return RedirectToAction("Edit", new { id = content.Id });

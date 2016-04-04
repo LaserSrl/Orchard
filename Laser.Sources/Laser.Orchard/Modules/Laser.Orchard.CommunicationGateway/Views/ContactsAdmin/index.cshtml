@@ -23,6 +23,8 @@
     </fieldset>
        
 }
+@using(Html.BeginForm()) {
+    @Html.AntiForgeryToken()
 <fieldset class="contentItems bulk-items">
     <ul>
         @{
@@ -68,6 +70,7 @@
         }
     </ul>
 </fieldset>
+}
 <br />
 @Display(Model.Pager)
 @*@using (Html.BeginForm("Index", "Routes", FormMethod.Post)) {
