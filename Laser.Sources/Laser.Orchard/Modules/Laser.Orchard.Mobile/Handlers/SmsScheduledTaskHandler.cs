@@ -8,8 +8,10 @@ using System.Web;
 using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.Mobile.Services;
 using Laser.Orchard.Mobile.Models;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.Mobile.Handlers {
+    [OrchardFeature("Laser.Orchard.SmsGateway")]
     public class SmsScheduledTaskHandler : IScheduledTaskHandler {
 
         private readonly IOrchardServices _orchardServices;
