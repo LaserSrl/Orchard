@@ -212,6 +212,14 @@
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields.Boolean-BlogPost.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Blogs.BlogArchives-AsideSecond.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
