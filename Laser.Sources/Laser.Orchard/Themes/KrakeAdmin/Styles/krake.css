@@ -736,3 +736,12 @@ input[type="number"]:focus {
 #media-library-main-navigation  {
   height: 65vh;
 }
+
+#site a, #site a:visited, #site a:active {
+  color: #fff;
+  float: none;
+  line-height: 50px;
+  position: relative;
+  text-align: center;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.9);
+}
