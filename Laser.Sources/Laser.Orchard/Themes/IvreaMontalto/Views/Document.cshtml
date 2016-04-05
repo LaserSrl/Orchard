@@ -14,10 +14,12 @@
     Style.Include("https://fonts.googleapis.com/css?family=Istok+Web").AtHead();
     Style.Include("https://fonts.googleapis.com/css?family=Roboto:400,700").AtHead();
     Style.Include("style.css").AtHead();
+    Style.Include("prettyPhoto.css").AtHead();
 
     //Scripts
     Script.Include("main.js").AtFoot();
-    Script.Require("jQuery");    
+    Script.Require("jQuery");
+    Script.Include("jquery.prettyPhoto.js").AtFoot();   
 }
 
 <!DOCTYPE html>

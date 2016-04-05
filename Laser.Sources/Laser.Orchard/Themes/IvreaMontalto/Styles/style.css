@@ -287,3 +287,12 @@ textarea:focus { outline: none !important; border:none; box-shadow: 0 0 3px #ED8
     background: #cb5f10 none repeat scroll 0 0;
     transition: background 0.25s ease-in 0s;
 }
+
+/* ----- BREADCRUMB ----- */
+.archive-trail { padding: 10px 15px 0px 15px; }
+.archive-trail a { color: #ed8232; }
+.archive-trail a:hover { text-decoration: underline; }
+
+/* ----- GALLERY ----- */
+.padding-bottom-20 { padding-bottom: 20px; }
+.gallery-title { padding-left: 20px; color: #ed8232; }

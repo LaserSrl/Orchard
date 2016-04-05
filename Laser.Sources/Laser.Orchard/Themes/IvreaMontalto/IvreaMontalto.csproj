@@ -67,7 +67,20 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\camera.min.js" />
+    <Content Include="Scripts\custom.js" />
+    <Content Include="Scripts\jflickrfeed.min.js" />
+    <Content Include="Scripts\jquery-1.7.2.min.js" />
+    <Content Include="Scripts\jquery.easing.1.3.js" />
+    <Content Include="Scripts\jquery.flexslider-min.js" />
+    <Content Include="Scripts\jquery.gmap.min.js" />
+    <Content Include="Scripts\jquery.mobile.customized.min.js" />
+    <Content Include="Scripts\jquery.prettyPhoto.js" />
+    <Content Include="Scripts\jquery.quicksand.js" />
+    <Content Include="Scripts\jquery.tools.min.js" />
     <Content Include="Scripts\main.js" />
+    <Content Include="Scripts\styleswitcher.js" />
     <Content Include="Styles\fonts\calcio.svg" />
     <Content Include="Styles\fonts\fontawesome-webfont.svg" />
     <Content Include="Styles\images\ajax-loader.gif" />
@@ -94,6 +107,7 @@
     <Content Include="Styles\images\slide-1.jpg" />
     <Content Include="Styles\images\team-societa.jpg" />
     <Content Include="Styles\images\utente.jpg" />
+    <Content Include="Styles\prettyPhoto.css" />
     <Content Include="Styles\style.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -209,6 +223,36 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.MenuWidget-MenuWidget-Navigation.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields.Boolean-BlogPost.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Blogs.BlogArchives-AsideSecond.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ListByArchive.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\List-ProjectionWidget-ForQuery-inprimopiano.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Parts.Common.Body-Page.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields.MediaLibraryPicker-Page.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.ContactForm-Contatti.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Title.Summary-Image.cshtml">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
