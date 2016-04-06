@@ -241,6 +241,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                     Title = ((dynamic)p).TitlePart.Title,
                     ModifiedUtc = ((dynamic)p).CommonPart.ModifiedUtc,
                     UserName = ((dynamic)p).CommonPart.Owner != null ? ((dynamic)p).CommonPart.Owner.UserName : "Anonymous",
+                    PreviewEmail = (((dynamic)p).EmailContactPart.EmailRecord.Count > 0) ? ((dynamic)p).EmailContactPart.EmailRecord[0].Email : "",
+                    PreviewSms = (((dynamic)p).SmsContactPart.SmsRecord.Count > 0) ? ((dynamic)p).SmsContactPart.SmsRecord[0].Sms : ""
                 }).ToList();
 
             if (pageOfContentItems == null) {
