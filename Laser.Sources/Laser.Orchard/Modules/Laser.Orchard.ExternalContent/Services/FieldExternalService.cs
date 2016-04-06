@@ -308,6 +308,7 @@ namespace Laser.Orchard.ExternalContent.Services {
             }
             catch (Exception ex) {
                 Logger.Error(ex, UrlToGet);
+                throw ex;
             }
             return (ci);
         }
