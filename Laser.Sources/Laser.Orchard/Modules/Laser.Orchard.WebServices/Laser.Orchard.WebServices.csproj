@@ -129,6 +129,7 @@
     <Compile Include="Controllers\MobileController.cs" />
     <Compile Include="Controllers\SerializeController.cs" />
     <Compile Include="Controllers\SignalController.cs" />
+    <Compile Include="Controllers\TermsController.cs" />
     <Compile Include="Drivers\WebServiceSettingsPartDriver.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Handlers\WebServiceSettingsHandler.cs" />

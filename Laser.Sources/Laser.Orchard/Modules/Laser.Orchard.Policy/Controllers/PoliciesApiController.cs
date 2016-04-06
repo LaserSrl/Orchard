@@ -2,6 +2,7 @@
 using Laser.Orchard.Policy.ViewModels;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -10,7 +11,7 @@ using System.Linq;
 using System.Web.Http;
 
 namespace Laser.Orchard.Policy.Controllers {
-
+    [WebApiKeyFilter(false)]
     public class PoliciesApiController : ApiController {
         private readonly IPolicyServices _policySerivces;
         private readonly ICsrfTokenHelper _csrfTokenHelper;

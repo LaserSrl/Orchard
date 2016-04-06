@@ -51,6 +51,7 @@
     <None Include="IvreaTerritorio\WebServices\Itinerario1.cshtml" />
     <None Include="IvreaTerritorio\WebServices\POI.cshtml" />
     <None Include="IvreaTerritorio\WebServices\POI1.cshtml" />
+    <None Include="Montevarchi\XSLT\eventi.cshtml" />
     <None Include="RomaMunicipioII\Code\ImportOsp.cshtml" />
     <None Include="TerritorioMorgex\Mobile\pushProdMorgex.p12" />
     <None Include="TerritorioMorgex\Mobile\pushSvilMorgex.p12" />
@@ -66,6 +67,9 @@
     <None Include="TurismoTorino\Mobile\ttprod.p12" />
     <None Include="Vialfre\Mobile\pushDevVialfre.p12" />
     <None Include="Vialfre\Mobile\pushProdVialfre.p12" />
+    <None Include="VisitMilano\ExternalListaEventi.cshtml" />
+    <None Include="VisitMilano\ExternalListaItinerari.cshtml" />
+    <None Include="VisitMilano\ExternalListaLuoghi.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AltoAdige\Xslt\feedurl.xslt" />
@@ -100,6 +104,9 @@
     <Content Include="Vialfre\Xslt\Visitami.xslt">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="VisitMilano\BikeSharing.xslt" />
+    <Content Include="VisitMilano\OtpStops.xslt" />
+    <Content Include="VisitMilano\OtpStopTimes.xslt" />
     <Content Include="ViviIlBiellese\Xslt\feedurl.xslt" />
     <Content Include="WakeUp.hta" />
   </ItemGroup>

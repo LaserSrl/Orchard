@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
+using Newtonsoft.Json;
 using Orchard;
 using Orchard.ContentManagement;
 using System;
@@ -8,7 +9,8 @@ using System.Web;
 using System.Web.Http;
 
 namespace Laser.Orchard.WebServices.Controllers {
-    public class SerializeController: ApiController {
+    [WebApiKeyFilter(false)]
+    public class SerializeController : ApiController {
         private readonly IOrchardServices _orchardServices;
         public SerializeController(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;

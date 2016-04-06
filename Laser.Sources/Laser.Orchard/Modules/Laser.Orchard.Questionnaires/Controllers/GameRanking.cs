@@ -3,6 +3,7 @@ using Laser.Orchard.Questionnaires.Services;
 using Laser.Orchard.Questionnaires.Settings;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Localization.Models;
@@ -11,7 +12,7 @@ using System;
 using System.Web.Http;
 
 namespace Laser.Orchard.Questionnaires.Controllers {
-
+    [WebApiKeyFilter(false)]
     public class GameRanking : ApiController {
         private readonly IOrchardServices _orchardServices;
         private readonly ICsrfTokenHelper _csrfTokenHelper;

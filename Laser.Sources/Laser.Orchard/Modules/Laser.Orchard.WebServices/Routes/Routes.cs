@@ -73,6 +73,20 @@ namespace Laser.Orchard.WebServices.Routes {
                             {"area", "Laser.Orchard.WebServices"}
                         },
                         new MvcRouteHandler())
+                },
+                                new RouteDescriptor {
+                    Route = new Route(
+                        "Terms/GetIconsIds",
+                        new RouteValueDictionary {
+                            {"area", "Laser.Orchard.WebServices"},
+                            {"controller", "Terms"},
+                            {"action", "GetIconsIds"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Laser.Orchard.WebServices"}
+                        },
+                        new MvcRouteHandler())
                 }
             };
         }

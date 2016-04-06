@@ -19,9 +19,11 @@ using System.Collections.Generic;
 using Laser.Orchard.ChartaWS.Models;
 using System.Globalization;
 using Laser.Orchard.Braintree.Services;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 
 namespace Laser.Orchard.ChartaWS.Controllers
 {
+    [WebApiKeyFilter(false)]
     public class ChartaApiController : ApiController
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(ChartaApiController));

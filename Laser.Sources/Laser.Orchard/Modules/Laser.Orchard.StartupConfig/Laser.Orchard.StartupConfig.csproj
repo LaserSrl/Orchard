@@ -253,6 +253,7 @@
     <Compile Include="Services\IMaintenanceService.cs" />
     <Compile Include="Services\MaintenanceBanner.cs" />
     <Compile Include="Services\MaintenanceService.cs" />
+    <Compile Include="Tokens\AdditionalDateTokens.cs" />
     <Compile Include="ViewModels\MaintenanceIndexVM.cs" />
     <Compile Include="ViewModels\MaintenanceVM.cs" />
     <Compile Include="ViewModels\Response.cs" />

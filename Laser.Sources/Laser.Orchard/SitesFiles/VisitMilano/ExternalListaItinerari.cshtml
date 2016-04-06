@@ -46,7 +46,8 @@
     GetChildValue(mydoc, "//itinerary/headline");
 	
 	GetChildValue(mydoc,"//itinerary/descriptiontext",true);
-	
+
+    mydoc = ConvertArrayOfStringToString(mydoc, "/itinerary", "priceInfo", "PriceInfo", true);
 	mydoc=ConvertArrayOfStringToString(mydoc,"/itinerary","descriptiontext","Descriptiontext",true);
 
 	//rendi array contact
