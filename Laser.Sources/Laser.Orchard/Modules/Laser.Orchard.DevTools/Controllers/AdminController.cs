@@ -183,10 +183,16 @@ namespace Laser.Orchard.DevTools.Controllers {
         [HttpGet]
         [Admin]
         public ActionResult GetValidApiKey() {
-            var apiKeyService = _orchardServices.WorkContext.Resolve<IApiKeyService>();
-            var iv = GetRandomIV();
-            var key = apiKeyService.GetValidApiKey(iv);
-            Segnalazione se = new Segnalazione { Testo = string.Format("ApiKey: {0} \r\nAKIV: {1}", key, iv) };
+            Segnalazione se = null;
+            IApiKeyService apiKeyService = null;
+            if (_orchardServices.WorkContext.TryResolve<IApiKeyService>(out apiKeyService)) {
+                var iv = GetRandomIV();
+                var key = apiKeyService.GetValidApiKey(iv);
+                se = new Segnalazione { Testo = string.Format("ApiKey: {0} \r\nAKIV: {1}", key, iv) };
+            }
+            else {
+                se = new Segnalazione { Testo = "Feature Laser.Orchard.StartupConfig.WebApiProtection not active." };
+            }
             return View("index", se);
         }
 

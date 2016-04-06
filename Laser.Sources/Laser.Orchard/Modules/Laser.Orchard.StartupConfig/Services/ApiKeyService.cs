@@ -10,8 +10,10 @@ using Laser.Orchard.StartupConfig.WebApiProtection.Models;
 using Orchard.ContentManagement;
 using Orchard.Utility.Extensions;
 using System.Text;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.StartupConfig.Services {
+    [OrchardFeature("Laser.Orchard.StartupConfig.WebApiProtection")]
     public class ApiKeyService : IApiKeyService {
         private readonly IOrchardServices _orchardServices;
         private readonly ShellSettings _shellSettings;
@@ -28,6 +30,7 @@ namespace Laser.Orchard.StartupConfig.Services {
             if (additionalCacheKey != null) {
                 return additionalCacheKey;
             }
+
             bool check = false;
             if (protectAlways == false) {
                 var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
