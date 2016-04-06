@@ -1,5 +1,6 @@
 ﻿@model Laser.Orchard.CommunicationGateway.ViewModels.SearchIndexVM
 @using Orchard.Security
+@using Laser.Orchard.CommunicationGateway.ViewModels
 @{
     var ContentsIndexVM = Model.ContentsIndexVM;
     Layout.Title = T("Contact");
@@ -17,6 +18,14 @@
     *@<fieldset class="bulk-actions">
         <label for="search">@T("Search:")</label>
         @Html.TextBoxFor(m => m.Search.Expression)
+
+        <label>@T("Filter by")</label>
+        @Html.DropDownListFor(m => m.Search.Field, new SelectList(Enum.GetValues(typeof(SearchFieldEnum))))
+@*        <select name="Search.Field">
+            <option value="name">@T("Name")</option>
+            <option value="mail">@T("e-mail")</option>
+            <option value="phone">@T("Phone")</option>
+        </select>*@
 
         <button type="submit">@T("Search")</button>
         <a href="@Url.Action("Index")">@T("Clear")</a>
