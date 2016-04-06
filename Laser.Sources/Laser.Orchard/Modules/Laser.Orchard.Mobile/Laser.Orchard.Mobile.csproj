@@ -238,6 +238,7 @@
     </Compile>
     <Compile Include="Services\MissingSmsSettingsBanner.cs" />
     <Compile Include="Services\SmsCommunicationService.cs" />
+    <Compile Include="Services\SmsValidationService.cs" />
     <Compile Include="SMSGatewayMigration.cs" />
     <Compile Include="SmsMigrations.cs" />
     <Compile Include="Handlers\DeviceFilter.cs" />
