@@ -1,0 +1,49 @@
+﻿@using Laser.Orchard.Questionnaires.ViewModels
+@using System.Linq
+
+@model List<QuestionnaireStatsViewModel>
+
+@{
+    const int answersToShow = 3;
+    Layout.Title = T("Questionnaire Answers");
+}
+
+<p class="breadcrumb">
+    <a href="@Url.Action("Index", "QuestionnaireStats", new { area = "Laser.Orchard.Questionnaires" })">@T("Questionnaire Statistics")</a>
+    &#62; @Layout.Title
+</p>
+    <h3><u>@Model.First().QuestionnaireTitle</u></h3>
+    
+    <div style="margin-top: 15px;">
+    @{
+        foreach (var question in Model) {
+            <h5>@question.Question</h5>
+    
+                List<AnswerStatsViewModel> answersList = new List<AnswerStatsViewModel>();
+
+                if (question.QuestionType == Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {
+                    answersList = question.Answers.OrderByDescending(x => x.Count).ThenBy(x => x.Answer).Take(answersToShow).ToList();
+                }
+                else {
+                    answersList = question.Answers.OrderByDescending(x => x.Count).ThenBy(x => x.Answer).ToList();
+                }
+
+                foreach (var answer in answersList) {
+                <div>
+                    &bull; @answer.Answer
+                    <span style="font-weight: bold">( @answer.Count )</span>
+                </div>
+                }
+
+                if (question.QuestionType == Laser.Orchard.Questionnaires.QuestionType.OpenAnswer && question.Answers.Count > answersToShow) {
+                <div style="margin-top:5px; margin-left: 9px;">
+                    <a href="@Url.Action("QuestionDetail", "QuestionnaireStats",
+                           new { area = "Laser.Orchard.Questionnaires", idQuestionario = Model.First().QuestionnairePart_Id, idDomanda = question.QuestionId })">
+                        @T("Show all answers")
+                    </a>
+                </div>
+                }
+                <br />
+        }
+    }
+    </div>
