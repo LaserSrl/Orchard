@@ -11,6 +11,7 @@ using Laser.Orchard.Mobile.Models;
 using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.Mobile.Handlers {
+
     [OrchardFeature("Laser.Orchard.SmsGateway")]
     public class SmsScheduledTaskHandler : IScheduledTaskHandler {
 

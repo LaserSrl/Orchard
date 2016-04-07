@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using Laser.Orchard.Mobile.Services;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Environment.Extensions;
 using System;
@@ -20,6 +21,7 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual int SmsDeliveredOrAcceptedNumber { get; set; }
         public virtual int SmsRejectedOrExpiredNumber { get; set; }
         public virtual int SmsRecipientsNumber { get; set; }
+        public virtual string PrefixForTest { get; set; }
     }
 
     [OrchardFeature("Laser.Orchard.SmsGateway")]
@@ -50,6 +52,7 @@ namespace Laser.Orchard.Mobile.Models {
             set { this.Store(x => x.SendToTestNumber, value); }
         }
 
+        [SmsValidationService]
         public string NumberForTest {
             get { return this.Retrieve(x => x.NumberForTest); }
             set { this.Store(x => x.NumberForTest, value); }
@@ -59,17 +62,26 @@ namespace Laser.Orchard.Mobile.Models {
             get { return this.Retrieve(x => x.SendOnNextPublish); }
             set { this.Store(x => x.SendOnNextPublish, value); }
         }
+
         public int SmsDeliveredOrAcceptedNumber {
             get { return this.Retrieve(x => x.SmsDeliveredOrAcceptedNumber); }
             set { this.Store(x => x.SmsDeliveredOrAcceptedNumber, value); }
         }
+
         public int SmsRejectedOrExpiredNumber {
             get { return this.Retrieve(x => x.SmsRejectedOrExpiredNumber); }
             set { this.Store(x => x.SmsRejectedOrExpiredNumber, value); }
         }
+
         public int SmsRecipientsNumber {
             get { return this.Retrieve(x => x.SmsRecipientsNumber); }
             set { this.Store(x => x.SmsRecipientsNumber, value); }
+        }
+
+        [SmsValidationService]
+        public string PrefixForTest {
+            get { return this.Retrieve(x => x.PrefixForTest); }
+            set { this.Store(x => x.PrefixForTest, value); }
         }
 
     }
