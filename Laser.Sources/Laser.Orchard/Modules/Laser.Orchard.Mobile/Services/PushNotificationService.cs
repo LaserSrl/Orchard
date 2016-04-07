@@ -35,8 +35,8 @@ namespace Laser.Orchard.Mobile.Services {
 
     public interface IPushNotificationService : IDependency {
 
-        List<PushNotificationRecord> GetPushQueryResult(Int32[] ids);
-        List<PushNotificationRecord> GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language);
+        IList GetPushQueryResult(Int32[] ids, bool countOnly = false);
+        IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false);
         void StorePushNotification(PushNotificationRecord pushElement);
 
         IEnumerable<PushNotificationRecord> SearchPushNotification(string texttosearch);
@@ -98,12 +98,12 @@ namespace Laser.Orchard.Mobile.Services {
             _queryPickerServices = queryPickerService; 
         }
 
-        public List<PushNotificationRecord> GetPushQueryResult(Int32[] ids)
+        public IList GetPushQueryResult(Int32[] ids, bool countOnly = false)
         {
-            return GetPushQueryResult(ids, null, true, "All");
+            return GetPushQueryResult(ids, null, true, "All", countOnly);
         }
 
-        public List<PushNotificationRecord> GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language)
+        public IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false)
         {
             IHqlQuery query;
             if (ids != null && ids.Count() > 0)
@@ -123,10 +123,15 @@ namespace Laser.Orchard.Mobile.Services {
             // provare a usare: query.OrderBy(null, null);
             stringHQL = stringHQL.ToString().Replace("order by civ.Id", "");
 
-            var queryForPush = "SELECT distinct cir.Id as Id, MobileRecord.Device as Device, MobileRecord.Produzione as Produzione, MobileRecord.Validated as Validated, MobileRecord.Language as Language, MobileRecord.UUIdentifier as UUIdentifier, MobileRecord.Token as Token " +
-                "FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr " +
+            string queryForPush = "";
+            if (countOnly) {
+                queryForPush = "SELECT count(MobileRecord) as Tot, sum(case MobileRecord.Device when 'Android' then 1 else 0 end) as Android, sum(case MobileRecord.Device when 'Apple' then 1 else 0 end) as Apple, sum(case MobileRecord.Device when 'WindowsMobile' then 1 else 0 end) as WindowsMobile";
+            }
+            else {
+                queryForPush = "SELECT cir.Id as Id, MobileRecord.Device as Device, MobileRecord.Produzione as Produzione, MobileRecord.Validated as Validated, MobileRecord.Language as Language, MobileRecord.UUIdentifier as UUIdentifier, MobileRecord.Token as Token";
+            }
+            queryForPush += " FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr " +
                 "join civr.ContentItemRecord as cir " +
-                //"join civr.TitlePartRecord as TitlePart " +
                 "join cir.MobileContactPartRecord as MobileContact " +
                 "join MobileContact.MobileRecord as MobileRecord " +
                 "WHERE civr.Published=1 AND MobileRecord.Validated";
@@ -147,15 +152,16 @@ namespace Laser.Orchard.Mobile.Services {
             // Creo query ottimizzata per le performance
             var fullStatement = _sessionLocator.For(null)
                 .CreateQuery(queryForPush)
-                .SetCacheable(false)
-                ;
+                .SetCacheable(false);
+
             //IList lista = fullStatement
             //        .SetResultTransformer(Transformers.AliasToEntityMap)
             //        .List();
             //return lista;
-            var lista = fullStatement.SetResultTransformer(Transformers.AliasToBean<PushNotificationRecord>())
-                .List<PushNotificationRecord>();
-            return lista.ToList<PushNotificationRecord>();
+            var lista = fullStatement
+                .SetResultTransformer(Transformers.AliasToEntityMap)  // (Transformers.AliasToBean<PushNotificationRecord>())
+                 .List();
+            return lista;
         }
 
         private IHqlQuery IntegrateAdditionalConditions(IHqlQuery query)
@@ -498,7 +504,8 @@ namespace Laser.Orchard.Mobile.Services {
                     //mpp.ToPush = false;
                     mpp.PushSent = true;
                     mpp.PushSentNumber = messageSent;
-                    mpp.TargetDeviceNumber = GetPushQueryResult(ids, locTipoDispositivo, produzione, language).Count;
+                    var couter = GetPushQueryResult(ids, locTipoDispositivo, produzione, language);
+                    mpp.TargetDeviceNumber = ((dynamic)couter).Tot;
                     _notifier.Information(T("Notification sent: " + messageSent.ToString()));
                 }
             }
@@ -589,7 +596,13 @@ namespace Laser.Orchard.Mobile.Services {
         private List<PushNotificationRecord> GetListMobileDevice(string queryDevice, TipoDispositivo tipodisp, bool produzione, string language, int[] queryIds) {
             if (queryDevice.Trim() == "")
             {
-                return GetPushQueryResult(queryIds, tipodisp, produzione, language);
+                var elenco = GetPushQueryResult(queryIds, tipodisp, produzione, language);
+                var lista = new List<PushNotificationRecord>();
+                PushNotificationRecord pnr = null;
+                foreach (Hashtable ht in elenco) {
+                    lista.Add(new PushNotificationRecord { Token = ht["Token"].ToString() });
+                }
+                return lista;
                 //return _pushNotificationRepository.Fetch(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
             }
             else
