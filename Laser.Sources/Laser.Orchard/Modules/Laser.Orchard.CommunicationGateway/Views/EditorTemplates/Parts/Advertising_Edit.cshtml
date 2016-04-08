@@ -115,12 +115,13 @@
         locCtrl.parent().after("<div id='summary-totals' style='border: solid 1px rgb(189, 188, 188)'></div>");
         var locSummary = $("#summary-totals");
         var locUrls = $("input[name=CountUrl]");
+        var idRun = 0;
         var arrUrl = [];
         var arrOutput = [];
         var arrFunc = [];
         for (var i = 0; i < locUrls.length; i++) {
             arrUrl[i] = locUrls.eq(i).val();
-            arrOutput[i] = 0;
+            arrOutput[i] = "";
         }
         updateSummary();
         var aux1 = locCtrl.change(function () {
@@ -128,6 +129,13 @@
         });
 
         function updateSummary() {
+            idRun++;
+            // pulisce il summary
+            for (var i = 0; i < arrOutput.length; i++) {
+                arrOutput[i] = "";
+            }
+            refresh();
+
             var locSelected = locCtrl.find("option:checked");
             var elencoIds = [];
             for (var i = 0; i < locSelected.length; i++) {
@@ -135,26 +143,42 @@
             }
             //alert(elencoIds);
 
-            for (var i = 0; i < arrUrl.length; i++) {
-                $.ajax({
-                    myIdx: i, // parametro custom per la function success
-                    type: "GET",
-                    url: arrUrl[i],
-                    traditional: true,
-                    data:{ids:elencoIds, idlocalization:@Model["LocalizationId"]},
-                    dataType: "json",
-                    success: function (data, status, jqXHR) {
+            if (arrUrl.length > 0) {
+                updateCounter(idRun, elencoIds, 0);
+            }
+        }
+
+        function updateCounter(pIdRun, elencoIds, idx) {
+            $.ajax({
+                myIdx: idx, // parametro custom per la function success
+                type: "GET",
+                url: arrUrl[idx],
+                traditional: true,
+                data:{ids:elencoIds, idlocalization:@Model["LocalizationId"] },
+                dataType: "json",
+                success: function (data, status, jqXHR) {
+                    if(pIdRun == idRun) {
+                        // aggiorna il summary se nel frattempo non è stato chiamato un altro updateSummary()
                         arrOutput[this.myIdx] = data.Key + " " + data.Value;
                         refresh();
-                    }//,
-                    //error: function (jqXHR, textStatus) {
-                    //    locMsg = locMsg + textStatus;
-                    //    var locSummary = $("#summary-totals");
-                    //    //locSummary.text(aux3 + "; urls: " + aux4 + "; msg: " + locMsg);
-                    //    locSummary.text("msg: " + locMsg);
-                    //}
-                });
-            }
+                    }
+                },
+                complete: function(xhr,status) {
+                    if(pIdRun == idRun) {
+                        // parte il counter successivo se nel frattempo non è stato chiamato un altro updateSummary()
+                        var newIdx = this.myIdx + 1;
+                        if(newIdx < arrUrl.length) {
+                            updateCounter(pIdRun, elencoIds, newIdx);
+                        }
+                    }
+                }
+                //error: function (jqXHR, textStatus) {
+                //    locMsg = locMsg + textStatus;
+                //    var locSummary = $("#summary-totals");
+                //    //locSummary.text(aux3 + "; urls: " + aux4 + "; msg: " + locMsg);
+                //    locSummary.text("msg: " + locMsg);
+                //}
+            });
         }
 
         function refresh() {
