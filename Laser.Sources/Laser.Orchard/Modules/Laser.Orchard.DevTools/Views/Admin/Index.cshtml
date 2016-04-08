@@ -5,6 +5,8 @@
 <a class="button primaryAction" href="@Url.Action("ShowLog", "Admin", new { area = "Laser.Orchard.DevTools" })" title="@T("Show Log")">@T("Show Log")</a>
 <a class="button primaryAction" href="@Url.Action("GetValidApiKey", "Admin", new { area = "Laser.Orchard.DevTools"})" title="@T("Get my ApiKey")">@T("Get my ApiKey")</a>
 <br />
+<a class="button primaryAction" href="@Url.Action("index", "pushnotification", new { area = "Laser.Orchard.Mobile" })" title="@T("DeviceList")">@T("DeviceList")</a>
+<br />
 <fieldset>
     @if (!string.IsNullOrEmpty(Model.Testo)){
     @Html.TextAreaFor(x => x.Testo,  new { style = "width: 100%; height: 600px;" })

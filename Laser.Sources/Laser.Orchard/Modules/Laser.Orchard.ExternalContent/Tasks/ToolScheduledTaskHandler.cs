@@ -16,6 +16,7 @@ using System.Net;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using Orchard.Mvc;
+using Laser.Orchard.StartupConfig.Services;
 
 namespace Laser.Orchard.ExternalContent.Tasks {
     public class ToolScheduledTaskHandler : IScheduledTaskHandler {
@@ -78,6 +79,15 @@ namespace Laser.Orchard.ExternalContent.Tasks {
                     //      var CallUrl = urlHelper.ItemDisplayUrl(context.Task.ContentItem);
                     // HostingEnvironment.MapPath("~/") + _shellSettings.Name + "\\Webservices\\Alias?displayalias=" + displayalias;
                     WebClient myClient = new WebClient();
+             
+                    IApiKeyService apiKeyService = null;
+                    if (_orchardServices.WorkContext.TryResolve<IApiKeyService>(out apiKeyService)) {
+                        var iv = GetRandomIV();
+                        var key = apiKeyService.GetValidApiKey(iv);
+                        // protezione attiva inserisco header
+                        myClient.Headers.Set("ApiKey", key);
+                        myClient.Headers.Set("AKIV", iv);
+                    }               
                     Stream response = myClient.OpenRead(CallUrl);
                     response.Close();
                 }
@@ -103,7 +113,11 @@ namespace Laser.Orchard.ExternalContent.Tasks {
                 }
             }
         }
-
+        private string GetRandomIV() {
+            string iv = string.Format("{0}{0}", DateTime.UtcNow.ToString("ddMMyyyy").Substring(0, 8));
+            byte[] arr = System.Text.Encoding.UTF8.GetBytes(iv);
+            return Convert.ToBase64String(arr);
+        }
         //private void ScheduleNextTask(Int32 minute, ContentItem ci) {
         //    if (minute > 0) {
         //        DateTime date = DateTime.UtcNow.AddMinutes(minute);

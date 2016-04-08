@@ -6,6 +6,7 @@ using Orchard;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Data;
@@ -50,8 +51,9 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         private readonly ILocalizedStringManager _localizedStringManager;
         private readonly IUtilsServices _utilsServices;
         private readonly ITransactionManager _transactionManager;
+        private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         public Localizer T { get; set; }
-
+ 
         public ContentItemController(
            ShellSettings shellSettings,
            ICsrfTokenHelper csrfTokenHelper,
@@ -65,7 +67,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
            IContentDefinitionManager contentDefinitionManager,
            ITaxonomyService taxonomyService,
            ILocalizedStringManager localizedStringManager,
-           ITransactionManager transactionManager
+           ITransactionManager transactionManager,
+            Lazy<IEnumerable<IContentHandler>> handlers
            ) {
             _localizedStringManager = localizedStringManager;
             _taxonomyService = taxonomyService;
@@ -82,8 +85,11 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             _utilsServices = utilsServices;
             Logger = NullLogger.Instance;
             _transactionManager = transactionManager;
+            _handlers = handlers;
         }
-
+        public IEnumerable<IContentHandler> Handlers {
+            get { return _handlers.Value; }
+        }
 
         public dynamic Get(Int32 id) {
             ContentItem ContentToView;
@@ -359,8 +365,9 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             if (currentUser == null)
                 return StoreNewContentItem(eObj, null);
             else
-                if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken())
+                if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
                     return StoreNewContentItem(eObj, currentUser.ContentItem);
+                }
                 else
                     return (_utilsServices.GetResponse(ResponseType.InvalidXSRF));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
         }
@@ -451,6 +458,10 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             //      }
             if (!rsp.Success)
                 _transactionManager.Cancel();
+            else {
+                var context = new UpdateContentContext(NewOrModifiedContent);
+                Handlers.Invoke(handler => handler.Updated(context), Logger);             
+            }
             return rsp;
         }
 

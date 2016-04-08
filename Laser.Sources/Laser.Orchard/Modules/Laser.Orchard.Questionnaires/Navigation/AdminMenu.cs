@@ -23,11 +23,18 @@ namespace Laser.Orchard.Questionnaires.Navigation {
 
 
             builder.Add(T("Statistics"), "10", menu => menu.LinkToFirstChild(false).Permission(Permissions.AccessStatistics)
-                    .Add(T("Questionnaires"), "0", subMenu => subMenu.Permission(Permissions.AccessStatistics).LinkToFirstChild(true)
-                        .Add(T("Single choice Answers"), "0", local => local.Action("IndexUserAnswers", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", type = QuestionType.SingleChoice }).Permission(Permissions.AccessStatistics).LocalNav())
-                        .Add(T("Multi choice Answers"), "1", local => local.Action("IndexUserAnswers", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", type = QuestionType.MultiChoice }).Permission(Permissions.AccessStatistics).LocalNav())
-                        .Add(T("Open Answers"), "2", local => local.Action("IndexUserAnswers", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", type = QuestionType.OpenAnswer }).Permission(Permissions.AccessStatistics).LocalNav())
-                    ));
+                    .Add(item => item
+                        .Caption(T("Questionnaires"))
+                        .Position("0")
+                        .Action("Index", "QuestionnaireStats", new { area = "Laser.Orchard.Questionnaires" })
+                        .Permission(Permissions.AccessStatistics)
+                    )
+                //.Add(T("Questionnaires"), "0", subMenu => subMenu.Permission(Permissions.AccessStatistics).LinkToFirstChild(true)
+                //    .Add(T("Single choice Answers"), "0", local => local.Action("IndexUserAnswers", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", type = QuestionType.SingleChoice }).Permission(Permissions.AccessStatistics).LocalNav())
+                //    .Add(T("Multi choice Answers"), "1", local => local.Action("IndexUserAnswers", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", type = QuestionType.MultiChoice }).Permission(Permissions.AccessStatistics).LocalNav())
+                //    .Add(T("Open Answers"), "2", local => local.Action("IndexUserAnswers", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", type = QuestionType.OpenAnswer }).Permission(Permissions.AccessStatistics).LocalNav())
+                //)
+                    );
         }
 
 
