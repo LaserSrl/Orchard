@@ -76,3 +76,20 @@
 .hlist-container img {
     width: 100px;
 }
+
+/*Statistiche*/
+
+.answer {
+    display:inline-block;
+    width:100%;
+}
+
+.answerlist {
+    float: left;
+}
+
+.answerchart {
+    height: 200px;
+    width: 300px;
+    float:right;
+}
