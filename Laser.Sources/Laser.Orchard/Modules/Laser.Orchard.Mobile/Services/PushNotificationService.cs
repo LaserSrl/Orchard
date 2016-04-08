@@ -27,6 +27,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
@@ -504,8 +505,8 @@ namespace Laser.Orchard.Mobile.Services {
                     //mpp.ToPush = false;
                     mpp.PushSent = true;
                     mpp.PushSentNumber = messageSent;
-                    var couter = GetPushQueryResult(ids, locTipoDispositivo, produzione, language);
-                    mpp.TargetDeviceNumber = ((dynamic)couter).Tot;
+                    var counter = GetPushQueryResult(ids, locTipoDispositivo, produzione, language, true);
+                    mpp.TargetDeviceNumber = Convert.ToInt32(((Hashtable)(counter[0]))["Tot"]);
                     _notifier.Information(T("Notification sent: " + messageSent.ToString()));
                 }
             }
@@ -598,9 +599,14 @@ namespace Laser.Orchard.Mobile.Services {
             {
                 var elenco = GetPushQueryResult(queryIds, tipodisp, produzione, language);
                 var lista = new List<PushNotificationRecord>();
-                PushNotificationRecord pnr = null;
                 foreach (Hashtable ht in elenco) {
-                    lista.Add(new PushNotificationRecord { Token = ht["Token"].ToString() });
+                    lista.Add(new PushNotificationRecord { Id = Convert.ToInt32(ht["Id"]),
+                        Device = (TipoDispositivo)(Enum.Parse(typeof(TipoDispositivo), ht["Device"].ToString())), 
+                        Produzione = Convert.ToBoolean(ht["Produzione"], CultureInfo.InvariantCulture),
+                        Validated = Convert.ToBoolean(ht["Validated"], CultureInfo.InvariantCulture),
+                        Language = ht["Language"].ToString(),
+                        UUIdentifier = ht["UUIdentifier"].ToString(),
+                        Token = ht["Token"].ToString() });
                 }
                 return lista;
                 //return _pushNotificationRepository.Fetch(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
