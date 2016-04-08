@@ -1,10 +1,14 @@
 ﻿using Laser.Orchard.CommunicationGateway.Helpers;
+using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.CommunicationGateway.ViewModels;
+using NHibernate;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Contents.Settings;
 using Orchard.Core.Title.Models;
+using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Admin;
@@ -24,6 +28,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly string contentType = "CommunicationContact";
         private readonly dynamic TestPermission = Permissions.ManageContact;
         private readonly ICommunicationService _communicationService;
+        private readonly ISessionLocator _session;
         private readonly INotifier _notifier;
         private Localizer T { get; set; }
 
@@ -31,12 +36,14 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             IOrchardServices orchardServices,
             INotifier notifier,
             IContentManager contentManager,
-             ICommunicationService communicationService) {
+             ICommunicationService communicationService,
+             ISessionLocator session) {
             _orchardServices = orchardServices;
             _contentManager = contentManager;
             _notifier = notifier;
             T = NullLocalizer.Instance;
             _communicationService = communicationService;
+            _session = session;
         }
 
         [Admin]
@@ -72,13 +79,31 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
 
+            var typeDef = _contentManager.GetContentTypeDefinitions().FirstOrDefault(x => x.Name == contentType);
+            bool draftable = typeDef.Settings.GetModel<ContentTypeSettings>().Draftable;
+
             ContentItem content;
             if (id == 0) {
                 var newContent = _contentManager.New(contentType);
-                _contentManager.Create(newContent, VersionOptions.Draft);
+
+                if (draftable) {
+                    _contentManager.Create(newContent, VersionOptions.Draft);
+                }
+                else {
+                    _contentManager.Create(newContent);
+                }
+
                 content = newContent;
-            } else
-                content = _contentManager.Get(id, VersionOptions.DraftRequired);
+            }
+            else {
+                if (draftable) {
+                    content = _contentManager.Get(id, VersionOptions.DraftRequired);
+                }
+                else {
+                    content = _contentManager.Get(id);
+                }
+            }
+
             var model = _contentManager.UpdateEditor(content, this);
             if (!ModelState.IsValid) {
                 foreach (string key in ModelState.Keys) {
@@ -89,7 +114,9 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _orchardServices.TransactionManager.Cancel();
                 return View(model);
             } else {
-                _contentManager.Publish(content);
+                if (draftable) {
+                    _contentManager.Publish(content);
+                }
             }
             _notifier.Add(NotifyType.Information, T("Contact saved"));
             return RedirectToAction("Edit", new { id = content.Id });
@@ -119,21 +146,103 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         [HttpPost]
         [Admin]
         public ActionResult Index(PagerParameters pagerParameters, SearchVM search) {
+            // variabili di appoggio
+            List<int> arr = null;
+            
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
+            IEnumerable<ContentItem> contentItems = null;
+            int totItems = 0;
+            Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
             dynamic Options = new System.Dynamic.ExpandoObject();
             var expression = search.Expression;
             IContentQuery<ContentItem> contentQuery = _contentManager.Query(VersionOptions.Latest).ForType(contentType);//.OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc); //Performance issues on heavy ContentItems numbers #6247
-            if (!string.IsNullOrEmpty(search.Expression))
-                contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(expression));
-            Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
-            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(contentQuery.Count());
-            var pageOfContentItems = contentQuery.Slice(pager.GetStartIndex(), pager.PageSize)
+            if (!string.IsNullOrEmpty(search.Expression)) {
+                switch (search.Field) {
+                    case SearchFieldEnum.Name:
+                        contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(expression));
+                        totItems = contentQuery.Count();
+                        contentItems = contentQuery.Slice(pager.GetStartIndex(), pager.PageSize);
+                        break;
+                    case SearchFieldEnum.Mail:
+                        string myQueryMail = @"select cir.Id
+                                    from Orchard.ContentManagement.Records.ContentItemVersionRecord as civr
+                                    join civr.ContentItemRecord as cir
+                                    join cir.EmailContactPartRecord as EmailPart
+                                    join EmailPart.EmailRecord as EmailRecord
+                                    where EmailRecord.Email like '%' + :mail + '%'
+                                    order by cir.Id";
+                        var elencoIdMail = _session.For(null)
+                            .CreateQuery(myQueryMail)
+                            .SetParameter("mail", expression)
+                            .List();
+
+                        // alternativa
+//                        string myQueryMail = @"select EmailContactPartRecord_Id 
+//                                            from Laser_Orchard_CommunicationGateway_CommunicationEmailRecord 
+//                                            where Email like '%' + :mail + '%'";
+//                        var elencoIdMail = _session.For(null)
+//                            .CreateSQLQuery(myQueryMail)
+//                            .SetParameter("mail", expression)
+//                            .List();
+
+                        totItems = elencoIdMail.Count;
+
+                        // tiene conto solo degli item presenti nella pagina da visualizzare
+                        arr = new List<int>();
+                        for (int idx = 0; (idx < pager.PageSize) && ((idx + pager.GetStartIndex()) < totItems); idx++) {
+                            arr.Add((int)(elencoIdMail[idx + pager.GetStartIndex()]));
+                        }
+                        elencoIdMail = null;
+                        contentItems = contentQuery.Where<CommunicationContactPartRecord>(x => arr.Contains(x.Id)).List();
+                        break;
+                    case SearchFieldEnum.Phone:
+                        string myQuerySms = @"select cir.Id
+                                    from Orchard.ContentManagement.Records.ContentItemVersionRecord as civr
+                                    join civr.ContentItemRecord as cir
+                                    join cir.SmsContactPartRecord as SmsPart
+                                    join SmsPart.SmsRecord as SmsRecord
+                                    where SmsRecord.Sms like '%' + :sms + '%'
+                                    order by cir.Id";
+                        var elencoIdSms = _session.For(null)
+                            .CreateQuery(myQuerySms)
+                            .SetParameter("sms", expression)
+                            .List();
+
+                        // alternativa
+//                        string myQuerySms = @"select SmsContactPartRecord_Id 
+//                                            from Laser_Orchard_CommunicationGateway_CommunicationSmsRecord 
+//                                            where sms like '%' + :sms + '%'";
+//                        var elencoIdSms = _session.For(null)
+//                            .CreateSQLQuery(myQuerySms)
+//                            .SetParameter("sms", expression)
+//                            .List();
+
+                        totItems = elencoIdSms.Count;
+
+                        // tiene conto solo degli item presenti nella pagina da visualizzare
+                        arr = new List<int>();
+                        for (int idx = 0; (idx < pager.PageSize) && ((idx + pager.GetStartIndex()) < totItems); idx++) {
+                            arr.Add((int)(elencoIdSms[idx + pager.GetStartIndex()]));
+                        }
+                        elencoIdSms = null;
+                        contentItems = contentQuery.Where<CommunicationContactPartRecord>(x => arr.Contains(x.Id)).List();
+                        break;
+                }
+            }
+            else {
+                totItems = contentQuery.Count();
+                contentItems = contentQuery.Slice(pager.GetStartIndex(), pager.PageSize);
+            }
+            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(totItems);
+            var pageOfContentItems = contentItems
                 .Select(p => new ContentIndexVM {
                     Id = p.Id,
                     Title = ((dynamic)p).TitlePart.Title,
                     ModifiedUtc = ((dynamic)p).CommonPart.ModifiedUtc,
                     UserName = ((dynamic)p).CommonPart.Owner != null ? ((dynamic)p).CommonPart.Owner.UserName : "Anonymous",
+                    PreviewEmail = (((dynamic)p).EmailContactPart.EmailRecord.Count > 0) ? ((dynamic)p).EmailContactPart.EmailRecord[0].Email : "",
+                    PreviewSms = (((dynamic)p).SmsContactPart.SmsRecord.Count > 0) ? ((dynamic)p).SmsContactPart.SmsRecord[0].Sms : ""
                 }).ToList();
 
             if (pageOfContentItems == null) {

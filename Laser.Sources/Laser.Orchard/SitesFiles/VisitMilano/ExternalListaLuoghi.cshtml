@@ -56,6 +56,7 @@
 
     GetChildValue(mydoc, "//venue/descriptiontext", true);
 
+    mydoc = ConvertArrayOfStringToString(mydoc, "/venue", "priceInfo", "PriceInfo", true);
     mydoc = ConvertArrayOfStringToString(mydoc, "/venue", "descriptiontext", "Descriptiontext", true);
 
     //rendi array contact

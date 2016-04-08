@@ -112,6 +112,10 @@ namespace Laser.Orchard.Mobile.Services {
                     smsRecord = contactRecord.SmsRecord[0];
                     risultato = smsRecord.Prefix + smsRecord.Sms;
                 }
+            } 
+            // Send for test
+            else if (content.ContainsKey("SmsTestNumber")) {
+                risultato = content["SmsTestNumber"].ToString();
             }
 
             ////versione senza l'uso degli alias nella query HQL

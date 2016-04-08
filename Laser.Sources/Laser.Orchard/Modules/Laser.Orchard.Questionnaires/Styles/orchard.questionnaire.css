@@ -2,7 +2,6 @@
     padding: 5px;
 }
 
-
 /* Elenco risposte */
 .questionnaire-container ul li ul li {
     display: inline;
@@ -148,8 +147,3 @@
 	background: #27AE60;
 	color: white;
 }
-
-
-
-
-

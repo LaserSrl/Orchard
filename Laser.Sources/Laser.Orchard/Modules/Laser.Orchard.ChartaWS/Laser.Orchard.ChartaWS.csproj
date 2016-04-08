@@ -168,6 +168,10 @@
       <Project>{ddf6fdc9-29a3-43e6-8724-3ce9e26289b6}</Project>
       <Name>Laser.Orchard.Braintree</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
+      <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
+      <Name>Laser.Orchard.StartupConfig</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />

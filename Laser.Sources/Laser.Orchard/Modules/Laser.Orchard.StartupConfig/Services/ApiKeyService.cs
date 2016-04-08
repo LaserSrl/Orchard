@@ -10,24 +10,27 @@ using Laser.Orchard.StartupConfig.WebApiProtection.Models;
 using Orchard.ContentManagement;
 using Orchard.Utility.Extensions;
 using System.Text;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.StartupConfig.Services {
+    [OrchardFeature("Laser.Orchard.StartupConfig.WebApiProtection")]
     public class ApiKeyService : IApiKeyService {
         private readonly IOrchardServices _orchardServices;
         private readonly ShellSettings _shellSettings;
-        private readonly HttpRequest _request;
+        private HttpRequest _request;
         public ILogger Logger;
 
         public ApiKeyService(ShellSettings shellSettings, IOrchardServices orchardServices) {
             _shellSettings = shellSettings;
-            _orchardServices = orchardServices;
-            _request = HttpContext.Current.Request;
+            _orchardServices = orchardServices;          
             Logger = NullLogger.Instance;
         }
         public string ValidateRequestByApiKey(string additionalCacheKey, bool protectAlways = false) {
+            _request = HttpContext.Current.Request;
             if (additionalCacheKey != null) {
                 return additionalCacheKey;
             }
+
             bool check = false;
             if (protectAlways == false) {
                 var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
@@ -87,6 +90,7 @@ namespace Laser.Orchard.StartupConfig.Services {
         }
 
         private bool TryValidateKey(string token, string akiv, bool clearText) {
+            _request = HttpContext.Current.Request;
             byte[] mykey = _shellSettings.EncryptionKey.ToByteArray();
             try {
                 byte[] myiv = Convert.FromBase64String(akiv);

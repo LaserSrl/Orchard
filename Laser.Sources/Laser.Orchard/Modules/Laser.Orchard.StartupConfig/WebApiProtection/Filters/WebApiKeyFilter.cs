@@ -25,14 +25,19 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
 
         public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext) {
             var workContext = actionContext.ControllerContext.GetWorkContext();
-            var apiKeyService = workContext.Resolve<IApiKeyService>();
-            _additionalCacheKey = apiKeyService.ValidateRequestByApiKey(_additionalCacheKey, _protectAlways);
-            if ((_additionalCacheKey != null) && (_additionalCacheKey != "AuthorizedApi")) {
-                var result = new JsonResult {
-                    Data = "UnauthorizedApi",
-                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
-                };
-                actionContext.Response = actionContext.ControllerContext.Request.CreateResponse(HttpStatusCode.Unauthorized, result, "application/json");
+            IApiKeyService apiKeyService = null;
+            if (workContext.TryResolve<IApiKeyService>(out apiKeyService)) {
+                _additionalCacheKey = apiKeyService.ValidateRequestByApiKey(_additionalCacheKey, _protectAlways);
+                if ((_additionalCacheKey != null) && (_additionalCacheKey != "AuthorizedApi")) {
+                    var result = new JsonResult {
+                        Data = "UnauthorizedApi",
+                        JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                    };
+                    actionContext.Response = actionContext.ControllerContext.Request.CreateResponse(HttpStatusCode.Unauthorized, result, "application/json");
+                }
+                else {
+                    base.OnActionExecuting(actionContext);
+                }
             }
             else {
                 base.OnActionExecuting(actionContext);

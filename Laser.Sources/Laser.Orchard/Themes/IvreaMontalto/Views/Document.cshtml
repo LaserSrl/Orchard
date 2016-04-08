@@ -1,0 +1,41 @@
+﻿@using Orchard.Environment.Configuration
+@{
+    var settings = WorkContext.Resolve<ShellSettings>();
+    var tenantName = settings.Name;
+
+    var title = String.Concat(Layout.Title, " - ", WorkContext.CurrentSite.SiteName);
+    var subthemePath = "~/Themes/IvreaMontalto/Styles/";
+
+}
+@{
+      
+
+    //Styles    
+    Style.Include("https://fonts.googleapis.com/css?family=Istok+Web").AtHead();
+    Style.Include("https://fonts.googleapis.com/css?family=Roboto:400,700").AtHead();
+    Style.Include("style.css").AtHead();
+    Style.Include("prettyPhoto.css").AtHead();
+
+    //Scripts
+    Script.Include("main.js").AtFoot();
+    Script.Require("jQuery");
+    Script.Include("jquery.prettyPhoto.js").AtFoot();   
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@title</title>
+
+    @Display(Model.Head)
+
+</head>
+<body>
+    @Display(Model.Body)
+    @Display(Model.Tail)
+
+</body>
+</html>
+

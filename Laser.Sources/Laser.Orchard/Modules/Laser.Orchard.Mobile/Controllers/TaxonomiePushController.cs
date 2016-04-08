@@ -17,6 +17,7 @@ using Orchard.Taxonomies.Fields;
 using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 
 namespace Laser.Orchard.Mobile.Controllers {
     public class category {
@@ -28,6 +29,7 @@ namespace Laser.Orchard.Mobile.Controllers {
     //    public bool Success { get; set; }
     //    public string Message { get; set; }
     //}
+    [WebApiKeyFilter(false)]
     public class TaxonomiePushController : ApiController {
 
         public Localizer T { get; set; }

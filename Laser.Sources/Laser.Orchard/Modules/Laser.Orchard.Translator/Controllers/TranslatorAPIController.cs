@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.Translator.Models;
+﻿using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
+using Laser.Orchard.Translator.Models;
 using Laser.Orchard.Translator.Services;
 using Orchard.Data;
 using System;
@@ -8,6 +9,7 @@ using System.Web.Http;
 
 namespace Laser.Orchard.Translator.Controllers
 {
+    [WebApiKeyFilter(false)]
     public class TranslatorAPIController : ApiController
     {
         private readonly ITransactionManager _transactionManager;

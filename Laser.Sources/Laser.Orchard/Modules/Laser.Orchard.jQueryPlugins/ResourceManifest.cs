@@ -47,6 +47,10 @@ namespace Laser.Orchard.jQueryPlugins {
 
             manifest.DefineScript("rcswitcher").SetUrl("rcswitcher.min.js").SetDependencies("jQuery");
 
+            manifest.DefineScript("jqPlot").SetUrl("jqPlot/jquery.jqplot.js").SetDependencies("jQuery");
+            manifest.DefineScript("jqPlot_Mini").SetUrl("jqPlot/jquery.jqplot.min.js").SetDependencies("jQuery");
+            manifest.DefineScript("jqPlotPieChart").SetUrl("jqPlot/plugins/jqplot.pieRenderer.js").SetDependencies("jqPlot");
+
             //Styles
 
             manifest.DefineStyle("jQuery_DataTables").SetUrl("jquery.dataTables.min.css");
@@ -69,6 +73,9 @@ namespace Laser.Orchard.jQueryPlugins {
             manifest.DefineStyle("Accordion").SetUrl("accordion.css");
 
             manifest.DefineStyle("rcswitcher").SetUrl("rcswitcher.min.css");
+
+            manifest.DefineStyle("jqPlot").SetUrl("jqPlot/jquery.jqplot.css");
+            manifest.DefineStyle("jqPlot_Mini").SetUrl("jqPlot/jquery.jqplot.min.css");
         }
     }
 }
