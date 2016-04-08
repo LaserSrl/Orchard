@@ -264,7 +264,6 @@
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\Orchard_Module_Release.pubxml" />
     <Content Include="Views\EditorTemplates\Parts\QuestionnaireModuleSettings.cshtml" />
     <Content Include="Views\DefinitionTemplates\QuestionnairesPartSettingVM.cshtml" />
