@@ -36,6 +36,7 @@ using System.Configuration;
 using System.Web.Configuration;
 using Orchard.ContentManagement;
 using Orchard.Tasks.Scheduling;
+using Laser.Orchard.StartupConfig.Exceptions;
 
 //using System.Web.Razor;
 
@@ -96,7 +97,6 @@ namespace Laser.Orchard.ExternalContent.Services {
             _orchardServices = orchardServices;
             _orchardServices.WorkContext.TryResolve<ICacheStorageProvider>(out _cacheStorageProvider);
             _scheduledTaskManager = scheduledTaskManager;
-
 
             //    _cacheStorageProvider = cacheStorageProvider;
         }
@@ -308,7 +308,7 @@ namespace Laser.Orchard.ExternalContent.Services {
             }
             catch (Exception ex) {
                 Logger.Error(ex, UrlToGet);
-                throw ex;
+                throw new ExternalFieldRemoteException();
             }
             return (ci);
         }
