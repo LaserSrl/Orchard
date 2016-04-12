@@ -1,0 +1,20 @@
+﻿@using Laser.Orchard.UserReactions.ViewModels;
+@model  UserReactionsTypes
+@{
+    Script.Require("jQuery_NestedModels").AtHead();
+}
+@{ Layout.Title = T("User Reactions Types Settings").ToString(); }
+@using (Html.BeginFormAntiForgeryPost()) {
+    var i = 0;
+    <div class="manage">
+        <button class="primaryAction" type="submit">@T("Update settings")</button>
+    </div>
+
+    <fieldset>
+        <legend>@T("Settings - User Reactions Types")</legend>
+        <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.UserReactionsType, T("Add Reaction").Text, "#reactions", ".j_reaction")
+        <div id="reactions">
+            @Html.EditorFor(x => x.UserReactionsType)
+        </div>
+    </fieldset>
+}
