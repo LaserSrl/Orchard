@@ -857,70 +857,76 @@ namespace Laser.Orchard.Mobile.Services {
                 pushMessage.Sound = "sound.caf"; //default
             string setting_password = "";
             string setting_file = "";
+            bool certificateexist = true;
             if (produzione) {
                 setting_password = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AppleCertificatePassword;
                 setting_file = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\Mobile\" + _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ApplePathCertificateFile;
+                if (string.IsNullOrEmpty(_orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ApplePathCertificateFile))
+                    certificateexist = false;
             }
             else {
                 setting_password = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AppleCertificatePasswordDevelopment;
                 setting_file = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\Mobile\" + _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ApplePathCertificateFileDevelopment;
+                if (string.IsNullOrEmpty(_orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ApplePathCertificateFileDevelopment))
+                    certificateexist = false;
             }
-            var push = new PushBroker();
-            push.OnNotificationSent += NotificationSent;
-            push.OnChannelException += ChannelException;
-            push.OnServiceException += ServiceException;
-            push.OnNotificationFailed += NotificationFailed;
-            if (produzione)
-                push.OnDeviceSubscriptionExpired += DeviceSubscriptionExpiredAppleProduzione;
-            else
-                push.OnDeviceSubscriptionExpired += DeviceSubscriptionExpiredAppleNotProduzione;
-            push.OnDeviceSubscriptionChanged += DeviceSubscriptionChanged;
-            push.OnChannelCreated += ChannelCreated;
-            push.OnChannelDestroyed += ChannelDestroyed;
-
-            //var appleCert = File.ReadAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Modules\\Laser.Orchard.Mobile\\AppleCertificate\\" + setting_file));
-            var appleCert = File.ReadAllBytes(setting_file);
-
-            //        var applepassword = "laser123";
-            push.RegisterAppleService(new ApplePushChannelSettings(produzione, appleCert, setting_password)); //Extension method
-            //Fluent construction of an iOS notification
-            //IMPORTANT: For iOS you MUST MUST MUST use your own DeviceToken here that gets generated within your iOS app itself when the Application Delegate
-            //  for registered for remote notifications is called, and the device token is passed back to you
-
-            foreach (PushNotificationRecord dispositivo in listdispositivo) {
-                AppleNotification appleNotification = new AppleNotification();
-                if (!string.IsNullOrEmpty(pushMessage.Eu)) {
-                    appleNotification.ForDeviceToken(dispositivo.Token)
-                        .WithAlert(pushMessage.Text)
-                        .WithCustomItem("Eu", pushMessage.Eu)
-                        .WithSound(pushMessage.Sound);
-                }
+            if (certificateexist) {
+                var push = new PushBroker();
+                push.OnNotificationSent += NotificationSent;
+                push.OnChannelException += ChannelException;
+                push.OnServiceException += ServiceException;
+                push.OnNotificationFailed += NotificationFailed;
+                if (produzione)
+                    push.OnDeviceSubscriptionExpired += DeviceSubscriptionExpiredAppleProduzione;
                 else
-                    if (!string.IsNullOrEmpty(pushMessage.Iu)) {
+                    push.OnDeviceSubscriptionExpired += DeviceSubscriptionExpiredAppleNotProduzione;
+                push.OnDeviceSubscriptionChanged += DeviceSubscriptionChanged;
+                push.OnChannelCreated += ChannelCreated;
+                push.OnChannelDestroyed += ChannelDestroyed;
+
+                //var appleCert = File.ReadAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Modules\\Laser.Orchard.Mobile\\AppleCertificate\\" + setting_file));
+                var appleCert = File.ReadAllBytes(setting_file);
+                //        var applepassword = "laser123";
+                push.RegisterAppleService(new ApplePushChannelSettings(produzione, appleCert, setting_password)); //Extension method
+                //Fluent construction of an iOS notification
+                //IMPORTANT: For iOS you MUST MUST MUST use your own DeviceToken here that gets generated within your iOS app itself when the Application Delegate
+                //  for registered for remote notifications is called, and the device token is passed back to you
+
+                foreach (PushNotificationRecord dispositivo in listdispositivo) {
+                    AppleNotification appleNotification = new AppleNotification();
+                    if (!string.IsNullOrEmpty(pushMessage.Eu)) {
                         appleNotification.ForDeviceToken(dispositivo.Token)
                             .WithAlert(pushMessage.Text)
-                            .WithCustomItem("Iu", pushMessage.Iu)
+                            .WithCustomItem("Eu", pushMessage.Eu)
                             .WithSound(pushMessage.Sound);
+                    }
+                    else
+                        if (!string.IsNullOrEmpty(pushMessage.Iu)) {
+                            appleNotification.ForDeviceToken(dispositivo.Token)
+                                .WithAlert(pushMessage.Text)
+                                .WithCustomItem("Iu", pushMessage.Iu)
+                                .WithSound(pushMessage.Sound);
+                        }
+                        else {
+                            appleNotification.ForDeviceToken(dispositivo.Token)
+                                .WithAlert(pushMessage.Text)
+
+                                    //  .WithCustomItem("Title", pushMessage.Title)
+                                .WithCustomItem("Id", pushMessage.idContent)
+                                .WithCustomItem("Rid", pushMessage.idRelated)
+                                .WithCustomItem("Ct", pushMessage.Ct)
+                                .WithCustomItem("Al", pushMessage.Al)
+                                .WithSound(pushMessage.Sound);
+                        }
+                    if (appleNotification.Payload.ToJson().Length > 255) {
+                        _notifier.Information(T("Sent: message payload exceed the limit"));
                     }
                     else {
-                        appleNotification.ForDeviceToken(dispositivo.Token)
-                            .WithAlert(pushMessage.Text)
-
-                                //  .WithCustomItem("Title", pushMessage.Title)
-                            .WithCustomItem("Id", pushMessage.idContent)
-                            .WithCustomItem("Rid", pushMessage.idRelated)
-                            .WithCustomItem("Ct", pushMessage.Ct)
-                            .WithCustomItem("Al", pushMessage.Al)
-                            .WithSound(pushMessage.Sound);
+                        push.QueueNotification(appleNotification);
                     }
-                if (appleNotification.Payload.ToJson().Length > 255) {
-                    _notifier.Information(T("Sent: message payload exceed the limit"));
                 }
-                else {
-                    push.QueueNotification(appleNotification);
-                }
+                push.StopAllServices();
             }
-            push.StopAllServices();
         }
 
         private void PushApple(PushNotificationRecord dispositivo, PushAppleVM pushMessage) {

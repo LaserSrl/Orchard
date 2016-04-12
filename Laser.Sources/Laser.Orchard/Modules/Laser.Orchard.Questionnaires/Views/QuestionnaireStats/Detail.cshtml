@@ -18,50 +18,57 @@
     &#62; @Layout.Title
 </p>
 
-<h3><u>@Model.First().QuestionnaireTitle</u></h3>
+@if (Model.Count == 1 && Model.First().Answers == null) {
+    <h3><u>@Model.First().QuestionnaireTitle</u></h3>
+    
+    <div style="margin-top: 15px;">@T("This questionnaire contains no answers.")</div>
+}
+else {
+    <h3><u>@Model.First().QuestionnaireTitle</u></h3>
 
-<div style="margin-top: 15px;">
-@{
-    foreach (var question in Model) {
-        <div id="answer-@question.QuestionId" class="answer">
-            <div id="answerlist-@question.QuestionId" class="answerlist">
-                <h5>@question.Question</h5>
-                @{
-                    List<AnswerStatsViewModel> answersList = new List<AnswerStatsViewModel>();
+    <div style="margin-top: 15px;">
+    @{
+        foreach (var question in Model) {
+            <div id="answer-@question.QuestionId" class="answer">
+                <div id="answerlist-@question.QuestionId" class="answerlist">
+                    <h5>@question.Question</h5>
+                    @{
+                        List<AnswerStatsViewModel> answersList = new List<AnswerStatsViewModel>();
 
-                    if (question.QuestionType == Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {
-                        answersList = question.Answers.OrderByDescending(x => x.Count).ThenBy(x => x.Answer).Take(answersToShow).ToList();
+                        if (question.QuestionType == Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {
+                            answersList = question.Answers.OrderByDescending(x => x.Count).ThenBy(x => x.Answer).Take(answersToShow).ToList();
+                        }
+                        else {
+                            answersList = question.Answers.OrderByDescending(x => x.Count).ThenBy(x => x.Answer).ToList();
+                        }
                     }
-                    else {
-                        answersList = question.Answers.OrderByDescending(x => x.Count).ThenBy(x => x.Answer).ToList();
-                    }
-                }
                 
-                @foreach (var answer in answersList) {
-                    <div>
-                        &bull; @answer.Answer
-                        <span style="font-weight: bold">( @answer.Count )</span>
+                    @foreach (var answer in answersList) {
+                        <div>
+                            &bull; @answer.Answer
+                            <span style="font-weight: bold">( @answer.Count )</span>
+                        </div>
+                        }
                     </div>
+            
+                    @if (question.QuestionType != Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {
+                        <div id="answerchart-@question.QuestionId" class="answerchart"></div>
                     }
                 </div>
-            
-                @if (question.QuestionType != Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {
-                    <div id="answerchart-@question.QuestionId" class="answerchart"></div>
-                }
-            </div>
 
-            if (question.QuestionType == Laser.Orchard.Questionnaires.QuestionType.OpenAnswer && question.Answers.Count > answersToShow) {
-            <div style="margin-top:5px; margin-left: 9px;">
-                <a href="@Url.Action("QuestionDetail", "QuestionnaireStats",
-                       new { area = "Laser.Orchard.Questionnaires", idQuestionario = Model.First().QuestionnairePart_Id, idDomanda = question.QuestionId })">
-                    @T("Show all answers")
-                </a>
-            </div>
-            }
-            <br />
+                if (question.QuestionType == Laser.Orchard.Questionnaires.QuestionType.OpenAnswer && question.Answers.Count > answersToShow) {
+                <div style="margin-top:5px; margin-left: 9px;">
+                    <a href="@Url.Action("QuestionDetail", "QuestionnaireStats",
+                           new { area = "Laser.Orchard.Questionnaires", idQuestionario = Model.First().QuestionnairePart_Id, idDomanda = question.QuestionId })">
+                        @T("Show all answers")
+                    </a>
+                </div>
+                }
+                <br />
+        }
     }
+    </div>
 }
-</div>
 
 @{
     using (Script.Foot()) {
@@ -71,15 +78,18 @@
                     if (question.QuestionType != Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {                        
                         <Text>
                         var data = [];
-                        @foreach (var answer in question.Answers) {
-                            <Text>data.push(['@answer.Answer', @answer.Count]);</Text>
+                        @if (question.Answers != null) {
+                            foreach (var answer in question.Answers) {
+                                <Text>data.push(['@answer.Answer', @answer.Count]);</Text>
+                            }
                         }
                     $.jqplot('answerchart-@question.QuestionId', [data], {
                             title: '@question.Question',
                             seriesDefaults: {
                                 renderer: jQuery.jqplot.PieRenderer, 
                                 rendererOptions: {
-                                    showDataLabels: true
+                                    showDataLabels: true,
+                                    dataLabelFormatString: '%.2f'
                                 }
                             }, 
                             legend: { show:true, location: 'e' }

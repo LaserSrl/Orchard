@@ -209,6 +209,7 @@
     <Compile Include="Drivers\TermPartExtensionDriver.cs" />
     <Compile Include="Controllers\UsersGroupsSettingsController.cs" />
     <Compile Include="Drivers\UsersGroupsDriver.cs" />
+    <Compile Include="Exceptions\ExternalFieldRemoteException.cs" />
     <Compile Include="Handlers\BlogPostPartHandler.cs" />
     <Compile Include="Handlers\ContentEventHandler.cs" />
     <Compile Include="Handlers\ContentPickerConnectorHandler.cs" />

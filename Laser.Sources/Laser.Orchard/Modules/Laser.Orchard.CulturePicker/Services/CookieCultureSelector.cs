@@ -39,7 +39,7 @@ namespace Laser.Orchard.CulturePicker.Services {
                 return null;
             }
             if (AdminFilter.IsApplied(context.Request.RequestContext)) { // I am in admin context so I have to use defualt site culture
-                return null;
+                return new CultureSelectorResult { Priority = SelectorPriority, CultureName = _orchardServices.WorkContext.CurrentSite.SiteCulture };
             }
 
             HttpCookie cultureCookie = context.Request.Cookies[context.Request.AnonymousID + CultureCookieName];

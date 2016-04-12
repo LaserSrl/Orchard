@@ -355,30 +355,40 @@ namespace Laser.Orchard.Questionnaires.Services {
                         .Where(w => w.Questions.QuestionnairePartRecord_Id == questionnaireId)
                         .ToList();
 
-            var aggregatedStats = questionnaireStats.Select(s => new QuestionnaireStatsViewModel {
-                                                                QuestionnairePart_Id = s.Questions.QuestionnairePartRecord_Id,
-                                                                QuestionnaireTitle = questionnaireData.As<TitlePart>().Title,
-                                                                QuestionId = s.Questions.Id,
-                                                                Question = s.Questions.Question,
-                                                                QuestionType = s.Questions.QuestionType,
-                                                                Answers = new List<AnswerStatsViewModel>()
-                                                            })
-                                                     .GroupBy(g => g.QuestionId)
-                                                     .Select(s => s.First()).ToList();
+            if (questionnaireStats.Count == 0) {
+                QuestionnaireStatsViewModel empty = new QuestionnaireStatsViewModel();
+                empty.QuestionnairePart_Id = questionnaireData.Id;
+                empty.QuestionnaireTitle = questionnaireData.As<TitlePart>().Title;
+                empty.Answers = null;
 
-            for (int i = 0; i < aggregatedStats.Count(); i++) {
-                var question = aggregatedStats.ElementAt(i);
-                var answers = questionnaireStats.Where(w => w.Questions.Id == question.QuestionId)
-                                                .GroupBy(g => g.UserAnswers.AnswerText, StringComparer.InvariantCultureIgnoreCase)
-                                                .Select(s => new AnswerStatsViewModel {
-                                                            Answer = s.Key,
-                                                            Count = s.Count()
-                                                        });
-
-                question.Answers.AddRange(answers.OrderBy(o => o.Answer));
+                return new List<QuestionnaireStatsViewModel>() { empty };
             }
+            else {
+                var aggregatedStats = questionnaireStats.Select(s => new QuestionnaireStatsViewModel {
+                                                                    QuestionnairePart_Id = s.Questions.QuestionnairePartRecord_Id,
+                                                                    QuestionnaireTitle = questionnaireData.As<TitlePart>().Title,
+                                                                    QuestionId = s.Questions.Id,
+                                                                    Question = s.Questions.Question,
+                                                                    QuestionType = s.Questions.QuestionType,
+                                                                    Answers = new List<AnswerStatsViewModel>()
+                                                                })
+                                                         .GroupBy(g => g.QuestionId)
+                                                         .Select(s => s.First()).ToList();
 
-            return aggregatedStats.OrderBy(o => o.Question).ToList();
+                for (int i = 0; i < aggregatedStats.Count(); i++) {
+                    var question = aggregatedStats.ElementAt(i);
+                    var answers = questionnaireStats.Where(w => w.Questions.Id == question.QuestionId)
+                                                    .GroupBy(g => g.UserAnswers.AnswerText, StringComparer.InvariantCultureIgnoreCase)
+                                                    .Select(s => new AnswerStatsViewModel {
+                                                        Answer = s.Key,
+                                                        Count = s.Count()
+                                                    });
+
+                    question.Answers.AddRange(answers.OrderBy(o => o.Answer));
+                }
+
+                return aggregatedStats.OrderBy(o => o.Question).ToList();
+            }
         }
 
         public List<QuestStatViewModel> GetStats(QuestionType type) {
