@@ -30,19 +30,14 @@ foreach (XmlNode bookToModify in mydoc.SelectNodes("/rss/channel/lista/ExternalE
 mydoc=ConvertDateWithFormat(mydoc,"rss/channel/lista/ExternalEvents/pubDate");
 mydoc=cambianome(mydoc,"rss/channel/lista/ExternalEvents/pubDate", "Date");
 
-mydoc=cambianome(mydoc,"rss/channel/lista/ExternalEvents/guid", "OriginalId");
-foreach (XmlNode bookToModify in mydoc.SelectNodes("/rss/channel/lista/ExternalEvents/OriginalId")) {
-	XmlNode author = mydoc.CreateElement("Sid");
-	author.InnerXml="ExternalEvents:"+bookToModify.ChildNodes[0].Value;
-	bookToModify.ParentNode.AppendChild(author);
-	XmlNode iden = mydoc.CreateElement("Id");
-	iden.InnerXml=bookToModify.ChildNodes[0].Value.Substring(2);
-	bookToModify.ParentNode.AppendChild(iden);
-}
-mydoc=rendinumeric(mydoc,"rss/channel/lista/ExternalEvents/Id");
-
-
+int i=0;
 foreach (XmlNode bookToModify in mydoc.SelectNodes("/rss/channel/lista/ExternalEvents")){
+
+    i++;
+	XmlNode author = mydoc.CreateElement("Sid");
+	author.InnerText="ExternalEvents:"+i.ToString();
+	bookToModify.AppendChild(author);
+
     XmlNode imgNode = bookToModify.SelectSingleNode("ImageUrl");
     string immagine = "";
     if (imgNode != null){
