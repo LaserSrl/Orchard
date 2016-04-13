@@ -26,6 +26,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using Orchard.OutputCache.Filters;
+using Laser.Orchard.StartupConfig.Exceptions;
 
 namespace Laser.Orchard.WebServices.Controllers {
 
@@ -268,41 +269,48 @@ namespace Laser.Orchard.WebServices.Controllers {
         // Attributes:
         // displayAlias: url di ingresso Es: displayAlias=produttore-hermes
         // filterSubItemsParts: elennco csv delle parti da estrarre in presenza di array di ContentItems Es: filterSubItemsParts=TitlePart,AutoroutePart,MapPart
-        public ContentResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
+        public ActionResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
             //   Logger.Error("inizio"+DateTime.Now.ToString());
             IContent item = null;
-
-            if (displayAlias.ToLower() == "user+info" || displayAlias.ToLower() == "user info") {
-                #region richiesta dati di uno user
-                var currentUser = _authenticationService.GetAuthenticatedUser();
-                if (currentUser == null) {
-                    //  return Content((Json(_utilsServices.GetResponse(ResponseType.InvalidUser))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                    var result = new ContentResult { ContentType = "application/json" };
-                    result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidUser));
-                    return result;
-                } else
-                    if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
+            try {
+                if (displayAlias.ToLower() == "user+info" || displayAlias.ToLower() == "user info") {
+                    #region richiesta dati di uno user
+                    var currentUser = _authenticationService.GetAuthenticatedUser();
+                    if (currentUser == null) {
+                        //  return Content((Json(_utilsServices.GetResponse(ResponseType.InvalidUser))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
                         var result = new ContentResult { ContentType = "application/json" };
-                        result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
+                        result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidUser));
                         return result;
-                        //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                    } else {
-                        #region utente validato
-                        item = currentUser.ContentItem;
-
-                        #endregion
                     }
-                #endregion
-            } else {
-                item = GetContentByAlias(displayAlias);
-            }
-            ContentResult cr = (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, complexBehaviour.Split(','));
-            //    Logger.Error("Fine:"+DateTime.Now.ToString());
+                    else
+                        if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
+                            var result = new ContentResult { ContentType = "application/json" };
+                            result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
+                            return result;
+                            //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
+                        }
+                        else {
+                            #region utente validato
+                            item = currentUser.ContentItem;
 
-            if (_orchardServices.WorkContext.CurrentSite.As<WebServiceSettingsPart>().LogWebservice) {
-                Logger.Error(cr.Content.ToString());
+                            #endregion
+                        }
+                    #endregion
+                }
+                else {
+                    item = GetContentByAlias(displayAlias);
+                }
+                ContentResult cr = (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, complexBehaviour.Split(','));
+                //    Logger.Error("Fine:"+DateTime.Now.ToString());
+
+                if (_orchardServices.WorkContext.CurrentSite.As<WebServiceSettingsPart>().LogWebservice) {
+                    Logger.Error(cr.Content.ToString());
+                }
+                return cr;
             }
-            return cr;
+            catch {
+                return new HttpStatusCodeResult(500);
+            }
         }
 
         //
@@ -498,6 +506,9 @@ namespace Laser.Orchard.WebServices.Controllers {
                     dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
                     //nameDynamicJsonArray = "List<generic>";
                     if (ExtertalFields.ContentObject != null) {
+                        if (ExtertalFields.ContentObject.GetType() == typeof(ExternalFieldRemoteException)) {
+                            throw new ExternalFieldRemoteException();
+                        }
                         projectionDump = dumper.Dump(cleanobj(ExtertalFields.ContentObject), ExtertalFields.Name, "List<generic>");
                         JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                     }
