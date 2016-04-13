@@ -7,7 +7,7 @@
     @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete" })
     @Html.HiddenFor(m => m.Id)
 
-    @Html.TextBoxFor(m => m.TypeName, new { placeholder = T("Name"), @class = "text small" })
+    @Html.TextBoxFor(m => m.TypeName, new { placeholder = T("Name"), @class = "text medium" })
     @Html.TextBoxFor(m => m.TypeCssClass, new { placeholder = T("Css Class Name"), @class = "text medium" })
     @Html.TextBoxFor(m => m.Priority, new { placeholder = T("Order"), @class = "text medium" })
     <i class="fa fa-times" style="color: red"></i>

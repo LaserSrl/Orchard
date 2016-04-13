@@ -44,18 +44,18 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Models {
     }
     public class ExternalApplication {
 
-        [ValidateExternalApplicationAttribute]
+        [ValidateExternalApplication]
         public string Name { get; set; }
 
-        [ValidateExternalApplicationAttribute]
+        [ValidateExternalApplication]
         public string ApiKey { get; set; }
 
         public bool Delete { get; set; }
 
     }
 
-    public class ValidateExternalApplicationAttribute : ValidationAttribute {
-        public ValidateExternalApplicationAttribute() {
+    public class ValidateExternalApplication : ValidationAttribute {
+        public ValidateExternalApplication() {
             T = NullLocalizer.Instance;
         }
         public Localizer T { get; set; }
