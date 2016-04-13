@@ -1,0 +1,27 @@
+﻿@{
+    if (String.IsNullOrWhiteSpace(WorkContext.HttpContext.Request.QueryString["termids"])) {
+        string[] categorieApp;
+        if (String.IsNullOrWhiteSpace(WorkContext.HttpContext.Request.QueryString["lang"]) || WorkContext.HttpContext.Request.QueryString["lang"].ToLower() == "it-it") {
+
+            categorieApp = new string[] { "980a70a6-3731-4a99-a63e-3848a1586e0e", //1
+                "c35bebe1-9b32-4b45-af7e-93a135b4b9b0",//2
+                "64a08a8b-7f39-449e-a815-ebc8df7e9b86,e3c592fa-313f-42a0-a995-2bc172ef96ed",//3
+                "4ffebbaf-904d-4dcd-a189-4d943e537e25",//4
+                "f1c0ffa8-80ea-4221-ae76-67612396c0f2,df943e38-d03d-4330-9dea-23f3fc619113"//5
+            };
+        } else {
+            categorieApp = new string[] {
+                "f2c814f5-a44f-4423-b5d8-8cc81b6bad8d",
+                "b4ee3901-b655-4c49-8d7d-2491cda12281",
+                "c7055d79-f8be-42d0-93be-dd180688954d",
+                "d9013875-c2d2-427f-b0cf-eb24e4339fcc",
+                "611b6399-0ca7-42fc-805f-d1969ac45bcc",
+                "04527fd3-8f61-4490-8d53-ebbc421368ec",
+                "20c62a85-77b8-468b-9895-e2150fbbfd94" 
+        	};
+        }
+    @Html.Raw(String.Join(",", categorieApp));
+    } else {
+    @Html.Raw(WorkContext.HttpContext.Request.QueryString["termids"])
+    }
+}

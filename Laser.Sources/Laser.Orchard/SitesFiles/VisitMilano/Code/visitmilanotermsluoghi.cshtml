@@ -1,0 +1,43 @@
+﻿@{
+    if (String.IsNullOrWhiteSpace(WorkContext.HttpContext.Request.QueryString["termids"])) {
+        string[] categorieApp;
+        if (String.IsNullOrWhiteSpace(WorkContext.HttpContext.Request.QueryString["lang"]) || WorkContext.HttpContext.Request.QueryString["lang"].ToLower() == "it-it") {
+
+            categorieApp = new string[] { "5ce6bc7b-e7ac-4745-a2f3-d79cc8151b9a,7bc76450-dd0f-4973-a22c-e246ceff4e12,eb4cd826-c8f5-460f-ab97-41261692b5de,bacba4d2-5fc0-4653-9da3-73e616bc2151", //1
+                 "e8429977-e95f-48dc-8f2d-f769cd404c29",//2
+                 "4a5a1e59-131a-41fc-98c0-2110a203638a,ea46c043-bbb4-425d-b7d8-b7cd086fd36c,abdbb074-8672-44f9-9325-581d8f05d843,503c0c5b-7de5-411f-afa1-8dc7045b3001,dd394c29-c4ea-4b86-be45-14d70ce66da9,cca07c92-8245-4501-83bf-f894b4b4f311,abe5672a-93b9-4d0a-9aa9-ff436c6a60df,211ea734-92c8-4fe8-8a19-e5dec03553ac",//3
+                 "396967af-69a8-4e1b-94ee-5d81221dfd4b,ae733080-4f34-4928-8084-6d6f5dc16373,3048f7af-8320-411e-bcfc-b4d0f8819e34,396f8983-5da0-4a8e-bb50-56de5c9a5a57",//4
+                 "79bcc58c-e020-4fd8-9490-b766d247899b,44af3145-900e-4dee-9264-8d89c00aa2d9",//5
+                 "ae661299-5176-4ae5-a20b-132a4e689234,27dc4374-e967-4eaa-ad9d-9e7fc9c349b5"//6
+             };
+        } else {
+            categorieApp = new string[] {
+                "db483dd6-d194-431f-80ae-6d30168a5c11",
+                "ad60fbfd-8404-41a2-b7bf-60bb15f1cac3",
+                "8bf5938d-2c29-4da6-a72a-653e4a49fd44",
+                "6b6fde4d-c081-4ec1-8e29-59bdfeb6f26a",
+                "c484943e-42e3-4d71-9e3c-c7311764ee18",
+                "115b6e3b-e7b5-4342-a545-a475dd9dee6a",
+                "3fb745c9-9a0a-48a7-a9d5-e902f752d858",
+                "3dc7c62f-f26f-4a06-b3fc-5e4bd3785bf8",
+                "9f11c0e4-03a1-461c-bb29-3dc1a4ff4e2b",
+                "975bad34-08e4-4a7e-af37-4da20207d575",
+                "5e74f658-3601-4c2e-8b69-18eb9d6ab4a7",
+                "61fa6e70-7355-4d8f-ac55-b7a785867cc5",
+                "ddedfc1d-b395-4583-a8fb-487c99b9a963",
+                "9b690a22-38d5-4b5e-a133-8fe9cb7d655f",
+                "812dc9c7-c335-47c7-8374-3667c23b244a",
+                "0e821647-2722-452c-9226-832c409fc9d2",
+                "a1e854dc-22f6-4968-aba9-ea78b1e01408",
+                "3ebe7981-fb0c-4b23-8484-10a44df911e7",
+                "f12af236-c9a1-4f7d-8dc9-1e778aeb0145",
+                "226c8aee-fdf2-415b-8e47-db7de17c7e72",
+                "70261f68-cd1f-4028-bd30-2ff37922c890",
+                "3647a8db-43e3-4ca1-bb22-aadb84ea401d" 
+        			};
+        }
+    @Html.Raw(String.Join(",", categorieApp));
+    } else {
+    @Html.Raw(WorkContext.HttpContext.Request.QueryString["termids"])
+    }
+}
