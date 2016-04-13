@@ -5,7 +5,7 @@
 @model dynamic
 @{ 
     Layout.Title = "Back Office - " + WorkContext.CurrentSite.SiteName;
-    var folderStylePath = "~/ThemesAdmin/KrakeAdmin/Styles";
+    var folderStylePath = Url.Content("~/Themes/KrakeAdmin/Styles");
 }
 <section class="dashboard group">
     <h2 class="claim">@T("MyKrake&#8482; - UN'UNICA PIATTAFORMA PER PIÙ CANALI DI COMUNICAZIONE")</>
