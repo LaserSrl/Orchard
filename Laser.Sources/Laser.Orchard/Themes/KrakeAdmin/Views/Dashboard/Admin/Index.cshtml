@@ -1,7 +1,11 @@
-﻿@model dynamic
+﻿@using Orchard.Mvc.Html;
+@using Orchard.UI.Resources;
+@using Orchard.Environment.Configuration
+
+@model dynamic
 @{ 
     Layout.Title = "Back Office - " + WorkContext.CurrentSite.SiteName;
-    var folderStylePath = "/Laser.Orchard/Themes/KrakeAdmin/Styles";
+    var folderStylePath = "~/ThemesAdmin/KrakeAdmin/Styles";
 }
 <section class="dashboard group">
     <h2 class="claim">@T("MyKrake&#8482; - UN'UNICA PIATTAFORMA PER PIÙ CANALI DI COMUNICAZIONE")</>
@@ -66,7 +70,7 @@
                             <img class="img-responsive icone-bianche" src="@folderStylePath/Images/icona-mail-w.png">
                             <h2 class="titolo-icone">MAIL</h2>
                             <div class="clear"></div>
-                            <b>KRAKE&#8482;</b> potrà gestire, attraverso un ambiente di back office, campagne di marketing mirato, newsletter, ecc.
+                            <b>@T("KRAKE&#8482;")</b> @T("potrà gestire, attraverso un ambiente di back office, campagne di marketing mirato, newsletter, ecc.")
                                        
                         </div>
                         <div style="background-image: url('@folderStylePath/Images/bg-mail.png')" class="bg-piattaforma-fasi"></div>
@@ -74,18 +78,18 @@
                     <div style="background-color: #EEB377" id="app-home" class="tab-pane" role="tabpanel">
                         <div class="testo-piattaforma-fasi">
                             <img class="img-responsive icone-bianche" src="@folderStylePath/Images/icona-app-w.png">
-                            <h2 class="titolo-icone">APP MOBILE</h2>
+                            <h2 class="titolo-icone">@T("APP MOBILE")</h2>
                             <div class="clear"></div>
-                            <b>KRAKE&#8482;</b> permetterà di implementare e gestire più applicazioni mobile. 
+                            <b>@T("KRAKE&#8482;")</b> @T("permetterà di implementare e gestire più applicazioni mobile.") 
                         </div>
                         <div style="background-image: url('@folderStylePath/Images/bg-app.png')" class="bg-piattaforma-fasi"></div>
                     </div>
                     <div style="background-color: #D26774" id="web" class="tab-pane" role="tabpanel">
                         <div class="testo-piattaforma-fasi">
                             <img class="img-responsive icone-bianche" src="@folderStylePath/Images/icona-web-w.png">
-                            <h2 class="titolo-icone">WEB</h2>
+                            <h2 class="titolo-icone">@T("WEB")</h2>
                             <div class="clear"></div>
-                            <b>KRAKE&#8482;</b> permetterà di implementare e gestire più siti web dal design responsivo.
+                            <b>@T("KRAKE&#8482;")</b> @T("permetterà di implementare e gestire più siti web dal design responsivo.")
                                        
                         </div>
                         <div style="background-image: url('@folderStylePath/Images/bg-web.png')" class="bg-piattaforma-fasi"></div>
@@ -93,9 +97,9 @@
                     <div style="background-color: #447879" id="notifiche" class="tab-pane" role="tabpanel">
                         <div class="testo-piattaforma-fasi">
                             <img class="img-responsive icone-bianche" src="@folderStylePath/Images/icona-notifiche-w.png">
-                            <h2 class="titolo-icone">NOTIFICHE PUSH</h2>
+                            <h2 class="titolo-icone">@T("NOTIFICHE PUSH")</h2>
                             <div class="clear"></div>
-                            Con <b>KRAKE&#8482;</b>, l'app sarà sempre viva e attiva: notifiche push, anche personalizzate, garantiranno comunicazioni precise, puntuali e mirate
+                            @T("Con") <b>@T("KRAKE&#8482;")</b>, @T("l'app sarà sempre viva e attiva: notifiche push, anche personalizzate, garantiranno comunicazioni precise, puntuali e mirate")
                                        
                         </div>
                         <div style="background-image: url('@folderStylePath/Images/bg-notifiche.png')" class="bg-piattaforma-fasi"></div>
@@ -105,7 +109,7 @@
                             <img class="img-responsive icone-bianche" src="@folderStylePath/Images/icona-sms-w.png">
                             <h2 class="titolo-icone">SMS</h2>
                             <div class="clear"></div>
-                            Attraverso <b>KRAKE&#8482;</b> sarà possibile gestire campagne di marketing e comunicazione via SMS: una soluzione di facile utilizzo e di veloce attivazione e configurazione.
+                           @T("Attraverso") <b>@T("KRAKE&#8482;")</b> @T("sarà possibile gestire campagne di marketing e comunicazione via SMS: una soluzione di facile utilizzo e di veloce attivazione e configurazione.")
                                        
                         </div>
                         <div style="background-image: url('@folderStylePath/Images/bg-sms.png')" class="bg-piattaforma-fasi"></div>
@@ -115,7 +119,7 @@
                             <img class="img-responsive icone-bianche" src="@folderStylePath/Images/icona-social-w.png">
                             <h2 class="titolo-icone">SOCIAL</h2>
                             <div class="clear"></div>
-                            Con <b>KRAKE&#8482;</b> sarà possibile gestire flussi di comunicazione integrata attraverso i profili social.
+                            @T("Con") <b>@T("KRAKE&#8482;")</b> @T("sarà possibile gestire flussi di comunicazione integrata attraverso i profili social.")
                         </div>
                         <div style="background-image: url('@folderStylePath/Images/bg-social.png')" class="bg-piattaforma-fasi"></div>
                     </div>
