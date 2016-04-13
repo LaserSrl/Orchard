@@ -23,7 +23,6 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
         string Execute(string codeFileWithExtension, IContent contentItem);
     }
 
-    [OrchardFeature("Laser.Orchard.StartupConfig.WorkflowExtensions")]
     public class RazorExecuteService : IRazorExecuteService {
         private readonly ShellSettings _shellSettings;
         private readonly IOrchardServices _orchardServices;
