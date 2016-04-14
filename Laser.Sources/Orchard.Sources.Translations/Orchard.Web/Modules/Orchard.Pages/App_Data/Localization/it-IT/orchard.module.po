@@ -1,0 +1,21 @@
+msgctxt "~/Modules/Orchard.Pages/Module.txt"
+msgid "Pages"
+msgstr "Pagine"
+
+msgctxt "~/Modules/Orchard.Pages/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il Team di Orchard"
+
+msgctxt "~/Modules/Orchard.Pages/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.Pages/Module.txt"
+msgid "Introduces a preconfigured page content type."
+msgstr "Introduce un Tipo di Contenuto preconfigurato per gestire le pagine."
+
+#: "Orchard.Pages.Commands.PageCommands"
+msgctxt "Orchard.Pages.Commands.PageCommands"
+msgid "Page created successfully."
+msgstr "Pagina creata con successo."
+

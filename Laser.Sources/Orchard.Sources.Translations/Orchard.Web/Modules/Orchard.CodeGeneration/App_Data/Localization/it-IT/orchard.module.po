@@ -1,0 +1,126 @@
+msgctxt "~/Modules/Orchard.CodeGeneration/Module.txt"
+msgid "Code Generation"
+msgstr "Generazione di codice"
+
+msgctxt "~/Modules/Orchard.CodeGeneration/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il team di Orchard"
+
+msgctxt "~/Modules/Orchard.CodeGeneration/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.CodeGeneration/Module.txt"
+msgid "Tools to create Orchard components."
+msgstr "Strumenti per creare componenti per Orchard."
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Creating Data Migration for {0}"
+msgstr "Creazione migrazione dati per {0} in corso"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Creating data migration failed: target Feature {0} could not be found."
+msgstr "Creazione della migrazione dati fallita: la Funzionalità di destinazione {0} non è stata trovata."
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Data migration already exists in target Module {0}."
+msgstr "La migrazione dati esiste giá nel Modulo di destinazione {0}."
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Data migration created successfully in Module {0}"
+msgstr "Migrazione dati creata con successo nel Modulo {0}"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Creating Module {0}"
+msgstr "Creazione Modulo {0} in corso"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Creating Module {0} failed: a module of the same name already exists"
+msgstr "Creazione Modulo {0} fallita: esiste giá un modulo con lo stesso nome"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Module {0} created successfully"
+msgstr "Modulo {0} creato con successo"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Creating module tests project {0}"
+msgstr "Creazione progetto test per il modulo {0}"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Creating module tests project {0} failed: a project of the same name already exists"
+msgstr "Creazione progetto test per il modulo {0} non riuscito: un progetto dello stesso nome esiste già"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Module tests project {0} created successfully"
+msgstr "Progetto test per il modulo {0} creato con successo"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Creating Theme {0}"
+msgstr "Creazione Tema {0} in corso"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Creating Theme {0} failed: an extention of the same name already exists"
+msgstr "Creazione Tema {0} fallita: esiste giá un estensione con lo stesso nome"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Creating Theme {0} failed: base theme named {1} was not found."
+msgstr "Creazione Tema {0} fallita: impossibile trovare il tema base col nome {0}."
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Theme {0} created successfully"
+msgstr "Tema {0} creato con successo"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Creating Controller {0} in Module {1}"
+msgstr "Creazione Controller {0} nel Modulo {1} in corso"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Creating Controller {0} failed: target Module {1} could not be found."
+msgstr "Creazione Controller {0} non riuscita: impossibile trovare il Modulo di destinazione {0}."
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Controller {0} already exists in target Module {1}."
+msgstr "Il Controller {0} giá presente nel Modolo di destinazione {1}."
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Controller {0} created successfully in Module {1}"
+msgstr "Controller {0} creato con successo nel Modulo {1}"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Warning: Orchard.Themes project file could not be found at {0}"
+msgstr "Attenzione: Impossibile trovare il file di progetto Orchard.Themes project {0}"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Warning: Unable to modify Orchard.Themes project file at {0}"
+msgstr "Attenzione: Impossibile modificare il progetto Orchard.Themes {0}"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "Warning: Solution file could not be found at {0}"
+msgstr "Attenzione: Impossibile trovare il file Solution {0}"
+
+#: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
+msgid "An unexpected error occured while trying to refresh the Visual Studio solution. Please reload it."
+msgstr "Un errore non previsto é avvenuto ricaricando la solution di Visual Studio. Ricaricala manualmente."
+

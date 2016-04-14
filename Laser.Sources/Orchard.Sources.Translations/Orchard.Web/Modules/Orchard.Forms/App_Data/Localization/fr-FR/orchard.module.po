@@ -1,0 +1,22 @@
+#. "Orchard.Forms.Name"
+msgctxt "~/Modules/Orchard.Forms/Module.txt"
+msgid "Forms"
+msgstr "Formulaires"
+
+msgctxt "~/Modules/Orchard.Forms/Module.txt"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+msgctxt "~/Modules/Orchard.Forms/Module.txt"
+msgid "http://orchardforms.codeplex.com"
+msgstr "http://orchardforms.codeplex.com"
+
+#. "Orchard.Forms.Description"
+msgctxt "~/Modules/Orchard.Forms/Module.txt"
+msgid "Provides a system to publish and alter html forms."
+msgstr "Permet la publication et la modification de forumulaires."
+
+msgctxt "~/Modules/Orchard.Forms/Module.txt"
+msgid "Developer"
+msgstr "Développeur"
+

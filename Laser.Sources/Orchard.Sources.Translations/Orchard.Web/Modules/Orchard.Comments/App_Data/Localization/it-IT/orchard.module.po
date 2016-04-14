@@ -1,0 +1,812 @@
+#. "Orchard.Comments.Name"
+msgctxt "~/Modules/Orchard.Comments/Module.txt"
+msgid "Comments"
+msgstr "Commenti"
+
+msgctxt "~/Modules/Orchard.Comments/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il Team di Orchard"
+
+msgctxt "~/Modules/Orchard.Comments/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.Comments/Module.txt"
+msgid "The comments system implemented by this module can be applied to arbitrary Orchard content types, such as blogs and pages. It includes comment validation and spam protection through the Akismet service."
+msgstr "Il sistema di gestione commenti implementato da questo modulo puó essere applicato a qualunque content type di Orchard, come i blog e le pagine. Include validazione e protezione anti-spam usando Akismet."
+
+msgctxt "~/Modules/Orchard.Comments/Module.txt"
+msgid "Standard content item comments."
+msgstr "Commenti standard agli elementi di contenuto."
+
+msgctxt "~/Modules/Orchard.Comments/Module.txt"
+msgid "Social"
+msgstr "Social"
+
+msgctxt "~/Modules/Orchard.Comments/Module.txt"
+msgid "Comments Workflows Activities"
+msgstr "Commenta le attività dei flussi di lavoro"
+
+msgctxt "~/Modules/Orchard.Comments/Module.txt"
+msgid "Provides workflow activities for comments management."
+msgstr "Fornisce attività di flussi di lavoro per la gestione dei commenti."
+
+msgctxt "~/Modules/Orchard.Comments/Module.txt"
+msgid "Workflows"
+msgstr "Flussi di lavoro"
+
+#: "Orchard.Comments.AdminMenu"
+msgctxt "Orchard.Comments.AdminMenu"
+msgid "Comments"
+msgstr "Commenti"
+
+#: "Orchard.Comments.AdminMenu"
+msgctxt "Orchard.Comments.AdminMenu"
+msgid "List"
+msgstr "Lista"
+
+#: "Orchard.Comments.Shapes"
+msgctxt "Orchard.Comments.Shapes"
+msgid "({0} pending)"
+msgstr "({0} in fase di approvazione)"
+
+#: "Orchard.Comments.Shapes"
+msgctxt "Orchard.Comments.Shapes"
+msgid "1 comment"
+msgstr "1 commento"
+
+#: "Orchard.Comments.Shapes"
+msgctxt "Orchard.Comments.Shapes"
+msgid "{0} comments"
+msgstr "{0} commenti"
+
+#: "Orchard.Comments.Activities.CloseCommentsActivity"
+msgctxt "Orchard.Comments.Activities.CloseCommentsActivity"
+msgid "Comments"
+msgstr "Commenti"
+
+#: "Orchard.Comments.Activities.CloseCommentsActivity"
+msgctxt "Orchard.Comments.Activities.CloseCommentsActivity"
+msgid "Closes the comments on the currently processed content item."
+msgstr "Chiudi i commenti sull'articolo che stai modificando."
+
+#. "Done"
+msgctxt "Orchard.Comments.Activities.CloseCommentsActivity"
+msgid "Done"
+msgstr "Operazione terminata"
+
+#. "Couldn't moderate comment"
+msgctxt "Orchard.Comments.Controllers.AdminController"
+msgid "Couldn't moderate comment"
+msgstr "Non è possibile moderare questo commento"
+
+#. "Couldn't delete comment"
+msgctxt "Orchard.Comments.Controllers.AdminController"
+msgid "Couldn't delete comment"
+msgstr "Impossibile cancellare questo commento"
+
+#: "Orchard.Comments.Controllers.AdminController"
+msgctxt "Orchard.Comments.Controllers.AdminController"
+msgid "Couldn't disable comments"
+msgstr "Impossibile disabilitare i commenti"
+
+#: "Orchard.Comments.Controllers.AdminController"
+msgctxt "Orchard.Comments.Controllers.AdminController"
+msgid "Couldn't enable comments"
+msgstr "Impossibile abilitare i commenti"
+
+#: "Orchard.Comments.Controllers.AdminController"
+msgctxt "Orchard.Comments.Controllers.AdminController"
+msgid "Couldn't edit comment"
+msgstr "Impossibile modificare questo commento"
+
+#: "Orchard.Comments.Controllers.AdminController"
+msgctxt "Orchard.Comments.Controllers.AdminController"
+msgid "Couldn't approve comment"
+msgstr "Impossibile approvare questo commento"
+
+#: "Orchard.Comments.Controllers.AdminController"
+msgctxt "Orchard.Comments.Controllers.AdminController"
+msgid "Couldn't unapprove comment"
+msgstr "Impossibile rimuove l'approvazione da questo commento"
+
+#: "Orchard.Comments.Controllers.CommentController"
+msgctxt "Orchard.Comments.Controllers.CommentController"
+msgid "Couldn't add comment"
+msgstr "Non è possibile aggiungere un commento"
+
+#: "Orchard.Comments.Controllers.CommentController"
+msgctxt "Orchard.Comments.Controllers.CommentController"
+msgid "Name is mandatory and must have less than 255 chars"
+msgstr "Il Nome è obbligatorio e non deve superare i 255 caratteri"
+
+#: "Orchard.Comments.Controllers.CommentController"
+msgctxt "Orchard.Comments.Controllers.CommentController"
+msgid "Email is invalid or is longer than 255 chars"
+msgstr "L'Email non è valida o supera i 255 caratteri"
+
+#: "Orchard.Comments.Controllers.CommentController"
+msgctxt "Orchard.Comments.Controllers.CommentController"
+msgid "Site url is invalid or is longer than 255 chars"
+msgstr "L'indirizzo del del sito non è valido o supera i 255 caratteri"
+
+#: "Orchard.Comments.Controllers.CommentController"
+msgctxt "Orchard.Comments.Controllers.CommentController"
+msgid "Comment is mandatory"
+msgstr "Il commento è obbligatorio"
+
+#. "Your comment has been posted."
+msgctxt "Orchard.Comments.Controllers.CommentController"
+msgid "Your comment has been posted."
+msgstr "Il tuo commento è stato pubblicato."
+
+#: "Orchard.Comments.Controllers.CommentController"
+msgctxt "Orchard.Comments.Controllers.CommentController"
+msgid "Your comment will appear after the site administrator approves it."
+msgstr "Il tuo commento apparirà dopo l'approvazione da parte dell'amministratore del sito."
+
+#: "Orchard.Comments.Controllers.CommentController"
+msgctxt "Orchard.Comments.Controllers.CommentController"
+msgid "Comment approved successfully"
+msgstr "Il commento è stato approvato"
+
+#: "Orchard.Comments.Controllers.CommentController"
+msgctxt "Orchard.Comments.Controllers.CommentController"
+msgid "Comment deleted successfully"
+msgstr "Il commento è stato eliminato"
+
+#: "Orchard.Comments.Controllers.CommentController"
+msgctxt "Orchard.Comments.Controllers.CommentController"
+msgid "Comment moderated successfully"
+msgstr "Il commento è stato moderato"
+
+#: "Orchard.Comments.Drivers.CommentPartDriver"
+msgctxt "Orchard.Comments.Drivers.CommentPartDriver"
+msgid "Couldn't moderate comment"
+msgstr "Non è possibile moderare il commento"
+
+#: "Orchard.Comments.Drivers.CommentPartDriver"
+msgctxt "Orchard.Comments.Drivers.CommentPartDriver"
+msgid "Comment successfully moderated."
+msgstr "Il commento è stato moderato."
+
+#: "Orchard.Comments.Drivers.CommentPartDriver"
+msgctxt "Orchard.Comments.Drivers.CommentPartDriver"
+msgid "Couldn't approve comment"
+msgstr "Non è possibile approvare il commento"
+
+#: "Orchard.Comments.Drivers.CommentPartDriver"
+msgctxt "Orchard.Comments.Drivers.CommentPartDriver"
+msgid "Comment approved."
+msgstr "Il commento è stato approvato."
+
+#: "Orchard.Comments.Drivers.CommentPartDriver"
+msgctxt "Orchard.Comments.Drivers.CommentPartDriver"
+msgid "Couldn't delete comment"
+msgstr "Non è possibilie eliminare il commento"
+
+#: "Orchard.Comments.Drivers.CommentPartDriver"
+msgctxt "Orchard.Comments.Drivers.CommentPartDriver"
+msgid "Comment successfully deleted."
+msgstr "Il commento è stato eliminato."
+
+#: "Orchard.Comments.Drivers.CommentPartDriver"
+msgctxt "Orchard.Comments.Drivers.CommentPartDriver"
+msgid "Comment saved."
+msgstr "Il Commento è stato salvato."
+
+#: "Orchard.Comments.Drivers.CommentPartDriver"
+msgctxt "Orchard.Comments.Drivers.CommentPartDriver"
+msgid "Name is mandatory"
+msgstr "Il Nome è obbligatorio"
+
+#: "Orchard.Comments.Feeds.CommentFeedItemBuilder"
+msgctxt "Orchard.Comments.Feeds.CommentFeedItemBuilder"
+msgid "Comment on {0} by {1}"
+msgstr "Commento su {0} di {1}"
+
+#: "Orchard.Comments.Handlers.CommentSettingsPartHandler"
+msgctxt "Orchard.Comments.Handlers.CommentSettingsPartHandler"
+msgid "Comments"
+msgstr "Commenti"
+
+#. "Comments"
+msgctxt "Orchard.Comments.Projections.CommentsFilter"
+msgid "Comments"
+msgstr "Commenti"
+
+#. "Has comments"
+msgctxt "Orchard.Comments.Projections.CommentsFilter"
+msgid "Has Comments"
+msgstr "Ha dei commenti"
+
+#: "Orchard.Comments.Projections.CommentsFilter"
+msgctxt "Orchard.Comments.Projections.CommentsFilter"
+msgid "Commented content items"
+msgstr "Elementi di contenuto commentati"
+
+#. "Close Comments"
+msgctxt "Orchard.Comments.Rules.CommentsActions"
+msgid "Close comments"
+msgstr "Chiudi i commenti"
+
+#. "Comments"
+msgctxt "Orchard.Comments.Rules.CommentsActions"
+msgid "Comments"
+msgstr "Commenti"
+
+#: "Orchard.Comments.Rules.CommentsActions"
+msgctxt "Orchard.Comments.Rules.CommentsActions"
+msgid "Closes comments on a content item."
+msgstr "Commenti chiusi per l'elemento di contenuto."
+
+#: "Orchard.Comments.Rules.CommentsForms"
+msgctxt "Orchard.Comments.Rules.CommentsForms"
+msgid "Content Item Id"
+msgstr "ID contenuto"
+
+#: "Orchard.Comments.Rules.CommentsForms"
+msgctxt "Orchard.Comments.Rules.CommentsForms"
+msgid "Content Item Id."
+msgstr "Id dell'elemento di contenuto."
+
+#. "Comments"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "Comments"
+msgstr "Commenti"
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "Commented On"
+msgstr "Commentato il"
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "The content item this comment was created on."
+msgstr "L'elemento di contenuto su cui questo commento è stato creato."
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "Comment Message"
+msgstr "Messaggio del Commento"
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "The text of the comment itself"
+msgstr "Il testo del commento stesso"
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "Comment Author"
+msgstr "Autore del Commento"
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "The author of the comment."
+msgstr "L'autore del commento."
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "Comment Author Url"
+msgstr "Url dell'autore del commento"
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "The url provided by the author of the comment."
+msgstr "Indirizzo della pagina dell'autore commento."
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "Comment Author Email"
+msgstr "Email dell'autore del commento"
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "The email provided by the author of the comment."
+msgstr "L'email fornita dall'autore del commento"
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "Comment approval Url"
+msgstr "Pagina approvazione Commento"
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "The absolute url to follow in order to approve this comment."
+msgstr "Pagina web per l'approvazione di questo commento."
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "Comment moderation Url"
+msgstr "Pagina moderazione commento"
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "The absolute url to follow in order to moderate this comment."
+msgstr "Pagina web per la moderazione di questo commento."
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "Comment deletion Url"
+msgstr "Pagina eliminazione commento"
+
+#: "Orchard.Comments.Tokens.CommentTokens"
+msgctxt "Orchard.Comments.Tokens.CommentTokens"
+msgid "The absolute url to follow in order to delete this comment."
+msgstr "Pagina web per l'eliminazione del commento"
+
+#: "~/Modules/Orchard.Comments/Views/CommentMetadata.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/CommentMetadata.cshtml"
+msgid "said"
+msgstr "ha detto"
+
+#: "~/Modules/Orchard.Comments/Views/CommentReplyButton.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/CommentReplyButton.cshtml"
+msgid "Reply"
+msgstr "Rispondi"
+
+#: "~/Modules/Orchard.Comments/Views/Parts.Comment.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.Comment.SummaryAdmin.cshtml"
+msgid "Approve"
+msgstr "Approva"
+
+#: "~/Modules/Orchard.Comments/Views/Parts.Comment.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.Comment.SummaryAdmin.cshtml"
+msgid "Unapprove"
+msgstr "Disapprova"
+
+#: "~/Modules/Orchard.Comments/Views/Parts.Comment.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.Comment.SummaryAdmin.cshtml"
+msgid " | "
+msgstr " | "
+
+#: "~/Modules/Orchard.Comments/Views/Parts.CommentForm.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.CommentForm.cshtml"
+msgid "Comments have been disabled for this content."
+msgstr "I commenti sono stati disabilitati per questo elemento."
+
+#: "~/Modules/Orchard.Comments/Views/Parts.CommentForm.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.CommentForm.cshtml"
+msgid "You must be authenticated in order to add a comment."
+msgstr "Devi essere autenticato per aggiungere un commento."
+
+#: "~/Modules/Orchard.Comments/Views/Parts.CommentForm.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.CommentForm.cshtml"
+msgid "Add a Comment"
+msgstr "Aggiungi un commento"
+
+#: "~/Modules/Orchard.Comments/Views/Parts.CommentForm.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.CommentForm.cshtml"
+msgid "You must {0} to comment."
+msgstr "Devi {0} per commentare."
+
+#: "~/Modules/Orchard.Comments/Views/Parts.CommentForm.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.CommentForm.cshtml"
+msgid "log on"
+msgstr "Accedi"
+
+#: "~/Modules/Orchard.Comments/Views/Parts.CommentForm.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.CommentForm.cshtml"
+msgid "Submit Comment"
+msgstr "Invia commento"
+
+#: "~/Modules/Orchard.Comments/Views/Parts.Comments.Count.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.Comments.Count.cshtml"
+msgid "No Comments"
+msgstr "Nessun commento"
+
+#: "~/Modules/Orchard.Comments/Views/Parts.Comments.Count.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.Comments.Count.cshtml"
+msgid "1 Comment"
+msgstr "Un commento"
+
+#: "~/Modules/Orchard.Comments/Views/Parts.Comments.Count.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.Comments.Count.SummaryAdmin.cshtml"
+msgid " | "
+msgstr " | "
+
+#: "~/Modules/Orchard.Comments/Views/Parts.ListOfComments.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.ListOfComments.cshtml"
+msgid "No Comments"
+msgstr "Nessun commento"
+
+#: "~/Modules/Orchard.Comments/Views/Parts.ListOfComments.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Parts.ListOfComments.cshtml"
+msgid "1 Comment"
+msgstr "1 commento"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Comments for {0}"
+msgstr "Commenti per {0}"
+
+#. "Enable Comments"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Enable Comments"
+msgstr "Abilita i Commenti"
+
+#. "Disable Comments"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Disable Comments"
+msgstr "Disabilita i Commenti"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Actions:"
+msgstr "Azioni:"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Choose action..."
+msgstr "Segli l'azione..."
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Approve"
+msgstr "Approva"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Unapprove"
+msgstr "Rimuovi Approvazione"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+#. "Apply"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Apply"
+msgstr "Salva"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Filter:"
+msgstr "Filtro:"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "All Comments"
+msgstr "Tutti i Commenti"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Approved Comments"
+msgstr "Commenti Approvati"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Pending Comments"
+msgstr "Commenti da Approvare"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "This is a table of the comments for the content item"
+msgstr "Questa é la tabella dei commenti sul tuo contenuto"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Status"
+msgstr "Stato"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Author"
+msgstr "Autore"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Comment"
+msgstr "Commento"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Date"
+msgstr "Data"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Pending"
+msgstr "Da Approvare"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Approved"
+msgstr "Approvato"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid " ..."
+msgstr " ..."
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Edit Comment"
+msgstr "Modifica Commento"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Details.cshtml"
+msgid "Edit"
+msgstr "Modifica"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Edit.cshtml"
+msgid "Edit Comment"
+msgstr "Modifica commento"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Comments"
+msgstr "Commenti"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Actions:"
+msgstr "Azioni:"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Choose action..."
+msgstr "Scegli l'azione..."
+
+#. "Approve"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Approve"
+msgstr "Approva"
+
+#. "Unapprove"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Unapprove"
+msgstr "Rimuovi approvazione"
+
+#. "Delete"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+#. "Apply"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Apply"
+msgstr "Salva"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Filter:"
+msgstr "Filtro:"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "All Comments"
+msgstr "Tutti i commenti"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Approved Comments"
+msgstr "Commenti approvati"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Pending Comments"
+msgstr "Commenti da approvare"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "This is a table of the comments in your application"
+msgstr "Questa é la taballa coi commenti nella tua applicazione"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Status"
+msgstr "Stato"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Author"
+msgstr "Autore"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Comment"
+msgstr "Commento"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Commented On"
+msgstr "Commento su"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Actions"
+msgstr "Azione"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Pending"
+msgstr "In corso di approvazione"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Approved"
+msgstr "Approvato"
+
+#: "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "[Empty]"
+msgstr "[Vuoto]"
+
+#. " | "
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid " | "
+msgstr " | "
+
+#. "Edit"
+msgctxt "~/Modules/Orchard.Comments/Views/Admin/Index.cshtml"
+msgid "Edit"
+msgstr "Modifica"
+
+#: "~/Modules/Orchard.Comments/Views/DefinitionTemplates/CommentsPartSettings.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/DefinitionTemplates/CommentsPartSettings.cshtml"
+msgid "Use threaded comments by default"
+msgstr "Utilizzare i commenti collegati per impostazione predefinita"
+
+#: "~/Modules/Orchard.Comments/Views/DefinitionTemplates/CommentsPartSettings.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/DefinitionTemplates/CommentsPartSettings.cshtml"
+msgid "Users must be authenticated to comment"
+msgstr "Gli utenti devono essere autenticati per commentare"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgid "The author's name."
+msgstr "Il nome dell'autore."
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgid "Email"
+msgstr "Email"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgid "The email address the author has provided with the comment."
+msgstr "L'indirizzo email dell'autore che ha fornito con il commento."
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgid "Url"
+msgstr "Pagina web"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgid "The website url the author has provided with the comment."
+msgstr "Sito web dell'autore che ha fornito con il commento."
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgid "Comment"
+msgstr "Commento"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgid "The body of the comment."
+msgstr "Il corpo del commento."
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgid "Save"
+msgstr "Salva"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgid "Moderate"
+msgstr "Moderato"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.AdminEdit.cshtml"
+msgid "Approve"
+msgstr "Approva"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.cshtml"
+msgid "Add a Comment"
+msgstr "Aggiungi un commento"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.cshtml"
+msgid "Email"
+msgstr "Email"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.cshtml"
+msgid "Url"
+msgstr "Pagina web"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.cshtml"
+msgid "Hi, {0}!"
+msgstr "Ciao, {0}!"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comment.cshtml"
+msgid "Comment"
+msgstr "Commento"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgid "Comments"
+msgstr "Commenti"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgid "Show comments"
+msgstr "Visualizza commenti"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgid "Enable to show the existing comments."
+msgstr "Permetti di visualizzare i commenti esistenti."
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgid "Allow new comments"
+msgstr "Permetti nuovi commenti"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgid "Enable to show the comment form. Disabling still allows the existing comments to be shown but does not allow the conversation to continue."
+msgstr "Abilita per mostrare il modulo per i commenti. Disabilitandolo i commenti esistenti saranno ancora mostrati, ma non sarà più possibile continuare la conversazione."
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgid "Allow threaded comments"
+msgstr "Consenti i commenti collegati"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.Comments.cshtml"
+msgid "Enable to allow users to answer directly to other comments."
+msgstr "Consenti agli utenti di rispondere direttamente ad altri commenti."
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.SiteSettings.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.SiteSettings.cshtml"
+msgid "Comments"
+msgstr "Commenti"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.SiteSettings.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.SiteSettings.cshtml"
+msgid "Comments must be approved before they appear"
+msgstr "I commenti devono essere approvati prima della pubblicazione"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.SiteSettings.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.SiteSettings.cshtml"
+msgid "Check if you want to manually approve comments before they can be displayed."
+msgstr "Seleziona se vuoi approvare manualmente i commenti prima che possano essere visualizzati."
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.SiteSettings.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.SiteSettings.cshtml"
+msgid "Automatically close comments after"
+msgstr "Chiudi automaticamente i commenti dopo"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.SiteSettings.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.SiteSettings.cshtml"
+msgid "days"
+msgstr "giorni"
+
+#: "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.SiteSettings.cshtml"
+msgctxt "~/Modules/Orchard.Comments/Views/EditorTemplates/Parts.Comments.SiteSettings.cshtml"
+msgid "Number of days after comments are automatically closed. Leave to 0 to have them always available."
+msgstr "Numero di giorni trascorsi i quali i commenti saranno chiusi automaticamente. Lasciare a 0 per averli sempre disponibili."
+

@@ -1,0 +1,287 @@
+#. "Orchard.Tags.Name"
+msgctxt "~/Modules/Orchard.Tags/Module.txt"
+msgid "Tags"
+msgstr "Étiquettes"
+
+msgctxt "~/Modules/Orchard.Tags/Module.txt"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+msgctxt "~/Modules/Orchard.Tags/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.Tags/Module.txt"
+msgid "The tags module is providing basic tagging for arbitrary content types."
+msgstr "Le module Étiquettes fournit une fonctionnalité rudimentaire d'étiquetage pour des contenus de tous types."
+
+#. "Orchard.Tags.TagCloud.Category"
+msgctxt "~/Modules/Orchard.Tags/Module.txt"
+msgid "Navigation"
+msgstr "Navigation"
+
+msgctxt "~/Modules/Orchard.Tags/Module.txt"
+msgid "Tags Feeds"
+msgstr "Tags RSS"
+
+msgctxt "~/Modules/Orchard.Tags/Module.txt"
+msgid "Adds tags to the RSS feeds."
+msgstr "Ajoute des balises aux fils RSS."
+
+msgctxt "~/Modules/Orchard.Tags/Module.txt"
+msgid "Syndication"
+msgstr "Syndication"
+
+msgctxt "~/Modules/Orchard.Tags/Module.txt"
+msgid "Tag Cloud"
+msgstr "Nuage de Tags"
+
+msgctxt "~/Modules/Orchard.Tags/Module.txt"
+msgid "Adds a tag cloud widget."
+msgstr "Ajoute un widget nuage de Tags."
+
+#: "Orchard.Tags.AdminMenu"
+msgctxt "Orchard.Tags.AdminMenu"
+msgid "Tags"
+msgstr "Étiquettes"
+
+#: "Orchard.Tags.AdminMenu"
+msgctxt "Orchard.Tags.AdminMenu"
+msgid "List"
+msgstr "Liste"
+
+#: "Orchard.Tags.Controllers.AdminController"
+msgctxt "Orchard.Tags.Controllers.AdminController"
+msgid "Can't manage tags"
+msgstr "Impossible de gérer les étiquettes"
+
+#: "Orchard.Tags.Controllers.AdminController"
+msgctxt "Orchard.Tags.Controllers.AdminController"
+msgid "Couldn't delete tag"
+msgstr "L'étiquette n'a pas pu être effacée."
+
+#: "Orchard.Tags.Controllers.AdminController"
+msgctxt "Orchard.Tags.Controllers.AdminController"
+msgid "Couldn't create tag"
+msgstr "L'étiquette n'a pas pau être créée"
+
+#: "Orchard.Tags.Controllers.AdminController"
+msgctxt "Orchard.Tags.Controllers.AdminController"
+msgid "The tag \"{0}\" could not be added because it contains forbidden chars: {1}"
+msgstr "Le tag \"{0}\" n'a pas pu être ajouté parce qu'il contient des caractères interdits : {1}"
+
+#: "Orchard.Tags.Controllers.AdminController"
+msgctxt "Orchard.Tags.Controllers.AdminController"
+msgid "Couldn't edit tag"
+msgstr "L'étiquette n'a pas pu être modifiée."
+
+#: "Orchard.Tags.Controllers.AdminController"
+msgctxt "Orchard.Tags.Controllers.AdminController"
+msgid "The tag \"{0}\" could not be modified because it contains forbidden chars: {1}"
+msgstr "Le tag \"{0}\" n'a pas pu être modifié parce qu'il contient des caractères interdits : {1}"
+
+#: "Orchard.Tags.Controllers.AdminController"
+msgctxt "Orchard.Tags.Controllers.AdminController"
+msgid "Couldn't remove tag"
+msgstr "L'étiquette n'a pas pu être enlevée."
+
+#: "Orchard.Tags.Controllers.AdminController"
+msgctxt "Orchard.Tags.Controllers.AdminController"
+msgid "Not authorized to fetch tags"
+msgstr "Non autorisé à recueillir les tags"
+
+#: "Orchard.Tags.Drivers.TagsPartDriver"
+msgctxt "Orchard.Tags.Drivers.TagsPartDriver"
+msgid "The tags \"{0}\" could not be added because they contain forbidden chars: {1}"
+msgstr "Les étiquettes \"{0}\" n'ont pas pu être ajoutées parce qu'elles contiennent des caractères interdits : {1}"
+
+#. "Tags"
+msgctxt "Orchard.Tags.Projections.TagsFilter"
+msgid "Tags"
+msgstr "Étiquettes"
+
+#: "Orchard.Tags.Projections.TagsFilter"
+msgctxt "Orchard.Tags.Projections.TagsFilter"
+msgid "Has Tags"
+msgstr "A des tags"
+
+#: "Orchard.Tags.Projections.TagsFilter"
+msgctxt "Orchard.Tags.Projections.TagsFilter"
+msgid "Tagged content items"
+msgstr "Eléments de contenu étiquettés"
+
+#: "Orchard.Tags.Projections.TagsFilter"
+msgctxt "Orchard.Tags.Projections.TagsFilter"
+msgid "Any tag"
+msgstr "N'importe quelle étiquette"
+
+#: "Orchard.Tags.Projections.TagsFilter"
+msgctxt "Orchard.Tags.Projections.TagsFilter"
+msgid "Tagged with {0}"
+msgstr "Etiquetter avec {0}"
+
+#: "Orchard.Tags.Projections.TagsFilterForms"
+msgctxt "Orchard.Tags.Projections.TagsFilterForms"
+msgid "Tags"
+msgstr "Étiquettes"
+
+#: "Orchard.Tags.Projections.TagsFilterForms"
+msgctxt "Orchard.Tags.Projections.TagsFilterForms"
+msgid "Select some tags."
+msgstr "Sélectionner des étiquettes."
+
+#: "Orchard.Tags.Projections.TagsFilterForms"
+msgctxt "Orchard.Tags.Projections.TagsFilterForms"
+msgid "Is one of"
+msgstr "Est un des tags"
+
+#: "Orchard.Tags.Projections.TagsFilterForms"
+msgctxt "Orchard.Tags.Projections.TagsFilterForms"
+msgid "Is all of"
+msgstr "Est tous les tags"
+
+#: "Orchard.Tags.Services.TagService"
+msgctxt "Orchard.Tags.Services.TagService"
+msgid "Couldn't rename tag: name was empty"
+msgstr "L'étiquette n'a pas pu être renommée : le nom était vide"
+
+#: "Orchard.Tags.Services.TagService"
+msgctxt "Orchard.Tags.Services.TagService"
+msgid "Error removing tag to content item: the content item has not been created yet."
+msgstr "Erreur lors de l'effacement de l'étiquette : le contenu n'a pas encore été créé."
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgid "Manage tag: {0}"
+msgstr "Gérer l'étiquette: {0}"
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgid "Tag Name"
+msgstr "Nom de l'étiquette"
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgid "Save"
+msgstr "Enregistrer"
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgid "Content items tagged with {0}"
+msgstr "Contenus étiquetés avec {0}"
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgid "There is nothing tagged with {0}"
+msgstr "Rien n'est étiqueté avec {0}."
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgid "Content Type"
+msgstr "Type de contenu"
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Edit.cshtml"
+msgid "Name"
+msgstr "Nom"
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgid "Tags"
+msgstr "Étiquettes"
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgid "Actions:"
+msgstr "Actions :"
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgid "Choose action..."
+msgstr "Choisissez une action..."
+
+#. "Delete"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgid "Delete"
+msgstr "Supprimer"
+
+#. "Apply"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgid "Apply"
+msgstr "Appliquer"
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgid "This is a table of the tags in your application"
+msgstr "Ceci est une liste des étiquettes de votre application."
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgid "Name"
+msgstr "Nom"
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgid "Edit"
+msgstr "Modifier"
+
+#: "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Admin/Index.cshtml"
+msgid " | "
+msgstr " | "
+
+#. "New Tag Name"
+msgctxt "~/Modules/Orchard.Tags/Views/EditorTemplates/Parts/CreateTag.cshtml"
+msgid "New Tag Name"
+msgstr "Nouveau nom d'étiquette"
+
+#: "~/Modules/Orchard.Tags/Views/EditorTemplates/Parts/CreateTag.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/EditorTemplates/Parts/CreateTag.cshtml"
+msgid "Add Tag"
+msgstr "Ajouter une étiquette"
+
+#: "~/Modules/Orchard.Tags/Views/EditorTemplates/Parts/TagCloud.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/EditorTemplates/Parts/TagCloud.cshtml"
+msgid "The number of buckets determines how many different sizes of tags will get rendered in the cloud."
+msgstr "Le nombre d'éléments détermine combien de tailles différentes de balises seront affichées dans le nuage."
+
+#: "~/Modules/Orchard.Tags/Views/EditorTemplates/Parts/TagCloud.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/EditorTemplates/Parts/TagCloud.cshtml"
+msgid "Enter the slug of the container for which you want the tag cloud, e.g. blog, /, or leave empty for the cloud to be scoped to the whole site. "
+msgstr "Entrer le slug du conteneur pour lequel vous voulez le nuage de Tags, par exemple, blog, /, ou laissez vide pour que le nuage soit sur l'ensemble du site. "
+
+#: "~/Modules/Orchard.Tags/Views/EditorTemplates/Parts/Tags.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/EditorTemplates/Parts/Tags.cshtml"
+msgid "Tags"
+msgstr "Étiquettes"
+
+#: "~/Modules/Orchard.Tags/Views/EditorTemplates/Parts/Tags.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/EditorTemplates/Parts/Tags.cshtml"
+msgid "Separate multiple tags with commas"
+msgstr "Séparer les étiquettes multiples avec des virgules."
+
+#: "~/Modules/Orchard.Tags/Views/Home/Index.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Home/Index.cshtml"
+msgid "Tags"
+msgstr "Étiquettes"
+
+#: "~/Modules/Orchard.Tags/Views/Home/Search.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Home/Search.cshtml"
+msgid "Tags"
+msgstr "Étiquettes"
+
+#: "~/Modules/Orchard.Tags/Views/Home/Search.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Home/Search.cshtml"
+msgid "Contents tagged with {0}"
+msgstr "Articles étiquetés avec {0}"
+
+#: "~/Modules/Orchard.Tags/Views/Home/Search.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Home/Search.cshtml"
+msgid "Contents tagged with <span>{0}</span>"
+msgstr "Articles étiquetés avec <span>{0}</span>"
+
+#: "~/Modules/Orchard.Tags/Views/Parts/Tags.ShowTags.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Parts/Tags.ShowTags.cshtml"
+msgid "Tags:"
+msgstr "Étiquettes :"
+
