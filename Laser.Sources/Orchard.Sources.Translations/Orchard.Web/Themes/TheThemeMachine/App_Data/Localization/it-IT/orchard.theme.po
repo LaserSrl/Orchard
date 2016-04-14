@@ -1,0 +1,40 @@
+msgctxt "~/Themes/TheThemeMachine/Theme.txt"
+msgid "The Theme Machine"
+msgstr "La macchina dei Temi"
+
+msgctxt "~/Themes/TheThemeMachine/Theme.txt"
+msgid "jowall, mibach, loudej, heskew"
+msgstr "jowall, mibach, loudej, heskew"
+
+msgctxt "~/Themes/TheThemeMachine/Theme.txt"
+msgid "Orchard Theme Machine is a flexible multi-zone theme that provides a solid foundation to build your site. It features 20 collapsible widget zones and is flexible enough to cover a wide range of layouts."
+msgstr "\"La macchina dei Temi\" è un tema flessibile multi-zona, che fornisce una solida base per creare il tuo sito. Contiene 20 zone per widget comprimibili ed è così flessibile d coprire una vasta gamma di impaginazioni."
+
+msgctxt "~/Themes/TheThemeMachine/Theme.txt"
+msgid "Awesome"
+msgstr "Fantastico"
+
+msgctxt "~/Themes/TheThemeMachine/Theme.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+#: "~/Themes/TheThemeMachine/Views/BadgeOfHonor.cshtml"
+msgctxt "~/Themes/TheThemeMachine/Views/BadgeOfHonor.cshtml"
+msgid "Powered by <a href=\"{0}\" target=\"_blank\">Orchard</a>"
+msgstr "Realizzato con <a href=\"{0}\" target=\"_blank\">Orchard</a>"
+
+#: "~/Themes/TheThemeMachine/Views/BadgeOfHonor.cshtml"
+msgctxt "~/Themes/TheThemeMachine/Views/BadgeOfHonor.cshtml"
+msgid "&#169; The Theme Machine 2010."
+msgstr "© 2010 La macchina dei Temi."
+
+#: "~/Themes/TheThemeMachine/Views/Pager.cshtml"
+msgctxt "~/Themes/TheThemeMachine/Views/Pager.cshtml"
+msgid "Newer"
+msgstr "Più nuovi"
+
+#: "~/Themes/TheThemeMachine/Views/Pager.cshtml"
+msgctxt "~/Themes/TheThemeMachine/Views/Pager.cshtml"
+msgid "Older"
+msgstr "Precedenti"
+

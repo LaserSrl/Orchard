@@ -1,0 +1,818 @@
+#. "PackagingServices.Category"
+#. "Gallery.Category"
+#. "Gallery.Updates.Category"
+msgctxt "~/Modules/Orchard.Packaging/Module.txt"
+msgid "Packaging"
+msgstr "Gestione pacchetti"
+
+msgctxt "~/Modules/Orchard.Packaging/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il Team di Orchard"
+
+msgctxt "~/Modules/Orchard.Packaging/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.Packaging/Module.txt"
+msgid "The packaging module enables packaging modules using the OPC format."
+msgstr "Il modulo di gestione pacchetti permette di creare pacchetti per i moduli usando il formato OPC."
+
+msgctxt "~/Modules/Orchard.Packaging/Module.txt"
+msgid "Packaging commands"
+msgstr "Comandi per la gestione dei pacchetti"
+
+msgctxt "~/Modules/Orchard.Packaging/Module.txt"
+msgid "Core services for packaging using the OPC format."
+msgstr "Servizi base per la gestione dei pacchetti usando il formato OPC."
+
+msgctxt "~/Modules/Orchard.Packaging/Module.txt"
+msgid "Gallery"
+msgstr "Galleria"
+
+msgctxt "~/Modules/Orchard.Packaging/Module.txt"
+msgid "Module gallery management."
+msgstr "Gestione della galleria dei moduli."
+
+msgctxt "~/Modules/Orchard.Packaging/Module.txt"
+msgid "Package Updates"
+msgstr "Aggiornamenti dei pacchetti"
+
+msgctxt "~/Modules/Orchard.Packaging/Module.txt"
+msgid "Manages updates for packages."
+msgstr "Gestisce gli aggiornamenti per i pacchetti."
+
+#: "Orchard.Packaging.AdminMenu"
+msgctxt "Orchard.Packaging.AdminMenu"
+msgid "Modules"
+msgstr "Moduli"
+
+#. "Gallery"
+msgctxt "Orchard.Packaging.AdminMenu"
+msgid "Gallery"
+msgstr "Galleria"
+
+#: "Orchard.Packaging.AdminMenu"
+msgctxt "Orchard.Packaging.AdminMenu"
+msgid "Themes"
+msgstr "Temi"
+
+#: "Orchard.Packaging.AdminMenu"
+msgctxt "Orchard.Packaging.AdminMenu"
+msgid "Settings"
+msgstr "Impostazioni"
+
+#. "Updates"
+msgctxt "Orchard.Packaging.AdminMenuGalleryUpdates"
+msgid "Updates"
+msgstr "Aggiornamenti"
+
+#. "Updates ({0})"
+msgctxt "Orchard.Packaging.AdminMenuGalleryUpdates"
+msgid "Updates ({0})"
+msgstr "Aggiornamenti ({0})"
+
+#: "Orchard.Packaging.AdminMenuGalleryUpdates"
+msgctxt "Orchard.Packaging.AdminMenuGalleryUpdates"
+msgid "Modules"
+msgstr "Moduli"
+
+#: "Orchard.Packaging.AdminMenuGalleryUpdates"
+msgctxt "Orchard.Packaging.AdminMenuGalleryUpdates"
+msgid "Themes"
+msgstr "Temi"
+
+#: "Orchard.Packaging.Commands.PackagingCommands"
+msgctxt "Orchard.Packaging.Commands.PackagingCommands"
+msgid "Module or Theme \"{0}\" does not exist in this Orchard installation."
+msgstr "Il Modulo o il Tema \"{0}\" non esistono in questa installazione di Orchard."
+
+#: "Orchard.Packaging.Commands.PackagingCommands"
+msgctxt "Orchard.Packaging.Commands.PackagingCommands"
+msgid "Package \"{0}\" successfully created"
+msgstr "Pacchetto \"{0}\" creato con successo"
+
+#. "Could not install the package: {0}"
+msgctxt "Orchard.Packaging.Commands.PackagingCommands"
+msgid "Could not install the package: {0}"
+msgstr "Impossibile installare il pacchetto: {0}"
+
+#: "Orchard.Packaging.Commands.PackagingCommands"
+msgctxt "Orchard.Packaging.Commands.PackagingCommands"
+msgid "Could not unintall the package: {0}"
+msgstr "Impossibile disinstallare il pacchetto: {0}"
+
+#: "Orchard.Packaging.Controllers.GalleryController"
+msgctxt "Orchard.Packaging.Controllers.GalleryController"
+msgid "Not authorized to list sources"
+msgstr "Non autorizzato ad elencare sorgenti"
+
+#: "Orchard.Packaging.Controllers.GalleryController"
+msgctxt "Orchard.Packaging.Controllers.GalleryController"
+msgid "Not authorized to remove sources"
+msgstr "Non autorizzato a rimuovere sorgenti"
+
+#: "Orchard.Packaging.Controllers.GalleryController"
+msgctxt "Orchard.Packaging.Controllers.GalleryController"
+msgid "The feed has been removed successfully."
+msgstr "Il feed è stato rimosso con successo."
+
+#. "Not authorized to add sources"
+msgctxt "Orchard.Packaging.Controllers.GalleryController"
+msgid "Not authorized to add sources"
+msgstr "Non autorizzato ad aggiungere sorgenti"
+
+#: "Orchard.Packaging.Controllers.GalleryController"
+msgctxt "Orchard.Packaging.Controllers.GalleryController"
+msgid "The Url is not valid"
+msgstr "L'Url non è valido"
+
+#: "Orchard.Packaging.Controllers.GalleryController"
+msgctxt "Orchard.Packaging.Controllers.GalleryController"
+msgid "Url is required"
+msgstr "L'Url è obbligatorio"
+
+#: "Orchard.Packaging.Controllers.GalleryController"
+msgctxt "Orchard.Packaging.Controllers.GalleryController"
+msgid "The feed has no title."
+msgstr "Il feed non ha titolo."
+
+#: "Orchard.Packaging.Controllers.GalleryController"
+msgctxt "Orchard.Packaging.Controllers.GalleryController"
+msgid "The url of the feed or its content is not valid."
+msgstr "L'url del feed o il suo contenuto non sono validi."
+
+#: "Orchard.Packaging.Controllers.GalleryController"
+msgctxt "Orchard.Packaging.Controllers.GalleryController"
+msgid "The feed has been added successfully."
+msgstr "Il feed è stato aggiunto con successo."
+
+#: "Orchard.Packaging.Controllers.GalleryController"
+msgctxt "Orchard.Packaging.Controllers.GalleryController"
+msgid "Not authorized to list Modules"
+msgstr "Non sei autorizzato ad elencare i Moduli"
+
+#: "Orchard.Packaging.Controllers.GalleryController"
+msgctxt "Orchard.Packaging.Controllers.GalleryController"
+msgid "Not authorized to list Themes"
+msgstr "Non sei autorizzato ad elencare i Temi"
+
+#: "Orchard.Packaging.Controllers.GalleryController"
+msgctxt "Orchard.Packaging.Controllers.GalleryController"
+msgid "Error loading extensions from gallery source '{0}'. {1}."
+msgstr "Errore nel caricare l'estensione dalla galleria '{0}'. {1}."
+
+#: "Orchard.Packaging.Controllers.GalleryUpdatesController"
+msgctxt "Orchard.Packaging.Controllers.GalleryUpdatesController"
+msgid "The feed has been notified for update. It might take a few minutes before the updates are displayed."
+msgstr "Al feed è stato notificata la richiesta di aggiornamento. Potrebbe volerci qualche minuto prima che gli aggiornamenti siano mostrati."
+
+#: "Orchard.Packaging.Controllers.GalleryUpdatesController"
+msgctxt "Orchard.Packaging.Controllers.GalleryUpdatesController"
+msgid "Not authorized to add sources"
+msgstr "Non sei autorizzato ad aggiungere nuove sorgenti"
+
+#: "Orchard.Packaging.Controllers.GalleryUpdatesController"
+msgctxt "Orchard.Packaging.Controllers.GalleryUpdatesController"
+msgid "No Gallery feed configured"
+msgstr "Nessun feed di Galleria configurato"
+
+#: "Orchard.Packaging.Controllers.GalleryUpdatesController"
+msgctxt "Orchard.Packaging.Controllers.GalleryUpdatesController"
+msgid "Package retrieve error: {0}"
+msgstr "Si è verificato un errore nel recuperare il pacchetto: {0}"
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Not authorized to add themes"
+msgstr "Non autorizzato ad aggiungere temi"
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Not authorized to remove themes"
+msgstr "Non autorizzato ad eliminare i temi"
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Not authorized to add modules"
+msgstr "Non sei autorizzato ad aggiungere moduli"
+
+#. "Not authorized to add sources"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Not authorized to add sources"
+msgstr "Non sei autorizzato ad aggiungere nuove sorgenti"
+
+#. "The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."
+msgstr "Il tema è stato installato con successo. Può essere abilitato nella pagina dei \"Temi\" accessibile dal menu."
+
+#. "The module has been successfully installed."
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "The module has been successfully installed."
+msgstr "Il modulo è stato installato con successo."
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Package installation failed: {0}"
+msgstr "Installazione del pacchetto non riuscita: {0}"
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Package installation failed."
+msgstr "Installazione del pacchetto non riuscita."
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Not authorized to install packages"
+msgstr "Non sei autorizzato ad installare i pacchetti"
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Select a file to upload."
+msgstr "Seleziona un file da caricare."
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Package uploading and installation failed: "
+msgstr "Caricamento e installazione del pacchetto non riuscita: "
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Package uploading and installation failed."
+msgstr "Caricamento e installazione del pacchetto non riuscita."
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Recipes contains {0} unsupported module installation steps."
+msgstr "La ricetta contiene {0} passi di installazione per il modulo non supportati."
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Post installation steps failed with error: {0}"
+msgstr "Passi di post-installazione non riusciti con l'errore: {0}"
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Not authorized to uninstall packages"
+msgstr "Non autorizzato a disinstallare i pacchetti"
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Uninstall failed: {0}"
+msgstr "Disinstallazione non riuscita: {0}"
+
+#: "Orchard.Packaging.Controllers.PackagingServicesController"
+msgctxt "Orchard.Packaging.Controllers.PackagingServicesController"
+msgid "Uninstalled package \"{0}\""
+msgstr "Pacchetto \"{0}\" disinstallato"
+
+#: "Orchard.Packaging.Events.ExtensionDisplayEventHandler"
+msgctxt "Orchard.Packaging.Events.ExtensionDisplayEventHandler"
+msgid "Version {0} is available (See <a href=\"{1}\">Updates</a>)."
+msgstr "È disponibile la versione {0} (Guarda gli <a href=\"{1}\">Aggiornamenti</a>)."
+
+#: "Orchard.Packaging.Services.FolderUpdater"
+msgctxt "Orchard.Packaging.Services.FolderUpdater"
+msgid "Skipping file \"{0}\" because it is the same content as the source file"
+msgstr "File \"{0}\" ignorato perchè ha lo stesso contenuto del file sorgente"
+
+#: "Orchard.Packaging.Services.PackageInstaller"
+msgctxt "Orchard.Packaging.Services.PackageInstaller"
+msgid "The specified package could not be found, id:{0} version:{1}"
+msgstr "Impossibile trovare il pacchetto specificato, id:{0} versione: {0}"
+
+#: "Orchard.Packaging.Services.PackageInstaller"
+msgctxt "Orchard.Packaging.Services.PackageInstaller"
+msgid "No version"
+msgstr "Nessuna versione"
+
+#: "Orchard.Packaging.Services.PackageInstaller"
+msgctxt "Orchard.Packaging.Services.PackageInstaller"
+msgid "Unable to backup existing local package directory."
+msgstr "Impossibile archiviare una cartella di pacchetti locali già esistente."
+
+#: "Orchard.Packaging.Services.PackageInstaller"
+msgctxt "Orchard.Packaging.Services.PackageInstaller"
+msgid "Unable to un-install local package before updating."
+msgstr "Impossibile disinstallare un pacchetto locale prima dell'aggiornamento."
+
+#: "Orchard.Packaging.Services.PackageInstaller"
+msgctxt "Orchard.Packaging.Services.PackageInstaller"
+msgid "The package is compatible with version {0} and above. Please update Orchard or install another version of this package."
+msgstr "Il pacchetto è compatibile con la versione {0} o superiore. Aggiornare Orchard o installare un'altra versione del pacchetto."
+
+#: "Orchard.Packaging.Services.PackageInstaller"
+msgctxt "Orchard.Packaging.Services.PackageInstaller"
+msgid "Package not found: {0}"
+msgstr "Pacchetto non trovato: {0}"
+
+#. "Backup folder {0} has too many backups subfolder (limit is 1,000)"
+msgctxt "Orchard.Packaging.Services.PackageInstaller"
+msgid "Backup folder {0} has too many backups subfolder (limit is 1,000)"
+msgstr "La cartella di archiviazione {0} ha troppe sottocartelle di (il limite è 1.000)"
+
+#: "Orchard.Packaging.Services.PackageInstaller"
+msgctxt "Orchard.Packaging.Services.PackageInstaller"
+msgid "Successfully restored local package to local folder \"{0}\""
+msgstr "Pacchetto ripristinato con successo nel percorso locale \"{0}\"."
+
+#: "Orchard.Packaging.Services.PackageInstaller"
+msgctxt "Orchard.Packaging.Services.PackageInstaller"
+msgid "Successfully backed up local package to local folder \"{0}\""
+msgstr "Pacchetto archiviato con successo nel percorso locale \"{0}\"."
+
+#: "Orchard.Packaging.Services.PackageInstaller"
+msgctxt "Orchard.Packaging.Services.PackageInstaller"
+msgid "Successfully un-installed local package {0}"
+msgstr "Pacchetto locale {0} disinstallato con successo."
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/AddSource.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/AddSource.cshtml"
+msgid "Add a Feed"
+msgstr "Aggiungi Feed"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/AddSource.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/AddSource.cshtml"
+msgid "Feed Url"
+msgstr "URL Feed"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/AddSource.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/AddSource.cshtml"
+msgid "Add Feed"
+msgstr "Aggiungi Feed"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Modules"
+msgstr "Moduli"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Feed:"
+msgstr "Feed:"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "All feeds"
+msgstr "Tutti i Feed"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Sort by:"
+msgstr "Ordina per:"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Downloads"
+msgstr "Download"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Ratings"
+msgstr "Valutazioni"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Alphanumeric"
+msgstr "Alfanumerico"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Apply"
+msgstr "Salva"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Search"
+msgstr "Cerca"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Version: {0}"
+msgstr " Versione: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Install"
+msgstr "Installa"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid " | "
+msgstr " | "
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Download"
+msgstr "Scarica"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "(No description"
+msgstr "(Nessuna descrizione"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "more..."
+msgstr "altro..."
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Last Updated: {0}"
+msgstr "Ultima modifica: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Author: {0}"
+msgstr "Autore: {0}"
+
+#. "Unknown"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Unknown"
+msgstr "Sconosciuto"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Downloads: {0}"
+msgstr "Download: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Website: "
+msgstr "Sito Web: "
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Rating: "
+msgstr "Valutazione: "
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Modules.cshtml"
+msgid "Rating: {0} out of 5 ({1} total)."
+msgstr "Valutazione: {0} su 5 ({1} in totale)."
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgid "Gallery"
+msgstr "Galleria"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgid "Add Feed"
+msgstr "Aggiungi Feed"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgid "This is a table of the gallery feeds in your application"
+msgstr "La tabella dei feed di galleria nella tua applicazione"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgid "Title"
+msgstr "Titolo"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgid "Url"
+msgstr "Url"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Sources.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Themes"
+msgstr "Temi"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Show"
+msgstr "Mostra"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "All feeds"
+msgstr "Tutti Feed"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Sort by:"
+msgstr "Ordina per:"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Downloads"
+msgstr "Download"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Ratings"
+msgstr "Valutazioni"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Alphanumeric"
+msgstr "Alfanumerico"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Apply"
+msgstr "Salva"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Search"
+msgstr "Cerca"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Version: {0}"
+msgstr " Versione: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Install"
+msgstr "Installa"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid " | "
+msgstr " | "
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Download"
+msgstr "Scarica"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "(No description"
+msgstr "(Nessuna descrizione"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "more..."
+msgstr "altro..."
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Last Updated: {0}"
+msgstr "Ultima modifica: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Author: {0}"
+msgstr "Autore: {0}"
+
+#. "Unknown"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Unknown"
+msgstr "Sconosciuto"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Downloads: {0}"
+msgstr "Download: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Website: "
+msgstr "Sito Web: "
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Rating: "
+msgstr "Valutazione: "
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "Rating: {0} out of 5 ({1} total)."
+msgstr "Valutazione: {0} su 5 ({1} in totale)."
+
+#: "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/Gallery/Themes.cshtml"
+msgid "No themes available."
+msgstr "Nessun tema disponibile."
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Modules"
+msgstr "Moduli"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Most recent check for updates: {0}"
+msgstr "Ultima volta che hai verificato la presenza di aggiornamenti: {0}"
+
+#. "Unknown"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Unknown"
+msgstr "Sconosciuto"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Check for Updates"
+msgstr "Ricerca aggiornamenti"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "No module updates available."
+msgstr "Nessuno aggiornamento di moduli disponibile."
+
+#. "Version: {0}"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Version: {0}"
+msgstr "Versione: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Install Latest"
+msgstr "Installa la più recente"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid " | "
+msgstr " | "
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Download"
+msgstr "Scarica"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "(No description"
+msgstr "(Nessuna descrizione"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Last Updated: {0}"
+msgstr "Ultimo Aggiornamento: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Author: {0}"
+msgstr "Autore: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Downloads: {0}"
+msgstr "Download: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Website: "
+msgstr "Sito Web: "
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Rating: "
+msgstr "Valutazione: "
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ModulesUpdates.cshtml"
+msgid "Rating: {0} out of 5 ({1} total)."
+msgstr "Valutazione: {0} su 5 ({1} in totale)."
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Themes"
+msgstr "Temi"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Most recent check for updates: {0}"
+msgstr "Ultima volta che hai verificato la presenza di aggiornamenti: {0}"
+
+#. "Unknown"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Unknown"
+msgstr "Sconosciuto"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Check for Updates"
+msgstr "Ricerca aggiornamenti"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "No theme updates available."
+msgstr "Non sono disponibili aggiornamenti per i temi."
+
+#. "Version: {0}"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Version: {0}"
+msgstr "Versione: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Install Latest"
+msgstr "Installa la più recente"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid " | "
+msgstr " | "
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Download"
+msgstr "Scarica"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "(No description"
+msgstr "(Nessuna descrizione"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Last Updated: {0}"
+msgstr "Ultimo aggiornamento: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Author: {0}"
+msgstr "Autore: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Downloads: {0}"
+msgstr "Download: {0}"
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Website: "
+msgstr "Sito Web: "
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Rating: "
+msgstr "Valutazione: "
+
+#: "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/GalleryUpdates/ThemesUpdates.cshtml"
+msgid "Rating: {0} out of 5 ({1} total)."
+msgstr "Valutazione: {0} su 5 ({1} in totale)."
+
+#: "~/Modules/Orchard.Packaging/Views/PackagingServices/AddModule.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/PackagingServices/AddModule.cshtml"
+msgid "Install a module from your computer"
+msgstr "Installa un modulo dal tuo computer"
+
+#: "~/Modules/Orchard.Packaging/Views/PackagingServices/AddModule.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/PackagingServices/AddModule.cshtml"
+msgid "Module Package"
+msgstr "Pacchetto Modulo"
+
+#: "~/Modules/Orchard.Packaging/Views/PackagingServices/AddModule.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/PackagingServices/AddModule.cshtml"
+msgid "Install"
+msgstr "Installa"
+
+#: "~/Modules/Orchard.Packaging/Views/PackagingServices/AddTheme.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/PackagingServices/AddTheme.cshtml"
+msgid "Install a theme from your computer"
+msgstr "Installa un tema dal tuo computer"
+
+#: "~/Modules/Orchard.Packaging/Views/PackagingServices/AddTheme.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/PackagingServices/AddTheme.cshtml"
+msgid "Theme Package"
+msgstr "Pacchetto Tema"
+
+#: "~/Modules/Orchard.Packaging/Views/PackagingServices/AddTheme.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/PackagingServices/AddTheme.cshtml"
+msgid "Install"
+msgstr "Installa"
+
+#: "~/Modules/Orchard.Packaging/Views/PackagingServices/InstallModuleDetails.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/PackagingServices/InstallModuleDetails.cshtml"
+msgid "{0} - {1} Details"
+msgstr "Dettagli {0} - {1}"
+
+#: "~/Modules/Orchard.Packaging/Views/PackagingServices/InstallModuleDetails.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/PackagingServices/InstallModuleDetails.cshtml"
+msgid "Pick the recipes you want to run"
+msgstr "Scegli le ricette che vuoi eseguire"
+
+#: "~/Modules/Orchard.Packaging/Views/PackagingServices/InstallModuleDetails.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/PackagingServices/InstallModuleDetails.cshtml"
+msgid "Pick the features you want enabled"
+msgstr "Scegli le funzionalità che vuoi abilitare"
+
+#: "~/Modules/Orchard.Packaging/Views/PackagingServices/InstallModuleDetails.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/PackagingServices/InstallModuleDetails.cshtml"
+msgid "Ok"
+msgstr "Ok"
+
+#: "~/Modules/Orchard.Packaging/Views/PackagingServices/InstallPackageFailed.cshtml"
+msgctxt "~/Modules/Orchard.Packaging/Views/PackagingServices/InstallPackageFailed.cshtml"
+msgid "Install package failed"
+msgstr "Installazione pacchetto non riuscita"
+

@@ -1,0 +1,552 @@
+msgctxt "~/Modules/Upgrade/Module.txt"
+msgid "Upgrade"
+msgstr "Aggiornamento"
+
+msgctxt "~/Modules/Upgrade/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il Team di Orchard"
+
+msgctxt "~/Modules/Upgrade/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+#. "Upgrade.Description"
+msgctxt "~/Modules/Upgrade/Module.txt"
+msgid "Provides actions for upgrading Orchard instances"
+msgstr "Fornisce attività che permettono l'aggiornamento delle istanze di Orchard"
+
+#: "Upgrade.AdminMenu"
+msgctxt "Upgrade.AdminMenu"
+msgid "Upgrade to 1.8"
+msgstr "Aggiornamento a 1.8"
+
+#: "Upgrade.AdminMenu"
+msgctxt "Upgrade.AdminMenu"
+msgid "Infoset (1.8)"
+msgstr "Infoset (1.8)"
+
+#: "Upgrade.AdminMenu"
+msgctxt "Upgrade.AdminMenu"
+msgid "Messaging (1.8)"
+msgstr "Messaggistica (1.8)"
+
+#: "Upgrade.AdminMenu"
+msgctxt "Upgrade.AdminMenu"
+msgid "Media (1.7)"
+msgstr "Media (1.7)"
+
+#: "Upgrade.AdminMenu"
+msgctxt "Upgrade.AdminMenu"
+msgid "Taxonomies (1.7)"
+msgstr "Tassonomie (1.7)"
+
+#: "Upgrade.AdminMenu"
+msgctxt "Upgrade.AdminMenu"
+msgid "Content Picker (1.7)"
+msgstr "Selezione di contenuto (1.7)"
+
+#: "Upgrade.AdminMenu"
+msgctxt "Upgrade.AdminMenu"
+msgid "Fields (1.5)"
+msgstr "Campi (1.5)"
+
+#: "Upgrade.AdminMenu"
+msgctxt "Upgrade.AdminMenu"
+msgid "Menu (1.5)"
+msgstr "Menu (1.5)"
+
+#: "Upgrade.AdminMenu"
+msgctxt "Upgrade.AdminMenu"
+msgid "Routes (1.4)"
+msgstr "Routes (1.4)"
+
+#: "Upgrade.Controllers.ContentPickerController"
+msgctxt "Upgrade.Controllers.ContentPickerController"
+msgid "You need to enable Orchard.ContentPicker in order to migrate Content Picker items to Orchard.ContentPicker."
+msgstr "È necessario abilitare il Orchard.ContentPicker al fine di migrare selezione contenuto elementi di Orchard.ContentPicker."
+
+#: "Upgrade.Controllers.ContentPickerController"
+msgctxt "Upgrade.Controllers.ContentPickerController"
+msgid "Not allowed to migrate Orchard.ContentPicker."
+msgstr "Non è consentito eseguire la migrazione di Orchard.ContentPicker."
+
+#: "Upgrade.Controllers.ContentPickerController"
+msgctxt "Upgrade.Controllers.ContentPickerController"
+msgid "Content Picker menu items were migrated successfully."
+msgstr "Voci di menu di Orchard.ContentPicker migrati con successo."
+
+#: "Upgrade.Controllers.ContentPickerController"
+msgctxt "Upgrade.Controllers.ContentPickerController"
+msgid "Unexpected error while migrating to Orchard.ContentPicker. Please check the log."
+msgstr "Errore imprevisto durante la migrazione a Orchard.ContentPicker. Controllare il log degli errori."
+
+#: "Upgrade.Controllers.FieldController"
+msgctxt "Upgrade.Controllers.FieldController"
+msgid "There are no content types with custom fields"
+msgstr "Non c'è nessun tipo di contenuto con campi personalizzati"
+
+#: "Upgrade.Controllers.FieldController"
+msgctxt "Upgrade.Controllers.FieldController"
+msgid "You need to enable Orchard.Fields in order to migrate current fields. Then you can safely remove Contrib.DateTimeField and Contrib.MediaPickerField."
+msgstr "È necessario abilitare il Orchard.Fields per poter migrare i campi esistenti. Dopodiché si può tranquillamente rimuovere Contrib.DateTimeField e Contrib.MediaPickerField."
+
+#: "Upgrade.Controllers.FieldController"
+msgctxt "Upgrade.Controllers.FieldController"
+msgid "Not allowed to migrate fields."
+msgstr "Non è consentito eseguire la migrazione di campi."
+
+#: "Upgrade.Controllers.FieldController"
+msgctxt "Upgrade.Controllers.FieldController"
+msgid "{0} fields were migrated successfully"
+msgstr "{0} campi sono stati migrati con successo"
+
+#: "Upgrade.Controllers.InfosetController"
+msgctxt "Upgrade.Controllers.InfosetController"
+msgid "Site Settings migrated successfully"
+msgstr "Impostazioni sito migrate con successo"
+
+#: "Upgrade.Controllers.MediaController"
+msgctxt "Upgrade.Controllers.MediaController"
+msgid "You need to enable Orchard.MediaLibrary in order to convert current media files to the Media Library."
+msgstr "È necessario abilitare il Orchard.MediaLibrary al fine di convertire la corrente file multimediali alla libreria multimediale."
+
+#: "Upgrade.Controllers.MediaController"
+msgctxt "Upgrade.Controllers.MediaController"
+msgid "Unknown MIME type for extension: {0}. These files will be imported as Document media."
+msgstr "Tipo MIME sconosciuto per estensione: {0}. questi file verranno importati come media Documento."
+
+#: "Upgrade.Controllers.MediaController"
+msgctxt "Upgrade.Controllers.MediaController"
+msgid "Some media files need to be migrated."
+msgstr "Alcuni file multimediali devono essere migrati."
+
+#: "Upgrade.Controllers.MediaController"
+msgctxt "Upgrade.Controllers.MediaController"
+msgid "{0} media files have been found, {1} media are in the library."
+msgstr "sono stati trovati file multimediali {0}, {1} media sono nella libreria."
+
+#: "Upgrade.Controllers.MediaController"
+msgctxt "Upgrade.Controllers.MediaController"
+msgid "All media files have been migrated."
+msgstr "Tutti i file multimediali sono stati migrati."
+
+#: "Upgrade.Controllers.MediaController"
+msgctxt "Upgrade.Controllers.MediaController"
+msgid "Not allowed to convert media files."
+msgstr "Non è consentito convertire file multimediali."
+
+#: "Upgrade.Controllers.MediaController"
+msgctxt "Upgrade.Controllers.MediaController"
+msgid "Media {0} has already been imported."
+msgstr "Il file multimediale {0} è già stato importato."
+
+#: "Upgrade.Controllers.MediaController"
+msgctxt "Upgrade.Controllers.MediaController"
+msgid "Importing {0}."
+msgstr "Importazione {0}."
+
+#: "Upgrade.Controllers.MediaController"
+msgctxt "Upgrade.Controllers.MediaController"
+msgid "Error while importing {0}. Please check the logs"
+msgstr "Errore durante l'importazione {0}. Si prega di verificare il log degli errori"
+
+#. "This step is unnecessary as some menus already exist."
+msgctxt "Upgrade.Controllers.MenuController"
+msgid "This step is unnecessary as some menus already exist."
+msgstr "Questo passaggio è inutile perché esiste già almeno un menu."
+
+#: "Upgrade.Controllers.MenuController"
+msgctxt "Upgrade.Controllers.MenuController"
+msgid "Not allowed to migrate the navigation."
+msgstr "Non è consentito migrare i dati di navigazione."
+
+#: "Upgrade.Controllers.MenuController"
+msgctxt "Upgrade.Controllers.MenuController"
+msgid "Main menu created"
+msgstr "Menu principale creato"
+
+#: "Upgrade.Controllers.MenuController"
+msgctxt "Upgrade.Controllers.MenuController"
+msgid "Menu items moved to Main menu"
+msgstr "Voci di menu trasferite nel menu principale"
+
+#: "Upgrade.Controllers.MenuController"
+msgctxt "Upgrade.Controllers.MenuController"
+msgid "Widget could not be created. Please create it manually."
+msgstr "Widget non può essere creato. Crearlo manualmente."
+
+#: "Upgrade.Controllers.MessagingController"
+msgctxt "Upgrade.Controllers.MessagingController"
+msgid "This step is unnecessary as no Send Email activities were found."
+msgstr "Questo passaggio è inutile perché non sono state trovate attività di posta elettronica."
+
+#: "Upgrade.Controllers.MessagingController"
+msgctxt "Upgrade.Controllers.MessagingController"
+msgid "This step appears unnecessary since it appears Orchard Workflows is not enabled."
+msgstr "Questo passaggio appare inutile, poiché sembra che il Workflow non sia abilitato."
+
+#: "Upgrade.Controllers.MessagingController"
+msgctxt "Upgrade.Controllers.MessagingController"
+msgid "Not allowed to upgrade."
+msgstr "Non è consentito effettuare l'aggiornamento."
+
+#: "Upgrade.Controllers.MessagingController"
+msgctxt "Upgrade.Controllers.MessagingController"
+msgid "Email activities updated successfully"
+msgstr "Attività di posta elettronica aggiornato con successo"
+
+#: "Upgrade.Controllers.MessagingController"
+msgctxt "Upgrade.Controllers.MessagingController"
+msgid "No email activities were updated."
+msgstr "Nessuna attività di posta elettronica sono state aggiornate."
+
+#: "Upgrade.Controllers.RouteController"
+msgctxt "Upgrade.Controllers.RouteController"
+msgid "There are no content types with RoutePart"
+msgstr "Non ci sono nessun tipi di contenuto con RoutePart"
+
+#: "Upgrade.Controllers.RouteController"
+msgctxt "Upgrade.Controllers.RouteController"
+msgid "Not allowed to migrate routes."
+msgstr "Non possono per migrare le route."
+
+#: "Upgrade.Controllers.RouteController"
+msgctxt "Upgrade.Controllers.RouteController"
+msgid "Some content items could not be imported. Please refer to the corresponding Report."
+msgstr "Alcuni elementi contenuti non possono essere importati. Fare riferimento alla relazione corrispondente."
+
+#: "Upgrade.Controllers.RouteController"
+msgctxt "Upgrade.Controllers.RouteController"
+msgid "{0} was migrated successfully"
+msgstr "{0} è stato migrato con successo"
+
+#: "Upgrade.Controllers.TaxonomyController"
+msgctxt "Upgrade.Controllers.TaxonomyController"
+msgid "You need to enable Orchard.Taxonomies in order to migrate Contrib.Taxonomies to Orchard.Taxonomies."
+msgstr "È necessario abilitare il Orchard.Taxonomies al fine di migrare Contrib.Taxonomies a Orchard.Taxonomies."
+
+#: "Upgrade.Controllers.TaxonomyController"
+msgctxt "Upgrade.Controllers.TaxonomyController"
+msgid "This migration step might have been done already."
+msgstr "Questo passaggio di migrazione potrebbe essere stato già eseguito."
+
+#: "Upgrade.Controllers.TaxonomyController"
+msgctxt "Upgrade.Controllers.TaxonomyController"
+msgid "Not allowed to migrate Contrib.Taxonomies."
+msgstr "Non è consentito eseguire la migrazione di Contrib.Taxonomies."
+
+#: "Upgrade.Controllers.TaxonomyController"
+msgctxt "Upgrade.Controllers.TaxonomyController"
+msgid "Taxonomies were migrated successfully."
+msgstr "Le tassonomie sono state migrate con successo."
+
+#: "Upgrade.Controllers.TaxonomyController"
+msgctxt "Upgrade.Controllers.TaxonomyController"
+msgid "Unexpected error while migrating to Orchard.Taxonomies. Please check the log."
+msgstr "Errore imprevisto durante la migrazione a Orchard.Taxonomies. Controllare il registro."
+
+#: "~/Modules/Upgrade/Views/ContentPicker/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/ContentPicker/Index.cshtml"
+msgid "Migrate Content Picker"
+msgstr "Eseguire la migrazione di selezione contenuto"
+
+#: "~/Modules/Upgrade/Views/ContentPicker/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/ContentPicker/Index.cshtml"
+msgid "Migrating Content Picker:"
+msgstr "La migrazione di selezione contenuto:"
+
+#: "~/Modules/Upgrade/Views/ContentPicker/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/ContentPicker/Index.cshtml"
+msgid "This migration step will move your content picker menu items to their new location."
+msgstr "Questo passaggio di migrazione si sposta le voci di menu di selezione contenuto alla nuova posizione."
+
+#: "~/Modules/Upgrade/Views/ContentPicker/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/ContentPicker/Index.cshtml"
+msgid "Migrate"
+msgstr "Migra"
+
+#: "~/Modules/Upgrade/Views/Field/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Field/Index.cshtml"
+msgid "Migrate Fields"
+msgstr "Eseguire la migrazione dei campi"
+
+#: "~/Modules/Upgrade/Views/Field/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Field/Index.cshtml"
+msgid "Choose the types to migrate:"
+msgstr "Scegliere i tipi di migrare:"
+
+#: "~/Modules/Upgrade/Views/Field/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Field/Index.cshtml"
+msgid "The migration process fields data. You will still need to enable Orchard.Fields, and remove Contrib.DateTime and Contrib.MediaPicker if you have installed them."
+msgstr "Il processo di migrazione cambia campi dati. Dei poi abilitare Orchard.Fields e rimuovere Contrib.DateTime e Contrib.MediaPicker se li hai installati."
+
+#: "~/Modules/Upgrade/Views/Field/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Field/Index.cshtml"
+msgid "Migrate"
+msgstr "Migra"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrate Infosets"
+msgstr "La migrazione degli Infoset"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrating Site Settings:"
+msgstr "La migrazione delle impostazioni del sito:"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "This migration step will migrate your Site Settings to Infosets and delete the deprecated records."
+msgstr "Questo passo di migrazione migrare le impostazioni sito a InfoSet ed eliminare i record obsoleti."
+
+#. "Migrate"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrate"
+msgstr "Migra"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrating Body Parts:"
+msgstr "Migrazione Body Part:"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "This migration step will copy all Body Parts to Infosets."
+msgstr "Questo passaggio di migrazione copia tutte le parti Body in Infoset."
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrating Media Parts:"
+msgstr "La migrazione contenuti multimediali:"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "This migration step will copy all Media Parts to Infosets."
+msgstr "Questo passaggio di migrazione copia tutte le parti multimediali in Infoset."
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrating Content Item Permissions Parts:"
+msgstr "Migrazione delle autorizzazioni per gli elementi di contenuto:"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "This migration step will copy all Content Item Permissions parts to Infosets."
+msgstr "Questo passaggio di migrazione copia tutte i permessi relativi alle parti di contenuto negli infoset."
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrating Content Item Menu Parts:"
+msgstr "Migrazione del Menu delle Parti di Contenuto:"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "This migration step will copy all Content Item Menu parts to Infosets."
+msgstr "Questo passaggio di migrazione copia tutte le parti Menu delle voci di contenuto negli infoset."
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrating Tags Parts:"
+msgstr "Migrazione Tag Part:"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "This migration step will copy all Tags parts to Infosets."
+msgstr "Questo passaggio di migrazione copia tutte le parti Tag in Infoset."
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrating Widget Parts:"
+msgstr "La migrazione parti di Widget:"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "This migration step will copy all Widget parts to Infosets."
+msgstr "Questo passaggio di migrazione copia tutte le parti Widget in Infoset."
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrating Layer Parts:"
+msgstr "La migrazione livello parti:"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "This migration step will copy all Layer parts to Infosets."
+msgstr "Questo passaggio di migrazione copia tutte le parti Livello in Infoset."
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrating Menu Widget Parts:"
+msgstr "Migrazione Menu Widget:"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "This migration step will copy all Menu Widget parts to Infosets."
+msgstr "Questo passaggio di migrazione copia tutte le parti Menu Widget in Infoset."
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrating Shape Menu Item Parts:"
+msgstr "Migrazione della Forma Menu:"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "This migration step will copy all Shape Menu Item parts to Infosets."
+msgstr "Questo passaggio di migrazione copia tutte le Forme Menu in Infoset."
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "Migrating Menu Item Parts:"
+msgstr "Migra le Parti Menu:"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "This migration step will copy all Menu Item parts to Infosets."
+msgstr "Questo passaggio di migrazione copia tutte le parti Menu in Infoset."
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "FIXING 1.x VERSIONS:"
+msgstr "CORREZIONE VERSIONI 1.x:"
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "This migration step will merge version infosets."
+msgstr "Questo passaggio di migrazione unirà le versioni di infoset."
+
+#: "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Infoset/Index.cshtml"
+msgid "All items have been processed"
+msgstr "Tutti gli elementi sono stati elaborati"
+
+#: "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgid "Migrate Media Files"
+msgstr "Eseguire la migrazione di file multimediali"
+
+#: "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgid "Migrating Media Files:"
+msgstr "Migrazione dei files multimediali:"
+
+#: "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgid "This migration step will create and organize new Media Content Items based on the media files in your ~/Media folder."
+msgstr "Questo passo di migrazione creare e organizzare nuovi elementi multimediali contenuti basati su file multimediali nella cartella ~/Media."
+
+#: "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgid "Before importing, please ensure the server has the expected mime types already registered as explained here: <a href=\"http://www.iis.net/configreference/system.webserver/staticcontent/mimemap\">http://www.iis.net/configreference/system.webserver/staticcontent/mimemap</a>"
+msgstr "Prima di importare, verifica se il server ha i tipi mime previsti già registrati come spiegato qui: <a href=\"http://www.iis.net/configreference/system.webserver/staticcontent/mimemap\"> http://www.iis.net/configreference/system.webserver/staticcontent/mimemap</a>"
+
+#. "Migrate"
+msgctxt "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgid "Migrate"
+msgstr "Migra"
+
+#: "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgid "Migrating Media Picker Fields:"
+msgstr "Migrazione  Selezione campi Media:"
+
+#: "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgid "This migration step will migrate your Media Picker and Media Gallery Picker fields to the new Media Library Field."
+msgstr "Questo passaggio di migrazione migrerà il Selettore Media e il Selettore Media Gallery nel nuovo campo Biblioteca Multimediale."
+
+#: "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgid "Before migrating fields, please migrate all the Media files."
+msgstr "Prima di migrare campi devono essere migrati tutti i file multimediali."
+
+#: "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Media/Index.cshtml"
+msgid "All media files have been processed"
+msgstr "Tutti i file multimediali sono stati elaborati"
+
+#: "~/Modules/Upgrade/Views/Menu/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Menu/Index.cshtml"
+msgid "Migrate Menu"
+msgstr "Migra Menu"
+
+#: "~/Modules/Upgrade/Views/Menu/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Menu/Index.cshtml"
+msgid "Migrating Menu:"
+msgstr "Migrazione Menu:"
+
+#: "~/Modules/Upgrade/Views/Menu/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Menu/Index.cshtml"
+msgid "This migration step will create a new Menu named \"Main Menu\" and add all your previous menu items to it. Finally it will create a new \"Menu Widget\" instance to render this menu on the website."
+msgstr "Questo passaggio di migrazione creerà un nuovo Menu chiamato \"Menu principale\" e vi aggiungerà tutte le precedenti voci di menu. Infine creerà una nuova istanza di \"Menu Widget\" per vedere il menu sul sito."
+
+#: "~/Modules/Upgrade/Views/Menu/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Menu/Index.cshtml"
+msgid "Migrate"
+msgstr "Migra"
+
+#: "~/Modules/Upgrade/Views/Messaging/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Messaging/Index.cshtml"
+msgid "Migrate Messaging"
+msgstr "Migrazione messaggistica"
+
+#: "~/Modules/Upgrade/Views/Messaging/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Messaging/Index.cshtml"
+msgid "Migrating Email Activities:"
+msgstr "Migrazione attività posta elettronica:"
+
+#: "~/Modules/Upgrade/Views/Messaging/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Messaging/Index.cshtml"
+msgid "This migration step will update the existing Send Email activities to use the new Message Queueing functionality."
+msgstr "Questo passaggio di migrazione si aggiornerà le attività esistenti di posta elettronica per utilizzare le nuove funzionalità di servizi Accodamento messaggi."
+
+#: "~/Modules/Upgrade/Views/Messaging/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Messaging/Index.cshtml"
+msgid "Migrate"
+msgstr "Migra"
+
+#: "~/Modules/Upgrade/Views/Route/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Route/Index.cshtml"
+msgid "Migrate Routes"
+msgstr "Migrazione Route"
+
+#: "~/Modules/Upgrade/Views/Route/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Route/Index.cshtml"
+msgid "Choose the types to migrate:"
+msgstr "Scegliere i tipi di migrare:"
+
+#: "~/Modules/Upgrade/Views/Route/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Route/Index.cshtml"
+msgid "The migration process will move the Route and Title properties by adding an Autoroute and a Title part to all the content items for the selected content types."
+msgstr "Il processo di migrazione si muoverà la Route e il Titolo aggiungendo una Autoroute Part e un Titolo Part a tutti gli elementi di contenuto per i tipi di contenuto selezionati."
+
+#: "~/Modules/Upgrade/Views/Route/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Route/Index.cshtml"
+msgid "Migrate"
+msgstr "Migra"
+
+#: "~/Modules/Upgrade/Views/Taxonomy/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Taxonomy/Index.cshtml"
+msgid "Migrate Taxonomies"
+msgstr "Migra le tassonomie"
+
+#: "~/Modules/Upgrade/Views/Taxonomy/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Taxonomy/Index.cshtml"
+msgid "Migrating Taxonomies:"
+msgstr "Migrazione tassonomie:"
+
+#: "~/Modules/Upgrade/Views/Taxonomy/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Taxonomy/Index.cshtml"
+msgid "This migration step will convert the Contrib.Taxonomies content items to Orchard.Taxonomies."
+msgstr "Questo passaggio di migrazione convertirà gli elementi di contenuto di Contrib.Taxonomies in Orchard.Taxonomies."
+
+#: "~/Modules/Upgrade/Views/Taxonomy/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Taxonomy/Index.cshtml"
+msgid "If you had any Term Widget instance, you will have to replace them with Projection Queries."
+msgstr "Se aveste qualsiasi istanza di Term Widget, dovreste sostituirli con Query di Proiezione."
+
+#: "~/Modules/Upgrade/Views/Taxonomy/Index.cshtml"
+msgctxt "~/Modules/Upgrade/Views/Taxonomy/Index.cshtml"
+msgid "Migrate"
+msgstr "Migra"
+
