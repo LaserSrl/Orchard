@@ -1,7 +1,7 @@
 ﻿@{
-    if (String.IsNullOrWhiteSpace(WorkContext.HttpContext.Request.QueryString["termids"])) {
+    if (String.IsNullOrWhiteSpace(Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["termids"])) {
         string[] categorieApp;
-        if (String.IsNullOrWhiteSpace(WorkContext.HttpContext.Request.QueryString["lang"]) || WorkContext.HttpContext.Request.QueryString["lang"].ToLower() == "it-it") {
+        if (String.IsNullOrWhiteSpace(Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["lang"]) || Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["lang"].ToLower() == "it-it") {
 
             categorieApp = new string[] { "980a70a6-3731-4a99-a63e-3848a1586e0e", //1
                 "c35bebe1-9b32-4b45-af7e-93a135b4b9b0",//2
@@ -20,8 +20,8 @@
                 "20c62a85-77b8-468b-9895-e2150fbbfd94" 
         	};
         }
-    @Html.Raw(String.Join(",", categorieApp));
+    @Raw(String.Join(",", categorieApp));
     } else {
-    @Html.Raw(WorkContext.HttpContext.Request.QueryString["termids"])
+    @Raw(Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["termids"])
     }
 }

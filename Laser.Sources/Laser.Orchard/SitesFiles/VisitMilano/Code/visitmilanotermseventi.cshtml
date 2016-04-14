@@ -1,7 +1,7 @@
 ﻿@{
-    if (String.IsNullOrWhiteSpace(WorkContext.HttpContext.Request.QueryString["termids"])) {
+    if (String.IsNullOrWhiteSpace(Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["termids"])) {
         string[] categorieApp;
-        if (String.IsNullOrWhiteSpace(WorkContext.HttpContext.Request.QueryString["lang"]) || WorkContext.HttpContext.Request.QueryString["lang"].ToLower() == "it-it") {
+        if (String.IsNullOrWhiteSpace(Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["lang"]) || Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["lang"].ToLower() == "it-it") {
             categorieApp = new string[] { "63aba84a-d0d8-4108-9483-bedadb4154af", //1
 			 "e8900d16-29e4-4d0d-824f-7e321ed32fb6",//2
              "82e6ddd3-3e5c-43fc-bd2a-a6dee69bd75b,d122a8bf-6131-4b42-a941-3020442eff66,414d5a62-34c7-4e39-8b2b-563bb4ea0a3e", //Moda e design
@@ -38,13 +38,13 @@
 						"aca2a3bb-247a-4b6e-a78d-80fed2bb28a3"
 			};
         }
-    @Html.Raw(String.Join(",", categorieApp));
+    @Raw(String.Join(",", categorieApp));
     } else {
-        var termIds = WorkContext.HttpContext.Request.QueryString["termids"];
+        var termIds = Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["termids"];
         var termIdsMilanoCreativa = "4ab182b8-21c3-4ca3-bc95-4073db83b953,414d5a62-34c7-4e39-8b2b-563bb4ea0a3e,d122a8bf-6131-4b42-a941-3020442eff66,82e6ddd3-3e5c-43fc-bd2a-a6dee69bd75";
         if (termIds == "414d5a62-34c7-4e39-8b2b-563bb4ea0a3e,d122a8bf-6131-4b42-a941-3020442eff66") {
             termIds = termIdsMilanoCreativa;
         }
-    @Html.Raw(termIds);
+    @Raw(termIds);
     }
 }

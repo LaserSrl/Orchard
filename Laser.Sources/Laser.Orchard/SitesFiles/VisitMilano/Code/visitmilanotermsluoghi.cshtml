@@ -1,7 +1,7 @@
 ﻿@{
-    if (String.IsNullOrWhiteSpace(WorkContext.HttpContext.Request.QueryString["termids"])) {
+    if (String.IsNullOrWhiteSpace(Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["termids"])) {
         string[] categorieApp;
-        if (String.IsNullOrWhiteSpace(WorkContext.HttpContext.Request.QueryString["lang"]) || WorkContext.HttpContext.Request.QueryString["lang"].ToLower() == "it-it") {
+        if (String.IsNullOrWhiteSpace(Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["lang"]) || Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["lang"].ToLower() == "it-it") {
 
             categorieApp = new string[] { "5ce6bc7b-e7ac-4745-a2f3-d79cc8151b9a,7bc76450-dd0f-4973-a22c-e246ceff4e12,eb4cd826-c8f5-460f-ab97-41261692b5de,bacba4d2-5fc0-4653-9da3-73e616bc2151", //1
                  "e8429977-e95f-48dc-8f2d-f769cd404c29",//2
@@ -36,8 +36,8 @@
                 "3647a8db-43e3-4ca1-bb22-aadb84ea401d" 
         			};
         }
-    @Html.Raw(String.Join(",", categorieApp));
+    @Raw(String.Join(",", categorieApp));
     } else {
-    @Html.Raw(WorkContext.HttpContext.Request.QueryString["termids"])
+    @Raw(Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["termids"])
     }
 }
