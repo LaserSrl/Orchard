@@ -154,7 +154,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             templatectx.Model = dynamicModel;
             var body = _templateServices.ParseTemplate(template, templatectx);
             if (body.StartsWith("Error On Template")) {
-                _notifier.Add(NotifyType.Error, T("Error on template, mail not sended"));
+                _notifier.Add(NotifyType.Error, T("Error on template, mail not sent"));
                 return false;
             }
             var data = new Dictionary<string, object>();
