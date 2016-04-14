@@ -55,9 +55,9 @@
 </fieldset>
 @Display.TokenHint()
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.CacheMinute)">@T("Cache Refresh")</label>
+    <label for="@Html.FieldIdFor(m => m.CacheMinute)">@T("Cache duration")</label>
     @Html.TextBoxFor(m => m.CacheMinute)
-    <span class="hint">@T("Insert minute to try refresh cache")</span>
+    <span class="hint">@T("Cache duration time in minutes")</span>
 </fieldset>
 <fieldset>
     @Html.CheckBoxFor(m => m.CacheToFileSystem)
@@ -66,9 +66,9 @@
 </fieldset>
 
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.CacheInput)">@T("Cache Input")</label>
+    <label for="@Html.FieldIdFor(m => m.CacheInput)">@T("Input Cache Key")</label>
     @Html.TextBoxFor(m => m.CacheInput, new { @class = "text large tokenized" })
-    <span class="hint">@T("Insert Cached data to Input")</span>
+    <span class="hint">@T("The cache key used in input.")</span>
 </fieldset>
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.ScheduledMinute)">@T("Scheduled Minute")</label>

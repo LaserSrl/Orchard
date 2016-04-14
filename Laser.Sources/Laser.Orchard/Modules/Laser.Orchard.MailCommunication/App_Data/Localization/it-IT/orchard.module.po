@@ -128,6 +128,10 @@ msgctxt "~/Modules/Laser.Orchard.MailCommunication/Views/EditorTemplates/Parts/M
 msgid "Validity (in days) of the token used by massive mailer to return the number of sent mails."
 msgstr "Validità (in giorni) del Token utilizzato dal Mailer per restituire il numero delle email inoltrate."
 
+msgctxt "Laser.Orchard.MailCommunication.Handlers.MailerScheduledTaskHandler"
+msgid "Error parsing mail template."
+msgstr "Errore durante la compilazione del template."
+
 msgctxt "Laser.Orchard.MailCommunication.Handlers.MailerSiteSettingsHandler"
 msgid "Mailer"
 msgstr "Mailer"
