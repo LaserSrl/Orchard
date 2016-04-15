@@ -1,0 +1,107 @@
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Designer Tools"
+msgstr "Strumenti per il design"
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il Team di Orchard"
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Contains designer tools to ease the Themes development process"
+msgstr "Contiene strumenti di design per rendere più facile lo sviluppo di Temi."
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Url Alternates"
+msgstr "Url Alternativi"
+
+#. "WidgetAlternates.Category"
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Designer"
+msgstr "Designer"
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Adds shape alternates for specific urls"
+msgstr "Aggiunge forme alternative per url specifici"
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Widget Alternates"
+msgstr "Widget Alternativo"
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Adds shape alternates for content types stereotyped as widgets, allowing to customize shapes by widget and zone"
+msgstr "Aggiunge una forma alternativadi per i tipi di contenuto stereotipati come widget, e consente di personalizzare le forme in base al widget e alla zona"
+
+#: "Orchard.DesignerTools.Controllers.AlternateController"
+msgctxt "Orchard.DesignerTools.Controllers.AlternateController"
+msgid "Not authorized to create templates"
+msgstr "Non sei autorizzato a creare modelli grafici"
+
+#. "n/a"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingMeta.cshtml"
+msgid "n/a"
+msgstr "n/d"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingMeta.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingMeta.cshtml"
+msgid "Content not available as coming from source code."
+msgstr "Contenuto non disponibile poichè viene dal codice sorgente."
+
+#. "Shape"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Shape"
+msgstr "Forma"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Model"
+msgstr "Modello"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Placement"
+msgstr "Posizionamento"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Template"
+msgstr "Modello grafico"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "HTML"
+msgstr "HTML"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Active Template"
+msgstr "Modello grafico Attivo"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Original Template"
+msgstr "Modello grafico originale"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Display Type"
+msgstr "Tipo di visualizzazione"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Alternate ({0})"
+msgstr "Alternativo ({0})"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Create"
+msgstr "Crea"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Wrappers ({0})"
+msgstr "Involucri ({0})"
+

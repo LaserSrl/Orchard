@@ -9,6 +9,14 @@
 # > msgstr "{ messaggio }"
 
 msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
+msgid "Ask New Short Link"
+msgstr "Richiedi un nuovo Link breve"
+
+msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
+msgid "Short Link"
+msgstr "Link breve"
+
+msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
 msgid "Test Short Link"
 msgstr "L'Url breve"
 
@@ -16,9 +24,21 @@ msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLin
 msgid "Valid for:"
 msgstr "Valido per:"
 
+msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
+msgid "You must save a valid Google API KEY on settings before be able to create short link."
+msgstr "Prima di poter creare un link breve (short link) sevi inserire una API KEY di Google valida nelle impostazioni."
+
+msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
+msgid "You must save content before be able to create short link."
+msgstr "Prima di poter creare un nuovo link breve (short link) devi salvare il contenuto."
+
 msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinksSettings.cshtml"
 msgid "Set the <a target=\"_blank\" href=\"{0}\">apikey</a> , on the google site select the project from upside menu's dropdownlist and create a Server Keys, remember to enable the service by going to Overview -> Other popular APIs ->URL Shortener Api"
 msgstr "Controlla la <a target=\"_blank\" href=\"{0}\">apikey</a>: sul sito google di riferimento seleziona il progetto dalla lista del menu in alto e crea una Chiave Server ("Server Keys"). Ricordati di abilitare anche l'opportuno servizio andando su Overview -> Other popular APIs ->URL Shortener Api"
+
+msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinksSettings.cshtml"
+msgid "Short Link Settings"
+msgstr "Impostazioni Sort Link"
 
 msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/Parts/ShortLinks.cshtml"
 msgid "Short Link"

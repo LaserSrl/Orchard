@@ -1,0 +1,281 @@
+msgctxt "~/Modules/Orchard.ContentPicker/Module.txt"
+msgid "Orchard.ContentPicker"
+msgstr "Orchard.ContentPicker"
+
+msgctxt "~/Modules/Orchard.ContentPicker/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il Team di Orchard"
+
+msgctxt "~/Modules/Orchard.ContentPicker/Module.txt"
+msgid "http://orchardcontentpicker.codeplex.com"
+msgstr "http://orchardcontentpicker.codeplex.com"
+
+#. "Orchard.ContentPicker.Description"
+msgctxt "~/Modules/Orchard.ContentPicker/Module.txt"
+msgid "UI for selecting Content Items."
+msgstr "Interfaccia utente per selezionare gli Elementi di Contenuto."
+
+msgctxt "~/Modules/Orchard.ContentPicker/Module.txt"
+msgid "Input Editor"
+msgstr "Editor input"
+
+#: "Orchard.ContentPicker.Drivers.ContentMenuItemPartDriver"
+msgctxt "Orchard.ContentPicker.Drivers.ContentMenuItemPartDriver"
+msgid "You must select a Content Item"
+msgstr "E' necessario selezionare un Elemento Contenuto"
+
+#: "Orchard.ContentPicker.Drivers.ContentPickerFieldDriver"
+msgctxt "Orchard.ContentPicker.Drivers.ContentPickerFieldDriver"
+msgid "The field {0} is mandatory"
+msgstr "Il campo {0} è obbligatorio"
+
+#: "Orchard.ContentPicker.Drivers.ContentPickerFieldDriver"
+msgctxt "Orchard.ContentPicker.Drivers.ContentPickerFieldDriver"
+msgid "Ids"
+msgstr "ID"
+
+#: "Orchard.ContentPicker.Drivers.ContentPickerFieldDriver"
+msgctxt "Orchard.ContentPicker.Drivers.ContentPickerFieldDriver"
+msgid "A formatted list of the ids, e.g., {1},{42}"
+msgstr "Un elenco formattato di ID, es. {1}, {42}"
+
+#: "Orchard.ContentPicker.Drivers.NavigationPartDriver"
+msgctxt "Orchard.ContentPicker.Drivers.NavigationPartDriver"
+msgid "The MenuText field is required"
+msgstr "Il campo MenuText è richiesto"
+
+#: "Orchard.ContentPicker.Services.ContentPickerNavigationProvider"
+msgctxt "Orchard.ContentPicker.Services.ContentPickerNavigationProvider"
+msgid "Content Picker"
+msgstr "Selezione contenuto"
+
+#: "Orchard.ContentPicker.Services.ContentPickerNavigationProvider"
+msgctxt "Orchard.ContentPicker.Services.ContentPickerNavigationProvider"
+msgid "Recent Content"
+msgstr "Contenuti recenti"
+
+#: "Orchard.ContentPicker.Tokens.ContentPickerFieldTokens"
+msgctxt "Orchard.ContentPicker.Tokens.ContentPickerFieldTokens"
+msgid "Content Picker Field"
+msgstr "Campo di selezione contenuto"
+
+#: "Orchard.ContentPicker.Tokens.ContentPickerFieldTokens"
+msgctxt "Orchard.ContentPicker.Tokens.ContentPickerFieldTokens"
+msgid "Tokens for Content Picker Fields"
+msgstr "Token per i campi di selezione contenuto"
+
+#: "Orchard.ContentPicker.Tokens.ContentPickerFieldTokens"
+msgctxt "Orchard.ContentPicker.Tokens.ContentPickerFieldTokens"
+msgid "Content Item"
+msgstr "Elemento di Contenuto"
+
+#: "Orchard.ContentPicker.Tokens.ContentPickerFieldTokens"
+msgctxt "Orchard.ContentPicker.Tokens.ContentPickerFieldTokens"
+msgid "The content item."
+msgstr "L'elemento di contenuto."
+
+#: "~/Modules/Orchard.ContentPicker/Views/ContentPicker.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/ContentPicker.cshtml"
+msgid "Select Content Item"
+msgstr "Selezionare l'elemento di contenuto"
+
+#: "~/Modules/Orchard.ContentPicker/Views/ContentPicker.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/ContentPicker.cshtml"
+msgid "Cannot perform requested operation"
+msgstr "Impossibile portare a termine l'operazione richiesta"
+
+#: "~/Modules/Orchard.ContentPicker/Views/ContentPicker.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/ContentPicker.cshtml"
+msgid "Authentication timed-out: please log-on again"
+msgstr "Autenticazione scaduta: rieseguire il login"
+
+#. "Remove"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/ContentPicker.Edit.cshtml"
+msgid "Remove"
+msgstr "Elimina"
+
+#: "~/Modules/Orchard.ContentPicker/Views/ContentPicker.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/ContentPicker.Edit.cshtml"
+msgid "You need to save your changes."
+msgstr "È necessario salvare le modifiche."
+
+#: "~/Modules/Orchard.ContentPicker/Views/ContentPicker.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/ContentPicker.Edit.cshtml"
+msgid "Content Item"
+msgstr "Elemento di Contenuto"
+
+#: "~/Modules/Orchard.ContentPicker/Views/ContentPicker.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/ContentPicker.Edit.cshtml"
+msgid "Add"
+msgstr "Aggiungi"
+
+#: "~/Modules/Orchard.ContentPicker/Views/ContentPicker.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/ContentPicker.SummaryAdmin.cshtml"
+msgid "Select"
+msgstr "Seleziona"
+
+#: "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgid "Recent Content"
+msgstr "Contenuti recenti"
+
+#: "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgid "Manage {0} Content"
+msgstr "Gestione {0} Contenuto"
+
+#: "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgid "Show"
+msgstr "Mostra"
+
+#: "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgid "any (show all)"
+msgstr "qualunque (mostra tutti)"
+
+#: "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgid "Ordered by"
+msgstr "In ordine per"
+
+#: "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgid "recently created"
+msgstr "creati di recente"
+
+#: "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgid "recently modified"
+msgstr "modificati di recente"
+
+#: "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgid "recently published"
+msgstr "pubblicato di recente"
+
+#: "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/RecentContentTab.cshtml"
+msgid "Apply"
+msgstr "Applica"
+
+#: "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgid "A content item is required"
+msgstr "È necessario specificare un elemento di contenuto"
+
+#: "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgid "Check to ensure the user is providing at least one content item."
+msgstr "Controlla che l'utente sta fornendo almeno un elemento di contenuto."
+
+#: "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgid "Allow multiple content items"
+msgstr "Consenti Elementi di Contenuto multipli."
+
+#: "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgid "Check to allow the user to select multiple content items."
+msgstr "Controllo per consentire all'utente di selezionare più elementi di contenuto."
+
+#: "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgid "Help text"
+msgstr "Testo della guida"
+
+#: "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgid "The help text is written under the field when authors are selecting content items."
+msgstr "Il testo della guida è scritto sotto il campo quando gli autori scelgono gli elementi di contenuto."
+
+#: "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgid "Show Content tab"
+msgstr "Visualizza scheda contenuto"
+
+#: "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgid "Uncheck to hide the Content tab from the picker window."
+msgstr "Deselezionare questa opzione per nascondere la scheda contenuto dalla finestra di selezione."
+
+#: "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgid "Content Types and Parts"
+msgstr "Parti e tipi di contenuto"
+
+#: "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/DefinitionTemplates/ContentPickerFieldSettings.cshtml"
+msgid "A comma separated value of all the content types or content parts to display."
+msgstr "Un valore separate da virgole di tutti i tipi di contenuto o di parti di contenuto da visualizzare."
+
+#: "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.ContentMenuItem.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.ContentMenuItem.Edit.cshtml"
+msgid "Empty"
+msgstr "Vuoto"
+
+#: "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.ContentMenuItem.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.ContentMenuItem.Edit.cshtml"
+msgid "Content Item"
+msgstr "Elemento di Contenuto"
+
+#: "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.ContentMenuItem.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.ContentMenuItem.Edit.cshtml"
+msgid "Browse"
+msgstr "Sfoglia"
+
+#: "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.ContentMenuItem.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.ContentMenuItem.Edit.cshtml"
+msgid "Select the Content Item to display in the menu."
+msgstr "Seleziona l'Elemento di Contenuto da visualizzare nel menu."
+
+#: "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgid "Menu Items"
+msgstr "Voci di menu"
+
+#: "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgid "The menu items linking to this content item."
+msgstr "Le voci di menu collegate a questo elemento."
+
+#: "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgid "on"
+msgstr "su"
+
+#: "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgid "Not displayed in any menu."
+msgstr "Non visualizzato in alcun menu."
+
+#: "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgid "Add on a menu"
+msgstr "Aggiungi ad un menu"
+
+#: "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgid "Select which menu you want the content item to be added on."
+msgstr "Selezionare il menu cui aggiungere l'elemento."
+
+#: "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgid "Menu text"
+msgstr "Testo menu"
+
+#: "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/EditorTemplates/Parts.Navigation.Edit.cshtml"
+msgid "The text that should appear in the menu."
+msgstr "Il testo che deve apparire nel menu."
+
+#: "~/Modules/Orchard.ContentPicker/Views/Fields/ContentPicker.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/Fields/ContentPicker.cshtml"
+msgid "No content items."
+msgstr "Nessun elemento di contenuto."
+
+#: "~/Modules/Orchard.ContentPicker/Views/Fields/ContentPicker.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.ContentPicker/Views/Fields/ContentPicker.SummaryAdmin.cshtml"
+msgid "No content items."
+msgstr "Nessun elemento di contenuto."
+

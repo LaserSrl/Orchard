@@ -6,7 +6,7 @@
 					if (HtmlFormat){
 						child_node.InnerXml = child_node.SelectSingleNode("value").InnerXml;
 					}else{
-						child_node.InnerXml = child_node.SelectSingleNode("value").FirstChild.InnerText;
+						child_node.InnerXml = child_node.SelectSingleNode("value").FirstChild.InnerText;child_node.InnerXml = StripHTML(child_node.SelectSingleNode("value").FirstChild.InnerText.Replace("<br/>"," "));
 					}
 				}
 			}

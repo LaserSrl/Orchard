@@ -153,12 +153,24 @@ msgid "Picture Url"
 msgstr "Url della foto"
 
 msgctxt "~/Modules/Laser.Orchard.Facebook/Views/EditorTemplates/Parts/FacebookPost.cshtml"
+msgid "Post"
+msgstr "Post"
+
+msgctxt "~/Modules/Laser.Orchard.Facebook/Views/EditorTemplates/Parts/FacebookPost.cshtml"
 msgid "Post on next publish"
 msgstr "Posta alla prossima pubblicaizone"
 
 msgctxt "~/Modules/Laser.Orchard.Facebook/Views/EditorTemplates/Parts/FacebookPost.cshtml"
+msgid "ShareLink"
+msgstr "Link to share"
+
+msgctxt "~/Modules/Laser.Orchard.Facebook/Views/EditorTemplates/Parts/FacebookPost.cshtml"
 msgid "This Facebook message has been already posted. You will be able to edit and save it, but it will not be posted anymore on next publish."
 msgstr "Questo messaggio è già stato postato. Potrai modificarlo e risalvarlo, ma non sarà più postato."
+
+msgctxt "~/Modules/Laser.Orchard.Facebook/Views/EditorTemplates/Parts/FacebookPost.cshtml"
+msgid "With Image"
+msgstr "Utilizza un'immagine"
 
 msgctxt "~/Modules/Laser.Orchard.Facebook/Views/EditorTemplates/Parts/FacebookPost.cshtml"
 msgid "YES"
@@ -219,6 +231,10 @@ msgstr "L'account Facebook dell'utente non può essere aggiunto, in quanto già 
 msgctxt "Laser.Orchard.Facebook.Handlers.FacebookPostHandler"
 msgid "Advertising can't be published, see campaign validation date"
 msgstr "Il comunicato non può essere pubblicato. Controllare le date di validità della campagna."
+
+msgctxt "Laser.Orchard.Facebook.Handlers.FacebookPostHandler"
+msgid "Facebook error:"
+msgstr "Errore durante l'operazione su Facebook:"
 
 msgctxt "Laser.Orchard.Facebook.Navigation.AdminMenu"
 msgid "Social Facebook Account"

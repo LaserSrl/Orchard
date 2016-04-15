@@ -1,0 +1,25 @@
+msgctxt "~/Themes/SafeMode/Theme.txt"
+msgid "SafeMode"
+msgstr "Modalità provvisoria"
+
+msgctxt "~/Themes/SafeMode/Theme.txt"
+msgid "Jonathan Wall"
+msgstr "Jonathan Wall"
+
+msgctxt "~/Themes/SafeMode/Theme.txt"
+msgid "The Orchard Theme for setup and failure conditions."
+msgstr "Il tema di Orchard per il setup e le condizioni d'errore."
+
+msgctxt "~/Themes/SafeMode/Theme.txt"
+msgid "hidden"
+msgstr "nascosto"
+
+msgctxt "~/Themes/SafeMode/Theme.txt"
+msgid "http://www.orchardproject.net"
+msgstr "http://www.orchardproject.net"
+
+#: "~/Themes/SafeMode/Views/Layout.cshtml"
+msgctxt "~/Themes/SafeMode/Views/Layout.cshtml"
+msgid "Welcome to Orchard"
+msgstr "Benvenuto in Orchard"
+

@@ -1,0 +1,211 @@
+msgctxt "~/Modules/Orchard.jQuery/Module.txt"
+msgid "jQuery"
+msgstr "jQuery"
+
+msgctxt "~/Modules/Orchard.jQuery/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il Team di Orchard"
+
+msgctxt "~/Modules/Orchard.jQuery/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.jQuery/Module.txt"
+msgid "The jQuery module contains the jQuery and related script libraries."
+msgstr "Il modulo jQuery contiene jQuery e le librerie javascript collegate."
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Prev"
+msgstr "Precedente"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Show the previous month"
+msgstr "Visualizza il mese precedente"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "<<"
+msgstr "<<"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Show the previous year"
+msgstr "Visualizza l'anno precedente"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Next"
+msgstr "Successivo"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Show the next month"
+msgstr "Visualizza il mese prossimo"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid ">>"
+msgstr ">>"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Show the next year"
+msgstr "Visualizza il prossimo anno"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Current"
+msgstr "Corrente"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Show the current month"
+msgstr "Visualizza il mese corrente"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Today"
+msgstr "Oggi"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Show today's month"
+msgstr "Visualizza mese odierno"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Clear"
+msgstr "Azzera"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Clear the date field"
+msgstr "Cancella il campo Data"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Done"
+msgstr "Completato"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Close the datepicker"
+msgstr "Chiudi il datepicker"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Change the year"
+msgstr "Modifica l'anno"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Change the month"
+msgstr "Modifica il mese"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Wk"
+msgstr "Sett"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Week of the year"
+msgstr "Settimana dell'anno"
+
+#: "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/CalendarsPickerLocalization.cshtml"
+msgid "Select a date"
+msgstr "Seleziona una data"
+
+#: "~/Modules/Orchard.jQuery/Views/DatePickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/DatePickerLocalization.cshtml"
+msgid "Done"
+msgstr "Fatto"
+
+#: "~/Modules/Orchard.jQuery/Views/DatePickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/DatePickerLocalization.cshtml"
+msgid "Prev"
+msgstr "Precedente"
+
+#: "~/Modules/Orchard.jQuery/Views/DatePickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/DatePickerLocalization.cshtml"
+msgid "Next"
+msgstr "Successivo"
+
+#: "~/Modules/Orchard.jQuery/Views/DatePickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/DatePickerLocalization.cshtml"
+msgid "Today"
+msgstr "Oggi"
+
+#: "~/Modules/Orchard.jQuery/Views/DatePickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/DatePickerLocalization.cshtml"
+msgid "Wk"
+msgstr "Sett"
+
+#: "~/Modules/Orchard.jQuery/Views/TimeEntryLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/TimeEntryLocalization.cshtml"
+msgid "Now"
+msgstr "Adesso"
+
+#: "~/Modules/Orchard.jQuery/Views/TimeEntryLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/TimeEntryLocalization.cshtml"
+msgid "Previous field"
+msgstr "Campo precedente"
+
+#: "~/Modules/Orchard.jQuery/Views/TimeEntryLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/TimeEntryLocalization.cshtml"
+msgid "Next field"
+msgstr "Campo successivo"
+
+#: "~/Modules/Orchard.jQuery/Views/TimeEntryLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/TimeEntryLocalization.cshtml"
+msgid "Increment"
+msgstr "Incremento"
+
+#: "~/Modules/Orchard.jQuery/Views/TimeEntryLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/TimeEntryLocalization.cshtml"
+msgid "Decrement"
+msgstr "Decremento"
+
+#: "~/Modules/Orchard.jQuery/Views/TimePickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/TimePickerLocalization.cshtml"
+msgid "Choose time"
+msgstr "Scegli un'ora"
+
+#: "~/Modules/Orchard.jQuery/Views/TimePickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/TimePickerLocalization.cshtml"
+msgid "Time"
+msgstr "Ora"
+
+#: "~/Modules/Orchard.jQuery/Views/TimePickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/TimePickerLocalization.cshtml"
+msgid "Hour"
+msgstr "Ora"
+
+#: "~/Modules/Orchard.jQuery/Views/TimePickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/TimePickerLocalization.cshtml"
+msgid "Minute"
+msgstr "Minuti"
+
+#: "~/Modules/Orchard.jQuery/Views/TimePickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/TimePickerLocalization.cshtml"
+msgid "Now"
+msgstr "Adesso"
+
+#: "~/Modules/Orchard.jQuery/Views/TimePickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/TimePickerLocalization.cshtml"
+msgid "Done"
+msgstr "Completato"
+
+#: "~/Modules/Orchard.jQuery/Views/EditorTemplates/DateTimeEditor.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/EditorTemplates/DateTimeEditor.cshtml"
+msgid "Date"
+msgstr "Data"
+
+#: "~/Modules/Orchard.jQuery/Views/EditorTemplates/DateTimeEditor.cshtml"
+msgctxt "~/Modules/Orchard.jQuery/Views/EditorTemplates/DateTimeEditor.cshtml"
+msgid "Time"
+msgstr "Ora"
+

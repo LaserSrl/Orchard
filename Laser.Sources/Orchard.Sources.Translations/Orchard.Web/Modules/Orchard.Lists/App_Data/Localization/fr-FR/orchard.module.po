@@ -1,0 +1,506 @@
+msgctxt "~/Modules/Orchard.Lists/Module.txt"
+msgid "Lists"
+msgstr "Listes"
+
+msgctxt "~/Modules/Orchard.Lists/Module.txt"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+msgctxt "~/Modules/Orchard.Lists/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.Lists/Module.txt"
+msgid "Introduces a preconfigured container-enabled content type."
+msgstr "Un type conteneur prêt à l'emploi."
+
+#: "Orchard.Lists.AdminMenu"
+msgctxt "Orchard.Lists.AdminMenu"
+msgid "Lists"
+msgstr "Listes"
+
+#. "New {0}"
+msgctxt "Orchard.Lists.AdminMenu"
+msgid "New {0}"
+msgstr "Nouveau {0}"
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Couldn't publish selected lists."
+msgstr "Impossible de publier les listes sélectionnées."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Lists successfully published."
+msgstr "Listes publiées avec succès."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Couldn't unpublish selected lists."
+msgstr "Impossible de dépublier les listes sélectionnées."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Lists successfully unpublished."
+msgstr "Listes dépubliées avec succès."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Couldn't remove selected lists."
+msgstr "Impossible de supprimer les listes sélectionnées."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Lists successfully removed."
+msgstr "Listes supprimées avec succès."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "{0} was moved to <a href=\"{1}\">{2}</a>"
+msgstr "{0} a été déplacé vers <a href=\"{1}\">{2}</a>"
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "{0} was moved from <a href=\"{3}\">{4}</a> to <a href=\"{1}\">{2}</a>"
+msgstr "{0} a été déplacé de <a href=\"{3}\">{4}</a> vers <a href=\"{1}\">{2}</a>"
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "{0} is already part of this list and was moved to the top."
+msgstr "{0} fait déjà partie de cette liste et a été déplacé vers le haut."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "The list has been reversed."
+msgstr "La liste a été inversée."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "The list has been shuffled."
+msgstr "La liste a été mélangée."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "The list has been sorted."
+msgstr "La liste a été triée."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Please select an operation to perform on the list."
+msgstr "Veuillez sélectionner une opération à exécuter sur la liste."
+
+#. "Please select the list to move the items to."
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Please select the list to move the items to."
+msgstr "Merci de bien vouloir sélectionner la liste vers laquelle les contenus doivent être déplacés."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Couldn't move selected content."
+msgstr "Impossible de déplacer le contenu sélectionné."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "One or more items could not be moved to '{0}' because it is restricted to containing items of type '{1}'."
+msgstr "Un ou plusieurs contenus n'ont pas pu être déplacés vers '{0}' parce que ce dernier est restreint aux contenus de type '{1}'."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Content successfully moved to <a href=\"{0}\">{1}</a>."
+msgstr "Contenu déplacé avec succès vers <a href=\"{0}\">{1}</a>."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Couldn't remove selected content from the list."
+msgstr "Impossible de retirer le contenu sélectionné de la liste."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Content successfully removed from the list."
+msgstr "Contenu retiré de la liste."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Couldn't remove selected content."
+msgstr "Impossible de retirer le contenu sélectionné."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Content successfully removed."
+msgstr "Contenu retiré."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Couldn't unpublish selected content."
+msgstr "Impossible de dépublier le contenu sélectionné."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Content successfully unpublished."
+msgstr "Contenu dépublié."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Couldn't publish selected content."
+msgstr "Impossible de publier le contenu sélectionné."
+
+#: "Orchard.Lists.Controllers.AdminController"
+msgctxt "Orchard.Lists.Controllers.AdminController"
+msgid "Content successfully published."
+msgstr "Contenu publié avec succès."
+
+#: "Orchard.Lists.Forms.ListFilterForm"
+msgctxt "Orchard.Lists.Forms.ListFilterForm"
+msgid "List"
+msgstr "Liste"
+
+#: "Orchard.Lists.Forms.ListFilterForm"
+msgctxt "Orchard.Lists.Forms.ListFilterForm"
+msgid "Select a list."
+msgstr "Sélectionner une liste."
+
+#: "Orchard.Lists.Helpers.StringExtensions"
+msgctxt "Orchard.Lists.Helpers.StringExtensions"
+msgid "{0} or {1}"
+msgstr "{0} ou {1}"
+
+#. "Lists"
+msgctxt "Orchard.Lists.Projections.ListFilter"
+msgid "Lists"
+msgstr "Listes"
+
+#: "Orchard.Lists.Projections.ListFilter"
+msgctxt "Orchard.Lists.Projections.ListFilter"
+msgid "List"
+msgstr "Liste"
+
+#: "Orchard.Lists.Projections.ListFilter"
+msgctxt "Orchard.Lists.Projections.ListFilter"
+msgid "Specific list"
+msgstr "Liste spécifique"
+
+#: "Orchard.Lists.Projections.ListFilter"
+msgctxt "Orchard.Lists.Projections.ListFilter"
+msgid "No list was selected"
+msgstr "Aucune liste n'a été choisie"
+
+#: "Orchard.Lists.Projections.ListFilter"
+msgctxt "Orchard.Lists.Projections.ListFilter"
+msgid "Show items from the following list: {0}"
+msgstr "Afficher les éléments dans la liste suivante : {0}"
+
+#: "Orchard.Lists.Projections.ListSortCriteria"
+msgctxt "Orchard.Lists.Projections.ListSortCriteria"
+msgid "List item position"
+msgstr "Position de l'élément de liste"
+
+#. "Position"
+msgctxt "Orchard.Lists.Projections.ListSortCriteria"
+msgid "Position"
+msgstr "Position"
+
+#: "Orchard.Lists.Projections.ListSortCriteria"
+msgctxt "Orchard.Lists.Projections.ListSortCriteria"
+msgid "Sorts the results by position"
+msgstr "Trie les résultats par position"
+
+#: "~/Modules/Orchard.Lists/Views/Breadcrumbs.ContentItem.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Breadcrumbs.ContentItem.cshtml"
+msgid "New {0}"
+msgstr "Nouveau {0}"
+
+#: "~/Modules/Orchard.Lists/Views/Content.SummaryAdminCondensed.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Content.SummaryAdminCondensed.cshtml"
+msgid "Edit"
+msgstr "Modifier"
+
+#: "~/Modules/Orchard.Lists/Views/Content.SummaryAdminCondensed.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Content.SummaryAdminCondensed.cshtml"
+msgid " | "
+msgstr " | "
+
+#: "~/Modules/Orchard.Lists/Views/Content.SummaryAdminCondensed.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Content.SummaryAdminCondensed.cshtml"
+msgid "Delete"
+msgstr "Supprimer"
+
+#: "~/Modules/Orchard.Lists/Views/Dialog.CloseButton.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Dialog.CloseButton.cshtml"
+msgid "Close"
+msgstr "Fermer"
+
+#: "~/Modules/Orchard.Lists/Views/ListNavigation.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/ListNavigation.cshtml"
+msgid "Previous"
+msgstr "Précédent"
+
+#: "~/Modules/Orchard.Lists/Views/ListNavigation.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/ListNavigation.cshtml"
+msgid "Next"
+msgstr "Suivant"
+
+#: "~/Modules/Orchard.Lists/Views/ListView.Condensed.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/ListView.Condensed.cshtml"
+msgid "'{0}' has no content items."
+msgstr "« {0} » n'a aucun élément de contenu."
+
+#: "~/Modules/Orchard.Lists/Views/ListView.Condensed.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/ListView.Condensed.cshtml"
+msgid "There was an error updating the positions. Please try again."
+msgstr "Il y a eu une erreur de mise à jour des positions. Veuillez essayer de nouveau."
+
+#: "~/Modules/Orchard.Lists/Views/ListView.Condensed.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/ListView.Condensed.cshtml"
+msgid "Items"
+msgstr "Eléments"
+
+#: "~/Modules/Orchard.Lists/Views/ListView.Default.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/ListView.Default.cshtml"
+msgid "'{0}' has no content items."
+msgstr "« {0} » n'a aucun élément de contenu."
+
+#: "~/Modules/Orchard.Lists/Views/ListView.Default.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/ListView.Default.cshtml"
+msgid "There was an error updating the positions. Please try again."
+msgstr "Il y a eu une erreur de mise à jour des positions. Veuillez essayer de nouveau."
+
+#: "~/Modules/Orchard.Lists/Views/ListView.Default.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/ListView.Default.cshtml"
+msgid "Items"
+msgstr "Eléments"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Move to..."
+msgstr "Déplacer vers..."
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Actions:"
+msgstr "Actions :"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Choose action..."
+msgstr "Sélectionner une action..."
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Publish Now"
+msgstr "Publier maintenant"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Unpublish"
+msgstr "Dépublier"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Delete"
+msgstr "Supprimer"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Remove from List"
+msgstr "Retirer de la liste"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Move to List..."
+msgstr "Déplacer de la liste..."
+
+#. "Apply"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Apply"
+msgstr "Appliquer"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "List Operations:"
+msgstr "Opérations sur les listes :"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Choose operation..."
+msgstr "Choisir une opération ..."
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Shuffle"
+msgstr "Mélanger"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Reverse"
+msgstr "Inverser"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Sort"
+msgstr "Trier"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Sort by..."
+msgstr "Trier par ..."
+
+#. "Recently Created"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Recently Created"
+msgstr "Récemment créé"
+
+#. "Recently Modified"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Recently Modified"
+msgstr "Récemment modifié"
+
+#. "Recently Published"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Recently Published"
+msgstr "Récemment publié"
+
+#. "Title"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Title"
+msgstr "Titre"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Ascending"
+msgstr "Croissant"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Descending"
+msgstr "Décroissant"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
+msgid "Ordered by"
+msgstr "Trié par"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.Contained.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.Contained.SummaryAdmin.cshtml"
+msgid "Contained Items ({0})"
+msgstr "Éléments contenus ({0})"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.Contained.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.Contained.SummaryAdmin.cshtml"
+msgid " | "
+msgstr " | "
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.ItemCount.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.ItemCount.SummaryAdmin.cshtml"
+msgid "Empty"
+msgstr "Vide"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.ItemCount.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.ItemCount.SummaryAdmin.cshtml"
+msgid "1 Item"
+msgstr "1 élément"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.Manage.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.Manage.cshtml"
+msgid "{0} Properties"
+msgstr "Propriétés de {0}"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.Manage.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.Manage.cshtml"
+msgid "New {0}"
+msgstr "Nouveau {0}"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.Manage.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.Manage.cshtml"
+msgid "New Content"
+msgstr "Nouveau contenu"
+
+#: "~/Modules/Orchard.Lists/Views/Parts.Container.Manage.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.Manage.cshtml"
+msgid "Choose Items"
+msgstr "Choisissez des éléments"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "Manage Lists"
+msgstr "Gérer les listes"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "New List"
+msgstr "Nouvelle liste"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "There are no lists yet. <a href=\"{0}\">Create a List<a/>."
+msgstr "Il n'y a pas encore de listes . <a href=\"{0}\">Créer une liste<a/>."
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "Actions:"
+msgstr "Actions :"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "Choose action..."
+msgstr "Sélectionner une action ..."
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "Publish Now"
+msgstr "Publier maintenant"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "Unpublish"
+msgstr "Dépublier"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "Delete"
+msgstr "Supprimer"
+
+#. "Apply"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "Apply"
+msgstr "Appliquer"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "Show"
+msgstr "Afficher"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "any (show all)"
+msgstr "Tous (tout afficher)"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "Ordered by"
+msgstr "Trié par"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "recently created"
+msgstr "Récemment créé"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "recently modified"
+msgstr "Récemment modifié"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/Index.cshtml"
+msgid "recently published"
+msgstr "Récemment publié"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/List.cshtml"
+msgid "Manage {0}"
+msgstr "Gérer {0}"
+
+#: "~/Modules/Orchard.Lists/Views/Admin/SelectType.cshtml"
+msgctxt "~/Modules/Orchard.Lists/Views/Admin/SelectType.cshtml"
+msgid "Create New List"
+msgstr "Créer une nouvelle Liste"
+

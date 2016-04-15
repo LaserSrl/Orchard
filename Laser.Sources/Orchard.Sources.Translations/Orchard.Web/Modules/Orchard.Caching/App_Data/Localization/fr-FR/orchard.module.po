@@ -1,0 +1,21 @@
+msgctxt "~/Modules/Orchard.Caching/Module.txt"
+msgid "Orchard.Caching"
+msgstr "Orchard.Caching"
+
+msgctxt "~/Modules/Orchard.Caching/Module.txt"
+msgid "Sébastien Ros"
+msgstr "Sébastien Ros"
+
+msgctxt "~/Modules/Orchard.Caching/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+#. "Orchard.Caching.Description"
+msgctxt "~/Modules/Orchard.Caching/Module.txt"
+msgid "Provides an API to cache business data."
+msgstr "Fournit une API de cache des données business."
+
+msgctxt "~/Modules/Orchard.Caching/Module.txt"
+msgid "Performance"
+msgstr "Performance"
+

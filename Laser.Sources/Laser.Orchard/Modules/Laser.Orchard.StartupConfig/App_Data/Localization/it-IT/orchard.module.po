@@ -40,6 +40,18 @@ msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/DefinitionTemplates/UserGro
 msgid "Required"
 msgstr "Richiesto"
 
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/ExternalApplication.cshtml"
+msgid "Api Secret Key"
+msgstr "Chiave segreta dell'Api"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/ProtectionSettingsPart.Edit.cshtml"
+msgid "A list of MVC Area.Controller.Action entries. When defined, using comma separated values, protects entries from unauthorized calls."
+msgstr "Una lista di elementi MVC Area.Controller.Action. Quando compilato, separando gli elementi da virgola, protegge le chiamate alle WebApi da chiamate non autorizzate."
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/ProtectionSettingsPart.Edit.cshtml"
+msgid "Add External Application"
+msgstr "Aggiungi applicazione remota"
+
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/TaxonomyExtension_Edit.cshtml"
 msgid "Order contents by"
 msgstr "Ordina i contenuti per"
@@ -59,6 +71,14 @@ msgstr "Impostazioni della Tassonomia"
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/UsersGroups.cshtml"
 msgid "Select User Group"
 msgstr "Selezionare Gruppo Utente"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
+msgid "Action"
+msgstr "Azione"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
+msgid "Addresses"
+msgstr "Indirizzi"
 
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/Parts/ContentPickerConnector.cshtml"
 msgid "No content items."
@@ -159,6 +179,14 @@ msgstr "Selezionare i Termini relativi al Contenuto"
 msgctxt "Laser.Orchard.StartupConfig.Activities.TaxonomySetValuesForm"
 msgid "Set Owner of content picker element"
 msgstr "Impostare il Proprietario dell'elemento di selezione del contenuto"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.UserEventActivity"
+msgid "AccessDenied"
+msgstr "Accesso negato"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.UserEventActivity"
+msgid "Approved"
+msgstr "Approvato"
 
 msgctxt "Laser.Orchard.StartupConfig.Activities.UserEventActivity"
 msgid "Created"
@@ -356,6 +384,10 @@ msgctxt "Laser.Orchard.StartupConfig.Providers.ContentUserToken"
 msgid "UserEmail"
 msgstr "EmailUtente"
 
+msgctxt "Laser.Orchard.StartupConfig.RazorCodeExecution.Forms.RazorExecuteForm"
+msgid "A comma-separated list of possible outcomes."
+msgstr "Una lista separata da virgole dei possibili risultati in uscita."
+
 msgctxt "Laser.Orchard.StartupConfig.Services.ActivityServices"
 msgid "Unknown"
 msgstr "Sconosciuto"
@@ -363,6 +395,14 @@ msgstr "Sconosciuto"
 msgctxt "Laser.Orchard.StartupConfig.Services.UsersGroupsSettingsService"
 msgid "Group user is in use and can't be deleted"
 msgstr "L'utente del gruppo è in uso e non può essere eliminato"
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.AdditionalDateTokens"
+msgid "Add Days|Months|Years to a date"
+msgstr "Add Days|Months|Years ad una data"
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.AdditionalDateTokens"
+msgid "Add:Days|Months|Years to a date"
+msgstr "Add:Days|Months|Years ad una data"
 
 msgctxt "Laser.Orchard.StartupConfig.Tokens.CreatorEmailTokens"
 msgid "Creator email"
@@ -379,4 +419,16 @@ msgstr "Campo della Tassonomia"
 msgctxt "Laser.Orchard.StartupConfig.Tokens.TaxonomyTokens"
 msgid "Terms"
 msgstr "Termini"
+
+msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Migration"
+msgid "A default app named \"{0}\" has been created. Its Api Key is {1}."
+msgstr "E' stata creata un'App di default chiamata \"{0}\". La sua Api Key è {1}."
+
+msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Models.ValidateExternalApplicationAttribute"
+msgid "ApiKey field is required."
+msgstr "il campo ApiKey è obbligatorio."
+
+msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Models.ValidateExternalApplicationAttribute"
+msgid "ApiKey field must be minimum 22 characters length."
+msgstr "Il campo ApiKey deve essere di almeno 22 caratteri."
 
