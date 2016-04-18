@@ -1,9 +1,11 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.CommunicationGateway.Utils;
 using Laser.Orchard.ShortLinks.Services;
 using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Records;
 using Orchard.ContentPicker.Fields;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
@@ -40,7 +42,15 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         CommunicationContactPart GetContactFromUser(int iduser);
 
+        List<ContentItem> GetContactsFromMail(string mail);
+
+        List<ContentItem> GetContactsFromSms(string prefix, string sms);
+
+        List<ContentItem> GetContactsFromName(string name);
+
         void Synchronize();
+
+        string ImportCsv(byte[] file);
     }
 
     public class CommunicationService : ICommunicationService {
@@ -49,17 +59,19 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly IContentExtensionsServices _contentExtensionsServices;
         private readonly IModuleService _moduleService;
         private readonly INotifier _notifier;
+        private readonly ISessionLocator _session;
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
 
-        public CommunicationService(IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices) {
+        public CommunicationService(IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
             _moduleService = moduleService;
             _notifier = notifier;
+            _session = session;
             T = NullLocalizer.Instance;
             _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
         }
@@ -154,6 +166,54 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         public CommunicationContactPart GetContactFromUser(int iduser) {
             return _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == iduser).List().FirstOrDefault();
+        }
+
+        public List<ContentItem> GetContactsFromMail(string mail) {
+            string hql = @"SELECT cir.Id as Id
+                FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr
+                join civr.ContentItemRecord as cir
+                join cir.EmailContactPartRecord as EmailPart
+                join EmailPart.EmailRecord as EmailRecord 
+                WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.Email = :mail";
+
+            var elencoId = _session.For(null)
+                .CreateQuery(hql)
+                .SetParameter("mail", mail)
+                .List();
+            var contentQuery = _orchardServices.ContentManager.Query(VersionOptions.Latest)
+                .ForType("CommunicationContact")
+                .Where<CommunicationContactPartRecord>(x => elencoId.Contains(x.Id)).List();
+            return contentQuery.ToList();
+        }
+
+        public List<ContentItem> GetContactsFromSms(string prefix, string sms) {
+            string hql = @"SELECT cir.Id as Id
+                FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr
+                join civr.ContentItemRecord as cir
+                join cir.SmsContactPartRecord as SmsPart
+                join SmsPart.SmsRecord as SmsRecord 
+                WHERE civr.Published=1 AND SmsRecord.Prefix = :prefix AND SmsRecord.Sms = :sms";
+            var elencoId = _session.For(null)
+                .CreateQuery(hql)
+                .SetParameter("prefix", prefix)
+                .SetParameter("sms", sms)
+                .List();
+            var contentQuery = _orchardServices.ContentManager.Query(VersionOptions.Latest)
+                .ForType("CommunicationContact")
+                .Where<CommunicationContactPartRecord>(x => elencoId.Contains(x.Id)).List();
+            return contentQuery.ToList();
+        }
+
+        public List<ContentItem> GetContactsFromName(string name) {
+            var query = _orchardServices.ContentManager.Query(new string[] { "CommunicationContact" })
+                .Where<TitlePartRecord>(x => x.Title == name);
+            return query.List().ToList();
+        }
+
+        public ContentItem GetContactFromId(int id) {
+            var query = _orchardServices.ContentManager.Query(new string[] { "CommunicationContact" })
+                .Where<CommunicationContactPartRecord>(x => x.Id == id);
+            return query.List().First();
         }
 
         /// <summary>
@@ -361,6 +421,12 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, Contact);
                 }
             }
+        }
+
+        public string ImportCsv(byte[] file) {
+            ImportUtil import = new ImportUtil(_orchardServices);
+            import.ImportCsv(file);
+            return string.Format("Errors: {0}.", import.Errors.Count);
         }
     }
 }

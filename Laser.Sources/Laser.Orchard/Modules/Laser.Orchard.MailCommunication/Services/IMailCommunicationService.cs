@@ -8,6 +8,7 @@ using Orchard.Data;
 using Orchard.Localization.Services;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Laser.Orchard.Services.MailCommunication {

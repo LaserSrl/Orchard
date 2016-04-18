@@ -170,6 +170,7 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="Security\AdvertisingEventHandler.cs" />
     <Compile Include="Services\ICommunicationService.cs" />
+    <Compile Include="Utils\ImportUtil.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
     <Compile Include="ViewModels\ListVM.cs" />
     <Compile Include="ViewModels\QueryFilterVM.cs" />

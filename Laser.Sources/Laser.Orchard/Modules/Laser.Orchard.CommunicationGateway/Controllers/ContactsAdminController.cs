@@ -14,6 +14,7 @@ using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
+using Orchard.Mvc;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -134,6 +135,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
         [HttpGet]
         [Admin]
+        
         public ActionResult Index(int? page, int? pageSize, SearchVM search) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
@@ -251,6 +253,19 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             _orchardServices.New.List();
             var model = new SearchIndexVM(pageOfContentItems, search, pagerShape, Options);
             return View((object)model);
+        }
+
+        [Admin]
+        [HttpPost]
+        public ActionResult ImportCsv(System.Web.HttpPostedFileBase csvFile) {
+            var len = csvFile.ContentLength;
+            if (len > 0) {
+                byte[] buffer = new byte[len];
+                csvFile.InputStream.Read(buffer, 0, buffer.Length);
+                string msg = _communicationService.ImportCsv(buffer);
+                _notifier.Add(NotifyType.Information, T(msg));
+            }
+            return RedirectToAction("Index");
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

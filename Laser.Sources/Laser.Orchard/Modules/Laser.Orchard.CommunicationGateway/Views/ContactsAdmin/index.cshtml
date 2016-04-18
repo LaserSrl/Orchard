@@ -13,6 +13,10 @@
         <a class="button primaryAction" href="@Url.Action("Synchronize", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" })" title="@T("Synchronize")">@T("Synchronize")</a>
     </div>
 }
+@using (Html.BeginFormAntiForgeryPost(Url.Action("ImportCsv", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
+    <input type="file" name="csvFile" id="csvFile" />
+    <button type="submit">@T("Import")</button>
+}
 @using (Html.BeginForm("Index", "ContactsAdmin", FormMethod.Get)) {
  @*   @Html.AntiForgeryToken()
     *@<fieldset class="bulk-actions">
