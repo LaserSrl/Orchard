@@ -1,7 +1,9 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.CommunicationGateway.ViewModels;
 using Laser.Orchard.ShortLinks.Services;
 using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
+using NHibernate.Transform;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentPicker.Fields;
@@ -21,6 +23,7 @@ using Orchard.Taxonomies.Models;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -31,15 +34,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
     public interface ICommunicationService : IDependency {
 
         bool AdvertisingIsAvailable(Int32 id);
-
         string GetCampaignLink(string CampaignSource, ContentPart part);
-
         bool CampaignLinkExist(ContentPart part);
-
         void UserToContact(IUser UserContent);
-
         CommunicationContactPart GetContactFromUser(int iduser);
-
         void Synchronize();
     }
 
@@ -49,19 +47,22 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly IContentExtensionsServices _contentExtensionsServices;
         private readonly IModuleService _moduleService;
         private readonly INotifier _notifier;
+
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
 
-        public CommunicationService(IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices) {
+        public CommunicationService(IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, 
+                                    IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
             _moduleService = moduleService;
             _notifier = notifier;
-            T = NullLocalizer.Instance;
             _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
+
+            T = NullLocalizer.Instance;
         }
 
         public bool AdvertisingIsAvailable(Int32 id) {
@@ -156,8 +157,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             return _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == iduser).List().FirstOrDefault();
         }
 
+        
+
         /// <summary>
-        ///La parte sarebbe CommunicationAdvertisingPart ma nobn l'ho definita quindi passo una cosa generica (ContentPart)
+        ///La parte sarebbe CommunicationAdvertisingPart ma non l'ho definita quindi passo una cosa generica (ContentPart)
         /// </summary>
         /// <param name="part"></param>
         /// <returns></returns>

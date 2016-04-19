@@ -9,6 +9,8 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
+using Orchard.Environment.Configuration;
+using Orchard.Fields.Fields;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Admin;
@@ -18,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.CommunicationGateway.Controllers {
@@ -28,6 +31,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly string contentType = "CommunicationContact";
         private readonly dynamic TestPermission = Permissions.ManageContact;
         private readonly ICommunicationService _communicationService;
+        private readonly IExportContactService _exportContactService;
+        private readonly ShellSettings _shellSettings;
         private readonly ISessionLocator _session;
         private readonly INotifier _notifier;
         private Localizer T { get; set; }
@@ -37,12 +42,17 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             INotifier notifier,
             IContentManager contentManager,
              ICommunicationService communicationService,
-             ISessionLocator session) {
+             ISessionLocator session,
+             IExportContactService exportContactService,
+            ShellSettings shellSettings
+            ) {
             _orchardServices = orchardServices;
             _contentManager = contentManager;
             _notifier = notifier;
             T = NullLocalizer.Instance;
             _communicationService = communicationService;
+            _exportContactService = exportContactService;
+            _shellSettings = shellSettings;
             _session = session;
         }
 
@@ -88,18 +98,15 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
                 if (draftable) {
                     _contentManager.Create(newContent, VersionOptions.Draft);
-                }
-                else {
+                } else {
                     _contentManager.Create(newContent);
                 }
 
                 content = newContent;
-            }
-            else {
+            } else {
                 if (draftable) {
                     content = _contentManager.Get(id, VersionOptions.DraftRequired);
-                }
-                else {
+                } else {
                     content = _contentManager.Get(id);
                 }
             }
@@ -132,28 +139,31 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             return RedirectToAction("Index", "ContactsAdmin");
         }
 
+
         [HttpGet]
         [Admin]
         public ActionResult Index(int? page, int? pageSize, SearchVM search) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
-            return Index(new PagerParameters {
-                Page = page,
-                PageSize = pageSize
-            }, search);
+
+            if (HttpContext.Request["submitFrom"] == null || HttpContext.Request["submitFrom"].ToString() != "submit.Export") {
+                return IndexSearch(page, pageSize, search);
+            } else {
+                return Export(search);
+            }
         }
 
         [HttpPost]
         [Admin]
-        public ActionResult Index(PagerParameters pagerParameters, SearchVM search) {
+        public ActionResult IndexSearch(int? page, int? pageSize, SearchVM search) {
             // variabili di appoggio
             List<int> arr = null;
-            
+
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
             IEnumerable<ContentItem> contentItems = null;
             int totItems = 0;
-            Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
+            Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, page, pageSize);
             dynamic Options = new System.Dynamic.ExpandoObject();
             var expression = search.Expression;
             IContentQuery<ContentItem> contentQuery = _contentManager.Query(VersionOptions.Latest).ForType(contentType);//.OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc); //Performance issues on heavy ContentItems numbers #6247
@@ -178,13 +188,13 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                             .List();
 
                         // alternativa
-//                        string myQueryMail = @"select EmailContactPartRecord_Id 
-//                                            from Laser_Orchard_CommunicationGateway_CommunicationEmailRecord 
-//                                            where Email like '%' + :mail + '%'";
-//                        var elencoIdMail = _session.For(null)
-//                            .CreateSQLQuery(myQueryMail)
-//                            .SetParameter("mail", expression)
-//                            .List();
+                        //                        string myQueryMail = @"select EmailContactPartRecord_Id 
+                        //                                            from Laser_Orchard_CommunicationGateway_CommunicationEmailRecord 
+                        //                                            where Email like '%' + :mail + '%'";
+                        //                        var elencoIdMail = _session.For(null)
+                        //                            .CreateSQLQuery(myQueryMail)
+                        //                            .SetParameter("mail", expression)
+                        //                            .List();
 
                         totItems = elencoIdMail.Count;
 
@@ -210,13 +220,13 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                             .List();
 
                         // alternativa
-//                        string myQuerySms = @"select SmsContactPartRecord_Id 
-//                                            from Laser_Orchard_CommunicationGateway_CommunicationSmsRecord 
-//                                            where sms like '%' + :sms + '%'";
-//                        var elencoIdSms = _session.For(null)
-//                            .CreateSQLQuery(myQuerySms)
-//                            .SetParameter("sms", expression)
-//                            .List();
+                        //                        string myQuerySms = @"select SmsContactPartRecord_Id 
+                        //                                            from Laser_Orchard_CommunicationGateway_CommunicationSmsRecord 
+                        //                                            where sms like '%' + :sms + '%'";
+                        //                        var elencoIdSms = _session.For(null)
+                        //                            .CreateSQLQuery(myQuerySms)
+                        //                            .SetParameter("sms", expression)
+                        //                            .List();
 
                         totItems = elencoIdSms.Count;
 
@@ -229,8 +239,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                         contentItems = contentQuery.Where<CommunicationContactPartRecord>(x => arr.Contains(x.Id)).List();
                         break;
                 }
-            }
-            else {
+            } else {
                 totItems = contentQuery.Count();
                 contentItems = contentQuery.Slice(pager.GetStartIndex(), pager.PageSize);
             }
@@ -252,6 +261,71 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             var model = new SearchIndexVM(pageOfContentItems, search, pagerShape, Options);
             return View((object)model);
         }
+
+        [HttpPost]
+        [Admin]
+        public ActionResult Export(SearchVM search) {
+            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+                return new HttpUnauthorizedResult();
+
+            IEnumerable<ContentItem> contentItems = _exportContactService.GetContactList(search);
+            List<ContactExport> listaContatti = new List<ContactExport>();
+
+            foreach (ContentItem contenuto in contentItems) {
+                // Contact Master non viene esportato
+                if (!contenuto.As<CommunicationContactPart>().Master) {
+                    listaContatti.Add(_exportContactService.GetInfoContactExport(contenuto));
+                }
+            }
+
+            // Export CSV
+            StringBuilder strBuilder = new StringBuilder();
+            string Separator = ";";
+            bool isColumnExist = false;
+
+            foreach (ContactExport contatto in listaContatti) {
+
+                if (!isColumnExist) {
+                    #region column
+                    strBuilder.Append("Id" + Separator);
+                    strBuilder.Append("TitlePart.Title" + Separator);
+                    foreach (Hashtable fieldColumn in contatto.Fields) {
+                        foreach (DictionaryEntry nameCol in fieldColumn) {
+                            strBuilder.Append(nameCol.Key + Separator);
+                        }
+                    }
+                    strBuilder.Append("ContactPart.Sms" + Separator);
+                    strBuilder.Append("ContactPart.Email" + Separator);
+                    strBuilder.Append("\n");
+                    #endregion
+
+                    isColumnExist = true;
+                }
+
+                #region row
+                strBuilder.Append(contatto.Id.ToString() + Separator);
+                strBuilder.Append(contatto.Title + Separator);
+                foreach (Hashtable fieldRow in contatto.Fields) {
+                    foreach (DictionaryEntry valueRow in fieldRow) {
+                        strBuilder.Append(valueRow.Value + Separator);
+                    }
+                }
+                strBuilder.Append(string.Join(",", contatto.Sms) + Separator);
+                strBuilder.Append(string.Join(",", contatto.Mail) + Separator);
+                strBuilder.Append("\n");
+                #endregion
+            }
+
+            string fileName = String.Format("contacts_{0}_{1:yyyyMMddHHmmss}.csv", _shellSettings.Name, DateTime.Now);
+            byte[] buffer = Encoding.UTF8.GetBytes(strBuilder.ToString());
+
+            FileContentResult file = new FileContentResult(buffer, "text/csv");
+            file.FileDownloadName = fileName;
+
+            return file;
+        }
+
+
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
