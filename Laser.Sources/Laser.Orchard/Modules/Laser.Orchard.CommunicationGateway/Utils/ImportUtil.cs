@@ -81,7 +81,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                         }
                     }
 
-                    // identifica i campi cardine (ID, Name, mail, sms)
+                    // controlla l'esistenza e la posizione dei campi cardine (ID, Name, mail, sms)
                     bool check = CheckForMainFields(intestazione);
                     if (check) {
                         //scandisce le righe del file
