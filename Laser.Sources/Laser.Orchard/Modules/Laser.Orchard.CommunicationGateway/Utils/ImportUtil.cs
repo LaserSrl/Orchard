@@ -30,14 +30,20 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
         }
 
         public List<string> Errors { get; set; }
+        public int TotMail { get; set; }
+        public int TotSms { get; set; }
+
         private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;
         private readonly ICommunicationService _communicationService;
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
         private readonly ITaxonomyService _taxonomyService;
+        
         private const char fieldSeparator = ';';
         private const char smsSeparator = '/';
+        private const string taxoPathSeparator = "/";
+        
         private int idxContactId = 0;
         private int idxContactEmail = 0;
         private int idxContactSms = 0;
@@ -61,7 +67,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
             try {
                 // converte il buffer in un testo
                 string[] lineSeparator = { Environment.NewLine };
-                string file = Encoding.ASCII.GetString(buffer);
+                string file = Encoding.UTF8.GetString(buffer);
                 lines = file.Split(lineSeparator, StringSplitOptions.None);
             }
             catch (Exception ex) {
@@ -104,30 +110,10 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
         private void ImportRecord(List<string> intestazioni, List<string> campi) {
             string[] elencoMail = null;
             string[] elencoSms = null;
-            string campo = null;
+            PartialRecord partialRecord = new PartialRecord();
 
             // popola le strutture dati di appoggio
-            PartialRecord partialRecord = new PartialRecord();
-            for (int i = 0; i < campi.Count; i++) {
-                campo = campi[i];
-                if (i == idxContactId) {
-                    if (string.IsNullOrWhiteSpace(campo) == false) {
-                        partialRecord.Id = Convert.ToInt32(campo);
-                    }
-                }
-                else if (i == idxContactName) {
-                    partialRecord.Name = campo;
-                }
-                else if (i == idxContactEmail) {
-                    elencoMail = campo.Split(fieldSeparator);
-                }
-                else if (i == idxContactSms) {
-                    elencoSms = campo.Split(fieldSeparator);
-                }
-                else {
-                    partialRecord.Profile.Add(intestazioni[i], campo);
-                }
-            }
+            LoadData(intestazioni, campi, ref partialRecord, ref elencoMail, ref elencoSms);
 
             // gestisce le mail
             foreach (var mail in elencoMail) {
@@ -144,20 +130,71 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
             }
         }
 
-        private void ImportMail(string mail, PartialRecord partialRecord) {
-            var elencoItems = _communicationService.GetContactsFromMail(mail);
-            if (elencoItems.Count > 0) {
-                foreach (var item in elencoItems) {
-                    if (CheckSameContact(item, partialRecord) == true) {
-                        UpdateContactInfo(item, partialRecord);
+        private void LoadData(List<string> intestazioni, List<string> campi, ref PartialRecord partialRecord, ref string[] elencoMail, ref string[] elencoSms) {
+            string campo = null;
+            for (int i = 0; i < campi.Count; i++) {
+                campo = campi[i];
+                if (i == idxContactId) {
+                    if (string.IsNullOrWhiteSpace(campo) == false) {
+                        partialRecord.Id = Convert.ToInt32(campo);
+                    }
+                }
+                else if (i == idxContactName) {
+                    partialRecord.Name = campo;
+                }
+                else if (i == idxContactEmail) {
+                    if (string.IsNullOrWhiteSpace(campo)) {
+                        elencoMail = new string[0];
                     }
                     else {
-                        var contact = item.As<CommunicationContactPart>();
-                        if (contact.Master) {
-                            // stacca la mail dal master contact, crea un nuovo contatto e glie la associa
-                            var a1 = item.As<EmailContactPart>().EmailRecord.Where(x => x.Email == mail).First();
-                            var ci = CreateContact(partialRecord);
-                            a1.EmailContactPartRecord_Id = ci.Id;
+                        elencoMail = campo.Split(fieldSeparator);
+                    }
+                }
+                else if (i == idxContactSms) {
+                    if (string.IsNullOrWhiteSpace(campo)) {
+                        elencoSms = new string[0];
+                    }
+                    else {
+                        elencoSms = campo.Split(fieldSeparator);
+                    }
+                }
+                else {
+                    partialRecord.Profile.Add(intestazioni[i], campo);
+                }
+            }
+        }
+
+        private void ImportMail(string mail, PartialRecord partialRecord) {
+            ContentItem contact = null;
+            var elencoItems = _communicationService.GetContactsFromMail(mail);
+            if (elencoItems.Count == 0) {
+                contact = FindContact(partialRecord.Id, partialRecord.Name);
+                if (contact == null) {
+                    contact = CreateContact(partialRecord);
+                }
+                CreateMailForContact(mail, contact.Id);
+                UpdateContactInfo(contact, partialRecord);
+                TotMail++;
+            }
+            else {
+                foreach (var item in elencoItems) {
+                    if (IsSameContact(item, partialRecord)) {
+                        UpdateContactInfo(item, partialRecord);
+                        TotMail++;
+                    }
+                    else {
+                        if (IsMasterContact(item)) {
+                            contact = FindContact(partialRecord.Id, partialRecord.Name);
+                            if (contact == null) {
+                                contact = CreateContact(partialRecord);
+                            }
+                            // sgancia la mail dal master e la associa al contatto
+                            var cer = _repositoryCommunicationEmailRecord.Get(x => x.Email == mail);
+                            cer.EmailContactPartRecord_Id = contact.Id;
+                            _repositoryCommunicationEmailRecord.Update(cer);
+
+                            UpdateContactInfo(contact, partialRecord);
+                            TotMail++;
                         }
                         else {
                             Errors.Add(string.Format("Mail {0} already assigned to contact id {1}.", mail, item.Id));
@@ -165,25 +202,39 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                     }
                 }
             }
-            else {
-                CreateContactForMail(partialRecord, mail);
-            }
         }
 
         private void ImportSms(string prefix, string sms, PartialRecord partialRecord) {
+            ContentItem contact = null;
             var elencoItems = _communicationService.GetContactsFromSms(prefix, sms);
-            if (elencoItems.Count > 0) {
+            if (elencoItems.Count == 0) {
+                contact = FindContact(partialRecord.Id, partialRecord.Name);
+                if (contact == null) {
+                    contact = CreateContact(partialRecord);
+                }
+                CreateSmsForContact(prefix, sms, contact.Id);
+                UpdateContactInfo(contact, partialRecord);
+                TotSms++;
+            }
+            else {
                 foreach (var item in elencoItems) {
-                    if (CheckSameContact(item, partialRecord) == true) {
+                    if (IsSameContact(item, partialRecord)) {
                         UpdateContactInfo(item, partialRecord);
+                        TotSms++;
                     }
                     else {
-                        var contact = item.As<CommunicationContactPart>();
-                        if (contact.Master) {
-                            // stacca l'sms dal master contact, crea un nuovo contatto e glie lo associa
-                            var a1 = item.As<SmsContactPart>().SmsRecord.Where(x => x.Prefix == prefix && x.Sms == sms).First();
-                            var ci = CreateContact(partialRecord);
-                            a1.SmsContactPartRecord_Id = ci.Id;
+                        if (IsMasterContact(item)) {
+                            contact = FindContact(partialRecord.Id, partialRecord.Name);
+                            if (contact == null) {
+                                contact = CreateContact(partialRecord);
+                            }
+                            // sgancia la mail dal master e la associa al contatto
+                            var csr = _repositoryCommunicationSmsRecord.Get(x => x.Prefix == prefix && x.Sms == sms);
+                            csr.SmsContactPartRecord_Id = contact.Id;
+                            _repositoryCommunicationSmsRecord.Update(csr);
+
+                            UpdateContactInfo(contact, partialRecord);
+                            TotSms++;
                         }
                         else {
                             Errors.Add(string.Format("Sms phone number {0}/{1} already assigned to contact id {2}.", prefix, sms, item.Id));
@@ -191,9 +242,31 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                     }
                 }
             }
-            else {
-                CreateContactForSms(partialRecord, prefix, sms);
+        }
+
+        private bool IsMasterContact(ContentItem contactItem) {
+            bool result = false;
+            var contactPart = contactItem.As<CommunicationContactPart>();
+            if((contactPart != null) && (contactPart.Master)) {
+                result = true;
             }
+            return result;
+        }
+
+        /// <summary>
+        /// Cerca un contatto nel DB in base a ID e nome.
+        /// </summary>
+        /// <param name="partialRecord"></param>
+        /// <returns></returns>
+        private ContentItem FindContact(int contactId, string name) {
+            ContentItem result = null;
+            if (contactId != 0) {
+                result = _communicationService.GetContactFromId(contactId);
+            }
+            else {
+                result = _communicationService.GetContactFromName(name);
+            }
+            return result;
         }
 
         /// <summary>
@@ -214,7 +287,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                         List<TermPart> termlist = new List<TermPart>();
                         TermPart term = null;
                         foreach (string locValue in prop.Value.Split(fieldSeparator)) {
-                            term = _taxonomyService.GetTermByPath((taxoName + "/" + locValue).ToLower());
+                            term = _taxonomyService.GetTermByPath((taxoName + taxoPathSeparator + locValue).ToLower());
                             if(term != null){
                                 termlist.Add(term);
                             }
@@ -231,20 +304,18 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
             }
         }
 
-        private void CreateContactForMail(PartialRecord partialRecord, string mail) {
-            var ci = CreateContact(partialRecord);
+        private void CreateMailForContact(string mail, int contactId) {
             CommunicationEmailRecord cer = new CommunicationEmailRecord();
             cer.Email = mail;
             cer.DataInserimento = DateTime.Now;
             cer.DataModifica = DateTime.Now;
             cer.Produzione = true;
             cer.Validated = true;
-            cer.EmailContactPartRecord_Id = ci.Id;
+            cer.EmailContactPartRecord_Id = contactId;
             _repositoryCommunicationEmailRecord.Create(cer);
         }
 
-        private void CreateContactForSms(PartialRecord partialRecord, string prefix, string sms) {
-            var ci = CreateContact(partialRecord);
+        private void CreateSmsForContact(string prefix, string sms, int contactId) {
             CommunicationSmsRecord csr = new CommunicationSmsRecord();
             csr.Prefix = prefix;
             csr.Sms = sms;
@@ -252,14 +323,37 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
             csr.DataModifica = DateTime.Now;
             csr.Produzione = true;
             csr.Validated = true;
-            csr.SmsContactPartRecord_Id = ci.Id;
+            csr.SmsContactPartRecord_Id = contactId;
             _repositoryCommunicationSmsRecord.Create(csr);
         }
+        //private void CreateContactForMail(PartialRecord partialRecord, string mail) {
+        //    var ci = CreateContact(partialRecord);
+        //    CommunicationEmailRecord cer = new CommunicationEmailRecord();
+        //    cer.Email = mail;
+        //    cer.DataInserimento = DateTime.Now;
+        //    cer.DataModifica = DateTime.Now;
+        //    cer.Produzione = true;
+        //    cer.Validated = true;
+        //    cer.EmailContactPartRecord_Id = ci.Id;
+        //    _repositoryCommunicationEmailRecord.Create(cer);
+        //}
+
+        //private void CreateContactForSms(PartialRecord partialRecord, string prefix, string sms) {
+        //    var ci = CreateContact(partialRecord);
+        //    CommunicationSmsRecord csr = new CommunicationSmsRecord();
+        //    csr.Prefix = prefix;
+        //    csr.Sms = sms;
+        //    csr.DataInserimento = DateTime.Now;
+        //    csr.DataModifica = DateTime.Now;
+        //    csr.Produzione = true;
+        //    csr.Validated = true;
+        //    csr.SmsContactPartRecord_Id = ci.Id;
+        //    _repositoryCommunicationSmsRecord.Create(csr);
+        //}
 
         private ContentItem CreateContact(PartialRecord partialRecord) {
             ContentItem ci = _contentManager.Create("CommunicationContact");
             ci.As<TitlePart>().Title = partialRecord.Name;
-            UpdateContactInfo(ci, partialRecord);
             return ci;
         }
 
@@ -269,7 +363,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
         /// <param name="ci"></param>
         /// <param name="partialRecord"></param>
         /// <returns></returns>
-        private bool CheckSameContact(ContentItem ci, PartialRecord partialRecord) {
+        private bool IsSameContact(ContentItem ci, PartialRecord partialRecord) {
             bool result = false;
             if (partialRecord.Id != 0) {
                 if (partialRecord.Id == ci.Id) {
@@ -285,22 +379,29 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
         }
 
         private bool CheckForMainFields(List<string> intestazioni) {
-            bool result = true;
-            idxContactId = intestazioni.IndexOf("ID");
-            if (idxContactId < 0) {
-                result = false;
+            bool result = false;
+            idxContactId = -1;
+            idxContactName = -1;
+            idxContactEmail = -1;
+            idxContactSms = -1;
+
+            for (var i = 0; i < intestazioni.Count; i++) {
+                if (intestazioni[i].CompareTo("ID") == 0) {
+                    idxContactId = i;
+                }
+                else if (intestazioni[i].CompareTo("TitlePart.Title") == 0) {
+                    idxContactName = i;
+                }
+
+                else if (intestazioni[i].CompareTo("ContactPart.Email") == 0) {
+                    idxContactEmail = i;
+                }
+                else if (intestazioni[i].CompareTo("ContactPart.Sms") == 0) {
+                    idxContactSms = i;
+                }
             }
-            idxContactName = intestazioni.IndexOf("TitlePart.Title");
-            if (idxContactName < 0) {
-                result = false;
-            }
-            idxContactEmail = intestazioni.IndexOf("ContactPart.Email");
-            if (idxContactEmail < 0) {
-                result = false;
-            }
-            idxContactSms = intestazioni.IndexOf("ContactPart.Sms");
-            if (idxContactSms < 0) {
-                result = false;
+            if ((idxContactId != -1) && (idxContactName != -1) && (idxContactEmail != -1) && (idxContactSms != -1)) {
+                result = true;
             }
             return result;
         }

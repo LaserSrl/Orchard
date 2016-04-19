@@ -258,12 +258,14 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         [Admin]
         [HttpPost]
         public ActionResult ImportCsv(System.Web.HttpPostedFileBase csvFile) {
-            var len = csvFile.ContentLength;
-            if (len > 0) {
-                byte[] buffer = new byte[len];
-                csvFile.InputStream.Read(buffer, 0, buffer.Length);
-                string msg = _communicationService.ImportCsv(buffer);
-                _notifier.Add(NotifyType.Information, T(msg));
+            if (csvFile != null) {
+                var len = csvFile.ContentLength;
+                if (len > 0) {
+                    byte[] buffer = new byte[len];
+                    csvFile.InputStream.Read(buffer, 0, buffer.Length);
+                    string msg = _communicationService.ImportCsv(buffer);
+                    _notifier.Add(NotifyType.Information, T(msg));
+                }
             }
             return RedirectToAction("Index");
         }

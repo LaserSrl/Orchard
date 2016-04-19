@@ -46,7 +46,9 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         List<ContentItem> GetContactsFromSms(string prefix, string sms);
 
-        List<ContentItem> GetContactsFromName(string name);
+        ContentItem GetContactFromName(string name);
+
+        ContentItem GetContactFromId(int id);
 
         void Synchronize();
 
@@ -204,10 +206,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             return contentQuery.ToList();
         }
 
-        public List<ContentItem> GetContactsFromName(string name) {
+        public ContentItem GetContactFromName(string name) {
             var query = _orchardServices.ContentManager.Query(new string[] { "CommunicationContact" })
                 .Where<TitlePartRecord>(x => x.Title == name);
-            return query.List().ToList();
+            return query.List().FirstOrDefault();
         }
 
         public ContentItem GetContactFromId(int id) {
@@ -426,7 +428,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         public string ImportCsv(byte[] file) {
             ImportUtil import = new ImportUtil(_orchardServices);
             import.ImportCsv(file);
-            return string.Format("Errors: {0}.", import.Errors.Count);
+            return string.Format("Errors: {0}. Mails: {1}. Sms: {2}", import.Errors.Count, import.TotMail, import.TotSms);
         }
     }
 }
