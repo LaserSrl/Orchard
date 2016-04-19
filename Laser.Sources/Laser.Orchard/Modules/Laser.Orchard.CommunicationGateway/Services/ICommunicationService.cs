@@ -1,8 +1,10 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.CommunicationGateway.ViewModels;
 using Laser.Orchard.CommunicationGateway.Utils;
 using Laser.Orchard.ShortLinks.Services;
 using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
+using NHibernate.Transform;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
@@ -23,6 +25,7 @@ using Orchard.Taxonomies.Models;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -33,15 +36,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
     public interface ICommunicationService : IDependency {
 
         bool AdvertisingIsAvailable(Int32 id);
-
         string GetCampaignLink(string CampaignSource, ContentPart part);
-
         bool CampaignLinkExist(ContentPart part);
-
         void UserToContact(IUser UserContent);
-
         CommunicationContactPart GetContactFromUser(int iduser);
-
         List<ContentItem> GetContactsFromMail(string mail);
 
         List<ContentItem> GetContactsFromSms(string prefix, string sms);
@@ -73,9 +71,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _contentExtensionsServices = contentExtensionsServices;
             _moduleService = moduleService;
             _notifier = notifier;
-            _session = session;
-            T = NullLocalizer.Instance;
             _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
+            _session = session;
+
+            T = NullLocalizer.Instance;
         }
 
         public bool AdvertisingIsAvailable(Int32 id) {
@@ -219,7 +218,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         }
 
         /// <summary>
-        ///La parte sarebbe CommunicationAdvertisingPart ma nobn l'ho definita quindi passo una cosa generica (ContentPart)
+        ///La parte sarebbe CommunicationAdvertisingPart ma non l'ho definita quindi passo una cosa generica (ContentPart)
         /// </summary>
         /// <param name="part"></param>
         /// <returns></returns>
