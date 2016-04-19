@@ -17,6 +17,12 @@
 @using (Html.BeginFormAntiForgeryPost(Url.Action("ImportCsv", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
     <input type="file" name="csvFile" id="csvFile" />
     <button type="submit">@T("Import")</button>
+    <script type="text/javascript">
+        function showImportErrors() {
+            $("#divImportErrors").css("display", "block");
+        }
+    </script>
+    <div id="divImportErrors" style="display:none;width:200px;height:100px;overflow:scroll">@Model.ImportErrors</div>
 }
 @using (Html.BeginForm("Index", "ContactsAdmin", FormMethod.Get)) {
 @*   @Html.AntiForgeryToken()

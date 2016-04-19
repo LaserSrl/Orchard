@@ -93,15 +93,19 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             item.UserIdentifier=0;
 
             // elimina le mail associate
-            var cer = _Emailrepository.Get(x => x.EmailContactPartRecord_Id == item.Id);
-            if (cer != null) {
-                _Emailrepository.Delete(cer);
+            var elencoCer = _Emailrepository.Fetch(x => x.EmailContactPartRecord_Id == item.Id);
+            if (elencoCer != null) {
+                foreach (var cer in elencoCer) {
+                    _Emailrepository.Delete(cer);
+                }
             }
 
             // elimina gli sms associati
-            var csr = _Smsrepository.Get(x => x.SmsContactPartRecord_Id == item.Id);
-            if (csr != null) {
-                _Smsrepository.Delete(csr);
+            var elencoCsr = _Smsrepository.Fetch(x => x.SmsContactPartRecord_Id == item.Id);
+            if (elencoCsr != null) {
+                foreach (var csr in elencoCsr) {
+                    _Smsrepository.Delete(csr);
+                }
             }
         }
     }

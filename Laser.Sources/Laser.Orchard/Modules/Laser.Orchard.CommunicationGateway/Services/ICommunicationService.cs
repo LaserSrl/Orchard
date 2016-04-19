@@ -214,7 +214,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         public ContentItem GetContactFromId(int id) {
             var query = _orchardServices.ContentManager.Query(new string[] { "CommunicationContact" })
                 .Where<CommunicationContactPartRecord>(x => x.Id == id);
-            return query.List().First();
+            return query.List().FirstOrDefault();
         }
 
         /// <summary>
@@ -427,7 +427,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         public string ImportCsv(byte[] file) {
             ImportUtil import = new ImportUtil(_orchardServices);
             import.ImportCsv(file);
-            return string.Format("Errors: {0}. Mails: {1}. Sms: {2}", import.Errors.Count, import.TotMail, import.TotSms);
+            return string.Format("Errors: {0} <a href='javascript:showImportErrors()'>(click here for details)</a>. Mails: {1}. Sms: {2}", import.Errors.Count, import.TotMail, import.TotSms);
         }
     }
 }

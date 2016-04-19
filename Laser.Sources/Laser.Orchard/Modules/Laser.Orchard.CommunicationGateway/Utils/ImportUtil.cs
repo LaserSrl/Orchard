@@ -386,7 +386,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
             idxContactSms = -1;
 
             for (var i = 0; i < intestazioni.Count; i++) {
-                if (intestazioni[i].CompareTo("ID") == 0) {
+                if (intestazioni[i].CompareTo("Id") == 0) {
                     idxContactId = i;
                 }
                 else if (intestazioni[i].CompareTo("TitlePart.Title") == 0) {

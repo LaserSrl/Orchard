@@ -143,12 +143,12 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
         [HttpGet]
         [Admin]
-        public ActionResult Index(int? page, int? pageSize, SearchVM search) {
+        public ActionResult Index(int? page, int? pageSize, SearchVM search, string ImportErrors) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
 
             if (HttpContext.Request["submitFrom"] == null || HttpContext.Request["submitFrom"].ToString() != "submit.Export") {
-                return IndexSearch(page, pageSize, search);
+                return IndexSearch(page, pageSize, search, ImportErrors);
             } else {
                 return Export(search);
             }
@@ -156,7 +156,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
         [HttpPost]
         [Admin]
-        public ActionResult IndexSearch(int? page, int? pageSize, SearchVM search) {
+        public ActionResult IndexSearch(int? page, int? pageSize, SearchVM search, string ImportErrors) {
             // variabili di appoggio
             List<int> arr = null;
 
@@ -240,6 +240,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                         contentItems = contentQuery.Where<CommunicationContactPartRecord>(x => arr.Contains(x.Id)).List();
                         break;
                 }
+            } else {
                 totItems = contentQuery.Count();
                 contentItems = contentQuery.Slice(pager.GetStartIndex(), pager.PageSize);
             }
@@ -259,6 +260,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             }
             _orchardServices.New.List();
             var model = new SearchIndexVM(pageOfContentItems, search, pagerShape, Options);
+            model.ImportErrors = ImportErrors;
             return View((object)model);
         }
 
@@ -296,7 +298,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                     }
                     strBuilder.Append("ContactPart.Sms" + Separator);
                     strBuilder.Append("ContactPart.Email" + Separator);
-                    strBuilder.Append("\n");
+                    strBuilder.Append("\r\n");
                     #endregion
 
                     isColumnExist = true;
@@ -312,7 +314,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 }
                 strBuilder.Append(string.Join(",", contatto.Sms) + Separator);
                 strBuilder.Append(string.Join(",", contatto.Mail) + Separator);
-                strBuilder.Append("\n");
+                strBuilder.Append("\r\n");
                 #endregion
             }
 
@@ -339,7 +341,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                     _notifier.Add(NotifyType.Information, T(msg));
                 }
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { ImportErrors = "Prova di scrittura." });
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
