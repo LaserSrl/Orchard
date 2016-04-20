@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Text;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
 
@@ -230,8 +231,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             //Logger.Error("GetCampaignLink: 01.01");
             string CampaignTerm = "";
             var tagPart = part.ContentItem.As<TagsPart>();
-            if (tagPart != null)
-            {
+            if (tagPart != null) {
                 CampaignTerm = string.Join("+", tagPart.CurrentTags.ToArray()).ToLower();
             }
             //Logger.Error("GetCampaignLink: 01.02");
@@ -240,12 +240,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             //Logger.Error("GetCampaignLink: 01.03");
             string CampaignName = "Flash";
             //Logger.Error("GetCampaignLink: 02");
-            try
-            {
+            try {
                 int idCampagna = ((int)((dynamic)part).CampaignId);
                 CampaignName = _orchardServices.ContentManager.Get(idCampagna).As<TitlePart>().Title;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 // cuomunicato non legato a campagna
             }
             //Logger.Error("GetCampaignLink: 03");
@@ -253,29 +251,24 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
                 //Logger.Error("GetCampaignLink: 03.01");
                 link = (string)(((dynamic)part).UrlLinked.Value);
-            }
-            else {
+            } else {
                 //Logger.Error("GetCampaignLink: 03.02");
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
                 //Logger.Error("GetCampaignLink: 03.03");
-                if (pickerField != null && pickerField.ContentItems != null)
-                {
+                if (pickerField != null && pickerField.ContentItems != null) {
                     //Logger.Error("GetCampaignLink: 03.04");
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
                     //Logger.Error("GetCampaignLink: 03.05");
-                    if (firstItem != null)
-                    {
+                    if (firstItem != null) {
                         //Logger.Error("GetCampaignLink: 03.06");
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
                         //Logger.Error("GetCampaignLink: 03.07");
                         link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
                         //Logger.Error("GetCampaignLink: 03.08");
-                    }
-                    else {
+                    } else {
                         return "";
                     }
-                }
-                else {
+                } else {
                     return "";
                 }
             }
@@ -283,13 +276,11 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
             string linkelaborated = ElaborateLink(link, CampaignSource, CampaignMedium, CampaignTerm, CampaignContent, CampaignName);
             //Logger.Error("GetCampaignLink: 04.01");
-            if (!string.IsNullOrEmpty(linkelaborated))
-            {
+            if (!string.IsNullOrEmpty(linkelaborated)) {
                 //Logger.Error("GetCampaignLink: 04.02");
                 shortlink = _shortLinksService.GetShortLink(linkelaborated);
                 //Logger.Error("GetCampaignLink: 04.03");
-                if (string.IsNullOrEmpty(shortlink))
-                {
+                if (string.IsNullOrEmpty(shortlink)) {
                     throw new Exception("Url Creation Failed");
                 }
             }
@@ -304,8 +295,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
                 linkExist = true;
-            }
-            else {
+            } else {
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
 
                 if (pickerField != null) {
@@ -314,8 +304,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         if (firstItem != null) {
                             linkExist = true;
                         }
-                    }
-                    catch { }
+                    } catch { }
                 }
             }
 
@@ -350,24 +339,21 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             try {
                 var profpart = ((dynamic)UserContent).ProfilePart;
                 asProfilePart = true;
-            }
-            catch { asProfilePart = false; }
+            } catch { asProfilePart = false; }
             int iduser = UserContent.Id;
             var contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == iduser).List().FirstOrDefault();
             ContentItem Contact;
             if (contactsUsers == null) {
                 Contact = _orchardServices.ContentManager.New("CommunicationContact");
                 _orchardServices.ContentManager.Create(Contact);
-            }
-            else {
+            } else {
                 Contact = contactsUsers.ContentItem;
             }
             try {
                 if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != Contact.As<FavoriteCulturePart>().Culture_Id) {
                     Contact.As<FavoriteCulturePart>().Culture_Id = UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id;
                 }
-            }
-            catch (Exception ex) { // non si ha l'estensione per favorite culture
+            } catch (Exception ex) { // non si ha l'estensione per favorite culture
             }
 
             if (!string.IsNullOrEmpty(UserContent.Email) && UserContent.ContentItem.As<UserPart>().RegistrationStatus == UserStatus.Approved) {
@@ -379,8 +365,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         _repositoryCommunicationEmailRecord.Update(cmr);
                         _repositoryCommunicationEmailRecord.Flush();
                     }
-                }
-                else {
+                } else {
                     CommunicationEmailRecord newrec = new CommunicationEmailRecord();
                     newrec.Email = UserContent.Email;
                     newrec.EmailContactPartRecord_Id = Contact.Id;
@@ -416,8 +401,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                                     second.Add(tv);
                                 }
                                 myval = ((object)(second.Select(x => (dynamic)x).ToList()));
-                            }
-                            else
+                            } else
                                 myval = ((object)(((dynamic)cf).Value));
                     _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, Contact);
                 }
@@ -425,9 +409,23 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         }
 
         public string ImportCsv(byte[] file) {
+            string result = "";
             ImportUtil import = new ImportUtil(_orchardServices);
             import.ImportCsv(file);
-            return string.Format("Errors: {0} <a href='javascript:showImportErrors()'>(click here for details)</a>. Mails: {1}. Sms: {2}", import.Errors.Count, import.TotMail, import.TotSms);
+            if (import.Errors.Count > 0) {
+                result = string.Format("Import result: Errors: {0} <a href='javascript:showImportErrors()'>(click here for details)</a>, Mails: {1}, Sms: {2}.\0{3}", import.Errors.Count, import.TotMail, import.TotSms, FormatErrorsInHtml(import.Errors));
+            } else {
+                result = string.Format("Import result: Errors: 0, Mails: {0}, Sms: {1}.", import.TotMail, import.TotSms);
+            }
+            return result;
+        }
+
+        private string FormatErrorsInHtml(List<string> errors) {
+            StringBuilder sb = new StringBuilder();
+            foreach (var line in errors) {
+                sb.AppendFormat("{0}<br/>", line);
+            }
+            return sb.ToString();
         }
     }
 }

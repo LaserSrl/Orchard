@@ -261,7 +261,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             _orchardServices.New.List();
             var model = new SearchIndexVM(pageOfContentItems, search, pagerShape, Options);
             model.ImportErrors = ImportErrors;
-            return View((object)model);
+            return View("Index", (object)model);
         }
 
         [HttpPost]
@@ -332,16 +332,29 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         [Admin]
         [HttpPost]
         public ActionResult ImportCsv(System.Web.HttpPostedFileBase csvFile) {
+            string msg = "";
+            string strErrors = "";
             if (csvFile != null) {
                 var len = csvFile.ContentLength;
                 if (len > 0) {
+                    // legge il contenuto del file uploadato dall'utente
                     byte[] buffer = new byte[len];
                     csvFile.InputStream.Read(buffer, 0, buffer.Length);
-                    string msg = _communicationService.ImportCsv(buffer);
+
+                    string result = _communicationService.ImportCsv(buffer);
+                    
+                    // parsifica il risultato dell'import
+                    string[] arrResult = result.Split('\0');
+                    if (arrResult.Length > 0) {
+                        msg = arrResult[0];
+                    }
+                    if (arrResult.Length > 1) {
+                        strErrors = arrResult[1];
+                    }
                     _notifier.Add(NotifyType.Information, T(msg));
                 }
             }
-            return RedirectToAction("Index", new { ImportErrors = "Prova di scrittura." });
+            return IndexSearch(null, null, new SearchVM(), strErrors);
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

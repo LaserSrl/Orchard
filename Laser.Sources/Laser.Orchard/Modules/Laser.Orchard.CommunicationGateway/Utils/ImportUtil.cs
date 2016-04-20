@@ -43,6 +43,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
         private const char fieldSeparator = ';';
         private const char smsSeparator = '/';
         private const string taxoPathSeparator = "/";
+        private const char taxoValuesSeparator = ',';
         
         private int idxContactId = 0;
         private int idxContactEmail = 0;
@@ -82,8 +83,8 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                     string header = null;
                     for (int i = 0; i < intestazione.Count; i++ ) {
                         header = intestazione[i];
-                        if (header.StartsWith("ProfilePart.") && header.EndsWith(".Value")) {
-                            intestazione[i] = header.Substring(12, header.Length - 18); //12: lunghezza di "ProfilePart.", 18 lunghezza di "ProfilePart." + ".Value"
+                        if (header.StartsWith("ProfilePart.")) {
+                            intestazione[i] = header.Substring(12); //12: lunghezza di "ProfilePart."
                         }
                     }
 
@@ -197,7 +198,8 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                             TotMail++;
                         }
                         else {
-                            Errors.Add(string.Format("Mail {0} already assigned to contact id {1}.", mail, item.Id));
+                            var title = item.As<TitlePart>().Title;
+                            Errors.Add(string.Format("Mail {0} already assigned to contact \"{1}\" (id: {2}).", mail, title, item.Id));
                         }
                     }
                 }
@@ -237,7 +239,8 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                             TotSms++;
                         }
                         else {
-                            Errors.Add(string.Format("Sms phone number {0}/{1} already assigned to contact id {2}.", prefix, sms, item.Id));
+                            var title = item.As<TitlePart>().Title;
+                            Errors.Add(string.Format("Sms phone number {0}/{1} already assigned to contact \"{2}\" (id: {3}).", prefix, sms, title, item.Id));
                         }
                     }
                 }
@@ -286,7 +289,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                         string taxoName = taxoSettings.Where(x => x.Key == "TaxonomyFieldSettings.Taxonomy").Select(x => x.Value).FirstOrDefault();
                         List<TermPart> termlist = new List<TermPart>();
                         TermPart term = null;
-                        foreach (string locValue in prop.Value.Split(fieldSeparator)) {
+                        foreach (string locValue in prop.Value.Split(taxoValuesSeparator)) {
                             term = _taxonomyService.GetTermByPath((taxoName + taxoPathSeparator + locValue).ToLower());
                             if(term != null){
                                 termlist.Add(term);
@@ -358,20 +361,20 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
         }
 
         /// <summary>
-        /// Controlla se il content item appartiene allo stesso contatto: verifica prima per id e poi per nome.
+        /// Controlla se il content item appartiene allo stesso contatto: verifica prima per nome e poi per id.
+        /// La verifica viene fattaprima per nome per non considerare diversi i casi in cui un contatto era stato esportato,
+        /// poi eliminato e poi reimportato. In questo caso il sistema gli ha assegnato un id diverso.
         /// </summary>
         /// <param name="ci"></param>
         /// <param name="partialRecord"></param>
         /// <returns></returns>
         private bool IsSameContact(ContentItem ci, PartialRecord partialRecord) {
             bool result = false;
-            if (partialRecord.Id != 0) {
-                if (partialRecord.Id == ci.Id) {
-                    result = true;
-                }
+            if (partialRecord.Name == ci.As<TitlePart>().Title) {
+                result = true;
             }
-            else {
-                if (partialRecord.Name == ci.As<TitlePart>().Title) {
+            else if (partialRecord.Id != 0) {
+                if (partialRecord.Id == ci.Id) {
                     result = true;
                 }
             }
