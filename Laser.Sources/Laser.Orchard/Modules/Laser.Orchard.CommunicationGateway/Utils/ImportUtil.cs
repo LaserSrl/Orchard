@@ -81,7 +81,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                     intestazione = GetFields(lines[0]);
                     // normalizza l'intestazione nel caso di ProfilePart
                     string header = null;
-                    for (int i = 0; i < intestazione.Count; i++ ) {
+                    for (int i = 0; i < intestazione.Count; i++) {
                         header = intestazione[i];
                         if (header.StartsWith("ProfilePart.")) {
                             intestazione[i] = header.Substring(12); //12: lunghezza di "ProfilePart."
@@ -100,10 +100,11 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                                 }
                             }
                         }
-                    }
-                    else {
+                    } else {
                         Errors.Add("At least a main field is missing. Main fields are: ID, TitlePart.Title, ContactPart.Email, ContactPart.Sms");
                     }
+                } else {
+                    Errors.Add("Empty file: no data found after headers.");
                 }
             }
         }
@@ -159,7 +160,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                         elencoSms = campo.Split(fieldSeparator);
                     }
                 }
-                else {
+                else if (string.IsNullOrWhiteSpace(intestazioni[i]) == false) {
                     partialRecord.Profile.Add(intestazioni[i], campo);
                 }
             }
@@ -278,33 +279,42 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
         private void UpdateContactInfo(ContentItem ci, PartialRecord partialRecord) {
             ci.As<TitlePart>().Title = partialRecord.Name;
             ContentPart profile = ((dynamic)ci).ProfilePart;
-            foreach (var prop in partialRecord.Profile) {
-                var cf = profile.Fields.Where(x => x.Name == prop.Key).FirstOrDefault();
-                if (cf != null) {
-                    if (cf.GetType() == typeof(DateTime)) {
-                        ((dynamic)cf).DateTime = prop.Value;
-                    }
-                    else if (cf.GetType() == typeof(TaxonomyField)) {
-                        var taxoSettings = ((TaxonomyField)cf).PartFieldDefinition.Settings;
-                        string taxoName = taxoSettings.Where(x => x.Key == "TaxonomyFieldSettings.Taxonomy").Select(x => x.Value).FirstOrDefault();
-                        List<TermPart> termlist = new List<TermPart>();
-                        TermPart term = null;
-                        foreach (string locValue in prop.Value.Split(taxoValuesSeparator)) {
-                            term = _taxonomyService.GetTermByPath((taxoName + taxoPathSeparator + locValue).ToLower());
-                            if(term != null){
-                                termlist.Add(term);
-                            }
+            if (profile != null) {
+                foreach (var prop in partialRecord.Profile) {
+                    var cf = profile.Fields.Where(x => x.Name == prop.Key).FirstOrDefault();
+                    if (cf != null) {
+                        if (cf.GetType() == typeof(DateTime)) {
+                            ((dynamic)cf).DateTime = prop.Value;
+                        } else if (cf.GetType() == typeof(TaxonomyField)) {
+                            UpdateTaxonomyField(ci, cf, prop.Value);
+                        } else if ((cf.GetType() == typeof(MediaLibraryPickerField)) || (cf.GetType() == typeof(ContentPickerField))) {
+                            Errors.Add(string.Format("Property {0} of type {1} cannot be updated by CSV import.", prop.Key, cf.GetType().Name));
+                        } else {
+                            ((dynamic)cf).Value = prop.Value;
                         }
-                        _taxonomyService.UpdateTerms(ci, termlist, cf.Name);
-                    }
-                    else if ((cf.GetType() == typeof(MediaLibraryPickerField)) || (cf.GetType() == typeof(ContentPickerField))) {
-                        Errors.Add(string.Format("Property {0} of type {1} cannot be updated by CSV import.", prop.Key, cf.GetType().Name));
-                    }
-                    else {
-                        ((dynamic)cf).Value = prop.Value;
+                    } else {
+                        Errors.Add(string.Format("Field \"{0}\" not found in Contact.", prop.Key));
                     }
                 }
             }
+        }
+
+        private void UpdateTaxonomyField(ContentItem ci, ContentField cf, string valuesList) {
+            var taxoSettings = ((TaxonomyField)cf).PartFieldDefinition.Settings;
+            string taxoName = taxoSettings.Where(x => x.Key == "TaxonomyFieldSettings.Taxonomy").Select(x => x.Value).FirstOrDefault();
+            List<TermPart> termlist = new List<TermPart>();
+            TermPart term = null;
+            foreach (string locValue in valuesList.Split(taxoValuesSeparator)) {
+                if (string.IsNullOrWhiteSpace(locValue) == false) {
+                    term = _taxonomyService.GetTermByPath((taxoName + taxoPathSeparator + locValue).ToLower());
+                    if (term != null) {
+                        termlist.Add(term);
+                    } else {
+                        Errors.Add(string.Format("Taxonomy path \"{0}\" not found on field \"{1}\".", taxoName + taxoPathSeparator + locValue, cf.Name));
+                    }
+                }
+            }
+            _taxonomyService.UpdateTerms(ci, termlist, cf.Name);
         }
 
         private void CreateMailForContact(string mail, int contactId) {

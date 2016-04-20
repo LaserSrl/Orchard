@@ -143,19 +143,17 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
         [HttpGet]
         [Admin]
-        public ActionResult Index(int? page, int? pageSize, SearchVM search, string ImportErrors) {
-            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+        public ActionResult Index(int? page, int? pageSize, SearchVM search) {
+            if (!_orchardServices.Authorizer.Authorize(TestPermission)) {
                 return new HttpUnauthorizedResult();
-
-            if (HttpContext.Request["submitFrom"] == null || HttpContext.Request["submitFrom"].ToString() != "submit.Export") {
-                return IndexSearch(page, pageSize, search, ImportErrors);
-            } else {
-                return Export(search);
             }
+            return IndexSearch(page, pageSize, search, "");
         }
 
         [HttpPost]
         [Admin]
+        [ActionName("IndexSearch")]
+        [FormValueRequired("submit.Search")]
         public ActionResult IndexSearch(int? page, int? pageSize, SearchVM search, string ImportErrors) {
             // variabili di appoggio
             List<int> arr = null;
@@ -252,7 +250,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                     ModifiedUtc = ((dynamic)p).CommonPart.ModifiedUtc,
                     UserName = ((dynamic)p).CommonPart.Owner != null ? ((dynamic)p).CommonPart.Owner.UserName : "Anonymous",
                     PreviewEmail = (((dynamic)p).EmailContactPart.EmailRecord.Count > 0) ? ((dynamic)p).EmailContactPart.EmailRecord[0].Email : "",
-                    PreviewSms = (((dynamic)p).SmsContactPart.SmsRecord.Count > 0) ? ((dynamic)p).SmsContactPart.SmsRecord[0].Sms : ""
+                    PreviewSms = (((dynamic)p).SmsContactPart.SmsRecord.Count > 0) ? ((dynamic)p).SmsContactPart.SmsRecord[0].Prefix + "/" + ((dynamic)p).SmsContactPart.SmsRecord[0].Sms : ""
                 }).ToList();
 
             if (pageOfContentItems == null) {
@@ -266,6 +264,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
         [HttpPost]
         [Admin]
+        [ActionName("IndexSearch")]
+        [FormValueRequired("submit.Export")]
         public ActionResult Export(SearchVM search) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
@@ -330,7 +330,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
 
         [Admin]
-        [HttpPost]
+        //[HttpPost]
         public ActionResult ImportCsv(System.Web.HttpPostedFileBase csvFile) {
             string msg = "";
             string strErrors = "";
@@ -342,7 +342,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                     csvFile.InputStream.Read(buffer, 0, buffer.Length);
 
                     string result = _communicationService.ImportCsv(buffer);
-                    
+
                     // parsifica il risultato dell'import
                     string[] arrResult = result.Split('\0');
                     if (arrResult.Length > 0) {
@@ -353,6 +353,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                     }
                     _notifier.Add(NotifyType.Information, T(msg));
                 }
+            } else {
+                _notifier.Add(NotifyType.Warning, T("Import Contacts: Please select a file to import."));
             }
             return IndexSearch(null, null, new SearchVM(), strErrors);
         }

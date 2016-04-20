@@ -423,7 +423,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private string FormatErrorsInHtml(List<string> errors) {
             StringBuilder sb = new StringBuilder();
             foreach (var line in errors) {
-                sb.AppendFormat("{0}<br/>", line);
+                sb.AppendLine(line);
             }
             return sb.ToString();
         }
