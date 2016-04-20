@@ -18,3 +18,20 @@ if ("undefined" == typeof jQuery) throw new Error("Bootstrap's JavaScript requir
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(wf, s);
 })();
+
+//collapsable menu
+$(function () {
+    $('.collapse-menu').on('click', function () {
+        if ($('#menu').is(':visible')) {
+            $('#menu').animate({ 'width': '0px' }, 'slow', function () {
+                $('#menu').hide();
+            });
+            $('#main').animate({ 'margin-left': '20px' }, 'slow');
+        }
+        else {
+            $('#menu').show();
+            $('#menu').animate({ 'width': '240px' }, 'slow');
+            $('#main').animate({ 'margin-left': '260px' }, 'slow');
+        }
+    });
+});

@@ -14,6 +14,8 @@
     string title = Convert.ToString(Model.Title);
     string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
     Style.Include("krake.css").AtHead();
+    Style.Include("https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css").AtHead();
+    Style.Include("https://fonts.googleapis.com/css?family=Roboto:400,700,500,300,100,900").AtHead();
     Script.Include("krake.js").AtHead();
     Script.Include("main.js").AtHead();
 }

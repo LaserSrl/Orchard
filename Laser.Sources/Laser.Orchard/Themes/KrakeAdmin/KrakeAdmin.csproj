@@ -112,6 +112,7 @@
     <Content Include="Styles\Images\krake-giallo.png" />
     <Content Include="Styles\Images\krake-rosso.png" />
     <Content Include="Styles\Images\krake-verde.png" />
+    <Content Include="Styles\Images\krake-orizontal.png" />
     <Content Include="Styles\Images\logo-laser.png" />
     <Content Include="Styles\Images\logo.png" />
     <Content Include="Styles\Images\logo_krake.png" />
@@ -119,6 +120,7 @@
     <Content Include="Styles\Images\piattaforma.png" />
     <Content Include="Styles\Images\sfondo-krake.png" />
     <Content Include="Styles\krake.css" />
+    <Content Include="Styles\krakeadmin.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -144,6 +146,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Images\brochure.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layout.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ErrorPage.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Header.cshtml" />
+    <Content Include="Views\LocalMenu.cshtml" />
+    <Content Include="Views\Menu.cshtml" />
+    <Content Include="Views\Pager.cshtml" />
+    <Content Include="Views\Title.cshtml" />
+    <Content Include="Views\User.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
