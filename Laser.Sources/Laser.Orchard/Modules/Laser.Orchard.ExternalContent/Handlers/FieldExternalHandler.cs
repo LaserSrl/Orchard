@@ -48,7 +48,7 @@ namespace Laser.Orchard.ExternalContent.Handlers {
 
 
             base.BuildDisplayShape(context);
-            if (context.DisplayType == "Detail") {
+            if (context.DisplayType == "Detail" || context.DisplayType == "Summary") {
 
                 var fields = context.ContentItem.Parts.SelectMany(x => x.Fields.Where(f => f.FieldDefinition.Name == typeof(FieldExternal).Name)).Cast<FieldExternal>();
                 if (fields.Count() > 0) {
@@ -61,7 +61,7 @@ namespace Laser.Orchard.ExternalContent.Handlers {
                             if (settings.NoFollow) {
                                 field.ContentUrl = _fieldExternalService.GetUrl(Myobject, settings.ExternalURL);
                             }
-                            else {
+                            else if (context.DisplayType == "Detail") {
                                 try {
                                     if (string.IsNullOrEmpty(settings.ExternalURL))
                                         field.ContentObject = _fieldExternalService.GetContentfromField(Myobject, field.ExternalUrl, field.Name, settings, context.ContentItem.ContentType, field.HttpVerb, field.HttpDataType, field.BodyRequest);
