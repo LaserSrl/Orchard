@@ -42,7 +42,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
         
         private const char fieldSeparator = ';';
         private const char smsSeparator = '/';
-        private const string taxoPathSeparator = "/";
+        private const char taxoPathSeparator = '/';
         private const char taxoValuesSeparator = ',';
         
         private int idxContactId = 0;
@@ -300,21 +300,48 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
         }
 
         private void UpdateTaxonomyField(ContentItem ci, ContentField cf, string valuesList) {
-            var taxoSettings = ((TaxonomyField)cf).PartFieldDefinition.Settings;
-            string taxoName = taxoSettings.Where(x => x.Key == "TaxonomyFieldSettings.Taxonomy").Select(x => x.Value).FirstOrDefault();
             List<TermPart> termlist = new List<TermPart>();
             TermPart term = null;
-            foreach (string locValue in valuesList.Split(taxoValuesSeparator)) {
-                if (string.IsNullOrWhiteSpace(locValue) == false) {
-                    term = _taxonomyService.GetTermByPath((taxoName + taxoPathSeparator + locValue).ToLower());
-                    if (term != null) {
-                        termlist.Add(term);
-                    } else {
-                        Errors.Add(string.Format("Taxonomy path \"{0}\" not found on field \"{1}\".", taxoName + taxoPathSeparator + locValue, cf.Name));
+            if (string.IsNullOrWhiteSpace(valuesList) == false) {
+                var taxoTerms = GetTaxonomyTerms(cf);
+                if (taxoTerms != null) {
+                    foreach (string locValue in valuesList.Split(taxoValuesSeparator)) {
+                        if (string.IsNullOrWhiteSpace(locValue) == false) {
+                            string path = "" + taxoPathSeparator;
+                            string termName = null;
+                            foreach (string section in locValue.Split(taxoPathSeparator)) {
+                                termName = section.Replace('\\', '/');
+                                term = taxoTerms.FirstOrDefault(x => x.Path == path && x.Name == termName);
+                                if (term != null) {
+                                    path = term.FullPath + taxoPathSeparator;
+                                } else {
+                                    term = null;
+                                    break;
+                                }
+                            }
+                            if (term != null) {
+                                termlist.Add(term);
+                            } else {
+                                Errors.Add(string.Format("Taxonomy term \"{0}\" not found on field \"{1}\".", locValue, cf.Name));
+                            }
+                        }
                     }
+                } else {
+                    Errors.Add(string.Format("Taxonomy not found for field \"{0}\".", cf.DisplayName));
                 }
+                _taxonomyService.UpdateTerms(ci, termlist, cf.Name);
             }
-            _taxonomyService.UpdateTerms(ci, termlist, cf.Name);
+        }
+
+        private IEnumerable<TermPart> GetTaxonomyTerms(ContentField cf) {
+            IEnumerable<TermPart> result = null;
+            var taxoSettings = ((TaxonomyField)cf).PartFieldDefinition.Settings;
+            string taxoName = taxoSettings.Where(x => x.Key == "TaxonomyFieldSettings.Taxonomy").Select(x => x.Value).FirstOrDefault();
+            TaxonomyPart taxoPart = _taxonomyService.GetTaxonomyByName(taxoName);
+            if (taxoPart != null) {
+                result = taxoPart.Terms;
+            }
+            return result;
         }
 
         private void CreateMailForContact(string mail, int contactId) {

@@ -37,6 +37,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly ISessionLocator _session;
         private readonly INotifier _notifier;
         private Localizer T { get; set; }
+        private readonly string _contactsExportRelativePath;
 
         public ContactsAdminController(
             IOrchardServices orchardServices,
@@ -55,6 +56,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             _exportContactService = exportContactService;
             _shellSettings = shellSettings;
             _session = session;
+            _contactsExportRelativePath = string.Format("~/App_Data/Sites/{0}/Export/Contacts", _shellSettings.Name);
         }
 
         [Admin]
@@ -327,10 +329,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             return file;
         }
 
-
-
         [Admin]
-        //[HttpPost]
         public ActionResult ImportCsv(System.Web.HttpPostedFileBase csvFile) {
             string msg = "";
             string strErrors = "";
@@ -357,6 +356,32 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _notifier.Add(NotifyType.Warning, T("Import Contacts: Please select a file to import."));
             }
             return IndexSearch(null, null, new SearchVM(), strErrors);
+        }
+
+        [Admin]
+        public ActionResult ExportedFilesList(ExportedFilesListVM model) {
+            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Server.MapPath(_contactsExportRelativePath));
+            if (dir.Exists == false) {
+                dir.Create();
+            }
+            var files = dir.GetFiles("*.csv", System.IO.SearchOption.TopDirectoryOnly);
+            foreach (var file in files) {
+                model.FileInfos.Add(file);
+            }
+            model.FileInfos = model.FileInfos.OrderByDescending(x => x.LastWriteTimeUtc).ToList();
+            return View("ExportedFilesList", model);
+        }
+
+        [Admin]
+        public ActionResult RemoveFile(string fName) {
+            System.IO.FileInfo file = new System.IO.FileInfo(Server.MapPath(_contactsExportRelativePath + "/" + fName));
+            if (file.Exists) {
+                file.Delete();
+                _notifier.Information(T("File removed."));
+            } else {
+                _notifier.Error(T("File does not exist. It should have been removed by someone else."));
+            }
+            return RedirectToAction("ExportedFilesList");
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

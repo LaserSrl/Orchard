@@ -140,9 +140,9 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                                 foreach (TermPart term in ((TaxonomyField)cf).Terms) {
                                     // Più termini selezionati
                                     if (valueField != "")
-                                        valueField = "," + valueField;
+                                        valueField += ",";
 
-                                    if (term.FullPath == "/" + term.Id) {
+                                    if (term.Path == "/") {
                                         // Taxonomy ad un livello
                                         valueField = valueField + term.Name;
                                     } 

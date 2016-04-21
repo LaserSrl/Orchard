@@ -1,0 +1,26 @@
+﻿@model Laser.Orchard.CommunicationGateway.ViewModels.ExportedFilesListVM
+@{
+    Layout.Title = T("Exported File List");
+}
+<a href="@Url.Action("Index")">@T("Contacts")</a> > @T("Exported Files")
+<br />
+@if (Model.FileInfos.Count == 0) {
+    <br />
+    <div class="content">@T("No data found.")</div>    
+} else{
+    <fieldset class="contentItems bulk-items">
+        <legend></legend>
+        <ul>
+        @foreach (var file in Model.FileInfos) {
+            <li>
+                <div class="summary">
+                    <div class="properties">@file.Name</div>
+                    <div class="related">
+                        <a href="@Url.Action("RemoveFile", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", fName = file.Name })" onclick="return confirm('@T("Are you sure?")')">@T("Delete")</a>
+                    </div>
+                </div>
+            </li>
+        }
+        </ul>
+    </fieldset>
+}

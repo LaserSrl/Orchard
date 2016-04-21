@@ -173,6 +173,7 @@
     <Compile Include="Services\ICommunicationService.cs" />
     <Compile Include="Utils\ImportUtil.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
+    <Compile Include="ViewModels\ExportedFilesListVM.cs" />
     <Compile Include="ViewModels\ListVM.cs" />
     <Compile Include="ViewModels\QueryFilterVM.cs" />
     <Compile Include="ViewModels\SearchFieldEnum.cs" />
@@ -202,6 +203,7 @@
     <Content Include="Views\EditorTemplates\Parts\Advertising_Edit.cshtml" />
     <Content Include="Views\switchurl.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\AdvertisingSwitcher.cshtml" />
+    <Content Include="Views\ContactsAdmin\ExportedFilesList.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
