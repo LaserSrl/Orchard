@@ -57,5 +57,16 @@ namespace Laser.Orchard.Policy {
             return 2;
         }
 
+        public int UpdateFrom2() {
+            SchemaBuilder.CreateTable("UserPolicyAnswersHistoryRecord", table => table
+                .Column<int>("Id", col => col.Identity().PrimaryKey())
+                .Column<int>("UserPolicyPartRecord_Id")
+                .Column<int>("PolicyTextInfoPartRecord_Id")
+                .Column<DateTime>("AnswerDate")
+                .Column<DateTime>("EndValidity")
+                .Column<bool>("Accepted")
+                );
+            return 3;
+        }
     }
 }

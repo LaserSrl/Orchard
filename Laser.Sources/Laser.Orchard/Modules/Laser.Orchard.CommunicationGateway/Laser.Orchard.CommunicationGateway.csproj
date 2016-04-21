@@ -51,6 +51,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="Laser.Orchard.Policy">
+      <HintPath>..\Laser.Orchard.Policy\bin\Laser.Orchard.Policy.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -156,6 +159,7 @@
     <Compile Include="Handlers\CommunicationAdvertisingPartHandler.cs" />
     <Compile Include="Handlers\CommunicationCampaignPartHandler.cs" />
     <Compile Include="Handlers\CommunicationContactPartHandler.cs" />
+    <Compile Include="Handlers\CommunicationPolicyChangedHandler.cs" />
     <Compile Include="Handlers\EmailContactPartHandler.cs" />
     <Compile Include="Handlers\SmsContactPartHandler.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />

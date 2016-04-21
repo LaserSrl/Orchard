@@ -36,4 +36,13 @@ namespace Laser.Orchard.Policy.ViewModels {
         public bool Accepted { get; set; }
     
     }
+
+    public class PolicyHistoryViewModel {
+        public int PolicyId { get; set; }
+        public string PolicyTitle { get; set; }
+        public PolicyTypeOptions PolicyType { get; set; }
+        public bool Accepted { get; set; }
+        public DateTime AnswerDate { get; set; }
+        public DateTime? EndValidity { get; set; }
+    }
 }

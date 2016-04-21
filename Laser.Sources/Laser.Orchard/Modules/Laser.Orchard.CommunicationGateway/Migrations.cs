@@ -154,6 +154,7 @@ namespace Laser.Orchard.CommunicationGateway {
              );
             return 6;
         }
+
         public int UpdateFrom6() {
             SchemaBuilder.AlterTable("CommunicationContactPartRecord",
                table => table
@@ -161,6 +162,7 @@ namespace Laser.Orchard.CommunicationGateway {
              );
             return 7;
         }
+
         public int UpdateFrom7() {
             SchemaBuilder.CreateTable("CommunicationEmailRecord",
             table => table
@@ -175,6 +177,7 @@ namespace Laser.Orchard.CommunicationGateway {
              );
             return 8;
         }
+
         public int UpdateFrom8() {
             SchemaBuilder.CreateTable("CommunicationSmsRecord",
             table => table
@@ -190,6 +193,7 @@ namespace Laser.Orchard.CommunicationGateway {
              );
             return 9;
         }
+
         public int UpdateFrom9() {
             ContentDefinitionManager.AlterPartDefinition("CommunicationAdvertisingPart",
                 alt => alt.RemoveField("Campaign"));
@@ -207,11 +211,11 @@ namespace Laser.Orchard.CommunicationGateway {
         }
 
         public int UpdateFrom10() {
-             SchemaBuilder.CreateTable("EmailContactPartRecord",
-                table => table
-                    .ContentPartRecord()
-            );
-                return 11;
+            SchemaBuilder.CreateTable("EmailContactPartRecord",
+               table => table
+                   .ContentPartRecord()
+           );
+            return 11;
         }
         public int UpdateFrom11() {
             SchemaBuilder.CreateTable("SmsContactPartRecord",
@@ -230,6 +234,7 @@ namespace Laser.Orchard.CommunicationGateway {
                     .CreateIndex("IX_CommunicationEmailRecord_SmsContactPartRecord_Id", "SmsContactPartRecord_Id"));
             return 13;
         }
+
         public int UpdateFrom13() {
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
@@ -238,7 +243,8 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 14;
         }
-                public int UpdateFrom14() {
+
+        public int UpdateFrom14() {
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
             type => type
@@ -246,14 +252,24 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 15;
         }
-                public int UpdateFrom15() {
-                    ContentDefinitionManager.AlterTypeDefinition(
-                    "CommunicationAdvertising",
-                    type => type
-                        .WithPart("TagsPart")
-                        );
-                    return 16;
-                }
 
+        public int UpdateFrom15() {
+            ContentDefinitionManager.AlterTypeDefinition(
+            "CommunicationAdvertising",
+            type => type
+                .WithPart("TagsPart")
+                );
+            return 16;
+        }
+
+        public int UpdateFrom16() {
+
+            SchemaBuilder.AlterTable("CommunicationSmsRecord", table => table.AddColumn<bool>("AccettatoUsoCommerciale", c => c.WithDefault(false)));
+            SchemaBuilder.AlterTable("CommunicationSmsRecord", table => table.AddColumn<bool>("AutorizzatoTerzeParti", c => c.WithDefault(false)));
+            SchemaBuilder.AlterTable("CommunicationEmailRecord", table => table.AddColumn<bool>("AccettatoUsoCommerciale", c => c.WithDefault(false)));
+            SchemaBuilder.AlterTable("CommunicationEmailRecord", table => table.AddColumn<bool>("AutorizzatoTerzeParti", c => c.WithDefault(false)));
+
+            return 17;
+        }
     }
 }
