@@ -89,7 +89,7 @@ namespace Laser.Orchard.WebServices.Controllers {
             _skipFieldTypes = new string[]{
                 "FieldDefinition","PartFieldDefinition"};
             _skipFieldProperties = new string[]{
-                "Storage", "Name", "DisplayName"};
+                "Storage", "Name", "DisplayName", "Setting"};
             _basicTypes = new Type[] {
                 typeof(string),
                 typeof(decimal),
