@@ -112,6 +112,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                 if (content.ContentItem.ContentType.EndsWith("Taxonomy")) {
                     contentToSerialize = content;
                     json = new JObject(SerializeObject(content));
+                    NormalizeSingleProperty(json);
                     return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
                 } else if (content.ContentItem.ContentType.EndsWith("Term") || !String.IsNullOrWhiteSpace(content.ContentItem.TypeDefinition.Settings["Taxonomy"])) {
                     termPart = ((dynamic)content.ContentItem).TermPart;
@@ -123,6 +124,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                             resultArray.Add(new JObject(SerializeObject(resulted)));
                         }
                         json.Add("SubTerms", resultArray);
+                        NormalizeSingleProperty(json);
                         return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
                     }
                 }
@@ -166,8 +168,12 @@ namespace Laser.Orchard.WebServices.Controllers {
                     foreach (var resulted in queryItems) {
                         resultArray.Add(new JObject(SerializeContentItem((ContentItem)resulted)));
                     }
-                    json.Add("ContentItems", resultArray);
-
+                    if ((json.Root.HasValues) && (json.Root.First.HasValues) && (json.Root.First.First.HasValues)) {
+                        JProperty array = new JProperty("ProjectionPageResults", resultArray);
+                        json.Root.First.First.Last.AddAfterSelf(array);
+                    } else {
+                        json.Add("ProjectionPageResults", resultArray);
+                    }
                 }
                 #endregion
             }
