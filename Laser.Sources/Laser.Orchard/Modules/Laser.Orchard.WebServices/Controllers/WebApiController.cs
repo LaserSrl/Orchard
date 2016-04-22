@@ -104,6 +104,33 @@ namespace Laser.Orchard.WebServices.Controllers {
 
         public ILogger Logger { get; set; }
 
+        public ActionResult Terms(string alias) {
+            JObject json;
+            var content = GetContentByAlias(alias);
+            dynamic contentToSerialize = null, termPart = null;
+            try {
+                if (content.ContentItem.ContentType.EndsWith("Taxonomy")) {
+                    contentToSerialize = content;
+                    json = new JObject(SerializeObject(content));
+                    return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
+                } else if (content.ContentItem.ContentType.EndsWith("Term") || !String.IsNullOrWhiteSpace(content.ContentItem.TypeDefinition.Settings["Taxonomy"])) {
+                    termPart = ((dynamic)content.ContentItem).TermPart;
+                    if (termPart != null) {
+                        json = new JObject(SerializeObject(content));
+                        contentToSerialize = _taxonomyService.GetChildren(termPart, false);
+                        var resultArray = new JArray();
+                        foreach (var resulted in contentToSerialize) {
+                            resultArray.Add(new JObject(SerializeObject(resulted)));
+                        }
+                        json.Add("SubTerms", resultArray);
+                        return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
+                    }
+                }
+            } catch {
+            }
+            return null;
+        }
+
         public ActionResult Display(string alias, int page = 1, int pageSize = 10) {
             var content = GetContentByAlias(alias);
             return GetJson(content, page, pageSize);
@@ -122,7 +149,7 @@ namespace Laser.Orchard.WebServices.Controllers {
             } else {// Se l'oggetto non ha delle pending policies allora devo serivre il content stesso
                 Shape shape = _orchardServices.ContentManager.BuildDisplay(content); // Forse non serve nemmeno
 
-                json = new JObject(SerializeContentItem((ContentItem)content));
+                json = new JObject(SerializeObject(content));
                 dynamic part;
 
                 #region [Projections]
@@ -281,10 +308,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                     PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
                     return new JProperty(item.GetType().Name, array);
 
-                } 
-                
-                
-                else if (item.GetType().IsClass) {
+                } else if (item.GetType().IsClass) {
 
                     //DA AFFINARE QUESTA PARTE ATTUALMENTE NON FUNZIONA!
                     //IL RISULTATO DOVREBBE ESSERE CHE TUTTI GLI ENUMERATORS POSSANO ESSERE CONVERTITI IN STRINGHE (PER UNA MIGLIORE LEGGIBILITA')
@@ -330,7 +354,7 @@ namespace Laser.Orchard.WebServices.Controllers {
             var serializer = JsonSerializerInstance();
             if (val is Array || val.GetType().IsGenericType) {
                 JArray array = new JArray();
-                foreach (var itemArray in (IList)val) {
+                foreach (var itemArray in (IEnumerable)val) {
 
                     if (!IsBasicType(itemArray.GetType())) {
                         array.Add(new JObject { SerializeObject(itemArray, skipProperties) });
