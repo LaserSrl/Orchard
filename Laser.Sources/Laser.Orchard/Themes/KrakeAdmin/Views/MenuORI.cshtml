@@ -1,7 +1,7 @@
 ﻿@using Orchard.Utility.Extensions;
 @{
     Script.Require("jQuery");
-    //Script.Include("admin.js").AtFoot();
+    Script.Include("admin.js").AtFoot();
     IEnumerable<dynamic> firstLevelMenuItems = Model;
 
     if (Model.ImageSets != null) {
@@ -103,7 +103,7 @@
                     }                    
                     @secondLevelTag.StartElement
                         if (HasText(secondLevelItemId)) {
-                            <a href="@secondLevelUrl" class="@secondLevelItemClassName" id="@secondLevelItemId">@secondLevelMenuItem.Text</a>
+                            <a href="@secondLevelUrl" class="@secondLevelItemClassName" id="@secondLevelItemId">@secondLevelMenuItem.Text ++++</a>
                         }
                         else {
                             <a href="@secondLevelUrl" class="@secondLevelItemClassName">@secondLevelMenuItem.Text -----</a>

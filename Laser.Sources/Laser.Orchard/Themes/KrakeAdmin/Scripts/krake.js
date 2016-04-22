@@ -22,16 +22,17 @@ if ("undefined" == typeof jQuery) throw new Error("Bootstrap's JavaScript requir
 //collapsable menu
 $(function () {
     $('.collapse-menu').on('click', function () {
-        if ($('#menu').is(':visible')) {
-            $('#menu').animate({ 'width': '0px' }, 'slow', function () {
-                $('#menu').hide();
+        console.log($('#menu').width());
+        if ($('#menu').width() == '240') {
+            $('#menu').animate({'width': '63px' }, 'slow', function () {
+                $('#menu').addClass('mini-menu');
             });
             $('#main').animate({ 'margin-left': '20px' }, 'slow');
         }
-        else {
-            $('#menu').show();
+        else 
             $('#menu').animate({ 'width': '240px' }, 'slow');
             $('#main').animate({ 'margin-left': '260px' }, 'slow');
         }
     });
 });
+

@@ -8412,8 +8412,93 @@ input[type="number"]:focus {
     background: #252c36 none repeat scroll 0 0 !important;
 }
 
-
-.menu-close {
-    width: 100px;
+/***** sidebar *****/
+#sidebar.mini-menu {
+    width: 50px;
 }
-
+#sidebar.mini-menu::before {
+    width: 50px;
+}
+#sidebar.mini-menu .sidebar-menu > ul > li > a > .menu-text .badge {
+    right: 10px;
+    top: 15px;
+}
+#sidebar.mini-menu .sidebar-menu > ul > li > a > .menu-text .label {
+    position: absolute;
+    right: 10px;
+    top: 15px;
+}
+#sidebar.mini-menu .sidebar-menu > ul > li > a > .menu-text {
+    background-color: #f4f4f4;
+    border: 1px solid #cecece;
+    display: none;
+    height: 50px;
+    left: 50px;
+    line-height: 38px;
+    padding: 5px 0 0 15px;
+    position: absolute;
+    top: 0;
+    width: 174px;
+    z-index: 121;
+}
+#sidebar.mini-menu .sidebar-menu > ul > li.has-sub > a > .menu-text {
+    border-right: medium none;
+    border-top: medium none;
+}
+#sidebar.mini-menu .sidebar-menu > ul > li:hover > a > .menu-text {
+    display: block;
+}
+#sidebar.mini-menu .sidebar-menu > ul > li > ul.sub {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #e7e7e7;
+    border-color: #e7e7e7 #cecece #cecece;
+    border-image: none;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) inset;
+    display: none !important;
+    left: 50px;
+    padding-bottom: 2px;
+    padding-top: 50px;
+    position: absolute;
+    top: 0;
+    width: 176px;
+    z-index: 120;
+}
+#sidebar.mini-menu .sidebar-menu > ul > li:hover > ul.sub {
+    display: block !important;
+}
+#sidebar.mini-menu .sidebar-menu ul > li > a .arrow::before {
+    display: none;
+}
+#sidebar.mini-menu .sidebar-menu > ul > li > a .arrow.open::before {
+    display: none;
+}
+#sidebar.mini-menu .quicklaunch-mini {
+    display: block;
+}
+#sidebar.mini-menu #quicklaunch {
+    position: relative;
+}
+#sidebar.mini-menu .quicklaunch-lg {
+    background-color: #f4f4f4;
+    border: 1px solid #cecece;
+    display: none;
+    height: 115%;
+    left: 50px;
+    max-height: 50px;
+    padding: 0 0 0 1px;
+    position: absolute;
+    top: -1px;
+    width: 190px;
+    z-index: 20;
+}
+#sidebar.mini-menu .quicklaunch-lg .btn {
+    margin-right: 0.25rem;
+}
+#sidebar.mini-menu #quicklaunch:hover .quicklaunch-lg {
+    display: block;
+}
