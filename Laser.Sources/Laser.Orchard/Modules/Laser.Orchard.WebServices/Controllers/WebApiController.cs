@@ -171,10 +171,45 @@ namespace Laser.Orchard.WebServices.Controllers {
                 }
                 #endregion
             }
+
+            NormalizeSingleProperty(json);
+
             return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
         }
 
+        /// <summary>
+        /// Accorpa gli oggetti che hanno una sola proprietà con la proprietà padre.
+        /// Es. Creator: { Value: 2 } diventa Creator: 2.
+        /// </summary>
+        /// <param name="json"></param>
+        private void NormalizeSingleProperty(JObject json) {
+            List<JToken> nodeList = new List<JToken>();
 
+            // scandisce tutto l'albero dei nodi e salva i nodi potenzialmente "interessanti" in una lista
+            nodeList.Add(json.Root);
+            for (int i = 0; i < nodeList.Count; i++) {
+                foreach (var tempNode in nodeList[i].Children()) {
+                    if (tempNode.HasValues) {
+                        nodeList.Add(tempNode);
+                    }
+                }
+            }
+
+            // scorre tutti i nodi per cercare quelli da accorpare
+            foreach (var tempNode in nodeList) {
+                if (tempNode.Count() == 1) {
+                    if (tempNode.First.HasValues == false) {
+                        if ((tempNode.Parent != null) && (tempNode.Parent.Count == 1)) {
+                            if ((tempNode.Parent.Parent != null) 
+                                && (tempNode.Parent.Parent.Count == 1) 
+                                && (tempNode.Parent.Parent.Type == JTokenType.Property)) {
+                                    (tempNode.Parent.Parent as JProperty).Value = tempNode.First;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         private IContent GetContentByAlias(string displayAlias) {
             IContent item = null;
