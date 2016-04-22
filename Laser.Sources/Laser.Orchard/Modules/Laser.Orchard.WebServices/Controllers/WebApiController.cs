@@ -53,10 +53,12 @@ namespace Laser.Orchard.WebServices.Controllers {
         private readonly string[] _skipPartProperties;
         private readonly string[] _skipFieldTypes;
         private readonly string[] _skipFieldProperties;
-
+        private readonly string[] _skipAlwaysProperties;
         private readonly Type[] _basicTypes;
 
         private readonly HttpRequest _request;
+
+        private List<string> processedItems;
 
         //
         // GET: /Json/
@@ -81,8 +83,9 @@ namespace Laser.Orchard.WebServices.Controllers {
                 "InfosetPart","FieldIndexPart","IdentityPart","UserPart","UserRolesPart", "AdminMenuPart", "MenuPart"};
             _skipPartTypes = new string[]{
                 "ContentItem","Zones","TypeDefinition","TypePartDefinition","PartDefinition", "Settings", "Fields", "Record"};
-            _skipPartProperties = new string[]{
+            _skipAlwaysProperties = new string[]{
                 "ContentItemRecord","ContentItemVersionRecord"};
+            _skipPartProperties = new string[] { };
             _skipFieldTypes = new string[]{
                 "FieldDefinition","PartFieldDefinition"};
             _skipFieldProperties = new string[]{
@@ -96,40 +99,51 @@ namespace Laser.Orchard.WebServices.Controllers {
                 typeof(DateTime),
                 typeof(Enum)
             };
-
+            processedItems = new List<string>();
         }
 
         public ILogger Logger { get; set; }
 
         public ActionResult Display(string alias, int page = 1, int pageSize = 10) {
             var content = GetContentByAlias(alias);
-            return GetJson(content,page, pageSize);
+            return GetJson(content, page, pageSize);
         }
 
         private ActionResult GetJson(IContent content, int page = 1, int pageSize = 10) {
-            Shape shape = _orchardServices.ContentManager.BuildDisplay(content); // Forse non serve nemmeno
-
-            var json = new JObject(SerializeContentItem((ContentItem)content));
-            dynamic part;
-
-            #region [Projections]
-            // Projection
-            try {
-                part = ((dynamic)content).ProjectionPart;
-            } catch {
-                part = null;
-            }
-            if (part != null) {
-                var queryId = part.Record.QueryPartRecord.Id;
-                var queryItems = _projectionManager.GetContentItems(queryId, (page - 1) * pageSize, pageSize);
+            JObject json;
+            var policy = content.As<Policy.Models.PolicyPart>();
+            if (policy != null && (policy.HasPendingPolicies ?? false)) { // Se l'oggetto ha delle pending policies allora devo serivre la lista delle pending policies
+                json = new JObject();
                 var resultArray = new JArray();
-                foreach (var resulted in queryItems) {
-                    resultArray.Add(new JObject(SerializeContentItem((ContentItem)resulted)));
+                foreach (var pendingPolicy in policy.PendingPolicies) {
+                    resultArray.Add(new JObject(SerializeContentItem((ContentItem)pendingPolicy)));
                 }
-                json.Add("ContentItems", resultArray);
+                json.Add("PendingPolicies", resultArray);
+            } else {// Se l'oggetto non ha delle pending policies allora devo serivre il content stesso
+                Shape shape = _orchardServices.ContentManager.BuildDisplay(content); // Forse non serve nemmeno
 
+                json = new JObject(SerializeContentItem((ContentItem)content));
+                dynamic part;
+
+                #region [Projections]
+                // Projection
+                try {
+                    part = ((dynamic)content).ProjectionPart;
+                } catch {
+                    part = null;
+                }
+                if (part != null) {
+                    var queryId = part.Record.QueryPartRecord.Id;
+                    var queryItems = _projectionManager.GetContentItems(queryId, (page - 1) * pageSize, pageSize);
+                    var resultArray = new JArray();
+                    foreach (var resulted in queryItems) {
+                        resultArray.Add(new JObject(SerializeContentItem((ContentItem)resulted)));
+                    }
+                    json.Add("ContentItems", resultArray);
+
+                }
+                #endregion
             }
-            #endregion
             return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
         }
 
@@ -235,42 +249,77 @@ namespace Laser.Orchard.WebServices.Controllers {
         }
 
         private JProperty SerializeObject(object item, string[] skipProperties = null) {
-            skipProperties = skipProperties ?? new string[0];
-            if (item is ContentPart) {
-                return SerializePart((ContentPart)item);
-            } else if (item is ContentField) {
-                return SerializeField((ContentField)item);
-            } else if (item is ContentItem) {
-                return SerializeContentItem((ContentItem)item);
-            } else if (item.GetType().IsClass) {
-                JObject propertiesObject;
-                var serializer = new JsonSerializer {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                };
-                propertiesObject = JObject.FromObject(item, serializer);
-                foreach (var skip in skipProperties) {
-                    propertiesObject.Remove(skip);
+            try {
+                if (((dynamic)item).Id != null) {
+                    if (processedItems.Contains(String.Format("{0}({1})", item.GetType().Name, ((dynamic)item).Id)))
+                        return null;
                 }
-                return new JProperty(item.GetType().Name, propertiesObject);
+            } catch {
             }
-                // else if (!_basicTypes.Contains(item.GetType())) {
-                //    JObject propertiesObject;
-                //    var serializer = new JsonSerializer {
-                //        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                //    };
+            skipProperties = skipProperties ?? new string[0];
+            try {
+                if (item is ContentPart) {
+                    return SerializePart((ContentPart)item);
+                } else if (item is ContentField) {
+                    return SerializeField((ContentField)item);
+                } else if (item is ContentItem) {
+                    return SerializeContentItem((ContentItem)item);
+                } else if (item is Array || item.GetType().IsGenericType) { // Lista
+                    //DA AFFINARE QUESTA PARTE ATTUALMENTE NON FUNZIONA!
 
-            //    try {
-                //        propertiesObject = JObject.FromObject(item, serializer);
-                //        foreach (var skip in skipProperties) {
-                //            propertiesObject.Remove(skip);
-                //        }
-                //        return new JProperty(item.GetType().Name, propertiesObject);
-                //    } catch {
-                //        return new JProperty(item.GetType().Name, item.GetType().FullName);
-                //    }
-                //} 
-                else {
-                return new JProperty(item.GetType().Name, item);
+                    JArray array = new JArray();
+                    foreach (var itemArray in (IList)item) {
+
+                        if (!IsBasicType(itemArray.GetType())) {
+                            array.Add(new JObject { SerializeObject(itemArray, skipProperties) });
+                        } else {
+                            var valItem = itemArray;
+                            FormatValue(ref valItem);
+                            array.Add(valItem);
+                        }
+                    }
+                    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    return new JProperty(item.GetType().Name, array);
+
+                } 
+                
+                
+                else if (item.GetType().IsClass) {
+
+                    //DA AFFINARE QUESTA PARTE ATTUALMENTE NON FUNZIONA!
+                    //IL RISULTATO DOVREBBE ESSERE CHE TUTTI GLI ENUMERATORS POSSANO ESSERE CONVERTITI IN STRINGHE (PER UNA MIGLIORE LEGGIBILITA')
+                    //var members = item.GetType()
+                    //.GetFields(BindingFlags.Instance | BindingFlags.Public).Cast<MemberInfo>()
+                    //.Union(item.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                    //.Where(m => !skipProperties.Contains(m.Name) && !_skipAlwaysProperties.Contains(m.Name))
+                    //;
+                    //List<JProperty> properties = new List<JProperty>();
+                    //foreach (var member in members) {
+                    //    var propertyInfo = item.GetType().GetProperty(member.Name);
+                    //    if (!IsBasicType(propertyInfo.PropertyType)) {
+                    //        properties.Add(SerializeObject(propertyInfo.GetValue(item), skipProperties));
+                    //    } else {
+                    //        properties.Add(new JProperty(member.Name, item.GetType().GetProperty(member.Name).GetValue(item)));
+                    //    }
+                    //}
+                    //PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    //return new JProperty(item.GetType().Name, properties);
+                    // END DA AFFINARE QUESTA PARTE ATTUALMENTE NON FUNZIONA!
+
+                    JObject propertiesObject;
+                    var serializer = JsonSerializerInstance();
+                    propertiesObject = JObject.FromObject(item, serializer);
+                    foreach (var skip in skipProperties) {
+                        propertiesObject.Remove(skip);
+                    }
+                    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    return new JProperty(item.GetType().Name, propertiesObject);
+                } else {
+                    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    return new JProperty(item.GetType().Name, item);
+                }
+            } catch (Exception ex) {
+                return new JProperty(item.GetType().Name, ex.Message);
             }
 
         }
@@ -278,16 +327,17 @@ namespace Laser.Orchard.WebServices.Controllers {
         private void PopulateJObject(ref JObject jObject, PropertyInfo property, object val, string[] skipProperties) {
 
             JObject propertiesObject;
-            var serializer = new JsonSerializer {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
+            var serializer = JsonSerializerInstance();
             if (val is Array || val.GetType().IsGenericType) {
                 JArray array = new JArray();
                 foreach (var itemArray in (IList)val) {
-                    if (!_basicTypes.Contains(itemArray.GetType())) {
-                        array.Add(new JObject { SerializeObject(itemArray) });
+
+                    if (!IsBasicType(itemArray.GetType())) {
+                        array.Add(new JObject { SerializeObject(itemArray, skipProperties) });
                     } else {
-                        array.Add(itemArray);
+                        var valItem = itemArray;
+                        FormatValue(ref valItem);
+                        array.Add(valItem);
                     }
                 }
                 jObject.Add(new JProperty(property.Name, array));
@@ -295,7 +345,7 @@ namespace Laser.Orchard.WebServices.Controllers {
             } else {
                 // jObject.Add(SerializeObject(val, skipProperties));
             }
-            if (!_basicTypes.Contains(val.GetType())) {
+            if (!IsBasicType(val.GetType())) {
                 try {
                     propertiesObject = JObject.FromObject(val, serializer);
                     foreach (var skip in skipProperties) {
@@ -306,8 +356,42 @@ namespace Laser.Orchard.WebServices.Controllers {
                     jObject.Add(new JProperty(property.Name, val.GetType().FullName));
                 }
             } else {
+                FormatValue(ref val);
                 jObject.Add(new JProperty(property.Name, val));
             }
         }
+
+        private bool IsBasicType(Type type) {
+            return _basicTypes.Contains(type) || type.IsEnum;
+        }
+
+        private void FormatValue(ref object val) {
+            if (val.GetType().IsEnum) {
+                val = val.ToString();
+            }
+        }
+
+        private void PopulateProcessedItems(string key, dynamic id) {
+            if (id != null)
+                processedItems.Add(String.Format("{0}({1})", key, id.ToString()));
+        }
+
+        private JsonSerializer JsonSerializerInstance() {
+            return new JsonSerializer {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                DateFormatString = "#MM-dd-yyyy hh.mm.ss#",
+            };
+        }
     }
+
+    public class EnumStringConverter : Newtonsoft.Json.Converters.StringEnumConverter {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
+            if (value.GetType().IsEnum) {
+                writer.WriteValue(value.ToString());// or something else
+                return;
+            }
+            base.WriteJson(writer, value, serializer);
+        }
+    }
+
 }
