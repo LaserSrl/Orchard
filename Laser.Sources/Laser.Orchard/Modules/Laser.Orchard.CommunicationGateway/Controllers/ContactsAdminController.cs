@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using Orchard.Themes;
+using Laser.Orchard.CommunicationGateway.Utils;
 
 namespace Laser.Orchard.CommunicationGateway.Controllers {
 
@@ -56,7 +58,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             _exportContactService = exportContactService;
             _shellSettings = shellSettings;
             _session = session;
-            _contactsExportRelativePath = string.Format("~/App_Data/Sites/{0}/Export/Contacts", _shellSettings.Name);
+            //_contactsExportRelativePath = string.Format("~/App_Data/Sites/{0}/Export/Contacts", _shellSettings.Name);
+            _contactsExportRelativePath = string.Format("~/Media/{0}/Export/Contacts", _shellSettings.Name);
         }
 
         [Admin]
@@ -322,11 +325,18 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
             string fileName = String.Format("contacts_{0}_{1:yyyyMMddHHmmss}.csv", _shellSettings.Name, DateTime.Now);
             byte[] buffer = Encoding.UTF8.GetBytes(strBuilder.ToString());
+            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Server.MapPath(_contactsExportRelativePath));
+            if(dir.Exists == false){
+                dir.Create();
+            }
+            System.IO.File.WriteAllBytes(dir.FullName + System.IO.Path.DirectorySeparatorChar + fileName, buffer);
+            _notifier.Information(T("Export completed."));
+            return RedirectToAction("Index");
 
-            FileContentResult file = new FileContentResult(buffer, "text/csv");
-            file.FileDownloadName = fileName;
+            //FileContentResult file = new FileContentResult(buffer, "text/csv");
+            //file.FileDownloadName = fileName;
 
-            return file;
+            //return file;
         }
 
         [Admin]
@@ -360,16 +370,28 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
         [Admin]
         public ActionResult ExportedFilesList(ExportedFilesListVM model) {
+            model.ExportedFilePath = _contactsExportRelativePath.Replace("~", Request.ApplicationPath);
             System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Server.MapPath(_contactsExportRelativePath));
             if (dir.Exists == false) {
                 dir.Create();
-            }
+            }  
             var files = dir.GetFiles("*.csv", System.IO.SearchOption.TopDirectoryOnly);
             foreach (var file in files) {
                 model.FileInfos.Add(file);
             }
             model.FileInfos = model.FileInfos.OrderByDescending(x => x.LastWriteTimeUtc).ToList();
             return View("ExportedFilesList", model);
+        }
+
+        [Admin]
+        public ActionResult DownloadFile(string fName) {
+            return new DownloadFileContentResult(Server.MapPath(_contactsExportRelativePath + "/" + fName), fName, "text/csv");
+            
+            // questa versione non funziona in alcuni casi (sul sito Default)
+            //byte[] buffer = System.IO.File.ReadAllBytes(Server.MapPath(_contactsExportRelativePath + "/" + fName));
+            //var fcr = new FileContentResult(buffer, "text/csv");
+            //fcr.FileDownloadName = fName;
+            //return fcr;
         }
 
         [Admin]

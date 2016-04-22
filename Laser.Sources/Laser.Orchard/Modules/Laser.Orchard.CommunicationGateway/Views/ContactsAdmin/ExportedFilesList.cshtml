@@ -14,7 +14,10 @@
         @foreach (var file in Model.FileInfos) {
             <li>
                 <div class="summary">
-                    <div class="properties">@file.Name</div>
+                    <div class="properties">
+                        @*<a href="@Url.Action("DownloadFile", new { fName = @file.Name })">@file.Name</a>*@
+                        <a href="@(string.Format("{0}/{1}", Model.ExportedFilePath, file.Name))">@file.Name</a>
+                    </div>
                     <div class="related">
                         <a href="@Url.Action("RemoveFile", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", fName = file.Name })" onclick="return confirm('@T("Are you sure?")')">@T("Delete")</a>
                     </div>

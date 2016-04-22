@@ -171,6 +171,7 @@
     <Compile Include="Security\AdvertisingEventHandler.cs" />
     <Compile Include="Services\ExportContactService.cs" />
     <Compile Include="Services\ICommunicationService.cs" />
+    <Compile Include="Utils\DownloadFileContentResult.cs" />
     <Compile Include="Utils\ImportUtil.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
     <Compile Include="ViewModels\ExportedFilesListVM.cs" />
