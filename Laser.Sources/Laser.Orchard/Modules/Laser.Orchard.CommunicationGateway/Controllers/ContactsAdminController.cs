@@ -9,10 +9,10 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
-using Orchard.Environment.Configuration;
 using Orchard.Fields.Fields;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Tasks.Scheduling;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
@@ -31,8 +31,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly string contentType = "CommunicationContact";
         private readonly dynamic TestPermission = Permissions.ManageContact;
         private readonly ICommunicationService _communicationService;
-        private readonly IExportContactService _exportContactService;
-        private readonly ShellSettings _shellSettings;
+        private readonly IScheduledTaskManager _taskManager;
         private readonly ISessionLocator _session;
         private readonly INotifier _notifier;
         private Localizer T { get; set; }
@@ -41,18 +40,16 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             IOrchardServices orchardServices,
             INotifier notifier,
             IContentManager contentManager,
-             ICommunicationService communicationService,
-             ISessionLocator session,
-             IExportContactService exportContactService,
-            ShellSettings shellSettings
+            ICommunicationService communicationService,
+            ISessionLocator session,
+            IScheduledTaskManager taskManager
             ) {
             _orchardServices = orchardServices;
             _contentManager = contentManager;
             _notifier = notifier;
             T = NullLocalizer.Instance;
             _communicationService = communicationService;
-            _exportContactService = exportContactService;
-            _shellSettings = shellSettings;
+            _taskManager = taskManager;
             _session = session;
         }
 
@@ -268,63 +265,16 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
 
-            IEnumerable<ContentItem> contentItems = _exportContactService.GetContactList(search);
-            List<ContactExport> listaContatti = new List<ContactExport>();
+            string parametri = "expression=" + search.Expression + ";field=" + search.Field.ToString();
 
-            foreach (ContentItem contenuto in contentItems) {
-                // Contact Master non viene esportato
-                if (!contenuto.As<CommunicationContactPart>().Master) {
-                    listaContatti.Add(_exportContactService.GetInfoContactExport(contenuto));
-                }
-            }
+            var ContentExport = _orchardServices.ContentManager.Create("ExportTaskParameters");
+            ((dynamic)ContentExport).ExportTaskParametersPart.Parameters.Value = parametri;
 
-            // Export CSV
-            StringBuilder strBuilder = new StringBuilder();
-            string Separator = ";";
-            bool isColumnExist = false;
+            _taskManager.CreateTask("Laser.Orchard.CommunicationGateway.ExportContact.Task", DateTime.UtcNow.AddMinutes(1), (ContentItem)ContentExport);
 
-            foreach (ContactExport contatto in listaContatti) {
-
-                if (!isColumnExist) {
-                    #region column
-                    strBuilder.Append("Id" + Separator);
-                    strBuilder.Append("TitlePart.Title" + Separator);
-                    foreach (Hashtable fieldColumn in contatto.Fields) {
-                        foreach (DictionaryEntry nameCol in fieldColumn) {
-                            strBuilder.Append(nameCol.Key + Separator);
-                        }
-                    }
-                    strBuilder.Append("ContactPart.Sms" + Separator);
-                    strBuilder.Append("ContactPart.Email" + Separator);
-                    strBuilder.Append("\n");
-                    #endregion
-
-                    isColumnExist = true;
-                }
-
-                #region row
-                strBuilder.Append(contatto.Id.ToString() + Separator);
-                strBuilder.Append(contatto.Title + Separator);
-                foreach (Hashtable fieldRow in contatto.Fields) {
-                    foreach (DictionaryEntry valueRow in fieldRow) {
-                        strBuilder.Append(valueRow.Value + Separator);
-                    }
-                }
-                strBuilder.Append(string.Join(",", contatto.Sms) + Separator);
-                strBuilder.Append(string.Join(",", contatto.Mail) + Separator);
-                strBuilder.Append("\n");
-                #endregion
-            }
-
-            string fileName = String.Format("contacts_{0}_{1:yyyyMMddHHmmss}.csv", _shellSettings.Name, DateTime.Now);
-            byte[] buffer = Encoding.UTF8.GetBytes(strBuilder.ToString());
-
-            FileContentResult file = new FileContentResult(buffer, "text/csv");
-            file.FileDownloadName = fileName;
-
-            return file;
+            _notifier.Add(NotifyType.Information, T("Export started. Please check 'Show Exported files' to get the result."));
+            return RedirectToAction("Index", "ContactsAdmin");
         }
-
 
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
