@@ -1,18 +1,22 @@
 ﻿@*<h1 id="page-title">@Model.Title</h1>*@
-
-
-<ul class="header-nav header-nav-options">
-    <li>
-        <a href="#" id="sidebar-collapse" class="btn btn-toggle-menu collapse-menu">
-            @*<i class="fa fa-bars"></i>*@
-            <i class="fa fa-bars" data-icon2="fa fa-bars" data-icon1="fa fa-bars"></i>
-        </a>
-    </li>
-    <li class="header-nav-brand">
-        <div class="brand-holder">
-            <a href="~/">
-                <h1 class="site-title">@Model.Title</h1>
-            </a>
-        </div>
-    </li>
-</ul>
+<div class="headerbar-left">
+	<ul class="header-nav header-nav-options">
+        <li>
+            <div class="krake-header">
+                <a class="krake-logo" href="~/"></a>
+            </div>
+        </li>
+		<li class="header-nav-brand" >
+			<div class="brand-holder">
+				<a href="~/">
+					<span class="text-lg text-bold text-primary">@Model.Title</span>
+				</a>
+			</div>
+		</li>
+		<li>
+			<a class="btn btn-icon-toggle menubar-toggle" data-toggle="menubar" href="javascript:void(0);">
+				<i class="fa fa-bars"></i>
+			</a>
+		</li>
+	</ul>
+</div>

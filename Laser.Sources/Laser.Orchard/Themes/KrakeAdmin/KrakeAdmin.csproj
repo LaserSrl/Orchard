@@ -76,9 +76,25 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\krake.js" />
+    <Content Include="Scripts\admin.js" />
+    <Content Include="Scripts\App.js" />
+    <Content Include="Scripts\App.min.js" />
+    <Content Include="Scripts\AppCard.js" />
+    <Content Include="Scripts\AppForm.js" />
+    <Content Include="Scripts\AppNavigation.js" />
+    <Content Include="Scripts\AppNavSearch.js" />
+    <Content Include="Scripts\AppOffcanvas.js" />
+    <Content Include="Scripts\AppVendor.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery.min.js" />
+    <Content Include="Scripts\jquery.autosize.min.js" />
     <Content Include="Scripts\main.js" />
+    <Content Include="Styles\bootstrap.css" />
+    <Content Include="Styles\font-awesome.min.css" />
+    <Content Include="Styles\fonts\fontawesome-webfont.svg" />
     <Content Include="Styles\Images\adminNavBackground.gif" />
+    <Content Include="Styles\Images\avatar1.png" />
     <Content Include="Styles\Images\bg-app.png" />
     <Content Include="Styles\Images\bg-mail.png" />
     <Content Include="Styles\Images\bg-notifiche.png" />
@@ -121,6 +137,7 @@
     <Content Include="Styles\Images\piattaforma.png" />
     <Content Include="Styles\Images\sfondo-krake.png" />
     <Content Include="Styles\krake.css" />
+    <Content Include="Styles\iconic-font.min.css" />
     <Content Include="Styles\krakeadmin.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -139,9 +156,7 @@
   <ItemGroup>
     <Content Include="Views\OrchardVersion.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Styles\fonts\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\Dashboard\Admin\Index.cshtml" />
   </ItemGroup>
@@ -163,6 +178,16 @@
     <Content Include="Views\Pager.cshtml" />
     <Content Include="Views\Title.cshtml" />
     <Content Include="Views\User.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MenuORI.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\fonts\fontawesome-webfont.eot" />
+    <Content Include="Styles\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Styles\fonts\fontawesome-webfont.woff" />
+    <Content Include="Styles\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Styles\fonts\FontAwesome.otf" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

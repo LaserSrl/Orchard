@@ -1,2 +1,41 @@
 ﻿@model dynamic
-@if (Model.CurrentUser != null) {<div id="login">@T("User:") @Html.ItemDisplayText((Orchard.ContentManagement.IContent)Model.CurrentUser) | @Html.ActionLink(T("Logout").ToString(), "LogOff", new { Area = "Orchard.Users", Controller = "Account", ReturnUrl = Href("~/") })</div>}
+@using Orchard.Mvc.Html;
+@using Orchard.UI.Resources;
+@using Orchard.Environment.Configuration
+@{
+    var folderStylePath = Url.Content("~/Themes/KrakeAdmin/Styles");
+}
+@if (Model.CurrentUser != null) {
+@*<div id="login">@T("User:") @Html.ItemDisplayText((Orchard.ContentManagement.IContent)Model.CurrentUser) | @Html.ActionLink(T("Logout").ToString(), "LogOff", new { Area = "Orchard.Users", Controller = "Account", ReturnUrl = Href("~/") })</div>*@
+    <div class="headerbar-right">
+        <ul class="header-nav header-nav-options">
+			<li>
+				<!-- Search form -->
+				<form class="navbar-search" role="search">
+					<div class="form-group">
+						<input type="text" class="form-control" name="headerSearch" placeholder="Enter your keyword">
+					</div>
+					<button type="submit" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-search"></i></button>
+				</form>
+			</li>
+        </ul>
+        <ul class="header-nav header-nav-profile">
+            <li class="dropdown">
+                <a href="javascript:void(0);" class="dropdown-toggle ink-reaction" data-toggle="dropdown">
+                    <img src="@folderStylePath/Images/avatar1.png?1403934956" alt="" />
+                    <span class="profile-info">
+                        @Html.ItemDisplayText((Orchard.ContentManagement.IContent)Model.CurrentUser)
+                        <small>@T("User")</small>
+                    </span>
+                </a>
+                <ul class="dropdown-menu animation-dock">
+                    <li><i class="fa fa-fw fa-power-off text-danger"></i>@Html.ActionLink(T("Logout").ToString(), "LogOff", new { Area = "Orchard.Users", Controller = "Account", ReturnUrl = Href("~/") })</li>
+                </ul>
+                <!--end .dropdown-menu -->
+            </li>
+            <!--end .dropdown -->
+        </ul>
+        <!--end .header-nav-profile -->
+    </div>
+
+}

@@ -13,11 +13,37 @@
 
     string title = Convert.ToString(Model.Title);
     string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
-    Style.Include("krake.css").AtHead();
-    Style.Include("https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css").AtHead();
+
+    //---- include js libraries ----//
+    //generic & tools
+    Script.Include("jquery.min.js").AtHead();
+    Script.Include("bootstrap.min.js").AtHead();
+    Script.Include("jquery.autosize.min.js").AtHead();
+    // specific for krake theme
+    Script.Include("App.js").AtHead();
+    Script.Include("AppCard.js").AtHead();
+    Script.Include("AppForm.js").AtHead();
+    Script.Include("AppNavigation.js").AtHead();
+    Script.Include("AppNavSearch.js").AtHead();
+    Script.Include("AppOffcanvas.js").AtHead();
+    Script.Include("AppVendor.js").AtHead();
+    //custom
+    Script.Include("krake.js").AtHead(); //dsweb custom library
+    Script.Include("main.js").AtHead(); //laser-orchard custom library
+    
+    //---- include css files ----//
+    Style.Include("krake.css").AtHead(); //dsweb custom styles TO DO JOIN with krakeadmin.css!!
+    Style.Include("krakeadmin.css").AtHead(); //dsweb custom styles
+   
+    // generic & utilities
+    Style.Include("bootstrap.css").AtHead();
+    Style.Include("font-awesome.min.css").AtHead();
+    Style.Include("iconic-font.min.css").AtHead();
     Style.Include("https://fonts.googleapis.com/css?family=Roboto:400,700,500,300,100,900").AtHead();
-    Script.Include("krake.js").AtHead();
-    Script.Include("main.js").AtHead();
+    
+    
+    
+    
 }
 <!DOCTYPE html> 
 <html lang="@WorkContext.CurrentCulture" class="static @Html.ClassForPage()"> 
@@ -27,9 +53,9 @@
     @Display(Model.Head)
     <script>        (function (d) { d.className = "dyn" + d.className.substring(6, d.className.length); })(document.documentElement);</script> 
 </head> 
-<body>
-@* Layout (template) is in the Body zone @ the default position (nothing, zero, zilch) *@
-@Display(Model.Body)
-@Display(Model.Tail)
+<body class="menubar-hoverable header-fixed ">
+    @* Layout (template) is in the Body zone @ the default position (nothing, zero, zilch) *@
+    @Display(Model.Body)
+    @Display(Model.Tail)
 </body>
 </html>
