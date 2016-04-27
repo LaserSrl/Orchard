@@ -93,6 +93,8 @@
     <Content Include="Styles\bootstrap.css" />
     <Content Include="Styles\font-awesome.min.css" />
     <Content Include="Styles\fonts\fontawesome-webfont.svg" />
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Styles\fonts\Material-Design-Iconic-Font.svg" />
     <Content Include="Styles\Images\adminNavBackground.gif" />
     <Content Include="Styles\Images\avatar1.png" />
     <Content Include="Styles\Images\bg-app.png" />
@@ -129,6 +131,7 @@
     <Content Include="Styles\Images\krake-giallo.png" />
     <Content Include="Styles\Images\krake-rosso.png" />
     <Content Include="Styles\Images\krake-verde.png" />
+    <Content Include="Styles\Images\krake-orizontal-old.png" />
     <Content Include="Styles\Images\krake-orizontal.png" />
     <Content Include="Styles\Images\logo-laser.png" />
     <Content Include="Styles\Images\logo.png" />
@@ -156,7 +159,15 @@
   <ItemGroup>
     <Content Include="Views\OrchardVersion.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Styles\fonts\Material-Design-Iconic-Font.eot" />
+    <Content Include="Styles\fonts\Material-Design-Iconic-Font.ttf" />
+    <Content Include="Styles\fonts\Material-Design-Iconic-Font.woff" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Dashboard\Admin\Index.cshtml" />
   </ItemGroup>
