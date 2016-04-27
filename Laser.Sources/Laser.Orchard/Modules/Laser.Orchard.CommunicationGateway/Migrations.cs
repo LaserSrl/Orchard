@@ -243,7 +243,6 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 14;
         }
-
         public int UpdateFrom14() {
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
@@ -252,7 +251,6 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 15;
         }
-
         public int UpdateFrom15() {
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
@@ -261,15 +259,26 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 16;
         }
-
         public int UpdateFrom16() {
+            ContentDefinitionManager.AlterPartDefinition("ExportTaskParametersPart", part => part
+                .WithField("Parameters", cfg => cfg.OfType("TextField"))
+                );
+            ContentDefinitionManager.AlterTypeDefinition("ExportTaskParameters", cfg => cfg
+                .WithPart("ExportTaskParametersPart")
+                .Creatable(false)
+                .Draftable(false));
+
+            return 17;
+        }
+
+        public int UpdateFrom17() {
 
             SchemaBuilder.AlterTable("CommunicationSmsRecord", table => table.AddColumn<bool>("AccettatoUsoCommerciale", c => c.WithDefault(false)));
             SchemaBuilder.AlterTable("CommunicationSmsRecord", table => table.AddColumn<bool>("AutorizzatoTerzeParti", c => c.WithDefault(false)));
             SchemaBuilder.AlterTable("CommunicationEmailRecord", table => table.AddColumn<bool>("AccettatoUsoCommerciale", c => c.WithDefault(false)));
             SchemaBuilder.AlterTable("CommunicationEmailRecord", table => table.AddColumn<bool>("AutorizzatoTerzeParti", c => c.WithDefault(false)));
 
-            return 17;
+            return 18;
         }
     }
 }

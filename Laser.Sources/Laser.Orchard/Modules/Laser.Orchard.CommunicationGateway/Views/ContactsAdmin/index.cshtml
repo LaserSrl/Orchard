@@ -5,6 +5,7 @@
     var ContentsIndexVM = Model.ContentsIndexVM;
     Layout.Title = T("Contact");
 }
+
 <div class="manage">
     <a class="button primaryAction" href="@Url.Action("Edit", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = 0 })" title="@T("Create New Contact")">@T("Create New Contact")</a>
 </div>
@@ -13,74 +14,83 @@
         <a class="button primaryAction" href="@Url.Action("Synchronize", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" })" title="@T("Synchronize")">@T("Synchronize")</a>
     </div>
 }
-@using (Html.BeginForm("Index", "ContactsAdmin", FormMethod.Get)) {
- @*   @Html.AntiForgeryToken()
-    *@<fieldset class="bulk-actions">
+@using (Html.BeginFormAntiForgeryPost(Url.Action("ImportCsv", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
+    <input type="file" name="csvFile" id="csvFile" />
+    <button type="submit">@T("Import")</button>
+    <a href="@Url.Action("ImportedFilesLogs")">@T("Show Import Logs")</a>@*
+    <script type="text/javascript">
+        function showImportErrors() {
+            $("#divImportErrors").css("display", "block");
+        }
+        function hideImportErrors() {
+            $("#divImportErrors").css("display", "none");
+        }
+    </script>
+    <div id="divImportErrors" class="contentItems" style="display:none"><span style="font-weight:bold;color:red">Import errors</span><a href="javascript:hideImportErrors()" style="margin-left:30px">X @T("Close")</a><br />
+        <textarea readonly style="width:100%;height:80px;overflow:scroll">@Model.ImportErrors</textarea>
+    </div>*@
+}
+@using (Html.BeginForm("IndexSearch", "ContactsAdmin", FormMethod.Post)) {
+    @Html.AntiForgeryToken()
+    <fieldset class="bulk-actions">
         <label for="search">@T("Search:")</label>
         @Html.TextBoxFor(m => m.Search.Expression)
-
         <label>@T("Filter by")</label>
         @Html.DropDownListFor(m => m.Search.Field, new SelectList(Enum.GetValues(typeof(SearchFieldEnum))))
-@*        <select name="Search.Field">
-            <option value="name">@T("Name")</option>
-            <option value="mail">@T("e-mail")</option>
-            <option value="phone">@T("Phone")</option>
-        </select>*@
-
-        <button type="submit">@T("Search")</button>
+        <button type="submit" name="submit.Search" value="-">@T("Search")</button>
         <a href="@Url.Action("Index")">@T("Clear")</a>
+        <div class="manage" style="">
+            <button class="button primaryAction" style="margin-left:4px" type="submit" name="submit.Export" value="-">@T("Export")</button>
+            <a href="@Url.Action("ExportedFilesList")">@T("Show Exported Files")</a>
+        </div>
     </fieldset>
-       
 }
-@using(Html.BeginForm()) {
+@using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
-<fieldset class="contentItems bulk-items">
-    <ul>
-        @{
-            foreach (var contentIndexVM in ContentsIndexVM) {
-            <li>
-                <div class="summary" itemscope="itemscope" itemid="@contentIndexVM.Id" itemtype="http://orchardproject.net/data/ContentItem">
-                    <div class="properties">
-                        <h3><a href="@Url.Action("Edit", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })">@contentIndexVM.Title</a></h3>
-                        <div class="contentType"> 
-                            @(string.IsNullOrEmpty(contentIndexVM.PreviewEmail) ? "" : " - " + contentIndexVM.PreviewEmail ) 
-                            @(string.IsNullOrEmpty(contentIndexVM.PreviewSms) ? "" : " - " + contentIndexVM.PreviewSms ) 
-                        </div>
-                        <div class="metadata">
-                            <ul class="pageStatus">
-                                <li>@T("Last modified"):
+    <fieldset class="contentItems bulk-items">
+        <ul>
+            @{
+    foreach (var contentIndexVM in ContentsIndexVM) {
+                <li>
+                    <div class="summary" itemscope="itemscope" itemid="@contentIndexVM.Id" itemtype="http://orchardproject.net/data/ContentItem">
+                        <div class="properties">
+                            <h3><a href="@Url.Action("Edit", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })">@contentIndexVM.Title</a></h3>
+                            <div class="contentType">
+                                @(string.IsNullOrEmpty(contentIndexVM.PreviewEmail) ? "" : " - " + contentIndexVM.PreviewEmail)
+                                @(string.IsNullOrEmpty(contentIndexVM.PreviewSms) ? "" : " - " + contentIndexVM.PreviewSms)
+                            </div>
+                            <div class="metadata">
+                                <ul class="pageStatus">
+                                    <li>@T("Last modified"):
                     @{TimeSpan tp = DateTime.UtcNow - (contentIndexVM.ModifiedUtc ?? DateTime.UtcNow);// content.CommonPart.ModifiedUtc;
                       if (tp.Days > 0) {
                         @Html.Raw(tp.Days.ToString() + " " + T("days ago"))
-                      }
-                      else if (tp.Hours > 0) {
+                      } else if (tp.Hours > 0) {
                         @Html.Raw(tp.Hours.ToString() + " " + T("hours ago"))
-                      }
-                      else if (tp.Minutes > 0) {
+                      } else if (tp.Minutes > 0) {
                         @Html.Raw(tp.Minutes.ToString() + " " + T("minutes ago"))
-                      }
-                      else if (tp.Seconds > 0) {
+                      } else if (tp.Seconds > 0) {
                         @Html.Raw(T("a moment ago"))
                       }
                         @Html.Raw("&nbsp;&vert;&nbsp;")
                     }
-                                </li>
-                                <li>@T("By") @contentIndexVM.UserName
-                                </li>
-                            </ul>
+                                    </li>
+                                    <li>@T("By") @contentIndexVM.UserName
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="related">
+                            <a href="@Url.Action("Edit", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })">@T("Edit")</a>
+                            &nbsp;&vert;&nbsp;
+                        <a href="@Url.Action("Remove", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
                         </div>
                     </div>
-                    <div class="related">
-                        <a href="@Url.Action("Edit", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })">@T("Edit")</a>
-                        &nbsp;&vert;&nbsp;
-                        <a href="@Url.Action("Remove", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
-                    </div>
-                </div>
-            </li>
+                </li>
+    }
             }
-        }
-    </ul>
-</fieldset>
+        </ul>
+    </fieldset>
 }
 <br />
 @Display(Model.Pager)
