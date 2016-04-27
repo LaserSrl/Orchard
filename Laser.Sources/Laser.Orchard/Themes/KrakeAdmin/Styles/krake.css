@@ -1011,7 +1011,7 @@ input[type="number"]:focus {
     height: 60px !important;
     margin: auto !important;
     text-indent: -9999px !important;
-    width: 240px !important;
+    width: 180px !important;
 }
 
 /*.zone-header {

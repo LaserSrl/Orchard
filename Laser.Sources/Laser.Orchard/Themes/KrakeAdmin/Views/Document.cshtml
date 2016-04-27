@@ -32,14 +32,14 @@
     Script.Include("main.js").AtHead(); //laser-orchard custom library
     
     //---- include css files ----//
-    Style.Include("krake.css").AtHead(); //dsweb custom styles TO DO JOIN with krakeadmin.css!!
-    Style.Include("krakeadmin.css").AtHead(); //dsweb custom styles
-   
     // generic & utilities
     Style.Include("bootstrap.css").AtHead();
     Style.Include("font-awesome.min.css").AtHead();
     Style.Include("iconic-font.min.css").AtHead();
     Style.Include("https://fonts.googleapis.com/css?family=Roboto:400,700,500,300,100,900").AtHead();
+    //custom
+    Style.Include("krake.css").AtHead(); //dsweb custom styles TO DO JOIN with krakeadmin.css!!
+    Style.Include("krakeadmin.css").AtHead(); //dsweb custom styles
     
     
     
@@ -53,7 +53,7 @@
     @Display(Model.Head)
     <script>        (function (d) { d.className = "dyn" + d.className.substring(6, d.className.length); })(document.documentElement);</script> 
 </head> 
-<body class="menubar-hoverable header-fixed ">
+<body class="menubar-hoverable header-fixed menubar-pin ">
     @* Layout (template) is in the Body zone @ the default position (nothing, zero, zilch) *@
     @Display(Model.Body)
     @Display(Model.Tail)
