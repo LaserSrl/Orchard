@@ -157,6 +157,8 @@
     <Compile Include="Handlers\CommunicationCampaignPartHandler.cs" />
     <Compile Include="Handlers\CommunicationContactPartHandler.cs" />
     <Compile Include="Handlers\EmailContactPartHandler.cs" />
+    <Compile Include="Handlers\ExportContactTaskHandler.cs" />
+    <Compile Include="Handlers\ImportContactTaskHandler.cs" />
     <Compile Include="Handlers\SmsContactPartHandler.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Models\CommunicationAdvertisingPart.cs" />
@@ -171,10 +173,12 @@
     <Compile Include="Security\AdvertisingEventHandler.cs" />
     <Compile Include="Services\ExportContactService.cs" />
     <Compile Include="Services\ICommunicationService.cs" />
-    <Compile Include="Utils\DownloadFileContentResult.cs" />
+    <Compile Include="Utils\DownloadFileContentResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Utils\ImportUtil.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
-    <Compile Include="ViewModels\ExportedFilesListVM.cs" />
+    <Compile Include="ViewModels\FilesListVM.cs" />
     <Compile Include="ViewModels\ListVM.cs" />
     <Compile Include="ViewModels\QueryFilterVM.cs" />
     <Compile Include="ViewModels\SearchFieldEnum.cs" />
@@ -205,6 +209,7 @@
     <Content Include="Views\switchurl.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\AdvertisingSwitcher.cshtml" />
     <Content Include="Views\ContactsAdmin\ExportedFilesList.cshtml" />
+    <Content Include="Views\ContactsAdmin\ImportedFilesLogs.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

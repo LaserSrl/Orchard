@@ -9,10 +9,10 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
-using Orchard.Environment.Configuration;
 using Orchard.Fields.Fields;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Tasks.Scheduling;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
@@ -20,11 +20,13 @@ using Orchard.Mvc;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Orchard.Themes;
 using Laser.Orchard.CommunicationGateway.Utils;
+using Orchard.Environment.Configuration;
 
 namespace Laser.Orchard.CommunicationGateway.Controllers {
 
@@ -34,20 +36,21 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly string contentType = "CommunicationContact";
         private readonly dynamic TestPermission = Permissions.ManageContact;
         private readonly ICommunicationService _communicationService;
-        private readonly IExportContactService _exportContactService;
-        private readonly ShellSettings _shellSettings;
+        private readonly IScheduledTaskManager _taskManager;
         private readonly ISessionLocator _session;
         private readonly INotifier _notifier;
+        private readonly ShellSettings _shellSettings;
         private Localizer T { get; set; }
         private readonly string _contactsExportRelativePath;
+        private readonly string _contactsImportRelativePath;
 
         public ContactsAdminController(
             IOrchardServices orchardServices,
             INotifier notifier,
             IContentManager contentManager,
-             ICommunicationService communicationService,
-             ISessionLocator session,
-             IExportContactService exportContactService,
+            ICommunicationService communicationService,
+            ISessionLocator session,
+            IScheduledTaskManager taskManager,
             ShellSettings shellSettings
             ) {
             _orchardServices = orchardServices;
@@ -55,11 +58,11 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             _notifier = notifier;
             T = NullLocalizer.Instance;
             _communicationService = communicationService;
-            _exportContactService = exportContactService;
-            _shellSettings = shellSettings;
+            _taskManager = taskManager;
             _session = session;
-            //_contactsExportRelativePath = string.Format("~/App_Data/Sites/{0}/Export/Contacts", _shellSettings.Name);
+            _shellSettings = shellSettings;
             _contactsExportRelativePath = string.Format("~/Media/{0}/Export/Contacts", _shellSettings.Name);
+            _contactsImportRelativePath = string.Format("~/Media/{0}/Import/Contacts", _shellSettings.Name);
         }
 
         [Admin]
@@ -152,14 +155,14 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             if (!_orchardServices.Authorizer.Authorize(TestPermission)) {
                 return new HttpUnauthorizedResult();
             }
-            return IndexSearch(page, pageSize, search, "");
+            return IndexSearch(page, pageSize, search);
         }
 
         [HttpPost]
         [Admin]
         [ActionName("IndexSearch")]
         [FormValueRequired("submit.Search")]
-        public ActionResult IndexSearch(int? page, int? pageSize, SearchVM search, string ImportErrors) {
+        public ActionResult IndexSearch(int? page, int? pageSize, SearchVM search) {
             // variabili di appoggio
             List<int> arr = null;
 
@@ -263,7 +266,6 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             }
             _orchardServices.New.List();
             var model = new SearchIndexVM(pageOfContentItems, search, pagerShape, Options);
-            model.ImportErrors = ImportErrors;
             return View("Index", (object)model);
         }
 
@@ -274,103 +276,51 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         public ActionResult Export(SearchVM search) {
             if (!_orchardServices.Authorizer.Authorize(TestPermission))
                 return new HttpUnauthorizedResult();
+            
+            string parametri = "expression=" + Url.Encode(search.Expression) + "&field=" + Url.Encode(search.Field.ToString());
 
-            IEnumerable<ContentItem> contentItems = _exportContactService.GetContactList(search);
-            List<ContactExport> listaContatti = new List<ContactExport>();
+            var ContentExport = _orchardServices.ContentManager.Create("ExportTaskParameters");
+            ((dynamic)ContentExport).ExportTaskParametersPart.Parameters.Value = parametri;
 
-            foreach (ContentItem contenuto in contentItems) {
-                // Contact Master non viene esportato
-                if (!contenuto.As<CommunicationContactPart>().Master) {
-                    listaContatti.Add(_exportContactService.GetInfoContactExport(contenuto));
-                }
-            }
+            _taskManager.CreateTask("Laser.Orchard.CommunicationGateway.ExportContact.Task", DateTime.UtcNow.AddSeconds(5), (ContentItem)ContentExport);
 
-            // Export CSV
-            StringBuilder strBuilder = new StringBuilder();
-            string Separator = ";";
-            bool isColumnExist = false;
-
-            foreach (ContactExport contatto in listaContatti) {
-
-                if (!isColumnExist) {
-                    #region column
-                    strBuilder.Append("Id" + Separator);
-                    strBuilder.Append("TitlePart.Title" + Separator);
-                    foreach (Hashtable fieldColumn in contatto.Fields) {
-                        foreach (DictionaryEntry nameCol in fieldColumn) {
-                            strBuilder.Append(nameCol.Key + Separator);
-                        }
-                    }
-                    strBuilder.Append("ContactPart.Sms" + Separator);
-                    strBuilder.Append("ContactPart.Email" + Separator);
-                    strBuilder.Append("\r\n");
-                    #endregion
-
-                    isColumnExist = true;
-                }
-
-                #region row
-                strBuilder.Append(contatto.Id.ToString() + Separator);
-                strBuilder.Append(contatto.Title + Separator);
-                foreach (Hashtable fieldRow in contatto.Fields) {
-                    foreach (DictionaryEntry valueRow in fieldRow) {
-                        strBuilder.Append(valueRow.Value + Separator);
-                    }
-                }
-                strBuilder.Append(string.Join(",", contatto.Sms) + Separator);
-                strBuilder.Append(string.Join(",", contatto.Mail) + Separator);
-                strBuilder.Append("\r\n");
-                #endregion
-            }
-
-            string fileName = String.Format("contacts_{0}_{1:yyyyMMddHHmmss}.csv", _shellSettings.Name, DateTime.Now);
-            byte[] buffer = Encoding.UTF8.GetBytes(strBuilder.ToString());
-            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Server.MapPath(_contactsExportRelativePath));
-            if(dir.Exists == false){
-                dir.Create();
-            }
-            System.IO.File.WriteAllBytes(dir.FullName + System.IO.Path.DirectorySeparatorChar + fileName, buffer);
-            _notifier.Information(T("Export completed."));
-            return RedirectToAction("Index");
-
-            //FileContentResult file = new FileContentResult(buffer, "text/csv");
-            //file.FileDownloadName = fileName;
-
-            //return file;
+            _notifier.Add(NotifyType.Information, T("Export started. Please check 'Show Exported Files' to get the result."));
+            return RedirectToAction("Index", "ContactsAdmin");
         }
 
         [Admin]
         public ActionResult ImportCsv(System.Web.HttpPostedFileBase csvFile) {
-            string msg = "";
-            string strErrors = "";
+            string path = Server.MapPath(_contactsImportRelativePath);
             if (csvFile != null) {
                 var len = csvFile.ContentLength;
                 if (len > 0) {
-                    // legge il contenuto del file uploadato dall'utente
-                    byte[] buffer = new byte[len];
-                    csvFile.InputStream.Read(buffer, 0, buffer.Length);
-
-                    string result = _communicationService.ImportCsv(buffer);
-
-                    // parsifica il risultato dell'import
-                    string[] arrResult = result.Split('\0');
-                    if (arrResult.Length > 0) {
-                        msg = arrResult[0];
+                    DirectoryInfo dir = new DirectoryInfo(path);
+                    if (dir.Exists == false) {
+                        dir.Create();
                     }
-                    if (arrResult.Length > 1) {
-                        strErrors = arrResult[1];
+                    FileInfo file = new FileInfo(string.Format("{0}{1}{2}", path, Path.DirectorySeparatorChar, csvFile.FileName));
+                    if(file.Exists){
+                        _notifier.Error(T("File already exist. Import aborted."));
+                    }else{
+                        csvFile.SaveAs(file.FullName);
+
+                        // schedula il task per l'import
+                        var scheduledImports = _taskManager.GetTasks(Handlers.ImportContactTaskHandler.TaskType).Count();
+                        if(scheduledImports == 0){
+                            _taskManager.CreateTask(Handlers.ImportContactTaskHandler.TaskType, DateTime.UtcNow.AddSeconds(5), null);
+                        }
+                        _notifier.Add(NotifyType.Information, T("Import started. Please check 'Show Import Logs' to get the result."));
                     }
-                    _notifier.Add(NotifyType.Information, T(msg));
                 }
             } else {
-                _notifier.Add(NotifyType.Warning, T("Import Contacts: Please select a file to import."));
+                _notifier.Warning(T("Import Contacts: Please select a file to import."));
             }
-            return IndexSearch(null, null, new SearchVM(), strErrors);
+            return IndexSearch(null, null, new SearchVM());
         }
 
         [Admin]
-        public ActionResult ExportedFilesList(ExportedFilesListVM model) {
-            model.ExportedFilePath = _contactsExportRelativePath.Replace("~", Request.ApplicationPath);
+        public ActionResult ExportedFilesList(FilesListVM model) {
+            model.FilePath = _contactsExportRelativePath.Replace("~", Request.ApplicationPath);
             System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Server.MapPath(_contactsExportRelativePath));
             if (dir.Exists == false) {
                 dir.Create();
@@ -384,18 +334,51 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         }
 
         [Admin]
-        public ActionResult DownloadFile(string fName) {
-            return new DownloadFileContentResult(Server.MapPath(_contactsExportRelativePath + "/" + fName), fName, "text/csv");
-            
-            // questa versione non funziona in alcuni casi (sul sito Default)
-            //byte[] buffer = System.IO.File.ReadAllBytes(Server.MapPath(_contactsExportRelativePath + "/" + fName));
-            //var fcr = new FileContentResult(buffer, "text/csv");
-            //fcr.FileDownloadName = fName;
-            //return fcr;
+        public ActionResult ImportedFilesLogs(FilesListVM model) {
+            model.FilePath = _contactsImportRelativePath.Replace("~", Request.ApplicationPath);
+            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Server.MapPath(_contactsImportRelativePath));
+            if (dir.Exists == false) {
+                dir.Create();
+            }
+            var files = dir.GetFiles("*.log", System.IO.SearchOption.TopDirectoryOnly);
+            foreach (var file in files) {
+                model.FileInfos.Add(file);
+            }
+            model.FileInfos = model.FileInfos.OrderByDescending(x => x.LastWriteTimeUtc).ToList();
+            return View("ImportedFilesLogs", model);
+        }
+
+        //[Admin]
+        public ActionResult DownloadCsvFile(string fName) {
+            //return new DownloadFileContentResult(Server.MapPath(_contactsExportRelativePath + "/" + fName), fName, "text/csv");
+            //return File(Server.MapPath(_contactsExportRelativePath + "/" + fName), "application/octet-stream", fName);
+
+            // il metodo seguente, contrariamente a quelli nelle righe precedenti, preserva la corretta codifica dei caratteri accentati
+            Response.AppendHeader("content-disposition", "attachment; filename=" + fName);
+            var result = new ContentResult();
+            result.Content = System.IO.File.ReadAllText(Server.MapPath(_contactsExportRelativePath + "/" + fName));
+            result.ContentEncoding = Encoding.UTF8;
+            result.ContentType = "text/csv";
+            return result;
         }
 
         [Admin]
-        public ActionResult RemoveFile(string fName) {
+        public ActionResult DownloadLogFile(string fName) {
+            // il tipo MIME "application/octet-stream" serve a forzare il download del file
+            //return new DownloadFileContentResult(Server.MapPath(_contactsImportRelativePath + "/" + fName), fName, "application/octet-stream");
+            //return File(System.IO.File.ReadAllBytes(Server.MapPath(_contactsImportRelativePath + "/" + fName)), "application/octet-stream", fName);
+
+            // il metodo seguente, contrariamente a quelli nelle righe precedenti, preserva la corretta codifica dei caratteri accentati
+            Response.AppendHeader("content-disposition", "attachment; filename=" + fName);
+            var result = new ContentResult();
+            result.Content = System.IO.File.ReadAllText(Server.MapPath(_contactsImportRelativePath + "/" + fName));
+            result.ContentEncoding = Encoding.UTF8;
+            result.ContentType = "text/plain";
+            return result;
+        }
+
+        [Admin]
+        public ActionResult RemoveExportFile(string fName) {
             System.IO.FileInfo file = new System.IO.FileInfo(Server.MapPath(_contactsExportRelativePath + "/" + fName));
             if (file.Exists) {
                 file.Delete();
@@ -404,6 +387,18 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _notifier.Error(T("File does not exist. It should have been removed by someone else."));
             }
             return RedirectToAction("ExportedFilesList");
+        }
+
+        [Admin]
+        public ActionResult RemoveImportLog(string fName) {
+            System.IO.FileInfo file = new System.IO.FileInfo(Server.MapPath(_contactsImportRelativePath + "/" + fName));
+            if (file.Exists) {
+                file.Delete();
+                _notifier.Information(T("File removed."));
+            } else {
+                _notifier.Error(T("File does not exist. It should have been removed by someone else."));
+            }
+            return RedirectToAction("ImportedFilesLogs");
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

@@ -140,11 +140,11 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                                 foreach (TermPart term in ((TaxonomyField)cf).Terms) {
                                     // Più termini selezionati
                                     if (valueField != "")
-                                        valueField += ",";
+                                        valueField = ";" + valueField;
 
                                     if (term.Path == "/") {
                                         // Taxonomy ad un livello
-                                        valueField = valueField + term.Name;
+                                        valueField = term.Name.Replace('/', '\\').Replace(";", ".,") + valueField;
                                     } 
                                     else {
                                         // Taxonomy su più livelli
@@ -193,7 +193,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         private void GetValueCompletoTerms(TermPart term, ref string valueTerm) {
 
-            valueTerm = "/" + term.Name.Replace('/', '\\') + valueTerm;
+            valueTerm = "/" + term.Name.Replace('/', '\\').Replace(";", ".,") + valueTerm;
 
             string padre = term.FullPath.Split('/')[term.FullPath.Split('/').Length - 2];
 

@@ -50,8 +50,6 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         ContentItem GetContactFromId(int id);
 
         void Synchronize();
-
-        string ImportCsv(byte[] file);
     }
 
     public class CommunicationService : ICommunicationService {
@@ -406,26 +404,6 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, Contact);
                 }
             }
-        }
-
-        public string ImportCsv(byte[] file) {
-            string result = "";
-            ImportUtil import = new ImportUtil(_orchardServices);
-            import.ImportCsv(file);
-            if (import.Errors.Count > 0) {
-                result = string.Format("Import result: Errors: {0} <a href='javascript:showImportErrors()'>(click here for details)</a>, Mails: {1}, Sms: {2}.\0{3}", import.Errors.Count, import.TotMail, import.TotSms, FormatErrorsInHtml(import.Errors));
-            } else {
-                result = string.Format("Import result: Errors: 0, Mails: {0}, Sms: {1}.", import.TotMail, import.TotSms);
-            }
-            return result;
-        }
-
-        private string FormatErrorsInHtml(List<string> errors) {
-            StringBuilder sb = new StringBuilder();
-            foreach (var line in errors) {
-                sb.AppendLine(line);
-            }
-            return sb.ToString();
         }
     }
 }

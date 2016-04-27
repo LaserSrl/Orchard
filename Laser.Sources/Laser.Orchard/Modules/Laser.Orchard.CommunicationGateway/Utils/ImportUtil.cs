@@ -43,7 +43,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
         private const char fieldSeparator = ';';
         private const char smsSeparator = '/';
         private const char taxoPathSeparator = '/';
-        private const char taxoValuesSeparator = ',';
+        private const char taxoValuesSeparator = ';';
         
         private int idxContactId = 0;
         private int idxContactEmail = 0;
@@ -286,7 +286,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                         if (cf.GetType() == typeof(DateTime)) {
                             ((dynamic)cf).DateTime = prop.Value;
                         } else if (cf.GetType() == typeof(TaxonomyField)) {
-                            UpdateTaxonomyField(ci, cf, prop.Value);
+                            UpdateTaxonomyField(ci, cf as TaxonomyField, prop.Value);
                         } else if ((cf.GetType() == typeof(MediaLibraryPickerField)) || (cf.GetType() == typeof(ContentPickerField))) {
                             Errors.Add(string.Format("Property {0} of type {1} cannot be updated by CSV import.", prop.Key, cf.GetType().Name));
                         } else {
@@ -299,18 +299,18 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
             }
         }
 
-        private void UpdateTaxonomyField(ContentItem ci, ContentField cf, string valuesList) {
+        private void UpdateTaxonomyField(ContentItem ci, TaxonomyField tf, string valuesList) {
             List<TermPart> termlist = new List<TermPart>();
             TermPart term = null;
             if (string.IsNullOrWhiteSpace(valuesList) == false) {
-                var taxoTerms = GetTaxonomyTerms(cf);
+                var taxoTerms = GetTaxonomyTerms(tf);
                 if (taxoTerms != null) {
                     foreach (string locValue in valuesList.Split(taxoValuesSeparator)) {
                         if (string.IsNullOrWhiteSpace(locValue) == false) {
                             string path = "" + taxoPathSeparator;
                             string termName = null;
                             foreach (string section in locValue.Split(taxoPathSeparator)) {
-                                termName = section.Replace('\\', '/');
+                                termName = section.Replace('\\', '/').Replace(".,", ";");
                                 term = taxoTerms.FirstOrDefault(x => x.Path == path && x.Name == termName);
                                 if (term != null) {
                                     path = term.FullPath + taxoPathSeparator;
@@ -322,20 +322,37 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                             if (term != null) {
                                 termlist.Add(term);
                             } else {
-                                Errors.Add(string.Format("Taxonomy term \"{0}\" not found on field \"{1}\".", locValue, cf.Name));
+                                Errors.Add(string.Format("Taxonomy term \"{0}\" not found on field \"{1}\".", locValue, tf.Name));
                             }
                         }
                     }
                 } else {
-                    Errors.Add(string.Format("Taxonomy not found for field \"{0}\".", cf.DisplayName));
+                    Errors.Add(string.Format("Taxonomy not found for field \"{0}\".", tf.DisplayName));
                 }
-                _taxonomyService.UpdateTerms(ci, termlist, cf.Name);
+                var oldTerms = _taxonomyService.GetTermsForContentItem(ci.Id, tf.Name);
+
+                // verifica se è necessario aggiornare il campo
+                bool updateNeeded = false;
+                if (oldTerms.Count() == termlist.Count) {
+                    foreach (var term0 in termlist) {
+                        if (oldTerms.Contains(term0) == false) {
+                            updateNeeded = true;
+                            break;
+                        }
+                    }
+                } else {
+                    updateNeeded = true;
+                }
+
+                if (updateNeeded) {
+                    _taxonomyService.UpdateTerms(ci, termlist, tf.Name);
+                }
             }
         }
 
-        private IEnumerable<TermPart> GetTaxonomyTerms(ContentField cf) {
+        private IEnumerable<TermPart> GetTaxonomyTerms(TaxonomyField tf) {
             IEnumerable<TermPart> result = null;
-            var taxoSettings = ((TaxonomyField)cf).PartFieldDefinition.Settings;
+            var taxoSettings = tf.PartFieldDefinition.Settings;
             string taxoName = taxoSettings.Where(x => x.Key == "TaxonomyFieldSettings.Taxonomy").Select(x => x.Value).FirstOrDefault();
             TaxonomyPart taxoPart = _taxonomyService.GetTaxonomyByName(taxoName);
             if (taxoPart != null) {

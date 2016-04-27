@@ -207,11 +207,11 @@ namespace Laser.Orchard.CommunicationGateway {
         }
 
         public int UpdateFrom10() {
-             SchemaBuilder.CreateTable("EmailContactPartRecord",
-                table => table
-                    .ContentPartRecord()
-            );
-                return 11;
+            SchemaBuilder.CreateTable("EmailContactPartRecord",
+               table => table
+                   .ContentPartRecord()
+           );
+            return 11;
         }
         public int UpdateFrom11() {
             SchemaBuilder.CreateTable("SmsContactPartRecord",
@@ -238,7 +238,7 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 14;
         }
-                public int UpdateFrom14() {
+        public int UpdateFrom14() {
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
             type => type
@@ -246,14 +246,25 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 15;
         }
-                public int UpdateFrom15() {
-                    ContentDefinitionManager.AlterTypeDefinition(
-                    "CommunicationAdvertising",
-                    type => type
-                        .WithPart("TagsPart")
-                        );
-                    return 16;
-                }
+        public int UpdateFrom15() {
+            ContentDefinitionManager.AlterTypeDefinition(
+            "CommunicationAdvertising",
+            type => type
+                .WithPart("TagsPart")
+                );
+            return 16;
+        }
+        public int UpdateFrom16() {
+            ContentDefinitionManager.AlterPartDefinition("ExportTaskParametersPart", part => part
+                .WithField("Parameters", cfg => cfg.OfType("TextField"))
+                );
+            ContentDefinitionManager.AlterTypeDefinition("ExportTaskParameters", cfg => cfg
+                .WithPart("ExportTaskParametersPart")
+                .Creatable(false)
+                .Draftable(false));
+
+            return 17;
+        }
 
     }
 }

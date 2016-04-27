@@ -5,13 +5,13 @@ using System.Web;
 using System.IO;
 
 namespace Laser.Orchard.CommunicationGateway.ViewModels {
-    public class ExportedFilesListVM {
+    public class FilesListVM {
         public List<FileSystemInfo> FileInfos { get; set; }
-        public string ExportedFilePath { get; set; }
+        public string FilePath { get; set; }
 
-        public ExportedFilesListVM() {
+        public FilesListVM() {
             FileInfos = new List<FileSystemInfo>();
-            ExportedFilePath = "";
+            FilePath = "";
         }
     }
 }
