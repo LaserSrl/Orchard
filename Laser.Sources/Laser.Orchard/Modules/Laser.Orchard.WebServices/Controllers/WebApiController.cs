@@ -133,12 +133,12 @@ namespace Laser.Orchard.WebServices.Controllers {
             return null;
         }
 
-        public ActionResult Display(string alias, int page = 1, int pageSize = 10) {
+        public ActionResult Display(string alias, int page = 1, int pageSize = 10, int maxLevels = 10) {
             var content = GetContentByAlias(alias);
-            return GetJson(content, page, pageSize);
+            return GetJson(content, page, pageSize, maxLevels);
         }
 
-        private ActionResult GetJson(IContent content, int page = 1, int pageSize = 10) {
+        private ActionResult GetJson(IContent content, int page = 1, int pageSize = 10, int maxLevels = 10) {
             JObject json;
             var policy = content.As<Policy.Models.PolicyPart>();
             if (policy != null && (policy.HasPendingPolicies ?? false)) { // Se l'oggetto ha delle pending policies allora devo serivre la lista delle pending policies
