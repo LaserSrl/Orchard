@@ -260,6 +260,15 @@ namespace Laser.Orchard.CommunicationGateway {
             return 16;
         }
         public int UpdateFrom16() {
+
+            SchemaBuilder.AlterTable("CommunicationSmsRecord", table => table.AddColumn<bool>("AccettatoUsoCommerciale", c => c.WithDefault(false)));
+            SchemaBuilder.AlterTable("CommunicationSmsRecord", table => table.AddColumn<bool>("AutorizzatoTerzeParti", c => c.WithDefault(false)));
+            SchemaBuilder.AlterTable("CommunicationEmailRecord", table => table.AddColumn<bool>("AccettatoUsoCommerciale", c => c.WithDefault(false)));
+            SchemaBuilder.AlterTable("CommunicationEmailRecord", table => table.AddColumn<bool>("AutorizzatoTerzeParti", c => c.WithDefault(false)));
+
+            return 17;
+        }
+        public int UpdateFrom17() {
             ContentDefinitionManager.AlterPartDefinition("ExportTaskParametersPart", part => part
                 .WithField("Parameters", cfg => cfg.OfType("TextField"))
                 );
@@ -268,17 +277,8 @@ namespace Laser.Orchard.CommunicationGateway {
                 .Creatable(false)
                 .Draftable(false));
 
-            return 17;
-        }
-
-        public int UpdateFrom17() {
-
-            SchemaBuilder.AlterTable("CommunicationSmsRecord", table => table.AddColumn<bool>("AccettatoUsoCommerciale", c => c.WithDefault(false)));
-            SchemaBuilder.AlterTable("CommunicationSmsRecord", table => table.AddColumn<bool>("AutorizzatoTerzeParti", c => c.WithDefault(false)));
-            SchemaBuilder.AlterTable("CommunicationEmailRecord", table => table.AddColumn<bool>("AccettatoUsoCommerciale", c => c.WithDefault(false)));
-            SchemaBuilder.AlterTable("CommunicationEmailRecord", table => table.AddColumn<bool>("AutorizzatoTerzeParti", c => c.WithDefault(false)));
-
             return 18;
         }
+
     }
 }
