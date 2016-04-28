@@ -117,7 +117,7 @@ namespace Laser.Orchard.NewsLetters.Services {
             _contentManager.Remove(newsletterDefinition);
         }
 
-        public void SendNewsletterEdition(ref NewsletterEditionPart newsletterEdition, bool isTest = false, string testEmail = "") {
+        public void SendNewsletterEdition(ref NewsletterEditionPart newsletterEdition, string testEmail) {
             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             var subscribers = GetSubscribers(newsletterEdition.NewsletterDefinitionPartRecord_Id).Where(w => w.Confirmed);
             int[] selectedAnnIds;
@@ -131,32 +131,30 @@ namespace Laser.Orchard.NewsLetters.Services {
                         AnnouncementPart = s,
                         DisplayUrl = urlHelper.ItemDisplayUrl(s)
                     }.ToExpando());
-            }
-            else {
+            } else {
                 fullyItems = null;
             }
             var model = new {
                 NewsletterEdition = newsletterEdition,
                 ContentItems = fullyItems
             }.ToExpando();
-            if (!isTest) {
-                var subscribersEmails = subscribers.Select(s => s.Email);
-                if (SendEmail((dynamic)model,
-                    GetNewsletterDefinition(newsletterEdition.NewsletterDefinitionPartRecord_Id,
-                        VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id,
-                        null, subscribersEmails)) {
+            //if (!isTest) {
+            //    if (SendEmail((dynamic)model,
+            //        GetNewsletterDefinition(newsletterEdition.NewsletterDefinitionPartRecord_Id,
+            //            VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id,
+            //            null, subscribersEmails)) {
 
-                    // Aggiorno la newsletter edition, e rimuovo la relazione tra Newletter e Announcement 
-                    newsletterEdition.Dispatched = true;
-                    newsletterEdition.DispatchDate = DateTime.Now;
-                    newsletterEdition.Number = GetNextNumber(newsletterEdition.NewsletterDefinitionPartRecord_Id); ;
-                    foreach (var item in items) {
-                        var ids = ("," + item.AttachToNextNewsletterIds + ",").Replace("," + newsletterEdition.NewsletterDefinitionPartRecord_Id + ",", "");
-                        item.AttachToNextNewsletterIds = ids;
-                    }
-                }
-            }
-            else if (!String.IsNullOrWhiteSpace(testEmail)) {
+            //        // Aggiorno la newsletter edition, e rimuovo la relazione tra Newletter e Announcement 
+            //        newsletterEdition.Dispatched = true;
+            //        newsletterEdition.DispatchDate = DateTime.Now;
+            //        newsletterEdition.Number = GetNextNumber(newsletterEdition.NewsletterDefinitionPartRecord_Id); ;
+            //        foreach (var item in items) {
+            //            var ids = ("," + item.AttachToNextNewsletterIds + ",").Replace("," + newsletterEdition.NewsletterDefinitionPartRecord_Id + ",", "");
+            //            item.AttachToNextNewsletterIds = ids;
+            //        }
+            //    }
+            //}
+            if (!String.IsNullOrWhiteSpace(testEmail)) {
                 if (SendEmail((dynamic)model,
                     GetNewsletterDefinition(newsletterEdition.NewsletterDefinitionPartRecord_Id,
                         VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id,
