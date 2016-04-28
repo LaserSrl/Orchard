@@ -1,0 +1,441 @@
+msgctxt "~/Modules/Orchard.MediaProcessing/Module.txt"
+msgid "Media Processing"
+msgstr "Elaborazione dei File multimediali"
+
+msgctxt "~/Modules/Orchard.MediaProcessing/Module.txt"
+msgid "John Murdock, Sébastien Ros"
+msgstr "John Murdock, Sébastien Ros"
+
+msgctxt "~/Modules/Orchard.MediaProcessing/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.MediaProcessing/Module.txt"
+msgid "Module for processing Media e.g. image resizing"
+msgstr "Modulo per l'elaborazione dei files multimediali (es. ridimensionamento immagini)"
+
+#: "Orchard.MediaProcessing.AdminMenu"
+msgctxt "Orchard.MediaProcessing.AdminMenu"
+msgid "Media"
+msgstr "Files multimediali"
+
+#: "Orchard.MediaProcessing.AdminMenu"
+msgctxt "Orchard.MediaProcessing.AdminMenu"
+msgid "Profiles"
+msgstr "Profili"
+
+#: "Orchard.MediaProcessing.Controllers.AdminController"
+msgctxt "Orchard.MediaProcessing.Controllers.AdminController"
+msgid "Not authorized to list media profiles"
+msgstr "Non sei autorizzato ad elencare i Profili Multimediali"
+
+#. "Not authorized to manage media profiles"
+msgctxt "Orchard.MediaProcessing.Controllers.AdminController"
+msgid "Not authorized to manage media profiles"
+msgstr "Non sei autorizzato a gestire i Profili Multimediali"
+
+#: "Orchard.MediaProcessing.Controllers.AdminController"
+msgctxt "Orchard.MediaProcessing.Controllers.AdminController"
+msgid "Not authorized to edit media profiles"
+msgstr "Non sei autorizzato a modificare i Profili Multimediali"
+
+#: "Orchard.MediaProcessing.Controllers.AdminController"
+msgctxt "Orchard.MediaProcessing.Controllers.AdminController"
+msgid "Image Profile {0} deleted"
+msgstr "Profilo immagine {0} eliminato"
+
+#. "Not authorized to manage image profiles"
+msgctxt "Orchard.MediaProcessing.Controllers.FilterController"
+msgid "Not authorized to manage image profiles"
+msgstr "Non sei autorizzato a gestire i Profili Immagine"
+
+#: "Orchard.MediaProcessing.Controllers.FilterController"
+msgctxt "Orchard.MediaProcessing.Controllers.FilterController"
+msgid "Filter deleted"
+msgstr "Filtro eliminato"
+
+#: "Orchard.MediaProcessing.Drivers.ImageProfilePartDriver"
+msgctxt "Orchard.MediaProcessing.Drivers.ImageProfilePartDriver"
+msgid "The Name can't be empty."
+msgstr "Il Nome non può essere vuoto."
+
+#: "Orchard.MediaProcessing.Drivers.ImageProfilePartDriver"
+msgctxt "Orchard.MediaProcessing.Drivers.ImageProfilePartDriver"
+msgid "A profile with the same Name already exists."
+msgstr "Un profilo con lo stesso Nome esiste già."
+
+#: "Orchard.MediaProcessing.Drivers.ImageProfilePartDriver"
+msgctxt "Orchard.MediaProcessing.Drivers.ImageProfilePartDriver"
+msgid "The Name can only contain letters and numbers without spaces"
+msgstr "Il Nome può contenere solo lettere e numeri, senza spazi"
+
+#. "Transform"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgid "Transform"
+msgstr "Trasforma"
+
+#. "Format"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgid "Format"
+msgstr "Formato"
+
+#: "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgid "Change the format of the image."
+msgstr "Modifica il formato dell'immagine."
+
+#: "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgid "Format the image to {0}"
+msgstr "Usa il formato dell'immagine {0}"
+
+#: "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgid "The target format of the image."
+msgstr "Il formato di destinazione dell'immagine."
+
+#: "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgid "Quality"
+msgstr "Qualità"
+
+#: "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgid "JPeg compression quality, from 0 to 100."
+msgstr "Qualità di compressione JPeg, da 0 a 100."
+
+#: "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgid "Jpeg"
+msgstr "Jpeg"
+
+#: "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgid "Gif"
+msgstr "Gif"
+
+#: "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.FormatFilter"
+msgid "Png"
+msgstr "Png"
+
+#. "Transform"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Transform"
+msgstr "Trasforma"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Resize"
+msgstr "Ridimensiona"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Resizes using predefined height or width."
+msgstr "Ridimensiona utilizzando l'altezza e la larghezza predefiniti."
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Pad to {0}x{1}"
+msgstr "Pad {0} x {1}"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Crop to {0}x{1}"
+msgstr "Ritaglia a {0} x {1}"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Stretch to {0}x{1}"
+msgstr "Allarga {0} x {1}"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Resize to {0}x{1}"
+msgstr "Ridimensiona {0} x {1}"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Width"
+msgstr "Larghezza"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "The width in pixels."
+msgstr "La larghezza in pixel."
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Height"
+msgstr "Altezza"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "The height in pixels."
+msgstr "L'altezza in pixel."
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Mode"
+msgstr "Modalità"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "How the image should be resized.<br />Max: adjusts to the max given width or height, keeping image ratio.<br />Pad: adds a padding so that the target image is exactly of width and height.<br />Crop: removes part of the image to fit with given height and width.<br />Stretch: stretches the image to fit within height and width."
+msgstr "Come l'immagine deve essere ridimensionata. <br />Massimo: regola al valore più grande tra larghezza o altezza, mantenendo il rapporto immagine.<br />Allinea: aggiunge una parte in modo che l'immagine di destinazione sia esattamente uguale alla larghezza e all'altezza date.<br />Ritaglia: rimuove una parte dell'immagine per adattarsi all'altezza e larghezza.<br />Allarga: estende l'immagine per adattarla all'altezza e alla larghezza."
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Alignment"
+msgstr "Allineamento"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Select the alignment for Crop and Pad modes."
+msgstr "Selezionare l'allineamento per modalità Ritaglia e Allinea."
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Pad Color"
+msgstr "Colore di riempimento"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "The background color to use to pad the image e.g., #ffffff, red. Leave empty to keep transparency."
+msgstr "Il colore di sfondo da utilizzare per riempire l'immagine (es. #ffffff, red). Lasciare vuoto per mantenere la trasparenza."
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Max"
+msgstr "Massimo"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Pad"
+msgstr "Allinea"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Crop"
+msgstr "Ritaglia"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Stretch"
+msgstr "Allarga"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Top Left"
+msgstr "In alto a sinistra"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Top Center"
+msgstr "In alto centrato"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Top Right"
+msgstr "In alto a destra"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Middle Left"
+msgstr "A metà a sinistra"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Middle Center"
+msgstr "A metà al centro"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Middle Right"
+msgstr "A metà a destra"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Bottom Left"
+msgstr "In basso a sinistra"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Bottom Center"
+msgstr "In basso al centro"
+
+#: "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgctxt "Orchard.MediaProcessing.Providers.Filters.ResizeFilter"
+msgid "Bottom Right"
+msgstr "In basso a destra"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgid "Edit Media Profile - {0}"
+msgstr "Modifica il profilo per i Files Multimediali - {0}"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgid "Filters"
+msgstr "Filtri"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgid "Add a new Filter"
+msgstr "Aggiungi un nuovo filtro"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgid "Description"
+msgstr "Descrizione"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgid "Edit"
+msgstr "Modifica"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgid "Up"
+msgstr "Su"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgid "Down"
+msgstr "Giù"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgid "Usage example: "
+msgstr "Esempio di utilizzo: "
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgid "Preview"
+msgstr "Anteprima"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Edit.cshtml"
+msgid "Close"
+msgstr "Chiudi"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "Profiles"
+msgstr "Profili"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "Add a new Media Profile"
+msgstr "Aggiungi un nuovo profilo per i Files Multimediali"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "Actions:"
+msgstr "Azioni:"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "Choose action..."
+msgstr "Scegli l'azione..."
+
+#. "Delete"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+#. "Apply"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "Apply"
+msgstr "Applica"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "Show:"
+msgstr "Mostra:"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "All"
+msgstr "Tutti"
+
+#. "Filter"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "Filter"
+msgstr "Filtro"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "Properties"
+msgstr "Proprietà"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "Edit"
+msgstr "Modifica"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Admin/Index.cshtml"
+msgid "Preview"
+msgstr "Anteprima"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/EditorTemplates/Parts.MediaProcessing.ImageProfilePart.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/EditorTemplates/Parts.MediaProcessing.ImageProfilePart.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/EditorTemplates/Parts.MediaProcessing.ImageProfilePart.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/EditorTemplates/Parts.MediaProcessing.ImageProfilePart.cshtml"
+msgid "The technical name of the profile. Must be letters and numbers only (e.g. Thumbnail)."
+msgstr "Il nome tecnico del profilo. Puoi inserire solo lettere o numeri (es. Miniatura)."
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Filter/Add.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Filter/Add.cshtml"
+msgid "Add a Filter"
+msgstr "Aggiungi un filtro"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Filter/Add.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Filter/Add.cshtml"
+msgid "There are no currently available filters"
+msgstr "Non ci sono filtri attualmente disponibili"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Filter/Add.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Filter/Add.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Filter/Add.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Filter/Add.cshtml"
+msgid "Description"
+msgstr "Descrizione"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Filter/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Filter/Edit.cshtml"
+msgid "Edit Filter - {0}"
+msgstr "Modifica Filtro - {0}"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Filter/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Filter/Edit.cshtml"
+msgid "Description"
+msgstr "Descrizione"
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Filter/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Filter/Edit.cshtml"
+msgid "You may optionally give a description to this filter, to be used in the dashboard screens."
+msgstr "È possibile fornire una descrizione del filtro da usare nelle schermate del pannello amministrativo."
+
+#: "~/Modules/Orchard.MediaProcessing/Views/Filter/Edit.cshtml"
+msgctxt "~/Modules/Orchard.MediaProcessing/Views/Filter/Edit.cshtml"
+msgid "Save"
+msgstr "Salva"
+

@@ -14,6 +14,8 @@ namespace Laser.Orchard.CommunicationGateway.Models {
         public virtual string Sms { get; set; }
         public virtual string Prefix { get; set; }
         public virtual bool Produzione { get; set; }
+        public virtual bool AccettatoUsoCommerciale { get; set; }
+        public virtual bool AutorizzatoTerzeParti { get; set; }
 
         public CommunicationSmsRecord() {
             this.SmsContactPartRecord_Id = 0;
@@ -22,6 +24,8 @@ namespace Laser.Orchard.CommunicationGateway.Models {
             this.DataInserimento = DateTime.Now;
             this.DataModifica = DateTime.Now;
             this.Produzione = true;
+            this.AccettatoUsoCommerciale = false;
+            this.AutorizzatoTerzeParti = false;
         }
     }
 }

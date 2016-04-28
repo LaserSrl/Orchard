@@ -122,10 +122,12 @@
   <ItemGroup>
     <Compile Include="Controllers\PoliciesApiController.cs" />
     <Compile Include="Controllers\PoliciesController.cs" />
+    <Compile Include="Controllers\PoliciesUserController.cs" />
     <Compile Include="Drivers\PolicyPartDriver.cs" />
     <Compile Include="Drivers\PolicyTextInfoPartDriver.cs" />
     <Compile Include="Drivers\UserPolicyPartDriver.cs" />
     <Compile Include="Enumerators.cs" />
+    <Compile Include="Events\IPolicyEventHandler.cs" />
     <Compile Include="Filters\PolicyFilter.cs" />
     <Compile Include="Handlers\PolicyUserEventHandler.cs" />
     <Compile Include="Handlers\PolicyPartHandler.cs" />
@@ -140,6 +142,7 @@
     <Compile Include="Routes.cs" />
     <Compile Include="Services\PolicyServices.cs" />
     <Compile Include="Settings\PolicyPartSettingsHooks.cs" />
+    <Compile Include="ViewModels\PolicyEventViewModel.cs" />
     <Compile Include="ViewModels\PolicyForUserViewModel.cs" />
     <Compile Include="ViewModels\PolicyPartEditModel.cs" />
   </ItemGroup>
@@ -161,7 +164,9 @@
       <Name>Laser.Orchard.StartupConfig</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\PoliciesUser\ShowHistory.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Localization\fr-FR\orchard.module.po" />
   </ItemGroup>

@@ -9,6 +9,6 @@ namespace Laser.Orchard.Policy {
     }
 
     public enum PolicyTypeOptions {
-        Policy, Regulation
+        Policy, Regulation, CommercialUse, ThirdParty
     }
 }

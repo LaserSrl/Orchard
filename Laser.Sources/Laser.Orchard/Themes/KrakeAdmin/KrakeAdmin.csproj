@@ -76,8 +76,47 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\main.js" />
     <Content Include="Styles\Images\adminNavBackground.gif" />
+    <Content Include="Styles\Images\bg-app.png" />
+    <Content Include="Styles\Images\bg-mail.png" />
+    <Content Include="Styles\Images\bg-notifiche.png" />
+    <Content Include="Styles\Images\bg-sms.png" />
+    <Content Include="Styles\Images\bg-social.png" />
+    <Content Include="Styles\Images\bg-web.png" />
+    <Content Include="Styles\Images\freccia-app.png" />
+    <Content Include="Styles\Images\freccia-mail.png" />
+    <Content Include="Styles\Images\freccia-notifiche.png" />
+    <Content Include="Styles\Images\freccia-sms.png" />
+    <Content Include="Styles\Images\freccia-social.png" />
+    <Content Include="Styles\Images\freccia-web.png" />
+    <Content Include="Styles\Images\icona-app-w.png" />
+    <Content Include="Styles\Images\icona-app.png" />
+    <Content Include="Styles\Images\icona-mail-w.png" />
+    <Content Include="Styles\Images\icona-mail.png" />
+    <Content Include="Styles\Images\icona-notifiche-w.png" />
+    <Content Include="Styles\Images\icona-notifiche.png" />
+    <Content Include="Styles\Images\icona-sms-w.png" />
+    <Content Include="Styles\Images\icona-sms.png" />
+    <Content Include="Styles\Images\icona-social-w.png" />
+    <Content Include="Styles\Images\icona-social.png" />
+    <Content Include="Styles\Images\icona-web-w.png" />
+    <Content Include="Styles\Images\icona-web.png" />
+    <Content Include="Styles\Images\img-applicazioni.jpg" />
+    <Content Include="Styles\Images\img-header.jpg" />
+    <Content Include="Styles\Images\img-perche-1.png" />
+    <Content Include="Styles\Images\img-perche-2.png" />
+    <Content Include="Styles\Images\img-perche-3.png" />
+    <Content Include="Styles\Images\img-perche-4.png" />
+    <Content Include="Styles\Images\krake-footer.png" />
+    <Content Include="Styles\Images\krake-giallo.png" />
+    <Content Include="Styles\Images\krake-rosso.png" />
+    <Content Include="Styles\Images\krake-verde.png" />
+    <Content Include="Styles\Images\logo-laser.png" />
+    <Content Include="Styles\Images\logo.png" />
     <Content Include="Styles\Images\logo_krake.png" />
+    <Content Include="Styles\Images\mail.png" />
+    <Content Include="Styles\Images\piattaforma.png" />
     <Content Include="Styles\Images\sfondo-krake.png" />
     <Content Include="Styles\krake.css" />
     <Content Include="Web.config" />
@@ -99,6 +138,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Styles\fonts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Dashboard\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Images\brochure.pdf" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

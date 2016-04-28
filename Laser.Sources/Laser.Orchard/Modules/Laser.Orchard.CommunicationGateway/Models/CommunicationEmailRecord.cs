@@ -11,5 +11,7 @@ namespace Laser.Orchard.CommunicationGateway.Models {
         public virtual DateTime DataModifica { get; set; }
         public virtual string Email { get; set; }
         public virtual bool Produzione { get; set; }
+        public virtual bool AccettatoUsoCommerciale { get; set; }
+        public virtual bool AutorizzatoTerzeParti { get; set; }
     }
 }

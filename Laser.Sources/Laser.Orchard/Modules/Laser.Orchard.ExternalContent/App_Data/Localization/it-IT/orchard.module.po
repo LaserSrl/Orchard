@@ -17,6 +17,18 @@ msgid "Body Request"
 msgstr "Corpo della richiesta"
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Cache duration"
+msgstr "Durata della cache"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Cache duration time in minutes"
+msgstr "Durata della cache in minuti"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Cache To FileSystem"
+msgstr "Salva cache su filesystem"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "Certificate file name."
 msgstr "Nome del certificato."
 
@@ -41,6 +53,10 @@ msgid "Generate on L For Mobile"
 msgstr "Genera su L For Mobile"
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "If checked cache will be stored also in filesystem (in folder/App_Data/cache)."
+msgstr "Se selezionato la cache sarà salvata anche su filesystem (cartella /App_Data/cache)."
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "If checked, a certificate will be attached to the request."
 msgstr "Se selezionato, contestualmente alla richiesta HTTP sarà inoltrato un certificato."
 
@@ -51,6 +67,10 @@ msgstr "Se selezionato, il campo sarà obbligatorio."
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "If not checked, the linked content will be charged with contentitem."
 msgstr "Se non selezionato, il contenuto collegato sarà caricato insieme al contenuto."
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Input Cache Key"
+msgstr "Chiave di cache in input"
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "Insert request body"
@@ -71,6 +91,18 @@ msgstr "Chiave privata."
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "Required"
 msgstr "Richiesto"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Scheduled Minute"
+msgstr "Minuti di attesa"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "Scheduled request Minute"
+msgstr "Minuti di attesa tra una schedulazione e l'altra"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
+msgid "The cache key used in input."
+msgstr "La chiave di cache utilizzata come input."
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/DefinitionTemplates/FieldExternalSetting.cshtml"
 msgid "The certificate file name. You also have to FTP upload the certificate in folder /App_Data/Sites/[tenant]/externalfields/ "
@@ -115,6 +147,10 @@ msgstr "Inserire il corpo della richiesta"
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/EditorTemplates/Fields/FieldExternal.cshtml"
 msgid "Insert url and token"
 msgstr "Inserire URL e token"
+
+msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/EditorTemplates/Fields/FieldExternal.cshtml"
+msgid "Start Schedule"
+msgstr "Avvio schedulazione"
 
 msgctxt "~/Modules/Laser.Orchard.ExternalContent/Views/EditorTemplates/Fields/FieldExternal.cshtml"
 msgid "Use this content type"

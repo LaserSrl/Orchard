@@ -35,7 +35,7 @@ namespace Laser.Orchard.Events.Services
             List<EventViewModel> list = new List<EventViewModel>();
 
             //Recupero tutti gli eventi dalla query associata al calendario
-            var eventArray = _projectionManager.GetContentItems(queryId, 0, 0, part == null ? null : new Dictionary<string, object> { { "EventList", part } }).ToList();
+            var eventArray = _projectionManager.GetContentItems(queryId, 0, 0, part == null ? null : new Dictionary<string, object> { { "Content", part } }).ToList();
 
             //Recupero gli eventi senza ripetizione e li aggiungo al calendario
             var listNoRepeat = new List<EventViewModel>();

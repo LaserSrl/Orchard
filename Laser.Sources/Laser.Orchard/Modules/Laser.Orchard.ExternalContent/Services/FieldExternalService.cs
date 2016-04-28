@@ -36,6 +36,7 @@ using System.Configuration;
 using System.Web.Configuration;
 using Orchard.ContentManagement;
 using Orchard.Tasks.Scheduling;
+using Laser.Orchard.StartupConfig.Exceptions;
 
 //using System.Web.Razor;
 
@@ -96,7 +97,6 @@ namespace Laser.Orchard.ExternalContent.Services {
             _orchardServices = orchardServices;
             _orchardServices.WorkContext.TryResolve<ICacheStorageProvider>(out _cacheStorageProvider);
             _scheduledTaskManager = scheduledTaskManager;
-
 
             //    _cacheStorageProvider = cacheStorageProvider;
         }
@@ -274,8 +274,11 @@ namespace Laser.Orchard.ExternalContent.Services {
                     // if (elementcached == null)
                     //     elementcached.Add("NoElement", new {value="true"});
                     if (mycache != null) {
-                       XmlDocument xml = JsonConvert.DeserializeXmlNode(JsonConvert.SerializeObject(mycache));
-                       dvb.AddValue("CachedData", xml);
+                        XmlDocument xml = JsonConvert.DeserializeXmlNode(JsonConvert.SerializeObject(mycache));
+                        dvb.AddValue("CachedData", xml);
+                    }
+                    else {
+                        dvb.AddValue("CachedData", new XmlDocument());
                     }
     
                //     dvb.AddValue("CachedData", elementcached);
@@ -308,7 +311,7 @@ namespace Laser.Orchard.ExternalContent.Services {
             }
             catch (Exception ex) {
                 Logger.Error(ex, UrlToGet);
-                throw ex;
+                throw new ExternalFieldRemoteException();
             }
             return (ci);
         }
@@ -460,7 +463,7 @@ namespace Laser.Orchard.ExternalContent.Services {
             if (System.IO.File.Exists(myfile)) {
                 string mytemplate = File.ReadAllText(myfile);
                 string myfile2 = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\common.cshtml";
-                if (System.IO.File.Exists(myfile)) {
+                if (System.IO.File.Exists(myfile2)) {
                     mytemplate = File.ReadAllText(myfile2) + mytemplate; ;
                 }
                 if (!string.IsNullOrEmpty(mytemplate)) {

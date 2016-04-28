@@ -1,0 +1,87 @@
+#. "Orchard.Scripting.Lightweight.Category"
+msgctxt "~/Modules/Orchard.Scripting/Module.txt"
+msgid "Scripting"
+msgstr "Scripting"
+
+msgctxt "~/Modules/Orchard.Scripting/Module.txt"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+msgctxt "~/Modules/Orchard.Scripting/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.Scripting/Module.txt"
+msgid "The scripting module enables the possibility to execute scripts using a simple custom scripting language."
+msgstr "Le module Scripting permet l'exécution de scripts utilisant une variété de langages simples."
+
+msgctxt "~/Modules/Orchard.Scripting/Module.txt"
+msgid "Lightweight scripting"
+msgstr "Scripting léger"
+
+msgctxt "~/Modules/Orchard.Scripting/Module.txt"
+msgid "Custom lightweight and simple scripting language."
+msgstr "Langage de script simplifié et léger."
+
+msgctxt "~/Modules/Orchard.Scripting/Module.txt"
+msgid "Scripting Rules"
+msgstr "Règles de script"
+
+msgctxt "~/Modules/Orchard.Scripting/Module.txt"
+msgid "Rules for the Scripting modules"
+msgstr "Règles pour le moteur de script"
+
+msgctxt "~/Modules/Orchard.Scripting/Module.txt"
+msgid "Rules"
+msgstr "Règles"
+
+#: "Orchard.Scripting.ScriptExpressionEvaluator"
+msgctxt "Orchard.Scripting.ScriptExpressionEvaluator"
+msgid "Syntax error: {0}"
+msgstr "Erreur de syntaxe : {0}"
+
+#. "Conditions"
+msgctxt "Orchard.Scripting.Rules.ConditionActions"
+msgid "Conditions"
+msgstr "Conditions"
+
+#: "Orchard.Scripting.Rules.ConditionActions"
+msgctxt "Orchard.Scripting.Rules.ConditionActions"
+msgid "Script condition"
+msgstr "Condition de script"
+
+#: "Orchard.Scripting.Rules.ConditionActions"
+msgctxt "Orchard.Scripting.Rules.ConditionActions"
+msgid "Evaluates a boolean using a scripting engine."
+msgstr "Évalue une expression Booléenne à l'aide d'un moteur de script."
+
+#: "Orchard.Scripting.Rules.ConditionActions"
+msgctxt "Orchard.Scripting.Rules.ConditionActions"
+msgid "There are currently no scripting engine enabled"
+msgstr "Aucun moteur de script n'est actif"
+
+#: "Orchard.Scripting.Rules.ConditionActions"
+msgctxt "Orchard.Scripting.Rules.ConditionActions"
+msgid "Expression is not a boolean value"
+msgstr "L'expression n'est pas Booléenne."
+
+#: "Orchard.Scripting.Rules.ConditionForms"
+msgctxt "Orchard.Scripting.Rules.ConditionForms"
+msgid "Description"
+msgstr "Description"
+
+#: "Orchard.Scripting.Rules.ConditionForms"
+msgctxt "Orchard.Scripting.Rules.ConditionForms"
+msgid "Message that will be displayed in the Actions list."
+msgstr "Le message qui sera affiché dans la liste des actions."
+
+#: "Orchard.Scripting.Rules.ConditionForms"
+msgctxt "Orchard.Scripting.Rules.ConditionForms"
+msgid "Condition"
+msgstr "Condition"
+
+#: "Orchard.Scripting.Rules.ConditionForms"
+msgctxt "Orchard.Scripting.Rules.ConditionForms"
+msgid "Enter a valid boolean expression to evaluate."
+msgstr "Saisissez une expression Booléenne valide à évaluer."
+

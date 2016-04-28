@@ -23,7 +23,7 @@
     <div>
         <label for="@Html.FieldIdFor(m => m.SharedImage)" >@T("Picture") </label>
         @Html.TextBoxFor(m => m.SharedImage, new { @class = "text medium tokenized", rows = "5" })
-        <span class="hint">@T("Picture to Share, tokenizer to field MediaLibraryPicker multiselect to enable user picture choise")</span>
+        <span class="hint">@T("Picture to Share: use tokens to define the MediaLibraryPickerField to use as source list.")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.ShowImageChoise)" >@T("Show Image Choise") </label>

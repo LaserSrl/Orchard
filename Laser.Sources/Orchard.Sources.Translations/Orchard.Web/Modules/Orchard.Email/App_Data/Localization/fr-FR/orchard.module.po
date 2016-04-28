@@ -1,0 +1,401 @@
+#. "Orchard.Email.Name"
+msgctxt "~/Modules/Orchard.Email/Module.txt"
+msgid "Email Messaging"
+msgstr "Email Messaging"
+
+msgctxt "~/Modules/Orchard.Email/Module.txt"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+msgctxt "~/Modules/Orchard.Email/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.Email/Module.txt"
+msgid "The Email Messaging module adds Email sending functionalities."
+msgstr "Le module de messagerie e-mail ajoute une fonctionnalité d'envoi d'e-mail."
+
+msgctxt "~/Modules/Orchard.Email/Module.txt"
+msgid "Messaging"
+msgstr "Messagerie"
+
+#. "Done"
+msgctxt "Orchard.Email.Activities.EmailActivity"
+msgid "Done"
+msgstr "Terminé"
+
+#: "Orchard.Email.Activities.EmailActivity"
+msgctxt "Orchard.Email.Activities.EmailActivity"
+msgid "Messaging"
+msgstr "Messagerie"
+
+#: "Orchard.Email.Activities.EmailActivity"
+msgctxt "Orchard.Email.Activities.EmailActivity"
+msgid "Sends an email to a specific user."
+msgstr "Envoie un email à un utilisateur spécifique."
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "Send to"
+msgstr "Envoyer à"
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "Email Addresses"
+msgstr "Adresses Email"
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "Specify a comma-separated list of recipient email addresses. To include a display name, use the following format: John Doe &lt;john.doe@outlook.com&gt;"
+msgstr "Spécifier une liste séparée par des virgules des adresses emails des destinataires. Pour inclure un nom d'affichage, utilisez le format suivant : John Doe &lt;john.doe@outlook.com&gt;"
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "Subject"
+msgstr "Objet"
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "The subject of the email message."
+msgstr "L'objet du message électronique."
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "Body"
+msgstr "Corps"
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "The body of the email message."
+msgstr "Le corps du message électronique."
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "Queued"
+msgstr "En file d'attente"
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "Check send it as a queued job."
+msgstr "Cocher pour l'envoyer en tant que tâche dans la file d'attente."
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "Priority"
+msgstr "Priorité"
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "Low"
+msgstr "Basse"
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "Normal"
+msgstr "Normale"
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "High"
+msgstr "Haute"
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "You must specify at least one recipient."
+msgstr "Vous devez spécifier au moins un destinataire."
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "You must provide a Subject."
+msgstr "Vous devez saisir un objet."
+
+#: "Orchard.Email.Forms.EmailForm"
+msgctxt "Orchard.Email.Forms.EmailForm"
+msgid "You must provide a Body."
+msgstr "Vous devez saisir le corps de l'email."
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "Send to"
+msgstr "Envoyer à"
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "Owner"
+msgstr "Propriétaire"
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "The owner of the content item in context, such as a blog post's author."
+msgstr "Le propriétaire de l'élément de contenu dans le contexte, comme un auteur de billet de blog."
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "Author"
+msgstr "Auteur"
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "The current user when this action executes."
+msgstr "L'utilisateur actuel au moment où l'action s'exécute."
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "Site Admin"
+msgstr "Administrateur du site"
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "The site administrator."
+msgstr "L'administrateur du site."
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "Other:"
+msgstr "Autre :"
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "E-mail"
+msgstr "Email"
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "Specify a comma-separated list of e-mail recipients."
+msgstr "Préciser une liste de destinataires séparés par des virgules."
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "Subject"
+msgstr "Objet"
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "The subject of the e-mail."
+msgstr "L'objet de l'email."
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "Body"
+msgstr "Corps"
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "The body of the e-mail."
+msgstr "Le corps de l'email."
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "You must select at least one recipient"
+msgstr "Vous devez sélectionner au moins un destinataire"
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "You must provide a Subject"
+msgstr "Vous devez saisir un objet"
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "You must provide a Body"
+msgstr "Vous devez saisir le corps de l'email"
+
+#: "Orchard.Email.Forms.MailForms"
+msgctxt "Orchard.Email.Forms.MailForms"
+msgid "You must provide an e-mail address"
+msgstr "Vous devez fournir une adresse email"
+
+#: "Orchard.Email.Handlers.SmtpSettingsPartHandler"
+msgctxt "Orchard.Email.Handlers.SmtpSettingsPartHandler"
+msgid "Email"
+msgstr "Email"
+
+#: "Orchard.Email.Rules.MailActions"
+msgctxt "Orchard.Email.Rules.MailActions"
+msgid "Send an e-mail"
+msgstr "Envoyer un email"
+
+#: "Orchard.Email.Rules.MailActions"
+msgctxt "Orchard.Email.Rules.MailActions"
+msgid "Messaging"
+msgstr "Messagerie"
+
+#: "Orchard.Email.Rules.MailActions"
+msgctxt "Orchard.Email.Rules.MailActions"
+msgid "Messages"
+msgstr "Messages"
+
+#: "Orchard.Email.Rules.MailActions"
+msgctxt "Orchard.Email.Rules.MailActions"
+msgid "Send e-mail"
+msgstr "Envoyer email"
+
+#: "Orchard.Email.Rules.MailActions"
+msgctxt "Orchard.Email.Rules.MailActions"
+msgid "Sends an e-mail to a specific user."
+msgstr "Envoie un e-mail à un utilisateur spécifique."
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "Send to"
+msgstr "Envoyer à"
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "Owner"
+msgstr "Propriétaire"
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "The owner of the content item in context, such as a blog post's author."
+msgstr "Le propriétaire de l'élément de contenu dans le contexte, comme un auteur de billet de blog."
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "Author"
+msgstr "Auteur"
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "The current user when this action executes."
+msgstr "L'utilisateur actuel au moment où l'action s'exécute."
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "Site Admin"
+msgstr "Administrateur du site"
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "The site administrator."
+msgstr "L'administrateur du site."
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "Other:"
+msgstr "Autre :"
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "E-mail"
+msgstr "Email"
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "Specify a comma-separated list of e-mail recipients."
+msgstr "Préciser une liste de destinataire séparée par des virgules."
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "Subject"
+msgstr "Sujet"
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "The subject of the e-mail."
+msgstr "Le sujet du mail"
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "Body"
+msgstr "Ventre"
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "The body of the e-mail."
+msgstr "Le corps du mail."
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "You must select at least one recipient"
+msgstr "Vous devez sélectionner au moins un destinataire"
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "You must provide a Subject"
+msgstr "Vous devez fournir un sujet"
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "You must provide a Body"
+msgstr "Vous devez fournir le corps du mail"
+
+#: "Orchard.Email.Rules.MailForms"
+msgctxt "Orchard.Email.Rules.MailForms"
+msgid "You must provide an e-mail address"
+msgstr "Vous devez fournir une adresse email"
+
+#: "Orchard.Email.Services.MissingSettingsBanner"
+msgctxt "Orchard.Email.Services.MissingSettingsBanner"
+msgid "The <a href=\"{0}\">SMTP settings</a> need to be configured."
+msgstr "La <a href=\"{0}\">configuration SMTP</a> doit être spécifiée."
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "Email"
+msgstr "Email"
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "Sender email address"
+msgstr "Adresse e-mail de l'expéditeur"
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "The default email address to use as a sender."
+msgstr "L'adresse email par défaut à utiliser en tant qu'expéditeur."
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "Host name"
+msgstr "Nom de l'hôte"
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "The SMTP server domain, e.g. <i>smtp.mailprovider.com</i>."
+msgstr "Le domaine du serveur SMTP, par exemple <i>smtp.mailprovider.com</i>."
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "Port number"
+msgstr "Numéro de port"
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "The SMTP server port, usually 25."
+msgstr "Le port du serveur SMTP, habituellement 25."
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "Enable SSL communications"
+msgstr "Activer les communications SSL"
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "Check if the SMTP server requires SSL communications."
+msgstr "Cocher si le serveur SMTP requiert des communications SSL."
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "Require credentials"
+msgstr "Requérir l'authentification"
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "User name"
+msgstr "Nom d'utilisateur"
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "The username for authentication."
+msgstr "Le nom d'utilisateur pour l'authentification."
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "Password"
+msgstr "Mot de passe"
+
+#: "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgctxt "~/Modules/Orchard.Email/Views/EditorTemplates/Parts/SmtpSettings.cshtml"
+msgid "The password for authentication."
+msgstr "Le mot de passe pour l'authentification."
+

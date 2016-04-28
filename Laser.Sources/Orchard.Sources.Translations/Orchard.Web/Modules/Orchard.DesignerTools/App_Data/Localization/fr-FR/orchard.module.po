@@ -1,0 +1,107 @@
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Designer Tools"
+msgstr "Outils pour designers"
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Contains designer tools to ease the Themes development process"
+msgstr "Outils pour les designers facilitant le développement de thèmes."
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Url Alternates"
+msgstr "Alternatives URL"
+
+#. "WidgetAlternates.Category"
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Designer"
+msgstr "Designer"
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Adds shape alternates for specific urls"
+msgstr "Ajoute des formes alternatives pour des URLs spécifiques"
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Widget Alternates"
+msgstr "Formes Alternatives pour Widgets"
+
+msgctxt "~/Modules/Orchard.DesignerTools/Module.txt"
+msgid "Adds shape alternates for content types stereotyped as widgets, allowing to customize shapes by widget and zone"
+msgstr "Ajoute des formes alternatives pour les contenus stéréotypées en tant que widgets, permettant la personnalisation du rendu par widget et par zone."
+
+#: "Orchard.DesignerTools.Controllers.AlternateController"
+msgctxt "Orchard.DesignerTools.Controllers.AlternateController"
+msgid "Not authorized to create templates"
+msgstr "Non autorisé à créer des modèles"
+
+#. "n/a"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingMeta.cshtml"
+msgid "n/a"
+msgstr "non disponible"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingMeta.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingMeta.cshtml"
+msgid "Content not available as coming from source code."
+msgstr "Contenu non disponible car provenant de code source."
+
+#. "Shape"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Shape"
+msgstr "Shape"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Model"
+msgstr "Données"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Placement"
+msgstr "Placement"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Template"
+msgstr "Modèle"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "HTML"
+msgstr "HTML"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Active Template"
+msgstr "Modèle actif"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Original Template"
+msgstr "Modèle original"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Display Type"
+msgstr "Type d'affichage"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Alternate ({0})"
+msgstr "Alternative ({0})"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Create"
+msgstr "Créer"
+
+#: "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgctxt "~/Modules/Orchard.DesignerTools/Views/ShapeTracingTemplates.cshtml"
+msgid "Wrappers ({0})"
+msgstr "Emballages ({0})"
+

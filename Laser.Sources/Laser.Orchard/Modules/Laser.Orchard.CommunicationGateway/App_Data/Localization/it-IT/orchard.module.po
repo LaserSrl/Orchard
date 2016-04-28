@@ -225,6 +225,14 @@ msgid "Edit"
 msgstr "Modifica"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "e-mail"
+msgstr "e-mail"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Filter by"
+msgstr "Filtra per"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "hours ago"
 msgstr "Ore fa"
 
@@ -237,6 +245,14 @@ msgid "minutes ago"
 msgstr "minuti fa"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Phone"
+msgstr "Telefono"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "Search"
 msgstr "Cerca"
 
@@ -247,6 +263,14 @@ msgstr "Cerca:"
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "Synchronize"
 msgstr "Sincronizza"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/Parts/Advertising_Edit.cshtml"
+msgid "Actions to be performed:"
+msgstr "Verranno eseguite le seguenti azioni:"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/Parts/Advertising_Edit.cshtml"
+msgid "Are you sure?"
+msgstr "Confermi?"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/Parts/AdvertisingSwitcher.cshtml"
 msgid "External Link"

@@ -1,0 +1,21 @@
+msgctxt "~/Modules/TinyMce/Module.txt"
+msgid "TinyMce"
+msgstr "TinyMce"
+
+msgctxt "~/Modules/TinyMce/Module.txt"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+msgctxt "~/Modules/TinyMce/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/TinyMce/Module.txt"
+msgid "The TinyMCE module enables rich text contents to be created using a \"What You See Is What You Get\" user interface."
+msgstr "Le module TinyMce permet la création de contenus en texte enrichi grâce à un éditeur visuel."
+
+#: "~/Modules/TinyMce/Views/Body-Html.Editor.cshtml"
+msgctxt "~/Modules/TinyMce/Views/Body-Html.Editor.cshtml"
+msgid "Insert/Update Media"
+msgstr "Ajouter ou mettre à jour un media"
+

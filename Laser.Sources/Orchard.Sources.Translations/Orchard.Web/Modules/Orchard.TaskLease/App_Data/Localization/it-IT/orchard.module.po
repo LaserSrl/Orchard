@@ -1,0 +1,16 @@
+msgctxt "~/Modules/Orchard.TaskLease/Module.txt"
+msgid "Task Lease"
+msgstr "Assegnazione Attività"
+
+msgctxt "~/Modules/Orchard.TaskLease/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il Team di Orchard"
+
+msgctxt "~/Modules/Orchard.TaskLease/Module.txt"
+msgid "http://orchardtasklease.codeplex.com"
+msgstr "http://orchardtasklease.codeplex.com"
+
+msgctxt "~/Modules/Orchard.TaskLease/Module.txt"
+msgid "Provides services to synchronize tasks in a farm environment"
+msgstr "Fornisce servizi per sincornizzare l'esecuzione di task in ambienti multi-server"
+
