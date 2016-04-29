@@ -33,6 +33,9 @@ using System.Reflection;
 using System.Collections;
 using Orchard.DisplayManagement.Shapes;
 using Newtonsoft.Json.Converters;
+using Orchard.Fields.Fields;
+using Orchard.Taxonomies.Fields;
+using System.Dynamic;
 namespace Laser.Orchard.WebServices.Controllers {
     public class WebApiController : Controller {
         private readonly IOrchardServices _orchardServices;
@@ -152,15 +155,16 @@ namespace Laser.Orchard.WebServices.Controllers {
                 }
                 json.Add("PendingPolicies", resultArray);
             } else {// Se l'oggetto non ha delle pending policies allora devo serivre il content stesso
-                Shape shape = _orchardServices.ContentManager.BuildDisplay(content); // Forse non serve nemmeno
+                dynamic shape = _orchardServices.ContentManager.BuildDisplay(content); // Forse non serve nemmeno
+                var filteredContent = shape.ContentItem;
 
-                json = new JObject(SerializeObject(content, 0));
+                json = new JObject(SerializeObject(filteredContent, 0));
                 dynamic part;
 
                 #region [Projections]
                 // Projection
                 try {
-                    part = ((dynamic)content).ProjectionPart;
+                    part = ((dynamic)filteredContent).ProjectionPart;
                 } catch {
                     part = null;
                 }
@@ -301,23 +305,54 @@ namespace Laser.Orchard.WebServices.Controllers {
 
         protected JProperty SerializeField(ContentField field, int actualLevel) {
             var fieldObject = new JObject();
-            var properties = field.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(prop =>
-                !_skipFieldTypes.Contains(prop.Name) //skip 
-                );
-
-            foreach (var property in properties) {
-                try {
-                    if (!_skipFieldProperties.Contains(property.Name)) {
-                        object val = property.GetValue(field, BindingFlags.GetProperty, null, null, null);
-                        if (val != null) {
-                            PopulateJObject(ref fieldObject, property, val, _skipFieldProperties, actualLevel);
+            if (field.FieldDefinition.Name == "EnumerationField") {
+                var enumField = (EnumerationField)field;
+                string[] selected = enumField.SelectedValues;
+                string[] options = enumField.PartFieldDefinition.Settings["EnumerationFieldSettings.Options"].Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                fieldObject.Add("Options", JToken.FromObject(options));
+                fieldObject.Add("SelectedValues", JToken.FromObject(selected));
+            } else if (field.FieldDefinition.Name == "TaxonomyField") {
+                var taxoField = (TaxonomyField)field;
+                fieldObject.Add("Terms", JToken.FromObject(taxoField.Terms.Select(x => x.Id).ToList()));
+                var taxo = taxoField.PartFieldDefinition.Settings["TaxonomyFieldSettings.Taxonomy"];
+                var taxoPart = _taxonomyService.GetTaxonomyByName(taxo);
+                JArray arr = new JArray();
+                fieldObject.Add("Taxonomy", arr);
+                foreach (var term in taxoPart.Terms) {
+                    CustomTermPart customTermPart = new CustomTermPart {
+                        Id = term.Id,
+                        Name = term.Name,
+                        Path = term.Path,
+                        Selectable = term.Selectable,
+                        Slug = term.Slug
+                    };
+                    JToken jObj = JToken.FromObject(customTermPart);
+                    arr.Add(jObj);
+                    var contentPartList = term.ContentItem.Parts.Where(x => (x.TypeDefinition.Name == "ContentType") && (x.PartDefinition.Name == term.ContentItem.TypeDefinition.Name)); // part aggiunta da Orchard per contenere i fields diretti
+                    foreach (var contentPart in contentPartList) {
+                        foreach (var innerField in contentPart.Fields) {
+                            jObj.Last.AddAfterSelf(SerializeField(innerField, actualLevel));
                         }
                     }
-                } catch {
+                }
+            } else {
+                var properties = field.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(prop =>
+                    !_skipFieldTypes.Contains(prop.Name) //skip 
+                    );
 
+                foreach (var property in properties) {
+                    try {
+                        if (!_skipFieldProperties.Contains(property.Name)) {
+                            object val = property.GetValue(field, BindingFlags.GetProperty, null, null, null);
+                            if (val != null) {
+                                PopulateJObject(ref fieldObject, property, val, _skipFieldProperties, actualLevel);
+                            }
+                        }
+                    } catch {
+
+                    }
                 }
             }
-
 
             return new JProperty(field.Name, fieldObject);
         }
@@ -468,4 +503,11 @@ namespace Laser.Orchard.WebServices.Controllers {
         }
     }
 
+    class CustomTermPart {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
+        public string Slug { get; set; }
+        public bool Selectable { get; set; }
+    }
 }
