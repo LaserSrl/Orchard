@@ -243,7 +243,7 @@ namespace Laser.Orchard.WebServices.Controllers {
 
         protected JProperty SerializeContentItem(ContentItem item, int actualLevel) {
             if ((actualLevel + 1) > _maxLevel) {
-                return new JProperty("content item", "omissis...");
+                return new JProperty("ContentItem", "...");
             }
             JProperty jsonItem;
             var jsonProps = new JObject(
@@ -328,7 +328,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                     };
                     JToken jObj = JToken.FromObject(customTermPart);
                     arr.Add(jObj);
-                    var contentPartList = term.ContentItem.Parts.Where(x => (x.TypeDefinition.Name == "ContentType") && (x.PartDefinition.Name == term.ContentItem.TypeDefinition.Name)); // part aggiunta da Orchard per contenere i fields diretti
+                    var contentPartList = term.ContentItem.Parts.Where(x => (x.GetType().Name == "ContentPart") && (x.PartDefinition.Name == term.ContentItem.TypeDefinition.Name)); // part aggiunta da Orchard per contenere i fields diretti
                     foreach (var contentPart in contentPartList) {
                         foreach (var innerField in contentPart.Fields) {
                             jObj.Last.AddAfterSelf(SerializeField(innerField, actualLevel));
@@ -359,7 +359,7 @@ namespace Laser.Orchard.WebServices.Controllers {
 
         private JProperty SerializeObject(object item, int actualLevel, string[] skipProperties = null) {
             if ((actualLevel + 1) > _maxLevel) {
-                return new JProperty("object", "omissis...");
+                return new JProperty(item.GetType().Name, "...");
             }
             try {
                 if (((dynamic)item).Id != null) {
@@ -376,53 +376,67 @@ namespace Laser.Orchard.WebServices.Controllers {
                     return SerializeField((ContentField)item, actualLevel);
                 } else if (item is ContentItem) {
                     return SerializeContentItem((ContentItem)item, actualLevel + 1);
-                } else if (item is Array || item.GetType().IsGenericType) { // Lista
-                    //DA AFFINARE QUESTA PARTE ATTUALMENTE NON FUNZIONA!
+                //} else if (item is Array || item.GetType().IsGenericType) { // Lista
+                //    //DA AFFINARE QUESTA PARTE ATTUALMENTE NON FUNZIONA!
 
-                    JArray array = new JArray();
-                    foreach (var itemArray in (IList)item) {
+                //    JArray array = new JArray();
+                //    foreach (var itemArray in (IList)item) {
 
-                        if (!IsBasicType(itemArray.GetType())) {
-                            array.Add(new JObject { SerializeObject(itemArray, actualLevel + 1, skipProperties) });
-                        } else {
-                            var valItem = itemArray;
-                            FormatValue(ref valItem);
-                            array.Add(valItem);
-                        }
-                    }
-                    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
-                    return new JProperty(item.GetType().Name, array);
+                //        if (!IsBasicType(itemArray.GetType())) {
+                //            array.Add(new JObject(SerializeObject(itemArray, actualLevel + 1, skipProperties)));
+                //        } else {
+                //            var valItem = itemArray;
+                //            FormatValue(ref valItem);
+                //            array.Add(valItem);
+                //        }
+                //    }
+                //    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                //    return new JProperty(item.GetType().Name, array);
 
                 } else if (item.GetType().IsClass) {
 
                     //DA AFFINARE QUESTA PARTE ATTUALMENTE NON FUNZIONA!
                     //IL RISULTATO DOVREBBE ESSERE CHE TUTTI GLI ENUMERATORS POSSANO ESSERE CONVERTITI IN STRINGHE (PER UNA MIGLIORE LEGGIBILITA')
-                    //var members = item.GetType()
-                    //.GetFields(BindingFlags.Instance | BindingFlags.Public).Cast<MemberInfo>()
-                    //.Union(item.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-                    //.Where(m => !skipProperties.Contains(m.Name) && !_skipAlwaysProperties.Contains(m.Name))
-                    //;
-                    //List<JProperty> properties = new List<JProperty>();
-                    //foreach (var member in members) {
-                    //    var propertyInfo = item.GetType().GetProperty(member.Name);
-                    //    if (!IsBasicType(propertyInfo.PropertyType)) {
-                    //        properties.Add(SerializeObject(propertyInfo.GetValue(item), skipProperties));
-                    //    } else {
-                    //        properties.Add(new JProperty(member.Name, item.GetType().GetProperty(member.Name).GetValue(item)));
-                    //    }
-                    //}
-                    //PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
-                    //return new JProperty(item.GetType().Name, properties);
-                    // END DA AFFINARE QUESTA PARTE ATTUALMENTE NON FUNZIONA!
-
-                    JObject propertiesObject;
-                    var serializer = JsonSerializerInstance();
-                    propertiesObject = JObject.FromObject(item, serializer);
-                    foreach (var skip in skipProperties) {
-                        propertiesObject.Remove(skip);
+                    var members = item.GetType()
+                    .GetFields(BindingFlags.Instance | BindingFlags.Public).Cast<MemberInfo>()
+                    .Union(item.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                    .Where(m => !skipProperties.Contains(m.Name) && !_skipAlwaysProperties.Contains(m.Name))
+                    ;
+                    List<JProperty> properties = new List<JProperty>();
+                    foreach (var member in members) {
+                        var propertyInfo = item.GetType().GetProperty(member.Name);
+                        object val = item.GetType().GetProperty(member.Name).GetValue(item);
+                        if (IsBasicType(propertyInfo.PropertyType)) {
+                            properties.Add(new JProperty(member.Name, val));
+                        } else if (typeof(IEnumerable).IsInstanceOfType(val)) {
+                            JArray arr = new JArray();
+                            properties.Add(new JProperty(member.Name, arr));
+                            foreach (var element in (val as IEnumerable)) {
+                                if (IsBasicType(element.GetType())) {
+                                    var valItem = element;
+                                    FormatValue(ref valItem);
+                                    arr.Add(valItem);
+                                } else {
+                                    var aux = SerializeObject(element, actualLevel + 1, skipProperties);
+                                    arr.Add(new JObject(aux));
+                                }
+                            }
+                        } else {
+                            properties.Add(SerializeObject(propertyInfo.GetValue(item), actualLevel + 1, skipProperties));
+                        }
                     }
                     PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
-                    return new JProperty(item.GetType().Name, propertiesObject);
+                    return new JProperty(item.GetType().Name, new JObject(properties));
+                    // END DA AFFINARE QUESTA PARTE ATTUALMENTE NON FUNZIONA!
+
+                    //JObject propertiesObject;
+                    //var serializer = JsonSerializerInstance();
+                    //propertiesObject = JObject.FromObject(item, serializer);
+                    //foreach (var skip in skipProperties) {
+                    //    propertiesObject.Remove(skip);
+                    //}
+                    //PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    //return new JProperty(item.GetType().Name, propertiesObject);
                 } else {
                     PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
                     return new JProperty(item.GetType().Name, item);
@@ -442,7 +456,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                 foreach (var itemArray in (IEnumerable)val) {
 
                     if (!IsBasicType(itemArray.GetType())) {
-                        array.Add(new JObject { SerializeObject(itemArray, actualLevel, skipProperties) });
+                        array.Add(new JObject(SerializeObject(itemArray, actualLevel, skipProperties)));
                     } else {
                         var valItem = itemArray;
                         FormatValue(ref valItem);
