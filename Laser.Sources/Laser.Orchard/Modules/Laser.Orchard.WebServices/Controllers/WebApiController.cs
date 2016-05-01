@@ -376,27 +376,20 @@ namespace Laser.Orchard.WebServices.Controllers {
                     return SerializeField((ContentField)item, actualLevel);
                 } else if (item is ContentItem) {
                     return SerializeContentItem((ContentItem)item, actualLevel + 1);
-                //} else if (item is Array || item.GetType().IsGenericType) { // Lista
-                //    //DA AFFINARE QUESTA PARTE ATTUALMENTE NON FUNZIONA!
-
-                //    JArray array = new JArray();
-                //    foreach (var itemArray in (IList)item) {
-
-                //        if (!IsBasicType(itemArray.GetType())) {
-                //            array.Add(new JObject(SerializeObject(itemArray, actualLevel + 1, skipProperties)));
-                //        } else {
-                //            var valItem = itemArray;
-                //            FormatValue(ref valItem);
-                //            array.Add(valItem);
-                //        }
-                //    }
-                //    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
-                //    return new JProperty(item.GetType().Name, array);
-
+                } else if (typeof(IEnumerable).IsInstanceOfType(item)) { // Lista o array
+                    JArray array = new JArray();
+                    foreach (var itemArray in (item as IEnumerable)) {
+                        if (IsBasicType(itemArray.GetType())) {
+                            var valItem = itemArray;
+                            FormatValue(ref valItem);
+                            array.Add(valItem);
+                        } else {
+                            array.Add(new JObject(SerializeObject(itemArray, actualLevel + 1, skipProperties)));
+                        }
+                    }
+                    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    return new JProperty(item.GetType().Name, array);
                 } else if (item.GetType().IsClass) {
-
-                    //DA AFFINARE QUESTA PARTE ATTUALMENTE NON FUNZIONA!
-                    //IL RISULTATO DOVREBBE ESSERE CHE TUTTI GLI ENUMERATORS POSSANO ESSERE CONVERTITI IN STRINGHE (PER UNA MIGLIORE LEGGIBILITA')
                     var members = item.GetType()
                     .GetFields(BindingFlags.Instance | BindingFlags.Public).Cast<MemberInfo>()
                     .Union(item.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
@@ -427,7 +420,6 @@ namespace Laser.Orchard.WebServices.Controllers {
                     }
                     PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
                     return new JProperty(item.GetType().Name, new JObject(properties));
-                    // END DA AFFINARE QUESTA PARTE ATTUALMENTE NON FUNZIONA!
 
                     //JObject propertiesObject;
                     //var serializer = JsonSerializerInstance();
