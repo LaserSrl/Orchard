@@ -1526,7 +1526,6 @@ a.text-success:hover {
 }
 #menubar .menubar-scroll-panel {
   position: relative;
-  padding-top: 16px;
   z-index: 2;
   min-height: 100%;
 }

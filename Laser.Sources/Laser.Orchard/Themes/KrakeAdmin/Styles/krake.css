@@ -21,9 +21,9 @@ html {
     background: transparent !important;
 }
 
-body {
+/*body {
     background: transparent !important;
-}
+}*/
 
 #layout-content {
     background: #fff;
@@ -304,20 +304,20 @@ label {
     min-width: 200px;
 }
 
-fieldset {
+/*fieldset {
     border: 1px solid #e2e2e2;
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 20px;
     background-color: #fff;
-}
+}*/
 
-#content {
+/*#content {
     background-color: transparent;
     border-radius: 20px;
     border: 1px solid #6db7e5;
     padding: 30px;
-}
+}*/
 
 .zone-messages {
     /*display: none !important;*/
@@ -1014,28 +1014,6 @@ input[type="number"]:focus {
     width: 180px !important;
 }
 
-/*.zone-header {
-    position: fixed;
-    background: #ffffff none repeat scroll 0 0;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
-    color: rgba(49, 53, 52, 0.6);
-    height: 64px;
-    left: 0;
-    right: 0;
-    z-index: 1005;
-}
-
-.krake-header {
-    padding: 5px 0;
-}
-
-#branding {
-    background: none;
-    float: left;
-    text-align: center;
-    height: auto;
-}*/
-
 .site-title {
     padding-left: 15px;
     font-family: 'Roboto';
@@ -1043,4 +1021,14 @@ input[type="number"]:focus {
     font-size: 20px;
     font-weight: 400;
 
+}
+
+/**** zone content ****/
+#main {
+    margin-left: 0px !important;
+}
+
+#content {
+    border: 0px;
+    background: none;
 }
