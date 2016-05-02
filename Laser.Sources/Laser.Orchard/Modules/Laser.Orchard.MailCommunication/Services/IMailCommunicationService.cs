@@ -63,7 +63,7 @@ namespace Laser.Orchard.Services.MailCommunication {
                 "civr.TitlePartRecord as TitlePart join " +
                 "cir.EmailContactPartRecord as EmailPart join " +
                     "EmailPart.EmailRecord as EmailRecord " +
-                "WHERE civr.Published=1 AND EmailRecord.Validated AND civr.Id in (" + stringHQL + ")";
+                "WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.AccettatoUsoCommerciale AND civr.Id in (" + stringHQL + ")";
 
             var fullStatement = _session.For(null)
                 .CreateQuery(queryForEmail)

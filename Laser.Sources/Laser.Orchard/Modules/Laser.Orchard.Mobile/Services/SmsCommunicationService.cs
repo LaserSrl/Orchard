@@ -107,7 +107,7 @@ namespace Laser.Orchard.Mobile.Services {
                 "civr.TitlePartRecord as TitlePart join " +
                 "cir.SmsContactPartRecord as SmsPart join " +
                     "SmsPart.SmsRecord as SmsRecord " +
-                "WHERE civr.Published=1 AND civr.Id in (" + stringHQL + ")";
+                "WHERE civr.Published=1 AND SmsRecord.Validated AND SmsRecord.AccettatoUsoCommerciale AND civr.Id in (" + stringHQL + ")";
 
             // Creo query ottimizzata per le performance
             var fullStatement = _session.For(null)

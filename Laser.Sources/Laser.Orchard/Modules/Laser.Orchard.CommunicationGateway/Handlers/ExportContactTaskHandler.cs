@@ -42,6 +42,8 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                 string[] parametri = (((dynamic)context.Task.ContentItem).ExportTaskParametersPart.Parameters.Value).Split('&');
                 string[] parExpression = parametri[0].Split('=');
                 string[] parField = parametri[1].Split('=');
+                string[] parCommUse = parametri[2].Split('=');
+                string[] parThirdParty = parametri[3].Split('=');
 
                 SearchVM search = new SearchVM();
                 search.Expression = HttpUtility.UrlDecode(parExpression[1]);
@@ -56,6 +58,17 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                         search.Field = ViewModels.SearchFieldEnum.Phone;
                         break;
                 }
+
+                if (!String.IsNullOrWhiteSpace(parCommUse[1]))
+                    search.CommercialUseAuthorization = Convert.ToBoolean(parCommUse[1]);
+                else
+                    search.CommercialUseAuthorization = null;
+
+                if (!String.IsNullOrWhiteSpace(parThirdParty[1]))
+                    search.ThirdPartyAuthorization = Convert.ToBoolean(parThirdParty[1]);
+                else
+                    search.ThirdPartyAuthorization = null;
+
                 IEnumerable<ContentItem> contentItems = _exportContactService.GetContactList(search);
                 List<ContactExport> listaContatti = new List<ContactExport>();
 

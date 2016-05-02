@@ -3,7 +3,13 @@
 @using Laser.Orchard.CommunicationGateway.ViewModels
 @{
     var ContentsIndexVM = Model.ContentsIndexVM;
+    var selectList = new SelectList(new[] { new { Value = "", Text = "" },
+                                            new { Value = "true", Text = T("Yes").ToString() },
+                                            new { Value = "false", Text = T("No").ToString() }},
+                                            "Value", "Text", Model);
     Layout.Title = T("Contact");
+
+    Script.Require("jQuery").AtHead();
 }
 
 <div class="manage">
@@ -32,16 +38,33 @@
 }
 @using (Html.BeginForm("IndexSearch", "ContactsAdmin", FormMethod.Post)) {
     @Html.AntiForgeryToken()
-    <fieldset class="bulk-actions">
-        <label for="search">@T("Search:")</label>
-        @Html.TextBoxFor(m => m.Search.Expression)
-        <label>@T("Filter by")</label>
-        @Html.DropDownListFor(m => m.Search.Field, new SelectList(Enum.GetValues(typeof(SearchFieldEnum))))
-        <button type="submit" name="submit.Search" value="-">@T("Search")</button>
-        <a href="@Url.Action("Index")">@T("Clear")</a>
-        <div class="manage" style="">
-            <button class="button primaryAction" style="margin-left:4px" type="submit" name="submit.Export" value="-">@T("Export")</button>
-            <a href="@Url.Action("ExportedFilesList")">@T("Show Exported Files")</a>
+    <fieldset class="bulk-actions" style="margin-top: 10px;">
+        <div>
+            <div>
+                <div style="float: left; margin-right: 25px;">
+                    <div>
+                        <label for="search">@T("Search:")</label>
+                        @Html.TextBoxFor(m => m.Search.Expression)
+                        <label>@T("Filter by")</label>
+                        @Html.DropDownListFor(m => m.Search.Field, new SelectList(Enum.GetValues(typeof(SearchFieldEnum))), new { @id = "searchTypeList" })
+                    </div>
+                </div>
+                <div style="float: right;">
+                    <button type="submit" name="submit.Search" value="-">@T("Search")</button>
+                    <a href="@Url.Action("Index")">@T("Clear")</a>
+                    <div class="manage">
+                        <button class="button primaryAction" style="margin-left: 4px" type="submit" name="submit.Export" value="-">@T("Export")</button>
+                        <a href="@Url.Action("ExportedFilesList")">@T("Show Exported Files")</a>
+                    </div>
+                </div>
+            </div>
+            <div id="authDiv" style="float: left; margin-top: -10px;">
+                <label id="authLabel">@T("Authorizations:")</label>
+                <label style="margin: 0 5px 0 5px;">@T("Commercial Use")</label>
+                @Html.DropDownListFor(m => m.Search.CommercialUseAuthorization, selectList, new { @id = "commercialUseAuthList" })
+                <label style="margin: 0 5px 0 5px;">@T("Third Party")</label>
+                @Html.DropDownListFor(m => m.Search.ThirdPartyAuthorization, selectList, new { @id = "thirdPartyAuthList" })
+            </div>
         </div>
     </fieldset>
 }
@@ -65,11 +88,14 @@
                     @{TimeSpan tp = DateTime.UtcNow - (contentIndexVM.ModifiedUtc ?? DateTime.UtcNow);// content.CommonPart.ModifiedUtc;
                       if (tp.Days > 0) {
                         @Html.Raw(tp.Days.ToString() + " " + T("days ago"))
-                      } else if (tp.Hours > 0) {
+                      }
+                      else if (tp.Hours > 0) {
                         @Html.Raw(tp.Hours.ToString() + " " + T("hours ago"))
-                      } else if (tp.Minutes > 0) {
+                      }
+                      else if (tp.Minutes > 0) {
                         @Html.Raw(tp.Minutes.ToString() + " " + T("minutes ago"))
-                      } else if (tp.Seconds > 0) {
+                      }
+                      else if (tp.Seconds > 0) {
                         @Html.Raw(T("a moment ago"))
                       }
                         @Html.Raw("&nbsp;&vert;&nbsp;")
@@ -97,3 +123,36 @@
 @*@using (Html.BeginForm("Index", "Routes", FormMethod.Post)) {
 }
  *@
+
+@{
+    using (Script.Head()) {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            ShowAuthorizationList();
+
+            $('#searchTypeList').change(function () {
+                ShowAuthorizationList();
+            });
+
+            function ShowAuthorizationList() {
+                if ($('#searchTypeList').val() != '@SearchFieldEnum.Name') {
+                    $('#authDiv').show();
+
+                    var label = '@T("Authorizations:")';
+                    if ($('#searchTypeList').val() == '@SearchFieldEnum.Mail') {
+                        label = '@T("Mail Authorizations:")';
+                    } else if ($('#searchTypeList').val() == '@SearchFieldEnum.Phone') {
+                        label = '@T("Sms Authorizations:")';
+                    }
+
+                $('#authLabel').text(label);
+            } else {
+                $('#authDiv').hide();
+                $('#commercialUseAuthList').val("");
+                $('#thirdPartyAuthList').val("");
+            }
+        }
+        });
+    </script>
+    }
+}
