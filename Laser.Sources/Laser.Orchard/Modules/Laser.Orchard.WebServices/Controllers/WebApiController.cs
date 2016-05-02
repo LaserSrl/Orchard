@@ -213,10 +213,10 @@ namespace Laser.Orchard.WebServices.Controllers {
                 if (tempNode.Count() == 1) {
                     if (tempNode.First.HasValues == false) {
                         if ((tempNode.Parent != null) && (tempNode.Parent.Count == 1)) {
-                            if ((tempNode.Parent.Parent != null) 
-                                && (tempNode.Parent.Parent.Count == 1) 
+                            if ((tempNode.Parent.Parent != null)
+                                && (tempNode.Parent.Parent.Count == 1)
                                 && (tempNode.Parent.Parent.Type == JTokenType.Property)) {
-                                    (tempNode.Parent.Parent as JProperty).Value = tempNode.First;
+                                (tempNode.Parent.Parent as JProperty).Value = tempNode.First;
                             }
                         }
                     }
@@ -400,7 +400,9 @@ namespace Laser.Orchard.WebServices.Controllers {
                         var propertyInfo = item.GetType().GetProperty(member.Name);
                         object val = item.GetType().GetProperty(member.Name).GetValue(item);
                         if (IsBasicType(propertyInfo.PropertyType)) {
-                            properties.Add(new JProperty(member.Name, val));
+                            var memberVal = val;
+                            FormatValue(ref memberVal);
+                            properties.Add(new JProperty(member.Name, memberVal));
                         } else if (typeof(IEnumerable).IsInstanceOfType(val)) {
                             JArray arr = new JArray();
                             properties.Add(new JProperty(member.Name, arr));
@@ -481,7 +483,7 @@ namespace Laser.Orchard.WebServices.Controllers {
         }
 
         private void FormatValue(ref object val) {
-            if (val.GetType().IsEnum) {
+            if (val != null && val.GetType().IsEnum) {
                 val = val.ToString();
             }
         }
