@@ -8,6 +8,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Localization.Models;
 using Orchard.Logging;
+using Orchard.UI.Admin;
 using System;
 using System.Web.Http;
 
@@ -90,5 +91,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             _orchardServices.ContentManager.Create(RankingCi);
             return (_utilsServices.GetResponse(ResponseType.Success));
         }
+
+
     }
 }

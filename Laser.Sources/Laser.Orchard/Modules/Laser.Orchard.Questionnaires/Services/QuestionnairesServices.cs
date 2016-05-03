@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Laser.Orchard.Events.Models;
 using Laser.Orchard.Questionnaires.Models;
 using Laser.Orchard.Questionnaires.Settings;
 using Laser.Orchard.Questionnaires.ViewModels;
@@ -71,35 +72,37 @@ namespace Laser.Orchard.Questionnaires.Services {
 
         public bool SendTemplatedEmailRanking() {
             var query = _orchardServices.ContentManager.Query();
-            var list = query.ForPart<GamePart>().List();
+            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x=>x.workflowfired==false).List();
             var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().List();
             foreach (GamePart gp in list) {
                 ContentItem Ci = gp.ContentItem;
-                //    gp.workflowfired = false; //todo remove this line
-                if (gp.workflowfired == false) {
-                    if (gp.Settings.GetModel<GamePartSettingVM>().SendEmail) {
-                        listranking.Where(z => z.As<RankingPart>().ContentIdentifier == Ci.Id).OrderBy(y => y.Point);
-                        List<RankingTemplateVM> rkt = new List<RankingTemplateVM>();
-                        foreach (RankingPart cirkt in listranking) {
-                            RankingTemplateVM tmp = new RankingTemplateVM();
-                            tmp.Point = cirkt.Point;
-                            tmp.ContentIdentifier = cirkt.ContentIdentifier;
-                            tmp.Device = cirkt.Device;
-                            tmp.Identifier = cirkt.Identifier;
-                            tmp.name = getusername(cirkt.User_Id);
-                            tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
-                            tmp.AccessSecured = cirkt.AccessSecured;
-                            tmp.RegistrationDate = cirkt.RegistrationDate;
-                            rkt.Add(tmp);
-                        }
+                if (((dynamic)Ci).ActivityPart != null && ((dynamic)Ci).ActivityPart.DateTimeEnd != null) {
+                    if (((dynamic)Ci).ActivityPart.DateTimeEnd < DateTime.Now) {
+                        //    gp.workflowfired = false; //todo remove this line
+                        //      if (gp.workflowfired == false) {
+                        if (gp.Settings.GetModel<GamePartSettingVM>().SendEmail) {
+                            var listordered = listranking.Where(z => z.As<RankingPart>().ContentIdentifier == Ci.Id).OrderByDescending(y => y.Point);
+                            List<RankingTemplateVM> rkt = new List<RankingTemplateVM>();
+                            foreach (RankingPart cirkt in listordered) {
+                                RankingTemplateVM tmp = new RankingTemplateVM();
+                                tmp.Point = cirkt.Point;
+                                tmp.ContentIdentifier = cirkt.ContentIdentifier;
+                                tmp.Device = cirkt.Device;
+                                tmp.Identifier = cirkt.Identifier;
+                                tmp.name = getusername(cirkt.User_Id);
+                                tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
+                                tmp.AccessSecured = cirkt.AccessSecured;
+                                tmp.RegistrationDate = cirkt.RegistrationDate;
+                                rkt.Add(tmp);
+                            }
 
-                        if (SendEmail(Ci, rkt)) {
-                            // logger
+                            if (SendEmail(Ci, rkt)) {
+                                // logger
+                            }
                         }
+                        _workflowManager.TriggerEvent("GameRankingSubmitted", Ci, () => new Dictionary<string, object> { { "Content", Ci } });
+                        gp.workflowfired = true;
                     }
-                    _workflowManager.TriggerEvent("GameRankingSubmitted", Ci, () => new Dictionary<string, object> { { "Content", Ci } });
-                    gp.workflowfired = true;
-
                 }
             }
             return true;
