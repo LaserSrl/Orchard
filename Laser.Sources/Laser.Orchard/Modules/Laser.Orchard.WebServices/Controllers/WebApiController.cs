@@ -39,6 +39,7 @@ namespace Laser.Orchard.WebServices.Controllers {
         private readonly string[] _skipFieldProperties;
         private readonly string[] _skipAlwaysProperties;
         private readonly Type[] _basicTypes;
+        private readonly ICommonsServices _commonServices;
 
         private readonly HttpRequest _request;
 
@@ -54,9 +55,10 @@ namespace Laser.Orchard.WebServices.Controllers {
             IUtilsServices utilsServices,
             ICsrfTokenHelper csrfTokenHelper,
             IAuthenticationService authenticationService,
+            ICommonsServices commonServices,
             IContentSerializationServices contentSerializationServices) {
             _request = System.Web.HttpContext.Current.Request;
-
+            _commonServices = commonServices;
             _orchardServices = orchardServices;
             _projectionManager = projectionManager;
             _taxonomyService = taxonomyService;
@@ -92,7 +94,7 @@ namespace Laser.Orchard.WebServices.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Terms(string alias, int maxLevel = 10) {
-            var content = GetContentByAlias(alias);
+            var content = _commonServices.GetContentByAlias(alias);
             var json = _contentSerializationServices.Terms(content, maxLevel);
             return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
 
@@ -124,19 +126,9 @@ namespace Laser.Orchard.WebServices.Controllers {
 
         public ActionResult Display(string alias, int page = 1, int pageSize = 10, int maxLevel = 10) {
             JObject json;
-            var content = GetContentByAlias(alias);
+            var content = _commonServices.GetContentByAlias(alias);
             //_maxLevel = maxLevel;
-            var policy = content.As<Laser.Orchard.Policy.Models.PolicyPart>();
-            if (policy != null && (policy.HasPendingPolicies ?? false)) { // Se l'oggetto ha delle pending policies allora devo serivre la lista delle pending policies
-                json = new JObject();
-                var resultArray = new JArray();
-                foreach (var pendingPolicy in policy.PendingPolicies) {
-                    resultArray.Add(new JObject(_contentSerializationServices.SerializeContentItem((ContentItem)pendingPolicy, 0)));
-                }
-                json.Add("PendingPolicies", resultArray);
-            } else {// Se l'oggetto non ha delle pending policies allora devo serivre il content stesso
-                json = _contentSerializationServices.GetJson(content, page, pageSize);
-            }
+            json = _contentSerializationServices.GetJson(content, page, pageSize);
             _contentSerializationServices.NormalizeSingleProperty(json);
             return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
             //return GetJson(content, page, pageSize);
@@ -221,22 +213,6 @@ namespace Laser.Orchard.WebServices.Controllers {
         //        }
         //    }
         //}
-
-        private IContent GetContentByAlias(string displayAlias) {
-            IContent item = null;
-            var autoroutePart = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>()
-                .ForVersion(VersionOptions.Published)
-                .Where(w => w.DisplayAlias == displayAlias).List().SingleOrDefault();
-
-            if (autoroutePart != null && autoroutePart.ContentItem != null) {
-                item = autoroutePart.ContentItem;
-            } else {
-                new HttpException(404, ("Not found"));
-                return null;
-            }
-            return item;
-
-        }
 
 
         //protected JProperty SerializeContentItem(ContentItem item, int actualLevel) {

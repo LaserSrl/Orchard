@@ -105,7 +105,7 @@ namespace Laser.Orchard.UsersExtensions.Filters {
 
                             json.Add("PendingPolicies", resultArray);
 
-                            filterContext.Result = new ContentResult { Content = json.ToString(), ContentType = "application/json" };
+                            filterContext.Result = new ContentResult { Content = json.ToString(Newtonsoft.Json.Formatting.None), ContentType = "application/json" };
                         }
                         else {
                             var encodedAssociatedPolicies = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Join(",", missingPolicies)));
