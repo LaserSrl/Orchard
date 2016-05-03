@@ -1,0 +1,70 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2016 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "Allows you to implement and manage marketing campaigns and communications via SMS"
+msgstr "permetterà di gestire campagne di marketing e comunicazione via SMS: una soluzione di facile utilizzo e di veloce attivazione e configurazione."
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "Allows you to implement and manage several mobile applications"
+msgstr "permetterà di implementare e gestire più applicazioni mobile."
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "Allows you to implement and manage several responsive websites"
+msgstr "permetterà di implementare e gestire più siti web dal design responsivo."
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "Allows you to manage integrated communication streams through your social accounts"
+msgstr "ti permetterà di gestire flussi di comunicazione integrata attraverso i profili social."
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "KRAKE&#8482;"
+msgstr "KRAKE&#8482;"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "MAIL"
+msgstr "MAIL"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "manage through its back office aimed marketing campaigns, newsletter and much more"
+msgstr "potrà gestire, attraverso un ambiente di back office, campagne di marketing mirato, newsletter, ecc."
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "MOBILE APP"
+msgstr "APP MOBILE"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "MyKrake&#8482; - ONE PLATFORM, MANY COMMUNICATION CHANNELS"
+msgstr "MyKrake&#8482; - UN'UNICA PIATTAFORMA PER PIÙ CANALI DI COMUNICAZIONE"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "PUSH NOTIFICATIONS"
+msgstr "NOTIFICHE PUSH"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "the app will remain up and vigilant thanks to custom push notifications"
+msgstr "l'app sarà sempre viva e attiva: notifiche push, anche personalizzate, garantiranno comunicazioni precise, puntuali e mirate"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "WEB"
+msgstr "WEB"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Layout.cshtml"
+msgid "Are you sure you want to remove this element ?"
+msgstr "Sicuro di volere eliminare questo elemento?"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Layout.cshtml"
+msgid "Skip to navigation"
+msgstr "Vai alla navigazione"
+
+msgctxt "~/Themes/KrakeAdmin/Views/OrchardVersion.cshtml"
+msgid "Krake v.{0}"
+msgstr "Krake v.{0}"
+

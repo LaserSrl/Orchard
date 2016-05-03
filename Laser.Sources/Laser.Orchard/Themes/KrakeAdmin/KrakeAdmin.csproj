@@ -76,8 +76,11 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\krake.js" />
     <Content Include="Scripts\main.js" />
+    <Content Include="Styles\fonts\HANDGOTB.svg" />
     <Content Include="Styles\Images\adminNavBackground.gif" />
+    <Content Include="Styles\Images\arrow-number.png" />
     <Content Include="Styles\Images\bg-app.png" />
     <Content Include="Styles\Images\bg-mail.png" />
     <Content Include="Styles\Images\bg-notifiche.png" />
@@ -112,12 +115,18 @@
     <Content Include="Styles\Images\krake-giallo.png" />
     <Content Include="Styles\Images\krake-rosso.png" />
     <Content Include="Styles\Images\krake-verde.png" />
+    <Content Include="Styles\Images\list-arrow.png" />
     <Content Include="Styles\Images\logo-laser.png" />
     <Content Include="Styles\Images\logo.png" />
     <Content Include="Styles\Images\logo_krake.png" />
+    <Content Include="Styles\Images\logo_krake_old.png" />
     <Content Include="Styles\Images\mail.png" />
     <Content Include="Styles\Images\piattaforma.png" />
+    <Content Include="Styles\Images\search-icon-dave.png" />
+    <Content Include="Styles\Images\search-icon.png" />
+    <Content Include="Styles\Images\select-arrow.png" />
     <Content Include="Styles\Images\sfondo-krake.png" />
+    <Content Include="Styles\Images\sfondo.png" />
     <Content Include="Styles\krake.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -136,14 +145,21 @@
   <ItemGroup>
     <Content Include="Views\OrchardVersion.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Styles\fonts\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\Dashboard\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Images\brochure.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\fonts\HANDGOTB.eot" />
+    <Content Include="Styles\fonts\HANDGOTB.otf" />
+    <Content Include="Styles\fonts\HANDGOTB.ttf" />
+    <Content Include="Styles\fonts\HANDGOTB.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

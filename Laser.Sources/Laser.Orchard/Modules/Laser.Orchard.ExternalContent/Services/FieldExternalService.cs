@@ -107,40 +107,31 @@ namespace Laser.Orchard.ExternalContent.Services {
             }
         }
         public string GetUrl(Dictionary<string, object> contesto, string externalUrl) {
+            bool threatUrlAsString = false;
+            string pureCleanString, finalUrl;
             var tokenizedzedUrl = _tokenizer.Replace(externalUrl, contesto, new ReplaceOptions { Encoding = ReplaceOptions.UrlEncode });
-            tokenizedzedUrl = tokenizedzedUrl.Replace("+", "%20");
-            //    tokenizedzedUrl = tokenizedzedUrl.Replace(".", "%2E");
+            pureCleanString = tokenizedzedUrl = tokenizedzedUrl.Replace("+", "%20");
+
+
+            threatUrlAsString = !tokenizedzedUrl.StartsWith("http");
+            if (threatUrlAsString) { // gestisco il caso in cui l'URl dell'externalField sia in realtà una stringa
+                tokenizedzedUrl = String.Format("http://{0}/{1}/{2}", _shellSetting.RequestUrlHost ?? "www.fakedomain.com", _shellSetting.RequestUrlPrefix ?? "", tokenizedzedUrl ?? "");
+
+            }
             Uri tokenizedzedUri;
             try {
                 tokenizedzedUri = new Uri(tokenizedzedUrl);
-            }
-            catch {
+            } catch {
                 // gestisco il caso in cui passo un'url e non i parametri di un'url
                 tokenizedzedUrl = _tokenizer.Replace(externalUrl, contesto, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
                 tokenizedzedUri = new Uri(tokenizedzedUrl);
 
             }
-            //}
-            //catch {
-            //    string[] partiurl= tokenizedzedUrl.Split('.');
-            //    string nome_dominio = partiurl[0];
-            //    for (int w = 1; w < partiurl.Count(); w++) {
-            //        if (partiurl[w].IndexOf("%2f") < 0)
-            //            nome_dominio +="."+ partiurl[w];
-            //        else {
-            //            nome_dominio +="."+ partiurl[w].Split(new string[] { "%2f" }, StringSplitOptions.None)[0];
-            //            break;
-            //        }
-            //    }
-            //    Uri Urifirst = new Uri(nome_dominio);
-            //    string urlpath = tokenizedzedUrl.Substring(nome_dominio.Length, 10000);
-            //    Uri Second = new Uri(Urifirst, urlpath);
-            //    var uriBuilder = new UriBuilder(tokenizedzedUrl);
-            //    // tokenizedzedUri = new Uri(uriString,uriKind);
-            //    Uri myfinalUrl = uriBuilder.Uri;
-            //    Uri.TryCreate(tokenizedzedUrl, UriKind.Absolute, out tokenizedzedUri);
-            //}
-            var finalUrl = String.Format("{0}{1}{2}{3}", tokenizedzedUri.Scheme, Uri.SchemeDelimiter, tokenizedzedUri.Authority, tokenizedzedUri.AbsolutePath);
+            if (threatUrlAsString) {
+                finalUrl = pureCleanString.Split('?')[0];
+            } else {
+                finalUrl = String.Format("{0}{1}{2}{3}", tokenizedzedUri.Scheme, Uri.SchemeDelimiter, tokenizedzedUri.Authority, tokenizedzedUri.AbsolutePath);
+            }
             var queryStringParameters = tokenizedzedUri.Query.Split('&');
             var i = 0;
             foreach (var item in queryStringParameters) {
@@ -175,8 +166,7 @@ namespace Laser.Orchard.ExternalContent.Services {
                         }
                         newJsonObject.Add(property.Name, myjarray);
                         // newJsonObject.Add(property.Name, jsonflusher((JObject)property.Value));
-                    }
-                    else if (property.Value.GetType().Name == "JObject") {
+                    } else if (property.Value.GetType().Name == "JObject") {
                         newJsonObject.Add(property.Name.Replace(" ", ""), jsonflusher((JObject)property.Value));
                     }
                 }
@@ -207,12 +197,10 @@ namespace Laser.Orchard.ExternalContent.Services {
                         certPath = String.Format(HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\ExternalFields\{0}", settings.CerticateFileName);
                         if (File.Exists(certPath)) {
                             webpagecontent = GetHttpPage(UrlToGet, httpMethod, httpDataType, bodyRequest, certPath, settings.CertificatePrivateKey.DecryptString(_shellSetting.EncryptionKey)).Trim();
-                        }
-                        else {
+                        } else {
                             throw new Exception(String.Format("File \"{0}\" not found! Upload certificate via FTP.", certPath));
                         }
-                    }
-                    else {
+                    } else {
                         webpagecontent = GetHttpPage(UrlToGet, httpMethod, httpDataType, bodyRequest).Trim();
                     }
                     if (!webpagecontent.StartsWith("<")) {
@@ -228,28 +216,28 @@ namespace Laser.Orchard.ExternalContent.Services {
                         correggiXML(newdoc);
                         webpagecontent = newdoc.InnerXml;
                     }
-                    dynamic mycache=null;
-                //    Dictionary<string, object> elementcached = null;
+                    dynamic mycache = null;
+                    //    Dictionary<string, object> elementcached = null;
 
                     DynamicViewBag dvb = new DynamicViewBag();
                     // dvb.AddValue(settings.CacheInput, _cacheStorageProvider.Get(settings.CacheInput));
                     if (!string.IsNullOrEmpty(settings.CacheInput)) {
                         string inputcache = _tokenizer.Replace(settings.CacheInput, contesto);
 
-                //        var mycache = _cacheStorageProvider.Get(settings.CacheInput);
+                        //        var mycache = _cacheStorageProvider.Get(settings.CacheInput);
                         mycache = _cacheStorageProvider.Get(inputcache);
                         // var Jsettings = new JsonSerializerSettings();
                         // Jsettings.TypeNameHandling = TypeNameHandling.Arrays;
-                        
-                        
-                 //       string tmpelementcached = JsonConvert.SerializeObject(mycache);//, Jsettings);//, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                 //       JavaScriptSerializer sera = new JavaScriptSerializer();
-                //        sera.MaxJsonLength = Int32.MaxValue;
-                 //       elementcached = (Dictionary<string, object>)sera.Deserialize(tmpelementcached, typeof(object));
-                if(mycache==null){
-                //        if (elementcached == null) {
-                    if (File.Exists(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + inputcache))) {
-                        string filecontent = File.ReadAllText(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + inputcache));
+
+
+                        //       string tmpelementcached = JsonConvert.SerializeObject(mycache);//, Jsettings);//, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                        //       JavaScriptSerializer sera = new JavaScriptSerializer();
+                        //        sera.MaxJsonLength = Int32.MaxValue;
+                        //       elementcached = (Dictionary<string, object>)sera.Deserialize(tmpelementcached, typeof(object));
+                        if (mycache == null) {
+                            //        if (elementcached == null) {
+                            if (File.Exists(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + inputcache))) {
+                                string filecontent = File.ReadAllText(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + inputcache));
 
                                 //var setdeserialize = new JsonSerializerSettings {
                                 //    TypeNameHandling = TypeNameHandling.Arrays,
@@ -257,12 +245,12 @@ namespace Laser.Orchard.ExternalContent.Services {
                                 //};
                                 //var aaa = JsonConvert.DeserializeObject(filecontent, setdeserialize);
 
-                 //               JavaScriptSerializer ser = new JavaScriptSerializer();
-                 //               ser.MaxJsonLength = Int32.MaxValue;
-                 //               elementcached = (Dictionary<string, object>)ser.Deserialize(filecontent, typeof(object));
-                 mycache=JsonConvert.DeserializeObject(filecontent);
-                 _cacheStorageProvider.Put(inputcache, mycache);
-                //                 _cacheStorageProvider.Put(settings.CacheInput, elementcached);
+                                //               JavaScriptSerializer ser = new JavaScriptSerializer();
+                                //               ser.MaxJsonLength = Int32.MaxValue;
+                                //               elementcached = (Dictionary<string, object>)ser.Deserialize(filecontent, typeof(object));
+                                mycache = JsonConvert.DeserializeObject(filecontent);
+                                _cacheStorageProvider.Put(inputcache, mycache);
+                                //                 _cacheStorageProvider.Put(settings.CacheInput, elementcached);
                                 //elementcached = JsonConvert.DeserializeObject<dynamic>(filecontent);
 
                                 //   elementcached new DynamicJsonObject(dynamiccontent_tmp);
@@ -276,16 +264,15 @@ namespace Laser.Orchard.ExternalContent.Services {
                     if (mycache != null) {
                         XmlDocument xml = JsonConvert.DeserializeXmlNode(JsonConvert.SerializeObject(mycache));
                         dvb.AddValue("CachedData", xml);
-                    }
-                    else {
+                    } else {
                         dvb.AddValue("CachedData", new XmlDocument());
                     }
-    
-               //     dvb.AddValue("CachedData", elementcached);
+
+                    //     dvb.AddValue("CachedData", elementcached);
                     //                    if (elementcached != null) {
                     //              string a = codifica((Dictionary<string,object>)elementcached);
                     //                    }
-            
+
                     ci = RazorTransform(webpagecontent.Replace(" xmlns=\"\"", ""), nomexlst, contentType, dvb);
 
                     _cacheStorageProvider.Remove(chiavecache);
@@ -308,8 +295,7 @@ namespace Laser.Orchard.ExternalContent.Services {
                     }
 
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Logger.Error(ex, UrlToGet);
                 throw new ExternalFieldRemoteException();
             }
@@ -317,53 +303,53 @@ namespace Laser.Orchard.ExternalContent.Services {
         }
 
 
-     //   private string codifica(object o) {
-          
-            //if (myval!=null){
-                  
-           
-            //    foreach(string key in myval.Keys){
-            //        if (!string.IsNullOrEmpty(key)){
-            //            if (myval[key]!=null){
-            //                if (myval[key].GetType() == typeof(String)  ){
-            //                    if (key=="Sid"){
-            //                        testo+="<VenueId>VenueId:" +myval[key].ToString().Substring(6) + "</VenueId>";
-            //                    }else{
-            //                            testo+="<"+key+"><![CDATA[" +myval[key] + "]]></"+key+">";
-            //                    }
-            //                }
-            //                else{
-            //                    if  (myval[key].GetType() == typeof(Decimal) || myval[key].GetType() == typeof(int)){
-            //                        testo+="<"+key+">" +myval[key].ToString().Replace(",",".") + "</"+key+">";
-            //                    }
-            //                    else{
-            //                        Type t = myval[key].GetType();
-            //                        bool isDict = t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>);
-            //                        if (isDict) {
-            //                            Dictionary<string, object> child = (Dictionary<string, object>)myval[key];
-            //                            testo += "<" + key + ">'" + codifica(child) + "'</" + key + ">";
-            //                        }
-            //                        else {
-            //                            try{
-            //                            var child = (object[])myval[key];
-            //                            testo += "<" + key + ">";
-            //                            for (Int32 i = 0; i < child.Length; i++) {
-            //                                if (child[i] != null) {
-            //                                    testo += codifica((Dictionary<string, object>)child[i]);
-            //                                }
-            //                            }
-            //                            testo += "</" + key + ">";
-            //                            }catch{}
-            //                        }
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-		//	return testo;
-	//	
-     //   }
+        //   private string codifica(object o) {
+
+        //if (myval!=null){
+
+
+        //    foreach(string key in myval.Keys){
+        //        if (!string.IsNullOrEmpty(key)){
+        //            if (myval[key]!=null){
+        //                if (myval[key].GetType() == typeof(String)  ){
+        //                    if (key=="Sid"){
+        //                        testo+="<VenueId>VenueId:" +myval[key].ToString().Substring(6) + "</VenueId>";
+        //                    }else{
+        //                            testo+="<"+key+"><![CDATA[" +myval[key] + "]]></"+key+">";
+        //                    }
+        //                }
+        //                else{
+        //                    if  (myval[key].GetType() == typeof(Decimal) || myval[key].GetType() == typeof(int)){
+        //                        testo+="<"+key+">" +myval[key].ToString().Replace(",",".") + "</"+key+">";
+        //                    }
+        //                    else{
+        //                        Type t = myval[key].GetType();
+        //                        bool isDict = t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>);
+        //                        if (isDict) {
+        //                            Dictionary<string, object> child = (Dictionary<string, object>)myval[key];
+        //                            testo += "<" + key + ">'" + codifica(child) + "'</" + key + ">";
+        //                        }
+        //                        else {
+        //                            try{
+        //                            var child = (object[])myval[key];
+        //                            testo += "<" + key + ">";
+        //                            for (Int32 i = 0; i < child.Length; i++) {
+        //                                if (child[i] != null) {
+        //                                    testo += codifica((Dictionary<string, object>)child[i]);
+        //                                }
+        //                            }
+        //                            testo += "</" + key + ">";
+        //                            }catch{}
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+        //	return testo;
+        //	
+        //   }
 
         //private static dynamic XmlToDynamic(XmlReader file, XElement node = null) {
         ////    if (String.IsNullOrWhiteSpace(file) && node == null) return null;
@@ -511,8 +497,7 @@ namespace Laser.Orchard.ExternalContent.Services {
                     //if (!string.IsNullOrEmpty(resultnobr)) {
 
                     // }
-                }
-                else
+                } else
                     output = "";
                 while (output.StartsWith("\t")) {
                     output = output.Substring(1);
@@ -526,8 +511,8 @@ namespace Laser.Orchard.ExternalContent.Services {
                 //  doc.DocumentElement.SetAttribute("xmlns:json", "http://www.w3.org/1999/xhtml");
 
                 XmlNode newNode = doc.DocumentElement;
-               
-                
+
+
 
 
                 //foreach (XmlNode node in newNode){
@@ -538,7 +523,7 @@ namespace Laser.Orchard.ExternalContent.Services {
                 //XmlNode thenewnode = doc.CreateElement("ToRemove");
                 //thenewnode.AppendChild(newNode);
 
-               newNode = XmlWithJsonArrayTag(newNode, doc);
+                newNode = XmlWithJsonArrayTag(newNode, doc);
 
 
 
@@ -549,7 +534,7 @@ namespace Laser.Orchard.ExternalContent.Services {
                 //docc.ImportNode(newNode,true);
 
                 // string JsonDataxxx = JsonConvert.SerializeXmlNode(doc);
-               
+
 
                 string JsonData = JsonConvert.SerializeXmlNode(newNode);
                 JsonData = JsonData.Replace(",{}]}", "]}");
@@ -574,8 +559,7 @@ namespace Laser.Orchard.ExternalContent.Services {
                 return dynamiccontent;
 
 
-            }
-            else {
+            } else {
                 return XsltTransform(xmlpage, xsltname, contentType);
             }
         }
@@ -583,7 +567,7 @@ namespace Laser.Orchard.ExternalContent.Services {
         private XmlNode XmlWithJsonArrayTag(XmlNode xn, XmlDocument doc) {
             bool ForceChildBeArray = false;
             if (xn.ChildNodes.Count > 1) {
-                if (xn.ChildNodes[0].Name == xn.ChildNodes[1].Name && xn.ChildNodes[0].Name!="ToRemove") {
+                if (xn.ChildNodes[0].Name == xn.ChildNodes[1].Name && xn.ChildNodes[0].Name != "ToRemove") {
                     ForceChildBeArray = true;
                 }
             }
@@ -682,8 +666,7 @@ namespace Laser.Orchard.ExternalContent.Services {
                 myXslTrans.Transform(myXPathDoc, argsList, xmlWriter);
 
                 output = sw.ToString();
-            }
-            else {
+            } else {
                 output = xmlpage;
                 Logger.Error("file not exist ->" + myXmlFile);
             }
@@ -826,8 +809,7 @@ namespace Laser.Orchard.ExternalContent.Services {
             if (node != null) {
                 if (node.HasElements) {
                     result = new DynamicXml(node);
-                }
-                else {
+                } else {
                     result = node.Value;
                 }
                 return true;
