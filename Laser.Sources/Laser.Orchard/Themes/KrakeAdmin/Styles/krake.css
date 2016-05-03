@@ -109,14 +109,24 @@ html {
 button, .button, a.button {
     /*background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(59, 130, 154, 1.0)), to(rgba(70, 142, 166, 1.0)));
     background: -moz-linear-gradient(top, rgba(59, 130, 154, 1.0), rgba(70, 142, 166, 1.0));*/
-    background: #6db7e5;
+    /*background: #6db7e5;
     border: 1px solid #2ab9e8;
     color: #fff;
     min-width: 150px;
     min-height: 30px;
     border-radius: 5px;
     font-weight: bold;
-    font-size: 15px;
+    font-size: 15px;*/
+
+    background: #3c8dbc;
+    border-color: #367fa9;
+    border-radius: 3px;
+    box-shadow: none;
+    color: #fff;
+}
+
+fieldset.save-button {
+    float: right;
 }
 
 span .button {
@@ -140,10 +150,10 @@ button:hover, .button:hover, a.button:hover {
 }
 
 select, textarea, input.text, input.textMedium, input.text-medium, input.text-small, input.text-box {
-    color: #3b829a !important;
+    color: #555 !important;  
     height: 35px;
     margin-bottom: 20px;
-    border-radius: 5px;
+    border-radius: 3px;
     padding-left: 10px;
 }
 
@@ -185,7 +195,6 @@ table.items thead, table.items th {
 
 .hint {
     color: #babfbf;
-    font-style: italic;
 }
 
 #login::before {
@@ -297,12 +306,12 @@ button.link {
     border-radius: 3px;
 }
 
-label {
+/*label {
     font-size: 15px;
     color: #252c36;
     font-weight: 200;
     min-width: 200px;
-}
+}*/
 
 /*fieldset {
     border: 1px solid #e2e2e2;
@@ -321,10 +330,11 @@ label {
 
 .zone-messages {
     /*display: none !important;*/
+    padding-top: 40px;
 }
 
 .edit-item-sidebar {
-    /*float: right !important;*/
+    float: right !important;
     display: inline-block;
     white-space: nowrap;
 }
@@ -505,9 +515,11 @@ answertable tr:last-child td:last-child {
 }
 
 legend {
-    margin-bottom: 30px !important;
-    font-family: "Krake";
-    color: #6db7e5;
+
+  display: inline-block;
+  font-size: 18px;
+  line-height: 1;
+  margin: 0;
 }
 
     legend label {
@@ -523,11 +535,11 @@ legend {
     margin: 0;
 }
 
-legend::before {
+/*legend::before {
     content: "\f03a";
     font-family: FontAwesome;
     padding-right: 8px;
-}
+}*/
 
 .time {
     min-width: 100px !important;
@@ -1026,9 +1038,46 @@ input[type="number"]:focus {
 /**** zone content ****/
 #main {
     margin-left: 0px !important;
+    margin-top:  20px;
 }
 
-#content {
+#content-main {
     border: 0px;
     background: none;
+    padding: 16px 24px;
+    margin: 8px 0 0 0;
+    clear: both;
+    /*CSS3 properties*/
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+label {
+    display: inherit;
+}
+
+fieldset:not(.save-button)::after {
+    display: block;
+    content:" ";
+    width: 100%;
+    margin: 0 auto;
+    border-bottom: 1px dotted #f1f1f1;
+    padding-bottom: 10px;
+}
+
+fieldset {
+    padding-bottom: 10px;
+}
+
+.add,
+#btn-CalendarEvent_Gallery_Field_Ids.button {
+  background-color: #dd4b39;
+  border-color: #d73925;
+}
+
+.add:hover,
+#btn-CalendarEvent_Gallery_Field_Ids.button:hover {
+  background-color: #d73925;
+  border-color: #ac2925;
 }

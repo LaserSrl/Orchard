@@ -1077,7 +1077,7 @@ a.text-primary-light:hover {
   color: #56cdc5;
 }
 .text-primary {
-  color: #00ccff !important;
+  color: #1c2a37 !important;
   text-transform: uppercase;
 }
 a.text-primary:hover {
@@ -1157,11 +1157,27 @@ a.text-success:hover {
   display: none;
   position: relative;
 }
+
+#content-main {
+    position: relative;
+    width: 100%;
+    left: 0;
+    padding-top: 14px;
+}
+
 #content {
   position: relative;
   width: 100%;
   left: 0;
-  padding-top: 64px;
+  padding-top: 14px;
+  background: #ffffff none repeat scroll 0 0;
+  border-radius: 3px;
+  border-top: 3px solid #d2d6de;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  position: relative;
+  width: 100%;
+  border-top-color: #3c8dbc;
 }
 @media (min-width: 1200px) {
   .menubar-pin #base {
@@ -2670,9 +2686,9 @@ legend.text-right:before {
 legend.text-right:after {
   width: 0%;
 }
-label {
+/*label {
   font-weight: 400;
-}
+}*/
 .form-group > label,
 .form-group .control-label {
   font-size: 12px;
