@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Fields.Fields;
+using Orchard.Projections.Services;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Services;
 using System;
@@ -14,10 +15,14 @@ using System.Reflection;
 namespace Laser.Orchard.StartupConfig.Services {
     public interface IContentSerializationServices : IDependency {
         JProperty SerializeContentItem(ContentItem item, int actualLevel);
+        JObject GetJson(IContent content, int page = 1, int pageSize = 10);
+        JObject Terms(IContent content, int maxLevel = 10);
+        void NormalizeSingleProperty(JObject json);
     }
 
     public class ContentSerializationServices : IContentSerializationServices {
-
+        private readonly IOrchardServices _orchardServices;
+        private readonly IProjectionManager _projectionManager;
         private readonly ITaxonomyService _taxonomyService;
 
         private readonly string[] _skipAlwaysProperties;
@@ -33,15 +38,18 @@ namespace Laser.Orchard.StartupConfig.Services {
 
         private List<string> processedItems;
 
-        public ContentSerializationServices(ITaxonomyService taxonomyService) {
+        public ContentSerializationServices(IOrchardServices orchardServices,
+            IProjectionManager projectionManager, ITaxonomyService taxonomyService) {
+            _orchardServices = orchardServices;
+            _projectionManager = projectionManager;
             _taxonomyService = taxonomyService;
 
-            _skipAlwaysProperties = new string[]{ "ContentItemRecord","ContentItemVersionRecord" };
-            _skipFieldProperties = new string[]{ "Storage", "Name", "DisplayName", "Setting" };
-            _skipFieldTypes = new string[]{ "FieldDefinition","PartFieldDefinition" };
-            _skipPartNames = new string[]{ "InfosetPart","FieldIndexPart","IdentityPart","UserPart","UserRolesPart", "AdminMenuPart", "MenuPart" };
+            _skipAlwaysProperties = new string[] { "ContentItemRecord", "ContentItemVersionRecord" };
+            _skipFieldProperties = new string[] { "Storage", "Name", "DisplayName", "Setting" };
+            _skipFieldTypes = new string[] { "FieldDefinition", "PartFieldDefinition" };
+            _skipPartNames = new string[] { "InfosetPart", "FieldIndexPart", "IdentityPart", "UserPart", "UserRolesPart", "AdminMenuPart", "MenuPart" };
             _skipPartProperties = new string[] { };
-            _skipPartTypes = new string[]{ "ContentItem","Zones","TypeDefinition","TypePartDefinition","PartDefinition", "Settings", "Fields", "Record" };
+            _skipPartTypes = new string[] { "ContentItem", "Zones", "TypeDefinition", "TypePartDefinition", "PartDefinition", "Settings", "Fields", "Record" };
 
             _basicTypes = new Type[] {
                 typeof(string),
@@ -56,9 +64,108 @@ namespace Laser.Orchard.StartupConfig.Services {
             processedItems = new List<string>();
         }
 
+        public JObject Terms(IContent content, int maxLevel = 10) {
+            JObject json;
+            _maxLevel = maxLevel;
+            dynamic contentToSerialize = null, termPart = null;
+            try {
+                if (content.ContentItem.ContentType.EndsWith("Taxonomy")) {
+                    contentToSerialize = content;
+                    json = new JObject(SerializeObject(content, 0));
+                    NormalizeSingleProperty(json);
+                    return json;
+                } else if (content.ContentItem.ContentType.EndsWith("Term") || !String.IsNullOrWhiteSpace(content.ContentItem.TypeDefinition.Settings["Taxonomy"])) {
+                    termPart = ((dynamic)content.ContentItem).TermPart;
+                    if (termPart != null) {
+                        json = new JObject(SerializeObject(content, 0));
+                        contentToSerialize = _taxonomyService.GetChildren(termPart, false);
+                        var resultArray = new JArray();
+                        foreach (var resulted in contentToSerialize) {
+                            resultArray.Add(new JObject(SerializeObject(resulted, 0)));
+                        }
+                        json.Add("SubTerms", resultArray);
+                        NormalizeSingleProperty(json);
+                        return json;
+                    }
+                }
+            } catch {
+            }
+            return null;
+        }
+
+        public JObject GetJson(IContent content, int page = 1, int pageSize = 10) {
+            JObject json;
+            dynamic shape = _orchardServices.ContentManager.BuildDisplay(content); // Forse non serve nemmeno
+            var filteredContent = shape.ContentItem;
+
+            json = new JObject(SerializeObject(filteredContent, 0));
+            dynamic part;
+
+            #region [Projections]
+            // Projection
+            try {
+                part = ((dynamic)filteredContent).ProjectionPart;
+            } catch {
+                part = null;
+            }
+            if (part != null) {
+                var queryId = part.Record.QueryPartRecord.Id;
+                var queryItems = _projectionManager.GetContentItems(queryId, (page - 1) * pageSize, pageSize);
+                var resultArray = new JArray();
+                foreach (var resulted in queryItems) {
+                    resultArray.Add(new JObject(SerializeContentItem((ContentItem)resulted, 0)));
+                }
+                if ((json.Root.HasValues) && (json.Root.First.HasValues) && (json.Root.First.First.HasValues)) {
+                    JProperty array = new JProperty("ProjectionPageResults", resultArray);
+                    json.Root.First.First.Last.AddAfterSelf(array);
+                } else {
+                    json.Add("ProjectionPageResults", resultArray);
+                }
+            }
+            #endregion
+
+            NormalizeSingleProperty(json);
+
+            return json;
+        }
+
+        /// <summary>
+        /// Accorpa gli oggetti che hanno una sola proprietà con la proprietà padre.
+        /// Es. Creator: { Value: 2 } diventa Creator: 2.
+        /// </summary>
+        /// <param name="json"></param>
+        public void NormalizeSingleProperty(JObject json) {
+            List<JToken> nodeList = new List<JToken>();
+
+            // scandisce tutto l'albero dei nodi e salva i nodi potenzialmente "interessanti" in una lista
+            nodeList.Add(json.Root);
+            for (int i = 0; i < nodeList.Count; i++) {
+                foreach (var tempNode in nodeList[i].Children()) {
+                    if (tempNode.HasValues) {
+                        nodeList.Add(tempNode);
+                    }
+                }
+            }
+
+            // scorre tutti i nodi per cercare quelli da accorpare
+            foreach (var tempNode in nodeList) {
+                if (tempNode.Count() == 1) {
+                    if (tempNode.First.HasValues == false) {
+                        if ((tempNode.Parent != null) && (tempNode.Parent.Count == 1)) {
+                            if ((tempNode.Parent.Parent != null)
+                                && (tempNode.Parent.Parent.Count == 1)
+                                && (tempNode.Parent.Parent.Type == JTokenType.Property)) {
+                                (tempNode.Parent.Parent as JProperty).Value = tempNode.First;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public JProperty SerializeContentItem(ContentItem item, int actualLevel) {
             if ((actualLevel + 1) > _maxLevel) {
-                return new JProperty("ContentItem", "...");
+                return new JProperty("ContentItem", null);
             }
             JProperty jsonItem;
             var jsonProps = new JObject(
@@ -94,8 +201,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                             PopulateJObject(ref partObject, property, val, _skipPartProperties, actualLevel);
                         }
                     }
-                }
-                catch { }
+                } catch { }
             }
 
             //// now add the fields to the json object....
@@ -107,12 +213,10 @@ namespace Laser.Orchard.StartupConfig.Services {
             try {
                 if (part.GetType() == typeof(ContentPart) && !part.PartDefinition.Name.EndsWith("Part")) {
                     return new JProperty(part.PartDefinition.Name + "DPart", partObject);
-                }
-                else {
+                } else {
                     return new JProperty(part.PartDefinition.Name, partObject);
                 }
-            }
-            catch {
+            } catch {
                 return new JProperty(Guid.NewGuid().ToString(), partObject);
             }
         }
@@ -125,8 +229,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                 string[] options = enumField.PartFieldDefinition.Settings["EnumerationFieldSettings.Options"].Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
                 fieldObject.Add("Options", JToken.FromObject(options));
                 fieldObject.Add("SelectedValues", JToken.FromObject(selected));
-            }
-            else if (field.FieldDefinition.Name == "TaxonomyField") {
+            } else if (field.FieldDefinition.Name == "TaxonomyField") {
                 var taxoField = (TaxonomyField)field;
                 fieldObject.Add("Terms", JToken.FromObject(taxoField.Terms.Select(x => x.Id).ToList()));
                 var taxo = taxoField.PartFieldDefinition.Settings["TaxonomyFieldSettings.Taxonomy"];
@@ -150,8 +253,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 var properties = field.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(prop =>
                     !_skipFieldTypes.Contains(prop.Name) //skip 
                     );
@@ -164,8 +266,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                                 PopulateJObject(ref fieldObject, property, val, _skipFieldProperties, actualLevel);
                             }
                         }
-                    }
-                    catch {
+                    } catch {
 
                     }
                 }
@@ -175,44 +276,42 @@ namespace Laser.Orchard.StartupConfig.Services {
         }
 
         private JProperty SerializeObject(object item, int actualLevel, string[] skipProperties = null) {
+            JProperty aux = null;
             if ((actualLevel + 1) > _maxLevel) {
-                return new JProperty(item.GetType().Name, "...");
+                return new JProperty(item.GetType().Name, null);
             }
             try {
                 if (((dynamic)item).Id != null) {
                     if (processedItems.Contains(String.Format("{0}({1})", item.GetType().Name, ((dynamic)item).Id)))
-                        return null;
+                        return new JProperty(item.GetType().Name, null);
                 }
-            }
-            catch {
+            } catch {
             }
             skipProperties = skipProperties ?? new string[0];
             try {
                 if (item is ContentPart) {
                     return SerializePart((ContentPart)item, actualLevel);
-                }
-                else if (item is ContentField) {
+                } else if (item is ContentField) {
                     return SerializeField((ContentField)item, actualLevel);
-                }
-                else if (item is ContentItem) {
+                } else if (item is ContentItem) {
                     return SerializeContentItem((ContentItem)item, actualLevel + 1);
-                }
-                else if (typeof(IEnumerable).IsInstanceOfType(item)) { // Lista o array
+                } else if (typeof(IEnumerable).IsInstanceOfType(item)) { // Lista o array
                     JArray array = new JArray();
                     foreach (var itemArray in (item as IEnumerable)) {
                         if (IsBasicType(itemArray.GetType())) {
                             var valItem = itemArray;
                             FormatValue(ref valItem);
                             array.Add(valItem);
-                        }
-                        else {
-                            array.Add(new JObject(SerializeObject(itemArray, actualLevel + 1, skipProperties)));
+                        } else {
+                            aux = SerializeObject(itemArray, actualLevel + 1, skipProperties);
+                            array.Add(new JObject(aux));
                         }
                     }
-                    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    if (item.GetType().GetProperties().Count(x => x.Name == "Id") > 0) {
+                        PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    }
                     return new JProperty(item.GetType().Name, array);
-                }
-                else if (item.GetType().IsClass) {
+                } else if (item.GetType().IsClass) {
                     var members = item.GetType()
                     .GetFields(BindingFlags.Instance | BindingFlags.Public).Cast<MemberInfo>()
                     .Union(item.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
@@ -226,8 +325,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                             var memberVal = val;
                             FormatValue(ref memberVal);
                             properties.Add(new JProperty(member.Name, memberVal));
-                        }
-                        else if (typeof(IEnumerable).IsInstanceOfType(val)) {
+                        } else if (typeof(IEnumerable).IsInstanceOfType(val)) {
                             JArray arr = new JArray();
                             properties.Add(new JProperty(member.Name, arr));
                             foreach (var element in (val as IEnumerable)) {
@@ -235,18 +333,19 @@ namespace Laser.Orchard.StartupConfig.Services {
                                     var valItem = element;
                                     FormatValue(ref valItem);
                                     arr.Add(valItem);
-                                }
-                                else {
-                                    var aux = SerializeObject(element, actualLevel + 1, skipProperties);
+                                } else {
+                                    aux = SerializeObject(element, actualLevel + 1, skipProperties);
                                     arr.Add(new JObject(aux));
                                 }
                             }
-                        }
-                        else {
-                            properties.Add(SerializeObject(propertyInfo.GetValue(item), actualLevel + 1, skipProperties));
+                        } else {
+                            aux = SerializeObject(propertyInfo.GetValue(item), actualLevel + 1, skipProperties);
+                            properties.Add(aux);
                         }
                     }
-                    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    if (item.GetType().GetProperties().Count(x => x.Name == "Id") > 0) {
+                        PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    }
                     return new JProperty(item.GetType().Name, new JObject(properties));
 
                     //JObject propertiesObject;
@@ -257,16 +356,15 @@ namespace Laser.Orchard.StartupConfig.Services {
                     //}
                     //PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
                     //return new JProperty(item.GetType().Name, propertiesObject);
-                }
-                else {
-                    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                } else {
+                    if (item.GetType().GetProperties().Count(x => x.Name == "Id") > 0) {
+                        PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    }
                     return new JProperty(item.GetType().Name, item);
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 return new JProperty(item.GetType().Name, ex.Message);
             }
-
         }
 
         private void PopulateJObject(ref JObject jObject, PropertyInfo property, object val, string[] skipProperties, int actualLevel) {
@@ -278,9 +376,9 @@ namespace Laser.Orchard.StartupConfig.Services {
                 foreach (var itemArray in (IEnumerable)val) {
 
                     if (!IsBasicType(itemArray.GetType())) {
-                        array.Add(new JObject(SerializeObject(itemArray, actualLevel, skipProperties)));
-                    }
-                    else {
+                        var aux = SerializeObject(itemArray, actualLevel, skipProperties);
+                        array.Add(new JObject(aux));
+                    } else {
                         var valItem = itemArray;
                         FormatValue(ref valItem);
                         array.Add(valItem);
@@ -288,8 +386,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                 }
                 jObject.Add(new JProperty(property.Name, array));
 
-            }
-            else {
+            } else {
                 // jObject.Add(SerializeObject(val, skipProperties));
             }
             if (!IsBasicType(val.GetType())) {
@@ -299,12 +396,10 @@ namespace Laser.Orchard.StartupConfig.Services {
                         propertiesObject.Remove(skip);
                     }
                     jObject.Add(property.Name, propertiesObject);
-                }
-                catch {
+                } catch {
                     jObject.Add(new JProperty(property.Name, val.GetType().FullName));
                 }
-            }
-            else {
+            } else {
                 FormatValue(ref val);
                 jObject.Add(new JProperty(property.Name, val));
             }
