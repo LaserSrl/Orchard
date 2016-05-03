@@ -180,6 +180,7 @@
   <ItemGroup>
     <Compile Include="Activities\QuestionnaireSubmittedEvent.cs" />
     <Compile Include="Activities\GameRankingSubmittedEvent.cs" />
+    <Compile Include="Controllers\AdminRankingController.cs" />
     <Compile Include="Controllers\GameRanking.cs" />
     <Compile Include="Controllers\QuestionnaireController.cs" />
     <Compile Include="Controllers\QuestionnaireResponseController.cs" />
@@ -268,6 +269,7 @@
     <Content Include="Views\EditorTemplates\Parts\QuestionnaireModuleSettings.cshtml" />
     <Content Include="Views\DefinitionTemplates\QuestionnairesPartSettingVM.cshtml" />
     <Content Include="Views\DefinitionTemplates\GamePartSettingVM.cshtml" />
+    <Content Include="Views\AdminRanking\GetList.cshtml" />
     <None Include="Views\EditorTemplates\Parts\GamePart_Edit.cshtml" />
     <Content Include="Views\QuestionnaireStats\Index.cshtml" />
     <Content Include="Views\QuestionnaireStats\Detail.cshtml" />
