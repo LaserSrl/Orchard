@@ -22,7 +22,7 @@ namespace Laser.Orchard.NewsLetters.Services {
         void DeleteNewsletterEdition(ContentItem newsletterDefinition);
         IList<AnnouncementLookupViewModel> GetNextAnnouncements(int id, int[] selectedIds);
         IList<AnnouncementPart> GetAnnouncements(int[] selectedIds);
-        void SendNewsletterEdition(ref NewsletterEditionPart newsletterEdition, bool isTest=false, string testEmail="");
+        void SendNewsletterEdition(ref NewsletterEditionPart newsletterEdition, string testEmail);
         #endregion
 
         #region [ Subscribers ]

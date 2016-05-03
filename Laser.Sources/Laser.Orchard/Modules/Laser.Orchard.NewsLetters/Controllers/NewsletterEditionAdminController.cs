@@ -16,6 +16,7 @@ using Orchard.UI.Notify;
 using Orchard.DisplayManagement;
 using Orchard.UI.Navigation;
 using Orchard.Mvc;
+using Orchard.Tasks.Scheduling;
 
 namespace Laser.Orchard.NewsLetters.Controllers {
     [Admin]
@@ -23,15 +24,18 @@ namespace Laser.Orchard.NewsLetters.Controllers {
         private readonly INewsletterServices _newslServices;
         private readonly ITransactionManager _transactionManager;
         private readonly IContentManager _contentManager;
+        private readonly IScheduledTaskManager _taskManager;
 
         public NewsletterEditionAdminController(IOrchardServices services,
                         ITransactionManager transactionManager,
                         IContentManager contentManager,
                         IShapeFactory shapeFactory,
-                        INewsletterServices newsletterServices) {
+                        INewsletterServices newsletterServices, 
+                        IScheduledTaskManager taskManager) {
             _newslServices = newsletterServices;
             _transactionManager = transactionManager;
             _contentManager = contentManager;
+            _taskManager = taskManager;
             Services = services;
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
@@ -120,9 +124,12 @@ namespace Laser.Orchard.NewsLetters.Controllers {
             var returnResult = EditionSave(ref newsletterEdition);
             if (returnResult == null) {
                 if (Request.Form["submit.SendNewsletter"] == "submit.SendNewsletterTest") {
-                    _newslServices.SendNewsletterEdition(ref newsletterEdition, true, Request.Form["Newsletters.SendNewsletterEmailTest"]);
+                    //_newslServices.SendNewsletterEdition(ref newsletterEdition, true, Request.Form["Newsletters.SendNewsletterEmailTest"]);
+                    _newslServices.SendNewsletterEdition(ref newsletterEdition, Request.Form["Newsletters.SendNewsletterEmailTest"]);
                 } else {
-                    _newslServices.SendNewsletterEdition(ref newsletterEdition);
+                    //_newslServices.SendNewsletterEdition(ref newsletterEdition);
+                    ContentItem newsletter = newsletterEdition.ContentItem;
+                    _taskManager.CreateTask("Laser.Orchard.NewsLetters.SendEdition.Task", DateTime.UtcNow.AddMinutes(1), newsletter);
                 }
 
                 return Redirect(Url.NewsLetterEditionEdit(newsletterId, newsletterEdition));
@@ -195,7 +202,7 @@ namespace Laser.Orchard.NewsLetters.Controllers {
         [ValidateInput(false)]
         [FormValueRequired("submit.SendNewsletter")]
         public ActionResult EditAndSend(int Id, int newsletterId) {
-            var newsletter = _newslServices.GetNewsletterEdition(Id, VersionOptions.DraftRequired);
+            ContentItem newsletter = _newslServices.GetNewsletterEdition(Id, VersionOptions.DraftRequired);
 
             //if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, newsletter, T("Couldn't edit newsletter")))
             //    return new HttpUnauthorizedResult();
@@ -213,11 +220,14 @@ namespace Laser.Orchard.NewsLetters.Controllers {
             Services.Notifier.Information(T("Newsletter edition updated"));
             var newsletterEditionpart = newsletter.As<NewsletterEditionPart>();
             if (Request.Form["submit.SendNewsletter"] == "submit.SendNewsletterTest") {
-                _newslServices.SendNewsletterEdition(ref newsletterEditionpart, true, Request.Form["Newsletters.SendNewsletterEmailTest"]);
+                //_newslServices.SendNewsletterEdition(ref newsletterEditionpart, true, Request.Form["Newsletters.SendNewsletterEmailTest"]);
+                _newslServices.SendNewsletterEdition(ref newsletterEditionpart, Request.Form["Newsletters.SendNewsletterEmailTest"]);
+                _contentManager.Publish(newsletter);
             } else {
-                _newslServices.SendNewsletterEdition(ref newsletterEditionpart);
+                //_newslServices.SendNewsletterEdition(ref newsletterEditionpart);
+                _taskManager.CreateTask("Laser.Orchard.NewsLetters.SendEdition.Task", DateTime.UtcNow.AddMinutes(1), newsletter);
             }
-            _contentManager.Publish(newsletter);
+            
             return Redirect(Url.NewsLetterEditionEdit(newsletterId, newsletter.As<NewsletterEditionPart>()));
         }
 

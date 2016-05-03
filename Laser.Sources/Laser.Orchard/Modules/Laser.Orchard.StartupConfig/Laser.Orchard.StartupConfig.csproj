@@ -249,6 +249,7 @@
     <Compile Include="RazorCodeExecution\Activities\RazorExecuteActivity.cs" />
     <Compile Include="RazorCodeExecution\Forms\RazorExecuteForm.cs" />
     <Compile Include="Services\ApiKeyService.cs" />
+    <Compile Include="Services\ContentSerializationServices.cs" />
     <Compile Include="Services\IApiKeyService.cs" />
     <Compile Include="RazorCodeExecution\Services\IRazorExecuteService.cs" />
     <Compile Include="Services\IMaintenanceService.cs" />
