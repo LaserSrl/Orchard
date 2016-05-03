@@ -3,7 +3,9 @@ using Laser.Orchard.Policy.Models;
 using Laser.Orchard.Policy.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.UsersExtensions.Services;
+using Newtonsoft.Json.Linq;
 using Orchard;
+using Orchard.ContentManagement;
 using Orchard.Mvc;
 using Orchard.Mvc.Filters;
 using Orchard.UI.Admin;
@@ -17,17 +19,20 @@ using System.Xml.Linq;
 namespace Laser.Orchard.UsersExtensions.Filters {
     public class PolicyFilter : FilterProvider, IActionFilter {
 
+        private readonly IContentSerializationServices _contentSerializationServices;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPolicyServices _policyServices;
         private readonly IUsersExtensionsServices _userExtensionServices;
         private readonly IUtilsServices _utilsServices;
         private readonly IWorkContextAccessor _workContext;
 
-        public PolicyFilter(IHttpContextAccessor httpContextAccessor,
+        public PolicyFilter(IContentSerializationServices contentSerializationServices,
+                            IHttpContextAccessor httpContextAccessor,
                             IPolicyServices policyServices,
                             IUsersExtensionsServices userExtensionServices,
                             IUtilsServices utilsServices,
                             IWorkContextAccessor workContext) {
+            _contentSerializationServices = contentSerializationServices;
             _httpContextAccessor = httpContextAccessor;
             _policyServices = policyServices;
             _userExtensionServices = userExtensionServices;
@@ -65,7 +70,7 @@ namespace Laser.Orchard.UsersExtensions.Filters {
 
                             int i = 0;
                             sb.Append("{");
-                            sb.AppendFormat("\"n\": \"{0}\"", "RegistrationPolicies");
+                            sb.AppendFormat("\"n\": \"{0}\"", "PendingPolicies");
                             sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
                             sb.Append(", \"m\": [");
 
@@ -87,6 +92,20 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                             sb.Append("}");
 
                             filterContext.Result = new ContentResult { Content = sb.ToString(), ContentType = "application/json" };
+                        }
+                        else if (filterContext.Controller.GetType().FullName == "Laser.Orchard.WebServices.Controllers.WebApiController") {
+                            JObject json = new JObject();
+                            var resultArray = new JArray();
+
+                            var policies = neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id));
+
+                            foreach (var pendingPolicy in policies) {
+                                resultArray.Add(new JObject(_contentSerializationServices.SerializeContentItem(pendingPolicy.ContentItem, 0)));
+                            }
+
+                            json.Add("PendingPolicies", resultArray);
+
+                            filterContext.Result = new ContentResult { Content = json.ToString(), ContentType = "application/json" };
                         }
                         else {
                             var encodedAssociatedPolicies = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Join(",", missingPolicies)));
