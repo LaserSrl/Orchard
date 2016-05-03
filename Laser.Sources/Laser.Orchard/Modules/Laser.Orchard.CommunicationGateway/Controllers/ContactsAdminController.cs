@@ -174,7 +174,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             dynamic Options = new System.Dynamic.ExpandoObject();
             var expression = search.Expression;
             IContentQuery<ContentItem> contentQuery = _contentManager.Query(VersionOptions.Latest).ForType(contentType);//.OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc); //Performance issues on heavy ContentItems numbers #6247
-            if (!string.IsNullOrEmpty(search.Expression)) {
+            if (!(string.IsNullOrEmpty(search.Expression) && !search.CommercialUseAuthorization.HasValue && !search.ThirdPartyAuthorization.HasValue)) {
                 switch (search.Field) {
                     case SearchFieldEnum.Name:
                         contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(expression));
@@ -187,12 +187,18 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                                     join civr.ContentItemRecord as cir
                                     join cir.EmailContactPartRecord as EmailPart
                                     join EmailPart.EmailRecord as EmailRecord
-                                    where EmailRecord.Email like '%' + :mail + '%'
-                                    order by cir.Id";
-                        var elencoIdMail = _session.For(null)
-                            .CreateQuery(myQueryMail)
-                            .SetParameter("mail", expression)
-                            .List();
+                                    where 1 = 1 ";
+                        if (!string.IsNullOrEmpty(search.Expression)) myQueryMail += "and EmailRecord.Email like '%' + :mail + '%' ";
+                        if (search.CommercialUseAuthorization.HasValue) myQueryMail += "and EmailRecord.AccettatoUsoCommerciale = :commuse ";
+                        if (search.ThirdPartyAuthorization.HasValue) myQueryMail += "and EmailRecord.AutorizzatoTerzeParti = :tpuse ";
+                        myQueryMail += "order by cir.Id";
+
+                        var mailQueryToExecute = _session.For(null).CreateQuery(myQueryMail);
+                        if (!string.IsNullOrEmpty(search.Expression)) mailQueryToExecute.SetParameter("mail", expression);
+                        if (search.CommercialUseAuthorization.HasValue) mailQueryToExecute.SetParameter("commuse", search.CommercialUseAuthorization.Value, NHibernateUtil.Boolean);
+                        if (search.ThirdPartyAuthorization.HasValue) mailQueryToExecute.SetParameter("tpuse", search.ThirdPartyAuthorization.Value, NHibernateUtil.Boolean);
+
+                        var elencoIdMail = mailQueryToExecute.List();
 
                         // alternativa
                         //                        string myQueryMail = @"select EmailContactPartRecord_Id 
@@ -219,12 +225,18 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                                     join civr.ContentItemRecord as cir
                                     join cir.SmsContactPartRecord as SmsPart
                                     join SmsPart.SmsRecord as SmsRecord
-                                    where SmsRecord.Sms like '%' + :sms + '%'
-                                    order by cir.Id";
-                        var elencoIdSms = _session.For(null)
-                            .CreateQuery(myQuerySms)
-                            .SetParameter("sms", expression)
-                            .List();
+                                    where 1 = 1 ";
+                        if (!string.IsNullOrEmpty(search.Expression)) myQuerySms += "and SmsRecord.Sms like '%' + :sms + '%' ";
+                        if (search.CommercialUseAuthorization.HasValue) myQuerySms += "and SmsRecord.AccettatoUsoCommerciale = :commuse ";
+                        if (search.ThirdPartyAuthorization.HasValue) myQuerySms += "and SmsRecord.AutorizzatoTerzeParti = :tpuse ";
+                        myQuerySms += "order by cir.Id";
+
+                        var smsQueryToExecute = _session.For(null).CreateQuery(myQuerySms);
+                        if (!string.IsNullOrEmpty(search.Expression)) smsQueryToExecute.SetParameter("sms", expression);
+                        if (search.CommercialUseAuthorization.HasValue) smsQueryToExecute.SetParameter("commuse", search.CommercialUseAuthorization.Value, NHibernateUtil.Boolean);
+                        if (search.ThirdPartyAuthorization.HasValue) smsQueryToExecute.SetParameter("tpuse", search.ThirdPartyAuthorization.Value, NHibernateUtil.Boolean);
+
+                        var elencoIdSms = smsQueryToExecute.List();
 
                         // alternativa
                         //                        string myQuerySms = @"select SmsContactPartRecord_Id 
@@ -278,6 +290,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 return new HttpUnauthorizedResult();
             
             string parametri = "expression=" + Url.Encode(search.Expression) + "&field=" + Url.Encode(search.Field.ToString());
+            parametri += search.CommercialUseAuthorization.HasValue ? String.Format("&commercialuse={0}", search.CommercialUseAuthorization.Value.ToString()) : "&commercialuse=";
+            parametri += search.ThirdPartyAuthorization.HasValue ? String.Format("&thirdparty={0}", search.ThirdPartyAuthorization.Value.ToString()) : "&thirdparty=";
 
             var ContentExport = _orchardServices.ContentManager.Create("ExportTaskParameters");
             ((dynamic)ContentExport).ExportTaskParametersPart.Parameters.Value = parametri;
