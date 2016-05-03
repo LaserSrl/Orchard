@@ -36,6 +36,7 @@ using Newtonsoft.Json.Converters;
 using Orchard.Fields.Fields;
 using Orchard.Taxonomies.Fields;
 using System.Dynamic;
+using Orchard.Taxonomies.Models;
 namespace Laser.Orchard.WebServices.Controllers {
     public class WebApiController : Controller {
         private readonly IOrchardServices _orchardServices;
@@ -243,7 +244,7 @@ namespace Laser.Orchard.WebServices.Controllers {
 
         protected JProperty SerializeContentItem(ContentItem item, int actualLevel) {
             if ((actualLevel + 1) > _maxLevel) {
-                return new JProperty("ContentItem", "...");
+                return new JProperty("ContentItem", null);
             }
             JProperty jsonItem;
             var jsonProps = new JObject(
@@ -358,13 +359,14 @@ namespace Laser.Orchard.WebServices.Controllers {
         }
 
         private JProperty SerializeObject(object item, int actualLevel, string[] skipProperties = null) {
+            JProperty aux = null;
             if ((actualLevel + 1) > _maxLevel) {
-                return new JProperty(item.GetType().Name, "...");
+                return new JProperty(item.GetType().Name, null);
             }
             try {
                 if (((dynamic)item).Id != null) {
                     if (processedItems.Contains(String.Format("{0}({1})", item.GetType().Name, ((dynamic)item).Id)))
-                        return null;
+                        return new JProperty(item.GetType().Name, null);
                 }
             } catch {
             }
@@ -384,10 +386,13 @@ namespace Laser.Orchard.WebServices.Controllers {
                             FormatValue(ref valItem);
                             array.Add(valItem);
                         } else {
-                            array.Add(new JObject(SerializeObject(itemArray, actualLevel + 1, skipProperties)));
+                            aux = SerializeObject(itemArray, actualLevel + 1, skipProperties);
+                            array.Add(new JObject(aux));
                         }
                     }
-                    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    if (item.GetType().GetProperties().Count(x => x.Name == "Id") > 0) {
+                        PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    }
                     return new JProperty(item.GetType().Name, array);
                 } else if (item.GetType().IsClass) {
                     var members = item.GetType()
@@ -412,15 +417,18 @@ namespace Laser.Orchard.WebServices.Controllers {
                                     FormatValue(ref valItem);
                                     arr.Add(valItem);
                                 } else {
-                                    var aux = SerializeObject(element, actualLevel + 1, skipProperties);
+                                    aux = SerializeObject(element, actualLevel + 1, skipProperties);
                                     arr.Add(new JObject(aux));
                                 }
                             }
                         } else {
-                            properties.Add(SerializeObject(propertyInfo.GetValue(item), actualLevel + 1, skipProperties));
+                            aux = SerializeObject(propertyInfo.GetValue(item), actualLevel + 1, skipProperties);
+                            properties.Add(aux);
                         }
                     }
-                    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    if (item.GetType().GetProperties().Count(x => x.Name == "Id") > 0) {
+                        PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    }
                     return new JProperty(item.GetType().Name, new JObject(properties));
 
                     //JObject propertiesObject;
@@ -432,13 +440,14 @@ namespace Laser.Orchard.WebServices.Controllers {
                     //PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
                     //return new JProperty(item.GetType().Name, propertiesObject);
                 } else {
-                    PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    if (item.GetType().GetProperties().Count(x => x.Name == "Id") > 0) {
+                        PopulateProcessedItems(item.GetType().Name, ((dynamic)item).Id);
+                    }
                     return new JProperty(item.GetType().Name, item);
                 }
             } catch (Exception ex) {
                 return new JProperty(item.GetType().Name, ex.Message);
             }
-
         }
 
         private void PopulateJObject(ref JObject jObject, PropertyInfo property, object val, string[] skipProperties, int actualLevel) {
@@ -450,7 +459,8 @@ namespace Laser.Orchard.WebServices.Controllers {
                 foreach (var itemArray in (IEnumerable)val) {
 
                     if (!IsBasicType(itemArray.GetType())) {
-                        array.Add(new JObject(SerializeObject(itemArray, actualLevel, skipProperties)));
+                        var aux = SerializeObject(itemArray, actualLevel, skipProperties);
+                        array.Add(new JObject(aux));
                     } else {
                         var valItem = itemArray;
                         FormatValue(ref valItem);
