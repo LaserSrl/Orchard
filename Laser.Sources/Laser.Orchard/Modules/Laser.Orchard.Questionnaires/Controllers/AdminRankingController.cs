@@ -33,7 +33,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
 
                 ContentItem Ci = gp.ContentItem;
                 string titolo = Ci.As<TitlePart>().Title;
-               var listordered= listranking.Where(z => z.As<RankingPart>().ContentIdentifier == Ci.Id).OrderByDescending(y => y.Point);
+                var listordered= listranking.Where(z => z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device==TipoDispositivo.Apple ).OrderByDescending(y => y.Point);
                 List<RankingTemplateVM> rkt = new List<RankingTemplateVM>();
                 foreach (RankingPart cirkt in listordered) {
                     RankingTemplateVM tmp = new RankingTemplateVM();
@@ -47,7 +47,39 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     tmp.RegistrationDate = cirkt.RegistrationDate;
                     rkt.Add(tmp);
                 }
-                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, ListRank = rkt });
+                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo + " Apple", ListRank = rkt });
+               
+                listordered = listranking.Where(z => z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.Android).OrderByDescending(y => y.Point);
+                rkt = new List<RankingTemplateVM>();
+                foreach (RankingPart cirkt in listordered) {
+                    RankingTemplateVM tmp = new RankingTemplateVM();
+                    tmp.Point = cirkt.Point;
+                    tmp.ContentIdentifier = cirkt.ContentIdentifier;
+                    tmp.Device = cirkt.Device;
+                    tmp.Identifier = cirkt.Identifier;
+                    tmp.name = getusername(cirkt.User_Id);
+                    tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
+                    tmp.AccessSecured = cirkt.AccessSecured;
+                    tmp.RegistrationDate = cirkt.RegistrationDate;
+                    rkt.Add(tmp);
+                }
+                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo + " Android", ListRank = rkt });
+
+                listordered = listranking.Where(z => z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.WindowsMobile).OrderByDescending(y => y.Point);
+                rkt = new List<RankingTemplateVM>();
+                foreach (RankingPart cirkt in listordered) {
+                    RankingTemplateVM tmp = new RankingTemplateVM();
+                    tmp.Point = cirkt.Point;
+                    tmp.ContentIdentifier = cirkt.ContentIdentifier;
+                    tmp.Device = cirkt.Device;
+                    tmp.Identifier = cirkt.Identifier;
+                    tmp.name = getusername(cirkt.User_Id);
+                    tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
+                    tmp.AccessSecured = cirkt.AccessSecured;
+                    tmp.RegistrationDate = cirkt.RegistrationDate;
+                    rkt.Add(tmp);
+                }
+                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo+" Windows Mobile", ListRank = rkt });
             }
 
             return View((object)listaAllRank);
