@@ -982,7 +982,7 @@ p img.pull-left {
 }
 ul,
 ol {
-  padding-left: 16px;
+  /*padding-left: 16px;*/
 }
 ul.list-divided li,
 ol.list-divided li {
@@ -1172,12 +1172,12 @@ a.text-success:hover {
   padding-top: 14px;
   background: #ffffff none repeat scroll 0 0;
   border-radius: 3px;
-  border-top: 3px solid #d2d6de;
+  border-top: 3px solid #de625e;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   position: relative;
   width: 100%;
-  border-top-color: #3c8dbc;
+  border-top-color: #ee726f;
 }
 @media (min-width: 1200px) {
   .menubar-pin #base {
@@ -2144,7 +2144,7 @@ body:not(.menubar-first) .menubar-fixed-panel {
 .menubar-inverse .gui-controls li.active .gui-icon:hover {
   background-color: #ffffff;
   border-color: #ffffff;
-  color: #00ccff;
+  color: #1c2a37;
 }
 .menubar-inverse .gui-icon-active {
   background-color: #00ccff;

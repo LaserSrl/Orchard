@@ -89,7 +89,9 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\jquery.autosize.min.js" />
+    <Content Include="Scripts\jquery.nanoscroller.min.js" />
     <Content Include="Scripts\main.js" />
+    <Content Include="Scripts\overthrow.min.js" />
     <Content Include="Styles\bootstrap.css" />
     <Content Include="Styles\font-awesome.min.css" />
     <Content Include="Styles\fonts\fontawesome-webfont.svg" />
