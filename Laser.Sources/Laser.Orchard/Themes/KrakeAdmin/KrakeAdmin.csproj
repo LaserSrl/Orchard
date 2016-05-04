@@ -98,6 +98,7 @@
     <Content Include="Styles\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Styles\fonts\Material-Design-Iconic-Font.svg" />
     <Content Include="Styles\Images\adminNavBackground.gif" />
+    <Content Include="Styles\Images\arrow-number.png" />
     <Content Include="Styles\Images\avatar1.png" />
     <Content Include="Styles\Images\bg-app.png" />
     <Content Include="Styles\Images\bg-mail.png" />
@@ -105,12 +106,22 @@
     <Content Include="Styles\Images\bg-sms.png" />
     <Content Include="Styles\Images\bg-social.png" />
     <Content Include="Styles\Images\bg-web.png" />
+    <Content Include="Styles\Images\cms-add-cut.png" />
+    <Content Include="Styles\Images\cms-di-piu-di-meno.png" />
+    <Content Include="Styles\Images\cms-import-export.png" />
+    <Content Include="Styles\Images\cms-multi-users.png" />
+    <Content Include="Styles\Images\communication-mail.png" />
+    <Content Include="Styles\Images\communication-sms.png" />
+    <Content Include="Styles\Images\communication-social.png" />
     <Content Include="Styles\Images\freccia-app.png" />
     <Content Include="Styles\Images\freccia-mail.png" />
     <Content Include="Styles\Images\freccia-notifiche.png" />
     <Content Include="Styles\Images\freccia-sms.png" />
     <Content Include="Styles\Images\freccia-social.png" />
     <Content Include="Styles\Images\freccia-web.png" />
+    <Content Include="Styles\Images\icon-cms.png" />
+    <Content Include="Styles\Images\icon-communication.png" />
+    <Content Include="Styles\Images\icon-web.png" />
     <Content Include="Styles\Images\icona-app-w.png" />
     <Content Include="Styles\Images\icona-app.png" />
     <Content Include="Styles\Images\icona-mail-w.png" />
@@ -135,12 +146,18 @@
     <Content Include="Styles\Images\krake-verde.png" />
     <Content Include="Styles\Images\krake-orizontal-old.png" />
     <Content Include="Styles\Images\krake-orizontal.png" />
+    <Content Include="Styles\Images\list-arrow.png" />
     <Content Include="Styles\Images\logo-laser.png" />
     <Content Include="Styles\Images\logo.png" />
     <Content Include="Styles\Images\logo_krake.png" />
+    <Content Include="Styles\Images\logo_krake_old.png" />
     <Content Include="Styles\Images\mail.png" />
     <Content Include="Styles\Images\piattaforma.png" />
+    <Content Include="Styles\Images\search-icon-dave.png" />
+    <Content Include="Styles\Images\search-icon.png" />
+    <Content Include="Styles\Images\select-arrow.png" />
     <Content Include="Styles\Images\sfondo-krake.png" />
+    <Content Include="Styles\Images\sfondo.png" />
     <Content Include="Styles\krake.css" />
     <Content Include="Styles\iconic-font.min.css" />
     <Content Include="Styles\krakeadmin.css" />
@@ -150,7 +167,9 @@
     <Content Include="Content\Web.config" />
     <Content Include="Theme.txt" />
     <Content Include="Theme.png" />
-    <Content Include="Placement.info" />
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Document.cshtml" />
