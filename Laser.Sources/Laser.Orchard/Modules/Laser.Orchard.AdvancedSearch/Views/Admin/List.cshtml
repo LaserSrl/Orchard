@@ -42,12 +42,12 @@
                         }
                     }
                     else {
-                      
+
                         if (!$(this).parentsUntil($('.accordion-section-content')).parent().hasClass('open')) {
                             $(this).parentsUntil($('.accordion-section-content')).parent().addClass('open');
                             $(this).parentsUntil($('.accordion-section-content')).parent().css({ display: "block" });
                         }
-                         if (!$($(this).parentsUntil($('.accordion-section')).parent().find('.accordion-section-title')).hasClass('active')) {
+                        if (!$($(this).parentsUntil($('.accordion-section')).parent().find('.accordion-section-title')).hasClass('active')) {
                             $($(this).parentsUntil($('.accordion-section')).parent().find('.accordion-section-title')).addClass('active');
                         }
                     }
@@ -94,6 +94,121 @@
         //]]>
     </script>
 }
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">@T("Manage content")</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal">
+                <div class="box-body">
+                    <div class="form-group">
+                        <label class="col-sm-4 align-right gray-label">@T("Builk actions:")</label>
+                        <div class="col-sm-8">
+                            <select id="publishActions" name="Options.BulkAction">
+                                @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
+                                @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
+                                @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
+                                @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
+                            </select>
+                            <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 align-right gray-label">@T("Content creation:")</label>
+
+                        <div class="col-sm-8">
+                             @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        <!-- /.box-body -->
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">@T("Content filtering")</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal">
+                <div class="box-body">
+                    <div class="form-group">
+                        <label class="col-sm-4 align-right gray-label">@T("Content type:")</label>
+                        <div class="col-sm-8">
+                           <select id="filterResults" name="Options.SelectedFilter">
+                                @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
+                                @foreach (var filterOption in Model.Options.FilterOptions) {
+                                    @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 align-right gray-label">@T("Content order:")</label>
+
+                        <div class="col-sm-8">
+                            <select id="orderResults" name="Options.OrderBy">
+                                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
+                                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
+                                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
+                            </select>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-sm-4 align-right gray-label">@T("Content status:")</label>
+
+                        <div class="col-sm-8">
+                            <select id="contentResults" name="Options.ContentsStatus">
+                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Latest, T("latest").ToString())
+                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Published, T("published").ToString())
+                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Draft, T("unpublished").ToString())
+                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.AllVersions, T("all versions").ToString())
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="box-footer align-right">
+                     <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
+                </div>
+            </form>
+        <!-- /.box-body -->
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<!--br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+
+
+
+
+
 <div class="manage">
     @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
 </div>
@@ -177,20 +292,18 @@
                                                Html.Raw("</optgroup>");
                                            }
                                            optgroupinserted = 1;
-                                           @Html.Raw("<optgroup label=\"" + (string)languageOption.Value + "\">");
-                                       }
-                                       else {
+                                    @Html.Raw("<optgroup label=\"" + (string)languageOption.Value + "\">");
+                                       } else {
                                     @Html.SelectOption((string)Model.AdvancedOptions.SelectedTermId.ToString(), (string)languageOption.Key.ToString(), (string)languageOption.Value)
                                        }
                                    }
                                    if (optgroupinserted > 0) {
-                                       @Html.Raw("</optgroup>");
+                                    @Html.Raw("</optgroup>");
                                    }
                                 }
                             </select>
                             }
-                        }
-                        catch { }
+                        } catch { }
                         @try {
                             if (Model.AdvancedOptions.StatusOptions != null && Model.AdvancedOptions.StatusOptions.Count > 0) {
                             <label for="statusResults" class="bulk-filter">@T("Extended status")</label>
@@ -201,8 +314,7 @@
                                 }
                             </select>
                             }
-                        }
-                        catch { }
+                        } catch { }
 
                         <label for="hasMediaResults" class="bulk-filter">@T("Only with media")</label>
                         @Html.CheckBox("AdvancedOptions.HasMedia", (bool)Model.AdvancedOptions.HasMedia, new { id = "hasMediaResults" })
@@ -215,7 +327,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div-->
     <fieldset class="contentItems bulk-items">
         @Display(Model.ContentItems)
     </fieldset>

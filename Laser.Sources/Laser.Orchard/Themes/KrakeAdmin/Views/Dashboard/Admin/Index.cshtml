@@ -7,9 +7,145 @@
     Layout.Title = "Back Office - " + WorkContext.CurrentSite.SiteName;
     var folderStylePath = Url.Content("~/Themes/KrakeAdmin/Styles");
 }
-<section class="dashboard group">
-    <h2 class="claim">@T("MyKrake&#8482; - ONE PLATFORM, MANY COMMUNICATION CHANNELS")</>
-</section>
+<div class="container">
+	<div class="space-40"></div>
+	<div class="space-40"></div>
+	<div class="space-40"></div>
+	<div class="row">
+		<div class="col-xs-12 col-sm-4">
+			<div class="dashboard-box dashboard-box-cms" ontouchstart="this.classList.toggle('hover');">
+				<div class="dashboard-card">
+					<div class="dashboard-card-face dashboard-box-front text-center">
+						<div class="dasboard-box-icon"><img src="@folderStylePath/Images/icon-cms.png" class="img-responsive"></div>
+						<h4 class="dashboard-box-title">CMS</h4>
+						<div class="dashboard-box-content">
+							Attraverso KRAKE™ è possibile gestire campagne di marketing e comunicazione via SMS: una soluzione di facile utilizzo e di veloce attivazione e configurazione.
+						</div>
+					</div>
+					<div class="dashboard-card-face dashboard-box-back">
+						<div class="row no-margin">
+							<div class="col-xs-12 col-sm-3 col-md-2 col-lg-2 no-padding">
+								<img src="@folderStylePath/Images/icon-cms.png" class="img-responsive dashboard-rear-panel-icon">
+							</div>
+							<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10">
+								<div class="space-40"></div>
+								<div class="row no-margin dashboard-list-item">
+									<div class="col-xs-6 no-padding">
+										<h4 class="dashboard-list-subtitle">Import ed Export</h4>
+									</div>
+									<div class="col-xs-6 text-center">
+										<img src="@folderStylePath/Images/cms-import-export.png" class="img-responsive">
+									</div>
+								</div>
+								<div class="row no-margin dashboard-list-item">
+									<div class="col-xs-6 no-padding">
+										<h4 class="dashboard-list-subtitle">Di più e di meno</h4>
+									</div>
+									<div class="col-xs-6 text-center">
+										<img src="@folderStylePath/Images/cms-di-piu-di-meno.png" class="img-responsive">
+									</div>
+								</div>
+								<div class="row no-margin dashboard-list-item">
+									<div class="col-xs-6 no-padding">
+										<h4 class="dashboard-list-subtitle">Add & Cut</h4>
+									</div>
+									<div class="col-xs-6 text-center">
+										<img src="@folderStylePath/Images/cms-add-cut.png" class="img-responsive">
+									</div>
+								</div>
+								<div class="row no-margin dashboard-list-item">
+									<div class="col-xs-6 no-padding">
+										<h4 class="dashboard-list-subtitle">Multi Users</h4>
+									</div>
+									<div class="col-xs-6 text-center">
+										<img src="@folderStylePath/Images/cms-multi-users.png" class="img-responsive">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-sm-4">
+			<div class="dashboard-box dashboard-box-web" ontouchstart="this.classList.toggle('hover');">
+				<div class="dashboard-card">
+					<div class="dashboard-card-face dashboard-box-front text-center">
+						<div class="dasboard-box-icon"><img src="@folderStylePath/Images/icon-web.png" class="img-responsive"></div>
+						<h4 class="dashboard-box-title">CMS</h4>
+						<div class="dashboard-box-content">
+							Attraverso KRAKE™ è possibile gestire campagne di marketing e comunicazione via SMS: una soluzione di facile utilizzo e di veloce attivazione e configurazione.
+						</div>
+					</div>
+					<div class="dashboard-card-face dashboard-box-back">
+						<div class="row no-margin">
+							<div class="col-xs-12 col-sm-3 col-md-2 col-lg-2 no-padding">
+								<img src="@folderStylePath/Images/icon-web.png" class="img-responsive dashboard-rear-panel-icon">
+							</div>
+							<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10">
+								<div class="space-20"></div>
+								<h5 class="dashboard-subtitle">Progettazione e sviluppo di Mobile Applications</h5>
+								<h5 class="dashboard-subtitle">Responsive Web Design (RWD) </h5>
+								<p>per soluzioni accessibili (e usabili) da qualsiasi utente e su qualsiasi device</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-sm-4">
+			<div class="dashboard-box dashboard-box-communication" ontouchstart="this.classList.toggle('hover');">
+				<div class="dashboard-card">
+					<div class="dashboard-card-face dashboard-box-front text-center">
+						<div class="dasboard-box-icon"><img src="@folderStylePath/Images/icon-communication.png" class="img-responsive"></div>
+						<h4 class="dashboard-box-title">CMS</h4>
+						<div class="dashboard-box-content">
+							Attraverso KRAKE™ è possibile gestire campagne di marketing e comunicazione via SMS: una soluzione di facile utilizzo e di veloce attivazione e configurazione.
+						</div>
+					</div>
+					<div class="dashboard-card-face dashboard-box-back">
+						<div class="row no-margin">
+							<div class="col-xs-12 col-sm-3 col-md-2 col-lg-2 no-padding">
+								<img src="@folderStylePath/Images/icon-communication.png" class="img-responsive dashboard-rear-panel-icon">
+							</div>
+							<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10">
+								<div class="space-20"></div>
+								<p><strong>Uno strumento semplice e immediato per gestire campagne di marketing mirate ed efficaci.</strong></p>
+								<div class="row no-margin dashboard-list-item">
+									<div class="col-xs-6 text-center">
+										<img src="@folderStylePath/Images/communication-sms.png" class="img-responsive">
+									</div>
+									<div class="col-xs-6 no-padding">
+										<h4 class="dashboard-list-subtitle">SMS</h4>
+									</div>
+								</div>
+								<div class="row no-margin dashboard-list-item">
+									<div class="col-xs-6 text-center">
+										<img src="@folderStylePath/Images/communication-social.png" class="img-responsive">
+									</div>
+									<div class="col-xs-6 no-padding">
+										<h4 class="dashboard-list-subtitle">Social</h4>
+									</div>
+								</div>
+								<div class="row no-margin dashboard-list-item">
+									<div class="col-xs-6 text-center">
+										<img src="@folderStylePath/Images/communication-mail.png" class="img-responsive">
+									</div>
+									<div class="col-xs-6 no-padding">
+										<h4 class="dashboard-list-subtitle">Mail</h4>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
 @*<div class="container roboto">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">

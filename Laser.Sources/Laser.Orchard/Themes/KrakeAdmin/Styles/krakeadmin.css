@@ -4003,8 +4003,8 @@ fieldset[disabled] .btn {
   box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.38);
 }
 .btn-raised.disabled,
-.btn-raised[disabled],
-.pager .disabled .btn-raised {
+.btn-raised[disabled], 
+.disabled .btn-raised {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
