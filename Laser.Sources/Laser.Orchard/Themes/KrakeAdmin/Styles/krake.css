@@ -422,7 +422,7 @@ form.link button, button.link {
 }
 
 a, a:link, a:visited {
-  color: #1c2a37;
+  color: #1e5d7d;
   text-decoration: none;
 }
 
@@ -1206,8 +1206,9 @@ fieldset {
     white-space: nowrap;
 }
 
-.page-results{
-    display: none;
+.page-results {
+  padding-top: 45px;
+  position: absolute;
 }
 
 .box {
