@@ -126,7 +126,12 @@ button, .button, a.button {
 }
 
 fieldset.save-button {
-    float: right;
+    /*float: right;*/
+}
+
+.save-button button,
+.primaryAction {
+    min-width: 110px;
 }
 
 span .button {
@@ -234,16 +239,16 @@ table.items {
 }
 
 .widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer {
-    background-color: #cbedf8 !important;
+    background-color: #f5f5f5 !important;
     /*min-height: 41px;*/
 }
 
 .widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer, #widgets-layer-visibility li.on {
-    border-color: #2ab9e8 !important;
+    border-color: #1c2a37 !important;
 }
 
 .widgets-listed li:hover, .widgets-listed li.on {
-    border-color: #2ab9e8 !important;
+    border-color: #1c2a37 !important;
 }
 
 button.widgets-move {
@@ -253,17 +258,16 @@ button.widgets-move {
 }
 
 .widgets-actions .button.grey {
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(59, 130, 154, 1.0)), to(rgba(70, 142, 166, 1.0)));
-    background: -moz-linear-gradient(top, rgba(59, 130, 154, 1.0), rgba(70, 142, 166, 1.0));
-    border: 1px solid #2ab9e8 !important;
-    color: #fff !important;
+    background: #00a65a;
+    border-color: #008d4c;    
+    border-radius: 3px;
+    color: #fff;
 }
 
 .content-picker .button.grey {
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(59, 130, 154, 1.0)), to(rgba(70, 142, 166, 1.0)));
-    background: -moz-linear-gradient(top, rgba(59, 130, 154, 1.0), rgba(70, 142, 166, 1.0));
-    border: 1px solid #2ab9e8 !important;
-    color: #fff !important;
+    background: #00a65a;
+    border-color: #008d4c;
+    color: #fff;
 }
 
 button.link {
@@ -400,12 +404,12 @@ select:not(.selector) {
     }
 
 .properties h3 {
-    color: #1C2A37 !important;
+    color: #1c2a37 !important;
     font-size: 15px;
 }
 
 a, a:link, a:visited, form.link button, button.link {
-  color: #1c2a37;
+  color: #fff;
   text-decoration: none;
 }
 
@@ -1113,7 +1117,7 @@ label {
     margin-bottom: 0px;
 }
 
-fieldset:not(.save-button):not(.bulk-items)::after {
+fieldset:not(.save-button):not(.bulk-items):not(.publish-button):not(publish-later-datetime)::after {
     display: block;
     content:" ";
     width: 100%;
@@ -1127,12 +1131,14 @@ fieldset {
 }
 
 .add,
+.button.grey,
 #btn-CalendarEvent_Gallery_Field_Ids.button {
   background-color: #00a65a;
   border-color: #008d4c;
 }
 
 .add:not(.mce-btn):hover,
+.button.grey:hover,
 #btn-CalendarEvent_Gallery_Field_Ids.button:hover {
   background-color: #008d4c;
 }
@@ -1146,7 +1152,7 @@ fieldset {
 }
 
 .contentItems .summary {
-  min-height: 140px;
+  /*min-height: 140px;*/
 }
 
 .pager-footer {
@@ -1161,7 +1167,7 @@ fieldset {
   border: 0px;
   border-radius: 0px;
   box-shadow:none;
-  color: #1C2A37;
+  color: #1c2a37;
   cursor: pointer;
   float: left;
   margin: 0 0 0 0;
@@ -1170,7 +1176,7 @@ fieldset {
 }
 
 .pagination > li > a, .pagination > li > span, .pager > li > a, .pager > li > span {
-  color: #1C2A37;
+  color: #1c2a37;
 }
 
 .page-size-options {
@@ -1246,3 +1252,39 @@ fieldset {
   padding: 10px;
 }
 
+.custom-button {
+  clear: right;
+  margin-top: 20px;
+}
+
+.widgets-listed .widgets-zone-widgets h3 a,
+.widgets-none h2 {
+    color: #1c2a37;
+    font-size: 14px;
+    font-family: 'Roboto';
+}
+
+.widgets-listed .widgets-zone-widgets h3 a:hover {
+    color: #253849;
+}
+
+#widgets-available li a {
+  border: 1px solid #eaeaea;
+  display: block;
+  padding: 5px 10px;
+  color: #1c2a37;
+  font-size: 11px;
+  background: #fff;
+  font-family: 'Roboto';
+}
+
+#widgets-available li a:hover {
+  background: #f4f4f4;
+  border: 1px solid #f5f5f5;
+}
+
+#widgets-zones, #widgets-zones-orphans, #widgets-available {
+  background: #fff none repeat scroll 0 0;
+  border: 1px solid #f5f5f5;
+  padding: 5px;
+}
