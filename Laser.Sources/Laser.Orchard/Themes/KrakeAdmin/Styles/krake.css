@@ -671,6 +671,7 @@ legend {
 
 .bulk-actions {
     display: inline-block;
+    padding-bottom: 20px;
     /*width: 600px;
     white-space: nowrap;*/
 }
@@ -1360,4 +1361,9 @@ input[type="file"] {
 .manage-export {
   padding-top: 27px;
   position: fixed;
+}
+
+.radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+  margin-left: 0;
+  position: relative;
 }
