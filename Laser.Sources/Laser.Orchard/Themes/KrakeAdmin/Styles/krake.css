@@ -484,9 +484,10 @@ a, a:link, a:visited {
 }
 
 .answertable {
-    border-left: 1px solid #a1d1ef !important;
-    border-right: 1px solid #a1d1ef !important;
-    border-bottom: 1px solid #a1d1ef !important;
+    margin-top: 20px;
+    border-left: 1px solid #f5f5f5 !important;
+    border-right: 1px solid #f5f5f5 !important;
+    border-bottom: 1px solid #f5f5f5 !important;
 }
 
     /*
@@ -522,12 +523,12 @@ answertable tr:last-child td:last-child {
 
     .answertable tr:nth-child(odd) td {
         background-color: #fff !important;
-        border-top: 1px solid #a1d1ef !important;
+        border-top: 1px solid #f5f5f5 !important;
     }
 
     .answertable tr:nth-child(even) td {
-        background-color: #eafbff !important;
-        border-top: 1px solid #a1d1ef !important;
+        background-color: #f4f4f4 !important;
+        border-top: 1px solid #f5f5f5 !important;
     }
 
 .j_risposta {
@@ -1349,4 +1350,9 @@ fieldset {
 
 .navigation-menu {
     width: 85%;
+}
+
+.answer {
+  width: 100%;
+  display: table-row;
 }

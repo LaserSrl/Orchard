@@ -19,10 +19,9 @@
 
 
 $(function () {
-
     var dd = $(".primary");
 
-    $(".summary").click(function () {
+    $(".summary").click(function (e) {
         if ($(this).closest(".summary").find('.primary').stop().is(':visible')) {
             $(this).closest(".summary").find('.primary').stop().hide();
         } else {

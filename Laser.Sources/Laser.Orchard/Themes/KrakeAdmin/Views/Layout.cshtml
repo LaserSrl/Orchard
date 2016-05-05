@@ -33,8 +33,7 @@
         Model.Header.Add(Display.Title(Title: Model.Title));
     }
 }
-
-
+<div id="layout-content">
     @if (Model.Header != null) {
         <header id="header">
             <div class="headerbar">
@@ -91,7 +90,7 @@
         </div>
 
         @if (Model.Navigation != null) {
-            <div id="menubar" class="menubar-inverse ">
+            <div id="menubar" class="menubar-inverse puppa">
             @*<div id="menu" class="">*@
                 @Zone(Model.Navigation)
             </div>
@@ -112,3 +111,4 @@
         //]]>
     </script>
 }
+</div>
