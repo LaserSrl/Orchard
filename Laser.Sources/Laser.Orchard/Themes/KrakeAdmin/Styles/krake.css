@@ -1079,8 +1079,9 @@ input[type="number"]:focus {
 .dashboard-box .dashboard-box-title{ font-weight:300; font-size:28px; height:62px; overflow:hidden; }
 .dashboard-box .dashboard-box-content{ padding:25px 40px; color:#fff; margin:0 -30px -30px;}
 .dashboard-box.dashboard-box-cms .dashboard-box-content{ background:#6699CC; }
-.dashboard-box.dashboard-box-web .dashboard-box-content{ background:#CC6666; }
-.dashboard-box.dashboard-box-communication .dashboard-box-content{ background:#99CC66; }
+.dashboard-box.dashboard-box-web .dashboard-box-content{ background:#CC6666; border: 1px solid #CC6666; }
+.dashboard-box.dashboard-box-communication .dashboard-box-content{ background:#99CC66; border: 1px solid #99CC66; }
+.box-blue { border: 1px solid #6699CC; }
 
 .dashboard-box-back{
 	z-index:2;
