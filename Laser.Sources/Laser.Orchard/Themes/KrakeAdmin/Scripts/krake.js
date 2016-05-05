@@ -27,5 +27,5 @@ $(function () {
         } else {
             $(this).closest(".summary").find('.primary').stop().slideToggle(300);
         }
-    });
+    })
 });

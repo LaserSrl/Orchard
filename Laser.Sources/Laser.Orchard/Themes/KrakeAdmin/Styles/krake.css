@@ -1387,3 +1387,11 @@ html.media-library-modal-window .button-cancel
   overflow: hidden;
   width: 186px;
 }
+
+#header {
+    overflow:visible; 
+}
+
+.dropdown-menu > li > a {
+  display: inline-block;
+}

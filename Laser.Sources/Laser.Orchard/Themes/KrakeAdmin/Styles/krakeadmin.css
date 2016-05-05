@@ -1365,6 +1365,7 @@ a.text-success:hover {
 }
 .header-nav-profile .dropdown.open {
   color: #313534;
+  margin-top: 9px;
 }
 .header-nav-profile .dropdown.open > a {
   margin-top: 6px;
