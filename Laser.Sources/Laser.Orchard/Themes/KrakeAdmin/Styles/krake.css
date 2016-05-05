@@ -699,14 +699,14 @@ legend {
 }
 
 .tokenized-popup {
-    background: rgba(0, 0, 0, 0) url("images/list-arrow.png") no-repeat scroll 0 0;
-    cursor: pointer;
-    height: 37px;
-    margin-top: 0;
-    padding-right: 37px;
-    position: absolute;
-    right: 100%;
-    width: 10px;
+  background: rgba(0, 0, 0, 0) url("images/list-arrow.png") no-repeat scroll 0 0;
+  cursor: pointer;
+  height: 28px;
+  margin-top: -6px;
+  padding-right: 35px;
+  position: absolute;
+  right: 100%;
+  width: 10px;
 }
 
 #maplocation {
