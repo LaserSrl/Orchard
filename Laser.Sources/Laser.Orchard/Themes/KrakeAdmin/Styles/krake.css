@@ -107,22 +107,14 @@ html {
     }*/
 
 button, .button, a.button {
-    /*background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(59, 130, 154, 1.0)), to(rgba(70, 142, 166, 1.0)));
-    background: -moz-linear-gradient(top, rgba(59, 130, 154, 1.0), rgba(70, 142, 166, 1.0));*/
-    /*background: #6db7e5;
-    border: 1px solid #2ab9e8;
-    color: #fff;
-    min-width: 150px;
-    min-height: 30px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 15px;*/
-
-    background: #de625e;
-    border-radius: 3px;
-    box-shadow: none;
-    color: #fff !important;
-    border: 0px;
+  background: #de625e none repeat scroll 0 0;
+  border: 0 none;
+  border-radius: 3px;
+  box-shadow: none;
+  color: #fff !important;
+  height: 30px;
+  line-height: 18px;
+  min-width: 110px;
 }
 
 fieldset.save-button {
@@ -683,6 +675,10 @@ legend {
     white-space: nowrap;*/
 }
 
+.bottom-20 {
+    padding-bottom: 20px;
+}
+
 #CommonPart_Creator_Value:parent {
     display: none;
 }
@@ -1208,8 +1204,8 @@ fieldset {
 }
 
 .page-results {
-  padding-top: 45px;
-  position: absolute;
+  display: block;
+  white-space: nowrap;
 }
 
 .box {
@@ -1355,4 +1351,13 @@ fieldset {
 .answer {
   width: 100%;
   display: table-row;
+}
+
+input[type="file"] {
+  display: inline;
+}
+
+.manage-export {
+  padding-top: 27px;
+  position: fixed;
 }
