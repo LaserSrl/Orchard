@@ -88,22 +88,10 @@
                         icon_class = "fa fa-pencil";
                         break;
                 }
-                
-                
-
-                //if (firstLevelMenuItem == firstLevelMenuItems.First()) {
-                //    firstLevelMenuItem.Classes.Add("first");
-                //}
-                //if (firstLevelMenuItem == firstLevelMenuItems.Last()) {
-                //    firstLevelMenuItem.Classes.Add("last");
-                //}
-                //if (HasText(sectionHeaderTextHint)) {
-                //    firstLevelMenuItem.Classes.Add("section-" + sectionHeaderTextHint.HtmlClassify());
-                //}
 
                 string classSelected = "";
                 IHtmlString sectionHeaderMarkup;
-                //***** Elimino il link sull'apertura del sottomenu *****//
+                
                 if (firstOfTheSecond != null && firstLevelMenuItem.LinkToFirstChild  && (firstOfTheSecond.RouteValues != null || HasText(firstOfTheSecond.Url))) {
                     //firstLevelMenuItemUrl = firstOfTheSecond.Href;
                     //sectionHeaderText = "<div class=\"gui-icon\"><i class=\"md md-home\"></i></div><span class=\"title\">" + sectionHeaderText + "</span>";
@@ -114,19 +102,21 @@
                         classSelected = "";
                     }
 
-                    sectionHeaderMarkup = HasText(itemId)
-                        ? new HtmlString(string.Format(@"<a href=""{0}"" class=""{1}"" id=""{2}""><div class=""gui-icon""><i class=""{4}""></i></div><span class=""title"">{3}</span></a>", (string)firstOfTheSecond.Href, Html.Encode(classSelected), Html.Encode(itemId), sectionHeaderText, icon_class))
-                        : new HtmlString(string.Format(@"<a href=""{0}"" class=""{1}""><div class=""gui-icon""><i class=""{3}""></i></div><span class=""title"">{2}</span></a>", (string)firstOfTheSecond.Href, Html.Encode(classSelected), sectionHeaderText, icon_class));
-                        //? Html.Link(sectionHeaderText + "--- pippo", (string)firstOfTheSecond.Href, new { @class = itemClassName, id = itemId })
-                        //: Html.Link(sectionHeaderText + "--- pippo1", (string)firstOfTheSecond.Href, new { @class = itemClassName });
+                    //***** Elimino il link sull'apertura del sottomenu *****//
+                    if (secondLevelMenuItems.Count(menuItem => !menuItem.LocalNav) > 1 || !firstLevelMenuItem.LinkToFirstChild) {
+                        sectionHeaderMarkup = new HtmlString(string.Format(@"<a><div class=""gui-icon""><i class=""{2}""></i></div><span class=""title"">{0}</span></a>", sectionHeaderText, Html.Encode(itemClassName), icon_class));
+                    } else {
+                        sectionHeaderMarkup = HasText(itemId)
+                            ? new HtmlString(string.Format(@"<a href=""{0}"" class=""{1}"" id=""{2}""><div class=""gui-icon""><i class=""{4}""></i></div><span class=""title"">{3}</span></a>", (string)firstOfTheSecond.Href, Html.Encode(classSelected), Html.Encode(itemId), sectionHeaderText, icon_class))
+                            : new HtmlString(string.Format(@"<a href=""{0}"" class=""{1}""><div class=""gui-icon""><i class=""{3}""></i></div><span class=""title"">{2}</span></a>", (string)firstOfTheSecond.Href, Html.Encode(classSelected), sectionHeaderText, icon_class));
+                    }
+                   
 
                 }
                 else if (firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)) {
                     sectionHeaderMarkup = HasText(itemId)
                         ? new HtmlString(string.Format(@"<a href=""{0}"" class=""{1}"" id=""{2}""><div class=""gui-icon""><i class=""{4}""></i></div><span class=""title"">{3}</span></a>", (string)firstLevelMenuItem.Href, Html.Encode(classSelected), Html.Encode(itemId), sectionHeaderText, icon_class))
                         : new HtmlString(string.Format(@"<a href=""{0}"" class=""{1}""><div class=""gui-icon""><i class=""{3}""></i></div><span class=""title"">{2}</span></a>", (string)firstLevelMenuItem.Href, Html.Encode(classSelected), sectionHeaderText, icon_class));
-                        //? Html.Link(sectionHeaderText + "--- pippo2", (string)firstLevelMenuItem.Href, new { @class = itemClassName, id = itemId })
-                        //: Html.Link(sectionHeaderText + "--- pippo3", (string)firstLevelMenuItem.Href, new { @class = itemClassName });
                 }
                 else {
                     // if the header isn't linked and there are no children there's no reason for this item in the menu other than to look pretty
@@ -135,7 +125,7 @@
                     }
         
                     sectionHeaderMarkup = HasText(itemId)
-                        ? new HtmlString(string.Format(@"<span class=""{1}"" id=""{2}"">{0}</span>", Html.Encode(sectionHeaderText), Html.Encode(itemClassName), Html.Encode(itemId)))
+                        ? new HtmlString(string.Format(@"<span class=""{1}"" id=""{2}"">{0}#####</span>", Html.Encode(sectionHeaderText), Html.Encode(itemClassName), Html.Encode(itemId)))
                         : new HtmlString(string.Format(@"<a><div class=""gui-icon""><i class=""{2}""></i></div><span class=""title {1}"">{0}</span></a>", Html.Encode(sectionHeaderText), Html.Encode(itemClassName), icon_class));
                 }
 
