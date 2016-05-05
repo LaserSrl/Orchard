@@ -140,6 +140,10 @@
     <Content Include="Styles\krake.css" />
     <Content Include="Styles\iconic-font.min.css" />
     <Content Include="Styles\krakeadmin.css" />
+    <Content Include="Views\Dashboard\Admin\Index.cshtml" />
+    <Content Include="Views\Document.cshtml" />
+    <Content Include="Views\Layout.cshtml" />
+    <Content Include="Views\OrchardVersion.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -151,23 +155,23 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Document.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="AdminThemeOverride.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\OrchardVersion.cshtml" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Content Include="Views\Dashboard\Admin\Index.cshtml" />
+    <Content Include="Views\Content.SummaryAdmin.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\ErrorPage.cshtml" />
+    <Content Include="Views\Header.cshtml" />
+    <Content Include="Views\LocalMenu.cshtml" />
+    <Content Include="Views\Menu.cshtml" />
+    <Content Include="Views\MenuORI.cshtml" />
+    <Content Include="Views\Pager.cshtml" />
+    <Content Include="Views\Title.cshtml" />
+    <Content Include="Views\User.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Images\brochure.pdf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\fonts\HANDGOTB.eot" />
