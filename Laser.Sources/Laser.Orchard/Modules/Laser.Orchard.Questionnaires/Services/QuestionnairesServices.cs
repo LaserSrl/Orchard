@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Laser.Orchard.Events.Models;
 using Laser.Orchard.Questionnaires.Models;
 using Laser.Orchard.Questionnaires.Settings;
 using Laser.Orchard.Questionnaires.ViewModels;
@@ -62,7 +63,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             if (id > 0) {
                 try {
                     return ((dynamic)_orchardServices.ContentManager.Get(id)).UserPart.UserName;
-                } catch (Exception ex) {
+                } catch (Exception) {
                     return "No User";
                 }
             } else
@@ -71,35 +72,37 @@ namespace Laser.Orchard.Questionnaires.Services {
 
         public bool SendTemplatedEmailRanking() {
             var query = _orchardServices.ContentManager.Query();
-            var list = query.ForPart<GamePart>().List();
+            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x=>x.workflowfired==false).List();
             var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().List();
             foreach (GamePart gp in list) {
                 ContentItem Ci = gp.ContentItem;
-                //    gp.workflowfired = false; //todo remove this line
-                if (gp.workflowfired == false) {
-                    if (gp.Settings.GetModel<GamePartSettingVM>().SendEmail) {
-                        listranking.Where(z => z.As<RankingPart>().ContentIdentifier == Ci.Id).OrderBy(y => y.Point);
-                        List<RankingTemplateVM> rkt = new List<RankingTemplateVM>();
-                        foreach (RankingPart cirkt in listranking) {
-                            RankingTemplateVM tmp = new RankingTemplateVM();
-                            tmp.Point = cirkt.Point;
-                            tmp.ContentIdentifier = cirkt.ContentIdentifier;
-                            tmp.Device = cirkt.Device;
-                            tmp.Identifier = cirkt.Identifier;
-                            tmp.name = getusername(cirkt.User_Id);
-                            tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
-                            tmp.AccessSecured = cirkt.AccessSecured;
-                            tmp.RegistrationDate = cirkt.RegistrationDate;
-                            rkt.Add(tmp);
-                        }
+                if (((dynamic)Ci).ActivityPart != null && ((dynamic)Ci).ActivityPart.DateTimeEnd != null) {
+                    if (((dynamic)Ci).ActivityPart.DateTimeEnd < DateTime.Now) {
+                        //    gp.workflowfired = false; //todo remove this line
+                        //      if (gp.workflowfired == false) {
+                        if (gp.Settings.GetModel<GamePartSettingVM>().SendEmail) {
+                            var listordered = listranking.Where(z => z.As<RankingPart>().ContentIdentifier == Ci.Id).OrderByDescending(y => y.Point);
+                            List<RankingTemplateVM> rkt = new List<RankingTemplateVM>();
+                            foreach (RankingPart cirkt in listordered) {
+                                RankingTemplateVM tmp = new RankingTemplateVM();
+                                tmp.Point = cirkt.Point;
+                                tmp.ContentIdentifier = cirkt.ContentIdentifier;
+                                tmp.Device = cirkt.Device;
+                                tmp.Identifier = cirkt.Identifier;
+                                tmp.name = getusername(cirkt.User_Id);
+                                tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
+                                tmp.AccessSecured = cirkt.AccessSecured;
+                                tmp.RegistrationDate = cirkt.RegistrationDate;
+                                rkt.Add(tmp);
+                            }
 
-                        if (SendEmail(Ci, rkt)) {
-                            // logger
+                            if (SendEmail(Ci, rkt)) {
+                                // logger
+                            }
                         }
+                        _workflowManager.TriggerEvent("GameRankingSubmitted", Ci, () => new Dictionary<string, object> { { "Content", Ci } });
+                        gp.workflowfired = true;
                     }
-                    _workflowManager.TriggerEvent("GameRankingSubmitted", Ci, () => new Dictionary<string, object> { { "Content", Ci } });
-                    gp.workflowfired = true;
-
                 }
             }
             return true;
@@ -212,7 +215,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                                 _repositoryAnswer.Delete(_repositoryAnswer.Get(answer.Id));
                             }
                             _repositoryQuestions.Delete(_repositoryQuestions.Get(quest.Id));
-                        } catch (Exception ex) {
+                        } catch (Exception) {
                             throw new Exception("quest.Delete");
                         }
                     } else {
@@ -227,7 +230,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                                 }
                             }
                             _repositoryQuestions.Update(questionRecord);
-                        } catch (Exception ex) {
+                        } catch (Exception) {
                             throw new Exception("quest.Update");
                         }
                         try {
@@ -239,7 +242,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                                     _repositoryAnswer.Create(answerRecord);
                                 }
                             }
-                        } catch (Exception ex) {
+                        } catch (Exception) {
                             throw new Exception("answer.Insert");
                         }
                     }
@@ -274,7 +277,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                                 _repositoryAnswer.Flush();
                             }
                         }
-                    } catch (Exception ex) {
+                    } catch (Exception) {
                         throw new Exception("quest.Create");
                     }
 
@@ -286,11 +289,11 @@ namespace Laser.Orchard.Questionnaires.Services {
                             _repositoryQuestions.Update(questionRecord);
                             re = null;
                         }
-                    } catch (Exception ex) {
+                    } catch (Exception) {
                         throw new Exception("quest.CorrezzioneCondizioni");
                     }
                 }
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw new Exception("quest.UpdateTotale");
             }
         }
@@ -343,6 +346,52 @@ namespace Laser.Orchard.Questionnaires.Services {
 
         public AnswerRecord GetAnswer(int id) {
             return (_repositoryAnswer.Get(id));
+        }
+
+        public List<QuestionnaireStatsViewModel> GetStats(int questionnaireId) {
+            var questionnaireData = _orchardServices.ContentManager.Query<QuestionnairePart, QuestionnairePartRecord>(VersionOptions.Published)
+                                                       .Where(q => q.Id == questionnaireId)
+                                                       .List().FirstOrDefault();
+
+            var questionnaireStats = _repositoryUserAnswer.Table.Join(_repositoryQuestions.Table,
+                        l => l.QuestionRecord_Id, r => r.Id, (l, r) => new { UserAnswers = l, Questions = r })
+                        .Where(w => w.Questions.QuestionnairePartRecord_Id == questionnaireId)
+                        .ToList();
+
+            if (questionnaireStats.Count == 0) {
+                QuestionnaireStatsViewModel empty = new QuestionnaireStatsViewModel();
+                empty.QuestionnairePart_Id = questionnaireData.Id;
+                empty.QuestionnaireTitle = questionnaireData.As<TitlePart>().Title;
+                empty.Answers = null;
+
+                return new List<QuestionnaireStatsViewModel>() { empty };
+            }
+            else {
+                var aggregatedStats = questionnaireStats.Select(s => new QuestionnaireStatsViewModel {
+                                                                    QuestionnairePart_Id = s.Questions.QuestionnairePartRecord_Id,
+                                                                    QuestionnaireTitle = questionnaireData.As<TitlePart>().Title,
+                                                                    QuestionId = s.Questions.Id,
+                                                                    Question = s.Questions.Question,
+                                                                    QuestionType = s.Questions.QuestionType,
+                                                                    Answers = new List<AnswerStatsViewModel>()
+                                                                })
+                                                         .GroupBy(g => g.QuestionId)
+                                                         .Select(s => s.First()).ToList();
+
+                for (int i = 0; i < aggregatedStats.Count(); i++) {
+                    var question = aggregatedStats.ElementAt(i);
+                    var answers = questionnaireStats.Where(w => w.Questions.Id == question.QuestionId)
+                                                    .GroupBy(g => g.UserAnswers.AnswerText, StringComparer.InvariantCultureIgnoreCase)
+                                                    .Select(s => new AnswerStatsViewModel {
+                                                        Answer = s.Key,
+                                                        Count = s.Count()
+                                                    });
+
+                    question.Answers.AddRange(answers.OrderBy(o => o.Answer));
+                }
+
+                return aggregatedStats.OrderBy(o => o.Question).ToList();
+            }
         }
 
         public List<QuestStatViewModel> GetStats(QuestionType type) {

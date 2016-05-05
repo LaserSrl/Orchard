@@ -23,7 +23,7 @@ namespace Laser.Orchard.DevTools {
                 .Caption(T("DevTools"))
                 .Position("1.01")
                 .Action("Index", "Admin", new { area = "Laser.Orchard.DevTools" })
-               // .Permission(Permissions.ManageSettings)
+                .Permission(Permissions.DevTools)
        );
         }
     }

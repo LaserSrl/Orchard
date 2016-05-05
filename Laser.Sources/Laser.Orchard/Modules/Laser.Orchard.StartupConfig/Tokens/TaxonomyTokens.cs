@@ -22,7 +22,7 @@ namespace Laser.Orchard.StartupConfig.Tokens {
             // Content.Fields.Article.Categories.Terms:0.DisplayUrl -> http://...
 
             context.For("TaxonomyField", T("Taxonomy Field"), T("Tokens for Taxonomy Fields"))
-                   .Token("TermsIds", T("Terms"), T("The Ids terms (Content) associated with field."))
+                   .Token("TermsIds", T("Terms"), T("The ids of the terms associated with field."))
                    ;
         }
 

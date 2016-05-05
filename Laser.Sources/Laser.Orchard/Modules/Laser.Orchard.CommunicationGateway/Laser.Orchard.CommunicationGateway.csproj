@@ -52,6 +52,10 @@
       <HintPath>..\..\..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.ContentPicker">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPicker\bin\Orchard.ContentPicker.dll</HintPath>
     </Reference>
@@ -126,6 +130,10 @@
       <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
       <Name>Laser.Orchard.Commons</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.Policy\Laser.Orchard.Policy.csproj">
+      <Project>{09a8fbda-b443-4f01-bc64-8115ac31abb3}</Project>
+      <Name>Laser.Orchard.Policy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.Queries\Laser.Orchard.Queries.csproj">
       <Project>{d494b57f-2ae6-460f-9785-565376409afc}</Project>
       <Name>Laser.Orchard.Queries</Name>
@@ -152,7 +160,10 @@
     <Compile Include="Handlers\CommunicationAdvertisingPartHandler.cs" />
     <Compile Include="Handlers\CommunicationCampaignPartHandler.cs" />
     <Compile Include="Handlers\CommunicationContactPartHandler.cs" />
+    <Compile Include="Handlers\CommunicationPolicyChangedHandler.cs" />
     <Compile Include="Handlers\EmailContactPartHandler.cs" />
+    <Compile Include="Handlers\ExportContactTaskHandler.cs" />
+    <Compile Include="Handlers\ImportContactTaskHandler.cs" />
     <Compile Include="Handlers\SmsContactPartHandler.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Models\CommunicationAdvertisingPart.cs" />
@@ -165,10 +176,17 @@
     <Compile Include="Models\SmsContactPart.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Security\AdvertisingEventHandler.cs" />
+    <Compile Include="Services\ExportContactService.cs" />
     <Compile Include="Services\ICommunicationService.cs" />
+    <Compile Include="Utils\DownloadFileContentResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\ImportUtil.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
+    <Compile Include="ViewModels\FilesListVM.cs" />
     <Compile Include="ViewModels\ListVM.cs" />
     <Compile Include="ViewModels\QueryFilterVM.cs" />
+    <Compile Include="ViewModels\SearchFieldEnum.cs" />
     <Compile Include="ViewModels\SearchIndexVM.cs" />
     <Compile Include="ViewModels\SearchVM.cs" />
     <Compile Include="Controllers\CampaignAdminController.cs" />
@@ -195,6 +213,8 @@
     <Content Include="Views\EditorTemplates\Parts\Advertising_Edit.cshtml" />
     <Content Include="Views\switchurl.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\AdvertisingSwitcher.cshtml" />
+    <Content Include="Views\ContactsAdmin\ExportedFilesList.cshtml" />
+    <Content Include="Views\ContactsAdmin\ImportedFilesLogs.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

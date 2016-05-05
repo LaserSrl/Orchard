@@ -1,6 +1,8 @@
 ﻿using Laser.Orchard.ExternalContent.Fields;
+using Laser.Orchard.ExternalContent.Services;
 using Laser.Orchard.ExternalContent.Settings;
 using Laser.Orchard.ExternalContent.ViewModels;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Configuration;
@@ -11,10 +13,14 @@ using System.Web.Hosting;
 namespace Laser.Orchard.ExternalContent.Drivers {
     public class FieldExternalDriver : ContentFieldDriver<FieldExternal> {
         private readonly ShellSettings _shellSettings;
+        private readonly IOrchardServices _orchardServices;
+        private readonly IFieldExternalService _fieldExternalService;
         public Localizer T { get; set; }
 
-        public FieldExternalDriver(ShellSettings shellSettings
+        public FieldExternalDriver(ShellSettings shellSettings, IOrchardServices orchardServices, IFieldExternalService fieldExternalService
             ) {
+                _fieldExternalService = fieldExternalService;
+                _orchardServices = orchardServices;
                 _shellSettings = shellSettings;
             T = NullLocalizer.Instance;
             string mobile_folder = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSettings.Name + @"\Xslt\";
@@ -60,7 +66,11 @@ namespace Laser.Orchard.ExternalContent.Drivers {
             if (settings.Required && string.IsNullOrEmpty(settings.ExternalURL) && string.IsNullOrEmpty(field.ExternalUrl)) {
                 updater.AddModelError("External Url", T("The field {0} is mandatory", field.Name.CamelFriendly()));
             }
-
+            if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.StartSchedule") {
+                _fieldExternalService.ScheduleNextTask(settings.ScheduledMinute, part.ContentItem);
+            }
+                     
+            
             return Editor(part, field, shapeHelper);
         }
 

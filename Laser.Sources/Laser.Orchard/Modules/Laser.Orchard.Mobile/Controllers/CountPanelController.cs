@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.Mobile.Services;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -28,11 +29,11 @@ namespace Laser.Orchard.Mobile.Controllers
             }
             else
             {
-                var elenco = _pushNotificationService.GetPushQueryResult(ids);
-                var android = elenco.Where(x => x.Device == TipoDispositivo.Android).Count();
-                var apple = elenco.Where(x => x.Device == TipoDispositivo.Apple).Count();
-                var win = elenco.Where(x => x.Device == TipoDispositivo.WindowsMobile).Count();
-                Total.Add("Value", string.Format("{0} (<i class=\"fa fa-android\"></i> {1}, <i class=\"fa fa-apple\"></i> {2}, <i class=\"fa fa-windows\"></i> {3})", elenco.Count, android, apple, win));
+                var elenco = _pushNotificationService.GetPushQueryResult(ids, true);
+                var android = Convert.ToInt64((((Hashtable)(elenco[0]))["Android"]) ?? 0); //elenco.Where(x => x.Device == TipoDispositivo.Android).Count();
+                var apple = Convert.ToInt64((((Hashtable)(elenco[0]))["Apple"]) ?? 0);  //elenco.Where(x => x.Device == TipoDispositivo.Apple).Count();
+                var win = Convert.ToInt64((((Hashtable)(elenco[0]))["WindowsMobile"]) ?? 0);  //elenco.Where(x => x.Device == TipoDispositivo.WindowsMobile).Count();
+                Total.Add("Value", string.Format("{0:#,##0} (<i class=\"fa fa-android\"></i> {1:#,##0}, <i class=\"fa fa-apple\"></i> {2:#,##0}, <i class=\"fa fa-windows\"></i> {3:#,##0})", ((long)(((Hashtable)(elenco[0]))["Tot"])), android, apple, win));
             }
             return Json(Total, JsonRequestBehavior.AllowGet);
         }
@@ -47,8 +48,8 @@ namespace Laser.Orchard.Mobile.Controllers
             }
             else
             {
-                var elenco = _smsCommunicationService.GetSmsQueryResult(ids, idlocalization);
-                Total.Add("Value", elenco.Count.ToString());
+                var elenco = _smsCommunicationService.GetSmsQueryResult(ids, idlocalization, true);
+                Total.Add("Value", ((long)(((Hashtable)(elenco[0]))["Tot"])).ToString("#,##0"));
             }
             return Json(Total, JsonRequestBehavior.AllowGet);
         }

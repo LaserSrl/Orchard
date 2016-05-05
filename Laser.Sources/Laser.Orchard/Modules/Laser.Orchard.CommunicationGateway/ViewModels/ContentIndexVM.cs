@@ -10,5 +10,7 @@ namespace Laser.Orchard.CommunicationGateway.ViewModels {
         public DateTime? ModifiedUtc { get; set; }
         public dynamic Option { get; set; }
         public ContentItem ContentItem { get; set; }
+        public string PreviewEmail { get; set; }
+        public string PreviewSms { get; set; }
     }
 }

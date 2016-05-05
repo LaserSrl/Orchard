@@ -1,0 +1,90 @@
+msgctxt "~/Themes/TheAdmin/Theme.txt"
+msgid "The Admin"
+msgstr "L'Amministratore"
+
+msgctxt "~/Themes/TheAdmin/Theme.txt"
+msgid "Jon Wall"
+msgstr "Jon Wall"
+
+msgctxt "~/Themes/TheAdmin/Theme.txt"
+msgid "hidden, admin"
+msgstr "admin, nascosto"
+
+msgctxt "~/Themes/TheAdmin/Theme.txt"
+msgid "An admin theme not to be used for the site so don't click \"Activate\" (or \"Uninstall\"). In the near future admin themes won't be mixed in with site themes."
+msgstr "Un tema per l'amministrazione non dev'essere usato per un sito, quindi non cliccare su \"Attiva\" (o \"Disinstalla\"). Nel futuro i temi per l'amministrazione non saranno mischiati con quelli per i siti."
+
+msgctxt "~/Themes/TheAdmin/Theme.txt"
+msgid "http://www.orchardproject.net"
+msgstr "http://www.orchardproject.net"
+
+#: "~/Themes/TheAdmin/Views/ErrorPage.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/ErrorPage.cshtml"
+msgid "Oops. Something went wrong ... sorry"
+msgstr "Oops. Qualcosa è andato storto... scusate"
+
+#: "~/Themes/TheAdmin/Views/ErrorPage.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/ErrorPage.cshtml"
+msgid "An unhandled exception has occurred and the request was terminated. Please refresh the page. If the error persists, go back"
+msgstr "Si è verificato un errore non gestito e la richiesta è stata terminata. Si prega di aggiornare la pagina. Se l'errore persiste, tornare alla pagina precedente."
+
+#: "~/Themes/TheAdmin/Views/Header.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/Header.cshtml"
+msgid "Your site"
+msgstr "Il tuo sito"
+
+#: "~/Themes/TheAdmin/Views/Header.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/Header.cshtml"
+msgid "Project Orchard"
+msgstr "Il progetto Orchard"
+
+#: "~/Themes/TheAdmin/Views/Layout.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/Layout.cshtml"
+msgid "Skip to navigation"
+msgstr "Vai alla navigazione"
+
+#: "~/Themes/TheAdmin/Views/Layout.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/Layout.cshtml"
+msgid "Are you sure you want to remove this element ?"
+msgstr "Sei sicuro di voler cancellare questo elemento?"
+
+#: "~/Themes/TheAdmin/Views/OrchardVersion.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/OrchardVersion.cshtml"
+msgid "Orchard v.{0}"
+msgstr "Orchard v.{0}"
+
+#: "~/Themes/TheAdmin/Views/Pager.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/Pager.cshtml"
+msgid "<"
+msgstr "<"
+
+#: "~/Themes/TheAdmin/Views/Pager.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/Pager.cshtml"
+msgid ">"
+msgstr ">"
+
+#: "~/Themes/TheAdmin/Views/Pager.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/Pager.cshtml"
+msgid "Show:"
+msgstr "Mostra:"
+
+#. "All"
+msgctxt "~/Themes/TheAdmin/Views/Pager.cshtml"
+msgid "All"
+msgstr "Tutto"
+
+#: "~/Themes/TheAdmin/Views/Pager.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/Pager.cshtml"
+msgid "Showing items {0} - {1} of {2}"
+msgstr "Elementi {0} - {1} su {2}"
+
+#: "~/Themes/TheAdmin/Views/User.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/User.cshtml"
+msgid "User:"
+msgstr "Utente:"
+
+#: "~/Themes/TheAdmin/Views/User.cshtml"
+msgctxt "~/Themes/TheAdmin/Views/User.cshtml"
+msgid "Logout"
+msgstr "Esci"
+

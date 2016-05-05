@@ -1,0 +1,315 @@
+#. "{0} (Retrying...)"
+msgctxt "Orchard.Commands.CommandHostAgent"
+msgid "{0} (Retrying...)"
+msgstr "{0} (Sto riprovando...)"
+
+#: "Orchard.Commands.CommandHostAgent"
+msgctxt "Orchard.Commands.CommandHostAgent"
+msgid "Error executing command \"{0}\""
+msgstr "Errore durante l'esecuzione del comando \"{0}\""
+
+#: "Orchard.Commands.CommandHostAgent"
+msgctxt "Orchard.Commands.CommandHostAgent"
+msgid "Error starting up Orchard command line host"
+msgstr "Errore nell'avviare l'host di linea di comando di Orchard"
+
+#: "Orchard.Commands.CommandHostAgent"
+msgctxt "Orchard.Commands.CommandHostAgent"
+msgid "Error shutting down Orchard command line host"
+msgstr "Si è verificato un errore disattivando la linea di comando di Orchard"
+
+#. "{0}"
+msgctxt "Orchard.Commands.CommandHostAgent"
+msgid "{0}"
+msgstr "{0}"
+
+#: "Orchard.Commands.CommandHostAgent"
+msgctxt "Orchard.Commands.CommandHostAgent"
+msgid "--------------------------------------------------------------------------------"
+msgstr "--------------------------------------------------------------------------------"
+
+#: "Orchard.Commands.CommandHostAgent"
+msgctxt "Orchard.Commands.CommandHostAgent"
+msgid "Exception Details: {0}: {1}"
+msgstr "Dettagli dell'eccezione: {0}: {1}"
+
+#: "Orchard.Commands.CommandHostAgent"
+msgctxt "Orchard.Commands.CommandHostAgent"
+msgid "Stack Trace:"
+msgstr "Analisi dello stack:"
+
+#: "Orchard.Commands.CommandHostAgent"
+msgctxt "Orchard.Commands.CommandHostAgent"
+msgid "[{0}: {1}]"
+msgstr "[{0}: {1}]"
+
+#: "Orchard.Commands.CommandHostAgent"
+msgctxt "Orchard.Commands.CommandHostAgent"
+msgid "Tenant {0} does not exist"
+msgstr "Il sito {0} non esiste"
+
+#: "Orchard.Commands.CommandHostEnvironment"
+msgctxt "Orchard.Commands.CommandHostEnvironment"
+msgid "A change of configuration requires the session to be restarted."
+msgstr "Un cambio di configurazione richiede il riavvio della sessione."
+
+#: "Orchard.Commands.DefaultCommandManager"
+msgctxt "Orchard.Commands.DefaultCommandManager"
+msgid "Multiple commands found matching arguments \"{0}\". Commands available: {1}."
+msgstr "Sono stati trovati diversi comandi corrispondenti agli argomenti \"{0}\". I comandi disponibili sono: {1}."
+
+#: "Orchard.Commands.DefaultCommandManager"
+msgctxt "Orchard.Commands.DefaultCommandManager"
+msgid "No command found matching arguments \"{0}\". Commands available: {1}."
+msgstr "Nessun comando trovato con gli argomenti \"{0}\". I comandi disponibili sono: {1}."
+
+#: "Orchard.Commands.DefaultOrchardCommandHandler"
+msgctxt "Orchard.Commands.DefaultOrchardCommandHandler"
+msgid "Switch \"{0}\" was not found"
+msgstr "Switch \"{0}\" non trovato"
+
+#: "Orchard.Commands.DefaultOrchardCommandHandler"
+msgctxt "Orchard.Commands.DefaultOrchardCommandHandler"
+msgid "A property \"{0}\" exists but is not decorated with \"{1}\""
+msgstr "Esiste una proprietà\"{0}\" ma non è decorata con \"{1}\""
+
+#: "Orchard.Commands.DefaultOrchardCommandHandler"
+msgctxt "Orchard.Commands.DefaultOrchardCommandHandler"
+msgid "Error converting value \"{0}\" to \"{1}\" for switch \"{2}\""
+msgstr "Errore di conversione del valore \"{0}\" in \"{1}\" per lo switch \"{2}\""
+
+#: "Orchard.Commands.DefaultOrchardCommandHandler"
+msgctxt "Orchard.Commands.DefaultOrchardCommandHandler"
+msgid "(empty)"
+msgstr "(vuoto)"
+
+#: "Orchard.Commands.DefaultOrchardCommandHandler"
+msgctxt "Orchard.Commands.DefaultOrchardCommandHandler"
+msgid "Command arguments \"{0}\" don't match command definition"
+msgstr "Gi argomenti del comando \"{0}\" non corrispondano alla definizione di comando"
+
+#: "Orchard.Commands.DefaultOrchardCommandHandler"
+msgctxt "Orchard.Commands.DefaultOrchardCommandHandler"
+msgid "Method \"{0}\" does not support switch \"{1}\"."
+msgstr "Il metodo \"{0}\" non supporta lo switch \"{1}\"."
+
+#: "Orchard.Commands.Builtin.HelpCommand"
+msgctxt "Orchard.Commands.Builtin.HelpCommand"
+msgid "List of available commands:"
+msgstr "Lista dei comandi disponibili:"
+
+#: "Orchard.Commands.Builtin.HelpCommand"
+msgctxt "Orchard.Commands.Builtin.HelpCommand"
+msgid "---------------------------"
+msgstr "---------------------------"
+
+#: "Orchard.Commands.Builtin.HelpCommand"
+msgctxt "Orchard.Commands.Builtin.HelpCommand"
+msgid "{0}: no help text"
+msgstr "{0}: nessun testo di aiuto"
+
+#: "Orchard.Commands.Builtin.HelpCommand"
+msgctxt "Orchard.Commands.Builtin.HelpCommand"
+msgid "Command {0} doesn't exist"
+msgstr "Il comando {0} non esiste"
+
+#: "Orchard.Data.Migration.DataMigrationNotificationProvider"
+msgctxt "Orchard.Data.Migration.DataMigrationNotificationProvider"
+msgid "Some features need to be upgraded: {0}"
+msgstr "Alcune funzionalità devono essere aggiornate: {0}"
+
+#: "Orchard.Data.Migration.Interpreters.DefaultDataMigrationInterpreter"
+msgctxt "Orchard.Data.Migration.Interpreters.DefaultDataMigrationInterpreter"
+msgid "Error while executing data migration: you need to specify the field's type in order to change its properties"
+msgstr "Errore durante la migrazione dati: bisogna specificare il tipo del campo"
+
+#: "Orchard.Data.Migration.Interpreters.MySqlCommandInterpreter"
+msgctxt "Orchard.Data.Migration.Interpreters.MySqlCommandInterpreter"
+msgid "Error while executing data migration: you need to specify the field's type in order to change its properties"
+msgstr "Errore durante la migrazione dei dati: è necessario specificare il tipo del campo per cambiare le sue proprietà"
+
+#: "Orchard.DisplayManagement.Implementation.DefaultDisplayManager"
+msgctxt "Orchard.DisplayManagement.Implementation.DefaultDisplayManager"
+msgid "Shape type {0} not found"
+msgstr "Tipo di Forma {0} non trovato"
+
+#: "Orchard.Environment.DefaultHostEnvironment"
+msgctxt "Orchard.Environment.DefaultHostEnvironment"
+msgid "Orchard needs to be restarted due to a configuration change, but was unable to do so.\r\n"
+msgstr "Orchard deve essere riavviato a causa di una modifica di configurazione, ma il riavvio non è riuscito.\r\n"
+
+#: "Orchard.Environment.Extensions.ExtensionLoaderCoordinator"
+msgctxt "Orchard.Environment.Extensions.ExtensionLoaderCoordinator"
+msgid "There are multiple extensions with the same name installed in this instance of Orchard.\r\n"
+msgstr "C'è più di una estensione con lo stesso nome installata in questa istanza di Orchard.\r\n"
+
+#: "Orchard.Environment.Extensions.ExtensionLoaderCoordinator"
+msgctxt "Orchard.Environment.Extensions.ExtensionLoaderCoordinator"
+msgid "Extension '{0}' has been found from the following locations: {1}.\r\n"
+msgstr "L'estensione '{0}' è stata trovata nei seguenti percorsi: {1}.\r\n"
+
+#: "Orchard.Environment.Extensions.ExtensionLoaderCoordinator"
+msgctxt "Orchard.Environment.Extensions.ExtensionLoaderCoordinator"
+msgid "This issue can be usually solved by removing or renaming the conflicting extension."
+msgstr "Questo problema potrebbe essere risolto rimuovendo o rinominando l'estensione che genera il conflitto."
+
+#: "Orchard.Environment.Extensions.ExtensionManager"
+msgctxt "Orchard.Environment.Extensions.ExtensionManager"
+msgid "Error while loading extension '{0}'."
+msgstr "Errore nel caricare l'estensione '{0}'."
+
+#: "Orchard.Environment.Extensions.Compilers.DefaultExtensionCompiler"
+msgctxt "Orchard.Environment.Extensions.Compilers.DefaultExtensionCompiler"
+msgid "Assembly reference '{0}' for project '{1}' cannot be loaded"
+msgstr "Il riferimento all'assembly '{0}' per il progetto '{1}' non può essere caricato"
+
+#: "Orchard.Environment.Extensions.Compilers.DefaultExtensionCompiler"
+msgctxt "Orchard.Environment.Extensions.Compilers.DefaultExtensionCompiler"
+msgid "Error compiling module \"{0}\" from file \"{1}\":\r\n{2}"
+msgstr "Errore compilando il modulo \"{0}\" a partire dal file \"{1}\":\r\n{2}"
+
+#: "Orchard.Environment.Extensions.Folders.ExtensionHarvester"
+msgctxt "Orchard.Environment.Extensions.Folders.ExtensionHarvester"
+msgid "The extension '{0}' could not be loaded because it has an invalid Path ({1}). It was ignored. The Path if specified must be a valid URL segment. The best bet is to stick with letters and numbers with no spaces."
+msgstr "L'estensione '{0}' non può essere caricata perché ha un percorso non valido ({1}). È stata ignorata. Il percorso se specificato deve essere un segmento di URL valido. La cosa migliore è attaccare con lettere e numeri senza spazi."
+
+#: "Orchard.Environment.Extensions.Folders.ExtensionHarvester"
+msgctxt "Orchard.Environment.Extensions.Folders.ExtensionHarvester"
+msgid "The extension '{0}' manifest could not be loaded. It was ignored."
+msgstr "Il manifesto dell'estensione '{0}' non può essere caricato. È stato ignorato."
+
+#: "Orchard.Environment.Features.FeatureManager"
+msgctxt "Orchard.Environment.Features.FeatureManager"
+msgid "Failed to get state for feature {0}"
+msgstr "Impossibile ottenere lo stato per la caratteristica {0}"
+
+#: "Orchard.Environment.Features.FeatureManager"
+msgctxt "Orchard.Environment.Features.FeatureManager"
+msgid "Found {0} states for feature {1}"
+msgstr "Trovati {0} stati per la caratteristica {1}"
+
+#: "Orchard.Events.DefaultOrchardEventBus"
+msgctxt "Orchard.Events.DefaultOrchardEventBus"
+msgid "{0} is not formatted correctly"
+msgstr "{0} non è correttamente formattato"
+
+#: "Orchard.FileSystems.AppData.AppDataFolder"
+msgctxt "Orchard.FileSystems.AppData.AppDataFolder"
+msgid "Unable to make room for file \"{0}\" in \"App_Data\" folder"
+msgstr "Non è possibile inserire il file \"{0}\" nella cartella \"App_Data\" per mancanza di spazio"
+
+#. "File {0} does not exist"
+msgctxt "Orchard.FileSystems.Media.FileSystemStorageProvider"
+msgid "File {0} does not exist"
+msgstr "Il file {0} non esiste"
+
+#. "Directory {0} does not exist"
+msgctxt "Orchard.FileSystems.Media.FileSystemStorageProvider"
+msgid "Directory {0} does not exist"
+msgstr "La cartella {0} non esiste"
+
+#: "Orchard.FileSystems.Media.FileSystemStorageProvider"
+msgctxt "Orchard.FileSystems.Media.FileSystemStorageProvider"
+msgid "The folder could not be created at path: {0}. {1}"
+msgstr "La cartella non può essere create al seguente percorso: {0}. {1}"
+
+#. "Directory {0} already exists"
+msgctxt "Orchard.FileSystems.Media.FileSystemStorageProvider"
+msgid "Directory {0} already exists"
+msgstr "La cartella {0} è già presente"
+
+#. "File {0} already exists"
+msgctxt "Orchard.FileSystems.Media.FileSystemStorageProvider"
+msgid "File {0} already exists"
+msgstr "Il file {0} è già presente"
+
+#: "Orchard.FileSystems.Media.FileSystemStorageProvider"
+msgctxt "Orchard.FileSystems.Media.FileSystemStorageProvider"
+msgid "Directory {0} does not have a parent directory"
+msgstr "La cartella {0} non ha una cartella padre"
+
+#: "Orchard.Localization.Commands.CultureCommands"
+msgctxt "Orchard.Localization.Commands.CultureCommands"
+msgid "Listing Cultures:"
+msgstr "Elenco delle Lingue:"
+
+#: "Orchard.Localization.Commands.CultureCommands"
+msgctxt "Orchard.Localization.Commands.CultureCommands"
+msgid "Site Culture is {0}"
+msgstr "La Lingua del sito è {0}"
+
+#: "Orchard.Localization.Commands.CultureCommands"
+msgctxt "Orchard.Localization.Commands.CultureCommands"
+msgid "Setting site culture to {0}"
+msgstr "Sto impostando la lingua del sito a {0}"
+
+#. "Supplied culture name {0} is not valid."
+msgctxt "Orchard.Localization.Commands.CultureCommands"
+msgid "Supplied culture name {0} is not valid."
+msgstr "Il nome di lingua fornito, {0}, non è valido."
+
+#: "Orchard.Localization.Commands.CultureCommands"
+msgctxt "Orchard.Localization.Commands.CultureCommands"
+msgid "Site culture set to {0} successfully"
+msgstr "Lingua del sito impostata correttamente a {0}"
+
+#: "Orchard.Localization.Commands.CultureCommands"
+msgctxt "Orchard.Localization.Commands.CultureCommands"
+msgid "Adding site cultures {0}"
+msgstr "Aggiungi al sito la lingua {0}"
+
+#: "Orchard.Mvc.DataAnnotations.LocalizedRangeAttribute"
+msgctxt "Orchard.Mvc.DataAnnotations.LocalizedRangeAttribute"
+msgid "The field {0} must be between {1} and {2}."
+msgstr "Il campo {0} deve essere compreso fra {1} e {2}."
+
+#: "Orchard.Mvc.DataAnnotations.LocalizedRegularExpressionAttribute"
+msgctxt "Orchard.Mvc.DataAnnotations.LocalizedRegularExpressionAttribute"
+msgid "The field {0} must match the regular expression '{1}'."
+msgstr "Il campo {0} deve corrispondere all'espressione regolare '{1}'."
+
+#: "Orchard.Mvc.DataAnnotations.LocalizedRequiredAttribute"
+msgctxt "Orchard.Mvc.DataAnnotations.LocalizedRequiredAttribute"
+msgid "The {0} field is required."
+msgstr "Il campo {0} è richiesto."
+
+#: "Orchard.Mvc.DataAnnotations.LocalizedStringLengthAttribute"
+msgctxt "Orchard.Mvc.DataAnnotations.LocalizedStringLengthAttribute"
+msgid "The field {0} must be a string with a minimum length of {2} and a maximum length of {1}."
+msgstr "Il campo {0} deve essere una stringa con una lunghezza minima di {2} e una lunghezza massima di {1}."
+
+#: "Orchard.Mvc.DataAnnotations.LocalizedStringLengthAttribute"
+msgctxt "Orchard.Mvc.DataAnnotations.LocalizedStringLengthAttribute"
+msgid "The field {0} must be a string with a maximum length of {1}."
+msgstr "Il campo {0} deve essere una stringa con una lunghezza massima di {1}."
+
+#: "Orchard.Security.Authorizer"
+msgctxt "Orchard.Security.Authorizer"
+msgid "{0}. Anonymous users do not have {1} permission."
+msgstr "{0}. Gli utenti anonimi non hanno il permesso {1}."
+
+#: "Orchard.Security.Authorizer"
+msgctxt "Orchard.Security.Authorizer"
+msgid "{0}. Current user, {2}, does not have {1} permission."
+msgstr "{0}. L'utente attuale, {2}, non ha il permesso {1}."
+
+#: "Orchard.UI.Admin.AdminFilter"
+msgctxt "Orchard.UI.Admin.AdminFilter"
+msgid "Can't access the admin"
+msgstr "Impossibile accedere all'amministrazione"
+
+#. "Hello world"
+msgctxt "Orchard.Tests.UI.Notify.NotifierTests"
+msgid "Hello world"
+msgstr "Ciao a tutti"
+
+#. "More Info"
+msgctxt "Orchard.Tests.UI.Notify.NotifierTests"
+msgid "More Info"
+msgstr "Altre informazioni"
+
+#. "Boom"
+msgctxt "Orchard.Tests.UI.Notify.NotifierTests"
+msgid "Boom"
+msgstr "Boom"
+

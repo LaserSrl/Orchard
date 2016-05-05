@@ -212,6 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CountPanelController.cs" />
+    <Compile Include="Controllers\ExternalPushController.cs" />
     <Compile Include="Controllers\TaxonomiePushController.cs" />
     <Compile Include="Controllers\TransferDeliveryReportController.cs" />
     <Compile Include="Drivers\MobileContactPartDriver.cs" />
@@ -223,6 +224,7 @@
     <Compile Include="Handlers\MobileContactPartHandler.cs" />
     <Compile Include="Handlers\SmsGatewayPartHandler.cs" />
     <Compile Include="Handlers\SmsPlaceholdersSettingsHandler.cs" />
+    <Compile Include="Handlers\SmsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\UserPwdRecoveryPartHandler.cs" />
     <Compile Include="Models\MobileContactPart.cs" />
     <Compile Include="Models\SmsGatewayPart.cs" />
@@ -236,6 +238,7 @@
     </Compile>
     <Compile Include="Services\MissingSmsSettingsBanner.cs" />
     <Compile Include="Services\SmsCommunicationService.cs" />
+    <Compile Include="Services\SmsValidationService.cs" />
     <Compile Include="SMSGatewayMigration.cs" />
     <Compile Include="SmsMigrations.cs" />
     <Compile Include="Handlers\DeviceFilter.cs" />

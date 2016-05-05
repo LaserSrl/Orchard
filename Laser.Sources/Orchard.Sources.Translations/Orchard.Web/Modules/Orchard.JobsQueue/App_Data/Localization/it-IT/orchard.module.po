@@ -1,0 +1,159 @@
+#. "Orchard.JobsQueue.Name"
+msgctxt "~/Modules/Orchard.JobsQueue/Module.txt"
+msgid "Jobs Queue"
+msgstr "Coda lavori"
+
+msgctxt "~/Modules/Orchard.JobsQueue/Module.txt"
+msgid "The Orchard Team"
+msgstr "The Orchard Team"
+
+msgctxt "~/Modules/Orchard.JobsQueue/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.JobsQueue/Module.txt"
+msgid "This module provides a jobs queue to process jobs asynchronously."
+msgstr "Questo modulo fornisce una coda di lavori per elaborare i processi in modo asincrono."
+
+msgctxt "~/Modules/Orchard.JobsQueue/Module.txt"
+msgid "Provides a jobs queue to process jobs asynchronously."
+msgstr "Fornisce una coda di lavori per elaborare i processi in modo asincrono."
+
+#. "Orchard.JobsQueue.UI.Category"
+msgctxt "~/Modules/Orchard.JobsQueue/Module.txt"
+msgid "Developer"
+msgstr "Sviluppatore"
+
+msgctxt "~/Modules/Orchard.JobsQueue/Module.txt"
+msgid "Provides a UI to manage queued jobs."
+msgstr "Fornisce un'interfaccia utente per gestire i lavori in coda."
+
+msgctxt "~/Modules/Orchard.JobsQueue/Module.txt"
+msgid "Jobs Queue UI"
+msgstr "Interfaccia utente per i lavori"
+
+#: "Orchard.JobsQueue.AdminMenu"
+msgctxt "Orchard.JobsQueue.AdminMenu"
+msgid "Jobs Queue"
+msgstr "Coda lavori"
+
+#: "Orchard.JobsQueue.Controllers.AdminController"
+msgctxt "Orchard.JobsQueue.Controllers.AdminController"
+msgid "The queue has been resumed."
+msgstr "La coda è stata ripresa."
+
+#: "Orchard.JobsQueue.Controllers.AdminController"
+msgctxt "Orchard.JobsQueue.Controllers.AdminController"
+msgid "The queue has been paused."
+msgstr "La coda è stata sospesa."
+
+#: "Orchard.JobsQueue.Controllers.AdminController"
+msgctxt "Orchard.JobsQueue.Controllers.AdminController"
+msgid "Processing has started."
+msgstr "Il processo è cominciato."
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/Details.cshtml"
+msgid "Job Details"
+msgstr "Dettagli del lavoro"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/Details.cshtml"
+msgid "Priority"
+msgstr "Priorità"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/Details.cshtml"
+msgid "Created"
+msgstr "Data di creazione"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/Details.cshtml"
+msgid "Payload"
+msgstr "Carico utile"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/Details.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/Details.cshtml"
+msgid "Back"
+msgstr "Indietro"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "Jobs Queue"
+msgstr "Coda lavori"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "Status: {0}"
+msgstr "Stato: {0}"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "Resume"
+msgstr "Riprendi"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "Pause"
+msgstr "Pausa"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "Process Now"
+msgstr "Inizia il processo adesso"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "The queue is empty."
+msgstr "La coda è vuota."
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "Priority"
+msgstr "Priorità"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "Type"
+msgstr "Tipo"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "Created"
+msgstr "Data di creazione"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "Actions"
+msgstr "Azioni"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "Low"
+msgstr "Bassa"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "Normal"
+msgstr "Normale"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "High"
+msgstr "Alta"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "None"
+msgstr "Nessuno"
+
+#: "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/List.cshtml"
+msgid "Details"
+msgstr "Dettagli"
+
+#: "~/Modules/Orchard.JobsQueue/Views/EditorTemplates/Parts/JobsQueueSettings.cshtml"
+msgctxt "~/Modules/Orchard.JobsQueue/Views/EditorTemplates/Parts/JobsQueueSettings.cshtml"
+msgid "Messaging"
+msgstr "Messaggistica"
+

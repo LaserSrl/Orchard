@@ -1,45 +1,65 @@
-﻿
-@model Laser.Orchard.Mobile.ViewModels.MobilePushVM
+﻿@model Laser.Orchard.Mobile.ViewModels.MobilePushVM
+@{
+    Script.Require("jQuery");
+    Script.Require("rcswitcher").AtHead();
+    Style.Require("rcswitcher").AtHead();
+    bool disabledElements = Model.PushSent;
+}
+@using (Script.Foot()) {
+    <script type="text/javascript">
+     $(function () {
+            $('.rcswitcher-checkbox-push').rcSwitcher({
+                theme: 'flat',
+                blobOffset: 1,
+                onText: '@T("YES")',
+                offText: '@T("NO")'
+            });
+        });
+    </script>
+}
 <div id="mobile-comm-container" class="comm-tabbed">
-<fieldset>
-    <legend>@T("Mobile Push")</legend>
-    <div class="editor-field">
-       @Html.HiddenFor(m => m.TitlePush)
-         @*<div class="editor-label">@Html.LabelFor(m => m.TitlePush, T("Title"))</div>
-        <div class="editor-field">@Html.TextBoxFor(m => m.TitlePush, new { @class = "text large" })</div>*@
-        <br />
-        <div class="editor-label">@Html.LabelFor(m => m.TextPush, T("Text"))</div>
-        <div class="editor-field">@Html.TextAreaFor(m => m.TextPush, new { @class = "text large" })</div>
-        <br />
-            @if (Model.PushSent)
-            {
-                <div class="message message-Error">@T("This Push message has been already sent. You will be able to edit and save it, but it will not be sent anymore on next publish.")</div>
-            }
-            else
-            {
-                <div class="checkbox-and-label">
-                    @Html.CheckBoxFor(m => m.ToPush)
-                    <label for="@Html.FieldIdFor(m => m.ToPush)" class="forcheckbox">@T("Push on next Publish") </label>
-                    <span class="hint">@T("Push will be sent to devices when ContentItem will published")</span>
-                </div>
-                <br />
-                if (Model.ShowTestOptions){
-                <div class="checkbox-and-label">
-                    @Html.CheckBoxFor(m => m.TestPush, new { @class = "checkbox" })
-                    <label for="@Html.FieldIdFor(m => m.TestPush)" class="forcheckbox">@T("Test Push on device") </label>
-                    <span class="hint">@T("Mask to make test for Push... this option is set by settings of module")</span>
-                </div>
-                }else{
-                @Html.HiddenFor(m=>m.TestPush)
+    <fieldset>
+        <legend>@T("Mobile Push")</legend>
+        <div class="editor-field">
+           @Html.HiddenFor(m => m.PushSent)
+           @Html.HiddenFor(m => m.TitlePush)
+            <br />
+            <div class="editor-label">@Html.LabelFor(m => m.TextPush, T("Text"))</div>
+            <div class="editor-field">@Html.TextAreaFor(m => m.TextPush, new { @class = "text large" })</div>
+        </div>
+    </fieldset>
+    <fieldset>
+        @Html.LabelFor(m => m.ToPush, T("Approved").Text, new { @class = "forcheckbox" })
+        @if (disabledElements == false) { 
+            @Html.CheckBoxFor(model => model.ToPush, new { @class = "rcswitcher-checkbox-push" }) 
+            <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet sent.")
+        }
+        else {
+            @Html.CheckBoxFor(model => model.ToPush, new { @class = "rcswitcher-checkbox-push", @disabled = "disabled" }) 
+            <i class="fa fa-check-circle" style="color: green"></i> @T("Message already sent.")
+            <div class="message message-Error">@T("This Push message has been already sent. You will be able to edit and save it, but it will not be sent anymore on next publish.")</div>
+        }
+    </fieldset>
+    <fieldset id="test-push-container" style="@((!Model.ShowTestOptions) ? "display:none;" : "")">
+        @*@if (Model.ShowTestOptions){
+            *@<div class="checkbox-and-label">
+                <label for="@Html.FieldIdFor(m => m.TestPush)" class="forcheckbox">@T("Test Push on device") </label>
+                @if(disabledElements == false) {
+                    @Html.CheckBoxFor(m => m.TestPush, new { @class = "rcswitcher-checkbox-push" })
                 }
-            }
+                else {
+                    @Html.CheckBoxFor(m => m.TestPush, new { @class = "rcswitcher-checkbox-push", @disabled = "disabled" })
+                }
+                <span class="hint">@T("Mask to make test for Push... this option is set by settings of module")</span>
+            </div>
+    </fieldset>
+    <fieldset>
         <div class="editor-label">@Html.LabelFor(m => m.DevicePush, T("To Device"))</div>
         <div class="editor-field">@Html.DropDownListFor(m => m.DevicePush, Model.ListOfDevice)
             <span class="hint">@T("Select Devices")</span>
         </div>
-    </div>
-</fieldset>
-    </div>
+    </fieldset>
+</div>
 <div class="tab-folder">
     <a href="#mobile-comm-container"><i class="fa fa-mobile"></i>@T("Mobile")</a>
 </div>

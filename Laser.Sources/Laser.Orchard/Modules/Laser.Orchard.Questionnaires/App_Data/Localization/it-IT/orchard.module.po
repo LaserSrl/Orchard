@@ -392,6 +392,62 @@ msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontE
 msgid "You have to be logged in, before answering a questionnaire!"
 msgstr "Devi essere autenticato per poter rispondere al nostro questionario!"
 
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Questionnaire Answers"
+msgstr "Risposte al questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Questionnaire Statistics"
+msgstr "Statistiche del questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Show all answers"
+msgstr "Mostra tutte le risposte"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "This questionnaire contains no answers."
+msgstr "Questo questionario non ha ricevuto nessuna risposta."
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "By {0}"
+msgstr "Di {0}"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "Clear"
+msgstr "Cancella"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "Language: {0}"
+msgstr "Lingua: {0}"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "Last modified: {0}"
+msgstr "Ultima modifica: {0}"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "Questionnaire Statistics"
+msgstr "Statistiche del questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "Search"
+msgstr "Cerca"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "Search:"
+msgstr "Cerca:"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/QuestionDetail.cshtml"
+msgid "Answers Detail"
+msgstr "Dettagli delle risposte"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/QuestionDetail.cshtml"
+msgid "Questionnaire Answers"
+msgstr "Risposte al questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/QuestionDetail.cshtml"
+msgid "Questionnaire Statistics"
+msgstr "Statistiche del questionario"
+
 msgctxt "Laser.Orchard.Questionnaires.Activities.GameRankingSubmittedgEvent"
 msgid "Done"
 msgstr "Fatto"

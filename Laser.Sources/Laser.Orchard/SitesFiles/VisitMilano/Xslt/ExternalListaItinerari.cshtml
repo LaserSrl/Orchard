@@ -1,0 +1,162 @@
+@functions{
+	// used to get value from e015 format
+		void GetChildValue(XmlDocument thedoc,string thepath,bool HtmlFormat=false){
+			foreach (XmlNode child_node in thedoc.SelectNodes(thepath)) {
+				if (child_node.HasChildNodes) {
+					if (HtmlFormat){
+						child_node.InnerXml = child_node.SelectSingleNode("value").InnerXml;
+					}else{
+						child_node.InnerXml = child_node.SelectSingleNode("value").FirstChild.InnerText;child_node.InnerXml = StripHTML(child_node.SelectSingleNode("value").FirstChild.InnerText.Replace("<br/>"," "));
+					}
+				}
+			}
+		}
+
+	}
+@{
+	XmlDocument mydoc=ToXmlDocument(Model);
+	
+	// aggiungo raggruppamento dei nodi itinerary sotto un unico nodo denominato lista e rimuovo i nodi non di tipo itinerary
+	mydoc=aggiungipadre(mydoc,"root","ToRemove","itinerary");
+	mydoc=RimuoviFratelli(mydoc,"/ToRemove");
+//	mydoc=cambianome(mydoc,"/lista", "ToRemove");
+	
+	
+	//foreach (XmlNode child_node in mydoc.SelectNodes("//eventId")) {
+	//	child_node.ParentNode.RemoveChild(child_node);
+	//}
+	
+	
+	GetChildValue(mydoc,"//itinerary/id");
+	foreach (XmlNode child_node in mydoc.SelectNodes("//itinerary/id")) {
+		XmlNode OriginalId = mydoc.CreateElement("OriginalId");
+		OriginalId.InnerXml=child_node.InnerXml;
+		child_node.ParentNode.AppendChild(OriginalId);
+	}
+	mydoc=cambianome(mydoc,"/itinerary/id","Sid");
+	foreach (XmlNode child_node in mydoc.SelectNodes("//itinerary/Sid")) {
+		child_node.InnerText="Itinerary:"+child_node.InnerText;
+	}
+    //Hermes
+    GetChildValue(mydoc, "//itinerary/name");
+    mydoc = ConvertArrayOfStringToString(mydoc, "/itinerary", "name", "Name", true);
+    foreach (System.Xml.XmlNode child_node in mydoc.SelectNodes("//itinerary")) {
+        mydoc = AggiungiShareLink(mydoc, child_node, child_node.SelectSingleNode("Name") != null ? HttpUtility.HtmlEncode(child_node.SelectSingleNode("Name").InnerText) : "", "http://www.turismo.milano.it/", child_node.SelectSingleNode("mediaResource/uri") != null ? child_node.SelectSingleNode("mediaResource/uri").InnerText : "");
+    }
+    GetChildValue(mydoc, "//itinerary/headline");
+	
+	GetChildValue(mydoc,"//itinerary/descriptiontext",true);
+
+    mydoc = ConvertArrayOfStringToString(mydoc, "/itinerary", "priceInfo", "PriceInfo", true);
+	mydoc=ConvertArrayOfStringToString(mydoc,"/itinerary","descriptiontext","Descriptiontext",true);
+
+	//rendi array contact
+	mydoc=aggiungipadre(mydoc,"/itinerary","Contacts","contact");
+	mydoc=aggiungifiglio(mydoc,"/itinerary/Contacts","contact");
+		mydoc=cambianome(mydoc,"/contact", "Contact");
+		//rendi array address
+	mydoc=aggiungipadre(mydoc,"/itinerary","Addresses","address");
+	mydoc=aggiungifiglio(mydoc,"/itinerary/Addresses","address");
+mydoc=cambianome(mydoc,"/address", "Address");
+		
+	//GetChildValue(mydoc,"//itinerary/moreinfo");
+	mydoc=aggiungipadre(mydoc,"/itinerary","MoreInfos","moreInfo");
+	mydoc=aggiungifiglio(mydoc,"/itinerary/MoreInfos","moreInfo");
+	mydoc=cambianome(mydoc,"/moreInfo", "MoreInfo");
+	//rendi array mediaResource
+	GetChildValue(mydoc,"//mediaResource/name");
+
+	string child_node_name="";
+	string child_node_uri="";
+	string child_node_mimeType="";
+	foreach (XmlNode child_node in mydoc.SelectNodes("//itinerary/mediaResource")) {
+		child_node_name="";
+		child_node_uri="";
+		child_node_mimeType="";
+		if (child_node.SelectSingleNode("name")!=null){
+			child_node_name=child_node.SelectSingleNode("name").InnerText;
+		}
+		if (child_node.SelectSingleNode("uri")!=null){
+			child_node_uri=child_node.SelectSingleNode("uri").InnerText;
+		}
+		if (child_node.SelectSingleNode("mimeType")!=null){
+			child_node_mimeType=child_node.SelectSingleNode("mimeType").InnerText;
+		}
+		XmlNode map = InsertImage(mydoc,child_node_uri,child_node_name,child_node_mimeType,"","");
+		child_node.ParentNode.AppendChild(map);
+		child_node.ParentNode.RemoveChild(child_node);
+	}
+	
+
+	foreach (XmlNode child_node in mydoc.SelectNodes("//itinerary/geolocation")) {
+	if (child_node.SelectSingleNode("geocoordinates")!=null){
+			if (child_node.SelectSingleNode("geocoordinates").SelectSingleNode("ycoord")!=null && child_node.SelectSingleNode("geocoordinates").SelectSingleNode("xcoord")!=null){
+	
+		XmlNode map = InsertMap(mydoc,child_node.SelectSingleNode("geocoordinates").SelectSingleNode("ycoord").InnerText, child_node.SelectSingleNode("geocoordinates").SelectSingleNode("xcoord").InnerText,"");
+		child_node.ParentNode.AppendChild(map);
+		child_node.ParentNode.RemoveChild(child_node);
+	}
+	}
+	}
+	//lo
+	foreach (XmlNode child_node in mydoc.SelectNodes("//venueOrVenueIdOrGeocoordinates")) {
+		if (child_node.SelectSingleNode("geocoordinates")!=null){
+			if (child_node.SelectSingleNode("geocoordinates").SelectSingleNode("ycoord")!=null && child_node.SelectSingleNode("geocoordinates").SelectSingleNode("xcoord")!=null){
+				XmlNode map = InsertMap(mydoc,child_node.SelectSingleNode("geocoordinates").SelectSingleNode("ycoord").InnerText, child_node.SelectSingleNode("geocoordinates").SelectSingleNode("xcoord").InnerText,"");
+				child_node.ParentNode.AppendChild(map);
+				child_node.ParentNode.RemoveChild(child_node);
+			}
+		}
+	}
+	mydoc=cambianome(mydoc,"/venueOrVenueIdOrGeocoordinates", "VenueOrVenueIdOrGeocoordinates");
+
+	GetChildValue(mydoc,"//itineraryStep/descriptiontext",true);
+	
+	
+//	foreach (XmlNode child_node in mydoc.SelectNodes("//itineraryStep")) {
+//		XmlNode map = InsertMap(mydoc,"0", "0","");
+//		child_node.AppendChild(map);
+//	}
+	
+	mydoc=aggiungipadre(mydoc,"/itinerary","ItinerarySteps","itineraryStep");
+	mydoc=aggiungifiglio(mydoc,"/ItinerarySteps","itineraryStep");
+	mydoc=aggiungipadre(mydoc,"/itinerary","GalleryItinerari","MediaPart");
+	mydoc=aggiungifiglio(mydoc,"/itinerary/GalleryItinerari","MediaPart");
+	//mydoc=aggiungipadre(mydoc,"/itinerary","Gallery","MediaParts");
+	
+	
+	
+	//lo
+	foreach (XmlNode child_node in mydoc.SelectNodes("//itineraryStep/id")) {
+
+
+		child_node.InnerText="ItineraryStep:"+child_node.InnerText;
+	}
+	mydoc=cambianome(mydoc,"/itineraryStep", "ItineraryStep");
+	mydoc=cambianome(mydoc,"/ItineraryStep/id", "Sid");
+	GetChildValue(mydoc,"//ItineraryStep/name");
+	
+	//category
+	GetChildValue(mydoc,"//itinerary/category");
+	mydoc=ConvertArrayOfStringToString(mydoc,"/itinerary","category","Category");
+
+	GetChildValue(mydoc,"//schedule/descriptiontext",true);
+	
+	GetChildValue(mydoc,"//itinerary/itineraryOrVenueId");
+	mydoc=ConvertArrayOfStringToString(mydoc,"/itinerary","itineraryOrVenueId","VenueOrVenueId");
+	
+
+	
+	mydoc=ConvertStringTimeStampToDate(mydoc,"/startDateTime",true);
+	mydoc=ConvertStringTimeStampToDate(mydoc,"/endDateTime",true);
+
+	mydoc=cambianome(mydoc,"/itineraryStep/id", "ItineraryId");
+	GetChildValue(mydoc,"//itineraryStep/name");
+	mydoc=cambianome(mydoc,"/itineraryStep", "ItineraryStep");
+	mydoc=cambianome(mydoc,"/itinerary", "Itinerary");
+	mydoc=rendinumeric(mydoc,"/MapPart/Latitude");
+mydoc=rendinumeric(mydoc,"/MapPart/Longitude");
+mydoc=cambianome(mydoc,"/itineraryStep", "ItineraryStep");
+
+	SpanXDocument(ToXDocument(mydoc).Root);
+}

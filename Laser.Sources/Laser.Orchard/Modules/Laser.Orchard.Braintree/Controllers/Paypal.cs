@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.Braintree.Models;
 using Laser.Orchard.Braintree.Services;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard;
 using Orchard.ContentManagement;
 using System;
@@ -15,6 +16,7 @@ using Bt = Braintree;
 
 namespace Laser.Orchard.Braintree.Controllers
 {
+    [WebApiKeyFilter(false)]
     public class Paypal : ApiController
     {
         private readonly IOrchardServices _orchardServices;
@@ -26,8 +28,7 @@ namespace Laser.Orchard.Braintree.Controllers
             _braintreeService = braintreeService;
         }
 
-        [HttpGet]
-        public HttpResponseMessage GetClientToken()
+        public HttpResponseMessage Get()
         {
             var clientToken = _braintreeService.GetClientToken();
 
@@ -37,8 +38,7 @@ namespace Laser.Orchard.Braintree.Controllers
             return result;
         }
 
-        [HttpPost]
-        public HttpResponseMessage Pay()
+        public HttpResponseMessage Post()
         {
             string esito = "";
             var locRequest = HttpContext.Current.Request;

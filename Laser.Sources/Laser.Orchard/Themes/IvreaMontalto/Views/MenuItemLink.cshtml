@@ -1,0 +1,15 @@
+﻿@using Orchard.Environment.Configuration
+@{
+    var settings = WorkContext.Resolve<ShellSettings>();
+    var prefix = settings.RequestUrlPrefix;
+}
+@functions {
+    // To support the layout classifaction below. Implementing as a razor function because we can, could otherwise be a Func<string[], string, string> in the code block following.
+    string NormalizeUrl(string url, string prefix) {
+        return url.StartsWith("~") ? Url.Content(url.StartsWith("~/" + prefix) ? url : url.Replace("~", "~/" + prefix)) : url;
+    }
+}
+@{
+    var url = Model.Href ?? "#";
+}
+<a href="@url">@Model.Text</a>

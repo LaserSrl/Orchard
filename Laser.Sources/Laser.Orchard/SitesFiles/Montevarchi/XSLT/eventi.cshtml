@@ -1,0 +1,56 @@
+@{
+
+
+	XmlDocument mydoc=ToXmlDocument(Model);
+
+
+mydoc=cambianome(mydoc,"rss/channel/item","ExternalEvents");
+mydoc=aggiungipadre(mydoc,"rss/channel","lista","ExternalEvents");
+mydoc=RimuoviFratelli(mydoc,"rss/channel/lista");
+
+mydoc=cambianome(mydoc,"rss/channel/lista/ExternalEvents/title", "TitleText");
+mydoc=cambianome(mydoc,"rss/channel/lista/ExternalEvents/link", "LinkText");
+mydoc=cambianome(mydoc,"rss/channel/lista/ExternalEvents/description", "DescriptionText");
+
+foreach (XmlNode bookToModify in mydoc.SelectNodes("/rss/channel/lista/ExternalEvents/DescriptionText")){
+	string description = bookToModify.ChildNodes[0].Value;
+	int start = description.IndexOf("src=\"");
+	if (start>0){
+		string trimmed = description.Substring(start+5);
+		int end = trimmed.IndexOf("\"");
+		if (end > 0){
+			trimmed = trimmed.Substring(0, end);
+			XmlNode newString = mydoc.CreateElement("ImageUrl");
+			newString.InnerXml= "http://www.comune.montevarchi.ar.it" + trimmed.ToString();
+			bookToModify.ParentNode.AppendChild(newString);
+		}
+	}
+}
+
+mydoc=ConvertDateWithFormat(mydoc,"rss/channel/lista/ExternalEvents/pubDate");
+mydoc=cambianome(mydoc,"rss/channel/lista/ExternalEvents/pubDate", "Date");
+
+int i=0;
+foreach (XmlNode bookToModify in mydoc.SelectNodes("/rss/channel/lista/ExternalEvents")){
+
+    i++;
+	XmlNode author = mydoc.CreateElement("Sid");
+	author.InnerText="ExternalEvents:"+i.ToString();
+	bookToModify.AppendChild(author);
+
+    XmlNode imgNode = bookToModify.SelectSingleNode("ImageUrl");
+    string immagine = "";
+    if (imgNode != null){
+        immagine = imgNode.InnerXml;
+    }else{
+        immagine = "http://www.michiamavavalerio.it/uploads/1/9/8/8/19886671/518106_orig.jpg";
+    }  
+	mydoc=AggiungiShareLink(mydoc, bookToModify, bookToModify.SelectSingleNode("TitleText").InnerXml + " #Montevarchi", bookToModify.SelectSingleNode("LinkText").InnerXml, immagine);
+
+}
+
+mydoc=cambianome(mydoc,"rss/channel/lista", "ToRemove");
+mydoc=cambianome(mydoc,"rss/channel", "ToRemove");
+
+	SpanXDocument(ToXDocument(mydoc).Root);
+}

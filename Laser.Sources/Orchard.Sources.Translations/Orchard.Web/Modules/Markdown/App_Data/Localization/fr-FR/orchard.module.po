@@ -1,0 +1,41 @@
+msgctxt "~/Modules/Markdown/Module.txt"
+msgid "Markdown"
+msgstr "Markdown"
+
+msgctxt "~/Modules/Markdown/Module.txt"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+msgctxt "~/Modules/Markdown/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Markdown/Module.txt"
+msgid "The Markdown module enables rich text contents to be created using the Markdown syntax."
+msgstr "Le module Markdown permet l'édition de contenus enrichis en utilisant la syntaxe Markdown."
+
+#: "Markdown.Handlers.MarkdownSiteSettingsPartHandler"
+msgctxt "Markdown.Handlers.MarkdownSiteSettingsPartHandler"
+msgid "Markdown"
+msgstr "Markdown"
+
+#: "~/Modules/Markdown/Views/Body-Markdown.Editor.cshtml"
+msgctxt "~/Modules/Markdown/Views/Body-Markdown.Editor.cshtml"
+msgid "Insert/Update Media"
+msgstr "Ajouter/mettre à jour le media"
+
+#: "~/Modules/Markdown/Views/EditorTemplates/Parts/Markdown.MarkdownSiteSettings.cshtml"
+msgctxt "~/Modules/Markdown/Views/EditorTemplates/Parts/Markdown.MarkdownSiteSettings.cshtml"
+msgid "Markdown"
+msgstr "Markdown"
+
+#: "~/Modules/Markdown/Views/EditorTemplates/Parts/Markdown.MarkdownSiteSettings.cshtml"
+msgctxt "~/Modules/Markdown/Views/EditorTemplates/Parts/Markdown.MarkdownSiteSettings.cshtml"
+msgid "Use Markdown to write Blog Post"
+msgstr "Utiliser Markdown pour écrire sur un billet de blog"
+
+#: "~/Modules/Markdown/Views/EditorTemplates/Parts/Markdown.MarkdownSiteSettings.cshtml"
+msgctxt "~/Modules/Markdown/Views/EditorTemplates/Parts/Markdown.MarkdownSiteSettings.cshtml"
+msgid "Enable to change the default editor for all blog posts to Markdown."
+msgstr "Active Markdown en tant qu'éditeur par défaut pour les billets de blog."
+

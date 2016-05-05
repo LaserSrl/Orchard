@@ -3,6 +3,7 @@ using Laser.Orchard.Questionnaires.Services;
 using Laser.Orchard.Questionnaires.ViewModels;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
@@ -15,7 +16,7 @@ using System.Web;
 using System.Web.Http;
 
 namespace Laser.Orchard.Questionnaires.Controllers {
-
+    [WebApiKeyFilter(false)]
     public class QuestionnaireResponseController : ApiController {
         private readonly IQuestionnairesServices _questionnairesServices;
         private readonly IContentManager _contentManager;

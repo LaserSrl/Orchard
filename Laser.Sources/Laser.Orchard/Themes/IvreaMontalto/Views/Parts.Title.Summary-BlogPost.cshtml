@@ -1,0 +1,6 @@
+@{
+    Orchard.ContentManagement.ContentItem contentItem = Model.ContentPart.ContentItem;
+    string title = Model.Title.ToString();
+}
+
+<p class="risultato"@Html.ItemDisplayLink(title, contentItem)</p>

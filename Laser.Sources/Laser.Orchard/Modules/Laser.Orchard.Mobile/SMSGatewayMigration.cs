@@ -52,5 +52,12 @@ namespace Laser.Orchard.Mobile {
             
             return 3;
         }
+
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("SmsGatewayPartRecord", table => table
+                .AddColumn("PrefixForTest", System.Data.DbType.String, col => col.WithLength(5)));
+
+            return 4;
+        }
     }
 }

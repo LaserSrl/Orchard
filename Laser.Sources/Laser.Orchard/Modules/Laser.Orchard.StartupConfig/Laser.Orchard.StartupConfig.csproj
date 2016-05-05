@@ -137,6 +137,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Workflows\bin\Orchard.Workflows.dll</HintPath>
     </Reference>
+    <Reference Include="RazorEngine">
+      <HintPath>..\..\..\packages\RazorEngine.3.7.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -144,6 +147,10 @@
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetwebapi\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -202,6 +209,7 @@
     <Compile Include="Drivers\TermPartExtensionDriver.cs" />
     <Compile Include="Controllers\UsersGroupsSettingsController.cs" />
     <Compile Include="Drivers\UsersGroupsDriver.cs" />
+    <Compile Include="Exceptions\ExternalFieldRemoteException.cs" />
     <Compile Include="Handlers\BlogPostPartHandler.cs" />
     <Compile Include="Handlers\ContentEventHandler.cs" />
     <Compile Include="Handlers\ContentPickerConnectorHandler.cs" />
@@ -238,9 +246,17 @@
     <Compile Include="Projections\FavoriteCultureFilter.cs" />
     <Compile Include="Projections\FavoriteCultureForm.cs" />
     <Compile Include="Projections\IProviderForProections.cs" />
+    <Compile Include="RazorCodeExecution\Activities\RazorExecuteActivity.cs" />
+    <Compile Include="RazorCodeExecution\Forms\RazorExecuteForm.cs" />
+    <Compile Include="Services\ApiKeyService.cs" />
+    <Compile Include="Services\ContentSerializationServices.cs" />
+    <Compile Include="Services\IApiKeyService.cs" />
+    <Compile Include="RazorCodeExecution\Services\IRazorExecuteService.cs" />
     <Compile Include="Services\IMaintenanceService.cs" />
     <Compile Include="Services\MaintenanceBanner.cs" />
     <Compile Include="Services\MaintenanceService.cs" />
+    <Compile Include="Tokens\AdditionalDateTokens.cs" />
+    <Compile Include="Tokens\RazorCodeExecutionToken.cs" />
     <Compile Include="ViewModels\MaintenanceIndexVM.cs" />
     <Compile Include="ViewModels\MaintenanceVM.cs" />
     <Compile Include="ViewModels\Response.cs" />
@@ -294,6 +310,7 @@
     <Compile Include="ViewModels\UsersGroupsSettingsVM.cs" />
     <Compile Include="ViewModels\UsersGroupsVM.cs" />
     <Compile Include="WebApiProtection\Filters\ApiKeyFilter.cs" />
+    <Compile Include="WebApiProtection\Filters\WebApiKeyFilter.cs" />
     <Compile Include="WebApiProtection\Handlers\ProtectionSettingsHandler.cs" />
     <Compile Include="WebApiProtection\Migrations.cs" />
     <Compile Include="WebApiProtection\Models\ProtectionSettingsPart.cs" />
@@ -322,6 +339,7 @@
     <Content Include="Views\EditorTemplates\Parts\FavoriteCulturePart_Edit.cshtml" />
     <Content Include="Views\EditorTemplates\ExternalApplication.cshtml" />
     <Content Include="Views\displaynone.cshtml" />
+    <Content Include="Views\Activity-RazorExecute.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

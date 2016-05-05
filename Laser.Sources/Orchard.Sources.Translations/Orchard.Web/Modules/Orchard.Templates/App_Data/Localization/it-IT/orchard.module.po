@@ -1,0 +1,187 @@
+msgctxt "~/Modules/Orchard.Templates/Module.txt"
+msgid "Orchard.Templates"
+msgstr "Orchard.Templates"
+
+msgctxt "~/Modules/Orchard.Templates/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il Team di Orchard"
+
+msgctxt "~/Modules/Orchard.Templates/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.Templates/Module.txt"
+msgid "Provides a Template type that can be used to store template code and used as a shape."
+msgstr "Fornisce un Template che può essere utilizzato per memorizzare il codice e utilizzato come Shape."
+
+msgctxt "~/Modules/Orchard.Templates/Module.txt"
+msgid "Templates"
+msgstr "Modelli grafici"
+
+msgctxt "~/Modules/Orchard.Templates/Module.txt"
+msgid "Provides a Template type that represents a shape template, stored as a content item."
+msgstr "Fornisce un Modello grafico che rappresenta un modello di Forma, archiviato come un elemento di contenuto."
+
+#. "Orchard.Templates.Razor.Category"
+msgctxt "~/Modules/Orchard.Templates/Module.txt"
+msgid "Content"
+msgstr "Contenuto"
+
+msgctxt "~/Modules/Orchard.Templates/Module.txt"
+msgid "Razor Templates"
+msgstr "Modelli Razor"
+
+msgctxt "~/Modules/Orchard.Templates/Module.txt"
+msgid "Extends Templates with Razor templates."
+msgstr "Estende i Modelli grafici con Razor."
+
+#: "Orchard.Templates.AdminMenu"
+msgctxt "Orchard.Templates.AdminMenu"
+msgid "Templates"
+msgstr "Modelli grafici"
+
+#: "Orchard.Templates.Controllers.AdminController"
+msgctxt "Orchard.Templates.Controllers.AdminController"
+msgid "Couldn't publish selected content."
+msgstr "Impossibile pubblicare il contenuto selezionato."
+
+#: "Orchard.Templates.Controllers.AdminController"
+msgctxt "Orchard.Templates.Controllers.AdminController"
+msgid "Content successfully published."
+msgstr "Contenuto pubblicato con successo."
+
+#: "Orchard.Templates.Controllers.AdminController"
+msgctxt "Orchard.Templates.Controllers.AdminController"
+msgid "Couldn't unpublish selected content."
+msgstr "Impossibile annullare la pubblicazione del contenuto selezionato."
+
+#: "Orchard.Templates.Controllers.AdminController"
+msgctxt "Orchard.Templates.Controllers.AdminController"
+msgid "Content successfully unpublished."
+msgstr "Pubblicazione del contenuto annullata con successo."
+
+#: "Orchard.Templates.Controllers.AdminController"
+msgctxt "Orchard.Templates.Controllers.AdminController"
+msgid "Couldn't remove selected content."
+msgstr "Impossibile rimuovere il contenuto selezionato."
+
+#: "Orchard.Templates.Controllers.AdminController"
+msgctxt "Orchard.Templates.Controllers.AdminController"
+msgid "Content successfully removed."
+msgstr "Contenuto rimosso con successo."
+
+#: "Orchard.Templates.Drivers.ShapePartDriver"
+msgctxt "Orchard.Templates.Drivers.ShapePartDriver"
+msgid "Template processing error: {0}"
+msgstr "Errore nell'elaborazione del Modello grafico: {0}"
+
+#: "Orchard.Templates.Drivers.ShapePartDriver"
+msgctxt "Orchard.Templates.Drivers.ShapePartDriver"
+msgid "{0} names can only contain alphanumerical or underscore (_) characters and have to start with a letter."
+msgstr "i nomi {0} possono solo contenere solo caratteri alfanumerici o sottolineatura (_) e devono iniziare con una lettera."
+
+#: "Orchard.Templates.Services.NoTemplateProcessorBanner"
+msgctxt "Orchard.Templates.Services.NoTemplateProcessorBanner"
+msgid "To be able to use Templates enable a template processor like Razor Templates."
+msgstr "Per poter utilizzare i Modelli è necessario un Processore di Modelli tipo Modelli Razor."
+
+#: "~/Modules/Orchard.Templates/Views/Admin/CreatableTypeList.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/CreatableTypeList.cshtml"
+msgid "Create New Template"
+msgstr "Crea nuovo modello grafico"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "Manage Templates"
+msgstr "Gestione Modelli grafici"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "Create New Template"
+msgstr "Creare nuovo modello grafico"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "Manage {0}s"
+msgstr "Gestisci {0}"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "Create New {0}"
+msgstr "Crea nuovo {0}"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "Actions:"
+msgstr "Azioni:"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "Choose action..."
+msgstr "Scegli l'azione..."
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "Publish Now"
+msgstr "Pubblica Ora"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "Unpublish"
+msgstr "Annulla Pubblicazione"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+#. "Apply"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "Apply"
+msgstr "Applica"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "Show"
+msgstr "Visualizza"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "any (show all)"
+msgstr "qualunque (mostra tutti)"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "Ordered by"
+msgstr "Ordinati per"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "recently created"
+msgstr "creati di recente"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "recently modified"
+msgstr "modificati di recente"
+
+#: "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Admin/List.cshtml"
+msgid "recently published"
+msgstr "pubblicati di recente"
+
+#: "~/Modules/Orchard.Templates/Views/DefinitionTemplates/Parts.Shape.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/DefinitionTemplates/Parts.Shape.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+#: "~/Modules/Orchard.Templates/Views/DefinitionTemplates/Parts.Shape.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/DefinitionTemplates/Parts.Shape.cshtml"
+msgid "The name of this template, which can be used to reference from code (as when using shape type names) and tokens."
+msgstr "Il nome di questo modello grafico, che può essere utilizzato con codice di riferimento (come quando si utilizzano nomi di tipi Shape) e token."
+
+#: "~/Modules/Orchard.Templates/Views/DefinitionTemplates/ShapePartSettingsViewModel.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/DefinitionTemplates/ShapePartSettingsViewModel.cshtml"
+msgid "Template Processor"
+msgstr "Processore di Modelli grafici"
+

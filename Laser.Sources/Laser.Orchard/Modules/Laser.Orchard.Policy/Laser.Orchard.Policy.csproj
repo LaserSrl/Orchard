@@ -48,6 +48,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Autoroute">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Autoroute\bin\Orchard.Autoroute.dll</HintPath>
     </Reference>
@@ -62,6 +66,10 @@
     </Reference>
     <Reference Include="Orchard.Localization">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Localization\bin\Orchard.Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.OutputCache, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.OutputCache\bin\Orchard.OutputCache.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Users, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -114,10 +122,13 @@
   <ItemGroup>
     <Compile Include="Controllers\PoliciesApiController.cs" />
     <Compile Include="Controllers\PoliciesController.cs" />
+    <Compile Include="Controllers\PoliciesUserController.cs" />
     <Compile Include="Drivers\PolicyPartDriver.cs" />
     <Compile Include="Drivers\PolicyTextInfoPartDriver.cs" />
     <Compile Include="Drivers\UserPolicyPartDriver.cs" />
     <Compile Include="Enumerators.cs" />
+    <Compile Include="Events\IPolicyEventHandler.cs" />
+    <Compile Include="Filters\PolicyFilter.cs" />
     <Compile Include="Handlers\PolicyUserEventHandler.cs" />
     <Compile Include="Handlers\PolicyPartHandler.cs" />
     <Compile Include="Handlers\PolicyTextInfoPartHandler.cs" />
@@ -131,6 +142,7 @@
     <Compile Include="Routes.cs" />
     <Compile Include="Services\PolicyServices.cs" />
     <Compile Include="Settings\PolicyPartSettingsHooks.cs" />
+    <Compile Include="ViewModels\PolicyEventViewModel.cs" />
     <Compile Include="ViewModels\PolicyForUserViewModel.cs" />
     <Compile Include="ViewModels\PolicyPartEditModel.cs" />
   </ItemGroup>
@@ -152,7 +164,9 @@
       <Name>Laser.Orchard.StartupConfig</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\PoliciesUser\ShowHistory.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Localization\fr-FR\orchard.module.po" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard;
 using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
@@ -31,6 +32,7 @@ using OrchardCore = Orchard.Core;
 
 namespace Laser.Orchard.ContentExtension.Controllers {
     [Obsolete("Replaced by ContentItemController")]
+    [WebApiKeyFilter(false)]
     public class ContentController : ApiController {
         private readonly IAuthenticationService _authenticationService;
         private readonly ICsrfTokenHelper _csrfTokenHelper;

@@ -76,30 +76,11 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\admin.js" />
-    <Content Include="Scripts\App.js" />
-    <Content Include="Scripts\App.min.js" />
-    <Content Include="Scripts\AppCard.js" />
-    <Content Include="Scripts\AppForm.js" />
-    <Content Include="Scripts\AppNavigation.js" />
-    <Content Include="Scripts\AppNavSearch.js" />
-    <Content Include="Scripts\AppOffcanvas.js" />
-    <Content Include="Scripts\AppVendor.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery.min.js" />
-    <Content Include="Scripts\jquery.autosize.min.js" />
-    <Content Include="Scripts\jquery.nanoscroller.min.js" />
+    <Content Include="Scripts\krake.js" />
     <Content Include="Scripts\main.js" />
-    <Content Include="Scripts\overthrow.min.js" />
-    <Content Include="Styles\bootstrap.css" />
-    <Content Include="Styles\font-awesome.min.css" />
-    <Content Include="Styles\fonts\fontawesome-webfont.svg" />
-    <Content Include="Styles\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Styles\fonts\Material-Design-Iconic-Font.svg" />
+    <Content Include="Styles\fonts\HANDGOTB.svg" />
     <Content Include="Styles\Images\adminNavBackground.gif" />
     <Content Include="Styles\Images\arrow-number.png" />
-    <Content Include="Styles\Images\avatar1.png" />
     <Content Include="Styles\Images\bg-app.png" />
     <Content Include="Styles\Images\bg-mail.png" />
     <Content Include="Styles\Images\bg-notifiche.png" />
@@ -144,8 +125,6 @@
     <Content Include="Styles\Images\krake-giallo.png" />
     <Content Include="Styles\Images\krake-rosso.png" />
     <Content Include="Styles\Images\krake-verde.png" />
-    <Content Include="Styles\Images\krake-orizontal-old.png" />
-    <Content Include="Styles\Images\krake-orizontal.png" />
     <Content Include="Styles\Images\list-arrow.png" />
     <Content Include="Styles\Images\logo-laser.png" />
     <Content Include="Styles\Images\logo.png" />
@@ -180,15 +159,7 @@
   <ItemGroup>
     <Content Include="Views\OrchardVersion.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Styles\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Styles\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Styles\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="Styles\fonts\Material-Design-Iconic-Font.eot" />
-    <Content Include="Styles\fonts\Material-Design-Iconic-Font.ttf" />
-    <Content Include="Styles\fonts\Material-Design-Iconic-Font.woff" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\Dashboard\Admin\Index.cshtml" />
   </ItemGroup>
@@ -196,33 +167,13 @@
     <Content Include="Styles\Images\brochure.pdf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Layout.cshtml">
-      <SubType>Code</SubType>
-    </Content>
+    <Content Include="Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ErrorPage.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\Header.cshtml" />
-    <Content Include="Views\LocalMenu.cshtml" />
-    <Content Include="Views\Menu.cshtml" />
-    <Content Include="Views\Pager.cshtml" />
-    <Content Include="Views\Title.cshtml" />
-    <Content Include="Views\User.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\MenuORI.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\fonts\fontawesome-webfont.eot" />
-    <Content Include="Styles\fonts\fontawesome-webfont.ttf" />
-    <Content Include="Styles\fonts\fontawesome-webfont.woff" />
-    <Content Include="Styles\fonts\fontawesome-webfont.woff2" />
-    <Content Include="Styles\fonts\FontAwesome.otf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Content.SummaryAdmin.cshtml" />
+    <Content Include="Styles\fonts\HANDGOTB.eot" />
+    <Content Include="Styles\fonts\HANDGOTB.otf" />
+    <Content Include="Styles\fonts\HANDGOTB.ttf" />
+    <Content Include="Styles\fonts\HANDGOTB.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

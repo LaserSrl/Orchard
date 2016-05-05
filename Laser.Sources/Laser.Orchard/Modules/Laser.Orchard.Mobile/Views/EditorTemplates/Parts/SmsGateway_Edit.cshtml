@@ -33,11 +33,11 @@
             });
         });
 
-        $(function () {
-            $('.rcswitcher-checkbox-havealias').rcSwitcher({
-                theme: 'flat',
-                blobOffset: 1,
-                onText: '@T("YES")',
+            $(function () {
+                $('.rcswitcher-checkbox-havealias').rcSwitcher({
+                    theme: 'flat',
+                    blobOffset: 1,
+                    onText: '@T("YES")',
                 offText: '@T("NO")'
             }).on({
                 'turnon.rcSwitcher': function (e, dataObj) {
@@ -55,17 +55,17 @@
             });
         });
 
-        $(function () {
-            $("#tab-folder-container ul li a").on('click', function () {
-                if ($(this).attr("href") == '#sms-comm-container') {
-                    $('#txtTesto').focus();
-                }
+            $(function () {
+                $("#tab-folder-container ul li a").on('click', function () {
+                    if ($(this).attr("href") == '#sms-comm-container') {
+                        $('#txtTesto').focus();
+                    }
+                });
             });
-        });
 
-        $(function () {
-            $('#txtTesto').on('focus blur keypress keyup change paste', {
-                maxLength: '@Model.MaxLenghtSms',
+            $(function () {
+                $('#txtTesto').on('focus blur keypress keyup change paste', {
+                    maxLength: '@Model.MaxLenghtSms',
                 txtTesto: $('#txtTesto'),
                 lblnumeroMessaggi: $('#lblnumeroMessaggi'),
                 lblnumeroChar: $('#lblnumeroChar'),
@@ -77,7 +77,7 @@
 }
 
 <div id="sms-comm-container" class="comm-tabbed">
-
+    @Html.HiddenFor(m => m.SmsGateway.SmsMessageSent)
     <div>
         <label for="contChar">@T("Number of chars:")</label>
         <span style="margin-left: 20px">
@@ -99,7 +99,7 @@
             @Html.ValidationMessageFor(model => model.SmsGateway.Message)
         </div>
     </div>
-    
+
     @foreach (var ph in Model.Settings.PlaceholdersList.Placeholders) {
         <button name="submit.@ph.Name" id="btn_@ph.Name" onclick="$('#txtTesto').insertAtCaret('[PH_@ph.Name]');return false;">@ph.DisplayName</button>
     }
@@ -126,9 +126,17 @@
     </div>
 
     <div id="test-sms-container" style="@((!Model.SmsGateway.SendToTestNumber) ? "display:none;" : "")">
-        @Html.LabelFor(m => m.SmsGateway.NumberForTest, T("Test Sms number").Text, new { @class = "forcheckbox" })
-        @Html.TextBoxFor(model => model.SmsGateway.NumberForTest, new { @class = "text medium" })
-        <button type="submit" name="submit.Test" value="submit.SmsTest">@T("Send for test")</button>
+        <div class="form-group col-md-10">
+            @Html.LabelFor(m => m.SmsGateway.PrefixForTest, T("Test Sms prefix").Text, new { @class = "forcheckbox" })
+            @Html.TextBoxFor(model => model.SmsGateway.PrefixForTest, new { @class = "text small", @placeholder = "es. +39" })
+            @Html.ValidationMessageFor(model => model.SmsGateway.PrefixForTest)
+        </div>
+        <div class="col-md-10">
+            @Html.LabelFor(m => m.SmsGateway.NumberForTest, T("Test Sms number").Text, new { @class = "forcheckbox" })
+            @Html.TextBoxFor(model => model.SmsGateway.NumberForTest, new { @class = "text medium" })
+            @Html.ValidationMessageFor(model => model.SmsGateway.NumberForTest)
+            <button type="submit" name="submit.Test" value="submit.SmsTest">@T("Send for test")</button>
+        </div>
     </div>
 
     <div>
@@ -150,11 +158,8 @@
 <div class="tab-folder">
     <a href="#sms-comm-container"><i class="fa fa-phone"></i>@T("Sms")</a>
 </div>
-@if (Model.SmsGateway.SmsMessageSent)
-{
-    <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalSms","CountPanel", new { area = "Laser.Orchard.Mobile", tot=Model.SmsGateway.SmsRecipientsNumber })"/>
-}
-else
-{
-    <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalSms","CountPanel", new { area = "Laser.Orchard.Mobile" })"/>
+@if (Model.SmsGateway.SmsMessageSent) {
+<input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalSms", "CountPanel", new { area = "Laser.Orchard.Mobile", tot = Model.SmsGateway.SmsRecipientsNumber })"/>
+} else {
+<input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalSms", "CountPanel", new { area = "Laser.Orchard.Mobile" })"/>
 }

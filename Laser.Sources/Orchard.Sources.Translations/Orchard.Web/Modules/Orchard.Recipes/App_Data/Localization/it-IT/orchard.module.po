@@ -1,0 +1,86 @@
+msgctxt "~/Modules/Orchard.Recipes/Module.txt"
+msgid "Recipes"
+msgstr "Ricette"
+
+msgctxt "~/Modules/Orchard.Recipes/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il Team di Orchard"
+
+msgctxt "~/Modules/Orchard.Recipes/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.Recipes/Module.txt"
+msgid "Provides Orchard Recipes."
+msgstr "Fornisce le ricette di Orchard."
+
+#. "Could not discover recipes because module '{0}' was not found."
+msgctxt "Orchard.Recipes.Commands.RecipesCommands"
+msgid "Could not discover recipes because module '{0}' was not found."
+msgstr "Non è stato possibile trovare le Ricette perché il modulo '{0}' non è stato trovato."
+
+#. "No recipes found for extension {0}."
+msgctxt "Orchard.Recipes.Commands.RecipesCommands"
+msgid "No recipes found for extension {0}."
+msgstr "Nessuna ricetta trovata per l'estensione {0}."
+
+#: "Orchard.Recipes.Commands.RecipesCommands"
+msgctxt "Orchard.Recipes.Commands.RecipesCommands"
+msgid "List of available recipes"
+msgstr "Lista della ricetta disponibili"
+
+#: "Orchard.Recipes.Commands.RecipesCommands"
+msgctxt "Orchard.Recipes.Commands.RecipesCommands"
+msgid "--------------------------"
+msgstr "--------------------------"
+
+#: "Orchard.Recipes.Commands.RecipesCommands"
+msgctxt "Orchard.Recipes.Commands.RecipesCommands"
+msgid "Recipe: {0}"
+msgstr "Ricetta: {0}"
+
+#: "Orchard.Recipes.Commands.RecipesCommands"
+msgctxt "Orchard.Recipes.Commands.RecipesCommands"
+msgid "  Version:     {0}"
+msgstr "  Versione: {0}"
+
+#: "Orchard.Recipes.Commands.RecipesCommands"
+msgctxt "Orchard.Recipes.Commands.RecipesCommands"
+msgid "  Tags:        {0}"
+msgstr "  Tag:  {0}"
+
+#: "Orchard.Recipes.Commands.RecipesCommands"
+msgctxt "Orchard.Recipes.Commands.RecipesCommands"
+msgid "  Description: {0}"
+msgstr "  Descrizione: {0}"
+
+#: "Orchard.Recipes.Commands.RecipesCommands"
+msgctxt "Orchard.Recipes.Commands.RecipesCommands"
+msgid "  Author:      {0}"
+msgstr "  Autore: {0}"
+
+#: "Orchard.Recipes.Commands.RecipesCommands"
+msgctxt "Orchard.Recipes.Commands.RecipesCommands"
+msgid "  Website:     {0}"
+msgstr "  Sito Web: {0}"
+
+#: "Orchard.Recipes.Commands.RecipesCommands"
+msgctxt "Orchard.Recipes.Commands.RecipesCommands"
+msgid "Invalid recipe name {0}."
+msgstr "Nome di ricetta non valido: {0}"
+
+#: "Orchard.Recipes.Commands.RecipesCommands"
+msgctxt "Orchard.Recipes.Commands.RecipesCommands"
+msgid "Recipe scheduled for execution successfully."
+msgstr "Ricetta correttamente schedulata per l'esecuzione."
+
+#: "Orchard.Recipes.Services.RecipeStepExecutor"
+msgctxt "Orchard.Recipes.Services.RecipeStepExecutor"
+msgid "Recipe execution with id {0} was cancelled because the \"{1}\" step failed to execute. The following exception was thrown: {2}. Refer to the error logs for more information."
+msgstr "L'esecuzione della Ricetta con id {0} è stata cancellata poiché l'esecuzione del passo \"{1}\" è fallita. Si è verificata la seguente eccezione: {2}. Il registro errori contiene maggiori informazioni."
+
+#: "Orchard.Recipes.Services.RecipeStepExecutor"
+msgctxt "Orchard.Recipes.Services.RecipeStepExecutor"
+msgid "Recipe execution with id {0} was cancelled because the recipe handler for step \"{1}\" was not found. Refer to the error logs for more information."
+msgstr "L'esecuzione della ricetta con id {0} è stata cancellata poiché non è stato trovato il gestore delle Ricetta per il passo \"{1}\". Il registro errori contiene maggiori informazioni."
+
