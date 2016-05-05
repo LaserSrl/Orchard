@@ -6783,12 +6783,12 @@ sub.badge {
 .alert-callout.alert-danger:before {
   background: #f44336;
 }
-.breadcrumb {
+/*.breadcrumb {
   padding: 0;
   margin-bottom: 0;
   font-size: 12px;
   text-shadow: none;
-}
+}*/
 .breadcrumb > li {
   opacity: 0.8;
   display: inline-block;

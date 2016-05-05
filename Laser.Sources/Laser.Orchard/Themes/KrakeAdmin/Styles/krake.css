@@ -300,13 +300,21 @@ button.link {
 }
 
 .breadcrumb {
-    border: 1px solid #ccc;
+    border: 1px solid #f5f5f5;
     padding: 5px;
     margin-bottom: 15px;
-    background-color: #eee;
+    background-color: #fff;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+}
+
+.breadcrumb a {
+    color: #1c2a37 !important;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline !important;
 }
 
 /*label {
@@ -1258,13 +1266,15 @@ fieldset {
 }
 
 .widgets-listed .widgets-zone-widgets h3 a,
-.widgets-none h2 {
+.widgets-none h2,
+.properties h3 a {
     color: #1c2a37;
     font-size: 14px;
     font-family: 'Roboto';
 }
 
-.widgets-listed .widgets-zone-widgets h3 a:hover {
+.widgets-listed .widgets-zone-widgets h3 a:hover,
+.properties h3 a:hover {
     color: #253849;
 }
 
