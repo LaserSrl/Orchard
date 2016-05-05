@@ -121,7 +121,7 @@ button, .button, a.button {
     background: #de625e;
     border-radius: 3px;
     box-shadow: none;
-    color: #fff;
+    color: #fff !important;
     border: 0px;
 }
 
@@ -1139,7 +1139,7 @@ label {
     margin-bottom: 0px;
 }
 
-fieldset:not(.save-button):not(.bulk-items):not(.publish-button):not(.publish-later-datetime):not(.bulk-actions)::after {
+fieldset:not(.save-button):not(.bulk-items):not(.publish-button):not(.publish-later-datetime):not(.bulk-actions):not(.bulk-actions-auto)::after {
     display: block;
     content:" ";
     width: 100%;
@@ -1155,14 +1155,14 @@ fieldset {
 .add,
 .button.grey,
 #btn-CalendarEvent_Gallery_Field_Ids.button {
-  background-color: #00a65a;
-  border-color: #008d4c;
+  background: #00a65a;
+  border-radius: 3px;
 }
 
 .add:not(.mce-btn):hover,
 .button.grey:hover,
 #btn-CalendarEvent_Gallery_Field_Ids.button:hover {
-  background-color: #008d4c;
+  background: #008d4c;
 }
 
 .mce-btn button:hover {
@@ -1340,5 +1340,12 @@ fieldset {
   border-radius: 3px;
   cursor: pointer;
   padding:10px;
+}
 
+.sections .primary {
+    width: auto;
+}
+
+.navigation-menu {
+    width: 85%;
 }
