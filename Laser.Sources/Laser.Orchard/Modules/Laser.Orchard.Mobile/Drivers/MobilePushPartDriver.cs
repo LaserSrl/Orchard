@@ -9,6 +9,7 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.UI.Admin;
+using System.Collections.Generic;
 
 namespace Laser.Orchard.Mobile.Drivers {
     public class MobilePushPartDriver : ContentPartDriver<MobilePushPart> {
@@ -90,7 +91,28 @@ namespace Laser.Orchard.Mobile.Drivers {
 
             viewModel.HideRelated = part.Settings.GetModel<PushMobilePartSettingVM>().HideRelated;
             _controllerContextAccessor.Context.Controller.TempData["HideRelated"] = viewModel.HideRelated;
-            return ContentShape("Parts_MobilePush_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/MobilePush_Edit", Model: viewModel, Prefix: Prefix));
+
+            if (part.ContentItem.ContentType == "CommunicationAdvertising") {
+                // Flag Approvato all'interno del tab
+                viewModel.PushAdvertising = true;
+                return ContentShape("Parts_MobilePush_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/MobilePush_Edit", Model: viewModel, Prefix: Prefix));
+            } 
+            else {
+                // Flag Approvato in fondo
+                viewModel.PushAdvertising = false;
+
+                var shapes = new List<DriverResult>();
+                shapes.Add(ContentShape("Parts_MobilePush_Edit",
+                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts/MobilePush_Edit",
+                                     Model: viewModel,
+                                     Prefix: Prefix)));
+                shapes.Add(ContentShape("Parts_MobilePushApproved_Edit",
+                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts/MobilePushApproved_Edit",
+                                     Model: viewModel,
+                                     Prefix: Prefix)));
+
+                return new CombinedResult(shapes);
+            }
         }
 
         protected override void Importing(MobilePushPart part, ImportContentContext context) {
