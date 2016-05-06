@@ -346,7 +346,7 @@ fieldset.publish-button {
     border: 0px !important;
 }
 
-select:not(.selector) {
+select:not(.selector):not(.ui-datepicker-month):not(.ui-datepicker-year) {
     /*background: url(Images/select-arrow.png) no-repeat right #fff;
     overflow: hidden;
     -moz-appearance: none;
@@ -1156,15 +1156,19 @@ fieldset {
 
 .add,
 .button.grey,
-#btn-CalendarEvent_Gallery_Field_Ids.button {
-  background: #00a65a;
+#btn-CalendarEvent_Gallery_Field_Ids.button,
+.ui-datepicker-current,
+.ui-datepicker-close {
+  background: #00a65a !important;
   border-radius: 3px;
 }
 
 .add:not(.mce-btn):hover,
 .button.grey:hover,
-#btn-CalendarEvent_Gallery_Field_Ids.button:hover {
-  background: #008d4c;
+#btn-CalendarEvent_Gallery_Field_Ids.button:hover,
+.ui-datepicker-current:hover,
+.ui-datepicker-close:hover {
+  background: #008d4c !important;
 }
 
 .mce-btn button:hover {
@@ -1398,4 +1402,8 @@ html.media-library-modal-window .button-cancel
 
 .dropdown-menu > li > a {
   display: inline-block;
+}
+
+#ui-datepicker-div, .ui-datepicker-inline {
+  min-width: 300px;
 }
