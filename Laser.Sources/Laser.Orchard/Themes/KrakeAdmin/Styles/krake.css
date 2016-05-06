@@ -26,7 +26,7 @@ html {
 }*/
 
 #layout-content {
-    background: #fff;
+    background: #e5e6e6 ;
     /*background-image: url("images/sfondo-krake.png") !important;
     background-attachment: fixed;
     background-position: right bottom !important;
@@ -346,7 +346,7 @@ fieldset.publish-button {
     border: 0px !important;
 }
 
-select:not(.selector) {
+select:not(.selector):not(.ui-datepicker-month):not(.ui-datepicker-year) {
     /*background: url(Images/select-arrow.png) no-repeat right #fff;
     overflow: hidden;
     -moz-appearance: none;
@@ -550,6 +550,9 @@ legend {
 .settings legend {
     font-size: 20px;
     margin: 0;
+    white-space: nowrap;
+    margin-bottom: 10px;
+    background: #fff;
 }
 
 /*legend::before {
@@ -702,7 +705,7 @@ legend {
   background: rgba(0, 0, 0, 0) url("images/list-arrow.png") no-repeat scroll 0 0;
   cursor: pointer;
   height: 28px;
-  margin-top: -6px;
+  margin-top: 1px;
   padding-right: 35px;
   position: absolute;
   right: 100%;
@@ -775,10 +778,14 @@ input[type="number"]:focus {
     height: 84% !important;
 }
 
-#media-library-main-list,
-#media-library-main-list-wrapper,
-#media-library-main-navigation {
+
+#media-library-main-list-wrapper {
     height: 65vh;
+}
+
+#media-library-main-list,
+#media-library-main-navigation {
+    height: 100%;
 }
 
 #site a, #site a:visited, #site a:active {
@@ -1138,7 +1145,7 @@ label {
     margin-bottom: 0px;
 }
 
-fieldset:not(.save-button):not(.bulk-items):not(.publish-button):not(.publish-later-datetime):not(.bulk-actions):not(.bulk-actions-auto)::after {
+fieldset:not(.save-button):not(.bulk-items):not(.publish-button):not(.publish-later-datetime):not(.bulk-actions):not(.bulk-actions-auto):not(.archive-later-datetime)::after {
     display: block;
     content:" ";
     width: 100%;
@@ -1153,15 +1160,19 @@ fieldset {
 
 .add,
 .button.grey,
-#btn-CalendarEvent_Gallery_Field_Ids.button {
-  background: #00a65a;
+#btn-CalendarEvent_Gallery_Field_Ids.button,
+.ui-datepicker-current,
+.ui-datepicker-close {
+  background: #00a65a !important;
   border-radius: 3px;
 }
 
 .add:not(.mce-btn):hover,
 .button.grey:hover,
-#btn-CalendarEvent_Gallery_Field_Ids.button:hover {
-  background: #008d4c;
+#btn-CalendarEvent_Gallery_Field_Ids.button:hover,
+.ui-datepicker-current:hover,
+.ui-datepicker-close:hover {
+  background: #008d4c !important;
 }
 
 .mce-btn button:hover {
@@ -1384,9 +1395,9 @@ html.media-library-modal-window .button-cancel
 }
 
 #media-library-main-list .media-thumbnail {
-  height: 155px;
+  height: auto;
   overflow: hidden;
-  width: 186px;
+  width: auto;
 }
 
 #header {
@@ -1396,3 +1407,8 @@ html.media-library-modal-window .button-cancel
 .dropdown-menu > li > a {
   display: inline-block;
 }
+
+#ui-datepicker-div, .ui-datepicker-inline {
+  min-width: 300px;
+}
+

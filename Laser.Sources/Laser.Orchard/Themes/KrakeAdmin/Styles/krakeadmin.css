@@ -2669,7 +2669,7 @@ legend:before {
   width: 0%;
 }
 legend:after {
-  width: 100%;
+  /*width: 100%;*/
 }
 legend.text-center span {
   padding: 0 10px;

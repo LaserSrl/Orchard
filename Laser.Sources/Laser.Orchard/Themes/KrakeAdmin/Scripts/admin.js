@@ -62,14 +62,14 @@
         $(this).closest("form").find(".apply-bulk-actions-auto:first").click();
     });
 
-    $("[itemprop~='RemoveUrl']").click(function () {
-        // don't show the confirm dialog if the link is also UnsafeUrl, as it will already be handled in base.js
-        if ($(this).filter("[itemprop~='UnsafeUrl']").length == 1) {
-            return false;
-        }
+    //$("[itemprop~='RemoveUrl']").click(function () {
+    //    // don't show the confirm dialog if the link is also UnsafeUrl, as it will already be handled in base.js
+    //    if ($(this).filter("[itemprop~='UnsafeUrl']").length == 1) {
+    //        return false;
+    //    }
 
-        return confirm(confirmRemoveMessage);
-    });
+    //    return confirm(confirmRemoveMessage);
+    //});
 
     $(".check-all").change(function () {
         $(this).parents("table.items").find(":checkbox").prop('checked', $(this).prop("checked"));

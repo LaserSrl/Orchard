@@ -5759,7 +5759,7 @@ a.badge:focus {
     font-size: 58.5px;
   }
 }
-.thumbnail {
+/*.thumbnail {
   display: block;
   padding: 4px;
   margin-bottom: 24px;
@@ -5770,7 +5770,7 @@ a.badge:focus {
   -webkit-transition: border 0.2s ease-in-out;
   -o-transition: border 0.2s ease-in-out;
   transition: border 0.2s ease-in-out;
-}
+}*/
 .thumbnail > img,
 .thumbnail a > img {
   margin-left: auto;
