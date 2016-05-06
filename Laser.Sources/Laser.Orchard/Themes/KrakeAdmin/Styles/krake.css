@@ -1412,3 +1412,19 @@ html.media-library-modal-window .button-cancel
   min-width: 300px;
 }
 
+.padding-right-35 {
+    padding-right: 35px;
+}
+
+.box-header > .box-tools {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}
+
+.btn-box-tool {
+  background: transparent none repeat scroll 0 0;
+  color: #97a0b3;
+  font-size: 12px;
+  padding: 5px;
+}
