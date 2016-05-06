@@ -87,12 +87,22 @@
     <Content Include="Styles\Images\bg-sms.png" />
     <Content Include="Styles\Images\bg-social.png" />
     <Content Include="Styles\Images\bg-web.png" />
+    <Content Include="Styles\Images\cms-add-cut.png" />
+    <Content Include="Styles\Images\cms-di-piu-di-meno.png" />
+    <Content Include="Styles\Images\cms-import-export.png" />
+    <Content Include="Styles\Images\cms-multi-users.png" />
+    <Content Include="Styles\Images\communication-mail.png" />
+    <Content Include="Styles\Images\communication-sms.png" />
+    <Content Include="Styles\Images\communication-social.png" />
     <Content Include="Styles\Images\freccia-app.png" />
     <Content Include="Styles\Images\freccia-mail.png" />
     <Content Include="Styles\Images\freccia-notifiche.png" />
     <Content Include="Styles\Images\freccia-sms.png" />
     <Content Include="Styles\Images\freccia-social.png" />
     <Content Include="Styles\Images\freccia-web.png" />
+    <Content Include="Styles\Images\icon-cms.png" />
+    <Content Include="Styles\Images\icon-communication.png" />
+    <Content Include="Styles\Images\icon-web.png" />
     <Content Include="Styles\Images\icona-app-w.png" />
     <Content Include="Styles\Images\icona-app.png" />
     <Content Include="Styles\Images\icona-mail-w.png" />
@@ -128,32 +138,40 @@
     <Content Include="Styles\Images\sfondo-krake.png" />
     <Content Include="Styles\Images\sfondo.png" />
     <Content Include="Styles\krake.css" />
+    <Content Include="Styles\iconic-font.min.css" />
+    <Content Include="Styles\krakeadmin.css" />
+    <Content Include="Views\Dashboard\Admin\Index.cshtml" />
+    <Content Include="Views\Document.cshtml" />
+    <Content Include="Views\Layout.cshtml" />
+    <Content Include="Views\OrchardVersion.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Content\Web.config" />
     <Content Include="Theme.txt" />
     <Content Include="Theme.png" />
-    <Content Include="Placement.info" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Document.cshtml" />
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminThemeOverride.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\OrchardVersion.cshtml" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Content Include="Views\Dashboard\Admin\Index.cshtml" />
+    <Content Include="Views\Content.SummaryAdmin.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\ErrorPage.cshtml" />
+    <Content Include="Views\Header.cshtml" />
+    <Content Include="Views\LocalMenu.cshtml" />
+    <Content Include="Views\Menu.cshtml" />
+    <Content Include="Views\MenuORI.cshtml" />
+    <Content Include="Views\Pager.cshtml" />
+    <Content Include="Views\Title.cshtml" />
+    <Content Include="Views\User.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Images\brochure.pdf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\fonts\HANDGOTB.eot" />

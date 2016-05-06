@@ -20,6 +20,38 @@
         <a class="button primaryAction" href="@Url.Action("Synchronize", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" })" title="@T("Synchronize")">@T("Synchronize")</a>
     </div>
 }
+@using (Html.BeginForm("IndexSearch", "ContactsAdmin", FormMethod.Post)) {
+    @Html.AntiForgeryToken()
+    <fieldset class="bulk-actions bottom-20">
+        <div>
+            <div>
+                <div style="float: left; margin-right: 25px;">
+                    <div>
+                        <label for="search">@T("Search:")</label>
+                        @Html.TextBoxFor(m => m.Search.Expression)
+                        <label>@T("Filter by")</label>
+                        @Html.DropDownListFor(m => m.Search.Field, new SelectList(Enum.GetValues(typeof(SearchFieldEnum))), new { @id = "searchTypeList" })
+                    </div>
+                </div>
+                <div style="float: right;">
+                    <button type="submit" name="submit.Search" value="-">@T("Search")</button>
+                    <a href="@Url.Action("Index")">@T("Clear")</a>
+                    <div class="manage-export">
+                        <button class="button primaryAction" style="margin-left: 4px" type="submit" name="submit.Export" value="-">@T("Export")</button>
+                        <a href="@Url.Action("ExportedFilesList")">@T("Show Exported Files")</a>
+                    </div>
+                </div>
+            </div>
+            <div id="authDiv" style="float: left; margin-top: -10px;">
+                <label id="authLabel">@T("Authorizations:")</label>
+                <label style="margin: 0 5px 0 5px;">@T("Commercial Use")</label>
+                @Html.DropDownListFor(m => m.Search.CommercialUseAuthorization, selectList, new { @id = "commercialUseAuthList" })
+                <label style="margin: 0 5px 0 5px;">@T("Third Party")</label>
+                @Html.DropDownListFor(m => m.Search.ThirdPartyAuthorization, selectList, new { @id = "thirdPartyAuthList" })
+            </div>
+        </div>
+    </fieldset>
+}
 @using (Html.BeginFormAntiForgeryPost(Url.Action("ImportCsv", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
     <input type="file" name="csvFile" id="csvFile" />
     <button type="submit">@T("Import")</button>
@@ -35,38 +67,6 @@
     <div id="divImportErrors" class="contentItems" style="display:none"><span style="font-weight:bold;color:red">Import errors</span><a href="javascript:hideImportErrors()" style="margin-left:30px">X @T("Close")</a><br />
         <textarea readonly style="width:100%;height:80px;overflow:scroll">@Model.ImportErrors</textarea>
     </div>*@
-}
-@using (Html.BeginForm("IndexSearch", "ContactsAdmin", FormMethod.Post)) {
-    @Html.AntiForgeryToken()
-    <fieldset class="bulk-actions" style="margin-top: 10px;">
-        <div>
-            <div>
-                <div style="float: left; margin-right: 25px;">
-                    <div>
-                        <label for="search">@T("Search:")</label>
-                        @Html.TextBoxFor(m => m.Search.Expression)
-                        <label>@T("Filter by")</label>
-                        @Html.DropDownListFor(m => m.Search.Field, new SelectList(Enum.GetValues(typeof(SearchFieldEnum))), new { @id = "searchTypeList" })
-                    </div>
-                </div>
-                <div style="float: right;">
-                    <button type="submit" name="submit.Search" value="-">@T("Search")</button>
-                    <a href="@Url.Action("Index")">@T("Clear")</a>
-                    <div class="manage">
-                        <button class="button primaryAction" style="margin-left: 4px" type="submit" name="submit.Export" value="-">@T("Export")</button>
-                        <a href="@Url.Action("ExportedFilesList")">@T("Show Exported Files")</a>
-                    </div>
-                </div>
-            </div>
-            <div id="authDiv" style="float: left; margin-top: -10px;">
-                <label id="authLabel">@T("Authorizations:")</label>
-                <label style="margin: 0 5px 0 5px;">@T("Commercial Use")</label>
-                @Html.DropDownListFor(m => m.Search.CommercialUseAuthorization, selectList, new { @id = "commercialUseAuthList" })
-                <label style="margin: 0 5px 0 5px;">@T("Third Party")</label>
-                @Html.DropDownListFor(m => m.Search.ThirdPartyAuthorization, selectList, new { @id = "thirdPartyAuthList" })
-            </div>
-        </div>
-    </fieldset>
 }
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
