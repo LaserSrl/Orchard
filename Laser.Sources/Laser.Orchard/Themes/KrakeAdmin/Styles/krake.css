@@ -705,7 +705,7 @@ legend {
   background: rgba(0, 0, 0, 0) url("images/list-arrow.png") no-repeat scroll 0 0;
   cursor: pointer;
   height: 28px;
-  margin-top: -6px;
+  margin-top: 1px;
   padding-right: 35px;
   position: absolute;
   right: 100%;
@@ -778,10 +778,14 @@ input[type="number"]:focus {
     height: 84% !important;
 }
 
-#media-library-main-list,
-#media-library-main-list-wrapper,
-#media-library-main-navigation {
+
+#media-library-main-list-wrapper {
     height: 65vh;
+}
+
+#media-library-main-list,
+#media-library-main-navigation {
+    height: 100%;
 }
 
 #site a, #site a:visited, #site a:active {
@@ -1141,7 +1145,7 @@ label {
     margin-bottom: 0px;
 }
 
-fieldset:not(.save-button):not(.bulk-items):not(.publish-button):not(.publish-later-datetime):not(.bulk-actions):not(.bulk-actions-auto)::after {
+fieldset:not(.save-button):not(.bulk-items):not(.publish-button):not(.publish-later-datetime):not(.bulk-actions):not(.bulk-actions-auto):not(.archive-later-datetime)::after {
     display: block;
     content:" ";
     width: 100%;
@@ -1391,9 +1395,9 @@ html.media-library-modal-window .button-cancel
 }
 
 #media-library-main-list .media-thumbnail {
-  height: 155px;
+  height: auto;
   overflow: hidden;
-  width: 186px;
+  width: auto;
 }
 
 #header {
@@ -1407,3 +1411,4 @@ html.media-library-modal-window .button-cancel
 #ui-datepicker-div, .ui-datepicker-inline {
   min-width: 300px;
 }
+
