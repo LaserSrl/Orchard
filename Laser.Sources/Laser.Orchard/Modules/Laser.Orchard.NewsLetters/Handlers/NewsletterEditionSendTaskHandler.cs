@@ -13,25 +13,27 @@ using Orchard.ContentManagement;
 using Orchard.Tasks.Scheduling;
 using Orchard.Environment.Configuration;
 using Orchard.Email.Models;
-using Orchard.UI.Notify;
 using Orchard.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
+using System.Web.Routing;
+using Orchard.Logging;
 
 
 namespace Laser.Orchard.NewsLetters.Handlers {
     public class NewsletterEditionSendTaskHandler : IScheduledTaskHandler {
 
+        public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
         private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;
         private readonly INewsletterServices _newslServices;
         private readonly ITemplateService _templateService;
-        private readonly INotifier _notifier;
         private readonly IRepository<NewsletterEditionPartRecord> _repositoryNewsletterEdition;
         private readonly ShellSettings _shellSettings;
         
@@ -41,14 +43,13 @@ namespace Laser.Orchard.NewsLetters.Handlers {
 
         public NewsletterEditionSendTaskHandler(IContentManager contentManager, IOrchardServices orchardServices,
                                                 INewsletterServices newslServices, ITemplateService templateService,
-                                                INotifier notifier, ShellSettings shellSettings,
+                                                ShellSettings shellSettings,
                                                 IRepository<NewsletterEditionPartRecord> repositoryNewsletterEdition) {
             _contentManager = contentManager;
             _orchardServices = orchardServices;
             _newslServices = newslServices;
             _templateService = templateService;
             _shellSettings = shellSettings;
-            _notifier = notifier;
             _repositoryNewsletterEdition = repositoryNewsletterEdition;
         }
 
@@ -104,21 +105,18 @@ namespace Laser.Orchard.NewsLetters.Handlers {
                 part.Dispatched = true;
                 part.DispatchDate = DateTime.Now;
                 part.Number = GetNextNumber(part.NewsletterDefinitionPartRecord_Id); ;
-                foreach (var item in items) {
-                    var ids = ("," + item.AttachToNextNewsletterIds + ",").Replace("," + part.NewsletterDefinitionPartRecord_Id + ",", "");
-                    item.AttachToNextNewsletterIds = ids;
-                }
 
-                // TODO: 
-                // - Chiedere ad Hermes come effetture delle Subscribe
-                // - Chiedere se è necessario un ResulAPIController come per le mail (nel nostro caso è presente un SentMailsNumber)
-                // - Nel caso non ci fosse bisogno url nei settings non serve a nulla (da togliere)
-                // - Altrimenti modificare NewsletterEditionPart e creare un controller tipo MailerResultAPIController
+                if (items != null) {
+                    foreach (var item in items) {
+                        var ids = ("," + item.AttachToNextNewsletterIds + ",").Replace("," + part.NewsletterDefinitionPartRecord_Id + ",", "");
+                        item.AttachToNextNewsletterIds = ids;
+                    }
+                }
 
                 _contentManager.Publish(context.Task.ContentItem);
             }
             else {
-                _notifier.Error(T("Error parsing mail template."));
+                Logger.Error(T("Error parsing mail template.").Text);
             }
         }
 
@@ -160,20 +158,26 @@ namespace Laser.Orchard.NewsLetters.Handlers {
 
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = _templateService.GetTemplate(templateId);
-            var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            //var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext); 
 
             var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
-            var tenantPrefix = GetTenantUrlPrexix(_shellSettings);
+
+            var host = string.Format("{0}://{1}{2}",
+                                    baseUri.Scheme,
+                                    baseUri.Host,
+                                    baseUri.Port == 80 ? string.Empty : ":" + baseUri.Port);
+
+            // Ricostruisco urlHelper senza usare HttpContext
+            var httpRequest = new HttpRequest("/", _orchardServices.WorkContext.CurrentSite.BaseUrl, "");
+            var httpResponse = new HttpResponse(new StringWriter());
+            var httpContext = new HttpContext(httpRequest, httpResponse);
+            var httpContextBase = new HttpContextWrapper(httpContext);
+
+            var virtualRequestContext = new RequestContext(httpContextBase, new RouteData());
+            var urlHelper = new UrlHelper(virtualRequestContext);
 
             // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
             // Nel template pertanto Model, diventa Model.Content
-            var host = string.Format("{0}://{1}{2}",
-                                    _orchardServices.WorkContext.HttpContext.Request.Url.Scheme,
-                                    _orchardServices.WorkContext.HttpContext.Request.Url.Host,
-                                    _orchardServices.WorkContext.HttpContext.Request.Url.Port == 80
-                                        ? string.Empty
-                                        : ":" + _orchardServices.WorkContext.HttpContext.Request.Url.Port);
-            
             var dynamicModel = new {
                 Content = contentModel,
                 Urls = new {
@@ -209,33 +213,14 @@ namespace Laser.Orchard.NewsLetters.Handlers {
                         break;
                 }
 
-                var baseUrl = baseUri.ToString();
-                // token di sicurezza: contiene data e ora (senza minuti e secondi) e id del content item
-                var token = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHH"), (contentModel as ContentItem).Id);
-                token = Convert.ToBase64String(System.Text.Encoding.Unicode.GetBytes(token));
-
-                //var url = string.Format("{0}/Laser.Orchard.Newsletter/MailerResult?tk={1}", baseUrl, token);  // versione per il GET
-                var url = string.Format("{0}/{1}api/Laser.Orchard.Newsletter/MailerResultAPI?tk={2}", baseUrl, tenantPrefix, token);  // versione per il POST
-
                 data.Add("Subject", subject);
                 data.Add("Body", body);
                 data.Add("Sender", smtp.Address);
                 data.Add("Priority", priority);
-                data.Add("Url", url);  // url di ritorno per comunicare a Orchard il numero di newsletter inviate con successo
-                data.Add("Attachments", ""); // TODO esempio: "[\"prova.pdf\",\"prova.docx\"]" 2016-01-14: per ora non li gestiamo
             }
             return data;
         }
 
-        private string GetTenantUrlPrexix(ShellSettings shellSettings) {
-            // calcola il prefix del tenant corrente
-            string tenantPath = shellSettings.RequestUrlPrefix ?? "";
-
-            if (tenantPath != "") {
-                tenantPath = tenantPath + "/";
-            }
-            return tenantPath;
-        }
 
         public int GetNextNumber(int newsltterId) {
             var maxNumber = _repositoryNewsletterEdition.Table
