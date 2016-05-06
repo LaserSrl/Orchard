@@ -26,6 +26,7 @@ namespace Laser.Orchard.StartupConfig.Services {
         private readonly ITaxonomyService _taxonomyService;
 
         private readonly string[] _skipAlwaysProperties;
+        private readonly string _skipAlwaysPropertiesEndWith;
         private readonly string[] _skipFieldProperties;
         private readonly string[] _skipFieldTypes;
         private readonly string[] _skipPartNames;
@@ -45,6 +46,7 @@ namespace Laser.Orchard.StartupConfig.Services {
             _taxonomyService = taxonomyService;
 
             _skipAlwaysProperties = new string[] { "ContentItemRecord", "ContentItemVersionRecord" };
+            _skipAlwaysPropertiesEndWith =  "Proxy" ;
             _skipFieldProperties = new string[] { "Storage", "Name", "DisplayName", "Setting" };
             _skipFieldTypes = new string[] { "FieldDefinition", "PartFieldDefinition" };
             _skipPartNames = new string[] { "InfosetPart", "FieldIndexPart", "IdentityPart", "UserPart", "UserRolesPart", "AdminMenuPart", "MenuPart" };
@@ -281,6 +283,8 @@ namespace Laser.Orchard.StartupConfig.Services {
                 return new JProperty(item.GetType().Name, null);
             }
             try {
+                if (item.GetType().Name.EndsWith(_skipAlwaysPropertiesEndWith))
+                    return new JProperty(item.GetType().Name, null);
                 if (((dynamic)item).Id != null) {
                     if (processedItems.Contains(String.Format("{0}({1})", item.GetType().Name, ((dynamic)item).Id)))
                         return new JProperty(item.GetType().Name, null);
@@ -315,7 +319,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                     var members = item.GetType()
                     .GetFields(BindingFlags.Instance | BindingFlags.Public).Cast<MemberInfo>()
                     .Union(item.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-                    .Where(m => !skipProperties.Contains(m.Name) && !_skipAlwaysProperties.Contains(m.Name))
+                    .Where(m => !skipProperties.Contains(m.Name) && !_skipAlwaysProperties.Contains(m.Name) && !m.Name.EndsWith(_skipAlwaysPropertiesEndWith))
                     ;
                     List<JProperty> properties = new List<JProperty>();
                     foreach (var member in members) {
@@ -339,6 +343,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                                 }
                             }
                         } else {
+                                                        
                             aux = SerializeObject(propertyInfo.GetValue(item), actualLevel + 1, skipProperties);
                             properties.Add(aux);
                         }
