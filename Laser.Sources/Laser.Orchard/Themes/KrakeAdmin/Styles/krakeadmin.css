@@ -1159,14 +1159,13 @@ a.text-success:hover {
 }
 
 #content-main {
-    position: relative;
+    /*position: relative;*/
     width: 100%;
     left: 0;
     padding-top: 14px;
 }
 
 #content {
-  position: relative;
   width: 100%;
   left: 0;
   padding-top: 14px;
@@ -1175,7 +1174,7 @@ a.text-success:hover {
   border-top: 3px solid #de625e;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
-  position: relative;
+  /*position: relative;*/
   width: 100%;
   border-top-color: #ee726f;
 }
@@ -1686,7 +1685,7 @@ body:not(.menubar-first) .menubar-fixed-panel {
   margin-bottom: 12px;
 }
 .gui-controls > li > a {
-  position: relative;
+  /*position: relative;*/
   display: block;
   text-decoration: none;
   padding: 12px 0px;
