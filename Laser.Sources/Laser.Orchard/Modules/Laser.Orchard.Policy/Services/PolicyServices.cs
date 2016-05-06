@@ -111,49 +111,56 @@ namespace Laser.Orchard.Policy.Services {
 
 
         public void PolicyForUserUpdate(PolicyForUserViewModel viewModel, IUser user = null) {
+            UserPolicyAnswersRecord record = new UserPolicyAnswersRecord();
+            var loggedUser = user ?? _workContext.GetContext().CurrentUser;
+
+            // Recupero la risposta precedente dell'utente, se esiste
+            if (viewModel.AnswerId > 0)
+                record = _userPolicyAnswersRepository.Get(viewModel.AnswerId);
+            else
+                record = _userPolicyAnswersRepository.Table.Where(w => w.PolicyTextInfoPartRecord.Id == viewModel.PolicyTextId && w.UserPolicyPartRecord.Id == loggedUser.Id).SingleOrDefault();
+
+            bool oldAnswer = record != null ? record.Accepted : false;
+
             // Entro nella funzione solo se il valore della nuova risposta è diverso da quello della precedente o se si tratta della prima risposta
-            if ((viewModel.OldAccepted != viewModel.Accepted || (!viewModel.Accepted && viewModel.AnswerDate == DateTime.MinValue))) {
+            if ((oldAnswer != viewModel.Accepted || (!viewModel.Accepted && viewModel.AnswerDate == DateTime.MinValue))) {
                 var policyText = _contentManager.Get<PolicyTextInfoPart>(viewModel.PolicyTextId).Record;
                 if ((policyText.UserHaveToAccept && viewModel.Accepted) || !policyText.UserHaveToAccept) {
-                    var loggedUser = user ?? _workContext.GetContext().CurrentUser;
                     var shouldCreateRecord = false;
                     if (loggedUser != null) {
-                        UserPolicyAnswersRecord record;
-                        UserPolicyAnswersHistoryRecord recordForHistory = new UserPolicyAnswersHistoryRecord();
-                        if (viewModel.AnswerId <= 0) {
-                            // Anche se non ho un Id di risposta, provo a recuperare la risposta in base all'utente e all'Id del testo privacy
-                            record = _userPolicyAnswersRepository.Table.Where(w => w.PolicyTextInfoPartRecord.Id == viewModel.PolicyTextId && w.UserPolicyPartRecord.Id == loggedUser.Id).SingleOrDefault();
-                            if (record == null) {
-                                record = new UserPolicyAnswersRecord();
-                                shouldCreateRecord = true;
-                            }
-                            recordForHistory = CopyForHistory(record);
+                        
+                        if (viewModel.AnswerId <= 0 && record == null) {
+                            record = new UserPolicyAnswersRecord();
+                            shouldCreateRecord = true;
                         }
-                        else {
-                            record = _userPolicyAnswersRepository.Get(viewModel.AnswerId);
-                            recordForHistory = CopyForHistory(record);
-                        }
+
+                        UserPolicyAnswersHistoryRecord recordForHistory = CopyForHistory(record);
+
                         record.AnswerDate = DateTime.UtcNow;
                         record.Accepted = viewModel.Accepted;
                         record.UserPolicyPartRecord = loggedUser.As<UserPolicyPart>().Record;
                         record.PolicyTextInfoPartRecord = policyText;
+
                         if (shouldCreateRecord) {
                             _userPolicyAnswersRepository.Create(record);
+
+                            _policyEventHandler.PolicyChanged(new PolicyEventViewModel {
+                                policyType = record.PolicyTextInfoPartRecord.PolicyType,
+                                accepted = record.Accepted
+                            });
                         }
-                        else {
+                        else if (record.Accepted != recordForHistory.Accepted) {
                             _userPolicyAnswersHistoryRepository.Create(recordForHistory);
                             _userPolicyAnswersRepository.Update(record);
-                        }
 
-                        _policyEventHandler.PolicyChanged(new PolicyEventViewModel {
-                            policyType = record.PolicyTextInfoPartRecord.PolicyType,
-                            accepted = record.Accepted
-                        });
-                        //_userPolicyAnswersRepository.Flush();
+                            _policyEventHandler.PolicyChanged(new PolicyEventViewModel {
+                                policyType = record.PolicyTextInfoPartRecord.PolicyType,
+                                accepted = record.Accepted
+                            });
+                        }
                     }
                 }
-                else if (policyText.UserHaveToAccept && !viewModel.Accepted && viewModel.AnswerId > 0) {
-                    UserPolicyAnswersRecord record = _userPolicyAnswersRepository.Get(viewModel.AnswerId);
+                else if (policyText.UserHaveToAccept && !viewModel.Accepted && record != null) {
                     UserPolicyAnswersHistoryRecord recordForHistory = CopyForHistory(record);
 
                     _userPolicyAnswersHistoryRepository.Create(recordForHistory);
@@ -166,7 +173,6 @@ namespace Laser.Orchard.Policy.Services {
                 }
             }
         }
-
 
         public void PolicyForUserMassiveUpdate(IList<PolicyForUserViewModel> viewModelCollection, IUser user = null) {
             var loggedUser = user ?? _workContext.GetContext().CurrentUser;
