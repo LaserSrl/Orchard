@@ -16,9 +16,6 @@
     Model.Attributes.Add("id", "main-menu");
     
     var tag = Tag(Model, "ul");
-
-    var icon_class = "";
-    
 }
 
 <div id="menubar" class="menubar-inverse ">
@@ -43,51 +40,53 @@
                 var itemId = HasText(firstLevelMenuItem.IdHint)
                     ? "navicon-" + firstLevelMenuItem.IdHint
                     : null;
+
+                var icon_class = "fa " + itemClassName;
                 
-                switch (itemClassName) {
-                    case "navicon-dashboard":
-                        icon_class = "fa fa-home";
-                        break;
-                    case "naviconnew":
-                        icon_class = "fa fa-file-o";
-                        break;
-                    case "navicon-maintenance":
-                        icon_class = "fa fa-wrench";
-                        break;
-                    case "navicon-content":
-                        icon_class = "fa fa-paragraph";
-                        break;
-                    case "navicon-content-definition":
-                        icon_class = "fa fa-cubes";
-                        break;
-                    case "navicon-blog":
-                        icon_class = "fa fa-rss";
-                        break;
-                    case "navicon-communication":
-                        icon_class = "fa fa-comments";
-                        break;
-                    case "navicon-newsletters":
-                        icon_class = "fa fa-comments";
-                        break;
-                    case "navicon-social-facebook-account":
-                        icon_class = "fa fa-facebook";
-                        break;
-                    case "navicon-social-twitter-account":
-                        icon_class = "fa fa-twitter";
-                        break;
-                    case "navicon-users":
-                        icon_class = "fa fa-users";
-                        break;
-                    case "navicon-import-export":
-                        icon_class = "fa fa-external-link";
-                        break;
-                    case "navicon-settings":
-                        icon_class = "fa fa-cogs";
-                        break;
-                    default:
-                        icon_class = "fa fa-pencil";
-                        break;
-                }
+                //switch (itemClassName) {
+                //    case "navicon-dashboard":
+                //        icon_class = "fa navicon-dashboard";
+                //        break;
+                //    case "naviconnew":
+                //        icon_class = "fa fa-file-o";
+                //        break;
+                //    case "navicon-maintenance":
+                //        icon_class = "fa fa-wrench";
+                //        break;
+                //    case "navicon-content":
+                //        icon_class = "fa fa-paragraph";
+                //        break;
+                //    case "navicon-content-definition":
+                //        icon_class = "fa fa-cubes";
+                //        break;
+                //    case "navicon-blog":
+                //        icon_class = "fa fa-rss";
+                //        break;
+                //    case "navicon-communication":
+                //        icon_class = "fa fa-comments";
+                //        break;
+                //    case "navicon-newsletters":
+                //        icon_class = "fa fa-comments";
+                //        break;
+                //    case "navicon-social-facebook-account":
+                //        icon_class = "fa fa-facebook";
+                //        break;
+                //    case "navicon-social-twitter-account":
+                //        icon_class = "fa fa-twitter";
+                //        break;
+                //    case "navicon-users":
+                //        icon_class = "fa fa-users";
+                //        break;
+                //    case "navicon-import-export":
+                //        icon_class = "fa fa-external-link";
+                //        break;
+                //    case "navicon-settings":
+                //        icon_class = "fa fa-cogs";
+                //        break;
+                //    default:
+                //        icon_class = "fa fa-pencil";
+                //        break;
+                //}
 
                 string classSelected = "";
                 IHtmlString sectionHeaderMarkup;

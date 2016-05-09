@@ -18,14 +18,14 @@
 
 
 
-$(function () {
-    var dd = $(".primary");
+//$(function () {
+//    var dd = $(".primary");
 
-    $(".summary").click(function (e) {
-        if ($(this).closest(".summary").find('.primary').stop().is(':visible')) {
-            $(this).closest(".summary").find('.primary').stop().hide();
-        } else {
-            $(this).closest(".summary").find('.primary').stop().slideToggle(300);
-        }
-    })
-});
+//    $(".summary").click(function (e) {
+//        if ($(this).closest(".summary").find('.primary').stop().is(':visible')) {
+//            $(this).closest(".summary").find('.primary').stop().hide();
+//        } else {
+//            $(this).closest(".summary").find('.primary').stop().slideToggle(300);
+//        }
+//    })
+//});

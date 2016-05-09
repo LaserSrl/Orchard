@@ -177,15 +177,7 @@
                                 @Html.SelectOption((string)Model.AdvancedOptions.SelectedLanguageId.ToString(), (string)languageOption.Key.ToString(), (string)languageOption.Value)
                             }
                         </select>
-                    </div>
-                    <div class="col-xs-12 col-md-4">
-                        <label class="gray-label">@T("Publish status:")</label>
-                        <select id="dateTypeResults" name="AdvancedOptions.DateFilterType">
-                            @foreach (var dateFilterOption in Enum.GetNames(typeof(Laser.Orchard.AdvancedSearch.DateFilterOptions))) {
-                                @Html.SelectOption((string)Convert.ToInt32(Model.AdvancedOptions.DateFilterType).ToString(), (string)Convert.ToInt32(Enum.Parse(typeof(Laser.Orchard.AdvancedSearch.DateFilterOptions), dateFilterOption)).ToString(), (string)dateFilterOption)
-                            }
-                        </select>
-                    </div>
+                    </div> 
                     <div class="col-xs-12 col-md-4">
                         @try {
                             if (Model.AdvancedOptions.TaxonomiesOptions != null && Model.AdvancedOptions.TaxonomiesOptions.Count > 0) {
@@ -212,24 +204,32 @@
                             }
                         } catch { }
                     </div>
+                     <div class="col-xs-12 col-md-4">
+                        <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
+                          @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults" })
+                    </div>
                 </div>
             </div>
 
              <div class="box-body">
                 <div class="row">
-                    <div class="col-xs-12 col-md-3">
-                         <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
-                          @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults" })
+                    <div class="col-xs-12 col-md-4">
+                        <label class="gray-label">@T("Publish status:")</label>
+                        <select id="dateTypeResults" name="AdvancedOptions.DateFilterType">
+                            @foreach (var dateFilterOption in Enum.GetNames(typeof(Laser.Orchard.AdvancedSearch.DateFilterOptions))) {
+                                @Html.SelectOption((string)Convert.ToInt32(Model.AdvancedOptions.DateFilterType).ToString(), (string)Convert.ToInt32(Enum.Parse(typeof(Laser.Orchard.AdvancedSearch.DateFilterOptions), dateFilterOption)).ToString(), (string)dateFilterOption)
+                            }
+                        </select>
                     </div>
-                    <div class="col-xs-12 col-md-3">
+                    <div class="col-xs-12 col-md-4">
                        <label for="dateFromResults" class="bulk-filter">@T("Date From")</label>
                         @Html.TextBox("AdvancedOptions.SelectedFromDate", (string)(Model.AdvancedOptions.SelectedFromDate != null ? Model.AdvancedOptions.SelectedFromDate.ToString() : ""), new { id = "dateFromResults" })
                     </div>
-                    <div class="col-xs-12 col-md-3">
+                    <div class="col-xs-12 col-md-2">
                         <label for="dateToResults" class="bulk-filter">@T("Date To")</label>
                          @Html.TextBox("AdvancedOptions.SelectedToDate", (string)(Model.AdvancedOptions.SelectedToDate != null ? Model.AdvancedOptions.SelectedToDate.ToString() : ""), new { id = "dateToResults" })
                     </div>
-                    <div class="col-xs-12 col-md-3">
+                    <div class="col-xs-12 col-md-2">
                         <label for="hasMediaResults" class="bulk-filter">@T("Only with media")</label>
                         @Html.CheckBox("AdvancedOptions.HasMedia", (bool)Model.AdvancedOptions.HasMedia, new { id = "hasMediaResults" })
                     </div>

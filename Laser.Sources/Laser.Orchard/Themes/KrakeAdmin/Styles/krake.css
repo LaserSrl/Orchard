@@ -812,7 +812,8 @@ input[type="number"]:focus {
     float: right;
     width: 100%;
 }
-.contentItems .infos {
+.contentItems .infos,
+.list-more-info {
     text-align: left;
     display: inline-block;
     white-space: nowrap;
@@ -1179,9 +1180,9 @@ fieldset {
     background-color: transparent;
 }
 
-.contentItems.bulk-items .primary {
-  display: none;
-}
+/*.contentItems.bulk-items .primary {
+  //display: none;
+}*/
 
 .contentItems .summary {
   /*min-height: 140px;*/
@@ -1427,4 +1428,9 @@ html.media-library-modal-window .button-cancel
   color: #97a0b3;
   font-size: 12px;
   padding: 5px;
+}
+
+.pager li span {
+    color: #fff;
+    background: #337AB7;
 }
