@@ -253,4 +253,11 @@ span.navicon-statistics:before {
     background-image: none !important; 
 }
 
+.navicon-tenants:before {
+    content: "\f16c";
+}
+.navicon-tenants {
+    background-image: none !important; 
+}
+
 
