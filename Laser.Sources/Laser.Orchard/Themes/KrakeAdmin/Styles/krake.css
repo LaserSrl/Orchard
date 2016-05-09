@@ -1429,3 +1429,8 @@ html.media-library-modal-window .button-cancel
   font-size: 12px;
   padding: 5px;
 }
+
+.pager li span {
+    color: #fff;
+    background: #337AB7;
+}
