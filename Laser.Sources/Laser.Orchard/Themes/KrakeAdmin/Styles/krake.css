@@ -1454,3 +1454,9 @@ html.dashboard {
 .swraper {
   z-index: 0;
 }
+
+html.dashboard #content {
+    background: transparent !important;
+    border: 0px !important;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.0);
+}
