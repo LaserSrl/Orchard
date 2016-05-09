@@ -117,6 +117,17 @@ button, .button, a.button {
   min-width: 110px;
 }
 
+#cboxClose,
+#cboxLoadingGraphic,
+#cboxLoadingOverlay,
+#cboxSlideshow,
+#cboxPrevious,
+#cboxNext,
+#cboxCurrent {
+    min-width: auto !important;
+}
+
+
 fieldset.save-button {
     /*float: right;*/
 }
@@ -594,7 +605,7 @@ legend {
 }
 
 .swraper.flat {
-    border-radius: 15px !important;
+    border-radius: 6px !important;
 }
 
     .swraper.flat .stoggler .sblob {
@@ -603,7 +614,7 @@ legend {
     }
 
     .swraper.flat .stoggler.on {
-        background: #6db7e5 none repeat scroll 0 0;
+        background: #008D4C none repeat scroll 0 0;
         color: #fff !important;
     }
 
@@ -1433,4 +1444,13 @@ html.media-library-modal-window .button-cancel
 .pager li span {
     color: #fff;
     background: #337AB7;
+}
+
+html.contents,
+html.dashboard {
+  padding: 10px 0 0;
+}
+
+.swraper {
+  z-index: 0;
 }
