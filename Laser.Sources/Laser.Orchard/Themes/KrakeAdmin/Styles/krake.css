@@ -539,13 +539,13 @@ legend {
   margin: 0;
 }
 
-    legend label {
+    /*legend label {
         margin-bottom: -27px !important;
         font-family: "Krake";
         color: #6db7e5;
         display: inline-block;
         font-size: 21px;
-    }
+    }*/
 
 .settings legend {
     font-size: 20px;
