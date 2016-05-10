@@ -149,11 +149,12 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             if (!_orchardServices.Authorizer.Authorize(Permissions.AccessStatistics))
                 return new HttpUnauthorizedResult();
 
-            IContentQuery<GamePart> contentQuery =
+            IContentQuery<ContentItem> contentQuery =
+            //IContentQuery<GamePart> contentQuery =
                 _orchardServices.ContentManager.Query()
-                                               .ForPart<GamePart>();
-                                               //.ForType("Game")
-                                               //.OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
+                                               //.ForPart<GamePart>();
+                                               .ForType("Game")
+                                               .OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
 
             if (!string.IsNullOrEmpty(searchExpression))
                 contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(searchExpression));
