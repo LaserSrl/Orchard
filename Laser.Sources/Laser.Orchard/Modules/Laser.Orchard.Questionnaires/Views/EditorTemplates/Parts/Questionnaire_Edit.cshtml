@@ -237,11 +237,12 @@
         @Html.EditorFor(m => m.UseRecaptcha)
         <label for="@Html.FieldIdFor(m => m.UseRecaptcha)" class="forcheckbox">@T("Use recaptcha")</label>
     </div>
-    <div>@Html.EditorFor(m => m.MustAcceptTerms)
+    @*Campi non più ultilizzati*@
+@*    <div>@Html.EditorFor(m => m.MustAcceptTerms)
         <label for="@Html.FieldIdFor(m => m.MustAcceptTerms)" class="forcheckbox">@T("Must accept terms and conditions")</label>
     </div>
     <label for="@Html.FieldIdFor(m => m.TermsText)">@T("Terms and conditions text")</label>
-    @Html.TextAreaFor(m => m.TermsText, 25, 80, new { @class = "html tinymce" })
+    @Html.TextAreaFor(m => m.TermsText, 25, 80, new { @class = "html tinymce" })*@
     <br />
     <p id="AddQuestionButton">
         <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.Questions, T("Add Question").Text, "#questions", ".j_question", "question", null, "TestQuestionNumber(); ScriviMenuTab();")
