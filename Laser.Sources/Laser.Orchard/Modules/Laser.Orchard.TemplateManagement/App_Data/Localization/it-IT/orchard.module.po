@@ -113,8 +113,16 @@ msgid "Select a template"
 msgstr "Seleziona un modello"
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.MailActivity"
+msgid "Error on template, mail not sent"
+msgstr "Errore nel template, mail non inviata"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.MailActivity"
 msgid "Messaging"
 msgstr "Messaggistica"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.MailActivity"
+msgid "Not Sent"
+msgstr "Non Inviata"
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.MailActivity"
 msgid "Sends an e-mail using a template to a specific user."

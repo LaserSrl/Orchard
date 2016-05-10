@@ -40,3 +40,7 @@ msgctxt "~/Modules/Laser.Orchard.IXMSD/Views/EditorTemplates/Parts/IXMSDSettings
 msgid "URL"
 msgstr "URL"
 
+msgctxt "Laser.Orchard.IXMSD.Handlers.IXMSDSettingsPartHandler"
+msgid "IXMSD"
+msgstr "IXMSD"
+

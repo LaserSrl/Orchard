@@ -185,6 +185,10 @@ msgid "User Twitter Account can't be added, is duplicated"
 msgstr "l'account utente di Twitter non può essere aggiunt, in quanto già presente"
 
 msgctxt "Laser.Orchard.Twitter.Handlers.TwitterPostHandler"
+msgid "No Twitter account specified."
+msgstr "Nessun account Twitter specificato."
+
+msgctxt "Laser.Orchard.Twitter.Handlers.TwitterPostHandler"
 msgid "Twitter error:"
 msgstr "Twitter errore:"
 

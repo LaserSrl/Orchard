@@ -192,9 +192,45 @@ msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/Edit.c
 msgid "Edit Contact"
 msgstr "Modifica Contatto"
 
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ExportedFilesList.cshtml"
+msgid "Are you sure?"
+msgstr "Confermi?"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ExportedFilesList.cshtml"
+msgid "Contacts"
+msgstr "Contatti"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ExportedFilesList.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ExportedFilesList.cshtml"
+msgid "Exported File List"
+msgstr "Lista dei file esportati"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ExportedFilesList.cshtml"
+msgid "Exported Files"
+msgstr "File esportati"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ImportedFilesLogs.cshtml"
+msgid "Are you sure?"
+msgstr "Confermi?"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ImportedFilesLogs.cshtml"
+msgid "Contacts"
+msgstr "Contatti"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ImportedFilesLogs.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "a moment ago"
 msgstr "poco fa"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Authorizations:"
+msgstr "Autorizzazioni:"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "By"
@@ -203,6 +239,14 @@ msgstr "di"
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "Clear"
 msgstr "Cancella"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Close"
+msgstr "Chiudi"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Commercial Use"
+msgstr "Uso commerciale"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "Contact"
@@ -227,6 +271,10 @@ msgstr "Modifica"
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "e-mail"
 msgstr "e-mail"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Export"
+msgstr "Esporta"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "Filter by"
@@ -344,6 +392,10 @@ msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
 msgid "Contact saved"
 msgstr "Contatto salvato"
 
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
+msgid "Export started. Please check 'Show Exported Files' to get the result."
+msgstr "Esportazione in esecuzione. Per verificarne l'esito clicca su 'Mostra file esportati'"
+
 msgctxt "Laser.Orchard.CommunicationGateway.Drivers.CommunicationAdvertisingPartDriver"
 msgid "AdvertisingPart Error"
 msgstr "Errore sul comunicato"
@@ -363,6 +415,10 @@ msgstr "il numero di cellulare non può essere assegnato in quanto già associat
 msgctxt "Laser.Orchard.CommunicationGateway.Handlers.CommunicationCampaignPartHandler"
 msgid "Cannot Update! publish later date is after Campaign date"
 msgstr "Impossibile aggiornare! La data di pubblicazione schedulata è oltre la data di validità della campagna."
+
+msgctxt "Laser.Orchard.CommunicationGateway.Handlers.ExportContactTaskHandler"
+msgid "Export Contacts - Error Message: "
+msgstr "Esportazione contatti - Errore:"
 
 msgctxt "Laser.Orchard.CommunicationGateway.Navigation.AdminMenu"
 msgid "Campaign"
