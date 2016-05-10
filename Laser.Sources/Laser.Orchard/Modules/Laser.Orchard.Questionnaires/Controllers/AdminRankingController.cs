@@ -3,6 +3,7 @@ using Laser.Orchard.Questionnaires.Services;
 using Laser.Orchard.Questionnaires.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
 using Orchard.Security;
 using Orchard.UI.Admin;
@@ -128,6 +129,44 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             }
             else
                 return "No User";
+        }
+
+        //Adding functionality to list all games (published and unpublished)
+        [HttpGet]
+        [Admin]
+        public ActionResult Index(int? page, int? pageSize, string searchExpression) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.AccessStatistics))
+                return new HttpUnauthorizedResult();
+            return Index(new PagerParameters {
+                Page = page,
+                PageSize = pageSize
+            }, searchExpression);
+        }
+
+        [HttpPost]
+        [Admin]
+        public ActionResult Index(PagerParameters pagerParameters, string searchExpression) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.AccessStatistics))
+                return new HttpUnauthorizedResult();
+
+            IContentQuery<GamePart> contentQuery =
+                _orchardServices.ContentManager.Query()
+                                               .ForPart<GamePart>();
+                                               //.ForType("Game")
+                                               //.OrderByDescending<CommonPartRecord>(cpr => cpr.ModifiedUtc);
+
+            if (!string.IsNullOrEmpty(searchExpression))
+                contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(searchExpression));
+
+            Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
+            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(contentQuery.Count());
+            var pageOfContentItems = contentQuery.Slice(pager.GetStartIndex(), pager.PageSize);
+
+            var model = new GamePartSearchViewModel();
+            model.Pager = pagerShape;
+            model.GameParts = pageOfContentItems;
+
+            return View((object)model);
         }
     }
 }

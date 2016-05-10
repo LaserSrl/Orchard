@@ -69,4 +69,11 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
             }
         }
     }
+
+    //matteo.piovanelli : 2016/05/10 : add class used in creating an Index of games
+    public class GamePartSearchViewModel {
+        public dynamic Pager { get; set; }
+        public string SearchExpression { get; set; }
+        public IEnumerable<GamePart> GameParts { get; set; }
+    }
 }

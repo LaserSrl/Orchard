@@ -270,6 +270,7 @@
     <Content Include="Views\DefinitionTemplates\QuestionnairesPartSettingVM.cshtml" />
     <Content Include="Views\DefinitionTemplates\GamePartSettingVM.cshtml" />
     <Content Include="Views\AdminRanking\GetList.cshtml" />
+    <Content Include="Views\AdminRanking\Index.cshtml" />
     <None Include="Views\EditorTemplates\Parts\GamePart_Edit.cshtml" />
     <Content Include="Views\QuestionnaireStats\Index.cshtml" />
     <Content Include="Views\QuestionnaireStats\Detail.cshtml" />
