@@ -52,6 +52,10 @@ msgctxt "~/Modules/Laser.Orchard.ShareLink/Views/DefinitionTemplates/ShareLinkPa
 msgid "Text"
 msgstr "Testo"
 
+msgctxt "~/Modules/Laser.Orchard.ShareLink/Views/DefinitionTemplates/ShareLinkPartSettingVM.cshtml"
+msgid "Text to Share"
+msgstr "Testo da Condividere"
+
 msgctxt "~/Modules/Laser.Orchard.ShareLink/Views/EditorTemplates/Parts/ShareLink.cshtml"
 msgid "Image"
 msgstr "Immagine"
@@ -68,6 +72,10 @@ msgctxt "~/Modules/Laser.Orchard.ShareLink/Views/EditorTemplates/Parts/ShareLink
 msgid "Sharing"
 msgstr "Condivisione"
 
+msgctxt "~/Modules/Laser.Orchard.ShareLink/Views/EditorTemplates/Parts/ShareLink.cshtml"
+msgid "Text"
+msgstr "Testo"
+
 msgctxt "~/Modules/Laser.Orchard.ShareLink/Views/EditorTemplates/Parts/ShareLinkModuleSetting.cshtml"
 msgid "Link"
 msgstr "Link"
@@ -83,6 +91,14 @@ msgstr "Foto"
 msgctxt "~/Modules/Laser.Orchard.ShareLink/Views/EditorTemplates/Parts/ShareLinkModuleSetting.cshtml"
 msgid "Picture to Share"
 msgstr "Foto da condividere"
+
+msgctxt "~/Modules/Laser.Orchard.ShareLink/Views/EditorTemplates/Parts/ShareLinkModuleSetting.cshtml"
+msgid "Text"
+msgstr "Testo"
+
+msgctxt "~/Modules/Laser.Orchard.ShareLink/Views/EditorTemplates/Parts/ShareLinkModuleSetting.cshtml"
+msgid "Text to Share"
+msgstr "Testo da Condividere"
 
 msgctxt "Laser.Orchard.ShareLink.Handlers.ShareLinkModuleSettingHandler"
 msgid "ShareLink"

@@ -108,6 +108,10 @@ msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
 msgid "Translator"
 msgstr "Traduttore"
 
+msgctxt "Laser.Orchard.Translator.AdminMenu"
+msgid "Translator"
+msgstr "Traduttore"
+
 msgctxt "Laser.Orchard.Translator.Controllers.TranslatorController"
 msgid "An error occurred while saving the translation. Please reload the page and retry."
 msgstr "Si è verificato un errore durante il salvataggio della traduzione. Si prega di ricaricare la pagina e riprovare."
@@ -127,4 +131,12 @@ msgstr "N/D"
 msgctxt "Laser.Orchard.Translator.Controllers.TranslatorTreeController"
 msgid "Themes"
 msgstr "Temi"
+
+msgctxt "Laser.Orchard.Translator.Handlers.TranslatorSettingsHandler"
+msgid "Translator"
+msgstr "Traduttore"
+
+msgctxt "Laser.Orchard.Translator.Services.TranslatorServices"
+msgid "The requested translation does not exists."
+msgstr "La traduzione richiesta non esiste."
 

@@ -29,12 +29,20 @@ msgid "Add"
 msgstr "Aggiungi"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
 msgid "Display plugin"
 msgstr "Visualizzazione"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
 msgid "Edit"
 msgstr "Modifica"
+
+msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
+msgid "Edit Query"
+msgstr "Modifica Ricerca"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
 msgid "from"
@@ -91,6 +99,10 @@ msgstr "Sono presenti modifiche non salvate."
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsGroup_Edit.cshtml"
 msgid "to"
 msgstr "fino al"
+
+msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsItem_Edit.cshtml"
+msgid "Back"
+msgstr "Indietro"
 
 msgctxt "~/Modules/Laser.Orchard.Highlights/Views/EditorTemplates/Parts/HighlightsItem_Edit.cshtml"
 msgid "Link Target"

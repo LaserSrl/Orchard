@@ -36,3 +36,7 @@ msgctxt "Laser.Orchard.Payment.Controllers.PaymentController"
 msgid "transaction not effected"
 msgstr "transazione non effettuata"
 
+msgctxt "Laser.Orchard.Payment.Handlers.PaymentSettingsHandler"
+msgid "Payment"
+msgstr "Pagamento"
+
