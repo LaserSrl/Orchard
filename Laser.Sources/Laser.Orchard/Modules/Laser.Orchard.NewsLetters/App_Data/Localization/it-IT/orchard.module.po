@@ -662,6 +662,10 @@ msgctxt "Laser.Orchard.NewsLetters.Drivers.SubscriberRegistrationPartDriver"
 msgid "SubscriberRegistration Error"
 msgstr "Errore SubscriberRegistration"
 
+msgctxt "Laser.Orchard.NewsLetters.Handlers.NewsletterEditionSendTaskHandler"
+msgid "Error parsing mail template."
+msgstr "Errore durante la compilazione del template."
+
 msgctxt "Laser.Orchard.NewsLetters.Services.NewsletterServices"
 msgid "Email already registered!"
 msgstr "Email già registrata!"
@@ -677,6 +681,10 @@ msgstr "Email non ancora registrata!"
 msgctxt "Laser.Orchard.NewsLetters.Services.NewsletterServices"
 msgid "Enter a test email!"
 msgstr "Inserisci un'email di test!"
+
+msgctxt "Laser.Orchard.NewsLetters.Services.NewsletterServices"
+msgid "Error on template, mail not sended"
+msgstr "Errore nell'esecuzione del Template, e-mail non inviata"
 
 msgctxt "Laser.Orchard.NewsLetters.Services.NewsletterServices"
 msgid "Newsletter edition sent to a test email!"

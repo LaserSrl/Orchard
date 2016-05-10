@@ -120,6 +120,30 @@ msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_E
 msgid "YES"
 msgstr "SI"
 
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePushApproved_Edit.cshtml"
+msgid "Approved"
+msgstr "Approvato"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePushApproved_Edit.cshtml"
+msgid "Mask to make test for Push... this option is set by settings of module"
+msgstr "Mask per effettuare test di push... questa opzione viene valorizzata dalle impostazioni del modulo"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePushApproved_Edit.cshtml"
+msgid "Message already sent."
+msgstr "Messaggio già inviato."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePushApproved_Edit.cshtml"
+msgid "Message not yet sent."
+msgstr "Messaggio non ancora inviato."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePushApproved_Edit.cshtml"
+msgid "Test Push on device"
+msgstr "Testa il Push sul dispositivo"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePushApproved_Edit.cshtml"
+msgid "This Push message has been already sent. You will be able to edit and save it, but it will not be sent anymore on next publish."
+msgstr "Questa PUSH è già stata inoltrata. Sarà possibile modificarla e salvarla, ma non sarà più reinoltrata."
+
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Android ApiKey"
 msgstr "ApiKey Android"

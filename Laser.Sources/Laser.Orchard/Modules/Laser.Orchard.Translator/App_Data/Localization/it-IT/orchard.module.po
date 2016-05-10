@@ -136,3 +136,7 @@ msgctxt "Laser.Orchard.Translator.Handlers.TranslatorSettingsHandler"
 msgid "Translator"
 msgstr "Traduttore"
 
+msgctxt "Laser.Orchard.Translator.Services.TranslatorServices"
+msgid "The requested translation does not exists."
+msgstr "La traduzione richiesta non esiste."
+
