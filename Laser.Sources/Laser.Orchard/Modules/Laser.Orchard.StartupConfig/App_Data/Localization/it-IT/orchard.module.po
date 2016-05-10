@@ -44,6 +44,38 @@ msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/ExternalApp
 msgid "Api Secret Key"
 msgstr "Chiave segreta dell'Api"
 
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/ExternalApplication.cshtml"
+msgid "Generate"
+msgstr "Genera"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/ExternalApplication.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/ExternalApplication.cshtml"
+msgid "Remove"
+msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/FavoriteCulturePart_Edit.cshtml"
+msgid "Favorite Culture"
+msgstr "Cultura Preferenziale"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/Maintenance_Edit.cshtml"
+msgid "Notify Enabled"
+msgstr "Notifica Abilitata"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/Maintenance_Edit.cshtml"
+msgid "Notify Message"
+msgstr "Messaggio Notifica"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/Maintenance_Edit.cshtml"
+msgid "Notify Type"
+msgstr "Tipo Notifica"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/Maintenance_Edit.cshtml"
+msgid "Select Tenant"
+msgstr "Seleziona Istanza"
+
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/ProtectionSettingsPart.Edit.cshtml"
 msgid "A list of MVC Area.Controller.Action entries. When defined, using comma separated values, protects entries from unauthorized calls."
 msgstr "Una lista di elementi MVC Area.Controller.Action. Quando compilato, separando gli elementi da virgola, protegge le chiamate alle WebApi da chiamate non autorizzate."
@@ -51,6 +83,14 @@ msgstr "Una lista di elementi MVC Area.Controller.Action. Quando compilato, sepa
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/ProtectionSettingsPart.Edit.cshtml"
 msgid "Add External Application"
 msgstr "Aggiungi applicazione remota"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/ProtectionSettingsPart.Edit.cshtml"
+msgid "Protected entries"
+msgstr "Elementi protetti"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/ProtectionSettingsPart.Edit.cshtml"
+msgid "Settings - Web Api"
+msgstr "Impostazioni - Api Web"
 
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/TaxonomyExtension_Edit.cshtml"
 msgid "Order contents by"
@@ -79,6 +119,46 @@ msgstr "Azione"
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
 msgid "Addresses"
 msgstr "Indirizzi"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
+msgid "Clear"
+msgstr "Cancella"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
+msgid "Edit"
+msgstr "Modifica"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
+msgid "Maintenance"
+msgstr "Manutenzione"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
+msgid "Notification Message"
+msgstr "Messaggio di Notifica"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
+msgid "Published"
+msgstr "Pubblicato"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
+msgid "Search"
+msgstr "Cerca"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
+msgid "Search:"
+msgstr "Cerca:"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
+msgid "This is a table of the maintenances of your tenant"
+msgstr "Questa è una tabella delle manutenzioni della tua istanza"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
+msgid "Unpublish"
+msgstr "Annulla Pubblicazione"
 
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/Parts/ContentPickerConnector.cshtml"
 msgid "No content items."
@@ -189,12 +269,32 @@ msgid "Approved"
 msgstr "Approvato"
 
 msgctxt "Laser.Orchard.StartupConfig.Activities.UserEventActivity"
+msgid "ChangedPassword"
+msgstr "PasswordModificata"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.UserEventActivity"
+msgid "ConfirmedEmail"
+msgstr "EmailConfermata"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.UserEventActivity"
 msgid "Created"
 msgstr "Creato"
 
 msgctxt "Laser.Orchard.StartupConfig.Activities.UserEventActivity"
+msgid "LoggedIn"
+msgstr "EseguitoLogin"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.UserEventActivity"
+msgid "LoggedOut"
+msgstr "EseguitoLogout"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.UserEventActivity"
 msgid "Manage User Event"
 msgstr "Gestisci Eventi Utente"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.UserEventActivity"
+msgid "SentChallengeEmail"
+msgstr "InviataEmailVerifica"
 
 msgctxt "Laser.Orchard.StartupConfig.Activities.UserEventActivity"
 msgid "Users"
@@ -236,6 +336,30 @@ msgctxt "Laser.Orchard.StartupConfig.Activities.WorkflowChangeOwnerForm"
 msgid "Set Owner of content picker element"
 msgstr "Impostare il Proprietario del picker del contenuto"
 
+msgctxt "Laser.Orchard.StartupConfig.Controllers.MaintenanceAdminController"
+msgid "Couldn't remove content"
+msgstr "Non è stato possibile eliminare il contenuto"
+
+msgctxt "Laser.Orchard.StartupConfig.Controllers.MaintenanceAdminController"
+msgid "Couldn't unpublish content"
+msgstr "Non è stato possibile annullare la pubblicazione del contenuto"
+
+msgctxt "Laser.Orchard.StartupConfig.Controllers.MaintenanceAdminController"
+msgid "That {0} has been removed."
+msgstr "Il {0} è stato rimosso."
+
+msgctxt "Laser.Orchard.StartupConfig.Controllers.MaintenanceAdminController"
+msgid "That {0} has been unpublished."
+msgstr "Questo {0} è stato spubblicato."
+
+msgctxt "Laser.Orchard.StartupConfig.Controllers.MaintenanceAdminController"
+msgid "That content has been removed."
+msgstr "Il contenuto è stato rimosso."
+
+msgctxt "Laser.Orchard.StartupConfig.Controllers.MaintenanceAdminController"
+msgid "That content has been unpublished."
+msgstr "La pubblicazione del contenuto è stata annullata."
+
 msgctxt "Laser.Orchard.StartupConfig.Controllers.UsersGroupsSettingsController"
 msgid "check your input!"
 msgstr "verifica i valori inseriti!"
@@ -247,6 +371,14 @@ msgstr "Aggiornamento impostazioni fallito: {0}"
 msgctxt "Laser.Orchard.StartupConfig.Controllers.UsersGroupsSettingsController"
 msgid "Settings updated."
 msgstr "Impostazioni aggiornate."
+
+msgctxt "Laser.Orchard.StartupConfig.Controllers.UsersGroupsSettingsController"
+msgid "You don't have permission \"Manage settings\" to define and manage User Groups!"
+msgstr "Non si dispone dell'autorizzazione \"Gestione Impostazioni\" per definire e gestire i gruppi di utenti!"
+
+msgctxt "Laser.Orchard.StartupConfig.Drivers.MaintenancePartDriver"
+msgid "Error on update google analytics"
+msgstr "Errore durante l'aggiornamento di Google Analytics"
 
 msgctxt "Laser.Orchard.StartupConfig.Drivers.TaxonomyFieldExtensionDriver"
 msgid "The {0} term has been created."
@@ -296,6 +428,10 @@ msgctxt "Laser.Orchard.StartupConfig.Drivers.UsersGroupsDriver"
 msgid "Please select a group"
 msgstr "Si prega di selezionare un gruppo"
 
+msgctxt "Laser.Orchard.StartupConfig.Drivers.UsersGroupsDriver"
+msgid "Select a Group please"
+msgstr "Selezionare un Gruppo"
+
 msgctxt "Laser.Orchard.StartupConfig.Handlers.ContentPickerFieldExtensionHandler"
 msgid "Linked {0} has been published"
 msgstr "Il contenuto collegato {0} è stato pubblicato"
@@ -320,9 +456,49 @@ msgctxt "Laser.Orchard.StartupConfig.Handlers.TermPartLocalizationHandler"
 msgid "The parent term has been changed to its localized version associated to the culture {0}."
 msgstr "Il termine padre e' stato cambiato con la sua versione localizzata associata alla cultura {0}."
 
+msgctxt "Laser.Orchard.StartupConfig.Handlers.UsersGroupsSettingsHandler"
+msgid "UserGroups"
+msgstr "GruppiUtente"
+
+msgctxt "Laser.Orchard.StartupConfig.Localization.DateLocalization"
+msgid "Date not Valid"
+msgstr "Data non valida"
+
+msgctxt "Laser.Orchard.StartupConfig.Navigation.MaintenanceMenu"
+msgid "Maintenance"
+msgstr "Manutenzione"
+
+msgctxt "Laser.Orchard.StartupConfig.Navigation.UsersGroupsSettingsProvider"
+msgid "Settings"
+msgstr "Impostazioni"
+
 msgctxt "Laser.Orchard.StartupConfig.Navigation.UsersGroupsSettingsProvider"
 msgid "Users Groups"
 msgstr "Gruppi di utenti"
+
+msgctxt "Laser.Orchard.StartupConfig.Projections.FavoriteCultureFilter"
+msgid "Content Items associated with {0} as favorite culture."
+msgstr "Contenuti associati alla cultura preferita {0}."
+
+msgctxt "Laser.Orchard.StartupConfig.Projections.FavoriteCultureFilter"
+msgid "Favorite Culture"
+msgstr "Cultura Preferenziale"
+
+msgctxt "Laser.Orchard.StartupConfig.Projections.FavoriteCultureFilter"
+msgid "Localization"
+msgstr "Localizzazione"
+
+msgctxt "Laser.Orchard.StartupConfig.Projections.FavoriteCultureFilter"
+msgid "Search for Content Items associated with a favorite culture."
+msgstr "Ricerca per contenuti associati a una lingua preferenziale."
+
+msgctxt "Laser.Orchard.StartupConfig.Projections.FavoriteCultureForm"
+msgid "Favorite Culture"
+msgstr "Cultura Preferenziale"
+
+msgctxt "Laser.Orchard.StartupConfig.Projections.FavoriteCultureForm"
+msgid "The culture code (e.g. en-US) or the culture id to filter for."
+msgstr "L'id o il codice (es. en-US) della cultura per cui filtrare."
 
 msgctxt "Laser.Orchard.StartupConfig.Projections.TaxonomyTokenFilter"
 msgid "Categorized content items (search by token)"
@@ -377,6 +553,22 @@ msgid "Content Items"
 msgstr "Contenuti"
 
 msgctxt "Laser.Orchard.StartupConfig.Providers.ContentUserToken"
+msgid "Gets the Authenticated User Email"
+msgstr "Recupera l'email dell'utente autenticato"
+
+msgctxt "Laser.Orchard.StartupConfig.Providers.ContentUserToken"
+msgid "Gets the Authenticated User Id"
+msgstr "Recupera l'id dell'utente autenticato"
+
+msgctxt "Laser.Orchard.StartupConfig.Providers.ContentUserToken"
+msgid "Gets the User Email"
+msgstr "Recupera l'email dell'utente"
+
+msgctxt "Laser.Orchard.StartupConfig.Providers.ContentUserToken"
+msgid "Gets the Username"
+msgstr "Recupera il nome dell'utente"
+
+msgctxt "Laser.Orchard.StartupConfig.Providers.ContentUserToken"
 msgid "User"
 msgstr "Utente"
 
@@ -384,9 +576,33 @@ msgctxt "Laser.Orchard.StartupConfig.Providers.ContentUserToken"
 msgid "UserEmail"
 msgstr "EmailUtente"
 
+msgctxt "Laser.Orchard.StartupConfig.RazorCodeExecution.Activities.RazorExecuteActivity"
+msgid "Execute code within a razor view."
+msgstr "Esegui codice all'interno di una Vista Razor"
+
+msgctxt "Laser.Orchard.StartupConfig.RazorCodeExecution.Activities.RazorExecuteActivity"
+msgid "Scripting"
+msgstr "Scripting"
+
 msgctxt "Laser.Orchard.StartupConfig.RazorCodeExecution.Forms.RazorExecuteForm"
 msgid "A comma-separated list of possible outcomes."
 msgstr "Una lista separata da virgole dei possibili risultati in uscita."
+
+msgctxt "Laser.Orchard.StartupConfig.RazorCodeExecution.Forms.RazorExecuteForm"
+msgid "Possible Outcomes."
+msgstr "Possibili Esiti."
+
+msgctxt "Laser.Orchard.StartupConfig.RazorCodeExecution.Forms.RazorExecuteForm"
+msgid "Razor View"
+msgstr "Vista Razor"
+
+msgctxt "Laser.Orchard.StartupConfig.RazorCodeExecution.Forms.RazorExecuteForm"
+msgid "The razor view to run every time the Decision Activity is invoked. You can use Model.ContentItem, Model.T, Model.OrchardServices. The razor output (e.g. 'Success', 'Error' or 'Empty') should be used to define the 'texthint' outcome of the activity."
+msgstr "La Vista Razor da eseguire ogni volta che la Decision Activity viene invocata. E' possibile usare Model.ContentItem, Model.T, Model.OrchardServices. L'output Razor (es. "Successo", "Errore" o "Vuoto") dev'essere usato per definire il risultato 'texthint' dell'attività."
+
+msgctxt "Laser.Orchard.StartupConfig.RazorCodeExecution.Forms.RazorExecuteForm"
+msgid "You must provide a Razor View"
+msgstr "E' necessario fornire una Vista Razor"
 
 msgctxt "Laser.Orchard.StartupConfig.Services.ActivityServices"
 msgid "Unknown"
@@ -396,6 +612,10 @@ msgctxt "Laser.Orchard.StartupConfig.Services.UsersGroupsSettingsService"
 msgid "Group user is in use and can't be deleted"
 msgstr "L'utente del gruppo è in uso e non può essere eliminato"
 
+msgctxt "Laser.Orchard.StartupConfig.Services.UsersGroupsSettingsService"
+msgid "Some groups cannot be inserted. {0}"
+msgstr "Alcuni gruppi non possono essere inseriti. {0}"
+
 msgctxt "Laser.Orchard.StartupConfig.Tokens.AdditionalDateTokens"
 msgid "Add Days|Months|Years to a date"
 msgstr "Add Days|Months|Years ad una data"
@@ -404,13 +624,29 @@ msgctxt "Laser.Orchard.StartupConfig.Tokens.AdditionalDateTokens"
 msgid "Add:Days|Months|Years to a date"
 msgstr "Add:Days|Months|Years ad una data"
 
+msgctxt "Laser.Orchard.StartupConfig.Tokens.AdditionalDateTokens"
+msgid "Current date/time tokens"
+msgstr "Token data/ora corrente"
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.AdditionalDateTokens"
+msgid "Date/time"
+msgstr "Data/Ora"
+
 msgctxt "Laser.Orchard.StartupConfig.Tokens.CreatorEmailTokens"
 msgid "Creator email"
 msgstr "Email del creatore"
 
 msgctxt "Laser.Orchard.StartupConfig.Tokens.CreatorEmailTokens"
+msgid "Creator email of content item "
+msgstr "Email creatore del contenuto"
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.CreatorEmailTokens"
 msgid "CreatorEmail"
 msgstr "EmailCreatore"
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.CreatorEmailTokens"
+msgid "The email of user creator."
+msgstr "L'email dell'utente creatore."
 
 msgctxt "Laser.Orchard.StartupConfig.Tokens.TaxonomyTokens"
 msgid "Taxonomy Field"
@@ -419,6 +655,18 @@ msgstr "Campo della Tassonomia"
 msgctxt "Laser.Orchard.StartupConfig.Tokens.TaxonomyTokens"
 msgid "Terms"
 msgstr "Termini"
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.TaxonomyTokens"
+msgid "The ids of the terms associated with field."
+msgstr "Gli id dei termini associati al campo."
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.TaxonomyTokens"
+msgid "Tokens for Taxonomy Fields"
+msgstr "Token per campi Tassonomia"
+
+msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Handlers.ProtectionSettingsHandler"
+msgid "Web Api"
+msgstr "Api Web"
 
 msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Migration"
 msgid "A default app named \"{0}\" has been created. Its Api Key is {1}."
@@ -431,4 +679,8 @@ msgstr "il campo ApiKey è obbligatorio."
 msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Models.ValidateExternalApplicationAttribute"
 msgid "ApiKey field must be minimum 22 characters length."
 msgstr "Il campo ApiKey deve essere di almeno 22 caratteri."
+
+msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Models.ValidateExternalApplicationAttribute"
+msgid "Name field is required."
+msgstr "Il campo Nome è obbligatorio."
 

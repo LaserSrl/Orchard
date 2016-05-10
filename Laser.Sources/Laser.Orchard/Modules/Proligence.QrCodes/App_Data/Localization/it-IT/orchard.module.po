@@ -28,3 +28,11 @@ msgctxt "~/Modules/Proligence.QrCodes/Views/EditorTemplates/Parts/QrCode.cshtml"
 msgid "Value"
 msgstr "Valore"
 
+msgctxt "Proligence.QrCodes.Drivers.QrCodePartDriver"
+msgid "Error during QR Code update!"
+msgstr "Errore durante l'aggiornamento del QR Code!"
+
+msgctxt "Proligence.QrCodes.Drivers.QrCodePartDriver"
+msgid "QR Code edited successfully"
+msgstr "QR Code modificato con successo"
+

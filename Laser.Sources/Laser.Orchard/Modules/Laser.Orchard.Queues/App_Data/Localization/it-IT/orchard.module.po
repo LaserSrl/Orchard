@@ -93,6 +93,14 @@ msgid "The queue {0} is currently serving the number {1}. Your number will be se
 msgstr "La coda {0} sta attualmente servendo il numero {1}. Il tuo numero verra' servito fra poco."
 
 msgctxt "Laser.Orchard.Queues.ViewModels.ValidateQueueTicketData"
+msgid "Error on queue {0}: the Number Distance and Max Number fields are required."
+msgstr "Errore sulla coda {0}: i campi Distanza Numeri e Numero Massimo sono obbligatori."
+
+msgctxt "Laser.Orchard.Queues.ViewModels.ValidateQueueTicketData"
+msgid "Error on queue {0}: the Number Distance and Max Number fields must be integer numbers greater than 0."
+msgstr "Errore sulla coda {0}: i campi Distanza Numeri e Numero Massimo devono essere dei numeri interi maggiori di 0."
+
+msgctxt "Laser.Orchard.Queues.ViewModels.ValidateQueueTicketData"
 msgid "The Queue Name field is required."
 msgstr "Il campo Nome Coda e' obbligatorio."
 

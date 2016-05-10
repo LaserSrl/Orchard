@@ -29,8 +29,32 @@ msgid "Apply"
 msgstr "Applica"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Builk actions:"
+msgstr "Azioni in blocco"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Choose action..."
 msgstr "Scegliere l'azione..."
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Content creation:"
+msgstr "Creazione contenuto:"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Content filtering"
+msgstr "Filtro contenuti"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Content order:"
+msgstr "Ordinamento contenuti:"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Content status:"
+msgstr "Stato:"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Content type:"
+msgstr "Tipo di contenuto:"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Create New {0}"
@@ -95,6 +119,10 @@ msgstr "Proprietario"
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Publish Now"
 msgstr "Pubblica Ora"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Publish status:"
+msgstr "Stato pubblicazione:"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "published"
