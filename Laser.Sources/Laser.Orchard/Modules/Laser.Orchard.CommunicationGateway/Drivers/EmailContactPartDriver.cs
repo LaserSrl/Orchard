@@ -63,9 +63,13 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                             }
                         if (vmel.Id > 0) {
                             CommunicationEmailRecord cmr = _repoEmail.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
-                            if (cmr.Email != vmel.Email || cmr.Validated != vmel.Validated) {
+                            if (cmr.Email != vmel.Email || cmr.Validated != vmel.Validated || 
+                                cmr.AccettatoUsoCommerciale != vmel.AccettatoUsoCommerciale ||
+                                cmr.AutorizzatoTerzeParti != vmel.AutorizzatoTerzeParti) {
                                 cmr.Email = vmel.Email;
                                 cmr.Validated = vmel.Validated;
+                                cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
+                                cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
                                 cmr.DataModifica = DateTime.Now;
                                 _repoEmail.Update(cmr);
 
@@ -78,6 +82,8 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                             Mapper.Map(vm, cmr);
                             cmr.Email = vmel.Email;
                             cmr.Validated = vmel.Validated;
+                            cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
+                            cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
                             cmr.EmailContactPartRecord_Id = part.Id;
                             _repoEmail.Create(cmr);
 
