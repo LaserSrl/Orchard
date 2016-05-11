@@ -212,6 +212,10 @@ msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/Export
 msgid "Exported Files"
 msgstr "File esportati"
 
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ExportedFilesList.cshtml"
+msgid "No data found."
+msgstr "Nessun dato trovato."
+
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ImportedFilesLogs.cshtml"
 msgid "Are you sure?"
 msgstr "Confermi?"
@@ -223,6 +227,14 @@ msgstr "Contatti"
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ImportedFilesLogs.cshtml"
 msgid "Delete"
 msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ImportedFilesLogs.cshtml"
+msgid "Imported Files Logs"
+msgstr "Log dei file importati"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/ImportedFilesLogs.cshtml"
+msgid "No data found."
+msgstr "Nessun dato trovato."
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "a moment ago"
@@ -285,8 +297,16 @@ msgid "hours ago"
 msgstr "Ore fa"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Import"
+msgstr "Import"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "Last modified"
 msgstr "Ultima modifica"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Mail Authorizations:"
+msgstr "Autorizzazioni e-mail:"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "minutes ago"
@@ -295,6 +315,10 @@ msgstr "minuti fa"
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "Name"
 msgstr "Nome"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "No"
+msgstr "No"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "Phone"
@@ -309,8 +333,28 @@ msgid "Search:"
 msgstr "Cerca:"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Show Exported Files"
+msgstr "Mostra file esportati"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Show Import Logs"
+msgstr "Mostra log di importazione"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Sms Authorizations:"
+msgstr "Autorizzazioni Sms:"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "Synchronize"
 msgstr "Sincronizza"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Third Party"
+msgstr "Terze Parti"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "Yes"
+msgstr "Si"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/Parts/Advertising_Edit.cshtml"
 msgid "Actions to be performed:"
@@ -353,12 +397,24 @@ msgid "Sms"
 msgstr "SMS"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/View_EmailVM_element.cshtml"
+msgid "Commercial use"
+msgstr "Uso Commerciale"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/View_EmailVM_element.cshtml"
 msgid "Remove"
 msgstr "Rimuovi"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/View_EmailVM_element.cshtml"
+msgid "Third party"
+msgstr "Terze parti"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/View_EmailVM_element.cshtml"
 msgid "Type a email"
 msgstr "Digita una E-mail"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/View_SmsVM_element.cshtml"
+msgid "Commercial use"
+msgstr "Uso Commerciale"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/View_SmsVM_element.cshtml"
 msgid "Prefix"
@@ -367,6 +423,10 @@ msgstr "Prefisso"
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/View_SmsVM_element.cshtml"
 msgid "Remove"
 msgstr "Rimuovi"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/View_SmsVM_element.cshtml"
+msgid "Third party"
+msgstr "Terze parti"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/View_SmsVM_element.cshtml"
 msgid "Type a number"
@@ -396,6 +456,26 @@ msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
 msgid "Export started. Please check 'Show Exported Files' to get the result."
 msgstr "Esportazione in esecuzione. Per verificarne l'esito clicca su 'Mostra file esportati'"
 
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
+msgid "File already exist. Import aborted."
+msgstr "Il file è già presente. L'operazione di import è stata annullata."
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
+msgid "File does not exist. It should have been removed by someone else."
+msgstr "Il file non esiste. Potrebbe essere stato rimosso da un altro operatore."
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
+msgid "File removed."
+msgstr "File rimosso."
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
+msgid "Import Contacts: Please select a file to import."
+msgstr "Importazione contatti: Selezionare un file da importare."
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
+msgid "Import started. Please check 'Show Import Logs' to get the result."
+msgstr "Importazione in esecuzione. Per verificarne l'esito clicca su 'Mostra log importazione'"
+
 msgctxt "Laser.Orchard.CommunicationGateway.Drivers.CommunicationAdvertisingPartDriver"
 msgid "AdvertisingPart Error"
 msgstr "Errore sul comunicato"
@@ -419,6 +499,10 @@ msgstr "Impossibile aggiornare! La data di pubblicazione schedulata è oltre la 
 msgctxt "Laser.Orchard.CommunicationGateway.Handlers.ExportContactTaskHandler"
 msgid "Export Contacts - Error Message: "
 msgstr "Esportazione contatti - Errore:"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Handlers.ExportContactTaskHandler"
+msgid "File {0} already exist"
+msgstr "Il file {0} è già presente"
 
 msgctxt "Laser.Orchard.CommunicationGateway.Navigation.AdminMenu"
 msgid "Campaign"

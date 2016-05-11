@@ -648,6 +648,14 @@ msgctxt "Laser.Orchard.StartupConfig.Tokens.CreatorEmailTokens"
 msgid "The email of user creator."
 msgstr "L'email dell'utente creatore."
 
+msgctxt "Laser.Orchard.StartupConfig.Tokens.RazorCodeExecutionToken"
+msgid "Executes the razor code in the specified file."
+msgstr "Esegue il codice razor presente nel file specificato."
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.RazorCodeExecutionToken"
+msgid "RazorExecute:<file name>"
+msgstr "RazorExecute:<file name>"
+
 msgctxt "Laser.Orchard.StartupConfig.Tokens.TaxonomyTokens"
 msgid "Taxonomy Field"
 msgstr "Campo della Tassonomia"
