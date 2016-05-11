@@ -34,6 +34,14 @@ namespace Laser.Orchard.Questionnaires.Navigation {
                         .Position("1")
                         .Action("Index", "adminranking", new { area = "Laser.Orchard.Questionnaires" })
                         .Permission(Permissions.AccessStatistics)
+                        .Add(T("Total"), "1", ranking => ranking
+                            .LocalNav())
+                        .Add(T("Apple"), "2", ranking => ranking
+                            .LocalNav())
+                        .Add(T("Android"), "3", ranking => ranking 
+                            .LocalNav())
+                        .Add(T("Windows Phone"), "4", ranking => ranking
+                            .LocalNav())
                     )   
                 //.Add(T("Questionnaires"), "0", subMenu => subMenu.Permission(Permissions.AccessStatistics).LinkToFirstChild(true)
                 //    .Add(T("Single choice Answers"), "0", local => local.Action("IndexUserAnswers", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", type = QuestionType.SingleChoice }).Permission(Permissions.AccessStatistics).LocalNav())

@@ -7,6 +7,29 @@
 @model List<Laser.Orchard.Questionnaires.ViewModels.DisplaRankingTemplateVM>
 
 @{
+    int devType = 0;
+    string devStr = Model.FirstOrDefault().Device;
+    if (devStr == "Apple") { devType = 1; }
+    else if (devStr == "Android") { devType = 2; }
+    else if (devStr == "Windows Phone") { devType = 3; }
+}
+
+<ul class="localmenu localmenu-submenu">
+    <li @if (devType == 0){
+            @:class="selected" 
+                 }><a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = Model.FirstOrDefault().GameID, deviceType = "General"})">Total</a></li>
+    <li @if (devType == 1){
+            @:class="selected" 
+                 }><a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = Model.FirstOrDefault().GameID, deviceType = "Apple"})">Apple</a></li>
+    <li @if (devType == 2){
+            @:class="selected" 
+                 }><a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = Model.FirstOrDefault().GameID, deviceType = "Android"})">Android</a></li>
+    <li @if (devType == 3){
+            @:class="selected" 
+                 }><a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = Model.FirstOrDefault().GameID, deviceType = "Windows Phone"})">Windows Phone</a></li>
+</ul>
+
+@{
     //Model is a list which contains the rankings tables for a given game 
     Layout.Title = T("Game Rankings for ") + Model.FirstOrDefault().Title;
 }

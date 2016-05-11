@@ -132,7 +132,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             ContentItem Ci = gp.ContentItem;
             string titolo = Ci.As<TitlePart>().Title;
 
-            if (deviceType == TipoDispositivo.Apple.ToString()) {
+            if (deviceType == "Apple") {
                 var listordered = listranking.Where(z =>
                 z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.Apple)
                 .OrderByDescending(y => y.Point);
@@ -149,8 +149,8 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     tmp.RegistrationDate = cirkt.RegistrationDate;
                     rkt.Add(tmp);
                 }
-                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Apple", ListRank = rkt });
-            } else if (deviceType == TipoDispositivo.Android.ToString()) {
+                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Apple", GameID = ID, ListRank = rkt });
+            } else if (deviceType == "Android") {
                 var listordered = listranking.Where(z => 
                     z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.Android)
                     .OrderByDescending(y => y.Point);
@@ -167,8 +167,8 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     tmp.RegistrationDate = cirkt.RegistrationDate;
                     rkt.Add(tmp);
                 }
-                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Android", ListRank = rkt });
-            } else if (deviceType == TipoDispositivo.WindowsMobile.ToString()) {
+                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Android", GameID = ID, ListRank = rkt });
+            } else if (deviceType == "Windows Phone") {
                 var listordered = listranking.Where(z =>
                     z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.WindowsMobile)
                     .OrderByDescending(y => y.Point);
@@ -185,7 +185,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     tmp.RegistrationDate = cirkt.RegistrationDate;
                     rkt.Add(tmp);
                 }
-                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Windows Mobile", ListRank = rkt });
+                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Windows Phone", GameID = ID, ListRank = rkt });
             } else {
                 var listordered = listranking.Where(z =>
                     z.As<RankingPart>().ContentIdentifier == Ci.Id)
@@ -203,13 +203,13 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     tmp.RegistrationDate = cirkt.RegistrationDate;
                     rkt.Add(tmp);
                 }
-                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "General", ListRank = rkt });
+                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "General", GameID = ID, ListRank = rkt });
             }
 
             List<DisplaRankingTemplateVM> distinct = new List<DisplaRankingTemplateVM>();
             foreach (DisplaRankingTemplateVM drtvm in listaAllRank) {
                 distinct.Add(new DisplaRankingTemplateVM {
-                    Title = titolo, Device = drtvm.Device,
+                    Title = titolo, Device = drtvm.Device, GameID = ID,
                     ListRank = drtvm.ListRank //this is already sorted by score
                                     .GroupBy(x => x.Identifier) //group elements by phone number
                                     .Select(g => g.First()) //consider first element of each group
