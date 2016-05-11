@@ -30,5 +30,10 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
         public List<RankingTemplateVM> ListRank { get; set; }
     }
 
+    public class DisplayRankingTemplateVMModel {
+        public dynamic Pager { get; set; }
+        public DisplaRankingTemplateVM drtvm { get; set; }
+    }
+
 
 }

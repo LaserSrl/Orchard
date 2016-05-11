@@ -118,10 +118,20 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             ////    Admn = hasPermission
             ////});
         }
-        //This method gets the rankings for a single name, identified by its ID, and for a single Device.
-        //For any user (identified by its phone number)  only one score is in the output of this method
+        //The GelistSingleGame methods get the rankings for a single name, identified by its ID, and for a single Device.
+        //For any user (identified by its phone number) only one score is in the output of the method.
+        [HttpGet]
         [Admin]
-        public ActionResult GetListSingleGame(int ID, string deviceType = "General", bool ascending = false) {
+        public ActionResult GetListSingleGame(int ID, int? page, int? pageSize, string deviceType = "General", bool ascending = false) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+                return new HttpUnauthorizedResult();
+            return GetListSingleGame(ID, new PagerParameters {
+                Page = page, PageSize = pageSize
+            }, DeviceType: deviceType, Ascending: ascending);
+        }
+        [HttpPost]
+        [Admin]
+        public ActionResult GetListSingleGame(int ID, PagerParameters pagerParameters, string DeviceType = "General", bool Ascending = false) {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 return new HttpUnauthorizedResult();
             var query = _orchardServices.ContentManager.Query();
@@ -132,7 +142,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             ContentItem Ci = gp.ContentItem;
             string titolo = Ci.As<TitlePart>().Title;
 
-            if (deviceType == "Apple") {
+            if (DeviceType == "Apple") {
                 var listordered = listranking.Where(z =>
                 z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.Apple)
                 .OrderByDescending(y => y.Point);
@@ -150,7 +160,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     rkt.Add(tmp);
                 }
                 listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Apple", GameID = ID, ListRank = rkt });
-            } else if (deviceType == "Android") {
+            } else if (DeviceType == "Android") {
                 var listordered = listranking.Where(z => 
                     z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.Android)
                     .OrderByDescending(y => y.Point);
@@ -168,7 +178,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     rkt.Add(tmp);
                 }
                 listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Android", GameID = ID, ListRank = rkt });
-            } else if (deviceType == "Windows Phone") {
+            } else if (DeviceType == "Windows Phone") {
                 var listordered = listranking.Where(z =>
                     z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.WindowsMobile)
                     .OrderByDescending(y => y.Point);
@@ -216,10 +226,26 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                                     .ToList()
                 });
             }
-            if (ascending)
+            if (Ascending)
                 distinct.Reverse();
 
-            return View((object)distinct); //((object)listaAllRank);
+            Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
+            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(distinct.First().ListRank.Count());
+            int listStart = pager.GetStartIndex();
+            int listEnd = listStart + ((pager.PageSize > distinct.First().ListRank.Count) ? distinct.First().ListRank.Count : pager.PageSize);
+            listEnd = listEnd > distinct.First().ListRank.Count ? distinct.First().ListRank.Count : listEnd;
+            DisplaRankingTemplateVM pageOfScores = new DisplaRankingTemplateVM {
+                Title = distinct.First().Title,
+                GameID = distinct.First().GameID,
+                Device = distinct.First().Device,
+                ListRank = distinct.First().ListRank.GetRange(listStart, listEnd-listStart)
+            };
+
+            var model = new DisplayRankingTemplateVMModel();
+            model.Pager = pagerShape;
+            model.drtvm = pageOfScores;
+
+            return View((object)model); //((object)listaAllRank);
         }
         private string getusername(int id) {
             if (id > 0) {
