@@ -276,6 +276,7 @@
     <Content Include="Views\QuestionnaireStats\Index.cshtml" />
     <Content Include="Views\QuestionnaireStats\Detail.cshtml" />
     <Content Include="Views\QuestionnaireStats\QuestionDetail.cshtml" />
+    <Content Include="Views\LocalNavRankings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

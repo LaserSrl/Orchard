@@ -121,7 +121,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         //This method gets the rankings for a single name, identified by its ID, and for a single Device.
         //For any user (identified by its phone number)  only one score is in the output of this method
         [Admin]
-        public ActionResult GetListSingleGame(int ID, string deviceType = "General") {
+        public ActionResult GetListSingleGame(int ID, string deviceType = "General", bool ascending = false) {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 return new HttpUnauthorizedResult();
             var query = _orchardServices.ContentManager.Query();
@@ -216,7 +216,8 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                                     .ToList()
                 });
             }
-
+            if (ascending)
+                distinct.Reverse();
 
             return View((object)distinct); //((object)listaAllRank);
         }

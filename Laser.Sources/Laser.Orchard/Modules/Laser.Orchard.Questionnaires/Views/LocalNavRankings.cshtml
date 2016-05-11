@@ -1,0 +1,21 @@
+﻿
+@{
+    int devType = Model.dType;
+    Int32 gameId = Model.gId;
+}
+<div class="zone zone-local-navigation">
+    <ul class="localmenu localmenu-local-admin" role="local-navigation">
+        <li @if (devType == 0){
+                @:class="selected" 
+                     }><a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "General"})">Total</a></li>
+        <li @if (devType == 1){
+                @:class="selected" 
+                     }><a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "Apple"})">Apple</a></li>
+        <li @if (devType == 2){
+                @:class="selected" 
+                     }><a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "Android"})">Android</a></li>
+        <li @if (devType == 3){
+                @:class="selected" 
+                     }><a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "Windows Phone"})">Windows Phone</a></li>
+    </ul>
+</div>

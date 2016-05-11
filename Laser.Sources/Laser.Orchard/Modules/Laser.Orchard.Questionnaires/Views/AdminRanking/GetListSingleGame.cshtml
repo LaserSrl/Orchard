@@ -14,20 +14,11 @@
     else if (devStr == "Windows Phone") { devType = 3; }
 }
 
-<ul class="localmenu localmenu-submenu">
-    <li @if (devType == 0){
-            @:class="selected" 
-                 }><a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = Model.FirstOrDefault().GameID, deviceType = "General"})">Total</a></li>
-    <li @if (devType == 1){
-            @:class="selected" 
-                 }><a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = Model.FirstOrDefault().GameID, deviceType = "Apple"})">Apple</a></li>
-    <li @if (devType == 2){
-            @:class="selected" 
-                 }><a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = Model.FirstOrDefault().GameID, deviceType = "Android"})">Android</a></li>
-    <li @if (devType == 3){
-            @:class="selected" 
-                 }><a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = Model.FirstOrDefault().GameID, deviceType = "Windows Phone"})">Windows Phone</a></li>
-</ul>
+@{
+    Layout.LocalNavigation.Add(Display.LocalNavRankings(dType: devType, gId: Model.FirstOrDefault().GameID));
+}
+
+
 
 @{
     //Model is a list which contains the rankings tables for a given game 
@@ -35,14 +26,14 @@
 }
     
 @foreach(DisplaRankingTemplateVM drt in Model){
-    @Html.Raw("Device: " + drt.Device);
+    //@Html.Raw("Device: " + drt.Device);
 <table class="items" summary="@T("List of ranking.")">
   
     <thead>
         <tr>
               <th scope="col">@T("Identifier")</th>
             <th scope="col">@T("name")</th>
-            <th scope="col">@T("point")</th>
+            <th scope="col">@T("point")</th> <!--//make this clickable to set the order to descending/ascending-->
             <th scope="col">@T("RegistrationDate")</th>
             <th scope="col">@T("UsernameGameCenter")</th>
             <th scope="col">@T("AccessSecured")</th>
