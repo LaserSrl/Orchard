@@ -25,6 +25,7 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
             ListRank = new List<RankingTemplateVM>();
         }
         public string Title { get; set; }
+        public string Device { get; set; }
         public List<RankingTemplateVM> ListRank { get; set; }
     }
 

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using System.Linq;
 using System.Web;
+using Orchard.ContentManagement;
 
 
 namespace Laser.Orchard.Questionnaires.ViewModels {
@@ -74,6 +75,6 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
     public class GamePartSearchViewModel {
         public dynamic Pager { get; set; }
         public string SearchExpression { get; set; }
-        public IEnumerable<GamePart> GameParts { get; set; }
+        public IEnumerable<ContentItem> GameParts { get; set; }
     }
 }

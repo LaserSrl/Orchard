@@ -118,6 +118,108 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             ////    Admn = hasPermission
             ////});
         }
+        //This method gets the rankings for a single name, identified by its ID, and for a single Device.
+        //For any user (identified by its phone number)  only one score is in the output of this method
+        [Admin]
+        public ActionResult GetListSingleGame(int ID, string deviceType = "General") {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+                return new HttpUnauthorizedResult();
+            var query = _orchardServices.ContentManager.Query();
+            var list = query.ForPart<GamePart>().List(); //list all games
+            var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().List();
+            List<DisplaRankingTemplateVM> listaAllRank = new List<DisplaRankingTemplateVM>(); //list to pass data to cshtml
+            GamePart gp = list.Where(x => x.Id == ID).FirstOrDefault(); //the game for which we want the rankings
+            ContentItem Ci = gp.ContentItem;
+            string titolo = Ci.As<TitlePart>().Title;
+
+            if (deviceType == TipoDispositivo.Apple.ToString()) {
+                var listordered = listranking.Where(z =>
+                z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.Apple)
+                .OrderByDescending(y => y.Point);
+                List<RankingTemplateVM> rkt = new List<RankingTemplateVM>();
+                foreach (RankingPart cirkt in listordered) {
+                    RankingTemplateVM tmp = new RankingTemplateVM();
+                    tmp.Point = cirkt.Point;
+                    tmp.ContentIdentifier = cirkt.ContentIdentifier;
+                    tmp.Device = cirkt.Device;
+                    tmp.Identifier = cirkt.Identifier;
+                    tmp.name = getusername(cirkt.User_Id);
+                    tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
+                    tmp.AccessSecured = cirkt.AccessSecured;
+                    tmp.RegistrationDate = cirkt.RegistrationDate;
+                    rkt.Add(tmp);
+                }
+                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Apple", ListRank = rkt });
+            } else if (deviceType == TipoDispositivo.Android.ToString()) {
+                var listordered = listranking.Where(z => 
+                    z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.Android)
+                    .OrderByDescending(y => y.Point);
+                var rkt = new List<RankingTemplateVM>();
+                foreach (RankingPart cirkt in listordered) {
+                    RankingTemplateVM tmp = new RankingTemplateVM();
+                    tmp.Point = cirkt.Point;
+                    tmp.ContentIdentifier = cirkt.ContentIdentifier;
+                    tmp.Device = cirkt.Device;
+                    tmp.Identifier = cirkt.Identifier;
+                    tmp.name = getusername(cirkt.User_Id);
+                    tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
+                    tmp.AccessSecured = cirkt.AccessSecured;
+                    tmp.RegistrationDate = cirkt.RegistrationDate;
+                    rkt.Add(tmp);
+                }
+                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Android", ListRank = rkt });
+            } else if (deviceType == TipoDispositivo.WindowsMobile.ToString()) {
+                var listordered = listranking.Where(z =>
+                    z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.WindowsMobile)
+                    .OrderByDescending(y => y.Point);
+                var rkt = new List<RankingTemplateVM>();
+                foreach (RankingPart cirkt in listordered) {
+                    RankingTemplateVM tmp = new RankingTemplateVM();
+                    tmp.Point = cirkt.Point;
+                    tmp.ContentIdentifier = cirkt.ContentIdentifier;
+                    tmp.Device = cirkt.Device;
+                    tmp.Identifier = cirkt.Identifier;
+                    tmp.name = getusername(cirkt.User_Id);
+                    tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
+                    tmp.AccessSecured = cirkt.AccessSecured;
+                    tmp.RegistrationDate = cirkt.RegistrationDate;
+                    rkt.Add(tmp);
+                }
+                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Windows Mobile", ListRank = rkt });
+            } else {
+                var listordered = listranking.Where(z =>
+                    z.As<RankingPart>().ContentIdentifier == Ci.Id)
+                    .OrderByDescending(y => y.Point);
+                var rkt = new List<RankingTemplateVM>();
+                foreach (RankingPart cirkt in listordered) {
+                    RankingTemplateVM tmp = new RankingTemplateVM();
+                    tmp.Point = cirkt.Point;
+                    tmp.ContentIdentifier = cirkt.ContentIdentifier;
+                    tmp.Device = cirkt.Device;
+                    tmp.Identifier = cirkt.Identifier;
+                    tmp.name = getusername(cirkt.User_Id);
+                    tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
+                    tmp.AccessSecured = cirkt.AccessSecured;
+                    tmp.RegistrationDate = cirkt.RegistrationDate;
+                    rkt.Add(tmp);
+                }
+                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "General", ListRank = rkt });
+            }
+
+            List<DisplaRankingTemplateVM> distinct = new List<DisplaRankingTemplateVM>();
+            foreach (DisplaRankingTemplateVM drtvm in listaAllRank) {
+                distinct.Add(new DisplaRankingTemplateVM {
+                    Title = titolo, Device = drtvm.Device,
+                    ListRank = drtvm.ListRank //this is already sorted by score
+                                    .GroupBy(x => x.Identifier) //group elements by phone number
+                                    .Select(g => g.First()) //consider first element of each group
+                                    .ToList()
+                });
+            }
+
+
+            return View((object)distinct); //((object)listaAllRank);
+        }
         private string getusername(int id) {
             if (id > 0) {
                 try {

@@ -6,7 +6,7 @@
 @model Laser.Orchard.Questionnaires.ViewModels.GamePartSearchViewModel
 
 @{
-    Layout.Title = T("Questionnaire Rankings");
+    Layout.Title = T("Index of games");
 }
 
 @using (Html.BeginForm("Index", "adminranking", FormMethod.Get)) {
@@ -27,7 +27,9 @@
                     <div class="summary" itemscope="itemscope" itemid="@game.Id" itemtype="http://orchardproject.net/data/ContentItem">
                         <div class="properties">
                             <h3>
+                                <a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = game.Id})">
                                 @(((dynamic)game).TitlePart.Title)
+                                </a>
                             </h3>
                             <div class="metadata">
                                 @{
