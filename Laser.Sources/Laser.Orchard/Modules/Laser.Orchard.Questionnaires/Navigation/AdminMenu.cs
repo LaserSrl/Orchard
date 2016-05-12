@@ -33,8 +33,8 @@ namespace Laser.Orchard.Questionnaires.Navigation {
                         .Caption(T("Games"))
                         .Position("1")
                         .Action("Index", "adminranking", new { area = "Laser.Orchard.Questionnaires" })
-                        .Permission(Permissions.AccessStatistics)
-                        
+                        .Permission(Permissions.GameRanking) //(Permissions.AccessStatistics) //
+
                     )   
                 //.Add(T("Questionnaires"), "0", subMenu => subMenu.Permission(Permissions.AccessStatistics).LinkToFirstChild(true)
                 //    .Add(T("Single choice Answers"), "0", local => local.Action("IndexUserAnswers", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", type = QuestionType.SingleChoice }).Permission(Permissions.AccessStatistics).LocalNav())

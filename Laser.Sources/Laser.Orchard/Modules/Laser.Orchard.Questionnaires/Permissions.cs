@@ -6,6 +6,7 @@ namespace Laser.Orchard.Questionnaires {
     public class Permissions : IPermissionProvider {
         public static readonly Permission SubmitQuestionnaire = new Permission { Description = "Submit questionnaire", Name = "SubmitQuestionnaire" };
         public static readonly Permission AccessStatistics = new Permission { Description = "Access questionnaire statistics", Name = "AccessStatistics" };
+        public static readonly Permission GameRanking = new Permission { Description = "View game rankings", Name = "GameRanking" };
 
 
         public virtual Feature Feature { get; set; }
@@ -14,6 +15,7 @@ namespace Laser.Orchard.Questionnaires {
             return new[] {
                 SubmitQuestionnaire,
                 AccessStatistics,
+                GameRanking,
             };
         }
 
@@ -25,9 +27,12 @@ namespace Laser.Orchard.Questionnaires {
                 },
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {AccessStatistics}
+                    Permissions = new[] {AccessStatistics} //, GameRanking } //
                 },
-
+                new PermissionStereotype {
+                    Name = "Author",
+                    Permissions = new[] {AccessStatistics, GameRanking } //} //
+                },
             };
         }
     }

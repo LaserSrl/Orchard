@@ -5,6 +5,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
+using Orchard.Data;
 using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
@@ -136,7 +137,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         [HttpGet]
         [Admin]
         public ActionResult GetListSingleGame(int ID, int? page, int? pageSize, string deviceType = "General", bool ascending = false) {
-            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.GameRanking)) //(Permissions.AccessStatistics)) //(StandardPermissions.SiteOwner)) //
                 return new HttpUnauthorizedResult();
             return GetListSingleGame(ID, new PagerParameters {
                 Page = page, PageSize = pageSize
@@ -145,8 +146,9 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         [HttpPost]
         [Admin]
         public ActionResult GetListSingleGame(int ID, PagerParameters pagerParameters, string DeviceType = "General", bool Ascending = false) {
-            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.GameRanking)) //(Permissions.AccessStatistics)) //(StandardPermissions.SiteOwner)) //
                 return new HttpUnauthorizedResult();
+
             var query = _orchardServices.ContentManager.Query();
             var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.Id == ID).List(); //list all games
             //var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().List(); //original
@@ -169,6 +171,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             queryRank = queryRank.OrderByDescending(y => y.Point); //sort by score 
             
             var listranking =  queryRank.List();
+
             List<DisplaRankingTemplateVM> listaAllRank = new List<DisplaRankingTemplateVM>(); //list to pass data to cshtml
             GamePart gp = list.FirstOrDefault(); //the game for which we want the rankings
             //Assuming there was no issues, gp should never be null. If gp is null, it probably means something happened in the DB, since we
@@ -242,7 +245,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         [HttpGet]
         [Admin]
         public ActionResult Index(int? page, int? pageSize, string searchExpression) {
-            if (!_orchardServices.Authorizer.Authorize(Permissions.AccessStatistics))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.GameRanking)) //(Permissions.AccessStatistics)) //
                 return new HttpUnauthorizedResult();
             return Index(new PagerParameters {
                 Page = page,
@@ -253,7 +256,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         [HttpPost]
         [Admin]
         public ActionResult Index(PagerParameters pagerParameters, string searchExpression) {
-            if (!_orchardServices.Authorizer.Authorize(Permissions.AccessStatistics))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.GameRanking)) //(Permissions.AccessStatistics)) //
                 return new HttpUnauthorizedResult();
 
             IContentQuery<ContentItem> contentQuery =
