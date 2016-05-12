@@ -486,8 +486,23 @@ namespace Laser.Orchard.Mobile.Services {
                     //mpp.ToPush = false;
                     mpp.PushSent = true;
                     mpp.PushSentNumber = messageSent;
-                    var counter = GetPushQueryResult(ids, locTipoDispositivo, produzione, language, true);
-                    mpp.TargetDeviceNumber = Convert.ToInt32(((Hashtable)(counter[0]))["Tot"]);
+                    int counter = 0;
+                    if (ci.ContentType == "CommunicationAdvertising") {
+                        var counterAux = GetPushQueryResult(ids, locTipoDispositivo, produzione, language, true);
+                        counter = Convert.ToInt32(((Hashtable)(counterAux[0]))["Tot"]);
+                    } else {
+                        if (queryDevice.Trim() == "") {
+                            counter = _pushNotificationRepository.Fetch(x => (x.Device == locTipoDispositivo || locTipoDispositivo == null) && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")).Count();
+                        }
+                        else {
+                            var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
+                             .CreateSQLQuery(queryDevice)
+                             .AddEntity(typeof(PushNotificationRecord))
+                             .List<PushNotificationRecord>();
+                            counter = estrazione.Where(x => (x.Device == locTipoDispositivo || locTipoDispositivo == null) && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")).Count();
+                        }
+                    }
+                    mpp.TargetDeviceNumber = counter;
                     _notifier.Information(T("Notification sent: " + messageSent.ToString()));
                 }
             }
