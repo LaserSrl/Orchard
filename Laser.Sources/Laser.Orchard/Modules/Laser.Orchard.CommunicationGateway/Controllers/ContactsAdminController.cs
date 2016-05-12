@@ -158,16 +158,19 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             return IndexSearch(page, pageSize, search);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Admin]
-        [ActionName("IndexSearch")]
-        [FormValueRequired("submit.Search")]
         public ActionResult IndexSearch(int? page, int? pageSize, SearchVM search) {
+            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+                return new HttpUnauthorizedResult();
+
+            if (Request.QueryString["submit.Export"] != null) {
+                return Export(search);
+            }
+
             // variabili di appoggio
             List<int> arr = null;
 
-            if (!_orchardServices.Authorizer.Authorize(TestPermission))
-                return new HttpUnauthorizedResult();
             IEnumerable<ContentItem> contentItems = null;
             int totItems = 0;
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, page, pageSize);
@@ -281,13 +284,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             return View("Index", (object)model);
         }
 
-        [HttpPost]
-        [Admin]
-        [ActionName("IndexSearch")]
-        [FormValueRequired("submit.Export")]
-        public ActionResult Export(SearchVM search) {
-            if (!_orchardServices.Authorizer.Authorize(TestPermission))
-                return new HttpUnauthorizedResult();
+        private ActionResult Export(SearchVM search) {
             
             string parametri = "expression=" + Url.Encode(search.Expression) + "&field=" + Url.Encode(search.Field.ToString());
             parametri += search.CommercialUseAuthorization.HasValue ? String.Format("&commercialuse={0}", search.CommercialUseAuthorization.Value.ToString()) : "&commercialuse=";
