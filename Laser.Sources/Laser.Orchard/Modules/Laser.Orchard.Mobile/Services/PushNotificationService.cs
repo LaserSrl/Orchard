@@ -580,7 +580,7 @@ namespace Laser.Orchard.Mobile.Services {
 
         private List<PushNotificationRecord> GetListMobileDevice(string contenttype, string queryDevice, TipoDispositivo tipodisp, bool produzione, string language, int[] queryIds) {
             if (contenttype == "CommunicationAdvertising") {
-                if (queryDevice.Trim() == "") {
+       //         if (queryDevice.Trim() == "") {
                     var elenco = GetPushQueryResult(queryIds, tipodisp, produzione, language);
                     var lista = new List<PushNotificationRecord>();
                     foreach (Hashtable ht in elenco) {
@@ -596,14 +596,14 @@ namespace Laser.Orchard.Mobile.Services {
                     }
                     return lista;
                     //return _pushNotificationRepository.Fetch(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
-                }
-                else {
-                    var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
-                     .CreateSQLQuery(queryDevice)
-                     .AddEntity(typeof(PushNotificationRecord))
-                     .List<PushNotificationRecord>();
-                    return estrazione.Where(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")).ToList();
-                }
+                //}
+                //else {
+                //    var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
+                //     .CreateSQLQuery(queryDevice)
+                //     .AddEntity(typeof(PushNotificationRecord))
+                //     .List<PushNotificationRecord>();
+                //    return estrazione.Where(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")).ToList();
+                //}
             }
             else {
                 if (queryDevice.Trim() == "") {
