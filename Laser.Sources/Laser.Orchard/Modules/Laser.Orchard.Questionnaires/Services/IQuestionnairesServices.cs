@@ -18,5 +18,6 @@ namespace Laser.Orchard.Questionnaires.Services {
         List<QuestStatViewModel> GetStats(QuestionType type);
         void Save(QuestionnaireWithResultsViewModel editModel, IUser currentUser,string SessionID);
         bool SendTemplatedEmailRanking();
+        bool SendTemplatedEmailRanking(Int32 gameID);
     }
 }

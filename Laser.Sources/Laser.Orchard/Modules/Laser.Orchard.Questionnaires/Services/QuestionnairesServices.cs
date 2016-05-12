@@ -108,12 +108,90 @@ namespace Laser.Orchard.Questionnaires.Services {
             return true;
         }
 
+        public bool SendTemplatedEmailRanking(Int32 gameID) {
+            var query = _orchardServices.ContentManager.Query();
+            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.Id == gameID).List();
+            GamePart gp = list.FirstOrDefault();
+            if (gp == null) //check if there is actually a game with the given ID (proper usage should make it so this is never true)
+                return false;
+            //get all rankings for the given game
+            var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().Where<RankingPartRecord>(x => x.ContentIdentifier == gameID).List();
+            //we do not do checks on whether this email was scheduled
+            ContentItem Ci = gp.ContentItem;
+            var listordered = listranking.OrderByDescending(y => y.Point);
+            List<RankingTemplateVM> generalRank = new List<RankingTemplateVM>();
+            List<RankingTemplateVM> appleRank = new List<RankingTemplateVM>();
+            List<RankingTemplateVM> androidRank = new List<RankingTemplateVM>();
+            List<RankingTemplateVM> windowsRank = new List<RankingTemplateVM>();
+            foreach (RankingPart cirkt in listordered) {
+                RankingTemplateVM tmp = new RankingTemplateVM();
+                tmp.Point = cirkt.Point;
+                tmp.ContentIdentifier = cirkt.ContentIdentifier;
+                tmp.Device = cirkt.Device;
+                tmp.Identifier = cirkt.Identifier;
+                tmp.name = getusername(cirkt.User_Id);
+                tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
+                tmp.AccessSecured = cirkt.AccessSecured;
+                tmp.RegistrationDate = cirkt.RegistrationDate;
+                generalRank.Add(tmp);
+                if (tmp.Device == TipoDispositivo.Android)
+                    androidRank.Add(tmp);
+                if (tmp.Device == TipoDispositivo.Apple)
+                    appleRank.Add(tmp);
+                if (tmp.Device == TipoDispositivo.WindowsMobile)
+                    windowsRank.Add(tmp);
+            }
+            //cut lists because we only want the top10, without with a single score per user
+            generalRank = generalRank.GroupBy(x => x.Identifier).Select(g => g.First()).ToList();
+            generalRank = generalRank.GetRange(0, 10 > generalRank.Count ? generalRank.Count : 10); //Top10
+            appleRank = appleRank.GroupBy(x => x.Identifier).Select(g => g.First()).ToList();
+            appleRank = appleRank.GetRange(0, 10 > appleRank.Count ? appleRank.Count : 10); //Top10
+            androidRank = androidRank.GroupBy(x => x.Identifier).Select(g => g.First()).ToList();
+            androidRank = androidRank.GetRange(0, 10 > androidRank.Count ? androidRank.Count : 10); //Top10
+            windowsRank = windowsRank.GroupBy(x => x.Identifier).Select(g => g.First()).ToList();
+            windowsRank = windowsRank.GetRange(0, 10 > windowsRank.Count ? windowsRank.Count : 10); //Top10
+
+            SendEmail(Ci, generalRank, appleRank, androidRank, windowsRank);
+            return true;
+        }
+
         private bool SendEmail(ContentItem Ci, List<RankingTemplateVM> rkt) {
             string emailRecipe = Ci.As<GamePart>().Settings.GetModel<GamePartSettingVM>().EmailRecipe;
             if (emailRecipe != "") {
                 var editModel = new Dictionary<string, object>();
                 editModel.Add("Content", Ci);
                 editModel.Add("ListRanking", rkt);
+                ParseTemplateContext ptc = new ParseTemplateContext();
+                ptc.Model = editModel;
+                int templateid = Ci.As<GamePart>().Settings.GetModel<GamePartSettingVM>().Template;
+                TemplatePart TemplateToUse = _orchardServices.ContentManager.Get(templateid).As<TemplatePart>();
+                string testohtml;
+                if (TemplateToUse != null) {
+                    testohtml = _templateService.ParseTemplate(TemplateToUse, ptc);
+                    var datiCI = Ci.Record;
+                    var data = new Dictionary<string, string>();
+                    data.Add("Subject", "Game Ranking");
+                    data.Add("Body", testohtml);
+                    _messageManager.Send(new string[] { emailRecipe }, "ModuleRankingEmail", "email", data);
+                    return true;
+                } else { // Nessun template selezionato non mando una mail e ritorno false, mail non inviata
+                    return false;
+                }
+            } else
+                return false;
+        }
+
+        //method to send a single email with separate rankings for the different platforms
+        private bool SendEmail(ContentItem Ci, List<RankingTemplateVM> generalRank, List<RankingTemplateVM> appleRank,
+            List<RankingTemplateVM> androidRank, List<RankingTemplateVM> windowsRank) {
+            string emailRecipe = Ci.As<GamePart>().Settings.GetModel<GamePartSettingVM>().EmailRecipe;
+            if (emailRecipe != "") {
+                var editModel = new Dictionary<string, object>();
+                editModel.Add("Content", Ci);
+                editModel.Add("GeneralRanking", generalRank);
+                editModel.Add("AppleRanking", appleRank);
+                editModel.Add("AndroidRanking", androidRank);
+                editModel.Add("WindowsRanking", windowsRank);
                 ParseTemplateContext ptc = new ParseTemplateContext();
                 ptc.Model = editModel;
                 int templateid = Ci.As<GamePart>().Settings.GetModel<GamePartSettingVM>().Template;

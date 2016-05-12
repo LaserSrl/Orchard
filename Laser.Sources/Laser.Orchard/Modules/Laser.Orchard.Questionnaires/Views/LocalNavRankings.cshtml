@@ -11,21 +11,21 @@
                 @:class="selected" 
                      }><a href="@Url.Action("GetListSingleGame", "adminranking", 
                         new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "General", 
-                            page = Page, pageSize = PageSize})">Total</a></li>
+                            page = 1, pageSize = PageSize})">Total</a></li>
         <li @if (devType == 1){
                 @:class="selected" 
                      }><a href="@Url.Action("GetListSingleGame", "adminranking", 
                         new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "Apple", 
-                            page = Page, pageSize = PageSize})">Apple</a></li>
+                            page = 1, pageSize = PageSize})">Apple</a></li>
         <li @if (devType == 2){
                 @:class="selected" 
                      }><a href="@Url.Action("GetListSingleGame", "adminranking", 
                         new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "Android", 
-                            page = Page, pageSize = PageSize})">Android</a></li>
+                            page = 1, pageSize = PageSize})">Android</a></li>
         <li @if (devType == 3){
                 @:class="selected" 
                      }><a href="@Url.Action("GetListSingleGame", "adminranking", 
                         new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "Windows Phone", 
-                            page = Page, pageSize = PageSize})">Windows Phone</a></li>
+                            page = 1, pageSize = PageSize})">Windows Phone</a></li>
     </ul>
 </div>

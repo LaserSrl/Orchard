@@ -49,6 +49,11 @@
                                             &nbsp;&#124;&nbsp;
                                         </li>
                                         <li>@T("By {0}", owner == null ? T("unknown").ToString() : Convert.ToString(Html.ItemDisplayText(owner)))</li>
+                                        <li>
+                                            <a href="@Url.Action("TestEmail", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = game.Id})">
+                                                Test email
+                                            </a>
+                                        </li>
                                     </ul>
                                     if (!String.IsNullOrWhiteSpace(language)) {
                                         <br />
