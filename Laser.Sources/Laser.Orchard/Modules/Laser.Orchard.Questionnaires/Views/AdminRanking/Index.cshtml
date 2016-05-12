@@ -3,13 +3,14 @@
 @using Orchard.Security;
 @using Orchard.Localization.Models;
 
-@model Laser.Orchard.Questionnaires.ViewModels.QuestionnaireSearchViewModel
+@model Laser.Orchard.Questionnaires.ViewModels.GamePartSearchViewModel
 
 @{
-    Layout.Title = T("Questionnaire Statistics");
+    Layout.Title = T("Index of games");
 }
 
-@using (Html.BeginForm("Index", "QuestionnaireStats", FormMethod.Get)) {
+
+@using (Html.BeginForm("Index", "adminranking", FormMethod.Get)) {
     <fieldset class="bulk-actions">
         <label for="search">@T("Search:")</label>
         @Html.TextBoxFor(m => m.SearchExpression)
@@ -22,18 +23,18 @@
 <fieldset class="contentItems bulk-items">
     <ul>
         @{
-            foreach(var questionnaire in Model.Questionnaires) {
+            foreach(var game in Model.GameParts){
                 <li>
-                    <div class="summary" itemscope="itemscope" itemid="@questionnaire.Id" itemtype="http://orchardproject.net/data/ContentItem">
+                    <div class="summary" itemscope="itemscope" itemid="@game.Id" itemtype="http://orchardproject.net/data/ContentItem">
                         <div class="properties">
                             <h3>
-                                <a href="@Url.Action("Detail", "QuestionnaireStats", new { area = "Laser.Orchard.Questionnaires", idQuestionario = questionnaire.Id })">
-                                    @(((dynamic)questionnaire).TitlePart.Title)
+                                <a href="@Url.Action("GetListSingleGame", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = game.Id})">
+                                @(((dynamic)game).TitlePart.Title)
                                 </a>
                             </h3>
                             <div class="metadata">
                                 @{
-                                    CommonPart commonPart = (((dynamic)questionnaire).CommonPart);
+                                    CommonPart commonPart = (((dynamic)game).CommonPart);
                                     DateTime? modifiedUtc = commonPart.As<CommonPart>() == null ? null : commonPart.As<CommonPart>().ModifiedUtc;
                                     IUser owner = commonPart.As<CommonPart>() == null ? null : commonPart.As<CommonPart>().Owner;
                                     //string language = commonPart.As<LocalizationPart>() == null ? null : commonPart.As<LocalizationPart>().Culture.Culture;
@@ -55,7 +56,7 @@
                                             <li>@T("Language: {0}", language)</li>
                                         </ul>
                                     }
-                                 }
+                                }
                             </div>
                         </div>
                     </div>
