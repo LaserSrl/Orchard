@@ -21,7 +21,7 @@ msgid "More info"
 msgstr "Mostra più informazioni"
 
 msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
-msgid " Design and development of Mobile Applications"
+msgid "Design and development of Mobile Applications"
 msgstr "Progettazione e sviluppo di Mobile Applications"
 
 msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
