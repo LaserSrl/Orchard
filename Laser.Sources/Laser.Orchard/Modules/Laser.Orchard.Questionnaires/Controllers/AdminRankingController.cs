@@ -167,7 +167,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                 devString = "General";
             }
             queryRank = queryRank.OrderByDescending(y => y.Point); //sort by score 
-
+            
             var listranking =  queryRank.List();
             List<DisplaRankingTemplateVM> listaAllRank = new List<DisplaRankingTemplateVM>(); //list to pass data to cshtml
             GamePart gp = list.FirstOrDefault(); //the game for which we want the rankings

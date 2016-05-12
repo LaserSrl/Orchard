@@ -70,6 +70,20 @@ namespace Laser.Orchard.Questionnaires.Services {
                 return "No User";
         }
 
+        public bool SendTemplatedEmailRanking(bool multipleRankings) {
+            if (multipleRankings)
+                return SendTemplatedEmailRankingMultiple();
+            else
+                return SendTemplatedEmailRanking();
+        }
+
+        private bool SendTemplatedEmailRankingMultiple() {
+            var query = _orchardServices.ContentManager.Query();
+            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.workflowfired == false).List();
+
+            return false;
+        }
+        
         public bool SendTemplatedEmailRanking() {
             var query = _orchardServices.ContentManager.Query();
             var list = query.ForPart<GamePart>().Where<GamePartRecord>(x=>x.workflowfired==false).List();
@@ -115,15 +129,18 @@ namespace Laser.Orchard.Questionnaires.Services {
             if (gp == null) //check if there is actually a game with the given ID (proper usage should make it so this is never true)
                 return false;
             //get all rankings for the given game
-            var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().Where<RankingPartRecord>(x => x.ContentIdentifier == gameID).List();
+            var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>()
+                .Where<RankingPartRecord>(x => x.ContentIdentifier == gameID)
+                .OrderByDescending(y => y.Point)
+                .List();
             //we do not do checks on whether this email was scheduled
             ContentItem Ci = gp.ContentItem;
-            var listordered = listranking.OrderByDescending(y => y.Point);
+            //var listordered = listranking.OrderByDescending(y => y.Point);
             List<RankingTemplateVM> generalRank = new List<RankingTemplateVM>();
             List<RankingTemplateVM> appleRank = new List<RankingTemplateVM>();
             List<RankingTemplateVM> androidRank = new List<RankingTemplateVM>();
             List<RankingTemplateVM> windowsRank = new List<RankingTemplateVM>();
-            foreach (RankingPart cirkt in listordered) {
+            foreach (RankingPart cirkt in listranking) {
                 RankingTemplateVM tmp = new RankingTemplateVM();
                 tmp.Point = cirkt.Point;
                 tmp.ContentIdentifier = cirkt.ContentIdentifier;
