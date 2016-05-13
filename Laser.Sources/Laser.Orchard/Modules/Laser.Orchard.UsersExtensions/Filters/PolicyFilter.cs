@@ -60,6 +60,13 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                             StringBuilder sb = new StringBuilder();
                             XElement dump = null;
 
+                            var realFormat = false;
+                            var minified = false; 
+                            bool.TryParse(_workContext.GetContext().HttpContext.Request["realformat"], out realFormat);
+                            bool.TryParse(_workContext.GetContext().HttpContext.Request["minified"], out minified);
+
+
+
                             var policies = neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id));
 
                             sb.Insert(0, "{");
@@ -85,7 +92,7 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                                 sb.Append("{");
                                 dumper = new ObjectDumper(10);
                                 dump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
-                                JsonConverter.ConvertToJSon(dump, sb);
+                                JsonConverter.ConvertToJSon(dump, sb, minified, realFormat);
                                 sb.Append("}");
                                 i++;
                             }
