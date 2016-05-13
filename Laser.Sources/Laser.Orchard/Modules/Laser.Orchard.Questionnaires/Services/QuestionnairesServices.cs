@@ -70,19 +70,19 @@ namespace Laser.Orchard.Questionnaires.Services {
                 return "No User";
         }
 
-        public bool SendTemplatedEmailRanking(bool multipleRankings) {
-            if (multipleRankings)
-                return SendTemplatedEmailRankingMultiple();
-            else
-                return SendTemplatedEmailRanking();
-        }
+        //public bool SendTemplatedEmailRanking(bool multipleRankings) {
+        //    if (multipleRankings)
+        //        return SendTemplatedEmailRankingMultiple();
+        //    else
+        //        return SendTemplatedEmailRanking();
+        //}
 
-        private bool SendTemplatedEmailRankingMultiple() {
-            var query = _orchardServices.ContentManager.Query();
-            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.workflowfired == false).List();
+        //private bool SendTemplatedEmailRankingMultiple() {
+        //    var query = _orchardServices.ContentManager.Query();
+        //    var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.workflowfired == false).List();
 
-            return false;
-        }
+        //    return false;
+        //}
         
         public bool SendTemplatedEmailRanking() {
             var query = _orchardServices.ContentManager.Query();

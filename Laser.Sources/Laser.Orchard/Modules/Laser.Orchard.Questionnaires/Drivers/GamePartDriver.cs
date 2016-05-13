@@ -6,8 +6,9 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
-using System;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Tasks.Scheduling;
+using System;
 using System.Globalization;
 
 namespace Laser.Orchard.Questionnaires.Drivers {
@@ -15,6 +16,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
     public class GamePartDriver : ContentPartDriver<GamePart> {
         private readonly IOrchardServices _orchardServices;
         private readonly IDateLocalization _dateLocalization;
+        private readonly IScheduledTaskManager _taskManager;
 
         public Localizer T { get; set; }
 
@@ -22,9 +24,11 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             get { return "Laser.Mobile.Questionnaires.Game"; }
         }
 
-        public GamePartDriver(IOrchardServices orchardServices, IDateLocalization dateLocalization) {
+        public GamePartDriver(IOrchardServices orchardServices, IDateLocalization dateLocalization,
+            IScheduledTaskManager taskManager) {
             _orchardServices = orchardServices;
             _dateLocalization = dateLocalization;
+            _taskManager = taskManager;
         }
 
         protected override DriverResult Editor(GamePart part, dynamic shapeHelper) {
@@ -48,6 +52,21 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                     part.GameDate = _dateLocalization.StringToDatetime(viewModel.GameDate, "") ?? DateTime.Now;
                 }
             }
+            //Schedule a task to send an email at the end of the game
+            DateTime timeGameEnd = ((dynamic)part.ContentItem).ActivityPart.DateTimeEnd;
+            //do we need to check whther timeGameEnd > DateTime.Now?
+            Int32 thisGameID = part.Record.Id;
+            //Check whether we already have a task for this game
+            string taskTypeStr = Laser.Orchard.Questionnaires.Handlers.ScheduledTaskHandler.TaskType + " " + thisGameID.ToString();
+            var tasks = _taskManager.GetTasks(taskTypeStr);
+            foreach (var ta in tasks) {
+                //if we are here, it means the task ta exists with the same game id as the current game
+                //hence we should update the task.
+                _taskManager.DeleteTasks(ta.ContentItem); //maybe
+            }
+            DateTime taskDate = timeGameEnd.AddMinutes(5);
+            _taskManager.CreateTask(taskTypeStr, taskDate, null);
+
             return Editor(part, shapeHelper);
         }
 
