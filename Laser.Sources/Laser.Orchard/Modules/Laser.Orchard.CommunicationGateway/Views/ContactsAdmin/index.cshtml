@@ -20,7 +20,7 @@
         <a class="button primaryAction" href="@Url.Action("Synchronize", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" })" title="@T("Synchronize")">@T("Synchronize")</a>
     </div>
 }
-@using (Html.BeginForm("IndexSearch", "ContactsAdmin", FormMethod.Post)) {
+@using (Html.BeginForm("IndexSearch", "ContactsAdmin", FormMethod.Get)) {
     @Html.AntiForgeryToken()
     <fieldset class="bulk-actions bottom-20">
         <div>
@@ -35,11 +35,11 @@
                 </div>
                 <div style="float: right;">
                     <div>
-                        <button type="submit" name="submit.Search" value="-">@T("Search")</button>
+                        <button type="submit" name="submit.Search" value="search">@T("Search")</button>
                         <a href="@Url.Action("Index")">@T("Clear")</a>
                     </div>
                     <div class="manage-export" id="manage-export">
-                        <button class="button primaryAction" style="margin-left: 4px" type="submit" name="submit.Export" value="-">@T("Export")</button>
+                        <button class="button primaryAction" style="margin-left: 4px" type="submit" name="submit.Export" value="export">@T("Export")</button>
                         <a href="@Url.Action("ExportedFilesList")">@T("Show Exported Files")</a>
                     </div>
                 </div>

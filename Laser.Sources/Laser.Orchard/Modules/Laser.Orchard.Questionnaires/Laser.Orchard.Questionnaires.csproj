@@ -270,10 +270,13 @@
     <Content Include="Views\DefinitionTemplates\QuestionnairesPartSettingVM.cshtml" />
     <Content Include="Views\DefinitionTemplates\GamePartSettingVM.cshtml" />
     <Content Include="Views\AdminRanking\GetList.cshtml" />
+    <Content Include="Views\AdminRanking\Index.cshtml" />
+    <Content Include="Views\AdminRanking\GetListSingleGame.cshtml" />
     <None Include="Views\EditorTemplates\Parts\GamePart_Edit.cshtml" />
     <Content Include="Views\QuestionnaireStats\Index.cshtml" />
     <Content Include="Views\QuestionnaireStats\Detail.cshtml" />
     <Content Include="Views\QuestionnaireStats\QuestionDetail.cshtml" />
+    <Content Include="Views\LocalNavRankings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
