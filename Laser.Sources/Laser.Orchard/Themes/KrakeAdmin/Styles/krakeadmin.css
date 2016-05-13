@@ -1401,13 +1401,22 @@ a.text-success:hover {
         padding-left: 240px;
     }
 
-    .logo-icon {
+    .menubar-pin .logo-icon {
         display: initial;
     }
 
-    .logo-icon-minimized {
+    .menubar-pin .logo-icon-minimized {
         display: none;
     }
+
+    /*.menubar-visible .logo-icon-minimized {
+        display: initial;
+    }
+
+     .menubar-visible .logo-icon {
+        display: none;
+    }*/
+
 }
 
 @media (min-width: 769px) {
@@ -1592,7 +1601,7 @@ a.text-success:hover {
 .header-nav-profile .dropdown > a:after {
     content: "\f107";
     position: absolute;
-    *margin-right: .3em;
+    margin-right: .3em;
     right: 10px;
     top: 22px;
     font-family: FontAwesome;
@@ -2021,7 +2030,7 @@ body:not(.menubar-first) .menubar-fixed-panel {
     display: block;
     text-decoration: none;
     padding: 12px 0px;
-    font-size: 12px;
+    font-size: 14px;
     line-height: normal;
     border-radius: 0;
     padding-left: 0;
@@ -2043,7 +2052,7 @@ body:not(.menubar-first) .menubar-fixed-panel {
     display: block;
     text-decoration: none;
     padding: 7px 17px;
-    font-size: 12px;
+    font-size: 14px;
     line-height: normal;
     border-radius: 0;
     padding-left: 57px;
@@ -2530,7 +2539,7 @@ body:not(.menubar-first) .menubar-fixed-panel {
 }
 
 .menubar-inverse .gui-controls li .title {
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.95);
     text-shadow: 0 1px 2px #000000;
 }
 
@@ -2543,16 +2552,16 @@ body:not(.menubar-first) .menubar-fixed-panel {
 }
 
 .menubar-inverse .gui-controls li.gui-folder > a .title {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.95);
 }
 
 .menubar-inverse .gui-controls li.gui-folder.expanded > a .title,
 .menubar-inverse .gui-controls li.gui-folder.active > a .title {
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.95);
 }
 
 .menubar-inverse .gui-folder > a:after {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.95);
 }
 
 .menubar-inverse .gui-controls > .gui-folder.expanding > a:after,
@@ -2561,7 +2570,7 @@ body:not(.menubar-first) .menubar-fixed-panel {
 }
 
 .menubar-inverse .gui-icon {
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.95);
 }
 
 .menubar-inverse .gui-icon:hover {
