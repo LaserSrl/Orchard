@@ -24,10 +24,13 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         //un bottone per mandarmi una mail
         private readonly IQuestionnairesServices _questionnairesServices;
         private readonly IRepository<RankingPartRecord> _repoRanking;
-        public AdminRankingController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, IRepository<RankingPartRecord> repoRanking) {
+        private readonly ISessionLocator _sessionLocator;
+        public AdminRankingController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, 
+            IRepository<RankingPartRecord> repoRanking, ISessionLocator sessionLocator) {
             _orchardServices = orchardServices;
             _questionnairesServices = questionnairesServices;
             _repoRanking = repoRanking;
+            _sessionLocator = sessionLocator;
         }
 
         [Admin]
@@ -180,22 +183,37 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             }
             //list of RankingTemplateVM
             List<RankingTemplateVM> innerquery;
-
+            NHibernate.Linq.NhQueryable<Laser.Orchard.Questionnaires.ViewModels.RankingTemplateVM> gQuery;
+            //var groupquery = tblQuery.GroupBy(
+            //            //grouping by User_id and UsernameGameCenter is redundant, but allows us to easily access that information for the Select() later
+            //            f => new { f.Identifier, f.Device, f.User_Id, f.UsernameGameCenter })
+            //            .Select(result => new RankingTemplateVM {
+            //                Point = result.Max(s => s.Point),
+            //                ContentIdentifier = ID,
+            //                Device = result.Key.Device,
+            //                Identifier = result.Key.Identifier,
+            //                name = result.Key.User_Id.ToString(), //the User_Id is a number uniquely identifying the user. Later we will get the name from it
+            //                UsernameGameCenter = result.Key.UsernameGameCenter,//(result.Where(r => r.Identifier == result.Key.Identifier)).First().UsernameGameCenter,
+            //                //we would like to take the date when the user first obtained his high score:
+            //                //the following query actually returns the date of the oldest score by the user
+            //                //result.Where<RankingPartRecord>(s => s.Point == result.Max(e => e.Point)).Min(t => t.RegistrationDate)
+            //                RegistrationDate = result.Where<RankingPartRecord>(s => s.Point == result.Max(e => e.Point)).Min(t => t.RegistrationDate) //result.Max(s => s.RegistrationDate) //
+            //            });
             var groupquery = tblQuery.GroupBy(
-                    //grouping by User_id and UsernameGameCenter is redundant, but allows us to easily access that information for the Select() later
-                    f => new { f.Identifier, f.Device, f.User_Id, f.UsernameGameCenter })
-                    .Select(result => new RankingTemplateVM {
-                        Point = result.Max(s => s.Point),
-                        ContentIdentifier = ID,
-                        Device = result.Key.Device,
-                        Identifier = result.Key.Identifier,
-                        name = result.Key.User_Id.ToString(), //the User_Id is a number uniquely identifying the user. Later we will get the name from it
-                        UsernameGameCenter = result.Key.UsernameGameCenter,//(result.Where(r => r.Identifier == result.Key.Identifier)).First().UsernameGameCenter,
-                        //we would like to take the date when the user first obtained his high score:
-                        //the following query actually returns the date of the oldest score by the user
-                        //result.Where<RankingPartRecord>(s => s.Point == result.Max(e => e.Point)).Min(t => t.RegistrationDate)
-                        RegistrationDate = result.Where<RankingPartRecord>(s => s.Point == result.Max(e => e.Point)).Min(t => t.RegistrationDate) //result.Max(s => s.RegistrationDate) //
-                    });
+                        //grouping by User_id and UsernameGameCenter is redundant, but allows us to easily access that information for the Select() later
+                       f => new { f.Identifier }) //new { f.Identifier, f.User_Id, f.UsernameGameCenter })
+                       .Select(result => new RankingTemplateVM {
+                           Point = result.Max(s => s.Point),
+                           ContentIdentifier = ID,
+                           //Device = result.Key.Device,
+                           Identifier = result.Key.Identifier,
+                           name = "0", // result.Key.User_Id.ToString(), //the User_Id is a number uniquely identifying the user. Later we will get the name from it
+                           UsernameGameCenter = "", //result.Key.UsernameGameCenter,//(result.Where(r => r.Identifier == result.Key.Identifier)).First().UsernameGameCenter,
+                           //we would like to take the date when the user first obtained his high score:
+                           //the following query actually returns the date of the oldest score by the user
+                           //result.Where<RankingPartRecord>(s => s.Point == result.Max(e => e.Point)).Min(t => t.RegistrationDate)
+                           RegistrationDate = result.Where<RankingPartRecord>(s => s.Point == result.Max(e => e.Point)).Min(t => t.RegistrationDate) //result.Max(s => s.RegistrationDate) //
+                       });
                     
             //The only difference between the two conditions is the OrderBy used. However if I split the query I get compilation errors
             if (Ascending)
@@ -213,9 +231,22 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                    .Take(pagerParameters.PageSize.Value)
                    .ToList();
 
-            //If we do not do the ToList(), Count == 1 for some reason. THis probably has to do with Count() working on Ienumerables,
-            //while groupquery is an IQueriable
-            int scoresCount = groupquery.ToList().Count();
+            var session = _sessionLocator.For(typeof(RankingPartRecord));
+            string queryString = "SELECT COUNT(DISTINCT Identifier) "
+                + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
+                + "WHERE rpr.ContentIdentifier=" + ID + " ";
+
+            if (DeviceType == "Apple") {
+                queryString += "AND rpr.Device = '" + TipoDispositivo.Apple + "' ";
+            } else if (DeviceType == "Android") {
+                queryString += "AND rpr.Device = '" + TipoDispositivo.Android + "' ";
+            } else if (DeviceType == "Windows Phone") {
+                queryString += "AND rpr.Device = '" + TipoDispositivo.WindowsMobile + "' ";
+            }
+            var countQuery = session.CreateQuery(queryString);
+            //var asd = countQuery.List(); // countQuery.UniqueResult();
+            int scoresCount = (int)(countQuery.UniqueResult<long>());
+
 
             //Get the actual username from the User_Id
             foreach (RankingTemplateVM rtvm in innerquery) {
