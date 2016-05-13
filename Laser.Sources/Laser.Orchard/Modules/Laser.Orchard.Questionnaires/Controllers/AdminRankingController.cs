@@ -23,9 +23,11 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         //orchard si occupa di andare ad iniettarlo in maniera corretta, quindi posso poi fare
         //un bottone per mandarmi una mail
         private readonly IQuestionnairesServices _questionnairesServices;
-        public AdminRankingController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices) {
+        private readonly IRepository<RankingPartRecord> _repoRanking;
+        public AdminRankingController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, IRepository<RankingPartRecord> repoRanking) {
             _orchardServices = orchardServices;
             _questionnairesServices = questionnairesServices;
+            _repoRanking = repoRanking;
         }
 
         [Admin]
@@ -149,82 +151,93 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             if (!_orchardServices.Authorizer.Authorize(Permissions.GameRanking)) //(Permissions.AccessStatistics)) //(StandardPermissions.SiteOwner)) //
                 return new HttpUnauthorizedResult();
 
-            var query = _orchardServices.ContentManager.Query();
-            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.Id == ID).List(); //list all games
-            //var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().List(); //original
-            var queryRank = _orchardServices.ContentManager.Query().ForPart<RankingPart>()
-                .Where<RankingPartRecord>(x => x.ContentIdentifier == ID); //only the ranking for the game we are interested in 
-
-            string devString = "";
-            if (DeviceType == "Apple"){
-                queryRank = queryRank.Where(z => z.Device == TipoDispositivo.Apple);
-                devString = "Apple";
-            } else if (DeviceType ==  "Android"){
-                queryRank = queryRank.Where(z => z.Device == TipoDispositivo.Android);
-                devString = "Android";
-            } else if (DeviceType == "Windows Phone") {
-                queryRank = queryRank.Where(z => z.Device == TipoDispositivo.WindowsMobile);
-                devString = "Windows Phone";
-            } else {
-                devString = "General";
-            }
-            queryRank = queryRank.OrderByDescending(y => y.Point); //sort by score 
+            if (pagerParameters.PageSize == null)
+                pagerParameters.PageSize = _orchardServices.WorkContext.CurrentSite.PageSize;
+            if (pagerParameters.Page == null)
+                pagerParameters.Page = 1;
             
-            var listranking =  queryRank.List();
 
-            List<DisplaRankingTemplateVM> listaAllRank = new List<DisplaRankingTemplateVM>(); //list to pass data to cshtml
+            var query = _orchardServices.ContentManager.Query();
+            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.Id == ID).List(); //list all games with the selected ID (should be only one)
             GamePart gp = list.FirstOrDefault(); //the game for which we want the rankings
             //Assuming there was no issues, gp should never be null. If gp is null, it probably means something happened in the DB, since we
             //read the ID from the DB to create the "caller" page, and the we read again in this method.
             ContentItem Ci = gp.ContentItem;
             string titolo = Ci.As<TitlePart>().Title;
 
-            List<RankingTemplateVM> rkt = new List<RankingTemplateVM>();
-            foreach (RankingPart cirkt in listranking) {
-                RankingTemplateVM tmp = new RankingTemplateVM();
-                tmp.Point = cirkt.Point;
-                tmp.ContentIdentifier = cirkt.ContentIdentifier;
-                tmp.Device = cirkt.Device;
-                tmp.Identifier = cirkt.Identifier;
-                tmp.name = getusername(cirkt.User_Id);
-                tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
-                tmp.AccessSecured = cirkt.AccessSecured;
-                tmp.RegistrationDate = cirkt.RegistrationDate;
-                rkt.Add(tmp);
+            string devString = "General";
+            //query to get the ranking out of the db, already sorted, with multiple scores by a same user removed
+            var tblQuery = _repoRanking.Table.Where(x => x.ContentIdentifier == ID);
+            if (DeviceType == "Apple") {
+                tblQuery = tblQuery.Where(z => z.Device == TipoDispositivo.Apple);
+                devString = "Apple";
+            } else if (DeviceType == "Android") {
+                tblQuery = tblQuery.Where(z => z.Device == TipoDispositivo.Android);
+                devString = "Android";
+            } else if (DeviceType == "Windows Phone") {
+                tblQuery = tblQuery.Where(z => z.Device == TipoDispositivo.WindowsMobile);
+                devString = "Windows Phone";
             }
-            listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = devString, GameID = ID, ListRank = rkt });
+            //list of RankingTemplateVM
+            List<RankingTemplateVM> innerquery;
 
-            List<DisplaRankingTemplateVM> distinct = new List<DisplaRankingTemplateVM>();
-            foreach (DisplaRankingTemplateVM drtvm in listaAllRank) {
-                distinct.Add(new DisplaRankingTemplateVM {
-                    Title = titolo, Device = drtvm.Device, GameID = ID,
-                    ListRank = drtvm.ListRank //this is already sorted by score
-                                    .GroupBy(x => x.Identifier) //group elements by phone number
-                                    .Select(g => g.First()) //consider first element of each group
-                                    .ToList()
-                });
-            }
+            var groupquery = tblQuery.GroupBy(
+                    //grouping by User_id and UsernameGameCenter is redundant, but allows us to easily access that information for the Select() later
+                    f => new { f.Identifier, f.Device, f.User_Id, f.UsernameGameCenter })
+                    .Select(result => new RankingTemplateVM {
+                        Point = result.Max(s => s.Point),
+                        ContentIdentifier = ID,
+                        Device = result.Key.Device,
+                        Identifier = result.Key.Identifier,
+                        name = result.Key.User_Id.ToString(), //the User_Id is a number uniquely identifying the user. Later we will get the name from it
+                        UsernameGameCenter = result.Key.UsernameGameCenter,//(result.Where(r => r.Identifier == result.Key.Identifier)).First().UsernameGameCenter,
+                        //we would like to take the date when the user first obtained his high score:
+                        //the following query actually returns the date of the oldest score by the user
+                        //result.Where<RankingPartRecord>(s => s.Point == result.Max(e => e.Point)).Min(t => t.RegistrationDate)
+                        RegistrationDate = result.Where<RankingPartRecord>(s => s.Point == result.Max(e => e.Point)).Min(t => t.RegistrationDate) //result.Max(s => s.RegistrationDate) //
+                    });
+                    
+            //The only difference between the two conditions is the OrderBy used. However if I split the query I get compilation errors
             if (Ascending)
-                distinct.Reverse();
+                innerquery = groupquery
+                    .OrderBy(o => o.Point)
+                    ////Next two lines implement the paging
+                    .Skip(pagerParameters.PageSize.Value * (pagerParameters.Page.Value - 1))
+                    .Take(pagerParameters.PageSize.Value)
+                    .ToList();
+            else
+                innerquery = groupquery
+                   .OrderByDescending(o => o.Point)
+                   // //Next two lines implement the paging
+                   .Skip(pagerParameters.PageSize.Value * (pagerParameters.Page.Value - 1))
+                   .Take(pagerParameters.PageSize.Value)
+                   .ToList();
 
+            //If we do not do the ToList(), Count == 1 for some reason. THis probably has to do with Count() working on Ienumerables,
+            //while groupquery is an IQueriable
+            int scoresCount = groupquery.ToList().Count();
+
+            //Get the actual username from the User_Id
+            foreach (RankingTemplateVM rtvm in innerquery) {
+                rtvm.name = getusername(Int32.Parse(rtvm.name));
+            }
+
+            //create and initialize pager
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
-            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(distinct.First().ListRank.Count());
+            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(scoresCount);
             int listStart = pager.GetStartIndex();
-            int listEnd = listStart + ((pager.PageSize > distinct.First().ListRank.Count) ? distinct.First().ListRank.Count : pager.PageSize);
-            listEnd = listEnd > distinct.First().ListRank.Count ? distinct.First().ListRank.Count : listEnd;
+            int listEnd = listStart + ((pager.PageSize > scoresCount) ? scoresCount : pager.PageSize);
+            listEnd = listEnd > scoresCount ? scoresCount : listEnd;
             DisplaRankingTemplateVM pageOfScores = new DisplaRankingTemplateVM {
-                Title = distinct.First().Title,
-                GameID = distinct.First().GameID,
-                Device = distinct.First().Device,
-                ListRank = distinct.First().ListRank.GetRange(listStart, listEnd-listStart)
+                Title = titolo,
+                GameID = ID,
+                Device = devString,
+                ListRank = innerquery
             };
 
             var model = new DisplayRankingTemplateVMModel();
             model.Pager = pagerShape;
             model.drtvm = pageOfScores;
-
-            //prova email
-            //SendTemplatedEmailRanking();
 
             return View((object)model); //((object)listaAllRank);
         }
