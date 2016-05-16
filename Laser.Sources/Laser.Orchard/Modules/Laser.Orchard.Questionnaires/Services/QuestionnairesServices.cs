@@ -144,8 +144,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             List<RankingTemplateVM> androidRank = QueryForRanking(gameId: gameID, device: TipoDispositivo.Android.ToString(), page: 1, pageSize: 10);
             List<RankingTemplateVM> windowsRank = QueryForRanking(gameId: gameID, device: TipoDispositivo.WindowsMobile.ToString(), page: 1, pageSize: 10);
 
-            SendEmail(Ci, generalRank, appleRank, androidRank, windowsRank);
-            return true;
+            return SendEmail(Ci, generalRank, appleRank, androidRank, windowsRank);
         }
 
         private bool SendEmail(ContentItem Ci, List<RankingTemplateVM> rkt) {
