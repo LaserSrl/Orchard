@@ -10,6 +10,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Tasks.Scheduling;
 using System;
 using System.Globalization;
+using Orchard.Localization.Services;
 
 namespace Laser.Orchard.Questionnaires.Drivers {
 
@@ -17,6 +18,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         private readonly IOrchardServices _orchardServices;
         private readonly IDateLocalization _dateLocalization;
         private readonly IScheduledTaskManager _taskManager;
+        private readonly IDateServices _dateServices;
 
         public Localizer T { get; set; }
 
@@ -25,10 +27,11 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         }
 
         public GamePartDriver(IOrchardServices orchardServices, IDateLocalization dateLocalization,
-            IScheduledTaskManager taskManager) {
+            IScheduledTaskManager taskManager, IDateServices dateServices) {
             _orchardServices = orchardServices;
             _dateLocalization = dateLocalization;
             _taskManager = taskManager;
+            _dateServices = dateServices;
         }
 
         protected override DriverResult Editor(GamePart part, dynamic shapeHelper) {
@@ -65,6 +68,10 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                 _taskManager.DeleteTasks(ta.ContentItem); //maybe
             }
             DateTime taskDate = timeGameEnd.AddMinutes(5);
+            //taskDate = (DateTime)( _dateServices.ConvertFromLocal(taskDate.ToLocalTime()));
+            taskDate = (DateTime)(_dateServices.ConvertFromLocalString(_dateLocalization.WriteDateLocalized(taskDate), _dateLocalization.WriteTimeLocalized(taskDate)));
+            //taskDate = taskDate.Subtract(new TimeSpan ( 2, 0, 0 )); //subtract two hours
+            taskDate = taskDate.ToUniversalTime();
             _taskManager.CreateTask(taskTypeStr, taskDate, null);
 
             return Editor(part, shapeHelper);
