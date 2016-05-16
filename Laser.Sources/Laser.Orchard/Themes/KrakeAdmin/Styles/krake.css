@@ -1305,8 +1305,7 @@ html.media-library-modal-window .button-cancel
     background: #337AB7;
 }
 
-html.contents,
-html.dashboard {
+html {
   padding: 10px 0 0;
 }
 

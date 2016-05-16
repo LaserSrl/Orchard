@@ -13,8 +13,11 @@ namespace Laser.Orchard.Policy.ViewModels {
     public class PoliciesForUserViewModel {
         public PoliciesForUserViewModel() {
             Policies = new List<PolicyForUserViewModel>();
+            EditMode = false;
         }
-        public IList<PolicyForUserViewModel> Policies{ get; set; }
+
+        public IList<PolicyForUserViewModel> Policies { get; set; }
+        public bool EditMode { get; set; }
     }
 
     public class SimplePoliciesForUserViewModel {

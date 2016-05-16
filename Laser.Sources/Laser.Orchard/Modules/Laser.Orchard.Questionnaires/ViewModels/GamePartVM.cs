@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using System.Linq;
 using System.Web;
+using Orchard.ContentManagement;
 
 
 namespace Laser.Orchard.Questionnaires.ViewModels {
@@ -68,5 +69,12 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
                 return new SelectList((IEnumerable<SelectListItem>)_list, "Value", "Text");
             }
         }
+    }
+
+    //matteo.piovanelli : 2016/05/10 : add class used in creating an Index of games
+    public class GamePartSearchViewModel {
+        public dynamic Pager { get; set; }
+        public string SearchExpression { get; set; }
+        public IEnumerable<ContentItem> GameParts { get; set; }
     }
 }
