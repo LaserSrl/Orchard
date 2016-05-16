@@ -1,5 +1,6 @@
 ﻿@using Orchard.Utility.Extensions
 @using Laser.Orchard.ContactForm.ViewModels
+@using System.Collections.Specialized
 @{
     Script.Require("jQuery").AtHead();
     Script.Require("jQueryColorBox").AtHead();
@@ -11,29 +12,36 @@
     var displayName = contactForm.ShowNameField ? string.Empty : displayNone;
     var displayAttachmentButton = contactForm.EnableFileUpload ? string.Empty : displayNone;
     var uniqueId = Model.ContentPart.Id;
+
+    var formData = TempData["form"];
+    var name = formData != null ? ((NameValueCollection)formData)["Name"] : "";
+    var email = formData != null ? ((NameValueCollection)formData)["Email"] : "";
+    var confirmEmail = formData != null ? ((NameValueCollection)formData)["ConfirmEmail"] : "";
+    var subject = formData != null ? ((NameValueCollection)formData)["Subject"] : "";
+    var message = formData != null ? ((NameValueCollection)formData)["Message"] : "";
     }
 @{using (Html.BeginForm("sendcontactemail", "contactform", new { area = "Laser.Orchard.ContactForm" }, FormMethod.Post, new { @class = "contact-form" }))
     {
         <ul>
             <li @Html.Raw(displayName)>
                 <label for="Name">@T("Name")</label>
-                <input id="Name-@uniqueId" class="text" name="Name" type="text" placeholder="@T("Your Name")" />
+                <input id="Name-@uniqueId" class="text" name="Name" type="text" placeholder="@T("Your Name")" value="@name" />
             </li>
             <li class="emailForm">
                 <label for="Email">@T("Email")</label>
-                <input id="Email-@uniqueId" class="text medium" name="Email" type="text" placeholder="@T("Email Address")" />
+                <input id="Email-@uniqueId" class="text medium" name="Email" type="text" placeholder="@T("Email Address")" value="@email" />
             </li>
             <li>
                 <label for="ConfirmEmail">@T("Confirm Email")</label>
-                <input id="ConfirmEmail-@uniqueId" class="text medium" name="ConfirmEmail" type="text" placeholder="@T("Confirm Email Address")" />
+                <input id="ConfirmEmail-@uniqueId" class="text medium" name="ConfirmEmail" type="text" placeholder="@T("Confirm Email Address")" value="@confirmEmail" />
             </li>
             <li @Html.Raw(displaySubject)>
                 <label for="Subject">@T("Subject")</label>
-                <input id="Subject-@uniqueId" class="text medium" name="Subject" type="text" placeholder="@T("Subject")" />
+                <input id="Subject-@uniqueId" class="text medium" name="Subject" type="text" placeholder="@T("Subject")" value="@subject" />
             </li>
             <li>
                 <label for="Message">@T("Message")</label>
-                <textarea id="Message-@uniqueId" class="text" name="Message" placeholder="@T("Comments or Inquiry")" cols="50" rows="10"></textarea>
+                <textarea id="Message-@uniqueId" class="text" name="Message" placeholder="@T("Comments or Inquiry")" cols="50" rows="10">@message</textarea>
             </li>
         </ul>
         <div id="AttachmentSection-@uniqueId" type="hidden">
