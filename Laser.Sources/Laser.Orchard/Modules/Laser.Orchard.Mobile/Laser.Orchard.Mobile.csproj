@@ -162,7 +162,6 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
