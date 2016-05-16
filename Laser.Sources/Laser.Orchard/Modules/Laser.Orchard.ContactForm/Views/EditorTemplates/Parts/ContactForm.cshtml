@@ -48,7 +48,7 @@
         @T("Mail Template")
     </div>
     <div class="editor-field">
-        @Html.DropDownListFor(m => m.ContactForm.TemplateRecord_Id, new SelectList(listTemplate, "Id", "Title", Model.ContactForm.TemplateRecord_Id))
+        @Html.DropDownListFor(m => m.ContactForm.TemplateRecord_Id, new SelectList(listTemplate, "Id", "Title", Model.ContactForm.TemplateRecord_Id), "")
     </div>
     <span class="hint">
         @T("Variables passed to the template through the model:")
