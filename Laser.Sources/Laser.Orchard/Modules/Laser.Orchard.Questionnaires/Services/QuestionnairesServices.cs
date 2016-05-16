@@ -33,6 +33,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly ITemplateService _templateService;
         private readonly IMessageManager _messageManager;
+        private readonly ISessionLocator _sessionLocator;
 
         public Localizer T { get; set; }
 
@@ -45,7 +46,8 @@ namespace Laser.Orchard.Questionnaires.Services {
             INotifier notifier,
             IControllerContextAccessor controllerContextAccessor,
             ITemplateService templateService,
-           IMessageManager messageManager) {
+           IMessageManager messageManager,
+            ISessionLocator sessionLocator) {
             _orchardServices = orchardServices;
             _repositoryAnswer = repositoryAnswer;
             _repositoryQuestions = repositoryQuestions;
@@ -57,6 +59,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             _controllerContextAccessor = controllerContextAccessor;
             _templateService = templateService;
             _messageManager = messageManager;
+            _sessionLocator = sessionLocator;
         }
 
         private string getusername(int id) {
@@ -135,38 +138,11 @@ namespace Laser.Orchard.Questionnaires.Services {
                 .List();
             //we do not do checks on whether this email was scheduled
             ContentItem Ci = gp.ContentItem;
-            //var listordered = listranking.OrderByDescending(y => y.Point);
-            List<RankingTemplateVM> generalRank = new List<RankingTemplateVM>();
-            List<RankingTemplateVM> appleRank = new List<RankingTemplateVM>();
-            List<RankingTemplateVM> androidRank = new List<RankingTemplateVM>();
-            List<RankingTemplateVM> windowsRank = new List<RankingTemplateVM>();
-            foreach (RankingPart cirkt in listranking) {
-                RankingTemplateVM tmp = new RankingTemplateVM();
-                tmp.Point = cirkt.Point;
-                tmp.ContentIdentifier = cirkt.ContentIdentifier;
-                tmp.Device = cirkt.Device;
-                tmp.Identifier = cirkt.Identifier;
-                tmp.name = getusername(cirkt.User_Id);
-                tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
-                tmp.AccessSecured = cirkt.AccessSecured;
-                tmp.RegistrationDate = cirkt.RegistrationDate;
-                generalRank.Add(tmp);
-                if (tmp.Device == TipoDispositivo.Android)
-                    androidRank.Add(tmp);
-                if (tmp.Device == TipoDispositivo.Apple)
-                    appleRank.Add(tmp);
-                if (tmp.Device == TipoDispositivo.WindowsMobile)
-                    windowsRank.Add(tmp);
-            }
-            //cut lists because we only want the top10, without with a single score per user
-            generalRank = generalRank.GroupBy(x => x.Identifier).Select(g => g.First()).ToList();
-            generalRank = generalRank.GetRange(0, 10 > generalRank.Count ? generalRank.Count : 10); //Top10
-            appleRank = appleRank.GroupBy(x => x.Identifier).Select(g => g.First()).ToList();
-            appleRank = appleRank.GetRange(0, 10 > appleRank.Count ? appleRank.Count : 10); //Top10
-            androidRank = androidRank.GroupBy(x => x.Identifier).Select(g => g.First()).ToList();
-            androidRank = androidRank.GetRange(0, 10 > androidRank.Count ? androidRank.Count : 10); //Top10
-            windowsRank = windowsRank.GroupBy(x => x.Identifier).Select(g => g.First()).ToList();
-            windowsRank = windowsRank.GetRange(0, 10 > windowsRank.Count ? windowsRank.Count : 10); //Top10
+
+            List<RankingTemplateVM> generalRank = QueryForRanking(gameId: gameID, page: 1, pageSize: 10);
+            List<RankingTemplateVM> appleRank = QueryForRanking(gameId: gameID, device: TipoDispositivo.Apple.ToString(), page: 1, pageSize: 10);
+            List<RankingTemplateVM> androidRank = QueryForRanking(gameId: gameID, device: TipoDispositivo.Android.ToString(), page: 1, pageSize: 10);
+            List<RankingTemplateVM> windowsRank = QueryForRanking(gameId: gameID, device: TipoDispositivo.WindowsMobile.ToString(), page: 1, pageSize: 10);
 
             SendEmail(Ci, generalRank, appleRank, androidRank, windowsRank);
             return true;
@@ -228,6 +204,77 @@ namespace Laser.Orchard.Questionnaires.Services {
             } else
                 return false;
         }
+
+        
+        /// <summary>
+        /// Method used to query the db for a specific ranking (by game, device) and a specific range of results (paging)
+        /// </summary>
+        /// <param name="gameId">The Id of the game for which we want the ranking table.</param>
+        /// <param name="device">A string representing the tipe of device for which we want the ranking. This is obtained as a 
+        /// TipoDispositivo.value.ToString(). Any other string causes this method to default to returning the general ranking.</param>
+        /// <param name="page">The page of the results in the ranking. This is 1-based (the top-most results are on page 1).</param>
+        /// <param name="pageSize">The size of a page of results, corresponding to the maximum number of socres to return.</param>
+        /// <param name="Ascending">A flag to determine the sorting order for the scores: <value>true</value> order by ascending score; 
+        /// <value>false</value> order by descending score.</param>
+        /// <returns>A <type>List &lt; RankingTemplateVM &gt;</type> containingn the objects representing the desired ranking.</returns>
+        /// <example> QueryForRanking (3, TipoDispositivo.Apple.ToString()) would return the top10 scores for game number 3
+        /// scored by iOs users, sorted from the highest score down.</example>
+        public List<RankingTemplateVM> QueryForRanking(
+            Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false) {
+            
+            List<RankingTemplateVM> lRank = new List<RankingTemplateVM>();
+            string queryDeviceCondition = "";
+            if (device == TipoDispositivo.Apple.ToString())
+                queryDeviceCondition += "AND Device = '" + TipoDispositivo.Apple + "' ";
+            else if (device == TipoDispositivo.Android.ToString())
+                queryDeviceCondition += "AND Device = '" + TipoDispositivo.Android + "' ";
+            else if (device == TipoDispositivo.WindowsMobile.ToString())
+                queryDeviceCondition += "AND Device = '" + TipoDispositivo.WindowsMobile + "' ";
+            string subQueryPoints = "SELECT MAX(Point) "
+                    + "FROM [Orchard_FestivalTV].[dbo].[Laser_Orchard_Questionnaires_RankingPartRecord] " //Laser.Orchard.Questionnaires.Models.RankingPartRecord "
+                    + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+                    + "AND Identifier = rpr.Identifier ";
+            string subQueryDate = "SELECT MIN(RegistrationDate) "
+                    + "FROM [Orchard_FestivalTV].[dbo].[Laser_Orchard_Questionnaires_RankingPartRecord] " //Laser.Orchard.Questionnaires.Models.RankingPartRecord "
+                    + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+                    + "GROUP BY Identifier, Point ";
+            string queryTable = "SELECT rpr.[Point], rpr.[Identifier], rpr.[UsernameGameCenter], rpr.[Device], rpr.[ContentIdentifier], rpr.[User_Id], rpr.[AccessSecured], rpr.[RegistrationDate] "
+                    + "FROM [Orchard_FestivalTV].[dbo].[Laser_Orchard_Questionnaires_RankingPartRecord] as rpr " //Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
+                    + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+                    + "AND Point = ( " + subQueryPoints + " ) "
+                    + "AND RegistrationDate IN ( " + subQueryDate + " ) ";
+            if (Ascending)
+                queryTable += "ORDER BY Point ";
+            else
+                queryTable += "ORDER BY Point DESC ";
+            //paging
+            queryTable += "OFFSET " + (pageSize * (page - 1)).ToString() + " ROWS "
+                    + "FETCH NEXT " + pageSize.ToString() + " ROWS ONLY ";
+            var tableQuery = _sessionLocator.For(typeof(RankingPartRecord)).CreateSQLQuery(queryTable); //since we create a SQL query, we use [table names] instead of Domain.Names
+            var ranking = tableQuery.List();
+
+            //get the query results into the list
+            foreach (Object[] obj in ranking) {
+                RankingTemplateVM tmp = new RankingTemplateVM();
+                tmp.Point = (Int32)obj[0];
+                tmp.Identifier = (string)obj[1];
+                tmp.UsernameGameCenter = (string)obj[2];
+                if ((string)obj[3] == TipoDispositivo.Android.ToString())
+                    tmp.Device = TipoDispositivo.Android;
+                else if ((string)obj[3] == TipoDispositivo.Apple.ToString())
+                    tmp.Device = TipoDispositivo.Apple;
+                else if ((string)obj[3] == TipoDispositivo.WindowsMobile.ToString())
+                    tmp.Device = TipoDispositivo.WindowsMobile;
+                tmp.ContentIdentifier = (Int32)obj[4];
+                tmp.name = getusername((Int32)obj[5]);
+                tmp.AccessSecured = (bool)obj[6];
+                tmp.RegistrationDate = (DateTime)obj[7];
+                lRank.Add(tmp);
+            }
+
+            return lRank;
+        }
+
 
         public void Save(QuestionnaireWithResultsViewModel editModel, IUser currentUser, string SessionID) {
             var questionnaireModuleSettings = _orchardServices.WorkContext.CurrentSite.As<QuestionnaireModuleSettingsPart>();

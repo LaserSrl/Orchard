@@ -20,5 +20,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         //bool SendTemplatedEmailRanking(bool multipleRankings);
         bool SendTemplatedEmailRanking();
         bool SendTemplatedEmailRanking(Int32 gameID);
+        List<RankingTemplateVM> QueryForRanking(
+           Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false);
     }
 }

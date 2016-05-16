@@ -3,6 +3,7 @@
 @using Orchard.Security;
 @using Orchard.Localization.Models;
 @using Laser.Orchard.Questionnaires.ViewModels;
+@using Laser.Orchard.Questionnaires.Models
 
 @* @model List<Laser.Orchard.Questionnaires.ViewModels.DisplaRankingTemplateVM>--> *@
 @model DisplayRankingTemplateVMModel
@@ -10,9 +11,9 @@
 @{
     int devType = 0;
     string devStr = Model.drtvm.Device;
-    if (devStr == "Apple") { devType = 1; }
-    else if (devStr == "Android") { devType = 2; }
-    else if (devStr == "Windows Phone") { devType = 3; }
+    if (devStr == TipoDispositivo.Apple.ToString()) { devType = 1; }
+    else if (devStr == TipoDispositivo.Android.ToString()) { devType = 2; }
+    else if (devStr == TipoDispositivo.WindowsMobile.ToString()) { devType = 3; }
 }
 
 @{
