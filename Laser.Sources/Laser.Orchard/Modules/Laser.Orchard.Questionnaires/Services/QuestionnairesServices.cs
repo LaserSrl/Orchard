@@ -6,6 +6,7 @@ using Laser.Orchard.Questionnaires.ViewModels;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.TemplateManagement.Models;
 using Laser.Orchard.TemplateManagement.Services;
+using NHibernate.Transform;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
@@ -250,28 +251,40 @@ namespace Laser.Orchard.Questionnaires.Services {
             queryTable += "OFFSET " + (pageSize * (page - 1)).ToString() + " ROWS "
                     + "FETCH NEXT " + pageSize.ToString() + " ROWS ONLY ";
             var tableQuery = _sessionLocator.For(typeof(RankingPartRecord)).CreateSQLQuery(queryTable); //since we create a SQL query, we use [table names] instead of Domain.Names
-            var ranking = tableQuery.List();
+            //var ranking = tableQuery.List();
+            var ranking = tableQuery.SetResultTransformer(Transformers.AliasToBean<RankingPartRecordIntermediate>()).List();
 
             //get the query results into the list
-            foreach (Object[] obj in ranking) {
-                RankingTemplateVM tmp = new RankingTemplateVM();
-                tmp.Point = (Int32)obj[0];
-                tmp.Identifier = (string)obj[1];
-                tmp.UsernameGameCenter = (string)obj[2];
-                if ((string)obj[3] == TipoDispositivo.Android.ToString())
-                    tmp.Device = TipoDispositivo.Android;
-                else if ((string)obj[3] == TipoDispositivo.Apple.ToString())
-                    tmp.Device = TipoDispositivo.Apple;
-                else if ((string)obj[3] == TipoDispositivo.WindowsMobile.ToString())
-                    tmp.Device = TipoDispositivo.WindowsMobile;
-                tmp.ContentIdentifier = (Int32)obj[4];
-                tmp.name = getusername((Int32)obj[5]);
-                tmp.AccessSecured = (bool)obj[6];
-                tmp.RegistrationDate = (DateTime)obj[7];
-                lRank.Add(tmp);
+            foreach (RankingPartRecordIntermediate obj in ranking) {
+                lRank.Add(ConvertFromDBData(obj));
             }
 
             return lRank;
+        }
+
+        /// <summary>
+        /// Method filling up a <type>RanKingTemplateVM</type> object from a <type>RankingPartRecordIntermediate</type> object. The <type>RanKingTemplateVM</type>
+        /// object has a filed of type <type>TipoDispositivo</type>. The corresponding record is read as a <type>string</type> from the DB. For this reason we use
+        /// an intermediate class to store what we read from the db, and then convert it into the proper type.
+        /// </summary>
+        /// <param name="rpri">A <type>RankingPartRecordIntermediate</type> object, corresponding to a record as read from the DB.</param>
+        /// <returns>A <type>RanKingTemplateVM</type> object, corresponding to the record we read from the DB.</returns>
+        private RankingTemplateVM ConvertFromDBData(RankingPartRecordIntermediate rpri) {
+            RankingTemplateVM ret = new RankingTemplateVM();
+            ret.Point = rpri.Point;
+            ret.Identifier = rpri.Identifier;
+            ret.UsernameGameCenter = rpri.UsernameGameCenter;
+            if (rpri.Device == TipoDispositivo.Android.ToString())
+                ret.Device = TipoDispositivo.Android;
+            else if (rpri.Device == TipoDispositivo.Apple.ToString())
+                ret.Device = TipoDispositivo.Apple;
+            else if (rpri.Device == TipoDispositivo.WindowsMobile.ToString())
+                ret.Device = TipoDispositivo.WindowsMobile;
+            ret.ContentIdentifier = rpri.ContentIdentifier;
+            ret.name = getusername(rpri.User_Id);
+            ret.AccessSecured = rpri.AccessSecured;
+            ret.RegistrationDate = rpri.RegistrationDate;
+            return ret;
         }
 
 

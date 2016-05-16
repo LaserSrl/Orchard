@@ -55,23 +55,25 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                     part.GameDate = _dateLocalization.StringToDatetime(viewModel.GameDate, "") ?? DateTime.Now;
                 }
             }
-            //Schedule a task to send an email at the end of the game
+            //Schedule a task to send an email at the end of the game. NOTE: the task should be scheduled only if the game is being scheduled.
             DateTime timeGameEnd = ((dynamic)part.ContentItem).ActivityPart.DateTimeEnd;
-            //do we need to check whther timeGameEnd > DateTime.Now?
+            //do we need to check whether timeGameEnd > DateTime.Now? NOTE: to make this check we should first convert timeGameEnd to UTC (see later)
+            //as the code is now, if DateTime.Now > timeGameEnd, the email gets sent immediately
             Int32 thisGameID = part.Record.Id;
             //Check whether we already have a task for this game
             string taskTypeStr = Laser.Orchard.Questionnaires.Handlers.ScheduledTaskHandler.TaskType + " " + thisGameID.ToString();
             var tasks = _taskManager.GetTasks(taskTypeStr);
             foreach (var ta in tasks) {
                 //if we are here, it means the task ta exists with the same game id as the current game
-                //hence we should update the task.
+                //hence we should update the task. We fall in this condition when we are updating the information for a game.
                 _taskManager.DeleteTasks(ta.ContentItem); //maybe
             }
             DateTime taskDate = timeGameEnd.AddMinutes(5);
+            //Local time to UTC conversion
             //taskDate = (DateTime)( _dateServices.ConvertFromLocal(taskDate.ToLocalTime()));
             taskDate = (DateTime)(_dateServices.ConvertFromLocalString(_dateLocalization.WriteDateLocalized(taskDate), _dateLocalization.WriteTimeLocalized(taskDate)));
             //taskDate = taskDate.Subtract(new TimeSpan ( 2, 0, 0 )); //subtract two hours
-            taskDate = taskDate.ToUniversalTime();
+            taskDate = taskDate.ToUniversalTime(); //this problay does nothing
             _taskManager.CreateTask(taskTypeStr, taskDate, null);
 
             return Editor(part, shapeHelper);
