@@ -1,0 +1,43 @@
+﻿@using Orchard.Utility.Extensions;
+@using Orchard.Environment.Configuration;
+@using System.Web.Mvc;
+
+@{
+    /*Logica Logo WhiteLabel*/
+    ShellSettings _shellsettings;
+    WorkContext.TryResolve<ShellSettings>(out _shellsettings);
+    string tenantname = _shellsettings.Name.ToLower();
+    var whitelabelLogo = Url.Content(String.Format("~/media/AdminResources/Logo/{0}-logo-frontoffice.png", tenantname));
+    string urlActionUser;
+    string actionLabel;
+}
+
+<div class="row">
+	<div class="col-xs-12 col-sm-3 col-index no-pad-right">
+        @if (File.Exists(Server.MapPath(whitelabelLogo))) {
+		    <img src="@whitelabelLogo" alt="@tenantname" class="img-responsive"/>
+        }
+        else{
+            <div class="placeholder-logo"></div>   
+        }
+	</div>
+	<div class="col-xs-8 col-sm-6 col-index">
+		<p>@T("You've successfully setup your Orchard Site and this is the homepage of your new site. Here are a few things you can look at to get familiar with the application. Once you feel confident you don't need this anymore, you can remove it by going into editing mode and replacing it with whatever you want.")</p>
+		@T("First things first - You'll probably want to manage your settings and configure Orchard to your liking. After that, you can head over to manage themes to change or install new themes and really make it your own. Once you're happy with a look and feel, it's time for some content. You can start creating new custom content types or start from the built-in ones by adding a page, or managing your menus.")
+	</div>
+	<div class="col-xs-4 col-sm-3 col-index no-pad-left">
+         @if (WorkContext.CurrentUser != null) {
+            urlActionUser = Url.Action("ChangePassword", new { Controller = "Account", Area = "Orchard.Users" });
+            <a href="@urlActionUser" class="logout-button"><i class="fa fa-users fa-4x lineheight-2" aria-hidden="true"></i><h6>@Html.ItemDisplayText(WorkContext.CurrentUser)</h6></a> 
+            
+            //Se volete checked IList bottone faccia il logout commentare le righe sopra e decommentare le due sotto
+            @*urlActionUser = Url.Action("LogOff", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl });
+            <a href="@urlActionUser" class="logout-button"><i class="fa fa-sign-out fa-4x lineheight-2" aria-hidden="true"></i><h6>@T("Logout")</h6></a>*@
+        } else {
+            urlActionUser = Url.Action("LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = (Request.QueryString["ReturnUrl"] ?? Request.RawUrl) });
+             <a href="@urlActionUser" class="login-button"><i class="fa fa-sign-in fa-4x lineheight-2" aria-hidden="true"></i><h6>@T("Login")</h6></a>
+        }
+
+		
+	</div>
+</div>
