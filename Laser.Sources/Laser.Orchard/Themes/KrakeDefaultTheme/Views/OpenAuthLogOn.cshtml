@@ -1,0 +1,61 @@
+﻿@using Laser.Orchard.OpenAuthentication.Extensions
+@using Laser.Orchard.OpenAuthentication.Models
+@using Orchard.ContentManagement
+@using Orchard.Utility.Extensions
+@using Laser.Orchard.OpenAuthentication
+@{
+    var userCanRegister = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().UsersCanRegister;
+    var enableLostPassword = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().EnableLostPassword;
+
+    var clientsData = (List<OrchardAuthenticationClientData>)Model.ClientsData;
+
+    var userName = Request.QueryString["UserName"];
+    var externalLoginData = Request.QueryString["ExternalLoginData"];
+    var returnUrl = Request.QueryString["ReturnUrl"];
+
+    var subthemePath = Url.Content("~/Themes/KrakeDefaultTheme/Styles");
+}
+<div class="row">
+    @Html.ValidationSummary(T("Login was unsuccessful. Please correct the errors and try again.").ToString())
+</div>
+@if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(externalLoginData)) {
+    <div class="row">
+        <p>@T("This user account will be linked to <b>{0}</b> when you login.", userName)</p>
+    </div>
+}
+
+<div class="row">
+	<div class="col-xs-12 col-sm-4 col-index">
+		<img src="@subthemePath/images/milano.png" alt="visitmilano" class="img-responsive"/>
+		<h3>@T("Account Information")</h3>
+		<b>@T("Enter username and password")</b><br>
+		@if (userCanRegister) {<a class="links" href="@Url.Register(userName, externalLoginData)">@T("Register")</a> @T(" if you don't have an account.")<br>}
+        @if (enableLostPassword) { @Html.ActionLink(T("Lost your Password?").Text, "RequestLostPassword", null, null, new { @class= "links"}) }
+	</div>
+	<div class="col-xs-12 col-sm-4 col-index">
+         @using (Html.BeginFormAntiForgeryPost(Url.Action("LogOn", "Account", new { area = Constants.OrchardUsersArea, ReturnUrl = returnUrl, UserName = userName, ExternalLoginData = externalLoginData, @class = "login-form" }))) {
+			@Html.TextBox("userNameOrEmail", "", new { id = "form-username", autofocus = "autofocus", placeholder = "Username...", @class = "input-text form-control" })
+			<div class="space-20"></div>
+            @Html.Password("password", "", new { id = "form-password", autofocus = "autofocus", placeholder = "Password...", @class = "input-text form-control" })
+			<div class="space-20"></div>
+			@T("Remember Me")<div class="padding-right-5"></div> @Html.CheckBox("rememberMe", new { id = "remember-me" })
+			<div class="space-20"></div>
+			<input type="submit" class="submit" value="@T("Sign In")">
+		}
+	</div>
+	<div class="col-xs-12 col-sm-4 col-index">
+		<h3 class="bottom-border-gray">@T("Accedi con un altro servizio")</h3>
+		<span class="fa-stack fa-lg">
+			<a href="#" class="black-link">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-facebook fa-stack-1x"></i>
+			</a>
+		</span>
+		<span class="fa-stack fa-lg">
+			<a href="#" class="black-link">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-twitter fa-stack-1x"></i>
+			</a>
+		</span>
+	</div>
+</div>
