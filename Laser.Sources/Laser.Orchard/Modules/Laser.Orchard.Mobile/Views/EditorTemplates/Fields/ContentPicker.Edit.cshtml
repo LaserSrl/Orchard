@@ -11,11 +11,12 @@
     Style.Include("content-picker-admin.css");
 
     var settings = Model.Field.PartFieldDefinition.Settings.GetModel<ContentPickerFieldSettings>();
+    string name = T(Model.Field.DisplayName).Text;
     }
     @Display.ContentPicker_Edit(
     Required: settings.Required,
     Multiple: settings.Multiple,
-    DisplayName: Model.Field.DisplayName,
+    DisplayName: name,
     IdsFieldId: Html.FieldIdFor(m => m.Field.Ids),
     SelectedItemsFieldName: Html.FieldNameFor(m => m.SelectedIds),
     ContentItems: Model.ContentItems,
