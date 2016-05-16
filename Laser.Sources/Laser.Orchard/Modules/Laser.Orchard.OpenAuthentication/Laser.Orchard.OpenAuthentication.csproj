@@ -219,6 +219,7 @@
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Services\UserExtensionService.cs" />
     <Compile Include="Handlers\OpenAuthenticationSettingsPartHandler.cs" />
     <Compile Include="Handlers\UserProvidersPartHandler.cs" />
     <Compile Include="Migrations.cs" />

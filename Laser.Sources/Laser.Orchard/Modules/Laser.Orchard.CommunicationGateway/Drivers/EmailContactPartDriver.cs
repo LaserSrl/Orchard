@@ -56,11 +56,11 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                 }
                 else
                     if (!vmel.Delete) {
-                        if (!string.IsNullOrEmpty(vmel.Email))
-                            if (_repoEmail.Fetch(x => x.Email == vmel.Email && x.Id != vmel.Id).Count() > 0) {
-                                error = true;
-                                updater.AddModelError("Error", T("Email can't be assigned is linked to other contact"));
-                            }
+                        //if (!string.IsNullOrEmpty(vmel.Email))
+                        //    if (_repoEmail.Fetch(x => x.Email == vmel.Email && x.Id != vmel.Id).Count() > 0) {
+                        //        error = true;
+                        //        updater.AddModelError("Error", T("Email can't be assigned is linked to other contact"));
+                        //    }
                         if (vmel.Id > 0) {
                             CommunicationEmailRecord cmr = _repoEmail.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
                             if (cmr.Email != vmel.Email || cmr.Validated != vmel.Validated || 

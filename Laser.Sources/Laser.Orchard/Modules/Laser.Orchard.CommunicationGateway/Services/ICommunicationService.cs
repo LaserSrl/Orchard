@@ -355,7 +355,11 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
 
             if (!string.IsNullOrEmpty(UserContent.Email) && UserContent.ContentItem.As<UserPart>().RegistrationStatus == UserStatus.Approved) {
-                CommunicationEmailRecord cmr = _repositoryCommunicationEmailRecord.Fetch(x => x.Email == UserContent.Email).FirstOrDefault();
+                var contact = GetContactFromUser(UserContent.Id);
+                CommunicationEmailRecord cmr = null;
+                if (contact != null) {
+                    cmr = _repositoryCommunicationEmailRecord.Fetch(x => x.Email == UserContent.Email && x.EmailContactPartRecord_Id == contact.Id).FirstOrDefault();
+                }
                 if (cmr != null) {
                     if (cmr.EmailContactPartRecord_Id != Contact.Id) {
                         cmr.EmailContactPartRecord_Id = Contact.Id;
