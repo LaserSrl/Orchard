@@ -55,7 +55,26 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                     part.GameDate = _dateLocalization.StringToDatetime(viewModel.GameDate, "") ?? DateTime.Now;
                 }
             }
-            //Schedule a task to send an email at the end of the game. NOTE: the task should be scheduled only if the game is being scheduled.
+            //Check the button pressed: either Publish or Save
+            if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Publish"] == "submit.Publish") {
+                //Schedule a task to send an email at the end of the game. NOTE: the task should be scheduled only if the game is being published.
+                ScheduleEmailTask(part);
+            } else if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.Save") {
+                //if the game has already been published, we need to reschedule its task
+                if (part.IsPublished()) {
+                    ScheduleEmailTask(part);
+                }
+            }
+            return Editor(part, shapeHelper);
+        }
+
+        /// <summary>
+        /// Create a task to schedule sending a summary email with the game results after the game has ended. the update of the task, in case the game has been modified,
+        /// is done by deleting the existing task and creating a new one.
+        /// </summary>
+        /// <param name="part">The <type>GamePart</type> object containing the information about the game.</param>
+        private void ScheduleEmailTask(GamePart part) {
+            //Schedule a task to send an email at the end of the game.
             DateTime timeGameEnd = ((dynamic)part.ContentItem).ActivityPart.DateTimeEnd;
             //do we need to check whether timeGameEnd > DateTime.Now? NOTE: to make this check we should first convert timeGameEnd to UTC (see later)
             //as the code is now, if DateTime.Now > timeGameEnd, the email gets sent immediately
@@ -75,8 +94,6 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             //taskDate = taskDate.Subtract(new TimeSpan ( 2, 0, 0 )); //subtract two hours
             taskDate = taskDate.ToUniversalTime(); //this problay does nothing
             _taskManager.CreateTask(taskTypeStr, taskDate, null);
-
-            return Editor(part, shapeHelper);
         }
 
         protected override void Importing(GamePart part, ImportContentContext context) {
