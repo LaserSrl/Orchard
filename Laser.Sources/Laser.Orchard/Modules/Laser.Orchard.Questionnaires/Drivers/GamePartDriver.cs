@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Laser.Orchard.Questionnaires.Models;
+using Laser.Orchard.Questionnaires.Services;
 using Laser.Orchard.Questionnaires.ViewModels;
 using Laser.Orchard.StartupConfig.Localization;
 using Orchard;
@@ -17,8 +18,6 @@ namespace Laser.Orchard.Questionnaires.Drivers {
     public class GamePartDriver : ContentPartDriver<GamePart> {
         private readonly IOrchardServices _orchardServices;
         private readonly IDateLocalization _dateLocalization;
-        private readonly IScheduledTaskManager _taskManager;
-        private readonly IDateServices _dateServices;
 
         public Localizer T { get; set; }
 
@@ -27,11 +26,10 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         }
 
         public GamePartDriver(IOrchardServices orchardServices, IDateLocalization dateLocalization,
-            IScheduledTaskManager taskManager, IDateServices dateServices) {
+            IScheduledTaskManager taskManager, IDateServices dateServices,
+            IQuestionnairesServices questionnairesServices) {
             _orchardServices = orchardServices;
             _dateLocalization = dateLocalization;
-            _taskManager = taskManager;
-            _dateServices = dateServices;
         }
 
         protected override DriverResult Editor(GamePart part, dynamic shapeHelper) {
@@ -55,45 +53,8 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                     part.GameDate = _dateLocalization.StringToDatetime(viewModel.GameDate, "") ?? DateTime.Now;
                 }
             }
-            //Check the button pressed: either Publish or Save
-            if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Publish"] == "submit.Publish") {
-                //Schedule a task to send an email at the end of the game. NOTE: the task should be scheduled only if the game is being published.
-                ScheduleEmailTask(part);
-            } else if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.Save") {
-                //if the game has already been published, we need to reschedule its task
-                if (part.IsPublished()) {
-                    ScheduleEmailTask(part);
-                }
-            }
+            
             return Editor(part, shapeHelper);
-        }
-
-        /// <summary>
-        /// Create a task to schedule sending a summary email with the game results after the game has ended. the update of the task, in case the game has been modified,
-        /// is done by deleting the existing task and creating a new one.
-        /// </summary>
-        /// <param name="part">The <type>GamePart</type> object containing the information about the game.</param>
-        private void ScheduleEmailTask(GamePart part) {
-            //Schedule a task to send an email at the end of the game.
-            DateTime timeGameEnd = ((dynamic)part.ContentItem).ActivityPart.DateTimeEnd;
-            //do we need to check whether timeGameEnd > DateTime.Now? NOTE: to make this check we should first convert timeGameEnd to UTC (see later)
-            //as the code is now, if DateTime.Now > timeGameEnd, the email gets sent immediately
-            Int32 thisGameID = part.Record.Id;
-            //Check whether we already have a task for this game
-            string taskTypeStr = Laser.Orchard.Questionnaires.Handlers.ScheduledTaskHandler.TaskType + " " + thisGameID.ToString();
-            var tasks = _taskManager.GetTasks(taskTypeStr);
-            foreach (var ta in tasks) {
-                //if we are here, it means the task ta exists with the same game id as the current game
-                //hence we should update the task. We fall in this condition when we are updating the information for a game.
-                _taskManager.DeleteTasks(ta.ContentItem); //maybe
-            }
-            DateTime taskDate = timeGameEnd.AddMinutes(5);
-            //Local time to UTC conversion
-            //taskDate = (DateTime)( _dateServices.ConvertFromLocal(taskDate.ToLocalTime()));
-            taskDate = (DateTime)(_dateServices.ConvertFromLocalString(_dateLocalization.WriteDateLocalized(taskDate), _dateLocalization.WriteTimeLocalized(taskDate)));
-            //taskDate = taskDate.Subtract(new TimeSpan ( 2, 0, 0 )); //subtract two hours
-            taskDate = taskDate.ToUniversalTime(); //this problay does nothing
-            _taskManager.CreateTask(taskTypeStr, taskDate, null);
         }
 
         protected override void Importing(GamePart part, ImportContentContext context) {

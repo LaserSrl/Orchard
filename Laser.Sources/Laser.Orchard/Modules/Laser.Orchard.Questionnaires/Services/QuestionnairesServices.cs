@@ -3,6 +3,7 @@ using Laser.Orchard.Events.Models;
 using Laser.Orchard.Questionnaires.Models;
 using Laser.Orchard.Questionnaires.Settings;
 using Laser.Orchard.Questionnaires.ViewModels;
+using Laser.Orchard.StartupConfig.Localization;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.TemplateManagement.Models;
 using Laser.Orchard.TemplateManagement.Services;
@@ -12,8 +13,10 @@ using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Messaging.Services;
 using Orchard.Security;
+using Orchard.Tasks.Scheduling;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
 using System;
@@ -35,6 +38,9 @@ namespace Laser.Orchard.Questionnaires.Services {
         private readonly ITemplateService _templateService;
         private readonly IMessageManager _messageManager;
         private readonly ISessionLocator _sessionLocator;
+        private readonly IDateLocalization _dateLocalization;
+        private readonly IScheduledTaskManager _taskManager;
+        private readonly IDateServices _dateServices;
 
         public Localizer T { get; set; }
 
@@ -48,7 +54,10 @@ namespace Laser.Orchard.Questionnaires.Services {
             IControllerContextAccessor controllerContextAccessor,
             ITemplateService templateService,
            IMessageManager messageManager,
-            ISessionLocator sessionLocator) {
+            ISessionLocator sessionLocator,
+            IDateLocalization dateLocalization,
+            IScheduledTaskManager taskManager,
+            IDateServices dateServices) {
             _orchardServices = orchardServices;
             _repositoryAnswer = repositoryAnswer;
             _repositoryQuestions = repositoryQuestions;
@@ -61,6 +70,9 @@ namespace Laser.Orchard.Questionnaires.Services {
             _templateService = templateService;
             _messageManager = messageManager;
             _sessionLocator = sessionLocator;
+            _dateLocalization = dateLocalization;
+            _taskManager = taskManager;
+            _dateServices = dateServices;
         }
 
         private string getusername(int id) {
@@ -73,20 +85,6 @@ namespace Laser.Orchard.Questionnaires.Services {
             } else
                 return "No User";
         }
-
-        //public bool SendTemplatedEmailRanking(bool multipleRankings) {
-        //    if (multipleRankings)
-        //        return SendTemplatedEmailRankingMultiple();
-        //    else
-        //        return SendTemplatedEmailRanking();
-        //}
-
-        //private bool SendTemplatedEmailRankingMultiple() {
-        //    var query = _orchardServices.ContentManager.Query();
-        //    var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.workflowfired == false).List();
-
-        //    return false;
-        //}
         
         public bool SendTemplatedEmailRanking() {
             var query = _orchardServices.ContentManager.Query();
@@ -203,6 +201,39 @@ namespace Laser.Orchard.Questionnaires.Services {
                 }
             } else
                 return false;
+        }
+
+        /// <summary>
+        /// Create a task to schedule sending a summary email with the game results after the game has ended. the update of the task, in case the game has been modified,
+        /// is done by deleting the existing task and creating a new one. The two parameters can for exaple be extracted from a <type>GamePart</type> called part as 
+        /// gameID = part.part.Record.Id; and timeGameEnd = ((dynamic)part.ContentItem).ActivityPart.DateTimeEnd;
+        /// </summary>
+        /// <param name="gameID">The unique <type>Int32</type> identifier of the game.</param>
+        /// <param name="timeGameEnd">The <type>DateTime</type> object telling when the game will end.</param>
+        public void ScheduleEmailTask(Int32 gameID, DateTime timeGameEnd) {
+            UnscheduleEmailTask(gameID);
+            string taskTypeStr = Laser.Orchard.Questionnaires.Handlers.ScheduledTaskHandler.TaskType + " " + gameID.ToString();
+            DateTime taskDate = timeGameEnd.AddMinutes(5);
+            //Local time to UTC conversion
+            //taskDate = (DateTime)( _dateServices.ConvertFromLocal(taskDate.ToLocalTime()));
+            taskDate = (DateTime)(_dateServices.ConvertFromLocalString(_dateLocalization.WriteDateLocalized(taskDate), _dateLocalization.WriteTimeLocalized(taskDate)));
+            //taskDate = taskDate.Subtract(new TimeSpan ( 2, 0, 0 )); //subtract two hours
+            taskDate = taskDate.ToUniversalTime(); //this problay does nothing
+            _taskManager.CreateTask(taskTypeStr, taskDate, null);
+        }
+
+        /// <summary>
+        /// Check whether an email task exists for a game identiied by the given Id, and destroy it if that is the case.
+        /// </summary>
+        /// <param name="gameID">The unique <type>Int32</type> identifier of the game.</param>
+        public void UnscheduleEmailTask(Int32 gameID) {
+            string taskTypeStr = Laser.Orchard.Questionnaires.Handlers.ScheduledTaskHandler.TaskType + " " + gameID.ToString();
+            var tasks = _taskManager.GetTasks(taskTypeStr);
+            foreach (var ta in tasks) {
+                //if we are here, it means the task ta exists with the same game id as the current game
+                //hence we should update the task. We fall in this condition when we are updating the information for a game.
+                _taskManager.DeleteTasks(ta.ContentItem); //maybe
+            }
         }
 
         

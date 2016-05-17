@@ -17,9 +17,10 @@ namespace Laser.Orchard.Questionnaires.Services {
         List<QuestionnaireStatsViewModel> GetStats(int questionnaireId);
         List<QuestStatViewModel> GetStats(QuestionType type);
         void Save(QuestionnaireWithResultsViewModel editModel, IUser currentUser,string SessionID);
-        //bool SendTemplatedEmailRanking(bool multipleRankings);
         bool SendTemplatedEmailRanking();
         bool SendTemplatedEmailRanking(Int32 gameID);
+        void ScheduleEmailTask(Int32 gameID, DateTime timeGameEnd);
+        void UnscheduleEmailTask(Int32 gameID);
         List<RankingTemplateVM> QueryForRanking(
            Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false);
     }
