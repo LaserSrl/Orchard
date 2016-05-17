@@ -80,8 +80,9 @@
                     <div class="summary" itemscope="itemscope" itemid="@contentIndexVM.Id" itemtype="http://orchardproject.net/data/ContentItem">
                         <div class="properties">
                             <h3><a href="@Url.Action("Edit", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })">@contentIndexVM.Title</a></h3>
+                            (@contentIndexVM.Provider)
                             <div class="contentType">
-                                @(string.IsNullOrEmpty(contentIndexVM.PreviewEmail) ? "" : " - " + contentIndexVM.PreviewEmail)
+                                @(string.IsNullOrEmpty(contentIndexVM.PreviewEmail) ? "" : (contentIndexVM.PreviewEmail != contentIndexVM.Title) ? " - " + contentIndexVM.PreviewEmail : "")
                                 @(string.IsNullOrEmpty(contentIndexVM.PreviewSms) ? "" : " - " + contentIndexVM.PreviewSms)
                             </div>
                             <div class="metadata">
