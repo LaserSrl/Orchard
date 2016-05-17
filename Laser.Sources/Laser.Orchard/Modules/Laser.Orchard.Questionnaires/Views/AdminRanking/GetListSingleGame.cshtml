@@ -27,6 +27,11 @@
     //Model is a list which contains the rankings tables for a given game 
     Layout.Title = T("Game Rankings for ") + Model.drtvm.Title;
 }
+
+<p class="breadcrumb">
+    <a href="@Url.Action("Index", "adminranking", new { area = "Laser.Orchard.Questionnaires" })">@T("Index of games")</a>
+    &#62; @Layout.Title
+</p>
     
 @*@foreach(DisplaRankingTemplateVM drt in Model){*@
 @{
