@@ -4,7 +4,7 @@
 
 @model dynamic
 @{ 
-    Layout.Title = "Back Office - " + WorkContext.CurrentSite.SiteName;
+    Layout.Title = "Back Office";
     var folderStylePath = Url.Content("~/Themes/KrakeAdmin/Styles");
 }
 <div class="container">
@@ -19,7 +19,7 @@
 						<div class="dasboard-box-icon"><img src="@folderStylePath/Images/icon-cms.png" class="img-responsive"></div>
 						<h4 class="dashboard-box-title">@T("CMS")</h4>
 						<div class="dashboard-box-content">
-							@T("Un'interfaccia semplice e trasparente per gestire contenuti (e processi) poliedrici ed eterogenei.")
+							@T("A simple and transparent interface to manage content (and processes) multifaceted and heterogeneous.")
 						</div>
 					</div>
 					<div class="dashboard-card-face dashboard-box-back">
@@ -31,7 +31,7 @@
 								<div class="space-40"></div>
 								<div class="row no-margin dashboard-list-item">
 									<div class="col-xs-6 no-padding">
-										<h4 class="dashboard-list-subtitle">@T("Import ed Export")</h4>
+										<h4 class="dashboard-list-subtitle">@T("Import and Export")</h4>
 									</div>
 									<div class="col-xs-6 text-center">
 										<img src="@folderStylePath/Images/cms-import-export.png" class="img-responsive">
@@ -39,7 +39,7 @@
 								</div>
 								<div class="row no-margin dashboard-list-item">
 									<div class="col-xs-6 no-padding">
-										<h4 class="dashboard-list-subtitle">@T("Di più e di meno")</h4>
+										<h4 class="dashboard-list-subtitle">@T("More and less")</h4>
 									</div>
 									<div class="col-xs-6 text-center">
 										<img src="@folderStylePath/Images/cms-di-piu-di-meno.png" class="img-responsive">
@@ -74,7 +74,7 @@
 						<div class="dasboard-box-icon"><img src="@folderStylePath/Images/icon-web.png" class="img-responsive"></div>
 						<h4 class="dashboard-box-title">@T("Web&Mobile")</h4>
 						<div class="dashboard-box-content">
-							@T("Siti web responsivi e applicazioni mobile: tu pensa ai contenuti, al resto ci pensa KRAKE™.")
+							@T("Responsive websites and mobile applications: you think about the content, the rest is Krake™.")
 						</div>
 					</div>
 					<div class="dashboard-card-face dashboard-box-back">
@@ -84,9 +84,9 @@
 							</div>
 							<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10">
 								<div class="space-20"></div>
-								<h5 class="dashboard-subtitle">@T("Progettazione e sviluppo di Mobile Applications")</h5>
+								<h5 class="dashboard-subtitle">@T("Design and development of Mobile Applications")</h5>
 								<h5 class="dashboard-subtitle">@T("Responsive Web Design (RWD)") </h5>
-								<p>@T("per soluzioni accessibili (e usabili) da qualsiasi utente e su qualsiasi device")</p>
+								<p>@T("for affordable (and usable) solutions by any user, on any device")</p>
                                 <img class="img-responsive" src="@folderStylePath/Images/web.png">
 							</div>
 						</div>
@@ -101,7 +101,7 @@
 						<div class="dasboard-box-icon"><img src="@folderStylePath/Images/icon-communication.png" class="img-responsive"></div>
 						<h4 class="dashboard-box-title">@T("Communication Gateway")</h4>
 						<div class="dashboard-box-content">
-							@T("Una dashboard unica per gestire campagne di Direct Marketing: SMS, MAIL, PUSH NOTIFICATION, SOCIAL.")
+							@T("A single dashboard to manage direct marketing campaigns: SMS, MAIL, PUSH NOTIFICATION, SOCIAL.")
 						</div>
 					</div>
 					<div class="dashboard-card-face dashboard-box-back">
@@ -111,7 +111,7 @@
 							</div>
 							<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10">
 								<div class="space-20"></div>
-								<p><strong>@T("Uno strumento semplice e immediato per gestire campagne di marketing mirate ed efficaci.")</strong></p>
+								<p><strong>@T("One quick and easy way to manage targeted marketing campaigns and effective.")</strong></p>
 								<div class="row no-margin dashboard-list-item">
 									<div class="col-xs-6 text-center">
 										<img src="@folderStylePath/Images/communication-sms.png" class="img-responsive">

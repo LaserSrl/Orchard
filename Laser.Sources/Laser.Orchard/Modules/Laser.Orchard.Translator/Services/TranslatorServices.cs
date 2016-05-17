@@ -84,7 +84,7 @@ namespace Laser.Orchard.Translator.Services {
                 _translationRecordRepository.Flush();
             } else {
                 if (searchById) {
-                    throw new Exception(T("The required translation does not exists.").ToString());
+                    throw new Exception(T("The requested translation does not exists.").ToString());
                 } else {
                     _translationRecordRepository.Create(translation);
                     _translationRecordRepository.Flush();

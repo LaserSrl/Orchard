@@ -31,6 +31,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Text;
+using Orchard.Taxonomies.Services;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
 
@@ -59,12 +60,13 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly IModuleService _moduleService;
         private readonly INotifier _notifier;
         private readonly ISessionLocator _session;
+        private readonly ITaxonomyService _taxonomyService;
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
 
-        public CommunicationService(IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session) {
+        public CommunicationService(ITaxonomyService taxonomyService,IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
@@ -72,6 +74,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _notifier = notifier;
             _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
             _session = session;
+            _taxonomyService = taxonomyService;
 
             T = NullLocalizer.Instance;
         }
@@ -120,6 +123,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _notifier.Add(NotifyType.Information, T("Syncronized {0} user's profiles", users.Count().ToString()));
 
             #endregion Import dei profili degli utenti
+
 
             #region Ricreo collegamento con parte mobile preesistente
 
@@ -346,6 +350,15 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 _orchardServices.ContentManager.Create(Contact);
             } else {
                 Contact = contactsUsers.ContentItem;
+            }
+            
+            //if (UserContent.ContentItem.User.PushCategories != null) {
+            //    dynamic mypart = (((dynamic)Contact).CommunicationContactPart);
+            //    mypart.GetType().GetProperty("UserIdentifier").SetValue(mypart, UserContent.Id, null);
+            //}
+            if (((dynamic)UserContent.ContentItem).User.Pushcategories != null && (((dynamic)Contact).CommunicationContactPart).Pushcategories!=null) {
+             List<TermPart>ListTermPartToAdd= ((TaxonomyField) ((dynamic)UserContent.ContentItem).User.Pushcategories).Terms.ToList();
+             _taxonomyService.UpdateTerms(Contact, ListTermPartToAdd, "Pushcategories");
             }
             try {
                 if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != Contact.As<FavoriteCulturePart>().Culture_Id) {

@@ -20,7 +20,7 @@
         <a class="button primaryAction" href="@Url.Action("Synchronize", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" })" title="@T("Synchronize")">@T("Synchronize")</a>
     </div>
 }
-@using (Html.BeginForm("IndexSearch", "ContactsAdmin", FormMethod.Post)) {
+@using (Html.BeginForm("IndexSearch", "ContactsAdmin", FormMethod.Get)) {
     @Html.AntiForgeryToken()
     <fieldset class="bulk-actions bottom-20">
         <div>
@@ -34,15 +34,17 @@
                     </div>
                 </div>
                 <div style="float: right;">
-                    <button type="submit" name="submit.Search" value="-">@T("Search")</button>
-                    <a href="@Url.Action("Index")">@T("Clear")</a>
-                    <div class="manage-export">
-                        <button class="button primaryAction" style="margin-left: 4px" type="submit" name="submit.Export" value="-">@T("Export")</button>
+                    <div>
+                        <button type="submit" name="submit.Search" value="search">@T("Search")</button>
+                        <a href="@Url.Action("Index")">@T("Clear")</a>
+                    </div>
+                    <div class="manage-export" id="manage-export">
+                        <button class="button primaryAction" style="margin-left: 4px" type="submit" name="submit.Export" value="export">@T("Export")</button>
                         <a href="@Url.Action("ExportedFilesList")">@T("Show Exported Files")</a>
                     </div>
                 </div>
             </div>
-            <div id="authDiv" style="float: left; margin-top: -10px;">
+            <div id="authDiv" style="float: left; margin-top: 10px;">
                 <label id="authLabel">@T("Authorizations:")</label>
                 <label style="margin: 0 5px 0 5px;">@T("Commercial Use")</label>
                 @Html.DropDownListFor(m => m.Search.CommercialUseAuthorization, selectList, new { @id = "commercialUseAuthList" })
@@ -137,6 +139,7 @@
             function ShowAuthorizationList() {
                 if ($('#searchTypeList').val() != '@SearchFieldEnum.Name') {
                     $('#authDiv').show();
+                    $('#manage-export').css({'marginTop' : '37px'});
 
                     var label = '@T("Authorizations:")';
                     if ($('#searchTypeList').val() == '@SearchFieldEnum.Mail') {
