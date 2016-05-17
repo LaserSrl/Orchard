@@ -3,6 +3,8 @@
 @using Orchard.ContentManagement
 @using Orchard.Utility.Extensions
 @using Laser.Orchard.OpenAuthentication
+@using Orchard.Environment.Configuration;
+
 @{
     var userCanRegister = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().UsersCanRegister;
     var enableLostPassword = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().EnableLostPassword;
@@ -13,7 +15,12 @@
     var externalLoginData = Request.QueryString["ExternalLoginData"];
     var returnUrl = Request.QueryString["ReturnUrl"];
 
-    var subthemePath = Url.Content("~/Themes/KrakeDefaultTheme/Styles");
+     /*Logica Logo WhiteLabel*/
+    ShellSettings _shellsettings;
+    WorkContext.TryResolve<ShellSettings>(out _shellsettings);
+    string tenantname = _shellsettings.Name.ToLower();
+    var whitelabelLogo = Url.Content(String.Format("~/media/AdminResources/Logo/{0}-logo-frontoffice.png", tenantname));
+    
 }
 <div class="row">
     @Html.ValidationSummary(T("Login was unsuccessful. Please correct the errors and try again.").ToString())
@@ -26,7 +33,7 @@
 
 <div class="row">
 	<div class="col-xs-12 col-sm-4 col-index">
-		<img src="@subthemePath/images/milano.png" alt="visitmilano" class="img-responsive"/>
+		<img src="@whitelabelLogo" alt="@tenantname" class="img-responsive"/>
 		<h3>@T("Account Information")</h3>
 		<b>@T("Enter username and password")</b><br>
 		@if (userCanRegister) {<a class="links" href="@Url.Register(userName, externalLoginData)">@T("Register")</a> @T(" if you don't have an account.")<br>}

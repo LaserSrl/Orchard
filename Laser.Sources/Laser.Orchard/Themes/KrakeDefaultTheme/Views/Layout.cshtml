@@ -1,4 +1,14 @@
-﻿@functions {
+﻿@model dynamic
+@using Orchard.Security;
+@using Orchard.DisplayManagement.Descriptors;
+@using Orchard.UI.Resources;
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Utility.Extensions;
+@using Orchard.Environment.Configuration;
+
+
+@functions {
     // To support the layout classifaction below. Implementing as a razor function because we can, could otherwise be a Func<string[], string, string> in the code block following.
     string CalcuClassify(string[] zoneNames, string classNamePrefix) {
         var zoneCounter = 0;
@@ -50,8 +60,15 @@
     Model.Classes.Add("main-bg");
     var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model
     var subthemePath = Url.Content("~/Themes/KrakeDefaultTheme/Styles");
-//var mainPath = "/Laser.Orchard/ivreamontalto";
 
+    ShellSettings _shellsettings;
+    WorkContext.TryResolve<ShellSettings>(out _shellsettings);
+    string tenantname = _shellsettings.Name;
+
+    if (Model.Title != null) {
+        Model.Header.Add(Display.Title(Title: Model.Title));
+    }
+    
 }
 
 <header>
@@ -65,7 +82,7 @@
 		</div>
 		<div class="space-40"></div>
 		<div class="float-left visit">
-            VisitMilano
+            @tenantname
 		</div>
 		 @if (Model.Navigation != null) { 
             @Zone(Model.Navigation)
@@ -73,6 +90,13 @@
 	</div>
 </header>
 <div class="container">
+    @if (Model.Messages != null) {
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                @Zone(Model.Messages)
+            </div>
+        </div>
+    }
 	@if (Model.Content != null) { 
         @Zone(Model.Content)
     }

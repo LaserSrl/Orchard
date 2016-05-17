@@ -1,18 +1,24 @@
-﻿@{
-	var subthemePath = Url.Content("~/Themes/KrakeDefaultTheme/Styles");
-}
+﻿@using Orchard.Utility.Extensions;
+@using Orchard.Environment.Configuration;
 
+@{
+    /*Logica Logo WhiteLabel*/
+    ShellSettings _shellsettings;
+    WorkContext.TryResolve<ShellSettings>(out _shellsettings);
+    string tenantname = _shellsettings.Name.ToLower();
+    var whitelabelLogo = Url.Content(String.Format("~/media/AdminResources/Logo/{0}-logo-frontoffice.png", tenantname));
+}
 
 <div class="row">
 	<div class="col-xs-12 col-sm-3 col-index no-pad-right">
-		<img src="@subthemePath/images/milano.png" alt="visitmilano" class="img-responsive"/>
+		<img src="@whitelabelLogo" alt="@tenantname" class="img-responsive"/>
 	</div>
 	<div class="col-xs-8 col-sm-6 col-index">
 		<p>@T("You've successfully setup your Orchard Site and this is the homepage of your new site. Here are a few things you can look at to get familiar with the application. Once you feel confident you don't need this anymore, you can remove it by going into editing mode and replacing it with whatever you want.")</p>
 		@T("First things first - You'll probably want to manage your settings and configure Orchard to your liking. After that, you can head over to manage themes to change or install new themes and really make it your own. Once you're happy with a look and feel, it's time for some content. You can start creating new custom content types or start from the built-in ones by adding a page, or managing your menus.")
 	</div>
 	<div class="col-xs-4 col-sm-3 col-index no-pad-left">
-		<a href="login.html" class="login-button">
+		<a href="#" class="login-button">
 			<i class="icon-user" data-icon="a"></i>
 			<h6>@T("Login")</h6>
 		</a>

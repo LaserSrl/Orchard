@@ -69,6 +69,11 @@
   <ItemGroup>
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Styles\bootstrap.min.css" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\css\font-awesome.css" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\css\font-awesome.min.css" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.svg" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\HELP-US-OUT.txt" />
+    <Content Include="Styles\fonts\krake.svg" />
     <Content Include="Styles\images\bg.png" />
     <Content Include="Styles\images\logo.png" />
     <Content Include="Styles\images\milano.png" />
@@ -97,6 +102,48 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.eot" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.woff" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\FontAwesome.otf" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\animated.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\bordered-pulled.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\core.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\fixed-width.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\font-awesome.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\icons.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\larger.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\list.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\mixins.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\path.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\rotated-flipped.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\screen-reader.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\stacked.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\variables.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\font-awesome.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_animated.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_bordered-pulled.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_core.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_fixed-width.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_icons.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_larger.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_list.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_mixins.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_path.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_rotated-flipped.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_screen-reader.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_stacked.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_variables.scss" />
+    <Content Include="Styles\fonts\HandelGotD-Bold.otf" />
+    <Content Include="Styles\fonts\krake.eot" />
+    <Content Include="Styles\fonts\krake.ttf" />
+    <Content Include="Styles\fonts\krake.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Users\Account\RequestLostPassword.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
