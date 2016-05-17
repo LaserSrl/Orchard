@@ -86,6 +86,9 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                         if (header.StartsWith("ProfilePart.")) {
                             intestazione[i] = header.Substring(12); //12: lunghezza di "ProfilePart."
                         }
+                        if (header.StartsWith("CommunicationContactPart.")) {
+                            intestazione[i] = header.Substring(25); //12: lunghezza di "CommunicationContactPart."
+                        }
                     }
 
                     // controlla l'esistenza e la posizione dei campi cardine (ID, Name, mail, sms)
