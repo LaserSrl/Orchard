@@ -143,7 +143,12 @@ namespace Laser.Orchard.Questionnaires.Services {
             List<RankingTemplateVM> androidRank = QueryForRanking(gameId: gameID, device: TipoDispositivo.Android.ToString(), page: 1, pageSize: 10);
             List<RankingTemplateVM> windowsRank = QueryForRanking(gameId: gameID, device: TipoDispositivo.WindowsMobile.ToString(), page: 1, pageSize: 10);
 
-            return SendEmail(Ci, generalRank, appleRank, androidRank, windowsRank);
+            if (SendEmail(Ci, generalRank, appleRank, androidRank, windowsRank)) {
+                _workflowManager.TriggerEvent("GameRankingSubmitted", Ci, () => new Dictionary<string, object> { { "Content", Ci } });
+                gp.workflowfired = true;
+                return true;
+            }
+            return false;
         }
 
         private bool SendEmail(ContentItem Ci, List<RankingTemplateVM> rkt) {
