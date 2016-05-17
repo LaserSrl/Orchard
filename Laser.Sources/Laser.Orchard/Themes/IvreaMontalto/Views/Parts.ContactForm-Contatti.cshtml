@@ -1,5 +1,6 @@
 ﻿@using Orchard.Utility.Extensions
 @using Laser.Orchard.ContactForm.ViewModels
+@using System.Collections.Specialized
 @{
     Script.Require("jQuery").AtHead();
     Script.Require("jQueryColorBox").AtHead();
@@ -11,6 +12,13 @@
     var displayName = contactForm.ShowNameField ? string.Empty : displayNone;
     var displayAttachmentButton = contactForm.EnableFileUpload ? string.Empty : displayNone;
     var uniqueId = Model.ContentPart.Id;
+    
+    var formData = TempData["form"];
+    var name = formData != null ? ((NameValueCollection)formData)["Name"] : "";
+    var email = formData != null ? ((NameValueCollection)formData)["Email"] : "";
+    var confirmEmail = formData != null ? ((NameValueCollection)formData)["ConfirmEmail"] : "";
+    var subject = formData != null ? ((NameValueCollection)formData)["Subject"] : "";
+    var message = formData != null ? ((NameValueCollection)formData)["Message"] : "";
 }
 @{using (Html.BeginForm("sendcontactemail", "contactform", new { area = "Laser.Orchard.ContactForm" }, FormMethod.Post, new { @class = "contact-form" })) {
     <div class="space-20"></div> 
@@ -18,13 +26,13 @@
         <div class="col-sm-6">
             <div class="form-group">
                 <label class="control-label" for="Name">@T("Name")</label><br />
-                <input id="Name-@uniqueId" class="text" size="40" name="Name" type="text" placeholder="@T("Your Name")" />
+                <input id="Name-@uniqueId" class="text" size="40" name="Name" type="text" placeholder="@T("Your Name")" value="@name" />
             </div>
         </div>
         <div class="col-sm-6">
             <div class="form-group">
                 <label class="control-label" for="Email">@T("Email")</label><br />
-                <input id="Email-@uniqueId" class="text medium" size="40" name="Email" type="text" placeholder="@T("Email Address")" />
+                <input id="Email-@uniqueId" class="text medium" size="40" name="Email" type="text" placeholder="@T("Email Address")" value="@email" />
             </div>
         </div>
     </div>
@@ -33,13 +41,13 @@
         <div class="col-sm-6">
             <div class="form-group">
                <label class="control-label" for="ConfirmEmail">@T("Confirm Email")</label><br />
-                <input id="ConfirmEmail-@uniqueId" class="text medium" size="40" name="ConfirmEmail" type="text" placeholder="@T("Confirm Email Address")" />
+                <input id="ConfirmEmail-@uniqueId" class="text medium" size="40" name="ConfirmEmail" type="text" placeholder="@T("Confirm Email Address")" value="@confirmEmail" />
             </div>
         </div>
         <div class="col-sm-6">
             <div class="form-group">
                 <label class="control-label" for="Subject">@T("Subject")</label><br />
-                <input id="Subject-@uniqueId" class="text medium" size="40" name="Subject" type="text" placeholder="@T("Subject")" />
+                <input id="Subject-@uniqueId" class="text medium" size="40" name="Subject" type="text" placeholder="@T("Subject")" value="@subject" />
             </div>
         </div>
     </div>
@@ -48,7 +56,7 @@
         <div class="col-sm-12">
             <div class="form-group">
                 <label for="Message">@T("Message")</label><br />
-                <textarea id="Message-@uniqueId" class="text" name="Message" placeholder="@T("Comments or Inquiry")" cols="40" rows="10"></textarea>
+                <textarea id="Message-@uniqueId" class="text" name="Message" placeholder="@T("Comments or Inquiry")" cols="40" rows="10">@message</textarea>
             </div>
         </div>
     </div>

@@ -51,7 +51,7 @@ namespace Laser.Orchard.ContactForm.Controllers
             } catch (Exception e)
             {
                 // L'eccezione serve solo per la chiamata via APIController, mentre per la chiamata via form è già stata loggata e salvata nel Notifier
-                e.Message.Trim();
+                TempData["form"] = Request.Form;
             }
 
             return this.RedirectLocal(returnUrl, "~/");
