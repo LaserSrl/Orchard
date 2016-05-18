@@ -22,7 +22,7 @@ namespace Laser.Orchard.Questionnaires.Navigation {
 
 
 
-            builder.Add(T("Statistics"), "10", menu => menu.LinkToFirstChild(false).Permission(Permissions.AccessStatistics)
+            builder.Add(T("Statistics"), "10", menu => menu.LinkToFirstChild(false).Permission(Permissions.AccessStatistics).Permission(Permissions.GameRanking)
                     .Add(item => item
                         .Caption(T("Questionnaires"))
                         .Position("0")

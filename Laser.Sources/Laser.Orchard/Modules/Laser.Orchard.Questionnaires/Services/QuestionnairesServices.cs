@@ -7,6 +7,8 @@ using Laser.Orchard.StartupConfig.Localization;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.TemplateManagement.Models;
 using Laser.Orchard.TemplateManagement.Services;
+using NHibernate.Criterion;
+using NHibernate.Persister.Entity;
 using NHibernate.Transform;
 using Orchard;
 using Orchard.ContentManagement;
@@ -257,8 +259,13 @@ namespace Laser.Orchard.Questionnaires.Services {
         /// scored by iOs users, sorted from the highest score down.</example>
         public List<RankingTemplateVM> QueryForRanking(
             Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false) {
-            
-            List<RankingTemplateVM> lRank = new List<RankingTemplateVM>();
+            //TODO: the query string should be tested on different instances.
+            var session = _sessionLocator.For(typeof(RankingPartRecord));
+            //if we create a SQL query, we use [table names] instead of Domain.Names, so we need the following line
+            //string tableName = ((ILockable)session.GetSessionImplementation().GetEntityPersister(null, new RankingPartRecord())).RootTableName;
+            //TODO: test the query on both MySql and Postgre
+            //TODO: the sql query here can probably be converted in an nHibernate query
+            List<RankingTemplateVM> lRank = new List<RankingTemplateVM>(); //list we will return
             string queryDeviceCondition = "";
             if (device == TipoDispositivo.Apple.ToString())
                 queryDeviceCondition += "AND Device = '" + TipoDispositivo.Apple + "' ";
@@ -266,34 +273,118 @@ namespace Laser.Orchard.Questionnaires.Services {
                 queryDeviceCondition += "AND Device = '" + TipoDispositivo.Android + "' ";
             else if (device == TipoDispositivo.WindowsMobile.ToString())
                 queryDeviceCondition += "AND Device = '" + TipoDispositivo.WindowsMobile + "' ";
-            string subQueryPoints = "SELECT MAX(Point) "
-                    + "FROM [Orchard_FestivalTV].[dbo].[Laser_Orchard_Questionnaires_RankingPartRecord] " //Laser.Orchard.Questionnaires.Models.RankingPartRecord "
+            //THe following commented lines contain the original SQL query we used
+#region original SQL query
+            ////if we create a SQL query, we use [table names] instead of Domain.Names, so we need the following line
+            //string tableName = ((ILockable)session.GetSessionImplementation().GetEntityPersister(null, new RankingPartRecord())).RootTableName;
+            //string subQueryPoints = "SELECT MAX(Point) "
+            //        + "FROM [" + tableName + "] " //Laser.Orchard.Questionnaires.Models.RankingPartRecord "
+            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+            //        + "AND Identifier = rpr.Identifier ";
+            //string subQueryDate = "SELECT MIN(RegistrationDate) "
+            //        + "FROM [" + tableName + "] " //Laser.Orchard.Questionnaires.Models.RankingPartRecord "
+            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+            //        + "GROUP BY Identifier, Point ";
+            //string queryTable = "SELECT rpr.[Point], rpr.[Identifier], rpr.[UsernameGameCenter], rpr.[Device], rpr.[ContentIdentifier], rpr.[User_Id], rpr.[AccessSecured], rpr.[RegistrationDate] "
+            //        + "FROM [" + tableName + "] as rpr " //Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
+            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+            //        + "AND Point = ( " + subQueryPoints + " ) "
+            //        + "AND RegistrationDate IN ( " + subQueryDate + " ) ";
+            //if (Ascending)
+            //    queryTable += "ORDER BY Point ";
+            //else
+            //    queryTable += "ORDER BY Point DESC "; 
+            //var tableQuery = session
+            //    .CreateSQLQuery(queryTable)
+            //    .SetFirstResult((pageSize * (page - 1)))    //paging
+            //    .SetMaxResults(pageSize); ;                 //paging
+            ////var ranking = tableQuery.List();
+            //var ranking = tableQuery
+            //    .SetResultTransformer(Transformers.AliasToBean<RankingPartRecordIntermediate>())
+            //    .List();
+            ////get the query results into the list
+            //foreach (RankingPartRecordIntermediate obj in ranking) {
+            //    lRank.Add(ConvertFromDBData(obj));
+            //}
+#endregion
+
+            //HQL query
+            string subHQLPoints = "SELECT MAX(Point) "
+                    + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord "
                     + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
                     + "AND Identifier = rpr.Identifier ";
-            string subQueryDate = "SELECT MIN(RegistrationDate) "
-                    + "FROM [Orchard_FestivalTV].[dbo].[Laser_Orchard_Questionnaires_RankingPartRecord] " //Laser.Orchard.Questionnaires.Models.RankingPartRecord "
+            string subHQLDate = "SELECT MIN(RegistrationDate) "
+                    + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord "
                     + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
                     + "GROUP BY Identifier, Point ";
-            string queryTable = "SELECT rpr.[Point], rpr.[Identifier], rpr.[UsernameGameCenter], rpr.[Device], rpr.[ContentIdentifier], rpr.[User_Id], rpr.[AccessSecured], rpr.[RegistrationDate] "
-                    + "FROM [Orchard_FestivalTV].[dbo].[Laser_Orchard_Questionnaires_RankingPartRecord] as rpr " //Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
+            string hqlTable = "SELECT rpr.Point as Point, rpr.Identifier as Identifier, rpr.UsernameGameCenter as UsernameGameCenter, rpr.Device as Device, rpr.ContentIdentifier as ContentIdentifier, rpr.User_Id as User_Id, rpr.AccessSecured as AccessSecured, rpr.RegistrationDate as RegistrationDate "
+                    + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
                     + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
-                    + "AND Point = ( " + subQueryPoints + " ) "
-                    + "AND RegistrationDate IN ( " + subQueryDate + " ) ";
+                    + "AND Point = ( " + subHQLPoints + " ) "
+                    + "AND RegistrationDate IN ( " + subHQLDate + " ) ";
             if (Ascending)
-                queryTable += "ORDER BY Point ";
+                hqlTable += "ORDER BY Point ";
             else
-                queryTable += "ORDER BY Point DESC ";
-            //paging
-            queryTable += "OFFSET " + (pageSize * (page - 1)).ToString() + " ROWS "
-                    + "FETCH NEXT " + pageSize.ToString() + " ROWS ONLY ";
-            var tableQuery = _sessionLocator.For(typeof(RankingPartRecord)).CreateSQLQuery(queryTable); //since we create a SQL query, we use [table names] instead of Domain.Names
-            //var ranking = tableQuery.List();
-            var ranking = tableQuery.SetResultTransformer(Transformers.AliasToBean<RankingPartRecordIntermediate>()).List();
-
+                hqlTable += "ORDER BY Point DESC "; 
+            var tableHQL = session
+                .CreateQuery(hqlTable)
+                .SetFirstResult((pageSize * (page - 1)))    //paging
+                .SetMaxResults(pageSize);                   //paging
+            var ranking = tableHQL
+                .SetResultTransformer(Transformers.AliasToBean<RankingPartRecord>()) //to use this we explicitly give the aliases in the query
+                .List();
             //get the query results into the list
-            foreach (RankingPartRecordIntermediate obj in ranking) {
+            foreach (RankingPartRecord obj in ranking) {
                 lRank.Add(ConvertFromDBData(obj));
             }
+
+            #region nHibernate query (incomplete)
+            //QueryOver<RankingPartRecord> qo = QueryOver.Of<RankingPartRecord>()
+            //    .Where(t => t.ContentIdentifier == gameId)
+            //    .And(t => (bool)(device == TipoDispositivo.Apple.ToString() ? t.Device == TipoDispositivo.Apple : (
+            //            device == TipoDispositivo.Android.ToString() ? t.Device == TipoDispositivo.Android : (
+            //                device == TipoDispositivo.WindowsMobile.ToString() ? t.Device == TipoDispositivo.WindowsMobile : true
+            //            )
+            //        ))
+            //    )
+            //    //.WithSubquery.Where(rpr => rpr.Point ==
+            //    //    QueryOver.Of<RankingPartRecord>()
+            //    //        .Where(inner => inner.Identifier == rpr.Identifier)
+            //    //        .And(t => t.ContentIdentifier == gameId)
+            //    //        .And(t => device == TipoDispositivo.Apple.ToString() ? t.Device == TipoDispositivo.Apple : (
+            //    //                device == TipoDispositivo.Android.ToString() ? t.Device == TipoDispositivo.Android : (
+            //    //                    device == TipoDispositivo.WindowsMobile.ToString() ? t.Device == TipoDispositivo.WindowsMobile : true
+            //    //                )
+            //    //            )
+            //    //        )
+            //    //        .Select(inner => inner.Point)
+            //    //        .OrderBy(inner => inner.Point).Desc
+            //    //        .Take(1)
+            //    //        .As<Int32>()
+            //    //)
+            //    //.WithSubquery.WhereProperty(rpr => rpr.RegistrationDate).In(
+            //    //    QueryOver.Of<RankingPartRecord>()
+            //    //    .Where(t => t.ContentIdentifier == gameId)
+            //    //    .And(t => device == TipoDispositivo.Apple.ToString() ? t.Device == TipoDispositivo.Apple : (
+            //    //            device == TipoDispositivo.Android.ToString() ? t.Device == TipoDispositivo.Android : (
+            //    //                device == TipoDispositivo.WindowsMobile.ToString() ? t.Device == TipoDispositivo.WindowsMobile : true
+            //    //            )
+            //    //        )
+            //    //    )
+            //    //    .SelectList(li => li
+            //    //        .SelectGroup(rec => rec.Identifier)
+            //    //        .SelectGroup(rec => rec.Point)
+            //    //    )
+            //    //)
+            //    .OrderBy(e => e.Point).Desc()
+            //    .Skip(pageSize * (page - 1))
+            //    .Take(pageSize);
+            //var rankrank = qo
+            //    .GetExecutableQueryOver(session)
+            //    .List();
+            #endregion
+
+
 
             return lRank;
         }
@@ -320,6 +411,25 @@ namespace Laser.Orchard.Questionnaires.Services {
             ret.name = getusername(rpri.User_Id);
             ret.AccessSecured = rpri.AccessSecured;
             ret.RegistrationDate = rpri.RegistrationDate;
+            return ret;
+        }
+        /// <summary>
+        /// Method filling up a <type>RanKingTemplateVM</type> object from a <type>RankingPartRecord</type> object. The <type>RanKingTemplateVM</type>
+        /// object has a filed of type <type>TipoDispositivo</type>. The corresponding record is read as a <type>string</type> from the DB. For this reason we use
+        /// an intermediate class to store what we read from the db, and then convert it into the proper type.
+        /// </summary>
+        /// <param name="rpr">A <type>RankingPartRecord</type> object, corresponding to a record as read from the DB.</param>
+        /// <returns>A <type>RanKingTemplateVM</type> object, corresponding to the record we read from the DB.</returns>
+        private RankingTemplateVM ConvertFromDBData(RankingPartRecord rpr) {
+            RankingTemplateVM ret = new RankingTemplateVM();
+            ret.Point = rpr.Point;
+            ret.Identifier = rpr.Identifier;
+            ret.UsernameGameCenter = rpr.UsernameGameCenter;
+            ret.Device = rpr.Device;
+            ret.ContentIdentifier = rpr.ContentIdentifier;
+            ret.name = getusername(rpr.User_Id);
+            ret.AccessSecured = rpr.AccessSecured;
+            ret.RegistrationDate = rpr.RegistrationDate;
             return ret;
         }
 
