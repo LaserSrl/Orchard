@@ -63,7 +63,7 @@
                 <div class="social-login-buttons">
                     @foreach (OrchardAuthenticationClientData clientData in clientsData) {
                             <span class="fa-stack fa-lg">
-                                <button class="btn btn-link-2" type="submit" name="providerName" value="@clientData.ProviderName" title="@T("Log in with") @clientData.ProviderName.ToLowerInvariant()"><i class="fa fa-@clientData.ProviderName.ToLowerInvariant() fa-stack-1x"></i>s@clientData.DisplayName</button>
+                                <button class="fa fa-circle fa-stack-2x" type="submit" name="providerName" value="@clientData.ProviderName" title="@T("Log in with") @clientData.ProviderName.ToLowerInvariant()"><i class="fa fa-@clientData.ProviderName.ToLowerInvariant() fa-stack-1x"></i>s@clientData.DisplayName</button>
                             </span>
                         @*
                         <a class="btn btn-link-2" href="#">
