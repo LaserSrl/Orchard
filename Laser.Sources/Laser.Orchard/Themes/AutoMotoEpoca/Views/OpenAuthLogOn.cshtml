@@ -56,6 +56,7 @@
                 <div class="form-group">
                     @if (userCanRegister) { <p><a href="@Url.Register(userName, externalLoginData)">@T("Register")</a> @T(" if you don't have an account.") </p>}
                     @if (enableLostPassword) { <p>
+                        <text> </text>
                         @Html.ActionLink(T("Lost your Password?").Text, "RequestLostPassword")
                     </p>}
                 </div>
