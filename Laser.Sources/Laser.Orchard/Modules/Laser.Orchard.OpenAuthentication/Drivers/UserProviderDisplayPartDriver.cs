@@ -36,11 +36,15 @@ namespace Laser.Orchard.OpenAuthentication.Drivers {
 
             return ContentShape("UserProviderDisplay", () => {
                 var model = new UserProviderDisplayViewModel();
-                var provider = _userProviderServices.Get(part.ContentItem.Id).FirstOrDefault();
-                if (provider != null) {
-                    model.Provider = provider.ProviderName;
+                if (part.ContentItem.ContentType == "User") {
+                    var provider = _userProviderServices.Get(part.ContentItem.Id).FirstOrDefault();
+                    if (provider != null) {
+                        model.Provider = provider.ProviderName;
+                    } else {
+                        model.Provider = "Local";
+                    }
                 } else {
-                    model.Provider = "Local";
+                    model.Provider = "N/A";
                 }
                 return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix);
             });
