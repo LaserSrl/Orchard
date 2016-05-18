@@ -225,6 +225,14 @@ label > span {
     color:#00B5E6;
 }
 
+.placeholder-logo {
+    width: 300px;
+    height: 300px;
+    background: url(images/placeholder.png);
+    padding-right: 20px;
+}
+
+
 @media(max-width:991px){
 
     .icon-user{
