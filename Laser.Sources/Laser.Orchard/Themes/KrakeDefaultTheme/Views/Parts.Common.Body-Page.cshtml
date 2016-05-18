@@ -27,12 +27,12 @@
 	</div>
 	<div class="col-xs-4 col-sm-3 col-index no-pad-left">
          @if (WorkContext.CurrentUser != null) {
-            urlActionUser = Url.Action("ChangePassword", new { Controller = "Account", Area = "Orchard.Users" });
-            <a href="@urlActionUser" class="logout-button"><i class="fa fa-users fa-4x lineheight-2" aria-hidden="true"></i><h6>@Html.ItemDisplayText(WorkContext.CurrentUser)</h6></a> 
+            @*urlActionUser = Url.Action("ChangePassword", new { Controller = "Account", Area = "Orchard.Users" });
+            <a href="@urlActionUser" class="logout-button"><i class="fa fa-users fa-4x lineheight-2" aria-hidden="true"></i><h6>@T("Logged")</h6></a>*@ 
             
             //Se volete checked IList bottone faccia il logout commentare le righe sopra e decommentare le due sotto
-            @*urlActionUser = Url.Action("LogOff", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl });
-            <a href="@urlActionUser" class="logout-button"><i class="fa fa-sign-out fa-4x lineheight-2" aria-hidden="true"></i><h6>@T("Logout")</h6></a>*@
+            urlActionUser = Url.Action("LogOff", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl });
+            <a href="@urlActionUser" class="logout-button"><i class="fa fa-sign-out fa-4x lineheight-2" aria-hidden="true"></i><h6>@T("Logout")</h6></a>
         } else {
             urlActionUser = Url.Action("LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = (Request.QueryString["ReturnUrl"] ?? Request.RawUrl) });
              <a href="@urlActionUser" class="login-button"><i class="fa fa-sign-in fa-4x lineheight-2" aria-hidden="true"></i><h6>@T("Login")</h6></a>
