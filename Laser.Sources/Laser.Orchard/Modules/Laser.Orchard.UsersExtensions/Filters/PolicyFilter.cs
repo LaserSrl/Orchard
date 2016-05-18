@@ -56,46 +56,53 @@ namespace Laser.Orchard.UsersExtensions.Filters {
 
                     if (missingPolicies.Count() > 0) {
                         if (filterContext.Controller.GetType().FullName == "Laser.Orchard.WebServices.Controllers.JsonController") {
-                            //ObjectDumper dumper;
-                            //StringBuilder sb = new StringBuilder();
-                            //XElement dump = null;
+                            ObjectDumper dumper;
+                            StringBuilder sb = new StringBuilder();
+                            XElement dump = null;
 
-                            //var policies = neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id));
+                            var realFormat = false;
+                            var minified = false; 
+                            bool.TryParse(_workContext.GetContext().HttpContext.Request["realformat"], out realFormat);
+                            bool.TryParse(_workContext.GetContext().HttpContext.Request["minified"], out minified);
 
-                            //sb.Insert(0, "{");
-                            //sb.AppendFormat("\"n\": \"{0}\"", "Model");
-                            //sb.AppendFormat(", \"v\": \"{0}\"", "VirtualContent");
-                            //sb.Append(", \"m\": [{");
-                            //sb.AppendFormat("\"n\": \"{0}\"", "VirtualId");
-                            //sb.AppendFormat(", \"v\": \"{0}\"", "0");
-                            //sb.Append("}]");
 
-                            //sb.Append(", \"l\":[");
 
-                            //int i = 0;
-                            //sb.Append("{");
-                            //sb.AppendFormat("\"n\": \"{0}\"", "PendingPolicies");
-                            //sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
-                            //sb.Append(", \"m\": [");
+                            var policies = neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id));
 
-                            //foreach (var item in policies) {
-                            //    if (i > 0) {
-                            //        sb.Append(",");
-                            //    }
-                            //    sb.Append("{");
-                            //    dumper = new ObjectDumper(10);
-                            //    dump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
-                            //    JsonConverter.ConvertToJSon(dump, sb);
-                            //    sb.Append("}");
-                            //    i++;
-                            //}
-                            //sb.Append("]");
-                            //sb.Append("}");
+                            sb.Insert(0, "{");
+                            sb.AppendFormat("\"n\": \"{0}\"", "Model");
+                            sb.AppendFormat(", \"v\": \"{0}\"", "VirtualContent");
+                            sb.Append(", \"m\": [{");
+                            sb.AppendFormat("\"n\": \"{0}\"", "VirtualId");
+                            sb.AppendFormat(", \"v\": \"{0}\"", "0");
+                            sb.Append("}]");
 
-                            //sb.Append("]");
-                            //sb.Append("}");
+                            sb.Append(", \"l\":[");
 
-                            //filterContext.Result = new ContentResult { Content = sb.ToString(), ContentType = "application/json" };
+                            int i = 0;
+                            sb.Append("{");
+                            sb.AppendFormat("\"n\": \"{0}\"", "PendingPolicies");
+                            sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
+                            sb.Append(", \"m\": [");
+
+                            foreach (var item in policies) {
+                                if (i > 0) {
+                                    sb.Append(",");
+                                }
+                                sb.Append("{");
+                                dumper = new ObjectDumper(10);
+                                dump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
+                                JsonConverter.ConvertToJSon(dump, sb, minified, realFormat);
+                                sb.Append("}");
+                                i++;
+                            }
+                            sb.Append("]");
+                            sb.Append("}");
+
+                            sb.Append("]");
+                            sb.Append("}");
+
+                            filterContext.Result = new ContentResult { Content = sb.ToString(), ContentType = "application/json" };
                         }
                         else if (filterContext.Controller.GetType().FullName == "Laser.Orchard.WebServices.Controllers.WebApiController") {
                             JObject json = new JObject();
