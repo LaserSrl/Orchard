@@ -338,50 +338,57 @@ namespace Laser.Orchard.Questionnaires.Services {
                 lRank.Add(ConvertFromDBData(obj));
             }
 
+
             #region nHibernate query (incomplete)
-            //QueryOver<RankingPartRecord> qo = QueryOver.Of<RankingPartRecord>()
-            //    .Where(t => t.ContentIdentifier == gameId)
-            //    .And(t => (bool)(device == TipoDispositivo.Apple.ToString() ? t.Device == TipoDispositivo.Apple : (
-            //            device == TipoDispositivo.Android.ToString() ? t.Device == TipoDispositivo.Android : (
-            //                device == TipoDispositivo.WindowsMobile.ToString() ? t.Device == TipoDispositivo.WindowsMobile : true
-            //            )
-            //        ))
-            //    )
-            //    //.WithSubquery.Where(rpr => rpr.Point ==
-            //    //    QueryOver.Of<RankingPartRecord>()
-            //    //        .Where(inner => inner.Identifier == rpr.Identifier)
-            //    //        .And(t => t.ContentIdentifier == gameId)
-            //    //        .And(t => device == TipoDispositivo.Apple.ToString() ? t.Device == TipoDispositivo.Apple : (
-            //    //                device == TipoDispositivo.Android.ToString() ? t.Device == TipoDispositivo.Android : (
-            //    //                    device == TipoDispositivo.WindowsMobile.ToString() ? t.Device == TipoDispositivo.WindowsMobile : true
-            //    //                )
-            //    //            )
-            //    //        )
-            //    //        .Select(inner => inner.Point)
-            //    //        .OrderBy(inner => inner.Point).Desc
-            //    //        .Take(1)
-            //    //        .As<Int32>()
-            //    //)
-            //    //.WithSubquery.WhereProperty(rpr => rpr.RegistrationDate).In(
-            //    //    QueryOver.Of<RankingPartRecord>()
-            //    //    .Where(t => t.ContentIdentifier == gameId)
-            //    //    .And(t => device == TipoDispositivo.Apple.ToString() ? t.Device == TipoDispositivo.Apple : (
-            //    //            device == TipoDispositivo.Android.ToString() ? t.Device == TipoDispositivo.Android : (
-            //    //                device == TipoDispositivo.WindowsMobile.ToString() ? t.Device == TipoDispositivo.WindowsMobile : true
-            //    //            )
-            //    //        )
-            //    //    )
-            //    //    .SelectList(li => li
-            //    //        .SelectGroup(rec => rec.Identifier)
-            //    //        .SelectGroup(rec => rec.Point)
-            //    //    )
-            //    //)
-            //    .OrderBy(e => e.Point).Desc()
-            //    .Skip(pageSize * (page - 1))
-            //    .Take(pageSize);
-            //var rankrank = qo
-            //    .GetExecutableQueryOver(session)
-            //    .List();
+            //QueryOver<RankingPartRecord> 
+            RankingPartRecord rprAlias = null; //used as alias inside the correlated subqueries
+            var qo = QueryOver.Of<RankingPartRecord>(() => rprAlias)
+                .Where(t => t.ContentIdentifier == gameId);
+            if (device == TipoDispositivo.Apple.ToString()) //TODO: make these branches into a method
+                qo = qo.Where(t => t.Device == TipoDispositivo.Apple);
+            else if (device == TipoDispositivo.Android.ToString())
+                qo = qo.Where(t => t.Device == TipoDispositivo.Android);
+            else if (device == TipoDispositivo.WindowsMobile.ToString())
+                qo = qo.Where(t => t.Device == TipoDispositivo.WindowsMobile);
+
+            var subPoints = QueryOver.Of<RankingPartRecord>()
+                .Where(t => t.ContentIdentifier == gameId);
+            if (device == TipoDispositivo.Apple.ToString())
+                subPoints = subPoints.Where(t => t.Device == TipoDispositivo.Apple);
+            else if (device == TipoDispositivo.Android.ToString())
+                subPoints = subPoints.Where(t => t.Device == TipoDispositivo.Android);
+            else if (device == TipoDispositivo.WindowsMobile.ToString())
+                subPoints = subPoints.Where(t => t.Device == TipoDispositivo.WindowsMobile);
+            subPoints = subPoints
+                .Where(s => s.Identifier == rprAlias.Identifier)
+                .SelectList(li => li
+                    .SelectMax(rec => rec.Point)
+                );
+
+            var subDate = QueryOver.Of<RankingPartRecord>()
+                .Where(t => t.ContentIdentifier == gameId);
+            if (device == TipoDispositivo.Apple.ToString())
+                subDate = subDate.Where(t => t.Device == TipoDispositivo.Apple);
+            else if (device == TipoDispositivo.Android.ToString())
+                subDate = subDate.Where(t => t.Device == TipoDispositivo.Android);
+            else if (device == TipoDispositivo.WindowsMobile.ToString())
+                subDate = subDate.Where(t => t.Device == TipoDispositivo.WindowsMobile);
+            subDate = subDate
+                .Where(s => s.Identifier == rprAlias.Identifier)
+                .And(s => s.Point == rprAlias.Point)
+                .SelectList(li => li
+                    .SelectMin(rec => rec.RegistrationDate)
+                );
+
+            qo = qo
+                .WithSubquery.WhereProperty(rpr => rpr.Point).Eq(subPoints)
+                .WithSubquery.WhereProperty(rpr => rpr.RegistrationDate).In(subDate);
+            var rankrank = qo
+                .GetExecutableQueryOver(session)
+                .OrderBy(e => e.Point).Desc
+                .Skip(pageSize * (page - 1))
+                .Take(pageSize)
+                .List();
             #endregion
 
 
