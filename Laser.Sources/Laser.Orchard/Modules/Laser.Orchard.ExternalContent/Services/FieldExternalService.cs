@@ -207,6 +207,12 @@ namespace Laser.Orchard.ExternalContent.Services {
                         if (webpagecontent.StartsWith("[")) {
                             webpagecontent = String.Concat("{\"", nomexlst, "List", "\":", webpagecontent, "}");
                         }
+                        
+                        if (webpagecontent.Trim() == "") {
+                            // fix json vuoto
+                            webpagecontent = "{}";
+                        }
+                        
                         JObject jsonObject = JObject.Parse(webpagecontent);
                         JObject newJsonObject = new JObject();
                         newJsonObject = jsonflusher(jsonObject);
