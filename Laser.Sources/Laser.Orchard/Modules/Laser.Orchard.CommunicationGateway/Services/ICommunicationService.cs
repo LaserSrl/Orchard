@@ -380,7 +380,11 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     _repositoryCommunicationEmailRecord.Flush();
                 }
             }
-            Contact.As<TitlePart>().Title = UserContent.Email + " " + UserContent.UserName;
+            if (UserContent.Email == UserContent.UserName) {
+                Contact.As<TitlePart>().Title = UserContent.UserName;
+            } else {
+                Contact.As<TitlePart>().Title = UserContent.Email + " " + UserContent.UserName;
+            }
             dynamic mypart = (((dynamic)Contact).CommunicationContactPart);
             mypart.GetType().GetProperty("UserIdentifier").SetValue(mypart, UserContent.Id, null);
             if (asProfilePart) {

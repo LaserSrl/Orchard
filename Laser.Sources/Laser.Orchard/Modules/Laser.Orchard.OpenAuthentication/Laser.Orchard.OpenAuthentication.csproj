@@ -103,6 +103,8 @@
   <ItemGroup>
     <Content Include="Content\Account\Images\openid-icon.png" />
     <Content Include="Content\Account\Images\openid-large.png" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\oauth\images\facebook-logo.jpg" />
     <Content Include="Content\oauth\images\twitter-logo.jpg" />
     <Content Include="Content\oauth\images\twitter_logo_75x17.jpg" />
@@ -192,11 +194,32 @@
     <Content Include="Content\openid-selector\images\openid-inputicon.gif" />
     <Content Include="Content\openid-selector\images\openid-providers-en.png" />
     <Content Include="Content\openid-selector\images\openid-providers-ru.png" />
+    <Content Include="Content\Site.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="packages.config" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\EditorTemplates\UserProviderDisplay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Account\Web.config" />
@@ -213,12 +236,14 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\UserProviderDisplayPartDriver.cs" />
     <Compile Include="Drivers\UserProvidersPartDriver.cs" />
     <Compile Include="Events\IOpenAuthUserEventHandler.cs" />
     <Compile Include="Events\OpenAuthUserEventHandler.cs" />
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Models\UserProviderDisplayPart.cs" />
     <Compile Include="Services\UserExtensionService.cs" />
     <Compile Include="Handlers\OpenAuthenticationSettingsPartHandler.cs" />
     <Compile Include="Handlers\UserProvidersPartHandler.cs" />
@@ -253,6 +278,7 @@
     <Compile Include="Shapes.cs" />
     <Compile Include="ViewModels\CreateProviderViewModel.cs" />
     <Compile Include="ViewModels\IndexViewModel.cs" />
+    <Compile Include="ViewModels\UserProviderDisplayViewModel.cs" />
     <Compile Include="ViewModels\UserProvidersViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
