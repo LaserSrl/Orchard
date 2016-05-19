@@ -49,6 +49,11 @@
                                             &nbsp;&#124;&nbsp;
                                         </li>
                                         <li>@T("By {0}", owner == null ? T("unknown").ToString() : Convert.ToString(Html.ItemDisplayText(owner)))</li>
+                                        <!--<li>
+                                            <a class="button" href="@Url.Action("TestEmail", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = game.Id})">
+                                                @T("Send top10s by email")
+                                            </a>
+                                        </li>-->
                                     </ul>
                                     if (!String.IsNullOrWhiteSpace(language)) {
                                         <br />
@@ -58,6 +63,9 @@
                                     }
                                 }
                             </div>
+                            <a href="@Url.Action("TestEmail", "adminranking", new {area = "Laser.Orchard.Questionnaires", ID = game.Id})">
+                                @T("Send top10s by email")
+                            </a>
                         </div>
                     </div>
                 </li>

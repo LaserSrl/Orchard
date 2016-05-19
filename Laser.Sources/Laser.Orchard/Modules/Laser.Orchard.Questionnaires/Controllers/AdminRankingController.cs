@@ -5,6 +5,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
+using Orchard.Data;
 using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
@@ -18,8 +19,24 @@ using System.Web.Mvc;
 namespace Laser.Orchard.Questionnaires.Controllers {
     public class AdminRankingController : Controller {
         private readonly IOrchardServices _orchardServices;
-        public AdminRankingController(IOrchardServices orchardServices) {
+        //metti come parametro del costruttore IQuestionnairesServices questionnairesServices e
+        //orchard si occupa di andare ad iniettarlo in maniera corretta, quindi posso poi fare
+        //un bottone per mandarmi una mail
+        private readonly IQuestionnairesServices _questionnairesServices;
+        private readonly IRepository<RankingPartRecord> _repoRanking;
+        private readonly ISessionLocator _sessionLocator;
+        public AdminRankingController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, 
+            IRepository<RankingPartRecord> repoRanking, ISessionLocator sessionLocator) {
             _orchardServices = orchardServices;
+            _questionnairesServices = questionnairesServices;
+            _repoRanking = repoRanking;
+            _sessionLocator = sessionLocator;
+        }
+
+        [Admin]
+        public ActionResult TestEmail(Int32 ID) {
+            _questionnairesServices.SendTemplatedEmailRanking(ID);
+            return RedirectToAction("Index");
         }
       
         [Admin]
@@ -83,6 +100,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                 listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo+" Windows Mobile", ListRank = rkt });
             }
 
+
             return View((object)listaAllRank);
 
 
@@ -120,10 +138,11 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         }
         //The GelistSingleGame methods get the rankings for a single name, identified by its ID, and for a single Device.
         //For any user (identified by its phone number) only one score is in the output of the method.
+        //TODO: Currently, DB accesses and list manipulations are done separately, but they should be merged into a single query to decrease data transfer between app and DB
         [HttpGet]
         [Admin]
         public ActionResult GetListSingleGame(int ID, int? page, int? pageSize, string deviceType = "General", bool ascending = false) {
-            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.GameRanking)) //(Permissions.AccessStatistics)) //(StandardPermissions.SiteOwner)) //
                 return new HttpUnauthorizedResult();
             return GetListSingleGame(ID, new PagerParameters {
                 Page = page, PageSize = pageSize
@@ -132,113 +151,61 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         [HttpPost]
         [Admin]
         public ActionResult GetListSingleGame(int ID, PagerParameters pagerParameters, string DeviceType = "General", bool Ascending = false) {
-            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.GameRanking)) //(Permissions.AccessStatistics)) //(StandardPermissions.SiteOwner)) //
                 return new HttpUnauthorizedResult();
+
+            if (pagerParameters.PageSize == null)
+                pagerParameters.PageSize = _orchardServices.WorkContext.CurrentSite.PageSize;
+            if (pagerParameters.Page == null)
+                pagerParameters.Page = 1;
+            
+
             var query = _orchardServices.ContentManager.Query();
-            var list = query.ForPart<GamePart>().List(); //list all games
-            var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().List();
-            List<DisplaRankingTemplateVM> listaAllRank = new List<DisplaRankingTemplateVM>(); //list to pass data to cshtml
-            GamePart gp = list.Where(x => x.Id == ID).FirstOrDefault(); //the game for which we want the rankings
+            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.Id == ID).List(); //list all games with the selected ID (should be only one)
+            GamePart gp = list.FirstOrDefault(); //the game for which we want the rankings
+            //Assuming there was no issues, gp should never be null. If gp is null, it probably means something happened in the DB, since we
+            //read the ID from the DB to create the "caller" page, and the we read again in this method.
             ContentItem Ci = gp.ContentItem;
             string titolo = Ci.As<TitlePart>().Title;
 
-            if (DeviceType == "Apple") {
-                var listordered = listranking.Where(z =>
-                z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.Apple)
-                .OrderByDescending(y => y.Point);
-                List<RankingTemplateVM> rkt = new List<RankingTemplateVM>();
-                foreach (RankingPart cirkt in listordered) {
-                    RankingTemplateVM tmp = new RankingTemplateVM();
-                    tmp.Point = cirkt.Point;
-                    tmp.ContentIdentifier = cirkt.ContentIdentifier;
-                    tmp.Device = cirkt.Device;
-                    tmp.Identifier = cirkt.Identifier;
-                    tmp.name = getusername(cirkt.User_Id);
-                    tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
-                    tmp.AccessSecured = cirkt.AccessSecured;
-                    tmp.RegistrationDate = cirkt.RegistrationDate;
-                    rkt.Add(tmp);
-                }
-                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Apple", GameID = ID, ListRank = rkt });
-            } else if (DeviceType == "Android") {
-                var listordered = listranking.Where(z => 
-                    z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.Android)
-                    .OrderByDescending(y => y.Point);
-                var rkt = new List<RankingTemplateVM>();
-                foreach (RankingPart cirkt in listordered) {
-                    RankingTemplateVM tmp = new RankingTemplateVM();
-                    tmp.Point = cirkt.Point;
-                    tmp.ContentIdentifier = cirkt.ContentIdentifier;
-                    tmp.Device = cirkt.Device;
-                    tmp.Identifier = cirkt.Identifier;
-                    tmp.name = getusername(cirkt.User_Id);
-                    tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
-                    tmp.AccessSecured = cirkt.AccessSecured;
-                    tmp.RegistrationDate = cirkt.RegistrationDate;
-                    rkt.Add(tmp);
-                }
-                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Android", GameID = ID, ListRank = rkt });
-            } else if (DeviceType == "Windows Phone") {
-                var listordered = listranking.Where(z =>
-                    z.As<RankingPart>().ContentIdentifier == Ci.Id && z.As<RankingPart>().Device == TipoDispositivo.WindowsMobile)
-                    .OrderByDescending(y => y.Point);
-                var rkt = new List<RankingTemplateVM>();
-                foreach (RankingPart cirkt in listordered) {
-                    RankingTemplateVM tmp = new RankingTemplateVM();
-                    tmp.Point = cirkt.Point;
-                    tmp.ContentIdentifier = cirkt.ContentIdentifier;
-                    tmp.Device = cirkt.Device;
-                    tmp.Identifier = cirkt.Identifier;
-                    tmp.name = getusername(cirkt.User_Id);
-                    tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
-                    tmp.AccessSecured = cirkt.AccessSecured;
-                    tmp.RegistrationDate = cirkt.RegistrationDate;
-                    rkt.Add(tmp);
-                }
-                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "Windows Phone", GameID = ID, ListRank = rkt });
-            } else {
-                var listordered = listranking.Where(z =>
-                    z.As<RankingPart>().ContentIdentifier == Ci.Id)
-                    .OrderByDescending(y => y.Point);
-                var rkt = new List<RankingTemplateVM>();
-                foreach (RankingPart cirkt in listordered) {
-                    RankingTemplateVM tmp = new RankingTemplateVM();
-                    tmp.Point = cirkt.Point;
-                    tmp.ContentIdentifier = cirkt.ContentIdentifier;
-                    tmp.Device = cirkt.Device;
-                    tmp.Identifier = cirkt.Identifier;
-                    tmp.name = getusername(cirkt.User_Id);
-                    tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
-                    tmp.AccessSecured = cirkt.AccessSecured;
-                    tmp.RegistrationDate = cirkt.RegistrationDate;
-                    rkt.Add(tmp);
-                }
-                listaAllRank.Add(new DisplaRankingTemplateVM { Title = titolo, Device = "General", GameID = ID, ListRank = rkt });
+            string devString = "General";
+            //query to get the ranking out of the db, already sorted and paged, with multiple scores by a same user removed
+            if (DeviceType == TipoDispositivo.Apple.ToString()) {
+                devString = TipoDispositivo.Apple.ToString();
+            } else if (DeviceType == TipoDispositivo.Android.ToString()) {
+                devString = TipoDispositivo.Android.ToString();
+            } else if (DeviceType == TipoDispositivo.WindowsMobile.ToString()) {
+                devString = TipoDispositivo.WindowsMobile.ToString();
             }
+            List<RankingTemplateVM> lRanka = _questionnairesServices.QueryForRanking(ID, devString, pagerParameters.Page.Value, pagerParameters.PageSize.Value, Ascending);
 
-            List<DisplaRankingTemplateVM> distinct = new List<DisplaRankingTemplateVM>();
-            foreach (DisplaRankingTemplateVM drtvm in listaAllRank) {
-                distinct.Add(new DisplaRankingTemplateVM {
-                    Title = titolo, Device = drtvm.Device, GameID = ID,
-                    ListRank = drtvm.ListRank //this is already sorted by score
-                                    .GroupBy(x => x.Identifier) //group elements by phone number
-                                    .Select(g => g.First()) //consider first element of each group
-                                    .ToList()
-                });
+            var session = _sessionLocator.For(typeof(RankingPartRecord));
+            string queryString = "SELECT COUNT(DISTINCT Identifier) "
+                + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
+                + "WHERE rpr.ContentIdentifier=" + ID + " ";
+
+            if (DeviceType == TipoDispositivo.Apple.ToString()) {
+                queryString += "AND rpr.Device = '" + TipoDispositivo.Apple + "' ";
+            } else if (DeviceType == TipoDispositivo.Android.ToString()) {
+                queryString += "AND rpr.Device = '" + TipoDispositivo.Android + "' ";
+            } else if (DeviceType == TipoDispositivo.WindowsMobile.ToString()) {
+                queryString += "AND rpr.Device = '" + TipoDispositivo.WindowsMobile + "' ";
             }
-            if (Ascending)
-                distinct.Reverse();
+            var countQuery = session.CreateQuery(queryString);
+            //var asd = countQuery.List(); // countQuery.UniqueResult();
+            int scoresCount = (int)(countQuery.UniqueResult<long>());
 
+            //create and initialize pager
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
-            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(distinct.First().ListRank.Count());
+            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(scoresCount);
             int listStart = pager.GetStartIndex();
-            int listEnd = listStart + ((pager.PageSize > distinct.First().ListRank.Count) ? distinct.First().ListRank.Count : pager.PageSize);
-            listEnd = listEnd > distinct.First().ListRank.Count ? distinct.First().ListRank.Count : listEnd;
+            int listEnd = listStart + ((pager.PageSize > scoresCount) ? scoresCount : pager.PageSize);
+            listEnd = listEnd > scoresCount ? scoresCount : listEnd;
             DisplaRankingTemplateVM pageOfScores = new DisplaRankingTemplateVM {
-                Title = distinct.First().Title,
-                GameID = distinct.First().GameID,
-                Device = distinct.First().Device,
-                ListRank = distinct.First().ListRank.GetRange(listStart, listEnd-listStart)
+                Title = titolo,
+                GameID = ID,
+                Device = devString,
+                ListRank = lRanka //innerquery
             };
 
             var model = new DisplayRankingTemplateVMModel();
@@ -264,7 +231,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         [HttpGet]
         [Admin]
         public ActionResult Index(int? page, int? pageSize, string searchExpression) {
-            if (!_orchardServices.Authorizer.Authorize(Permissions.AccessStatistics))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.GameRanking)) //(Permissions.AccessStatistics)) //
                 return new HttpUnauthorizedResult();
             return Index(new PagerParameters {
                 Page = page,
@@ -275,7 +242,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         [HttpPost]
         [Admin]
         public ActionResult Index(PagerParameters pagerParameters, string searchExpression) {
-            if (!_orchardServices.Authorizer.Authorize(Permissions.AccessStatistics))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.GameRanking)) //(Permissions.AccessStatistics)) //
                 return new HttpUnauthorizedResult();
 
             IContentQuery<ContentItem> contentQuery =

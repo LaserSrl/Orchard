@@ -77,6 +77,14 @@ msgid "read more"
 msgstr "leggi tutto"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-InfoPage.Detail.cshtml"
+msgid "Attachment"
+msgstr "Allegato"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-InfoPage.Detail.cshtml"
+msgid "Attachments"
+msgstr "Allegati"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Content-InfoPage.Detail.cshtml"
 msgid "Gallery"
 msgstr "Gallery"
 
@@ -244,6 +252,10 @@ msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.MenuWidget-Breadcrumb.cshtml"
 msgid "Home"
 msgstr "Home"
 
+msgctxt "~/Themes/AnfiteatroMorenico/Views/WideContentMap.cshtml"
+msgid "more"
+msgstr "leggi tutto"
+
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-BannerLinks.cshtml"
 msgid "Go to page {0}"
 msgstr "Vai alla pagina {0}"
@@ -273,6 +285,34 @@ msgid "Data"
 msgstr "Data"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
+msgid "Date"
+msgstr "Data"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
+msgid "from"
+msgstr "dal"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
 msgid "Inserisci la data"
 msgstr "Inserisci la data"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
+msgid "Insert date"
+msgstr "Inserisci la data"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
+msgid "Search"
+msgstr "Cerca"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
+msgid "Search for the event"
+msgstr "Cerca l'evento"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
+msgid "Search for the event..."
+msgstr "Cerca l'evento..."
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Widget-FormEventiWidget.cshtml"
+msgid "to"
+msgstr "al"
 
