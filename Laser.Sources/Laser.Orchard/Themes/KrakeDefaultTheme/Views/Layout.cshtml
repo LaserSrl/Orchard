@@ -72,19 +72,20 @@
 }
 
 <header>
-	<div class="container container-header">
-		<div class="row">
-			<div class="col-xs-0 col-md-4"></div>
-			<div class="col-xs-12 col-md-4 text-center">
-				<a href="~/"><img src="@subthemePath/images/logo.png" alt="krakelogo" class="img-responsive"/></a>
-			</div>
-			<div class="col-xs-0 col-md-4"></div>
-		</div>
-		<div class="space-20"></div>
-		 @if (Model.Navigation != null) { 
+    <div class="container container-header">
+        <div class="row">
+            <div class="col-xs-0 col-md-4"></div>
+            <div class="col-xs-12 col-md-4 text-center">
+                <a href="~/">
+                    <img src="@subthemePath/images/logo.png" alt="krakelogo" class="img-responsive"/></a>
+            </div>
+            <div class="col-xs-0 col-md-4"></div>
+        </div>
+        <div class="space-20"></div>
+        @if (Model.Navigation != null) { 
             @Zone(Model.Navigation)
         }
-	</div>
+    </div>
 </header>
 <div class="container">
     @if (Model.Messages != null) {
@@ -94,24 +95,29 @@
             </div>
         </div>
     }
-	@if (Model.Content != null) { 
-        @Zone(Model.Content)
+    @if (Model.Content != null) { 
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                @Zone(Model.Content)
+            </div>
+        </div>
+
     }
 </div>
 <div id="footer">
-	<div class="container container-footer">
-		<div class="footer-text">Powered by Laser S.r.l.</div>
-	</div>
+    <div class="container container-footer">
+        <div class="footer-text">Powered by Laser S.r.l.</div>
+    </div>
 </div>
 <script>
-	function colorCheckbox() {
-		if (jQuery('label span').hasClass('accepted')) {
-		    jQuery('label span').removeClass('accepted');
-		    jQuery('label span').text('@T("I Disagree")');
-		} else {
-		    jQuery('label span').addClass('accepted');
-		    jQuery('label span').text('@T("I Agree")');
-		}
-	}
+    function colorCheckbox() {
+        if (jQuery('label span').hasClass('accepted')) {
+            jQuery('label span').removeClass('accepted');
+            jQuery('label span').text('@T("I Disagree")');
+        } else {
+            jQuery('label span').addClass('accepted');
+            jQuery('label span').text('@T("I Agree")');
+        }
+    }
 
 </script>

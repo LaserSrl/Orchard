@@ -58,7 +58,7 @@ header{
 }
 
 header h1, header h6 {
-    font-family: "Handel";
+    /*font-family: "Handel";*/
 }
 
 .container-header{
@@ -72,7 +72,7 @@ header h1, header h6 {
 }
 
 header h1{
-    font-size:5.1em;
+    font-size: 1.9em;
     line-height:0.8;
     margin:0;
     color:black;
