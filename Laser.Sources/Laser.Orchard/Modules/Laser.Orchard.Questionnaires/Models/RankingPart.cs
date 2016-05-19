@@ -66,6 +66,25 @@ namespace Laser.Orchard.Questionnaires.Models {
         public virtual Int32 User_Id { get; set; }
     }
 
+    public class RankingPartRecordIntermediate { //class used to extract RankingPartRecord from DB, since TIpoDispositivo is stored as a String there
+
+        public virtual Int32 Point { get; set; }
+
+        public virtual string Identifier { get; set; }
+
+        public virtual string UsernameGameCenter { get; set; }
+
+        public virtual string Device { get; set; }
+
+        public virtual Int32 ContentIdentifier { get; set; }
+
+        public virtual DateTime RegistrationDate { get; set; }
+
+        public virtual bool AccessSecured { get; set; }
+
+        public virtual Int32 User_Id { get; set; }
+    }
+
     public enum TipoDispositivo { Android, Apple, WindowsMobile }
 
     public class RankingVM {

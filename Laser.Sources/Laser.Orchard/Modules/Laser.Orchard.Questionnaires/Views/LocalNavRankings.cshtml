@@ -1,4 +1,4 @@
-﻿
+﻿@using Laser.Orchard.Questionnaires.Models
 @{
     int devType = Model.dType;
     Int32 gameId = Model.gId;
@@ -7,25 +7,25 @@
 }
 <div class="zone zone-local-navigation">
     <ul class="localmenu localmenu-local-admin" role="local-navigation">
-        <li @if (devType == 0){
+        <a href="@Url.Action("GetListSingleGame", "adminranking", 
+            new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "General", 
+            page = 1, pageSize = PageSize})"><li @if (devType == 0){
                 @:class="selected" 
-                     }><a href="@Url.Action("GetListSingleGame", "adminranking", 
-                        new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "General", 
-                            page = Page, pageSize = PageSize})">Total</a></li>
-        <li @if (devType == 1){
+                     }>Total</li></a>
+        <a href="@Url.Action("GetListSingleGame", "adminranking", 
+            new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = TipoDispositivo.Apple.ToString(), 
+            page = 1, pageSize = PageSize})"><li @if (devType == 1){
                 @:class="selected" 
-                     }><a href="@Url.Action("GetListSingleGame", "adminranking", 
-                        new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "Apple", 
-                            page = Page, pageSize = PageSize})">Apple</a></li>
-        <li @if (devType == 2){
+                     }>Apple</li></a>
+        <a href="@Url.Action("GetListSingleGame", "adminranking", 
+            new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = TipoDispositivo.Android.ToString(), 
+            page = 1, pageSize = PageSize})"><li @if (devType == 2){
                 @:class="selected" 
-                     }><a href="@Url.Action("GetListSingleGame", "adminranking", 
-                        new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "Android", 
-                            page = Page, pageSize = PageSize})">Android</a></li>
-        <li @if (devType == 3){
+                     }>Android</li></a>
+        <a href="@Url.Action("GetListSingleGame", "adminranking", 
+            new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = TipoDispositivo.WindowsMobile.ToString(), 
+            page = 1, pageSize = PageSize})"><li @if (devType == 3){
                 @:class="selected" 
-                     }><a href="@Url.Action("GetListSingleGame", "adminranking", 
-                        new {area = "Laser.Orchard.Questionnaires", ID = gameId, deviceType = "Windows Phone", 
-                            page = Page, pageSize = PageSize})">Windows Phone</a></li>
+                     }>Windows Phone</li></a>
     </ul>
 </div>

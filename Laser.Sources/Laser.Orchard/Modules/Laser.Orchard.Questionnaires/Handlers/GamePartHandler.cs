@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.Events.Models;
 using Laser.Orchard.Questionnaires.Models;
+using Laser.Orchard.Questionnaires.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
@@ -14,9 +15,12 @@ namespace Laser.Orchard.Questionnaires.Handlers {
 
     public class GamePartHandler : ContentHandler {
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IQuestionnairesServices _questionnairesServices;
 
-        public GamePartHandler(IRepository<GamePartRecord> repository, IContentDefinitionManager contentDefinitionManager) {
+        public GamePartHandler(IRepository<GamePartRecord> repository, IContentDefinitionManager contentDefinitionManager,
+            IQuestionnairesServices questionnairesServices) {
             _contentDefinitionManager = contentDefinitionManager;
+            _questionnairesServices = questionnairesServices;
             Filters.Add(StorageFilter.For(repository));
             OnInitializing<GamePart>((context, part) => {
                 int currYear = DateTime.Now.Year;
@@ -130,6 +134,25 @@ namespace Laser.Orchard.Questionnaires.Handlers {
                 list[n] = value;
             }
             return list;
+        }
+
+        protected override void Published(PublishContentContext context) {
+            Int32 gId = ((dynamic)context.ContentItem).Id;
+            DateTime timeGameEnd = ((dynamic)context.ContentItem).ActivityPart.DateTimeEnd;
+            _questionnairesServices.ScheduleEmailTask(gId, timeGameEnd);
+            base.Published(context);
+        }
+
+        protected override void Unpublished(PublishContentContext context) {
+            Int32 gId = ((dynamic)context.ContentItem).Id;
+            _questionnairesServices.UnscheduleEmailTask(gId);
+            base.Unpublished(context);
+        }
+
+        protected override void Removed(RemoveContentContext context) {
+            Int32 gId = ((dynamic)context.ContentItem).Id;
+            _questionnairesServices.UnscheduleEmailTask(gId);
+            base.Removed(context);
         }
     }
 }
