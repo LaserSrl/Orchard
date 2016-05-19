@@ -274,7 +274,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             else if (device == TipoDispositivo.WindowsMobile.ToString())
                 queryDeviceCondition += "AND Device = '" + TipoDispositivo.WindowsMobile + "' ";
             //THe following commented lines contain the original SQL query we used
-#region original SQL query
+            #region original SQL query
             ////if we create a SQL query, we use [table names] instead of Domain.Names, so we need the following line
             //string tableName = ((ILockable)session.GetSessionImplementation().GetEntityPersister(null, new RankingPartRecord())).RootTableName;
             //string subQueryPoints = "SELECT MAX(Point) "
@@ -306,59 +306,50 @@ namespace Laser.Orchard.Questionnaires.Services {
             //foreach (RankingPartRecordIntermediate obj in ranking) {
             //    lRank.Add(ConvertFromDBData(obj));
             //}
-#endregion
+            #endregion
 
-            //HQL query
-            string subHQLPoints = "SELECT MAX(Point) "
-                    + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord "
-                    + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
-                    + "AND Identifier = rpr.Identifier ";
-            string subHQLDate = "SELECT MIN(RegistrationDate) "
-                    + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord "
-                    + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
-                    + "GROUP BY Identifier, Point ";
-            string hqlTable = "SELECT rpr.Point as Point, rpr.Identifier as Identifier, rpr.UsernameGameCenter as UsernameGameCenter, rpr.Device as Device, rpr.ContentIdentifier as ContentIdentifier, rpr.User_Id as User_Id, rpr.AccessSecured as AccessSecured, rpr.RegistrationDate as RegistrationDate "
-                    + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
-                    + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
-                    + "AND Point = ( " + subHQLPoints + " ) "
-                    + "AND RegistrationDate IN ( " + subHQLDate + " ) ";
-            if (Ascending)
-                hqlTable += "ORDER BY Point ";
-            else
-                hqlTable += "ORDER BY Point DESC "; 
-            var tableHQL = session
-                .CreateQuery(hqlTable)
-                .SetFirstResult((pageSize * (page - 1)))    //paging
-                .SetMaxResults(pageSize);                   //paging
-            var ranking = tableHQL
-                .SetResultTransformer(Transformers.AliasToBean<RankingPartRecord>()) //to use this we explicitly give the aliases in the query
-                .List();
-            //get the query results into the list
-            foreach (RankingPartRecord obj in ranking) {
-                lRank.Add(ConvertFromDBData(obj));
-            }
+            #region HQL query on nHibernate
+            //string subHQLPoints = "SELECT MAX(Point) "
+            //        + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord "
+            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+            //        + "AND Identifier = rpr.Identifier ";
+            //string subHQLDate = "SELECT MIN(RegistrationDate) "
+            //        + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord "
+            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+            //        + "GROUP BY Identifier, Point ";
+            //string hqlTable = "SELECT rpr.Point as Point, rpr.Identifier as Identifier, rpr.UsernameGameCenter as UsernameGameCenter, rpr.Device as Device, rpr.ContentIdentifier as ContentIdentifier, rpr.User_Id as User_Id, rpr.AccessSecured as AccessSecured, rpr.RegistrationDate as RegistrationDate "
+            //        + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
+            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+            //        + "AND Point = ( " + subHQLPoints + " ) "
+            //        + "AND RegistrationDate IN ( " + subHQLDate + " ) ";
+            //if (Ascending)
+            //    hqlTable += "ORDER BY Point ";
+            //else
+            //    hqlTable += "ORDER BY Point DESC "; 
+            //var tableHQL = session
+            //    .CreateQuery(hqlTable)
+            //    .SetFirstResult((pageSize * (page - 1)))    //paging
+            //    .SetMaxResults(pageSize);                   //paging
+            //var ranking = tableHQL
+            //    .SetResultTransformer(Transformers.AliasToBean<RankingPartRecord>()) //to use this we explicitly give the aliases in the query
+            //    .List();
+            ////get the query results into the list
+            //foreach (RankingPartRecord obj in ranking) {
+            //    lRank.Add(ConvertFromDBData(obj));
+            //}
+            #endregion
 
 
-            #region nHibernate query (incomplete)
+            #region nHibernate query
             //QueryOver<RankingPartRecord> 
             RankingPartRecord rprAlias = null; //used as alias inside the correlated subqueries
             var qo = QueryOver.Of<RankingPartRecord>(() => rprAlias)
                 .Where(t => t.ContentIdentifier == gameId);
-            if (device == TipoDispositivo.Apple.ToString()) //TODO: make these branches into a method
-                qo = qo.Where(t => t.Device == TipoDispositivo.Apple);
-            else if (device == TipoDispositivo.Android.ToString())
-                qo = qo.Where(t => t.Device == TipoDispositivo.Android);
-            else if (device == TipoDispositivo.WindowsMobile.ToString())
-                qo = qo.Where(t => t.Device == TipoDispositivo.WindowsMobile);
+            qo = CheckDeviceType(qo, device);
 
             var subPoints = QueryOver.Of<RankingPartRecord>()
                 .Where(t => t.ContentIdentifier == gameId);
-            if (device == TipoDispositivo.Apple.ToString())
-                subPoints = subPoints.Where(t => t.Device == TipoDispositivo.Apple);
-            else if (device == TipoDispositivo.Android.ToString())
-                subPoints = subPoints.Where(t => t.Device == TipoDispositivo.Android);
-            else if (device == TipoDispositivo.WindowsMobile.ToString())
-                subPoints = subPoints.Where(t => t.Device == TipoDispositivo.WindowsMobile);
+            subPoints = CheckDeviceType(subPoints, device);
             subPoints = subPoints
                 .Where(s => s.Identifier == rprAlias.Identifier)
                 .SelectList(li => li
@@ -367,12 +358,7 @@ namespace Laser.Orchard.Questionnaires.Services {
 
             var subDate = QueryOver.Of<RankingPartRecord>()
                 .Where(t => t.ContentIdentifier == gameId);
-            if (device == TipoDispositivo.Apple.ToString())
-                subDate = subDate.Where(t => t.Device == TipoDispositivo.Apple);
-            else if (device == TipoDispositivo.Android.ToString())
-                subDate = subDate.Where(t => t.Device == TipoDispositivo.Android);
-            else if (device == TipoDispositivo.WindowsMobile.ToString())
-                subDate = subDate.Where(t => t.Device == TipoDispositivo.WindowsMobile);
+            subDate = CheckDeviceType(subDate, device);
             subDate = subDate
                 .Where(s => s.Identifier == rprAlias.Identifier)
                 .And(s => s.Point == rprAlias.Point)
@@ -383,17 +369,50 @@ namespace Laser.Orchard.Questionnaires.Services {
             qo = qo
                 .WithSubquery.WhereProperty(rpr => rpr.Point).Eq(subPoints)
                 .WithSubquery.WhereProperty(rpr => rpr.RegistrationDate).In(subDate);
-            var rankrank = qo
+            qo = CheckSortDirection(qo, Ascending);
+            var ranking = qo
                 .GetExecutableQueryOver(session)
-                .OrderBy(e => e.Point).Desc
-                .Skip(pageSize * (page - 1))
-                .Take(pageSize)
+                .Skip(pageSize * (page - 1))    //paging
+                .Take(pageSize)                 //paging
                 .List();
+
+            //get the query results into the list
+            foreach (RankingPartRecord obj in ranking) {
+                lRank.Add(ConvertFromDBData(obj));
+            }
             #endregion
 
 
 
             return lRank;
+        }
+
+        /// <summary>
+        /// Verifies what kind of device we want to query for, and eventually adds the corresponding query.
+        /// </summary>
+        /// <param name="qoRpr">The <type>QueryOver</type> object we are building the query on.</param>
+        /// <param name="devType">A <type>string</type> containing the name of the device type.</param>
+        /// <returns>A <type>QueryOver</type> object built from the one passed as parameter by adding the device query.</returns>
+        private QueryOver<RankingPartRecord, RankingPartRecord> CheckDeviceType(QueryOver<RankingPartRecord, RankingPartRecord> qoRpr, string devType) {
+            if (devType == TipoDispositivo.Apple.ToString())
+                return qoRpr.Where(t => t.Device == TipoDispositivo.Apple);
+            else if (devType == TipoDispositivo.Android.ToString())
+                return qoRpr.Where(t => t.Device == TipoDispositivo.Android);
+            else if (devType == TipoDispositivo.WindowsMobile.ToString())
+                return qoRpr.Where(t => t.Device == TipoDispositivo.WindowsMobile);
+            return qoRpr; //general case
+        }
+        /// <summary>
+        /// Verifies the sort direction required
+        /// </summary>
+        /// <param name="qoRpr">The <type>QueryOver</type> object we are building the query on.</param>
+        /// <param name="Ascending">A <type>bool</type> telling the sorting direction.</param>
+        /// <returns>A <type>QueryOver</type> object built from the one passed as parameter by adding the sort query.</returns>
+        private QueryOver<RankingPartRecord, RankingPartRecord> CheckSortDirection(QueryOver<RankingPartRecord, RankingPartRecord> qoRpr, bool Ascending) {
+            if (Ascending)
+                return qoRpr.OrderBy(r => r.Point).Asc;
+            else
+                return qoRpr.OrderBy(r => r.Point).Desc;
         }
 
         /// <summary>
