@@ -41,27 +41,25 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
 
     public class AliasToBeanVMFromRecord : IResultTransformer {
         private readonly AliasToBeanResultTransformer aliasToBeanTransformer;
-        private readonly IOrchardServices _orchardServices;
-        private readonly Action<RankingPartRecord> _callback;
+        public delegate RankingTemplateVM Del(RankingPartRecord rpr);
+        private readonly Del _callback;
 
-        public AliasToBeanVMFromRecord() {
+        public AliasToBeanVMFromRecord(Del cb) {
             this.aliasToBeanTransformer = new AliasToBeanResultTransformer(typeof(RankingPartRecord));
-            //_orchardServices = orchardServices;
+            _callback = cb;
         }
 
         public IList TransformList(IList collection) {
-            return this.aliasToBeanTransformer.TransformList(collection);
+            return collection; // this.aliasToBeanTransformer.TransformList(collection);
         }
 
         public object TransformTuple(object[] tuple, string[] aliases) {
             if (aliases == null) {
                 throw new ArgumentNullException("aliases");
             }
-            RankingPartRecord result = (RankingPartRecord)this.aliasToBeanTransformer.TransformTuple(tuple, aliases);
-            //_callback((RankingPartRecord)result);
-            
+            RankingPartRecord result = (RankingPartRecord)tuple[0]; // this.aliasToBeanTransformer.TransformTuple(tuple, aliases);
 
-            return result;
+            return _callback((RankingPartRecord)result);; //result;
         }
     }
 

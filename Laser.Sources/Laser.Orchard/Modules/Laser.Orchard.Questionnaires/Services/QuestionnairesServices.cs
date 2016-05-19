@@ -138,40 +138,44 @@ namespace Laser.Orchard.Questionnaires.Services {
             var session = _sessionLocator.For(typeof(RankingPartRecord));
             var generalRankQuery = GenerateRankingQuery(gameId: gameID, page: 1, pageSize: 10)
                 .GetExecutableQueryOver(session)
-                //.TransformUsing(new AliasToBeanVMFromRecord()) //TODO: use transformers. Start from the IResultTransformer in RankingTemplateVM.cs. Also http://blog.andrewawhitaker.com/queryover-series
-                .Future();
+                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData)) //TODO: use transformers. Start from the IResultTransformer in RankingTemplateVM.cs. Also http://blog.andrewawhitaker.com/queryover-series
+                //.Future();
+                .Future<RankingTemplateVM>();
             var appleRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.Apple.ToString(), page: 1, pageSize: 10)
                 .GetExecutableQueryOver(session)
-                //.TransformUsing(new AliasToBeanVMFromRecord())
-                .Future();
+                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+                //.Future();
+                .Future<RankingTemplateVM>();
             var androidRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.Android.ToString(), page: 1, pageSize: 10)
                 .GetExecutableQueryOver(session)
-                //.TransformUsing(new AliasToBeanVMFromRecord())
-                .Future();
+                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+                //.Future();
+                .Future<RankingTemplateVM>();
             var windowsRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.WindowsMobile.ToString(), page: 1, pageSize: 10)
                 .GetExecutableQueryOver(session)
-                //.TransformUsing(new AliasToBeanVMFromRecord())
-                .Future();
+                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+                //.Future();
+                .Future<RankingTemplateVM>();
 
-            var generalRankList = generalRankQuery.Count();
-            List<RankingTemplateVM> generalRank = new List<RankingTemplateVM>();
-            foreach (RankingPartRecord obj in generalRankQuery) { //Trasformers would allow getting rid of these iterations
-                generalRank.Add(ConvertFromDBData(obj));
-            }
-            List<RankingTemplateVM> appleRank = new List<RankingTemplateVM>();
-            foreach (RankingPartRecord obj in appleRankQuery) {
-                appleRank.Add(ConvertFromDBData(obj));
-            }
-            List<RankingTemplateVM> androidRank = new List<RankingTemplateVM>();
-            foreach (RankingPartRecord obj in androidRankQuery) {
-                androidRank.Add(ConvertFromDBData(obj));
-            }
-            List<RankingTemplateVM> windowsRank = new List<RankingTemplateVM>();
-            foreach (RankingPartRecord obj in windowsRankQuery) {
-                windowsRank.Add(ConvertFromDBData(obj));
-            }
+            //List<RankingTemplateVM> generalRank = new List<RankingTemplateVM>();
+            //foreach (RankingPartRecord obj in generalRankQuery) { //Trasformers would allow getting rid of these iterations
+            //    generalRank.Add(ConvertFromDBData(obj));
+            //}
+            //List<RankingTemplateVM> appleRank = new List<RankingTemplateVM>();
+            //foreach (RankingPartRecord obj in appleRankQuery) {
+            //    appleRank.Add(ConvertFromDBData(obj));
+            //}
+            //List<RankingTemplateVM> androidRank = new List<RankingTemplateVM>();
+            //foreach (RankingPartRecord obj in androidRankQuery) {
+            //    androidRank.Add(ConvertFromDBData(obj));
+            //}
+            //List<RankingTemplateVM> windowsRank = new List<RankingTemplateVM>();
+            //foreach (RankingPartRecord obj in windowsRankQuery) {
+            //    windowsRank.Add(ConvertFromDBData(obj));
+            //}
 
-            if (SendEmail(Ci, generalRank, appleRank, androidRank, windowsRank)) {
+            //if (SendEmail(Ci, generalRank, appleRank, androidRank, windowsRank)) {
+            if (SendEmail(Ci, generalRankQuery.ToList(), appleRankQuery.ToList(), androidRankQuery.ToList(), windowsRankQuery.ToList())) {
                 _workflowManager.TriggerEvent("GameRankingSubmitted", Ci, () => new Dictionary<string, object> { { "Content", Ci } });
                 gp.workflowfired = true;
                 return true;
@@ -337,14 +341,14 @@ namespace Laser.Orchard.Questionnaires.Services {
             //TODO: the query string should be tested on different instances.
             var session = _sessionLocator.For(typeof(RankingPartRecord));
             //TODO: test the query on both MySql and Postgre 
-            List<RankingTemplateVM> lRank = new List<RankingTemplateVM>(); //list we will return
-            string queryDeviceCondition = "";
-            if (device == TipoDispositivo.Apple.ToString())
-                queryDeviceCondition += "AND Device = '" + TipoDispositivo.Apple + "' ";
-            else if (device == TipoDispositivo.Android.ToString())
-                queryDeviceCondition += "AND Device = '" + TipoDispositivo.Android + "' ";
-            else if (device == TipoDispositivo.WindowsMobile.ToString())
-                queryDeviceCondition += "AND Device = '" + TipoDispositivo.WindowsMobile + "' ";
+            //List<RankingTemplateVM> lRank = new List<RankingTemplateVM>(); //list we will return
+            //string queryDeviceCondition = "";
+            //if (device == TipoDispositivo.Apple.ToString())
+            //    queryDeviceCondition += "AND Device = '" + TipoDispositivo.Apple + "' ";
+            //else if (device == TipoDispositivo.Android.ToString())
+            //    queryDeviceCondition += "AND Device = '" + TipoDispositivo.Android + "' ";
+            //else if (device == TipoDispositivo.WindowsMobile.ToString())
+            //    queryDeviceCondition += "AND Device = '" + TipoDispositivo.WindowsMobile + "' ";
             //THe following commented lines contain the original SQL query we used
             #region original SQL query
             ////if we create a SQL query, we use [table names] instead of Domain.Names, so we need the following line
@@ -414,19 +418,23 @@ namespace Laser.Orchard.Questionnaires.Services {
 
             #region nHibernate query
 
-            var ranking = GenerateRankingQuery(gameId: gameId, device: device, page: page, pageSize: pageSize)
+            //var ranking = GenerateRankingQuery(gameId: gameId, device: device, page: page, pageSize: pageSize)
+            //    .GetExecutableQueryOver(session)
+            //    //.TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+            //    .List();
+            var rankrank = GenerateRankingQuery(gameId: gameId, device: device, page: page, pageSize: pageSize)
                 .GetExecutableQueryOver(session)
-                //.TransformUsing(new AliasToBeanVMFromRecord())
-                .List();
-            //TODO: do this step with a custom transformer directly in the nHibernate query (implementing IResultTransformer) 
-            //see https://github.com/nhibernate/nhibernate-core/tree/master/src/NHibernate/Transform for examples
-            foreach (RankingPartRecord obj in ranking) {
-                lRank.Add(ConvertFromDBData(obj));
-            }
+                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+                .List<RankingTemplateVM>();
+            ////TODO: do this step with a custom transformer directly in the nHibernate query (implementing IResultTransformer) 
+            ////see https://github.com/nhibernate/nhibernate-core/tree/master/src/NHibernate/Transform for examples
+            //foreach (RankingPartRecord obj in ranking) {
+            //    lRank.Add(ConvertFromDBData(obj));
+            //}
             #endregion
 
 
-            return lRank;
+            return rankrank.ToList(); // lRank;
         }
 
         /// <summary>

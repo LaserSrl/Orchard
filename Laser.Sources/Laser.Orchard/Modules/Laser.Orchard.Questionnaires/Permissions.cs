@@ -27,7 +27,7 @@ namespace Laser.Orchard.Questionnaires {
                 },
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {AccessStatistics} //, GameRanking } //
+                    Permissions = new[] {AccessStatistics, GameRanking } //
                 },
                 new PermissionStereotype {
                     Name = "Editor",
