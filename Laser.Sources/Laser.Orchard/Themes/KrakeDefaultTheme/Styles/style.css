@@ -323,6 +323,10 @@ label > span {
     border-color: #ebccd1;
 }
 
+button {
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0 !important;
+  border: 0 none !important;
+}
 
 /*.navbar-default .navbar-nav .navbar-blue > li > a {
     color: #172535 !important;
