@@ -114,7 +114,7 @@ msgstr "Titolo"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "To Device"
-msgstr "Al Device"
+msgstr "Dispositivi"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "YES"

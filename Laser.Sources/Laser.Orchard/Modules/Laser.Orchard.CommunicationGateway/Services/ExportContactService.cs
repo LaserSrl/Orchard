@@ -114,32 +114,12 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             return contentItems;
         }
 
-        public ContactExport GetInfoContactExport(ContentItem content) {
-            ContactExport contact = new ContactExport();
 
-            // Id
-            contact.Id = content.Id;
-
-            // Title
-            contact.Title = content.As<TitlePart>().Title;
-
-            // Fields
-            List<Hashtable> listaField = new List<Hashtable>();
-
-            bool ExistProfilePart = true;
-            dynamic fields = null;
-
-            try {
-                fields = ((dynamic)content).ProfilePart.Fields;
-            } catch {
-                ExistProfilePart = false;
-            }
-
-            if (ExistProfilePart) {
-                foreach (dynamic cf in fields) {
-
-                    if (cf.FieldDefinition.Name != typeof(ContentPickerField).Name && cf.FieldDefinition.Name != typeof(MediaLibraryPickerField).Name) {
-                        string keyField = "ProfilePart." + ((object)cf.DisplayName).ToString();
+        private Hashtable ConvertField(ContentField contfield,string partname) {
+            dynamic cf = contfield;
+            Hashtable hs = new Hashtable();
+            if (cf.FieldDefinition.Name != typeof(ContentPickerField).Name && cf.FieldDefinition.Name != typeof(MediaLibraryPickerField).Name) {
+                        string keyField = partname+"." + ((object)cf.DisplayName).ToString();
                         string valueField = "";
 
                         if (cf.FieldDefinition.Name == typeof(DateTimeField).Name) {
@@ -168,10 +148,89 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                                 valueField = ((object)cf.Value).ToString();
                         }
 
-                        Hashtable hs = new Hashtable();
+                       // Hashtable hs = new Hashtable();
                         hs.Add(keyField, valueField);
-                        listaField.Add(hs);
+                      //  listaField.Add(hs);
                     }
+            return hs;
+        }
+
+
+        public ContactExport GetInfoContactExport(ContentItem content) {
+            ContactExport contact = new ContactExport();
+
+            // Id
+            contact.Id = content.Id;
+
+            // Title
+            contact.Title = content.As<TitlePart>().Title;
+
+            // Fields
+            List<Hashtable> listaField = new List<Hashtable>();
+
+            bool ExistProfilePart = true;
+            bool ExistCommunicationContactPart = true;
+            dynamic fields = null;
+
+            try {fields = ((dynamic)content).CommunicationContactPart.Fields;}
+            catch { ExistCommunicationContactPart = false; }
+            if (ExistCommunicationContactPart)
+            foreach (dynamic cf in fields) {
+                Hashtable hs = ConvertField(cf,"CommunicationContactPart");
+                if (hs.Count > 0)
+                    listaField.Add(hs);
+            }
+
+
+
+
+            try {
+                fields = ((dynamic)content).ProfilePart.Fields;
+            } catch {
+                ExistProfilePart = false;
+            }
+
+
+
+            if (ExistProfilePart) {
+                foreach (dynamic cf in fields) {
+                    Hashtable hs = ConvertField(cf, "ProfilePart");
+                    if (hs.Count>0)
+                        listaField.Add(hs);
+                    //if (cf.FieldDefinition.Name != typeof(ContentPickerField).Name && cf.FieldDefinition.Name != typeof(MediaLibraryPickerField).Name) {
+                    //    string keyField = "ProfilePart." + ((object)cf.DisplayName).ToString();
+                    //    string valueField = "";
+
+                    //    if (cf.FieldDefinition.Name == typeof(DateTimeField).Name) {
+                    //        if (cf.DateTime != null && !cf.DateTime.Equals(DateTime.MinValue))
+                    //            valueField = ((object)cf.DateTime).ToString();
+                    //    }
+                    //    else if (cf.FieldDefinition.Name == typeof(TaxonomyField).Name) {
+                    //        if (((TaxonomyField)cf).Terms != null) {
+                    //            foreach (TermPart term in ((TaxonomyField)cf).Terms) {
+                    //                // Più termini selezionati
+                    //                if (valueField != "")
+                    //                    valueField = ";" + valueField;
+
+                    //                if (term.Path == "/") {
+                    //                    // Taxonomy ad un livello
+                    //                    valueField = term.Name.Replace('/', '\\').Replace(";", ".,") + valueField;
+                    //                } 
+                    //                else {
+                    //                    // Taxonomy su più livelli
+                    //                    GetValueCompletoTerms(term, ref valueField);
+                    //                }
+                    //            }
+                    //        }
+                    //    } else {
+                    //        if (cf.Value != null)
+                    //            valueField = ((object)cf.Value).ToString();
+                    //    }
+
+                    //    Hashtable hs = new Hashtable();
+                    //    hs.Add(keyField, valueField);
+                    //    listaField.Add(hs);
+                    //}
                 }
             }
             contact.Fields = listaField;
