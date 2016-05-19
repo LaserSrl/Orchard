@@ -66,7 +66,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
 
-        public CommunicationService(ITaxonomyService taxonomyService,IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session) {
+        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
@@ -344,21 +344,37 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             } catch { asProfilePart = false; }
             int iduser = UserContent.Id;
             var contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == iduser).List().FirstOrDefault();
-            ContentItem Contact;
+            ContentItem Contact = null;
             if (contactsUsers == null) {
-                Contact = _orchardServices.ContentManager.New("CommunicationContact");
-                _orchardServices.ContentManager.Create(Contact);
+                // cerca un eventuale contatto con la stessa mail ma non ancora legato a uno user
+                var contactEmailList = GetContactsFromMail(UserContent.Email);
+                foreach (var contactEmail in contactEmailList) {
+                    if ((contactEmail != null) && (contactEmail.ContentType == "CommunicationContact")) {
+                        if (contactEmail.As<CommunicationContactPart>().Record.UserPartRecord_Id == 0) {
+                            Contact = contactEmail;
+                            Contact.As<CommunicationContactPart>().Logs += string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function.").Text, DateTime.Now);
+                        }
+                    }
+                }
+
+                if (Contact == null) {
+                    Contact = _orchardServices.ContentManager.New("CommunicationContact");
+                    _orchardServices.ContentManager.Create(Contact);
+                }
             } else {
                 Contact = contactsUsers.ContentItem;
             }
-            
+
             //if (UserContent.ContentItem.User.PushCategories != null) {
             //    dynamic mypart = (((dynamic)Contact).CommunicationContactPart);
             //    mypart.GetType().GetProperty("UserIdentifier").SetValue(mypart, UserContent.Id, null);
             //}
-            if (((dynamic)UserContent.ContentItem).User.Pushcategories != null && (((dynamic)Contact).CommunicationContactPart).Pushcategories!=null) {
-             List<TermPart>ListTermPartToAdd= ((TaxonomyField) ((dynamic)UserContent.ContentItem).User.Pushcategories).Terms.ToList();
-             _taxonomyService.UpdateTerms(Contact, ListTermPartToAdd, "Pushcategories");
+            try {
+                if (((dynamic)UserContent.ContentItem).User.Pushcategories != null && (((dynamic)Contact).CommunicationContactPart).Pushcategories != null) {
+                    List<TermPart> ListTermPartToAdd = ((TaxonomyField)((dynamic)UserContent.ContentItem).User.Pushcategories).Terms.ToList();
+                    _taxonomyService.UpdateTerms(Contact, ListTermPartToAdd, "Pushcategories");
+                }
+            } catch { // non ci sono le Pushcategories
             }
             try {
                 if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != Contact.As<FavoriteCulturePart>().Culture_Id) {
@@ -368,7 +384,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
 
             if (!string.IsNullOrEmpty(UserContent.Email) && UserContent.ContentItem.As<UserPart>().RegistrationStatus == UserStatus.Approved) {
-                var contact = GetContactFromUser(UserContent.Id);
+                var contact = Contact; //GetContactFromUser(UserContent.Id);
                 CommunicationEmailRecord cmr = null;
                 if (contact != null) {
                     cmr = _repositoryCommunicationEmailRecord.Fetch(x => x.Email == UserContent.Email && x.EmailContactPartRecord_Id == contact.Id).FirstOrDefault();

@@ -16,6 +16,7 @@
            
     <Place Parts_CommunicationAdvertising_Edit="Content:1"/>
   </Match>  
+  <Place Parts_CommunicationContact_Edit="Content:after" />"
   <Place Fields_MediaLibraryPicker_Edit="Content:2"/>
   <Place Parts_Tags_Edit="Content:3"/>
   <Place Parts_EmailContact_Edit="Content:4"/>

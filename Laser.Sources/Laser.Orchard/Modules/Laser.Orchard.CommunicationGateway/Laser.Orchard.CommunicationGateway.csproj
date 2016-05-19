@@ -186,6 +186,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utils\ImportUtil.cs" />
+    <Compile Include="ViewModels\CommunicationContactPartVM.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
     <Compile Include="ViewModels\FilesListVM.cs" />
     <Compile Include="ViewModels\ListVM.cs" />
@@ -219,6 +220,7 @@
     <Content Include="Views\EditorTemplates\Parts\AdvertisingSwitcher.cshtml" />
     <Content Include="Views\ContactsAdmin\ExportedFilesList.cshtml" />
     <Content Include="Views\ContactsAdmin\ImportedFilesLogs.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\CommunicationContact_Edit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

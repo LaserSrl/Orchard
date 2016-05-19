@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -25,6 +26,17 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
+
+        protected override DriverResult Editor(CommunicationContactPart part, dynamic shapeHelper) {
+            CommunicationContactPartVM model = new CommunicationContactPartVM();
+            if (string.IsNullOrWhiteSpace(part.Logs)) {
+                model.Logs = T("No log.").Text;
+            } else {
+                model.Logs = part.Logs;
+            }
+            return ContentShape("Parts_CommunicationContact_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/CommunicationContact_Edit", Model: model, Prefix: Prefix));
+        }
+
         //protected override void Importing(CommunicationContactPart part, ImportContentContext context) {
         //    var root = context.Data.Element(part.PartDefinition.Name);
         //    part.AllDay = Boolean.Parse(root.Attribute("AllDay").Value);
