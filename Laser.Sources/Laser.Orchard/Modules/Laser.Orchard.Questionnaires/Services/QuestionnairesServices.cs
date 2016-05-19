@@ -132,18 +132,44 @@ namespace Laser.Orchard.Questionnaires.Services {
             GamePart gp = list.FirstOrDefault();
             if (gp == null) //check if there is actually a game with the given ID (proper usage should make it so this is never true)
                 return false;
-            //get all rankings for the given game
-            var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>()
-                .Where<RankingPartRecord>(x => x.ContentIdentifier == gameID)
-                .OrderByDescending(y => y.Point)
-                .List();
-            //we do not do checks on whether this email was scheduled
+            //we do not do checks on whether this email was scheduled, because this method is also used to send it out of synch with the tasks
             ContentItem Ci = gp.ContentItem;
 
-            List<RankingTemplateVM> generalRank = QueryForRanking(gameId: gameID, page: 1, pageSize: 10);
-            List<RankingTemplateVM> appleRank = QueryForRanking(gameId: gameID, device: TipoDispositivo.Apple.ToString(), page: 1, pageSize: 10);
-            List<RankingTemplateVM> androidRank = QueryForRanking(gameId: gameID, device: TipoDispositivo.Android.ToString(), page: 1, pageSize: 10);
-            List<RankingTemplateVM> windowsRank = QueryForRanking(gameId: gameID, device: TipoDispositivo.WindowsMobile.ToString(), page: 1, pageSize: 10);
+            var session = _sessionLocator.For(typeof(RankingPartRecord));
+            var generalRankQuery = GenerateRankingQuery(gameId: gameID, page: 1, pageSize: 10)
+                .GetExecutableQueryOver(session)
+                //.TransformUsing(new AliasToBeanVMFromRecord()) //TODO: use transformers. Start from the IResultTransformer in RankingTemplateVM.cs. Also http://blog.andrewawhitaker.com/queryover-series
+                .Future();
+            var appleRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.Apple.ToString(), page: 1, pageSize: 10)
+                .GetExecutableQueryOver(session)
+                //.TransformUsing(new AliasToBeanVMFromRecord())
+                .Future();
+            var androidRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.Android.ToString(), page: 1, pageSize: 10)
+                .GetExecutableQueryOver(session)
+                //.TransformUsing(new AliasToBeanVMFromRecord())
+                .Future();
+            var windowsRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.WindowsMobile.ToString(), page: 1, pageSize: 10)
+                .GetExecutableQueryOver(session)
+                //.TransformUsing(new AliasToBeanVMFromRecord())
+                .Future();
+
+            var generalRankList = generalRankQuery.Count();
+            List<RankingTemplateVM> generalRank = new List<RankingTemplateVM>();
+            foreach (RankingPartRecord obj in generalRankQuery) { //Trasformers would allow getting rid of these iterations
+                generalRank.Add(ConvertFromDBData(obj));
+            }
+            List<RankingTemplateVM> appleRank = new List<RankingTemplateVM>();
+            foreach (RankingPartRecord obj in appleRankQuery) {
+                appleRank.Add(ConvertFromDBData(obj));
+            }
+            List<RankingTemplateVM> androidRank = new List<RankingTemplateVM>();
+            foreach (RankingPartRecord obj in androidRankQuery) {
+                androidRank.Add(ConvertFromDBData(obj));
+            }
+            List<RankingTemplateVM> windowsRank = new List<RankingTemplateVM>();
+            foreach (RankingPartRecord obj in windowsRankQuery) {
+                windowsRank.Add(ConvertFromDBData(obj));
+            }
 
             if (SendEmail(Ci, generalRank, appleRank, androidRank, windowsRank)) {
                 _workflowManager.TriggerEvent("GameRankingSubmitted", Ci, () => new Dictionary<string, object> { { "Content", Ci } });
@@ -243,7 +269,56 @@ namespace Laser.Orchard.Questionnaires.Services {
             }
         }
 
-        
+        /// <summary>
+        /// This method generates a <type>QueryOver</type> object that can be used to invoke a query using 
+        /// .GetExecutableQueryOver(session). In particular, the queries generated from this method are used to get 
+        /// pages of rankings from the DB. They can be executed calling GetExecutableQueryOver(session).List(), or 
+        /// GetExecutableQueryOver(session).Future&lt;RankingPartRecord&gt;()
+        /// </summary>
+        /// <param name="gameId">The Id of the game for which we want the ranking table.</param>
+        /// <param name="device">A string representing the tipe of device for which we want the ranking. This is obtained as a 
+        /// TipoDispositivo.value.ToString(). Any other string causes this method to default to returning the general ranking.</param>
+        /// <param name="page">The page of the results in the ranking. This is 1-based (the top-most results are on page 1).</param>
+        /// <param name="pageSize">The size of a page of results, corresponding to the maximum number of socres to return.</param>
+        /// <param name="Ascending">A flag to determine the sorting order for the scores: <value>true</value> order by ascending score; 
+        /// <value>false</value> order by descending score.</param>
+        /// <returns>A <type>QueryOver</type> object built from the parameters and that can be used to execute queries on the DB.</returns>
+        private QueryOver<RankingPartRecord> GenerateRankingQuery(
+            Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false) {
+            
+            RankingPartRecord rprAlias = null; //used as alias in correlated subqueries
+            QueryOver<RankingPartRecord, RankingPartRecord> qoRpr = QueryOver.Of<RankingPartRecord>(() => rprAlias)
+                .Where(t => t.ContentIdentifier == gameId);
+            qoRpr = CheckDeviceType(qoRpr, device);
+
+            QueryOver<RankingPartRecord, RankingPartRecord> subPoints = QueryOver.Of<RankingPartRecord>()
+                .Where(t => t.ContentIdentifier == gameId);
+            subPoints = CheckDeviceType(subPoints, device);
+            subPoints = subPoints
+                .Where(s => s.Identifier == rprAlias.Identifier)
+                .SelectList(li => li
+                    .SelectMax(rec => rec.Point)
+                );
+
+            QueryOver<RankingPartRecord, RankingPartRecord> subDate = QueryOver.Of<RankingPartRecord>()
+                .Where(t => t.ContentIdentifier == gameId);
+            subDate = CheckDeviceType(subDate, device);
+            subDate = subDate
+                .Where(s => s.Identifier == rprAlias.Identifier)
+                .And(s => s.Point == rprAlias.Point)
+                .SelectList(li => li
+                    .SelectMin(rec => rec.RegistrationDate)
+                );
+
+            qoRpr = qoRpr
+                .WithSubquery.WhereProperty(rpr => rpr.Point).Eq(subPoints)
+                .WithSubquery.WhereProperty(rpr => rpr.RegistrationDate).In(subDate);
+
+            qoRpr = CheckSortDirection(qoRpr, Ascending);
+
+            return qoRpr.Skip(pageSize * (page - 1)).Take(pageSize);
+        }
+
         /// <summary>
         /// Method used to query the db for a specific ranking (by game, device) and a specific range of results (paging)
         /// </summary>
@@ -261,10 +336,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false) {
             //TODO: the query string should be tested on different instances.
             var session = _sessionLocator.For(typeof(RankingPartRecord));
-            //if we create a SQL query, we use [table names] instead of Domain.Names, so we need the following line
-            //string tableName = ((ILockable)session.GetSessionImplementation().GetEntityPersister(null, new RankingPartRecord())).RootTableName;
-            //TODO: test the query on both MySql and Postgre
-            //TODO: the sql query here can probably be converted in an nHibernate query
+            //TODO: test the query on both MySql and Postgre 
             List<RankingTemplateVM> lRank = new List<RankingTemplateVM>(); //list we will return
             string queryDeviceCondition = "";
             if (device == TipoDispositivo.Apple.ToString())
@@ -341,47 +413,17 @@ namespace Laser.Orchard.Questionnaires.Services {
 
 
             #region nHibernate query
-            //QueryOver<RankingPartRecord> 
-            RankingPartRecord rprAlias = null; //used as alias inside the correlated subqueries
-            var qo = QueryOver.Of<RankingPartRecord>(() => rprAlias)
-                .Where(t => t.ContentIdentifier == gameId);
-            qo = CheckDeviceType(qo, device);
 
-            var subPoints = QueryOver.Of<RankingPartRecord>()
-                .Where(t => t.ContentIdentifier == gameId);
-            subPoints = CheckDeviceType(subPoints, device);
-            subPoints = subPoints
-                .Where(s => s.Identifier == rprAlias.Identifier)
-                .SelectList(li => li
-                    .SelectMax(rec => rec.Point)
-                );
-
-            var subDate = QueryOver.Of<RankingPartRecord>()
-                .Where(t => t.ContentIdentifier == gameId);
-            subDate = CheckDeviceType(subDate, device);
-            subDate = subDate
-                .Where(s => s.Identifier == rprAlias.Identifier)
-                .And(s => s.Point == rprAlias.Point)
-                .SelectList(li => li
-                    .SelectMin(rec => rec.RegistrationDate)
-                );
-
-            qo = qo
-                .WithSubquery.WhereProperty(rpr => rpr.Point).Eq(subPoints)
-                .WithSubquery.WhereProperty(rpr => rpr.RegistrationDate).In(subDate);
-            qo = CheckSortDirection(qo, Ascending);
-            var ranking = qo
+            var ranking = GenerateRankingQuery(gameId: gameId, device: device, page: page, pageSize: pageSize)
                 .GetExecutableQueryOver(session)
-                .Skip(pageSize * (page - 1))    //paging
-                .Take(pageSize)                 //paging
+                //.TransformUsing(new AliasToBeanVMFromRecord())
                 .List();
-
-            //get the query results into the list
+            //TODO: do this step with a custom transformer directly in the nHibernate query (implementing IResultTransformer) 
+            //see https://github.com/nhibernate/nhibernate-core/tree/master/src/NHibernate/Transform for examples
             foreach (RankingPartRecord obj in ranking) {
                 lRank.Add(ConvertFromDBData(obj));
             }
             #endregion
-
 
 
             return lRank;

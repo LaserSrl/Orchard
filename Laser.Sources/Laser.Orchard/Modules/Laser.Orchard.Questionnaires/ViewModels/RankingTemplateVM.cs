@@ -1,5 +1,8 @@
 ﻿using Laser.Orchard.Questionnaires.Models;
+using NHibernate.Transform;
+using Orchard;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -33,6 +36,33 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
     public class DisplayRankingTemplateVMModel {
         public dynamic Pager { get; set; }
         public DisplaRankingTemplateVM drtvm { get; set; }
+    }
+
+
+    public class AliasToBeanVMFromRecord : IResultTransformer {
+        private readonly AliasToBeanResultTransformer aliasToBeanTransformer;
+        private readonly IOrchardServices _orchardServices;
+        private readonly Action<RankingPartRecord> _callback;
+
+        public AliasToBeanVMFromRecord() {
+            this.aliasToBeanTransformer = new AliasToBeanResultTransformer(typeof(RankingPartRecord));
+            //_orchardServices = orchardServices;
+        }
+
+        public IList TransformList(IList collection) {
+            return this.aliasToBeanTransformer.TransformList(collection);
+        }
+
+        public object TransformTuple(object[] tuple, string[] aliases) {
+            if (aliases == null) {
+                throw new ArgumentNullException("aliases");
+            }
+            RankingPartRecord result = (RankingPartRecord)this.aliasToBeanTransformer.TransformTuple(tuple, aliases);
+            //_callback((RankingPartRecord)result);
+            
+
+            return result;
+        }
     }
 
 
