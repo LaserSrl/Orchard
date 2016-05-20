@@ -55,7 +55,9 @@ namespace Laser.Orchard.CulturePicker.Controllers {
                     returnUrl = "~/" + returnUrl;
                 }
             }
-
+            //in the redirect we should be including the queries back into returnUrl
+            //we can find the queries in Services.WorkContext.HttpContext.Request.rlReferrer.PathAndQuery
+            string queries = Services.WorkContext.HttpContext.Request.UrlReferrer.PathAndQuery;
             return this.RedirectLocal(returnUrl);
         }
 
