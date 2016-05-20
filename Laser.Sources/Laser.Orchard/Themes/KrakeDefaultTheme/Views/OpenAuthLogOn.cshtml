@@ -3,8 +3,7 @@
 @using Orchard.ContentManagement
 @using Orchard.Utility.Extensions
 @using Laser.Orchard.OpenAuthentication
-@using Orchard.Environment.Configuration;
-
+@using Orchard.Environment.Configuration
 @{
     var userCanRegister = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().UsersCanRegister;
     var enableLostPassword = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().EnableLostPassword;
