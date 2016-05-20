@@ -17,14 +17,16 @@ namespace Laser.Orchard.Meteo.Handlers {
         public MeteoPartHandler(IOrchardServices orchardServices, IWorkContextAccessor workContext) {
             _orchardServices = orchardServices;
             _workContext = workContext;
+
+            OnLoaded<MeteoPart>((context, part) => LoadMeteo(context, part));
         }
 
-        protected override void Loaded(LoadContentContext context) {
-            base.Loaded(context);
+        protected void LoadMeteo(LoadContentContext context, MeteoPart part) {
+            //base.Loaded(context);
             // TODO: create settings dfor theese values
             var providerUrl = "";
             var provider = MeteoProviders.RegioneVda;
-            var part = context.ContentItem.Parts.Where(w => w.PartDefinition.Name == typeof(MeteoPart).Name).Cast<MeteoPart>().SingleOrDefault();
+            //var part = context.ContentItem.Parts.Where(w => w.PartDefinition.Name == typeof(MeteoPart).Name).Cast<MeteoPart>().SingleOrDefault();
             if (part == null) return;
             if (provider == MeteoProviders.RegioneVda) {
                 providerUrl = "http://www.regione.vda.it/territorio/centrofunzionale/meteo/dati2013/bollettino_meteo/bollettino_{0}.xml";
