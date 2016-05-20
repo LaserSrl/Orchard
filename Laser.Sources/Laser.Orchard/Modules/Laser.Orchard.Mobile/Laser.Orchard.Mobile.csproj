@@ -212,7 +212,6 @@
     <Content Include="Views\DefinitionTemplates\PushMobilePartSettingVM.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\SmsSettingsPart_Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\UserPwdRecoveryPart_Edit.cshtml" />
-    <Content Include="Views\EditorTemplates\Fields\ContentPicker.Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\MobileContact_Edit.cshtml" />
     <Content Include="Views\Parts\MobilePush.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\SmsGateway_Edit.cshtml" />
@@ -299,6 +298,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Lib\" />
+    <Folder Include="Views\EditorTemplates\Fields\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PushNotification\Index.cshtml" />
