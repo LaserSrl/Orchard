@@ -348,3 +348,11 @@ button {
 label {
     font-weight: normal;
 }
+
+.social-login-buttons button {
+    background-color: #fff;
+}
+
+.social-hover:hover {
+    cursor:pointer;
+}
