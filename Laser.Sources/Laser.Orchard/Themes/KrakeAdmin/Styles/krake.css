@@ -233,7 +233,7 @@ table.items {
 
 .widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer {
     background-color: #cbedf8 !important;
-    min-height: 41px;
+    /*min-height: 41px;*/
 }
 
 .widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer, #widgets-layer-visibility li.on {
@@ -359,6 +359,7 @@ select {
 .archive-later-datetime,
 .publish-later-datetime {
     border: 0;
+    background: transparent;
 }
 
 .bulk-actions label {
@@ -559,13 +560,14 @@ label.sub {
     padding-right: 8px;
 }
 
-.widgets-listed .widgets-move-down[disabled] {
+/*.widgets-listed .widgets-move-down[disabled] {
   background-position: 7px -16px !important;
   cursor: pointer;
-}
+}*/
 
 .bulk-actions-auto {
     border: 0px;
+    background: transparent;
 }
 
 .manage fieldset,
@@ -589,4 +591,26 @@ label.sub {
 
 .mce-container button {
     min-width: 30px;
+}
+
+#activity-toolbar > div label {
+  min-width: 22px !important;
+}
+
+.widgets-this-layer h3 {
+    font-size: 20px;
+}
+
+.widgets-move-somewhere button {
+    min-height: auto;
+}
+
+.bulk-actions {
+    display: inline-block;
+    /*width: 600px;
+    white-space: nowrap;*/
+}
+
+#CommonPart_Creator_Value:parent {
+    display: none;
 }
