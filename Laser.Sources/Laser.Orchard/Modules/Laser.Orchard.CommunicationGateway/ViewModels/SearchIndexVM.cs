@@ -8,6 +8,7 @@ namespace Laser.Orchard.CommunicationGateway.ViewModels {
         public dynamic Pager { get; set; }
         public dynamic Option { get; set; }
         public SearchVM Search { get; set; }
+        public string ImportErrors { get; set; }
         //  public bool Admn { get; set; }
         //  public int OrderPayedCount { get; set; }
         //      public Enums.OrderStatus stati { get; set; }

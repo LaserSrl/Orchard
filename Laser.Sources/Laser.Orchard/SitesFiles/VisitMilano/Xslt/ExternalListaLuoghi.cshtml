@@ -1,0 +1,158 @@
+@using Orchard.Caching;
+@{
+    //ICacheManager _cacheManager;
+    //WorkContext.TryResolve<ICacheManager>(out _cacheManager);
+    //_cacheManager.Get
+    // cache.Add("Vandelay.Favicon.Url", "ciao")
+}
+@functions{
+    // used to get value from e015 format
+    void GetChildValue(XmlDocument thedoc, string thepath, bool HtmlFormat = false) {
+        foreach (XmlNode child_node in thedoc.SelectNodes(thepath)) {
+            if (child_node != null && child_node.HasChildNodes) {
+                if (child_node.SelectSingleNode("value") != null) {
+                    if (HtmlFormat) {
+                        child_node.InnerXml = child_node.SelectSingleNode("value").InnerXml;
+                    } else {
+                        if (child_node.SelectSingleNode("value").FirstChild != null) {
+                            child_node.InnerXml = HttpUtility.HtmlEncode(child_node.SelectSingleNode("value").FirstChild.InnerText);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+	}
+@{
+    XmlDocument mydoc = ToXmlDocument(Model);
+
+    // aggiungo raggruppamento dei nodi venue sotto un unico nodo denominato lista e rimuovo i nodi non di tipo venue
+    mydoc = aggiungipadre(mydoc, "root", "lista", "venue");
+    mydoc = RimuoviFratelli(mydoc, "/lista");
+
+    foreach (XmlNode child_node in mydoc.SelectNodes("//eventId")) {
+        child_node.ParentNode.RemoveChild(child_node);
+    }
+
+    GetChildValue(mydoc, "//venue/id");
+    foreach (XmlNode child_node in mydoc.SelectNodes("//venue/id")) {
+        XmlNode OriginalId = mydoc.CreateElement("OriginalId");
+        OriginalId.InnerXml = child_node.InnerXml;
+        child_node.ParentNode.AppendChild(OriginalId);
+    }
+    mydoc = cambianome(mydoc, "/venue/id", "Sid");
+    foreach (XmlNode child_node in mydoc.SelectNodes("//venue/Sid")) {
+        child_node.InnerText = "Venue:" + child_node.InnerText;
+    }
+    //Hermes
+    GetChildValue(mydoc, "//venue/name");
+    mydoc = ConvertArrayOfStringToString(mydoc, "/venue", "name", "Name", true);
+    foreach (System.Xml.XmlNode child_node in mydoc.SelectNodes("//venue")) {
+        mydoc = AggiungiShareLink(mydoc, child_node, child_node.SelectSingleNode("Name") != null ? HttpUtility.HtmlEncode(child_node.SelectSingleNode("Name").InnerText) : "", "http://www.turismo.milano.it/", child_node.SelectSingleNode("mediaResource/uri") != null ? child_node.SelectSingleNode("mediaResource/uri").InnerText : "");
+    }
+    
+    GetChildValue(mydoc, "//venue/headline");
+
+    GetChildValue(mydoc, "//venue/descriptiontext", true);
+
+    mydoc = ConvertArrayOfStringToString(mydoc, "/venue", "priceInfo", "PriceInfo", true);
+    mydoc = ConvertArrayOfStringToString(mydoc, "/venue", "descriptiontext", "Descriptiontext", true);
+
+    //rendi array contact
+    mydoc = aggiungipadre(mydoc, "/venue", "Contacts", "contact");
+    mydoc = aggiungifiglio(mydoc, "/venue/Contacts", "contact");
+    mydoc = cambianome(mydoc, "/contact", "Contact");
+    //rendi array address
+    mydoc = aggiungipadre(mydoc, "/venue", "Addresses", "address");
+    mydoc = aggiungifiglio(mydoc, "/venue/Addresses", "address");
+    mydoc = cambianome(mydoc, "/address", "Address");
+
+    GetChildValue(mydoc, "//openingTimes/descriptiontext", true);
+    mydoc = ConvertArrayOfStringToString(mydoc, "/openingTimes", "descriptiontext", "Descriptiontext", true);
+
+    GetChildValue(mydoc, "//venue/abstracttext", true);
+    mydoc = ConvertArrayOfStringToString(mydoc, "/venue", "abstracttext", "Abstracttext", true);
+    GetChildValue(mydoc, "//openingTimes/abstracttext", true);
+    mydoc = ConvertArrayOfStringToString(mydoc, "/openingTimes", "abstracttext", "Abstracttext", true);
+
+    //GetChildValue(mydoc,"//venue/moreinfo");
+    mydoc = aggiungipadre(mydoc, "/venue", "MoreInfos", "moreInfo");
+    mydoc = aggiungifiglio(mydoc, "/venue/MoreInfos", "moreInfo");
+    mydoc = cambianome(mydoc, "/moreInfo", "MoreInfo");
+    //rendi array mediaResource
+    GetChildValue(mydoc, "//mediaResource/name");
+
+    string child_node_name = "";
+    string child_node_uri = "";
+    string child_node_mimeType = "";
+    foreach (XmlNode child_node in mydoc.SelectNodes("//venue/mediaResource")) {
+        child_node_name = "";
+        child_node_uri = "";
+        child_node_mimeType = "";
+        if (child_node.SelectSingleNode("name") != null) {
+            child_node_name = child_node.SelectSingleNode("name").InnerText;
+        }
+        if (child_node.SelectSingleNode("uri") != null) {
+            child_node_uri = child_node.SelectSingleNode("uri").InnerText;
+        }
+        if (child_node.SelectSingleNode("mimeType") != null) {
+            child_node_mimeType = child_node.SelectSingleNode("mimeType").InnerText;
+        }
+        XmlNode map = InsertImage(mydoc, child_node_uri, child_node_name, child_node_mimeType, "", "");
+        child_node.ParentNode.AppendChild(map);
+        child_node.ParentNode.RemoveChild(child_node);
+    }
+
+
+    foreach (XmlNode child_node in mydoc.SelectNodes("//geocoordinates")) {
+        if (child_node != null) {
+            string child_node_ycoord = "";
+            string child_node_xcoord = "";
+            if (child_node.SelectSingleNode("ycoord") != null) {
+                child_node_ycoord = child_node.SelectSingleNode("ycoord").InnerText;
+            }
+            if (child_node.SelectSingleNode("xcoord") != null) {
+                child_node_xcoord = child_node.SelectSingleNode("xcoord").InnerText;
+            }
+            XmlNode map = InsertMap(mydoc, child_node_ycoord, child_node_xcoord, "");
+            child_node.ParentNode.AppendChild(map);
+            child_node.ParentNode.RemoveChild(child_node);
+        }
+    }
+
+    mydoc = aggiungipadre(mydoc, "/geolocation", "MapParts", "MapPart");
+    mydoc = aggiungifiglio(mydoc, "/geolocation/MapParts", "MapPart");
+
+    //mydoc=aggiungifiglio(mydoc,"/venue/geolocation","MapPart");
+    mydoc = cambianome(mydoc, "/venue/geolocation", "Geolocation");
+    mydoc = aggiungifiglio(mydoc, "/geopolygon/geocoordinates", "MapPart");
+    mydoc = cambianome(mydoc, "/geopolygon/geocoordinates", "Geocoordinates");
+    mydoc = cambianome(mydoc, "/geocoverage", "ToRemove");
+    mydoc = cambianome(mydoc, "/geopolygon", "Geopolygon");
+
+
+    mydoc = aggiungipadre(mydoc, "/venue", "GalleryLuoghi", "MediaPart");
+    mydoc = aggiungifiglio(mydoc, "/venue/GalleryLuoghi", "MediaPart");
+    //mydoc=aggiungipadre(mydoc,"/venue","Gallery","MediaParts");
+
+    //category
+    GetChildValue(mydoc, "//venue/category");
+    mydoc = ConvertArrayOfStringToString(mydoc, "/venue", "category", "Category");
+
+    GetChildValue(mydoc, "//schedule/descriptiontext", true);
+
+    GetChildValue(mydoc, "//venue/venueOrVenueId");
+    mydoc = ConvertArrayOfStringToString(mydoc, "/venue", "venueOrVenueId", "VenueOrVenueId");
+
+    mydoc = cambianome(mydoc, "/lista", "ToRemove");
+
+    mydoc = ConvertStringTimeStampToDate(mydoc, "/startDateTime", true);
+    mydoc = ConvertStringTimeStampToDate(mydoc, "/endDateTime", true);
+    mydoc = rendinumeric(mydoc, "/MapPart/Latitude");
+    mydoc = rendinumeric(mydoc, "/MapPart/Longitude");
+    mydoc = cambianome(mydoc, "/venue", "Venue");
+
+    SpanXDocument(ToXDocument(mydoc).Root);
+
+}

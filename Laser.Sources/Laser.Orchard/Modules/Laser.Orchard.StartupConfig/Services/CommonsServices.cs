@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Orchard;
+using Orchard.ContentManagement;
+using Orchard.Autoroute.Models;
 
 namespace Laser.Orchard.StartupConfig.Services {
     public class CommonsServices : ICommonsServices {
@@ -22,6 +24,22 @@ namespace Laser.Orchard.StartupConfig.Services {
             } else {
                 return DevicesBrands.Unknown;
             }
+
+        }
+
+        public IContent GetContentByAlias(string displayAlias) {
+            IContent item = null;
+            var autoroutePart = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>()
+                .ForVersion(VersionOptions.Published)
+                .Where(w => w.DisplayAlias == displayAlias).List().SingleOrDefault();
+
+            if (autoroutePart != null && autoroutePart.ContentItem != null) {
+                item = autoroutePart.ContentItem;
+            } else {
+                new HttpException(404, ("Not found"));
+                return null;
+            }
+            return item;
 
         }
     }

@@ -61,7 +61,7 @@ namespace Laser.Orchard.StartupConfig.Drivers {
                 //        Debug.WriteLine(error.ErrorMessage);
                 //    }
                 //}
-                //  _notifier.Add(NotifyType.Error, T("Error on udpate google analytics"));
+                //  _notifier.Add(NotifyType.Error, T("Error on update google analytics"));
             }
             return Editor(part, shapeHelper);
         }

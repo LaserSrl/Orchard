@@ -155,9 +155,23 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="packages.config" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\smsScript.js" />
     <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.Config.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -174,6 +188,7 @@
     <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.StatusByExtId.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
     <None Include="Service References\SmsServiceReference\SmsWebService.disco" />
     <None Include="Service References\SmsServiceReference\configuration91.svcinfo" />
     <None Include="Service References\SmsServiceReference\configuration.svcinfo" />
@@ -209,9 +224,13 @@
     <Content Include="Views\EditorTemplates\Parts\SmsPlaceholders.Settings.cshtml" />
     <Content Include="Views\EditorTemplates\SmsPlaceholder.cshtml" />
     <Content Include="Views\Parts\SmsGateway_SummaryAdmin.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\MobilePushApproved_Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CountPanelController.cs" />
+    <Compile Include="Controllers\ExternalPushController.cs" />
     <Compile Include="Controllers\TaxonomiePushController.cs" />
     <Compile Include="Controllers\TransferDeliveryReportController.cs" />
     <Compile Include="Drivers\MobileContactPartDriver.cs" />
@@ -223,6 +242,7 @@
     <Compile Include="Handlers\MobileContactPartHandler.cs" />
     <Compile Include="Handlers\SmsGatewayPartHandler.cs" />
     <Compile Include="Handlers\SmsPlaceholdersSettingsHandler.cs" />
+    <Compile Include="Handlers\SmsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\UserPwdRecoveryPartHandler.cs" />
     <Compile Include="Models\MobileContactPart.cs" />
     <Compile Include="Models\SmsGatewayPart.cs" />
@@ -236,6 +256,7 @@
     </Compile>
     <Compile Include="Services\MissingSmsSettingsBanner.cs" />
     <Compile Include="Services\SmsCommunicationService.cs" />
+    <Compile Include="Services\SmsValidationService.cs" />
     <Compile Include="SMSGatewayMigration.cs" />
     <Compile Include="SmsMigrations.cs" />
     <Compile Include="Handlers\DeviceFilter.cs" />

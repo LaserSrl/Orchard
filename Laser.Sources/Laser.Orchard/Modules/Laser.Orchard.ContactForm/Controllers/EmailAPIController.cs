@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.ContactForm.Models;
 using Laser.Orchard.ContactForm.Services;
 using Laser.Orchard.ContactForm.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard.Localization;
 using System;
 using System.Web.Http;
@@ -8,6 +9,7 @@ using System.Web.Http;
 
 namespace Laser.Orchard.ContactForm.Controllers
 {
+    [WebApiKeyFilter(false)]
     public class EmailAPIController : ApiController
     {
 

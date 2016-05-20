@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentPicker.Fields;
@@ -20,7 +21,7 @@ using System.Linq;
 using System.Web.Http;
 
 namespace Laser.Orchard.StartupConfig.Controllers {
-
+    [WebApiKeyFilter(false)]
     public class UserController : ApiController {
         private readonly IAuthenticationService _authenticationService;
         private readonly ICsrfTokenHelper _csrfTokenHelper;

@@ -1,0 +1,21 @@
+msgctxt "~/Modules/SysCache/Module.txt"
+msgid "SysCache"
+msgstr "SysCache"
+
+msgctxt "~/Modules/SysCache/Module.txt"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+msgctxt "~/Modules/SysCache/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+#. "SysCache.Description"
+msgctxt "~/Modules/SysCache/Module.txt"
+msgid "Enables database caching using the SysCache provider."
+msgstr "Active le cache en base de données en utilisant le fournisseur SysCache."
+
+msgctxt "~/Modules/SysCache/Module.txt"
+msgid "Performance"
+msgstr "Performance"
+

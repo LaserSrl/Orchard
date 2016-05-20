@@ -16,12 +16,14 @@ using Orchard.Data;
 using Laser.Orchard.CommunicationGateway.Services;
 using Orchard.Tokens;
 using Laser.Orchard.Mobile.Handlers;
+using System.Collections;
 
 namespace Laser.Orchard.Mobile.Services {
 
     public interface ISmsServices : IDependency {
         //string SendSms(long[] TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
-        string SendSms(IList<SmsHQL> TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
+        //string SendSms(IList<SmsHQL> TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
+        string SendSms(IList TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
         Config GetConfig();
         string GetReportSmsStatus(string IdSMS);
         void Synchronize();
@@ -90,12 +92,61 @@ namespace Laser.Orchard.Mobile.Services {
             #endregion
         }
 
+        /// <summary>
+        /// Data una Hashtable frutto di una query HQL e di un AliasToEntityMap, cerca la componenete SmsContactPartRecord 
+        /// e ne estrae il numero di telefono (prefisso + numero).
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        private string GetPhoneNumber(Hashtable content)
+        {
+            string risultato = "";
+            SmsContactPartRecord contactRecord = null;
+            CommunicationSmsRecord smsRecord = null;
+
+            if (content.ContainsKey("SmsContactPartRecord"))
+            {
+                contactRecord = (content["SmsContactPartRecord"] as SmsContactPartRecord);
+                if ((contactRecord.SmsRecord != null) && (contactRecord.SmsRecord.Count > 0))
+                {
+                    smsRecord = contactRecord.SmsRecord[0];
+                    risultato = smsRecord.Prefix + smsRecord.Sms;
+                }
+            } 
+            // Send for test
+            else if (content.ContainsKey("SmsTestNumber")) {
+                risultato = content["SmsTestNumber"].ToString();
+            }
+
+            ////versione senza l'uso degli alias nella query HQL
+            //foreach (DictionaryEntry obj in content)
+            //{
+            //    if (obj.Value.GetType() == typeof(SmsContactPartRecord))
+            //    {
+            //        contactRecord = (obj.Value as SmsContactPartRecord);
+            //        if ((contactRecord.SmsRecord != null) && (contactRecord.SmsRecord.Count > 0))
+            //        {
+            //            smsRecord = contactRecord.SmsRecord[0];
+            //            risultato = smsRecord.Prefix + smsRecord.Sms;
+            //            break;
+            //        }
+            //    }
+            //}
+            return risultato;
+        }
+
         //public string SendSms(long[] telDestArr, string testoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false) {
-        public string SendSms(IList<SmsHQL> telDestArr, string testoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false) {
+        //public string SendSms(IList<SmsHQL> telDestArr, string testoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false) {
+        public string SendSms(IList telDestArr, string testoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false) {
             var bRet = "FALSE";
 
             ArrayOfLong numbers = new ArrayOfLong();
-            numbers.AddRange(telDestArr.Select(x => Convert.ToInt64(x.SmsPrefix + x.SmsNumber)).ToArray());
+            foreach (Hashtable tel in telDestArr)
+            {
+                numbers.Add(Convert.ToInt64(GetPhoneNumber(tel)));
+            }
+
+            //numbers.AddRange(telDestArr.Select(x => Convert.ToInt64(x.SmsPrefix + x.SmsNumber)).ToArray());
 
             try {
                 var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
@@ -164,45 +215,109 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         //private List<SmsServiceReference.PlaceHolderMessaggio> GetPlaceHolder(long[] telDestArr, string testoSMS) {
-        private List<SmsServiceReference.PlaceHolderMessaggio> GetPlaceHolder(IList<SmsHQL> telDestArr, string testoSMS) {
+        //private List<SmsServiceReference.PlaceHolderMessaggio> GetPlaceHolder(IList<SmsHQL> telDestArr, string testoSMS) {
+        private List<SmsServiceReference.PlaceHolderMessaggio> GetPlaceHolder(IList telDestArr, string testoSMS) {
             List<SmsServiceReference.PlaceHolderMessaggio> listaPH = null;
 
             var smsPlaceholdersSettingsPart = _orchardServices.WorkContext.CurrentSite.As<SmsPlaceholdersSettingsPart>();
 
             if (smsPlaceholdersSettingsPart.PlaceholdersList.Placeholders.Count() > 0 && testoSMS.Contains(PREFISSO_PLACE_HOLDER)) {
                 listaPH = new List<SmsServiceReference.PlaceHolderMessaggio>();
-                
-                foreach (SmsHQL dest in telDestArr) {
+
+                foreach (Hashtable dest in telDestArr)
+                {
                     SmsServiceReference.PlaceHolderMessaggio ph = new SmsServiceReference.PlaceHolderMessaggio();
-                    ph.Telefono = dest.SmsPrefix + dest.SmsNumber;
+                    ph.Telefono = GetPhoneNumber(dest);
 
                     List<SmsServiceReference.PHChiaveValore> listaCV = new List<SmsServiceReference.PHChiaveValore>();
 
-                    foreach(var settingsPH in smsPlaceholdersSettingsPart.PlaceholdersList.Placeholders) {
-
+                    foreach(var settingsPH in smsPlaceholdersSettingsPart.PlaceholdersList.Placeholders) 
+                    {
                         SmsServiceReference.PHChiaveValore ph_SettingsCV = new SmsServiceReference.PHChiaveValore();
-
                         ph_SettingsCV.Chiave = "[PH_" + settingsPH.Name + "]";
 
-                        // TODO: Si dovrà recuperare anche il valore dei Place Holder che non hanno value fisso - es.{ User.Name }
-                        // bisognerebbe passare il content item:
-                        //var part = _orchardServices.ContentManager.Get<SmsContactPart>(dest.Id);
-                        //var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } }; 
-                        ph_SettingsCV.Valore = _tokenizer.Replace(settingsPH.Value, null);
-                        //ph_SettingsCV.Valore = settingsPH.Value;
-
+                        if (settingsPH.Value.StartsWith("."))
+                        {
+                            ph_SettingsCV.Valore = GetCustomTokenValue(settingsPH.Value, dest);
+                        }
+                        else
+                        {
+                            ph_SettingsCV.Valore = _tokenizer.Replace(settingsPH.Value, null);
+                        }
                         listaCV.Add(ph_SettingsCV);
                     }
-
                     ph.ListaPHChiaveValore = listaCV.ToArray();
-
                     listaPH.Add(ph);
                 }
             }
-
             return listaPH;
         }
 
+        /// <summary>
+        /// Data una Hashtable di oggetti, la naviga in base al token e restituisce il valore corrispondente.
+        /// Il token deve essere nella forma: chiave_hashtable.proprietà1.proprietà2...
+        /// Il token può iniziare con il punto che verrà però ignorato.
+        /// Sono gestiti gli indexer numerici (es. classe.proprietà1[0]).
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private string GetCustomTokenValue(string token, Hashtable context)
+        {
+            string risultato = "";
+            char[] sepProprieta = { '.' };
+            char[] sepIndexer = { '[', ']' };
+            object obj = null;
+            string[] arrAux = null;
+            string indexer = "";
+            object[] arrIdx = { 0 };
+            string[] navigation = token.Split(sepProprieta, StringSplitOptions.RemoveEmptyEntries);
+
+            try
+            {
+                if (navigation.Length > 0)
+                {
+                    obj = context[navigation[0]];
+
+                    // scende nelle properties dell'oggetto
+                    for (int i = 1; i < navigation.Length; i++)
+                    {
+                        if (navigation[i].EndsWith("]"))
+                        {
+                            // gestione proprietà con indexer
+                            arrAux = navigation[i].Split(sepIndexer, StringSplitOptions.RemoveEmptyEntries);
+                            if (arrAux.Length == 2)
+                            {
+                                indexer = arrAux[0];
+                                arrIdx[0] = Convert.ToInt32(arrAux[1]);
+                                if (obj.GetType().GetProperty(indexer).GetIndexParameters().Length > 0)
+                                {
+                                    //indexer esplicito
+                                    obj = obj.GetType().GetProperty(indexer).GetValue(obj, arrIdx);
+                                }
+                                else
+                                {
+                                    //indexer implicito
+                                    obj = obj.GetType().GetProperty(indexer).GetValue(obj);
+                                    obj = obj.GetType().GetProperty("Item").GetValue(obj, arrIdx);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // gestione proprietà senza indexer
+                            obj = obj.GetType().GetProperty(navigation[i]).GetValue(obj);
+                        }
+                    }
+                    risultato = obj.ToString();
+                }
+            }
+            catch 
+            {
+                // ignora volutamente qualsiasi errore e restituisce una stringa vuota
+            }
+            return risultato;
+        }
 
         public Config GetConfig() {
             //Specify the binding to be used for the client.

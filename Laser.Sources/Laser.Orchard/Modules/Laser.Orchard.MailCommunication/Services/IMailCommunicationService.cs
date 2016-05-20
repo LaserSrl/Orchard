@@ -8,6 +8,7 @@ using Orchard.Data;
 using Orchard.Localization.Services;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Laser.Orchard.Services.MailCommunication {
@@ -15,7 +16,7 @@ namespace Laser.Orchard.Services.MailCommunication {
     public interface IMailCommunicationService : IDependency {
 
         // IHqlQuery IntegrateAdditionalConditions(IHqlQuery query = null, IContent content = null);
-        IList GetMailQueryResult(Int32[] ids, Int32? idlingua);
+        IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false);
     }
 
     public class DefaultMailCommunicationService : IMailCommunicationService {
@@ -31,7 +32,7 @@ namespace Laser.Orchard.Services.MailCommunication {
             _session = session;
         }
 
-        public IList GetMailQueryResult(Int32[] ids, Int32? idlingua) {// idcontent) {
+        public IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false) {// idcontent) {
             // dynamic content = _orchardServices.ContentManager.Get(idcontent);
             //  content = _orchardServices.ContentManager.Get(idcontent, VersionOptions.DraftRequired);
             IHqlQuery query;
@@ -50,19 +51,23 @@ namespace Laser.Orchard.Services.MailCommunication {
             // TODO: trovare un modo migliore per rimuovere la order by
             stringHQL = stringHQL.ToString().Replace("order by civ.Id", "");
 
-            var queryForEmail = "SELECT distinct cir.Id as Id, TitlePart.Title as Title, EmailRecord.Email as EmailAddress FROM " +
-                "Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
+            string queryForEmail = "";
+            if (countOnly) {
+                queryForEmail = "SELECT count(EmailRecord) as Tot";
+            }
+            else {
+                queryForEmail = "SELECT cir.Id as Id, TitlePart.Title as Title, EmailRecord.Email as EmailAddress";
+            }
+            queryForEmail += " FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
                 "civr.ContentItemRecord as cir join " +
                 "civr.TitlePartRecord as TitlePart join " +
                 "cir.EmailContactPartRecord as EmailPart join " +
                     "EmailPart.EmailRecord as EmailRecord " +
-                "WHERE civr.Published=1 AND EmailRecord.Validated AND civr.Id in (" + stringHQL + ")";
+                "WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.AccettatoUsoCommerciale AND civr.Id in (" + stringHQL + ")";
 
-            // Creo query ottimizzata per le performance
             var fullStatement = _session.For(null)
                 .CreateQuery(queryForEmail)
-                .SetCacheable(false)
-                ;
+                .SetCacheable(false);
             IList lista = fullStatement
                     .SetResultTransformer(Transformers.AliasToEntityMap)
                     .List();

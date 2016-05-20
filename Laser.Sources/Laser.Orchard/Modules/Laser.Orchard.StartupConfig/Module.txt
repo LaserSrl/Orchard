@@ -5,7 +5,7 @@ Website: http://www.laser-group.com
 Version: 1.8
 OrchardVersion: 1.8
 Description: Modulo per definizioni di base utili nella creazione di siti Laser
-Dependencies: Orchard.MediaLibrary, Orchard.Fields, Orchard.ContentPicker, Orchard.Localization, Orchard.Modules
+Dependencies: Orchard.MediaLibrary, Orchard.Fields, Orchard.ContentPicker, Orchard.Localization, Orchard.Modules, Orchard.Tokens
 Category: Administration
 Features:
     Laser.Orchard.StartupConfig.UriCultureSelector:
@@ -32,7 +32,7 @@ Features:
 		Name: Laser Workflow Extension
 		Description: Expose useful functions for workflows
 		Category: Workflows
-		Dependencies: Orchard.Workflows
+		Dependencies: Orchard.Workflows, Orchard.Forms, Laser.Orchard.StartupConfig
 	Laser.Orchard.StartupConfig.RelationshipsEnhancer:
 		Name: Laser Relationships Enhancer
 		Description: Create a part to obtain parents Content Items via Content Picker Field informations.
@@ -57,4 +57,4 @@ Features:
 		Name: Laser WebApi and Controller Protection
 		Description: Enable feature to protect WebApi Call
 		Category: Security
-		Dependencies: Orchard.OutputCache
+		Dependencies: Laser.Orchard.StartupConfig, Orchard.OutputCache

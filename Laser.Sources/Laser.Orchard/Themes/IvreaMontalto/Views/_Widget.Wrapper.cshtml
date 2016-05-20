@@ -1,0 +1,23 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Widgets.Models;
+@{
+    var widgetPart = ((IContent)Model.ContentItem).As<WidgetPart>();
+    if (widgetPart.Zone == "AsideSecond" || widgetPart.Zone == "AsideFirst") {
+        Model.Classes.Add("theme-widget");
+    }
+    var tag = Tag(Model, "article");
+}
+@if ((widgetPart.RenderTitle && HasText(widgetPart.Title)) || Model.Header != null) {
+    if ((widgetPart.RenderTitle && HasText(widgetPart.Title))) {
+        <h2>@widgetPart.Title</h2>
+        <hr class="linea" />
+    }
+    @Display(Model.Header)
+                      
+}
+
+@Display(Model.Child)
+
+@if (Model.Footer != null) {
+    @Display(Model.Footer)
+}

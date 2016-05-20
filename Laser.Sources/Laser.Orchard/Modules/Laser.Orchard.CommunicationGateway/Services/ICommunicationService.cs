@@ -1,14 +1,19 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.CommunicationGateway.ViewModels;
+using Laser.Orchard.CommunicationGateway.Utils;
 using Laser.Orchard.ShortLinks.Services;
 using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
+using NHibernate.Transform;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Records;
 using Orchard.ContentPicker.Fields;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Fields.Fields;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.MediaLibrary.Fields;
 using Orchard.Modules.Services;
 using Orchard.Mvc.Extensions;
@@ -20,24 +25,29 @@ using Orchard.Taxonomies.Models;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Text;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
 
     public interface ICommunicationService : IDependency {
 
         bool AdvertisingIsAvailable(Int32 id);
-
         string GetCampaignLink(string CampaignSource, ContentPart part);
-
         bool CampaignLinkExist(ContentPart part);
-
         void UserToContact(IUser UserContent);
-
         CommunicationContactPart GetContactFromUser(int iduser);
+        List<ContentItem> GetContactsFromMail(string mail);
+
+        List<ContentItem> GetContactsFromSms(string prefix, string sms);
+
+        ContentItem GetContactFromName(string name);
+
+        ContentItem GetContactFromId(int id);
 
         void Synchronize();
     }
@@ -48,18 +58,22 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly IContentExtensionsServices _contentExtensionsServices;
         private readonly IModuleService _moduleService;
         private readonly INotifier _notifier;
+        private readonly ISessionLocator _session;
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
 
-        public CommunicationService(IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices) {
+        public CommunicationService(IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
             _moduleService = moduleService;
             _notifier = notifier;
-            T = NullLocalizer.Instance;
             _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
+            _session = session;
+
+            T = NullLocalizer.Instance;
         }
 
         public bool AdvertisingIsAvailable(Int32 id) {
@@ -154,54 +168,121 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             return _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == iduser).List().FirstOrDefault();
         }
 
+        public List<ContentItem> GetContactsFromMail(string mail) {
+            string hql = @"SELECT cir.Id as Id
+                FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr
+                join civr.ContentItemRecord as cir
+                join cir.EmailContactPartRecord as EmailPart
+                join EmailPart.EmailRecord as EmailRecord 
+                WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.Email = :mail";
+
+            var elencoId = _session.For(null)
+                .CreateQuery(hql)
+                .SetParameter("mail", mail)
+                .List();
+            var contentQuery = _orchardServices.ContentManager.Query(VersionOptions.Latest)
+                .ForType("CommunicationContact")
+                .Where<CommunicationContactPartRecord>(x => elencoId.Contains(x.Id)).List();
+            return contentQuery.ToList();
+        }
+
+        public List<ContentItem> GetContactsFromSms(string prefix, string sms) {
+            string hql = @"SELECT cir.Id as Id
+                FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr
+                join civr.ContentItemRecord as cir
+                join cir.SmsContactPartRecord as SmsPart
+                join SmsPart.SmsRecord as SmsRecord 
+                WHERE civr.Published=1 AND SmsRecord.Prefix = :prefix AND SmsRecord.Sms = :sms";
+            var elencoId = _session.For(null)
+                .CreateQuery(hql)
+                .SetParameter("prefix", prefix)
+                .SetParameter("sms", sms)
+                .List();
+            var contentQuery = _orchardServices.ContentManager.Query(VersionOptions.Latest)
+                .ForType("CommunicationContact")
+                .Where<CommunicationContactPartRecord>(x => elencoId.Contains(x.Id)).List();
+            return contentQuery.ToList();
+        }
+
+        public ContentItem GetContactFromName(string name) {
+            var query = _orchardServices.ContentManager.Query(new string[] { "CommunicationContact" })
+                .Where<TitlePartRecord>(x => x.Title == name);
+            return query.List().FirstOrDefault();
+        }
+
+        public ContentItem GetContactFromId(int id) {
+            var query = _orchardServices.ContentManager.Query(new string[] { "CommunicationContact" })
+                .Where<CommunicationContactPartRecord>(x => x.Id == id);
+            return query.List().FirstOrDefault();
+        }
+
         /// <summary>
-        ///La parte sarebbe CommunicationAdvertisingPart ma nobn l'ho definita quindi passo una cosa generica (ContentPart)
+        ///La parte sarebbe CommunicationAdvertisingPart ma non l'ho definita quindi passo una cosa generica (ContentPart)
         /// </summary>
         /// <param name="part"></param>
         /// <returns></returns>
         public string GetCampaignLink(string CampaignSource, ContentPart generalpart) {
             //string CampaignSource = "email";
+            //Logger.Error("GetCampaignLink: 01");
             string shortlink = "";
             ContentPart part = (ContentPart)(((dynamic)generalpart).ContentItem.CommunicationAdvertisingPart);
-            string CampaignTerm = string.Join("+", part.ContentItem.As<TagsPart>().CurrentTags.ToArray()).ToLower();
+            //Logger.Error("GetCampaignLink: 01.01");
+            string CampaignTerm = "";
+            var tagPart = part.ContentItem.As<TagsPart>();
+            if (tagPart != null) {
+                CampaignTerm = string.Join("+", tagPart.CurrentTags.ToArray()).ToLower();
+            }
+            //Logger.Error("GetCampaignLink: 01.02");
             string CampaignMedium = CampaignSource;
             string CampaignContent = part.ContentItem.As<TitlePart>().Title.ToLower();
+            //Logger.Error("GetCampaignLink: 01.03");
             string CampaignName = "Flash";
+            //Logger.Error("GetCampaignLink: 02");
             try {
                 int idCampagna = ((int)((dynamic)part).CampaignId);
                 CampaignName = _orchardServices.ContentManager.Get(idCampagna).As<TitlePart>().Title;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 // cuomunicato non legato a campagna
             }
+            //Logger.Error("GetCampaignLink: 03");
             string link = "";
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
+                //Logger.Error("GetCampaignLink: 03.01");
                 link = (string)(((dynamic)part).UrlLinked.Value);
-            }
-            else {
+            } else {
+                //Logger.Error("GetCampaignLink: 03.02");
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
+                //Logger.Error("GetCampaignLink: 03.03");
                 if (pickerField != null && pickerField.ContentItems != null) {
+                    //Logger.Error("GetCampaignLink: 03.04");
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
+                    //Logger.Error("GetCampaignLink: 03.05");
                     if (firstItem != null) {
+                        //Logger.Error("GetCampaignLink: 03.06");
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                        //Logger.Error("GetCampaignLink: 03.07");
                         link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
-                    }
-                    else {
+                        //Logger.Error("GetCampaignLink: 03.08");
+                    } else {
                         return "";
                     }
-                }
-                else {
+                } else {
                     return "";
                 }
             }
+            //Logger.Error("GetCampaignLink: 04");
 
             string linkelaborated = ElaborateLink(link, CampaignSource, CampaignMedium, CampaignTerm, CampaignContent, CampaignName);
+            //Logger.Error("GetCampaignLink: 04.01");
             if (!string.IsNullOrEmpty(linkelaborated)) {
+                //Logger.Error("GetCampaignLink: 04.02");
                 shortlink = _shortLinksService.GetShortLink(linkelaborated);
+                //Logger.Error("GetCampaignLink: 04.03");
                 if (string.IsNullOrEmpty(shortlink)) {
                     throw new Exception("Url Creation Failed");
                 }
             }
+            //Logger.Error("GetCampaignLink: 05");
             return shortlink;
         }
 
@@ -212,8 +293,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
                 linkExist = true;
-            }
-            else {
+            } else {
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
 
                 if (pickerField != null) {
@@ -222,8 +302,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         if (firstItem != null) {
                             linkExist = true;
                         }
-                    }
-                    catch { }
+                    } catch { }
                 }
             }
 
@@ -258,24 +337,21 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             try {
                 var profpart = ((dynamic)UserContent).ProfilePart;
                 asProfilePart = true;
-            }
-            catch { asProfilePart = false; }
+            } catch { asProfilePart = false; }
             int iduser = UserContent.Id;
             var contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == iduser).List().FirstOrDefault();
             ContentItem Contact;
             if (contactsUsers == null) {
                 Contact = _orchardServices.ContentManager.New("CommunicationContact");
                 _orchardServices.ContentManager.Create(Contact);
-            }
-            else {
+            } else {
                 Contact = contactsUsers.ContentItem;
             }
             try {
                 if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != Contact.As<FavoriteCulturePart>().Culture_Id) {
                     Contact.As<FavoriteCulturePart>().Culture_Id = UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id;
                 }
-            }
-            catch (Exception ex) { // non si ha l'estensione per favorite culture
+            } catch (Exception ex) { // non si ha l'estensione per favorite culture
             }
 
             if (!string.IsNullOrEmpty(UserContent.Email) && UserContent.ContentItem.As<UserPart>().RegistrationStatus == UserStatus.Approved) {
@@ -287,8 +363,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         _repositoryCommunicationEmailRecord.Update(cmr);
                         _repositoryCommunicationEmailRecord.Flush();
                     }
-                }
-                else {
+                } else {
                     CommunicationEmailRecord newrec = new CommunicationEmailRecord();
                     newrec.Email = UserContent.Email;
                     newrec.EmailContactPartRecord_Id = Contact.Id;
@@ -324,8 +399,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                                     second.Add(tv);
                                 }
                                 myval = ((object)(second.Select(x => (dynamic)x).ToList()));
-                            }
-                            else
+                            } else
                                 myval = ((object)(((dynamic)cf).Value));
                     _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, Contact);
                 }

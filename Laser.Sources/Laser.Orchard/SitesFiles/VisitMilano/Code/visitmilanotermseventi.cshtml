@@ -1,0 +1,50 @@
+﻿@{
+    if (String.IsNullOrWhiteSpace(Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["termids"])) {
+        string[] categorieApp;
+        if (String.IsNullOrWhiteSpace(Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["lang"]) || Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["lang"].ToLower() == "it-it") {
+            categorieApp = new string[] { "63aba84a-d0d8-4108-9483-bedadb4154af", //1
+			 "e8900d16-29e4-4d0d-824f-7e321ed32fb6",//2
+             "82e6ddd3-3e5c-43fc-bd2a-a6dee69bd75b,d122a8bf-6131-4b42-a941-3020442eff66,414d5a62-34c7-4e39-8b2b-563bb4ea0a3e", //Moda e design
+			 "6d73fbd0-749d-4402-bceb-c9459259acc8,2545af9b-df46-4a57-afcd-232a3310e6ad,298b6a45-12d0-417d-a41b-9c7fe95432bc",//3
+			 "841e8dba-994b-48b2-94bd-a39850e29567,c0a69859-717f-4dd1-8087-345e1243ebbe,ce3aa7ec-7a54-4cfa-bfc9-1fe26cc6030b",//4
+			 "f01c45c5-666d-45b1-bf3b-c014803f267e,0810e999-9dd8-4700-b8db-8a7144bd5316,5406221d-3e9c-4e7c-b017-8087f475f35e,167e9ed5-d6e5-4415-8fdf-a810ce1f938a",//5
+			 "2d477e56-9cab-43c5-b9e7-a16ad71d2d74",//6
+			 "5313cbf8-1fab-4457-8949-7dac79669a45,815e05ff-b4dc-4f3a-bd92-bfb4b8e134a3,2c429855-4a44-46d1-a223-45878a230af7,2e5f4a5e-5245-4fba-b2bc-769bc818c2c7,47709d5b-9376-4ed0-bde6-6230d830f6a5"//7
+		      };
+        } else {
+            categorieApp = new string[] {
+						"7ef45737-35b5-4914-bbce-12d71c722257",
+						"5af2d718-7510-4aaf-a547-59f0a6e07815",
+						"762ee434-1fac-4f58-b973-f9c343bd8b45",
+						"f2c5f1ba-b369-495c-a851-22b18529f269",
+						"d3359992-4898-4c83-ba04-ed25ee9a9f92",
+						"7ebf8cfd-c197-4af8-86e6-c67e72771195",
+						"1c9943cb-a2a7-48d8-96a8-3e1038819e78",
+						"ca32d38f-b661-4771-b78b-cd8a039c02fa",
+						"08af2e49-5256-474d-9507-4ced14f0475e",
+						"2c810995-8079-4555-a66b-28777215d835",
+						"7af0bc35-07ee-465d-ac5c-596afdebe807",
+						"849305db-cdb2-4d90-af29-4235e28efec3",
+						"6401eb91-4b01-4c1b-ae39-d86ead413e9b",
+						"9b48e58b-2383-4625-b58e-496b968ff630",
+						"058eadb0-d90d-45cf-9c6a-723f7f4d68a6",
+						"4ab182b8-21c3-4ca3-bc95-4073db83b953",
+						"43ac4379-9221-4557-ab80-f6556abd8e6e",
+						"38b9d575-3453-4304-8392-079e9ab408f1",
+						"168977a4-22cc-40ec-b6cb-001665537719",
+						"c5314254-3762-42ab-a5ce-e0c4637b8486",
+						"db413571-3b29-4de1-985b-0326773ba7c9",
+						"9d03493f-2788-402a-ba74-df14c00e2fb1",
+						"aca2a3bb-247a-4b6e-a78d-80fed2bb28a3"
+			};
+        }
+    @Raw(String.Join(",", categorieApp));
+    } else {
+        var termIds = Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["termids"];
+        var termIdsMilanoCreativa = "4ab182b8-21c3-4ca3-bc95-4073db83b953,414d5a62-34c7-4e39-8b2b-563bb4ea0a3e,d122a8bf-6131-4b42-a941-3020442eff66,82e6ddd3-3e5c-43fc-bd2a-a6dee69bd75";
+        if (termIds == "414d5a62-34c7-4e39-8b2b-563bb4ea0a3e,d122a8bf-6131-4b42-a941-3020442eff66") {
+            termIds = termIdsMilanoCreativa;
+        }
+    @Raw(termIds);
+    }
+}

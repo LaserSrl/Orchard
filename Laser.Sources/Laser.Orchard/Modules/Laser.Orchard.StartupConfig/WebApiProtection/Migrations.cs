@@ -18,6 +18,7 @@ using Orchard.Localization;
 
 namespace Laser.Orchard.StartupConfig.WebApiProtection {
 
+    [OrchardFeature("Laser.Orchard.StartupConfig.WebApiProtection")]
     public class Migration : DataMigrationImpl, IFeatureEventHandler {
         private readonly IOrchardServices _services;
         private readonly ShellSettings _settings;
@@ -59,7 +60,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection {
                 });
                 appList.ExternalApplications = apps;
                 settings.ExternalApplicationList = appList;
-                _notifier.Information(T("A default app named \"{0}\" has benn created. Its Api Key is {1}.", name, api));
+                _notifier.Information(T("A default app named \"{0}\" has been created. Its Api Key is {1}.", name, api));
             }
         }
 

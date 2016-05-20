@@ -14,4 +14,9 @@
     <Place Parts_Common_Metadata="-"/>
   </Match>
 -->
+  <Match DisplayType="SummaryAdmin">
+    <Place Fields_MediaLibraryPicker_SummaryAdmin="DetailInfos:after"/>
+    <Place Fields_MediaLibraryPicker_SummaryAdmin__MapPart-MapSourceFile="-" />
+    <Place Parts_Localization_ContentTranslations_SummaryAdmin="DetailInfos:before"/>
+  </Match>
 </Placement>

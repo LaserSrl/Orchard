@@ -8,4 +8,4 @@ Description: Description for the module
 Features:
     Laser.Orchard.DevTools:
         Description: Description for feature Laser.Orchard.DevTools.
-		Dependencies: Laser.Orchard.StartupConfig
+		Dependencies: Laser.Orchard.StartupConfig,Orchard.Caching

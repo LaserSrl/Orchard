@@ -1,0 +1,731 @@
+#. "Orchard.Fields.Category"
+msgctxt "~/Modules/Orchard.Fields/Module.txt"
+msgid "Fields"
+msgstr "Campi"
+
+msgctxt "~/Modules/Orchard.Fields/Module.txt"
+msgid "Antoine Griffard, S�bastien Ros"
+msgstr "Antoine Griffard, Sébastien Ros"
+
+msgctxt "~/Modules/Orchard.Fields/Module.txt"
+msgid "http://orchardfields.codeplex.com"
+msgstr "http://orchardfields.codeplex.com"
+
+msgctxt "~/Modules/Orchard.Fields/Module.txt"
+msgid "Some content fields"
+msgstr "Alcuni campi di contenuto"
+
+msgctxt "~/Modules/Orchard.Fields/Module.txt"
+msgid "Contains the following fields: Input, Boolean, DateTime, Numeric, Link, Enumeration"
+msgstr "Contiene i seguenti campi: Input, Sì/No, Data e Ora, numerico, Collegamento, Enumerazione"
+
+#: "Orchard.Fields.Drivers.BooleanFieldDriver"
+msgctxt "Orchard.Fields.Drivers.BooleanFieldDriver"
+msgid "The field {0} is mandatory."
+msgstr "Il campo {0} è obbligatorio."
+
+#: "Orchard.Fields.Drivers.BooleanFieldDriver"
+msgctxt "Orchard.Fields.Drivers.BooleanFieldDriver"
+msgid "Value"
+msgstr "Valore"
+
+#: "Orchard.Fields.Drivers.BooleanFieldDriver"
+msgctxt "Orchard.Fields.Drivers.BooleanFieldDriver"
+msgid "The boolean value of the field."
+msgstr "Il valore booleano del campo."
+
+#: "Orchard.Fields.Drivers.DateTimeFieldDriver"
+msgctxt "Orchard.Fields.Drivers.DateTimeFieldDriver"
+msgid "{0} is required."
+msgstr "{0} è richiesto."
+
+#: "Orchard.Fields.Drivers.DateTimeFieldDriver"
+msgctxt "Orchard.Fields.Drivers.DateTimeFieldDriver"
+msgid "{0} could not be parsed as a valid date and time."
+msgstr "{0} non è una data o un ora valida."
+
+#: "Orchard.Fields.Drivers.DateTimeFieldDriver"
+msgctxt "Orchard.Fields.Drivers.DateTimeFieldDriver"
+msgid "Value"
+msgstr "Valore"
+
+#: "Orchard.Fields.Drivers.DateTimeFieldDriver"
+msgctxt "Orchard.Fields.Drivers.DateTimeFieldDriver"
+msgid "The date and time value of the field."
+msgstr "Il valore del campo data e ora."
+
+#: "Orchard.Fields.Drivers.EnumerationFieldDriver"
+msgctxt "Orchard.Fields.Drivers.EnumerationFieldDriver"
+msgid "The field {0} is mandatory"
+msgstr "Il campo {0} è obbligatorio"
+
+#: "Orchard.Fields.Drivers.EnumerationFieldDriver"
+msgctxt "Orchard.Fields.Drivers.EnumerationFieldDriver"
+msgid "Value"
+msgstr "Valore"
+
+#: "Orchard.Fields.Drivers.EnumerationFieldDriver"
+msgctxt "Orchard.Fields.Drivers.EnumerationFieldDriver"
+msgid "The selected values of the field."
+msgstr "I valori del campo selezionati."
+
+#: "Orchard.Fields.Drivers.InputFieldDriver"
+msgctxt "Orchard.Fields.Drivers.InputFieldDriver"
+msgid "The field {0} is mandatory."
+msgstr "Il campo {0} è obbligatorio."
+
+#: "Orchard.Fields.Drivers.InputFieldDriver"
+msgctxt "Orchard.Fields.Drivers.InputFieldDriver"
+msgid "Value"
+msgstr "Valore"
+
+#: "Orchard.Fields.Drivers.InputFieldDriver"
+msgctxt "Orchard.Fields.Drivers.InputFieldDriver"
+msgid "The value of the field."
+msgstr "Il valore del campo."
+
+#: "Orchard.Fields.Drivers.LinkFieldDriver"
+msgctxt "Orchard.Fields.Drivers.LinkFieldDriver"
+msgid "Url is required for {0}"
+msgstr "L'indirizzo è richiesto per {0}"
+
+#: "Orchard.Fields.Drivers.LinkFieldDriver"
+msgctxt "Orchard.Fields.Drivers.LinkFieldDriver"
+msgid "{0} is an invalid url."
+msgstr "{0} non è un indirizzo valido."
+
+#: "Orchard.Fields.Drivers.LinkFieldDriver"
+msgctxt "Orchard.Fields.Drivers.LinkFieldDriver"
+msgid "Text is required for {0}."
+msgstr "Testo è richiesto per {0}."
+
+#: "Orchard.Fields.Drivers.LinkFieldDriver"
+msgctxt "Orchard.Fields.Drivers.LinkFieldDriver"
+msgid "Text"
+msgstr "Testo"
+
+#: "Orchard.Fields.Drivers.LinkFieldDriver"
+msgctxt "Orchard.Fields.Drivers.LinkFieldDriver"
+msgid "The text of the link."
+msgstr "Il testo del collegamento."
+
+#: "Orchard.Fields.Drivers.LinkFieldDriver"
+msgctxt "Orchard.Fields.Drivers.LinkFieldDriver"
+msgid "Url"
+msgstr "Url"
+
+#: "Orchard.Fields.Drivers.LinkFieldDriver"
+msgctxt "Orchard.Fields.Drivers.LinkFieldDriver"
+msgid "The url of the link."
+msgstr "L'indirizzo del collegamento."
+
+#: "Orchard.Fields.Drivers.NumericFieldDriver"
+msgctxt "Orchard.Fields.Drivers.NumericFieldDriver"
+msgid "The field {0} is mandatory."
+msgstr "Il campo {0} è obbligatorio."
+
+#: "Orchard.Fields.Drivers.NumericFieldDriver"
+msgctxt "Orchard.Fields.Drivers.NumericFieldDriver"
+msgid "{0} is an invalid number"
+msgstr "{0} è un numero non valido"
+
+#: "Orchard.Fields.Drivers.NumericFieldDriver"
+msgctxt "Orchard.Fields.Drivers.NumericFieldDriver"
+msgid "The value must be greater than {0}"
+msgstr "Il valore deve essere maggiore di {0}"
+
+#: "Orchard.Fields.Drivers.NumericFieldDriver"
+msgctxt "Orchard.Fields.Drivers.NumericFieldDriver"
+msgid "The value must be less than {0}"
+msgstr "Il valore deve essere inferiore a {0}"
+
+#: "Orchard.Fields.Drivers.NumericFieldDriver"
+msgctxt "Orchard.Fields.Drivers.NumericFieldDriver"
+msgid "The field {0} must be an integer"
+msgstr "Il campo {0} deve essere un numero intero"
+
+#: "Orchard.Fields.Drivers.NumericFieldDriver"
+msgctxt "Orchard.Fields.Drivers.NumericFieldDriver"
+msgid "Invalid number of digits for {0}, max allowed: {1}"
+msgstr "Numero di cifre non valido per {0}, massimo consentito: {1}"
+
+#: "Orchard.Fields.Drivers.NumericFieldDriver"
+msgctxt "Orchard.Fields.Drivers.NumericFieldDriver"
+msgid "Value"
+msgstr "Valore"
+
+#: "Orchard.Fields.Drivers.NumericFieldDriver"
+msgctxt "Orchard.Fields.Drivers.NumericFieldDriver"
+msgid "The value of the field."
+msgstr "Il valore del campo."
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "Link Field"
+msgstr "Campo link"
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "Tokens for Link Fields"
+msgstr "Token per i campi Collegamento"
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "Text"
+msgstr "Testo"
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "The text of the link."
+msgstr "Il testo del collegamento."
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "Url"
+msgstr "Url"
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "The url of the link."
+msgstr "L'indirizzo del collegamento."
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "Target"
+msgstr "Destinazione"
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "The target of the link."
+msgstr "La destinazione del collegamento."
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "Date Time Field"
+msgstr "Campo Data Ora"
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "Tokens for Date Time Fields"
+msgstr "Token per i campi Data e Ora"
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "Date"
+msgstr "Data"
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "The date only."
+msgstr "Solo la data."
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "Time"
+msgstr "Orario"
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "The time only."
+msgstr "Solo l'ora."
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "Date Time"
+msgstr "Data e Ora"
+
+#: "Orchard.Fields.Tokens.FieldTokens"
+msgctxt "Orchard.Fields.Tokens.FieldTokens"
+msgid "The date and time."
+msgstr "La data e l'ora."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "Add a neutral option"
+msgstr "Aggiungi un'opzione neutra"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "Check to allow the user to enter a neutral value, like 'Maybe'."
+msgstr "Seleziona per permettere all'utente di inserire un valore neutrale, ad esempio 'Forse'."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "Neutral option text"
+msgstr "Testo per l'opzione neutrale"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "The text displayed when the field is not selected."
+msgstr "Il testo visualizzato quando il campo non è selezionato."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "On Label"
+msgstr "Etichetta se attivato"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "The text displayed when the field is selected."
+msgstr "Il testo visualizzato quando il campo è selezionato."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "Off Label"
+msgstr "Etichetta se disattivo"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "The text displayed when the field is unselected."
+msgstr "Il testo visualizzato quando il campo è deselezionato."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "Selection mode"
+msgstr "Modalità di selezione"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "Checkbox"
+msgstr "Casella di controllo"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "Radio buttons"
+msgstr "Pulsanti di opzione"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "Dropdown list"
+msgstr "Elenco a discesa"
+
+#. "When Checkbox is selected, the label for 'on' will be used."
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "When Checkbox is selected, the label for 'on' will be used."
+msgstr "Quando Casella di controllo è selezionata, verrà utilizzata l'\"Etichetta se attivato\"."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "Default value"
+msgstr "Valore predefinito"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "Neutral"
+msgstr "Neutrale"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "True"
+msgstr "Vero"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "False"
+msgstr "Falso"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "Help text"
+msgstr "Testo della guida"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/BooleanFieldSettings.cshtml"
+msgid "The help text is written under the field when the user is selecting a value."
+msgstr "Il testo della guida è scritto sotto il campo quando l'utente inserisce un valore."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgid "Display options"
+msgstr "Opzioni di visualizzazione"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgid "Date and time"
+msgstr "Data e ora"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgid "Date only"
+msgstr "Solo data"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgid "Time only"
+msgstr "Solo orario"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgid "Required"
+msgstr "Richiesto"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgid "Check if the field is required."
+msgstr "Seleziona se il campo è richiesto."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgid "Help text"
+msgstr "Testo della guida"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/DateTimeFieldSettings.cshtml"
+msgid "The help text is written under the field when the user is entering a value."
+msgstr "Il testo della guida è scritto sotto il campo quando l'utente inserisce un valore."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgid "An option is required"
+msgstr "È necessario selezionare un opzione"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgid "Check to ensure the user is providing an option for this field."
+msgstr "Seleziona per obbligare l'utente a fornire una opzione per questo campo."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgid "Options"
+msgstr "Opzioni"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgid "Enter an option per line."
+msgstr "Inserire un'opzione per riga."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgid "List mode"
+msgstr "Modalità lista"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgid "Dropdown list"
+msgstr "Elenco a discesa"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgid "Radio button list"
+msgstr "Lista pulsanti di elenco"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgid "Listbox"
+msgstr "Casella di riepilogo"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgid "Checkbox"
+msgstr "Casella di controllo"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgid "Help text"
+msgstr "Testo della guida"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/EnumerationFieldSettings.cshtml"
+msgid "The help text is written under the field when users are selecting an option."
+msgstr "Il testo della guida è scritto sotto il campo quando l'utente inserisce un valore."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Input type"
+msgstr "Tipo di input"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Text"
+msgstr "Testo"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Url"
+msgstr "Url"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Tel"
+msgstr "Tel"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Email"
+msgstr "Posta elettronica"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Defines what format should be applied to the text."
+msgstr "Definisce il formato da applicare al testo."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Pattern"
+msgstr "Modello"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Declaring what pattern should be used for validating a field’s value, in the form of a regular expression. (optional)"
+msgstr "Modello da utilizzare per convalidare il valore del campo, in forma di espressione regolare. (Opzionale)"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Title"
+msgstr "Titolo"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "The title attribute of the field. (optional)"
+msgstr "L'attributo title del campo. (Opzionale)"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Required"
+msgstr "Richiesto"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Check if the field is required."
+msgstr "Seleziona se il campo è richiesto."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Autofocus"
+msgstr "Selezione automatica"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Whether focus should be set to this field as soon as it has loaded."
+msgstr "Specifica se questo campo deve essere selezionato appena terminato di caricare la pagina."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Automatic completion"
+msgstr "Completamento automatico"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "An option to turn off automatic form completion of values. Leave unchecked to disable automatic completion."
+msgstr "Questa opzione disattiva il completamento automatico. Lasciare deselezionata per disattivare il completamento automatico."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Watermark"
+msgstr "Filigrana"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "A hint to display when the input is empty. (optional)"
+msgstr "Un suggerimento da visualizzare quando non è stato inserito alcun valore. (Opzionale)"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Editor css class"
+msgstr "Classe CSS dell'editor"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "The css class to use for the editor. (optional)"
+msgstr "La classe CSS da utilizzare per l'editor. (Opzionale)"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Maximum length"
+msgstr "Lunghezza massima"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "The maximum number of chars allowed. (optional)"
+msgstr "Il numero massimo di caratteri consentiti. (opzionale)"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "Help text"
+msgstr "Testo della guida"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/InputFieldSettings.cshtml"
+msgid "The help text is written under the field when the user is entering a value."
+msgstr "Il testo della guida è scritto sotto il campo quando l'utente inserisce un valore."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Target"
+msgstr "Destinazione"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "No target"
+msgstr "Non impostato"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Open link in new window"
+msgstr "Apri collegamento in una nuova finestra"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Open link in the parent frameset"
+msgstr "Apri collegamento nel 'frameset' in cui è inserito"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Open link in the full body of the window"
+msgstr "Apri il collegamento nel corpo della finestra"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Allow the user to choose"
+msgstr "Permetti di scegliere all'utente"
+
+#. "Required"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Required"
+msgstr "Richiesto"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Whether the url is required."
+msgstr "Indica se l'indirizzo è richiesto."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Link text"
+msgstr "Testo del collegamento"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Optional"
+msgstr "Opzionale"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Static"
+msgstr "Statico"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Url"
+msgstr "Url"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Define how the title field should behave in the editor."
+msgstr "Definisce come il titolo di campo si comporta nell'editor."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "The title to display for the link"
+msgstr "Il titolo da visualizzare per il collegamento"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "Help text"
+msgstr "Testo della guida"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/LinkFieldSettings.cshtml"
+msgid "The help text is written under the field."
+msgstr "Il testo della guida è scritto sotto il campo."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgid "Required"
+msgstr "Richiesto"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgid "Check if the field is required."
+msgstr "Seleziona se il campo è richiesto."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgid "Scale"
+msgstr "Scala"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgid "The number of digits to the right of the decimal. Put 0 for integers."
+msgstr "Il numero di cifre a destra della virgola. Inserire 0 per numeri interi."
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgid "Minimum"
+msgstr "Minimo"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgid "The minimum value allowed. (optional)"
+msgstr "Il valore minimo consentito. (opzionale)"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgid "Maximum"
+msgstr "Massimo"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgid "The maximum value allowed. (optional)"
+msgstr "Il valore massimo consentito. (opzionale)"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgid "Help text"
+msgstr "Testo della guida"
+
+#: "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/DefinitionTemplates/NumericFieldSettings.cshtml"
+msgid "The help text is written under the field when the user is entering a value."
+msgstr "Il testo della guida è scritto sotto il campo quando l'utente inserisce un valore."
+
+#: "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Enumeration.Edit.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Enumeration.Edit.cshtml"
+msgid "Select an option"
+msgstr "Seleziona un'opzione"
+
+#: "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Enumeration.Edit.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Enumeration.Edit.cshtml"
+msgid "unset"
+msgstr "non specificato"
+
+#: "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Link.Edit.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Link.Edit.cshtml"
+msgid "Url"
+msgstr "Url"
+
+#: "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Link.Edit.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Link.Edit.cshtml"
+msgid "A valid url, i.e. http://orchardproject.net, /content/file.pdf, ..."
+msgstr "Un url valido, cioè http://orchardproject.net, /content/file.pdf,..."
+
+#: "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Link.Edit.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Link.Edit.cshtml"
+msgid "Text"
+msgstr "Testo"
+
+#: "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Link.Edit.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Link.Edit.cshtml"
+msgid "The text of the link. If left empty, the url will be used instead."
+msgstr "Il testo del collegamento. Se lasciato vuoto verrà usato l'indirizzo."
+
+#: "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Link.Edit.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Link.Edit.cshtml"
+msgid "Target"
+msgstr "Destinazione"
+
+#: "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Link.Edit.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/EditorTemplates/Fields/Link.Edit.cshtml"
+msgid "A valid HTML target attribute value. e.g., _blank, _parent, _top, or an anchor. "
+msgstr "Un valore valido come attributo di destinazione HTML. ad esempio, _blank, _parent, _top o un ancora. "
+
+#: "~/Modules/Orchard.Fields/Views/Fields/Enumeration.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/Fields/Enumeration.cshtml"
+msgid "{0}"
+msgstr "{0}"
+
+#: "~/Modules/Orchard.Fields/Views/Fields/Enumeration.cshtml"
+msgctxt "~/Modules/Orchard.Fields/Views/Fields/Enumeration.cshtml"
+msgid ", "
+msgstr ","
+

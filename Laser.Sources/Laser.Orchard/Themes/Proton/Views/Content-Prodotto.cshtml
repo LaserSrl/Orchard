@@ -77,7 +77,8 @@
     <!-- End Portfolio Detail Description -->
 
     <div class="clearfix"></div>
-    @if (Model.ContentItem.Prodotto.Video != null && Model.ContentItem.Prodotto.Video.Ids.Length > 0) {
+    @try {
+        if (Model.ContentItem.Prodotto.Video != null && Model.ContentItem.Prodotto.Video.Ids.Length > 0) {
         <section class="span12 portfolio-related">
             <h3 class="section-title">@Model.ContentItem.Prodotto.Video.ContentItems[0].TitlePart.Title</h3>
             @{    string link = Model.ContentItem.Prodotto.Video.ContentItems[0].YoutubeVideo.VideoUrl.Value.ToString();
@@ -91,8 +92,8 @@
             }
             <iframe width="560" height="315" src="@link" frameborder="0" allowfullscreen></iframe>
         </section>
-    }
-
+        }
+    } catch { }
 @*<!-- Related Portfolio -->
     <section class="span12 portfolio-related">
 

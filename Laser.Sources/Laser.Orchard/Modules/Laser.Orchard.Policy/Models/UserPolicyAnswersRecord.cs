@@ -12,4 +12,13 @@ namespace Laser.Orchard.Policy.Models {
         public virtual DateTime AnswerDate { get; set; }
         public virtual bool Accepted { get; set; }
     }
+
+    public class UserPolicyAnswersHistoryRecord {
+        public virtual int Id { get; set; }
+        public virtual UserPolicyPartRecord UserPolicyPartRecord { get; set; }
+        public virtual PolicyTextInfoPartRecord PolicyTextInfoPartRecord { get; set; }
+        public virtual DateTime AnswerDate { get; set; }
+        public virtual DateTime EndValidity { get; set; }
+        public virtual bool Accepted { get; set; }
+    }
 }

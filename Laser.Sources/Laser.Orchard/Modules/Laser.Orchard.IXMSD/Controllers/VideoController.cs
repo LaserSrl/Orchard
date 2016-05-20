@@ -2,6 +2,7 @@
 using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
@@ -19,7 +20,7 @@ using System.Web;
 using System.Web.Http;
 
 namespace Laser.Orchard.IXMSD.Controllers {
-
+    [WebApiKeyFilter(false)]
     public class VideoController : ApiController {
         private readonly IOrchardServices _orchardServices;
         private readonly IUtilsServices _utilsServices;
