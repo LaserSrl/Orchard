@@ -23,6 +23,7 @@
         {
         <label for="CultureName">@T("Language")</label>
         }
-       @Html.DropDownList("CultureName", new SelectList(availableCultureswithNames, "Key", "Value", Model.UserCulture.CultureCode), new { onchange = "submit()" })
+       @* @Html.DropDownList("CultureName", new SelectList(availableCultureswithNames, "Key", "Value", Model.UserCulture.CultureCode), new { onchange = "submit()" }) *@
+        @Html.DropDownList("CultureName", new SelectList(availableCultureswithNames, "Key", "Value", Model.UserCulture == null ? WorkContext.CurrentSite.SiteCulture : Model.UserCulture.CultureCode), new { onchange = "submit()" })
     </div>
 }
