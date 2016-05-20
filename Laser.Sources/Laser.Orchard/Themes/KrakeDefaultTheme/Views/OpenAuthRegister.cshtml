@@ -5,15 +5,15 @@
 
 <div class="row">
     @using (Html.BeginFormAntiForgeryPost()) {
-    <div class="col-xs-12 col-sm-6 col-padding-low">
+    <div class="col-xs-12 col-sm-12 col-padding-low">
         <div class="no-margin">
             <h3>@Html.TitleForPage(T("Create a New Account").ToString())</h3>
             <p>@T("Account informations")</p>
             @if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(externalLoginData)) {
                 <p>@T("This user account will be linked to <b>{0}</b> when you login.", userName)</p>
             }
-            <div class="space-20"></div>
         </div>
+        
 
         <div class="space-20"></div>
         
@@ -28,28 +28,13 @@
         <div class="space-20"></div>
         @Html.Password("confirmPassword", "", new { id = "form-confirmPassword", autofocus = "autofocus", placeholder = T("Confirm password") + "...", @class = "form-confirmPassword input-text form-control" })
         @Html.ValidationMessage("confirmPassword")
-        <div class="space-20"></div>
-			
-        <br />
+
+        <hr>
+
+         @if (Model.UserProfile != null) { // if UserProfile && ExtendedRegistration are enabled, it shows all user parts/fields
+            @Display(Model.UserProfile)
+        }
     </div>
-	<div class="col-xs-12 col-sm-6 col-padding-low">
-		<h3 class="no-margin">@T("Privacy Information")</h3>
-		<p>@T("Accept privacy")</p>
-		<div class="space-20"></div>
-		<p>@T("You've successfully setup your Orchard Site and this is the homepage of your new site. Here are a few things you can look at to get familiar with the application. Once you feel confident you don't need this anymore, you can remove it by going into editing mode and replacing it with whatever you want.")</p>
-		<div class="space-20"></div>
-		<div class="col-xs-3 col-sm-3">
-		</div>
-		<div class="col-xs-7 text-center">
-			<div class='checkbox checkbox-slider--b checkbox-slider-md'>
-				<label>
-					<input type="checkbox" onclick="colorCheckbox();" checked><span class="accepted">@T("I Agree")</span>
-				</label>
-			</div>
-		</div>
-		<div class='space-40'></div>
-		<input type="submit" class="submit" value="@T("Register")">
-	</div>
    }
 </div>
 
