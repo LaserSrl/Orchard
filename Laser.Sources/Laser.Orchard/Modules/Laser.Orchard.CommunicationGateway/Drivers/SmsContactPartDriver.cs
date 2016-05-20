@@ -25,10 +25,12 @@
 using AutoMapper;
 using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.ViewModels;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Data;
 using Orchard.Localization;
+using Orchard.UI.Admin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,10 +44,39 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         }
         private readonly IRepository<CommunicationSmsRecord> _repoSms;
         private readonly ITransactionManager _transaction;
-        public SmsContactPartDriver(IRepository<CommunicationSmsRecord> repoSms, ITransactionManager transaction) {
+        private readonly IOrchardServices _orchardServices;
+
+        public SmsContactPartDriver(IRepository<CommunicationSmsRecord> repoSms, ITransactionManager transaction, IOrchardServices orchardServices) {
             _repoSms = repoSms;
             T = NullLocalizer.Instance;
             _transaction = transaction;
+            _orchardServices = orchardServices;
+        }
+
+        protected override DriverResult Display(SmsContactPart part, string displayType, dynamic shapeHelper) {
+            //Determine if we're on an admin page
+            bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            if (isAdmin) {
+                if (displayType == "Detail") {
+                    Mapper.CreateMap<CommunicationSmsRecord, View_SmsVM_element>();
+                    View_SmsVM viewModel = new View_SmsVM();
+                    View_SmsVM_element vm = new View_SmsVM_element();
+                    if (part.SmsEntries.Value != null) {
+                        List<CommunicationSmsRecord> oldviewModel = part.SmsEntries.Value.ToList();
+                        foreach (CommunicationSmsRecord cm in oldviewModel) {
+                            vm = new View_SmsVM_element();
+                            Mapper.Map(cm, vm);
+                            viewModel.Elenco.Add(vm);
+                        }
+                    }
+                    return ContentShape("Parts_SmsContact",
+                        () => shapeHelper.Parts_SmsContact(Elenco: viewModel.Elenco));
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
         }
 
         protected override DriverResult Editor(SmsContactPart part, dynamic shapeHelper) {

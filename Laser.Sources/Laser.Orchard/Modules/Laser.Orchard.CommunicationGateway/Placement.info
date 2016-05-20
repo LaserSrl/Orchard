@@ -15,12 +15,23 @@
     <Place Fields_Link_Edit__CommunicationAdvertisingPart-UrlLinked="Content:1.1.3;Wrapper=switchurl"/>
            
     <Place Parts_CommunicationAdvertising_Edit="Content:1"/>
-  </Match>  
-  <Place Parts_CommunicationContact_Edit="Content:after" />"
+  </Match>
+  <Match ContentType="CommunicationContact">
+    <Match DisplayType="Detail">
+      <Place Parts_FavoriteCulturePart="Content:3"/>
+      <Place Parts_EmailContact="Content:4"/>
+      <Place Parts_SmsContact="Content:4"/>
+      <Place Parts_CommunicationContact="Content:after"/>
+      <Place Parts_TermPart="Content:6" Parts_TermPart_Localized="Content:6" />
+      <Place Fields_Enumeration__CommunicationContact__ProfilePart="Content:7"/>
+      <Place Fields_TaxonomyField__CommunicationContact__ProfilePart="Content:8"/>
+    </Match>
+  </Match>
   <Place Fields_MediaLibraryPicker_Edit="Content:2"/>
   <Place Parts_Tags_Edit="Content:3"/>
   <Place Parts_EmailContact_Edit="Content:4"/>
   <Place Parts_SmsContact_Edit="Content:4.1"/>
   <Place Parts_Advertising_Edit="Content:4.2"/>
   <Place Parts_QueryPicker_Edit="Content:5"/>
+  <Place Parts_CommunicationContact_Edit="Content:after" />"
 </Placement>

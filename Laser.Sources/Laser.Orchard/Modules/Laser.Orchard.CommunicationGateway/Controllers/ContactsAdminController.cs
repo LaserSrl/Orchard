@@ -124,6 +124,10 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 } else {
                     content = _contentManager.Get(id);
                 }
+                // verifica che il contact non sia legato a un utente
+                if (content.As<CommunicationContactPart>().UserIdentifier != 0) {
+                    return new HttpUnauthorizedResult();
+                }
             }
 
             var model = _contentManager.UpdateEditor(content, this);
@@ -437,6 +441,22 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _notifier.Error(T("File does not exist. It should have been removed by someone else."));
             }
             return RedirectToAction("ImportedFilesLogs");
+        }
+
+        [Admin]
+        public ActionResult View(int id) {
+            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+                return new HttpUnauthorizedResult();
+            object model;
+            if (id == 0) {
+                var newContent = _contentManager.New(contentType);
+                model = _contentManager.BuildDisplay(newContent, "Detail");
+            } else {
+                model = _contentManager.BuildDisplay(_contentManager.Get(id, VersionOptions.Latest), "Detail");
+            }
+            return View((object)model);
+
+            //return RedirectToAction("Edit", new { id = contactId });
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

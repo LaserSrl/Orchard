@@ -1,0 +1,14 @@
+﻿@*@model Laser.Orchard.CommunicationGateway.ViewModels.View_EmailVM*@
+<fieldset>
+    <legend> @T("Email")</legend>
+        <div id="MasterEmail">
+            <ul style="list-style-type:disc;list-style-position: inside">
+                @foreach (var email in Model.Elenco) {
+                    <li>@email.Email<br />
+                        &nbsp;&nbsp; (@T("Valid"): @email.Validated, @T("Production"): @email.Produzione, 
+                        @T("Commercial use"): @email.AccettatoUsoCommerciale, @T("Third party"): @email.AutorizzatoTerzeParti,
+                        @T("Creation date"): @email.DataInserimento, @T("Modified"): @email.DataModifica)</li>
+                }
+            </ul>
+        </div>
+</fieldset>

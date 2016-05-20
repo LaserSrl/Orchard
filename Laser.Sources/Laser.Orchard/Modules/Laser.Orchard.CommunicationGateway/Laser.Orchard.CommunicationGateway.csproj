@@ -221,6 +221,12 @@
     <Content Include="Views\ContactsAdmin\ExportedFilesList.cshtml" />
     <Content Include="Views\ContactsAdmin\ImportedFilesLogs.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\CommunicationContact_Edit.cshtml" />
+    <Content Include="Views\ContactsAdmin\View.cshtml" />
+    <Content Include="Views\Parts\CommunicationContact.cshtml" />
+    <Content Include="Views\Parts\EmailContact.cshtml" />
+    <Content Include="Views\Parts\SmsContact.cshtml" />
+    <Content Include="Views\Fields\Enumeration__CommunicationContact__ProfilePart.cshtml" />
+    <Content Include="Views\Fields\TaxonomyField__CommunicationContact__ProfilePart.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

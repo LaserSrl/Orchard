@@ -7,12 +7,35 @@ using Laser.Orchard.StartupConfig.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard;
+using OrchardData = Orchard.Data;
+using OrchardLocalization = Orchard.Localization;
 
 namespace Laser.Orchard.StartupConfig.Drivers {
     public class FavoriteCulturePartDriver : ContentPartDriver<FavoriteCulturePart> {
+        private readonly IOrchardServices _orchardServices;
         protected override string Prefix {
             get {
                 return "FavoriteCulturePart";
+            }
+        }
+        public FavoriteCulturePartDriver(IOrchardServices orchardServices) {
+            _orchardServices = orchardServices;
+        }
+        protected override DriverResult Display(FavoriteCulturePart part, string displayType, dynamic shapeHelper) {
+            if (displayType == "Detail") {
+                string culture = "";
+                OrchardData.IRepository<OrchardLocalization.Records.CultureRecord> cultureRepository;
+                if (_orchardServices.WorkContext.TryResolve<OrchardData.IRepository<OrchardLocalization.Records.CultureRecord>>(out cultureRepository)) {
+                    var cultureRecord = cultureRepository.Get(part.Culture_Id);
+                    if (cultureRecord != null) {
+                        culture = cultureRecord.Culture;
+                    }
+                }
+                return ContentShape("Parts_FavoriteCulturePart",
+                    () => shapeHelper.Parts_FavoriteCulturePart(Culture: culture));
+            } else {
+                return null;
             }
         }
         protected override DriverResult Editor(FavoriteCulturePart part, dynamic shapeHelper) {

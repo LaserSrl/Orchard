@@ -5,6 +5,7 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.UI.Admin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,25 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
+        }
+
+        protected override DriverResult Display(CommunicationContactPart part, string displayType, dynamic shapeHelper) {
+            //Determine if we're on an admin page
+            bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            if (isAdmin) {
+                if (displayType == "Detail") {
+                    string logs = T("No log.").Text;
+                    if (string.IsNullOrWhiteSpace(part.Logs) == false) {
+                        logs = part.Logs;
+                    }
+                    return ContentShape("Parts_CommunicationContact",
+                        () => shapeHelper.Parts_CommunicationContact(Logs: logs, Master: part.Master));
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
         }
 
         protected override DriverResult Editor(CommunicationContactPart part, dynamic shapeHelper) {
