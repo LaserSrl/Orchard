@@ -12,31 +12,39 @@
     datainizio != today != datafine, the title is @T("Events between {0} and {1}", datainizio, datafine)
     if there is a category filter (termids) add to the title " - category"
 *@
-s
+
 @{
     if (Model.Title == @T("Events").ToString()){
         var rQuery = WorkContext.HttpContext.Request.QueryString; //example "?datainizio=20/05/2016&datafine=20/05/2016&termids=33"
-        DateTime? startTime = DateTime.Parse(rQuery.Get("datainizio"));
-        DateTime? endTime = DateTime.Parse(rQuery.Get("datafine"));
-        int? tId = Int16.Parse(rQuery.Get("termids"));
-        if (startTime.Value.Date == endTime.Value.Date) {
-            if (startTime.Value.Date == DateTime.Today.Date) {
-                <h1>@T("Today's events")</h1>
+        string sDate = rQuery.Get("datainizio") ?? "";
+        string eDate = rQuery.Get("datafine") ?? "";
+        DateTime startTime, endTime;
+        if (DateTime.TryParse(sDate, out startTime) && DateTime.TryParse(eDate, out endTime)){
+            if (startTime.Date == endTime.Date) {
+                if (startTime.Date == DateTime.Today.Date) {
+                    <h1>@T("Today's events")</h1>
+                }
+                else{
+                    <h1>@T("Events for {0}", startTime.Date.ToShortDateString())</h1>
+                }
             }
             else{
-                <h1>@T("Events for {0}", startTime.Value.Date.ToShortDateString())</h1>
+                //startTime != endTime
+                if (startTime.Date == DateTime.Today.Date) {
+                    <h1>@T("Events between today and {0}", endTime.Date.ToShortDateString())</h1>
+                }
+                else {
+                    <h1>@T("Events between {0} and {1}", startTime.Date.ToShortDateString(), endTime.Date.ToShortDateString())</h1>
+                }
             }
         }
-        else{
-            //startTime != endTime
-            if (startTime.Value.Date == DateTime.Today.Date) {
-                <h1>@T("Events between today and {0}", endTime.Value.Date.ToShortDateString())</h1>
-            }
-            else {
-                <h1>@T("Events between {0} and {1}", startTime.Value.Date.ToShortDateString(), endTime.Value.Date.ToShortDateString())</h1>
-            }
-        }
+
         //TODO: for termids we should query the db for the correctly localized label
+        string cat = rQuery.Get("termids");
+        int tId;
+        if (Int32.TryParse(cat, out tId)){
+            //get the category corresponding to the given Id
+        }
     }
     else{
         <h1>@Model.Title</h1>
