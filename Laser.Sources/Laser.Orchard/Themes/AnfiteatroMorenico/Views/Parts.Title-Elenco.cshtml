@@ -1,4 +1,8 @@
-﻿
+﻿@using NHibernate.Criterion;
+@using NHibernate.Persister.Entity;
+@using NHibernate.Transform;
+@using Orchard.Core.Title.Models;
+@using Orchard.Data;
 
 @{
     Layout.Title = Model.Title;
@@ -18,23 +22,28 @@
         var rQuery = WorkContext.HttpContext.Request.QueryString; //example "?datainizio=20/05/2016&datafine=20/05/2016&termids=33"
         string sDate = rQuery.Get("datainizio") ?? "";
         string eDate = rQuery.Get("datafine") ?? "";
+        string titleString = "";
         DateTime startTime, endTime;
         if (DateTime.TryParse(sDate, out startTime) && DateTime.TryParse(eDate, out endTime)){
             if (startTime.Date == endTime.Date) {
                 if (startTime.Date == DateTime.Today.Date) {
-                    <h1>@T("Today's events")</h1>
+                    //<h1>@T("Today's events")</h1>
+                    titleString = @T("Today's events").ToString();
                 }
                 else{
-                    <h1>@T("Events for {0}", startTime.Date.ToShortDateString())</h1>
+                    //<h1>@T("Events for {0}", startTime.Date.ToShortDateString())</h1>
+                    titleString = @T("Events for {0}", startTime.Date.ToShortDateString()).ToString();
                 }
             }
             else{
                 //startTime != endTime
                 if (startTime.Date == DateTime.Today.Date) {
-                    <h1>@T("Events between today and {0}", endTime.Date.ToShortDateString())</h1>
+                    //<h1>@T("Events between today and {0}", endTime.Date.ToShortDateString())</h1>
+                    titleString = @T("Events between today and {0}", endTime.Date.ToShortDateString()).ToString();
                 }
                 else {
-                    <h1>@T("Events between {0} and {1}", startTime.Date.ToShortDateString(), endTime.Date.ToShortDateString())</h1>
+                    //<h1>@T("Events between {0} and {1}", startTime.Date.ToShortDateString(), endTime.Date.ToShortDateString())</h1>
+                    titleString = @T("Events between {0} and {1}", startTime.Date.ToShortDateString(), endTime.Date.ToShortDateString()).ToString();
                 }
             }
         }
@@ -43,8 +52,20 @@
         string cat = rQuery.Get("termids");
         int tId;
         if (Int32.TryParse(cat, out tId)){
-            //get the category corresponding to the given Id
+            //Get the session to be able to actually execute the QueryOver
+            ISessionLocator _sessionLocator;
+            if (WorkContext.TryResolve<ISessionLocator>(out _sessionLocator)) {
+                //get the category corresponding to the given Id
+                //Search in the TItlePartRecord table for the element whose ContentItemRecor_Id matches tId
+                QueryOver<TitlePartRecord, TitlePartRecord> qoTitle = QueryOver.Of<TitlePartRecord>()
+                    .Where(tpr => tpr.ContentItemRecord.Id == tId)
+                    .Select(tpr => tpr.Title);
+                string categoryTitle = qoTitle.GetExecutableQueryOver(_sessionLocator.For(typeof(TitlePartRecord))).SingleOrDefault<string>();
+                titleString += " - " + categoryTitle;
+            }
+            
         }
+        <h1>@titleString</h1>
     }
     else{
         <h1>@Model.Title</h1>
