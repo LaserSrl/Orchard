@@ -23,10 +23,13 @@ namespace Laser.Orchard.Accessibility.Filters
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            _originalWriter = filterContext.HttpContext.Response.Output;
-            _tempWriter = new StringWriterWithEncoding(_originalWriter.Encoding, _originalWriter.FormatProvider);
-            filterContext.HttpContext.Response.Output = _tempWriter;
-            _completeResponse = CaptureResponse;
+            bool isAdmin = _orchardServices.Authorizer.Authorize(StandardPermissions.AccessAdminPanel);
+            if (!isAdmin) {
+                _originalWriter = filterContext.HttpContext.Response.Output;
+                _tempWriter = new StringWriterWithEncoding(_originalWriter.Encoding, _originalWriter.FormatProvider);
+                filterContext.HttpContext.Response.Output = _tempWriter;
+                _completeResponse = CaptureResponse;
+            }
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext)

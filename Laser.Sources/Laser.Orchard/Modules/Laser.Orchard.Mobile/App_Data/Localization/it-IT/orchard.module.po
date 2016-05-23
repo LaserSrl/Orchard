@@ -218,7 +218,7 @@ msgstr "Windows EndPoint"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid " + 16 chars campaign shortlink"
-msgstr "+ 16 caratteri per lo short link della campagna"
+msgstr "+ 16 caratteri per lo shortlink della campagna"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid "Alias"
@@ -471,6 +471,10 @@ msgstr "PushMobile"
 msgctxt "Laser.Orchard.Mobile.Handlers.SmsSettingsPartHandler"
 msgid "SMS"
 msgstr "SMS"
+
+msgctxt "Laser.Orchard.Mobile.Migrations"
+msgid "Content Related"
+msgstr "Contenuto Correlato"
 
 msgctxt "Laser.Orchard.Mobile.Projections.DeveiceFilter"
 msgid "Content with userpart"
