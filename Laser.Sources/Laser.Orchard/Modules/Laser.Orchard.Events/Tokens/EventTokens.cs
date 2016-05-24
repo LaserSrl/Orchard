@@ -44,6 +44,9 @@ namespace Laser.Orchard.Events.Tokens
 
         public void Evaluate(EvaluateContext context)
         {
+            if (_currentContentAccessor.CurrentContentItem == null)
+                return;
+
             context.For("Content", _currentContentAccessor.CurrentContentItem)
                    .Token("CalendarStartDate", content => GetStartDate(content))
                    .Chain("CalendarStartDate", "Date", content => { DateTime dateResult; if (DateTime.TryParse(GetStartDate(content), _cultureInfo.Value, DateTimeStyles.None, out dateResult)) return dateResult; else return null; })
