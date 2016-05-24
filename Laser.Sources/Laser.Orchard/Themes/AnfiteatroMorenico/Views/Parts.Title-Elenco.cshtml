@@ -3,6 +3,7 @@
 @using NHibernate.Transform;
 @using Orchard.Core.Title.Models;
 @using Orchard.Data;
+@using Laser.Orchard.CulturePicker.Services;
 
 @{
     Layout.Title = Model.Title;
@@ -52,18 +53,32 @@
         string cat = rQuery.Get("termids");
         int tId;
         if (Int32.TryParse(cat, out tId)){
-            //Get the session to be able to actually execute the QueryOver
-            ISessionLocator _sessionLocator;
-            if (WorkContext.TryResolve<ISessionLocator>(out _sessionLocator)) {
-                //get the category corresponding to the given Id
-                //Search in the TItlePartRecord table for the element whose ContentItemRecor_Id matches tId
-                QueryOver<TitlePartRecord, TitlePartRecord> qoTitle = QueryOver.Of<TitlePartRecord>()
-                    .Where(tpr => tpr.ContentItemRecord.Id == tId)
-                    .Select(tpr => tpr.Title);
-                string categoryTitle = qoTitle.GetExecutableQueryOver(_sessionLocator.For(typeof(TitlePartRecord))).SingleOrDefault<string>();
-                titleString += " - " + categoryTitle;
-            }
-            
+            //check wheter the query is correct for the language selected
+            ILocalizableContentService _localizableContentService;
+            if (WorkContext.TryResolve<ILocalizableContentService>(out _localizableContentService)) {
+                int tranId = 0;
+                if (_localizableContentService.TryGetLocalizedId(tId, WorkContext.CurrentCulture, out tranId)) {
+                    //ids have been translated
+                    //parse the string for redirect
+                    string oldUrl = WorkContext.HttpContext.Request.Url.PathAndQuery;
+                    string newUrl = oldUrl.Substring(0, oldUrl.IndexOf("termids")+8);
+                    newUrl += tranId.ToString();
+                    newUrl += oldUrl.Substring(oldUrl.IndexOf("termids") + 8 + cat.Length);
+                    WorkContext.HttpContext.RedirectLocal(newUrl);
+                } else {
+                    //Get the session to be able to actually execute the QueryOver
+                    ISessionLocator _sessionLocator;
+                    if (WorkContext.TryResolve<ISessionLocator>(out _sessionLocator)) {
+                        //get the category corresponding to the given Id
+                        //Search in the TItlePartRecord table for the element whose ContentItemRecor_Id matches tId
+                        QueryOver<TitlePartRecord, TitlePartRecord> qoTitle = QueryOver.Of<TitlePartRecord>()
+                            .Where(tpr => tpr.ContentItemRecord.Id == tId)
+                            .Select(tpr => tpr.Title);
+                        string categoryTitle = qoTitle.GetExecutableQueryOver(_sessionLocator.For(typeof(TitlePartRecord))).SingleOrDefault<string>();
+                        titleString += " - " + categoryTitle;
+                    }
+                }
+            }            
         }
         <h1>@titleString</h1>
     }
