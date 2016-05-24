@@ -360,6 +360,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 if (Contact == null) {
                     Contact = _orchardServices.ContentManager.New("CommunicationContact");
                     _orchardServices.ContentManager.Create(Contact);
+                    Contact = _orchardServices.ContentManager.Get(Contact.Id);
                 }
             } else {
                 Contact = contactsUsers.ContentItem;

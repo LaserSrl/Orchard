@@ -1,5 +1,6 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.UI.Admin;
 using Orchard.Widgets.Models;
 
 
@@ -25,16 +26,17 @@ namespace Laser.Orchard.ZoneAlternates {
                           ContentField contentField = displayedContext.Shape.ContentField is ContentField ? displayedContext.Shape.ContentField : null;
                           var displayType = displayedContext.ShapeMetadata.DisplayType;
 
-                          var route = System.Web.HttpContext.Current.Request.RequestContext.RouteData.Values;
-                          var area = (route.ContainsKey("area")) ? route["area"] : null;
-                          var controller = (route.ContainsKey("controller")) ? route["controller"] : null;
-                          var action = (route.ContainsKey("action"))? route["action"]: null;
+                          //var route = System.Web.HttpContext.Current.Request.RequestContext.RouteData.Values;
+                          //var area = (route.ContainsKey("area")) ? route["area"] : null;
+                          //var controller = (route.ContainsKey("controller")) ? route["controller"] : null;
+                          //var action = (route.ContainsKey("action"))? route["action"]: null;
+                          bool isAdmin = AdminFilter.IsApplied(System.Web.HttpContext.Current.Request.RequestContext); //   _orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                          var shapeName = displayedContext.ShapeMetadata.Type;
 
                           if (contentItem != null && lastZone != "") {
 
                               // contentItem è un Widget?
                               var zoneName = lastZone;
-                              var shapeName = displayedContext.ShapeMetadata.Type;
                               // [ShapeName]-[ZoneName].cshtml: "Parts.Blogs.RecentBlogPosts-myZoneName.cshtml"
                               // [ContentTypeName]-[ZoneName].cshtml: "RecentBlogPosts-myZoneName.cshtml"
                               if (!displayedContext.ShapeMetadata.Alternates.Contains(shapeName + "__" + zoneName)) {
@@ -63,14 +65,14 @@ namespace Laser.Orchard.ZoneAlternates {
                                       }
                                   }
                               }
+
                           }
-                          if (contentItem != null) {
-                              var shapeName = displayedContext.ShapeMetadata.Type;
-                              if (action != null) {
-                                  if (!displayedContext.ShapeMetadata.Alternates.Contains(shapeName + "__" + area + "__" + controller + "__" + action)) {
-                                      displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + area + "__" + controller + "__" + action);
+                          if (contentPart != null) {
+                              if (isAdmin) {
+                                  if (!displayedContext.ShapeMetadata.Alternates.Contains(shapeName + "__" + contentItem.ContentType + "__" + contentPart.PartDefinition.Name + "__AdminFilter")) {
+                                      displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + "__" + contentPart.PartDefinition.Name + "__AdminFilter");
                                       if (!string.IsNullOrWhiteSpace(displayType) && displayType != "Detail") {
-                                          displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + area + "__" + controller + "__" + action + "__" + displayType);
+                                          displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + "__" + contentPart.PartDefinition.Name + "__AdminFilter" + "__" + displayType);
                                       }
                                   }
                               }

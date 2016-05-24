@@ -225,8 +225,13 @@
     <Content Include="Views\Parts\CommunicationContact.cshtml" />
     <Content Include="Views\Parts\EmailContact.cshtml" />
     <Content Include="Views\Parts\SmsContact.cshtml" />
-    <Content Include="Views\Fields\Enumeration__CommunicationContact__ProfilePart.cshtml" />
-    <Content Include="Views\Fields\TaxonomyField__CommunicationContact__ProfilePart.cshtml" />
+    <Content Include="Views\Fields\Enumeration__CommunicationContact__ProfilePart__AdminFilter.cshtml" />
+    <Content Include="Views\Fields\TaxonomyField__CommunicationContact__ProfilePart__AdminFilter.cshtml" />
+    <Content Include="Views\Fields\Numeric__CommunicationContact__ProfilePart__AdminFilter.cshtml" />
+    <Content Include="Views\Fields\Common_Text__CommunicationContact__ProfilePart__AdminFilter.cshtml" />
+    <Content Include="Views\Fields\Boolean__CommunicationContact__ProfilePart__AdminFilter.cshtml" />
+    <Content Include="Views\Fields\DateTime__CommunicationContact__ProfilePart__AdminFilter.cshtml" />
+    <Content Include="Views\Fields\Link__CommunicationContact__ProfilePart__AdminFilter.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

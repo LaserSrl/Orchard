@@ -22,9 +22,14 @@
       <Place Parts_EmailContact="Content:4"/>
       <Place Parts_SmsContact="Content:4"/>
       <Place Parts_CommunicationContact="Content:after"/>
-      <Place Parts_TermPart="Content:6" Parts_TermPart_Localized="Content:6" />
-      <Place Fields_Enumeration__CommunicationContact__ProfilePart="Content:7"/>
-      <Place Fields_TaxonomyField__CommunicationContact__ProfilePart="Content:8"/>
+      <Place Fields_Enumeration__CommunicationContact__ProfilePart="Content:6.1"/>
+      <Place Fields_TaxonomyField__CommunicationContact__ProfilePart="Content:6.2"/>
+      <Place Fields_Numeric__CommunicationContact__ProfilePart="Content:6.3"/>
+      <Place Fields_Common_Text__CommunicationContact__ProfilePart="Content:6.4"/>
+      <Place Fields_Boolean__CommunicationContact__ProfilePart="Content:6.5"/>
+      <Place Fields_DateTime__CommunicationContact__ProfilePart="Content:6.6"/>
+      <Place Fields_Link__CommunicationContact__ProfilePart="Content:6.7"/>
+      <Place Fields_Numeric="-"/> <!-- hide Id of user Creator and Id of last user that modified the item -->
     </Match>
   </Match>
   <Place Fields_MediaLibraryPicker_Edit="Content:2"/>

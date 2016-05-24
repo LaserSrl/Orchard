@@ -231,7 +231,10 @@ namespace Laser.Orchard.ContentExtension.Services {
 
                                             if (theContentItem.As<LocalizationPart>() == null || theContentItem.ContentType == "User") { // se il contenuto non ha localization oppure è user salvo il mastercontent del termine
                                                 Int32 idmaster = 0;
-                                                if (termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem == null)
+                                                if (termine_selezionato.ContentItem.As<LocalizationPart>() == null) {
+                                                    idmaster = termine_selezionato.ContentItem.Id;
+                                                }
+                                                else if (termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem == null)
                                                     idmaster = termine_selezionato.ContentItem.As<LocalizationPart>().Id;
                                                 else
                                                     idmaster = termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem.Id;

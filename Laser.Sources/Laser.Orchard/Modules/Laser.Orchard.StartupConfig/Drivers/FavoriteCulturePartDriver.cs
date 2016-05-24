@@ -10,6 +10,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard;
 using OrchardData = Orchard.Data;
 using OrchardLocalization = Orchard.Localization;
+using Orchard.UI.Admin;
 
 namespace Laser.Orchard.StartupConfig.Drivers {
     public class FavoriteCulturePartDriver : ContentPartDriver<FavoriteCulturePart> {
@@ -23,7 +24,8 @@ namespace Laser.Orchard.StartupConfig.Drivers {
             _orchardServices = orchardServices;
         }
         protected override DriverResult Display(FavoriteCulturePart part, string displayType, dynamic shapeHelper) {
-            if (displayType == "Detail") {
+            bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            if (isAdmin && (displayType == "Detail")) {
                 string culture = "";
                 OrchardData.IRepository<OrchardLocalization.Records.CultureRecord> cultureRepository;
                 if (_orchardServices.WorkContext.TryResolve<OrchardData.IRepository<OrchardLocalization.Records.CultureRecord>>(out cultureRepository)) {

@@ -48,33 +48,8 @@ namespace Laser.Orchard.StartupConfig.Handlers
 
             T = NullLocalizer.Instance;
 
-            OnPublished<TaxonomyPart>((context, part) => AddLocalizationPartToTerm(part));
+            OnPublished<TaxonomyPart>((context, part) => _taxonomyExtensionsServices.AddLocalizationPartToTerm(part));
             OnPublishing<TermPart>((context, part) => CheckTermLocalization(context.ContentItem));
-        }
-
-        //Controlla se il content type rappresentante i termini della tassonomia ha una LocalizationPart e, in base alle impostazioni del sito, se non ce l'ha gliela aggiunge
-        private void AddLocalizationPartToTerm(TaxonomyPart part)
-        {
-            var taxonomyExtensionsSiteSettings = _orchardServices.WorkContext.CurrentSite.As<TaxonomyExtensionsSiteSettingsPart>();
-
-            if (taxonomyExtensionsSiteSettings != null)
-            {
-                if (taxonomyExtensionsSiteSettings.LocalizeTerms)
-                {
-                    ContentTypeDefinition termDefinition = _contentDefinitionManager.GetTypeDefinition(part.TermTypeName);
-
-                    if (termDefinition != null)
-                    {
-                        if (termDefinition.Parts.Where(x => x.PartDefinition.Name == "LocalizationPart").Count() == 0)
-                        {
-                            _contentDefinitionManager.AlterTypeDefinition(part.TermTypeName,
-                                cfg => cfg
-                                    .WithPart("LocalizationPart")
-                                );
-                        }
-                    }
-                }
-            }
         }
 
         private void CheckTermLocalization(ContentItem termItem)
