@@ -95,7 +95,7 @@
                 </a>
             }
             else{
-                <a class="navbar-brand" rel="home" title="Anfiteatro Morenico Ivrea" href="@(WorkContext.CurrentCulture)">
+                <a class="navbar-brand" rel="home" title="Anfiteatro Morenico Ivrea" href="@Href("~/" + WorkContext.CurrentCulture)"> @*"@(WorkContext.CurrentCulture)">*@
                     <img class="logo img-responsive" alt="Anfiteatro Morenico Ivrea" src="@(themeBasePath + "/styles/images/logo.png")" />
                     <img class="logo-mobile img-responsive" alt="Anfiteatro Morenico Ivrea" src="@(themeBasePath + "/styles/images/logo-mobile.png")" />
                 </a>
