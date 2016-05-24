@@ -1,0 +1,7 @@
+﻿@{
+    var field = (Model.ContentField as Orchard.Fields.Fields.LinkField);
+}
+<fieldset>
+    <legend>@field.DisplayName</legend>
+    <a href="@field.Value" target="@field.Target">@field.Text</a>
+</fieldset>

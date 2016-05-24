@@ -180,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Recipes\Laser.recipe.xml" />
+    <Content Include="packages.config" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -340,6 +341,7 @@
     <Content Include="Views\EditorTemplates\ExternalApplication.cshtml" />
     <Content Include="Views\displaynone.cshtml" />
     <Content Include="Views\Activity-RazorExecute.cshtml" />
+    <Content Include="Views\Parts\FavoriteCulturePart.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -79,7 +79,12 @@
                 <li>
                     <div class="summary" itemscope="itemscope" itemid="@contentIndexVM.Id" itemtype="http://orchardproject.net/data/ContentItem">
                         <div class="properties">
-                            <h3><a href="@Url.Action("Edit", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })">@contentIndexVM.Title</a></h3>
+                            @if (contentIndexVM.UserId == 0) {
+                                <h3><a href="@Url.Action("Edit", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })">@contentIndexVM.Title</a></h3>
+                            } else {
+                                <h3><a href="@Url.Action("View", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })">@contentIndexVM.Title</a></h3>
+                            }
+                            (@contentIndexVM.Provider)
                             <div class="contentType">
                                 @(string.IsNullOrEmpty(contentIndexVM.PreviewEmail) ? "" : " - " + contentIndexVM.PreviewEmail)
                                 @(string.IsNullOrEmpty(contentIndexVM.PreviewSms) ? "" : " - " + contentIndexVM.PreviewSms)
@@ -109,9 +114,13 @@
                             </div>
                         </div>
                         <div class="related">
-                            <a href="@Url.Action("Edit", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })">@T("Edit")</a>
-                            &nbsp;&vert;&nbsp;
-                        <a href="@Url.Action("Remove", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                            @if(contentIndexVM.UserId == 0) {
+                                <a href="@Url.Action("Edit", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })">@T("Edit")</a>
+                                <text>&nbsp;&vert;&nbsp;</text>
+                                <a href="@Url.Action("Remove", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                            } else {
+                                <a href="@Url.Action("View", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway", id = contentIndexVM.Id })">@T("View")</a>
+                            }
                         </div>
                     </div>
                 </li>

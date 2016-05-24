@@ -18,10 +18,19 @@ namespace Laser.Orchard.CommunicationGateway.Models {
             get { return this.Retrieve(r => r.Master); }
             set { this.Store(r => r.Master, value); }
         }
+
+        /// <summary>
+        /// Questo campo contiene annotazioni in sola lettura che vengono popolate dal sistema.
+        /// </summary>
+        public string Logs {
+            get { return this.Retrieve(r => r.Logs); }
+            set { this.Store(r => r.Logs, value); }
+        }
     }
 
     public class CommunicationContactPartRecord : ContentPartRecord {
         public virtual Int32 UserPartRecord_Id { get; set; }
         public virtual bool Master { get; set; }
+        public virtual string Logs { get; set; }
     }
 }
