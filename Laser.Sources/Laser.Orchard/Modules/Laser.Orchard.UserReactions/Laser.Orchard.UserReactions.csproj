@@ -109,6 +109,10 @@
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="DataMigrations.cs" />
+    <Compile Include="Drivers\UserReactionsPartDriver.cs" />
+    <Compile Include="Handlers\UserReactionsPartHandler.cs" />
+    <Compile Include="Models\UserReactionsPartRecord.cs" />
+    <Compile Include="Models\UserReactionsSummaryRecord.cs" />
     <Compile Include="Models\UserReactionsTypesRecord.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Services\UserReactionsService.cs" />
@@ -117,6 +121,8 @@
   <ItemGroup>
     <Content Include="Views\Admin\Settings.cshtml" />
     <Content Include="Views\EditorTemplates\UserReactionsTypeVM.cshtml" />
+    <Content Include="Views\Parts\UserReactions_SummaryAdmin.cshtml" />
+    <Content Include="Placement.info" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -126,6 +132,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
