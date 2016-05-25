@@ -52,14 +52,18 @@
     </div>
 </fieldset>
     <fieldset>
-              <div class="editor-label">@Html.LabelFor(m => m.GameType, T("Game Type"))</div>
-        <div class="editor-field">@Html.DropDownListFor(m => m.GameType, Model.ListOfGameType)
-            <span class="hint">@T("Select Game Type")</span>
-        </div>
-</fieldset>
+            <div class="editor-label">@Html.LabelFor(m => m.GameType, T("Game Type"))</div>
+            <div class="editor-field">@Html.DropDownListFor(m => m.GameType, Model.ListOfGameType)
+                <span class="hint">@T("Select Game Type")</span>
+            </div>
+    </fieldset>
+    <fieldset>
+        <label>@T("The value of this field is changed automatically by the system")</label>
+          @Html.CheckBoxFor(m => m.workflowfired)
+        <label for="@Html.FieldIdFor(m => m.workflowfired)" class="forcheckbox">@T("Email sended at the end of the game") </label>     
+    </fieldset>
 </fieldset>
 
-@Html.HiddenFor(x => x.workflowfired)
 @Html.HiddenFor(x => x.State)
 @using (Script.Foot()) {
         @Display.DatePickerLocalization()

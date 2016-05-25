@@ -33,10 +33,16 @@ namespace Laser.Orchard.Accessibility.Controllers
                     break;
             }
 
-            // calcola l'url di ritorno: è la pagina in cui è stato richiamato il controller
-            string returnUrl = _orchardServices.WorkContext.HttpContext.Request.UrlReferrer.AbsoluteUri;
+            // Se non arrivo dalla navigazione sulla pagina
+            if (_orchardServices.WorkContext.HttpContext.Request.UrlReferrer == null)
+                //throw new System.Web.HttpException(404, "Not found");
+                return HttpNotFound();
+            else {
+                // calcola l'url di ritorno: è la pagina in cui è stato richiamato il controller
+                string returnUrl = _orchardServices.WorkContext.HttpContext.Request.UrlReferrer.AbsoluteUri;
 
-            return Redirect(returnUrl);
+                return Redirect(returnUrl);
+            }
         }
 	}
 }

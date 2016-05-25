@@ -209,6 +209,7 @@
     <Compile Include="Drivers\TermPartExtensionDriver.cs" />
     <Compile Include="Controllers\UsersGroupsSettingsController.cs" />
     <Compile Include="Drivers\UsersGroupsDriver.cs" />
+    <Compile Include="Exceptions\ExternalFieldRemoteException.cs" />
     <Compile Include="Handlers\BlogPostPartHandler.cs" />
     <Compile Include="Handlers\ContentEventHandler.cs" />
     <Compile Include="Handlers\ContentPickerConnectorHandler.cs" />
@@ -248,12 +249,14 @@
     <Compile Include="RazorCodeExecution\Activities\RazorExecuteActivity.cs" />
     <Compile Include="RazorCodeExecution\Forms\RazorExecuteForm.cs" />
     <Compile Include="Services\ApiKeyService.cs" />
+    <Compile Include="Services\ContentSerializationServices.cs" />
     <Compile Include="Services\IApiKeyService.cs" />
     <Compile Include="RazorCodeExecution\Services\IRazorExecuteService.cs" />
     <Compile Include="Services\IMaintenanceService.cs" />
     <Compile Include="Services\MaintenanceBanner.cs" />
     <Compile Include="Services\MaintenanceService.cs" />
     <Compile Include="Tokens\AdditionalDateTokens.cs" />
+    <Compile Include="Tokens\RazorCodeExecutionToken.cs" />
     <Compile Include="ViewModels\MaintenanceIndexVM.cs" />
     <Compile Include="ViewModels\MaintenanceVM.cs" />
     <Compile Include="ViewModels\Response.cs" />
@@ -335,6 +338,7 @@
     <Content Include="Views\MaintenanceAdmin\Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\FavoriteCulturePart_Edit.cshtml" />
     <Content Include="Views\EditorTemplates\ExternalApplication.cshtml" />
+    <Content Include="Views\displaynone.cshtml" />
     <Content Include="Views\Activity-RazorExecute.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -28,6 +28,8 @@
             <div class="editor-field">@Html.TextAreaFor(m => m.TextPush, new { @class = "text large" })</div>
         </div>
     </fieldset>
+@if (Model.PushAdvertising)
+{
     <fieldset>
         @Html.LabelFor(m => m.ToPush, T("Approved").Text, new { @class = "forcheckbox" })
         @if (disabledElements == false) { 
@@ -53,6 +55,7 @@
                 <span class="hint">@T("Mask to make test for Push... this option is set by settings of module")</span>
             </div>
     </fieldset>
+}
     <fieldset>
         <div class="editor-label">@Html.LabelFor(m => m.DevicePush, T("To Device"))</div>
         <div class="editor-field">@Html.DropDownListFor(m => m.DevicePush, Model.ListOfDevice)

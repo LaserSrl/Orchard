@@ -1,17 +1,24 @@
 ﻿using AutoMapper;
+using Laser.Orchard.Events.Models;
 using Laser.Orchard.Questionnaires.Models;
 using Laser.Orchard.Questionnaires.Settings;
 using Laser.Orchard.Questionnaires.ViewModels;
+using Laser.Orchard.StartupConfig.Localization;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.TemplateManagement.Models;
 using Laser.Orchard.TemplateManagement.Services;
+using NHibernate.Criterion;
+using NHibernate.Persister.Entity;
+using NHibernate.Transform;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Messaging.Services;
 using Orchard.Security;
+using Orchard.Tasks.Scheduling;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
 using System;
@@ -32,6 +39,10 @@ namespace Laser.Orchard.Questionnaires.Services {
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly ITemplateService _templateService;
         private readonly IMessageManager _messageManager;
+        private readonly ISessionLocator _sessionLocator;
+        private readonly IDateLocalization _dateLocalization;
+        private readonly IScheduledTaskManager _taskManager;
+        private readonly IDateServices _dateServices;
 
         public Localizer T { get; set; }
 
@@ -44,7 +55,11 @@ namespace Laser.Orchard.Questionnaires.Services {
             INotifier notifier,
             IControllerContextAccessor controllerContextAccessor,
             ITemplateService templateService,
-           IMessageManager messageManager) {
+           IMessageManager messageManager,
+            ISessionLocator sessionLocator,
+            IDateLocalization dateLocalization,
+            IScheduledTaskManager taskManager,
+            IDateServices dateServices) {
             _orchardServices = orchardServices;
             _repositoryAnswer = repositoryAnswer;
             _repositoryQuestions = repositoryQuestions;
@@ -56,6 +71,10 @@ namespace Laser.Orchard.Questionnaires.Services {
             _controllerContextAccessor = controllerContextAccessor;
             _templateService = templateService;
             _messageManager = messageManager;
+            _sessionLocator = sessionLocator;
+            _dateLocalization = dateLocalization;
+            _taskManager = taskManager;
+            _dateServices = dateServices;
         }
 
         private string getusername(int id) {
@@ -68,41 +87,100 @@ namespace Laser.Orchard.Questionnaires.Services {
             } else
                 return "No User";
         }
-
+        
         public bool SendTemplatedEmailRanking() {
             var query = _orchardServices.ContentManager.Query();
-            var list = query.ForPart<GamePart>().List();
+            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x=>x.workflowfired==false).List();
             var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().List();
             foreach (GamePart gp in list) {
                 ContentItem Ci = gp.ContentItem;
-                //    gp.workflowfired = false; //todo remove this line
-                if (gp.workflowfired == false) {
-                    if (gp.Settings.GetModel<GamePartSettingVM>().SendEmail) {
-                        listranking.Where(z => z.As<RankingPart>().ContentIdentifier == Ci.Id).OrderBy(y => y.Point);
-                        List<RankingTemplateVM> rkt = new List<RankingTemplateVM>();
-                        foreach (RankingPart cirkt in listranking) {
-                            RankingTemplateVM tmp = new RankingTemplateVM();
-                            tmp.Point = cirkt.Point;
-                            tmp.ContentIdentifier = cirkt.ContentIdentifier;
-                            tmp.Device = cirkt.Device;
-                            tmp.Identifier = cirkt.Identifier;
-                            tmp.name = getusername(cirkt.User_Id);
-                            tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
-                            tmp.AccessSecured = cirkt.AccessSecured;
-                            tmp.RegistrationDate = cirkt.RegistrationDate;
-                            rkt.Add(tmp);
-                        }
+                if (((dynamic)Ci).ActivityPart != null && ((dynamic)Ci).ActivityPart.DateTimeEnd != null) {
+                    if (((dynamic)Ci).ActivityPart.DateTimeEnd < DateTime.Now) {
+                        //    gp.workflowfired = false; //todo remove this line
+                        //      if (gp.workflowfired == false) {
+                        if (gp.Settings.GetModel<GamePartSettingVM>().SendEmail) {
+                            var listordered = listranking.Where(z => z.As<RankingPart>().ContentIdentifier == Ci.Id).OrderByDescending(y => y.Point);
+                            List<RankingTemplateVM> rkt = new List<RankingTemplateVM>();
+                            foreach (RankingPart cirkt in listordered) {
+                                RankingTemplateVM tmp = new RankingTemplateVM();
+                                tmp.Point = cirkt.Point;
+                                tmp.ContentIdentifier = cirkt.ContentIdentifier;
+                                tmp.Device = cirkt.Device;
+                                tmp.Identifier = cirkt.Identifier;
+                                tmp.name = getusername(cirkt.User_Id);
+                                tmp.UsernameGameCenter = cirkt.UsernameGameCenter;
+                                tmp.AccessSecured = cirkt.AccessSecured;
+                                tmp.RegistrationDate = cirkt.RegistrationDate;
+                                rkt.Add(tmp);
+                            }
 
-                        if (SendEmail(Ci, rkt)) {
-                            // logger
+                            if (SendEmail(Ci, rkt)) {
+                                // logger
+                            }
                         }
+                        _workflowManager.TriggerEvent("GameRankingSubmitted", Ci, () => new Dictionary<string, object> { { "Content", Ci } });
+                        gp.workflowfired = true;
                     }
-                    _workflowManager.TriggerEvent("GameRankingSubmitted", Ci, () => new Dictionary<string, object> { { "Content", Ci } });
-                    gp.workflowfired = true;
-
                 }
             }
             return true;
+        }
+
+        public bool SendTemplatedEmailRanking(Int32 gameID) {
+            var query = _orchardServices.ContentManager.Query();
+            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.Id == gameID).List();
+            GamePart gp = list.FirstOrDefault();
+            if (gp == null) //check if there is actually a game with the given ID (proper usage should make it so this is never true)
+                return false;
+            //we do not do checks on whether this email was scheduled, because this method is also used to send it out of synch with the tasks
+            ContentItem Ci = gp.ContentItem;
+
+            var session = _sessionLocator.For(typeof(RankingPartRecord));
+            var generalRankQuery = GenerateRankingQuery(gameId: gameID, page: 1, pageSize: 10)
+                .GetExecutableQueryOver(session)
+                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData)) //TODO: use transformers. Start from the IResultTransformer in RankingTemplateVM.cs. Also http://blog.andrewawhitaker.com/queryover-series
+                //.Future();
+                .Future<RankingTemplateVM>();
+            var appleRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.Apple.ToString(), page: 1, pageSize: 10)
+                .GetExecutableQueryOver(session)
+                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+                //.Future();
+                .Future<RankingTemplateVM>();
+            var androidRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.Android.ToString(), page: 1, pageSize: 10)
+                .GetExecutableQueryOver(session)
+                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+                //.Future();
+                .Future<RankingTemplateVM>();
+            var windowsRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.WindowsMobile.ToString(), page: 1, pageSize: 10)
+                .GetExecutableQueryOver(session)
+                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+                //.Future();
+                .Future<RankingTemplateVM>();
+
+            //List<RankingTemplateVM> generalRank = new List<RankingTemplateVM>();
+            //foreach (RankingPartRecord obj in generalRankQuery) { //Trasformers would allow getting rid of these iterations
+            //    generalRank.Add(ConvertFromDBData(obj));
+            //}
+            //List<RankingTemplateVM> appleRank = new List<RankingTemplateVM>();
+            //foreach (RankingPartRecord obj in appleRankQuery) {
+            //    appleRank.Add(ConvertFromDBData(obj));
+            //}
+            //List<RankingTemplateVM> androidRank = new List<RankingTemplateVM>();
+            //foreach (RankingPartRecord obj in androidRankQuery) {
+            //    androidRank.Add(ConvertFromDBData(obj));
+            //}
+            //List<RankingTemplateVM> windowsRank = new List<RankingTemplateVM>();
+            //foreach (RankingPartRecord obj in windowsRankQuery) {
+            //    windowsRank.Add(ConvertFromDBData(obj));
+            //}
+
+            //if (SendEmail(Ci, generalRank, appleRank, androidRank, windowsRank)) {
+            if (SendEmail(Ci, generalRankQuery.ToList(), appleRankQuery.ToList(), androidRankQuery.ToList(), windowsRankQuery.ToList())) {
+                _workflowManager.TriggerEvent("GameRankingSubmitted", Ci, () => new Dictionary<string, object> { { "Content", Ci } });
+                gp.workflowfired = true;
+                return true;
+            }
+            return false;
         }
 
         private bool SendEmail(ContentItem Ci, List<RankingTemplateVM> rkt) {
@@ -130,6 +208,307 @@ namespace Laser.Orchard.Questionnaires.Services {
             } else
                 return false;
         }
+
+        //method to send a single email with separate rankings for the different platforms
+        private bool SendEmail(ContentItem Ci, List<RankingTemplateVM> generalRank, List<RankingTemplateVM> appleRank,
+            List<RankingTemplateVM> androidRank, List<RankingTemplateVM> windowsRank) {
+            string emailRecipe = Ci.As<GamePart>().Settings.GetModel<GamePartSettingVM>().EmailRecipe;
+            if (emailRecipe != "") {
+                var editModel = new Dictionary<string, object>();
+                editModel.Add("Content", Ci);
+                editModel.Add("GeneralRanking", generalRank);
+                editModel.Add("AppleRanking", appleRank);
+                editModel.Add("AndroidRanking", androidRank);
+                editModel.Add("WindowsRanking", windowsRank);
+                ParseTemplateContext ptc = new ParseTemplateContext();
+                ptc.Model = editModel;
+                int templateid = Ci.As<GamePart>().Settings.GetModel<GamePartSettingVM>().Template;
+                TemplatePart TemplateToUse = _orchardServices.ContentManager.Get(templateid).As<TemplatePart>();
+                string testohtml;
+                if (TemplateToUse != null) {
+                    testohtml = _templateService.ParseTemplate(TemplateToUse, ptc);
+                    var datiCI = Ci.Record;
+                    var data = new Dictionary<string, string>();
+                    data.Add("Subject", "Game Ranking");
+                    data.Add("Body", testohtml);
+                    _messageManager.Send(new string[] { emailRecipe }, "ModuleRankingEmail", "email", data);
+                    return true;
+                } else { // Nessun template selezionato non mando una mail e ritorno false, mail non inviata
+                    return false;
+                }
+            } else
+                return false;
+        }
+
+        /// <summary>
+        /// Create a task to schedule sending a summary email with the game results after the game has ended. the update of the task, in case the game has been modified,
+        /// is done by deleting the existing task and creating a new one. The two parameters can for exaple be extracted from a <type>GamePart</type> called part as 
+        /// gameID = part.part.Record.Id; and timeGameEnd = ((dynamic)part.ContentItem).ActivityPart.DateTimeEnd;
+        /// </summary>
+        /// <param name="gameID">The unique <type>Int32</type> identifier of the game.</param>
+        /// <param name="timeGameEnd">The <type>DateTime</type> object telling when the game will end.</param>
+        public void ScheduleEmailTask(Int32 gameID, DateTime timeGameEnd) {
+            UnscheduleEmailTask(gameID);
+            string taskTypeStr = Laser.Orchard.Questionnaires.Handlers.ScheduledTaskHandler.TaskType + " " + gameID.ToString();
+            DateTime taskDate = timeGameEnd.AddMinutes(5);
+            //Local time to UTC conversion
+            //taskDate = (DateTime)( _dateServices.ConvertFromLocal(taskDate.ToLocalTime()));
+            taskDate = (DateTime)(_dateServices.ConvertFromLocalString(_dateLocalization.WriteDateLocalized(taskDate), _dateLocalization.WriteTimeLocalized(taskDate)));
+            //taskDate = taskDate.Subtract(new TimeSpan ( 2, 0, 0 )); //subtract two hours
+            taskDate = taskDate.ToUniversalTime(); //this problay does nothing
+            _taskManager.CreateTask(taskTypeStr, taskDate, null);
+        }
+
+        /// <summary>
+        /// Check whether an email task exists for a game identiied by the given Id, and destroy it if that is the case.
+        /// </summary>
+        /// <param name="gameID">The unique <type>Int32</type> identifier of the game.</param>
+        public void UnscheduleEmailTask(Int32 gameID) {
+            string taskTypeStr = Laser.Orchard.Questionnaires.Handlers.ScheduledTaskHandler.TaskType + " " + gameID.ToString();
+            var tasks = _taskManager.GetTasks(taskTypeStr);
+            foreach (var ta in tasks) {
+                //if we are here, it means the task ta exists with the same game id as the current game
+                //hence we should update the task. We fall in this condition when we are updating the information for a game.
+                _taskManager.DeleteTasks(ta.ContentItem); //maybe
+            }
+        }
+
+        /// <summary>
+        /// This method generates a <type>QueryOver</type> object that can be used to invoke a query using 
+        /// .GetExecutableQueryOver(session). In particular, the queries generated from this method are used to get 
+        /// pages of rankings from the DB. They can be executed calling GetExecutableQueryOver(session).List(), or 
+        /// GetExecutableQueryOver(session).Future&lt;RankingPartRecord&gt;()
+        /// </summary>
+        /// <param name="gameId">The Id of the game for which we want the ranking table.</param>
+        /// <param name="device">A string representing the tipe of device for which we want the ranking. This is obtained as a 
+        /// TipoDispositivo.value.ToString(). Any other string causes this method to default to returning the general ranking.</param>
+        /// <param name="page">The page of the results in the ranking. This is 1-based (the top-most results are on page 1).</param>
+        /// <param name="pageSize">The size of a page of results, corresponding to the maximum number of socres to return.</param>
+        /// <param name="Ascending">A flag to determine the sorting order for the scores: <value>true</value> order by ascending score; 
+        /// <value>false</value> order by descending score.</param>
+        /// <returns>A <type>QueryOver</type> object built from the parameters and that can be used to execute queries on the DB.</returns>
+        private QueryOver<RankingPartRecord> GenerateRankingQuery(
+            Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false) {
+            
+            RankingPartRecord rprAlias = null; //used as alias in correlated subqueries
+            QueryOver<RankingPartRecord, RankingPartRecord> qoRpr = QueryOver.Of<RankingPartRecord>(() => rprAlias)
+                .Where(t => t.ContentIdentifier == gameId);
+            qoRpr = CheckDeviceType(qoRpr, device);
+
+            QueryOver<RankingPartRecord, RankingPartRecord> subPoints = QueryOver.Of<RankingPartRecord>()
+                .Where(t => t.ContentIdentifier == gameId);
+            subPoints = CheckDeviceType(subPoints, device);
+            subPoints = subPoints
+                .Where(s => s.Identifier == rprAlias.Identifier)
+                .SelectList(li => li
+                    .SelectMax(rec => rec.Point)
+                );
+
+            QueryOver<RankingPartRecord, RankingPartRecord> subDate = QueryOver.Of<RankingPartRecord>()
+                .Where(t => t.ContentIdentifier == gameId);
+            subDate = CheckDeviceType(subDate, device);
+            subDate = subDate
+                .Where(s => s.Identifier == rprAlias.Identifier)
+                .And(s => s.Point == rprAlias.Point)
+                .SelectList(li => li
+                    .SelectMin(rec => rec.RegistrationDate)
+                );
+
+            qoRpr = qoRpr
+                .WithSubquery.WhereProperty(rpr => rpr.Point).Eq(subPoints)
+                .WithSubquery.WhereProperty(rpr => rpr.RegistrationDate).In(subDate);
+
+            qoRpr = CheckSortDirection(qoRpr, Ascending);
+
+            return qoRpr.Skip(pageSize * (page - 1)).Take(pageSize);
+        }
+
+        /// <summary>
+        /// Method used to query the db for a specific ranking (by game, device) and a specific range of results (paging)
+        /// </summary>
+        /// <param name="gameId">The Id of the game for which we want the ranking table.</param>
+        /// <param name="device">A string representing the tipe of device for which we want the ranking. This is obtained as a 
+        /// TipoDispositivo.value.ToString(). Any other string causes this method to default to returning the general ranking.</param>
+        /// <param name="page">The page of the results in the ranking. This is 1-based (the top-most results are on page 1).</param>
+        /// <param name="pageSize">The size of a page of results, corresponding to the maximum number of socres to return.</param>
+        /// <param name="Ascending">A flag to determine the sorting order for the scores: <value>true</value> order by ascending score; 
+        /// <value>false</value> order by descending score.</param>
+        /// <returns>A <type>List &lt; RankingTemplateVM &gt;</type> containingn the objects representing the desired ranking.</returns>
+        /// <example> QueryForRanking (3, TipoDispositivo.Apple.ToString()) would return the top10 scores for game number 3
+        /// scored by iOs users, sorted from the highest score down.</example>
+        public List<RankingTemplateVM> QueryForRanking(
+            Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false) {
+            //TODO: the query string should be tested on different instances.
+            var session = _sessionLocator.For(typeof(RankingPartRecord));
+            //TODO: test the query on both MySql and Postgre 
+            //List<RankingTemplateVM> lRank = new List<RankingTemplateVM>(); //list we will return
+            //string queryDeviceCondition = "";
+            //if (device == TipoDispositivo.Apple.ToString())
+            //    queryDeviceCondition += "AND Device = '" + TipoDispositivo.Apple + "' ";
+            //else if (device == TipoDispositivo.Android.ToString())
+            //    queryDeviceCondition += "AND Device = '" + TipoDispositivo.Android + "' ";
+            //else if (device == TipoDispositivo.WindowsMobile.ToString())
+            //    queryDeviceCondition += "AND Device = '" + TipoDispositivo.WindowsMobile + "' ";
+            //THe following commented lines contain the original SQL query we used
+            #region original SQL query
+            ////if we create a SQL query, we use [table names] instead of Domain.Names, so we need the following line
+            //string tableName = ((ILockable)session.GetSessionImplementation().GetEntityPersister(null, new RankingPartRecord())).RootTableName;
+            //string subQueryPoints = "SELECT MAX(Point) "
+            //        + "FROM [" + tableName + "] " //Laser.Orchard.Questionnaires.Models.RankingPartRecord "
+            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+            //        + "AND Identifier = rpr.Identifier ";
+            //string subQueryDate = "SELECT MIN(RegistrationDate) "
+            //        + "FROM [" + tableName + "] " //Laser.Orchard.Questionnaires.Models.RankingPartRecord "
+            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+            //        + "GROUP BY Identifier, Point ";
+            //string queryTable = "SELECT rpr.[Point], rpr.[Identifier], rpr.[UsernameGameCenter], rpr.[Device], rpr.[ContentIdentifier], rpr.[User_Id], rpr.[AccessSecured], rpr.[RegistrationDate] "
+            //        + "FROM [" + tableName + "] as rpr " //Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
+            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+            //        + "AND Point = ( " + subQueryPoints + " ) "
+            //        + "AND RegistrationDate IN ( " + subQueryDate + " ) ";
+            //if (Ascending)
+            //    queryTable += "ORDER BY Point ";
+            //else
+            //    queryTable += "ORDER BY Point DESC "; 
+            //var tableQuery = session
+            //    .CreateSQLQuery(queryTable)
+            //    .SetFirstResult((pageSize * (page - 1)))    //paging
+            //    .SetMaxResults(pageSize); ;                 //paging
+            ////var ranking = tableQuery.List();
+            //var ranking = tableQuery
+            //    .SetResultTransformer(Transformers.AliasToBean<RankingPartRecordIntermediate>())
+            //    .List();
+            ////get the query results into the list
+            //foreach (RankingPartRecordIntermediate obj in ranking) {
+            //    lRank.Add(ConvertFromDBData(obj));
+            //}
+            #endregion
+
+            #region HQL query on nHibernate
+            //string subHQLPoints = "SELECT MAX(Point) "
+            //        + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord "
+            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+            //        + "AND Identifier = rpr.Identifier ";
+            //string subHQLDate = "SELECT MIN(RegistrationDate) "
+            //        + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord "
+            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+            //        + "GROUP BY Identifier, Point ";
+            //string hqlTable = "SELECT rpr.Point as Point, rpr.Identifier as Identifier, rpr.UsernameGameCenter as UsernameGameCenter, rpr.Device as Device, rpr.ContentIdentifier as ContentIdentifier, rpr.User_Id as User_Id, rpr.AccessSecured as AccessSecured, rpr.RegistrationDate as RegistrationDate "
+            //        + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
+            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
+            //        + "AND Point = ( " + subHQLPoints + " ) "
+            //        + "AND RegistrationDate IN ( " + subHQLDate + " ) ";
+            //if (Ascending)
+            //    hqlTable += "ORDER BY Point ";
+            //else
+            //    hqlTable += "ORDER BY Point DESC "; 
+            //var tableHQL = session
+            //    .CreateQuery(hqlTable)
+            //    .SetFirstResult((pageSize * (page - 1)))    //paging
+            //    .SetMaxResults(pageSize);                   //paging
+            //var ranking = tableHQL
+            //    .SetResultTransformer(Transformers.AliasToBean<RankingPartRecord>()) //to use this we explicitly give the aliases in the query
+            //    .List();
+            ////get the query results into the list
+            //foreach (RankingPartRecord obj in ranking) {
+            //    lRank.Add(ConvertFromDBData(obj));
+            //}
+            #endregion
+
+
+            #region nHibernate query
+
+            //var ranking = GenerateRankingQuery(gameId: gameId, device: device, page: page, pageSize: pageSize)
+            //    .GetExecutableQueryOver(session)
+            //    //.TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+            //    .List();
+            var rankrank = GenerateRankingQuery(gameId: gameId, device: device, page: page, pageSize: pageSize)
+                .GetExecutableQueryOver(session)
+                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+                .List<RankingTemplateVM>();
+            ////TODO: do this step with a custom transformer directly in the nHibernate query (implementing IResultTransformer) 
+            ////see https://github.com/nhibernate/nhibernate-core/tree/master/src/NHibernate/Transform for examples
+            //foreach (RankingPartRecord obj in ranking) {
+            //    lRank.Add(ConvertFromDBData(obj));
+            //}
+            #endregion
+
+
+            return rankrank.ToList(); // lRank;
+        }
+
+        /// <summary>
+        /// Verifies what kind of device we want to query for, and eventually adds the corresponding query.
+        /// </summary>
+        /// <param name="qoRpr">The <type>QueryOver</type> object we are building the query on.</param>
+        /// <param name="devType">A <type>string</type> containing the name of the device type.</param>
+        /// <returns>A <type>QueryOver</type> object built from the one passed as parameter by adding the device query.</returns>
+        private QueryOver<RankingPartRecord, RankingPartRecord> CheckDeviceType(QueryOver<RankingPartRecord, RankingPartRecord> qoRpr, string devType) {
+            if (devType == TipoDispositivo.Apple.ToString())
+                return qoRpr.Where(t => t.Device == TipoDispositivo.Apple);
+            else if (devType == TipoDispositivo.Android.ToString())
+                return qoRpr.Where(t => t.Device == TipoDispositivo.Android);
+            else if (devType == TipoDispositivo.WindowsMobile.ToString())
+                return qoRpr.Where(t => t.Device == TipoDispositivo.WindowsMobile);
+            return qoRpr; //general case
+        }
+        /// <summary>
+        /// Verifies the sort direction required
+        /// </summary>
+        /// <param name="qoRpr">The <type>QueryOver</type> object we are building the query on.</param>
+        /// <param name="Ascending">A <type>bool</type> telling the sorting direction.</param>
+        /// <returns>A <type>QueryOver</type> object built from the one passed as parameter by adding the sort query.</returns>
+        private QueryOver<RankingPartRecord, RankingPartRecord> CheckSortDirection(QueryOver<RankingPartRecord, RankingPartRecord> qoRpr, bool Ascending) {
+            if (Ascending)
+                return qoRpr.OrderBy(r => r.Point).Asc;
+            else
+                return qoRpr.OrderBy(r => r.Point).Desc;
+        }
+
+        /// <summary>
+        /// Method filling up a <type>RanKingTemplateVM</type> object from a <type>RankingPartRecordIntermediate</type> object. The <type>RanKingTemplateVM</type>
+        /// object has a filed of type <type>TipoDispositivo</type>. The corresponding record is read as a <type>string</type> from the DB. For this reason we use
+        /// an intermediate class to store what we read from the db, and then convert it into the proper type.
+        /// </summary>
+        /// <param name="rpri">A <type>RankingPartRecordIntermediate</type> object, corresponding to a record as read from the DB.</param>
+        /// <returns>A <type>RanKingTemplateVM</type> object, corresponding to the record we read from the DB.</returns>
+        private RankingTemplateVM ConvertFromDBData(RankingPartRecordIntermediate rpri) {
+            RankingTemplateVM ret = new RankingTemplateVM();
+            ret.Point = rpri.Point;
+            ret.Identifier = rpri.Identifier;
+            ret.UsernameGameCenter = rpri.UsernameGameCenter;
+            if (rpri.Device == TipoDispositivo.Android.ToString())
+                ret.Device = TipoDispositivo.Android;
+            else if (rpri.Device == TipoDispositivo.Apple.ToString())
+                ret.Device = TipoDispositivo.Apple;
+            else if (rpri.Device == TipoDispositivo.WindowsMobile.ToString())
+                ret.Device = TipoDispositivo.WindowsMobile;
+            ret.ContentIdentifier = rpri.ContentIdentifier;
+            ret.name = getusername(rpri.User_Id);
+            ret.AccessSecured = rpri.AccessSecured;
+            ret.RegistrationDate = rpri.RegistrationDate;
+            return ret;
+        }
+        /// <summary>
+        /// Method filling up a <type>RanKingTemplateVM</type> object from a <type>RankingPartRecord</type> object. The <type>RanKingTemplateVM</type>
+        /// object has a filed of type <type>TipoDispositivo</type>. The corresponding record is read as a <type>string</type> from the DB. For this reason we use
+        /// an intermediate class to store what we read from the db, and then convert it into the proper type.
+        /// </summary>
+        /// <param name="rpr">A <type>RankingPartRecord</type> object, corresponding to a record as read from the DB.</param>
+        /// <returns>A <type>RanKingTemplateVM</type> object, corresponding to the record we read from the DB.</returns>
+        private RankingTemplateVM ConvertFromDBData(RankingPartRecord rpr) {
+            RankingTemplateVM ret = new RankingTemplateVM();
+            ret.Point = rpr.Point;
+            ret.Identifier = rpr.Identifier;
+            ret.UsernameGameCenter = rpr.UsernameGameCenter;
+            ret.Device = rpr.Device;
+            ret.ContentIdentifier = rpr.ContentIdentifier;
+            ret.name = getusername(rpr.User_Id);
+            ret.AccessSecured = rpr.AccessSecured;
+            ret.RegistrationDate = rpr.RegistrationDate;
+            return ret;
+        }
+
 
         public void Save(QuestionnaireWithResultsViewModel editModel, IUser currentUser, string SessionID) {
             var questionnaireModuleSettings = _orchardServices.WorkContext.CurrentSite.As<QuestionnaireModuleSettingsPart>();

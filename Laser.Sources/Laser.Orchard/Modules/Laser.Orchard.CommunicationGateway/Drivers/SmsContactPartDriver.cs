@@ -86,10 +86,14 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                             }
                         if (vmel.Id > 0) {
                             CommunicationSmsRecord cmr = _repoSms.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
-                            if (cmr.Sms != vmel.Sms || cmr.Prefix != vmel.Prefix || cmr.Validated != vmel.Validated) {
+                            if (cmr.Sms != vmel.Sms || cmr.Prefix != vmel.Prefix || cmr.Validated != vmel.Validated|| 
+                                cmr.AccettatoUsoCommerciale != vmel.AccettatoUsoCommerciale ||
+                                cmr.AutorizzatoTerzeParti != vmel.AutorizzatoTerzeParti) {
                                 cmr.Sms = vmel.Sms;
                                 cmr.Prefix = vmel.Prefix;
                                 cmr.Validated = vmel.Validated;
+                                cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
+                                cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
                                 cmr.DataModifica = DateTime.Now;
                                 _repoSms.Update(cmr);
 
@@ -102,6 +106,8 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                             Mapper.Map(vm, cmr);
                             cmr.Sms = vmel.Sms;
                             cmr.Validated = vmel.Validated;
+                            cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
+                            cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
                             cmr.Prefix = vmel.Prefix;
                             cmr.SmsContactPartRecord_Id = part.Id;
                             _repoSms.Create(cmr);

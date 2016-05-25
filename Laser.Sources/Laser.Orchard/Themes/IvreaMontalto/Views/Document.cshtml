@@ -4,6 +4,9 @@
     var tenantName = settings.Name;
 
     var title = String.Concat(Layout.Title, " - ", WorkContext.CurrentSite.SiteName);
+	 if (string.IsNullOrEmpty(Layout.Title.ToString())){
+    	title =WorkContext.CurrentSite.SiteName;
+    }
     var subthemePath = "~/Themes/IvreaMontalto/Styles/";
 
 }

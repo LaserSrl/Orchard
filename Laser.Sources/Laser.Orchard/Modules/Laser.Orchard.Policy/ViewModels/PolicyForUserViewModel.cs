@@ -13,8 +13,11 @@ namespace Laser.Orchard.Policy.ViewModels {
     public class PoliciesForUserViewModel {
         public PoliciesForUserViewModel() {
             Policies = new List<PolicyForUserViewModel>();
+            EditMode = false;
         }
-        public IList<PolicyForUserViewModel> Policies{ get; set; }
+
+        public IList<PolicyForUserViewModel> Policies { get; set; }
+        public bool EditMode { get; set; }
     }
 
     public class SimplePoliciesForUserViewModel {
@@ -35,5 +38,14 @@ namespace Laser.Orchard.Policy.ViewModels {
         public bool OldAccepted { get; set; }
         public bool Accepted { get; set; }
     
+    }
+
+    public class PolicyHistoryViewModel {
+        public int PolicyId { get; set; }
+        public string PolicyTitle { get; set; }
+        public PolicyTypeOptions PolicyType { get; set; }
+        public bool Accepted { get; set; }
+        public DateTime AnswerDate { get; set; }
+        public DateTime? EndValidity { get; set; }
     }
 }

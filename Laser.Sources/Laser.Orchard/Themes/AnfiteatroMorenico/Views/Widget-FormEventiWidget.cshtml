@@ -17,23 +17,23 @@
     <form action="" method="get">
             <input type="hidden" name="termids" value="@termids">
         <div class="form-group">
-            <label>@T("Inserisci la data")</label>
+            <label>@T("Insert date")</label>
         </div>
         <div class="col-xs-12 col-lg-6 form-group">
-            <label for="da_data">@T("dal")</label>
-            <input type="text" id="da_data" class="form-control datepicker" placeholder="@T("Data")" name="datainizio" value="@datainizio">
+            <label for="da_data">@T("from")</label>
+            <input type="text" id="da_data" class="form-control datepicker" placeholder="@T("Date")" name="datainizio" value="@datainizio">
         </div>
         <div class="col-xs-12 col-lg-6 form-group">
-            <label for="a_data">@T("al")</label>
-            <input type="text" id="a_data" class="form-control datepicker" placeholder="@T("Data")" name="datafine" value="@datafine">
+            <label for="a_data">@T("to")</label>
+            <input type="text" id="a_data" class="form-control datepicker" placeholder="@T("Date")" name="datafine" value="@datafine">
         </div>
 @*        <div class="form-group">
-            <label>@T("Cerca l'evento")</label>
-            <input type="text" class="form-control" placeholder="@T("Cerca l'evento...")" name="cerca">
+            <label>@T("Search for the event")</label>
+            <input type="text" class="form-control" placeholder="@T("Search for the event...")" name="cerca">
         </div>*@
         <div class="clear"></div>
-        <input type="submit" class="btn btn-danger btn-eventi pull-right" value="@T("Cerca")" />
-        @Html.AntiForgeryTokenOrchard()
+        <input type="submit" class="btn btn-danger btn-eventi pull-right" value="@T("Search")" />
+        @*@Html.AntiForgeryTokenOrchard()*@
     </form>
     <script>
         $(document).ready(function () {

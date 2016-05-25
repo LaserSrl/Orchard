@@ -1,0 +1,177 @@
+msgctxt "~/Modules/Orchard.Localization/Module.txt"
+msgid "Localization"
+msgstr "Localisation"
+
+msgctxt "~/Modules/Orchard.Localization/Module.txt"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+msgctxt "~/Modules/Orchard.Localization/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.Localization/Module.txt"
+msgid "The localization module enables the localization of content items."
+msgstr "Le module de localisation permet la localisation de contenus."
+
+msgctxt "~/Modules/Orchard.Localization/Module.txt"
+msgid "Enables localization of content items."
+msgstr "Permet la localisation des éléments de contenu."
+
+#. "Orchard.Localization.DateTimeFormat.Category"
+msgctxt "~/Modules/Orchard.Localization/Module.txt"
+msgid "Content"
+msgstr "Contenu"
+
+msgctxt "~/Modules/Orchard.Localization/Module.txt"
+msgid "Content Localization"
+msgstr "Localisation de contenu"
+
+msgctxt "~/Modules/Orchard.Localization/Module.txt"
+msgid "Enables localization of date/time formats and names of days and months."
+msgstr "Permet la localisation des formats de date/heure et les noms des jours et des mois."
+
+msgctxt "~/Modules/Orchard.Localization/Module.txt"
+msgid "Date/Time Format Localization"
+msgstr "Localisation de format de date/heure"
+
+#: "Orchard.Localization.Controllers.AdminController"
+msgctxt "Orchard.Localization.Controllers.AdminController"
+msgid "Edited content item translation."
+msgstr "Traduction du contenu modifiée."
+
+#: "Orchard.Localization.Controllers.AdminController"
+msgctxt "Orchard.Localization.Controllers.AdminController"
+msgid "Created content item translation."
+msgstr "Traduction du contenu créée."
+
+#. "Localization"
+msgctxt "Orchard.Localization.Projections.CurrentCultureFilter"
+msgid "Localization"
+msgstr "Localisation"
+
+#. "For current culture"
+msgctxt "Orchard.Localization.Projections.CurrentCultureFilter"
+msgid "For current culture"
+msgstr "Pour la culture en cours"
+
+#: "Orchard.Localization.Projections.CurrentCultureFilter"
+msgctxt "Orchard.Localization.Projections.CurrentCultureFilter"
+msgid "Localized content items for current culture"
+msgstr "Eléments de contenu localisés pour la culture en cours"
+
+#: "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgctxt "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgid "January, February, March, April, May, June, July, August, September, October, November, December"
+msgstr "Janvier, F&eacute;vrier, Mars, Avril, Mai, Juin, Juillet, Ao&ucirc;t, Septembre, Octobre, Novembre, D&eacute;cembre"
+
+#: "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgctxt "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgid "Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec"
+msgstr "Janv., Fevr., Mars, Avril, Mai, Juin, Juil., Aout, Sept., Oct., Nov., Dec"
+
+#: "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgctxt "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgid "Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday"
+msgstr "Dimanche, Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi"
+
+#: "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgctxt "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgid "Sun, Mon, Tue, Wed, Thu, Fri, Sat"
+msgstr "Dim, Lun, Mar, Mer, Jeu, Ven, Sam"
+
+#: "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgctxt "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgid "Su, Mo, Tu, We, Th, Fr, Sa"
+msgstr "Di, Lu, Ma, Me, Je, Ve, Sa"
+
+#: "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgctxt "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgid "M/d/yyyy"
+msgstr "dd/MM/yyyy"
+
+#: "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgctxt "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgid "h:mm tt"
+msgstr "HH:mm"
+
+#: "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgctxt "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgid "dddd, MMMM d, yyyy"
+msgstr "dddd dd MMMM yyyy"
+
+#: "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgctxt "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgid "h:mm:ss tt"
+msgstr "HH:mm:ss"
+
+#: "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgctxt "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgid "firstDay: 1"
+msgstr "firstDay: 1"
+
+#: "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgctxt "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgid "use24HourTime: false"
+msgstr "use24HourTime: true"
+
+#: "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgctxt "Orchard.Localization.Services.LocalizationDateTimeFormatProvider"
+msgid "AM;PM"
+msgstr " "
+
+#: "~/Modules/Orchard.Localization/Views/CultureSelection.cshtml"
+msgctxt "~/Modules/Orchard.Localization/Views/CultureSelection.cshtml"
+msgid "Content Localization"
+msgstr "Localisation de contenu"
+
+#: "~/Modules/Orchard.Localization/Views/CultureSelection.cshtml"
+msgctxt "~/Modules/Orchard.Localization/Views/CultureSelection.cshtml"
+msgid "This is the <em>{0}</em> variation of {1}"
+msgstr "Ceci est la version <em>{0}</em> de {1}."
+
+#: "~/Modules/Orchard.Localization/Views/Admin/Translate.cshtml"
+msgctxt "~/Modules/Orchard.Localization/Views/Admin/Translate.cshtml"
+msgid "Translate Content"
+msgstr "Traduire le contenu"
+
+#: "~/Modules/Orchard.Localization/Views/EditorTemplates/Parts/Localization.ContentTranslations.Edit.cshtml"
+msgctxt "~/Modules/Orchard.Localization/Views/EditorTemplates/Parts/Localization.ContentTranslations.Edit.cshtml"
+msgid "Content Localization"
+msgstr "Localisation de contenu"
+
+#: "~/Modules/Orchard.Localization/Views/EditorTemplates/Parts/Localization.ContentTranslations.Edit.cshtml"
+msgctxt "~/Modules/Orchard.Localization/Views/EditorTemplates/Parts/Localization.ContentTranslations.Edit.cshtml"
+msgid "This is the <em>{0}</em> variation of {1}."
+msgstr "Ceci est la traduction <em>{0}</em> de {1}."
+
+#: "~/Modules/Orchard.Localization/Views/EditorTemplates/Parts/Localization.ContentTranslations.Edit.cshtml"
+msgctxt "~/Modules/Orchard.Localization/Views/EditorTemplates/Parts/Localization.ContentTranslations.Edit.cshtml"
+msgid "Other translations:"
+msgstr "Autres traductions:"
+
+#: "~/Modules/Orchard.Localization/Views/EditorTemplates/Parts/Localization.ContentTranslations.Edit.cshtml"
+msgctxt "~/Modules/Orchard.Localization/Views/EditorTemplates/Parts/Localization.ContentTranslations.Edit.cshtml"
+msgid "+ New translation"
+msgstr "+ Nouvelle traduction"
+
+#: "~/Modules/Orchard.Localization/Views/Parts/Localization.ContentTranslations.cshtml"
+msgctxt "~/Modules/Orchard.Localization/Views/Parts/Localization.ContentTranslations.cshtml"
+msgid "Translations:"
+msgstr "Traductions:"
+
+#: "~/Modules/Orchard.Localization/Views/Parts/Localization.ContentTranslations.Summary.cshtml"
+msgctxt "~/Modules/Orchard.Localization/Views/Parts/Localization.ContentTranslations.Summary.cshtml"
+msgid "Translations:"
+msgstr "Traductions:"
+
+#: "~/Modules/Orchard.Localization/Views/Parts/Localization.ContentTranslations.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Localization/Views/Parts/Localization.ContentTranslations.SummaryAdmin.cshtml"
+msgid "Translations:"
+msgstr "Traductions:"
+
+#: "~/Modules/Orchard.Localization/Views/Parts/Localization.ContentTranslations.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Localization/Views/Parts/Localization.ContentTranslations.SummaryAdmin.cshtml"
+msgid "+ New translation"
+msgstr "+ Nouvelle traduction"
+

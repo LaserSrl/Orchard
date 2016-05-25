@@ -17,6 +17,10 @@ msgid "ContentType Permission Settings"
 msgstr "Impostazione dei permessi per il tipo di contenuto"
 
 msgctxt "~/Modules/Laser.Orchard.ContentExtension/Views/Admin/Settings.cshtml"
+msgid "If multiple permissions are set for same ContentType then, if one permission is matched, ContentType access is enabled"
+msgstr "Nel caso in cui vengano assegnati più permessi, è sufficiente anche solo una sola corrispondenza per permettere l'accesso al contenuto."
+
+msgctxt "~/Modules/Laser.Orchard.ContentExtension/Views/Admin/Settings.cshtml"
 msgid "Permission Delete"
 msgstr "Permesso di Eliminazione"
 

@@ -1,0 +1,216 @@
+msgctxt "~/Modules/Orchard.OutputCache/Module.txt"
+msgid "Output Cache"
+msgstr "Cache di output"
+
+msgctxt "~/Modules/Orchard.OutputCache/Module.txt"
+msgid "Sébastien Ros"
+msgstr "Sébastien Ros"
+
+msgctxt "~/Modules/Orchard.OutputCache/Module.txt"
+msgid "http://orchardproject.net/"
+msgstr "http://orchardproject.net/"
+
+#. "Orchard.OutputCache.Description"
+msgctxt "~/Modules/Orchard.OutputCache/Module.txt"
+msgid "Adds Output Caching functionality."
+msgstr "Aggiunge funzionalità di memorizzazione nella cache di Output."
+
+msgctxt "~/Modules/Orchard.OutputCache/Module.txt"
+msgid "Performance"
+msgstr "Prestazioni"
+
+#. "Settings"
+msgctxt "Orchard.OutputCache.AdminMenu"
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: "Orchard.OutputCache.AdminMenu"
+msgctxt "Orchard.OutputCache.AdminMenu"
+msgid "Cache"
+msgstr "Cache"
+
+#: "Orchard.OutputCache.AdminMenu"
+msgctxt "Orchard.OutputCache.AdminMenu"
+msgid "Statistics"
+msgstr "Statistiche"
+
+#. "Not allowed to manage cache"
+msgctxt "Orchard.OutputCache.Controllers.AdminController"
+msgid "Not allowed to manage cache"
+msgstr "Non sei autorizzato a gestire la cache"
+
+#: "Orchard.OutputCache.Controllers.AdminController"
+msgctxt "Orchard.OutputCache.Controllers.AdminController"
+msgid "Cache Settings saved successfully."
+msgstr "Impostazioni cache salvate con successo."
+
+#: "Orchard.OutputCache.Controllers.AdminController"
+msgctxt "Orchard.OutputCache.Controllers.AdminController"
+msgid "Could not save Cache Settings."
+msgstr "Impossibile salvare le impostazioni della cache."
+
+#. "Not allowed to manage cache"
+msgctxt "Orchard.OutputCache.Controllers.StatisticsController"
+msgid "Not allowed to manage cache"
+msgstr "Non sei autorizzato a gestire la cache"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Cache Settings"
+msgstr "Impostazioni della cache"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Default Cache Duration"
+msgstr "Durata della Cache predefinita"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Number of seconds the pages should be kept in cache on the server."
+msgstr "Numero di secondi per cui le pagine devono essere conservate nella cache del server."
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Max Age"
+msgstr "Durata massima"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "When defined, a cache-control header with a max-age property will be added. Use this in order to enable kernel cache on IIS."
+msgstr "Se definito, verrà aggiunta una intestazione cache-control con una proprietà max-age. Serve ad abilitare la cache del kernel in IIS."
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Headers"
+msgstr "Intestazioni"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Ignore no-cache headers"
+msgstr "Ignora le intestazioni no-cache"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "When checked, any request containing a 'Content-Cache: no-cache' header will still return cached values if available."
+msgstr "Quando selezionata, qualsiasi richiesta contenente una intestazione 'Content-Cache: no-cache' restituirà sempre i valori memorizzati nella cache, se disponibili."
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Vary Query String Parameters"
+msgstr "Modifica i parametri della stringa di Query"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "When defined, using comma separated values, sets caching to vary via specified query string parameters"
+msgstr "Quando definita, usando valori separati da virgola, imposta la memorizzazione nella cache al variare dei parametri specificati nella stringa di query."
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Vary Request Headers"
+msgstr "Varia in base alle intestazioni della richiesta"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "When defined, using comma separated values, sets caching to vary via specified request headers."
+msgstr "Quando definita, usando valori separati da virgola, imposta la memorizzazione nella cache al variare di specifiche intestazioni della richiesta."
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Ignored urls"
+msgstr "Indirizzi ingorati"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "This must be a set of relative paths, e.g., /, /About. Please ensure that you enter only one path per line."
+msgstr "Deve essere un insieme di percorsi relativi, es. /, /About. Controlla di aver inserito un solo percorso per riga."
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "You can add comments by starting the line with #."
+msgstr "È possibile aggiungere commenti iniziando la riga con #."
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Culture"
+msgstr "Lingua"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Differentiate cultures"
+msgstr "Tieni conto delle diverse lingue"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "When checked, the cached content will differ per culture too. For better performance, leave this unchecked if your website uses only one culture."
+msgstr "Quando selezionata, il contenuto della cache sarà diverso per ogni lingua. Per ottenere prestazioni migliori, lasciare deselezionato se il sito utilizza solo una lingua."
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Debug mode"
+msgstr "Modalità di debug"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Render caching information in cached pages"
+msgstr "Visualizza informazioni cache nelle pagine memorizzate nella cache"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Route"
+msgstr "Percorso"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Priority"
+msgstr "Priorità"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Duration"
+msgstr "Durata"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Leave empty to use default duration, 0 to disable caching on this route."
+msgstr "Lasciare vuoto per usare durata predefinita, 0 per disabilitare la cache su questo Percorso."
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Save"
+msgstr "Salva"
+
+#: "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgid "Cache Statistics"
+msgstr "Statistiche della cache"
+
+#: "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgid "Evict All"
+msgstr "Elimina tutti"
+
+#: "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgid "Cached pages"
+msgstr "Pagine memorizzate nella cache"
+
+#: "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgid "Url"
+msgstr "Url"
+
+#: "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgid "Cached On"
+msgstr "Messo nella cache il"
+
+#: "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgid "Cached Until"
+msgstr "Nella cache fino al"
+
+#: "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Statistics/Index.cshtml"
+msgid "Evict"
+msgstr "Eliminato"
+

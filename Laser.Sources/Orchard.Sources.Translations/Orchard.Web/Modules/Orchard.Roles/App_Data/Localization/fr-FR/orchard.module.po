@@ -1,0 +1,392 @@
+#. "Orchard.Roles.Name"
+msgctxt "~/Modules/Orchard.Roles/Module.txt"
+msgid "Roles"
+msgstr "Rôles"
+
+msgctxt "~/Modules/Orchard.Roles/Module.txt"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+msgctxt "~/Modules/Orchard.Roles/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+msgctxt "~/Modules/Orchard.Roles/Module.txt"
+msgid "The roles module is adding the ability to assign roles to users. It's also providing a set of default roles for which other modules can define default permissions."
+msgstr "Le module Rôles ajoute la possibilité d'assigner des rôles aux utilisateurs. Il fournit aussi un ensemble de rôles de base pour lesquels d'autres modules peuvent définir des permissions par défaut."
+
+msgctxt "~/Modules/Orchard.Roles/Module.txt"
+msgid "Standard user roles."
+msgstr "Rôles des utilisateurs standards."
+
+msgctxt "~/Modules/Orchard.Roles/Module.txt"
+msgid "Core"
+msgstr "Core"
+
+msgctxt "~/Modules/Orchard.Roles/Module.txt"
+msgid "Roles Workflows Activities"
+msgstr "Activités de Worflows pour les rôles"
+
+msgctxt "~/Modules/Orchard.Roles/Module.txt"
+msgid "Provides a role based activities."
+msgstr "Fournit des activités basées sur les rôles."
+
+msgctxt "~/Modules/Orchard.Roles/Module.txt"
+msgid "Workflows"
+msgstr "Worflows"
+
+#: "Orchard.Roles.AdminMenu"
+msgctxt "Orchard.Roles.AdminMenu"
+msgid "Users"
+msgstr "Utilisateurs"
+
+#: "Orchard.Roles.AdminMenu"
+msgctxt "Orchard.Roles.AdminMenu"
+msgid "Roles"
+msgstr "Rôles"
+
+#: "Orchard.Roles.Activities.AssignRoleActivity"
+msgctxt "Orchard.Roles.Activities.AssignRoleActivity"
+msgid "User"
+msgstr "Utilisateur"
+
+#: "Orchard.Roles.Activities.AssignRoleActivity"
+msgctxt "Orchard.Roles.Activities.AssignRoleActivity"
+msgid "Assign specific roles to the current content item if it's a user."
+msgstr "Affecte des rôles spécifiques à l'élément de contenu en cours si c'est un utilisateur."
+
+#. "Done"
+msgctxt "Orchard.Roles.Activities.AssignRoleActivity"
+msgid "Done"
+msgstr "Terminé"
+
+#: "Orchard.Roles.Activities.IsInRoleActivity"
+msgctxt "Orchard.Roles.Activities.IsInRoleActivity"
+msgid "Conditions"
+msgstr "Conditions"
+
+#: "Orchard.Roles.Activities.IsInRoleActivity"
+msgctxt "Orchard.Roles.Activities.IsInRoleActivity"
+msgid "Whether the current user is in a specific role."
+msgstr "Si l'utilisateur en cours est dans un rôle spécifique."
+
+#. "Yes"
+msgctxt "Orchard.Roles.Activities.IsInRoleActivity"
+msgid "Yes"
+msgstr "Oui"
+
+#. "No"
+msgctxt "Orchard.Roles.Activities.IsInRoleActivity"
+msgid "No"
+msgstr "Non"
+
+#: "Orchard.Roles.Activities.UserTaskActivity"
+msgctxt "Orchard.Roles.Activities.UserTaskActivity"
+msgid "Tasks"
+msgstr "Tâches"
+
+#: "Orchard.Roles.Activities.UserTaskActivity"
+msgctxt "Orchard.Roles.Activities.UserTaskActivity"
+msgid "Wait for a user to execute a specific task."
+msgstr "Attend qu'une tâche spécifique soit exécutée par l'utilisateur."
+
+#. "List of Roles"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "List of Roles"
+msgstr "Liste des rôles"
+
+#. "--------------------------"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "--------------------------"
+msgstr "---------------------------"
+
+#: "Orchard.Roles.Commands.RoleCommands"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "{0}"
+msgstr "{0}"
+
+#. "List of Permissions"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "List of Permissions"
+msgstr "Liste des autorisations"
+
+#: "Orchard.Roles.Commands.RoleCommands"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "List of Users"
+msgstr "Liste des utilisateurs"
+
+#: "Orchard.Roles.Commands.RoleCommands"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "Adding role {0} to user {1}"
+msgstr "Ajout du rôle {0} à l'utilisateur {1}"
+
+#: "Orchard.Roles.Commands.RoleCommands"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "Removing role {0} from user {1}"
+msgstr "Effacement du rôle {0} de l'utilisateur {1}"
+
+#: "Orchard.Roles.Commands.RoleCommands"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "Adding permission {0} to role {1}"
+msgstr "Ajout de l'autorisation {0} au {1} rôle"
+
+#: "Orchard.Roles.Commands.RoleCommands"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "Removing permission {0} from role {1}"
+msgstr "Suppression de l'autorisation {0} au {1} rôle"
+
+#: "Orchard.Roles.Commands.RoleCommands"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "Role {0} already exists"
+msgstr "Le rôle {0} existe déjà"
+
+#: "Orchard.Roles.Commands.RoleCommands"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "Creating role {0}"
+msgstr "Création du rôle {0}"
+
+#: "Orchard.Roles.Commands.RoleCommands"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "Role {0} doesn't exist"
+msgstr "Le rôle {0} n'existe pas"
+
+#: "Orchard.Roles.Commands.RoleCommands"
+msgctxt "Orchard.Roles.Commands.RoleCommands"
+msgid "Deleting role {0}"
+msgstr "Suppression du rôle {0}"
+
+#. "Not authorized to manage roles"
+msgctxt "Orchard.Roles.Controllers.AdminController"
+msgid "Not authorized to manage roles"
+msgstr "Non autorisé à gérer les rôles"
+
+#. "Role name can't be empty"
+msgctxt "Orchard.Roles.Controllers.AdminController"
+msgid "Role name can't be empty"
+msgstr "Le nom de rôle ne peut pas être vide"
+
+#. "Role with same name already exists"
+msgctxt "Orchard.Roles.Controllers.AdminController"
+msgid "Role with same name already exists"
+msgstr "Un rôle avec le même nom existe déjà"
+
+#: "Orchard.Roles.Controllers.AdminController"
+msgctxt "Orchard.Roles.Controllers.AdminController"
+msgid "Your Role has been saved."
+msgstr "Le rôle a été enregistré."
+
+#: "Orchard.Roles.Controllers.AdminController"
+msgctxt "Orchard.Roles.Controllers.AdminController"
+msgid "Role was successfully deleted."
+msgstr "Le rôle a été supprimé."
+
+#: "Orchard.Roles.Drivers.UserRolesPartDriver"
+msgctxt "Orchard.Roles.Drivers.UserRolesPartDriver"
+msgid "Adding role {0} to user {1}"
+msgstr "Ajout du rôle {0} à l'utilisateur {1}"
+
+#: "Orchard.Roles.Drivers.UserRolesPartDriver"
+msgctxt "Orchard.Roles.Drivers.UserRolesPartDriver"
+msgid "Removing role {0} from user {1}"
+msgstr "Effacement du rôle {0} de l'utilisateur {1}"
+
+#: "Orchard.Roles.Drivers.UserTaskDriver"
+msgctxt "Orchard.Roles.Drivers.UserTaskDriver"
+msgid "Not authorized to trigger {0}."
+msgstr "Non autorisé à déclencher {0}."
+
+#: "Orchard.Roles.Forms.SelectRolesForms"
+msgctxt "Orchard.Roles.Forms.SelectRolesForms"
+msgid "Roles"
+msgstr "Rôles"
+
+#: "Orchard.Roles.Forms.SelectRolesForms"
+msgctxt "Orchard.Roles.Forms.SelectRolesForms"
+msgid "Select some roles."
+msgstr "Sélectionner des rôles."
+
+#: "Orchard.Roles.Forms.SelectRolesForms"
+msgctxt "Orchard.Roles.Forms.SelectRolesForms"
+msgid "Any"
+msgstr "Tous"
+
+#: "Orchard.Roles.Forms.UserTaskForms"
+msgctxt "Orchard.Roles.Forms.UserTaskForms"
+msgid "Roles"
+msgstr "Rôles"
+
+#: "Orchard.Roles.Forms.UserTaskForms"
+msgctxt "Orchard.Roles.Forms.UserTaskForms"
+msgid "Select some roles."
+msgstr "Sélectionner des rôles."
+
+#: "Orchard.Roles.Forms.UserTaskForms"
+msgctxt "Orchard.Roles.Forms.UserTaskForms"
+msgid "Available actions."
+msgstr "Actions disponibles."
+
+#: "Orchard.Roles.Forms.UserTaskForms"
+msgctxt "Orchard.Roles.Forms.UserTaskForms"
+msgid "A comma separated list of actions."
+msgstr "Une liste d'actions séparées par des virgules."
+
+#: "Orchard.Roles.Forms.UserTaskForms"
+msgctxt "Orchard.Roles.Forms.UserTaskForms"
+msgid "Any"
+msgstr "Tous"
+
+#: "Orchard.Roles.Services.RolesBasedAuthorizationService"
+msgctxt "Orchard.Roles.Services.RolesBasedAuthorizationService"
+msgid "A security exception occurred in the content management system."
+msgstr "Une erreur de sécurité s'est produite dans le systeme de gestion de contenu."
+
+#. "Permission {0} was not found in any of the installed modules."
+msgctxt "Orchard.Roles.Services.RoleService"
+msgid "Permission {0} was not found in any of the installed modules."
+msgstr "La permission {0} n'a pas pu être trouvée parmi les modules installés."
+
+#: "Orchard.Roles.Services.RoleService"
+msgctxt "Orchard.Roles.Services.RoleService"
+msgid "{0} Feature"
+msgstr "Fonctionnalité {0}"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgid "Add Role"
+msgstr "Ajouter un rôle"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgid "Information"
+msgstr "Information"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgid "Role Name:"
+msgstr "Nom du rôle"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgid "Permissions"
+msgstr "Permissions"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgid "{0} Module"
+msgstr "Module {0}"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgid "Permission"
+msgstr "Permission"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgid "Allow"
+msgstr "Autoriser"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Create.cshtml"
+msgid "Save"
+msgstr "Enregistrer"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgid "Edit Role"
+msgstr "Modifier le rôle"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgid "Information"
+msgstr "Information"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgid "Role Name:"
+msgstr "Nom du rôle"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgid "Permissions"
+msgstr "Permissions"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgid "Permission"
+msgstr "Permission"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgid "Allow"
+msgstr "Autoriser"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgid "Effective"
+msgstr "Effective"
+
+#. "Save"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgid "Save"
+msgstr "Enregistrer"
+
+#. "Delete"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Edit.cshtml"
+msgid "Delete"
+msgstr "Supprimer"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgid "Roles"
+msgstr "Rôles"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgid "Actions:"
+msgstr "Actions :"
+
+#. "Delete"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgid "Delete"
+msgstr "Supprimer"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgid "Apply"
+msgstr "Appliquer"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgid "Add a role"
+msgstr "Ajouter un rôle"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgid "This is a table of the roles currently available for use in your application."
+msgstr "Ceci est une liste des rôles actuellement disponibles dans votre application."
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgid "Name"
+msgstr "Nom"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgid "Edit"
+msgstr "Modifier"
+
+#: "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Admin/Index.cshtml"
+msgid " | "
+msgstr " | "
+
+#: "~/Modules/Orchard.Roles/Views/EditorTemplates/Parts/Roles.UserRoles.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/EditorTemplates/Parts/Roles.UserRoles.cshtml"
+msgid "Roles"
+msgstr "Rôles"
+
+#: "~/Modules/Orchard.Roles/Views/EditorTemplates/Parts/Roles.UserRoles.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/EditorTemplates/Parts/Roles.UserRoles.cshtml"
+msgid "There are no roles."
+msgstr "Il n'existe pas de rôles."
+

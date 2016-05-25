@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
 using Laser.Orchard.Questionnaires.Models;
+using Laser.Orchard.Questionnaires.Services;
 using Laser.Orchard.Questionnaires.ViewModels;
 using Laser.Orchard.StartupConfig.Localization;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
-using System;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Tasks.Scheduling;
+using System;
 using System.Globalization;
+using Orchard.Localization.Services;
 
 namespace Laser.Orchard.Questionnaires.Drivers {
 
@@ -22,7 +25,9 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             get { return "Laser.Mobile.Questionnaires.Game"; }
         }
 
-        public GamePartDriver(IOrchardServices orchardServices, IDateLocalization dateLocalization) {
+        public GamePartDriver(IOrchardServices orchardServices, IDateLocalization dateLocalization,
+            IScheduledTaskManager taskManager, IDateServices dateServices,
+            IQuestionnairesServices questionnairesServices) {
             _orchardServices = orchardServices;
             _dateLocalization = dateLocalization;
         }
@@ -48,6 +53,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                     part.GameDate = _dateLocalization.StringToDatetime(viewModel.GameDate, "") ?? DateTime.Now;
                 }
             }
+            
             return Editor(part, shapeHelper);
         }
 

@@ -112,3 +112,11 @@ msgctxt "Laser.Orchard.Fidelity.Controllers.FidelityController"
 msgid "Unable to register: {0}"
 msgstr "Impossibile portare a termine la registrazione: {0}"
 
+msgctxt "Laser.Orchard.Fidelity.Handlers.FidelitySiteSettingsHandler"
+msgid "Fidelity"
+msgstr "Fedeltà"
+
+msgctxt "Laser.Orchard.Fidelity.Menus.LoyalzooBackEndMenu"
+msgid "Fidelity"
+msgstr "Fedeltà"
+

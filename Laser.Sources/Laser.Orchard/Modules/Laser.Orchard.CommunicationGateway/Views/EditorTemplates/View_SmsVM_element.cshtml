@@ -22,6 +22,10 @@
     <br />
     <span>Produzione:</span>    @Html.DisplayFor(x => x.Produzione)
     <br />
+    <span>@T("Commercial use"):</span>    @Html.EditorFor(x => x.AccettatoUsoCommerciale)
+    <br />
+    <span>@T("Third party"):</span>    @Html.EditorFor(x => x.AutorizzatoTerzeParti)
+    <br />
     <span>Data Creazione :</span>    @Model.DataInserimento
     <br />
     <span>Ultima modifica:</span>    @Model.DataModifica

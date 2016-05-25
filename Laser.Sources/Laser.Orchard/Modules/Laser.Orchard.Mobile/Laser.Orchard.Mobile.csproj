@@ -155,9 +155,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\smsScript.js" />
     <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.Config.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -174,6 +184,7 @@
     <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.StatusByExtId.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
     <None Include="Service References\SmsServiceReference\SmsWebService.disco" />
     <None Include="Service References\SmsServiceReference\configuration91.svcinfo" />
     <None Include="Service References\SmsServiceReference\configuration.svcinfo" />
@@ -201,7 +212,6 @@
     <Content Include="Views\DefinitionTemplates\PushMobilePartSettingVM.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\SmsSettingsPart_Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\UserPwdRecoveryPart_Edit.cshtml" />
-    <Content Include="Views\EditorTemplates\Fields\ContentPicker.Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\MobileContact_Edit.cshtml" />
     <Content Include="Views\Parts\MobilePush.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\SmsGateway_Edit.cshtml" />
@@ -209,6 +219,7 @@
     <Content Include="Views\EditorTemplates\Parts\SmsPlaceholders.Settings.cshtml" />
     <Content Include="Views\EditorTemplates\SmsPlaceholder.cshtml" />
     <Content Include="Views\Parts\SmsGateway_SummaryAdmin.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\MobilePushApproved_Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CountPanelController.cs" />
@@ -287,7 +298,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Lib\" />
-    <Folder Include="Views\TransferDeliveryReport\" />
+    <Folder Include="Views\EditorTemplates\Fields\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PushNotification\Index.cshtml" />

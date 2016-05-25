@@ -40,6 +40,7 @@ a:hover, a:focus{text-decoration:none;}
 .contorno-slide{margin-top:-103px; position:relative; z-index:2;}
 .logo{position:relative; margin:-260px auto 0; z-index:3; max-width:210px;}
 .slide{position:relative; z-index:1; height:500px; background-size:cover; background-repeat: no-repeat; background-position:center bottom;}
+.slide.minimized { height:300px; }
 
 /* ----- MENU ----- */
 .navbar{border-radius:0; margin-bottom:0;}

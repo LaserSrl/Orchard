@@ -1,0 +1,747 @@
+msgctxt "~/Modules/Orchard.Workflows/Module.txt"
+msgid "Workflows"
+msgstr "Flussi di lavoro"
+
+msgctxt "~/Modules/Orchard.Workflows/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il Team di Orchard"
+
+msgctxt "~/Modules/Orchard.Workflows/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+#. "Orchard.Workflows.Description"
+msgctxt "~/Modules/Orchard.Workflows/Module.txt"
+msgid "Provides tools to create custom workflows."
+msgstr "Fornisce strumenti per creare flussi di lavoro personalizzati."
+
+#. "Workflows"
+msgctxt "Orchard.Workflows.AdminMenu"
+msgid "Workflows"
+msgstr "Flussi di lavoro"
+
+#: "Orchard.Workflows.Activities.BranchActivity"
+msgctxt "Orchard.Workflows.Activities.BranchActivity"
+msgid "Flow"
+msgstr "Flusso"
+
+#: "Orchard.Workflows.Activities.BranchActivity"
+msgctxt "Orchard.Workflows.Activities.BranchActivity"
+msgid "Splits the workflow on different branches."
+msgstr "Suddivide il flusso di lavoro in diversi rami."
+
+#. "Done"
+msgctxt "Orchard.Workflows.Activities.ContentActivity"
+msgid "Done"
+msgstr "Completato"
+
+#: "Orchard.Workflows.Activities.ContentActivity"
+msgctxt "Orchard.Workflows.Activities.ContentActivity"
+msgid "Content Items"
+msgstr "Elementi di Contenuto"
+
+#: "Orchard.Workflows.Activities.ContentActivity"
+msgctxt "Orchard.Workflows.Activities.ContentActivity"
+msgid "Content is created."
+msgstr "Il contenuto è stato creato."
+
+#: "Orchard.Workflows.Activities.ContentActivity"
+msgctxt "Orchard.Workflows.Activities.ContentActivity"
+msgid "Content is updated."
+msgstr "ll contenuto è stato aggiornato."
+
+#: "Orchard.Workflows.Activities.ContentActivity"
+msgctxt "Orchard.Workflows.Activities.ContentActivity"
+msgid "Content is published."
+msgstr "ll contenuto è stato pubblicato."
+
+#: "Orchard.Workflows.Activities.ContentActivity"
+msgctxt "Orchard.Workflows.Activities.ContentActivity"
+msgid "Content is versioned."
+msgstr "ll contenuto è stato aggiornato con il tracciamento della modifica."
+
+#: "Orchard.Workflows.Activities.ContentActivity"
+msgctxt "Orchard.Workflows.Activities.ContentActivity"
+msgid "Content is removed."
+msgstr "Il contenuto è stato eliminato."
+
+#. "Deleted"
+msgctxt "Orchard.Workflows.Activities.DeleteActivity"
+msgid "Deleted"
+msgstr "Eliminato"
+
+#: "Orchard.Workflows.Activities.DeleteActivity"
+msgctxt "Orchard.Workflows.Activities.DeleteActivity"
+msgid "Content Items"
+msgstr "Elementi di Contenuto"
+
+#: "Orchard.Workflows.Activities.DeleteActivity"
+msgctxt "Orchard.Workflows.Activities.DeleteActivity"
+msgid "Delete the content item."
+msgstr "Elimina il contenuto."
+
+#: "Orchard.Workflows.Activities.ExclusiveBranchActivity"
+msgctxt "Orchard.Workflows.Activities.ExclusiveBranchActivity"
+msgid "Splits the workflow on different branches, activating the first event to occur."
+msgstr "Suddivide il flusso di lavoro su diversi rami, attivando il primo evento che si verifica."
+
+#: "Orchard.Workflows.Activities.LoggingActivity"
+msgctxt "Orchard.Workflows.Activities.LoggingActivity"
+msgid "Diagnostics"
+msgstr "Diagnostica"
+
+#: "Orchard.Workflows.Activities.LoggingActivity"
+msgctxt "Orchard.Workflows.Activities.LoggingActivity"
+msgid "Creates an entry in the application's logs."
+msgstr "Crea una voce nei log dell'applicazione."
+
+#. "Done"
+msgctxt "Orchard.Workflows.Activities.LoggingActivity"
+msgid "Done"
+msgstr "Completato"
+
+#. "Done"
+msgctxt "Orchard.Workflows.Activities.MergeActivity"
+msgid "Done"
+msgstr "Completato"
+
+#: "Orchard.Workflows.Activities.MergeActivity"
+msgctxt "Orchard.Workflows.Activities.MergeActivity"
+msgid "Flow"
+msgstr "Flusso"
+
+#: "Orchard.Workflows.Activities.MergeActivity"
+msgctxt "Orchard.Workflows.Activities.MergeActivity"
+msgid "Merges multiple branches."
+msgstr "Unisce più rami."
+
+#: "Orchard.Workflows.Activities.NotificationActivity"
+msgctxt "Orchard.Workflows.Activities.NotificationActivity"
+msgid "Notification"
+msgstr "Notifica"
+
+#: "Orchard.Workflows.Activities.NotificationActivity"
+msgctxt "Orchard.Workflows.Activities.NotificationActivity"
+msgid "Display a message."
+msgstr "Visualizza un messaggio."
+
+#. "Done"
+msgctxt "Orchard.Workflows.Activities.NotificationActivity"
+msgid "Done"
+msgstr "Completato"
+
+#. "Published"
+msgctxt "Orchard.Workflows.Activities.PublishActivity"
+msgid "Published"
+msgstr "Pubblicato"
+
+#: "Orchard.Workflows.Activities.PublishActivity"
+msgctxt "Orchard.Workflows.Activities.PublishActivity"
+msgid "Content Items"
+msgstr "Elementi di Contenuto"
+
+#: "Orchard.Workflows.Activities.PublishActivity"
+msgctxt "Orchard.Workflows.Activities.PublishActivity"
+msgid "Publish the content item."
+msgstr "Pubblica il contenuto."
+
+#: "Orchard.Workflows.Activities.RedirectActivity"
+msgctxt "Orchard.Workflows.Activities.RedirectActivity"
+msgid "HTTP"
+msgstr "HTTP"
+
+#: "Orchard.Workflows.Activities.RedirectActivity"
+msgctxt "Orchard.Workflows.Activities.RedirectActivity"
+msgid "Redirects to the specified URL."
+msgstr "Rimanda alla pagina specificata."
+
+#. "Done"
+msgctxt "Orchard.Workflows.Activities.SignalActivity"
+msgid "Done"
+msgstr "Completato"
+
+#: "Orchard.Workflows.Activities.SignalActivity"
+msgctxt "Orchard.Workflows.Activities.SignalActivity"
+msgid "Events"
+msgstr "Eventi"
+
+#: "Orchard.Workflows.Activities.SignalActivity"
+msgctxt "Orchard.Workflows.Activities.SignalActivity"
+msgid "Suspends the workflow until this signal is specifically triggered."
+msgstr "Sospende il flusso di lavoro fino a quando questo segnale viene attivato in modo specifico."
+
+#: "Orchard.Workflows.Activities.TimerActivity"
+msgctxt "Orchard.Workflows.Activities.TimerActivity"
+msgid "Tasks"
+msgstr "Compiti"
+
+#: "Orchard.Workflows.Activities.TimerActivity"
+msgctxt "Orchard.Workflows.Activities.TimerActivity"
+msgid "Wait for a specific time has passed."
+msgstr "Restare in attesa per un tempo specificato."
+
+#. "Done"
+msgctxt "Orchard.Workflows.Activities.TimerActivity"
+msgid "Done"
+msgstr "Completato"
+
+#. "Done"
+msgctxt "Orchard.Workflows.Activities.TriggerActivity"
+msgid "Done"
+msgstr "Completato"
+
+#: "Orchard.Workflows.Activities.TriggerActivity"
+msgctxt "Orchard.Workflows.Activities.TriggerActivity"
+msgid "Events"
+msgstr "Eventi"
+
+#: "Orchard.Workflows.Activities.TriggerActivity"
+msgctxt "Orchard.Workflows.Activities.TriggerActivity"
+msgid "Triggers a Signal by its name."
+msgstr "Attiva un segnale per nome."
+
+#. "Error"
+msgctxt "Orchard.Workflows.Activities.WebRequestActivity"
+msgid "Error"
+msgstr "Errore"
+
+#. "Success"
+msgctxt "Orchard.Workflows.Activities.WebRequestActivity"
+msgid "Success"
+msgstr "Completato"
+
+#: "Orchard.Workflows.Activities.WebRequestActivity"
+msgctxt "Orchard.Workflows.Activities.WebRequestActivity"
+msgid "HTTP"
+msgstr "HTTP"
+
+#: "Orchard.Workflows.Activities.WebRequestActivity"
+msgctxt "Orchard.Workflows.Activities.WebRequestActivity"
+msgid "Performs an HTTP request."
+msgstr "Esegue una richiesta HTTP."
+
+#. "Not authorized to list workflows"
+msgctxt "Orchard.Workflows.Controllers.AdminController"
+msgid "Not authorized to list workflows"
+msgstr "Non sei autorizzato a visualizzare l'elenco dei flussi di lavoro"
+
+#. "Not authorized to create workflows"
+msgctxt "Orchard.Workflows.Controllers.AdminController"
+msgid "Not authorized to create workflows"
+msgstr "Non sei autorizzato a creare flussi di lavoro"
+
+#. "Not authorized to edit workflows"
+msgctxt "Orchard.Workflows.Controllers.AdminController"
+msgid "Not authorized to edit workflows"
+msgstr "Non sei autorizzato a modiifcare flussi di lavoro"
+
+#. "Not authorized to manage workflows"
+msgctxt "Orchard.Workflows.Controllers.AdminController"
+msgid "Not authorized to manage workflows"
+msgstr "Non sei autorizzato a gestire flussi di lavoro"
+
+#: "Orchard.Workflows.Controllers.AdminController"
+msgctxt "Orchard.Workflows.Controllers.AdminController"
+msgid "Workflow {0} deleted"
+msgstr "Flusso di lavoro {0} eliminato"
+
+#: "Orchard.Workflows.Controllers.AdminController"
+msgctxt "Orchard.Workflows.Controllers.AdminController"
+msgid "Workflow deleted"
+msgstr "Flusso di lavoro eliminato"
+
+#: "Orchard.Workflows.Controllers.AdminController"
+msgctxt "Orchard.Workflows.Controllers.AdminController"
+msgid "Workflow saved successfully"
+msgstr "Flusso di lavoro salvato correttamente"
+
+#: "Orchard.Workflows.Forms.BranchForms"
+msgctxt "Orchard.Workflows.Forms.BranchForms"
+msgid "Available branches."
+msgstr "Rami disponibili."
+
+#: "Orchard.Workflows.Forms.BranchForms"
+msgctxt "Orchard.Workflows.Forms.BranchForms"
+msgid "A comma separated list of names."
+msgstr "Un elenco di nomi separato da virgole."
+
+#: "Orchard.Workflows.Forms.ContentForms"
+msgctxt "Orchard.Workflows.Forms.ContentForms"
+msgid "Content types"
+msgstr "Tipi di contenuto"
+
+#: "Orchard.Workflows.Forms.ContentForms"
+msgctxt "Orchard.Workflows.Forms.ContentForms"
+msgid "Select some content types."
+msgstr "Scegli almeno un tipo di contenuto."
+
+#: "Orchard.Workflows.Forms.ContentForms"
+msgctxt "Orchard.Workflows.Forms.ContentForms"
+msgid "Any"
+msgstr "Qualsiasi"
+
+#: "Orchard.Workflows.Forms.LoggingActivityForms"
+msgctxt "Orchard.Workflows.Forms.LoggingActivityForms"
+msgid "Log entry level"
+msgstr "Registro di basso livello"
+
+#: "Orchard.Workflows.Forms.LoggingActivityForms"
+msgctxt "Orchard.Workflows.Forms.LoggingActivityForms"
+msgid "Select what type of notification should be displayed."
+msgstr "Seleziona quale tipo di notifica deve essere visualizzata."
+
+#: "Orchard.Workflows.Forms.LoggingActivityForms"
+msgctxt "Orchard.Workflows.Forms.LoggingActivityForms"
+msgid "Debug"
+msgstr "Debug"
+
+#: "Orchard.Workflows.Forms.LoggingActivityForms"
+msgctxt "Orchard.Workflows.Forms.LoggingActivityForms"
+msgid "Information"
+msgstr "Informazioni"
+
+#: "Orchard.Workflows.Forms.LoggingActivityForms"
+msgctxt "Orchard.Workflows.Forms.LoggingActivityForms"
+msgid "Warning"
+msgstr "Avviso"
+
+#: "Orchard.Workflows.Forms.LoggingActivityForms"
+msgctxt "Orchard.Workflows.Forms.LoggingActivityForms"
+msgid "Error"
+msgstr "Errore"
+
+#: "Orchard.Workflows.Forms.LoggingActivityForms"
+msgctxt "Orchard.Workflows.Forms.LoggingActivityForms"
+msgid "Fatal"
+msgstr "Errore grave"
+
+#: "Orchard.Workflows.Forms.LoggingActivityForms"
+msgctxt "Orchard.Workflows.Forms.LoggingActivityForms"
+msgid "Message"
+msgstr "Messaggio"
+
+#: "Orchard.Workflows.Forms.LoggingActivityForms"
+msgctxt "Orchard.Workflows.Forms.LoggingActivityForms"
+msgid "The message to log."
+msgstr "Messaggio da scrivere nel registro."
+
+#: "Orchard.Workflows.Forms.NotificationActivityForms"
+msgctxt "Orchard.Workflows.Forms.NotificationActivityForms"
+msgid "Notification type"
+msgstr "Tipo di notifica"
+
+#: "Orchard.Workflows.Forms.NotificationActivityForms"
+msgctxt "Orchard.Workflows.Forms.NotificationActivityForms"
+msgid "Select what type of notification should be displayed."
+msgstr "Seleziona quale tipo di notifica deve essere visualizzato."
+
+#: "Orchard.Workflows.Forms.NotificationActivityForms"
+msgctxt "Orchard.Workflows.Forms.NotificationActivityForms"
+msgid "Information"
+msgstr "Informazioni"
+
+#: "Orchard.Workflows.Forms.NotificationActivityForms"
+msgctxt "Orchard.Workflows.Forms.NotificationActivityForms"
+msgid "Warning"
+msgstr "Avviso"
+
+#: "Orchard.Workflows.Forms.NotificationActivityForms"
+msgctxt "Orchard.Workflows.Forms.NotificationActivityForms"
+msgid "Error"
+msgstr "Errore"
+
+#: "Orchard.Workflows.Forms.NotificationActivityForms"
+msgctxt "Orchard.Workflows.Forms.NotificationActivityForms"
+msgid "Message"
+msgstr "Messaggio"
+
+#: "Orchard.Workflows.Forms.NotificationActivityForms"
+msgctxt "Orchard.Workflows.Forms.NotificationActivityForms"
+msgid "The notification message to display."
+msgstr "Il messaggio di notifica da visualizzare."
+
+#: "Orchard.Workflows.Forms.RedirectActionForm"
+msgctxt "Orchard.Workflows.Forms.RedirectActionForm"
+msgid "Url"
+msgstr "Url"
+
+#: "Orchard.Workflows.Forms.RedirectActionForm"
+msgctxt "Orchard.Workflows.Forms.RedirectActionForm"
+msgid "The url to redirect to."
+msgstr "Rimandare alla Url."
+
+#: "Orchard.Workflows.Forms.SignalForms"
+msgctxt "Orchard.Workflows.Forms.SignalForms"
+msgid "Name of the signal."
+msgstr "Nome del segnale."
+
+#: "Orchard.Workflows.Forms.SignalForms"
+msgctxt "Orchard.Workflows.Forms.SignalForms"
+msgid "The name of the signal."
+msgstr "Il nome del segnale."
+
+#: "Orchard.Workflows.Forms.SignalForms"
+msgctxt "Orchard.Workflows.Forms.SignalForms"
+msgid "Available signals"
+msgstr "Segnali disponibili"
+
+#: "Orchard.Workflows.Forms.SignalForms"
+msgctxt "Orchard.Workflows.Forms.SignalForms"
+msgid "Select a signal."
+msgstr "Seleziona un segnale."
+
+#: "Orchard.Workflows.Forms.ScheduleForms"
+msgctxt "Orchard.Workflows.Forms.ScheduleForms"
+msgid "Amount"
+msgstr "Quantità"
+
+#: "Orchard.Workflows.Forms.ScheduleForms"
+msgctxt "Orchard.Workflows.Forms.ScheduleForms"
+msgid "Amount type"
+msgstr "Tipo di quantità"
+
+#: "Orchard.Workflows.Forms.ScheduleForms"
+msgctxt "Orchard.Workflows.Forms.ScheduleForms"
+msgid "Minutes"
+msgstr "Minuti"
+
+#: "Orchard.Workflows.Forms.ScheduleForms"
+msgctxt "Orchard.Workflows.Forms.ScheduleForms"
+msgid "Hours"
+msgstr "Ore"
+
+#: "Orchard.Workflows.Forms.ScheduleForms"
+msgctxt "Orchard.Workflows.Forms.ScheduleForms"
+msgid "Days"
+msgstr "Giorni"
+
+#: "Orchard.Workflows.Forms.ScheduleForms"
+msgctxt "Orchard.Workflows.Forms.ScheduleForms"
+msgid "Weeks"
+msgstr "Settimane"
+
+#: "Orchard.Workflows.Forms.ScheduleForms"
+msgctxt "Orchard.Workflows.Forms.ScheduleForms"
+msgid "Months"
+msgstr "Mesi"
+
+#: "Orchard.Workflows.Forms.ScheduleForms"
+msgctxt "Orchard.Workflows.Forms.ScheduleForms"
+msgid "You must provide an Amount"
+msgstr "È obbbligatorio fornire una quantità"
+
+#: "Orchard.Workflows.Forms.ScheduleForms"
+msgctxt "Orchard.Workflows.Forms.ScheduleForms"
+msgid "You must provide a Type"
+msgstr "È obbligatorio fornire un tipo"
+
+#: "Orchard.Workflows.Forms.WebRequestForm"
+msgctxt "Orchard.Workflows.Forms.WebRequestForm"
+msgid "Url"
+msgstr "Url"
+
+#: "Orchard.Workflows.Forms.WebRequestForm"
+msgctxt "Orchard.Workflows.Forms.WebRequestForm"
+msgid "The url to send the request to."
+msgstr "L'url dove inviare la richiesta."
+
+#: "Orchard.Workflows.Forms.WebRequestForm"
+msgctxt "Orchard.Workflows.Forms.WebRequestForm"
+msgid "Verb"
+msgstr "Verbo HTTP"
+
+#: "Orchard.Workflows.Forms.WebRequestForm"
+msgctxt "Orchard.Workflows.Forms.WebRequestForm"
+msgid "The HTTP verb to use."
+msgstr "Il verbo HTTP da utilizzare."
+
+#: "Orchard.Workflows.Forms.WebRequestForm"
+msgctxt "Orchard.Workflows.Forms.WebRequestForm"
+msgid "Headers"
+msgstr "Intestazioni"
+
+#: "Orchard.Workflows.Forms.WebRequestForm"
+msgctxt "Orchard.Workflows.Forms.WebRequestForm"
+msgid "Enter one line per header=value pair"
+msgstr "Immettere una riga per ogni intestazione=coppia valore"
+
+#: "Orchard.Workflows.Forms.WebRequestForm"
+msgctxt "Orchard.Workflows.Forms.WebRequestForm"
+msgid "Form Format"
+msgstr "Formato modulo"
+
+#: "Orchard.Workflows.Forms.WebRequestForm"
+msgctxt "Orchard.Workflows.Forms.WebRequestForm"
+msgid "The serialization format to use for the POST body."
+msgstr "Il formato di serializzazione da utilizzare per il corpo del POST."
+
+#: "Orchard.Workflows.Forms.WebRequestForm"
+msgctxt "Orchard.Workflows.Forms.WebRequestForm"
+msgid "Form Values"
+msgstr "Valori del modulo"
+
+#: "Orchard.Workflows.Forms.WebRequestForm"
+msgctxt "Orchard.Workflows.Forms.WebRequestForm"
+msgid "For KeyValue, enter one line per key=value pair to submit when using the POST verb. For JSon, enter a valid JSon string"
+msgstr "Per KeyValue, inserire una riga per ogni chiave = coppia di valori da inviare quando si utilizza il verbo POST. Per JSon, immettere una stringa JSon valida"
+
+#: "Orchard.Workflows.Tokens.SignalTokens"
+msgctxt "Orchard.Workflows.Tokens.SignalTokens"
+msgid "Workflow"
+msgstr "Flusso di lavoro"
+
+#: "Orchard.Workflows.Tokens.SignalTokens"
+msgctxt "Orchard.Workflows.Tokens.SignalTokens"
+msgid "Workflow tokens."
+msgstr "Gettoni del flusso di lavoro (tokens)."
+
+#: "Orchard.Workflows.Tokens.SignalTokens"
+msgctxt "Orchard.Workflows.Tokens.SignalTokens"
+msgid "TriggerUrl:<signal>"
+msgstr "TriggerUrl:<signal>"
+
+#: "Orchard.Workflows.Tokens.SignalTokens"
+msgctxt "Orchard.Workflows.Tokens.SignalTokens"
+msgid "The relative url to call in order to trigger the specified Signal."
+msgstr "L'url relativo da chiamare per attivare il Segnale specificato."
+
+#: "Orchard.Workflows.Tokens.StateTokens"
+msgctxt "Orchard.Workflows.Tokens.StateTokens"
+msgid "Workflow"
+msgstr "Flusso di lavoro"
+
+#: "Orchard.Workflows.Tokens.StateTokens"
+msgctxt "Orchard.Workflows.Tokens.StateTokens"
+msgid "Workflow tokens."
+msgstr "Gettoni del flusso di lavoro (tokens)."
+
+#: "Orchard.Workflows.Tokens.StateTokens"
+msgctxt "Orchard.Workflows.Tokens.StateTokens"
+msgid "State:<workflowcontext path>"
+msgstr "Stato:<workflowcontext path>"
+
+#: "Orchard.Workflows.Tokens.StateTokens"
+msgctxt "Orchard.Workflows.Tokens.StateTokens"
+msgid "The workflow context state to access. Workflow.State:MyData.MyProperty.SubProperty"
+msgstr "Lo stato del contesto del flusso di lavoro per fare l'accesso. Workflow.State:MyData.MyProperty.SubProperty"
+
+#: "~/Modules/Orchard.Workflows/Views/Activity-Delete.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Activity-Delete.cshtml"
+msgid "Delete content item"
+msgstr "Eliminare il contenuto"
+
+#: "~/Modules/Orchard.Workflows/Views/Activity-Notify.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Activity-Notify.cshtml"
+msgid "{0}: {1}"
+msgstr "{0}: {1}"
+
+#: "~/Modules/Orchard.Workflows/Views/Activity-Publish.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Activity-Publish.cshtml"
+msgid "Publish content item"
+msgstr "Pubblica il contenuto"
+
+#: "~/Modules/Orchard.Workflows/Views/Activity-Redirect.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Activity-Redirect.cshtml"
+msgid "Redirect to {0}"
+msgstr "Reindirizza a {0}"
+
+#: "~/Modules/Orchard.Workflows/Views/Activity-Redirect.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Activity-Redirect.cshtml"
+msgid "Redirect"
+msgstr "Reindirizza"
+
+#: "~/Modules/Orchard.Workflows/Views/Activity-Timer.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Activity-Timer.cshtml"
+msgid "{0} {1} after"
+msgstr "{0} {1} dopo"
+
+#: "~/Modules/Orchard.Workflows/Views/Parts.Workflow.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Parts.Workflow.SummaryAdmin.cshtml"
+msgid "Running workflows"
+msgstr "Flussi di lavoro in esecuzione"
+
+#: "~/Modules/Orchard.Workflows/Views/Parts.Workflow.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Parts.Workflow.SummaryAdmin.cshtml"
+msgid "Running ({0})"
+msgstr "In esecuzione ({0})"
+
+#: "~/Modules/Orchard.Workflows/Views/Parts.Workflow.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Parts.Workflow.SummaryAdmin.cshtml"
+msgid "{0} Workflow"
+msgstr "{0} workflow"
+
+#: "~/Modules/Orchard.Workflows/Views/Parts.Workflow.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Parts.Workflow.SummaryAdmin.cshtml"
+msgid "{0} Workflows"
+msgstr "{0} flussi di lavoro"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Create.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Create.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Create.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Create.cshtml"
+msgid "The name of the Workflow"
+msgstr "Il nome del flusso di lavoro"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Create.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Create.cshtml"
+msgid "Save"
+msgstr "Salva"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgid "Edit Workflow {0}"
+msgstr "Modifica del flusso di lavoro {0}"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgid "Starts workflow"
+msgstr "Attiva il flusso di lavoro"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgid "Edit"
+msgstr "Modifica"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgid "Remove"
+msgstr "Elimina"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgid "Are you sure you want to remove this activity?"
+msgstr "Sei sicuro di che voler eliminare questa attività?"
+
+#. "Save"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgid "Save"
+msgstr "Salva"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgid "Close"
+msgstr "Chiudi"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgid "You need to hit \"Save\" in order to save your changes."
+msgstr "Devi premere \"Salva\" per salvare le modifiche."
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Edit.cshtml"
+msgid "The workflow needs at least one activity to be set as a starting state."
+msgstr "Il flusso di lavoro ha bisogno di almeno un'attività impostata come stato di partenza."
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/EditActivity.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/EditActivity.cshtml"
+msgid "Edit Activity"
+msgstr "Modifica attività"
+
+#. "Save"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/EditActivity.cshtml"
+msgid "Save"
+msgstr "Salva"
+
+#. "Cancel"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/EditActivity.cshtml"
+msgid "Cancel"
+msgstr "Annulla"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "Manage Workflow Definitions"
+msgstr "Gestione Flussi di Lavoro"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "Create new Workflow Definition"
+msgstr "Crea un nuovo flusso di lavoro"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "Actions:"
+msgstr "Azioni:"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "Choose action..."
+msgstr "Scegli l'azione..."
+
+#. "Delete"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+#. "Apply"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "Apply"
+msgstr "Applica"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "Sort by:"
+msgstr "Ordina per:"
+
+#. "Name"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "Name"
+msgstr "Nome"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "Show:"
+msgstr "Visualizza:"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "All"
+msgstr "Tutti"
+
+#. "Filter"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "Filter"
+msgstr "Filtra"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "{0} Running"
+msgstr "{0} in esecuzione"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "Properties"
+msgstr "Proprietà"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/Index.cshtml"
+msgid "Edit"
+msgstr "Modifica"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/List.cshtml"
+msgid "Running workflows"
+msgstr "Flussi di lavoro in esecuzione"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/List.cshtml"
+msgid "Worfklow Definition"
+msgstr "Definizione del flusso di lavoro"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/List.cshtml"
+msgid "No workflows associated with this content item."
+msgstr "Nessun flusso di lavoro associato a questo contenuto."
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/List.cshtml"
+msgid "Status"
+msgstr "Stato"
+
+#: "~/Modules/Orchard.Workflows/Views/Admin/List.cshtml"
+msgctxt "~/Modules/Orchard.Workflows/Views/Admin/List.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+

@@ -21,6 +21,8 @@ namespace Laser.Orchard.CommunicationGateway.ViewModels {
         public string Prefix { get; set; }
         public bool Produzione { get; set; }
         public bool Delete { get; set; }
+        public bool AccettatoUsoCommerciale { get; set; }
+        public bool AutorizzatoTerzeParti { get; set; }
         
 
         public View_SmsVM_element() {
@@ -31,6 +33,8 @@ namespace Laser.Orchard.CommunicationGateway.ViewModels {
             this.DataModifica = DateTime.Now;
             this.Produzione = true;
             this.Delete = false;
+            this.AccettatoUsoCommerciale = false;
+            this.AutorizzatoTerzeParti = false;
         }
     }
 }

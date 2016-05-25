@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using Orchard.UI.Admin;
 
 namespace Laser.Orchard.Accessibility.Filters
 {
@@ -23,10 +24,13 @@ namespace Laser.Orchard.Accessibility.Filters
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            _originalWriter = filterContext.HttpContext.Response.Output;
-            _tempWriter = new StringWriterWithEncoding(_originalWriter.Encoding, _originalWriter.FormatProvider);
-            filterContext.HttpContext.Response.Output = _tempWriter;
-            _completeResponse = CaptureResponse;
+            bool isAdmin = AdminFilter.IsApplied(filterContext.RequestContext);
+            if (!isAdmin) {
+                _originalWriter = filterContext.HttpContext.Response.Output;
+                _tempWriter = new StringWriterWithEncoding(_originalWriter.Encoding, _originalWriter.FormatProvider);
+                filterContext.HttpContext.Response.Output = _tempWriter;
+                _completeResponse = CaptureResponse;
+            }
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext)
@@ -54,7 +58,7 @@ namespace Laser.Orchard.Accessibility.Filters
 
             // se richiesto, pulisce l'output per avere "solo testo"
             // controlla sia il cookie sia il fatto di non avere accesso alla dashboard
-            bool isAdmin = _orchardServices.Authorizer.Authorize(StandardPermissions.AccessAdminPanel);
+            bool isAdmin = AdminFilter.IsApplied(filterContext.RequestContext);
             if (new Utils().GetTenantCookieValue(Utils.AccessibilityCookieName, filterContext.HttpContext.Request) == Utils.AccessibilityTextOnly
                 && (isAdmin == false))
             {

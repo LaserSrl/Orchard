@@ -36,6 +36,122 @@ msgctxt "~/Modules/Laser.Orchard.Questionnaires/ViewModels/ValidationProvider.cs
 msgid "Your answer to {0} must be a valid internet address"
 msgstr "La risposta alla domanda {0} deve essere un indirizzo internet valido"
 
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetList.cshtml"
+msgid "AccessSecured"
+msgstr "Accesso sicuro"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetList.cshtml"
+msgid "ContentIdentifier"
+msgstr "Codice gioco"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetList.cshtml"
+msgid "Device"
+msgstr "Tipo di dispositivo"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetList.cshtml"
+msgid "Identifier"
+msgstr "Identificativo"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetList.cshtml"
+msgid "List of ranking."
+msgstr "Classifica."
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetList.cshtml"
+msgid "name"
+msgstr "Nome"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetList.cshtml"
+msgid "point"
+msgstr "Punteggio"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetList.cshtml"
+msgid "Questionnaire Ranking"
+msgstr "Classifica questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetList.cshtml"
+msgid "RegistrationDate"
+msgstr "Data di registrazione"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetList.cshtml"
+msgid "UsernameGameCenter"
+msgstr "Username nel Game Center"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetListSingleGame.cshtml"
+msgid "AccessSecured"
+msgstr "Accesso sicuro"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetListSingleGame.cshtml"
+msgid "ContentIdentifier"
+msgstr "Codice gioco"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetListSingleGame.cshtml"
+msgid "Device"
+msgstr "Tipo di dispositivo"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetListSingleGame.cshtml"
+msgid "Game Rankings for {0}"
+msgstr "Classifiche per il gioco {0}"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetListSingleGame.cshtml"
+msgid "Identifier"
+msgstr "Identificativo"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetListSingleGame.cshtml"
+msgid "Index of games"
+msgstr "Indice dei giochi"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetListSingleGame.cshtml"
+msgid "List of ranking."
+msgstr "Classifica."
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetListSingleGame.cshtml"
+msgid "name"
+msgstr "Nome"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetListSingleGame.cshtml"
+msgid "point"
+msgstr "Punteggio"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetListSingleGame.cshtml"
+msgid "RegistrationDate"
+msgstr "Data di registrazione"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/GetListSingleGame.cshtml"
+msgid "UsernameGameCenter"
+msgstr "Username nel Game Center"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/Index.cshtml"
+msgid "By {0}"
+msgstr "Di {0}"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/Index.cshtml"
+msgid "Clear"
+msgstr "Cancella"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/Index.cshtml"
+msgid "Index of games"
+msgstr "Indice dei giochi"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/Index.cshtml"
+msgid "Language: {0}"
+msgstr "Lingua: {0}"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/Index.cshtml"
+msgid "Last modified: {0}"
+msgstr "Ultima modifica: {0}"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/Index.cshtml"
+msgid "Search"
+msgstr "Cerca"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/Index.cshtml"
+msgid "Search:"
+msgstr "Cerca:"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/AdminRanking/Index.cshtml"
+msgid "Send top10s by email"
+msgstr "Invia le top10 via email"
+
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/GamePartSettingVM.cshtml"
 msgid "Default is false. If selected emails will be sended at end game"
 msgstr "Il valore predefinito è falso. Se selezionato, alla fine del gioco verranno inviate le email"
@@ -177,6 +293,10 @@ msgid "Don't change this value when Game is started or Ranking will be incorrect
 msgstr "Non modificare questo valore quando il Gioco è in corso per non alterare erroneamente la Classifica"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/GamePart_Edit.cshtml"
+msgid "Email sended at the end of the game"
+msgstr "Email inviata alla fine del gioco"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/GamePart_Edit.cshtml"
 msgid "Game Date"
 msgstr "Data del Gioco"
 
@@ -215,6 +335,10 @@ msgstr "Seleziona il Tipo di Gioco"
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/GamePart_Edit.cshtml"
 msgid "Set the Limit of number of questions sorted randomly , default is 0 (No limits)"
 msgstr "Impostare il limite nel numero di domande ordinate in modo casuale, il default è 0 (Nessun limite)"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/GamePart_Edit.cshtml"
+msgid "The value of this field is changed automatically by the system"
+msgstr "Il valore di questo campo è cambiato automaticamente dal sistema"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/Parts/GamePart_Edit.cshtml"
 msgid "Time for Answer"
@@ -392,6 +516,62 @@ msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontE
 msgid "You have to be logged in, before answering a questionnaire!"
 msgstr "Devi essere autenticato per poter rispondere al nostro questionario!"
 
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Questionnaire Answers"
+msgstr "Risposte al questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Questionnaire Statistics"
+msgstr "Statistiche del questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Show all answers"
+msgstr "Mostra tutte le risposte"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "This questionnaire contains no answers."
+msgstr "Questo questionario non ha ricevuto nessuna risposta."
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "By {0}"
+msgstr "Di {0}"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "Clear"
+msgstr "Cancella"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "Language: {0}"
+msgstr "Lingua: {0}"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "Last modified: {0}"
+msgstr "Ultima modifica: {0}"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "Questionnaire Statistics"
+msgstr "Statistiche del questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "Search"
+msgstr "Cerca"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Index.cshtml"
+msgid "Search:"
+msgstr "Cerca:"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/QuestionDetail.cshtml"
+msgid "Answers Detail"
+msgstr "Dettagli delle risposte"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/QuestionDetail.cshtml"
+msgid "Questionnaire Answers"
+msgstr "Risposte al questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/QuestionDetail.cshtml"
+msgid "Questionnaire Statistics"
+msgstr "Statistiche del questionario"
+
 msgctxt "Laser.Orchard.Questionnaires.Activities.GameRankingSubmittedgEvent"
 msgid "Done"
 msgstr "Fatto"
@@ -457,6 +637,10 @@ msgid "Questionnaire without response for current User"
 msgstr "Questionari senza risposta per l'Utente corrente"
 
 msgctxt "Laser.Orchard.Questionnaires.Navigation.AdminMenu"
+msgid "Games"
+msgstr "Giochi"
+
+msgctxt "Laser.Orchard.Questionnaires.Navigation.AdminMenu"
 msgid "Multi choice Answers"
 msgstr "Risposta a scelta multipla"
 
@@ -477,6 +661,10 @@ msgid "Statistics"
 msgstr "Statistiche"
 
 msgctxt "Laser.Orchard.Questionnaires.Services.QuestionnairesServices"
+msgid "Operation Fail: Questionnaire already filled"
+msgstr "Operazione fallita: questionario già compilato"
+
+msgctxt "Laser.Orchard.Questionnaires.Services.to"
 msgid "Operation Fail: Questionnaire already filled"
 msgstr "Operazione fallita: questionario già compilato"
 

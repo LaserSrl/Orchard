@@ -115,12 +115,20 @@ msgid "Policy acceptances"
 msgstr "Accettazione informative"
 
 msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/UserPolicy_Edit.cshtml"
+msgid "Policy Acceptances History"
+msgstr "Storico accettazione policy"
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/UserPolicy_Edit.cshtml"
 msgid "Policy Text"
 msgstr "Testo informativa"
 
 msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/UserPolicy_Edit.cshtml"
 msgid "Read"
 msgstr "Letto"
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/UserPolicy_Edit.cshtml"
+msgid "Show full history"
+msgstr "Mostra storico completo"
 
 msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/UserPolicy_Edit.cshtml"
 msgid "Unread"
@@ -161,6 +169,38 @@ msgstr "Ho letto il regolamento."
 msgctxt "~/Modules/Laser.Orchard.Policy/Views/Policies/Index.cshtml"
 msgid "Save"
 msgstr "Salva"
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/PoliciesUser/ShowHistory.cshtml"
+msgid "Accepted"
+msgstr "Accettata"
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/PoliciesUser/ShowHistory.cshtml"
+msgid "Answer date"
+msgstr "Data risposta"
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/PoliciesUser/ShowHistory.cshtml"
+msgid "Not Accepted"
+msgstr "Non accettata"
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/PoliciesUser/ShowHistory.cshtml"
+msgid "Policy acceptance history"
+msgstr "Storico accettazione policy"
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/PoliciesUser/ShowHistory.cshtml"
+msgid "Policy Text"
+msgstr "Testo informativa"
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/PoliciesUser/ShowHistory.cshtml"
+msgid "Read"
+msgstr "Letto"
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/PoliciesUser/ShowHistory.cshtml"
+msgid "Unread"
+msgstr "Da leggere"
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/PoliciesUser/ShowHistory.cshtml"
+msgid "Validity end"
+msgstr "Fine validità"
 
 msgctxt "Laser.Orchard.Policy.Drivers.PolicyPartDriver"
 msgid "PolicyPart Error"

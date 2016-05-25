@@ -9,4 +9,4 @@ Features:
     Laser.Orchard.Policy:
         Description: Define policies textes, and make any content under policies and regulation acceptance.
         Category: Content
-		Dependencies: Orchard.jQuery, Orchard.Localization, Orchard.Fields, Orchard.Users,Laser.Orchard.StartupConfig
+		Dependencies: Orchard.jQuery, Orchard.Localization, Orchard.Fields, Orchard.Users, Laser.Orchard.StartupConfig, Laser.Orchard.Policy

@@ -56,7 +56,9 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                         Produzione = x.Produzione,
                         Email = x.Email,
                         EmailContactPartRecord_Id = x.EmailContactPartRecord_Id,
-                        Validated = x.Validated
+                        Validated = x.Validated,
+                        AccettatoUsoCommerciale = x.AccettatoUsoCommerciale,
+                        AutorizzatoTerzeParti = x.AutorizzatoTerzeParti
                     })
                     .ToList();
         }
@@ -79,7 +81,9 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                         Sms = x.Sms,
                         Prefix = x.Prefix,
                         SmsContactPartRecord_Id = x.SmsContactPartRecord_Id,
-                        Validated = x.Validated
+                        Validated = x.Validated,
+                        AccettatoUsoCommerciale = x.AccettatoUsoCommerciale,
+                        AutorizzatoTerzeParti = x.AutorizzatoTerzeParti
                     })
                     .ToList();
         }
@@ -91,6 +95,22 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
         }
         private void RemoveLinks(CommunicationContactPart item) {
             item.UserIdentifier=0;
+
+            // elimina le mail associate
+            var elencoCer = _Emailrepository.Fetch(x => x.EmailContactPartRecord_Id == item.Id);
+            if (elencoCer != null) {
+                foreach (var cer in elencoCer) {
+                    _Emailrepository.Delete(cer);
+                }
+            }
+
+            // elimina gli sms associati
+            var elencoCsr = _Smsrepository.Fetch(x => x.SmsContactPartRecord_Id == item.Id);
+            if (elencoCsr != null) {
+                foreach (var csr in elencoCsr) {
+                    _Smsrepository.Delete(csr);
+                }
+            }
         }
     }
 }

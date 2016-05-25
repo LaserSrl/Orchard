@@ -2,7 +2,7 @@
 @using Laser.Orchard.ButtonToWorkflows.ViewModels
 @using Orchard.ContentManagement;
 @using Laser.Orchard.ButtonToWorkflows.Security;
-
+<div class="custom-button pull-right"><strong>@T("Custom actions:")</strong>
 @{
     var permissionToTest = ButtonPermissions.ButtonToWorkFlow1;
     for (Int32 i = 0; i < Model.ElencoButtons.Count; i++) {
@@ -29,4 +29,5 @@
     @Html.HiddenFor(m => m.ElencoButtons[i].ButtonAction)
     }
 }
+</div>
 

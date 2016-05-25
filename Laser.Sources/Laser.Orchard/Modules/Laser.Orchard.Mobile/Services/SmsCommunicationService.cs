@@ -22,7 +22,7 @@ namespace Laser.Orchard.Mobile.Services {
         //IHqlQuery IntegrateAdditionalConditions(IHqlQuery query = null, IContent content = null);
         //IHqlQuery IntegrateAdditionalConditions(IHqlQuery query, Int32? idlocalization);
         //IList<SmsHQL> GetSmsQueryResult(Int32[] ids, Int32? idlingua);
-        IList GetSmsQueryResult(Int32[] ids, Int32? idlingua);
+        IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false);
         //List<string> GetSmsNumbersQueryResult(Int32[] ids, Int32? idlingua);
     }
 
@@ -59,7 +59,7 @@ namespace Laser.Orchard.Mobile.Services {
         //}
         
         //public IList<SmsHQL> GetSmsQueryResult(Int32[] ids, Int32? idlingua)
-        public IList GetSmsQueryResult(Int32[] ids, Int32? idlingua)
+        public IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false)
         {
             IHqlQuery query;
             if (ids != null && ids.Length > 0)
@@ -95,13 +95,19 @@ namespace Laser.Orchard.Mobile.Services {
             //    "cir.SmsContactPartRecord as SmsPart join " +
             //        "SmsPart.SmsRecord as SmsRecord " +
             //    "WHERE civr.Published=1 AND civr.Id in (" + stringHQL + ")";
-            var queryForSms = "SELECT civr as ContentItemVersionRecord, cir as ContentItemRecord, TitlePart as TitlePartRecord, SmsPart as SmsContactPartRecord, SmsRecord as SmsRecord FROM " +
-                "Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
+            string queryForSms = "";
+            if (countOnly) {
+                queryForSms = "SELECT count(SmsRecord) as Tot";
+            }
+            else {
+                queryForSms = "SELECT civr as ContentItemVersionRecord, cir as ContentItemRecord, TitlePart as TitlePartRecord, SmsPart as SmsContactPartRecord, SmsRecord as SmsRecord";
+            }
+            queryForSms += " FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
                 "civr.ContentItemRecord as cir join " +
                 "civr.TitlePartRecord as TitlePart join " +
                 "cir.SmsContactPartRecord as SmsPart join " +
                     "SmsPart.SmsRecord as SmsRecord " +
-                "WHERE civr.Published=1 AND civr.Id in (" + stringHQL + ")";
+                "WHERE civr.Published=1 AND SmsRecord.Validated AND SmsRecord.AccettatoUsoCommerciale AND civr.Id in (" + stringHQL + ")";
 
             // Creo query ottimizzata per le performance
             var fullStatement = _session.For(null)

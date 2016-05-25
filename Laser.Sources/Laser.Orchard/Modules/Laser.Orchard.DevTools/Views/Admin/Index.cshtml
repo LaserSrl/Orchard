@@ -6,6 +6,9 @@
 <a class="button primaryAction" href="@Url.Action("GetValidApiKey", "Admin", new { area = "Laser.Orchard.DevTools"})" title="@T("Get my ApiKey")">@T("Get my ApiKey")</a>
 <br />
 <a class="button primaryAction" href="@Url.Action("index", "pushnotification", new { area = "Laser.Orchard.Mobile" })" title="@T("DeviceList")">@T("DeviceList")</a>
+<!--
+    <a class="button primaryAction" href="@Url.Action("GetList", "adminranking", new { area = "Laser.Orchard.Questionnaires" })" title="@T("RankingList")">@T("Ranking List")</a>
+-->
 <br />
 <fieldset>
     @if (!string.IsNullOrEmpty(Model.Testo)){

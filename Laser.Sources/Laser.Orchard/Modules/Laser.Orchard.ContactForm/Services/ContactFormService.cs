@@ -144,7 +144,7 @@ namespace Laser.Orchard.ContactForm.Services {
 
                         try {
 
-                            if (templateId != -1) {
+                            if (templateId > 0) {
 
                                 ParseTemplateContext templatectx = new ParseTemplateContext();
                                 var template = _templateServices.GetTemplate(templateId);

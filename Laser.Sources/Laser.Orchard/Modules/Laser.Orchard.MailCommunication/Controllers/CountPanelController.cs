@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.Services.MailCommunication;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -23,7 +24,8 @@ namespace Laser.Orchard.MailCommunication.Controllers {
             }
             else
             {
-                Total.Add("Value", _mailCommunicationService.GetMailQueryResult(ids, idlocalization).Count.ToString());
+                var elenco = _mailCommunicationService.GetMailQueryResult(ids, idlocalization, true);
+                Total.Add("Value", ((long)(((Hashtable)(elenco[0]))["Tot"])).ToString("#,##0"));
             }
             return Json(Total, JsonRequestBehavior.AllowGet);
         }

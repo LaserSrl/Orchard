@@ -50,7 +50,13 @@
     Model.Classes.Add("main-bg");
     var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model
     var subthemePath = Url.Content("~/Themes/IvreaMontalto/Styles");
-    var mainPath = "/Laser.Orchard/ivreamontalto";
+    var settings = WorkContext.Resolve<Orchard.Environment.Configuration.ShellSettings>();
+    var host = settings.RequestUrlHost;
+    var prefix = settings.RequestUrlPrefix;
+    var urlPath = (Request.Path.EndsWith("/") ? Request.Path : Request.Path + "/");
+    var urlHome = Url.Content("~/" + (!String.IsNullOrWhiteSpace(prefix) ? prefix + "/" : ""));
+
+        //var mainPath = "/Laser.Orchard/ivreamontalto";
 
 }
 <div id="page" class="hfeed site">
@@ -59,7 +65,13 @@
     }
     <div id="slider">
         <div>
-            <div style="background-image: url(@subthemePath/images/slide-1.jpg)" class="slide"></div>
+            @{
+                var slideclass = "slide";
+                if (!urlPath.Equals(urlHome, StringComparison.InvariantCultureIgnoreCase)) {
+                    slideclass += " minimized";
+                }
+            }
+            <div style="background-image: url(@subthemePath/images/slide-1.jpg)" class="@slideclass"></div>
         </div>
         <!--
                 <div>
@@ -107,7 +119,7 @@
         </div>
         <div class="container bg-white">
             <div id="social">
-                <a href="@mainPath/contatti" class="link-contatti">Contatti
+                <a href="/contatti" class="link-contatti">Contatti
                 </a>
                 <a href="https://www.facebook.com/montaltese.calcio/" target="_blank">
                     <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-facebook fa-stack-1x fa-inverse"></i></span>
@@ -267,7 +279,7 @@
     </div>
     <div class="credits">
         <div class="container">
-            Unione Sportiva Dilettantistica Ivrea Montalto | <a href="#">Normativa Privacy</a> | e-mail: <a href="mailto:usdivrea@libero.it">usdivrea@libero.it</a>
+            Unione Sportiva Dilettantistica Ivrea Montalto | <a href="/cookie-policy">Normativa Privacy</a> | e-mail: <a href="mailto:usdivrea@libero.it">usdivrea@libero.it</a>
         </div>
     </div>
 </div>

@@ -36,7 +36,9 @@
                                     CommonPart commonPart = (((dynamic)questionnaire).CommonPart);
                                     DateTime? modifiedUtc = commonPart.As<CommonPart>() == null ? null : commonPart.As<CommonPart>().ModifiedUtc;
                                     IUser owner = commonPart.As<CommonPart>() == null ? null : commonPart.As<CommonPart>().Owner;
-                                    string language = commonPart.As<LocalizationPart>() == null ? null : commonPart.As<LocalizationPart>().Culture.Culture;
+                                    //string language = commonPart.As<LocalizationPart>() == null ? null : commonPart.As<LocalizationPart>().Culture.Culture;
+                                    string language = (commonPart.As<LocalizationPart>() == null || commonPart.As<LocalizationPart>().Culture == null) ? 
+                                        null : commonPart.As<LocalizationPart>().Culture.Culture;
                                     
                                     <ul class="pageStatus">
                                         <li>

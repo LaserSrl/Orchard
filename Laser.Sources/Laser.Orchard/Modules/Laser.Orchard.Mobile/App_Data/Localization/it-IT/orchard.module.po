@@ -57,8 +57,20 @@ msgid "Mobile"
 msgstr "Mobile"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "Approved"
+msgstr "Approvato"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Mask to make test for Push... this option is set by settings of module"
 msgstr "Mask per effettuare test di push... questa opzione viene valorizzata dalle impostazioni del modulo"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "Message already sent."
+msgstr "Messaggio già inviato."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "Message not yet sent."
+msgstr "Messaggio non ancora inviato."
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Mobile"
@@ -67,6 +79,10 @@ msgstr "Mobile"
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Mobile Push"
 msgstr "Push Mobile"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "NO"
+msgstr "NO"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Push on next Publish"
@@ -89,12 +105,44 @@ msgid "Text"
 msgstr "Testo"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "This Push message has been already sent. You will be able to edit and save it, but it will not be sent anymore on next publish."
+msgstr "Questa PUSH è già stata inoltrata. Sarà possibile modificarla e salvarla, ma non sarà più reinoltrata."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Title"
 msgstr "Titolo"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "To Device"
-msgstr "Al Device"
+msgstr "Dispositivi"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "YES"
+msgstr "SI"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePushApproved_Edit.cshtml"
+msgid "Approved"
+msgstr "Approvato"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePushApproved_Edit.cshtml"
+msgid "Mask to make test for Push... this option is set by settings of module"
+msgstr "Mask per effettuare test di push... questa opzione viene valorizzata dalle impostazioni del modulo"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePushApproved_Edit.cshtml"
+msgid "Message already sent."
+msgstr "Messaggio già inviato."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePushApproved_Edit.cshtml"
+msgid "Message not yet sent."
+msgstr "Messaggio non ancora inviato."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePushApproved_Edit.cshtml"
+msgid "Test Push on device"
+msgstr "Testa il Push sul dispositivo"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePushApproved_Edit.cshtml"
+msgid "This Push message has been already sent. You will be able to edit and save it, but it will not be sent anymore on next publish."
+msgstr "Questa PUSH è già stata inoltrata. Sarà possibile modificarla e salvarla, ma non sarà più reinoltrata."
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Android ApiKey"
@@ -170,11 +218,15 @@ msgstr "Windows EndPoint"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid " + 16 chars campaign shortlink"
-msgstr "+ 16 caratteri per lo short link della campagna"
+msgstr "+ 16 caratteri per lo shortlink della campagna"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid "Alias"
 msgstr "Alias"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Approved"
+msgstr "Approvato"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid "Have Alias"
@@ -217,8 +269,12 @@ msgid "Test Sms number"
 msgstr "Numero di cellulare per l'invio del SMS di test"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Test Sms prefix"
+msgstr "Prefisso"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid "This SMS has been already sent. You will be able to edit and save it, but it will not be sent anymore on next publish."
-msgstr "Questo SMS è già stato inoltrato. Sarà possibile modificarlo e salvarlo, ma non sarà più reinoltrarlo."
+msgstr "Questo SMS è già stato inoltrato. Sarà possibile modificarlo e salvarlo, ma non sarà più reinoltrato."
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid "YES"
@@ -239,6 +295,14 @@ msgstr "Identificativo driver Mam"
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
 msgid "Mam has alias"
 msgstr "Mam ha un alias"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "Protocol"
+msgstr "Protocollo"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "Sms max lenght"
+msgstr "Lunghezza massima dell'SMS"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
 msgid "SMS priority"
@@ -408,6 +472,10 @@ msgctxt "Laser.Orchard.Mobile.Handlers.SmsSettingsPartHandler"
 msgid "SMS"
 msgstr "SMS"
 
+msgctxt "Laser.Orchard.Mobile.Migrations"
+msgid "Content Related"
+msgstr "Contenuto Correlato"
+
 msgctxt "Laser.Orchard.Mobile.Projections.DeveiceFilter"
 msgid "Content with userpart"
 msgstr "Contenuto con parte utente"
@@ -487,6 +555,18 @@ msgstr "Invio: il carico utile del messaggio eccede il limite previsto"
 msgctxt "Laser.Orchard.Mobile.Services.PushNotificationService"
 msgid "The event is not implemented for Windows"
 msgstr "L'evento non è implementato per Windows"
+
+msgctxt "Laser.Orchard.Mobile.Services.SmsValidationService"
+msgid "NumberForTest field is required."
+msgstr "Il campo Numero di cellulare per il test è obbligatorio."
+
+msgctxt "Laser.Orchard.Mobile.Services.SmsValidationService"
+msgid "NumberForTest field must be minimum 22 characters length."
+msgstr "Il campo Numero di cellulare per il test deve essere almeno di 22 caratteri."
+
+msgctxt "Laser.Orchard.Mobile.Services.SmsValidationService"
+msgid "PrefixForTest field is required."
+msgstr "Il campo Prefisso del numero di cellulare per il test è obbligatorio."
 
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "A template to format your email message."
