@@ -1,0 +1,7 @@
+﻿@model Laser.Orchard.UserReactions.Models.UserReactionsPart
+
+
+@foreach (var item in Model.Reactions) { 
+    @item.Quantity
+    @item.UserReactionsTypesRecord.TypeName
+}

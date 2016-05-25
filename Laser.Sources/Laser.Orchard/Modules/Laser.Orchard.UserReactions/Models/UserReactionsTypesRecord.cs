@@ -9,5 +9,6 @@ namespace Laser.Orchard.UserReactions.Models {
         public virtual string TypeName { get; set; }
         public virtual string TypeCssClass { get; set; }
         public virtual int Priority { get; set; }
+        
     }
 }

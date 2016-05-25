@@ -123,6 +123,7 @@
     <Content Include="Views\EditorTemplates\UserReactionsTypeVM.cshtml" />
     <Content Include="Views\Parts\UserReactions_SummaryAdmin.cshtml" />
     <Content Include="Placement.info" />
+    <Content Include="Views\EditorTemplates\Parts\UserReactionsEdit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

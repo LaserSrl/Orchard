@@ -10,15 +10,10 @@ namespace Laser.Orchard.UserReactions.Drivers {
 
 
         protected override DriverResult Display(UserReactionsPart part, string displayType, dynamic shapeHelper) {
-
-            if (displayType != "Detail")
-                return null;
-
-
             if (displayType == "SummaryAdmin")
 
                 return ContentShape("Parts_UserReactions_SummaryAdmin", () => shapeHelper
-                    .Parts_UserReactions_SummaryAdmin(UserReactions: part));
+                    .Parts_UserReactions_SummaryAdmin(UserReaction: part));
            
 
             return null;
@@ -28,14 +23,13 @@ namespace Laser.Orchard.UserReactions.Drivers {
         /// <summary>
         /// GET Editor.
         /// </summary>
-        //protected override DriverResult Editor(SeoPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(UserReactionsPart part, dynamic shapeHelper) {
 
-        //    return ContentShape("Parts_SEO_Edit",
-        //                        () => shapeHelper.EditorTemplate(
-        //                          TemplateName: "Parts/SEO",
-        //                          Model: part,
-        //                          Prefix: Prefix));
-        //}
+            return ContentShape("Parts_UserReactions_Edit", () => shapeHelper.EditorTemplate(
+                                  TemplateName: "Parts/UserReactionsEdit",
+                                  Model: part,
+                                  Prefix: Prefix));
+        }
 
 
         ///// <summary>
