@@ -34,6 +34,8 @@
          @if (Model.UserProfile != null) { // if UserProfile && ExtendedRegistration are enabled, it shows all user parts/fields
             @Display(Model.UserProfile)
         }
+        <hr>
+        <input type="submit" class="submit" value="@T("Register")">
     </div>
    }
 </div>
