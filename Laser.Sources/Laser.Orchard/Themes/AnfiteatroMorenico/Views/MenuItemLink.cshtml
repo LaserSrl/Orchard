@@ -1,4 +1,7 @@
 ﻿@using Orchard.Environment.Configuration
+@using Orchard.Autoroute.Models;
+@using Laser.Orchard.CulturePicker.Services;
+
 @{
     var settings = WorkContext.Resolve<ShellSettings>();
     var prefix = settings.RequestUrlPrefix;
@@ -12,7 +15,20 @@
 @{
     var url = Model.Href ?? "#";
     if (Model.Content != null && Model.Content.ContentItem != null && Model.Content.ContentItem.ContentType == "CategorieEventiTerm") {
-        var urlPattern = "~/eventi?datainizio={0}&datafine={1}&termids={2}";
+        string returnUrl = "eventi"; 
+        ILocalizableContentService _localizableContentService;
+        if (WorkContext.TryResolve<ILocalizableContentService>(out _localizableContentService)){
+            AutoroutePart currentRoutePart;
+            //returnUrl may not correspond to any content and we use "Try" approach
+            if (_localizableContentService.TryGetRouteForUrl(returnUrl, out currentRoutePart)) {
+                AutoroutePart localizedRoutePart;
+                //content may not have localized version and we use "Try" approach
+                if (_localizableContentService.TryFindLocalizedRoute(currentRoutePart.ContentItem, WorkContext.CurrentCulture, out localizedRoutePart)) {
+                    returnUrl = localizedRoutePart.Path;
+                }
+            }
+        }
+        var urlPattern = "~/" + returnUrl + "?datainizio={0}&datafine={1}&termids={2}";  //"~/eventi?datainizio={0}&datafine={1}&termids={2}";
         url = String.Format(urlPattern,
             Request.QueryString["datainizio"] ?? DateTime.Today.ToString("dd/MM/yyyy"),
             Request.QueryString["datafine"] ?? DateTime.Today.ToString("dd/MM/yyyy"),
