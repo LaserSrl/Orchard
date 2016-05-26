@@ -18,18 +18,22 @@
   </Match>
   <Match ContentType="CommunicationContact">
     <Match DisplayType="Detail">
+      <Place Parts_EmailContact="Content:1"/>
+      <Place Parts_SmsContact="Content:2"/>
       <Place Parts_FavoriteCulturePart="Content:3"/>
-      <Place Parts_EmailContact="Content:4"/>
-      <Place Parts_SmsContact="Content:4"/>
-      <Place Parts_CommunicationContact="Content:after"/>
-      <Place Fields_Enumeration__CommunicationContact__ProfilePart="Content:6.1"/>
-      <Place Fields_TaxonomyField__CommunicationContact__ProfilePart="Content:6.2"/>
-      <Place Fields_Numeric__CommunicationContact__ProfilePart="Content:6.3"/>
-      <Place Fields_Common_Text__CommunicationContact__ProfilePart="Content:6.4"/>
-      <Place Fields_Boolean__CommunicationContact__ProfilePart="Content:6.5"/>
-      <Place Fields_DateTime__CommunicationContact__ProfilePart="Content:6.6"/>
-      <Place Fields_Link__CommunicationContact__ProfilePart="Content:6.7"/>
-      <Place Fields_Numeric="-"/> <!-- hide Id of user Creator and Id of last user that modified the item -->
+      <Place Parts_ProfilePart="Content:4"/>
+      <Place Parts_CommunicationContact="Content:5"/>
+      <!-- hide all other fields -->
+      <Place Fields_Numeric="-"/>
+      <Place Fields_Boolean="-"/>
+      <Place Fields_Enumeration="-"/>
+      <Place Fields_TaxonomyField="-"/>
+      <Place Fields_TaxonomyField_Localized="-"/>
+      <Place Fields_Common_Text="-"/>
+      <Place Fields_DateTime="-"/>
+      <Place Fields_Link="-"/>
+      <Place Fields_ContentPicker="-"/>
+      <Place Fields_MediaLibraryPicker="-"/>
     </Match>
   </Match>
   <Place Fields_MediaLibraryPicker_Edit="Content:2"/>

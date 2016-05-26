@@ -1,0 +1,30 @@
+﻿@foreach (var field in Model.ContentPart.Fields) {
+    string fieldName = field.FieldDefinition.Name;
+    if (fieldName == "BooleanField") {
+        @Display.Fields_BooleanField(Field: field)
+    }
+    else if (fieldName == "DateTimeField") {
+        @Display.Fields_DateTimeField(Field: field)
+    }
+    else if (fieldName == "EnumerationField") {
+        @Display.Fields_EnumerationField(Field: field)
+    }
+    else if (fieldName == "LinkField") {
+        @Display.Fields_LinkField(Field: field)
+    }
+    else if (fieldName == "NumericField") {
+        @Display.Fields_NumericField(Field: field)
+    }
+    else if (fieldName == "TextField") {
+        @Display.Fields_TextField(Field: field)
+    }
+    else if (fieldName == "TaxonomyField") {
+        @Display.Fields_TaxonomyField(Field: field)
+    }
+    else if (fieldName == "ContentPickerField") {
+        @Display.Fields_ContentPickerField(Field: field)
+    }
+    else if (fieldName == "MediaLibraryPickerField") {
+        @Display.Fields_MediaPickerField(Field: field)
+    }
+}
