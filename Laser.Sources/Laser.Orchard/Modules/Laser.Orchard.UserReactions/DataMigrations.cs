@@ -41,6 +41,7 @@ namespace Laser.Orchard.UserReactions {
             SchemaBuilder.AlterTable("UserReactionsSummaryRecord", table => table
                         .CreateIndex("Index_UserReactionsSummaryRecord_UserReactionsTypesRecord_Id",
                                     "UserReactionsTypesRecord_Id"));
+
             ContentDefinitionManager.AlterPartDefinition(
             typeof(UserReactionsPart).Name,
                 cfg => cfg.Attachable());

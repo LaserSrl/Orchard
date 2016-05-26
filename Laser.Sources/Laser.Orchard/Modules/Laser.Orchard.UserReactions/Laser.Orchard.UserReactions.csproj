@@ -117,6 +117,7 @@
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Services\UserReactionsService.cs" />
     <Compile Include="ViewModels\UserReactionsTypesVM.cs" />
+    <Compile Include="ViewModels\UserReactionsVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Settings.cshtml" />
@@ -124,6 +125,8 @@
     <Content Include="Views\Parts\UserReactions_SummaryAdmin.cshtml" />
     <Content Include="Placement.info" />
     <Content Include="Views\EditorTemplates\Parts\UserReactionsEdit.cshtml" />
+    <Content Include="Views\Parts\UserReactions_Detail.cshtml" />
+    <Content Include="Views\Parts\UserReactions_Summary.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

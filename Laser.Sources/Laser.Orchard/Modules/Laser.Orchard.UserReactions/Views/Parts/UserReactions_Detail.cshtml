@@ -1,0 +1,8 @@
+﻿@{
+    List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
+    
+    }
+@foreach (var item in part) { 
+    @item.Quantity
+    @item.TypeName
+}

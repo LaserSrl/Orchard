@@ -7,9 +7,7 @@ using System.Linq;
 
 
 namespace Laser.Orchard.UserReactions.Models {
-   
-
-
+  
     public class UserReactionsPart : ContentPart<UserReactionsPartRecord> {
 
         public IEnumerable<UserReactionsSummaryRecord> Reactions {
