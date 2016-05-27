@@ -37,8 +37,12 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     if (string.IsNullOrWhiteSpace(part.Logs) == false) {
                         logs = part.Logs;
                     }
-                    return ContentShape("Parts_CommunicationContact",
-                        () => shapeHelper.Parts_CommunicationContact(Logs: logs, Master: part.Master));
+                    var profile = part.ContentItem.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ProfilePart");
+                    return Combined(ContentShape("Parts_CommunicationContact",
+                        () => shapeHelper.Parts_CommunicationContact(Logs: logs)),
+                        ContentShape("Parts_ProfilePart",
+                        () => shapeHelper.Parts_ProfilePart(ContentPart: profile))
+                            );
                 } else {
                     return null;
                 }

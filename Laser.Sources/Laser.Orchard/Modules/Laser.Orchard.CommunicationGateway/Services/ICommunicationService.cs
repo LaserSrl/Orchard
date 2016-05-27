@@ -410,7 +410,15 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     _repositoryCommunicationEmailRecord.Flush();
                 }
             }
-            Contact.As<TitlePart>().Title = UserContent.UserName;
+            if (string.IsNullOrWhiteSpace(UserContent.UserName) == false) {
+                Contact.As<TitlePart>().Title = UserContent.UserName;
+            }
+            else if (string.IsNullOrWhiteSpace(UserContent.Email) == false) {
+                Contact.As<TitlePart>().Title = UserContent.Email;
+            }
+            else {
+                Contact.As<TitlePart>().Title = string.Format("User with ID {0}", UserContent.Id);
+            }
             //Contact.As<TitlePart>().Title = UserContent.Email + " " + UserContent.UserName;
             dynamic mypart = (((dynamic)Contact).CommunicationContactPart);
             mypart.GetType().GetProperty("UserIdentifier").SetValue(mypart, UserContent.Id, null);
@@ -421,21 +429,21 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     object myval;
                     if (cf.FieldDefinition.Name == typeof(DateTimeField).Name)
                         myval = ((object)(((dynamic)cf).DateTime));
-                    else
-                        if (cf.FieldDefinition.Name == typeof(MediaLibraryPickerField).Name || cf.FieldDefinition.Name == typeof(ContentPickerField).Name)
-                            myval = ((Int32[])cf.Ids).ToList().Select(x => (object)x).ToList();
-                        else
-                            if (cf.FieldDefinition.Name == typeof(TaxonomyField).Name) {
-                                List<TaxoVM> second = new List<TaxoVM>();
-                                foreach (TermPart tp in ((TaxonomyField)cf).Terms) {
-                                    TaxoVM tv = new TaxoVM();
-                                    tv.Id = tp.Id;
-                                    tv.flag = true;
-                                    second.Add(tv);
-                                }
-                                myval = ((object)(second.Select(x => (dynamic)x).ToList()));
-                            } else
-                                myval = ((object)(((dynamic)cf).Value));
+                    else if (cf.FieldDefinition.Name == typeof(MediaLibraryPickerField).Name || cf.FieldDefinition.Name == typeof(ContentPickerField).Name)
+                        myval = ((Int32[])cf.Ids).ToList().Select(x => (object)x).ToList();
+                    else if (cf.FieldDefinition.Name == typeof(TaxonomyField).Name) {
+                        List<TaxoVM> second = new List<TaxoVM>();
+                        foreach (TermPart tp in ((TaxonomyField)cf).Terms) {
+                            TaxoVM tv = new TaxoVM();
+                            tv.Id = tp.Id;
+                            tv.flag = true;
+                            second.Add(tv);
+                        }
+                        myval = ((object)(second.Select(x => (dynamic)x).ToList()));
+                    }
+                    else {
+                        myval = ((object)(((dynamic)cf).Value));
+                    }
                     _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, Contact);
                 }
             }
