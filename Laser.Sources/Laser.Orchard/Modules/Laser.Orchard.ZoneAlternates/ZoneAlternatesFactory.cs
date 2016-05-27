@@ -20,8 +20,7 @@ namespace Laser.Orchard.ZoneAlternates {
                 if (displayedContext.ShapeMetadata.Type != "Widget") {
                     if (displayedContext.ShapeMetadata.Type == "Zone") {
                         lastZone = displayedContext.Shape.ZoneName;
-                    }
-                    else {
+                    } else {
                         ContentItem contentItem = displayedContext.Shape.ContentItem;
                         ContentPart contentPart = displayedContext.Shape.ContentPart is ContentPart ? displayedContext.Shape.ContentPart : null;
                         ContentField contentField = displayedContext.Shape.ContentField is ContentField ? displayedContext.Shape.ContentField : null;
@@ -67,11 +66,13 @@ namespace Laser.Orchard.ZoneAlternates {
                                 }
                             }
                         }
-                        if (isAdmin) {
-                            if (!displayedContext.ShapeMetadata.Alternates.Contains(shapeName + "__" + contentItem.ContentType + "__AdminFilter")) {
-                                displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + "__AdminFilter");
-                                if (!string.IsNullOrWhiteSpace(displayType) && displayType != "Detail") {
-                                    displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + "__AdminFilter" + "__" + displayType);
+                        if (contentItem != null) {
+                            if (isAdmin) {
+                                if (!displayedContext.ShapeMetadata.Alternates.Contains(shapeName + "__" + contentItem.ContentType + "__AdminFilter")) {
+                                    displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + "__AdminFilter");
+                                    if (!string.IsNullOrWhiteSpace(displayType) && displayType != "Detail") {
+                                        displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + "__AdminFilter" + "__" + displayType);
+                                    }
                                 }
                             }
                         }
