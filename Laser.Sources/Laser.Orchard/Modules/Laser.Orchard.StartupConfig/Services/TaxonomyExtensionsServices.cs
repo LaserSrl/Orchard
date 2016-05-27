@@ -1,8 +1,11 @@
 ﻿
+using Laser.Orchard.StartupConfig.Models;
 using Orchard;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
@@ -24,6 +27,7 @@ namespace Laser.Orchard.StartupConfig.Services
         void InheritParentContentCulture(ContentItem item);
         IContent GetMasterItem(IContent item);
         string CheckIfDuplicateTerm(TermPart term, bool translating);
+        void AddLocalizationPartToTerm(TaxonomyPart part);
     }
 
     
@@ -36,13 +40,17 @@ namespace Laser.Orchard.StartupConfig.Services
         private readonly IRepository<ContentItemRecord> _contentItemRepository;
         private readonly IRepository<ContentTypeRecord> _contentTypeRepository;
         private readonly ITaxonomyService _taxonomyService;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IOrchardServices _orchardServices;
 
         public TaxonomyExtensionsService(IAutorouteService autorouteService,
                                          IContentManager contentManager,
                                          ILocalizationService localizationService,
                                          IRepository<ContentItemRecord> contentItemRepository,
                                          IRepository<ContentTypeRecord> contentTypeRepository,
-                                         ITaxonomyService taxonomyService)
+                                         ITaxonomyService taxonomyService,
+                                         IContentDefinitionManager contentDefinitionManager,
+                                         IOrchardServices orchardServices)
         {
             _autorouteService = autorouteService;
             _contentManager = contentManager;
@@ -50,6 +58,31 @@ namespace Laser.Orchard.StartupConfig.Services
             _contentItemRepository = contentItemRepository;
             _contentTypeRepository = contentTypeRepository;
             _taxonomyService = taxonomyService;
+            _contentDefinitionManager = contentDefinitionManager;
+            _orchardServices = orchardServices;
+        }
+
+        /// <summary>
+        /// Controlla se il content type rappresentante i termini della tassonomia ha una LocalizationPart e, in base alle impostazioni del sito, se non ce l'ha gliela aggiunge.
+        /// </summary>
+        /// <param name="part"></param>
+        public void AddLocalizationPartToTerm(TaxonomyPart part) {
+            var taxonomyExtensionsSiteSettings = _orchardServices.WorkContext.CurrentSite.As<TaxonomyExtensionsSiteSettingsPart>();
+
+            if (taxonomyExtensionsSiteSettings != null) {
+                if (taxonomyExtensionsSiteSettings.LocalizeTerms) {
+                    ContentTypeDefinition termDefinition = _contentDefinitionManager.GetTypeDefinition(part.TermTypeName);
+
+                    if (termDefinition != null) {
+                        if (termDefinition.Parts.Where(x => x.PartDefinition.Name == "LocalizationPart").Count() == 0) {
+                            _contentDefinitionManager.AlterTypeDefinition(part.TermTypeName,
+                                cfg => cfg
+                                    .WithPart("LocalizationPart")
+                                );
+                        }
+                    }
+                }
+            }
         }
 
         public ContentItem GetParentTaxonomy(ContentItem container)

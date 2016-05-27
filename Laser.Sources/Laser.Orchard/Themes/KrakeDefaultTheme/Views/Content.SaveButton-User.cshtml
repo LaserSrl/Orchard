@@ -1,0 +1,13 @@
+﻿@using Orchard.Utility.Extensions
+    <div class='space-40'></div>
+    <button class="submit" type="submit" name="submit.Save" value="submit.Save">@T("Register")</button>
+    
+		@*<input type="submit" class="submit" value="@T("Register")">*@
+    
+    @{
+        var returnUrl = Request.QueryString["returnUrl"];
+    }
+    
+    @if (!String.IsNullOrWhiteSpace(returnUrl) && Request.IsLocalUrl(returnUrl)) {
+        <a id="button-cancel" href="@returnUrl" class="button">@T("Cancel")</a>
+    }

@@ -145,6 +145,7 @@
     <Content Include="Views\Parts.Accessibility.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Views\Parts.Title-Elenco.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -12,5 +12,11 @@ namespace Laser.Orchard.CommunicationGateway.ViewModels {
         public ContentItem ContentItem { get; set; }
         public string PreviewEmail { get; set; }
         public string PreviewSms { get; set; }
+        public int UserId { get; set; }
+        public string Provider { get; set; }
+
+        public ContentIndexVM() {
+            Provider = "";
+        }
     }
 }

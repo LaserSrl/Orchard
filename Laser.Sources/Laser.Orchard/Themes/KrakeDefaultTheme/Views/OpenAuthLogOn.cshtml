@@ -3,8 +3,7 @@
 @using Orchard.ContentManagement
 @using Orchard.Utility.Extensions
 @using Laser.Orchard.OpenAuthentication
-@using Orchard.Environment.Configuration;
-
+@using Orchard.Environment.Configuration
 @{
     var userCanRegister = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().UsersCanRegister;
     var enableLostPassword = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().EnableLostPassword;
@@ -62,9 +61,9 @@
             <h3>@T("...or login with:")</h3>
                 <div class="social-login-buttons">
                     @foreach (OrchardAuthenticationClientData clientData in clientsData) {
-                            <span class="fa-stack fa-lg">
-                                <button class="fa fa-circle fa-stack-2x" type="submit" name="providerName" value="@clientData.ProviderName" title="@T("Log in with") @clientData.ProviderName.ToLowerInvariant()"><i class="fa fa-@clientData.ProviderName.ToLowerInvariant() fa-stack-1x social-button-content"></i></button>
-                            </span>
+                            
+                                <button class="fa fa-@clientData.ProviderName.ToLowerInvariant()-square fa-5x social-hover" type="submit" name="providerName" value="@clientData.ProviderName" title="@T("Log in with") @clientData.ProviderName.ToLowerInvariant()"></button>
+                            
                         @*
                         <a class="btn btn-link-2" href="#">
                         <i class="fa fa-@clientData.ProviderName.ToLowerInvariant()"></i>Facebook
