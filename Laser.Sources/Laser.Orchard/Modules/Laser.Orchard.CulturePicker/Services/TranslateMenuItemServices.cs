@@ -65,11 +65,14 @@ namespace Laser.Orchard.CulturePicker.Services {
                     //The content element may be localized
                     int ciId = ((dynamic)origPart.ContentItem).ContentMenuItemPart.ContentItemId;
                     int newCiId = ciId;
-                    var localizations = _localizationService.GetLocalizations(_contentManager.Get(ciId), VersionOptions.Published);
-                    foreach (var loc in localizations) {
-                        if (loc.Culture.Id == targetCultureId) {
-                            newCiId = loc.Id;
-                            break;
+                    var origContent = _contentManager.Get(ciId);
+                    if (origContent != null) {
+                        var localizations = _localizationService.GetLocalizations(origContent, VersionOptions.Published);
+                        foreach (var loc in localizations) {
+                            if (loc.Culture.Id == targetCultureId) {
+                                newCiId = loc.Id;
+                                break;
+                            }
                         }
                     }
                     ((dynamic)menuPart.ContentItem).ContentMenuItemPart.ContentItemId = newCiId;
@@ -87,11 +90,14 @@ namespace Laser.Orchard.CulturePicker.Services {
                     //the taxonomy may be localized
                     int tId = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.TaxonomyId;
                     int newTId = tId;
-                    var localizations = _localizationService.GetLocalizations(_contentManager.Get(tId), VersionOptions.Published);
-                    foreach (var loc in localizations) {
-                        if (loc.Culture.Id == targetCultureId) {
-                            newTId = loc.Id;
-                            break;
+                    var origContent = _contentManager.Get(tId);
+                    if (origContent != null) {
+                        var localizations = _localizationService.GetLocalizations(origContent, VersionOptions.Published);
+                        foreach (var loc in localizations) {
+                            if (loc.Culture.Id == targetCultureId) {
+                                newTId = loc.Id;
+                                break;
+                            }
                         }
                     }
                     ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.TaxonomyId = newTId;
