@@ -65,18 +65,15 @@ namespace Laser.Orchard.ZoneAlternates {
                                       }
                                   }
                               }
-
                           }
-                          if (contentPart != null) {
-                              if (isAdmin) {
-                                  if (!displayedContext.ShapeMetadata.Alternates.Contains(shapeName + "__" + contentItem.ContentType + "__" + contentPart.PartDefinition.Name + "__AdminFilter")) {
-                                      displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + "__" + contentPart.PartDefinition.Name + "__AdminFilter");
-                                      if (!string.IsNullOrWhiteSpace(displayType) && displayType != "Detail") {
-                                          displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + "__" + contentPart.PartDefinition.Name + "__AdminFilter" + "__" + displayType);
-                                      }
-                                  }
-                              }
-                          }
+                            if (isAdmin) {
+                                if (!displayedContext.ShapeMetadata.Alternates.Contains(shapeName + "__" + contentItem.ContentType + "__AdminFilter")) {
+                                    displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + "__AdminFilter");
+                                    if (!string.IsNullOrWhiteSpace(displayType) && displayType != "Detail") {
+                                        displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + "__AdminFilter" + "__" + displayType);
+                                    }
+                                }
+                            }
                       }
                   }
               });

@@ -1,6 +1,6 @@
 ﻿@foreach (var field in Model.ContentPart.Fields) {
     if(field.FieldDefinition.Name == "TaxonomyField") {
-        @Display.Fields_TaxonomyField(Field: field)
+        @Display.Fields_TaxonomyField__CommunicationContact__AdminFilter(Field: field)
     }
 }
 <fieldset>
