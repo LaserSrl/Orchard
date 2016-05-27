@@ -1,8 +1,57 @@
-﻿@{
-    List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
+﻿
+@{
     
+    List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
+    Script.Require("jQuery").AtHead();
+
     }
-@foreach (var item in part) { 
+
+@Html.AntiForgeryToken()
+
+@{foreach (var item in part)
+  { 
     @item.Quantity
-    @item.TypeName
+    
+   <a id="@item.TypeId">@item.TypeName</a>      
+  }
 }
+
+<a style="visibility:hidden" id="pageid" >@part.FirstOrDefault().Id</a>
+
+<script type="text/javascript">
+ 
+    function addRequestVerificationToken(data) {
+        data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
+        return data;
+    };
+
+    $(document).ready(function () {
+
+        $("a").bind("click", function (event) 
+        {
+            //Parameters
+             
+            //var userName = lato server
+            //var datatimeins = lato server
+          
+            var ReactionTypeId = this.id;
+            var PageId = 1;            
+           
+           
+            
+            $.ajax(
+                {                    
+                    url: "@Url.Action("GetReactionClicked", "ReactionAjax", new { Area="Laser.Orchard.UserReactions" })",
+                    success: function (result) {
+                        alert("result");
+                    },
+                    type: "POST",
+                    data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId })
+                    });
+        });
+
+
+    });
+
+
+</script>

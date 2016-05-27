@@ -2,6 +2,7 @@
 using Laser.Orchard.UserReactions.ViewModels;
 using Orchard;
 using Orchard.Data;
+using Orchard.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace Laser.Orchard.UserReactions.Services {
     public class UserReactionsService : IUserReactionsService {
         private readonly IRepository<UserReactionsTypesRecord> _repoTypes;
         private readonly IRepository<UserReactionsVM> _repoTot;
+        private readonly IAuthenticationService _authenticationService;
 
         public UserReactionsService(IRepository<UserReactionsTypesRecord> repoTypes, IRepository<UserReactionsVM> repoTot) {
             _repoTypes = repoTypes;
@@ -42,6 +44,10 @@ namespace Laser.Orchard.UserReactions.Services {
         }
 
 
+        public IUser CurrentUser() {
+           return _authenticationService.GetAuthenticatedUser();
+        }
+                   
 
         public IList<UserReactionsVM> GetTot(UserReactionsPart part) {
 

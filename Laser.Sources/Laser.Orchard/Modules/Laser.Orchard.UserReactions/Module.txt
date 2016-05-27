@@ -9,4 +9,4 @@ Features:
 		Name: Laser Orchard User Reaction
 		Description: Allows visitors to rate and react to content using Emojis.
 		Category: Social
-		Dependencies: Laser.Orchard.jQueryPlugins
+		Dependencies: Laser.Orchard.jQueryPlugins, Orchard.jQuery
