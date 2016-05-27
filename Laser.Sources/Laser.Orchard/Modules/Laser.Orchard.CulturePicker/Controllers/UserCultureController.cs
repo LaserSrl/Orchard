@@ -7,6 +7,13 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Mvc.Extensions;
 using Orchard;
+using System.Linq;
+using NHibernate.Criterion;
+using NHibernate.Persister.Entity;
+using NHibernate.Transform;
+using Orchard.Localization.Models;
+using Orchard.Localization.Records;
+
 
 namespace Laser.Orchard.CulturePicker.Controllers {
     public class UserCultureController : Controller {
@@ -58,6 +65,7 @@ namespace Laser.Orchard.CulturePicker.Controllers {
             //in the redirect we should be including the queries back into returnUrl
             //we can find the queries in Services.WorkContext.HttpContext.Request.rlReferrer.PathAndQuery
             string queries = Services.WorkContext.HttpContext.Request.UrlReferrer.Query;
+
             returnUrl += queries;
             return this.RedirectLocal(returnUrl);
         }

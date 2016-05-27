@@ -21,3 +21,8 @@ Features:
         Description: Automatically redirects a user to the translated home page
         Dependencies: Orchard.Localization, Orchard.Alias
         Category: Localization
+	Laser.Orchard.CulturePicker.TranslateMenuItems:
+		Name: Laser Culture Picker Menu Translation
+		Description: Enable semi-automated menu translations
+		Dependencies: Orchard.Localization
+		Category: Localization

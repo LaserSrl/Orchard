@@ -9,5 +9,8 @@ namespace Laser.Orchard.CulturePicker.Services {
         bool TryFindLocalizedRoute(ContentItem routableContent, string cultureName, out AutoroutePart localizedRoute);
         bool TryGetRouteForUrl(string url, out AutoroutePart route);
         IList<ExtendedCultureRecord> AvailableTranslations(string url, bool isHomePage=false);
+
+        bool TryGetLocalizedId(int originalId, string cultureName, out int translatedIds);
+        bool TryGetLocalizedId(IList<int> originalIds, string cultureName, out IList<int> translatedIds);
     }
 }

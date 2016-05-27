@@ -175,3 +175,27 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{ font-weight:800; }
 
 .message-Error { color: red; border-color:red; }
 div.cc-cookies { width: 100%;}
+
+/* culture picker */
+.container{padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}
+.container-nav{position:relative;}
+.ul-cultures{
+    display: block;
+    list-style: none;
+    list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+}
+
+.btn-header{position:relative;}
+.btn-header a{color:#000;}
+.btn-header:hover, .btn-header:focus {background: #12C4FF;}/*#FFD037;}*/
+.btn-header{ border-radius:0 0 3px 3px; color:#000; }
+
+.lang{padding:3px 15px; margin:0 2px; border:1px solid #12C4FF; border-top:none; border-bottom:none}/*:1px solid #FBC000; border-top:none;}*/
+.lang a{color:#12C4FF}/*#FBC000}*/
+.lang:hover, .lang:focus, .lang.active{border:1px solid #12C4FF; background:#12C4FF;}/*1px solid #FBC000; background:#FBC000;}*/
+.lang:hover a, .lang:focus a, .lang.active a{color:#000;}
