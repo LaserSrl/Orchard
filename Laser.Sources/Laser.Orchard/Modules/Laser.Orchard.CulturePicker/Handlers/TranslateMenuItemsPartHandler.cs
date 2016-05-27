@@ -27,14 +27,22 @@ namespace Laser.Orchard.CulturePicker.Handlers {
 
         protected override void Published(PublishContentContext context) {
             var menu = ((dynamic)context.ContentItem); //the menu
-            var part = menu.TranslateMenuItemsPart; 
-            if (!part.Translated && part.ToBeTranslated) {
-                //invoke the service to rebuild the menu
-                if (_translateMenuItemsService.TryTranslateAllSubmenus(part)) {
-                    part.Translated = true;
+            if (menu.ContentType == "Menu") {
+                try {
+                    var part = menu.TranslateMenuItemsPart;
+                    if (!part.Translated && part.ToBeTranslated) {
+                        //invoke the service to rebuild the menu
+                        if (_translateMenuItemsService.TryTranslateAllSubmenus(part)) {
+                            part.Translated = true;
+                        }
+                    }
+                    part.ToBeTranslated = false;
+                } catch (Exception ex) {
+
                 }
             }
-            part.ToBeTranslated = false;
+            
+            
             base.Published(context);
         }
 
