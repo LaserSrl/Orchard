@@ -6,4 +6,5 @@
     <Match DisplayType="Summary">
       <Place Parts_Localization_ContentTranslations_Summary="-"/>
     </Match>
+  <Place Parts_TranslateMenuItem="Content:2" />
 </Placement>

@@ -126,6 +126,7 @@
     <Content Include="App_Data\Localization\fr-FR\orchard.module.po" />
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
     <None Include="Properties\PublishProfiles\Orchard_Module_Release.pubxml" />
+    <Content Include="Views\EditorTemplates\Parts\TranslateMenuItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
@@ -134,11 +135,18 @@
     </Compile>
     <Compile Include="Controllers\UserCultureController.cs" />
     <Compile Include="Drivers\CulturePickerPartDriver.cs" />
+    <Compile Include="Drivers\TranslateMenuItemsPartDriver.cs" />
+    <Compile Include="Handlers\TranslateMenuItemsPartHandler.cs" />
     <Compile Include="HomeRoutes.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Migrations.cs" />
+    <Compile Include="Services\ITranslateMenuItemsServices.cs" />
+    <Compile Include="Services\TranslateMenuItemServices.cs" />
+    <Compile Include="TranslateMenuItemPartMigrations.cs" />
     <Compile Include="Models\CulturePickerPart.cs" />
+    <Compile Include="Models\TranslateMenuItemsPart.cs" />
+    <Compile Include="TranslateMenuItemsPermissions.cs" />
     <Compile Include="Projections\CurrentCultureFilter.cs" />
     <Compile Include="Models\CulturePickerSettings.cs" />
     <Compile Include="Projections\CurrentCultureWithUntranslated.cs" />
@@ -156,7 +164,6 @@
     <Compile Include="Services\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Handlers\" />
     <Folder Include="Records\" />
   </ItemGroup>
   <PropertyGroup>

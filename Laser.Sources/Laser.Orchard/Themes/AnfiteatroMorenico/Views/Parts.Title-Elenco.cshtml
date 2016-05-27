@@ -54,6 +54,10 @@
         int tId;
         if (Int32.TryParse(cat, out tId)){
             //check wheter the query is correct for the language selected
+            //Translating a term in a taxonomy spawns a new term id. It means that for example a Fair
+            //in Italian has ID==140, while its translation has ID==167. It means that starting from
+            //a search in one language, when we change language we should be changing the parameters 
+            //of the search if we want to see the same results.
             ILocalizableContentService _localizableContentService;
             if (WorkContext.TryResolve<ILocalizableContentService>(out _localizableContentService)) {
                 int tranId = 0;
