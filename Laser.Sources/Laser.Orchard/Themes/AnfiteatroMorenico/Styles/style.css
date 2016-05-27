@@ -19,7 +19,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{ font-weight:800; }
 .space-20{ height:20px; clear:both; }
 .space-40{ height:40px; clear:both; }
 
-.space-map{display:block}
+.space-map{display:block; height:65px; }
 @media(max-width:767px){.space-map{display:none;}}
 @media(min-width:991px){.space-map{display:none;}}
 
