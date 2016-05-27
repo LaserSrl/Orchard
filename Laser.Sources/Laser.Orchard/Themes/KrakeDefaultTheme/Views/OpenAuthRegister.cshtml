@@ -12,8 +12,10 @@
             @if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(externalLoginData)) {
                 <p>@T("This user account will be linked to <b>{0}</b> when you login.", userName)</p>
             }
+            <p>@T("Use the form below to create a new account.")</p>
+            <p>@T("Passwords are required to be a minimum of {0} characters in length.", ViewData["PasswordLength"])</p>
+            @Html.ValidationSummary(T("Account creation was unsuccessful. Please correct the errors and try again.").ToString())
         </div>
-        
 
         <div class="space-20"></div>
         
@@ -39,4 +41,18 @@
     </div>
    }
 </div>
+
+@if (Model.UserProfile != null) {
+    Script.Require("jQuery");
+    using (Script.Foot()) {
+        // calling EditorFor(Part) -> will render a Publish button
+        // in this case we don't have a publish button, so we just hide it!
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $('.save-button').hide();
+        });
+    </script>
+    }
+}
+
 
