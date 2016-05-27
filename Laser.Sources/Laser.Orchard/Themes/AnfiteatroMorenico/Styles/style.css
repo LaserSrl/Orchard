@@ -195,7 +195,7 @@ div.cc-cookies { width: 100%;}
 .btn-header:hover, .btn-header:focus {background: #12C4FF;}/*#FFD037;}*/
 .btn-header{ border-radius:0 0 3px 3px; color:#000; }
 
-.lang{padding:3px 15px; margin:0 2px; border:1px solid #12C4FF; border-top:none;}/*:1px solid #FBC000; border-top:none;}*/
+.lang{padding:3px 15px; margin:0 2px; border:1px solid #12C4FF; border-top:none; border-bottom:none}/*:1px solid #FBC000; border-top:none;}*/
 .lang a{color:#12C4FF}/*#FBC000}*/
 .lang:hover, .lang:focus, .lang.active{border:1px solid #12C4FF; background:#12C4FF;}/*1px solid #FBC000; background:#FBC000;}*/
 .lang:hover a, .lang:focus a, .lang.active a{color:#000;}
