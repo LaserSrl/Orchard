@@ -62,6 +62,7 @@
             var icon_class = "fa " + itemClassName;
             
             var stringUrlFirstChild = "";
+            var stringLabelFirstChild = "";
 
            
             string classSelected = "";
@@ -88,6 +89,7 @@
 
                 if (secondLevelMenuItems.Count(menuItem => !menuItem.LocalNav) > 1 && firstLevelMenuItemUrl != firstOfTheSecond.Href) {
                     stringUrlFirstChild = (string)firstOfTheSecond.Href;
+                    stringLabelFirstChild = sectionHeaderText;
                 }
 
             } else if (firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)) {
@@ -130,7 +132,7 @@
                     }
 
                     if (countChild == 0 && !String.Equals(stringUrlFirstChild, secondLevelMenuItem.Href) && stringUrlFirstChild != "") {
-                         <li><a href="@stringUrlFirstChild"><span class="title">@T("List All")</span></a></li>
+                         <li><a href="@stringUrlFirstChild"><span class="title">@stringLabelFirstChild</span></a></li>
                     }
 
                     string secondLevelTextHint = secondLevelMenuItem.Text.TextHint;
@@ -168,6 +170,7 @@
             @firstLevelTag.EndElement
 
             stringUrlFirstChild = "";
+            stringLabelFirstChild = "";
         }
         @tag.EndElement
     </div>
