@@ -225,16 +225,16 @@
     <Content Include="Views\Parts\CommunicationContact.cshtml" />
     <Content Include="Views\Parts\EmailContact.cshtml" />
     <Content Include="Views\Parts\SmsContact.cshtml" />
-    <Content Include="Views\Parts\ProfilePart.cshtml" />
-    <Content Include="Views\Fields\TaxonomyField.cshtml" />
-    <Content Include="Views\Fields\EnumerationField.cshtml" />
-    <Content Include="Views\Fields\LinkField.cshtml" />
-    <Content Include="Views\Fields\DateTimeField.cshtml" />
-    <Content Include="Views\Fields\BooleanField.cshtml" />
-    <Content Include="Views\Fields\NumericField.cshtml" />
-    <Content Include="Views\Fields\TextField.cshtml" />
-    <Content Include="Views\Fields\ContentPickerField.cshtml" />
-    <Content Include="Views\Fields\MediaPickerField.cshtml" />
+    <Content Include="Views\Parts\ProfilePart__CommunicationContact__AdminFilter.cshtml" />
+    <Content Include="Views\Fields\TaxonomyField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\EnumerationField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\LinkField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\DateTimeField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\BooleanField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\NumericField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\TextField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\ContentPickerField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\MediaPickerField-CommunicationContact-AdminFilter.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

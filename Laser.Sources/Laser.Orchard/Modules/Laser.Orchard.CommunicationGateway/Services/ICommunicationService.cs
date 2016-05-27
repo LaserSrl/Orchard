@@ -410,7 +410,15 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     _repositoryCommunicationEmailRecord.Flush();
                 }
             }
-            Contact.As<TitlePart>().Title = UserContent.UserName;
+            if (string.IsNullOrWhiteSpace(UserContent.UserName) == false) {
+                Contact.As<TitlePart>().Title = UserContent.UserName;
+            }
+            else if (string.IsNullOrWhiteSpace(UserContent.Email) == false) {
+                Contact.As<TitlePart>().Title = UserContent.Email;
+            }
+            else {
+                Contact.As<TitlePart>().Title = string.Format("User with ID {0}", UserContent.Id);
+            }
             //Contact.As<TitlePart>().Title = UserContent.Email + " " + UserContent.UserName;
             dynamic mypart = (((dynamic)Contact).CommunicationContactPart);
             mypart.GetType().GetProperty("UserIdentifier").SetValue(mypart, UserContent.Id, null);

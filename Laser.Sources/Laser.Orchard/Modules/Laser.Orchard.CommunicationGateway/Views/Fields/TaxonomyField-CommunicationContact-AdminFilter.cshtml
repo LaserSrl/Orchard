@@ -1,0 +1,20 @@
+﻿@{
+    var taxonomyField = (Orchard.Taxonomies.Fields.TaxonomyField)(Model.Field);
+    var taxoSettings = taxonomyField.PartFieldDefinition.Settings;
+    string taxoName = taxoSettings.Where(x => x.Key == "TaxonomyFieldSettings.Taxonomy").Select(x => x.Value).FirstOrDefault();
+    var taxoPart = WorkContext.Resolve<Orchard.Taxonomies.Services.ITaxonomyService>().GetTaxonomyByName(taxoName);
+    Orchard.Taxonomies.Models.TermPart term = null;
+}
+<fieldset>
+    <legend>@taxonomyField.DisplayName</legend>
+    <ul>
+    @foreach (var val in taxonomyField.Terms) {
+        <li style="list-style-type:disc;list-style-position:inside">
+        @foreach (var path in val.Path.Split(new char[]{'/'}, StringSplitOptions.RemoveEmptyEntries)) {
+            term = taxoPart.Terms.FirstOrDefault(x => x.Id.ToString() == path);
+            <text>@term.Name -> </text>
+        }
+        @val.Name</li>
+    }
+    </ul>
+</fieldset>
