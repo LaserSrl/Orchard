@@ -1,26 +1,10 @@
-﻿using Orchard.Autoroute.Models;
-using Orchard.ContentManagement;
-using System.Collections.Generic;
+﻿using Orchard.ContentManagement;
 using Laser.Orchard.CulturePicker.Models;
-using Orchard;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
 using Orchard.Localization.Models;
-using System.Linq;
-using Orchard.UI.Navigation;
 using Orchard.Core.Navigation.Models;
-using Orchard.Data;
-using NHibernate.Criterion;
 using Orchard.Core.Navigation.Services;
-
-//using Orchard.ContentPicker.Models;
-//using Orchard.Taxonomies.Models;
-//using Orchard.Core.Common.Models;
-//using Orchard.Core.Navigation.Models;
-//using Orchard.Core.Common.Models;
-//using Orchard.Projections.Models;
-//using Orchard.Taxonomies.Models;
-
 
 namespace Laser.Orchard.CulturePicker.Services {
     [OrchardFeature("Laser.Orchard.CulturePicker.TranslateMenuItems")]
@@ -28,18 +12,15 @@ namespace Laser.Orchard.CulturePicker.Services {
 
         private readonly IContentManager _contentManager;
         private readonly ILocalizationService _localizationService;
-        private readonly ISessionLocator _sessionLocator;
         private readonly IMenuService _menuService;
 
         public TranslateMenuItemServices(
             ILocalizationService localizationService, 
             IContentManager contentManager,
-            ISessionLocator sessionLocator,
             IMenuService menuService) {
 
             _localizationService = localizationService;
             _contentManager = contentManager;
-            _sessionLocator = sessionLocator;
             _menuService = menuService;
         }
 
@@ -70,14 +51,16 @@ namespace Laser.Orchard.CulturePicker.Services {
             foreach (var origPart in masterParts) {
                 var menuPart = _contentManager.New<MenuPart>(origPart.ContentItem.ContentType);
 
-                //menuPart.ContentItem = _contentManager.Clone(origPart.ContentItem); //this does not attach items to the menu
-
                 menuPart.MenuPosition = origPart.MenuPosition;
                 menuPart.Menu = thisMenu;
                 menuPart.MenuText = origPart.MenuText + " " + targetCulture;
   
                 _contentManager.Create(menuPart);
 
+                //This is horrible to behold:
+                //For each type of MenuItem, we go and copy/localize the relevant fields.
+                //We may have to restructure all MenuItems if we want to make this more flexible, so that they
+                //contain information about the members to be copied over or localized.
                 if (origPart.ContentItem.ContentType == "ContentMenuItem") {
                     //The content element may be localized
                     int ciId = ((dynamic)origPart.ContentItem).ContentMenuItemPart.ContentItemId;
