@@ -13,6 +13,15 @@ using Orchard.Data;
 using NHibernate.Criterion;
 using Orchard.Core.Navigation.Services;
 
+//using Orchard.ContentPicker.Models;
+//using Orchard.Taxonomies.Models;
+//using Orchard.Core.Common.Models;
+//using Orchard.Core.Navigation.Models;
+//using Orchard.Core.Common.Models;
+//using Orchard.Projections.Models;
+//using Orchard.Taxonomies.Models;
+
+
 namespace Laser.Orchard.CulturePicker.Services {
     [OrchardFeature("Laser.Orchard.CulturePicker.TranslateMenuItems")]
     public class TranslateMenuItemServices : ITranslateMenuItemsServices {
@@ -33,6 +42,7 @@ namespace Laser.Orchard.CulturePicker.Services {
             _sessionLocator = sessionLocator;
             _menuService = menuService;
         }
+
         public bool TryTranslateAllSubmenus(TranslateMenuItemsPart part) {
             var menu = part.ContentItem;
             //get the Id of the translated menu
@@ -40,6 +50,7 @@ namespace Laser.Orchard.CulturePicker.Services {
             //get the target culture from the localization part in the menu
             var locPart = menu.As<LocalizationPart>(); //this contains the localization info
             string targetCulture = locPart.Culture.Culture;
+            int targetCultureId = locPart.Culture.Id;
             //find the master menu item
             var locInfo = _localizationService.GetLocalizations(menu, VersionOptions.Published);
             int masterId = 0;
@@ -58,13 +69,53 @@ namespace Laser.Orchard.CulturePicker.Services {
             //duplicate the parts into the new menu
             foreach (var origPart in masterParts) {
                 var menuPart = _contentManager.New<MenuPart>(origPart.ContentItem.ContentType);
+
+                //menuPart.ContentItem = _contentManager.Clone(origPart.ContentItem); //this does not attach items to the menu
+
                 menuPart.MenuPosition = origPart.MenuPosition;
                 menuPart.Menu = thisMenu;
                 menuPart.MenuText = origPart.MenuText + " " + targetCulture;
-                //Up to this point, we have replicated the menu structure (for this item)
-                //We should see to relocalize the content of the menu item IF it has a translation already
-
+  
                 _contentManager.Create(menuPart);
+
+                if (origPart.ContentItem.ContentType == "ContentMenuItem") {
+                    //The content element may be localized
+                    int ciId = ((dynamic)origPart.ContentItem).ContentMenuItemPart.ContentItemId;
+                    int newCiId = ciId;
+                    var localizations = _localizationService.GetLocalizations(_contentManager.Get(ciId), VersionOptions.Published);
+                    foreach (var loc in localizations) {
+                        if (loc.Culture.Id == targetCultureId) {
+                            newCiId = loc.Id;
+                            break;
+                        }
+                    }
+                    ((dynamic)menuPart.ContentItem).ContentMenuItemPart.ContentItemId = newCiId;
+                } else if (origPart.ContentItem.ContentType == "MenuItem") {
+                    ((dynamic)menuPart.ContentItem).MenuItemPart.Url = ((dynamic)origPart.ContentItem).MenuItemPart.Url;
+                } else if (origPart.ContentItem.ContentType == "HtmlMenuItem") {
+                    ((dynamic)menuPart.ContentItem).BodyPart.Text = ((dynamic)origPart.ContentItem).BodyPart.Text;
+                } else if (origPart.ContentItem.ContentType == "NavigationQueryMenuItem") {
+                    ((dynamic)menuPart.ContentItem).NavigationQueryPart.QueryPartRecord = ((dynamic)origPart.ContentItem).NavigationQueryPart.QueryPartRecord;
+                } else if (origPart.ContentItem.ContentType == "TaxonomyNavigationMenuItem") {
+                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.DisplayContentCount = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.DisplayContentCount;
+                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.DisplayRootTerm = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.DisplayRootTerm;
+                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.HideEmptyTerms = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.HideEmptyTerms;
+                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.LevelsToDisplay = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.LevelsToDisplay;
+                    //the taxonomy may be localized
+                    int tId = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.TaxonomyId;
+                    int newTId = tId;
+                    var localizations = _localizationService.GetLocalizations(_contentManager.Get(tId), VersionOptions.Published);
+                    foreach (var loc in localizations) {
+                        if (loc.Culture.Id == targetCultureId) {
+                            newTId = loc.Id;
+                            break;
+                        }
+                    }
+                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.TaxonomyId = newTId;
+                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.TermId = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.TermId;
+                } else if (origPart.ContentItem.ContentType == "ShapeMenuItem") {
+                    ((dynamic)menuPart.ContentItem).ShapeMenuItemPart.ShapeType = ((dynamic)origPart.ContentItem).ShapeMenuItemPart.ShapeType;
+                }
 
             }
 
