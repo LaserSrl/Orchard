@@ -252,6 +252,26 @@ msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.MenuWidget-Breadcrumb.cshtml"
 msgid "Home"
 msgstr "Home"
 
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.Title-Elenco.cshtml"
+msgid "Events"
+msgstr "Eventi"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.Title-Elenco.cshtml"
+msgid "Events between {0} and {1}"
+msgstr "Eventi tra il {0} ed il {1}"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.Title-Elenco.cshtml"
+msgid "Events between today and {0}"
+msgstr "Eventi tra oggi ed il {0}"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.Title-Elenco.cshtml"
+msgid "Events for {0}"
+msgstr "Eventi per il {0}"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.Title-Elenco.cshtml"
+msgid "Today's events"
+msgstr "Eventi di oggi"
+
 msgctxt "~/Themes/AnfiteatroMorenico/Views/WideContentMap.cshtml"
 msgid "more"
 msgstr "leggi tutto"

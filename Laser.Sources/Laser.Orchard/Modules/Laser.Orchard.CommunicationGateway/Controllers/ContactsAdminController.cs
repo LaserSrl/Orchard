@@ -27,6 +27,9 @@ using System.Web.Mvc;
 using Orchard.Themes;
 using Laser.Orchard.CommunicationGateway.Utils;
 using Orchard.Environment.Configuration;
+using Orchard.Users.Services;
+using Laser.Orchard.OpenAuthentication.Services;
+using Laser.Orchard.OpenAuthentication.Models;
 
 namespace Laser.Orchard.CommunicationGateway.Controllers {
 
@@ -40,6 +43,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly ISessionLocator _session;
         private readonly INotifier _notifier;
         private readonly ShellSettings _shellSettings;
+        private readonly IUserService _userService;
         private Localizer T { get; set; }
         private readonly string _contactsExportRelativePath;
         private readonly string _contactsImportRelativePath;
@@ -51,7 +55,8 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             ICommunicationService communicationService,
             ISessionLocator session,
             IScheduledTaskManager taskManager,
-            ShellSettings shellSettings
+            ShellSettings shellSettings,
+            IUserService userService
             ) {
             _orchardServices = orchardServices;
             _contentManager = contentManager;
@@ -61,6 +66,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             _taskManager = taskManager;
             _session = session;
             _shellSettings = shellSettings;
+            _userService = userService;
             _contactsExportRelativePath = string.Format("~/Media/{0}/Export/Contacts", _shellSettings.Name);
             _contactsImportRelativePath = string.Format("~/Media/{0}/Import/Contacts", _shellSettings.Name);
         }
@@ -117,6 +123,10 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                     content = _contentManager.Get(id, VersionOptions.DraftRequired);
                 } else {
                     content = _contentManager.Get(id);
+                }
+                // verifica che il contact non sia legato a un utente
+                if (content.As<CommunicationContactPart>().UserIdentifier != 0) {
+                    return new HttpUnauthorizedResult();
                 }
             }
 
@@ -273,15 +283,36 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                     ModifiedUtc = ((dynamic)p).CommonPart.ModifiedUtc,
                     UserName = ((dynamic)p).CommonPart.Owner != null ? ((dynamic)p).CommonPart.Owner.UserName : "Anonymous",
                     PreviewEmail = (((dynamic)p).EmailContactPart.EmailRecord.Count > 0) ? ((dynamic)p).EmailContactPart.EmailRecord[0].Email : "",
-                    PreviewSms = (((dynamic)p).SmsContactPart.SmsRecord.Count > 0) ? ((dynamic)p).SmsContactPart.SmsRecord[0].Prefix + "/" + ((dynamic)p).SmsContactPart.SmsRecord[0].Sms : ""
+                    PreviewSms = (((dynamic)p).SmsContactPart.SmsRecord.Count > 0) ? ((dynamic)p).SmsContactPart.SmsRecord[0].Prefix + "/" + ((dynamic)p).SmsContactPart.SmsRecord[0].Sms : "",
+                    UserId = ((dynamic)p).CommunicationContactPart.UserIdentifier
                 }).ToList();
 
             if (pageOfContentItems == null) {
                 pageOfContentItems = new List<ContentIndexVM>();
             }
-            _orchardServices.New.List();
+            //_orchardServices.New.List();
+            AddProviderInfo(pageOfContentItems);
             var model = new SearchIndexVM(pageOfContentItems, search, pagerShape, Options);
             return View("Index", (object)model);
+        }
+
+        private void AddProviderInfo(List<ContentIndexVM> items) {
+            IUserProviderServices userProviderService = null;
+            UserProviderRecord provider = null;
+            if(_orchardServices.WorkContext.TryResolve<IUserProviderServices>(out userProviderService)){
+                foreach (var item in items) {
+                    if (item.UserId != 0) {
+                        provider = userProviderService.Get(item.UserId).FirstOrDefault();
+                        if (provider == null) {
+                            item.Provider = "Local";
+                        } else {
+                            item.Provider = provider.ProviderName;
+                        }
+                    } else {
+                        item.Provider = "Contact";
+                    }
+                }
+            }
         }
 
         private ActionResult Export(SearchVM search) {
@@ -410,6 +441,22 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _notifier.Error(T("File does not exist. It should have been removed by someone else."));
             }
             return RedirectToAction("ImportedFilesLogs");
+        }
+
+        [Admin]
+        public ActionResult View(int id) {
+            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+                return new HttpUnauthorizedResult();
+            object model;
+            if (id == 0) {
+                var newContent = _contentManager.New(contentType);
+                model = _contentManager.BuildDisplay(newContent, "Detail");
+            } else {
+                model = _contentManager.BuildDisplay(_contentManager.Get(id, VersionOptions.Latest), "Detail");
+            }
+            return View((object)model);
+
+            //return RedirectToAction("Edit", new { id = contactId });
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
