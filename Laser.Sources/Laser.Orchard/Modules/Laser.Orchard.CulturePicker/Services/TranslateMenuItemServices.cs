@@ -83,10 +83,6 @@ namespace Laser.Orchard.CulturePicker.Services {
                 } else if (origPart.ContentItem.ContentType == "NavigationQueryMenuItem") {
                     ((dynamic)menuPart.ContentItem).NavigationQueryPart.QueryPartRecord = ((dynamic)origPart.ContentItem).NavigationQueryPart.QueryPartRecord;
                 } else if (origPart.ContentItem.ContentType == "TaxonomyNavigationMenuItem") {
-                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.DisplayContentCount = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.DisplayContentCount;
-                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.DisplayRootTerm = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.DisplayRootTerm;
-                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.HideEmptyTerms = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.HideEmptyTerms;
-                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.LevelsToDisplay = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.LevelsToDisplay;
                     //the taxonomy may be localized
                     int tId = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.TaxonomyId;
                     int newTId = tId;
@@ -102,6 +98,10 @@ namespace Laser.Orchard.CulturePicker.Services {
                     }
                     ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.TaxonomyId = newTId;
                     ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.TermId = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.TermId;
+                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.DisplayContentCount = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.DisplayContentCount;
+                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.DisplayRootTerm = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.DisplayRootTerm;
+                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.HideEmptyTerms = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.HideEmptyTerms;
+                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.LevelsToDisplay = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.LevelsToDisplay;
                 } else if (origPart.ContentItem.ContentType == "ShapeMenuItem") {
                     ((dynamic)menuPart.ContentItem).ShapeMenuItemPart.ShapeType = ((dynamic)origPart.ContentItem).ShapeMenuItemPart.ShapeType;
                 }
