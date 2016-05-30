@@ -97,7 +97,20 @@ namespace Laser.Orchard.CulturePicker.Services {
                         }
                     }
                     ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.TaxonomyId = newTId;
-                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.TermId = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.TermId;
+                    //the "starting" term in this taxonomy may be localized
+                    int termId = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.TermId;
+                    int newTermId = termId;
+                    var origTerm = _contentManager.Get(termId);
+                    if (origTerm != null) {
+                        var localizations = _localizationService.GetLocalizations(origTerm, VersionOptions.Published);
+                        foreach (var loc in localizations) {
+                            if (loc.Culture.Id == targetCultureId) {
+                                newTermId = loc.Id;
+                                break;
+                            }
+                        }
+                    }
+                    ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.TermId = newTermId;
                     ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.DisplayContentCount = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.DisplayContentCount;
                     ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.DisplayRootTerm = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.DisplayRootTerm;
                     ((dynamic)menuPart.ContentItem).TaxonomyNavigationPart.HideEmptyTerms = ((dynamic)origPart.ContentItem).TaxonomyNavigationPart.HideEmptyTerms;
