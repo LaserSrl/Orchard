@@ -2,10 +2,13 @@
 using Orchard;
 using Orchard.Environment.Configuration;
 using Orchard.Modules.Services;
+using Orchard.Security.Permissions;
+using Orchard.Roles.Services;
 using System;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
+using System.Collections.Generic;
 
 namespace Laser.Orchard.StartupConfig.Services {
 
@@ -24,6 +27,15 @@ namespace Laser.Orchard.StartupConfig.Services {
         void EnableFeature(string featureId);
 
         bool FeatureIsEnabled(string featureId);
+
+        /// <summary>
+        /// This method may be called whenever we need to update some roles' permissions based on known stereotypes.
+        /// For example, whenever we add new permissions and stereotypes to a module, we should update that module's
+        /// migration, calling this method and giving the new stereotypes as parameters.
+        /// </summary>
+        /// <param name="stereotypes">An <type>IEnumerable<PermissionStereotype></type> obtained for example by a call to
+        /// <example>new Permissions().GetDefaultStereotypes();</example></param>
+        void UpdateStereotypesPermissions(IEnumerable<PermissionStereotype> stereotypes);
 
         Response GetResponse(ResponseType rsptype, string message = "", dynamic data = null);
     }
@@ -97,9 +109,11 @@ namespace Laser.Orchard.StartupConfig.Services {
         private readonly string _storageMediaPath; // C:\orchard\media\default
         private readonly string _virtualMediaPath; // ~/Media/Default/
         private readonly string _publicMediaPath; // /Orchard/Media/Default/
+        private readonly IRoleService _roleService;
 
-        public UtilsServices(IModuleService moduleService, ShellSettings settings) {
+        public UtilsServices(IModuleService moduleService, ShellSettings settings, IRoleService roleService) {
             _moduleService = moduleService;
+            _roleService = roleService;
 
             var mediaPath = HostingEnvironment.IsHosted
                                 ? HostingEnvironment.MapPath("~/Media/") ?? ""
@@ -160,6 +174,32 @@ namespace Laser.Orchard.StartupConfig.Services {
         public bool FeatureIsEnabled(string featureId) {
             var features = _moduleService.GetAvailableFeatures().ToDictionary(m => m.Descriptor.Id, m => m);
             return (features.ContainsKey(featureId) && features[featureId].IsEnabled);
+        }
+
+        public void UpdateStereotypesPermissions(IEnumerable<PermissionStereotype> stereotypes) {
+            foreach (var stereotype in stereotypes) {
+                //get role corresponding to the stereotype
+                var role = _roleService.GetRoleByName(stereotype.Name);
+                if (role == null) {
+                    //create new role
+                    _roleService.CreateRole(stereotype.Name);
+                    role = _roleService.GetRoleByName(stereotype.Name);
+                }
+                //merge permissions into the role
+                var stereotypePermissionsNames = (stereotype.Permissions ?? Enumerable.Empty<Permission>()).Select(x => x.Name);
+                var currentPermissionsNames = role.RolesPermissions.Select(x => x.Permission.Name);
+                var distinctPerrmissionsNames = currentPermissionsNames
+                    .Union(stereotypePermissionsNames)
+                    .Distinct();
+                //if we added permissions we update the role
+                var additionalPermissionsNames = distinctPerrmissionsNames.Except(currentPermissionsNames);
+                if (additionalPermissionsNames.Any()) {
+                    //we have new permissions to add to this role
+                    foreach (var permissionName in additionalPermissionsNames) {
+                        _roleService.CreatePermissionForRole(role.Name, permissionName);
+                    }
+                }
+            }
         }
     }
 }
