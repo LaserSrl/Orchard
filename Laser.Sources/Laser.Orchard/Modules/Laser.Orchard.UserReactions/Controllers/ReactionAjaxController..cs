@@ -10,18 +10,21 @@ namespace Laser.Orchard.UserReactions.Controllers {
     
     public class ReactionAjaxController : Controller     
     {
+        private readonly IUserReactionsService _userReactionService;
+
+        public ReactionAjaxController(IUserReactionsService userReactionService) {
+            _userReactionService = userReactionService;
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public bool GetReactionClicked(int pageId, int reactionTypeId) {
-         //public int GetReactionClicked() {
-            
-            ////int ret1 = pageId;
-            ////int ret2 = reactionTypeId;
-            //CalculateTypeClick(UserId, ReactionType)
-            //Inserting data in table
+        public int GetReactionClicked(int pageId, int reactionTypeId) {
+           
+            var userId = _userReactionService.CurrentUser();
+            int typeClick = _userReactionService.CalculateTypeClick(userId, reactionTypeId, pageId);
 
-            return true;
+
+            return typeClick;
         }
 
 

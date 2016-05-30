@@ -1,8 +1,12 @@
 ﻿
 @{
     
+    //Setta i dati della vista collegandoli al modello settato dal controller che richiama la vista
     List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
-    Script.Require("jQuery").AtHead();
+    
+    //Aggiungi in testata la libreria jQuery
+    
+        Script.Require("jQuery").AtHead();
 
     }
 
@@ -16,10 +20,11 @@
   }
 }
 
-<a style="visibility:hidden" id="pageid" >@part.FirstOrDefault().Id</a>
+<a style="visibility:hidden" id="pageid" >@Model.ContentItem.Id</a>
 
 <script type="text/javascript">
- 
+    //Aggiungo il valore del campo nascosto AntiForgeryToken al valore data della funzione 
+    //richiamata di JQuery
     function addRequestVerificationToken(data) {
         data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
         return data;
@@ -35,15 +40,19 @@
             //var datatimeins = lato server
           
             var ReactionTypeId = this.id;
-            var PageId = 1;            
-           
-           
-            
+
+            //Dato di test            
+            var PageId = $("pageid").val();
+            if (PageId == null)
+                PageId = 1;
+
+            //Chiamata ajax richiama metodo server GetReactionClicked nel controller ReactionAjax 
+            //che verifica se l'utente deve fare un click in aggiunta oppure in decremento, quale icona cliccata 
             $.ajax(
                 {                    
                     url: "@Url.Action("GetReactionClicked", "ReactionAjax", new { Area="Laser.Orchard.UserReactions" })",
                     success: function (result) {
-                        alert("result");
+                        alert(result);
                     },
                     type: "POST",
                     data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId })

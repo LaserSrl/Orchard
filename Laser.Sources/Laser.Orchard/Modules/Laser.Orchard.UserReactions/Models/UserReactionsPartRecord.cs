@@ -8,8 +8,12 @@ using System.Linq;
 
 namespace Laser.Orchard.UserReactions.Models {
   
+    /// <summary>
+    /// Oggetto content cioè contenuto della pagina
+    /// </summary>
     public class UserReactionsPart : ContentPart<UserReactionsPartRecord> {
 
+        //per ogni content posso inserire una lista di reactions (vedi oggetto sotto)
         public IEnumerable<UserReactionsSummaryRecord> Reactions {
             get {
                 return Record.Reactions;
@@ -18,6 +22,9 @@ namespace Laser.Orchard.UserReactions.Models {
 
     }
 
+    /// <summary>
+    /// Record di reactions 
+    /// </summary>
     public class UserReactionsPartRecord : ContentPartRecord {
 
         public UserReactionsPartRecord() {

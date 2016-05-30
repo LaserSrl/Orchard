@@ -46,25 +46,26 @@ namespace Laser.Orchard.UserReactions {
             typeof(UserReactionsPart).Name,
                 cfg => cfg.Attachable());
 
-
             return 2;
         
         }
-
 
 
         public int UpdateFrom2() 
         {
             SchemaBuilder.CreateTable("UserReactionsClickRecord", table => table
             .Column<int>("Id", col => col.PrimaryKey().Identity())
-            .Column<int>("UserId")
+            //UserID
+            .Column<int>("UserPartRecord_Id")
             .Column<DateTime>("CreatedUtc", c => c.NotNull())
-            .Column<int>("UserReactionsTypesRecord_Id")
+            //ContentId
+            .Column<int>("ContentItemRecordId", c => c.NotNull())
+            //Reaction Type
+            .Column<int>("UserReactionsTypesRecord_Id")                      
             .Column<int>("ActionType")
             );
 
             return 3;
-
         }
 
     }

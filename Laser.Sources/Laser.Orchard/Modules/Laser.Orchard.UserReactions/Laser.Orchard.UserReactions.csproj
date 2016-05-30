@@ -54,6 +54,9 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Users">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -112,6 +115,7 @@
     <Compile Include="DataMigrations.cs" />
     <Compile Include="Drivers\UserReactionsPartDriver.cs" />
     <Compile Include="Handlers\UserReactionsPartHandler.cs" />
+    <Compile Include="Models\UserReactionsClickRecord.cs" />
     <Compile Include="Models\UserReactionsPartRecord.cs" />
     <Compile Include="Models\UserReactionsSummaryRecord.cs" />
     <Compile Include="Models\UserReactionsTypesRecord.cs" />
@@ -124,7 +128,9 @@
     <Content Include="Views\Admin\Settings.cshtml" />
     <Content Include="Views\EditorTemplates\UserReactionsTypeVM.cshtml" />
     <Content Include="Views\Parts\UserReactions_SummaryAdmin.cshtml" />
-    <Content Include="Placement.info" />
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\EditorTemplates\Parts\UserReactionsEdit.cshtml" />
     <Content Include="Views\Parts\UserReactions_Detail.cshtml" />
     <Content Include="Views\Parts\UserReactions_Summary.cshtml" />
