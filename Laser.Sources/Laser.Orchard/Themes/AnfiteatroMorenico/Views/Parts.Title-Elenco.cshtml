@@ -4,6 +4,7 @@
 @using Orchard.Core.Title.Models;
 @using Orchard.Data;
 @using Laser.Orchard.CulturePicker.Services;
+@using Orchard.ContentManagement;
 
 @{
     Layout.Title = Model.Title;
@@ -74,12 +75,14 @@
                     ISessionLocator _sessionLocator;
                     if (WorkContext.TryResolve<ISessionLocator>(out _sessionLocator)) {
                         //get the category corresponding to the given Id
+                        var contentManager = WorkContext.Resolve<IContentManager>();
+                        var what = contentManager.Query<TitlePart>().Where<TitlePartRecord>(tp => tp.ContentItemRecord.Id == tId).List();
                         //Search in the TItlePartRecord table for the element whose ContentItemRecor_Id matches tId
-                        QueryOver<TitlePartRecord, TitlePartRecord> qoTitle = QueryOver.Of<TitlePartRecord>()
-                            .Where(tpr => tpr.ContentItemRecord.Id == tId)
-                            .Select(tpr => tpr.Title);
-                        string categoryTitle = qoTitle.GetExecutableQueryOver(_sessionLocator.For(typeof(TitlePartRecord))).SingleOrDefault<string>();
-                        titleString += " - " + categoryTitle;
+                        //QueryOver<TitlePartRecord, TitlePartRecord> qoTitle = QueryOver.Of<TitlePartRecord>()
+                        //    .Where(tpr => tpr.ContentItemRecord.Id == tId)
+                        //    .Select(tpr => tpr.Title);
+                        //string categoryTitle = qoTitle.GetExecutableQueryOver(_sessionLocator.For(typeof(TitlePartRecord))).SingleOrDefault<string>();
+                        titleString += " - " + what.FirstOrDefault().Title; // categoryTitle;
                     }
                 }
             }            
