@@ -48,6 +48,18 @@ msgctxt "~/Modules/Laser.Orchard.CulturePicker/Views/Admin/Settings.cshtml"
 msgid "Update settings"
 msgstr "Aggiorna le impostazioni"
 
+msgctxt "~/Modules/Laser.Orchard.CulturePicker/Views/EditorTemplates/Parts/TranslateMenuItem.cshtml"
+msgid " To be translated"
+msgstr "Da tradurre"
+
+msgctxt "~/Modules/Laser.Orchard.CulturePicker/Views/EditorTemplates/Parts/TranslateMenuItem.cshtml"
+msgid " Translated"
+msgstr "Tradotto"
+
+msgctxt "~/Modules/Laser.Orchard.CulturePicker/Views/EditorTemplates/Parts/TranslateMenuItem.cshtml"
+msgid "This is the translation from the {0} culture."
+msgstr "Questa è la traduzione dalla cultura {0}."
+
 msgctxt "~/Modules/Laser.Orchard.CulturePicker/Views/Parts/CulturePicker.cshtml"
 msgid "Language"
 msgstr "Lingua"
@@ -99,4 +111,36 @@ msgstr "Localizzazione"
 msgctxt "Laser.Orchard.CulturePicker.Projections.CurrentCultureWithUntranslatedFilter"
 msgid "Localized content items for current culture (untranslated included in default culture)"
 msgstr "Versione tradotta dei contenuti nella lingua corrente (non tradotti inclusi nella lingua di default)"
+
+msgctxt "Laser.Orchard.CulturePicker.Services.TranslateMenuItemServices"
+msgid "The content for a Term in Taxonomy Item {0} could not be found."
+msgstr "Impossibile trovare il contenuto corrispondente ad un Termine nella Tassonomia {0}."
+
+msgctxt "Laser.Orchard.CulturePicker.Services.TranslateMenuItemServices"
+msgid "The content for a Term in Taxonomy Item {0} should be localized."
+msgstr "Il contenuto per un Termine nella Tassonomia {0} deve essere localizzato."
+
+msgctxt "Laser.Orchard.CulturePicker.Services.TranslateMenuItemServices"
+msgid "The content for Menu Item {0} could not be found."
+msgstr "Impossibile trovare il contenuto corrispondente al menu {0}."
+
+msgctxt "Laser.Orchard.CulturePicker.Services.TranslateMenuItemServices"
+msgid "The content for Menu Item {0} should be localized."
+msgstr "Il contenuto corrispondente al menu {0} deve essere localizzato."
+
+msgctxt "Laser.Orchard.CulturePicker.Services.TranslateMenuItemServices"
+msgid "The content for Taxonomy Item {0} could not be found."
+msgstr "Impossibile trovare il contenuto corrispondente ala Tassonomia {0}."
+
+msgctxt "Laser.Orchard.CulturePicker.Services.TranslateMenuItemServices"
+msgid "The content for Taxonomy Item {0} should be localized."
+msgstr "Il contenuto per la Tassonomia {0} deve essere localizzato."
+
+msgctxt "Laser.Orchard.CulturePicker.Services.TranslateMenuItemServices"
+msgid "The localization was successful."
+msgstr "Localizzazione eseguita con successo."
+
+msgctxt "Laser.Orchard.CulturePicker.Services.TranslateMenuItemServices"
+msgid "Verify the Url in Menu Item {0}."
+msgstr "Verificare l'URL nel menu {0}."
 
