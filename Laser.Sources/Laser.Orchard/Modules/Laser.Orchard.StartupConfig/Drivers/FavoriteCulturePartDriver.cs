@@ -36,7 +36,8 @@ namespace Laser.Orchard.StartupConfig.Drivers {
                 }
                 return ContentShape("Parts_FavoriteCulturePart",
                     () => shapeHelper.Parts_FavoriteCulturePart(Culture: culture));
-            } else {
+            }
+            else {
                 return null;
             }
         }

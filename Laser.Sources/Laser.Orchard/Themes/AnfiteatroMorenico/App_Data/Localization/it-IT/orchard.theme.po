@@ -244,6 +244,10 @@ msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.ContactForm.cshtml"
 msgid "Upload file"
 msgstr "Carica allegato"
 
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.CulturePicker.cshtml"
+msgid "Language"
+msgstr "Lingua"
+
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Parts.MenuWidget-AsideSecond.cshtml"
 msgid "Go to page {0}"
 msgstr "Vai alla pagina {0}"
