@@ -230,7 +230,7 @@
                                     } else {
                                         @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults", enabled = true })
                                     }
-                                    &nbsp
+                                    &nbsp;
                                     @Html.CheckBox("AdvancedOptions.OwnedByMe", (bool)Model.AdvancedOptions.OwnedByMe, new { id = "isOwnedByMe", @onclick = "checkOwnedByMeCheckBox()" })
                                     @T("Owned by me")
                                 </div>
