@@ -111,6 +111,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdvancedSearchPermissions.cs" />
     <Compile Include="ContentAdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Enumerators.cs" />
