@@ -25,6 +25,7 @@ using Laser.Orchard.Mobile.Handlers;
 using Laser.Orchard.StartupConfig.Models;
 using Orchard.Data;
 using Orchard.Localization.Records;
+using Orchard.Localization.Services;
 
 
 namespace Laser.Orchard.UsersExtensions.Services {
@@ -49,12 +50,13 @@ namespace Laser.Orchard.UsersExtensions.Services {
         private readonly IUserEventHandler _userEventHandler;
         private readonly IShapeFactory _shapeFactory;
         private ISmsServices _smsServices;
+        private readonly ICultureManager _cultureManager;
 
         private static readonly TimeSpan DelayToResetPassword = new TimeSpan(1, 0, 0, 0); // 24 hours to reset password
         private readonly IRepository<CultureRecord> _repositoryCultures;
 
 
-        public UsersExtensionsServices(IOrchardServices orchardServices, IPolicyServices policySerivces, IMembershipService membershipService, IUtilsServices utilsServices, IAuthenticationService authenticationService, IUserService userService, IUserEventHandler userEventHandler, IShapeFactory shapeFactory, IRepository<CultureRecord> repositoryCultures) {
+        public UsersExtensionsServices(IOrchardServices orchardServices, IPolicyServices policySerivces, IMembershipService membershipService, IUtilsServices utilsServices, IAuthenticationService authenticationService, IUserService userService, IUserEventHandler userEventHandler, IShapeFactory shapeFactory, ICultureManager cultureManager, IRepository<CultureRecord> repositoryCultures) {
             T = NullLocalizer.Instance;
             Log = NullLogger.Instance;
             _policySerivces = policySerivces;
@@ -65,6 +67,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
             _userService = userService;
             _userEventHandler = userEventHandler;
             _shapeFactory = shapeFactory;
+            _cultureManager = cultureManager;
             _repositoryCultures = repositoryCultures;
         }
 
@@ -94,16 +97,19 @@ namespace Laser.Orchard.UsersExtensions.Services {
                                 allRight = false;
                                 //break;
                             }
-                        } else if (answer == null && policyRequired) {
+                        }
+                        else if (answer == null && policyRequired) {
                             allRight = false;
                             //break;
                         }
-                        policyAnswers.Add(new PolicyForUserViewModel {
-                            OldAccepted = false,
-                            PolicyTextId = policyId,
-                            Accepted = answer.PolicyAnswer,
-                            AnswerDate = DateTime.Now
-                        });
+                        if (answer != null) {
+                            policyAnswers.Add(new PolicyForUserViewModel {
+                                OldAccepted = false,
+                                PolicyTextId = policyId,
+                                Accepted = answer.PolicyAnswer,
+                                AnswerDate = DateTime.Now
+                            });
+                        }
                     }
                     if (!allRight) {
                         throw new SecurityException(T("User has to accept policies!").Text);
@@ -124,6 +130,16 @@ namespace Laser.Orchard.UsersExtensions.Services {
                         var culture = _repositoryCultures.Fetch(x => x.Culture.Equals(userRegistrationParams.Culture)).SingleOrDefault();
                         if (culture != null) {
                             favCulture.Culture_Id = culture.Id;
+                        }
+                        else {
+                            //culture = _repositoryCultures.Fetch(x => userRegistrationParams.Culture.StartsWith(x.Culture)).SingleOrDefault();
+                            //if (culture != null) {
+                            //    favCulture.Culture_Id = culture.Id;
+                            //}
+                            //else {
+                                // usa la culture di default del sito
+                                favCulture.Culture_Id = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture()).Id;
+                            //}
                         }
                     }
                     _authenticationService.SignIn(createdUser, true);
