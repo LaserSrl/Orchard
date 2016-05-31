@@ -39,6 +39,7 @@ using Laser.Orchard.StartupConfig.Localization;
 using Orchard.Projections.Models;
 using Orchard.ContentTypes.Services;
 using Orchard.Fields.Settings;
+using Orchard.Security;
 
 
 namespace Laser.Orchard.AdvancedSearch.Controllers {
@@ -138,7 +139,16 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             }
 
             // owner query
-            if (Services.Authorizer.Authorize(AdvancedSearchPermissions.CanOnlySeeOwnContents)) {
+            if (    //user is not admin
+                    !Services.Authorizer.Authorize(StandardPermissions.SiteOwner)
+                    && (//user has either limitation
+                        Services.Authorizer.Authorize(AdvancedSearchPermissions.CanOnlySeeOwnContents) 
+                        || (
+                            (Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent)) 
+                            && (model.AdvancedOptions.OwnedByMe)
+                        )
+                    )
+                ) {
                 //this user can only see the contents they own
                 var lowerName = Services.WorkContext.CurrentUser.UserName.ToLowerInvariant();
                 var email = Services.WorkContext.CurrentUser.Email;
@@ -273,16 +283,33 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
         public ActionResult ListFilterPOST(ContentOptions options, AdvancedContentOptions advancedOptions) {
             var routeValues = ControllerContext.RouteData.Values;
             if (options != null) {
+                if (advancedOptions.OwnedByMe) {
+                    advancedOptions.SelectedOwner = Services.WorkContext.CurrentUser.UserName;
+                }
+
                 routeValues["Options.OrderBy"] = options.OrderBy; //todo: don't hard-code the key
                 routeValues["Options.ContentsStatus"] = options.ContentsStatus; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedLanguageId"] = advancedOptions.SelectedLanguageId; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedTermId"] = advancedOptions.SelectedTermId; //todo: don't hard-code the key
-                routeValues["AdvancedOptions.SelectedOwner"] = advancedOptions.SelectedOwner; //todo: don't hard-code the key
+                //condition to avoid adding the owner to the query string if we are going to ignore it anyway
+                if (    //user is admin
+                        Services.Authorizer.Authorize(StandardPermissions.SiteOwner)
+                        || ( //user does not have limitations
+                            !(Services.Authorizer.Authorize(AdvancedSearchPermissions.CanOnlySeeOwnContents) 
+                            || (
+                                (Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent)) 
+                                && (advancedOptions.OwnedByMe)
+                            ))
+                        )
+                    ) {
+                    routeValues["AdvancedOptions.SelectedOwner"] = advancedOptions.SelectedOwner; //todo: don't hard-code the key
+                }
                 routeValues["AdvancedOptions.SelectedFromDate"] = advancedOptions.SelectedFromDate; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedToDate"] = advancedOptions.SelectedToDate; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.DateFilterType"] = advancedOptions.DateFilterType; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.HasMedia"] = advancedOptions.HasMedia; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedStatus"] = advancedOptions.SelectedStatus; //todo: don't hard-code the key
+                routeValues["AdvancedOptions.OwnedByMe"] = advancedOptions.OwnedByMe; //todo: don't hard-code the key
 
 
                 if (GetCreatableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {

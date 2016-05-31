@@ -1,6 +1,7 @@
 ﻿@using Orchard.Core.Contents.ViewModels;
 @using Laser.Orchard.AdvancedSearch.ViewModels;
 @using Laser.Orchard.AdvancedSearch;
+@using Orchard.Security;
 
 
 @{
@@ -186,32 +187,57 @@
                             <select id="termsResults" name="AdvancedOptions.SelectedTermId">
                                 @Html.SelectOption((string)Model.AdvancedOptions.SelectedTermId.ToString(), "0", T("any (show all)").ToString())
                                 @{ int optgroupinserted = 0;
-                                    foreach (var languageOption in Model.AdvancedOptions.TaxonomiesOptions) {
-                                        if ((string)languageOption.Key.ToString() == "-1") {
-                                            if (optgroupinserted > 0) {
-                                                Html.Raw("</optgroup>");
-                                            }
-                                            optgroupinserted = 1;
+                                   foreach (var languageOption in Model.AdvancedOptions.TaxonomiesOptions) {
+                                       if ((string)languageOption.Key.ToString() == "-1") {
+                                           if (optgroupinserted > 0) {
+                                               Html.Raw("</optgroup>");
+                                           }
+                                           optgroupinserted = 1;
                                     @Html.Raw("<optgroup label=\"" + (string)languageOption.Value + "\">");
-                                        } else {
+                                       } else {
                                     @Html.SelectOption((string)Model.AdvancedOptions.SelectedTermId.ToString(), (string)languageOption.Key.ToString(), (string)languageOption.Value)
-                                        }
-                                    }
-                                    if (optgroupinserted > 0) {
+                                       }
+                                   }
+                                   if (optgroupinserted > 0) {
                                     @Html.Raw("</optgroup>");
-                                    }
+                                   }
                                 }
                             </select>
                             }
                         } catch { }
                     </div>
-                    @* if the user has the CanOnlySeeOwnContents, the "Owner" textbox doesn't even show *@
-                    @if (!Authorizer.Authorize(AdvancedSearchPermissions.CanOnlySeeOwnContents)) {
+                    @* if the user is admin*@
+                    @if (Authorizer.Authorize(StandardPermissions.SiteOwner)
+                        || !( @*or even if the user has no limitation*@
+                            Authorizer.Authorize(AdvancedSearchPermissions.CanOnlySeeOwnContents)
+                            || Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent)
+                        )){
                         <div class="col-xs-12 col-md-4">
                             <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
-                                @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults" })
+                            @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults" })
                         </div>
+                    } else {
+                        @* if the user has the CanOnlySeeOwnContents, the "Owner" textbox doesn't even show *@
+                        if (!Authorizer.Authorize(AdvancedSearchPermissions.CanOnlySeeOwnContents)) {
+                            @*if the user has the MayChooseToSeeOthersContent, the "Owner" textbox is populated with their name and initially disabled.
+                            Moreover, they have a checkbox to enable/disable it.*@
+                            if (Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent)) {
+                                <div class="col-xs-12 col-md-4">
+                                    <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
+                                    @if ((bool)Model.AdvancedOptions.OwnedByMe) {
+                                        Model.AdvancedOptions.SelectedOwner = WorkContext.CurrentUser.UserName;
+                                        @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults", disabled = true })
+                                    } else {
+                                        @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults", enabled = true })
+                                    }
+                                    &nbsp
+                                    @Html.CheckBox("AdvancedOptions.OwnedByMe", (bool)Model.AdvancedOptions.OwnedByMe, new { id = "isOwnedByMe", @onclick = "checkOwnedByMeCheckBox()" })
+                                    @T("Owned by me")
+                                </div>
+                            }
+                        }
                     }
+                    
                      
                 </div>
             </div>
@@ -247,6 +273,19 @@
         <!-- /.box-body -->
     </div>
 </div>
+    
+<script>
+    function checkOwnedByMeCheckBox() {
+        var cbOwnedByMe = document.getElementById("isOwnedByMe"); //this is the checkbox object
+        var tbOwner = document.getElementById("ownerResults"); //this is the owner textbox
+        if (cbOwnedByMe.checked) {
+            tbOwner.value = "@WorkContext.CurrentUser.UserName";
+            tbOwner.disabled = true;
+        } else {
+            tbOwner.disabled = false;
+        }
+    }
+</script>
     
     
     
