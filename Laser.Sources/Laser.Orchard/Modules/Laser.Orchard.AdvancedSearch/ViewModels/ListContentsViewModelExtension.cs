@@ -33,11 +33,12 @@ namespace Laser.Orchard.AdvancedSearch.ViewModels {
         public IEnumerable<KeyValuePair<int, string>> TaxonomiesOptions { get; set; }
         public IEnumerable<KeyValuePair<string, string>> StatusOptions { get; set; }
 
+        //used with the MayChooseToSeeOthersContent permission
         private bool _ownedByMe = true;
         public bool OwnedByMe { 
             get {return _ownedByMe;}
             set { _ownedByMe = value; }
-        } //used with the MayChooseToSeeOthersContent permission
+        } 
 
     }
 

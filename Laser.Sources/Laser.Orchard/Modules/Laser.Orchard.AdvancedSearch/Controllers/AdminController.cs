@@ -139,14 +139,13 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             }
 
             // owner query
-            if (    //user is not admin
-                    !Services.Authorizer.Authorize(StandardPermissions.SiteOwner)
+            if (    //user cannot see everything by default
+                    !Services.Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent)
                     && (//user has either limitation
-                        Services.Authorizer.Authorize(AdvancedSearchPermissions.CanOnlySeeOwnContents) 
-                        || (
-                            (Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent)) 
-                            && (model.AdvancedOptions.OwnedByMe)
-                        )
+                        ((Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent))
+                            && (model.AdvancedOptions.OwnedByMe))
+                        || (Services.Authorizer.Authorize(AdvancedSearchPermissions.CanSeeOwnContents) 
+                        && ! Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent))
                     )
                 ) {
                 //this user can only see the contents they own
@@ -292,14 +291,11 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 routeValues["AdvancedOptions.SelectedLanguageId"] = advancedOptions.SelectedLanguageId; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedTermId"] = advancedOptions.SelectedTermId; //todo: don't hard-code the key
                 //condition to add the owner to the query string only if we are not going to ignore it anyway
-                if (    //user is admin
-                        Services.Authorizer.Authorize(StandardPermissions.SiteOwner)
+                if (    //user may see everything
+                        Services.Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent)
                         || ( //user does not have limitations
-                            !(Services.Authorizer.Authorize(AdvancedSearchPermissions.CanOnlySeeOwnContents) 
-                            || (
-                                (Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent)) 
-                                && (advancedOptions.OwnedByMe)
-                            ))
+                            (Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent))
+                            && (!advancedOptions.OwnedByMe)
                         )
                     ) {
                     routeValues["AdvancedOptions.SelectedOwner"] = advancedOptions.SelectedOwner; //todo: don't hard-code the key
