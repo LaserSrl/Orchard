@@ -113,6 +113,10 @@ msgid "Other filters"
 msgstr "Altri filtri"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Owned by me"
+msgstr "Solo miei contenuti"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Owner"
 msgstr "Proprietario"
 
