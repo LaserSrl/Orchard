@@ -206,31 +206,34 @@
                             }
                         } catch { }
                     </div>
-                    @* if the user may see everything*@
-                    @if (Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent)) {
-                        <div class="col-xs-12 col-md-4">
-                            <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
-                            @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults" })
-                        </div>
-                    } else {
-                        @* if the user has only the CanSeeOwnContents, the "Owner" textbox doesn't even show *@
-                        @* if the user has the MayChooseToSeeOthersContent, the "Owner" textbox is populated with their name and initially disabled.
-                            Moreover, they have a checkbox to enable/disable it.*@
-                        if (Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent)) {
-                            <div class="col-xs-12 col-md-4">
-                                <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
-                                @if ((bool)Model.AdvancedOptions.OwnedByMe) {
-                                    Model.AdvancedOptions.SelectedOwner = WorkContext.CurrentUser.UserName;
-                                    @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults", disabled = true })
-                                } else {
-                                    @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults", enabled = true })
-                                }
-                                &nbsp;
-                                @Html.CheckBox("AdvancedOptions.OwnedByMe", (bool)Model.AdvancedOptions.OwnedByMe, new { id = "isOwnedByMe", @onclick = "checkOwnedByMeCheckBox()" })
-                                @T("Owned by me")
-                            </div>
+                    @{
+                        bool seeAll = Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent);
+                        bool mayChoose =  Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent);
+                        bool onlyMine = (bool)Model.AdvancedOptions.OwnedByMe;
+
+                        if (mayChoose) {
+	                        //seeAll implies mayChoose
+	                        <div class="col-xs-12 col-md-4">
+		                        <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
+		                        @*for the texbox, we check loads of conditions*@
+		                        @Html.TextBox(
+			                        "AdvancedOptions.SelectedOwner",
+			                        (seeAll || !onlyMine) ? 
+				                        (string)Model.AdvancedOptions.SelectedOwner : 
+				                        (string)WorkContext.CurrentUser.UserName,
+			                        (seeAll || !onlyMine) ?
+				                        (object)new { id = "ownerResults" } : 
+				                        (object)new { id = "ownerResults", @disabled = "disabled"}
+		                        )
+			                    &nbsp;
+		                        @if (!seeAll) {
+			                        @Html.CheckBox("AdvancedOptions.OwnedByMe", (bool)Model.AdvancedOptions.OwnedByMe, new { id = "isOwnedByMe", @onclick = "checkOwnedByMeCheckBox()" })
+			                        @T("Owned by me")
+		                        }
+	                        </div>
                         }
                     }
+                    
                     
                      
                 </div>
