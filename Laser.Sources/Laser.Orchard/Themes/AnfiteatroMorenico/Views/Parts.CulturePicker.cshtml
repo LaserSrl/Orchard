@@ -1,0 +1,44 @@
+﻿@using System.Globalization
+@{
+    var translatedCultures = Model.TranslatedCultures as IList<Laser.Orchard.CulturePicker.Models.ExtendedCultureRecord>;
+    if (Model.ShowOnlyPertinentCultures && translatedCultures.Count(p => p.Equals(Model.UserCulture)) == 0) { translatedCultures.Insert(0, Model.UserCulture); }
+    var availableCultures = (Model.ShowOnlyPertinentCultures) ? translatedCultures : Model.AvailableCultures;
+    var availableCultureswithNames = new List<KeyValuePair<string, string>>(availableCultures.Count);
+    foreach (Laser.Orchard.CulturePicker.Models.ExtendedCultureRecord culture in availableCultures)
+    {
+        try {
+            var cultureInfo = new CultureInfo(culture.CultureCode);
+            var disaplyedName = String.IsNullOrEmpty(culture.DisplayName) ? cultureInfo.NativeName : culture.DisplayName;
+            availableCultureswithNames.Add(new KeyValuePair<string, string>(culture.CultureCode, disaplyedName));
+        }
+        catch {
+            availableCultureswithNames.Add(new KeyValuePair<string, string>(culture.CultureCode, culture.CultureCode));
+        }
+    }
+}
+
+@using (Html.BeginForm("ChangeCulture", "UserCulture", new {Area = "Laser.Orchard.CulturePicker"}, FormMethod.Post, new {id = "CulturePickerForm"})) {
+    <div class="container container-nav">
+        @*@if (Model.ShowLabel)
+        {
+        <label for="CultureName">@T("Language")</label>
+        }*@
+        @{
+            var selectedCulture = Model.UserCulture == null ? WorkContext.CurrentCulture : Model.UserCulture.CultureCode;
+        }
+        @if (availableCultureswithNames != null && availableCultureswithNames.Count > 0) {
+            <ul class="ul-cultures">
+            @foreach (var cul in availableCultureswithNames) {
+                string activeCulture = cul.Key == selectedCulture ? "active" : "";
+                <a href="@Url.Action("ChangeCulture", "UserCulture", new {Area = "Laser.Orchard.CulturePicker", CultureName = cul.Key})">
+                    <li class="lang btn-header @activeCulture">
+                        @cul.Key.Substring(0,2)
+                    </li>
+                </a>
+            }
+            </ul>
+        }
+       @* @Html.DropDownList("CultureName", new SelectList(availableCultureswithNames, "Key", "Value", Model.UserCulture.CultureCode), new { onchange = "submit()" }) *@
+       @*@Html.DropDownList("CultureName", new SelectList(availableCultureswithNames, "Key", "Value", Model.UserCulture == null ? WorkContext.CurrentCulture : Model.UserCulture.CultureCode), new { onchange = "submit()" })*@
+    </div>
+}

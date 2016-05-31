@@ -21,7 +21,9 @@ namespace Laser.Orchard.Questionnaires.Handlers {
             IQuestionnairesServices questionnairesServices) {
             _contentDefinitionManager = contentDefinitionManager;
             _questionnairesServices = questionnairesServices;
+
             Filters.Add(StorageFilter.For(repository));
+
             OnInitializing<GamePart>((context, part) => {
                 int currYear = DateTime.Now.Year;
                 int currMonth = DateTime.Now.Month;
@@ -29,6 +31,10 @@ namespace Laser.Orchard.Questionnaires.Handlers {
                 part.GameDate = new DateTime(currYear, currMonth, currDay);
                 AdjustContentItem(context.ContentItem);
             });
+
+            OnPublished<GamePart>((context, part) => Published(context));
+            OnUnpublished<GamePart>((context, part) => Unpublished(context));
+            OnRemoved<GamePart>((context, part) => Removed(context));
         }
 
         private void AdjustContentItem(ContentItem ci) {
@@ -136,23 +142,23 @@ namespace Laser.Orchard.Questionnaires.Handlers {
             return list;
         }
 
-        protected override void Published(PublishContentContext context) {
+        protected void Published(PublishContentContext context) {
             Int32 gId = ((dynamic)context.ContentItem).Id;
             DateTime timeGameEnd = ((dynamic)context.ContentItem).ActivityPart.DateTimeEnd;
             _questionnairesServices.ScheduleEmailTask(gId, timeGameEnd);
-            base.Published(context);
+            //base.Published(context);
         }
 
-        protected override void Unpublished(PublishContentContext context) {
+        protected void Unpublished(PublishContentContext context) {
             Int32 gId = ((dynamic)context.ContentItem).Id;
             _questionnairesServices.UnscheduleEmailTask(gId);
-            base.Unpublished(context);
+            //base.Unpublished(context);
         }
 
-        protected override void Removed(RemoveContentContext context) {
+        protected void Removed(RemoveContentContext context) {
             Int32 gId = ((dynamic)context.ContentItem).Id;
             _questionnairesServices.UnscheduleEmailTask(gId);
-            base.Removed(context);
+            //base.Removed(context);
         }
     }
 }

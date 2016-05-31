@@ -118,8 +118,12 @@ namespace Laser.Orchard.ShareLink.Drivers {
             updater.TryUpdateModel(vm, Prefix, null, null);
             Mapper.CreateMap<ShareLinkVM, ShareLinkPart>();
             Mapper.Map(vm, part);
-            part.SharedIdImage = vm.SharedImage.Replace("{", "").Replace("}", "");
-            part.SharedImage = getimgurl(part.SharedIdImage);
+
+            if (vm.SharedImage != null) {
+                part.SharedIdImage = vm.SharedImage.Replace("{", "").Replace("}", "");
+                part.SharedImage = getimgurl(part.SharedIdImage);
+            }
+
             return Editor(part, shapeHelper);
         }
 
