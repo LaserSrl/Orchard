@@ -291,7 +291,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 routeValues["Options.ContentsStatus"] = options.ContentsStatus; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedLanguageId"] = advancedOptions.SelectedLanguageId; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedTermId"] = advancedOptions.SelectedTermId; //todo: don't hard-code the key
-                //condition to avoid adding the owner to the query string if we are going to ignore it anyway
+                //condition to add the owner to the query string only if we are not going to ignore it anyway
                 if (    //user is admin
                         Services.Authorizer.Authorize(StandardPermissions.SiteOwner)
                         || ( //user does not have limitations

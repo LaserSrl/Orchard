@@ -8,6 +8,10 @@ using Orchard.Security.Permissions;
 namespace Laser.Orchard.AdvancedSearch {
     public class AdvancedSearchPermissions : IPermissionProvider {
 
+        //NOTE: the permissions CanOnlySeeOwnContents and MayChooseToSeeOthersContent are used to limit access to some users. Since the SiteOwner
+        //stereotype has all permissions by default, this may cause the admin to lose visibility to some content in the advanced search. To avoid
+        //this kind of issue, we MUST add checks for the SiteOwner permission whenever we try to limit a users rights with permissions.
+
         //With this permission, a user is able to visualize exclusively their own contents. They are unable to see anything they do not own.
         public static readonly Permission CanOnlySeeOwnContents = new Permission {
             Description = "A user with this permission can see exclusively the content they own.",
