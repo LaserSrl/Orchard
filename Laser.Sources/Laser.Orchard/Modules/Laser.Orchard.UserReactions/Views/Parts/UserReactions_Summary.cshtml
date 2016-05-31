@@ -1,8 +1,24 @@
 ﻿@{
+     Style.Require("Reactions");
+}
+
+@{
     List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
     
     }
-@foreach (var item in part) { 
-    @item.Quantity
+
+@{foreach (var item in part) 
+  { 
+    
+    var quantità = "(" + @item.Quantity + ")";
+      var itemName = " " + @item.TypeName + " " + quantità;
+        
+      <span id="@item.TypeId" class="@item.CssName" >@itemName</span>
+    } 
+} 
+    
+    @* 
+   @item.Quantity
     @item.TypeName
-}
+
+}*@

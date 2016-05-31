@@ -16,15 +16,15 @@ namespace Laser.Orchard.UserReactions.Controllers {
             _userReactionService = userReactionService;
         }
 
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public int GetReactionClicked(int pageId, int reactionTypeId) {
+        public int GetReactionClicked(int reactionTypeId, int pageId ) {
            
             var userId = _userReactionService.CurrentUser();
             int typeClick = _userReactionService.CalculateTypeClick(userId, reactionTypeId, pageId);
 
-
-            return typeClick;
+            return typeClick;       
         }
 
 

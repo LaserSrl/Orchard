@@ -1,26 +1,29 @@
-﻿
-@{
-    
+﻿ @{
+     Style.Require("Reactions");
+    }
+
+@{    
     //Setta i dati della vista collegandoli al modello settato dal controller che richiama la vista
     List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
     
     //Aggiungi in testata la libreria jQuery
     
         Script.Require("jQuery").AtHead();
-
     }
 
 @Html.AntiForgeryToken()
 
 @{foreach (var item in part)
   { 
-    @item.Quantity
     
-   <a id="@item.TypeId">@item.TypeName</a>      
+      var quantità = "(" + @item.Quantity + ")";
+      var itemName = " " + @item.TypeName + " " + quantità;
+        
+      <span id="@item.TypeId" class="@item.CssName" >@itemName</span> 
+    
   }
 }
 
-<a style="visibility:hidden" id="pageid" >@Model.ContentItem.Id</a>
 
 <script type="text/javascript">
     //Aggiungo il valore del campo nascosto AntiForgeryToken al valore data della funzione 
@@ -32,33 +35,27 @@
 
     $(document).ready(function () {
 
-        $("a").bind("click", function (event) 
+        $("span").bind("click", function (event) 
         {
-            //Parameters
-             
-            //var userName = lato server
-            //var datatimeins = lato server
-          
+            //Parameters     
+            var PageId = "@Model.ContentItem.Id";
             var ReactionTypeId = this.id;
-
-            //Dato di test            
-            var PageId = $("pageid").val();
-            if (PageId == null)
-                PageId = 1;
 
             //Chiamata ajax richiama metodo server GetReactionClicked nel controller ReactionAjax 
             //che verifica se l'utente deve fare un click in aggiunta oppure in decremento, quale icona cliccata 
             $.ajax(
-                {                    
-                    url: "@Url.Action("GetReactionClicked", "ReactionAjax", new { Area="Laser.Orchard.UserReactions" })",
-                    success: function (result) {
-                        alert(result);
-                    },
-                    type: "POST",
-                    data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId })
-                    });
+            {                    
+                url: "@Url.Action("GetReactionClicked", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",
+                success: function (result) {
+                    //Ricarica la pagina aggiornando i valori
+                    window.location.reload();
+                },
+                type: "POST",
+                data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId})
+            });
         });
 
+       
 
     });
 

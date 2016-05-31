@@ -47,7 +47,6 @@ namespace Laser.Orchard.UserReactions.Drivers {
 
             return null;
 
-
         }
 
 
@@ -58,26 +57,11 @@ namespace Laser.Orchard.UserReactions.Drivers {
         protected override DriverResult Editor(UserReactionsPart part, dynamic shapeHelper) {
             
             var viewmodel=_userReactionService.GetTot(part);
-           
-            //Trasformali in un array
-            //var ids = viewmodel.Select(s => s.TypeId).ToArray();
-
-            ////_userReactionService sono i dati 
-            //var listType = _userReactionService.GetTypesTable().Where(w => !(ids.Contains(w.Id)))
-            //    .Select(x => new UserReactionsVM {
-            //        Id = 0,
-            //        Quantity = 0,
-            //        TypeName = x.TypeName,
-            //        TypeId = x.Id
-            //    }).ToList();
-
-            //viewmodel = viewmodel.Concat(listType).ToList(); //TODO .OrderBy(o=>o.Priority);
-
+ 
             return ContentShape("Parts_UserReactions_Edit", () => shapeHelper.EditorTemplate(
                                   TemplateName: "Parts/UserReactionsEdit",
                                   Model: viewmodel,
                                   Prefix: Prefix));
-
 
         }
 
