@@ -8,6 +8,7 @@ using Laser.Orchard.TemplateManagement.Services;
 using Laser.Orchard.MailCommunication;
 using Newtonsoft.Json;
 using Orchard;
+using Orchard.Mvc.Html;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Tasks.Scheduling;
@@ -22,6 +23,7 @@ using System.Web.Mvc;
 using System.IO;
 using System.Web.Routing;
 using Orchard.Logging;
+using System.Dynamic;
 
 
 namespace Laser.Orchard.NewsLetters.Handlers {
@@ -57,27 +59,36 @@ namespace Laser.Orchard.NewsLetters.Handlers {
             if (context.Task.TaskType != TaskType) {
                 return;
             }
-
             dynamic content = context.Task.ContentItem;
             NewsletterEditionPart part = context.Task.ContentItem.As<NewsletterEditionPart>();
-
             _mailerConfig = _orchardServices.WorkContext.CurrentSite.As<MailerSiteSettingsPart>();
-
+            var urlHelper = GetUrlHelper();
             int[] selectedAnnIds;
             IList<AnnouncementPart> items = null;
+            IEnumerable<ExpandoObject> fullyItems;
             if (!String.IsNullOrWhiteSpace(part.AnnouncementIds)) {
                 selectedAnnIds = !String.IsNullOrWhiteSpace(part.AnnouncementIds) ? part.AnnouncementIds.Split(',').Select(s => Convert.ToInt32(s)).ToArray() : null;
                 items = GetAnnouncements(selectedAnnIds);
+                fullyItems = items.Select(
+                    s => new {
+                        AnnouncementPart = s,
+                        DisplayUrl = urlHelper.ItemDisplayUrl(s)
+                    }.ToExpando());
             }
-
+            else {
+                fullyItems = null;
+            }
             var subscribers = _newslServices.GetSubscribers(part.NewsletterDefinitionPartRecord_Id).Where(w => w.Confirmed);
             var subscribersEmails = subscribers.Select(s => new { s.Id, s.Name, s.Email });
 
             // ricava i settings e li invia tramite FTP
             var templateId = _newslServices.GetNewsletterDefinition(part.NewsletterDefinitionPartRecord_Id,
                 VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id;
-
-            Dictionary<string, object> settings = GetSettings(content, templateId, part);
+            var model = new {
+                NewsletterEdition = content,
+                ContentItems = fullyItems
+            }.ToExpando();
+            Dictionary<string, object> settings = GetSettings(model, templateId, part);
             
             if (settings.Count > 0) {
                 SendSettings(settings, part.Id);
@@ -158,23 +169,12 @@ namespace Laser.Orchard.NewsLetters.Handlers {
 
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = _templateService.GetTemplate(templateId);
-            //var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext); 
-
             var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
-
             var host = string.Format("{0}://{1}{2}",
                                     baseUri.Scheme,
                                     baseUri.Host,
                                     baseUri.Port == 80 ? string.Empty : ":" + baseUri.Port);
-
-            // Ricostruisco urlHelper senza usare HttpContext
-            var httpRequest = new HttpRequest("/", _orchardServices.WorkContext.CurrentSite.BaseUrl, "");
-            var httpResponse = new HttpResponse(new StringWriter());
-            var httpContext = new HttpContext(httpRequest, httpResponse);
-            var httpContextBase = new HttpContextWrapper(httpContext);
-
-            var virtualRequestContext = new RequestContext(httpContextBase, new RouteData());
-            var urlHelper = new UrlHelper(virtualRequestContext);
+            var urlHelper = GetUrlHelper();
 
             // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
             // Nel template pertanto Model, diventa Model.Content
@@ -230,5 +230,18 @@ namespace Laser.Orchard.NewsLetters.Handlers {
             return (maxNumber.HasValue ? maxNumber.Value + 1 : 1);
         }
 
+        /// <summary>
+        /// Costruisce un UrlHelper senza usare HttpContext perché questo non è disponibile all'interno del task.
+        /// </summary>
+        /// <returns></returns>
+        private UrlHelper GetUrlHelper() {
+            var httpRequest = new HttpRequest("/", _orchardServices.WorkContext.CurrentSite.BaseUrl, "");
+            var httpResponse = new HttpResponse(new StringWriter());
+            var httpContext = new HttpContext(httpRequest, httpResponse);
+            var httpContextBase = new HttpContextWrapper(httpContext);
+            var virtualRequestContext = new RequestContext(httpContextBase, new RouteData());
+            var urlHelper = new UrlHelper(virtualRequestContext);
+            return urlHelper;
+        }
     }
 }
