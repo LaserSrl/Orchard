@@ -254,11 +254,19 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
 
 
 
-            var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
-            var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
 
+            var pagerShape = Shape.Pager(pager).TotalItemCount(0);
             var list = Shape.List();
-            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+
+            //the user may not have permission to see anything: in that case, do not execute the query
+            if (Services.Authorizer.Authorize(AdvancedSearchPermissions.CanSeeOwnContents)) {
+                pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
+                var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
+                list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+            } else {
+                Services.Notifier.Error(T("Not authorized to visualize any item."));
+            }
+
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)
