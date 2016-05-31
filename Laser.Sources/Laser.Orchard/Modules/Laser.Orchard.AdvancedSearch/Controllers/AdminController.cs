@@ -138,7 +138,13 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             }
 
             // owner query
-            if (!String.IsNullOrWhiteSpace(model.AdvancedOptions.SelectedOwner)) {
+            if (Services.Authorizer.Authorize(AdvancedSearchPermissions.CanOnlySeeOwnContents)) {
+                //this user can only see the contents they own
+                var lowerName = Services.WorkContext.CurrentUser.UserName.ToLowerInvariant();
+                var email = Services.WorkContext.CurrentUser.Email;
+                var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName || u.Email == email).List().FirstOrDefault();
+                query = query.Join<CommonPartRecord>().Where(x => x.OwnerId == user.Id);
+            } else if (!String.IsNullOrWhiteSpace(model.AdvancedOptions.SelectedOwner)) {
                 var lowerName = model.AdvancedOptions.SelectedOwner == null ? "" : model.AdvancedOptions.SelectedOwner.ToLowerInvariant();
                 var email = model.AdvancedOptions.SelectedOwner;
                 var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName || u.Email == email).List().FirstOrDefault();

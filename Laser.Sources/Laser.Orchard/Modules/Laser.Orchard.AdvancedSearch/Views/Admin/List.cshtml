@@ -1,5 +1,6 @@
 ﻿@using Orchard.Core.Contents.ViewModels;
 @using Laser.Orchard.AdvancedSearch.ViewModels;
+@using Laser.Orchard.AdvancedSearch;
 
 
 @{
@@ -204,10 +205,14 @@
                             }
                         } catch { }
                     </div>
-                     <div class="col-xs-12 col-md-4">
-                        <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
-                          @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults" })
-                    </div>
+                    @* if the user has the CanOnlySeeOwnContents, the "Owner" textbox doesn't even show *@
+                    @if (!Authorizer.Authorize(AdvancedSearchPermissions.CanOnlySeeOwnContents)) {
+                        <div class="col-xs-12 col-md-4">
+                            <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
+                                @Html.TextBox("AdvancedOptions.SelectedOwner", (string)Model.AdvancedOptions.SelectedOwner, new { id = "ownerResults" })
+                        </div>
+                    }
+                     
                 </div>
             </div>
 
