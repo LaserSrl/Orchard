@@ -432,6 +432,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             //Contact.As<TitlePart>().Title = UserContent.Email + " " + UserContent.UserName;
             if (Contact.Has<CommonPart>()) {
                 Contact.As<CommonPart>().ModifiedUtc = DateTime.Now;
+                Contact.As<CommonPart>().Owner = _orchardServices.WorkContext.CurrentUser;
             }
             dynamic mypart = (((dynamic)Contact).CommunicationContactPart);
             mypart.GetType().GetProperty("UserIdentifier").SetValue(mypart, UserContent.Id, null);
