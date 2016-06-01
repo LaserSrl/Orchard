@@ -13,6 +13,7 @@ using Orchard.Users.Events;
 using Orchard.Data;
 using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.CommunicationGateway.Models;
+using Orchard.Logging;
 
 namespace Laser.Orchard.Mobile.Handlers {
     public class UserDeviceHandler : IUserEventHandler {
@@ -20,6 +21,7 @@ namespace Laser.Orchard.Mobile.Handlers {
         private readonly IRepository<UserDeviceRecord> _userDeviceRecord;
         private readonly IRepository<PushNotificationRecord> _pushNotificationRecord;
         private readonly IRepository<CommunicationContactPartRecord> _communicationContactPartRecord;
+        public ILogger Logger { get; set; }
 
         public UserDeviceHandler(
             IHttpContextAccessor httpContextAccessor,
@@ -31,6 +33,7 @@ namespace Laser.Orchard.Mobile.Handlers {
             _userDeviceRecord = userDeviceRecord;
             _pushNotificationRecord = pushNotificationRecord;
             _communicationContactPartRecord = communicationContactPartRecord;
+            Logger = NullLogger.Instance;
         }
         public void AccessDenied(IUser user) {
             //  throw new NotImplementedException();
@@ -84,14 +87,20 @@ namespace Laser.Orchard.Mobile.Handlers {
                 var recordContact = _communicationContactPartRecord.Fetch(x => x.UserPartRecord_Id == user.Id).FirstOrDefault();
                 if (recordContact == null) {
                     // non dovrebbe mai accadere che esista un utente senza il record di profilazione
-                    //   throw new Exception("Nessun contatto possiede questa profile part");
+                    //throw new Exception("Nessun contatto possiede questa profile part");
+                    Logger.Error(string.Format("UserDeviceHandler.LoggedIn: contatto non trovato per lo User ID {0}.", user.Id));
                 }
                 else {
                     var pushNotificationToLink=_pushNotificationRecord.Fetch(x => x.UUIdentifier == UUIdentifier).FirstOrDefault();
-                    if (pushNotificationToLink.MobileContactPartRecord_Id != recordContact.Id) {
-                        pushNotificationToLink.MobileContactPartRecord_Id = recordContact.Id;
-                        _pushNotificationRecord.Update(pushNotificationToLink);
-                        _pushNotificationRecord.Flush();
+                    if (pushNotificationToLink != null) {
+                        if (pushNotificationToLink.MobileContactPartRecord_Id != recordContact.Id) {
+                            pushNotificationToLink.MobileContactPartRecord_Id = recordContact.Id;
+                            _pushNotificationRecord.Update(pushNotificationToLink);
+                            _pushNotificationRecord.Flush();
+                        }
+                    }
+                    else {
+                        Logger.Error(string.Format("UserDeviceHandler.LoggedIn: pushNotificationRecord non trovato per lo UUIdentifier {0}.", UUIdentifier));
                     }
                 }
                 #endregion
