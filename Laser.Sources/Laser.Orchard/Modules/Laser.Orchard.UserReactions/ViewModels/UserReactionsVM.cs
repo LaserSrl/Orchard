@@ -20,6 +20,7 @@ namespace Laser.Orchard.UserReactions.ViewModels {
         public int Quantity { get; set; }
         public int TypeId { get; set; }
         public string CssName { get; set; }
+        public int OrderPriority { get; set; }
     }
 
 

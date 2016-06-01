@@ -3,21 +3,19 @@
 }
 
 @{
-    Laser.Orchard.UserReactions.Models.UserReactionsPart part = Model.UserReaction;
+    List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
 }
 
-@{foreach (var item in part.Reactions) 
+@{foreach (var item in part) 
   { 
+        var quantità = "(" + @item.Quantity + ")";
+        var itemName = " " + @item.TypeName + " " + quantità;
+        string attCSS = @item.CssName; 
+           
+        <div class="glyph">
+        <span class="@attCSS"></span> 
+        <b id="@item.TypeId">@itemName</b>
+        </div>
     
-    var quantità = "(" + @item.Quantity + ")";
-    var itemName = " " + item.UserReactionsTypesRecord.TypeName + " " + quantità;
-        
-      <span id="@item.UserReactionsTypesRecord.TypeName">@item.UserReactionsTypesRecord.TypeName</span>
     } 
 } 
-
-
-@*@foreach (var item in part.Reactions) { 
-    @item.Quantity
-    @item.UserReactionsTypesRecord.TypeName
-}*@

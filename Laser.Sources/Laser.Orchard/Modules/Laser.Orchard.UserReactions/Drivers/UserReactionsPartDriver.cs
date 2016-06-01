@@ -23,14 +23,17 @@ namespace Laser.Orchard.UserReactions.Drivers {
 
         //Evento display 
         protected override DriverResult Display(UserReactionsPart part, string displayType, dynamic shapeHelper) {
-            
+
+            var viewmodel = _userReactionService.GetTot(part);
+
+
             //Gestione visualizzazione amministratore
             if (displayType == "SummaryAdmin") {
                 return ContentShape("Parts_UserReactions_SummaryAdmin", () => shapeHelper
-                    .Parts_UserReactions_SummaryAdmin(UserReaction: part));
+                    .Parts_UserReactions_SummaryAdmin(UserReaction: viewmodel));
             }
 
-            var viewmodel = _userReactionService.GetTot(part);
+            
             //Passare la view model da definire 
             if (displayType == "Detail") {
                 return ContentShape("Parts_UserReactions_Detail", () => shapeHelper

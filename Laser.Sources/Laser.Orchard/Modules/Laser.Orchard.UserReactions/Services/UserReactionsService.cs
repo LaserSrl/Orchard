@@ -122,8 +122,8 @@ namespace Laser.Orchard.UserReactions.Services {
                 Quantity = s.Quantity,
                 TypeName = s.UserReactionsTypesRecord.TypeName,
                 TypeId = s.UserReactionsTypesRecord.Id,
-                CssName = s.UserReactionsTypesRecord.TypeCssClass 
-
+                CssName = s.UserReactionsTypesRecord.TypeCssClass, 
+                OrderPriority = s.UserReactionsTypesRecord.Priority,
             }).ToList();
 
             var ids = viewmodel.Select(s => s.TypeId).ToArray();
@@ -135,10 +135,11 @@ namespace Laser.Orchard.UserReactions.Services {
                     Quantity = 0,
                     TypeName = x.TypeName,
                     TypeId = x.Id,
-                    CssName = x.TypeCssClass
+                    CssName = x.TypeCssClass,
+                    OrderPriority=x.Priority
                 }).ToList();
 
-            viewmodel = viewmodel.Concat(listType).ToList();
+            viewmodel = viewmodel.Concat(listType).OrderBy(z => z.OrderPriority).ToList();
             return viewmodel;
         }
 
@@ -157,13 +158,24 @@ namespace Laser.Orchard.UserReactions.Services {
             UserReactionsPartRecord userPart = new UserReactionsPartRecord();
 
             //Verifica che non sia già stato eseguito un click           
-            UserReactionsClickRecord res = GetClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserPartRecord.Id.Equals(CurrentUser.Id)).FirstOrDefault();
+            UserReactionsClickRecord res = GetClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserPartRecord.Id.Equals(CurrentUser.Id) && w.ActionType.Equals(1)).FirstOrDefault();
 
             if (res != null) 
             {
                 //Già cliccato (Update dati)   
                 res.ActionType = -1;
                 _repoClick.Update(res);
+
+                UserReactionsSummaryRecord sommaryRecord = new UserReactionsSummaryRecord();
+
+                //Verifica che ci sia già un record cliccato per quell' icona in quel documento
+                sommaryRecord = _repoSummary.Table.Where(z => z.UserReactionsTypesRecord.Id.Equals(IconType) && z.UserReactionsPartRecord.Id.Equals(CurrentPage)).FirstOrDefault();
+
+                if (sommaryRecord.Quantity > 0) {
+                    sommaryRecord.Quantity = sommaryRecord.Quantity - 1;
+                    _repoSummary.Update(sommaryRecord);
+                }
+                
                 returnVal = - 1;
             }               
             else 

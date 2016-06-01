@@ -9,10 +9,14 @@
 @{foreach (var item in Model) 
   { 
     
-    var quantità = "(" + @item.Quantity + ")";
-      var itemName = " " + @item.TypeName + " " + quantità;
-        
-      <span id="@item.TypeId" class="@item.CssName" >@itemName</span>
+   var quantità = "(" + @item.Quantity + ")";
+        var itemName = " " + @item.TypeName + " " + quantità;
+        string attCSS = @item.CssName; 
+           
+        <div class="glyph">
+        <span class="@attCSS"></span> 
+        <b id="@item.TypeId">@itemName</b>
+        </div>
     
     } 
     

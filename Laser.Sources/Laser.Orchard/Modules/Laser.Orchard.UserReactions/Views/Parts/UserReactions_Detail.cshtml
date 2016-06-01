@@ -1,4 +1,5 @@
 ﻿ @{
+     //Aggiungi il foglio di stile CSS definito nel file ResourceManifest.cs ed inserito nella cartella Styles
      Style.Require("Reactions");
     }
 
@@ -13,16 +14,21 @@
 
 @Html.AntiForgeryToken()
 
+
 @{foreach (var item in part)
   { 
-    
       var quantità = "(" + @item.Quantity + ")";
       var itemName = " " + @item.TypeName + " " + quantità;
-        
-      <span id="@item.TypeId" class="@item.CssName" >@itemName</span> 
-    
+      string attCSS = @item.CssName;
+      
+      <div class="glyph">
+      <span id="@item.TypeId" class="@attCSS"></span> 
+      <b>@itemName</b>
+     </div>
+      
   }
 }
+
 
 
 <script type="text/javascript">
@@ -54,8 +60,7 @@
                 data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId})
             });
         });
-
-       
+        
 
     });
 
