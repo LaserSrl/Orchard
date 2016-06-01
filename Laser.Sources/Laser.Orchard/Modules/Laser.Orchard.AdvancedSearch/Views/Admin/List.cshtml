@@ -211,6 +211,10 @@
                         bool mayChoose =  Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent);
                         bool onlyMine = (bool)Model.AdvancedOptions.OwnedByMe;
 
+		                if (seeAll) {
+                            onlyMine = (bool)Model.AdvancedOptions.OwnedByMeSeeAll;
+                        }
+                        
                         if (mayChoose) {
 	                        //seeAll implies mayChoose
 	                        <div class="col-xs-12 col-md-4">
@@ -218,18 +222,23 @@
 		                        @*for the texbox, we check loads of conditions*@
 		                        @Html.TextBox(
 			                        "AdvancedOptions.SelectedOwner",
-			                        (seeAll || !onlyMine) ? 
+			                        (!onlyMine) ? //(seeAll || !onlyMine) ?
 				                        (string)Model.AdvancedOptions.SelectedOwner : 
 				                        (string)WorkContext.CurrentUser.UserName,
-			                        (seeAll || !onlyMine) ?
+			                        (!onlyMine) ?
 				                        (object)new { id = "ownerResults" } : 
 				                        (object)new { id = "ownerResults", @disabled = "disabled"}
 		                        )
 			                    &nbsp;
-		                        @if (!seeAll) {
-			                        @Html.CheckBox("AdvancedOptions.OwnedByMe", (bool)Model.AdvancedOptions.OwnedByMe, new { id = "isOwnedByMe", @onclick = "checkOwnedByMeCheckBox()" })
-			                        @T("Owned by me")
-		                        }
+			                    @Html.CheckBox(
+                                    seeAll ?
+                                        "AdvancedOptions.OwnedByMeSeeAll" :
+                                        "AdvancedOptions.OwnedByMe", 
+                                    onlyMine, 
+                                    new { id = "isOwnedByMe", @onclick = "checkOwnedByMeCheckBox()" }
+                                )
+			                    @T("Owned by me")
+		                        
 	                        </div>
                         }
                     }

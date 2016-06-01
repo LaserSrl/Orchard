@@ -38,8 +38,14 @@ namespace Laser.Orchard.AdvancedSearch.ViewModels {
         public bool OwnedByMe { 
             get {return _ownedByMe;}
             set { _ownedByMe = value; }
-        } 
+        }
 
+        //used with the SeesAllContent permission
+        private bool _ownedByMeSeeAll = false;
+        public bool OwnedByMeSeeAll {
+            get { return _ownedByMeSeeAll; }
+            set { _ownedByMeSeeAll = value; }
+        }
     }
 
 }

@@ -140,8 +140,10 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
 
             // owner query
             if (    //user cannot see everything by default
-                    !Services.Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent)
-                    && (//user has either limitation
+                    (
+                        !Services.Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent)
+                        || (Services.Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent) && model.AdvancedOptions.OwnedByMeSeeAll)
+                    )&& (//user has either limitation
                         ((Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent))
                             && (model.AdvancedOptions.OwnedByMe))
                         || (Services.Authorizer.Authorize(AdvancedSearchPermissions.CanSeeOwnContents) 
@@ -290,7 +292,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
         public ActionResult ListFilterPOST(ContentOptions options, AdvancedContentOptions advancedOptions) {
             var routeValues = ControllerContext.RouteData.Values;
             if (options != null) {
-                if (advancedOptions.OwnedByMe) {
+                if (advancedOptions.OwnedByMe || advancedOptions.OwnedByMeSeeAll) {
                     advancedOptions.SelectedOwner = Services.WorkContext.CurrentUser.UserName;
                 }
 
@@ -300,11 +302,12 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 routeValues["AdvancedOptions.SelectedTermId"] = advancedOptions.SelectedTermId; //todo: don't hard-code the key
                 //condition to add the owner to the query string only if we are not going to ignore it anyway
                 if (    //user may see everything
-                        Services.Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent)
-                        || ( //user does not have limitations
+                        (Services.Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent)
+                        && (!advancedOptions.OwnedByMeSeeAll))
+                        ||(  //user does not have limitations
                             (Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent))
                             && (!advancedOptions.OwnedByMe)
-                        )
+                        ) 
                     ) {
                     routeValues["AdvancedOptions.SelectedOwner"] = advancedOptions.SelectedOwner; //todo: don't hard-code the key
                 }
@@ -314,6 +317,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 routeValues["AdvancedOptions.HasMedia"] = advancedOptions.HasMedia; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedStatus"] = advancedOptions.SelectedStatus; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.OwnedByMe"] = advancedOptions.OwnedByMe; //todo: don't hard-code the key
+                routeValues["AdvancedOptions.OwnedByMeSeeAll"] = advancedOptions.OwnedByMeSeeAll; //todo: don't hard-code the key
 
 
                 if (GetCreatableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
