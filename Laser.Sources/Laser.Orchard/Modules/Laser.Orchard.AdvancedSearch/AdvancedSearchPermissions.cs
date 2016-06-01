@@ -38,9 +38,26 @@ namespace Laser.Orchard.AdvancedSearch {
             };
         }
 
-        //must implement GetDefaultStereotypes() even though we have no stereotypes
+        //update stereotypes of default roles
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
-            return Enumerable.Empty<PermissionStereotype>();
+            return new[]{
+                new PermissionStereotype {
+                    Name = "Administrator",
+                    Permissions = new[] { SeesAllContent }
+                },
+                new PermissionStereotype {
+                    Name = "Editor",
+                    Permissions = new[] { SeesAllContent }
+                },
+                new PermissionStereotype {
+                    Name = "Contributor",
+                    Permissions = new[] { CanSeeOwnContents }
+                },
+                new PermissionStereotype {
+                    Name = "Author",
+                    Permissions = new[] { CanSeeOwnContents }
+                },
+            };
         }
     }
 }
