@@ -40,6 +40,7 @@ using Orchard.Projections.Models;
 using Orchard.ContentTypes.Services;
 using Orchard.Fields.Settings;
 using Orchard.Security;
+using System.Linq.Expressions;
 
 
 namespace Laser.Orchard.AdvancedSearch.Controllers {
@@ -130,6 +131,15 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             // language query
             if (model.AdvancedOptions.SelectedLanguageId > 0) {
                 query = query.Join<LocalizationPartRecord>().Where(x => x.CultureId == model.AdvancedOptions.SelectedLanguageId);
+            }
+            if (model.AdvancedOptions.SelectedUntranslatedLanguageId > 0) {
+                //query for content items that do not have a translation in the selected language
+                Expression<Func<LocalizationPartRecord, bool>> exp1 = c1 => true;
+                query = query.Join<LocalizationPartRecord>()
+                    .Where(lpr => lpr.CultureId != model.AdvancedOptions.SelectedUntranslatedLanguageId);
+                    //.Where(lpr => !query.List().Select(c => c.Id).Contains(lpr.MasterContentItemId));
+            //TODO: implement the fuctionality at the end of the query with LINQ
+                //var hql = _contentManager.HqlQuery();
             }
 
             // terms query
@@ -292,20 +302,24 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
         public ActionResult ListFilterPOST(ContentOptions options, AdvancedContentOptions advancedOptions) {
             var routeValues = ControllerContext.RouteData.Values;
             if (options != null) {
-                if (advancedOptions.OwnedByMe || advancedOptions.OwnedByMeSeeAll) {
+                bool seeAll = Services.Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent);
+                bool maySee = Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent);
+                if ((seeAll && advancedOptions.OwnedByMeSeeAll)
+                    || (!seeAll && maySee && advancedOptions.OwnedByMe)) {
                     advancedOptions.SelectedOwner = Services.WorkContext.CurrentUser.UserName;
                 }
 
                 routeValues["Options.OrderBy"] = options.OrderBy; //todo: don't hard-code the key
                 routeValues["Options.ContentsStatus"] = options.ContentsStatus; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedLanguageId"] = advancedOptions.SelectedLanguageId; //todo: don't hard-code the key
+                routeValues["AdvancedOptions.SelectedUntranslatedLanguageId"] = advancedOptions.SelectedUntranslatedLanguageId; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedTermId"] = advancedOptions.SelectedTermId; //todo: don't hard-code the key
                 //condition to add the owner to the query string only if we are not going to ignore it anyway
                 if (    //user may see everything
-                        (Services.Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent)
+                        (seeAll
                         && (!advancedOptions.OwnedByMeSeeAll))
                         ||(  //user does not have limitations
-                            (Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent))
+                            (maySee)
                             && (!advancedOptions.OwnedByMe)
                         ) 
                     ) {

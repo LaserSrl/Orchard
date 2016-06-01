@@ -179,6 +179,17 @@
                                 @Html.SelectOption((string)Model.AdvancedOptions.SelectedLanguageId.ToString(), (string)languageOption.Key.ToString(), (string)languageOption.Value)
                             }
                         </select>
+                        <br /><br />
+                        <select id="languageUntranslatedResults" name="AdvancedOptions.SelectedUntranslatedLanguageId">
+                            @Html.SelectOption((string)Model.AdvancedOptions.SelectedUntranslatedLanguageId.ToString(), "0", T("any (translated or not)").ToString())
+                            @foreach (var languageOption in Model.AdvancedOptions.LanguageOptions) {
+                                @Html.SelectOption(
+                                    (string)Model.AdvancedOptions.SelectedLanguageId.ToString(), 
+                                    (string)languageOption.Key.ToString(), 
+                                    @T("Untranslated in {0}", (string)languageOption.Value).ToString()
+                                )
+                            }
+                        </select>
                     </div> 
                     <div class="col-xs-12 col-md-4">
                         @try {
