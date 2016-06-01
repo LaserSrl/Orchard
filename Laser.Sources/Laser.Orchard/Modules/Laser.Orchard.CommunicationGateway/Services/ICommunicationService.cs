@@ -359,7 +359,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 var contactEmailList = GetContactsFromMail(UserContent.Email);
                 foreach (var contactEmail in contactEmailList) {
                     if ((contactEmail != null) && (contactEmail.ContentType == "CommunicationContact")) {
-                        if (contactEmail.As<CommunicationContactPart>().Record.UserPartRecord_Id == 0) {
+                        if ((contactEmail.As<CommunicationContactPart>().Record.UserPartRecord_Id == 0) && (contactEmail.As<CommunicationContactPart>().Master == false)) {
                             Contact = contactEmail;
                             Contact.As<CommunicationContactPart>().Logs += string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function.").Text, DateTime.Now);
                             break; // associa solo il primo contatto che trova
