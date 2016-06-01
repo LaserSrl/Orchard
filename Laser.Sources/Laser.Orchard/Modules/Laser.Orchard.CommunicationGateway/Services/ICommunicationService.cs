@@ -32,6 +32,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Text;
 using Orchard.Taxonomies.Services;
+using Orchard.Core.Common.Models;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
 
@@ -420,6 +421,9 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 Contact.As<TitlePart>().Title = string.Format("User with ID {0}", UserContent.Id);
             }
             //Contact.As<TitlePart>().Title = UserContent.Email + " " + UserContent.UserName;
+            if (Contact.Has<CommonPart>()) {
+                Contact.As<CommonPart>().ModifiedUtc = DateTime.Now;
+            }
             dynamic mypart = (((dynamic)Contact).CommunicationContactPart);
             mypart.GetType().GetProperty("UserIdentifier").SetValue(mypart, UserContent.Id, null);
             if (asProfilePart) {
