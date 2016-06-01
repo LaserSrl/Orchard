@@ -52,6 +52,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         ContentItem GetContactFromId(int id);
 
         void Synchronize();
+        void UnboundFromUser(UserPart userPart);
     }
 
     public class CommunicationService : ICommunicationService {
@@ -337,6 +338,13 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             return link;
         }
 
+        public void UnboundFromUser(UserPart userPart) {
+            var contacts = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == userPart.Id).List();
+            foreach(var contact in contacts) {
+                contact.UserIdentifier = 0;
+            }
+        }
+
         public void UserToContact(IUser UserContent) {
             bool asProfilePart = true;
             try {
@@ -354,6 +362,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         if (contactEmail.As<CommunicationContactPart>().Record.UserPartRecord_Id == 0) {
                             Contact = contactEmail;
                             Contact.As<CommunicationContactPart>().Logs += string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function.").Text, DateTime.Now);
+                            break; // associa solo il primo contatto che trova
                         }
                     }
                 }

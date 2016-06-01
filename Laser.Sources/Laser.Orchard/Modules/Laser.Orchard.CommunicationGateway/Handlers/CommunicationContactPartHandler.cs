@@ -36,6 +36,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             #region sync user profile
             OnUpdated<UserPart>((context, part) => UpdateProfile(context.ContentItem));
             OnRemoved<CommunicationContactPart>((context, part) => RemoveLinks(part));
+            OnRemoved<UserPart>((context, part) => RemoveUserLink(part));
             #endregion
         }
 
@@ -111,6 +112,10 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                     _Smsrepository.Delete(csr);
                 }
             }
+        }
+
+        private void RemoveUserLink(UserPart part) {
+            _communicationService.UnboundFromUser(part);
         }
     }
 }
