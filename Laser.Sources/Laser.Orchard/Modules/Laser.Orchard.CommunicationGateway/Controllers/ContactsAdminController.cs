@@ -74,7 +74,15 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         [Admin]
         public ActionResult Synchronize() {
             if (_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner)) {
-                _communicationService.Synchronize();
+                // schedula il task per la sincronizzazione
+                var scheduledSynchronizations = _taskManager.GetTasks(Handlers.SynchronizeContactTaskHandler.TaskType);
+                if (scheduledSynchronizations.Count() == 0) {
+                    _taskManager.CreateTask(Handlers.SynchronizeContactTaskHandler.TaskType, DateTime.UtcNow.AddSeconds(5), null);
+                    _notifier.Add(NotifyType.Information, T("Synchronization started. Please come back on this page in a few minutes to check the result."));
+                }
+                else {
+                    _notifier.Add(NotifyType.Information, T("Synchronization already scheduled at {0:dd-MM-yyyy HH:mm}. Please come back later on this page to check the result.",  DateTime.SpecifyKind(scheduledSynchronizations.Min(x => x.ScheduledUtc).Value, DateTimeKind.Utc).ToLocalTime()));
+                }
             }
             return RedirectToAction("Index", "ContactsAdmin");
         }
