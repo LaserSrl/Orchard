@@ -220,6 +220,7 @@
     <Content Include="Views\EditorTemplates\SmsPlaceholder.cshtml" />
     <Content Include="Views\Parts\SmsGateway_SummaryAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\MobilePushApproved_Edit.cshtml" />
+    <Content Include="Views\Parts\MobileContact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CountPanelController.cs" />

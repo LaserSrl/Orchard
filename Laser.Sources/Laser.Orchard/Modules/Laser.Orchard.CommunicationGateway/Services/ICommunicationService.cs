@@ -53,6 +53,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         void Synchronize();
         void UnboundFromUser(UserPart userPart);
+        CommunicationContactPart EnsureMasterContact();
     }
 
     public class CommunicationService : ICommunicationService {
@@ -96,17 +97,29 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             return true;
         }
 
-        public void Synchronize() {
-
-            #region Creazione di un Contact Master a cui agganciare tutte le parti che non hanno una profilazione
-
+        public CommunicationContactPart EnsureMasterContact() {
             if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
-                var Contact = _orchardServices.ContentManager.New("CommunicationContact");
-                _orchardServices.ContentManager.Create(Contact);
+                var Contact = _orchardServices.ContentManager.Create("CommunicationContact");
                 Contact.As<TitlePart>().Title = "Master Contact";
                 Contact.As<CommunicationContactPart>().Master = true;
                 _notifier.Add(NotifyType.Information, T("Master Contact Created"));
             }
+            CommunicationContactPart master = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).List().FirstOrDefault();
+            return master;
+        }
+
+        public void Synchronize() {
+
+            #region Creazione di un Contact Master a cui agganciare tutte le parti che non hanno una profilazione
+
+            //if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
+            //    var Contact = _orchardServices.ContentManager.New("CommunicationContact");
+            //    _orchardServices.ContentManager.Create(Contact);
+            //    Contact.As<TitlePart>().Title = "Master Contact";
+            //    Contact.As<CommunicationContactPart>().Master = true;
+            //    _notifier.Add(NotifyType.Information, T("Master Contact Created"));
+            //}
+            EnsureMasterContact();
 
             #endregion Creazione di un Contact Master a cui agganciare tutte le parti che non hanno una profilazione
 

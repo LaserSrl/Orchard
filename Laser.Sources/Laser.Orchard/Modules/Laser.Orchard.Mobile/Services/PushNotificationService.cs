@@ -129,6 +129,7 @@ namespace Laser.Orchard.Mobile.Services {
             }
             queryForPush += " FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr " +
                 "join civr.ContentItemRecord as cir " +
+                "join cir.CommunicationContactPartRecord as CommunicationContact " +
                 "join cir.MobileContactPartRecord as MobileContact " +
                 "join MobileContact.MobileRecord as MobileRecord " +
                 "WHERE civr.Published=1 AND MobileRecord.Validated";
@@ -140,7 +141,8 @@ namespace Laser.Orchard.Mobile.Services {
             }
             queryForPush += " AND MobileRecord.Produzione=" + ((produzione) ? "1" : "0");
             if ((ids != null) && (ids.Count() > 0)) {
-                queryForPush += " AND civr.Id in (" + stringHQL + ")";
+                // tiene conto degli id selezionati ma aggiunge comunque i device del master contact
+                queryForPush += " AND (civr.Id in (" + stringHQL + ") OR CommunicationContact.Master)";
             }
             // x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")
 
@@ -228,13 +230,14 @@ namespace Laser.Orchard.Mobile.Services {
 
             #region [lego i rimanenti content al Content Master per renderli querabili]
 
-            if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
-                var Contact = _orchardServices.ContentManager.New("CommunicationContact");
-                _orchardServices.ContentManager.Create(Contact);
-                Contact.As<TitlePart>().Title = "Master Contact";
-                Contact.As<CommunicationContactPart>().Master = true;
-            }
-            CommunicationContactPart master = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).List().FirstOrDefault();
+            //if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
+            //    var Contact = _orchardServices.ContentManager.New("CommunicationContact");
+            //    _orchardServices.ContentManager.Create(Contact);
+            //    Contact.As<TitlePart>().Title = "Master Contact";
+            //    Contact.As<CommunicationContactPart>().Master = true;
+            //}
+            //CommunicationContactPart master = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).List().FirstOrDefault();
+            CommunicationContactPart master = _communicationService.EnsureMasterContact();
             int idmaster = master.Id;
             var notificationrecords = _pushNotificationRepository.Fetch(x => x.MobileContactPartRecord_Id == 0 || x.MobileContactPartRecord_Id == null).ToList();
             foreach (PushNotificationRecord rec in notificationrecords) {

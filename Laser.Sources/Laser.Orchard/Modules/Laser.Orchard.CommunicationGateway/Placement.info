@@ -20,9 +20,10 @@
     <Match DisplayType="Detail">
       <Place Parts_EmailContact="Content:1"/>
       <Place Parts_SmsContact="Content:2"/>
-      <Place Parts_FavoriteCulturePart="Content:3"/>
-      <Place Parts_ProfilePart="Content:4"/>
-      <Place Parts_CommunicationContact="Content:5"/>
+      <Place Parts_MobileContact="Content:3"/>
+      <Place Parts_FavoriteCulturePart="Content:4"/>
+      <Place Parts_ProfilePart="Content:5"/>
+      <Place Parts_CommunicationContact="Content:6"/>
       <!-- hide all other fields -->
       <Place Fields_Numeric="-"/>
       <Place Fields_Boolean="-"/>
