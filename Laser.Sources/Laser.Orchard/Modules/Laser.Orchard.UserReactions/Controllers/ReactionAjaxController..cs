@@ -5,6 +5,8 @@ using Laser.Orchard.UserReactions.Services;
 using Laser.Orchard.UserReactions.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
+using System;
+using Orchard.Security;
 
 namespace Laser.Orchard.UserReactions.Controllers {
     
@@ -20,9 +22,11 @@ namespace Laser.Orchard.UserReactions.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public int GetReactionClicked(int reactionTypeId, int pageId ) {
-           
-            var userId = _userReactionService.CurrentUser();
-            int typeClick = _userReactionService.CalculateTypeClick(userId, reactionTypeId, pageId);
+
+            int typeClick = 0;
+            IUser userId = _userReactionService.CurrentUser();
+                         
+            typeClick = _userReactionService.CalculateTypeClick(userId, reactionTypeId, pageId);
 
             return typeClick;       
         }

@@ -68,5 +68,13 @@ namespace Laser.Orchard.UserReactions {
             return 3;
         }
 
+
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("UserReactionsClickRecord", table => table
+                .AddColumn<string>("UserGuid", col => col.WithLength(38)));
+
+            return 4;
+        }
+
     }
 }
