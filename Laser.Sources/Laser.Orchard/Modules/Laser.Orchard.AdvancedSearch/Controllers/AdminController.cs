@@ -171,9 +171,10 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             }
 
             //date query
-            if (model.AdvancedOptions.SelectedFromDate != null) {
-                var fromD = _dataLocalization.StringToDatetime(model.AdvancedOptions.SelectedFromDate, "");
-                var toD = _dataLocalization.StringToDatetime(model.AdvancedOptions.SelectedToDate, "");
+            if (model.AdvancedOptions.SelectedFromDate != null || model.AdvancedOptions.SelectedToDate != null) {
+                //set default dates for From and To if they are null.
+                var fromD = _dataLocalization.StringToDatetime(model.AdvancedOptions.SelectedFromDate, "") ?? _dataLocalization.StringToDatetime("09/05/1985", "");
+                var toD = _dataLocalization.StringToDatetime(model.AdvancedOptions.SelectedToDate, "") ?? DateTime.Now;
 
                 if (model.AdvancedOptions.DateFilterType == DateFilterOptions.Created)
                     query = query.Join<CommonPartRecord>().Where(x => x.CreatedUtc >= fromD && x.CreatedUtc <= toD);
