@@ -47,6 +47,31 @@ namespace Laser.Orchard.AdvancedSearch.ViewModels {
             get { return _ownedByMeSeeAll; }
             set { _ownedByMeSeeAll = value; }
         }
+
+        /// <summary>
+        /// Returns the string description of a culture by its identifier.
+        /// </summary>
+        /// <param name="cultureId">The culture numeral identifier, greater than 0.</param>
+        /// <returns>The string description of the desired culture.</returns>
+        public string CultureById(int cultureId) {
+            return this.LanguageOptions
+                .Where(lO => lO.Key == cultureId)
+                .FirstOrDefault()
+                .Value.ToString();
+        }
+
+        /// <summary>
+        /// Return the string for a term given its identifier.
+        /// </summary>
+        /// <param name="termId">The term's numerical identifier.</param>
+        /// <returns>The string corresponding to the term.</returns>
+        public string TermById(int termId) {
+            return this.TaxonomiesOptions
+                .Where(tO => tO.Key == termId)
+                .FirstOrDefault()
+                .Value.ToString();
+        }
+
     }
 
 }

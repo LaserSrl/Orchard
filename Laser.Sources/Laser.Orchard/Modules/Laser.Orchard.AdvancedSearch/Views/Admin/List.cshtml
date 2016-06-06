@@ -95,6 +95,66 @@
         });
         //]]>
     </script>
+    
+    <script type="text/javascript">
+        function removeFilterAndReload(index) {
+            //each filter is hardcoded to a case statement. This is rather ugly.
+            switch (index) {
+                case 0:
+                    document.getElementById("filterResults").value = "";
+                    break;
+                case 1:
+                    document.getElementById("orderResults").value = '@ContentsOrder.Modified.ToString()';
+                    break;
+                case 2:
+                    document.getElementById("contentResults").value = '@ContentsStatus.Latest.ToString()';
+                    break;
+                case 3:
+                    document.getElementById("languageResults").value = "0";
+                    break;
+                case 4:
+                    document.getElementById("languageUntranslatedResults").value = "0";
+                    break;
+                case 5:
+                    document.getElementById("termsResults").value = "0";
+                    break;
+                case 6:
+                    document.getElementById("ownerResults").value = "";
+                    break;
+                case 7:
+                    document.getElementById("ownerResults").disabled = false;
+                    document.getElementById("isOwnedByMe").value = 0;
+                    break;
+                case 8:
+                    document.getElementById("dateFromResults").value = "";
+                    break;
+                case 9:
+                    document.getElementById("dateToResults").value = "";
+                    break;
+                case 10:
+                    document.getElementById("hasMediaResults").value = 0;
+                    break;
+            }
+
+            //location;
+            document.getElementById("applyFiltersButton").click();
+            //$.post(document.submit.Filter.action);
+            return false;
+        }
+    </script>
+    
+    <script>
+        function checkOwnedByMeCheckBox() {
+            var cbOwnedByMe = document.getElementById("isOwnedByMe"); //this is the checkbox object
+            var tbOwner = document.getElementById("ownerResults"); //this is the owner textbox
+            if (cbOwnedByMe.checked) {
+                tbOwner.value = "@WorkContext.CurrentUser.UserName";
+                tbOwner.disabled = true;
+            } else {
+                tbOwner.disabled = false;
+            }
+        }
+    </script>
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
@@ -130,6 +190,79 @@
     <div class="box">
         <div class="box-header with-border">
             <h3 class="box-title">@T("Content filtering")</h3>
+            @* Use a javascript to add labels here for each filter that is not default. Those labels should be clickable: on click, the page 
+                should reload, with the condition connected to the label reset to default.*@
+            <div id="appliedFilters" class="row">
+                @* Generate labels with razor. Each label has a script to remove the corresponding filter and reload the page. *@
+                <ul>
+                    @if (Model.Options.SelectedFilter != null) {
+                        <a href="javascript:void(0)" onclick="removeFilterAndReload(0)">
+                            <li>@T("Content type: {0}", Model.Options.SelectedFilter.ToString())</li>
+                        </a>
+                    }
+                    @if (Model.Options.OrderBy != (ContentsOrder)ContentsOrder.Modified) {
+                        <a href="javascript:void(0)" onclick="removeFilterAndReload(1)">
+                            <li>@T("Content order: {0}", Model.Options.OrderBy.ToString())</li>
+                        </a>
+                    }
+                    @if (Model.Options.ContentsStatus != (ContentsStatus)ContentsStatus.Latest) {
+                        <a href="javascript:void(0)" onclick="removeFilterAndReload(2)">
+                            <li>@T("Content status: {0}", Model.Options.ContentsStatus.ToString())</li>
+                        </a>
+                    } 
+                    @if (Model.AdvancedOptions.SelectedLanguageId != 0){
+                        var culture = Model.AdvancedOptions.CultureById(Model.AdvancedOptions.SelectedLanguageId);
+                        <a href="javascript:void(0)" onclick="removeFilterAndReload(3)">
+                            <li>@T("Language: {0}", culture.ToString())</li>
+                        </a>
+                    }
+                    @if (Model.AdvancedOptions.SelectedUntranslatedLanguageId != 0) {
+                        var culture = Model.AdvancedOptions.CultureById(Model.AdvancedOptions.SelectedUntranslatedLanguageId);
+                        <a href="javascript:void(0)" onclick="removeFilterAndReload(4)">
+                            <li>@T("Not translated to: {0}", culture.ToString())</li>
+                        </a>
+                    }
+                    @if (Model.AdvancedOptions.TaxonomiesOptions != null && Model.AdvancedOptions.TaxonomiesOptions.Count > 0) {
+                        if (Model.AdvancedOptions.SelectedTermId != 0) {
+                            var term = Model.AdvancedOptions.TermById(Model.AdvancedOptions.SelectedTermId);
+                            <a href="javascript:void(0)" onclick="removeFilterAndReload(5)">
+                                <li>@T("Taxonomy term: {0}", term.ToString())</li>
+                            </a>
+                        }
+                    }
+                    @{
+                        bool seeAll = Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent);
+                        bool mayChoose = Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent);
+                        bool onlyMine = seeAll ? (bool)Model.AdvancedOptions.OwnedByMeSeeAll : (bool)Model.AdvancedOptions.OwnedByMe;
+                        if (mayChoose) { //seeAll impliese mayChoose
+                            if (onlyMine) {
+                                <a href="javascript:void(0)" onclick="removeFilterAndReload(7)">
+                                    <li>@T("Only show my items.")</li>
+                                </a>
+                            } else if (Model.AdvancedOptions.SelectedOwner != null && !String.IsNullOrEmpty(Model.AdvancedOptions.SelectedOwner.ToString())) {
+                                <a href="javascript:void(0)" onclick="removeFilterAndReload(6)">
+                                    <li>@T("Only show items by: {0}", Model.AdvancedOptions.SelectedOwner.ToString())</li>
+                                </a>
+                            }
+                        }
+                    }
+                    @if (Model.AdvancedOptions.SelectedFromDate != null) {
+                        <a href="javascript:void(0)" onclick="removeFilterAndReload(8)">
+                            <li>@T("{0} from {1}", Model.AdvancedOptions.DateFilterType.ToString(), Model.AdvancedOptions.SelectedFromDate.ToString())</li>
+                        </a>
+                    }
+                    @if (Model.AdvancedOptions.SelectedToDate != null) {
+                        <a href="javascript:void(0)" onclick="removeFilterAndReload(9)">
+                            <li>@T("{0} until {1}", Model.AdvancedOptions.DateFilterType.ToString(), Model.AdvancedOptions.SelectedToDate.ToString())</li>
+                        </a>
+                    }
+                    @if ((bool)Model.AdvancedOptions.HasMedia) {
+                        <a href="javascript:void(0)" onclick="removeFilterAndReload(10)">
+                            <li>@T("Only items with media.")</li>
+                        </a>
+                    }
+                </ul>
+            </div>
         </div>
         <div class="box-body">
             <div class="row">
@@ -184,8 +317,8 @@
                             @Html.SelectOption((string)Model.AdvancedOptions.SelectedUntranslatedLanguageId.ToString(), "0", T("any (translated or not)").ToString())
                             @foreach (var languageOption in Model.AdvancedOptions.LanguageOptions) {
                                 @Html.SelectOption(
-                                    (string)Model.AdvancedOptions.SelectedUntranslatedLanguageId.ToString(), 
-                                    (string)languageOption.Key.ToString(), 
+                                    (string)Model.AdvancedOptions.SelectedUntranslatedLanguageId.ToString(),
+                                    (string)languageOption.Key.ToString(),
                                     @T("Untranslated in {0}", (string)languageOption.Value).ToString()
                                 )
                             }
@@ -218,34 +351,30 @@
                         } catch { }
                     </div>
                     @{
-                        bool seeAll = Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent);
-                        bool mayChoose =  Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent);
-                        bool onlyMine = (bool)Model.AdvancedOptions.OwnedByMe;
+                        //bool seeAll = Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent);
+                        //bool mayChoose = Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent);
+                        //bool onlyMine = seeAll ? (bool)Model.AdvancedOptions.OwnedByMeSeeAll : (bool)Model.AdvancedOptions.OwnedByMe;
 
-		                if (seeAll) {
-                            onlyMine = (bool)Model.AdvancedOptions.OwnedByMeSeeAll;
-                        }
-                        
                         if (mayChoose) {
-	                        //seeAll implies mayChoose
+                            //seeAll implies mayChoose
 	                        <div class="col-xs-12 col-md-4">
 		                        <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
 		                        @*for the texbox, we check loads of conditions*@
 		                        @Html.TextBox(
-			                        "AdvancedOptions.SelectedOwner",
-			                        (!onlyMine) ? //(seeAll || !onlyMine) ?
-				                        (string)Model.AdvancedOptions.SelectedOwner : 
-				                        (string)WorkContext.CurrentUser.UserName,
-			                        (!onlyMine) ?
-				                        (object)new { id = "ownerResults" } : 
-				                        (object)new { id = "ownerResults", @disabled = "disabled"}
-		                        )
+                                    "AdvancedOptions.SelectedOwner",
+                                    (!onlyMine) ? //(seeAll || !onlyMine) ?
+                                        (string)Model.AdvancedOptions.SelectedOwner :
+                                        (string)WorkContext.CurrentUser.UserName,
+                                    (!onlyMine) ?
+                                        (object)new { id = "ownerResults" } :
+                                        (object)new { id = "ownerResults", @disabled = "disabled" }
+                                )
 			                    &nbsp;
 			                    @Html.CheckBox(
                                     seeAll ?
                                         "AdvancedOptions.OwnedByMeSeeAll" :
-                                        "AdvancedOptions.OwnedByMe", 
-                                    onlyMine, 
+                                        "AdvancedOptions.OwnedByMe",
+                                    onlyMine,
                                     new { id = "isOwnedByMe", @onclick = "checkOwnedByMeCheckBox()" }
                                 )
 			                    @T("Owned by me")
@@ -285,24 +414,15 @@
             </div>
         </div>
         <div class="box-footer align-right padding-right-35">
-            <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
+            <button id="applyFiltersButton" type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
         </div>
         <!-- /.box-body -->
     </div>
 </div>
     
-<script>
-    function checkOwnedByMeCheckBox() {
-        var cbOwnedByMe = document.getElementById("isOwnedByMe"); //this is the checkbox object
-        var tbOwner = document.getElementById("ownerResults"); //this is the owner textbox
-        if (cbOwnedByMe.checked) {
-            tbOwner.value = "@WorkContext.CurrentUser.UserName";
-            tbOwner.disabled = true;
-        } else {
-            tbOwner.disabled = false;
-        }
-    }
-</script>
+
+    
+
     
     
     
