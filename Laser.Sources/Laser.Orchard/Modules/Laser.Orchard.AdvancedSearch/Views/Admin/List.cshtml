@@ -184,7 +184,7 @@
                             @Html.SelectOption((string)Model.AdvancedOptions.SelectedUntranslatedLanguageId.ToString(), "0", T("any (translated or not)").ToString())
                             @foreach (var languageOption in Model.AdvancedOptions.LanguageOptions) {
                                 @Html.SelectOption(
-                                    (string)Model.AdvancedOptions.SelectedLanguageId.ToString(), 
+                                    (string)Model.AdvancedOptions.SelectedUntranslatedLanguageId.ToString(), 
                                     (string)languageOption.Key.ToString(), 
                                     @T("Untranslated in {0}", (string)languageOption.Value).ToString()
                                 )

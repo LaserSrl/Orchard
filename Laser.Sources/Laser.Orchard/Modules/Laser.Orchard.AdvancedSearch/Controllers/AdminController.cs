@@ -129,18 +129,12 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             }
             // FILTER QUERIES: START //
             // language query
+            //For any language query, remember that Orchard's localization table, as of Orchard 1.8, has an issue where the content
+            //created but never translated does not have the default Culture assigned to it.
             if (model.AdvancedOptions.SelectedLanguageId > 0) {
                 query = query.Join<LocalizationPartRecord>().Where(x => x.CultureId == model.AdvancedOptions.SelectedLanguageId);
             }
-            if (model.AdvancedOptions.SelectedUntranslatedLanguageId > 0) {
-                //query for content items that do not have a translation in the selected language
-                Expression<Func<LocalizationPartRecord, bool>> exp1 = c1 => true;
-                query = query.Join<LocalizationPartRecord>()
-                    .Where(lpr => lpr.CultureId != model.AdvancedOptions.SelectedUntranslatedLanguageId);
-                    //.Where(lpr => !query.List().Select(c => c.Id).Contains(lpr.MasterContentItemId));
-            //TODO: implement the fuctionality at the end of the query with LINQ
-                //var hql = _contentManager.HqlQuery();
-            }
+
 
             // terms query
             if (model.AdvancedOptions.SelectedTermId > 0) {
@@ -272,9 +266,40 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
 
             //the user may not have permission to see anything: in that case, do not execute the query
             if (Services.Authorizer.Authorize(AdvancedSearchPermissions.CanSeeOwnContents)) {
-                pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
-                var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
-                list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+                //if we want only items that do not have a specific translation, we have to do things differently,
+                //because the check is done after the query. Hence, for example, we cannot directly page.
+                if (model.AdvancedOptions.SelectedUntranslatedLanguageId > 0) {
+                    var allCi = query.List();
+                    var untranslatedCi = allCi
+                        .Where(x =>
+                            x.Is<LocalizationPart>() && //some content items may not be translatable
+                            (
+                                (x.As<LocalizationPart>().Culture != null &&
+                                x.As<LocalizationPart>().Culture.Id != model.AdvancedOptions.SelectedUntranslatedLanguageId) ||
+                                (x.As<LocalizationPart>().Culture == null) //this is the case where the content was created and never translated to any other culture. 
+                                //In that case, in Orchard 1.8, no culture is directly assigned to it, even though the default culture is assumed.
+                            ) &&
+                            x.As<LocalizationPart>().MasterContentItem == null &&
+                            !allCi.Any(y =>
+                                y.Is<LocalizationPart>() &&
+                                y.As<LocalizationPart>().MasterContentItem == x &&
+                                y.As<LocalizationPart>().Culture.Id == model.AdvancedOptions.SelectedUntranslatedLanguageId
+                            )
+                        );
+                    //Paging
+                    pagerShape = Shape.Pager(pager).TotalItemCount(untranslatedCi.Count());
+                    var pageOfCi = untranslatedCi
+                        .Skip(pager.GetStartIndex())
+                        .Take((pager.GetStartIndex() + pager.PageSize) > untranslatedCi.Count() ?
+                        untranslatedCi.Count() - pager.GetStartIndex() :
+                        pager.PageSize)
+                        .ToList();
+                    list.AddRange(pageOfCi.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+                } else {
+                    pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
+                    var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
+                    list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+                }
             } else {
                 Services.Notifier.Error(T("Not authorized to visualize any item."));
             }
