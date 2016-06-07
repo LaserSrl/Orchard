@@ -169,6 +169,7 @@
     <Compile Include="Handlers\ExportContactTaskHandler.cs" />
     <Compile Include="Handlers\ImportContactTaskHandler.cs" />
     <Compile Include="Handlers\SmsContactPartHandler.cs" />
+    <Compile Include="Handlers\SynchronizeContactTaskHandler.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Models\CommunicationAdvertisingPart.cs" />
     <Compile Include="Models\CommunicationCampaignPart.cs" />
