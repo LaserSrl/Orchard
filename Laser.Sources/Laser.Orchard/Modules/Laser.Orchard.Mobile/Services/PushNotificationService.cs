@@ -143,6 +143,7 @@ namespace Laser.Orchard.Mobile.Services {
             if ((ids != null) && (ids.Count() > 0)) {
                 // tiene conto degli id selezionati ma aggiunge comunque i device del master contact
                 queryForPush += " AND (civr.Id in (" + stringHQL + ") OR CommunicationContact.Master)";
+                //queryForPush += " AND civr.Id in (" + stringHQL + ")";
             }
             // x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")
 
