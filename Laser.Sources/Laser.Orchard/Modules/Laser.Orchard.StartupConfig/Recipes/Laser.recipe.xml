@@ -113,8 +113,8 @@
   </Settings>
     <Migration features="*" />
   <Command>
-    theme activate "Krake Admin"
     cultures add "it-IT"
     cultures set site culture "it-IT"
+    theme activate "Krake Admin"
   </Command>
 </Orchard>
