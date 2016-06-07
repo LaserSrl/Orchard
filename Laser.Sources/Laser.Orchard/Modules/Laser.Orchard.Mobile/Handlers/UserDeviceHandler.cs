@@ -14,6 +14,7 @@ using Orchard.Data;
 using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.CommunicationGateway.Models;
 using Orchard.Logging;
+using Laser.Orchard.CommunicationGateway.Services;
 
 namespace Laser.Orchard.Mobile.Handlers {
     public class UserDeviceHandler : IUserEventHandler {
@@ -21,18 +22,21 @@ namespace Laser.Orchard.Mobile.Handlers {
         private readonly IRepository<UserDeviceRecord> _userDeviceRecord;
         private readonly IRepository<PushNotificationRecord> _pushNotificationRecord;
         private readonly IRepository<CommunicationContactPartRecord> _communicationContactPartRecord;
+        private readonly ICommunicationService _communicationService;
         public ILogger Logger { get; set; }
 
         public UserDeviceHandler(
             IHttpContextAccessor httpContextAccessor,
             IRepository<UserDeviceRecord> userDeviceRecord,
             IRepository<PushNotificationRecord> pushNotificationRecord,
-            IRepository<CommunicationContactPartRecord> communicationContactPartRecord
+            IRepository<CommunicationContactPartRecord> communicationContactPartRecord,
+            ICommunicationService communicationService
             ) {
             _httpContextAccessor = httpContextAccessor;
             _userDeviceRecord = userDeviceRecord;
             _pushNotificationRecord = pushNotificationRecord;
             _communicationContactPartRecord = communicationContactPartRecord;
+            _communicationService = communicationService;
             Logger = NullLogger.Instance;
         }
         public void AccessDenied(IUser user) {
@@ -87,21 +91,20 @@ namespace Laser.Orchard.Mobile.Handlers {
                 var recordContact = _communicationContactPartRecord.Fetch(x => x.UserPartRecord_Id == user.Id).FirstOrDefault();
                 if (recordContact == null) {
                     // non dovrebbe mai accadere che esista un utente senza il record di profilazione
-                    //throw new Exception("Nessun contatto possiede questa profile part");
-                    Logger.Error(string.Format("UserDeviceHandler.LoggedIn: contatto non trovato per lo User ID {0}.", user.Id));
+                    _communicationService.UserToContact(user);
+                    Logger.Error(string.Format("UserDeviceHandler.LoggedIn: creato contatto mancante per lo User ID {0}.", user.Id));
+                    recordContact = _communicationContactPartRecord.Fetch(x => x.UserPartRecord_Id == user.Id).FirstOrDefault();
+                }
+                var pushNotificationToLink=_pushNotificationRecord.Fetch(x => x.UUIdentifier == UUIdentifier).FirstOrDefault();
+                if (pushNotificationToLink != null) {
+                    if (pushNotificationToLink.MobileContactPartRecord_Id != recordContact.Id) {
+                        pushNotificationToLink.MobileContactPartRecord_Id = recordContact.Id;
+                        _pushNotificationRecord.Update(pushNotificationToLink);
+                        _pushNotificationRecord.Flush();
+                    }
                 }
                 else {
-                    var pushNotificationToLink=_pushNotificationRecord.Fetch(x => x.UUIdentifier == UUIdentifier).FirstOrDefault();
-                    if (pushNotificationToLink != null) {
-                        if (pushNotificationToLink.MobileContactPartRecord_Id != recordContact.Id) {
-                            pushNotificationToLink.MobileContactPartRecord_Id = recordContact.Id;
-                            _pushNotificationRecord.Update(pushNotificationToLink);
-                            _pushNotificationRecord.Flush();
-                        }
-                    }
-                    else {
-                        Logger.Error(string.Format("UserDeviceHandler.LoggedIn: pushNotificationRecord non trovato per lo UUIdentifier {0}.", UUIdentifier));
-                    }
+                    Logger.Error(string.Format("UserDeviceHandler.LoggedIn: pushNotificationRecord non trovato per lo UUIdentifier {0}.", UUIdentifier));
                 }
                 #endregion
             }
