@@ -255,6 +255,26 @@ namespace Laser.Orchard.StartupConfig.Services {
                         }
                     }
                 }
+            } else if (field.FieldDefinition.Name == "BooleanField") {
+                var properties = field.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(prop =>
+                    !_skipFieldTypes.Contains(prop.Name) //skip 
+                    );
+
+                foreach (var property in properties) {
+                    try {
+                        if (!_skipFieldProperties.Contains(property.Name)) {
+                            object val = property.GetValue(field, BindingFlags.GetProperty, null, null, null);
+                            if (property.Name == "Value") {
+                                val = val ?? false;
+                            }
+                            if (val != null) {
+                                PopulateJObject(ref fieldObject, property, val, _skipFieldProperties, actualLevel);
+                            }
+                        }
+                    } catch {
+
+                    }
+                }
             } else {
                 var properties = field.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(prop =>
                     !_skipFieldTypes.Contains(prop.Name) //skip 
