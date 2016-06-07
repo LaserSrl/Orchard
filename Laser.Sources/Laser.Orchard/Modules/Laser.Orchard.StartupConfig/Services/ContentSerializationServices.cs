@@ -264,7 +264,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                     try {
                         if (!_skipFieldProperties.Contains(property.Name)) {
                             object val = property.GetValue(field, BindingFlags.GetProperty, null, null, null);
-                            if (property.Name == "Value") {
+                            if (property.Name == "Value") { //handle the case where the value is set to null, by setting the value to default
                                 val = val ?? false;
                             }
                             if (val != null) {
