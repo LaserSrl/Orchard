@@ -134,6 +134,10 @@
                 case 10:
                     document.getElementById("hasMediaResults").value = 0;
                     break;
+                case 11:
+                    document.getElementById("CPFIdToSearch").value = null;
+                    document.getElementById("CPFName").value = "";
+                    break;
             }
 
             //location;
@@ -259,6 +263,14 @@
                     @if ((bool)Model.AdvancedOptions.HasMedia) {
                         <a href="javascript:void(0)" onclick="removeFilterAndReload(10)">
                             <li>@T("Only items with media.")</li>
+                        </a>
+                    }
+                    @if (Model.AdvancedOptions.CPFIdToSearch != null && !String.IsNullOrWhiteSpace(Model.AdvancedOptions.CPFName)) {
+                        //In this case we create some hidden input fields to hold the values from the model
+                        @Html.Hidden("AdvancedOptions.CPFIdToSearch", (string)(Model.AdvancedOptions.CPFIdToSearch != null ? Model.AdvancedOptions.CPFIdToSearch.ToString() : ""), new { id = "CPFIdToSearch" })
+                        @Html.Hidden("AdvancedOptions.CPFName", (string)(Model.AdvancedOptions.CPFName != null ? Model.AdvancedOptions.CPFName.ToString() : ""), new { id = "CPFName" })
+                        <a href="javascript:void(0)" onclick="removeFilterAndReload(11)">
+                            <li>@T("Items with Id {0} in the CPF {1}", Model.AdvancedOptions.CPFIdToSearch.ToString(), Model.AdvancedOptions.CPFName)</li>
                         </a>
                     }
                 </ul>
@@ -413,20 +425,7 @@
                 </div>
             </div>
 
-            @*REGIONE PROVA QUERIES CPF*@
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-xs-12 col-md-4">
-                        <label class="gray-label">Prova CPF</label>
-                            @Html.TextBox("AdvancedOptions.CPFIdToSearch", (string)(Model.AdvancedOptions.CPFIdToSearch != null ? Model.AdvancedOptions.CPFIdToSearch.ToString() : ""), new { id = "cPFOwnerId" })
-                    </div>
-                    <div class="col-xs-12 col-md-4">
-                        <label class="gray-label">Prova CPF</label>
-                            @Html.TextBox("AdvancedOptions.CPFName", (string)(Model.AdvancedOptions.CPFName != null ? Model.AdvancedOptions.CPFName.ToString() : ""), new { id = "cPFOwnerId" })
-                    </div>
-                </div>
-            </div>
-            @*REGIONE PROVA QUERIES CPF*@
+
 
 
         </div>

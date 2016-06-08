@@ -109,6 +109,10 @@ msgid "Filter by"
 msgstr "Filtrare per"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Items with Id {0} in the CPF {1}"
+msgstr "Contenuti con Id {0} nel CPF {1}"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Language"
 msgstr "Lingua"
 
