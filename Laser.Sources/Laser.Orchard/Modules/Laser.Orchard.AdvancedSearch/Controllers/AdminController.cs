@@ -281,6 +281,8 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             //    }
             //}
             if (model.AdvancedOptions.CPFIdToSearch != null && !String.IsNullOrWhiteSpace(model.AdvancedOptions.CPFName)) {
+                //given an Id, search for all items that have a Content Picker Field whose PropertyName is PCFName and that have the
+                //Id among the corresponding values.
                 string fieldName = (string)model.AdvancedOptions.CPFName;
                 query = query.Join<FieldIndexPartRecord>()
                     .Where(fip => 
