@@ -50,8 +50,8 @@ namespace Laser.Orchard.AdvancedSearch.ViewModels {
 
 
         //stuff to query on the Content Picker Field
-        public int? CPFOwnerId { get; set; } //Id of the item that "owns" the content picker field
-        public string CPFName { get; set; } //Name of the content picker field in the owner item
+        public int? CPFIdToSearch { get; set; } //Id of the item that we will search in content picker fields
+        public string CPFName { get; set; } //name of the CPF
 
         /// <summary>
         /// Returns the string description of a culture by its identifier.

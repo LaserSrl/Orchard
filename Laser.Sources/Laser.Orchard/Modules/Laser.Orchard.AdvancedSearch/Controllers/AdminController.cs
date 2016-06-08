@@ -41,6 +41,8 @@ using Orchard.ContentTypes.Services;
 using Orchard.Fields.Settings;
 using Orchard.Security;
 using System.Linq.Expressions;
+using Orchard.Core.Settings.Metadata.Records;
+using Orchard.ContentManagement.Records;
 
 
 namespace Laser.Orchard.AdvancedSearch.Controllers {
@@ -58,6 +60,8 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
         private readonly INotifier _notifier;
         private readonly IDateLocalization _dataLocalization;
 
+        private readonly IRepository<FieldIndexPartRecord> _cpfRepo;
+
 
         public AdminController(
             IOrchardServices orchardServices,
@@ -72,7 +76,8 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             INotifier notifier,
             IUserService userService,
             IDateLocalization dataLocalization,
-            ITaxonomyService taxonomyService) {
+            ITaxonomyService taxonomyService,
+            IRepository<FieldIndexPartRecord> cpfRepo) {
             Services = orchardServices;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
@@ -88,7 +93,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             _dataLocalization = dataLocalization;
             _userService = userService;
             _notifier = notifier;
-
+            _cpfRepo = cpfRepo;
         }
 
         dynamic Shape { get; set; }
@@ -257,13 +262,46 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 model.AdvancedOptions.StatusOptions = options.Select(s => new KeyValuePair<string, string>(s, T(s).Text));
             }
 
+             #region TEST OF CPF QUERIES
+            //if (model.AdvancedOptions.CPFOwnerId != null) {
+            //    var item = _contentManager.Get((int)model.AdvancedOptions.CPFOwnerId);
+            //    var parts = item.Parts;
+            //    list = Shape.List();
+            //    foreach (var part in parts) {
+            //        foreach (var field in part.Fields) {
+            //            if (field.FieldDefinition.Name == "ContentPickerField") {
+            //                bool noName = String.IsNullOrWhiteSpace(model.AdvancedOptions.CPFName);
+            //                if (noName || (!noName && field.Name == model.AdvancedOptions.CPFName)) {
+            //                    var relatedItems = _contentManager.GetMany<ContentItem>((IEnumerable<int>)field.GetType().GetProperty("Ids").GetValue(field), VersionOptions.Latest, QueryHints.Empty);
+                                
+            //                    list.AddRange(relatedItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            if (model.AdvancedOptions.CPFIdToSearch != null && !String.IsNullOrWhiteSpace(model.AdvancedOptions.CPFName)) {
+                string fieldName = (string)model.AdvancedOptions.CPFName;
+                query = query.Join<FieldIndexPartRecord>()
+                    .Where(fip => 
+                        fip.StringFieldIndexRecords
+                            .Any(sfi =>
+                                sfi.PropertyName.Contains(fieldName)
+                                && sfi.Value.Contains("{" + model.AdvancedOptions.CPFIdToSearch.ToString() + "}")
+                            )
+                    );
+
+            }
+            #endregion
+
             // FILTER MODELS: END //
 
 
-
+            //EXECUTE QUERIES
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(0);
             var list = Shape.List();
+            IEnumerable<ContentItem> pageOfContentItems = (IEnumerable<ContentItem>)null;
 
             //the user may not have permission to see anything: in that case, do not execute the query
             if (Services.Authorizer.Authorize(AdvancedSearchPermissions.CanSeeOwnContents)) {
@@ -289,41 +327,24 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                         );
                     //Paging
                     pagerShape = Shape.Pager(pager).TotalItemCount(untranslatedCi.Count());
-                    var pageOfCi = untranslatedCi
+                    pageOfContentItems= untranslatedCi
                         .Skip(pager.GetStartIndex())
                         .Take((pager.GetStartIndex() + pager.PageSize) > untranslatedCi.Count() ?
                         untranslatedCi.Count() - pager.GetStartIndex() :
                         pager.PageSize)
                         .ToList();
-                    list.AddRange(pageOfCi.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
                 } else {
                     pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
-                    var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
-                    list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+                    pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
                 }
             } else {
                 Services.Notifier.Error(T("Not authorized to visualize any item."));
             }
 
-            #region TEST OF CPF QUERIES
-            if (model.AdvancedOptions.CPFOwnerId != null) {
-                var item = _contentManager.Get((int)model.AdvancedOptions.CPFOwnerId);
-                var parts = item.Parts;
-                list = Shape.List();
-                foreach (var part in parts) {
-                    foreach (var field in part.Fields) {
-                        if (field.FieldDefinition.Name == "ContentPickerField") {
-                            bool noName = String.IsNullOrWhiteSpace(model.AdvancedOptions.CPFName);
-                            if (noName || (!noName && field.Name == model.AdvancedOptions.CPFName)) {
-                                var relatedItems = _contentManager.GetMany<ContentItem>((IEnumerable<int>)field.GetType().GetProperty("Ids").GetValue(field), VersionOptions.Latest, QueryHints.Empty);
-                                
-                                list.AddRange(relatedItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
-                            }
-                        }
-                    }
-                }
+            if (pageOfContentItems != null) {
+                list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
             }
-            #endregion
+           
 
 
             var viewModel = Shape.ViewModel()
@@ -380,8 +401,8 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 routeValues["AdvancedOptions.OwnedByMeSeeAll"] = advancedOptions.OwnedByMeSeeAll; //todo: don't hard-code the key
 
                 //Querying base off content picker field
-                if (advancedOptions.CPFOwnerId != null) {
-                    routeValues["AdvancedOptions.CPFOwnerId"] = advancedOptions.CPFOwnerId;
+                if (advancedOptions.CPFIdToSearch != null) {
+                    routeValues["AdvancedOptions.CPFIdToSearch"] = advancedOptions.CPFIdToSearch;
                     if (!String.IsNullOrWhiteSpace(advancedOptions.CPFName)) {
                         routeValues["AdvancedOptions.CPFName"] = advancedOptions.CPFName;
                     }
