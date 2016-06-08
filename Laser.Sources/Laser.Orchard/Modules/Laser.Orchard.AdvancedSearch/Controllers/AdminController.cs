@@ -305,6 +305,26 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 Services.Notifier.Error(T("Not authorized to visualize any item."));
             }
 
+            #region TEST OF CPF QUERIES
+            if (model.AdvancedOptions.CPFOwnerId != null) {
+                var item = _contentManager.Get((int)model.AdvancedOptions.CPFOwnerId);
+                var parts = item.Parts;
+                list = Shape.List();
+                foreach (var part in parts) {
+                    foreach (var field in part.Fields) {
+                        if (field.FieldDefinition.Name == "ContentPickerField") {
+                            bool noName = String.IsNullOrWhiteSpace(model.AdvancedOptions.CPFName);
+                            if (noName || (!noName && field.Name == model.AdvancedOptions.CPFName)) {
+                                var relatedItems = _contentManager.GetMany<ContentItem>((IEnumerable<int>)field.GetType().GetProperty("Ids").GetValue(field), VersionOptions.Latest, QueryHints.Empty);
+                                
+                                list.AddRange(relatedItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+                            }
+                        }
+                    }
+                }
+            }
+            #endregion
+
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)
@@ -358,6 +378,14 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 routeValues["AdvancedOptions.SelectedStatus"] = advancedOptions.SelectedStatus; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.OwnedByMe"] = advancedOptions.OwnedByMe; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.OwnedByMeSeeAll"] = advancedOptions.OwnedByMeSeeAll; //todo: don't hard-code the key
+
+                //Querying base off content picker field
+                if (advancedOptions.CPFOwnerId != null) {
+                    routeValues["AdvancedOptions.CPFOwnerId"] = advancedOptions.CPFOwnerId;
+                    if (!String.IsNullOrWhiteSpace(advancedOptions.CPFName)) {
+                        routeValues["AdvancedOptions.CPFName"] = advancedOptions.CPFName;
+                    }
+                }
 
 
                 if (GetCreatableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {

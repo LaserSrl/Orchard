@@ -48,6 +48,11 @@ namespace Laser.Orchard.AdvancedSearch.ViewModels {
             set { _ownedByMeSeeAll = value; }
         }
 
+
+        //stuff to query on the Content Picker Field
+        public int? CPFOwnerId { get; set; } //Id of the item that "owns" the content picker field
+        public string CPFName { get; set; } //Name of the content picker field in the owner item
+
         /// <summary>
         /// Returns the string description of a culture by its identifier.
         /// </summary>
