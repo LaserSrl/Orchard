@@ -1,11 +1,16 @@
 ﻿ @{
+     //Setta i dati della vista collegandoli al modello settato dal controller che richiama la vista
+     List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
      //Aggiungi il foglio di stile CSS definito nel file ResourceManifest.cs ed inserito nella cartella Styles
-     Style.Require("Reactions");
+     //Style.Require("Reactions");
+     
+     var fileCss = part.FindLast(z => z.CssName!=null).CssName.ToString();
+     Style.Require(fileCss);
     }
 
 @{    
-    //Setta i dati della vista collegandoli al modello settato dal controller che richiama la vista
-    List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
+    
+    
     
     //Aggiungi in testata la libreria jQuery
     
@@ -19,7 +24,7 @@
   { 
       var quantità = "(" + @item.Quantity + ")";
       var itemName = " " + @item.TypeName + " " + quantità;
-      string attCSS = @item.CssName;
+      string attCSS = @item.CssStyleName;
       
       <div class="glyph">
       <span id="@item.TypeId" class="@attCSS"></span> 
@@ -53,8 +58,12 @@
             {                    
                 url: "@Url.Action("GetReactionClicked", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",
                 success: function (result) {
-                    //Ricarica la pagina aggiornando i valori
-                    window.location.reload();
+                    //Ricarica la pagina aggiornando i valori                   
+                    window.location.reload()
+
+                    if (result == 0) {
+                        alert("Il risultato è stato acquisito. A breve sarà disponibile sulla pagina");
+                    }
                 },
                 type: "POST",
                 data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId})

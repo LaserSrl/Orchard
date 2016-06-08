@@ -24,8 +24,7 @@ namespace Laser.Orchard.UserReactions.Controllers {
         public int GetReactionClicked(int reactionTypeId, int pageId ) {
 
             int typeClick = 0;
-            IUser userId = _userReactionService.CurrentUser();
-                         
+            IUser userId = _userReactionService.CurrentUser();                         
             typeClick = _userReactionService.CalculateTypeClick(userId, reactionTypeId, pageId);
 
             return typeClick;       

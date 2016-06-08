@@ -2,14 +2,43 @@
 @{ MvcHtmlString answerBlock = Html.UniqueClientId("UserReactionType"); }
 @{
     var phId = "phNum_" + answerBlock;
+    }
+
+
+    @{
+   List<SelectListItem> cssNames= new List<SelectListItem>();
+   //cssNames.Add(new SelectListItem
+   //     {
+   //       Text = "Reactions",
+   //       Value = "Reactions"
+   //     });
+
+   //cssNames.Add(new SelectListItem {
+   //    Text = "ColoredReactions",
+   //    Value = "ColoredReactions"
+   cssNames.Add(new SelectListItem
+        {
+          Text = Model.CssName.ToString(),
+          Value = Model.CssName.ToString()
+        });
+
+   });
 }
+
+
 <div id="@phId" class="j_reaction">
+    <div>
+        @Html.DropDownListFor(m => m.CssName, cssNames,   new { placeholder = T("CssName"), @class = "text medium" })
+    </div>
+    <br />
     @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete" })
     @Html.HiddenFor(m => m.Id)
 
     @Html.TextBoxFor(m => m.TypeName, new { placeholder = T("Name"), @class = "text medium" })
     @Html.TextBoxFor(m => m.TypeCssClass, new { placeholder = T("Css Class Name"), @class = "text medium" })
     @Html.TextBoxFor(m => m.Priority, new { placeholder = T("Order"), @class = "text medium" })
+   @* @Html.DropDownListFor(m => m.CssName, cssNames,  new { placeholder = T("CssName"), @class = "text medium" })*@
+    @Html.CheckBoxFor(m => m.Activating, new { placeholder = T("Activating"), @class = "text medium" })
     <i class="fa fa-times" style="color: red"></i>
     @Html.LinkToRemoveNestedForm(T("Remove").Text, ".j_reaction", "input.ph-mark-for-delete")
 </div>

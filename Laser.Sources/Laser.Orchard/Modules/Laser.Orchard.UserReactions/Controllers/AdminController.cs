@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -41,7 +40,7 @@ namespace Laser.Orchard.UserReactions.Controllers {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Yout have to be an Administrator to edit Culture Picker settings!")))
                 return new HttpUnauthorizedResult();
 
-            var model = _reactionsService.GetTypes();
+            var model = _reactionsService.GetTypesTableWithStyles();
             return View(model);
         }
         [HttpPost]

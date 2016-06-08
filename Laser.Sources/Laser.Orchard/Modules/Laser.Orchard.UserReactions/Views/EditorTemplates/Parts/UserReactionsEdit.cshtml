@@ -1,17 +1,21 @@
-﻿@{
-     Style.Require("Reactions");
+﻿@model List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM>
+
+@{
+    List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model;
+
+    var fileCss = part.FindLast(z => z.CssName != null).CssName.ToString();
+    Style.Require(fileCss);
+    
+
 }
-
-
-@model List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM>
 
 
 @{foreach (var item in Model) 
   { 
     
-   var quantità = "(" + @item.Quantity + ")";
+    var quantità = "(" + @item.Quantity + ")";
         var itemName = " " + @item.TypeName + " " + quantità;
-        string attCSS = @item.CssName; 
+        string attCSS = @item.CssStyleName; 
            
         <div class="glyph">
         <span class="@attCSS"></span> 

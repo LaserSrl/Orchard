@@ -97,6 +97,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\coloredflaticon.css" />
     <Content Include="Styles\flaticon.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -118,11 +119,14 @@
     <Compile Include="Handlers\UserReactionsPartHandler.cs" />
     <Compile Include="Models\UserReactionsClickRecord.cs" />
     <Compile Include="Models\UserReactionsPartRecord.cs" />
+    <Compile Include="Models\UserReactionsSettings.cs" />
+    <Compile Include="Models\UserReactionsStyleFileName.cs" />
     <Compile Include="Models\UserReactionsSummaryRecord.cs" />
     <Compile Include="Models\UserReactionsTypesRecord.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\UserReactionsService.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="ViewModels\UserReactionsTypesVM.cs" />
     <Compile Include="ViewModels\UserReactionsVM.cs" />
   </ItemGroup>

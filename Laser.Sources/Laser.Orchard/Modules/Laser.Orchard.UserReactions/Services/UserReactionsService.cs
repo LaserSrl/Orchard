@@ -1,7 +1,6 @@
 ﻿using Laser.Orchard.UserReactions.Models;
 using Laser.Orchard.UserReactions.ViewModels;
 using Orchard;
-using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Security;
 using Orchard.Services;
@@ -10,12 +9,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Laser.Orchard.UserReactions.Services;
+using Laser.Orchard.UserReactions.ViewModels;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement;
+
 
 namespace Laser.Orchard.UserReactions.Services {
 
     public interface IUserReactionsService : IDependency {
         IQueryable<UserReactionsTypesRecord> GetTypesTable();
         UserReactionsTypes GetTypes();
+        UserReactionsTypes GetTypesTableWithStyles();
         IList<UserReactionsVM> GetTot(UserReactionsPart part);
         IUser CurrentUser();
         int CalculateTypeClick(IUser CurrentUser, int IconType, int CurrentPage);
@@ -36,6 +41,7 @@ namespace Laser.Orchard.UserReactions.Services {
         private readonly IClock _clock;
         private readonly IRepository<UserPartRecord> _repoUser;
         private readonly IRepository<UserReactionsPartRecord> _repoPartRec;
+        private readonly IOrchardServices _orchardServices;
         //private readonly IRepository<ContentItemRecord> _repoContent;
         /// <summary>
         /// 
@@ -54,8 +60,8 @@ namespace Laser.Orchard.UserReactions.Services {
                                     IClock clock,
                                     IRepository<UserPartRecord> repoUser,
                                     IRepository<UserReactionsPartRecord> repoPartRec,
-                                    IRepository<UserReactionsSummaryRecord> repoSummary
-                                    //IRepository<ContentItemRecord> repoContent
+                                    IRepository<UserReactionsSummaryRecord> repoSummary,
+                                    IOrchardServices orchardServices
 ) 
         {
             _repoTypes = repoTypes;
@@ -66,7 +72,7 @@ namespace Laser.Orchard.UserReactions.Services {
             _repoUser = repoUser;
             _repoPartRec = repoPartRec;
             _repoSummary = repoSummary;
-            //_repoContent = repoContent;
+            _orchardServices = orchardServices;
         }
 
 
@@ -75,10 +81,36 @@ namespace Laser.Orchard.UserReactions.Services {
         /// </summary>
         /// <returns></returns>
         public IQueryable<UserReactionsTypesRecord> GetTypesTable() {
+            
             return _repoTypes.Table.OrderBy(o => o.Priority);
         }
 
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public UserReactionsTypes GetTypesTableWithStyles() {
+
+            //var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
+            UserReactionsSettingsPart fileCssName = new UserReactionsSettingsPart();
+
+       
+            var userRT = new UserReactionsTypes();
+            userRT.UserReactionsType = GetTypesTable().Select(r => new UserReactionsTypeVM {
+                Id = r.Id,
+                Priority = r.Priority,
+                TypeCssClass = r.TypeCssClass,
+                TypeName = r.TypeName,
+               // CssName = fileCssName.StyleFileNameProvider,
+                Activating=r.Activating,
+                Delete = false
+            }).ToList();
+            return userRT;
+        }
+
+       
 
         /// <summary>
         /// 
@@ -94,12 +126,18 @@ namespace Laser.Orchard.UserReactions.Services {
         /// </summary>
         /// <returns></returns>
         public UserReactionsTypes GetTypes() {
+
+            //var userReactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
+
+
             var userRT = new UserReactionsTypes();
             userRT.UserReactionsType = GetTypesTable().Select(r => new UserReactionsTypeVM {
                 Id = r.Id,
                 Priority = r.Priority,
                 TypeCssClass = r.TypeCssClass,
                 TypeName = r.TypeName,
+                //CssName = userReactionSettings.StyleFileNameProvider,
+                Activating=r.Activating,
                 Delete = false
             }).ToList();
             return userRT;
@@ -124,8 +162,10 @@ namespace Laser.Orchard.UserReactions.Services {
                 Quantity = s.Quantity,
                 TypeName = s.UserReactionsTypesRecord.TypeName,
                 TypeId = s.UserReactionsTypesRecord.Id,
-                CssName = s.UserReactionsTypesRecord.TypeCssClass, 
+                CssStyleName = s.UserReactionsTypesRecord.TypeCssClass, 
                 OrderPriority = s.UserReactionsTypesRecord.Priority,
+                CssName=s.UserReactionsTypesRecord.CssName,
+                Activating = s.UserReactionsTypesRecord.Activating
             }).ToList();
 
             var ids = viewmodel.Select(s => s.TypeId).ToArray();
@@ -137,11 +177,13 @@ namespace Laser.Orchard.UserReactions.Services {
                     Quantity = 0,
                     TypeName = x.TypeName,
                     TypeId = x.Id,
-                    CssName = x.TypeCssClass,
-                    OrderPriority=x.Priority
+                    CssStyleName = x.TypeCssClass,
+                    OrderPriority=x.Priority,
+                    CssName = x.CssName,
+                    Activating= x.Activating
                 }).ToList();
 
-            viewmodel = viewmodel.Concat(listType).OrderBy(z => z.OrderPriority).ToList();
+            viewmodel = viewmodel.Concat(listType).Where(r=>r.Activating==true).OrderBy(z => z.OrderPriority).ToList();
             return viewmodel;
         }
 
@@ -200,7 +242,12 @@ namespace Laser.Orchard.UserReactions.Services {
                     _repoSummary.Update(sommaryRecord);
                 }
 
+                if(CurrentUser==null)
+                    returnVal = 0;
+                else
                 returnVal = -1;
+
+
                 return returnVal;
             } 
             else 
@@ -255,12 +302,14 @@ namespace Laser.Orchard.UserReactions.Services {
                     _repoSummary.Update(sommaryRecord);
                 }
 
-                returnVal = 1;
+                if (CurrentUser == null)
+                    returnVal = 0;
+                else
+                    returnVal = 1;
 
             } catch (Exception) {
-                returnVal = 0;
-            }
-            
+                returnVal = 5;
+            }            
 
             return returnVal;
         }

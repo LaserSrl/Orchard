@@ -1,9 +1,12 @@
 ﻿@{
-     Style.Require("Reactions");
+    List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
+    
+    var fileCss = part.FindLast(z => z.CssName != null).CssName.ToString();
+    Style.Require(fileCss);
 }
 
 @{
-    List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
+    
     
     }
 
@@ -12,7 +15,7 @@
    
         var quantità = "(" + @item.Quantity + ")";
         var itemName = " " + @item.TypeName + " " + quantità;
-        string attCSS = @item.CssName; 
+        string attCSS = @item.CssStyleName; 
            
         <div class="glyph">
         <span class="@attCSS"></span> 

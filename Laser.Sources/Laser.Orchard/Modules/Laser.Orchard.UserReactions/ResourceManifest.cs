@@ -7,6 +7,7 @@ namespace Laser.Orchard.UserReactions {
             var manifest = builder.Add();
             // CSS
             manifest.DefineStyle("Reactions").SetUrl("flaticon.css");
+            manifest.DefineStyle("ColoredReactions").SetUrl("coloredflaticon.css");
         }
     }
 }

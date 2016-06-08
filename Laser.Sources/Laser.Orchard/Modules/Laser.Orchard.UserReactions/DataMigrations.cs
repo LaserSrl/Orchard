@@ -76,5 +76,19 @@ namespace Laser.Orchard.UserReactions {
             return 4;
         }
 
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("UserReactionsTypesRecord", table => table
+                .AddColumn<string>("CssName"));
+
+            return 5;
+        }
+
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("UserReactionsTypesRecord", table => table
+                .AddColumn<bool>("Activating"));
+
+            return 6;
+        }
+
     }
 }
