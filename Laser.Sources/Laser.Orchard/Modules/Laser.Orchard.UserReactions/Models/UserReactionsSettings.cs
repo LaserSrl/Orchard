@@ -12,17 +12,6 @@ namespace Laser.Orchard.UserReactions.Models {
             get { return this.Retrieve(x => x.StyleFileNameProvider); }
             set { this.Store(x => x.StyleFileNameProvider, value); }
         }
-
     }
-
-    //public class UserReactionsSettingsPart : ContentPart {
-
-    //    public UserReactionsSettingsPart() {
-    //        List<string> StylesFiles = new List<string>();
-    //        StylesFiles.Add("Reactions");
-    //        StylesFiles.Add("ColoredReactions");
-
-    //    }
-    //    public virtual IList<string> StylesFiles { get; set; }
-    //}
+    
 }

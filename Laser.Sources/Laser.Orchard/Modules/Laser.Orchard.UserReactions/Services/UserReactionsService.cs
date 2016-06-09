@@ -93,18 +93,19 @@ namespace Laser.Orchard.UserReactions.Services {
         /// <returns></returns>
         public UserReactionsTypes GetTypesTableWithStyles() {
 
-            //var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
-            UserReactionsSettingsPart fileCssName = new UserReactionsSettingsPart();
+            var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
+            //UserReactionsSettingsPart fileCssName = new UserReactionsSettingsPart();
 
        
             var userRT = new UserReactionsTypes();
+            userRT.CssName = reactionSettings.StyleFileNameProvider;
+            
             userRT.UserReactionsType = GetTypesTable().Select(r => new UserReactionsTypeVM {
                 Id = r.Id,
                 Priority = r.Priority,
                 TypeCssClass = r.TypeCssClass,
                 TypeName = r.TypeName,
-               // CssName = fileCssName.StyleFileNameProvider,
-                Activating=r.Activating,
+                Activating = r.Activating,
                 Delete = false
             }).ToList();
             return userRT;
@@ -127,16 +128,13 @@ namespace Laser.Orchard.UserReactions.Services {
         /// <returns></returns>
         public UserReactionsTypes GetTypes() {
 
-            //var userReactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
-
-
             var userRT = new UserReactionsTypes();
+
             userRT.UserReactionsType = GetTypesTable().Select(r => new UserReactionsTypeVM {
                 Id = r.Id,
                 Priority = r.Priority,
                 TypeCssClass = r.TypeCssClass,
                 TypeName = r.TypeName,
-                //CssName = userReactionSettings.StyleFileNameProvider,
                 Activating=r.Activating,
                 Delete = false
             }).ToList();
@@ -155,8 +153,11 @@ namespace Laser.Orchard.UserReactions.Services {
         /// <param name="part"></param>
         /// <returns></returns>
         public IList<UserReactionsVM> GetTot(UserReactionsPart part) {
-
+           
+            var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
+           
             IList<UserReactionsVM> viewmodel = new List<UserReactionsVM>();
+
             viewmodel = part.Reactions.Select(s => new UserReactionsVM {
                 Id = s.Id,
                 Quantity = s.Quantity,
@@ -164,8 +165,8 @@ namespace Laser.Orchard.UserReactions.Services {
                 TypeId = s.UserReactionsTypesRecord.Id,
                 CssStyleName = s.UserReactionsTypesRecord.TypeCssClass, 
                 OrderPriority = s.UserReactionsTypesRecord.Priority,
-                CssName=s.UserReactionsTypesRecord.CssName,
-                Activating = s.UserReactionsTypesRecord.Activating
+                Activating = s.UserReactionsTypesRecord.Activating,
+                CssName = reactionSettings.StyleFileNameProvider 
             }).ToList();
 
             var ids = viewmodel.Select(s => s.TypeId).ToArray();
@@ -179,8 +180,8 @@ namespace Laser.Orchard.UserReactions.Services {
                     TypeId = x.Id,
                     CssStyleName = x.TypeCssClass,
                     OrderPriority=x.Priority,
-                    CssName = x.CssName,
-                    Activating= x.Activating
+                    Activating= x.Activating,
+                    CssName = reactionSettings.StyleFileNameProvider 
                 }).ToList();
 
             viewmodel = viewmodel.Concat(listType).Where(r=>r.Activating==true).OrderBy(z => z.OrderPriority).ToList();

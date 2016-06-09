@@ -2,8 +2,7 @@
      //Setta i dati della vista collegandoli al modello settato dal controller che richiama la vista
      List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
      //Aggiungi il foglio di stile CSS definito nel file ResourceManifest.cs ed inserito nella cartella Styles
-     //Style.Require("Reactions");
-     
+    
      var fileCss = part.FindLast(z => z.CssName!=null).CssName.ToString();
      Style.Require(fileCss);
     }

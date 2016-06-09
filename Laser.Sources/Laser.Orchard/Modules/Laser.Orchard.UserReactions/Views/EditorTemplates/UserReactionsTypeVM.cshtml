@@ -1,36 +1,9 @@
 ﻿@model Laser.Orchard.UserReactions.ViewModels.UserReactionsTypeVM
 @{ MvcHtmlString answerBlock = Html.UniqueClientId("UserReactionType"); }
-@{
-    var phId = "phNum_" + answerBlock;
-    }
-
-
-    @{
-   List<SelectListItem> cssNames= new List<SelectListItem>();
-   //cssNames.Add(new SelectListItem
-   //     {
-   //       Text = "Reactions",
-   //       Value = "Reactions"
-   //     });
-
-   //cssNames.Add(new SelectListItem {
-   //    Text = "ColoredReactions",
-   //    Value = "ColoredReactions"
-   cssNames.Add(new SelectListItem
-        {
-          Text = Model.CssName.ToString(),
-          Value = Model.CssName.ToString()
-        });
-
-   });
-}
-
+@{ var phId = "phNum_" + answerBlock;}
 
 <div id="@phId" class="j_reaction">
-    <div>
-        @Html.DropDownListFor(m => m.CssName, cssNames,   new { placeholder = T("CssName"), @class = "text medium" })
-    </div>
-    <br />
+    
     @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete" })
     @Html.HiddenFor(m => m.Id)
 

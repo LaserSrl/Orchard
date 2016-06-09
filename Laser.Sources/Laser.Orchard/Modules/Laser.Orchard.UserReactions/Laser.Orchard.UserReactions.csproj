@@ -117,16 +117,19 @@
     <Compile Include="DataMigrations.cs" />
     <Compile Include="Drivers\UserReactionsPartDriver.cs" />
     <Compile Include="Handlers\UserReactionsPartHandler.cs" />
+    <Compile Include="Handlers\UserReactionsSettingsPartHandler.cs" />
     <Compile Include="Models\UserReactionsClickRecord.cs" />
     <Compile Include="Models\UserReactionsPartRecord.cs" />
+    <Compile Include="Models\UserReactionsPartSettings.cs" />
     <Compile Include="Models\UserReactionsSettings.cs" />
-    <Compile Include="Models\UserReactionsStyleFileName.cs" />
+    <Compile Include="Models\UserReactionsSettingTypesRecord.cs" />
     <Compile Include="Models\UserReactionsSummaryRecord.cs" />
     <Compile Include="Models\UserReactionsTypesRecord.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\UserReactionsService.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Settings\UserReactionsPartSettingsHooks.cs" />
     <Compile Include="ViewModels\UserReactionsTypesVM.cs" />
     <Compile Include="ViewModels\UserReactionsVM.cs" />
   </ItemGroup>
@@ -140,6 +143,7 @@
     <Content Include="Views\EditorTemplates\Parts\UserReactionsEdit.cshtml" />
     <Content Include="Views\Parts\UserReactions_Detail.cshtml" />
     <Content Include="Views\Parts\UserReactions_Summary.cshtml" />
+    <Content Include="Views\DefinitionTemplates\UserReactionsPartSettings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

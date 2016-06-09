@@ -3,6 +3,8 @@ using Laser.Orchard.UserReactions.Services;
 using Orchard;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement;
+using Laser.Orchard.UserReactions.ViewModels;
+using Orchard.Localization;
 
 
 namespace Laser.Orchard.UserReactions.Drivers {
@@ -19,15 +21,11 @@ namespace Laser.Orchard.UserReactions.Drivers {
             _orchardServices = orchardServices;
         }
 
-        
+        public Localizer T { get; set; }
         //Evento display 
         protected override DriverResult Display(UserReactionsPart part, string displayType, dynamic shapeHelper) {
 
             var viewmodel = _userReactionService.GetTot(part);
-
-            //var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
-
-            UserReactionsSettingsPart reactionSettings = new UserReactionsSettingsPart();
 
             //Gestione visualizzazione amministratore
             if (displayType == "SummaryAdmin") {
@@ -59,7 +57,8 @@ namespace Laser.Orchard.UserReactions.Drivers {
         ///// GET Editor.
         ///// </summary>   
         //Evento Edit
-        protected override DriverResult Editor(UserReactionsPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(UserReactionsPart part, dynamic shapeHelper) 
+        {
             
             var viewmodel=_userReactionService.GetTot(part);
  

@@ -9,10 +9,12 @@ using Orchard.Localization;
 namespace Laser.Orchard.UserReactions.ViewModels {
 
     public class UserReactionsTypes {
+
         public UserReactionsTypes() {
             UserReactionsType = new List<UserReactionsTypeVM>();
         }
 
+        public StyleFileNameProviders CssName { get; set; }
         public List<UserReactionsTypeVM> UserReactionsType { get; set; }
     }
 
@@ -22,7 +24,6 @@ namespace Laser.Orchard.UserReactions.ViewModels {
         public string TypeName { get; set; }
         public string TypeCssClass { get; set; }
         public int Priority { get; set; }
-        public StyleFileNameProviders CssName { get; set; }
         public bool Activating { get; set; }
         public bool Delete { get; set; }
     }

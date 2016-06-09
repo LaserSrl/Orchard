@@ -1,0 +1,23 @@
+﻿@model Laser.Orchard.UserReactions.Models.UserReactionsPartSettings
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Filtering, new { @checked = "checked", @class = "check-box" })
+        <label for="@Html.FieldIdFor(m => m.Filtering)" class="forcheckbox">@T("Required filtered reactions")</label>
+    </div>
+    <div>
+         @{
+       
+             for (int x = 0; x < Model.TypeReactionsPartsSelected.Count();x++ ) {
+                   @Html.CheckBoxFor(m => m.TypeReactionsPartsSelected[x].checkReaction, new { @checked = "checked", @class = "check-box" }) 
+                    <label for="@Html.FieldIdFor(m => m.TypeReactionsPartsSelected[x].nameReaction)" ></label>   
+
+             }
+     
+             
+            
+    } 
+    
+} 
+
+    </div>
+</fieldset>
