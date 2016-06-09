@@ -30,7 +30,10 @@ namespace Laser.Orchard.ZoneAlternates {
                         //var area = (route.ContainsKey("area")) ? route["area"] : null;
                         //var controller = (route.ContainsKey("controller")) ? route["controller"] : null;
                         //var action = (route.ContainsKey("action"))? route["action"]: null;
-                        bool isAdmin = AdminFilter.IsApplied(System.Web.HttpContext.Current.Request.RequestContext);
+                        bool isAdmin = false;
+                        if (System.Web.HttpContext.Current != null) {
+                            isAdmin = AdminFilter.IsApplied(System.Web.HttpContext.Current.Request.RequestContext);
+                        }
                         var shapeName = displayedContext.ShapeMetadata.Type;
 
                         if (contentItem != null && lastZone != "") {

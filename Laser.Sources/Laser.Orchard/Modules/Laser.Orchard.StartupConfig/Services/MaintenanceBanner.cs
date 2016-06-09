@@ -44,6 +44,7 @@ namespace Laser.Orchard.StartupConfig.Services {
             if (currentTenant.ToLower() != "default") {
                 var tenantShellSettings = _shellSettingsManager.LoadSettings().Where(settings => settings.Name == "Default").Single();
                 var shellContext = _orchardHost.GetShellContext(tenantShellSettings);
+                if (shellContext == null) yield return null;
                 using (var wc = shellContext.LifetimeScope.Resolve<IWorkContextAccessor>().CreateWorkContextScope()) {
                //     var tenantSiteName = wc.Resolve<ISiteService>().GetSiteSettings().SiteName;
                     List<MaintenanceVM> ListMaintenanceVM = new List<MaintenanceVM>();
