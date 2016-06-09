@@ -362,6 +362,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         }
 
         public void UserToContact(IUser UserContent) {
+            if (UserContent.Id == 0) {
+                // non crea il contatto se lo user non è ancora stato salvato
+                return;
+            }
             bool asProfilePart = true;
             try {
                 var profpart = ((dynamic)UserContent).ProfilePart;
@@ -387,6 +391,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     Contact = _orchardServices.ContentManager.New("CommunicationContact");
                     _orchardServices.ContentManager.Create(Contact);
                     Contact = _orchardServices.ContentManager.Get(Contact.Id);
+                    Contact.As<CommunicationContactPart>().Master = false;
                 }
             } else {
                 Contact = contactsUsers.ContentItem;
