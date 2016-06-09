@@ -52,6 +52,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         ContentItem GetContactFromId(int id);
 
         void Synchronize();
+        void UnboundFromUser(UserPart userPart);
+        CommunicationContactPart EnsureMasterContact();
     }
 
     public class CommunicationService : ICommunicationService {
@@ -95,17 +97,29 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             return true;
         }
 
-        public void Synchronize() {
-
-            #region Creazione di un Contact Master a cui agganciare tutte le parti che non hanno una profilazione
-
+        public CommunicationContactPart EnsureMasterContact() {
             if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
-                var Contact = _orchardServices.ContentManager.New("CommunicationContact");
-                _orchardServices.ContentManager.Create(Contact);
+                var Contact = _orchardServices.ContentManager.Create("CommunicationContact");
                 Contact.As<TitlePart>().Title = "Master Contact";
                 Contact.As<CommunicationContactPart>().Master = true;
                 _notifier.Add(NotifyType.Information, T("Master Contact Created"));
             }
+            CommunicationContactPart master = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).List().FirstOrDefault();
+            return master;
+        }
+
+        public void Synchronize() {
+
+            #region Creazione di un Contact Master a cui agganciare tutte le parti che non hanno una profilazione
+
+            //if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
+            //    var Contact = _orchardServices.ContentManager.New("CommunicationContact");
+            //    _orchardServices.ContentManager.Create(Contact);
+            //    Contact.As<TitlePart>().Title = "Master Contact";
+            //    Contact.As<CommunicationContactPart>().Master = true;
+            //    _notifier.Add(NotifyType.Information, T("Master Contact Created"));
+            //}
+            EnsureMasterContact();
 
             #endregion Creazione di un Contact Master a cui agganciare tutte le parti che non hanno una profilazione
 
@@ -337,6 +351,13 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             return link;
         }
 
+        public void UnboundFromUser(UserPart userPart) {
+            var contacts = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == userPart.Id).List();
+            foreach(var contact in contacts) {
+                contact.UserIdentifier = 0;
+            }
+        }
+
         public void UserToContact(IUser UserContent) {
             bool asProfilePart = true;
             try {
@@ -351,9 +372,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 var contactEmailList = GetContactsFromMail(UserContent.Email);
                 foreach (var contactEmail in contactEmailList) {
                     if ((contactEmail != null) && (contactEmail.ContentType == "CommunicationContact")) {
-                        if (contactEmail.As<CommunicationContactPart>().Record.UserPartRecord_Id == 0) {
+                        if ((contactEmail.As<CommunicationContactPart>().Record.UserPartRecord_Id == 0) && (contactEmail.As<CommunicationContactPart>().Master == false)) {
                             Contact = contactEmail;
                             Contact.As<CommunicationContactPart>().Logs += string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function.").Text, DateTime.Now);
+                            break; // associa solo il primo contatto che trova
                         }
                     }
                 }
@@ -423,6 +445,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             //Contact.As<TitlePart>().Title = UserContent.Email + " " + UserContent.UserName;
             if (Contact.Has<CommonPart>()) {
                 Contact.As<CommonPart>().ModifiedUtc = DateTime.Now;
+                Contact.As<CommonPart>().Owner = _orchardServices.WorkContext.CurrentUser;
             }
             dynamic mypart = (((dynamic)Contact).CommunicationContactPart);
             mypart.GetType().GetProperty("UserIdentifier").SetValue(mypart, UserContent.Id, null);
