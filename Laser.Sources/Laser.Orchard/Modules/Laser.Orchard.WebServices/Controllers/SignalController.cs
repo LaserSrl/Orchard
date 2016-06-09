@@ -11,6 +11,7 @@ namespace Laser.Orchard.WebServices.Controllers {
         public SignalController(IActivityServices activityServices) {
             _activityServices = activityServices;
         }
+        [OutputCache(NoStore=true, Duration=0)]
         public ActionResult Trigger(string signalName, int contentId, string returnUrl="") {
             try {
                 _activityServices.TriggerSignal(signalName, contentId);
