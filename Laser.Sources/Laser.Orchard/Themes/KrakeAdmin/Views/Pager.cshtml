@@ -22,6 +22,15 @@
     Model.Metadata.Type = "Pager_Links";
     IHtmlString pagerLinks = Display(Model);
 
+    //fix pagerLinks for the case when we want to display all elements.
+    //In that case the Orchard method uses the default pageSize.
+    if ((int)Model.PageSize == 0) {
+        //pageLinks = new IHtmlString {<ul class="pager"><li class="last first"><span>1</span></li></ul>};
+        pagerLinks = new Orchard.Mvc.Spooling.HtmlStringWriter();
+        ((Orchard.Mvc.Spooling.HtmlStringWriter)pagerLinks).Write("<ul class=\"pager\"><li class=\"last first\"><span>1</span></li></ul>");
+    }
+
+
     Model.Classes.Add("selector");
     var pageSizeTag = Tag(Model, "ul");
 
