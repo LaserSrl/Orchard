@@ -11,6 +11,7 @@ using Orchard.ContentManagement;
 using Orchard.Utility.Extensions;
 using System.Text;
 using Orchard.Environment.Extensions;
+using Orchard.Caching.Services;
 
 namespace Laser.Orchard.StartupConfig.Services {
     [OrchardFeature("Laser.Orchard.StartupConfig.WebApiProtection")]
@@ -19,11 +20,13 @@ namespace Laser.Orchard.StartupConfig.Services {
         private readonly ShellSettings _shellSettings;
         private HttpRequest _request;
         public ILogger Logger;
+        private ICacheStorageProvider _cacheStorage;
 
-        public ApiKeyService(ShellSettings shellSettings, IOrchardServices orchardServices) {
+        public ApiKeyService(ShellSettings shellSettings, IOrchardServices orchardServices, ICacheStorageProvider cacheManager) {
             _shellSettings = shellSettings;
             _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
+            _cacheStorage = cacheManager;
         }
         public string ValidateRequestByApiKey(string additionalCacheKey, bool protectAlways = false) {
             _request = HttpContext.Current.Request;
@@ -77,7 +80,8 @@ namespace Laser.Orchard.StartupConfig.Services {
                 var defaulApp = settings.ExternalApplicationList.ExternalApplications.First();
                 string aux = defaulApp.ApiKey;
                 if (useTimeStamp) {
-                    aux += ":" + ((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString();
+                    Random rnd = new Random();
+                    aux += ":" + ((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString() + ":" + rnd.Next(1000000).ToString();
                 }
 
                 byte[] encryptedAES = EncryptStringToBytes_Aes(aux, mykey, myiv);
@@ -89,8 +93,9 @@ namespace Laser.Orchard.StartupConfig.Services {
         }
 
         private bool TryValidateKey(string token, string akiv, bool clearText) {
-            _request = HttpContext.Current.Request;
             byte[] mykey = _shellSettings.EncryptionKey.ToByteArray();
+            string cacheKey;
+            _request = HttpContext.Current.Request;
             try {
                 byte[] myiv = Convert.FromBase64String(akiv);
                 if (String.IsNullOrWhiteSpace(token)) {
@@ -120,7 +125,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                 int unixTimeStamp, unixTimeStampNow;
                 unixTimeStamp = 0;
                 unixTimeStampNow = ((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
-                if (tokens.Length == 2) {
+                if (tokens.Length >= 2) {
                     unixTimeStamp = Convert.ToInt32(tokens[1]);
                 }
                 var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
@@ -129,18 +134,29 @@ namespace Laser.Orchard.StartupConfig.Services {
                     Logger.Error("Decrypted key not found: key = " + key);
                     return false;
                 }
-                var floorLimit = Math.Abs(unixTimeStampNow - unixTimeStamp);
-                if (item.EnableTimeStampVerification && floorLimit > ((item.Validity > 0 ? item.Validity : 5)/*minutes*/ * 60)) {
-                    Logger.Error("Timestamp validity expired: key = " + key);
-                    return false;
-                }
 
+
+                var floorLimit = Math.Abs(unixTimeStampNow - unixTimeStamp);
+                if (item.EnableTimeStampVerification) {
+                    cacheKey = String.Concat(_shellSettings.Name, token);
+                    if (_cacheStorage.Get(cacheKey) != null) {
+                        Logger.Error("cachekey duplicated: key = " + key);
+                        return false;
+                    }
+                    if (floorLimit > ((item.Validity > 0 ? item.Validity : 5)/*minutes*/ * 60)) {
+                        Logger.Error("Timestamp validity expired: key = " + key);
+                        return false;
+                    } else {
+                        _cacheStorage.Put(cacheKey, "", new TimeSpan(0, item.Validity > 0 ? item.Validity : 5, 0));
+                    }
+                }
                 return true;
             } catch (Exception ex) {
                 Logger.Error("Exception: " + ex.Message);
                 return false;
             }
         }
+
 
         private byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV) {
             // Check arguments.
