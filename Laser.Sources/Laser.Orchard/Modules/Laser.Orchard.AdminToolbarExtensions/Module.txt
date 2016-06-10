@@ -1,0 +1,12 @@
+﻿Name: Laser Admin Toolbar Extensions
+AntiForgery: enabled
+Author: Laser srl
+Website: http://www.laser-group.com
+Version: 1.0
+OrchardVersion: 1.8
+Description: This module contains extensions for the admin side
+Features:
+    Laser.Orchard.AdminToolbarExtensions.SummaryAdminToolbar:
+		Name: Laser SummaryAdmin Toolbar
+        Description: Adds a part for interactive labels to the SummaryAdmin views of contents
+		Category: Administration

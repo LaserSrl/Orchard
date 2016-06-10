@@ -6,12 +6,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CA315CA5-BB14-443D-AE97-508A08C32214}</ProjectGuid>
+    <ProjectGuid>{38090550-EAD0-420F-B45B-D76261E7044D}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laser.Orchard.AdvancedSearch</RootNamespace>
-    <AssemblyName>Laser.Orchard.AdvancedSearch</AssemblyName>
+    <RootNamespace>Laser.Orchard.AdminToolbarExtensions</RootNamespace>
+    <AssemblyName>Laser.Orchard.AdminToolbarExtensions</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
@@ -48,36 +48,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Orchard.ContentTypes">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentTypes\bin\Orchard.ContentTypes.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Core, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Fields">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Fields\bin\Orchard.Fields.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Framework, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Localization">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Localization\bin\Orchard.Localization.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Projections, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Roles, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Laser.Orchard.Questionnaires\bin\Orchard.Roles.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Taxonomies">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Taxonomies\bin\Orchard.Taxonomies.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Users">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -85,13 +60,13 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -105,32 +80,34 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Laser.Orchard.jQueryPlugins\Laser.Orchard.jQueryPlugins.csproj">
-      <Project>{7a05758d-761e-4b5d-8a64-b93be5da3c93}</Project>
-      <Name>Laser.Orchard.jQueryPlugins</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
-      <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
-      <Name>Laser.Orchard.StartupConfig</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AdvancedSearchPermissions.cs" />
-    <Compile Include="ContentAdminMenu.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Enumerators.cs" />
+    <Compile Include="Drivers\SummaryAdminToolbarPartDriver.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="ResourceManifest.cs" />
-    <Compile Include="ViewModels\ListContentsViewModelExtension.cs" />
+    <Compile Include="Models\SummaryAdminToolbarPart.cs" />
+    <Compile Include="Models\SummaryAdminToolbarSettings.cs" />
+    <Compile Include="Settings\SummaryAdminToolbarPartSettingsHooks.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Handlers\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Admin\List.cshtml" />
+    <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\AdvancedSearch.css" />
+    <Content Include="Views\Parts\SummaryAdminToolbarPart.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\SummaryAdminToolbarSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\SummaryAdminToolbarLabel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
+      <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
+      <Name>Laser.Orchard.Commons</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
