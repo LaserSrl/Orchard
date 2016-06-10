@@ -54,6 +54,9 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Tokens">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -82,14 +85,14 @@
   <ItemGroup>
     <Compile Include="Drivers\SummaryAdminToolbarPartDriver.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Handlers\SummaryAdminToolbarPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\SummaryAdminToolbarPart.cs" />
-    <Compile Include="Models\SummaryAdminToolbarSettings.cs" />
+    <Compile Include="Models\SummaryAdminToolbarPartSettings.cs" />
     <Compile Include="Settings\SummaryAdminToolbarPartSettingsHooks.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Handlers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />
@@ -98,7 +101,7 @@
     <Content Include="Views\Parts\SummaryAdminToolbarPart.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DefinitionTemplates\SummaryAdminToolbarSettings.cshtml" />
+    <Content Include="Views\DefinitionTemplates\SummaryAdminToolbarPartSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\SummaryAdminToolbarLabel.cshtml" />
@@ -108,6 +111,9 @@
       <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
       <Name>Laser.Orchard.Commons</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ClassDiagram1.cd" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

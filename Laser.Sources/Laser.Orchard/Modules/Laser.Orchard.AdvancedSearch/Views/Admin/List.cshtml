@@ -265,10 +265,11 @@
                             <li>@T("Only items with media.")</li>
                         </a>
                     }
+
+                    @*In this case we create some hidden input fields to hold the values from the model*@
+                    @Html.Hidden("AdvancedOptions.CPFIdToSearch", (string)(Model.AdvancedOptions.CPFIdToSearch != null ? Model.AdvancedOptions.CPFIdToSearch.ToString() : ""), new { id = "CPFIdToSearch" })
+                    @Html.Hidden("AdvancedOptions.CPFName", (string)(Model.AdvancedOptions.CPFName != null ? Model.AdvancedOptions.CPFName.ToString() : ""), new { id = "CPFName" })    
                     @if (Model.AdvancedOptions.CPFIdToSearch != null && !String.IsNullOrWhiteSpace(Model.AdvancedOptions.CPFName)) {
-                        //In this case we create some hidden input fields to hold the values from the model
-                        @Html.Hidden("AdvancedOptions.CPFIdToSearch", (string)(Model.AdvancedOptions.CPFIdToSearch != null ? Model.AdvancedOptions.CPFIdToSearch.ToString() : ""), new { id = "CPFIdToSearch" })
-                        @Html.Hidden("AdvancedOptions.CPFName", (string)(Model.AdvancedOptions.CPFName != null ? Model.AdvancedOptions.CPFName.ToString() : ""), new { id = "CPFName" })
                         <a href="javascript:void(0)" onclick="removeFilterAndReload(11)">
                             <li>@T("Items with Id {0} in the CPF {1}", Model.AdvancedOptions.CPFIdToSearch.ToString(), Model.AdvancedOptions.CPFName)</li>
                         </a>
