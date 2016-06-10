@@ -403,7 +403,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             //}
             try {
                 if (((dynamic)UserContent.ContentItem).User.Pushcategories != null && (((dynamic)Contact).CommunicationContactPart).Pushcategories != null) {
-                    List<TermPart> ListTermPartToAdd = ((TaxonomyField)((dynamic)UserContent.ContentItem).User.Pushcategories).Terms.ToList();
+                    //List<TermPart> ListTermPartToAdd = ((TaxonomyField)((dynamic)UserContent.ContentItem).User.Pushcategories).Terms.ToList();
+                    List<TermPart> ListTermPartToAdd = _taxonomyService.GetTermsForContentItem(UserContent.Id, "Pushcategories").ToList();
                     _taxonomyService.UpdateTerms(Contact, ListTermPartToAdd, "Pushcategories");
                 }
             } catch { // non ci sono le Pushcategories
