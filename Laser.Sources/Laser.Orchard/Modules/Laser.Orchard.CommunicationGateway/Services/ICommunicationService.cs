@@ -33,6 +33,7 @@ using System.Web.Mvc;
 using System.Text;
 using Orchard.Taxonomies.Services;
 using Orchard.Core.Common.Models;
+using Orchard.Localization.Services;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
 
@@ -64,12 +65,13 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly INotifier _notifier;
         private readonly ISessionLocator _session;
         private readonly ITaxonomyService _taxonomyService;
+        private readonly ICultureManager _cultureManager;
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
 
-        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session) {
+        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session, ICultureManager cultureManager) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
@@ -78,6 +80,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
             _session = session;
             _taxonomyService = taxonomyService;
+            _cultureManager = cultureManager;
 
             T = NullLocalizer.Instance;
         }
@@ -359,6 +362,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         }
 
         public void UserToContact(IUser UserContent) {
+            if (UserContent.Id == 0) {
+                // non crea il contatto se lo user non è ancora stato salvato
+                return;
+            }
             bool asProfilePart = true;
             try {
                 var profpart = ((dynamic)UserContent).ProfilePart;
@@ -384,6 +391,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     Contact = _orchardServices.ContentManager.New("CommunicationContact");
                     _orchardServices.ContentManager.Create(Contact);
                     Contact = _orchardServices.ContentManager.Get(Contact.Id);
+                    Contact.As<CommunicationContactPart>().Master = false;
                 }
             } else {
                 Contact = contactsUsers.ContentItem;
@@ -401,10 +409,20 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             } catch { // non ci sono le Pushcategories
             }
             try {
-                if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != Contact.As<FavoriteCulturePart>().Culture_Id) {
-                    Contact.As<FavoriteCulturePart>().Culture_Id = UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id;
+                if ((UserContent.ContentItem.As<FavoriteCulturePart>() != null) && (Contact.As<FavoriteCulturePart>() != null)) {
+                    if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != 0) {
+                        if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != Contact.As<FavoriteCulturePart>().Culture_Id) {
+                            Contact.As<FavoriteCulturePart>().Culture_Id = UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id;
+                        }
+                    }
+                    else {
+                        // imposta la culture di default
+                        var defaultCultureId = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture()).Id;
+                        Contact.As<FavoriteCulturePart>().Culture_Id = defaultCultureId;
+                        UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id = defaultCultureId;
+                    }
                 }
-            } catch (Exception ex) { // non si ha l'estensione per favorite culture
+            } catch { // non si ha l'estensione per favorite culture
             }
 
             if (!string.IsNullOrEmpty(UserContent.Email) && UserContent.ContentItem.As<UserPart>().RegistrationStatus == UserStatus.Approved) {
@@ -445,7 +463,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             //Contact.As<TitlePart>().Title = UserContent.Email + " " + UserContent.UserName;
             if (Contact.Has<CommonPart>()) {
                 Contact.As<CommonPart>().ModifiedUtc = DateTime.Now;
-                Contact.As<CommonPart>().Owner = _orchardServices.WorkContext.CurrentUser;
+                Contact.As<CommonPart>().Owner = UserContent;
             }
             dynamic mypart = (((dynamic)Contact).CommunicationContactPart);
             mypart.GetType().GetProperty("UserIdentifier").SetValue(mypart, UserContent.Id, null);
