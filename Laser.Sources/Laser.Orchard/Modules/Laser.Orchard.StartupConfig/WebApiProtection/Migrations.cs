@@ -23,15 +23,19 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection {
         private readonly IOrchardServices _services;
         private readonly ShellSettings _settings;
         private readonly INotifier _notifier;
-        public Migration(IOrchardServices services, ShellSettings settings, INotifier notifier) {
+        private readonly IUtilsServices _utilsServices;
+
+        public Migration(IOrchardServices services, ShellSettings settings, INotifier notifier, IUtilsServices utilsServices) {
             T = NullLocalizer.Instance;
             _services = services;
             _settings = settings;
             _notifier = notifier;
+            _utilsServices = utilsServices;
         }
 
         public Localizer T { get; set; }
 
+        #region [ IFeatureEventHandler Implementaton ]
         public void Disabled(global::Orchard.Environment.Extensions.Models.Feature feature) {
         }
 
@@ -78,8 +82,14 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection {
 
         public void Uninstalling(global::Orchard.Environment.Extensions.Models.Feature feature) {
         }
+        #endregion [ IFeatureEventHandler Implementaton ]
 
-
+        #region [ DataMigration Implementation ]
+        public int Create() {
+            _utilsServices.EnableFeature("Orchard.Caching");
+            return 1;
+        }
+        #endregion [ DataMigration Implementation ]
         private string RandomString(int length) {
             const string chars = "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
             var rnd = new Random();
