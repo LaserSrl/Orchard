@@ -74,6 +74,9 @@
     <Reference Include="Orchard.Blogs">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Blogs\bin\Orchard.Blogs.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Caching">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Caching\bin\Orchard.Caching.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.ContentPermissions">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPermissions\bin\Orchard.ContentPermissions.dll</HintPath>
     </Reference>

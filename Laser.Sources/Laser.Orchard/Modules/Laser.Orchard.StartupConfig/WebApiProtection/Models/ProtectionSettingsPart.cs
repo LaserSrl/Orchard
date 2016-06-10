@@ -42,6 +42,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Models {
 
         public IEnumerable<ExternalApplication> ExternalApplications { get; set; }
     }
+
     public class ExternalApplication {
 
         [ValidateExternalApplicationAttribute]
@@ -49,6 +50,11 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Models {
 
         [ValidateExternalApplicationAttribute]
         public string ApiKey { get; set; }
+
+        [ValidateExternalApplicationAttribute]
+        public bool EnableTimeStampVerification { get; set; }
+
+        public int Validity { get; set; }
 
         public bool Delete { get; set; }
 
@@ -78,6 +84,9 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Models {
                     } else if (model.ApiKey.Trim().Length < 22) {
                         return new ValidationResult(T("ApiKey field must be minimum 22 characters length.").Text);
                     }
+                }
+                if (model.EnableTimeStampVerification && model.Validity <= 0) {
+                    return new ValidationResult(T("Validity should be more than 0 minutes.").Text);
                 }
             }
             return ValidationResult.Success;
