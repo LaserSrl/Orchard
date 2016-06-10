@@ -1,0 +1,8 @@
+﻿@if (Model.Toolbar != null) {
+    foreach (var lblObj in Model.Toolbar.Labels) {
+        @Html.ActionLink((string)(lblObj.Label), (string)(lblObj.Action), (string)(lblObj.Controller))
+
+    }
+    
+}
+TESTO
