@@ -122,7 +122,7 @@
     <Compile Include="Models\UserReactionsPartRecord.cs" />
     <Compile Include="Models\UserReactionsPartSettings.cs" />
     <Compile Include="Models\UserReactionsSettings.cs" />
-    <Compile Include="Models\UserReactionsSettingTypesRecord.cs" />
+    <Compile Include="Models\UserReactionsSettingTypesSel.cs" />
     <Compile Include="Models\UserReactionsSummaryRecord.cs" />
     <Compile Include="Models\UserReactionsTypesRecord.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />

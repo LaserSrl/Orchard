@@ -25,10 +25,13 @@ namespace Laser.Orchard.UserReactions.Drivers {
         //Evento display 
         protected override DriverResult Display(UserReactionsPart part, string displayType, dynamic shapeHelper) {
 
-            var viewmodel = _userReactionService.GetTot(part);
+            
 
             //Gestione visualizzazione amministratore
             if (displayType == "SummaryAdmin") {
+
+                var viewmodel = _userReactionService.GetTot(part);
+
                 return ContentShape("Parts_UserReactions_SummaryAdmin", () => shapeHelper
                     .Parts_UserReactions_SummaryAdmin(UserReaction: viewmodel));
             }
@@ -36,8 +39,23 @@ namespace Laser.Orchard.UserReactions.Drivers {
             
             //Passare la view model da definire 
             if (displayType == "Detail") {
+
+                UserReactionsPartSettings settings = part.TypePartDefinition.Settings.GetModel<UserReactionsPartSettings>();
+
+                bool FilterApplied = settings.Filtering;
+                if (FilterApplied == true) {
+                    
+                    List<UserReactionsSettingTypesSel> SettingType = new List<UserReactionsSettingTypesSel>();
+
+                    if (part.Settings.Count > 0) {
+                        SettingType = new JavaScriptSerializer().Deserialize<List<UserReactionsSettingTypesSel>>(definition.Settings.Values.ElementAt(1));
+                    }
+
+                    model.TypeReactionsPartsSelected = SettingType;  
+                }
+
                 return ContentShape("Parts_UserReactions_Detail", () => shapeHelper
-                   .Parts_UserReactions_Detail(UserReaction: viewmodel));
+                      .Parts_UserReactions_Detail(UserReaction: viewmodel));
 
             }
 
@@ -68,6 +86,10 @@ namespace Laser.Orchard.UserReactions.Drivers {
                                   Prefix: Prefix));
 
         }
+
+
+
+       
 
 
     }

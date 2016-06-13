@@ -7,6 +7,6 @@ namespace Laser.Orchard.UserReactions.Models {
     public class UserReactionsPartSettings 
     {
         public bool Filtering { get; set; }
-        public List<UserReactionsSettingTypesRecord> TypeReactionsPartsSelected { get; set; }
+        public List<UserReactionsSettingTypesSel> TypeReactionsPartsSelected { get; set; }
     }
 }

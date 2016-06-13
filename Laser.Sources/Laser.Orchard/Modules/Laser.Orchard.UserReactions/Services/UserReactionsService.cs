@@ -24,6 +24,7 @@ namespace Laser.Orchard.UserReactions.Services {
         IList<UserReactionsVM> GetTot(UserReactionsPart part);
         IUser CurrentUser();
         int CalculateTypeClick(IUser CurrentUser, int IconType, int CurrentPage);
+        UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model);
 
     }
 
@@ -83,6 +84,37 @@ namespace Laser.Orchard.UserReactions.Services {
         public IQueryable<UserReactionsTypesRecord> GetTypesTable() {
             
             return _repoTypes.Table.OrderBy(o => o.Priority);
+        }
+
+
+
+        public UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model) 
+        {
+            UserReactionsPartSettings retval = new UserReactionsPartSettings();
+            IQueryable<UserReactionsTypesRecord> repotypesAll = _repoTypes.Table.Where(z => z.Activating == true && z.TypeName != null).OrderBy(o => o.Priority);
+            
+            List<UserReactionsSettingTypesSel> partSelectedAll = repotypesAll.Select(r=> new UserReactionsSettingTypesSel 
+            {
+                 Id = r.Id,
+                 nameReaction =r.TypeName,
+                 checkReaction = false
+                 
+            }).ToList();
+
+
+            List<UserReactionsSettingTypesSel> viewmodel;
+            List<UserReactionsSettingTypesSel> TypeReactionsPartsModel = new List<UserReactionsSettingTypesSel>();
+            TypeReactionsPartsModel = Model.TypeReactionsPartsSelected;
+      
+      
+            if (TypeReactionsPartsModel.Count()==0)
+                viewmodel = partSelectedAll;
+            else                
+                viewmodel = Model.TypeReactionsPartsSelected.Except(partSelectedAll).ToList();
+
+            retval.TypeReactionsPartsSelected = viewmodel;
+            retval.Filtering = Model.Filtering;
+            return retval;
         }
 
 
@@ -154,8 +186,7 @@ namespace Laser.Orchard.UserReactions.Services {
         /// <returns></returns>
         public IList<UserReactionsVM> GetTot(UserReactionsPart part) {
            
-            var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
-           
+            var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();           
             IList<UserReactionsVM> viewmodel = new List<UserReactionsVM>();
 
             viewmodel = part.Reactions.Select(s => new UserReactionsVM {
