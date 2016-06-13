@@ -1,8 +1,50 @@
-﻿@if (Model.Toolbar != null) {
-    foreach (var lblObj in Model.Toolbar.Labels) {
-        @Html.ActionLink((string)(lblObj.Label), (string)(lblObj.Action), (string)(lblObj.Controller))
+﻿@using System.Collections.Specialized;
 
+@if (Model.Toolbar != null) {
+    foreach (var lblObj in Model.Toolbar.Labels) {
+        //if there is a Custom URL, link to that
+        if (!String.IsNullOrWhiteSpace((string)(lblObj.CustomUrl))) {
+            //The custom URL gets appended to the current one as additional parameters
+            string hString = WorkContext.HttpContext.Request.Path;
+            var qs = new NameValueCollection(WorkContext.HttpContext.Request.QueryString);
+            string[] myQsKeys = ((string)(lblObj.CustomUrl)).Split(new char[] { '&' });
+            var myQsValues = new string[myQsKeys.Length];
+            int i = 0;
+            foreach (var str in myQsKeys) {
+                //extract the values passed as parameters, and put them in a separate array
+                int ind = str.IndexOf("=");
+                myQsValues[i] = str.Substring(ind+1);
+                myQsKeys[i++] = str.Substring(0, ind);
+            }
+            i = 0;
+            foreach (var str in myQsKeys) {
+                if (qs.Get(str) == null){
+                    qs.Add(str, myQsValues[i]);
+                } else {
+                    qs[str] = myQsValues[i];
+                }
+                i++;
+            }
+            string qsString = "";
+            foreach (var k in qs.AllKeys){
+                qsString += k + "=" + qs[k] + "&";
+            }
+            string myPath = WorkContext.HttpContext.Request.Path;
+            //the following condition is needed becacuse the search functionality depends on the advanced search module, but we could
+            //have a list of content items containing the SummaryAdminToolbar by going through the content type creation pages.
+            if (!myPath.Contains("Laser.Orchard.AdvancedSearch")) {
+                myPath = myPath.Replace("Contents", "Laser.Orchard.AdvancedSearch");
+                //in this case we should also remove the content type from the end of the path, otherwise it would carry over as a filter
+                //to the advanced search module, possibly preventing any result to be displayed.
+                myPath = myPath.Substring(0, myPath.IndexOf("/List") + 5);
+            }
+            <a href="@Href(myPath + "?" + qsString)" target ="@lblObj.Target.ToString()" name="submit.Filter">@(lblObj.Label.ToString())</a>
+        } else {
+            @Html.ActionLink((string)(lblObj.Label), (string)(lblObj.Action), (string)(lblObj.Controller))
+        }
+        
+        <text>&nbsp;|&nbsp;</text>
     }
     
 }
-TESTO
+

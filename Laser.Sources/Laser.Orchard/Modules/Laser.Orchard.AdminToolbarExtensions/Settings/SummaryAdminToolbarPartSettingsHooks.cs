@@ -18,7 +18,11 @@ namespace Laser.Orchard.AdminToolbarExtensions.Settings {
             ContentTypePartDefinition definition){
                 
             if (definition.PartDefinition.Name != "SummaryAdminToolbarPart") yield break;
-            var model = definition.Settings.GetModel<SummaryAdminToolbarSettings>();
+            var model = definition.Settings.GetModel<SummaryAdminToolbarPartSettings>();
+            string toParse = "";
+            if (definition.Settings.TryGetValue("SummaryAdminToolbarPartSettings.Labels", out toParse)) {
+                model.ParseStringToList(toParse);
+            }
 
             yield return DefinitionTemplate(model);
         }
@@ -27,13 +31,16 @@ namespace Laser.Orchard.AdminToolbarExtensions.Settings {
             ContentTypePartDefinitionBuilder builder,
             IUpdateModel updateModel) {
 
-            if (builder.Name != "SummaryAdminToolbarPart") yield break;
+            if (builder.Name == "SummaryAdminToolbarPart") {
+                var model = new SummaryAdminToolbarPartSettings();
+                updateModel.TryUpdateModel(model, "SummaryAdminToolbarPartSettings", null, null);
+                //put actual values in the PartSettings
+                builder.WithSetting("SummaryAdminToolbarPartSettings.Labels", model.ParseListToString());
 
-            var model = new SummaryAdminToolbarSettings();
-            updateModel.TryUpdateModel(model, "SummaryAdminToolbarSettings", null, null);
-            //put actual values in the MapPartSettings
+                yield return DefinitionTemplate(model);
+            }
 
-            yield return DefinitionTemplate(model);
+            yield break;
         }
     }
 }
