@@ -161,6 +161,13 @@
     </script>
 }
 
+@helper FilterActiveTag(int filter, string text){
+    
+    <a href="javascript:void(0)" onclick="removeFilterAndReload(@filter)" class="btn btn-sm" id="my-btn-outline">
+        <li>@text</li>
+    </a>
+}
+
 @using (Html.BeginFormAntiForgeryPost()) {
 
 <div class="row">
@@ -200,38 +207,26 @@
                 @* Generate labels with razor. Each label has a script to remove the corresponding filter and reload the page. *@
                 <ul>
                     @if (Model.Options.SelectedFilter != null) {
-                        <a href="javascript:void(0)" onclick="removeFilterAndReload(0)">
-                            <li>@T("Content type: {0}", Model.Options.SelectedFilter.ToString())</li>
-                        </a>
+                        @FilterActiveTag(0, @T("Content type: {0}", Model.Options.SelectedFilter.ToString()).ToString());
                     }
                     @if (Model.Options.OrderBy != (ContentsOrder)ContentsOrder.Modified) {
-                        <a href="javascript:void(0)" onclick="removeFilterAndReload(1)">
-                            <li>@T("Content order: {0}", Model.Options.OrderBy.ToString())</li>
-                        </a>
+                        @FilterActiveTag(1, @T("Content order: {0}", Model.Options.OrderBy.ToString()).ToString());
                     }
                     @if (Model.Options.ContentsStatus != (ContentsStatus)ContentsStatus.Latest) {
-                        <a href="javascript:void(0)" onclick="removeFilterAndReload(2)">
-                            <li>@T("Content status: {0}", Model.Options.ContentsStatus.ToString())</li>
-                        </a>
+                        @FilterActiveTag(2, @T("Content status: {0}", Model.Options.ContentsStatus.ToString()).ToString());
                     } 
                     @if (Model.AdvancedOptions.SelectedLanguageId != 0){
                         var culture = Model.AdvancedOptions.CultureById(Model.AdvancedOptions.SelectedLanguageId);
-                        <a href="javascript:void(0)" onclick="removeFilterAndReload(3)">
-                            <li>@T("Language: {0}", culture.ToString())</li>
-                        </a>
+                        @FilterActiveTag(3, @T("Language: {0}", culture.ToString()).ToString());
                     }
                     @if (Model.AdvancedOptions.SelectedUntranslatedLanguageId != 0) {
                         var culture = Model.AdvancedOptions.CultureById(Model.AdvancedOptions.SelectedUntranslatedLanguageId);
-                        <a href="javascript:void(0)" onclick="removeFilterAndReload(4)">
-                            <li>@T("Not translated to: {0}", culture.ToString())</li>
-                        </a>
+                        @FilterActiveTag(4, @T("Not translated to: {0}", culture.ToString()).ToString());
                     }
                     @if (Model.AdvancedOptions.TaxonomiesOptions != null && Model.AdvancedOptions.TaxonomiesOptions.Count > 0) {
                         if (Model.AdvancedOptions.SelectedTermId != 0) {
                             var term = Model.AdvancedOptions.TermById(Model.AdvancedOptions.SelectedTermId);
-                            <a href="javascript:void(0)" onclick="removeFilterAndReload(5)">
-                                <li>@T("Taxonomy term: {0}", term.ToString())</li>
-                            </a>
+                            @FilterActiveTag(5, @T("Taxonomy term: {0}", term.ToString()).ToString());
                         }
                     }
                     @{
@@ -240,39 +235,27 @@
                         bool onlyMine = seeAll ? (bool)Model.AdvancedOptions.OwnedByMeSeeAll : (bool)Model.AdvancedOptions.OwnedByMe;
                         if (mayChoose) { //seeAll impliese mayChoose
                             if (onlyMine) {
-                                <a href="javascript:void(0)" onclick="removeFilterAndReload(7)">
-                                    <li>@T("Only show my items.")</li>
-                                </a>
+                                @FilterActiveTag(7, @T("Only show my items.").ToString());
                             } else if (Model.AdvancedOptions.SelectedOwner != null && !String.IsNullOrEmpty(Model.AdvancedOptions.SelectedOwner.ToString())) {
-                                <a href="javascript:void(0)" onclick="removeFilterAndReload(6)">
-                                    <li>@T("Only show items by: {0}", Model.AdvancedOptions.SelectedOwner.ToString())</li>
-                                </a>
+                                @FilterActiveTag(6, @T("Only show items by: {0}", Model.AdvancedOptions.SelectedOwner.ToString()).ToString());
                             }
                         }
                     }
                     @if (Model.AdvancedOptions.SelectedFromDate != null) {
-                        <a href="javascript:void(0)" onclick="removeFilterAndReload(8)">
-                            <li>@T("{0} from {1}", Model.AdvancedOptions.DateFilterType.ToString(), Model.AdvancedOptions.SelectedFromDate.ToString())</li>
-                        </a>
+                        @FilterActiveTag(8, @T("{0} from {1}", Model.AdvancedOptions.DateFilterType.ToString(), Model.AdvancedOptions.SelectedFromDate.ToString()).ToString());
                     }
                     @if (Model.AdvancedOptions.SelectedToDate != null) {
-                        <a href="javascript:void(0)" onclick="removeFilterAndReload(9)">
-                            <li>@T("{0} until {1}", Model.AdvancedOptions.DateFilterType.ToString(), Model.AdvancedOptions.SelectedToDate.ToString())</li>
-                        </a>
+                        @FilterActiveTag(9, @T("{0} until {1}", Model.AdvancedOptions.DateFilterType.ToString(), Model.AdvancedOptions.SelectedToDate.ToString()).ToString());
                     }
                     @if ((bool)Model.AdvancedOptions.HasMedia) {
-                        <a href="javascript:void(0)" onclick="removeFilterAndReload(10)">
-                            <li>@T("Only items with media.")</li>
-                        </a>
+                        @FilterActiveTag(10, @T("Only items with media.").ToString());
                     }
 
                     @*In this case we create some hidden input fields to hold the values from the model*@
                     @Html.Hidden("AdvancedOptions.CPFIdToSearch", (string)(Model.AdvancedOptions.CPFIdToSearch != null ? Model.AdvancedOptions.CPFIdToSearch.ToString() : ""), new { id = "CPFIdToSearch" })
                     @Html.Hidden("AdvancedOptions.CPFName", (string)(Model.AdvancedOptions.CPFName != null ? Model.AdvancedOptions.CPFName.ToString() : ""), new { id = "CPFName" })    
                     @if (Model.AdvancedOptions.CPFIdToSearch != null && !String.IsNullOrWhiteSpace(Model.AdvancedOptions.CPFName)) {
-                        <a href="javascript:void(0)" onclick="removeFilterAndReload(11)">
-                            <li>@T("Items with Id {0} in the CPF {1}", Model.AdvancedOptions.CPFIdToSearch.ToString(), Model.AdvancedOptions.CPFName)</li>
-                        </a>
+                        @FilterActiveTag(11, @T("Items with Id {0} in the CPF {1}", Model.AdvancedOptions.CPFIdToSearch.ToString(), Model.AdvancedOptions.CPFName).ToString());
                     }
                 </ul>
             </div>
