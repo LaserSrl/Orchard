@@ -149,10 +149,16 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{ font-weight:800; }
 .prodotti_home{color:#fff}
 .prodotti{color:#3366b7}
 .prodotti:hover, .prodotti:focus, .prodotti:active{color:#3366b7}
+.products-taxonomies{color:#3366b7}
+.products-taxonomies:hover, .products-taxonomies:focus, .products-taxonomies:active{color:#3366b7}
 .poi-outdoor{color:#8dd600}
 .poi-outdoor:hover, .poi-outdoor:focus, .poi-outdoor:active{color:#8dd600}
+.poi-outdoor-taxonomies{color:#8dd600}
+.poi-outdoor-taxonomies:hover, .poi-outdoor-taxonomies:focus, .poi-outdoor-taxonomies:active{color:#8dd600}
 .poi-siti{color:#ff8504}
 .poi-siti:hover, .poi-siti:focus, .poi-siti:active{color:#ff8504}
+.poi-sites-taxonomies{color:#ff8504}
+.poi-sites-taxonomies:hover, .poi-sites-taxonomies:focus, .poi-sites-taxonomies:active{color:#ff8504}
 .eventi {color:#c50032}
 .eventi:hover, .eventi:focus, .eventi:active{color:#c50032}
 .manifestazioni_home {color:#fff}
