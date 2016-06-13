@@ -1,0 +1,28 @@
+﻿@using Orchard.ContentManagement;
+@using System.Text;
+@{
+    string result = "Done";
+    try{
+        dynamic ci = Model.ContentItem;
+        var cpf = ci.SchedaPartecipazione.EventoCorrelato.Ids;
+        dynamic eventoCorrelato = null;
+        string titleEvento = "";
+        if (cpf != null) {
+            if (cpf.Length > 0) {
+                eventoCorrelato = Model.OrchardServices.ContentManager.Get(cpf[0]);
+                titleEvento = eventoCorrelato.TitlePart.Title;
+            }
+        }
+
+        // ricava nome e cognome dell'utente
+        int idOwner = ci.CommonPart.Owner.Id;
+        dynamic owner = (dynamic)(Model.OrchardServices.ContentManager.Get(idOwner));
+        string nome = owner.ProfilePart.Nome.Value;
+        string cognome = owner.ProfilePart.Cognome.Value;
+        Model.ContentItem.TitlePart.Title = string.Format("Richiesta iscrizione {0} - {1} {2}", titleEvento, nome, cognome);
+    }
+    catch{
+        result = "Error";
+    }
+}
+@result

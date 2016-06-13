@@ -237,6 +237,7 @@
     <Content Include="Views\Fields\ContentPickerField-CommunicationContact-AdminFilter.cshtml" />
     <Content Include="Views\Fields\MediaPickerField-CommunicationContact-AdminFilter.cshtml" />
     <Content Include="Views\Parts\FavoriteCulturePart-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\InputField-CommunicationContact-AdminFilter.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

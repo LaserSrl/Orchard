@@ -479,7 +479,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         myval = ((Int32[])cf.Ids).ToList().Select(x => (object)x).ToList();
                     else if (cf.FieldDefinition.Name == typeof(TaxonomyField).Name) {
                         List<TaxoVM> second = new List<TaxoVM>();
-                        foreach (TermPart tp in ((TaxonomyField)cf).Terms) {
+                        var selectedTerms = _taxonomyService.GetTermsForContentItem(UserContent.Id, ((ContentField)cf).Name);
+                        foreach (TermPart tp in selectedTerms) {
                             TaxoVM tv = new TaxoVM();
                             tv.Id = tp.Id;
                             tv.flag = true;
