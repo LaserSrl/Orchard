@@ -5,6 +5,11 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement;
 using Laser.Orchard.UserReactions.ViewModels;
 using Orchard.Localization;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Web.Script.Serialization;
+using System.Collections;
 
 
 namespace Laser.Orchard.UserReactions.Drivers {
@@ -25,40 +30,47 @@ namespace Laser.Orchard.UserReactions.Drivers {
         //Evento display 
         protected override DriverResult Display(UserReactionsPart part, string displayType, dynamic shapeHelper) {
 
+            IList<UserReactionsVM> viewmodel = _userReactionService.GetTot(part, false); ;
             
-
             //Gestione visualizzazione amministratore
-            if (displayType == "SummaryAdmin") {
-
-                var viewmodel = _userReactionService.GetTot(part);
-
+            if (displayType == "SummaryAdmin")                 
+            {
+                viewmodel = _userReactionService.GetTot(part, false);
                 return ContentShape("Parts_UserReactions_SummaryAdmin", () => shapeHelper
                     .Parts_UserReactions_SummaryAdmin(UserReaction: viewmodel));
             }
 
             
             //Passare la view model da definire 
-            if (displayType == "Detail") {
+            if (displayType == "Detail") 
+            {
 
                 UserReactionsPartSettings settings = part.TypePartDefinition.Settings.GetModel<UserReactionsPartSettings>();
+           
+                UserReactionsPartSettings newPartsSetting = new UserReactionsPartSettings();
 
                 bool FilterApplied = settings.Filtering;
-                if (FilterApplied == true) {
-                    
-                    List<UserReactionsSettingTypesSel> SettingType = new List<UserReactionsSettingTypesSel>();
-
-                    if (part.Settings.Count > 0) {
-                        SettingType = new JavaScriptSerializer().Deserialize<List<UserReactionsSettingTypesSel>>(definition.Settings.Values.ElementAt(1));
-                    }
-
-                    model.TypeReactionsPartsSelected = SettingType;  
+               
+                if (FilterApplied == true) 
+                {
+                    viewmodel= _userReactionService.GetTot(part, true);
                 }
+                
+                    //List<UserReactionsSettingTypesSel> SettingType = new List<UserReactionsSettingTypesSel>();
 
-                return ContentShape("Parts_UserReactions_Detail", () => shapeHelper
+                    //if (part.Settings.Count > 0) 
+                    //{
+                    //    SettingType = new JavaScriptSerializer().Deserialize<List<UserReactionsSettingTypesSel>>(part.Settings.Values.ElementAt(1));
+                    //    newPartsSetting.TypeReactionsPartsSelected = SettingType.Where(z=>z.checkReaction==true).ToList();
+                    //    newPartsSetting.Filtering = true;
+                    //}                   
+                   // var viewmodel = _userReactionService.GetTot(newPartsSetting);
+
+                    return ContentShape("Parts_UserReactions_Detail", () => shapeHelper
                       .Parts_UserReactions_Detail(UserReaction: viewmodel));
 
-            }
-
+                } 
+  
             //Passare la view model da definire 
             if (displayType == "Summary") {
                 return ContentShape("Parts_UserReactions_Summary", () => shapeHelper
@@ -77,8 +89,8 @@ namespace Laser.Orchard.UserReactions.Drivers {
         //Evento Edit
         protected override DriverResult Editor(UserReactionsPart part, dynamic shapeHelper) 
         {
-            
-            var viewmodel=_userReactionService.GetTot(part);
+
+            IList<UserReactionsVM> viewmodel = _userReactionService.GetTot(part, false);
  
             return ContentShape("Parts_UserReactions_Edit", () => shapeHelper.EditorTemplate(
                                   TemplateName: "Parts/UserReactionsEdit",
@@ -87,9 +99,6 @@ namespace Laser.Orchard.UserReactions.Drivers {
 
         }
 
-
-
-       
 
 
     }
