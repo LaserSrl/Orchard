@@ -45,29 +45,21 @@ namespace Laser.Orchard.UserReactions.Drivers {
             if (displayType == "Detail") 
             {
 
-                UserReactionsPartSettings settings = part.TypePartDefinition.Settings.GetModel<UserReactionsPartSettings>();
-           
+                UserReactionsPartSettings settings = part.TypePartDefinition.Settings.GetModel<UserReactionsPartSettings>();           
                 UserReactionsPartSettings newPartsSetting = new UserReactionsPartSettings();
-
                 bool FilterApplied = settings.Filtering;
-               
+
                 if (FilterApplied == true) 
                 {
-                    viewmodel= _userReactionService.GetTot(part, true);
+                    viewmodel = _userReactionService.GetTot(part, true);
+                } 
+                else 
+                {
+                    viewmodel = _userReactionService.GetTot(part, false);
                 }
                 
-                    //List<UserReactionsSettingTypesSel> SettingType = new List<UserReactionsSettingTypesSel>();
-
-                    //if (part.Settings.Count > 0) 
-                    //{
-                    //    SettingType = new JavaScriptSerializer().Deserialize<List<UserReactionsSettingTypesSel>>(part.Settings.Values.ElementAt(1));
-                    //    newPartsSetting.TypeReactionsPartsSelected = SettingType.Where(z=>z.checkReaction==true).ToList();
-                    //    newPartsSetting.Filtering = true;
-                    //}                   
-                   // var viewmodel = _userReactionService.GetTot(newPartsSetting);
-
-                    return ContentShape("Parts_UserReactions_Detail", () => shapeHelper
-                      .Parts_UserReactions_Detail(UserReaction: viewmodel));
+                return ContentShape("Parts_UserReactions_Detail", () => shapeHelper
+                    .Parts_UserReactions_Detail(UserReaction: viewmodel));
 
                 } 
   

@@ -13,6 +13,7 @@ using Laser.Orchard.UserReactions.Services;
 using Laser.Orchard.UserReactions.ViewModels;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement;
+using System.Web.Script.Serialization;
 
 
 namespace Laser.Orchard.UserReactions.Services {
@@ -84,6 +85,11 @@ namespace Laser.Orchard.UserReactions.Services {
         public IQueryable<UserReactionsTypesRecord> GetTypesTable() {
             
             return _repoTypes.Table.OrderBy(o => o.Priority);
+        }
+
+        public IQueryable<UserReactionsTypesRecord> GetTypesTableFiltered() {
+
+            return _repoTypes.Table.Where(z=>z.Activating==true).OrderBy(o => o.Priority);
         }
 
 
@@ -188,6 +194,8 @@ namespace Laser.Orchard.UserReactions.Services {
            
             var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();           
             IList<UserReactionsVM> viewmodel = new List<UserReactionsVM>();
+            List<UserReactionsVM> listType = new List<UserReactionsVM>();
+            int[] ids = null;
 
             viewmodel = part.Reactions.Select(s => new UserReactionsVM {
                 Id = s.Id,
@@ -200,22 +208,48 @@ namespace Laser.Orchard.UserReactions.Services {
                 CssName = reactionSettings.StyleFileNameProvider 
             }).ToList();
 
-            var ids = viewmodel.Select(s => s.TypeId).ToArray();
+            if (filter == false) {
+                
+                ids = viewmodel.Select(s => s.TypeId).ToArray();
 
-            //_userReactionService sono i dati 
-            var listType = GetTypesTable().Where(w => !(ids.Contains(w.Id)))
+                listType = GetTypesTableFiltered().Where(w => !(ids.Contains(w.Id)))
                 .Select(x => new UserReactionsVM {
                     Id = 0,
                     Quantity = 0,
                     TypeName = x.TypeName,
                     TypeId = x.Id,
                     CssStyleName = x.TypeCssClass,
-                    OrderPriority=x.Priority,
-                    Activating= x.Activating,
-                    CssName = reactionSettings.StyleFileNameProvider 
+                    OrderPriority = x.Priority,
+                    Activating = x.Activating,
+                    CssName = reactionSettings.StyleFileNameProvider
                 }).ToList();
 
-            viewmodel = viewmodel.Concat(listType).Where(r=>r.Activating==true).OrderBy(z => z.OrderPriority).ToList();
+                viewmodel = viewmodel.Concat(listType).Where(r => r.Activating == true).OrderBy(z => z.OrderPriority).ToList();
+            } 
+            else 
+            {
+                List<UserReactionsSettingTypesSel> SettingType = new List<UserReactionsSettingTypesSel>();
+
+                if (part.Settings.Count > 0) {
+                    SettingType = new JavaScriptSerializer().Deserialize<List<UserReactionsSettingTypesSel>>(part.Settings.Values.ElementAt(1));
+                    ids = SettingType.Where(z => z.checkReaction == true).Select(x => x.Id).ToArray();
+
+                    listType = GetTypesTableFiltered().Where(w => (ids.Contains(w.Id)))
+                                    .Select(x => new UserReactionsVM {
+                                    Id = 0,
+                                    Quantity = 0,
+                                    TypeName = x.TypeName,
+                                    TypeId = x.Id,
+                                    CssStyleName = x.TypeCssClass,
+                                    OrderPriority = x.Priority,
+                                    Activating = x.Activating,
+                                    CssName = reactionSettings.StyleFileNameProvider
+                                }).ToList();
+
+                    viewmodel = viewmodel.Except(listType).OrderBy(z => z.OrderPriority).ToList();
+                }   
+            }
+          
             return viewmodel;
         }
 
@@ -258,6 +292,9 @@ namespace Laser.Orchard.UserReactions.Services {
 
             UserReactionsClickRecord result = new UserReactionsClickRecord();
 
+
+
+            //Se già cliccato quella reaction
             if (res != null) 
             {
                 //Già cliccato (Update dati)   
@@ -277,7 +314,7 @@ namespace Laser.Orchard.UserReactions.Services {
                 if(CurrentUser==null)
                     returnVal = 0;
                 else
-                returnVal = -1;
+                    returnVal = -1;
 
 
                 return returnVal;
@@ -304,6 +341,7 @@ namespace Laser.Orchard.UserReactions.Services {
                 }
                        
            }
+
 
             result.UserPartRecord = userRec;
 
@@ -335,7 +373,7 @@ namespace Laser.Orchard.UserReactions.Services {
                 }
 
                 if (CurrentUser == null)
-                    returnVal = 0;
+                    returnVal = 2;
                 else
                     returnVal = 1;
 

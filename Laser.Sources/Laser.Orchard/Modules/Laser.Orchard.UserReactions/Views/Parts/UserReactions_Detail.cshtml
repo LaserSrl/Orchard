@@ -27,7 +27,11 @@
       
       <div class="glyph">
       <span id="@item.TypeId" class="@attCSS"></span> 
-      <b>@itemName</b>
+
+   @*   <b>@itemName</b>*@
+
+          <b id="itemName">@itemName</b>
+          <b id="quantity">@quantità></b>
      </div>
       
   }
@@ -58,11 +62,22 @@
                 url: "@Url.Action("GetReactionClicked", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",
                 success: function (result) {
                     //Ricarica la pagina aggiornando i valori                   
-                    window.location.reload()
 
-                    if (result == 0) {
+                    // window.location.reload()
+
+                    if (result == 0 || result == 2) {
                         alert("Il risultato è stato acquisito. A breve sarà disponibile sulla pagina");
                     }
+
+                    if (result == 0 || result == -1)
+                    {
+                        alert($("quantity").val() + " " + result);
+                    }
+
+                    if (result == 2 || result == 1) {
+                        alert($("quantity").val() + " " + result);
+                    }
+
                 },
                 type: "POST",
                 data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId})
