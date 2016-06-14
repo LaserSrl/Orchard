@@ -39,6 +39,10 @@ using Laser.Orchard.StartupConfig.Localization;
 using Orchard.Projections.Models;
 using Orchard.ContentTypes.Services;
 using Orchard.Fields.Settings;
+using Orchard.Security;
+using System.Linq.Expressions;
+using Orchard.Core.Settings.Metadata.Records;
+using Orchard.ContentManagement.Records;
 
 
 namespace Laser.Orchard.AdvancedSearch.Controllers {
@@ -56,6 +60,8 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
         private readonly INotifier _notifier;
         private readonly IDateLocalization _dataLocalization;
 
+        private readonly IRepository<FieldIndexPartRecord> _cpfRepo;
+
 
         public AdminController(
             IOrchardServices orchardServices,
@@ -70,7 +76,8 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             INotifier notifier,
             IUserService userService,
             IDateLocalization dataLocalization,
-            ITaxonomyService taxonomyService) {
+            ITaxonomyService taxonomyService,
+            IRepository<FieldIndexPartRecord> cpfRepo) {
             Services = orchardServices;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
@@ -86,7 +93,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             _dataLocalization = dataLocalization;
             _userService = userService;
             _notifier = notifier;
-
+            _cpfRepo = cpfRepo;
         }
 
         dynamic Shape { get; set; }
@@ -127,9 +134,12 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             }
             // FILTER QUERIES: START //
             // language query
+            //For any language query, remember that Orchard's localization table, as of Orchard 1.8, has an issue where the content
+            //created but never translated does not have the default Culture assigned to it.
             if (model.AdvancedOptions.SelectedLanguageId > 0) {
                 query = query.Join<LocalizationPartRecord>().Where(x => x.CultureId == model.AdvancedOptions.SelectedLanguageId);
             }
+
 
             // terms query
             if (model.AdvancedOptions.SelectedTermId > 0) {
@@ -138,7 +148,23 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             }
 
             // owner query
-            if (!String.IsNullOrWhiteSpace(model.AdvancedOptions.SelectedOwner)) {
+            if (    //user cannot see everything by default
+                    (
+                        !Services.Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent)
+                        || (Services.Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent) && model.AdvancedOptions.OwnedByMeSeeAll)
+                    )&& (//user has either limitation
+                        ((Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent))
+                            && (model.AdvancedOptions.OwnedByMe))
+                        || (Services.Authorizer.Authorize(AdvancedSearchPermissions.CanSeeOwnContents) 
+                        && ! Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent))
+                    )
+                ) {
+                //this user can only see the contents they own
+                var lowerName = Services.WorkContext.CurrentUser.UserName.ToLowerInvariant();
+                var email = Services.WorkContext.CurrentUser.Email;
+                var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName || u.Email == email).List().FirstOrDefault();
+                query = query.Join<CommonPartRecord>().Where(x => x.OwnerId == user.Id);
+            } else if (!String.IsNullOrWhiteSpace(model.AdvancedOptions.SelectedOwner)) {
                 var lowerName = model.AdvancedOptions.SelectedOwner == null ? "" : model.AdvancedOptions.SelectedOwner.ToLowerInvariant();
                 var email = model.AdvancedOptions.SelectedOwner;
                 var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName || u.Email == email).List().FirstOrDefault();
@@ -150,9 +176,10 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             }
 
             //date query
-            if (model.AdvancedOptions.SelectedFromDate != null) {
-                var fromD = _dataLocalization.StringToDatetime(model.AdvancedOptions.SelectedFromDate, "");
-                var toD = _dataLocalization.StringToDatetime(model.AdvancedOptions.SelectedToDate, "");
+            if (model.AdvancedOptions.SelectedFromDate != null || model.AdvancedOptions.SelectedToDate != null) {
+                //set default dates for From and To if they are null.
+                var fromD = _dataLocalization.StringToDatetime(model.AdvancedOptions.SelectedFromDate, "") ?? _dataLocalization.StringToDatetime("09/05/1985", "");
+                var toD = _dataLocalization.StringToDatetime(model.AdvancedOptions.SelectedToDate, "") ?? DateTime.Now;
 
                 if (model.AdvancedOptions.DateFilterType == DateFilterOptions.Created)
                     query = query.Join<CommonPartRecord>().Where(x => x.CreatedUtc >= fromD && x.CreatedUtc <= toD);
@@ -235,15 +262,92 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 model.AdvancedOptions.StatusOptions = options.Select(s => new KeyValuePair<string, string>(s, T(s).Text));
             }
 
+             #region TEST OF CPF QUERIES
+            //if (model.AdvancedOptions.CPFOwnerId != null) {
+            //    var item = _contentManager.Get((int)model.AdvancedOptions.CPFOwnerId);
+            //    var parts = item.Parts;
+            //    list = Shape.List();
+            //    foreach (var part in parts) {
+            //        foreach (var field in part.Fields) {
+            //            if (field.FieldDefinition.Name == "ContentPickerField") {
+            //                bool noName = String.IsNullOrWhiteSpace(model.AdvancedOptions.CPFName);
+            //                if (noName || (!noName && field.Name == model.AdvancedOptions.CPFName)) {
+            //                    var relatedItems = _contentManager.GetMany<ContentItem>((IEnumerable<int>)field.GetType().GetProperty("Ids").GetValue(field), VersionOptions.Latest, QueryHints.Empty);
+                                
+            //                    list.AddRange(relatedItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            if (model.AdvancedOptions.CPFIdToSearch != null && !String.IsNullOrWhiteSpace(model.AdvancedOptions.CPFName)) {
+                //given an Id, search for all items that have a Content Picker Field whose PropertyName is PCFName and that have the
+                //Id among the corresponding values.
+                string fieldName = (string)model.AdvancedOptions.CPFName;
+                query = query.Join<FieldIndexPartRecord>()
+                    .Where(fip => 
+                        fip.StringFieldIndexRecords
+                            .Any(sfi =>
+                                sfi.PropertyName.Contains(fieldName)
+                                && sfi.Value.Contains("{" + model.AdvancedOptions.CPFIdToSearch.ToString() + "}")
+                            )
+                    );
+
+            }
+            #endregion
+
             // FILTER MODELS: END //
 
 
+            //EXECUTE QUERIES
 
-            var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
-            var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
-
+            var pagerShape = Shape.Pager(pager).TotalItemCount(0);
             var list = Shape.List();
-            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+            IEnumerable<ContentItem> pageOfContentItems = (IEnumerable<ContentItem>)null;
+
+            //the user may not have permission to see anything: in that case, do not execute the query
+            if (Services.Authorizer.Authorize(AdvancedSearchPermissions.CanSeeOwnContents)) {
+                //if we want only items that do not have a specific translation, we have to do things differently,
+                //because the check is done after the query. Hence, for example, we cannot directly page.
+                if (model.AdvancedOptions.SelectedUntranslatedLanguageId > 0) {
+                    var allCi = query.List();
+                    var untranslatedCi = allCi
+                        .Where(x =>
+                            x.Is<LocalizationPart>() && //some content items may not be translatable
+                            (
+                                (x.As<LocalizationPart>().Culture != null &&
+                                x.As<LocalizationPart>().Culture.Id != model.AdvancedOptions.SelectedUntranslatedLanguageId) ||
+                                (x.As<LocalizationPart>().Culture == null) //this is the case where the content was created and never translated to any other culture. 
+                                //In that case, in Orchard 1.8, no culture is directly assigned to it, even though the default culture is assumed.
+                            ) &&
+                            x.As<LocalizationPart>().MasterContentItem == null &&
+                            !allCi.Any(y =>
+                                y.Is<LocalizationPart>() &&
+                                y.As<LocalizationPart>().MasterContentItem == x &&
+                                y.As<LocalizationPart>().Culture.Id == model.AdvancedOptions.SelectedUntranslatedLanguageId
+                            )
+                        );
+                    //Paging
+                    pagerShape = Shape.Pager(pager).TotalItemCount(untranslatedCi.Count());
+                    pageOfContentItems= untranslatedCi
+                        .Skip(pager.GetStartIndex())
+                        .Take((pager.GetStartIndex() + pager.PageSize) > untranslatedCi.Count() ?
+                        untranslatedCi.Count() - pager.GetStartIndex() :
+                        pager.PageSize)
+                        .ToList();
+                } else {
+                    pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
+                    pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
+                }
+            } else {
+                Services.Notifier.Error(T("Not authorized to visualize any item."));
+            }
+
+            if (pageOfContentItems != null) {
+                list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+            }
+           
+
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)
@@ -267,16 +371,44 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
         public ActionResult ListFilterPOST(ContentOptions options, AdvancedContentOptions advancedOptions) {
             var routeValues = ControllerContext.RouteData.Values;
             if (options != null) {
+                bool seeAll = Services.Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent);
+                bool maySee = Services.Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent);
+                if ((seeAll && advancedOptions.OwnedByMeSeeAll)
+                    || (!seeAll && maySee && advancedOptions.OwnedByMe)) {
+                    advancedOptions.SelectedOwner = Services.WorkContext.CurrentUser.UserName;
+                }
+
                 routeValues["Options.OrderBy"] = options.OrderBy; //todo: don't hard-code the key
                 routeValues["Options.ContentsStatus"] = options.ContentsStatus; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedLanguageId"] = advancedOptions.SelectedLanguageId; //todo: don't hard-code the key
+                routeValues["AdvancedOptions.SelectedUntranslatedLanguageId"] = advancedOptions.SelectedUntranslatedLanguageId; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedTermId"] = advancedOptions.SelectedTermId; //todo: don't hard-code the key
-                routeValues["AdvancedOptions.SelectedOwner"] = advancedOptions.SelectedOwner; //todo: don't hard-code the key
+                //condition to add the owner to the query string only if we are not going to ignore it anyway
+                if (    //user may see everything
+                        (seeAll
+                        && (!advancedOptions.OwnedByMeSeeAll))
+                        ||(  //user does not have limitations
+                            (maySee)
+                            && (!advancedOptions.OwnedByMe)
+                        ) 
+                    ) {
+                    routeValues["AdvancedOptions.SelectedOwner"] = advancedOptions.SelectedOwner; //todo: don't hard-code the key
+                }
                 routeValues["AdvancedOptions.SelectedFromDate"] = advancedOptions.SelectedFromDate; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedToDate"] = advancedOptions.SelectedToDate; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.DateFilterType"] = advancedOptions.DateFilterType; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.HasMedia"] = advancedOptions.HasMedia; //todo: don't hard-code the key
                 routeValues["AdvancedOptions.SelectedStatus"] = advancedOptions.SelectedStatus; //todo: don't hard-code the key
+                routeValues["AdvancedOptions.OwnedByMe"] = advancedOptions.OwnedByMe; //todo: don't hard-code the key
+                routeValues["AdvancedOptions.OwnedByMeSeeAll"] = advancedOptions.OwnedByMeSeeAll; //todo: don't hard-code the key
+
+                //Querying base off content picker field
+                if (advancedOptions.CPFIdToSearch != null) {
+                    routeValues["AdvancedOptions.CPFIdToSearch"] = advancedOptions.CPFIdToSearch;
+                    if (!String.IsNullOrWhiteSpace(advancedOptions.CPFName)) {
+                        routeValues["AdvancedOptions.CPFName"] = advancedOptions.CPFName;
+                    }
+                }
 
 
                 if (GetCreatableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
