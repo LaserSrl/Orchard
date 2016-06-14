@@ -9,7 +9,7 @@ using Orchard.Localization;
 using Laser.Orchard.AdminToolbarExtensions.Models;
 
 namespace Laser.Orchard.AdminToolbarExtensions.Handlers {
-    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions.SummaryAdminToolbar")]
+    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions")]
     public class SummaryAdminToolbarPartHandler : ContentHandler {
 
         public SummaryAdminToolbarPartHandler() {

@@ -9,7 +9,7 @@ using Orchard.ContentManagement.Records;
 using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.AdminToolbarExtensions.Models {
-    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions.SummaryAdminToolbar")]
+    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions")]
     public class SummaryAdminToolbarPart : ContentPart{
         
     }

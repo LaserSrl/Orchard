@@ -10,7 +10,7 @@ using Orchard;
 using System.Collections.Specialized;
 
 namespace Laser.Orchard.AdminToolbarExtensions.Drivers {
-    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions.SummaryAdminToolbar")]
+    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions")]
     public class SummaryAdminToolbarPartDriver : ContentPartDriver<SummaryAdminToolbarPart> {
 
         private readonly ITokenizer _tokenizer;
