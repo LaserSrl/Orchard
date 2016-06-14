@@ -1,5 +1,4 @@
 ﻿@using Orchard.ContentManagement;
-@using System.Text;
 @{
     string result = "Done";
     try{
@@ -20,6 +19,20 @@
         string nome = owner.ProfilePart.Nome.Value;
         string cognome = owner.ProfilePart.Cognome.Value;
         Model.ContentItem.TitlePart.Title = string.Format("Richiesta iscrizione {0} - {1} {2}", titleEvento, nome, cognome);
+        
+        //// invia mail all'organizzatore
+        ////string[] contentTypes = { "CustomTemplate" };
+        ////var qry = Model.OrchardServices.ContentManager.Query().ForType("CustomTemplate"); //.Where(x => x.Title == "TemplateRichiestaPartecipazione");
+        //string body = "";
+        
+        //var data = new Dictionary<string, object>();
+        //data.Add("Subject", Model.ContentItem.TitlePart.Title);
+        //data.Add("Body", body);
+        //data.Add("Recipients", eventoCorrelato.SpecialEvent.EmailOrganizzatore.Value);
+        //Orchard.Messaging.Services.IMessageService messageService = null;
+        //if (Model.OrchardServices.WorkContext.TryResolve<Orchard.Messaging.Services.IMessageService>(out messageService)) {
+        //    messageService.Send(Orchard.Email.Services.SmtpMessageChannel.MessageType, data);
+        //}
     }
     catch{
         result = "Error";
