@@ -8,7 +8,10 @@
     if (File.Exists(Server.MapPath(css_TenantPath + "Tenant.css")))  {
         Style.Include(css_TenantPath + "Tenant.css").AtHead();
     }
-    RegisterLink(new LinkEntry {Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content("~/modules/orchard.themes/Content/orchard.ico")});
+    @*Change favicon*@
+    @*RegisterLink(new LinkEntry {Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content("~/modules/orchard.themes/Content/orchard.ico")});*@
+    var folderStylePath = Url.Content("~/Themes/KrakeAdmin/Styles");
+    RegisterLink(new LinkEntry { Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content(folderStylePath + "/Images/logo_krake.ico") });
     Script.Include("html5.js").UseCondition("lt IE 9").AtHead();
 
     string title = Convert.ToString(Model.Title);
