@@ -129,7 +129,7 @@ namespace Laser.Orchard.WebServices.Controllers {
             var content = _commonServices.GetContentByAlias(alias);
             //_maxLevel = maxLevel;
             json = _contentSerializationServices.GetJson(content, page, pageSize);
-            _contentSerializationServices.NormalizeSingleProperty(json);
+            //_contentSerializationServices.NormalizeSingleProperty(json);
             return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
             //return GetJson(content, page, pageSize);
         }
