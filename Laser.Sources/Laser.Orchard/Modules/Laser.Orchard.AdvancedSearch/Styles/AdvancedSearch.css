@@ -5,10 +5,15 @@
 
 #my-btn-outline {
     border: 1px solid #000;
-    background-color:transparent;
+    background-color: transparent;
     color: black;
 }
-    #my-btn-outline a, a:link, a:hover, a:visited {
-        color: black;
-    }
 
+#my-btn-outline a, a:link, a:hover, a:visited {
+    color: black;
+}
+
+#appliedFilters ul li {
+    display: inline;
+    margin-right: 0.2em;
+}

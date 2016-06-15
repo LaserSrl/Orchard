@@ -12,7 +12,7 @@ using Laser.Orchard.AdminToolbarExtensions.Models;
 using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.AdminToolbarExtensions {
-    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions.SummaryAdminToolbar")]
+    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions")]
     public class SummaryAdminToolbarMigrations : DataMigrationImpl {
 
         public int Create() {
