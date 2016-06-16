@@ -49,6 +49,10 @@ msgid "Choose action..."
 msgstr "Scegliere l'azione..."
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Click to remove filter"
+msgstr "Clicca per rimuovere il filtro"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Content creation:"
 msgstr "Creazione contenuto:"
 
