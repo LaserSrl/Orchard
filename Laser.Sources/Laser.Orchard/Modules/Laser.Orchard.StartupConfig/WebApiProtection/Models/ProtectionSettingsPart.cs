@@ -51,7 +51,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Models {
         [ValidateExternalApplication]
         public string ApiKey { get; set; }
 
-        [ValidateExternalApplicationAttribute]
+        [ValidateExternalApplication]
         public bool EnableTimeStampVerification { get; set; }
 
         public int Validity { get; set; }
