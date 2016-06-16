@@ -283,11 +283,12 @@ namespace Laser.Orchard.StartupConfig.Services {
             }
             else if (field.FieldDefinition.Name == "NumericField") {
                 var numericField = field as NumericField;
+                object val = 0;
                 if (numericField.Value.HasValue) {
-                    object val = numericField.Value.Value;
-                    FormatValue(ref val);
-                    return new JProperty(field.Name + field.FieldDefinition.Name, val);
+                    val = numericField.Value.Value;
                 }
+                FormatValue(ref val);
+                return new JProperty(field.Name + field.FieldDefinition.Name, val);
             }
             else if (field.FieldDefinition.Name == "TextField") {
                 var textField = field as TextField;
@@ -303,11 +304,12 @@ namespace Laser.Orchard.StartupConfig.Services {
             }
             else if (field.FieldDefinition.Name == "BooleanField") {
                 var booleanField = field as BooleanField;
+                object val = false;
                 if (booleanField.Value.HasValue) {
-                    object val = booleanField.Value.Value;
-                    FormatValue(ref val);
-                    return new JProperty(field.Name + field.FieldDefinition.Name, val);
+                    val = booleanField.Value.Value;
                 }
+                FormatValue(ref val);
+                return new JProperty(field.Name + field.FieldDefinition.Name, val);
             }
             else if (field.FieldDefinition.Name == "DateTimeField") {
                 var dateTimeField = field as DateTimeField;
