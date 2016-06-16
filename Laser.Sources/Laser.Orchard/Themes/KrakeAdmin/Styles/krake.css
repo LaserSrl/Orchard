@@ -32,10 +32,12 @@ html {
     margin: -16px 0 0;
 }
 
+/*
 #layout-main {
     color: #f0f0f0 !important;
     background: transparent;
 }
+*/
 
 #site {
     background: #252c36 none repeat scroll 0 0 !important;
@@ -1007,7 +1009,7 @@ input[type="number"]:focus {
     margin-top:  20px;
 }
 
-#content-main {
+#layout-main {
     border: 0px;
     background: none;
     padding: 16px 24px;

@@ -145,6 +145,17 @@
     <Content Include="Views\Parts.Accessibility.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Views\Parts.Title-Elenco.cshtml" />
+    <Content Include="Views\Parts.CulturePicker.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Laser.Orchard.CulturePicker\Laser.Orchard.CulturePicker.csproj">
+      <Project>{2896dd3e-a55b-493f-9483-a107aa54c930}</Project>
+      <Name>Laser.Orchard.CulturePicker</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

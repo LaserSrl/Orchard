@@ -19,7 +19,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{ font-weight:800; }
 .space-20{ height:20px; clear:both; }
 .space-40{ height:40px; clear:both; }
 
-.space-map{display:block}
+.space-map{display:block; height:65px; }
 @media(max-width:767px){.space-map{display:none;}}
 @media(min-width:991px){.space-map{display:none;}}
 
@@ -149,10 +149,16 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{ font-weight:800; }
 .prodotti_home{color:#fff}
 .prodotti{color:#3366b7}
 .prodotti:hover, .prodotti:focus, .prodotti:active{color:#3366b7}
+.products-taxonomies{color:#3366b7}
+.products-taxonomies:hover, .products-taxonomies:focus, .products-taxonomies:active{color:#3366b7}
 .poi-outdoor{color:#8dd600}
 .poi-outdoor:hover, .poi-outdoor:focus, .poi-outdoor:active{color:#8dd600}
+.poi-outdoor-taxonomies{color:#8dd600}
+.poi-outdoor-taxonomies:hover, .poi-outdoor-taxonomies:focus, .poi-outdoor-taxonomies:active{color:#8dd600}
 .poi-siti{color:#ff8504}
 .poi-siti:hover, .poi-siti:focus, .poi-siti:active{color:#ff8504}
+.poi-sites-taxonomies{color:#ff8504}
+.poi-sites-taxonomies:hover, .poi-sites-taxonomies:focus, .poi-sites-taxonomies:active{color:#ff8504}
 .eventi {color:#c50032}
 .eventi:hover, .eventi:focus, .eventi:active{color:#c50032}
 .manifestazioni_home {color:#fff}
@@ -175,3 +181,27 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{ font-weight:800; }
 
 .message-Error { color: red; border-color:red; }
 div.cc-cookies { width: 100%;}
+
+/* culture picker */
+.container{padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}
+.container-nav{position:relative;}
+.ul-cultures{
+    display: block;
+    list-style: none;
+    list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+}
+
+.btn-header{position:relative;}
+.btn-header a{color:#000;}
+.btn-header:hover, .btn-header:focus {background: #12C4FF;}/*#FFD037;}*/
+.btn-header{ border-radius:0 0 3px 3px; color:#000; }
+
+.lang{padding:3px 15px; margin:0 2px; border:1px solid #12C4FF; border-top:none; border-bottom:none}/*:1px solid #FBC000; border-top:none;}*/
+.lang a{color:#12C4FF}/*#FBC000}*/
+.lang:hover, .lang:focus, .lang.active{border:1px solid #12C4FF; background:#12C4FF;}/*1px solid #FBC000; background:#FBC000;}*/
+.lang:hover a, .lang:focus a, .lang.active a{color:#000;}

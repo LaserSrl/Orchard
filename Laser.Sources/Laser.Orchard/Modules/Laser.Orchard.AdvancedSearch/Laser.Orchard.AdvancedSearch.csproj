@@ -69,6 +69,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Roles, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Laser.Orchard.Questionnaires\bin\Orchard.Roles.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Taxonomies">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Taxonomies\bin\Orchard.Taxonomies.dll</HintPath>
     </Reference>
@@ -111,9 +115,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdvancedSearchPermissions.cs" />
     <Compile Include="ContentAdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Enumerators.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="ViewModels\ListContentsViewModelExtension.cs" />
   </ItemGroup>

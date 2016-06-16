@@ -110,6 +110,58 @@ namespace Laser.Orchard.CulturePicker.Services {
       return (cultureList);
     }
 
+      /// <summary>
+      /// Returns a boolean telling whether the ids provided correspond to the culture provided. If not,
+      /// the out parameter contains the ids of the corresponding translated contents.
+      /// </summary>
+      /// <param name="originalIds">An <type>IList&ltint&gt</type> containing the Ids of the items we may have to translate.</param>
+      /// <param name="cultureName">The string representation of the culture we are translating the content to.</param>
+      /// <param name="translatedIds">An <type>IList&ltint&gt</type> containing the Ids of the translated items.</param>
+      /// <returns><value>true</value> if the input ids ARE NOT in the culture given; <value>false</value> if the 
+      /// input ids ARE in the culture given.</returns>
+    public bool TryGetLocalizedId(IList<int> originalIds, string cultureName, out IList<int> translatedIds) {
+        //var culture = _cultureManager.GetCultureByName(cultureName);
+        translatedIds =  new List<int>();
+        bool redirect = false; //tells wheter there has been a translation of id
+        foreach (int id in originalIds) {
+            var item = _contentManager.Get(id);
+            var locInfo = _localizationService.GetLocalizations(item, VersionOptions.Published); //AllVersions);
+            var tran = locInfo.Where(e => e.Culture.Culture == cultureName).FirstOrDefault();
+            if (tran == null)
+                translatedIds.Add(id);
+            else {
+                translatedIds.Add(tran.Id);
+                if (tran.Id != id)
+                    redirect = true;
+            }
+        }
+        return redirect;
+    }
 
+    /// <summary>
+    /// Returns a boolean telling whether the is provided corresponds to the culture provided. If not,
+    /// the out parameter contains the id of the corresponding translated contents.
+    /// </summary>
+    /// <param name="originalId">An <type>Iint</type> corresponding to the Ids of the item we may have to translate.</param>
+    /// <param name="cultureName">The string representation of the culture we are translating the content to.</param>
+    /// <param name="translatedIds">An <type>int</type> containing the Id of the translated item.</param>
+    /// <returns><value>true</value> if the input id IS NOT in the culture given; <value>false</value> if the 
+    /// input id IS in the culture given.</returns>
+    public bool TryGetLocalizedId(int originalId, string cultureName, out int translatedIds) {
+        //var culture = _cultureManager.GetCultureByName(cultureName);
+        bool redirect = false; //tells wheter there has been a translation of id
+        var item = _contentManager.Get(originalId);
+        //var tran = _localizationService.GetLocalizedContentItem(item, cultureName); //use GetLocalizations
+        var locInfo = _localizationService.GetLocalizations(item, VersionOptions.Published); //AllVersions);
+        var tran = locInfo.Where(e => e.Culture.Culture == cultureName).FirstOrDefault();
+        if (tran == null) //GetLocalizedContentItem returns null if the item is already localized
+            translatedIds = originalId;
+        else {
+            translatedIds = tran.Id;
+            if (tran.Id != originalId)
+                redirect = true;
+        }
+        return redirect;
+    }
   }
 }

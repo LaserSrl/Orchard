@@ -180,7 +180,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
             ContentItem contact = null;
             var elencoItems = _communicationService.GetContactsFromMail(mail);
             if (elencoItems.Count == 0) {
-                contact = FindContact(partialRecord.Id, partialRecord.Name);
+                contact = FindContact(partialRecord.Name);
                 if (contact == null) {
                     contact = CreateContact(partialRecord);
                 }
@@ -196,7 +196,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                     }
                     else {
                         if (IsMasterContact(item)) {
-                            contact = FindContact(partialRecord.Id, partialRecord.Name);
+                            contact = FindContact(partialRecord.Name);
                             if (contact == null) {
                                 contact = CreateContact(partialRecord);
                             }
@@ -221,7 +221,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
             ContentItem contact = null;
             var elencoItems = _communicationService.GetContactsFromSms(prefix, sms);
             if (elencoItems.Count == 0) {
-                contact = FindContact(partialRecord.Id, partialRecord.Name);
+                contact = FindContact(partialRecord.Name);
                 if (contact == null) {
                     contact = CreateContact(partialRecord);
                 }
@@ -237,7 +237,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                     }
                     else {
                         if (IsMasterContact(item)) {
-                            contact = FindContact(partialRecord.Id, partialRecord.Name);
+                            contact = FindContact(partialRecord.Name);
                             if (contact == null) {
                                 contact = CreateContact(partialRecord);
                             }
@@ -272,14 +272,8 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
         /// </summary>
         /// <param name="partialRecord"></param>
         /// <returns></returns>
-        private ContentItem FindContact(int contactId, string name) {
-            ContentItem result = null;
-            if (contactId != 0) {
-                result = _communicationService.GetContactFromId(contactId);
-            }
-            else {
-                result = _communicationService.GetContactFromName(name);
-            }
+        private ContentItem FindContact(string name) {
+            ContentItem result = _communicationService.GetContactFromName(name);
             return result;
         }
 

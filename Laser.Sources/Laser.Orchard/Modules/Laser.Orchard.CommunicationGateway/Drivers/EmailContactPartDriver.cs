@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.ViewModels;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Data;
 using Orchard.Localization;
+using Orchard.UI.Admin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +20,39 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         }
         private readonly IRepository<CommunicationEmailRecord> _repoEmail;
         private readonly ITransactionManager _transaction;
-        public EmailContactPartDriver(IRepository<CommunicationEmailRecord> repoEmail, ITransactionManager transaction) {
+        private readonly IOrchardServices _orchardServices;
+
+        public EmailContactPartDriver(IRepository<CommunicationEmailRecord> repoEmail, ITransactionManager transaction, IOrchardServices orchardServices) {
             _repoEmail = repoEmail;
             T = NullLocalizer.Instance;
             _transaction = transaction;
+            _orchardServices = orchardServices;
+        }
+
+        protected override DriverResult Display(EmailContactPart part, string displayType, dynamic shapeHelper) {
+            //Determine if we're on an admin page
+            bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            if (isAdmin) {
+                if (displayType == "Detail") {
+                    Mapper.CreateMap<CommunicationEmailRecord, View_EmailVM_element>();
+                    View_EmailVM viewModel = new View_EmailVM();
+                    View_EmailVM_element vm = new View_EmailVM_element();
+                    if (part.EmailEntries.Value != null) {
+                        List<CommunicationEmailRecord> oldviewModel = part.EmailEntries.Value.ToList();
+                        foreach (CommunicationEmailRecord cm in oldviewModel) {
+                            vm = new View_EmailVM_element();
+                            Mapper.Map(cm, vm);
+                            viewModel.Elenco.Add(vm);
+                        }
+                    }
+                    return ContentShape("Parts_EmailContact",
+                        () => shapeHelper.Parts_EmailContact(Elenco: viewModel.Elenco));
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
         }
 
         protected override DriverResult Editor(EmailContactPart part, dynamic shapeHelper) {
@@ -56,11 +87,12 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                 }
                 else
                     if (!vmel.Delete) {
-                        if (!string.IsNullOrEmpty(vmel.Email))
+                        if (!string.IsNullOrEmpty(vmel.Email)) {
                             if (_repoEmail.Fetch(x => x.Email == vmel.Email && x.Id != vmel.Id).Count() > 0) {
                                 error = true;
                                 updater.AddModelError("Error", T("Email can't be assigned is linked to other contact"));
                             }
+                        }
                         if (vmel.Id > 0) {
                             CommunicationEmailRecord cmr = _repoEmail.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
                             if (cmr.Email != vmel.Email || cmr.Validated != vmel.Validated || 

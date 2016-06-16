@@ -56,6 +56,14 @@ msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/ExternalApp
 msgid "Remove"
 msgstr "Elimina"
 
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/ExternalApplication.cshtml"
+msgid "Validity in minutes"
+msgstr "Validità in minuti"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/ExternalApplication.cshtml"
+msgid "Verify TimeStamp"
+msgstr "Verifica TimeStamp"
+
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/FavoriteCulturePart_Edit.cshtml"
 msgid "Favorite Culture"
 msgstr "Cultura Preferenziale"
@@ -616,6 +624,26 @@ msgctxt "Laser.Orchard.StartupConfig.Services.UsersGroupsSettingsService"
 msgid "Some groups cannot be inserted. {0}"
 msgstr "Alcuni gruppi non possono essere inseriti. {0}"
 
+msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
+msgid "Invalid Token/csrfToken"
+msgstr "Token/csrfToken non valido"
+
+msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
+msgid "Invalid User"
+msgstr "Utente non valido"
+
+msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
+msgid "Successfully Executed"
+msgstr "Eseguito con successo"
+
+msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
+msgid "UnAuthorized Action"
+msgstr "Azione non autorizzata"
+
+msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
+msgid "Validation error"
+msgstr "Errore di validazione"
+
 msgctxt "Laser.Orchard.StartupConfig.Tokens.AdditionalDateTokens"
 msgid "Add Days|Months|Years to a date"
 msgstr "Add Days|Months|Years ad una data"
@@ -691,4 +719,8 @@ msgstr "Il campo ApiKey deve essere di almeno 22 caratteri."
 msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Models.ValidateExternalApplicationAttribute"
 msgid "Name field is required."
 msgstr "Il campo Nome è obbligatorio."
+
+msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Models.ValidateExternalApplicationAttribute"
+msgid "Validity should be more than 0 minutes."
+msgstr "Validità deve essere maggiore di 0 minuti"
 

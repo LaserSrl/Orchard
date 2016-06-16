@@ -3,14 +3,18 @@ using Laser.Orchard.StartupConfig.Services;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
+using Orchard.Roles.Services;
 using System;
+using System.Linq;
+using Orchard.Security.Permissions;
 
 namespace Laser.Orchard.Questionnaires {
 
     public class Migrations : DataMigrationImpl {
         private readonly IUtilsServices _utilsServices;
 
-        public Migrations(IUtilsServices utilsServices) {
+        public Migrations(IUtilsServices utilsServices,
+            IRoleService roleService) {
             _utilsServices = utilsServices;
         }
 
@@ -188,6 +192,13 @@ namespace Laser.Orchard.Questionnaires {
         public int UpdateFrom17() {
             SchemaBuilder.AlterTable("QuestionRecord", t => t.AlterColumn("Question", col => col.WithType(System.Data.DbType.String).WithLength(500)));
             return 18;
+        }
+
+        public int UpdateFrom18() {
+            //update permissions based on the new stereotypes we created
+            var stereotypes = new Permissions().GetDefaultStereotypes();
+            _utilsServices.UpdateStereotypesPermissions(stereotypes);
+            return 19;
         }
     }
 }

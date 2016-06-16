@@ -11,6 +11,7 @@ using Orchard.ContentManagement;
 using Orchard.Utility.Extensions;
 using System.Text;
 using Orchard.Environment.Extensions;
+using Orchard.Caching.Services;
 
 namespace Laser.Orchard.StartupConfig.Services {
     [OrchardFeature("Laser.Orchard.StartupConfig.WebApiProtection")]
@@ -19,11 +20,13 @@ namespace Laser.Orchard.StartupConfig.Services {
         private readonly ShellSettings _shellSettings;
         private HttpRequest _request;
         public ILogger Logger;
+        private ICacheStorageProvider _cacheStorage;
 
-        public ApiKeyService(ShellSettings shellSettings, IOrchardServices orchardServices) {
+        public ApiKeyService(ShellSettings shellSettings, IOrchardServices orchardServices, ICacheStorageProvider cacheManager) {
             _shellSettings = shellSettings;
-            _orchardServices = orchardServices;          
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
+            _cacheStorage = cacheManager;
         }
         public string ValidateRequestByApiKey(string additionalCacheKey, bool protectAlways = false) {
             _request = HttpContext.Current.Request;
@@ -45,16 +48,14 @@ namespace Laser.Orchard.StartupConfig.Services {
                 if (action == null) {
                     // caso che si verifica con le web api (ApiController)
                     entryToVerify = String.Format("{0}.{1}", area, controller);
-                }
-                else {
+                } else {
                     // caso che si verifica con i normali Controller
                     entryToVerify = String.Format("{0}.{1}.{2}", area, controller, action);
                 }
                 if (protectedControllers.Contains(entryToVerify, StringComparer.InvariantCultureIgnoreCase)) {
                     check = true;
                 }
-            }
-            else {
+            } else {
                 check = true;
             }
 
@@ -63,15 +64,14 @@ namespace Laser.Orchard.StartupConfig.Services {
                 var myAkiv = _request.QueryString["AKIV"] ?? _request.Headers["AKIV"];
                 if (!TryValidateKey(myApikey, myAkiv, (_request.QueryString["ApiKey"] != null && _request.QueryString["clear"] != "false"))) {
                     additionalCacheKey = "UnauthorizedApi";
-                }
-                else {
+                } else {
                     additionalCacheKey = "AuthorizedApi";
                 }
             }
             return additionalCacheKey;
         }
 
-        public string GetValidApiKey(string sIV) {
+        public string GetValidApiKey(string sIV, bool useTimeStamp = false) {
             string key = "";
             byte[] mykey = _shellSettings.EncryptionKey.ToByteArray();
             byte[] myiv = Convert.FromBase64String(sIV);
@@ -79,19 +79,23 @@ namespace Laser.Orchard.StartupConfig.Services {
                 var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
                 var defaulApp = settings.ExternalApplicationList.ExternalApplications.First();
                 string aux = defaulApp.ApiKey;
+                if (useTimeStamp) {
+                    Random rnd = new Random();
+                    aux += ":" + ((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString() + ":" + rnd.Next(1000000).ToString();
+                }
 
                 byte[] encryptedAES = EncryptStringToBytes_Aes(aux, mykey, myiv);
                 key = Convert.ToBase64String(encryptedAES);
-            }
-            catch {
+            } catch {
                 // ignora volutamente qualsiasi errore e restituisce una stringa vuota
             }
             return key;
         }
 
         private bool TryValidateKey(string token, string akiv, bool clearText) {
-            _request = HttpContext.Current.Request;
             byte[] mykey = _shellSettings.EncryptionKey.ToByteArray();
+            string cacheKey;
+            _request = HttpContext.Current.Request;
             try {
                 byte[] myiv = Convert.FromBase64String(akiv);
                 if (String.IsNullOrWhiteSpace(token)) {
@@ -104,8 +108,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                     var encryptedAES = Convert.FromBase64String(token);
                     key = DecryptStringFromBytes_Aes(encryptedAES, mykey, myiv);
                     //key = aes.Decrypt(token, mykey, myiv);
-                }
-                else {
+                } else {
                     var encryptedAES = EncryptStringToBytes_Aes(token, mykey, myiv);
                     var base64EncryptedAES = Convert.ToBase64String(encryptedAES, Base64FormattingOptions.None);
                     //var encrypted = aes.Crypt(token, mykey, myiv);
@@ -116,19 +119,44 @@ namespace Laser.Orchard.StartupConfig.Services {
                         HttpContext.Current.Response.End();
                     }
                 }
-
+                // test if key has a time stamp
+                var tokens = key.Split(':');
+                string pureKey = tokens[0];
+                int unixTimeStamp, unixTimeStampNow;
+                unixTimeStamp = 0;
+                unixTimeStampNow = ((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
+                if (tokens.Length >= 2) {
+                    unixTimeStamp = Convert.ToInt32(tokens[1]);
+                }
                 var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
-                if (!settings.ExternalApplicationList.ExternalApplications.Any(x => x.ApiKey.Equals(key))) {
+                var item = settings.ExternalApplicationList.ExternalApplications.FirstOrDefault(x => x.ApiKey.Equals(pureKey));
+                if (item == null) {
                     Logger.Error("Decrypted key not found: key = " + key);
                     return false;
                 }
+
+
+                var floorLimit = Math.Abs(unixTimeStampNow - unixTimeStamp);
+                if (item.EnableTimeStampVerification) {
+                    cacheKey = String.Concat(_shellSettings.Name, token);
+                    if (_cacheStorage.Get(cacheKey) != null) {
+                        Logger.Error("cachekey duplicated: key = " + key);
+                        return false;
+                    }
+                    if (floorLimit > ((item.Validity > 0 ? item.Validity : 5)/*minutes*/ * 60)) {
+                        Logger.Error("Timestamp validity expired: key = " + key);
+                        return false;
+                    } else {
+                        _cacheStorage.Put(cacheKey, "", new TimeSpan(0, item.Validity > 0 ? item.Validity : 5, 0));
+                    }
+                }
                 return true;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Logger.Error("Exception: " + ex.Message);
                 return false;
             }
         }
+
 
         private byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV) {
             // Check arguments.

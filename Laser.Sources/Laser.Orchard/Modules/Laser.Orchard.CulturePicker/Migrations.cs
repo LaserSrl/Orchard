@@ -2,6 +2,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Laser.Orchard.CulturePicker.Models;
 using Orchard.Data.Migration;
+using System.Collections.Generic;
 
 namespace Laser.Orchard.CulturePicker {
     public class Migrations : DataMigrationImpl {
@@ -43,6 +44,8 @@ namespace Laser.Orchard.CulturePicker {
                     );
             return 3;
         }
+
+        
 
     }
 }

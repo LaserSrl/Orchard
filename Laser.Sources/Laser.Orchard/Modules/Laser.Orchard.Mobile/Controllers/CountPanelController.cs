@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.Mobile.Services;
+using Orchard;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,12 +12,14 @@ namespace Laser.Orchard.Mobile.Controllers
 {
     public class CountPanelController : Controller
     {
+        private readonly IOrchardServices _orchardServices;
         private readonly IPushNotificationService _pushNotificationService;
         private readonly ISmsCommunicationService _smsCommunicationService;
-        public CountPanelController(IPushNotificationService pushNotificationService, ISmsCommunicationService smsCommunicationService)
+        public CountPanelController(IOrchardServices orchardServices, IPushNotificationService pushNotificationService)
         {
+            _orchardServices = orchardServices;
             _pushNotificationService = pushNotificationService;
-            _smsCommunicationService = smsCommunicationService;
+            _orchardServices.WorkContext.TryResolve<ISmsCommunicationService>(out _smsCommunicationService);
         }
         [HttpGet]
         public JsonResult GetTotalPush(Int32[] ids, Int32? idlocalization, Int32? tot)

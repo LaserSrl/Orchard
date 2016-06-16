@@ -130,6 +130,10 @@
       <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
       <Name>Laser.Orchard.Commons</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.OpenAuthentication\Laser.Orchard.OpenAuthentication.csproj">
+      <Project>{9ce00190-3abe-41e2-966f-76a9b017eb65}</Project>
+      <Name>Laser.Orchard.OpenAuthentication</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.Policy\Laser.Orchard.Policy.csproj">
       <Project>{09a8fbda-b443-4f01-bc64-8115ac31abb3}</Project>
       <Name>Laser.Orchard.Policy</Name>
@@ -165,6 +169,7 @@
     <Compile Include="Handlers\ExportContactTaskHandler.cs" />
     <Compile Include="Handlers\ImportContactTaskHandler.cs" />
     <Compile Include="Handlers\SmsContactPartHandler.cs" />
+    <Compile Include="Handlers\SynchronizeContactTaskHandler.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Models\CommunicationAdvertisingPart.cs" />
     <Compile Include="Models\CommunicationCampaignPart.cs" />
@@ -182,6 +187,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utils\ImportUtil.cs" />
+    <Compile Include="ViewModels\CommunicationContactPartVM.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
     <Compile Include="ViewModels\FilesListVM.cs" />
     <Compile Include="ViewModels\ListVM.cs" />
@@ -215,6 +221,23 @@
     <Content Include="Views\EditorTemplates\Parts\AdvertisingSwitcher.cshtml" />
     <Content Include="Views\ContactsAdmin\ExportedFilesList.cshtml" />
     <Content Include="Views\ContactsAdmin\ImportedFilesLogs.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\CommunicationContact_Edit.cshtml" />
+    <Content Include="Views\ContactsAdmin\View.cshtml" />
+    <Content Include="Views\Parts\CommunicationContact.cshtml" />
+    <Content Include="Views\Parts\EmailContact.cshtml" />
+    <Content Include="Views\Parts\SmsContact.cshtml" />
+    <Content Include="Views\Parts\ProfilePart__CommunicationContact__AdminFilter.cshtml" />
+    <Content Include="Views\Fields\TaxonomyField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\EnumerationField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\LinkField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\DateTimeField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\BooleanField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\NumericField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\TextField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\ContentPickerField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\MediaPickerField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Parts\FavoriteCulturePart-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\InputField-CommunicationContact-AdminFilter.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

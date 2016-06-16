@@ -74,6 +74,9 @@
     <Reference Include="Orchard.Blogs">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Blogs\bin\Orchard.Blogs.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Caching">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Caching\bin\Orchard.Caching.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.ContentPermissions">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPermissions\bin\Orchard.ContentPermissions.dll</HintPath>
     </Reference>
@@ -179,7 +182,10 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Recipes\Laser.recipe.xml" />
+    <Content Include="Recipes\Laser.recipe.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="packages.config" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -340,6 +346,7 @@
     <Content Include="Views\EditorTemplates\ExternalApplication.cshtml" />
     <Content Include="Views\displaynone.cshtml" />
     <Content Include="Views\Activity-RazorExecute.cshtml" />
+    <Content Include="Views\Parts\FavoriteCulturePart.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
