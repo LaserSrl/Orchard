@@ -24,7 +24,7 @@ namespace Laser.Orchard.UserReactions.Services {
         UserReactionsTypes GetTypesTableWithStyles();
         IList<UserReactionsVM> GetTot(UserReactionsPart part, bool filter);
         IUser CurrentUser();
-        int CalculateTypeClick(IUser CurrentUser, int IconType, int CurrentPage);
+        string CalculateTypeClick(IUser CurrentUser, int IconType, int CurrentPage);
         UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model);
 
     }
@@ -259,13 +259,15 @@ namespace Laser.Orchard.UserReactions.Services {
         /// <param name="IconType"></param>
         /// <param name="CurrentPage"></param>
         /// <returns></returns>
-        public int CalculateTypeClick(IUser CurrentUser, int IconType, int CurrentPage) {
-            int returnVal = 0;
+        public string CalculateTypeClick(IUser CurrentUser, int IconType, int CurrentPage) {
+            
             UserPartRecord userRec = new UserPartRecord();
             UserReactionsTypesRecord reactType = new UserReactionsTypesRecord();
             UserReactionsPartRecord userPart = new UserReactionsPartRecord();
             UserReactionsClickRecord res = new UserReactionsClickRecord();
             string userCookie = string.Empty;
+            string sommaryQty = string.Empty;
+            string returnVal = string.Empty;
 
             //Verifica che non sia già stato eseguito un click 
             if (CurrentUser != null) 
@@ -311,10 +313,12 @@ namespace Laser.Orchard.UserReactions.Services {
                     _repoSummary.Update(sommaryRecord);
                 }
 
+                sommaryQty = sommaryRecord.Quantity.ToString();
+
                 if(CurrentUser==null)
-                    returnVal = 0;
+                    returnVal = "0" + "|" + sommaryQty + "|" + IconType.ToString();
                 else
-                    returnVal = -1;
+                    returnVal = "-1" + "|" + sommaryQty + "|" + IconType.ToString(); ;
 
 
                 return returnVal;
@@ -341,7 +345,6 @@ namespace Laser.Orchard.UserReactions.Services {
                 }
                        
            }
-
 
             result.UserPartRecord = userRec;
 
@@ -372,13 +375,15 @@ namespace Laser.Orchard.UserReactions.Services {
                     _repoSummary.Update(sommaryRecord);
                 }
 
+                sommaryQty = sommaryRecord.Quantity.ToString();
+
                 if (CurrentUser == null)
-                    returnVal = 2;
+                    returnVal =  "2" + "|" + sommaryQty + "|" + IconType.ToString();
                 else
-                    returnVal = 1;
+                    returnVal = "1" + "|" + sommaryQty + "|" + IconType.ToString(); 
 
             } catch (Exception) {
-                returnVal = 5;
+                returnVal = "5" + "|" + sommaryQty + "|" + IconType.ToString(); ;
             }            
 
             return returnVal;

@@ -1,6 +1,12 @@
 ﻿@model Laser.Orchard.UserReactions.ViewModels.UserReactionsTypeVM
+
+
+
 @{ MvcHtmlString answerBlock = Html.UniqueClientId("UserReactionType"); }
-@{ var phId = "phNum_" + answerBlock;}
+@{ var phId = "phNum_" + answerBlock;
+
+   Script.Require("Autocomplete").AtHead();
+   }
 
 <div id="@phId" class="j_reaction">
     
@@ -8,10 +14,70 @@
     @Html.HiddenFor(m => m.Id)
 
     @Html.TextBoxFor(m => m.TypeName, new { placeholder = T("Name"), @class = "text medium" })
-    @Html.TextBoxFor(m => m.TypeCssClass, new { placeholder = T("Css Class Name"), @class = "text medium" })
+    
+   @* @Html.TextBoxFor(m => m.TypeCssClass, new {@id="txtClass" + Model.Id , @onchange = "classNameChangeEvent(id);", placeholder = T("Css Class Name"), @class = "text medium" })*@
+    @Html.TextBoxFor(m => m.TypeCssClass, new {@id="CssName" +  Model.Id, @onfocus="classNameChangeEvent(id);", placeholder = T("Css Class Name"), @class = "text medium" })
+
     @Html.TextBoxFor(m => m.Priority, new { placeholder = T("Order"), @class = "text medium" })
    @* @Html.DropDownListFor(m => m.CssName, cssNames,  new { placeholder = T("CssName"), @class = "text medium" })*@
     @Html.CheckBoxFor(m => m.Activating, new { placeholder = T("Activating"), @class = "text medium" })
     <i class="fa fa-times" style="color: red"></i>
     @Html.LinkToRemoveNestedForm(T("Remove").Text, ".j_reaction", "input.ph-mark-for-delete")
 </div>
+<br />
+
+
+@*<div>
+    <input type="text" id="textarea1"  onfocus="classNameChangeEvent(id)" />
+</div>*@
+
+<script type="text/javascript">
+  
+
+    function classNameChangeEvent(id)
+    {       
+        var objectSelected = "#" + id;
+        alert(objectSelected);
+
+    //    $('#textarea1').textcomplete([
+    //    { // emoji strategy
+    //        id: 'emoji',
+    //        match: /\B:([\-+\w]*)$/,
+    //        search: function (term, callback) {
+    //            callback($.map(emojies, function (emoji) {
+    //                return emoji.indexOf(term) === 0 ? emoji : null;
+    //            }));
+    //        },
+    //        template: function (value) {
+    //            return '<img src="./Styles/images/flaticon/png/' + value + '.png"></img>' + value;
+    //        },
+    //        replace: function (value) {
+    //            return ':' + value + ': ';
+    //        },
+    //        index: 1
+    //    },
+    //{ // tech companies
+    //    id: 'tech-companies',
+    //    words: ['apple', 'google', 'facebook', 'github'],
+    //    match: /\b(\w{2,})$/,
+    //    search: function (term, callback) {
+    //        callback($.map(this.words, function (word) {
+    //            return word.indexOf(term) === 0 ? word : null;
+    //        }));
+    //    },
+    //    index: 1,
+    //    replace: function (word) {
+    //        return word + ' ';
+    //    }
+    //}
+    //], {
+    //onKeydown: function (e, commands) {
+    //    if (e.ctrlKey && e.keyCode === 74) { // CTRL-J
+    //        return commands.KEY_ENTER;
+    //    }
+    //}
+    //});
+
+
+    }    
+</script>

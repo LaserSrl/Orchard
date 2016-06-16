@@ -4,13 +4,15 @@
     Script.Require("jQuery_NestedModels").AtHead();
 }
 
-<div class="manage"> 
+
+@{ using (Html.BeginFormAntiForgeryPost()) {
+   
+    <div class="manage"> 
     <button class="primaryAction" type="submit">@T("Update settings")</button>
 </div>
 <br />
-
-@{ Layout.Title = T("User Reactions Types Settings").ToString(); }
-@{ using (Html.BeginFormAntiForgeryPost()) {
+    
+    Layout.Title = T("User Reactions Types Settings").ToString(); 
 
      <h2><p><b>@T("Settings - User Reactions Types")</b></p></h2>
 
@@ -22,15 +24,14 @@
     
     <fieldset>
         <legend></legend>
-        @*<legend>@T("Settings - User Reactions Types")</legend>*@
         <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.UserReactionsType, T("Add Reaction").Text, "#reactions", ".j_reaction")
         <div id="reactions">
+
             @Html.EditorFor(x => x.UserReactionsType)
         </div>
 
         
     </fieldset>
+   } 
     
-    
-}
 }

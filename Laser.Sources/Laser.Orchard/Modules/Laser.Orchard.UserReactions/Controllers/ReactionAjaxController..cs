@@ -21,9 +21,9 @@ namespace Laser.Orchard.UserReactions.Controllers {
        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public int GetReactionClicked(int reactionTypeId, int pageId ) {
+        public string GetReactionClicked(int reactionTypeId, int pageId ) {
 
-            int typeClick = 0;
+            string typeClick = string.Empty;
             IUser userId = _userReactionService.CurrentUser();                         
             typeClick = _userReactionService.CalculateTypeClick(userId, reactionTypeId, pageId);
 

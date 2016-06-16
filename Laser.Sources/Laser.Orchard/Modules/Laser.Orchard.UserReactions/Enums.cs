@@ -14,5 +14,5 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement;
 
 namespace Laser.Orchard.UserReactions {
-   public enum StyleFileNameProviders { Reactions, ColoredReactions };
+    public enum StyleFileNameProviders { Reactions, Coloredflaticon };
 }
