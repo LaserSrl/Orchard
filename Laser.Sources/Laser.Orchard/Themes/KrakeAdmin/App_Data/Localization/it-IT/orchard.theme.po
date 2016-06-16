@@ -21,10 +21,6 @@ msgid "More info"
 msgstr "Mostra più informazioni"
 
 msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
-msgid "Design and development of Mobile Applications"
-msgstr "Progettazione e sviluppo di Mobile Applications"
-
-msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
 msgid "A simple and transparent interface to manage content (and processes) multifaceted and heterogeneous."
 msgstr "Un'interfaccia semplice e trasparente per gestire contenuti (e processi) poliedrici ed eterogenei."
 
@@ -59,6 +55,10 @@ msgstr "CMS"
 msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
 msgid "Communication Gateway"
 msgstr "Communication Gateway"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
+msgid "Design and development of Mobile Applications"
+msgstr "Progettazione e sviluppo di Mobile Applications"
 
 msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
 msgid "for affordable (and usable) solutions by any user, on any device"
