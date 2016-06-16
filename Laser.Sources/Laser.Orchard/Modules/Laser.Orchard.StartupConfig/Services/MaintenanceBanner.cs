@@ -44,17 +44,18 @@ namespace Laser.Orchard.StartupConfig.Services {
             if (currentTenant.ToLower() != "default") {
                 var tenantShellSettings = _shellSettingsManager.LoadSettings().Where(settings => settings.Name == "Default").Single();
                 var shellContext = _orchardHost.GetShellContext(tenantShellSettings);
-                using (var wc = shellContext.LifetimeScope.Resolve<IWorkContextAccessor>().CreateWorkContextScope()) {
-               //     var tenantSiteName = wc.Resolve<ISiteService>().GetSiteSettings().SiteName;
-                    List<MaintenanceVM> ListMaintenanceVM = new List<MaintenanceVM>();
-                    try {
-                       ListMaintenanceVM = wc.Resolve<IMaintenanceService>().Get().Where(y=>y.Selected_TenantVM.Contains(currentTenant)).ToList();
-                    }
-                    catch {
-                    // non so a priori se il master (default tenant) ha il modulo maintenance enabled
-                    }
-                    foreach (var y in ListMaintenanceVM) {
-                        yield return new NotifyEntry { Message = T(y.MaintenanceNotify), Type = y.MaintenanceNotifyType };
+                if (shellContext != null) {
+                    using (var wc = shellContext.LifetimeScope.Resolve<IWorkContextAccessor>().CreateWorkContextScope()) {
+                        //     var tenantSiteName = wc.Resolve<ISiteService>().GetSiteSettings().SiteName;
+                        List<MaintenanceVM> ListMaintenanceVM = new List<MaintenanceVM>();
+                        try {
+                            ListMaintenanceVM = wc.Resolve<IMaintenanceService>().Get().Where(y => y.Selected_TenantVM.Contains(currentTenant)).ToList();
+                        } catch {
+                            // non so a priori se il master (default tenant) ha il modulo maintenance enabled
+                        }
+                        foreach (var y in ListMaintenanceVM) {
+                            yield return new NotifyEntry { Message = T(y.MaintenanceNotify), Type = y.MaintenanceNotifyType };
+                        }
                     }
                 }
             }

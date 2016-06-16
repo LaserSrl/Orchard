@@ -57,4 +57,4 @@ Features:
 		Name: Laser WebApi and Controller Protection
 		Description: Enable feature to protect WebApi Call
 		Category: Security
-		Dependencies: Laser.Orchard.StartupConfig, Orchard.OutputCache
+		Dependencies: Laser.Orchard.StartupConfig, Orchard.OutputCache, Orchard.Caching

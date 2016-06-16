@@ -6,7 +6,8 @@
 					if (HtmlFormat){
 						child_node.InnerXml = child_node.SelectSingleNode("value").InnerXml;
 					}else{
-						child_node.InnerXml = child_node.SelectSingleNode("value").FirstChild.InnerText;child_node.InnerXml = StripHTML(child_node.SelectSingleNode("value").FirstChild.InnerText.Replace("<br/>"," "));
+						//child_node.InnerXml = child_node.SelectSingleNode("value").FirstChild.InnerText;
+						child_node.InnerXml = StripHTML(child_node.SelectSingleNode("value").FirstChild.InnerText.Replace("<br/>"," "));
 					}
 				}
 			}
@@ -74,13 +75,13 @@ mydoc=cambianome(mydoc,"/address", "Address");
 		child_node_uri="";
 		child_node_mimeType="";
 		if (child_node.SelectSingleNode("name")!=null){
-			child_node_name=child_node.SelectSingleNode("name").InnerText;
+			child_node_name=child_node.SelectSingleNode("name").InnerXml;
 		}
 		if (child_node.SelectSingleNode("uri")!=null){
-			child_node_uri=child_node.SelectSingleNode("uri").InnerText;
+			child_node_uri=child_node.SelectSingleNode("uri").InnerXml;
 		}
 		if (child_node.SelectSingleNode("mimeType")!=null){
-			child_node_mimeType=child_node.SelectSingleNode("mimeType").InnerText;
+			child_node_mimeType=child_node.SelectSingleNode("mimeType").InnerXml;
 		}
 		XmlNode map = InsertImage(mydoc,child_node_uri,child_node_name,child_node_mimeType,"","");
 		child_node.ParentNode.AppendChild(map);

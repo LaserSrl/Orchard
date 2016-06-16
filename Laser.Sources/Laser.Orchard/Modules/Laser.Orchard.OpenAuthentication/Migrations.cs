@@ -156,5 +156,11 @@ namespace Laser.Orchard.OpenAuthentication {
                   );
             return 9;
         }
+         public int UpdateFrom9() {
+             ContentDefinitionManager.AlterTypeDefinition("User",
+                cfg => cfg
+                    .WithPart("UserProviderDisplayPart"));
+             return 10;
+         }
     }
 }

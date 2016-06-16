@@ -63,6 +63,7 @@
     <None Include="Tff\Xslt\getsponsor.cshtml" />
     <None Include="Tff\Xslt\LuoghiFestival - Copia.cshtml" />
     <None Include="Tff\Xslt\LuoghiFestival.cshtml" />
+    <None Include="TorinoCampidoglio\Code\ElaboraSchedaPartecipazione.cshtml" />
     <None Include="TurismoTorino\Mobile\ttdev.p12" />
     <None Include="TurismoTorino\Mobile\ttprod.p12" />
     <None Include="Vialfre\Mobile\pushDevVialfre.p12" />
@@ -82,6 +83,7 @@
     <Content Include="FondationGP\Xslt\NewsField.xslt">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="TorinoCampidoglio\Xslt\ListaEventi.xslt" />
     <Content Include="TurismoTorino\Xslt\ElencoProduttori.xslt">
       <SubType>Designer</SubType>
     </Content>

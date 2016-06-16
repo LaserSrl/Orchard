@@ -42,7 +42,7 @@
         </header>
     }
 
-    @*@if (Model.Header != null) {
+@*@if (Model.Header != null) {
         <div id="header" role="banner">
            @Zone(Model.Header)
         </div>
@@ -55,7 +55,7 @@
     <div id="base">
         <div class="offcanvas">
         </div>
-        <div id="content-main">
+        <div id="layout-main">
             <div id="main" role="main">
                 @if (Model.Messages != null) {
                     <div id="messages">
@@ -89,13 +89,13 @@
             </div>
         </div>
 
-        @if (Model.Navigation != null) {
-            <div id="menubar" class="menubar-inverse puppa">
+    @if (Model.Navigation != null) {
+        <div id="menubar" class="menubar-inverse puppa">
             @*<div id="menu" class="">*@
-                @Zone(Model.Navigation)
-            </div>
-        }
-    </div>
+            @Zone(Model.Navigation)
+        </div>
+    }
+</div>
 
 
 @if (Model.Footer != null) {

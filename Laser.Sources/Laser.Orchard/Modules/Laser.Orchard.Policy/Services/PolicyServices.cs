@@ -7,6 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Localization.Models;
+using Orchard.Localization.Records;
 using Orchard.Localization.Services;
 using Orchard.Security;
 using System;
@@ -270,14 +271,15 @@ namespace Laser.Orchard.Policy.Services {
             int currentLanguageId;
             IList<PolicyForUserViewModel> model = new List<PolicyForUserViewModel>();
             IContentQuery<PolicyTextInfoPart> query;
-
+            CultureRecord cultureRecord = null;
             if (!String.IsNullOrWhiteSpace(culture)) {
-                currentLanguageId = _cultureManager.GetCultureByName(culture).Id;
+                cultureRecord = _cultureManager.GetCultureByName(culture);
             }
-            else {
+            if (cultureRecord == null) {
                 //Nel caso di contenuto senza Localizationpart prendo la CurrentCulture
-                currentLanguageId = _cultureManager.GetCultureByName(_workContext.GetContext().CurrentCulture).Id;
+                cultureRecord = _cultureManager.GetCultureByName(_workContext.GetContext().CurrentCulture);
             }
+            currentLanguageId = cultureRecord.Id;
 
             if (ids != null) {
                 query = _contentManager.Query<PolicyTextInfoPart, PolicyTextInfoPartRecord>()

@@ -60,52 +60,11 @@
                 : null;
 
             var icon_class = "fa " + itemClassName;
+            
+            var stringUrlFirstChild = "";
+            var stringLabelFirstChild = "";
 
-            //switch (itemClassName) {
-            //    case "navicon-dashboard":
-            //        icon_class = "fa navicon-dashboard";
-            //        break;
-            //    case "naviconnew":
-            //        icon_class = "fa fa-file-o";
-            //        break;
-            //    case "navicon-maintenance":
-            //        icon_class = "fa fa-wrench";
-            //        break;
-            //    case "navicon-content":
-            //        icon_class = "fa fa-paragraph";
-            //        break;
-            //    case "navicon-content-definition":
-            //        icon_class = "fa fa-cubes";
-            //        break;
-            //    case "navicon-blog":
-            //        icon_class = "fa fa-rss";
-            //        break;
-            //    case "navicon-communication":
-            //        icon_class = "fa fa-comments";
-            //        break;
-            //    case "navicon-newsletters":
-            //        icon_class = "fa fa-comments";
-            //        break;
-            //    case "navicon-social-facebook-account":
-            //        icon_class = "fa fa-facebook";
-            //        break;
-            //    case "navicon-social-twitter-account":
-            //        icon_class = "fa fa-twitter";
-            //        break;
-            //    case "navicon-users":
-            //        icon_class = "fa fa-users";
-            //        break;
-            //    case "navicon-import-export":
-            //        icon_class = "fa fa-external-link";
-            //        break;
-            //    case "navicon-settings":
-            //        icon_class = "fa fa-cogs";
-            //        break;
-            //    default:
-            //        icon_class = "fa fa-pencil";
-            //        break;
-            //}
-
+           
             string classSelected = "";
             IHtmlString sectionHeaderMarkup;
 
@@ -121,13 +80,17 @@
 
                 //***** Elimino il link sull'apertura del sottomenu *****//
                 if (secondLevelMenuItems.Count(menuItem => !menuItem.LocalNav) > 1 || !firstLevelMenuItem.LinkToFirstChild) {
-                    sectionHeaderMarkup = new HtmlString(string.Format(@"<a><div class=""gui-icon""><i class=""{2}""></i></div><span class=""title"">{0}</span></a>", sectionHeaderText, Html.Encode(itemClassName), icon_class));
+                    sectionHeaderMarkup = new HtmlString(string.Format(@"<a><div class=""gui-icon""><i class=""{2}""></i></div><span class=""title"">{0}</span></a>", sectionHeaderText, Html.Encode(itemClassName), icon_class)); 
                 } else {
                     sectionHeaderMarkup = HasText(itemId)
                         ? new HtmlString(string.Format(@"<a href=""{0}"" class=""{1}"" id=""{2}""><div class=""gui-icon""><i class=""{4}""></i></div><span class=""title"">{3}</span></a>", (string)firstOfTheSecond.Href, Html.Encode(classSelected), Html.Encode(itemId), sectionHeaderText, icon_class))
                         : new HtmlString(string.Format(@"<a href=""{0}"" class=""{1}""><div class=""gui-icon""><i class=""{3}""></i></div><span class=""title"">{2}</span></a>", (string)firstOfTheSecond.Href, Html.Encode(classSelected), sectionHeaderText, icon_class));
                 }
 
+                if (secondLevelMenuItems.Count(menuItem => !menuItem.LocalNav) > 1 && firstLevelMenuItemUrl != firstOfTheSecond.Href) {
+                    stringUrlFirstChild = (string)firstOfTheSecond.Href;
+                    stringLabelFirstChild = sectionHeaderText;
+                }
 
             } else if (firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)) {
                 sectionHeaderMarkup = HasText(itemId)
@@ -140,19 +103,9 @@
                 }
 
                 sectionHeaderMarkup = HasText(itemId)
-                    ? new HtmlString(string.Format(@"<span class=""{1}"" id=""{2}"">{0}#####</span>", Html.Encode(sectionHeaderText), Html.Encode(itemClassName), Html.Encode(itemId)))
+                    ? new HtmlString(string.Format(@"<span class=""{1}"" id=""{2}"">{0}</span>", Html.Encode(sectionHeaderText), Html.Encode(itemClassName), Html.Encode(itemId)))
                     : new HtmlString(string.Format(@"<a><div class=""gui-icon""><i class=""{2}""></i></div><span class=""title {1}"">{0}</span></a>", Html.Encode(sectionHeaderText), Html.Encode(itemClassName), icon_class));
             }
-
-            //if (firstLevelMenuItem == firstLevelMenuItems.First()) {
-            //    firstLevelMenuItem.Classes.Add("first");
-            //}
-            //if (firstLevelMenuItem == firstLevelMenuItems.Last()) {
-            //    firstLevelMenuItem.Classes.Add("last");
-            //}
-            //if (HasText(sectionHeaderTextHint)) {
-            //    firstLevelMenuItem.Classes.Add("section-" + sectionHeaderTextHint.HtmlClassify());
-            //}
 
             if (firstLevelMenuItem.Selected) {
                 firstLevelMenuItem.Classes.Add("active");
@@ -168,11 +121,18 @@
             @sectionHeaderMarkup
             if (secondLevelMenuItems.Count(menuItem => !menuItem.LocalNav) > 1 || !firstLevelMenuItem.LinkToFirstChild) {
             <ul>
-                @{ var first = true;}
+                @{ 
+                    var first = true;
+                    var countChild = 0;
+                 }
                 @foreach (var secondLevelMenuItem in secondLevelMenuItems.Where(menuItem => !menuItem.LocalNav)) {
                     if (first && firstLevelMenuItem.LinkToFirstChild && String.Equals(firstLevelMenuItemUrl, secondLevelMenuItem.Href)) {
                         first = false;
                         continue;
+                    }
+
+                    if (countChild == 0 && !String.Equals(stringUrlFirstChild, secondLevelMenuItem.Href) && stringUrlFirstChild != "") {
+                         <li><a href="@stringUrlFirstChild"><span class="title">@stringLabelFirstChild</span></a></li>
                     }
 
                     string secondLevelTextHint = secondLevelMenuItem.Text.TextHint;
@@ -201,10 +161,16 @@
                     <a href="@secondLevelUrl"><span class="title">@secondLevelMenuItem.Text</span></a>
                     }
                     @secondLevelTag.EndElement
+
+                    countChild++;
                 }
+
             </ul>
             }
             @firstLevelTag.EndElement
+
+            stringUrlFirstChild = "";
+            stringLabelFirstChild = "";
         }
         @tag.EndElement
     </div>

@@ -2,25 +2,65 @@
 <Orchard>
   <Recipe>
     <Name>Laser</Name>
-    <Description>Remember To add "it-IT" in Settings Language</Description>
+    <Description>Run this recipe to set things up and enable the standard Laser modules.</Description>
     <Author>Lorenzo Frediani</Author>
     <WebSite>laser-group.com</WebSite>
     <Tags></Tags>
     <Version>1.8.1</Version>
   </Recipe>
 
-  <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,Orchard.Alias,Orchard.Autoroute,
-                   TinyMce,Orchard.MediaLibrary,Orchard.ContentPicker,Orchard.PublishLater,
-                   Orchard.jQuery,Orchard.Widgets,Orchard.ContentTypes,
-                   Orchard.Scripting,Orchard.Scripting.Lightweight,PackagingServices,Orchard.Packaging,
-                   Orchard.Projections,Orchard.Fields,Orchard.OutputCache,Orchard.Taxonomies,Orchard.Workflows,
- 				   Laser.Orchard.StartupConfig,Laser.Orchard.GoogleAnalytics,Laser.Orchard.TemplateEmailActivities,
-				   Laser.Orchard.Mobile,Orchard.ArchiveLater,
-				   Orchard.Localization,Orchard.ImportExport,Laser.Orchard.StartupConfig.RelationshipsEnhancer,Laser.Orchard.StartupConfig.TaxonomiesExtensions,
-Orchard.Tokens,Laser.Orchard.ZoneAlternates,
-Laser.Orchard.Maps,Laser.Orchard.StartupConfig.UriCultureSelector,Laser.Orchard.StartupConfig.MediaExtensions,
-Laser.Orchard.StartupConfig.MailExtensions,Laser.Orchard.TemplateManagement.Parsers.Razor,Orchard.Search.Content,Lucene,Orchard.Indexing,
-Laser.Orchard.WebServices,Laser.Orchard.StartupConfig.WorkflowExtensions,TheLaserAdmin,ResponsiveBaseTheme,Laser.Orchard.CulturePicker" />
+  <Feature enable="Orchard.Blogs,
+           Orchard.Comments,
+           Orchard.Tags,
+           Orchard.Alias,
+           Orchard.Autoroute,
+           TinyMce,
+           Orchard.MediaLibrary,
+           Orchard.ContentPicker,
+           Orchard.PublishLater,
+           Orchard.jQuery,
+           Orchard.Widgets,
+           Orchard.ContentTypes,
+           Orchard.Scripting,
+           Orchard.Scripting.Lightweight,
+           PackagingServices,
+           Orchard.Packaging,
+           Orchard.Projections,
+           Orchard.Fields,
+           Orchard.OutputCache,
+           Orchard.Taxonomies,
+           Orchard.Workflows,
+ 				   Laser.Orchard.StartupConfig,
+           Laser.Orchard.GoogleAnalytics,
+           Laser.Orchard.TemplateEmailActivities,
+				   Laser.Orchard.Mobile,
+           Orchard.ArchiveLater,
+				   Orchard.Localization,
+           Orchard.ImportExport,
+           Laser.Orchard.StartupConfig.RelationshipsEnhancer,
+           Laser.Orchard.StartupConfig.TaxonomiesExtensions,
+           Orchard.Tokens,
+           Laser.Orchard.ZoneAlternates,
+           Laser.Orchard.Maps,
+           Laser.Orchard.StartupConfig.UriCultureSelector,
+           Laser.Orchard.StartupConfig.MediaExtensions,
+           Laser.Orchard.StartupConfig.MailExtensions,
+           Laser.Orchard.TemplateManagement.Parsers.Razor,
+           Orchard.Search.Content,
+           Lucene,
+           Orchard.Indexing,
+           Laser.Orchard.WebServices,
+           Laser.Orchard.StartupConfig.WorkflowExtensions,
+           TheLaserAdmin,
+           ResponsiveBaseTheme,
+           Laser.Orchard.CulturePicker,
+           KrakeAdmin,
+           Laser.Orchard.ShareLink,
+           Laser.Orchard.Generator,
+           Laser.Orchard.CommunicationGateway,
+           Laser.Orchard.OpenAuthentication,
+           Laser.Orchard.StartupConfig.WebApiProtection,
+           Laser.Orchard.DevTools" />
   <Metadata>
     <Types>
       <Page ContentTypeSettings.Draftable="True"  TypeIndexing.Indexes="Search">
@@ -64,11 +104,18 @@ Laser.Orchard.WebServices,Laser.Orchard.StartupConfig.WorkflowExtensions,TheLase
         <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="True" FieldExternalSetting.Required="False" FieldExternalSetting.NoFollow="False" FieldExternalSetting.GenerateL="False" />
       </InfoPage>
       <LocalizationPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Provides the user interface to localize content items." />
+      <TermPart>
+        <Icon.MediaLibraryPickerField DisplayName="Icon" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="False" />
+      </TermPart>
     </Parts>
   </Metadata>
-  <Settings />
+  <Settings>
+    <RegistrationSettingsPart UsersCanRegister="true" UsersMustValidateEmail="false" ValidateEmailRegisteredWebsite="" ValidateEmailContactEMail="" UsersAreModerated="false" NotifyModeration="false" NotificationsRecipients="" EnableLostPassword="true" />
+  </Settings>
     <Migration features="*" />
   <Command>
-    theme activate "ResponsiveBaseTheme"
+    cultures add "it-IT"
+    cultures set site culture "it-IT"
+    theme activate "Krake Admin"
   </Command>
 </Orchard>

@@ -21,6 +21,14 @@ msgid "Get my CsrfToken"
 msgstr "Ottieni il tuo CsrfToken"
 
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Ranking List"
+msgstr "Classifiche"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "RankingList"
+msgstr "Classifiche"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
 msgid "Show Cached Data"
 msgstr "Mostra dati in cache"
 

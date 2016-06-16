@@ -88,10 +88,19 @@
     <div class="container">
         <div class="navbar-header">
             <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
-            <a class="navbar-brand" rel="home" title="Anfiteatro Morenico Ivrea" href="~/">
-                <img class="logo img-responsive" alt="Anfiteatro Morenico Ivrea" src="@(themeBasePath + "/styles/images/logo.png")" />
-                <img class="logo-mobile img-responsive" alt="Anfiteatro Morenico Ivrea" src="@(themeBasePath + "/styles/images/logo-mobile.png")" />
-            </a>
+            @if (WorkContext.CurrentCulture == "it-IT"){
+                <a class="navbar-brand" rel="home" title="Anfiteatro Morenico Ivrea" href="~/">
+                    <img class="logo img-responsive" alt="Anfiteatro Morenico Ivrea" src="@(themeBasePath + "/styles/images/logo.png")" />
+                    <img class="logo-mobile img-responsive" alt="Anfiteatro Morenico Ivrea" src="@(themeBasePath + "/styles/images/logo-mobile.png")" />
+                </a>
+            }
+            else{
+                <a class="navbar-brand" rel="home" title="Anfiteatro Morenico Ivrea" href="@Href("~/" + WorkContext.CurrentCulture)"> @*"@(WorkContext.CurrentCulture)">*@
+                    <img class="logo img-responsive" alt="Anfiteatro Morenico Ivrea" src="@(themeBasePath + "/styles/images/logo.png")" />
+                    <img class="logo-mobile img-responsive" alt="Anfiteatro Morenico Ivrea" src="@(themeBasePath + "/styles/images/logo-mobile.png")" />
+                </a>
+            }
+                
         </div>
         <div class="navbar-collapse collapse">
             @if (Model.Navigation != null)
@@ -199,9 +208,16 @@
                 <img src="@(themeBasePath + "/styles/images/regione-piemonte.png")" class="img-responsive" alt="@T("Logo Regione Piemonte")" />
                 <img src="@(themeBasePath + "/styles/images/ami.png")" class="img-responsive" alt="@T("Logo AMI")" />
                 <br />
-                <a href="/infos/e015-digital-ecosystem" title="@T("E015")">
-                    <img  src="@(themeBasePath + "/styles/images/E015-Logo.png")"  class="img-responsive" alt="@T("Logo E015")"/>
-                </a>
+                @{
+                    string e015Ref = "~/";
+                    if (WorkContext.CurrentCulture != "it-IT"){
+                        e015Ref += WorkContext.CurrentCulture + "/";
+                    }
+                    e015Ref += "infos/e015-digital-ecosystem";
+                    <a href="@Href(e015Ref)" title="@T("E015")">
+                        <img  src="@(themeBasePath + "/styles/images/E015-Logo.png")"  class="img-responsive" alt="@T("Logo E015")"/>
+                    </a>
+                }
             </div>
             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                 <h5 class="footer-title">@T("App Download")</h5>

@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement.MetaData;
+﻿using Laser.Orchard.StartupConfig.Services;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using System;
@@ -6,12 +7,12 @@ using System;
 namespace Laser.Orchard.CommunicationGateway {
 
     public class CoomunicationMigrations : DataMigrationImpl {
-        //  private readonly IUtilsServices _utilServices;
+        private readonly IUtilsServices _utilsServices;
 
-        //public Migrations(IUtilsServices utilsServices)
-        //{
-        //    _utilServices = utilsServices;
-        //}
+        public CoomunicationMigrations(IUtilsServices utilsServices)
+        {
+            _utilsServices = utilsServices;
+        }
 
         /// <summary>
         /// This executes whenever this module is activated.
@@ -278,6 +279,17 @@ namespace Laser.Orchard.CommunicationGateway {
                 .Draftable(false));
 
             return 18;
+        }
+        public int UpdateFrom18() {
+            SchemaBuilder.AlterTable("CommunicationContactPartRecord",
+               table => table
+               .AddColumn<string>("Logs")
+             );
+            return 19;
+        }
+        public int UpdateFrom19() {
+            _utilsServices.EnableFeature("Laser.Orchard.ZoneAlternates");
+            return 20;
         }
 
     }

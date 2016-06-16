@@ -163,6 +163,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.UserReactions
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KrakeDefaultTheme", "Themes\KrakeDefaultTheme\KrakeDefaultTheme.csproj", "{CABDCB59-8E15-4B37-9D6B-41BF1425F36A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.AdminToolbarExtensions", "Modules\Laser.Orchard.AdminToolbarExtensions\Laser.Orchard.AdminToolbarExtensions.csproj", "{38090550-EAD0-420F-B45B-D76261E7044D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -467,6 +469,10 @@ Global
 		{CABDCB59-8E15-4B37-9D6B-41BF1425F36A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CABDCB59-8E15-4B37-9D6B-41BF1425F36A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CABDCB59-8E15-4B37-9D6B-41BF1425F36A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38090550-EAD0-420F-B45B-D76261E7044D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38090550-EAD0-420F-B45B-D76261E7044D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38090550-EAD0-420F-B45B-D76261E7044D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38090550-EAD0-420F-B45B-D76261E7044D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

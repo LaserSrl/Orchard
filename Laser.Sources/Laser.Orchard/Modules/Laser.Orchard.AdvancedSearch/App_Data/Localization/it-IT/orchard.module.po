@@ -9,6 +9,14 @@
 # > msgstr "{ messaggio }"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "{0} from {1}"
+msgstr "{0} da {1}"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "{0} until {1}"
+msgstr "{0} fino a {1}"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Actions:"
 msgstr "Azioni:"
 
@@ -25,6 +33,10 @@ msgid "any (show all)"
 msgstr "qualsiasi (visualizza tutti)"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "any (translated or not)"
+msgstr "Tutto (tradotto e non)"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Apply"
 msgstr "Applica"
 
@@ -35,6 +47,10 @@ msgstr "Azioni in blocco"
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Choose action..."
 msgstr "Scegliere l'azione..."
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Click to remove filter"
+msgstr "Clicca per rimuovere il filtro"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Content creation:"
@@ -49,12 +65,24 @@ msgid "Content order:"
 msgstr "Ordinamento contenuti:"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Content order: {0}"
+msgstr "Ordinamento contenuti: {0}"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Content status:"
 msgstr "Stato:"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Content status: {0}"
+msgstr "Stato del contenuto: {0}"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Content type:"
 msgstr "Tipo di contenuto:"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Content type: {0}"
+msgstr "Tipo di contenuto: {0}"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Create New {0}"
@@ -85,8 +113,16 @@ msgid "Filter by"
 msgstr "Filtrare per"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Items with Id {0} in the CPF {1}"
+msgstr "Contenuti con Id {0} nel CPF {1}"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Language"
 msgstr "Lingua"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Language: {0}"
+msgstr "Lingua: {0}"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "latest"
@@ -101,6 +137,22 @@ msgid "Manage Content"
 msgstr "Gestire Contenuto"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Not translated to: {0}"
+msgstr "Non tradotto in: {0}"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Only items with media."
+msgstr "Solo contenuti multimediali."
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Only show items by: {0}"
+msgstr "Mostra solo i contenuti di: {0}"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Only show my items."
+msgstr "Mostra solo miei contenuti."
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Only with media"
 msgstr "Solo con file multimediali"
 
@@ -111,6 +163,10 @@ msgstr "Ordinato per"
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Other filters"
 msgstr "Altri filtri"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Owned by me"
+msgstr "Solo miei contenuti"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Owner"
@@ -145,6 +201,10 @@ msgid "Show"
 msgstr "Visualizza"
 
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Taxonomy term: {0}"
+msgstr "Termine tassonomia: {0}"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Terms"
 msgstr "Termini"
 
@@ -155,6 +215,10 @@ msgstr "Annulla Pubblicazione"
 msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "unpublished"
 msgstr "Non pubblicato"
+
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "Untranslated in {0}"
+msgstr "Non tradotto in {0}"
 
 msgctxt "Laser.Orchard.AdvancedSearch.ContentAdminMenu"
 msgid "Advanced Search"
@@ -227,6 +291,10 @@ msgstr "Non è stato possibile annullare la pubblicazione del contenuto selezion
 msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
 msgid "No user found. Ownership filter not applied."
 msgstr "Utente non trovato. Filtro sul proprietario non applicato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
+msgid "Not authorized to visualize any item."
+msgstr "Non autorizzato a vedere alcun contenuto."
 
 msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
 msgid "Successfully cloned. The clone was saved as a draft."

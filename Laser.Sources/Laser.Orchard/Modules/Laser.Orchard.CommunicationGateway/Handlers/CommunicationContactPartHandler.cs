@@ -34,7 +34,9 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             Filters.Add(new ActivatingFilter<FavoriteCulturePart>("CommunicationContact"));
 
             #region sync user profile
+            OnCreated<UserPart>((context, part) => UpdateProfile(context.ContentItem));
             OnUpdated<UserPart>((context, part) => UpdateProfile(context.ContentItem));
+            OnRemoved<UserPart>((context, part) => RemoveUserLink(part));
             OnRemoved<CommunicationContactPart>((context, part) => RemoveLinks(part));
             #endregion
         }
@@ -111,6 +113,10 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                     _Smsrepository.Delete(csr);
                 }
             }
+        }
+
+        private void RemoveUserLink(UserPart part) {
+            _communicationService.UnboundFromUser(part);
         }
     }
 }

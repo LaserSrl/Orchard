@@ -380,6 +380,10 @@ msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/SmsPlaceholder.csh
 msgid "Value"
 msgstr "Valore"
 
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/Parts/MobileContact.cshtml"
+msgid "Mobile"
+msgstr "Mobile"
+
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/Parts/UserAgentRedirect.cshtml"
 msgid "For this site exists the '{0}' mobile App on {1}. Do you want to download it?"
 msgstr "Per questo sito esiste l'App mobile '{0}' su {1} . Vuoi scaricarla?"
@@ -474,6 +478,10 @@ msgstr "SMS"
 
 msgctxt "Laser.Orchard.Mobile.Migrations"
 msgid "Content Related"
+msgstr "Contenuto Correlato"
+
+msgctxt "Laser.Orchard.Mobile.Migrations"
+msgid "Related Content"
 msgstr "Contenuto Correlato"
 
 msgctxt "Laser.Orchard.Mobile.Projections.DeveiceFilter"

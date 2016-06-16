@@ -113,7 +113,7 @@ namespace Laser.Orchard.DevTools.Controllers {
                 return new HttpUnauthorizedResult();
             ScheduledTaskRecord st = _repositoryScheduledTask.Fetch(t => t.ScheduledUtc > DateTime.UtcNow).Where(x => x.Id == key).FirstOrDefault();
             _repositoryScheduledTask.Delete(st);
-          //  st.ContentItemVersionRecord.ContentItemRecord.Id;
+            //  st.ContentItemVersionRecord.ContentItemRecord.Id;
             return RedirectToAction("ShowScheduledTask", "Admin");
         }
 
@@ -146,8 +146,7 @@ namespace Laser.Orchard.DevTools.Controllers {
                 foreach (string thekey in all) {
                     _cacheStorageProvider.Remove(thekey);
                 }
-            }
-            else
+            } else
                 _cacheStorageProvider.Remove(key);
             return RedirectToAction("ShowCachedData", "Admin");
         }
@@ -162,8 +161,7 @@ namespace Laser.Orchard.DevTools.Controllers {
                 foreach (string thekey in all) {
                     System.IO.File.Delete(thekey);
                 }
-            }
-            else
+            } else
                 System.IO.File.Delete(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + key));
             return RedirectToAction("ShowCachedData", "Admin");
         }
@@ -187,10 +185,10 @@ namespace Laser.Orchard.DevTools.Controllers {
             IApiKeyService apiKeyService = null;
             if (_orchardServices.WorkContext.TryResolve<IApiKeyService>(out apiKeyService)) {
                 var iv = GetRandomIV();
-                var key = apiKeyService.GetValidApiKey(iv);
-                se = new Segnalazione { Testo = string.Format("ApiKey: {0} \r\nAKIV: {1}", key, iv) };
-            }
-            else {
+                var token = apiKeyService.GetValidApiKey(iv);
+                var tokenTS = apiKeyService.GetValidApiKey(iv, true);
+                se = new Segnalazione { Testo = string.Format("ApiKey: {0} \r\nApiKey: {1} \r\nAKIV: {2}", token, tokenTS, iv) };
+            } else {
                 se = new Segnalazione { Testo = "Feature Laser.Orchard.StartupConfig.WebApiProtection not active." };
             }
             return View("index", se);

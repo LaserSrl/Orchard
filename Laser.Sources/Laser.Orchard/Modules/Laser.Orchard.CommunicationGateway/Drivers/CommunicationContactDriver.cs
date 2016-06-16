@@ -1,9 +1,11 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.UI.Admin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,40 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
+
+        protected override DriverResult Display(CommunicationContactPart part, string displayType, dynamic shapeHelper) {
+            //Determine if we're on an admin page
+            bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            if (isAdmin) {
+                if (displayType == "Detail") {
+                    string logs = T("No log.").Text;
+                    if (string.IsNullOrWhiteSpace(part.Logs) == false) {
+                        logs = part.Logs;
+                    }
+                    var profile = part.ContentItem.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ProfilePart");
+                    return Combined(ContentShape("Parts_CommunicationContact",
+                        () => shapeHelper.Parts_CommunicationContact(Logs: logs)),
+                        ContentShape("Parts_ProfilePart",
+                        () => shapeHelper.Parts_ProfilePart(ContentPart: profile))
+                            );
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+
+        protected override DriverResult Editor(CommunicationContactPart part, dynamic shapeHelper) {
+            CommunicationContactPartVM model = new CommunicationContactPartVM();
+            if (string.IsNullOrWhiteSpace(part.Logs)) {
+                model.Logs = T("No log.").Text;
+            } else {
+                model.Logs = part.Logs;
+            }
+            return ContentShape("Parts_CommunicationContact_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/CommunicationContact_Edit", Model: model, Prefix: Prefix));
+        }
+
         //protected override void Importing(CommunicationContactPart part, ImportContentContext context) {
         //    var root = context.Data.Element(part.PartDefinition.Name);
         //    part.AllDay = Boolean.Parse(root.Attribute("AllDay").Value);

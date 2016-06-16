@@ -14,6 +14,7 @@ namespace Laser.Orchard.StartupConfig.Drivers {
     public class TaxonomyExtensionPartDriver : ContentPartDriver<TaxonomyExtensionPart> {
 
         protected override string Prefix { get { return "TaxonomyExtension"; } }
+
         protected override DriverResult Editor(TaxonomyExtensionPart part, dynamic shapeHelper) {
             return ContentShape("Parts_TaxonomyExtension_Edit",
                     () => shapeHelper.EditorTemplate(TemplateName: "Parts/TaxonomyExtension_Edit", Model: part, Prefix: Prefix));
