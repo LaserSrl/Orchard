@@ -45,8 +45,28 @@ msgid "Users registration - policies acceptation"
 msgstr "Registrazione utenti - accettazione informative"
 
 msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Generic error"
+msgstr "Errore generico"
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
 msgid "Invalid user."
 msgstr "Utente non valido."
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Message rejected: too many characters. (160 max)"
+msgstr "Messaggio rigettato per superamento lunghezza max di testo (160 caratteri)"
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Missing recipient"
+msgstr "Destinatario mancante"
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Missing text"
+msgstr "Testo mancante"
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Priority missing or wrong"
+msgstr "Priorità mancante o errata"
 
 msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
 msgid "Send email failed."
@@ -55,6 +75,14 @@ msgstr "Invio email fallito"
 msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
 msgid "Send SMS failed."
 msgstr "Invio SMS fallito."
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Sender identifier missing"
+msgstr "Identificativo di invio mancante"
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Sender missing or wrong"
+msgstr "Mittente mancante o errato"
 
 msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
 msgid "Users cannot recover lost password due to site settings."
