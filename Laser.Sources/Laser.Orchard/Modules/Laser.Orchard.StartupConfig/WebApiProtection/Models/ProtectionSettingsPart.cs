@@ -84,9 +84,10 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Models {
                     } else if (model.ApiKey.Trim().Length < 22) {
                         return new ValidationResult(T("ApiKey field must be minimum 22 characters length.").Text);
                     }
-                }
-                if (model.EnableTimeStampVerification && model.Validity <= 0) {
-                    return new ValidationResult(T("Validity should be more than 0 minutes.").Text);
+                } else if (validationContext.DisplayName == "EnableTimeStampVerification") {
+                    if (model.EnableTimeStampVerification && model.Validity <= 0) {
+                        return new ValidationResult(T("Validity should be more than 0 minutes.").Text);
+                    }
                 }
             }
             return ValidationResult.Success;
