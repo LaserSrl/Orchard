@@ -10,7 +10,7 @@ using Orchard;
 using System.Collections.Specialized;
 
 namespace Laser.Orchard.AdminToolbarExtensions.Drivers {
-    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions.SummaryAdminToolbar")]
+    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions")]
     public class SummaryAdminToolbarPartDriver : ContentPartDriver<SummaryAdminToolbarPart> {
 
         private readonly ITokenizer _tokenizer;
@@ -44,7 +44,7 @@ namespace Laser.Orchard.AdminToolbarExtensions.Drivers {
                 if (!String.IsNullOrWhiteSpace(lbl.CustomUrl)) {
                     //change the content of the CustomUrl string so that it has the whole url to call
                     string hString = _orchardServices.WorkContext.HttpContext.Request.Path;
-                    var qs = new NameValueCollection(_orchardServices.WorkContext.HttpContext.Request.QueryString);
+                    var qs = new NameValueCollection();  //new NameValueCollection(_orchardServices.WorkContext.HttpContext.Request.QueryString);
                     string[] myQsKeys = ((string)(lbl.CustomUrl)).Split(new char[] { '&' });
                     var myQsValues = new string[myQsKeys.Length];
                     int i = 0;
@@ -74,8 +74,10 @@ namespace Laser.Orchard.AdminToolbarExtensions.Drivers {
                         myPath = myPath.Replace("Contents", "Laser.Orchard.AdvancedSearch");
                         //in this case we should also remove the content type from the end of the path, otherwise it would carry over as a filter
                         //to the advanced search module, possibly preventing any result to be displayed.
-                        myPath = myPath.Substring(0, myPath.IndexOf("/List") + 5);
+                        //myPath = myPath.Substring(0, myPath.IndexOf("/List") + 5);
                     }
+                    //we want to also reset the filter for content-type. That filter, rather than being in the querystring, is in the path
+                    myPath = myPath.Substring(0, myPath.IndexOf("/List") + 5);
                     lbl.CustomUrl = myPath + "?" + qsString;
                 }
             }

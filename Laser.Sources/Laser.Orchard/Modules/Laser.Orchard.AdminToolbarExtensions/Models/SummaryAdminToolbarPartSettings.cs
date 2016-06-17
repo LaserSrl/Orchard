@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Laser.Orchard.AdminToolbarExtensions.Models {
-    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions.SummaryAdminToolbar")]
+    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions")]
     public class SummaryAdminToolbarPartSettings {
         private static string formatTemplate = "{{ Label={0}, Area={1}, Controller={2}, Action={3}, Parameters={4}, CustomUrl={5}, Target={6} }},";
         public IEnumerable<SummaryAdminToolbarLabel> Labels { get; set; }
@@ -57,7 +57,7 @@ namespace Laser.Orchard.AdminToolbarExtensions.Models {
         }
     }
 
-    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions.SummaryAdminToolbar")]
+    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions")]
     public class SummaryAdminToolbarLabel {
         public string Label { get; set; } //label that will be visualized in the SummaryAdmin view
         public string Area { get; set; } //Area parameter for dynamically computed action

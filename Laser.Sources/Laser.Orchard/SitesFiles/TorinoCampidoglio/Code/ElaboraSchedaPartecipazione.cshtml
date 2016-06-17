@@ -1,0 +1,57 @@
+﻿@using Orchard.ContentManagement;
+@{
+    string result = "Done";
+    try{
+        dynamic ci = Model.ContentItem;
+        var cpf = ci.SchedaPartecipazione.EventoCorrelato.Ids;
+        dynamic eventoCorrelato = null;
+        string titleEvento = "";
+        if (cpf != null) {
+            if (cpf.Length > 0) {
+                eventoCorrelato = Model.OrchardServices.ContentManager.Get(cpf[0]);
+                titleEvento = eventoCorrelato.TitlePart.Title;
+            }
+        }
+
+        // controlla se le iscrizioni sono abilitate
+        bool consentiIscrizioni = eventoCorrelato.SpecialEvent.ConsentiIscrizioni.Value;
+        if(consentiIscrizioni) {
+            // controlla la data di termine per l'iscrizione
+            DateTime dataTermineIscrizione = eventoCorrelato.SpecialEvent.DataTermineIscrizione.DateTime;
+            if(dataTermineIscrizione >= DateTime.Now) {
+                //Model.ContentItem.SchedaPartecipazione.NoteDescrittive.Value = dataTermineIscrizione.ToString();
+        
+                // ricava nome e cognome dell'utente
+                int idOwner = ci.CommonPart.Owner.Id;
+                dynamic owner = (dynamic)(Model.OrchardServices.ContentManager.Get(idOwner));
+                string nome = owner.ProfilePart.Nome.Value;
+                string cognome = owner.ProfilePart.Cognome.Value;
+                Model.ContentItem.TitlePart.Title = string.Format("Richiesta iscrizione {0} - {1} {2}", titleEvento, nome, cognome);
+        
+                //// invia mail all'organizzatore
+                ////string[] contentTypes = { "CustomTemplate" };
+                ////var qry = Model.OrchardServices.ContentManager.Query().ForType("CustomTemplate"); //.Where(x => x.Title == "TemplateRichiestaPartecipazione");
+                //string body = "";
+        
+                //var data = new Dictionary<string, object>();
+                //data.Add("Subject", Model.ContentItem.TitlePart.Title);
+                //data.Add("Body", body);
+                //data.Add("Recipients", eventoCorrelato.SpecialEvent.EmailOrganizzatore.Value);
+                //Orchard.Messaging.Services.IMessageService messageService = null;
+                //if (Model.OrchardServices.WorkContext.TryResolve<Orchard.Messaging.Services.IMessageService>(out messageService)) {
+                //    messageService.Send(Orchard.Email.Services.SmtpMessageChannel.MessageType, data);
+                //}
+            }
+            else{
+                result = "Error";
+            }
+        }
+        else {
+            result = "Error";
+        }
+    }
+    catch{
+        result = "Error";
+    }
+}
+@result

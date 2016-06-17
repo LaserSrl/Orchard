@@ -353,8 +353,20 @@ msgid "Third Party"
 msgstr "Terze Parti"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
+msgid "View"
+msgstr "Visualizza"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/index.cshtml"
 msgid "Yes"
 msgstr "Si"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/View.cshtml"
+msgid "Contacts List"
+msgstr "Lista dei contatti"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/ContactsAdmin/View.cshtml"
+msgid "View Contact"
+msgstr "Visualizza contatto"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/Parts/Advertising_Edit.cshtml"
 msgid "Actions to be performed:"
@@ -371,6 +383,10 @@ msgstr "Link esterno"
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/Parts/AdvertisingSwitcher.cshtml"
 msgid "Internal Link"
 msgstr "Link interno"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/Parts/CommunicationContact_Edit.cshtml"
+msgid "Logs"
+msgstr "Log"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/Parts/EmailContact_Edit.cshtml"
 msgid "Add Email"
@@ -432,6 +448,90 @@ msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/EditorTemplates/View
 msgid "Type a number"
 msgstr "Digita un numero di telefono"
 
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Fields/ContentPickerField-CommunicationContact-AdminFilter.cshtml"
+msgid "Content"
+msgstr "Contenuto"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/CommunicationContact.cshtml"
+msgid "Logs"
+msgstr "Log"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/EmailContact.cshtml"
+msgid "Commercial use"
+msgstr "Uso commerciale"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/EmailContact.cshtml"
+msgid "Creation date"
+msgstr "Data di creazione"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/EmailContact.cshtml"
+msgid "Email"
+msgstr "Email"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/EmailContact.cshtml"
+msgid "Modified"
+msgstr "Modificato"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/EmailContact.cshtml"
+msgid "No"
+msgstr "No"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/EmailContact.cshtml"
+msgid "Production"
+msgstr "Produzione"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/EmailContact.cshtml"
+msgid "Third party"
+msgstr "Terze parti"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/EmailContact.cshtml"
+msgid "Valid"
+msgstr "Valido"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/EmailContact.cshtml"
+msgid "Yes"
+msgstr "Si"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/FavoriteCulturePart-CommunicationContact-AdminFilter.cshtml"
+msgid "Favorite Culture"
+msgstr "Cultura Preferenziale"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/SmsContact.cshtml"
+msgid "Commercial use"
+msgstr "Uso commerciale"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/SmsContact.cshtml"
+msgid "Creation date"
+msgstr "Data di creazione"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/SmsContact.cshtml"
+msgid "Modified"
+msgstr "Modificato"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/SmsContact.cshtml"
+msgid "No"
+msgstr "No"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/SmsContact.cshtml"
+msgid "Production"
+msgstr "Produzione"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/SmsContact.cshtml"
+msgid "Sms"
+msgstr "Sms"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/SmsContact.cshtml"
+msgid "Third party"
+msgstr "Terze parti"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/SmsContact.cshtml"
+msgid "Valid"
+msgstr "Valido"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/Parts/SmsContact.cshtml"
+msgid "Yes"
+msgstr "Si"
+
 msgctxt "Laser.Orchard.CommunicationGateway.Controllers.AdvertisingAdminController"
 msgid "Advertising saved"
 msgstr "Comunicato salvato"
@@ -476,9 +576,21 @@ msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
 msgid "Import started. Please check 'Show Import Logs' to get the result."
 msgstr "Importazione in esecuzione. Per verificarne l'esito clicca su 'Mostra log importazione'"
 
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
+msgid "Synchronization already scheduled at {0:dd-MM-yyyy HH:mm}. Please come back later on this page to check the result."
+msgstr "Sincronizzazione già pianificata per il {0:dd-MM-yyyy HH:mm}. Accedi alla pagina più tardi per visualizzarne l'esito."
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
+msgid "Synchronization started. Please come back on this page in a few minutes to check the result."
+msgstr "Sincronizzazione avviata. Accedi a questa pagina tra pochi minuti per visualizzarne l'esito."
+
 msgctxt "Laser.Orchard.CommunicationGateway.Drivers.CommunicationAdvertisingPartDriver"
 msgid "AdvertisingPart Error"
 msgstr "Errore sul comunicato"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Drivers.CommunicationContactDriver"
+msgid "No log."
+msgstr "Nessun log."
 
 msgctxt "Laser.Orchard.CommunicationGateway.Drivers.EmailContactPartDriver"
 msgid "Email can't be assigned is linked to other contact"
@@ -535,4 +647,8 @@ msgstr "Contatto Master creato"
 msgctxt "Laser.Orchard.CommunicationGateway.Services.CommunicationService"
 msgid "Syncronized {0} user's profiles"
 msgstr "Sono stati sincronizzati {0} profili utente"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Services.CommunicationService"
+msgid "This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function."
+msgstr "Questo contatto è stato associato al suo utente dalla funzione di sincronizzazione in data {0:dd-MM-yyyy HH:mm}"
 

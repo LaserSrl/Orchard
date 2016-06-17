@@ -11,7 +11,7 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.AdminToolbarExtensions.Settings {
-    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions.SummaryAdminToolbar")]
+    [OrchardFeature("Laser.Orchard.AdminToolbarExtensions")]
     public class SummaryAdminToolbarPartSettingsHooks : ContentDefinitionEditorEventsBase  {
 
         public override IEnumerable<TemplateViewModel> TypePartEditor(
