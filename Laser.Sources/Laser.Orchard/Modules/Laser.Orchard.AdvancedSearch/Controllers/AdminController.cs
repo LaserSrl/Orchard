@@ -61,7 +61,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
         private readonly IDateLocalization _dataLocalization;
 
         private readonly IRepository<FieldIndexPartRecord> _cpfRepo;
-
+        private readonly ILocalizationService _localizationService;
 
         public AdminController(
             IOrchardServices orchardServices,
@@ -77,7 +77,8 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             IUserService userService,
             IDateLocalization dataLocalization,
             ITaxonomyService taxonomyService,
-            IRepository<FieldIndexPartRecord> cpfRepo) {
+            IRepository<FieldIndexPartRecord> cpfRepo,
+            ILocalizationService localizationService) {
             Services = orchardServices;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
@@ -94,6 +95,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             _userService = userService;
             _notifier = notifier;
             _cpfRepo = cpfRepo;
+            _localizationService = localizationService;
         }
 
         dynamic Shape { get; set; }
@@ -313,20 +315,24 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                     var allCi = query.List();
                     var untranslatedCi = allCi
                         .Where(x =>
-                            x.Is<LocalizationPart>() && //some content items may not be translatable
-                            (
-                                (x.As<LocalizationPart>().Culture != null &&
-                                x.As<LocalizationPart>().Culture.Id != model.AdvancedOptions.SelectedUntranslatedLanguageId) ||
-                                (x.As<LocalizationPart>().Culture == null) //this is the case where the content was created and never translated to any other culture. 
-                                //In that case, in Orchard 1.8, no culture is directly assigned to it, even though the default culture is assumed.
-                            ) &&
-                            x.As<LocalizationPart>().MasterContentItem == null &&
-                            !allCi.Any(y =>
-                                y.Is<LocalizationPart>() &&
-                                y.As<LocalizationPart>().MasterContentItem == x &&
-                                y.As<LocalizationPart>().Culture.Id == model.AdvancedOptions.SelectedUntranslatedLanguageId
+                            !_localizationService.GetLocalizations(x, versionOptions).Any(li =>
+                                li.Culture.Id == model.AdvancedOptions.SelectedUntranslatedLanguageId
                             )
                         );
+                        //.Where(x =>
+                        //    x.Is<LocalizationPart>() && //some content items may not be translatable
+                        //    (
+                        //        (x.As<LocalizationPart>().Culture != null && x.As<LocalizationPart>().Culture.Id != model.AdvancedOptions.SelectedUntranslatedLanguageId) ||
+                        //        (x.As<LocalizationPart>().Culture == null) //this is the case where the content was created and never translated to any other culture. 
+                        //        //In that case, in Orchard 1.8, no culture is directly assigned to it, even though the default culture is assumed.
+                        //    ) &&
+                        //    x.As<LocalizationPart>().MasterContentItem == null &&
+                        //    !allCi.Any(y =>
+                        //        y.Is<LocalizationPart>() &&
+                        //        (y.As<LocalizationPart>().MasterContentItem == x || y.As<LocalizationPart>().MasterContentItem == x.As<LocalizationPart>().MasterContentItem) &&
+                        //        y.As<LocalizationPart>().Culture.Id == model.AdvancedOptions.SelectedUntranslatedLanguageId
+                        //    )
+                        //);
                     //Paging
                     pagerShape = Shape.Pager(pager).TotalItemCount(untranslatedCi.Count());
                     pageOfContentItems= untranslatedCi
