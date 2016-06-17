@@ -1,18 +1,15 @@
-﻿@{
-    List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
-    
-    var fileCss = part.FindLast(z => z.CssName != null).CssName.ToString();
-    Style.Require(fileCss);
-}
-
+﻿@using Laser.Orchard.UserReactions.Models
+@using Laser.Orchard.UserReactions.ViewModels
+@using Orchard.ContentManagement
 @{
-    
-    
-    }
+    List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model.UserReaction;
+
+    var settings = WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
+    Style.Require(settings.StyleFileNameProvider.ToString());
+}
 
 @{foreach (var item in part) 
   { 
-   
         var quantità = "(" + @item.Quantity + ")";
         var itemName = " " + @item.TypeName + " " + quantità;
         string attCSS = @item.CssStyleName; 
@@ -24,8 +21,4 @@
     } 
 } 
     
-    @* 
-   @item.Quantity
-    @item.TypeName
-
-}*@
+   

@@ -30,11 +30,16 @@ namespace Laser.Orchard.UserReactions.Drivers {
         //Evento display 
         protected override DriverResult Display(UserReactionsPart part, string displayType, dynamic shapeHelper) {
 
-            IList<UserReactionsVM> viewmodel = _userReactionService.GetTot(part, false); ;
+            //IList<UserReactionsVM> viewmodel = _userReactionService.GetTot(part, false);
+            IList<UserReactionsVM> viewmodel = null;
+            //UserReactionsPartSettings settings = part.TypePartDefinition.Settings.GetModel<UserReactionsPartSettings>();
+            //UserReactionsPartSettings newPartsSetting = new UserReactionsPartSettings();
+            //bool FilterApplied = settings.Filtering;
+
 
             //Gestione visualizzazione amministratore
             if (displayType == "SummaryAdmin") {
-                viewmodel = _userReactionService.GetTot(part, false);
+                viewmodel = _userReactionService.GetTot(part);
                 return ContentShape("Parts_UserReactions_SummaryAdmin", () => shapeHelper
                     .Parts_UserReactions_SummaryAdmin(UserReaction: viewmodel));
             }
@@ -42,17 +47,7 @@ namespace Laser.Orchard.UserReactions.Drivers {
 
             //Passare la view model da definire 
             if (displayType == "Detail") {
-
-                UserReactionsPartSettings settings = part.TypePartDefinition.Settings.GetModel<UserReactionsPartSettings>();
-                UserReactionsPartSettings newPartsSetting = new UserReactionsPartSettings();
-                bool FilterApplied = settings.Filtering;
-
-                if (FilterApplied == true) {
-                    viewmodel = _userReactionService.GetTot(part, true);
-                } else {
-                    viewmodel = _userReactionService.GetTot(part, false);
-                }
-
+                viewmodel = _userReactionService.GetTot(part);              
                 return ContentShape("Parts_UserReactions_Detail", () => shapeHelper
                     .Parts_UserReactions_Detail(UserReaction: viewmodel));
 
@@ -60,6 +55,7 @@ namespace Laser.Orchard.UserReactions.Drivers {
 
             //Passare la view model da definire 
             if (displayType == "Summary") {
+                viewmodel = _userReactionService.GetTot(part);
                 return ContentShape("Parts_UserReactions_Summary", () => shapeHelper
                    .Parts_UserReactions_Summary(UserReaction: viewmodel));
 
@@ -76,7 +72,7 @@ namespace Laser.Orchard.UserReactions.Drivers {
         //Evento Edit
         protected override DriverResult Editor(UserReactionsPart part, dynamic shapeHelper) {
 
-            IList<UserReactionsVM> viewmodel = _userReactionService.GetTot(part, false);
+            IList<UserReactionsVM> viewmodel = _userReactionService.GetTot(part);
 
             return ContentShape("Parts_UserReactions_Edit", () => shapeHelper.EditorTemplate(
                                   TemplateName: "Parts/UserReactionsEdit",
