@@ -335,13 +335,13 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                     result = _utilsServices.GetResponse(ResponseType.Success);
                 } else {
                     Dictionary<string, string> errors = new Dictionary<string, string>();
-                    errors.Add("BODYEXCEEDED", "messaggio rigettato per superamento lunghezza max di testo (160 caratteri)");
-                    errors.Add("MISSINGPARAMETER_1", "Destinatario mancante");
-                    errors.Add("MISSINGPARAMETER_2", "Identificativo di invio mancante");
-                    errors.Add("MISSINGPARAMETER_3", "Mittente mancante o errato");
-                    errors.Add("MISSINGPARAMETER_4", "Testo mancante");
-                    errors.Add("MISSINGPARAMETER_5", "Priorità mancante o errata");
-                    errors.Add("FALSE", "Errore generico");
+                    errors.Add("BODYEXCEEDED", T("Message rejected: too many characters. (160 max)").ToString()); //"messaggio rigettato per superamento lunghezza max di testo (160 caratteri)");
+                    errors.Add("MISSINGPARAMETER_1", T("Missing recipient").ToString()); //"Destinatario mancante");
+                    errors.Add("MISSINGPARAMETER_2", T("Sender identifier missing").ToString()); //"Identificativo di invio mancante");
+                    errors.Add("MISSINGPARAMETER_3", T("Sender missing or wrong").ToString()); //"Mittente mancante o errato");
+                    errors.Add("MISSINGPARAMETER_4", T("Missing text").ToString()); //"Testo mancante");
+                    errors.Add("MISSINGPARAMETER_5", T("Priority missing or wrong").ToString()); //"Priorità mancante o errata");
+                    errors.Add("FALSE", T("Generic error").ToString()); //"Errore generico");
                     result = _utilsServices.GetResponse(ResponseType.None, T("Send SMS failed.").Text + errors[sendSmsResult].ToString());
                 }
             }

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using System.Collections.Generic;
+using Orchard.Localization;
 
 namespace Laser.Orchard.StartupConfig.Services {
 
@@ -42,68 +43,7 @@ namespace Laser.Orchard.StartupConfig.Services {
 
     public class UtilsServices : IUtilsServices {
 
-        public Response GetResponse(ResponseType rsptype, string message = "", dynamic data = null) {
-            Response rsp = new Response();
-            rsp.Message = message;
-            switch (rsptype) {
-                case ResponseType.Success:
-                    rsp.Success = true;
-                    if (message != "")
-                        rsp.Message = message;
-                    else
-                        rsp.Message = "Successfully Executed";
-                    rsp.ErrorCode = ErrorCode.NoError;
-                    rsp.Data = data;
-                    rsp.ResolutionAction = ResolutionAction.NoAction;
-                    break;
-
-                case ResponseType.InvalidUser:
-                    rsp.Success = false;
-                    if (message != "")
-                        rsp.Message = message;
-                    else
-                        rsp.Message = "Invalid User";
-                    rsp.ErrorCode = ErrorCode.InvalidUser;
-                    rsp.Data = data;
-                    rsp.ResolutionAction = ResolutionAction.Login;
-                    break;
-
-                case ResponseType.InvalidXSRF:
-                    rsp.Success = false;
-                    if (message != "")
-                        rsp.Message = message;
-                    else
-                        rsp.Message = "Invalid Token/csrfToken";
-                    rsp.ErrorCode = ErrorCode.InvalidXSRF;
-                    rsp.Data = data;
-                    rsp.ResolutionAction = ResolutionAction.Login;
-                    break;
-
-                case ResponseType.Validation:
-                    rsp.Success = false;
-                    if (message != "")
-                        rsp.Message = message;
-                    else
-                        rsp.Message = "Validation error";
-                    rsp.ErrorCode = ErrorCode.Validation;
-                    rsp.Data = data;
-                    rsp.ResolutionAction = ResolutionAction.NoAction;
-                    break;
-
-                case ResponseType.UnAuthorized:
-                    rsp.Success = false;
-                    if (message != "")
-                        rsp.Message = message;
-                    else
-                        rsp.Message = "UnAuthorized Action";
-                    rsp.ErrorCode = ErrorCode.UnAuthorized;
-                    rsp.Data = data;
-                    rsp.ResolutionAction = ResolutionAction.NoAction;
-                    break;
-            }
-            return rsp;
-        }
-
+        public Localizer T { get; set; }
         private readonly IModuleService _moduleService;
         private readonly string _tenantPath;
         private readonly string _storageMediaPath; // C:\orchard\media\default
@@ -134,7 +74,72 @@ namespace Laser.Orchard.StartupConfig.Services {
             _publicMediaPath = appPath + "Media/" + settings.Name + "/";
 
             _tenantPath = HostingEnvironment.IsHosted ? HostingEnvironment.MapPath("~/") ?? "" : AppDomain.CurrentDomain.BaseDirectory;
+
+            T = NullLocalizer.Instance;
         }
+
+        public Response GetResponse(ResponseType rsptype, string message = "", dynamic data = null) {
+            Response rsp = new Response();
+            rsp.Message = message;
+            switch (rsptype) {
+                case ResponseType.Success:
+                    rsp.Success = true;
+                    if (message != "")
+                        rsp.Message = message;
+                    else
+                        rsp.Message = T("Successfully Executed").ToString();
+                    rsp.ErrorCode = ErrorCode.NoError;
+                    rsp.Data = data;
+                    rsp.ResolutionAction = ResolutionAction.NoAction;
+                    break;
+
+                case ResponseType.InvalidUser:
+                    rsp.Success = false;
+                    if (message != "")
+                        rsp.Message = message;
+                    else
+                        rsp.Message = T("Invalid User").ToString();
+                    rsp.ErrorCode = ErrorCode.InvalidUser;
+                    rsp.Data = data;
+                    rsp.ResolutionAction = ResolutionAction.Login;
+                    break;
+
+                case ResponseType.InvalidXSRF:
+                    rsp.Success = false;
+                    if (message != "")
+                        rsp.Message = message;
+                    else
+                        rsp.Message = T("Invalid Token/csrfToken").ToString();
+                    rsp.ErrorCode = ErrorCode.InvalidXSRF;
+                    rsp.Data = data;
+                    rsp.ResolutionAction = ResolutionAction.Login;
+                    break;
+
+                case ResponseType.Validation:
+                    rsp.Success = false;
+                    if (message != "")
+                        rsp.Message = message;
+                    else
+                        rsp.Message = T("Validation error").ToString();
+                    rsp.ErrorCode = ErrorCode.Validation;
+                    rsp.Data = data;
+                    rsp.ResolutionAction = ResolutionAction.NoAction;
+                    break;
+
+                case ResponseType.UnAuthorized:
+                    rsp.Success = false;
+                    if (message != "")
+                        rsp.Message = message;
+                    else
+                        rsp.Message = T("UnAuthorized Action").ToString();
+                    rsp.ErrorCode = ErrorCode.UnAuthorized;
+                    rsp.Data = data;
+                    rsp.ResolutionAction = ResolutionAction.NoAction;
+                    break;
+            }
+            return rsp;
+        }
+
 
         /// <summary>
         /// Returns the tenant path
