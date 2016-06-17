@@ -21,8 +21,8 @@ namespace Laser.Orchard.UserReactions.ViewModels {
         public int TypeId { get; set; }
         public string CssStyleName { get; set; }
         public int OrderPriority { get; set; }
-        public StyleFileNameProviders CssName { get; set; }
         public bool Activating { get; set; }
+        public bool Selected { get; set; }
     }
 
 

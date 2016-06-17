@@ -30,12 +30,7 @@ namespace Laser.Orchard.UserReactions.Drivers {
         //Evento display 
         protected override DriverResult Display(UserReactionsPart part, string displayType, dynamic shapeHelper) {
 
-            //IList<UserReactionsVM> viewmodel = _userReactionService.GetTot(part, false);
             IList<UserReactionsVM> viewmodel = null;
-            //UserReactionsPartSettings settings = part.TypePartDefinition.Settings.GetModel<UserReactionsPartSettings>();
-            //UserReactionsPartSettings newPartsSetting = new UserReactionsPartSettings();
-            //bool FilterApplied = settings.Filtering;
-
 
             //Gestione visualizzazione amministratore
             if (displayType == "SummaryAdmin") {

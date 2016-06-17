@@ -25,6 +25,7 @@ namespace Laser.Orchard.UserReactions.Services {
         IList<UserReactionsVM> GetTot(UserReactionsPart part);
         IUser CurrentUser();
         string CalculateTypeClick(IUser CurrentUser, int IconType, int CurrentPage);
+        UserReactionsVM[] GetSummaryReaction(IUser CurrentUser, int CurrentPage);
         UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model);
 
     }
@@ -111,7 +112,11 @@ namespace Laser.Orchard.UserReactions.Services {
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
         public UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model) 
         {
             UserReactionsPartSettings retval = new UserReactionsPartSettings();
@@ -125,11 +130,9 @@ namespace Laser.Orchard.UserReactions.Services {
                  
             }).ToList();
 
-
             List<UserReactionsSettingTypesSel> viewmodel;
             List<UserReactionsSettingTypesSel> TypeReactionsPartsModel = new List<UserReactionsSettingTypesSel>();
             TypeReactionsPartsModel = Model.TypeReactionsPartsSelected;
-      
       
             if (TypeReactionsPartsModel.Count()==0)
                 viewmodel = partSelectedAll;
@@ -166,8 +169,7 @@ namespace Laser.Orchard.UserReactions.Services {
             }).ToList();
             return userRT;
         }
-
-       
+     
 
         /// <summary>
         /// 
@@ -202,79 +204,17 @@ namespace Laser.Orchard.UserReactions.Services {
         /// </summary>
         /// <returns></returns>
         public IUser CurrentUser() {
-           return _authenticationService.GetAuthenticatedUser();
+            return _authenticationService.GetAuthenticatedUser();
         }
-                   
 
-        ///////// <param name="part"></param>
-        ///////// <returns></returns>
-        //////public IList<UserReactionsVM> GetTot(UserReactionsPart part, bool filter) {
-           
-        //////    var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();           
-        //////    IList<UserReactionsVM> viewmodel = new List<UserReactionsVM>();
-        //////    List<UserReactionsVM> listType = new List<UserReactionsVM>();
-        //////    int[] ids = null;
-
-        //////    viewmodel = part.Reactions.Select(s => new UserReactionsVM {
-        //////        Id = s.Id,
-        //////        Quantity = s.Quantity,
-        //////        TypeName = s.UserReactionsTypesRecord.TypeName,
-        //////        TypeId = s.UserReactionsTypesRecord.Id,
-        //////        CssStyleName = s.UserReactionsTypesRecord.TypeCssClass, 
-        //////        OrderPriority = s.UserReactionsTypesRecord.Priority,
-        //////        Activating = s.UserReactionsTypesRecord.Activating,
-        //////        CssName = reactionSettings.StyleFileNameProvider 
-        //////    }).ToList();
-
-        //////    if (filter == false) {
-                
-        //////        ids = viewmodel.Select(s => s.TypeId).ToArray();
-
-        //////        listType = GetTypesTableFiltered().Where(w => !(ids.Contains(w.Id)))
-        //////        .Select(x => new UserReactionsVM {
-        //////            Id = 0,
-        //////            Quantity = 0,
-        //////            TypeName = x.TypeName,
-        //////            TypeId = x.Id,
-        //////            CssStyleName = x.TypeCssClass,
-        //////            OrderPriority = x.Priority,
-        //////            Activating = x.Activating,
-        //////            CssName = reactionSettings.StyleFileNameProvider
-        //////        }).ToList();
-
-        //////        viewmodel = viewmodel.Concat(listType).Where(r => r.Activating == true).OrderBy(z => z.OrderPriority).ToList();
-        //////    } 
-        //////    else 
-        //////    {
-        //////        List<UserReactionsSettingTypesSel> SettingType = new List<UserReactionsSettingTypesSel>();
-
-        //////        if (part.Settings.Count > 0) {
-        //////            SettingType = new JavaScriptSerializer().Deserialize<List<UserReactionsSettingTypesSel>>(part.Settings.Values.ElementAt(1));
-        //////            ids = SettingType.Where(z => z.checkReaction == true).Select(x => x.Id).ToArray();
-
-        //////            listType = GetTypesTableFiltered().Where(w => (ids.Contains(w.Id)))
-        //////                            .Select(x => new UserReactionsVM {
-        //////                            Id = 0,
-        //////                            Quantity = 0,
-        //////                            TypeName = x.TypeName,
-        //////                            TypeId = x.Id,
-        //////                            CssStyleName = x.TypeCssClass,
-        //////                            OrderPriority = x.Priority,
-        //////                            Activating = x.Activating,
-        //////                            CssName = reactionSettings.StyleFileNameProvider
-        //////                        }).ToList();
-
-        //////            viewmodel = viewmodel.Except(listType).OrderBy(z => z.OrderPriority).ToList();
-        //////        }   
-        //////    }
-          
-        //////    return viewmodel;
-        //////}
-
-
-        //public IList<UserReactionsVM> GetTot(UserReactionsPart part, bool filter) {         
-            public IList<UserReactionsVM> GetTot(UserReactionsPart part) {
-           
+    
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part"></param>
+        /// <returns></returns>       
+        public IList<UserReactionsVM> GetTot(UserReactionsPart part) 
+        {           
             //Part
             IList<UserReactionsVM> viewmodel = new List<UserReactionsVM>();
             //settings type
@@ -310,20 +250,19 @@ namespace Laser.Orchard.UserReactions.Services {
             {
                 // prendi i valori filtrati
                 listType = GetTypesTableFilteredByTypeReactions(SettingType)
-                               .Select(x => new UserReactionsVM {
-                                   Id = 0,
-                                   Quantity = 0,
-                                   TypeName = x.TypeName,
-                                   TypeId = x.Id,
-                                   CssStyleName = x.TypeCssClass,
-                                   OrderPriority = x.Priority,
-                                   Activating = x.Activating
-                               }).ToList();
+                                .Select(x => new UserReactionsVM {
+                                    Id = 0,
+                                    Quantity = 0,
+                                    TypeName = x.TypeName,
+                                    TypeId = x.Id,
+                                    CssStyleName = x.TypeCssClass,
+                                    OrderPriority = x.Priority,
+                                    Activating = x.Activating
+                                }).ToList();
 
             }
 
             /////////////////////////////////////////////////////////////////
-
             //Part type
             viewmodel = part.Reactions.Select(s => new UserReactionsVM {
                 Id = s.Id,
@@ -335,13 +274,45 @@ namespace Laser.Orchard.UserReactions.Services {
                 Activating = s.UserReactionsTypesRecord.Activating,
             }).ToList();
 
+            List<UserReactionsVM> retData = new List<UserReactionsVM>(); 
 
-            IList<UserReactionsVM> retData= listType.Except(viewmodel).OrderBy(z => z.OrderPriority).ToList();
+            foreach (UserReactionsVM itemTypeReactions in listType)
+            {
+                UserReactionsVM totItem = itemTypeReactions;
+                UserReactionsVM viewModel = viewmodel.FirstOrDefault(z => z.TypeId.Equals(itemTypeReactions.TypeId));
+                
+                if (viewModel != null) 
+                {                   
+                    totItem.Quantity = viewModel.Quantity;
+                }                
+                retData.Add(totItem);
+            }
 
             return retData;
         }
 
 
+        /// <param name="CurrentUser"></param>
+        /// <param name="IconType"></param>
+        /// <param name="CurrentPage"></param>
+        /// <returns></returns>
+        public UserReactionsVM[] GetSummaryReaction(IUser CurrentUser, int CurrentPage) 
+        {
+            //Verifica che ci sia già un record cliccato per quell' icona in quel documento
+            var sommaryRecord = _repoSummary.Table.Where(z => z.UserReactionsPartRecord.Id.Equals(CurrentPage))
+                .Select(s => new UserReactionsVM { 
+                Id= s.Id,
+                OrderPriority = s.UserReactionsTypesRecord.Priority,
+                Quantity = s.Quantity,
+                Selected = false, //INserire logica selected in base al cookie
+                })
+                .ToArray();
+
+            return sommaryRecord;
+        }
+
+
+         
 
 
         /// <param name="CurrentUser"></param>
