@@ -171,8 +171,14 @@ public string UnixTicks( string dtstring)
           <xsl:variable name="year" select="substring-before($date, '-')" />
           <xsl:variable name="month" select="substring-before(substring-after($date, '-'), '-')" />
           <xsl:variable name="day" select="substring-after(substring-after($date, '-'), '-')" />
+          <xsl:variable name="datenum" select="(((number($year)*100)+number($month))*100)+number($day)" />
+          
+          <xsl:variable name="dayinizio" select="substring-before($datainizio, '/')" />
+          <xsl:variable name="monthinizio" select="substring-before(substring-after($datainizio, '/'), '/')" />
+          <xsl:variable name="yearinizio" select="substring-after(substring-after($datainizio, '/'), '/')" />
+          <xsl:variable name="datainizionum" select="(((number($yearinizio)*100)+number($monthinizio))*100)+number($dayinizio)" />
 
-          <xsl:if test="concat($day,'/',$month,'/',$year) = $datainizio">
+          <xsl:if test="$datenum &gt;= $datainizionum">
             <xsl:element name="{local-name()}" namespace="">
               <xsl:apply-templates select="node()" />
             </xsl:element>
