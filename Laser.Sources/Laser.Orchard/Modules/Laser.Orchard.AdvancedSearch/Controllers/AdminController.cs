@@ -313,9 +313,24 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 //because the check is done after the query. Hence, for example, we cannot directly page.
                 if (model.AdvancedOptions.SelectedUntranslatedLanguageId > 0) {
                     var allCi = query.List();
+                    //for (int i = 0; i < allCi.Count(); i++) { //this loop is used to test null conditions and other stuff like that while debugging
+                    //    var ci = allCi.ElementAt(i);
+                    //    if (ci.Is<LocalizationPart>()) {
+                    //        var lci = _localizationService.GetLocalizations(ci, versionOptions);
+                    //        var clci = lci.Count();
+                    //        var bo = lci.Any(li => li.Culture.Id == model.AdvancedOptions.SelectedUntranslatedLanguageId);
+                    //    }
+                    //}
                     var untranslatedCi = allCi
                         .Where(x =>
+                            x.Is<LocalizationPart>() && //the content is translatable
+                            (
+                                x.As<LocalizationPart>().Culture == null || //this is the case where the content was created and never translated to any other culture.
+                                x.As<LocalizationPart>().Culture.Id != model.AdvancedOptions.SelectedUntranslatedLanguageId //not a content in the language in which we are looking translations
+                            ) &&
+                            _localizationService.GetLocalizations(x, versionOptions) != null &&
                             !_localizationService.GetLocalizations(x, versionOptions).Any(li =>
+                                li.Culture != null &&
                                 li.Culture.Id == model.AdvancedOptions.SelectedUntranslatedLanguageId
                             )
                         );
