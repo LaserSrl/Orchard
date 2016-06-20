@@ -23,6 +23,16 @@
         </script>
     }
 }
+@using (Script.Foot()) {
+    @Display.DatePickerLocalization()
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+            $('#unavailableAfterDate').datepicker({ showAnim: "", changeYear: true, changeMonth: true });
+        });
+        //]]>
+    </script>
+}
 <fieldset class="editor">
     <legend id="seo-label"><a href="#seo-label"><i class="fa fa-chevron-right"></i></a> @T("SEO attributes")</legend>
     @if (emptySeo){
@@ -52,6 +62,46 @@
         <div class="editor-field">
             @Html.TextBoxFor(m => m.Keywords, new { @class = "large text" })
             @Html.ValidationMessageFor(m => m.Keywords)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(m => m.RobotsNoIndex, @T("Robots settings"))
+        </div>
+        <div class="editor-field">
+            @Html.CheckBoxFor(m => m.RobotsNoIndex)
+            @Html.DisplayNameFor(m => m.RobotsNoIndex)
+
+            @Html.CheckBoxFor(m => m.RobotsNoFollow)
+            @Html.DisplayNameFor(m => m.RobotsNoFollow)
+
+            @Html.CheckBoxFor(m => m.RobotsNoSnippet)
+            @Html.DisplayNameFor(m => m.RobotsNoSnippet)
+
+            @Html.CheckBoxFor(m => m.RobotsNoOdp)
+            @Html.DisplayNameFor(m => m.RobotsNoOdp)
+
+            @Html.CheckBoxFor(m => m.RobotsNoArchive)
+            @Html.DisplayNameFor(m => m.RobotsNoArchive)
+
+            @Html.CheckBoxFor(m => m.RobotsUnavailableAfter)
+            @Html.DisplayNameFor(m => m.RobotsUnavailableAfter)
+
+            @Html.TextBoxFor(m => m.RobotsUnavailableAfterDate, new { id = "unavailableAfterDate" })
+
+            @Html.CheckBoxFor(m => m.RobotsNoImageIndex)
+            @Html.DisplayNameFor(m => m.RobotsNoImageIndex)
+
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(m => m.RobotsNoIndex, @T("Google settings"))
+        </div>
+        <div class="editor-field">
+            @Html.CheckBoxFor(m => m.GoogleNoSiteLinkSearchBox)
+            @Html.DisplayNameFor(m => m.GoogleNoSiteLinkSearchBox)
+
+            @Html.CheckBoxFor(m => m.GoogleNoTranslate)
+            @Html.DisplayNameFor(m => m.GoogleNoTranslate)
         </div>
     </div>
 </fieldset>

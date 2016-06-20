@@ -3,6 +3,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data;
 using Orchard.Data.Migration;
+using System;
 
 
 namespace Laser.Orchard.SEO {
@@ -61,6 +62,31 @@ namespace Laser.Orchard.SEO {
                 }
             }
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("SeoVersionRecord",
+                t => t.AddColumn<bool>("RobotsNoIndex"));
+            SchemaBuilder.AlterTable("SeoVersionRecord",
+                t => t.AddColumn<bool>("RobotsNoFollow")); 
+            SchemaBuilder.AlterTable("SeoVersionRecord",
+                 t => t.AddColumn<bool>("RobotsNoSnippet"));
+            SchemaBuilder.AlterTable("SeoVersionRecord",
+                 t => t.AddColumn<bool>("RobotsNoOdp"));
+            SchemaBuilder.AlterTable("SeoVersionRecord",
+                 t => t.AddColumn<bool>("RobotsNoArchive"));
+            SchemaBuilder.AlterTable("SeoVersionRecord",
+                 t => t.AddColumn<bool>("RobotsUnavailableAfter"));
+            SchemaBuilder.AlterTable("SeoVersionRecord",
+                 t => t.AddColumn<DateTime>("RobotsUnavailableAfterDate"));
+            SchemaBuilder.AlterTable("SeoVersionRecord",
+                 t => t.AddColumn<bool>("RobotsNoImageIndex"));
+            SchemaBuilder.AlterTable("SeoVersionRecord",
+                 t => t.AddColumn<bool>("GoogleNoSiteLinkSearchBox"));
+            SchemaBuilder.AlterTable("SeoVersionRecord",
+                 t => t.AddColumn<bool>("GoogleNoTranslate"));
+            
+            return 3;
         }
 
     }
