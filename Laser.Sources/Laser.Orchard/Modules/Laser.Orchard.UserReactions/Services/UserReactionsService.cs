@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Laser.Orchard.UserReactions.Services;
-using Laser.Orchard.UserReactions.ViewModels;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement;
 using System.Web.Script.Serialization;
@@ -24,8 +23,8 @@ namespace Laser.Orchard.UserReactions.Services {
         UserReactionsTypes GetTypesTableWithStyles();
         IList<UserReactionsVM> GetTot(UserReactionsPart part);
         IUser CurrentUser();
-        string CalculateTypeClick(IUser CurrentUser, int IconType, int CurrentPage);
-        UserReactionsVM[] GetSummaryReaction(IUser CurrentUser, int CurrentPage);
+        UserReactionsVM CalculateTypeClick(int IconType, int CurrentPage);
+        UserReactionsVM[] GetSummaryReaction(int CurrentPage);
         UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model);
 
     }
@@ -44,7 +43,9 @@ namespace Laser.Orchard.UserReactions.Services {
         private readonly IClock _clock;
         private readonly IRepository<UserPartRecord> _repoUser;
         private readonly IRepository<UserReactionsPartRecord> _repoPartRec;
+        private readonly IRepository<UserReactionsPart> _repoPart;
         private readonly IOrchardServices _orchardServices;
+
         //private readonly IRepository<ContentItemRecord> _repoContent;
         /// <summary>
         /// 
@@ -64,7 +65,9 @@ namespace Laser.Orchard.UserReactions.Services {
                                     IRepository<UserPartRecord> repoUser,
                                     IRepository<UserReactionsPartRecord> repoPartRec,
                                     IRepository<UserReactionsSummaryRecord> repoSummary,
-                                    IOrchardServices orchardServices
+                                    IOrchardServices orchardServices,
+                                    IRepository<UserReactionsPart> repoPart
+                                   
 ) 
         {
             _repoTypes = repoTypes;
@@ -76,6 +79,8 @@ namespace Laser.Orchard.UserReactions.Services {
             _repoPartRec = repoPartRec;
             _repoSummary = repoSummary;
             _orchardServices = orchardServices;
+            _repoPart = repoPart;
+           
         }
 
 
@@ -208,6 +213,38 @@ namespace Laser.Orchard.UserReactions.Services {
         }
 
     
+         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="CurrentUser"></param>
+        /// <returns></returns>
+        public UserReactionsUser ReactionsCurrentUser(IUser CurrentUser) 
+        {
+            UserReactionsUser reactionsCurrentUser = new UserReactionsUser();
+            string userCookie = string.Empty;
+
+            if (CurrentUser != null) {
+                reactionsCurrentUser.Id = CurrentUser.Id;
+            } 
+            else
+            {
+                if (HttpContext.Current.Request.Cookies["userCookie"] != null) {
+                    userCookie = HttpContext.Current.Request.Cookies["userCookie"].Value.ToString();
+                } else {
+                    Guid userNameCookie = System.Guid.NewGuid();
+                    HttpContext.Current.Response.Cookies.Add(new HttpCookie("userCookie", userNameCookie.ToString()));
+                    userCookie = userNameCookie.ToString();
+                    
+                }
+                reactionsCurrentUser.Id = 0;
+                reactionsCurrentUser.Guid = userCookie;
+            }
+
+            return reactionsCurrentUser;
+        }
+
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -296,71 +333,95 @@ namespace Laser.Orchard.UserReactions.Services {
         /// <param name="IconType"></param>
         /// <param name="CurrentPage"></param>
         /// <returns></returns>
-        public UserReactionsVM[] GetSummaryReaction(IUser CurrentUser, int CurrentPage) 
+        public UserReactionsVM[] GetSummaryReaction(int CurrentPage) 
         {
-            //Verifica che ci sia già un record cliccato per quell' icona in quel documento
+            UserReactionsPartRecord part = new UserReactionsPartRecord();
+            part = _repoPartRec.Table.Where(z => z.Id == CurrentPage).FirstOrDefault();
+          
+            IUser userId = this.CurrentUser(); 
+            UserReactionsClickRecord res = new UserReactionsClickRecord();
+            string userCookie = string.Empty;
+                        
+            UserReactionsUser reactionsCurrentUser = new UserReactionsUser();
+            reactionsCurrentUser = ReactionsCurrentUser(userId);      
+           
             var sommaryRecord = _repoSummary.Table.Where(z => z.UserReactionsPartRecord.Id.Equals(CurrentPage))
-                .Select(s => new UserReactionsVM { 
-                Id= s.Id,
-                OrderPriority = s.UserReactionsTypesRecord.Priority,
-                Quantity = s.Quantity,
-                Selected = false, //INserire logica selected in base al cookie
-                })
-                .ToArray();
+               .Select(s => new UserReactionsVM {
+                   Id = s.Id,
+                   TypeId=s.UserReactionsTypesRecord.Id,
+                   OrderPriority = s.UserReactionsTypesRecord.Priority,
+                   Quantity = s.Quantity,
+                   Clicked = 0
+               }).ToList();
 
-            return sommaryRecord;
+            List<UserReactionsVM> newSommaryRecord = new List<UserReactionsVM>();
+            foreach (UserReactionsVM item in sommaryRecord) 
+            {
+                UserReactionsVM newItem = new UserReactionsVM();
+                newItem = item;
+
+                int IconType = item.TypeId;
+                //Verifica che non sia già stato eseguito un click 
+                if (reactionsCurrentUser.Id > 0) {
+                    res = GetClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserPartRecord.Id.Equals(reactionsCurrentUser.Id) && w.ActionType.Equals(1)).FirstOrDefault();
+                } else {
+                    userCookie = reactionsCurrentUser.Guid;
+                    res = GetClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserGuid.Equals(userCookie) && w.ActionType.Equals(1)).FirstOrDefault();
+                }
+
+                if (res == null)
+                    newItem.Clicked = 1;
+                else
+                    newItem.Clicked = -1;
+
+                
+                newSommaryRecord.Add(newItem);
+            }
+
+            return newSommaryRecord.ToArray();
         }
 
 
-         
-
-
-        /// <param name="CurrentUser"></param>
+               
         /// <param name="IconType"></param>
         /// <param name="CurrentPage"></param>
         /// <returns></returns>
-        public string CalculateTypeClick(IUser CurrentUser, int IconType, int CurrentPage) {
+        public UserReactionsVM CalculateTypeClick(int IconType, int CurrentPage) {
             
             UserPartRecord userRec = new UserPartRecord();
             UserReactionsTypesRecord reactType = new UserReactionsTypesRecord();
             UserReactionsPartRecord userPart = new UserReactionsPartRecord();
             UserReactionsClickRecord res = new UserReactionsClickRecord();
+            UserReactionsVM retVal=new ViewModels.UserReactionsVM();
+
             string userCookie = string.Empty;
             string sommaryQty = string.Empty;
             string returnVal = string.Empty;
 
+            //Verifica user
+            IUser userId = CurrentUser(); 
+            UserReactionsUser reactionsCurrentUser = new UserReactionsUser();
+            reactionsCurrentUser=ReactionsCurrentUser(userId);
+
             //Verifica che non sia già stato eseguito un click 
-            if (CurrentUser != null) 
+            if (reactionsCurrentUser.Id > 0) 
             {
-                res = GetClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserPartRecord.Id.Equals(CurrentUser.Id) && w.ActionType.Equals(1)).FirstOrDefault();
+                res = GetClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserPartRecord.Id.Equals(reactionsCurrentUser.Id ) && w.ActionType.Equals(1)).FirstOrDefault();
             } 
             else 
-            {                
-                //Leggi il cookie se vuoto crea il guid altrimenti prendi il valore del cookie
-                if (HttpContext.Current.Request.Cookies["userCookie"] != null) 
-                {
-                    userCookie = HttpContext.Current.Request.Cookies["userCookie"].Value.ToString();                    
-                } 
-                else
-                {
-                    Guid userNameCookie = System.Guid.NewGuid();
-                    HttpContext.Current.Response.Cookies.Add(new HttpCookie("userCookie", userNameCookie.ToString()));
-                    userCookie = userNameCookie.ToString();                                                                               
-                   
-                }
-
-                res = GetClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserGuid.Equals(userCookie) && w.ActionType.Equals(1)).FirstOrDefault();
+            {                               
+               userCookie = reactionsCurrentUser.Guid;
+               res = GetClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserGuid.Equals(userCookie) && w.ActionType.Equals(1)).FirstOrDefault();
             }
 
             UserReactionsClickRecord result = new UserReactionsClickRecord();
-
-
 
             //Se già cliccato quella reaction
             if (res != null) 
             {
                 //Già cliccato (Update dati)   
                 res.ActionType = -1;
+                res.CreatedUtc = _clock.UtcNow;
                 _repoClick.Update(res);
 
                 UserReactionsSummaryRecord sommaryRecord = new UserReactionsSummaryRecord();
@@ -373,15 +434,19 @@ namespace Laser.Orchard.UserReactions.Services {
                     _repoSummary.Update(sommaryRecord);
                 }
 
-                sommaryQty = sommaryRecord.Quantity.ToString();
+                //if(reactionsCurrentUser.Id > 0)
+                //{
+                retVal.Clicked = -1;                
+                //}
+                //else
+                //{
+                    //retVal.Clicked = 0;              
+                //}
 
-                if(CurrentUser==null)
-                    returnVal = "0" + "|" + sommaryQty + "|" + IconType.ToString();
-                else
-                    returnVal = "-1" + "|" + sommaryQty + "|" + IconType.ToString(); ;
-
-
-                return returnVal;
+                retVal.Quantity=sommaryRecord.Quantity;
+                retVal.TypeId=IconType;
+                retVal.Id = CurrentPage;
+                return retVal;
             } 
             else 
             {
@@ -394,9 +459,9 @@ namespace Laser.Orchard.UserReactions.Services {
                 reactType = GetTypesTable().Where(w => w.Id.Equals(IconType)).FirstOrDefault();
                 result.UserReactionsTypesRecord = reactType;
 
-                if (CurrentUser != null) 
+                if (reactionsCurrentUser.Id > 0) 
                 {
-                    userRec = _repoUser.Table.Where(w => w.Id.Equals(CurrentUser.Id)).FirstOrDefault();
+                    userRec = _repoUser.Table.Where(w => w.Id.Equals(reactionsCurrentUser.Id )).FirstOrDefault();
                 } 
                 else 
                 {                        
@@ -437,16 +502,29 @@ namespace Laser.Orchard.UserReactions.Services {
 
                 sommaryQty = sommaryRecord.Quantity.ToString();
 
-                if (CurrentUser == null)
-                    returnVal =  "2" + "|" + sommaryQty + "|" + IconType.ToString();
-                else
-                    returnVal = "1" + "|" + sommaryQty + "|" + IconType.ToString(); 
+                //if (reactionsCurrentUser.Id > 0)
+                //{
+                    retVal.Clicked = 1;                   
+                //}
+                //else
+                //{
+                //     retVal.Clicked = 2;
+                //}
+
+                retVal.Quantity=sommaryRecord.Quantity;
+                retVal.TypeId=IconType;
+                retVal.Id = CurrentPage;
+                return retVal;
+               
 
             } catch (Exception) {
-                returnVal = "5" + "|" + sommaryQty + "|" + IconType.ToString(); ;
+                
+                retVal.Clicked=5;
+                return retVal;
+
             }            
 
-            return returnVal;
+            
         }
 
 

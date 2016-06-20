@@ -126,6 +126,7 @@
     <Compile Include="Models\UserReactionsSettingTypesSel.cs" />
     <Compile Include="Models\UserReactionsSummaryRecord.cs" />
     <Compile Include="Models\UserReactionsTypesRecord.cs" />
+    <Compile Include="Models\UserReactionsUser.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\UserReactionsService.cs" />

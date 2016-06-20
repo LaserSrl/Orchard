@@ -20,26 +20,28 @@
 @Html.AntiForgeryToken()
 
 
+
 @{foreach (var item in part) {
       var quantità = "(" + @item.Quantity + ")";
       var itemName = " " + @item.TypeName + " ";
       string attCSS = @item.CssStyleName;
       var id = @item.TypeId;
       
-     
-         <div class="glyph">      
-          <span id="@item.TypeId" class="@attCSS"></span> 
-
-          @{var itemNameCount = "itemName" + @id; }
-          @{var itemQtyCount = "itemQuantity" + @id; }
+       
+      <div class="glyph"> 
+          <div class="reactiondiv" id="@item.TypeId">     
+              @*<span id="@item.TypeId" class="@attCSS"></span> *@
+              <span class="@attCSS"></span>
+              @{var itemNameCount = "itemName" + @id; }
+              @{var itemQtyCount = "itemQuantity" + @id; }
           
-          <b id="@itemNameCount">@itemName</b>
-          <b id="@itemQtyCount">@quantità</b>
-     </div>
+              <b id="@itemNameCount">@itemName</b>
+              <b id="@itemQtyCount">@quantità</b>
+          </div>
+      </div>
       
   }
 }
-
 
 
 <script type="text/javascript">
@@ -65,8 +67,7 @@
                     var nameitem = "#itemQuantity" + result[i].TypeId;
                     var total = result[i].Quantity;
                     $(nameitem).html("(" + total + ")");
-                }
-                                 
+                }                                 
             },
                 type: "POST",
                 data: addRequestVerificationToken({ pageId: PageId })
@@ -74,10 +75,10 @@
         //////////////////////////////////////////////////////////////////
 
 
-        //Assegnazione evento click a tag span
-        //$("div.reaction").bind("click", function (event
-         $("span").bind("click", function (event)
-        {
+        //Assegnazione evento click a div reactiondiv
+
+        $("div.reactiondiv").bind("click", function (event)
+        {           
             //Parameters     
             var PageId = "@Model.ContentItem.Id";
             var ReactionTypeId = this.id;
@@ -85,26 +86,13 @@
             //Chiamata ajax richiama metodo server GetReactionClicked nel controller ReactionAjax 
             //che verifica se l'utente deve fare un click in aggiunta oppure in decremento, quale icona cliccata 
             $.ajax(
-            {                    
+            {               
                 url: "@Url.Action("GetReactionClicked", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",
                 success: function (result) {
-
-                    var typeResult = result.split('|')[0];
-                    var total = result.split('|')[1];
-                    var typeReaction = result.split('|')[2];
-
-                    //aggiornamento valori                   
-                    if (typeResult == 0 || typeResult == 2) {
-                        alert("Il risultato è stato acquisito. A breve sarà disponibile sulla pagina");
-                    }
-
-                    var nameitem = "#itemQuantity" + typeReaction;
-
-                    if (typeResult == -1 || typeResult == 1)
-                    {                                               
-                        $(nameitem).html("(" + total + ")");
-                    }
-
+                                        
+                var nameitem = "#itemQuantity" + result.TypeId;                      
+                $(nameitem).html("(" + result.Quantity + ")");
+                    
                 },
                 type: "POST",
                 data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId})

@@ -21,13 +21,11 @@ namespace Laser.Orchard.UserReactions.Controllers {
        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public string GetReactionClicked(int reactionTypeId, int pageId) {
+        public JsonResult GetReactionClicked(int reactionTypeId, int pageId) {
 
-            string typeClick = string.Empty;
-            IUser userId = _userReactionService.CurrentUser();                         
-            typeClick = _userReactionService.CalculateTypeClick(userId, reactionTypeId, pageId);
-
-            return typeClick;       
+            UserReactionsVM typeClick = null;
+            typeClick =_userReactionService.CalculateTypeClick(reactionTypeId, pageId); 
+            return Json(typeClick) ;
         }
 
 
@@ -36,8 +34,7 @@ namespace Laser.Orchard.UserReactions.Controllers {
         public JsonResult GetSummaryReaction(int pageId) {
 
             UserReactionsVM[] typeClick = null;
-            IUser userId = _userReactionService.CurrentUser();
-            typeClick = _userReactionService.GetSummaryReaction(userId, pageId);
+            typeClick = _userReactionService.GetSummaryReaction(pageId);
 
             return Json(typeClick) ;
         }

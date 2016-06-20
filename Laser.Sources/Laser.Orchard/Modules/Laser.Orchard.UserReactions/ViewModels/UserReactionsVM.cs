@@ -22,7 +22,7 @@ namespace Laser.Orchard.UserReactions.ViewModels {
         public string CssStyleName { get; set; }
         public int OrderPriority { get; set; }
         public bool Activating { get; set; }
-        public bool Selected { get; set; }
+        public int Clicked { get; set; }
     }
 
 
