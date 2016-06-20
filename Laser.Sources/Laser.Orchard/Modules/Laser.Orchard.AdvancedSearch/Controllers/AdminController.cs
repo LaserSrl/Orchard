@@ -335,11 +335,12 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                         //);
                     //Paging
                     pagerShape = Shape.Pager(pager).TotalItemCount(untranslatedCi.Count());
+                    int pSize = pager.PageSize != 0 ? pager.PageSize : untranslatedCi.Count();
                     pageOfContentItems= untranslatedCi
                         .Skip(pager.GetStartIndex())
-                        .Take((pager.GetStartIndex() + pager.PageSize) > untranslatedCi.Count() ?
-                        untranslatedCi.Count() - pager.GetStartIndex() :
-                        pager.PageSize)
+                        .Take((pager.GetStartIndex() + pSize) > untranslatedCi.Count() ?
+                            untranslatedCi.Count() - pager.GetStartIndex() :
+                            pSize)
                         .ToList();
                 } else {
                     pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
