@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Core.Common.Fields;
 using Orchard.Fields.Fields;
 using Orchard.Projections.Services;
 using Orchard.Taxonomies.Fields;
@@ -74,7 +75,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                 if (content.ContentItem.ContentType.EndsWith("Taxonomy")) {
                     contentToSerialize = content;
                     json = new JObject(SerializeObject(content, 0));
-                    NormalizeSingleProperty(json);
+                    //NormalizeSingleProperty(json);
                     return json;
                 } else if (content.ContentItem.ContentType.EndsWith("Term") || !String.IsNullOrWhiteSpace(content.ContentItem.TypeDefinition.Settings["Taxonomy"])) {
                     termPart = ((dynamic)content.ContentItem).TermPart;
@@ -86,7 +87,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                             resultArray.Add(new JObject(SerializeObject(resulted, 0)));
                         }
                         json.Add("SubTerms", resultArray);
-                        NormalizeSingleProperty(json);
+                        //NormalizeSingleProperty(json);
                         return json;
                     }
                 }
@@ -126,7 +127,7 @@ namespace Laser.Orchard.StartupConfig.Services {
             }
             #endregion
 
-            NormalizeSingleProperty(json);
+            //NormalizeSingleProperty(json);
 
             return json;
         }
@@ -196,6 +197,10 @@ namespace Laser.Orchard.StartupConfig.Services {
                 );
             var partObject = new JObject();
             foreach (var property in properties) {
+                // skippa la property "Id" se ha lo stesso valore del content item che contiene la part
+                if ((property.Name == "Id") && (part.Id == part.ContentItem.Id)) {
+                    continue;
+                }
                 try {
                     if (!_skipPartProperties.Contains(property.Name)) {
                         object val = property.GetValue(part, BindingFlags.GetProperty, null, null, null);
@@ -255,27 +260,64 @@ namespace Laser.Orchard.StartupConfig.Services {
                         }
                     }
                 }
-            } else if (field.FieldDefinition.Name == "BooleanField") {
-                var properties = field.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(prop =>
-                    !_skipFieldTypes.Contains(prop.Name) //skip 
-                    );
+            //} else if (field.FieldDefinition.Name == "BooleanField") {
+            //    var properties = field.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(prop =>
+            //        !_skipFieldTypes.Contains(prop.Name) //skip 
+            //        );
 
-                foreach (var property in properties) {
-                    try {
-                        if (!_skipFieldProperties.Contains(property.Name)) {
-                            object val = property.GetValue(field, BindingFlags.GetProperty, null, null, null);
-                            if (property.Name == "Value") { //handle the case where the value is set to null, by setting the value to default
-                                val = val ?? false;
-                            }
-                            if (val != null) {
-                                PopulateJObject(ref fieldObject, property, val, _skipFieldProperties, actualLevel);
-                            }
-                        }
-                    } catch {
+            //    foreach (var property in properties) {
+            //        try {
+            //            if (!_skipFieldProperties.Contains(property.Name)) {
+            //                object val = property.GetValue(field, BindingFlags.GetProperty, null, null, null);
+            //                if (property.Name == "Value") { //handle the case where the value is set to null, by setting the value to default
+            //                    val = val ?? false;
+            //                }
+            //                if (val != null) {
+            //                    PopulateJObject(ref fieldObject, property, val, _skipFieldProperties, actualLevel);
+            //                }
+            //            }
+            //        } catch {
 
-                    }
+            //        }
+            //    }
+            }
+            else if (field.FieldDefinition.Name == "NumericField") {
+                var numericField = field as NumericField;
+                object val = 0;
+                if (numericField.Value.HasValue) {
+                    val = numericField.Value.Value;
                 }
-            } else {
+                FormatValue(ref val);
+                return new JProperty(field.Name + field.FieldDefinition.Name, val);
+            }
+            else if (field.FieldDefinition.Name == "TextField") {
+                var textField = field as TextField;
+                object val = textField.Value;
+                FormatValue(ref val);
+                return new JProperty(field.Name + field.FieldDefinition.Name, val);
+            }
+            else if (field.FieldDefinition.Name == "InputField") {
+                var inputField = field as InputField;
+                object val = inputField.Value;
+                FormatValue(ref val);
+                return new JProperty(field.Name + field.FieldDefinition.Name, val);
+            }
+            else if (field.FieldDefinition.Name == "BooleanField") {
+                var booleanField = field as BooleanField;
+                object val = false;
+                if (booleanField.Value.HasValue) {
+                    val = booleanField.Value.Value;
+                }
+                FormatValue(ref val);
+                return new JProperty(field.Name + field.FieldDefinition.Name, val);
+            }
+            else if (field.FieldDefinition.Name == "DateTimeField") {
+                var dateTimeField = field as DateTimeField;
+                object val = dateTimeField.DateTime;
+                FormatValue(ref val);
+                return new JProperty(field.Name + field.FieldDefinition.Name, val);
+            }
+            else {
                 var properties = field.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(prop =>
                     !_skipFieldTypes.Contains(prop.Name) //skip 
                     );
@@ -294,7 +336,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                 }
             }
 
-            return new JProperty(field.Name, fieldObject);
+            return new JProperty(field.Name + field.FieldDefinition.Name, fieldObject);
         }
 
         private JProperty SerializeObject(object item, int actualLevel, string[] skipProperties = null) {

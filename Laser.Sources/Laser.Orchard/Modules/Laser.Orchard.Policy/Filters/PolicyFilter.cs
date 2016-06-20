@@ -51,7 +51,7 @@ namespace Laser.Orchard.Policy.Filters {
                     resultArray.Add(new JObject(_contentSerializationServices.SerializeContentItem((ContentItem)pendingPolicy, 0)));
                 }
                 json.Add("PendingPolicies", resultArray);
-                _contentSerializationServices.NormalizeSingleProperty(json);
+                //_contentSerializationServices.NormalizeSingleProperty(json);
                 filterContext.Result = new ContentResult { Content = json.ToString(Newtonsoft.Json.Formatting.None), ContentType = "application/json" };
                 //return GetJson(content, page, pageSize);
             }
