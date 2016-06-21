@@ -137,7 +137,8 @@ namespace Laser.Orchard.Policy.Services {
 
                         UserPolicyAnswersHistoryRecord recordForHistory = CopyForHistory(record);
 
-                        record.AnswerDate = DateTime.UtcNow;
+                        //date should be updated only if it is a new record, or the answer has actually changed
+                        record.AnswerDate = (shouldCreateRecord || oldAnswer != viewModel.Accepted) ? DateTime.UtcNow : record.AnswerDate;
                         record.Accepted = viewModel.Accepted;
                         record.UserPolicyPartRecord = loggedUser.As<UserPolicyPart>().Record;
                         record.PolicyTextInfoPartRecord = policyText;

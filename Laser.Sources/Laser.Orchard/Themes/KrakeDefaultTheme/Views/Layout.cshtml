@@ -110,15 +110,3 @@
         <div class="footer-text">@WorkContext.CurrentSite.SiteName - @T("Powered by Krake")</div>
     </div>
 </div>
-<script>
-    function colorCheckbox() {
-        if (jQuery('label span').hasClass('accepted')) {
-            jQuery('label span').removeClass('accepted');
-            jQuery('label span').text('@T("I Disagree")');
-        } else {
-            jQuery('label span').addClass('accepted');
-            jQuery('label span').text('@T("I Agree")');
-        }
-    }
-
-</script>
