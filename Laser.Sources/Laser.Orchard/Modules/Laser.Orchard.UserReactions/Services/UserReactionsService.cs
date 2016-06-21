@@ -394,11 +394,14 @@ namespace Laser.Orchard.UserReactions.Services {
             reactionsCurrentUser = ReactionsCurrentUser(userId);
 
             //Verifica che non sia già stato eseguito un click 
-            if (reactionsCurrentUser.Id > 0) {
-                res = GetClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserPartRecord.Id.Equals(reactionsCurrentUser.Id) && w.ActionType.Equals(1)).FirstOrDefault();
-            } else {
-                userCookie = reactionsCurrentUser.Guid;
-                res = GetClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserGuid.Equals(userCookie) && w.ActionType.Equals(1)).FirstOrDefault();
+            if (reactionsCurrentUser.Id > 0) 
+            {
+                res = GetClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) &&  w.UserPartRecord.Id.Equals(reactionsCurrentUser.Id) && w.ContentItemRecordId.Equals(CurrentPage) && w.ActionType.Equals(1)).FirstOrDefault();
+            } 
+            else 
+            {                               
+               userCookie = reactionsCurrentUser.Guid;
+               res = GetClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserGuid.Equals(userCookie) && w.ActionType.Equals(1)).FirstOrDefault();
             }
 
             UserReactionsClickRecord result = new UserReactionsClickRecord();
@@ -415,7 +418,7 @@ namespace Laser.Orchard.UserReactions.Services {
                 //Verifica che ci sia già un record cliccato per quell' icona in quel documento
                 sommaryRecord = _repoSummary.Table.Where(z => z.UserReactionsTypesRecord.Id.Equals(IconType) && z.UserReactionsPartRecord.Id.Equals(CurrentPage)).FirstOrDefault();
 
-                if (sommaryRecord.Quantity > 0) {
+                if (sommaryRecord!=null && sommaryRecord.Quantity > 0) {
                     sommaryRecord.Quantity = sommaryRecord.Quantity - 1;
                     _repoSummary.Update(sommaryRecord);
                 }
@@ -465,7 +468,8 @@ namespace Laser.Orchard.UserReactions.Services {
                 sommaryRecord = _repoSummary.Table.Where(z => z.UserReactionsTypesRecord.Id.Equals(IconType) && z.UserReactionsPartRecord.Id.Equals(CurrentPage)).FirstOrDefault();
 
                 // se 0 record aggiungi il record
-                if (sommaryRecord == null) {
+                if (sommaryRecord == null)
+                {
                     //Create
                     UserReactionsSummaryRecord sommaryRec = new UserReactionsSummaryRecord();
                     userPart = _repoPartRec.Table.FirstOrDefault(z => z.Id.Equals(CurrentPage));
@@ -474,14 +478,14 @@ namespace Laser.Orchard.UserReactions.Services {
                     sommaryRec.UserReactionsTypesRecord = reactType;
                     sommaryRec.UserReactionsPartRecord = userPart;
                     _repoSummary.Create(sommaryRec);
-                }
-                    // Vai in update ed aggiorna il campo Quantity
-                else {
+                }                    
+                else // Vai in update ed aggiorna il campo Quantity
+                {
                     sommaryRecord.Quantity = sommaryRecord.Quantity + 1;
                     _repoSummary.Update(sommaryRecord);
                 }
 
-                sommaryQty = sommaryRecord.Quantity.ToString();
+               // sommaryQty = sommaryRecord.Quantity.ToString();
 
                 //if (reactionsCurrentUser.Id > 0)
                 //{
@@ -493,7 +497,7 @@ namespace Laser.Orchard.UserReactions.Services {
                 //}
 
                 retVal.Quantity = sommaryRecord.Quantity;
-                retVal.TypeId = IconType;
+                retVal.TypeId=IconType;
                 retVal.Id = CurrentPage;
                 return retVal;
 

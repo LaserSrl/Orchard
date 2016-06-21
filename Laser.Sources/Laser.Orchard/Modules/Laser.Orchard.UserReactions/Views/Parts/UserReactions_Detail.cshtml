@@ -63,6 +63,7 @@
             url: "@Url.Action("GetSummaryReaction", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",           
             success: function (result) 
             {
+
                 for (var i = 0; i < result.length; i++) {
                     var nameitem = "#itemQuantity" + result[i].TypeId;
                     var total = result[i].Quantity;
@@ -89,10 +90,11 @@
             {               
                 url: "@Url.Action("GetReactionClicked", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",
                 success: function (result) {
-                                        
-                var nameitem = "#itemQuantity" + result.TypeId;                      
-                $(nameitem).html("(" + result.Quantity + ")");
+                document.getElementById("itemQuantity" + result.TypeId).style.cursor = "pointer";
+                var nameitem = "#itemQuantity" + result.TypeId;  
                     
+                $(nameitem).html("(" + result.Quantity + ")");
+                document.getElementById("itemQuantity" + result.TypeId).style.cursor = "none";
                 },
                 type: "POST",
                 data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId})
