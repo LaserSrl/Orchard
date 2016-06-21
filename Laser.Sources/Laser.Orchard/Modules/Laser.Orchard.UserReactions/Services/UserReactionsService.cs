@@ -13,6 +13,7 @@ using Laser.Orchard.UserReactions.Services;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement;
 using System.Web.Script.Serialization;
+using Orchard.Localization;
 
 
 namespace Laser.Orchard.UserReactions.Services {
@@ -26,10 +27,10 @@ namespace Laser.Orchard.UserReactions.Services {
         UserReactionsVM CalculateTypeClick(int IconType, int CurrentPage);
         UserReactionsVM[] GetSummaryReaction(int CurrentPage);
         UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model);
-
+        LocalizedString GetReactionEnumTranslations(ReactionsNames reactionName);
     }
 
-    
+
     //Class definition to user type
     /// <summary>
     /// 
@@ -58,18 +59,17 @@ namespace Laser.Orchard.UserReactions.Services {
         /// <param name="repoUser"></param>
         /// <param name="repoPartRec"></param>
         /// <param name="repoSummary"></param>
-        public UserReactionsService(IRepository<UserReactionsTypesRecord> repoTypes, IRepository<UserReactionsVM> repoTot, 
+        public UserReactionsService(IRepository<UserReactionsTypesRecord> repoTypes, IRepository<UserReactionsVM> repoTot,
                                     IRepository<UserReactionsClickRecord> repoClick,
-                                    IAuthenticationService authenticationService, 
+                                    IAuthenticationService authenticationService,
                                     IClock clock,
                                     IRepository<UserPartRecord> repoUser,
                                     IRepository<UserReactionsPartRecord> repoPartRec,
                                     IRepository<UserReactionsSummaryRecord> repoSummary,
                                     IOrchardServices orchardServices,
                                     IRepository<UserReactionsPart> repoPart
-                                   
-) 
-        {
+
+) {
             _repoTypes = repoTypes;
             _repoTot = repoTot;
             _authenticationService = authenticationService;
@@ -80,16 +80,18 @@ namespace Laser.Orchard.UserReactions.Services {
             _repoSummary = repoSummary;
             _orchardServices = orchardServices;
             _repoPart = repoPart;
-           
+            T = NullLocalizer.Instance;
+
         }
 
+        public Localizer T { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public IQueryable<UserReactionsTypesRecord> GetTypesTable() {
-            
+
             return _repoTypes.Table.OrderBy(o => o.Priority);
         }
 
@@ -99,7 +101,7 @@ namespace Laser.Orchard.UserReactions.Services {
         /// <returns></returns>
         public IQueryable<UserReactionsTypesRecord> GetTypesTableFiltered() {
 
-            return _repoTypes.Table.Where(z=>z.Activating==true).OrderBy(o => o.Priority);
+            return _repoTypes.Table.Where(z => z.Activating == true).OrderBy(o => o.Priority);
         }
 
         /// <summary>
@@ -110,7 +112,7 @@ namespace Laser.Orchard.UserReactions.Services {
 
             IList<UserReactionsTypesRecord> typeReactionsSelected = _repoTypes.Table.Where(z => z.Activating == true).OrderBy(o => o.Priority).ToList();
             int[] ids = null;
-            ids = typeSettingsReactions.Where(s=>s.checkReaction==true).Select(s => s.Id).ToArray();
+            ids = typeSettingsReactions.Where(s => s.checkReaction == true).Select(s => s.Id).ToArray();
             typeReactionsSelected = typeReactionsSelected.Where(w => (ids.Contains(w.Id))).ToList();
 
             return typeReactionsSelected.AsQueryable();
@@ -122,26 +124,24 @@ namespace Laser.Orchard.UserReactions.Services {
         /// </summary>
         /// <param name="Model"></param>
         /// <returns></returns>
-        public UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model) 
-        {
+        public UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model) {
             UserReactionsPartSettings retval = new UserReactionsPartSettings();
             IQueryable<UserReactionsTypesRecord> repotypesAll = _repoTypes.Table.Where(z => z.Activating == true && z.TypeName != null).OrderBy(o => o.Priority);
-            
-            List<UserReactionsSettingTypesSel> partSelectedAll = repotypesAll.Select(r=> new UserReactionsSettingTypesSel 
-            {
-                 Id = r.Id,
-                 nameReaction =r.TypeName,
-                 checkReaction = false
-                 
+
+            List<UserReactionsSettingTypesSel> partSelectedAll = repotypesAll.Select(r => new UserReactionsSettingTypesSel {
+                Id = r.Id,
+                nameReaction = r.TypeName,
+                checkReaction = false
+
             }).ToList();
 
             List<UserReactionsSettingTypesSel> viewmodel;
             List<UserReactionsSettingTypesSel> TypeReactionsPartsModel = new List<UserReactionsSettingTypesSel>();
             TypeReactionsPartsModel = Model.TypeReactionsPartsSelected;
-      
-            if (TypeReactionsPartsModel.Count()==0)
+
+            if (TypeReactionsPartsModel.Count() == 0)
                 viewmodel = partSelectedAll;
-            else                
+            else
                 viewmodel = Model.TypeReactionsPartsSelected.Except(partSelectedAll).ToList();
 
             retval.TypeReactionsPartsSelected = viewmodel;
@@ -160,10 +160,10 @@ namespace Laser.Orchard.UserReactions.Services {
             var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
             //UserReactionsSettingsPart fileCssName = new UserReactionsSettingsPart();
 
-       
+
             var userRT = new UserReactionsTypes();
             userRT.CssName = reactionSettings.StyleFileNameProvider;
-            
+
             userRT.UserReactionsType = GetTypesTable().Select(r => new UserReactionsTypeVM {
                 Id = r.Id,
                 Priority = r.Priority,
@@ -174,14 +174,14 @@ namespace Laser.Orchard.UserReactions.Services {
             }).ToList();
             return userRT;
         }
-     
+
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-         public IQueryable<UserReactionsClickRecord> GetClickTable() {
-             return _repoClick.Table.OrderBy(o => o.Id);
+        public IQueryable<UserReactionsClickRecord> GetClickTable() {
+            return _repoClick.Table.OrderBy(o => o.Id);
         }
 
 
@@ -198,7 +198,7 @@ namespace Laser.Orchard.UserReactions.Services {
                 Priority = r.Priority,
                 TypeCssClass = r.TypeCssClass,
                 TypeName = r.TypeName,
-                Activating=r.Activating,
+                Activating = r.Activating,
                 Delete = false
             }).ToList();
             return userRT;
@@ -212,29 +212,26 @@ namespace Laser.Orchard.UserReactions.Services {
             return _authenticationService.GetAuthenticatedUser();
         }
 
-    
-         /// <summary>
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="CurrentUser"></param>
         /// <returns></returns>
-        public UserReactionsUser ReactionsCurrentUser(IUser CurrentUser) 
-        {
+        public UserReactionsUser ReactionsCurrentUser(IUser CurrentUser) {
             UserReactionsUser reactionsCurrentUser = new UserReactionsUser();
             string userCookie = string.Empty;
 
             if (CurrentUser != null) {
                 reactionsCurrentUser.Id = CurrentUser.Id;
-            } 
-            else
-            {
+            } else {
                 if (HttpContext.Current.Request.Cookies["userCookie"] != null) {
                     userCookie = HttpContext.Current.Request.Cookies["userCookie"].Value.ToString();
                 } else {
                     Guid userNameCookie = System.Guid.NewGuid();
                     HttpContext.Current.Response.Cookies.Add(new HttpCookie("userCookie", userNameCookie.ToString()));
                     userCookie = userNameCookie.ToString();
-                    
+
                 }
                 reactionsCurrentUser.Id = 0;
                 reactionsCurrentUser.Guid = userCookie;
@@ -250,13 +247,12 @@ namespace Laser.Orchard.UserReactions.Services {
         /// </summary>
         /// <param name="part"></param>
         /// <returns></returns>       
-        public IList<UserReactionsVM> GetTot(UserReactionsPart part) 
-        {           
+        public IList<UserReactionsVM> GetTot(UserReactionsPart part) {
             //Part
             IList<UserReactionsVM> viewmodel = new List<UserReactionsVM>();
             //settings type
             List<UserReactionsVM> listType = new List<UserReactionsVM>();
-            
+
             /////////////////////
             //reaction type settings
             UserReactionsPartSettings settings = part.TypePartDefinition.Settings.GetModel<UserReactionsPartSettings>();
@@ -282,9 +278,7 @@ namespace Laser.Orchard.UserReactions.Services {
                     OrderPriority = x.Priority,
                     Activating = x.Activating,
                 }).ToList();
-            } 
-            else 
-            {
+            } else {
                 // prendi i valori filtrati
                 listType = GetTypesTableFilteredByTypeReactions(SettingType)
                                 .Select(x => new UserReactionsVM {
@@ -311,17 +305,15 @@ namespace Laser.Orchard.UserReactions.Services {
                 Activating = s.UserReactionsTypesRecord.Activating,
             }).ToList();
 
-            List<UserReactionsVM> retData = new List<UserReactionsVM>(); 
+            List<UserReactionsVM> retData = new List<UserReactionsVM>();
 
-            foreach (UserReactionsVM itemTypeReactions in listType)
-            {
+            foreach (UserReactionsVM itemTypeReactions in listType) {
                 UserReactionsVM totItem = itemTypeReactions;
                 UserReactionsVM viewModel = viewmodel.FirstOrDefault(z => z.TypeId.Equals(itemTypeReactions.TypeId));
-                
-                if (viewModel != null) 
-                {                   
+
+                if (viewModel != null) {
                     totItem.Quantity = viewModel.Quantity;
-                }                
+                }
                 retData.Add(totItem);
             }
 
@@ -333,27 +325,25 @@ namespace Laser.Orchard.UserReactions.Services {
         /// <param name="IconType"></param>
         /// <param name="CurrentPage"></param>
         /// <returns></returns>
-        public UserReactionsVM[] GetSummaryReaction(int CurrentPage) 
-        {
+        public UserReactionsVM[] GetSummaryReaction(int CurrentPage) {
             IUser userId = this.CurrentUser(); 
             UserReactionsClickRecord res = new UserReactionsClickRecord();
             string userCookie = string.Empty;
-                        
+
             UserReactionsUser reactionsCurrentUser = new UserReactionsUser();
-            reactionsCurrentUser = ReactionsCurrentUser(userId);      
-           
+            reactionsCurrentUser = ReactionsCurrentUser(userId);
+
             var sommaryRecord = _repoSummary.Table.Where(z => z.UserReactionsPartRecord.Id.Equals(CurrentPage))
                .Select(s => new UserReactionsVM {
                    Id = s.Id,
-                   TypeId=s.UserReactionsTypesRecord.Id,
+                   TypeId = s.UserReactionsTypesRecord.Id,
                    OrderPriority = s.UserReactionsTypesRecord.Priority,
                    Quantity = s.Quantity,
                    Clicked = 0
                }).ToList();
 
             List<UserReactionsVM> newSommaryRecord = new List<UserReactionsVM>();
-            foreach (UserReactionsVM item in sommaryRecord) 
-            {
+            foreach (UserReactionsVM item in sommaryRecord) {
                 UserReactionsVM newItem = new UserReactionsVM();
                 newItem = item;
 
@@ -376,26 +366,26 @@ namespace Laser.Orchard.UserReactions.Services {
         }
 
 
-               
+
         /// <param name="IconType"></param>
         /// <param name="CurrentPage"></param>
         /// <returns></returns>
         public UserReactionsVM CalculateTypeClick(int IconType, int CurrentPage) {
-            
+
             UserPartRecord userRec = new UserPartRecord();
             UserReactionsTypesRecord reactType = new UserReactionsTypesRecord();
             UserReactionsPartRecord userPart = new UserReactionsPartRecord();
             UserReactionsClickRecord res = new UserReactionsClickRecord();
-            UserReactionsVM retVal=new ViewModels.UserReactionsVM();
+            UserReactionsVM retVal = new ViewModels.UserReactionsVM();
 
             string userCookie = string.Empty;
             string sommaryQty = string.Empty;
             string returnVal = string.Empty;
 
             //Verifica user
-            IUser userId = CurrentUser(); 
+            IUser userId = CurrentUser();
             UserReactionsUser reactionsCurrentUser = new UserReactionsUser();
-            reactionsCurrentUser=ReactionsCurrentUser(userId);
+            reactionsCurrentUser = ReactionsCurrentUser(userId);
 
             //Verifica che non sia già stato eseguito un click 
             if (reactionsCurrentUser.Id > 0) 
@@ -411,8 +401,7 @@ namespace Laser.Orchard.UserReactions.Services {
             UserReactionsClickRecord result = new UserReactionsClickRecord();
 
             //Se già cliccato quella reaction
-            if (res != null) 
-            {
+            if (res != null) {
                 //Già cliccato (Update dati) e ActionType=1   
                 if (res.ActionType == 1)
                     res.ActionType = -1;
@@ -442,13 +431,11 @@ namespace Laser.Orchard.UserReactions.Services {
                 }
                 
                 retVal.Clicked = res.ActionType;                
-                retVal.Quantity=sommaryRecord.Quantity;
-                retVal.TypeId=IconType;
+                retVal.Quantity = sommaryRecord.Quantity;
+                retVal.TypeId = IconType;
                 retVal.Id = CurrentPage;
                 return retVal;
-            } 
-            else 
-            {
+            } else {
                 //Crea record dati click mai eseguito su quella emoticon                                 
                 result.CreatedUtc = _clock.UtcNow;
                 result.ContentItemRecordId = CurrentPage;
@@ -457,17 +444,14 @@ namespace Laser.Orchard.UserReactions.Services {
                 reactType = GetTypesTable().Where(w => w.Id.Equals(IconType)).FirstOrDefault();
                 result.UserReactionsTypesRecord = reactType;
 
-                if (reactionsCurrentUser.Id > 0) 
-                {
-                    userRec = _repoUser.Table.Where(w => w.Id.Equals(reactionsCurrentUser.Id )).FirstOrDefault();
-                } 
-                else 
-                {                        
+                if (reactionsCurrentUser.Id > 0) {
+                    userRec = _repoUser.Table.Where(w => w.Id.Equals(reactionsCurrentUser.Id)).FirstOrDefault();
+                } else {
                     userRec = null;
                     result.UserGuid = userCookie;
                 }
-                       
-           }
+
+            }
 
             result.UserPartRecord = userRec;
 
@@ -507,16 +491,48 @@ namespace Laser.Orchard.UserReactions.Services {
                 retVal.TypeId=IconType;
                 retVal.Id = CurrentPage;
                 return retVal;
-               
+
 
             } catch (Exception) {
                 
                 retVal.Clicked  =5;
                 return retVal;
 
-            }            
+            }
 
-            
+
+        }
+        public LocalizedString GetReactionEnumTranslations(ReactionsNames reactionName) {
+            if (reactionName.Equals(ReactionsNames.angry)) {
+                return T("Angry");
+            } else if (reactionName.Equals(ReactionsNames.boring)) {
+                return T("Boring");
+            } else if (reactionName.Equals(ReactionsNames.exahausted)) {
+                return T("Exahausted");
+            } else if (reactionName.Equals(ReactionsNames.happy)) {
+                return T("Happy");
+            } else if (reactionName.Equals(ReactionsNames.ILike)) {
+                return T("I Like");
+            } else if (reactionName.Equals(ReactionsNames.Iwasthere)) {
+                return T("I Was There");
+            } else if (reactionName.Equals(ReactionsNames.joke)) {
+                return T("Joke");
+            } else if (reactionName.Equals(ReactionsNames.kiss)) {
+                return T("Kiss");
+            } else if (reactionName.Equals(ReactionsNames.love)) {
+                return T("Love");
+            } else if (reactionName.Equals(ReactionsNames.pain)) {
+                return T("Pain");
+            } else if (reactionName.Equals(ReactionsNames.sad)) {
+                return T("Sad");
+            } else if (reactionName.Equals(ReactionsNames.shocked)) {
+                return T("Shocked");
+            } else if (reactionName.Equals(ReactionsNames.silent)) {
+                return T("Silent");
+            } else {
+                return T("None");
+            }
+
         }
 
 
