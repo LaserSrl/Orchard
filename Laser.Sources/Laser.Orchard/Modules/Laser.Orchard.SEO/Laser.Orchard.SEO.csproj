@@ -96,8 +96,10 @@
     <Compile Include="Models\SeoPart.cs" />
     <Compile Include="Models\SeoRecord.cs" />
     <Compile Include="Services\FaviconService.cs" />
+    <Compile Include="Services\SEOServices.cs" />
     <Compile Include="Shapes\FaviconShapes.cs" />
     <Compile Include="ViewModels\FaviconSettingsViewModel.cs" />
+    <Compile Include="ViewModels\SeoPartViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts\SEO.cshtml" />

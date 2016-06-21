@@ -1,7 +1,7 @@
 ﻿
 @using Orchard.Localization.Services;
 
-@model Laser.Orchard.SEO.Models.SeoPart
+@model Laser.Orchard.SEO.ViewModels.SeoPartViewModel
 @{
     var emptySeo = String.IsNullOrWhiteSpace(Model.Keywords) && String.IsNullOrWhiteSpace(Model.Description) && String.IsNullOrWhiteSpace(Model.TitleOverride);
     Style.Require("FontAwesome430").AtHead();
@@ -89,11 +89,6 @@
             @Html.CheckBoxFor(m => m.RobotsUnavailableAfter)
             @Html.DisplayNameFor(m => m.RobotsUnavailableAfter)
 
-            @{
-                IDateServices _dateServices;
-                WorkContext.TryResolve<IDateServices>(out _dateServices);
-                Model.RobotsUnavailableAfterDate = (DateTime)_dateServices.ConvertToLocal(Model.RobotsUnavailableAfterDate);
-            }
             @Html.TextBoxFor(m => m.RobotsUnavailableAfterDate, new { id = "unavailableAfterDate" })
 
             @Html.CheckBoxFor(m => m.RobotsNoImageIndex)

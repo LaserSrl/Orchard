@@ -7,6 +7,8 @@ using Laser.Orchard.SEO.Models;
 using System.Data.SqlTypes;
 using Orchard.Localization.Services;
 using Laser.Orchard.StartupConfig.Localization;
+using Laser.Orchard.SEO.ViewModels;
+using Laser.Orchard.SEO.Services;
 
 
 namespace Laser.Orchard.SEO.Drivers {
@@ -16,15 +18,11 @@ namespace Laser.Orchard.SEO.Drivers {
 
 
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IDateServices _dateServices;
-        private readonly IDateLocalization _dateLocalization;
+        private readonly ISEOServices _seoServices;
 
-
-        public SeoDriver(IWorkContextAccessor workContextAccessor,
-            IDateServices dateServices, IDateLocalization dateLocalization) {
+        public SeoDriver(IWorkContextAccessor workContextAccessor, ISEOServices seoServices) {
             _workContextAccessor = workContextAccessor;
-            _dateServices = dateServices;
-            _dateLocalization = dateLocalization;
+            _seoServices = seoServices;
         }
 
 
@@ -91,14 +89,11 @@ namespace Laser.Orchard.SEO.Drivers {
         /// GET Editor.
         /// </summary>
         protected override DriverResult Editor(SeoPart part, dynamic shapeHelper) {
-
-            //part.RobotsUnavailableAfterDate = part.RobotsUnavailableAfterDate.ToLocalTime();
-            //part.RobotsUnavailableAfterDate = (DateTime)_dateServices.ConvertToLocal(part.RobotsUnavailableAfterDate);
-            //part.RobotsUnavailableAfterDate = DateTime.SpecifyKind(part.RobotsUnavailableAfterDate, DateTimeKind.Local);
+            part.Description = "editor get";
             return ContentShape("Parts_SEO_Edit",
                                 () => shapeHelper.EditorTemplate(
                                   TemplateName: "Parts/SEO",
-                                  Model: part,
+                                  Model: new SeoPartViewModel(part, _seoServices),
                                   Prefix: Prefix));
         }
 
@@ -107,13 +102,9 @@ namespace Laser.Orchard.SEO.Drivers {
         /// POST Editor.
         /// </summary>
         protected override DriverResult Editor(SeoPart part, IUpdateModel updater, dynamic shapeHelper) {
-
-            updater.TryUpdateModel(part, Prefix, null, null);
-            //part.RobotsUnavailableAfterDate = (DateTime)_dateServices.ConvertFromLocal(part.RobotsUnavailableAfterDate);
-            //part.RobotsUnavailableAfterDate = DateTime.SpecifyKind(part.RobotsUnavailableAfterDate, DateTimeKind.Utc);
-            part.RobotsUnavailableAfterDate = 
-                (DateTime)(_dateServices.ConvertFromLocalString(_dateLocalization.WriteDateLocalized(part.RobotsUnavailableAfterDate), _dateLocalization.WriteTimeLocalized(part.RobotsUnavailableAfterDate)));
-            //part.RobotsUnavailableAfterDate = part.RobotsUnavailableAfterDate.ToUniversalTime();
+            var vm = new SeoPartViewModel();
+            updater.TryUpdateModel(vm, Prefix, null, null);
+            vm.UpdatePart(part, _seoServices);
             return Editor(part, shapeHelper);
         }
 
