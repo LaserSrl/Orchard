@@ -82,9 +82,12 @@ namespace Laser.Orchard.UserReactions.Controllers {
                     } 
                     else 
                     {
+                        var styleAcronime = new Laser.Orchard.UserReactions.StyleAcroName();
+                        string styleAcronimeName = styleAcronime.StyleAcronime + item.TypeName;
+
                             _repoTypes.Create(new Models.UserReactionsTypesRecord {
                             Priority = item.Priority,
-                            TypeCssClass = item.TypeCssClass,
+                            TypeCssClass = styleAcronimeName,
                             TypeName = item.TypeName,
                             Activating=item.Activating
                             

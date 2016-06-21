@@ -6,6 +6,8 @@
 @{ var phId = "phNum_" + answerBlock;
 
    Script.Require("Autocomplete").AtHead();
+   var styleAcronime = new Laser.Orchard.UserReactions.StyleAcroName();
+   string styleAcronimeName = styleAcronime.StyleAcronime;
    }
 
 <div id="@phId" class="j_reaction">
@@ -13,10 +15,12 @@
     @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete" })
     @Html.HiddenFor(m => m.Id)
 
-    @Html.TextBoxFor(m => m.TypeName, new { placeholder = T("Name"), @class = "text medium" })
-    
-   @* @Html.TextBoxFor(m => m.TypeCssClass, new {@id="txtClass" + Model.Id , @onchange = "classNameChangeEvent(id);", placeholder = T("Css Class Name"), @class = "text medium" })*@
-    @Html.TextBoxFor(m => m.TypeCssClass, new {@id="CssName" +  Model.Id, @onfocus="classNameChangeEvent(id);", placeholder = T("Css Class Name"), @class = "text medium" })
+    @*@Html.TextBoxFor(m => m.TypeName, new { placeholder = T("Name"), @class = "text medium" })*@
+    @Html.DropDownListFor(m => m.TypeName,  new SelectList(Enum.GetNames(typeof(Laser.Orchard.UserReactions.ReactionsNames))), Model.TypeName)
+  
+    @Html.HiddenFor(m => m.TypeCssClass,  @styleAcronimeName +  @Model.TypeName)
+
+    @*@id="CssName" +  Model.Id, @onfocus="classNameChangeEvent(id);", *@
 
     @Html.TextBoxFor(m => m.Priority, new { placeholder = T("Order"), @class = "text medium" })
    @* @Html.DropDownListFor(m => m.CssName, cssNames,  new { placeholder = T("CssName"), @class = "text medium" })*@
@@ -36,8 +40,8 @@
 
     function classNameChangeEvent(id)
     {       
-        var objectSelected = "#" + id;
-        alert(objectSelected);
+       
+        alert(id);
 
     //    $('#textarea1').textcomplete([
     //    { // emoji strategy
