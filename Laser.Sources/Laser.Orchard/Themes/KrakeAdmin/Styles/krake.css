@@ -87,7 +87,7 @@ button, .button, a.button {
   border: 0 none;
   border-radius: 3px;
   box-shadow: none;
-  color: #fff !important;
+  color: #fff; /* !important;*/
   height: 30px;
   line-height: 18px;
   min-width: 110px;
@@ -1024,6 +1024,11 @@ input[type="number"]:focus {
 label {
     display: inherit;
     margin-bottom: 0px;
+}
+
+.sms-info {
+    display: inline-block;
+    min-width: 170px;
 }
 
 fieldset:not(.save-button):not(.bulk-items):not(.publish-button):not(.publish-later-datetime):not(.bulk-actions):not(.bulk-actions-auto):not(.archive-later-datetime)::after {
