@@ -54,7 +54,7 @@ namespace Laser.Orchard.SEO.ViewModels {
             part.RobotsUnavailableAfterDate = seoServices.DateToUTC(this.RobotsUnavailableAfterDate);
             part.RobotsNoImageIndex = this.RobotsNoImageIndex;
             part.GoogleNoSiteLinkSearchBox = this.GoogleNoSiteLinkSearchBox;
-            part.GoogleNoTranslate = this.GoogleNoTranslate;
+            part.GoogleNoTranslate = this.GoogleNoTranslate; 
         }
     }
 }
