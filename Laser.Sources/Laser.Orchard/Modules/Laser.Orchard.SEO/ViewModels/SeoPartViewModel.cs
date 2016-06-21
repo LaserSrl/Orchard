@@ -21,9 +21,17 @@ namespace Laser.Orchard.SEO.ViewModels {
         public bool GoogleNoSiteLinkSearchBox { get; set; }
         public bool GoogleNoTranslate { get; set; }
 
+        /// <summary>
+        /// default empty constructor
+        /// </summary>
         public SeoPartViewModel() {
         }
 
+        /// <summary>
+        /// Create the ViewModel from the Part. 
+        /// </summary>
+        /// <param name="part">The SeoPart we start from.</param>
+        /// <param name="seoServices">Dependency injection for services.</param>
         public SeoPartViewModel(SeoPart part, ISEOServices seoServices) {
 
             this.TitleOverride = part.TitleOverride;
@@ -41,6 +49,11 @@ namespace Laser.Orchard.SEO.ViewModels {
             this.GoogleNoTranslate = part.GoogleNoTranslate;
         }
 
+        /// <summary>
+        /// Update a part based on the values of properties in the view model.
+        /// </summary>
+        /// <param name="part">The SeoPart we are going to update.</param>
+        /// <param name="seoServices">Dependency injection for services.</param>
         public void UpdatePart(SeoPart part, ISEOServices seoServices) {
             part.TitleOverride = this.TitleOverride;
             part.Keywords = this.Keywords;

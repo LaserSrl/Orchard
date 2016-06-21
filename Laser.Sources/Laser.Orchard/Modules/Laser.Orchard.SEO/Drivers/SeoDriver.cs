@@ -92,7 +92,7 @@ namespace Laser.Orchard.SEO.Drivers {
             return ContentShape("Parts_SEO_Edit",
                                 () => shapeHelper.EditorTemplate(
                                   TemplateName: "Parts/SEO",
-                                  Model: new SeoPartViewModel(part, _seoServices),
+                                  Model: new SeoPartViewModel(part, _seoServices), //use a viewmodel to show times in local base, while keeping UTC on the server side
                                   Prefix: Prefix));
         }
 
