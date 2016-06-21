@@ -6,7 +6,7 @@
      List<UserReactionsVM> part = Model.UserReaction;
      //Aggiungi il foglio di stile CSS definito nel file ResourceManifest.cs ed inserito nella cartella Styles
     
-     var settings = WorkContext.CurrentSite.As<UserReactionsSettingsPart>();//part.FindLast(z => z.CssName!=null).CssName.ToString();
+     var settings = WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
      Style.Require(settings.StyleFileNameProvider.ToString());
     }
 
@@ -58,6 +58,7 @@
         //per ovviare al problema della cache di pagina di Orchard
         var PageId = "@Model.ContentItem.Id";
 
+
         $.ajax(
         {
             url: "@Url.Action("GetSummaryReaction", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",           
@@ -68,11 +69,15 @@
                     var nameitem = "#itemQuantity" + result[i].TypeId;
                     var total = result[i].Quantity;
                     $(nameitem).html("(" + total + ")");
-                }                                 
+                }
+               // $("div.reactiondiv").css('cursor', 'default');
             },
                 type: "POST",
                 data: addRequestVerificationToken({ pageId: PageId })
-         });
+        });
+
+         
+        
         //////////////////////////////////////////////////////////////////
 
 
@@ -84,22 +89,25 @@
             var PageId = "@Model.ContentItem.Id";
             var ReactionTypeId = this.id;
 
+            
+
             //Chiamata ajax richiama metodo server GetReactionClicked nel controller ReactionAjax 
             //che verifica se l'utente deve fare un click in aggiunta oppure in decremento, quale icona cliccata 
             $.ajax(
             {               
                 url: "@Url.Action("GetReactionClicked", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",
-                success: function (result) {
-                document.getElementById("itemQuantity" + result.TypeId).style.cursor = "pointer";
-                var nameitem = "#itemQuantity" + result.TypeId;  
-                    
-                $(nameitem).html("(" + result.Quantity + ")");
-                document.getElementById("itemQuantity" + result.TypeId).style.cursor = "none";
+                success: function (result)
+                {
+                //    $("div.reactiondiv").css('cursor', 'wait');
+                    var nameitem = "#itemQuantity" + result.TypeId;                      
+                    $(nameitem).html("(" + result.Quantity + ")");                                     
                 },
                 type: "POST",
                 data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId})
             });
-        });        
+        
+           
+        });
 
     });
 

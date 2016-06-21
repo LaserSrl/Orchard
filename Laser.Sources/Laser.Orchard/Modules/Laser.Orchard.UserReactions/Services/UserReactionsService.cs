@@ -483,13 +483,14 @@ namespace Laser.Orchard.UserReactions.Services {
                 //Verifica che ci sia già un record cliccato per quell' icona in quel documento
                 sommaryRecord = _repoSummary.Table.Where(z => z.UserReactionsTypesRecord.Id.Equals(IconType) && z.UserReactionsPartRecord.Id.Equals(CurrentPage)).FirstOrDefault();
 
+                int summQty = 0;
                 // se 0 record aggiungi il record
                 if (sommaryRecord == null)
                 {
                     //Create
                     UserReactionsSummaryRecord sommaryRec = new UserReactionsSummaryRecord();
                     userPart = _repoPartRec.Table.FirstOrDefault(z => z.Id.Equals(CurrentPage));
-
+                    summQty = 1;
                     sommaryRec.Quantity = 1;
                     sommaryRec.UserReactionsTypesRecord = reactType;
                     sommaryRec.UserReactionsPartRecord = userPart;
@@ -497,22 +498,14 @@ namespace Laser.Orchard.UserReactions.Services {
                 }                    
                 else // Vai in update ed aggiorna il campo Quantity
                 {
+                    summQty = sommaryRecord.Quantity + 1;
                     sommaryRecord.Quantity = sommaryRecord.Quantity + 1;
                     _repoSummary.Update(sommaryRecord);
                 }
 
-               // sommaryQty = sommaryRecord.Quantity.ToString();
+                retVal.Clicked = 1;                                   
 
-                //if (reactionsCurrentUser.Id > 0)
-                //{
-                    retVal.Clicked = 1;                   
-                //}
-                //else
-                //{
-                //     retVal.Clicked = 2;
-                //}
-
-                retVal.Quantity = sommaryRecord.Quantity;
+                retVal.Quantity = summQty;
                 retVal.TypeId=IconType;
                 retVal.Id = CurrentPage;
                 return retVal;
