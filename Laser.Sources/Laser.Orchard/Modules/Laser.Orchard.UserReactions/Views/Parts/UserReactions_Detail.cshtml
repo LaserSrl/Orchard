@@ -1,7 +1,13 @@
 ﻿@using Laser.Orchard.UserReactions.Models
 @using Laser.Orchard.UserReactions.ViewModels
 @using Orchard.ContentManagement
+@using Laser.Orchard.UserReactions.Services
+@using Laser.Orchard.UserReactions
+
 @{
+    IUserReactionsService _reactionService;
+    WorkContext.TryResolve<IUserReactionsService>(out _reactionService);
+
      //Setta i dati della vista collegandoli al modello settato dal controller che richiama la vista
      List<UserReactionsVM> part = Model.UserReaction;
      //Aggiungi il foglio di stile CSS definito nel file ResourceManifest.cs ed inserito nella cartella Styles
@@ -23,7 +29,7 @@
 
 @{foreach (var item in part) {
       var quantità = "(" + @item.Quantity + ")";
-      var itemName = " " + @item.TypeName + " ";
+      var itemName = " " + _reactionService.GetReactionEnumTranslations((ReactionsNames)Enum.Parse(typeof(ReactionsNames), item.TypeName)) + " ";
       string attCSS = @item.CssStyleName;
       var id = @item.TypeId;
       
