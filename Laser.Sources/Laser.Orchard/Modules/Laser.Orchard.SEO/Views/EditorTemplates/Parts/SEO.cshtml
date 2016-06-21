@@ -28,12 +28,12 @@
 }
 @using (Script.Foot()) {
     @Display.DatePickerLocalization()
+    @Display.TimePickerLocalization()
+
     <script type="text/javascript">
-        //<![CDATA[
         $(function () {
-            $('#unavailableAfterDate').datepicker({ showAnim: "", changeYear: true, changeMonth: true });
-        });
-        //]]>
+            $('#unavailableAfterDate').datetimepicker({ 'showTimepicker': true, showAnim: "", changeYear: true, changeMonth: true });
+        })
     </script>
 }
 <fieldset class="editor">
