@@ -1,11 +1,12 @@
 ﻿@model List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM>
-
+@using Laser.Orchard.UserReactions.Models
+@using Laser.Orchard.UserReactions.ViewModels
+@using Orchard.ContentManagement
 @{
     List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model;
 
-    var fileCss = part.FindLast(z => z.CssName != null).CssName.ToString();
-    Style.Require(fileCss);
-    
+    var settings = WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
+    Style.Require(settings.StyleFileNameProvider.ToString());
 
 }
 
