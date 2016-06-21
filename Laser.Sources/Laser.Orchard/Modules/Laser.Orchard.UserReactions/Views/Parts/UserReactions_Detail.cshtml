@@ -69,6 +69,13 @@
                     var nameitem = "#itemQuantity" + result[i].TypeId;
                     var total = result[i].Quantity;
                     $(nameitem).html("(" + total + ")");
+                    //se già cliccato
+                    if (result[i].Clicked == 1) {
+                        $(nameitem).css('color', 'red');
+                    }
+                    else {
+                        $(nameitem).css('color', 'black');
+                    }
                 }
                // $("div.reactiondiv").css('cursor', 'default');
             },
@@ -87,9 +94,7 @@
         {           
             //Parameters     
             var PageId = "@Model.ContentItem.Id";
-            var ReactionTypeId = this.id;
-
-            
+            var ReactionTypeId = this.id;            
 
             //Chiamata ajax richiama metodo server GetReactionClicked nel controller ReactionAjax 
             //che verifica se l'utente deve fare un click in aggiunta oppure in decremento, quale icona cliccata 
@@ -100,7 +105,16 @@
                 {
                 //    $("div.reactiondiv").css('cursor', 'wait');
                     var nameitem = "#itemQuantity" + result.TypeId;                      
-                    $(nameitem).html("(" + result.Quantity + ")");                                     
+                    $(nameitem).html("(" + result.Quantity + ")");
+
+                    if (result.Clicked == 1) {
+                        $(nameitem).css('color', 'red');
+                        $(nameitem).css('font-weight','Bold');
+                    } else {
+                        $(nameitem).css('color', 'black');
+                    }
+
+
                 },
                 type: "POST",
                 data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId})
