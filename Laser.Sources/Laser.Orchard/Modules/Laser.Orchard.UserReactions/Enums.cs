@@ -12,16 +12,29 @@ using System.Web;
 using Laser.Orchard.UserReactions.Services;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement;
+using System.ComponentModel.DataAnnotations;
 
-namespace Laser.Orchard.UserReactions 
-{
-    public enum StyleFileNameProviders { Reactions, Coloredflaticon };
-    public enum ReactionsNames { angry, boring, exahausted, happy, joke, kiss, love, pain, sad, shocked, silent, ILike, Iwasthere };
-    
-    public class StyleAcroName
-    {
+namespace Laser.Orchard.UserReactions {
+    public enum StyleFileNameProviders { Reactions };
+    public enum ReactionsNames {
+        angry,
+        boring,
+        exahausted,
+        happy,
+        joke,
+        kiss,
+        love,
+        pain,
+        sad,
+        shocked,
+        silent,
+        ILike,
+        Iwasthere
+    }; // Se si aggiungono enumeratori, provvedere opportuna traduzione in UserReactionsService.GetReactionEnumTranslations
+
+    public class StyleAcroName {
         public string StyleAcronime = "glyph-icon flaticon-";
 
     }
-        
+
 }
