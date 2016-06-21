@@ -58,12 +58,22 @@ namespace Laser.Orchard.SEO.Drivers {
             metaRobots += part.RobotsNoSnippet ? "nosnippet," : "";
             metaRobots += part.RobotsNoOdp ? "noodp," : "";
             metaRobots += part.RobotsNoArchive ? "noarchive," : "";
-            metaRobots += part.RobotsUnavailableAfter ? "unavailable_after:" + part.RobotsUnavailableAfterDate.ToUniversalTime().ToString("r") + "," : "";
+            metaRobots += part.RobotsUnavailableAfter ? "unavailable_after:" + part.RobotsUnavailableAfterDate.ToUniversalTime().ToString("r") + "," : ""; //date in rfc850 format
             metaRobots += part.RobotsNoImageIndex ? "noimageindex," : "";
             if (!string.IsNullOrWhiteSpace(metaRobots)) {
                 resourceManager.SetMeta(new MetaEntry {
                     Name = "robots",
                     Content = metaRobots
+                });
+            }
+
+            string metaGoogle = "";
+            metaGoogle += part.GoogleNoSiteLinkSearchBox ? "nositelinkssearchbox," : "";
+            metaGoogle += part.GoogleNoTranslate ? "notranslate," : "";
+            if (!string.IsNullOrWhiteSpace(metaGoogle)) {
+                resourceManager.SetMeta(new MetaEntry {
+                    Name = "google",
+                    Content = metaGoogle
                 });
             }
 
@@ -82,10 +92,8 @@ namespace Laser.Orchard.SEO.Drivers {
         /// </summary>
         protected override DriverResult Editor(SeoPart part, dynamic shapeHelper) {
 
-            if (part.RobotsUnavailableAfterDate < (DateTime)SqlDateTime.MinValue) {
-                part.RobotsUnavailableAfterDate = ((DateTime)SqlDateTime.MinValue).AddDays(1);
-            }
-            part.RobotsUnavailableAfterDate = part.RobotsUnavailableAfterDate.ToLocalTime();
+            //part.RobotsUnavailableAfterDate = part.RobotsUnavailableAfterDate.ToLocalTime();
+            //part.RobotsUnavailableAfterDate = (DateTime)_dateServices.ConvertToLocal(part.RobotsUnavailableAfterDate);
             //part.RobotsUnavailableAfterDate = DateTime.SpecifyKind(part.RobotsUnavailableAfterDate, DateTimeKind.Local);
             return ContentShape("Parts_SEO_Edit",
                                 () => shapeHelper.EditorTemplate(
@@ -101,8 +109,10 @@ namespace Laser.Orchard.SEO.Drivers {
         protected override DriverResult Editor(SeoPart part, IUpdateModel updater, dynamic shapeHelper) {
 
             updater.TryUpdateModel(part, Prefix, null, null);
-            part.RobotsUnavailableAfterDate = DateTime.SpecifyKind(part.RobotsUnavailableAfterDate, DateTimeKind.Utc);
-            //part.RobotsUnavailableAfterDate = (DateTime)(_dateServices.ConvertFromLocalString(_dateLocalization.WriteDateLocalized(part.RobotsUnavailableAfterDate), _dateLocalization.WriteTimeLocalized(part.RobotsUnavailableAfterDate)));
+            //part.RobotsUnavailableAfterDate = (DateTime)_dateServices.ConvertFromLocal(part.RobotsUnavailableAfterDate);
+            //part.RobotsUnavailableAfterDate = DateTime.SpecifyKind(part.RobotsUnavailableAfterDate, DateTimeKind.Utc);
+            part.RobotsUnavailableAfterDate = 
+                (DateTime)(_dateServices.ConvertFromLocalString(_dateLocalization.WriteDateLocalized(part.RobotsUnavailableAfterDate), _dateLocalization.WriteTimeLocalized(part.RobotsUnavailableAfterDate)));
             //part.RobotsUnavailableAfterDate = part.RobotsUnavailableAfterDate.ToUniversalTime();
             return Editor(part, shapeHelper);
         }
