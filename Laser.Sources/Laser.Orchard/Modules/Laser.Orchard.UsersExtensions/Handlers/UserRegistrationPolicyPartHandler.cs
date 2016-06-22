@@ -42,18 +42,19 @@ namespace Laser.Orchard.UsersExtensions.Handlers {
             if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy")) {
                 var policies = _usersExtensionsServices.BuildEditorForRegistrationPolicies();
 
-                var answers = _controllerAccessor.Context.Controller.TempData["VolatileAnswers"] != null ? _controllerAccessor.Context.Controller.TempData["VolatileAnswers"].ToString() : ""; //userRegistrationPolicy.VolatileAnswers;
+                if (_controllerAccessor.Context != null) {
+                    var answers = _controllerAccessor.Context.Controller.TempData["VolatileAnswers"] != null ? _controllerAccessor.Context.Controller.TempData["VolatileAnswers"].ToString() : ""; //userRegistrationPolicy.VolatileAnswers;
 
-                if (!String.IsNullOrWhiteSpace(answers)) {
-                    var updateModel = policies.Select(x => new PolicyForUserViewModel {
-                        PolicyTextId = x.PolicyId,
-                        Accepted = answers.Split(',').Contains(x.PolicyId.ToString()),
-                        AnswerDate = DateTime.MinValue, // verrà automaticamente valorizzata in fase di salvataggio
-                        OldAccepted = false
-                    }).ToList();
-                    _policyServices.PolicyForUserMassiveUpdate(updateModel, (IUser)context.ContentItem.As<UserPart>());
-                    _controllerAccessor.Context.Controller.TempData["VolatileAnswers"] = null;
-
+                    if (!String.IsNullOrWhiteSpace(answers)) {
+                        var updateModel = policies.Select(x => new PolicyForUserViewModel {
+                            PolicyTextId = x.PolicyId,
+                            Accepted = answers.Split(',').Contains(x.PolicyId.ToString()),
+                            AnswerDate = DateTime.MinValue, // verrà automaticamente valorizzata in fase di salvataggio
+                            OldAccepted = false
+                        }).ToList();
+                        _policyServices.PolicyForUserMassiveUpdate(updateModel, (IUser)context.ContentItem.As<UserPart>());
+                        _controllerAccessor.Context.Controller.TempData["VolatileAnswers"] = null;
+                    }
                 }
             }
         }
