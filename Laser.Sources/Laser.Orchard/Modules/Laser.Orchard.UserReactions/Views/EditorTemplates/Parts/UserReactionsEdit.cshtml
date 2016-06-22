@@ -1,0 +1,33 @@
+﻿@model List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM>
+@using Laser.Orchard.UserReactions.Models
+@using Laser.Orchard.UserReactions.ViewModels
+@using Orchard.ContentManagement
+@using Laser.Orchard.UserReactions.Services
+@using Laser.Orchard.UserReactions
+@{
+
+    List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model;
+    IUserReactionsService _reactionService;
+    WorkContext.TryResolve<IUserReactionsService>(out _reactionService);
+
+    var settings = WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
+    Style.Require(settings.StyleFileNameProvider.ToString());
+
+}
+
+
+@{foreach (var item in Model) {
+
+      var quantità = "(" + item.Quantity + ")";
+      var itemName = " " + _reactionService.GetReactionEnumTranslations((ReactionsNames)Enum.Parse(typeof(ReactionsNames), item.TypeName)) + " " + quantità;
+      string attCSS = item.CssStyleName; 
+           
+    <div class="glyph">
+        <span class="@attCSS"></span>
+        <b id="@item.TypeId">@itemName</b>
+    </div>
+    
+  } 
+    
+}
+<br />
