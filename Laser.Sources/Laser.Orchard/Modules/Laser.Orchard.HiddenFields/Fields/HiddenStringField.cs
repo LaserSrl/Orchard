@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using Laser.Orchard.HiddenFields.Settings;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace Laser.Orchard.HiddenFields.Fields {
             get { return Storage.Get<string>(); }
             set { Storage.Set(value); }
         }
+
     }
 }

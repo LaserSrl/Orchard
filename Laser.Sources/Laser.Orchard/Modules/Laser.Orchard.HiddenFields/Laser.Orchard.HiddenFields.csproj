@@ -57,6 +57,10 @@
     <Reference Include="Orchard.Roles">
       <HintPath>..\Laser.Orchard.Questionnaires\bin\Orchard.Roles.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Tokens, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -85,6 +89,7 @@
   <ItemGroup>
     <Compile Include="Drivers\HiddenStringFieldDriver.cs" />
     <Compile Include="Fields\HiddenStringField.cs" />
+    <Compile Include="Handlers\HiddenStringFieldHandler.cs" />
     <Compile Include="HiddenFieldsMigrations.cs" />
     <Compile Include="HiddenFieldsPermissions.cs" />
     <Compile Include="Settings\HiddenStringFieldSettings.cs" />
@@ -93,7 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Handlers\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

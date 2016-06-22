@@ -32,7 +32,7 @@ namespace Laser.Orchard.HiddenFields.Settings {
                 var model = new HiddenStringFieldSettingsEventsViewModel {
                     Settings = new HiddenStringFieldSettings()
                 };
-                if (updateModel.TryUpdateModel(model, "HiddenStringFieldSettings", null, null)) {
+                if (updateModel.TryUpdateModel(model, "HiddenStringFieldSettingsEventsViewModel", null, null)) {
                     builder.WithSetting("HiddenStringFieldSettings.Required", model.Settings.Required.ToString());
                     builder.WithSetting("HiddenStringFieldSettings.Tokenized", model.Settings.Tokenized.ToString());
                     builder.WithSetting("HiddenStringFieldSettings.TemplateString", model.Settings.TemplateString);

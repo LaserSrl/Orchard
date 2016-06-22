@@ -47,9 +47,7 @@ namespace Laser.Orchard.HiddenFields.Drivers {
             return ContentShape("Fields_Hidden_String_Edit", GetDifferentiator(field, part),
                 () => {
                     var fs = field.PartFieldDefinition.Settings.GetModel<HiddenStringFieldSettings>();
-                    if (fs.Tokenized && string.IsNullOrWhiteSpace(field.Value) && !string.IsNullOrWhiteSpace(fs.TemplateString)) {
-                        //TODO: if field.Value is empy, use fs.TemplateString to generate it by replacing tokens
-                    }
+                    //tokenization happens in the handler
                     var vm = new HiddenStringFieldDriverViewModel {
                         Field = field,
                         Value = field.Value,
@@ -70,9 +68,7 @@ namespace Laser.Orchard.HiddenFields.Drivers {
             //require at least the "see" permission
             if (_orchardServices.Authorizer.Authorize(HiddenFieldsPermissions.MayEditHiddenFields)) {
                 var fs = field.PartFieldDefinition.Settings.GetModel<HiddenStringFieldSettings>();
-                if (fs.Tokenized && string.IsNullOrWhiteSpace(field.Value) && !string.IsNullOrWhiteSpace(fs.TemplateString)) {
-                    //TODO: if field.Value is empy, use fs.TemplateString to generate it by replacing tokens
-                }
+                //tokenization happens in the handler
                 var vm = new HiddenStringFieldDriverViewModel {
                     Field = field,
                     Value = field.Value,
@@ -84,10 +80,6 @@ namespace Laser.Orchard.HiddenFields.Drivers {
                         updater.AddModelError("HiddenString", T("The field {0} is mandatory", T(field.DisplayName)));
                         return ContentShape("Fields_Hidden_String_Edit", GetDifferentiator(field, part),
                             () => shapeHelper.EditorTemplate(TemplateName: "Fields.Hidden.String.Edit", Model: vm, Prefix: GetPrefix(field, part)));
-                    }
-                    
-                    if (vm.Settings.Tokenized && !string.IsNullOrWhiteSpace(vm.Value)) {
-                        //TODO: add token substitution in field.Value
                     }
 
                     field.Value = vm.Value;
