@@ -2,6 +2,8 @@
 @model  UserReactionsTypes
 @{
     Script.Require("jQuery_NestedModels").AtHead();
+    Script.Require("jQueryUI_Sortable").AtHead();
+    Style.Require("FontAwesome430").AtHead();
 }
 
 
@@ -34,4 +36,7 @@
     </fieldset>
    } 
     
+}
+@using (Script.Foot()) {
+    @Html.MakeSortable("#reactions", ".reaction-position-field");
 }

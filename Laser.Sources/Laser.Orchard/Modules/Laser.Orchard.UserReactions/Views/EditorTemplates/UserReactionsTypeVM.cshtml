@@ -8,80 +8,25 @@
    Script.Require("Autocomplete").AtHead();
    var styleAcronime = new Laser.Orchard.UserReactions.StyleAcroName();
    string styleAcronimeName = styleAcronime.StyleAcronime;
-   }
+}
 
 <div id="@phId" class="j_reaction">
-    
+    <i class="fa fa-arrows"></i>
     @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete" })
     @Html.HiddenFor(m => m.Id)
 
     @*@Html.TextBoxFor(m => m.TypeName, new { placeholder = T("Name"), @class = "text medium" })*@
-    @Html.DropDownListFor(m => m.TypeName,  new SelectList(Enum.GetNames(typeof(Laser.Orchard.UserReactions.ReactionsNames))), Model.TypeName)
-  
-    @Html.HiddenFor(m => m.TypeCssClass,  @styleAcronimeName +  @Model.TypeName)
+    @Html.DropDownListFor(m => m.TypeName, new SelectList(Enum.GetNames(typeof(Laser.Orchard.UserReactions.ReactionsNames))), Model.TypeName)
+
+    @Html.HiddenFor(m => m.TypeCssClass, @styleAcronimeName + @Model.TypeName)
 
     @*@id="CssName" +  Model.Id, @onfocus="classNameChangeEvent(id);", *@
 
-    @Html.TextBoxFor(m => m.Priority, new { placeholder = T("Order"), @class = "text medium" })
-   @* @Html.DropDownListFor(m => m.CssName, cssNames,  new { placeholder = T("CssName"), @class = "text medium" })*@
+    @Html.TextBoxFor(m => m.Priority, new { placeholder = T("Order"), @class = "text medium reaction-position-field" })
+    @* @Html.DropDownListFor(m => m.CssName, cssNames,  new { placeholder = T("CssName"), @class = "text medium" })*@
     @Html.CheckBoxFor(m => m.Activating, new { placeholder = T("Activating"), @class = "text medium" })
     <i class="fa fa-times" style="color: red"></i>
     @Html.LinkToRemoveNestedForm(T("Remove").Text, ".j_reaction", "input.ph-mark-for-delete")
 </div>
-<br />
 
 
-@*<div>
-    <input type="text" id="textarea1"  onfocus="classNameChangeEvent(id)" />
-</div>*@
-
-<script type="text/javascript">
-  
-
-    function classNameChangeEvent(id)
-    {       
-       
-        alert(id);
-
-    //    $('#textarea1').textcomplete([
-    //    { // emoji strategy
-    //        id: 'emoji',
-    //        match: /\B:([\-+\w]*)$/,
-    //        search: function (term, callback) {
-    //            callback($.map(emojies, function (emoji) {
-    //                return emoji.indexOf(term) === 0 ? emoji : null;
-    //            }));
-    //        },
-    //        template: function (value) {
-    //            return '<img src="./Styles/images/flaticon/png/' + value + '.png"></img>' + value;
-    //        },
-    //        replace: function (value) {
-    //            return ':' + value + ': ';
-    //        },
-    //        index: 1
-    //    },
-    //{ // tech companies
-    //    id: 'tech-companies',
-    //    words: ['apple', 'google', 'facebook', 'github'],
-    //    match: /\b(\w{2,})$/,
-    //    search: function (term, callback) {
-    //        callback($.map(this.words, function (word) {
-    //            return word.indexOf(term) === 0 ? word : null;
-    //        }));
-    //    },
-    //    index: 1,
-    //    replace: function (word) {
-    //        return word + ' ';
-    //    }
-    //}
-    //], {
-    //onKeydown: function (e, commands) {
-    //    if (e.ctrlKey && e.keyCode === 74) { // CTRL-J
-    //        return commands.KEY_ENTER;
-    //    }
-    //}
-    //});
-
-
-    }    
-</script>

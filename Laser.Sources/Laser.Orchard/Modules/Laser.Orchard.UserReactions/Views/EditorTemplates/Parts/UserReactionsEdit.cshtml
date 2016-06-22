@@ -5,6 +5,7 @@
 @using Laser.Orchard.UserReactions.Services
 @using Laser.Orchard.UserReactions
 @{
+
     List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model;
     IUserReactionsService _reactionService;
     WorkContext.TryResolve<IUserReactionsService>(out _reactionService);
