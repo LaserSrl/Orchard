@@ -495,7 +495,7 @@ namespace Laser.Orchard.UserReactions.Services {
 
             } catch (Exception) {
                 
-                retVal.Clicked  =5;
+                retVal.Clicked = 5;
                 return retVal;
 
             }
@@ -511,9 +511,9 @@ namespace Laser.Orchard.UserReactions.Services {
                 return T("Exahausted");
             } else if (reactionName.Equals(ReactionsNames.happy)) {
                 return T("Happy");
-            } else if (reactionName.Equals(ReactionsNames.ILike)) {
+            } else if (reactionName.Equals(ReactionsNames.like)) {
                 return T("I Like");
-            } else if (reactionName.Equals(ReactionsNames.Iwasthere)) {
+            } else if (reactionName.Equals(ReactionsNames.iwasthere)) {
                 return T("I Was There");
             } else if (reactionName.Equals(ReactionsNames.joke)) {
                 return T("Joke");

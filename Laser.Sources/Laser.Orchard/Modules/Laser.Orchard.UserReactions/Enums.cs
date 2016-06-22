@@ -28,8 +28,8 @@ namespace Laser.Orchard.UserReactions {
         sad,
         shocked,
         silent,
-        ILike,
-        Iwasthere
+        like,
+        iwasthere
     }; // Se si aggiungono enumeratori, provvedere opportuna traduzione in UserReactionsService.GetReactionEnumTranslations
 
     public class StyleAcroName {
