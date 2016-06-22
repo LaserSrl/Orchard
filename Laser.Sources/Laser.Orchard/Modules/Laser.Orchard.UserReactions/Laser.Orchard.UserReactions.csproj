@@ -100,6 +100,7 @@
     <Content Include="Scripts\jquery.textcomplete.js" />
     <Content Include="Styles\coloredflaticon.css" />
     <Content Include="Styles\flaticon.css" />
+    <Content Include="Styles\fonts\flaticon.svg" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -146,6 +147,9 @@
     <Content Include="Views\Parts\UserReactions_Detail.cshtml" />
     <Content Include="Views\Parts\UserReactions_Summary.cshtml" />
     <Content Include="Views\DefinitionTemplates\UserReactionsPartSettings.cshtml" />
+    <Content Include="Styles\fonts\flaticon.eot" />
+    <Content Include="Styles\fonts\flaticon.ttf" />
+    <Content Include="Styles\fonts\flaticon.woff" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
