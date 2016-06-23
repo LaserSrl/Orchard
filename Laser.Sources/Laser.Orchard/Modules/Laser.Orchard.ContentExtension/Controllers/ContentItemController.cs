@@ -462,7 +462,11 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             else {
                 var context = new UpdateContentContext(NewOrModifiedContent);
                 Handlers.Invoke(handler => handler.Updated(context), Logger);
-                _orchardServices.ContentManager.Publish(NewOrModifiedContent);
+                // forza il publish solo per i contenuti non draftable
+                var typeSettings = NewOrModifiedContent.TypeDefinition.Settings.TryGetModel<ContentTypeSettings>();
+                if ((typeSettings == null) || (typeSettings.Draftable == false)) {
+                    _orchardServices.ContentManager.Publish(NewOrModifiedContent);
+                }
             }
             return rsp;
         }
