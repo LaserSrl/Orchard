@@ -59,7 +59,21 @@ namespace Laser.Orchard.WebServices.Routes {
                         },
                         new MvcRouteHandler())
                 },
-                                new RouteDescriptor {
+                new RouteDescriptor {
+                    Route = new Route(
+                        "WebServices/E015/{version}",
+                        new RouteValueDictionary {
+                            {"area", "Laser.Orchard.WebServices"},
+                            {"controller", "Json"},
+                            {"action", "GetObjectByAlias"},
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Laser.Orchard.WebServices"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
                     Route = new Route(
                         "WebServices/E015/ID",
                         new RouteValueDictionary {
@@ -74,7 +88,21 @@ namespace Laser.Orchard.WebServices.Routes {
                         },
                         new MvcRouteHandler())
                 },
-                                new RouteDescriptor {
+                new RouteDescriptor {
+                    Route = new Route(
+                        "WebServices/E015/{version}/ID",
+                        new RouteValueDictionary {
+                            {"area", "Laser.Orchard.WebServices"},
+                            {"controller", "Json"},
+                            {"action", "GetObjectById"},
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Laser.Orchard.WebServices"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
                     Route = new Route(
                         "Terms/GetIconsIds",
                         new RouteValueDictionary {
