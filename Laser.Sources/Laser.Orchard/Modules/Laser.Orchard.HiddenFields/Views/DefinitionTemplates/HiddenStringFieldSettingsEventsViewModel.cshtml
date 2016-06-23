@@ -2,10 +2,6 @@
 
 <fieldset>
     <div>
-        @Html.CheckBoxFor(m => m.Settings.Required, new { @class = "check-box" }) <label for="@Html.FieldIdFor(m=>m.Settings.Required)" class="forcheckbox">@T("Required")</label>
-        <span class="hint">@T("Check to ensure the user enters a value in this field.")</span>
-    </div>
-    <div>
         @Html.CheckBoxFor(m=>m.Settings.Tokenized, new { @class = "check-box" }) <label for="@Html.FieldIdFor(m=>m.Settings.Tokenized)" class="forcheckbox">@T("Tokenized")</label>
         <span class="hint">@T("Check to enable token replacement in the field contents.")</span>
     </div>

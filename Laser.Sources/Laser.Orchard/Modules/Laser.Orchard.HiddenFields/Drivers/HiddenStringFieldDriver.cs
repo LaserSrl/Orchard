@@ -76,12 +76,6 @@ namespace Laser.Orchard.HiddenFields.Drivers {
                     IsEditAuthorized = _orchardServices.Authorizer.Authorize(HiddenFieldsPermissions.MayEditHiddenFields)
                 };
                 if (updater.TryUpdateModel(vm, GetPrefix(field, part), null, null)) {
-                    if (vm.Settings.Required && string.IsNullOrWhiteSpace(vm.Value)) {
-                        updater.AddModelError("HiddenString", T("The field {0} is mandatory", T(field.DisplayName)));
-                        return ContentShape("Fields_Hidden_String_Edit", GetDifferentiator(field, part),
-                            () => shapeHelper.EditorTemplate(TemplateName: "Fields.Hidden.String.Edit", Model: vm, Prefix: GetPrefix(field, part)));
-                    }
-
                     field.Value = vm.Value;
                 }
             }
