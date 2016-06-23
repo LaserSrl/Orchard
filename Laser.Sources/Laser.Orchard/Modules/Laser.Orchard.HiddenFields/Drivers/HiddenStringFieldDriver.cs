@@ -96,7 +96,7 @@ namespace Laser.Orchard.HiddenFields.Drivers {
 
         protected override void Describe(DescribeMembersContext context) {
             context
-                .Member(null, typeof(string), T("Value"), T("The text associated with the field."))
+                .Member(null, typeof(string), T("Value"), T("The string associated with the field."))
                 .Enumerate<HiddenStringField>(() => field => new[] { field.Value });
         }
 

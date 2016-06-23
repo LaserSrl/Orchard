@@ -51,8 +51,16 @@
     <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Forms, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Forms\bin\Orchard.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Projections, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Roles">
       <HintPath>..\Laser.Orchard.Questionnaires\bin\Orchard.Roles.dll</HintPath>
@@ -88,10 +96,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Drivers\HiddenStringFieldDriver.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Fields\HiddenStringField.cs" />
+    <Compile Include="FieldTypeEditors\HiddenStringFieldTypeEditor.cs" />
+    <Compile Include="FilterEditors\Forms\HiddenStringFieldFilterForm.cs" />
+    <Compile Include="FilterEditors\HiddenStringFieldFilterEditor.cs" />
     <Compile Include="Handlers\HiddenStringFieldHandler.cs" />
     <Compile Include="HiddenFieldsMigrations.cs" />
     <Compile Include="HiddenFieldsPermissions.cs" />
+    <Compile Include="Projections\HiddenStringFieldFilter.cs" />
     <Compile Include="Settings\HiddenStringFieldSettings.cs" />
     <Compile Include="Settings\HiddenStringFieldsSettingsEvents.cs" />
     <Compile Include="ViewModels\HiddenStringFieldViewModels.cs" />
