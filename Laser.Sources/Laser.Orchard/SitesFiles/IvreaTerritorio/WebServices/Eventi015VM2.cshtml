@@ -110,6 +110,32 @@
         }
         catch { }
 
+		try {
+			if (((dynamic)ci).POI != null) {
+                string name = ((dynamic)(((dynamic)ci).POI.Contatti.ContentItems[0])).TitlePart.Title;
+                string tel = ((dynamic)(((dynamic)ci).POI.Contatti.ContentItems[0])).Contatto.Telefono.Value;
+                string email = ((dynamic)ci).POI.Contatti.ContentItems[0].Contatto.Email.Value;
+                string sito = ((dynamic)ci).POI.Contatti.ContentItems[0].Contatto.SitoWeb.Value;
+				string indirizzo = ((dynamic)ci).POI.Contatti.ContentItems[0].Contatto.Indirizzo.Value;
+                if (!string.IsNullOrEmpty(name)) {
+                    selectev.Contact.Add(new Contact { String = name, Type = "name" });
+                }
+                if (!string.IsNullOrEmpty(tel)) {
+                    selectev.Contact.Add(new Contact { String = tel, Type = "phone" });
+                }
+                if (!string.IsNullOrEmpty(email)) {
+                    selectev.Contact.Add(new Contact { String = email, Type = "email" });
+                }
+                if (!string.IsNullOrEmpty(sito)) {
+                    selectev.Contact.Add(new Contact { String = sito, Type = "www" });
+                }
+				if (!string.IsNullOrEmpty(indirizzo)) {
+                    selectev.Contact.Add(new Contact { String = indirizzo, Type = "address" });
+                }
+            }
+		}
+		catch { }
+		
         try {//itinerary non ha immagini
             foreach (var img in miocontenuto.Gallery.MediaParts) {
                 if (selectev.MediaResource.Where(a => a.MediaUrl == img.MediaUrl).Count() > 0) {
