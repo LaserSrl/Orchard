@@ -3,6 +3,7 @@ using Orchard;
 using Orchard.Localization.Services;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Web;
 
@@ -27,6 +28,11 @@ namespace Laser.Orchard.SEO.Services {
         /// <param name="utcDate">UTC-based time.</param>
         /// <returns>Local time.</returns>
         public DateTime DateToLocal(DateTime utcDate) {
+            if (utcDate <= (DateTime)SqlDateTime.MinValue) {
+                utcDate = SqlDateTime.MinValue.Value.AddDays(1);
+            } else if (utcDate >= (DateTime)SqlDateTime.MaxValue) {
+                utcDate = SqlDateTime.MaxValue.Value.Subtract(TimeSpan.FromDays(1));
+            }
             return (DateTime)_dateServices.ConvertToLocal(utcDate);
         }
         /// <summary>
@@ -35,6 +41,11 @@ namespace Laser.Orchard.SEO.Services {
         /// <param name="localDate">Local time</param>
         /// <returns>UTC-based time</returns>
         public DateTime DateToUTC(DateTime localDate) {
+            if (localDate <= (DateTime)SqlDateTime.MinValue) {
+                localDate = SqlDateTime.MinValue.Value.AddDays(1);
+            } else if (localDate >= (DateTime)SqlDateTime.MaxValue) {
+                localDate = SqlDateTime.MaxValue.Value.Subtract(TimeSpan.FromDays(1));
+            }
             return (DateTime)(_dateServices.ConvertFromLocalString(_dateLocalization.WriteDateLocalized(localDate), _dateLocalization.WriteTimeLocalized(localDate)));
             
         }
