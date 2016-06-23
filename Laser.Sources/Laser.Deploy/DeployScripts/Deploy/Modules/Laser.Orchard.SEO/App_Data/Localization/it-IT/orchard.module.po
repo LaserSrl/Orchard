@@ -1,0 +1,50 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2016 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/Favicon.FaviconSettings.cshtml"
+msgid "current"
+msgstr "Favicon attuale"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/Favicon.FaviconSettings.cshtml"
+msgid "Favicon"
+msgstr "Favicon"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/Favicon.FaviconSettings.cshtml"
+msgid "Favicon URL"
+msgstr "Indirizzo virtuale immagine"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "Description"
+msgstr "META Description"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "Keywords"
+msgstr "META Keywords"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "SEO attributes"
+msgstr "Attributi SEO"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "SEO attributes are empty!"
+msgstr "Gli attributi SEO sono vuoti!"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "TitleOverride"
+msgstr "Titolo della pagina"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "TitleOverrideDescription"
+msgstr "ATTENZIONE: lascia vuoto questo campo per usare il normale titolo del contenuto."
+
+msgctxt "Laser.Orchard.SEO.Handlers.FaviconSettingsPartHandler"
+msgid "Favicon"
+msgstr "Favicon"
+

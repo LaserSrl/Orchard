@@ -1,0 +1,8 @@
+﻿@using Laser.Orchard.SEO.Models
+@{
+  var seoPartTyped = (SeoPart)Model.ContentItem.SeoPart;
+  //var seoPartDynamic = Model.ContentItem.SeoPart;
+  if (!string.IsNullOrEmpty(seoPartTyped.TitleOverride)) {
+    Layout.Title = seoPartTyped.TitleOverride;
+  }
+}
