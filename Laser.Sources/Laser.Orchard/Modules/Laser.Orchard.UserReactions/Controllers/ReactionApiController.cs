@@ -23,11 +23,18 @@ namespace Laser.Orchard.UserReactions.Controllers {
             return typeClick;
 
         }
-        public UserReactionsVM Post(int reactionTypeId, int pageId) {
+        public UserReactionsVM Post(ReactionUpdateModel reactionUpdateModel) {
             UserReactionsVM typeClick = null;
-            typeClick = _userReactionService.CalculateTypeClick(reactionTypeId, pageId);
+            typeClick = _userReactionService.CalculateTypeClick(reactionUpdateModel.TypeId, reactionUpdateModel.PageId);
             return typeClick;
         }
 
+    }
+    /// <summary>
+    /// json example {"TypeId": 1, "PageId": 2817 }
+    /// </summary>
+    public class ReactionUpdateModel {
+        public int TypeId { get; set; }
+        public int PageId { get; set; }
     }
 }
