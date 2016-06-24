@@ -90,6 +90,8 @@
     <Compile Include="FaviconMigrations.cs" />
     <Compile Include="Handlers\FaviconSettingsPartHandler.cs" />
     <Compile Include="Handlers\SeoHandler.cs" />
+    <Compile Include="Models\KeywordHelperPart.cs" />
+    <Compile Include="Models\KeywordHelperPartVersionRecord.cs" />
     <Compile Include="SeoMigrations.cs" />
     <Compile Include="Models\FaviconSettingsPart.cs" />
     <Compile Include="Models\FaviconSettingsRecord.cs" />
