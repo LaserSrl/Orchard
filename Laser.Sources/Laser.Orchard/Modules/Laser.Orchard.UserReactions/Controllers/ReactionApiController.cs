@@ -18,12 +18,16 @@ namespace Laser.Orchard.UserReactions.Controllers {
         }
 
         public UserReactionsVM[] Get(int pageId) {
+            if (pageId < 1) throw new Exception("incorrect input parameter.");
             UserReactionsVM[] typeClick = null;
             typeClick = _userReactionService.GetSummaryReaction(pageId);
             return typeClick;
 
         }
         public UserReactionsVM Post(ReactionUpdateModel reactionUpdateModel) {
+            if (reactionUpdateModel == null || reactionUpdateModel.TypeId < 1 || reactionUpdateModel.PageId < 1) {
+                throw new Exception("incorrect input parameter.");
+            }
             UserReactionsVM typeClick = null;
             typeClick = _userReactionService.CalculateTypeClick(reactionUpdateModel.TypeId, reactionUpdateModel.PageId);
             return typeClick;
