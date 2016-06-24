@@ -330,20 +330,15 @@ namespace Laser.Orchard.UserReactions.Services {
             UserReactionsClickRecord res = new UserReactionsClickRecord();
             string userCookie = string.Empty;
 
+            var part = _orchardServices.ContentManager.Get<UserReactionsPart>(CurrentPage);
+            var items = GetTot(part);
+            
             UserReactionsUser reactionsCurrentUser = new UserReactionsUser();
             reactionsCurrentUser = ReactionsCurrentUser(userId);
 
-            var sommaryRecord = _repoSummary.Table.Where(z => z.UserReactionsPartRecord.Id.Equals(CurrentPage))
-               .Select(s => new UserReactionsVM {
-                   Id = s.Id,
-                   TypeId = s.UserReactionsTypesRecord.Id,
-                   OrderPriority = s.UserReactionsTypesRecord.Priority,
-                   Quantity = s.Quantity,
-                   Clicked = 0
-               }).ToList();
 
             List<UserReactionsVM> newSommaryRecord = new List<UserReactionsVM>();
-            foreach (UserReactionsVM item in sommaryRecord) {
+            foreach (UserReactionsVM item in items) {
                 UserReactionsVM newItem = new UserReactionsVM();
                 newItem = item;
 
