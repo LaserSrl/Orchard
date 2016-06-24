@@ -1,0 +1,32 @@
+﻿@model dynamic
+@{
+    Layout.Title = "List of Reactions";
+}
+@*<fieldset class="contentItems bulk-items">
+    @Display(Model.ContentItems.Items)
+
+</fieldset>*@
+
+@{foreach (var item in Model.ContentItems.Items) {
+      var space = " ";
+
+      var creationData = @item.CreatedUtc + space;
+      var reactionType= @item.UserReactionsTypesRecord.TypeName + space;
+      var username = (@item.UserPartRecord.UserName!=null? @item.UserPartRecord.UserName: "anonimous" ) ;
+     
+      
+          <div>                             
+              <b>@reactionType </b>
+              <b>@creationData </b>
+              <b>@username</b>
+          </div>
+     
+      
+  }
+}
+
+
+@using(Html.BeginForm("ListSummaryReactionByUsers", "Routes", FormMethod.Post))
+{
+    @Display(Model.Pager)
+}

@@ -101,6 +101,7 @@
     <Content Include="Styles\coloredflaticon.css" />
     <Content Include="Styles\flaticon.css" />
     <Content Include="Styles\fonts\flaticon.svg" />
+    <None Include="Views\Admin\ListSummaryReactionByUsers.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -133,6 +134,7 @@
     <Compile Include="Services\UserReactionsService.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Settings\UserReactionsPartSettingsHooks.cs" />
+    <Compile Include="ViewModels\ListSummaryReactionByUsersViewModel.cs" />
     <Compile Include="ViewModels\UserReactionsTypesVM.cs" />
     <Compile Include="ViewModels\UserReactionsVM.cs" />
   </ItemGroup>

@@ -28,6 +28,7 @@ namespace Laser.Orchard.UserReactions.Services {
         UserReactionsVM[] GetSummaryReaction(int CurrentPage);
         UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model);
         LocalizedString GetReactionEnumTranslations(ReactionsNames reactionName);
+        List<UserReactionsClickRecord> GetListTotalReactions(int Content);
     }
 
 
@@ -270,7 +271,7 @@ namespace Laser.Orchard.UserReactions.Services {
             if (FilterApplied == false) {
                 listType = GetTypesTableFiltered()
                 .Select(x => new UserReactionsVM {
-                    Id = 0,
+                    Id = part.Id,
                     Quantity = 0,
                     TypeName = x.TypeName,
                     TypeId = x.Id,
@@ -282,7 +283,7 @@ namespace Laser.Orchard.UserReactions.Services {
                 // prendi i valori filtrati
                 listType = GetTypesTableFilteredByTypeReactions(SettingType)
                                 .Select(x => new UserReactionsVM {
-                                    Id = 0,
+                                    Id = part.Id,
                                     Quantity = 0,
                                     TypeName = x.TypeName,
                                     TypeId = x.Id,
@@ -363,6 +364,14 @@ namespace Laser.Orchard.UserReactions.Services {
             }
 
             return newSommaryRecord.ToArray();
+        }
+
+
+        public List<UserReactionsClickRecord> GetListTotalReactions(int Content) 
+        {
+            var retVal = GetClickTable().Where(z => z.ActionType == 1 && z.ContentItemRecordId==Content).ToList();
+
+            return retVal;
         }
 
 
