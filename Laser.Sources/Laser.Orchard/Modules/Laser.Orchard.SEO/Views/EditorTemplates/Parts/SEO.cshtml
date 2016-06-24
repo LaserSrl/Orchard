@@ -36,6 +36,13 @@
         })
     </script>
 }
+
+@helper CbAndLabelFor(System.Linq.Expressions.Expression<Func<Laser.Orchard.SEO.ViewModels.SeoPartViewModel, bool>> expression){
+    @Html.CheckBoxFor(expression)
+    <label for="@Html.FieldIdFor(expression)" class="forcheckbox" style="font-weight: normal;">@Html.DisplayNameFor(expression)</label>
+    <text>&nbsp;&nbsp;</text>
+}
+
 <fieldset class="editor">
     <legend id="seo-label"><a href="#seo-label"><i class="fa fa-chevron-right"></i></a> @T("SEO attributes")</legend>
     @if (emptySeo){
@@ -66,33 +73,26 @@
             @Html.TextBoxFor(m => m.Keywords, new { @class = "large text" })
             @Html.ValidationMessageFor(m => m.Keywords)
         </div>
-
+        
         <div class="editor-label">
             @Html.LabelFor(m => m.RobotsNoIndex, @T("Robots settings"))
         </div>
         <div class="editor-field">
-            @Html.CheckBoxFor(m => m.RobotsNoIndex)
-            @Html.DisplayNameFor(m => m.RobotsNoIndex)
+            @CbAndLabelFor(m => m.RobotsNoIndex)
+            
+            @CbAndLabelFor(m => m.RobotsNoFollow)
 
-            @Html.CheckBoxFor(m => m.RobotsNoFollow)
-            @Html.DisplayNameFor(m => m.RobotsNoFollow)
+            @CbAndLabelFor(m => m.RobotsNoSnippet)
 
-            @Html.CheckBoxFor(m => m.RobotsNoSnippet)
-            @Html.DisplayNameFor(m => m.RobotsNoSnippet)
+            @CbAndLabelFor(m => m.RobotsNoOdp)
 
-            @Html.CheckBoxFor(m => m.RobotsNoOdp)
-            @Html.DisplayNameFor(m => m.RobotsNoOdp)
+            @CbAndLabelFor(m => m.RobotsNoArchive)
 
-            @Html.CheckBoxFor(m => m.RobotsNoArchive)
-            @Html.DisplayNameFor(m => m.RobotsNoArchive)
-
-            @Html.CheckBoxFor(m => m.RobotsUnavailableAfter)
-            @Html.DisplayNameFor(m => m.RobotsUnavailableAfter)
+            @CbAndLabelFor(m => m.RobotsUnavailableAfter)
 
             @Html.TextBoxFor(m => m.RobotsUnavailableAfterDate, new { id = "unavailableAfterDate" })
 
-            @Html.CheckBoxFor(m => m.RobotsNoImageIndex)
-            @Html.DisplayNameFor(m => m.RobotsNoImageIndex)
+            @CbAndLabelFor(m => m.RobotsNoImageIndex)
 
         </div>
 
@@ -100,11 +100,9 @@
             @Html.LabelFor(m => m.RobotsNoIndex, @T("Google settings"))
         </div>
         <div class="editor-field">
-            @Html.CheckBoxFor(m => m.GoogleNoSiteLinkSearchBox)
-            @Html.DisplayNameFor(m => m.GoogleNoSiteLinkSearchBox)
+            @CbAndLabelFor(m => m.GoogleNoSiteLinkSearchBox)
 
-            @Html.CheckBoxFor(m => m.GoogleNoTranslate)
-            @Html.DisplayNameFor(m => m.GoogleNoTranslate)
+            @CbAndLabelFor(m => m.GoogleNoTranslate)
         </div>
     </div>
 </fieldset>

@@ -61,7 +61,7 @@ namespace Laser.Orchard.SEO.Drivers {
             if (!string.IsNullOrWhiteSpace(metaRobots)) {
                 resourceManager.SetMeta(new MetaEntry {
                     Name = "robots",
-                    Content = metaRobots
+                    Content = metaRobots.Substring(0, metaRobots.Length-1) //remove trailing comma
                 });
             }
 
@@ -71,7 +71,7 @@ namespace Laser.Orchard.SEO.Drivers {
             if (!string.IsNullOrWhiteSpace(metaGoogle)) {
                 resourceManager.SetMeta(new MetaEntry {
                     Name = "google",
-                    Content = metaGoogle
+                    Content = metaGoogle.Substring(0, metaGoogle.Length - 1)
                 });
             }
 
