@@ -70,14 +70,16 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
+        private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
 
-        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session, ICultureManager cultureManager) {
+        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
             _moduleService = moduleService;
             _notifier = notifier;
             _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
+            _repositoryCommunicationSmsRecord = repositoryCommunicationSmsRecord;
             _session = session;
             _taxonomyService = taxonomyService;
             _cultureManager = cultureManager;
@@ -426,8 +428,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             } catch { // non si ha l'estensione per favorite culture
             }
 
+            var contact = Contact; //GetContactFromUser(UserContent.Id);
+
+            // email
             if (!string.IsNullOrEmpty(UserContent.Email) && UserContent.ContentItem.As<UserPart>().RegistrationStatus == UserStatus.Approved) {
-                var contact = Contact; //GetContactFromUser(UserContent.Id);
                 CommunicationEmailRecord cmr = null;
                 if (contact != null) {
                     cmr = _repositoryCommunicationEmailRecord.Fetch(x => x.Email == UserContent.Email && x.EmailContactPartRecord_Id == contact.Id).FirstOrDefault();
@@ -452,6 +456,44 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     _repositoryCommunicationEmailRecord.Flush();
                 }
             }
+
+            // sms
+            try {
+                dynamic userPwdRecoveryPart = ((dynamic)UserContent.ContentItem).UserPwdRecoveryPart;
+                if (userPwdRecoveryPart != null) {
+                    string pref = userPwdRecoveryPart.InternationalPrefix;
+                    string num = userPwdRecoveryPart.PhoneNumber;
+                    CommunicationContactPart ciCommunication = contact.As<CommunicationContactPart>();
+                    if (ciCommunication != null) {
+                        CommunicationSmsRecord csr = _repositoryCommunicationSmsRecord.Fetch(x => x.SmsContactPartRecord_Id == ciCommunication.ContentItem.Id).FirstOrDefault();
+                        if (csr == null) {
+                            CommunicationSmsRecord newsms = new CommunicationSmsRecord();
+                            newsms.Prefix = pref;
+                            newsms.Sms = num;
+                            newsms.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
+                            newsms.Id = 0;
+                            newsms.Validated = true;
+                            newsms.DataInserimento = DateTime.Now;
+                            newsms.DataModifica = DateTime.Now;
+                            newsms.Produzione = true;
+                            _repositoryCommunicationSmsRecord.Create(newsms);
+                            _repositoryCommunicationSmsRecord.Flush();
+                        }
+                        else {
+                            csr.Prefix = pref;
+                            csr.Sms = num;
+                            csr.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
+                            csr.DataModifica = DateTime.Now;
+                            _repositoryCommunicationSmsRecord.Update(csr);
+                            _repositoryCommunicationSmsRecord.Flush();
+                        }
+                    }
+                }
+            }
+            catch { 
+                // non è abilitato il modulo Laser.Mobile.SMS, quindi non allineo il telefono
+            }
+
             if (string.IsNullOrWhiteSpace(UserContent.UserName) == false) {
                 Contact.As<TitlePart>().Title = UserContent.UserName;
             }

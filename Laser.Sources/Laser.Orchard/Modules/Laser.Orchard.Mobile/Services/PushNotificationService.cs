@@ -14,6 +14,7 @@ using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
+using Orchard.Security;
 using Orchard.Tokens;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
@@ -270,14 +271,33 @@ namespace Laser.Orchard.Mobile.Services {
                 pushElement.DataModifica = adesso;
                 pushElement.DataInserimento = OldPush.DataInserimento;
                 pushElement.Id = OldPush.Id;
+                pushElement.MobileContactPartRecord_Id = TryGetContactId(pushElement.UUIdentifier);
                 _pushNotificationRepository.Update(pushElement);
             }
             else {
                 pushElement.Id = 0;
                 pushElement.DataInserimento = adesso;
                 pushElement.DataModifica = adesso;
+                pushElement.MobileContactPartRecord_Id = TryGetContactId(pushElement.UUIdentifier);
                 _pushNotificationRepository.Create(pushElement);
             }
+        }
+
+        private int TryGetContactId(string uuIdentifier) {
+            int contactId = 0;
+            try {
+                var userDevice = _userDeviceRecord.Fetch(x => x.UUIdentifier == uuIdentifier).FirstOrDefault();
+                if (userDevice != null) {
+                    var contactList = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where<CommunicationContactPartRecord>(x => x.UserPartRecord_Id == userDevice.UserPartRecord.Id).List();
+                    if (contactList.FirstOrDefault() != null) {
+                        contactId = contactList.FirstOrDefault().Id;
+                    }
+                }
+            }
+            catch (Exception ex) {
+                _myLog.WriteLog(string.Format("TryGetContactId - Exception occurred: {0} \r\n    in {1}", ex.Message, ex.StackTrace));
+            }
+            return contactId;
         }
 
         private PushNotificationRecord GetPushNotificationBy_UUIdentifier(string uuidentifier, bool produzione) {
