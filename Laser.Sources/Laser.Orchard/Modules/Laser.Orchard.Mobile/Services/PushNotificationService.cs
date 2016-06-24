@@ -943,7 +943,7 @@ namespace Laser.Orchard.Mobile.Services {
                 //    .WithCustomItem(chiave, valore)
                 //    .WithSound(mypush.Sound);
 
-                sb.AppendFormat("{ \"aps\": { \"alert\": \"{0}\", \"sound\":\"{1}\"}", mypush.Text, mypush.Sound);
+                sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", mypush.Text, mypush.Sound);
                 sb.AppendFormat("\"{0}\":\"{1}\"", chiave, valore);
                 sb.Append("}");
             }
@@ -965,7 +965,7 @@ namespace Laser.Orchard.Mobile.Services {
                 //.WithCustomItem("Al", mypush.Al)
                 //.WithSound(mypush.Sound);
 
-                sb.AppendFormat("{ \"aps\": { \"alert\": \"{0}\", \"sound\":\"{1}\"}", mypush.Text, mypush.Sound);
+                sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", mypush.Text, mypush.Sound);
                 sb.AppendFormat("\"Id\":\"{0}\"", mypush.idContent);
                 sb.AppendFormat("\"Rid\":\"{0}\"", mypush.idRelated);
                 sb.AppendFormat("\"Ct\":\"{0}\"", mypush.Ct);
@@ -1161,7 +1161,7 @@ namespace Laser.Orchard.Mobile.Services {
                 push.Start();
                 foreach (PushNotificationRecord dispositivo in listdispositivo) {
                     sb.Clear();
-                    sb.AppendFormat("{ \"aps\": { \"alert\": \"{0}\", \"sound\":\"{1}\"}", pushMessage.Text, pushMessage.Sound);
+                    sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", pushMessage.Text, pushMessage.Sound);
                     if (!string.IsNullOrEmpty(pushMessage.Eu)) {
                         sb.AppendFormat("\"Eu\":\"{0}\"", pushMessage.Eu);
                     }
