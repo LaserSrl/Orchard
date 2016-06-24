@@ -943,8 +943,8 @@ namespace Laser.Orchard.Mobile.Services {
                 //    .WithCustomItem(chiave, valore)
                 //    .WithSound(mypush.Sound);
 
-                sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", mypush.Text, mypush.Sound);
-                sb.AppendFormat("\"{0}\":\"{1}\"", chiave, valore);
+                sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", FormatJsonValue(mypush.Text), FormatJsonValue(mypush.Sound));
+                sb.AppendFormat(",\"{0}\":\"{1}\"", FormatJsonValue(chiave), FormatJsonValue(valore));
                 sb.Append("}");
             }
             else {
@@ -965,11 +965,11 @@ namespace Laser.Orchard.Mobile.Services {
                 //.WithCustomItem("Al", mypush.Al)
                 //.WithSound(mypush.Sound);
 
-                sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", mypush.Text, mypush.Sound);
-                sb.AppendFormat("\"Id\":\"{0}\"", mypush.idContent);
-                sb.AppendFormat("\"Rid\":\"{0}\"", mypush.idRelated);
-                sb.AppendFormat("\"Ct\":\"{0}\"", mypush.Ct);
-                sb.AppendFormat("\"Al\":\"{0}\"", mypush.Al);
+                sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", FormatJsonValue(mypush.Text), FormatJsonValue(mypush.Sound));
+                sb.AppendFormat(",\"Id\":{0}", mypush.idContent);
+                sb.AppendFormat(",\"Rid\":{0}", mypush.idRelated);
+                sb.AppendFormat(",\"Ct\":\"{0}\"", FormatJsonValue(mypush.Ct));
+                sb.AppendFormat(",\"Al\":\"{0}\"", FormatJsonValue(mypush.Al));
                 sb.Append("}");
             }
             if (sb.Length > 255) {
@@ -1161,18 +1161,18 @@ namespace Laser.Orchard.Mobile.Services {
                 push.Start();
                 foreach (PushNotificationRecord dispositivo in listdispositivo) {
                     sb.Clear();
-                    sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", pushMessage.Text, pushMessage.Sound);
+                    sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", FormatJsonValue(pushMessage.Text), FormatJsonValue(pushMessage.Sound));
                     if (!string.IsNullOrEmpty(pushMessage.Eu)) {
-                        sb.AppendFormat("\"Eu\":\"{0}\"", pushMessage.Eu);
+                        sb.AppendFormat(",\"Eu\":\"{0}\"", FormatJsonValue(pushMessage.Eu));
                     }
                     else if (!string.IsNullOrEmpty(pushMessage.Iu)) {
-                        sb.AppendFormat("\"Iu\":\"{0}\"", pushMessage.Iu);
+                        sb.AppendFormat(",\"Iu\":\"{0}\"", FormatJsonValue(pushMessage.Iu));
                     }
                     else {
-                        sb.AppendFormat("\"Id\":\"{0}\"", pushMessage.idContent);
-                        sb.AppendFormat("\"Rid\":\"{0}\"", pushMessage.idRelated);
-                        sb.AppendFormat("\"Ct\":\"{0}\"", pushMessage.Ct);
-                        sb.AppendFormat("\"Al\":\"{0}\"", pushMessage.Al);
+                        sb.AppendFormat(",\"Id\":{0}", pushMessage.idContent);
+                        sb.AppendFormat(",\"Rid\":{0}", pushMessage.idRelated);
+                        sb.AppendFormat(",\"Ct\":\"{0}\"", FormatJsonValue(pushMessage.Ct));
+                        sb.AppendFormat(",\"Al\":\"{0}\"", FormatJsonValue(pushMessage.Al));
                     }
                     sb.Append("}");
                     if (sb.Length > 255) {
@@ -1220,6 +1220,10 @@ namespace Laser.Orchard.Mobile.Services {
                 //push.StopAllServices();
                 push.Stop();
             }
+        }
+
+        private string FormatJsonValue(string text) {
+            return (text ?? "").Replace("\"", "\\\"");
         }
 
         private void PushApple(PushNotificationRecord dispositivo, PushAppleVM pushMessage) {
