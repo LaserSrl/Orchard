@@ -13,6 +13,17 @@ namespace Laser.Orchard.SEO.Models {
         public virtual string TitleOverride { get; set; }
         public virtual string Keywords { get; set; }
         public virtual string Description { get; set; }
+        //20160620: update SEOPart based off supported metadata: https://support.google.com/webmasters/answer/79812?hl=en
+        public virtual bool RobotsNoIndex { get; set; }
+        public virtual bool RobotsNoFollow { get; set; }
+        public virtual bool RobotsNoSnippet { get; set; }
+        public virtual bool RobotsNoOdp { get; set; }
+        public virtual bool RobotsNoArchive { get; set; }
+        public virtual bool RobotsUnavailableAfter { get; set; }
+        public virtual DateTime RobotsUnavailableAfterDate { get; set; }
+        public virtual bool RobotsNoImageIndex { get; set; }
+        public virtual bool GoogleNoSiteLinkSearchBox { get; set; }
+        public virtual bool GoogleNoTranslate { get; set; }
     }
 
 }
