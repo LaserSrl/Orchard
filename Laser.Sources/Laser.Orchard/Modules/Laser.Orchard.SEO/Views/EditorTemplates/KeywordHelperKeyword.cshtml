@@ -1,0 +1,15 @@
+﻿@using Laser.Orchard.SEO;
+@using Laser.Orchard.Commons.Helpers;
+
+@model Laser.Orchard.SEO.ViewModels.KeywordHelperKeyword
+@{ MvcHtmlString answerBlock = Html.UniqueClientId("SummaryAdminToolbarLabel"); }
+@{
+    var appId = "phNum_" + answerBlock;
+}
+
+<div id="@appId" class="j_seokeyword">
+    @Html.TextBoxFor(m=>m.Keyword, new {placeholder=T("Keyword"), @class="text medium"})
+    @if (!string.IsNullOrWhiteSpace(Model.Keyword)) {
+        <script type="text/javascript" src="//www.google.com/trends/embed.js?hl=it&q=@Model.PercentEncode()&geo=IT&date=today+1-m&tz=Etc/GMT-2&content=1&cid=TOP_QUERIES_0_0&export=5&w=300&h=420"></script>
+    }
+</div>

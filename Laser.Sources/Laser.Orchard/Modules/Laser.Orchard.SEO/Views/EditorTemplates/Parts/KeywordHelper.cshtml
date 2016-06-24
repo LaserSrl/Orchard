@@ -1,0 +1,18 @@
+﻿@using Laser.Orchard.Commons.Helpers;
+
+@model Laser.Orchard.SEO.ViewModels.KeywordHelperPartViewModel
+
+@{
+    Script.Require("jQuery_NestedModels").AtHead();
+}
+
+<fieldset>
+    <legend>@T("Keywords selected for this content")</legend>
+    <div>
+        <i class="fa fa-plus" style="color: green"></i>
+        @Html.LinkToAddNestedForm(x => x.Keywords, T("Add keyword").Text, "#seokeyword", ".j_seokeyword")
+        <div id="seokeyword">
+            @Html.EditorFor(x => x.Keywords)
+        </div>
+    </div>
+</fieldset>
