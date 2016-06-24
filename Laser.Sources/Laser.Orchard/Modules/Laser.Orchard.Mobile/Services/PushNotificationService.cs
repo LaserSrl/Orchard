@@ -1223,7 +1223,7 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         private string FormatJsonValue(string text) {
-            return (text ?? "").Replace("\"", "\\\"");
+            return (text ?? "").Replace("\"", "\\\"").Replace("\\", "\\\\");
         }
 
         private void PushApple(PushNotificationRecord dispositivo, PushAppleVM pushMessage) {
