@@ -36,13 +36,13 @@
   } 
     
 }
-<a href="@Url.Action("ListSummaryReactionByUsers", "Admin", new { Area = "Laser.Orchard.UserReactions", Content = @Model.FirstOrDefault().Id, page=1, pageSize=5 })" class="colorbox"><button>Open summary</button></a>
+<a href="@Url.Action("ListSummaryReactionByUsers", "Admin", new { Area = "Laser.Orchard.UserReactions", Content = @Model.FirstOrDefault().Id, page=1, pageSize=10 })" class="colorbox"><button>Open summary</button></a>
 
 <br />
 @using (Script.Head()) {
      <script type="text/javascript">
          $(document).ready(function () {
-             $('.colorbox').colorbox({ resize: false, iframe: true, href: $(this).href, innerWidth: 800, innerHeight: 600 });
+             $('.colorbox').colorbox({ resize: false, iframe: true, href: $(this).href, innerWidth: "90%", innerHeight: "80%" });
          });
     </script>
 }

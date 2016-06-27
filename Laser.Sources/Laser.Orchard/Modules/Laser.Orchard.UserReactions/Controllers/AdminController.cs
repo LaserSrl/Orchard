@@ -17,6 +17,7 @@ using Orchard.UI.Admin;
 
 
 namespace Laser.Orchard.UserReactions.Controllers {
+
     public class AdminController : Controller {
         private readonly IAuthenticationService _authenticationService;
         private readonly IMembershipService _membershipService;
@@ -60,6 +61,7 @@ namespace Laser.Orchard.UserReactions.Controllers {
 
 
         [HttpPost]
+        [Admin, Themed(false)]
         public ActionResult ListSummaryReactionByUsers(int content, PagerParameters pagerParameters) 
         {
             var routes = _reactionsService.GetListTotalReactions(content);

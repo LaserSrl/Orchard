@@ -7,15 +7,15 @@
 @{
     IUserReactionsService _reactionService;
     WorkContext.TryResolve<IUserReactionsService>(out _reactionService);
-    Layout.Title = "Reactions list summary";
+    Layout.Title = T("Reactions list summary");
+    Script.Require("jQuery").AtHead();
 }
 
 @{       
     Style.Include("~/Themes/TheAdmin/Styles/Site.css").AtHead();
-    Script.Require("jQuery").AtHead();
 }
 
- <style type="text/css" media="screen">
+@* <style type="text/css" media="screen">
 
         body,
         html {
@@ -43,7 +43,7 @@
         $("#layout-content").css('width', '800px');
     });
 
-</script>
+</script>*@
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,51 +52,51 @@
 </head>
 
 
-<body style="background-image:none;">
+<body style="background-image: none;">
     <table class="items">
         <thead>
             <tr>
-                <th><b>Creation date</b></th>
-                <th><b>Username</b></th>
-                <th><b>Reaction type</b></th>
-                <th><b>Selected</b></th>
+                <th>@T("Creation date")</th>
+                <th>@T("User")</th>
+                <th>@T("Reaction type")</th>
+                <th>@T("Action")</th>
             </tr>
-            </thead>
+        </thead>
         <tbody>
-@{foreach (var item in Model.ContentItems.Items) {
-      var space = " ";
+            @foreach (var item in Model.ContentItems.Items) {
+                var space = " ";
 
-      var creationData = @item.CreatedUtc + space;
-      var reactionType = _reactionService.GetReactionEnumTranslations((ReactionsNames)Enum.Parse(typeof(ReactionsNames), @item.UserReactionsTypesRecord.TypeName)) + space;
-      
-      string username =string.Empty;
-      bool clicked = true;
-      
-      if(@item.UserPartRecord==null)          
-        username=@item.UserGuid;
-      else          
-        username = @item.UserPartRecord.UserName;
+                var creationData = item.CreatedUtc + space;
+                var reactionType = _reactionService.GetReactionEnumTranslations((ReactionsNames)Enum.Parse(typeof(ReactionsNames), item.UserReactionsTypesRecord.TypeName)) + space;
 
-      if (@item.ActionType == 1)
-          clicked = true;
-      else
-          clicked = false;
+                string username = string.Empty;
+                string clicked = "";
+
+                if (item.UserPartRecord == null) {
+                    username = item.UserGuid;
+                } else {
+                    username = item.UserPartRecord.UserName;
+                }
+
+                if (item.ActionType == 1) {
+                    clicked = T("Clicked").Text;
+                } else {
+                    clicked = T("Unclicked").Text;
+                }
           
-              <tr>
-              <td>@creationData</td> 
-              <td>@username</td>                   
-              <td>@reactionType</td>
-              <td style="color:blue">@clicked</td>
-              </tr>                
-  }
-}
-</tbody>
-</table>
+                <tr>
+                    <td>@creationData</td>
+                    <td>@username</td>
+                    <td>@reactionType</td>
+                    <td style="color: @((item.ActionType == 1) ? "#91B9FD" : "#F7685C")">@clicked</td>
+                </tr>                
+            }
+        </tbody>
+    </table>
 
 
-@using(Html.BeginForm("ListSummaryReactionByUsers", "Routes", FormMethod.Post))
-{
-    @Display(Model.Pager)
-}
+    @using (Html.BeginForm("ListSummaryReactionByUsers", "Routes", FormMethod.Post)) {
+        @Display(Model.Pager)
+    }
 </body>
 </html>
