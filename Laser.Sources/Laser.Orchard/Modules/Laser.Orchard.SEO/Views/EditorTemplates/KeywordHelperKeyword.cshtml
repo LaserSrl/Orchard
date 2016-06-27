@@ -5,66 +5,64 @@
 
 
 @model Laser.Orchard.SEO.ViewModels.KeywordHelperKeyword
-@{ MvcHtmlString answerBlock = Html.UniqueClientId("SummaryAdminToolbarLabel"); }
+@{ MvcHtmlString answerBlock = Html.UniqueClientId("KeywordHelperKeyword"); }
 @{
     var appId = "phNum_" + answerBlock;
 
 }
 
+
+
 <div id="@appId" class="j_seokeyword">
-    @Html.TextBoxFor(m=>m.Keyword, new {placeholder=T("Keyword").ToString(), @class="text medium", @title=T("Keyword").ToString()})
-    <select title="@T("Select time period.").ToString()" id="period_+@appId">
+    @Html.TextBoxFor(m=>m.Keyword, new {placeholder=T("Keyword").ToString(), @class="text medium", @title=T("Keyword").ToString(), @id="key_"+@appId})
+    <select title="@T("Select time period.").ToString()" id="period_@appId">
         @Html.SelectOption("today+12-m", true, T("Past year").ToString());
         @Html.SelectOption("today+3-m", false, T("Past 90 days").ToString());
         @Html.SelectOption("today+2-m", false, T("Past 60 days").ToString());
         @Html.SelectOption("today+1-m", false, T("Past 30 days").ToString());
         @Html.SelectOption("today+7-d", false, T("Past week").ToString());
     </select>
-    <select title="@T("Language").ToString()" id="lang_+@appId">
+    <select title="@T("Language").ToString()" id="lang_@appId">
         @*Insert languages from site settings*@
         @{
-            IOrchardServices _orchardServices = WorkContext.Resolve<IOrchardServices>();
-            
+            Orchard.Data.IRepository<Orchard.Localization.Records.CultureRecord> _cultureRepository;
+            if (WorkContext.TryResolve<Orchard.Data.IRepository<Orchard.Localization.Records.CultureRecord>>(out _cultureRepository)) {
+                foreach (var row in _cultureRepository.Table) {
+                    var lCode = row.Culture;
+                    var shortLCode = lCode.Substring(0, 2);
+                    var lText = KeywordHelperKeyword.langDictionary.ContainsKey(lCode) ? 
+                        KeywordHelperKeyword.langDictionary[lCode] : 
+                        KeywordHelperKeyword.langDictionary.ContainsKey(shortLCode) ?
+                        KeywordHelperKeyword.langDictionary[shortLCode] : "";
+                    if (!String.IsNullOrWhiteSpace(lText)){
+                        @Html.SelectOption(shortLCode, WorkContext.CurrentSite.SiteCulture == lCode, lText);
+                    }
+                }
+            }
         }
-        @Html.SelectOption("it", true, T("Italian").ToString());
-        @Html.SelectOption("en", false, T("English").ToString());
         @*Insert languages from file*@
+        @if (KeywordHelperKeyword.langDictionary.Count() > 0) {
+            <option disabled>_________</option>
+        }
         @foreach (var lang in KeywordHelperKeyword.langDictionary) {
             @Html.SelectOption(lang.Key, false, lang.Value);
         }
     </select>
-    <select title="@T("Region").ToString()" id="region_+@appId">
+    <select title="@T("Region").ToString()" id="region_@appId">
         @Html.SelectOption("", true, T("Worldwide").ToString());
         @*Insert regions from file*@
+        @if (KeywordHelperKeyword.regionDictionary.Count() > 0) {
+            <option disabled>_________</option>
+        }
         @foreach (var reg in KeywordHelperKeyword.regionDictionary) {
             @Html.SelectOption(reg.Key, false, reg.Value);
         }
     </select>
+    
+    <a href="javascript:void(0)" onclick="refreshTrends('@appId')" class="btn btn-sm" id="button_@appId" title="@T("Click to refresh charts")">@T("Refresh charts")</a>
+
     <div>
-        @if (!string.IsNullOrWhiteSpace(Model.Keyword)) {
-            @*<iframe src="//www.google.com/trends/fetchComponent?hl=it&q=@Model.PercentEncode()&geo=IT&date=today+2-m&tz=Etc/GMT-2&content=1&cid=TOP_QUERIES_0_0&export=5&w=100&h=100" style="position: absolute; top:-200px; left:-200px;" id="iframe_trends"></iframe>*@
-            <script type="text/javascript" src="//www.google.com/trends/embed.js?hl=it&q=@Model.PercentEncode()&geo=IT&date=&tz=Etc/GMT-2&content=1&cid=TOP_QUERIES_0_0&export=5&w=400&h=550"></script>
-            <script type="text/javascript" src="//www.google.com/trends/embed.js?hl=it&q=@Model.PercentEncode()&geo=IT&date=today+1-m&cmpt=q&tz=Etc/GMT-2&tz=Etc/GMT-2&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=550&h=400"></script>
+        <iframe style="position:relative;top:5px;left:5px;border:none;" width="100%" height="1px" id="iframe_@appId"></iframe>
         
-            @*using (Script.Foot()) {
-                <script>
-                    window.frames.iframe_trends.onload = function () {
-                        var iFrameDoc;
-                        if (window.frames) {
-                            alert("1");
-                            if (window.frames.iframe_trends) {
-                                alert("2");
-                                if (iFrameDoc = window.frames.iframe_trends.document) { //cannot access to this because of cross-domain limitations
-                                    var iFrameBody = iFrameDoc.body;
-                                    var iFrameContent = iFrameBody.innerHtml;
-                                    alert(iFrameContent);
-                                }
-                            }
-                        }
-                    }
-                </script>
-            }*@
-        
-        }
     </div>
 </div>

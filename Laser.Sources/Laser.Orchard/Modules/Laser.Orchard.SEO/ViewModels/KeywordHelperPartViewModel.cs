@@ -86,6 +86,16 @@ namespace Laser.Orchard.SEO.ViewModels {
             string clean = this.CleanKeyword();
             return System.Web.HttpUtility.UrlEncode(clean);
         }
+    }
 
+    //This model is used to refresh the Google Trends charts
+    [OrchardFeature("Laser.Orchard.KeywordHelper")]
+    public class GoogleTrendsViewModel {
+
+        public string hl { get; set; } //language
+        public string q { get; set; } //keywords(percent encoded)
+        public string geo { get; set; } //location
+        public string date { get; set; } //time period
+        
     }
 }
