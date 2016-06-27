@@ -374,57 +374,56 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 var profpart = ((dynamic)UserContent).ProfilePart;
                 asProfilePart = true;
             } catch { asProfilePart = false; }
-            int iduser = UserContent.Id;
+            //int iduser = UserContent.Id;
 
             // identifica il Contact relativo a UserContent
-            var contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == iduser).List().FirstOrDefault();
-            ContentItem Contact = null;
+            var contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == UserContent.Id).List().FirstOrDefault();
+            ContentItem contact = null;
             if (contactsUsers == null) {
                 // cerca un eventuale contatto con la stessa mail ma non ancora legato a uno user
                 var contactEmailList = GetContactsFromMail(UserContent.Email);
                 foreach (var contactEmail in contactEmailList) {
                     if ((contactEmail != null) && (contactEmail.ContentType == "CommunicationContact")) {
                         if ((contactEmail.As<CommunicationContactPart>().Record.UserPartRecord_Id == 0) && (contactEmail.As<CommunicationContactPart>().Master == false)) {
-                            Contact = contactEmail;
-                            Contact.As<CommunicationContactPart>().Logs += string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function.").Text, DateTime.Now);
+                            contact = contactEmail;
+                            contact.As<CommunicationContactPart>().Logs += string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function.").Text, DateTime.Now);
+                            contact.As<CommunicationContactPart>().UserIdentifier = UserContent.Id;
                             break; // associa solo il primo contatto che trova
                         }
                     }
                 }
 
-                if (Contact == null) {
-                    Contact = _orchardServices.ContentManager.New("CommunicationContact");
-                    _orchardServices.ContentManager.Create(Contact);
-                    Contact = _orchardServices.ContentManager.Get(Contact.Id);
-                    Contact.As<CommunicationContactPart>().Master = false;
+                if (contact == null) {
+                    contact = _orchardServices.ContentManager.Create("CommunicationContact");
+                    contact.As<CommunicationContactPart>().Master = false;
+                    contact.As<CommunicationContactPart>().UserIdentifier = UserContent.Id;
                 }
             } else {
-                Contact = contactsUsers.ContentItem;
+                contact = contactsUsers.ContentItem;
             }
-            var contact = Contact; //GetContactFromUser(UserContent.Id);
 
             // aggiorna Pushcategories
             try {
-                if (((dynamic)UserContent.ContentItem).User.Pushcategories != null && (((dynamic)Contact).CommunicationContactPart).Pushcategories != null) {
+                if (((dynamic)UserContent.ContentItem).User.Pushcategories != null && (((dynamic)contact).CommunicationContactPart).Pushcategories != null) {
                     //List<TermPart> ListTermPartToAdd = ((TaxonomyField)((dynamic)UserContent.ContentItem).User.Pushcategories).Terms.ToList();
                     List<TermPart> ListTermPartToAdd = _taxonomyService.GetTermsForContentItem(UserContent.Id, "Pushcategories").ToList();
-                    _taxonomyService.UpdateTerms(Contact, ListTermPartToAdd, "Pushcategories");
+                    _taxonomyService.UpdateTerms(contact, ListTermPartToAdd, "Pushcategories");
                 }
             } catch { // non ci sono le Pushcategories
             }
 
             // aggiorna FavoriteCulture
             try {
-                if ((UserContent.ContentItem.As<FavoriteCulturePart>() != null) && (Contact.As<FavoriteCulturePart>() != null)) {
+                if ((UserContent.ContentItem.As<FavoriteCulturePart>() != null) && (contact.As<FavoriteCulturePart>() != null)) {
                     if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != 0) {
-                        if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != Contact.As<FavoriteCulturePart>().Culture_Id) {
-                            Contact.As<FavoriteCulturePart>().Culture_Id = UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id;
+                        if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != contact.As<FavoriteCulturePart>().Culture_Id) {
+                            contact.As<FavoriteCulturePart>().Culture_Id = UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id;
                         }
                     }
                     else {
                         // imposta la culture di default
                         var defaultCultureId = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture()).Id;
-                        Contact.As<FavoriteCulturePart>().Culture_Id = defaultCultureId;
+                        contact.As<FavoriteCulturePart>().Culture_Id = defaultCultureId;
                         UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id = defaultCultureId;
                     }
                 }
@@ -438,8 +437,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     cmr = _repositoryCommunicationEmailRecord.Fetch(x => x.Email == UserContent.Email && x.EmailContactPartRecord_Id == contact.Id).FirstOrDefault();
                 }
                 if (cmr != null) {
-                    if (cmr.EmailContactPartRecord_Id != Contact.Id) {
-                        cmr.EmailContactPartRecord_Id = Contact.Id;
+                    if (cmr.EmailContactPartRecord_Id != contact.Id) {
+                        cmr.EmailContactPartRecord_Id = contact.Id;
                         cmr.DataModifica = DateTime.Now;
                         _repositoryCommunicationEmailRecord.Update(cmr);
                         _repositoryCommunicationEmailRecord.Flush();
@@ -447,7 +446,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 } else {
                     CommunicationEmailRecord newrec = new CommunicationEmailRecord();
                     newrec.Email = UserContent.Email;
-                    newrec.EmailContactPartRecord_Id = Contact.Id;
+                    newrec.EmailContactPartRecord_Id = contact.Id;
                     newrec.Id = 0;
                     newrec.Validated = true;
                     newrec.DataInserimento = DateTime.Now;
@@ -497,29 +496,25 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
             // aggiorna Title
             if (string.IsNullOrWhiteSpace(UserContent.UserName) == false) {
-                Contact.As<TitlePart>().Title = UserContent.UserName;
+                contact.As<TitlePart>().Title = UserContent.UserName;
             }
             else if (string.IsNullOrWhiteSpace(UserContent.Email) == false) {
-                Contact.As<TitlePart>().Title = UserContent.Email;
+                contact.As<TitlePart>().Title = UserContent.Email;
             }
             else {
-                Contact.As<TitlePart>().Title = string.Format("User with ID {0}", UserContent.Id);
+                contact.As<TitlePart>().Title = string.Format("User with ID {0}", UserContent.Id);
             }
 
             // aggiorna CommonPart
-            if (Contact.Has<CommonPart>()) {
-                Contact.As<CommonPart>().ModifiedUtc = DateTime.Now;
-                Contact.As<CommonPart>().Owner = UserContent;
+            if (contact.Has<CommonPart>()) {
+                contact.As<CommonPart>().ModifiedUtc = DateTime.Now;
+                contact.As<CommonPart>().Owner = UserContent;
             }
-
-            // aggiorna riferimento allo User
-            dynamic mypart = (((dynamic)Contact).CommunicationContactPart);
-            mypart.GetType().GetProperty("UserIdentifier").SetValue(mypart, UserContent.Id, null);
 
             // aggiorna ProfilePart
             if (asProfilePart) {
                 List<ContentPart> Lcp = new List<ContentPart>();
-                Lcp.Add(((ContentPart)((dynamic)Contact).ProfilePart));
+                Lcp.Add(((ContentPart)((dynamic)contact).ProfilePart));
                 foreach (dynamic cf in ((dynamic)UserContent).ProfilePart.Fields) {
                     object myval;
                     if (cf.FieldDefinition.Name == typeof(DateTimeField).Name)
@@ -540,7 +535,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     else {
                         myval = ((object)(((dynamic)cf).Value));
                     }
-                    _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, Contact);
+                    _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, contact);
                 }
             }
         }

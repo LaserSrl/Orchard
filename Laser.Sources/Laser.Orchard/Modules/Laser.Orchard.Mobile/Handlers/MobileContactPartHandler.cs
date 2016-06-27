@@ -27,6 +27,12 @@ namespace Laser.Orchard.Mobile.Handlers {
             Filters.Add(new ActivatingFilter<MobileContactPart>("CommunicationContact"));
             OnLoaded<MobileContactPart>(LazyLoadHandlers);
             OnRemoved<UserPart>(RebindDevices);
+            OnUpdated<CommunicationContactPart>((context, part) => {
+                if (part.ContentItem.ContentType == "CommunicationContact") {
+                    // TODO
+                    // allinea i device del contatto in base a quelli dell'utente collegato (part.UserIdentifier)
+                }
+            });
         }
 
         protected void LazyLoadHandlers(LoadContentContext context, MobileContactPart part) {
