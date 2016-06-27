@@ -58,11 +58,21 @@
         return data;
     };
 
-    $(document).ready(function () {
+    $(document).ready(function () {        
 
-        $("div.reactiondiv").hover(function () {
-            $(this).css('cursor', 'pointer');
-        });
+        $("div.reactiondiv").hover(
+              function() {
+                  $(this).css('cursor', 'pointer');
+                  $(this).css('opacity', '0.4');
+              },
+              function() {
+                  $(this).css('opacity', '1');
+              });
+            
+        
+
+
+
         //Esegui chiamata Ajax per calcolare la somma delle reactions al loading della page
         //per ovviare al problema della cache di pagina di Orchard
         var PageId = "@Model.ContentItem.Id";

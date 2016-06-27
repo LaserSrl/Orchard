@@ -10,6 +10,10 @@ using Laser.Orchard.UserReactions.Services;
 using Laser.Orchard.UserReactions.ViewModels;
 using Orchard.Data;
 using Laser.Orchard.UserReactions.Models;
+using Orchard.UI.Navigation;
+using Orchard.DisplayManagement;
+using Orchard.Themes;
+using Orchard.UI.Admin;
 
 
 namespace Laser.Orchard.UserReactions.Controllers {
@@ -22,13 +26,16 @@ namespace Laser.Orchard.UserReactions.Controllers {
         private readonly INotifier _notifier;
 
         public Localizer T { get; set; }
+        dynamic Shape { get; set; }
+
         // GET: /Admin/
         public AdminController(
             IAuthenticationService authenticationService,
             IMembershipService membershipService, IOrchardServices orcharcServices,
              IUserReactionsService reactionsService,
             IRepository<UserReactions.Models.UserReactionsTypesRecord> repoTypes,
-            INotifier notifier
+            INotifier notifier,
+            IShapeFactory shapeFactory
             ) {
             _authenticationService = authenticationService;
             _membershipService = membershipService;
@@ -37,7 +44,44 @@ namespace Laser.Orchard.UserReactions.Controllers {
             T = NullLocalizer.Instance;
             _repoTypes = repoTypes;
             _notifier = notifier;
+            Shape = shapeFactory;
         }
+
+        
+
+        [HttpGet]
+        public ActionResult ListSummaryReactionByUsers(int Content, int? page, int? pageSize) 
+        {
+            return ListSummaryReactionByUsers(Content, new PagerParameters {
+                Page = page,
+                PageSize = pageSize
+            });
+        }
+
+
+        [HttpPost]
+        public ActionResult ListSummaryReactionByUsers(int content, PagerParameters pagerParameters) 
+        {
+            var routes = _reactionsService.GetListTotalReactions(content);
+
+            Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
+            dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(routes.Count());
+
+            var list = _orchardServices.New.List();
+            list.AddRange(routes.Skip(pager.GetStartIndex())
+                                .Take(pager.PageSize)
+                                );
+            
+
+            var viewModel = Shape.ViewModel() 
+                .ContentItems(list)
+                .Pager(pagerShape);
+          
+            return View(viewModel);
+        }
+
+        
+
 
         [HttpGet]
         public ActionResult Settings() {
