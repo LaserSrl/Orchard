@@ -5,14 +5,20 @@
 @using Laser.Orchard.UserReactions.Services
 @using Laser.Orchard.UserReactions
 @{
+    Script.Require("jQuery").AtHead();
+    Script.Require("jQueryColorBox").AtHead();
 
-    List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model;
+    Style.Require("jQueryColorBox").AtHead();
+
+   // List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model;
+      
     IUserReactionsService _reactionService;
     WorkContext.TryResolve<IUserReactionsService>(out _reactionService);
+    
 
     var settings = WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
     Style.Require(settings.StyleFileNameProvider.ToString());
-
+  
 }
 
 
@@ -30,4 +36,13 @@
   } 
     
 }
+<a href="@Url.Action("ListSummaryReactionByUsers", "Admin", new { Area = "Laser.Orchard.UserReactions", Content = @Model.FirstOrDefault().Id, page=1, pageSize=10 })" class="colorbox"><button>Open summary</button></a>
+
 <br />
+@using (Script.Head()) {
+     <script type="text/javascript">
+         $(document).ready(function () {
+             $('.colorbox').colorbox({ resize: false, iframe: true, href: $(this).href, innerWidth: "90%", innerHeight: "80%" });
+         });
+    </script>
+}
