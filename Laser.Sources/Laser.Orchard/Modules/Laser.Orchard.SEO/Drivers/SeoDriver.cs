@@ -56,7 +56,7 @@ namespace Laser.Orchard.SEO.Drivers {
             metaRobots += part.RobotsNoSnippet ? "nosnippet," : "";
             metaRobots += part.RobotsNoOdp ? "noodp," : "";
             metaRobots += part.RobotsNoArchive ? "noarchive," : "";
-            metaRobots += part.RobotsUnavailableAfter ? "unavailable_after:" + part.RobotsUnavailableAfterDate.ToUniversalTime().ToString("r") + "," : ""; //date in rfc850 format
+            metaRobots += part.RobotsUnavailableAfter ? "unavailable_after:" + part.RobotsUnavailableAfterDate.Value.ToUniversalTime().ToString("r") + "," : ""; //date in rfc850 format
             metaRobots += part.RobotsNoImageIndex ? "noimageindex," : "";
             if (!string.IsNullOrWhiteSpace(metaRobots)) {
                 resourceManager.SetMeta(new MetaEntry {
