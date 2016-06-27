@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.Services;
+using Laser.Orchard.StartupConfig.Handlers;
 using Laser.Orchard.StartupConfig.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -12,7 +13,7 @@ using System.Linq;
 
 namespace Laser.Orchard.CommunicationGateway.Handlers {
 
-    public class CommunicationContactPartHandler : ContentHandler {
+    public class CommunicationContactPartHandler : ContentHandler, IContactRelatedEventHandler {
         public Localizer T { get; set; }
         private readonly ICommunicationService _communicationService;
         private readonly IRepository<CommunicationEmailRecord> _Emailrepository;
@@ -38,6 +39,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             OnUpdated<UserPart>((context, part) => UpdateProfile(context.ContentItem));
             OnRemoved<UserPart>((context, part) => RemoveUserLink(part));
             OnRemoved<CommunicationContactPart>((context, part) => RemoveLinks(part));
+            OnUpdated<FavoriteCulturePart>((context, part) => UpdateProfile(context.ContentItem));
             #endregion
         }
 
@@ -117,6 +119,14 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
 
         private void RemoveUserLink(UserPart part) {
             _communicationService.UnboundFromUser(part);
+        }
+
+        public void DeviceUpdated() {
+            //throw new System.NotImplementedException();
+        }
+
+        public void SmsUpdated() {
+            //throw new System.NotImplementedException();
         }
     }
 }
