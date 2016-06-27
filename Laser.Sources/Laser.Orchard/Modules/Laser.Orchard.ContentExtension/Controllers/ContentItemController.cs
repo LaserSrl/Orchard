@@ -9,6 +9,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.Core.Contents.Settings;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Fields.Fields;
@@ -460,7 +461,12 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                 _transactionManager.Cancel();
             else {
                 var context = new UpdateContentContext(NewOrModifiedContent);
-                Handlers.Invoke(handler => handler.Updated(context), Logger);             
+                Handlers.Invoke(handler => handler.Updated(context), Logger);
+                // forza il publish solo per i contenuti non draftable
+                var typeSettings = NewOrModifiedContent.TypeDefinition.Settings.TryGetModel<ContentTypeSettings>();
+                if ((typeSettings == null) || (typeSettings.Draftable == false)) {
+                    _orchardServices.ContentManager.Publish(NewOrModifiedContent);
+                }
             }
             return rsp;
         }
