@@ -16,7 +16,7 @@ namespace Laser.Orchard.SEO.ViewModels {
         public bool RobotsNoOdp { get; set; }
         public bool RobotsNoArchive { get; set; }
         public bool RobotsUnavailableAfter { get; set; }
-        public DateTime RobotsUnavailableAfterDate { get; set; }
+        public DateTime? RobotsUnavailableAfterDate { get; set; }
         public bool RobotsNoImageIndex { get; set; }
         public bool GoogleNoSiteLinkSearchBox { get; set; }
         public bool GoogleNoTranslate { get; set; }
