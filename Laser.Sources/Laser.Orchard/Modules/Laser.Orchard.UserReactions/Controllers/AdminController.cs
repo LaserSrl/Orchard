@@ -12,6 +12,8 @@ using Orchard.Data;
 using Laser.Orchard.UserReactions.Models;
 using Orchard.UI.Navigation;
 using Orchard.DisplayManagement;
+using Orchard.Themes;
+using Orchard.UI.Admin;
 
 
 namespace Laser.Orchard.UserReactions.Controllers {
@@ -47,11 +49,9 @@ namespace Laser.Orchard.UserReactions.Controllers {
 
         
 
-
         [HttpGet]
         public ActionResult ListSummaryReactionByUsers(int Content, int? page, int? pageSize) 
         {
-
             return ListSummaryReactionByUsers(Content, new PagerParameters {
                 Page = page,
                 PageSize = pageSize

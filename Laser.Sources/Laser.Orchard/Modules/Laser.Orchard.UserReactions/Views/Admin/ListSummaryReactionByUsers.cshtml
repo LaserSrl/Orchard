@@ -1,32 +1,102 @@
-﻿@model dynamic
+﻿@using Laser.Orchard.UserReactions.Models
+@using Laser.Orchard.UserReactions.ViewModels
+@using Orchard.ContentManagement
+@using Laser.Orchard.UserReactions.Services
+@using Laser.Orchard.UserReactions
+@model dynamic
 @{
-    Layout.Title = "List of Reactions";
+    IUserReactionsService _reactionService;
+    WorkContext.TryResolve<IUserReactionsService>(out _reactionService);
+    Layout.Title = "Reactions list summary";
 }
-@*<fieldset class="contentItems bulk-items">
-    @Display(Model.ContentItems.Items)
 
-</fieldset>*@
+@{       
+    Style.Include("~/Themes/TheAdmin/Styles/Site.css").AtHead();
+    Script.Require("jQuery").AtHead();
+}
 
+ <style type="text/css" media="screen">
+
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        iframe {
+            width: 800px;
+            height: 100%;
+            overflow: hidden;
+            border: none;
+        }
+    </style>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#layout-content").css('width', '800px');
+    });
+
+</script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@T("Reactions list summary")</title>
+    @Display(Layout.Head)
+</head>
+
+
+<body style="background-image:none;">
+    <table class="items">
+        <thead>
+            <tr>
+                <th><b>Creation date</b></th>
+                <th><b>Username</b></th>
+                <th><b>Reaction type</b></th>
+                <th><b>Selected</b></th>
+            </tr>
+            </thead>
+        <tbody>
 @{foreach (var item in Model.ContentItems.Items) {
       var space = " ";
 
       var creationData = @item.CreatedUtc + space;
-      var reactionType= @item.UserReactionsTypesRecord.TypeName + space;
-      var username = (@item.UserPartRecord.UserName!=null? @item.UserPartRecord.UserName: "anonimous" ) ;
-     
+      var reactionType = _reactionService.GetReactionEnumTranslations((ReactionsNames)Enum.Parse(typeof(ReactionsNames), @item.UserReactionsTypesRecord.TypeName)) + space;
       
-          <div>                             
-              <b>@reactionType </b>
-              <b>@creationData </b>
-              <b>@username</b>
-          </div>
-     
+      string username =string.Empty;
+      bool clicked = true;
       
+      if(@item.UserPartRecord==null)          
+        username=@item.UserGuid;
+      else          
+        username = @item.UserPartRecord.UserName;
+
+      if (@item.ActionType == 1)
+          clicked = true;
+      else
+          clicked = false;
+          
+              <tr>
+              <td>@creationData</td> 
+              <td>@username</td>                   
+              <td>@reactionType</td>
+              <td style="color:blue">@clicked</td>
+              </tr>                
   }
 }
+</tbody>
+</table>
 
 
 @using(Html.BeginForm("ListSummaryReactionByUsers", "Routes", FormMethod.Post))
 {
     @Display(Model.Pager)
 }
+</body>
+</html>

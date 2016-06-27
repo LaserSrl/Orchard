@@ -36,14 +36,13 @@
   } 
     
 }
-<a href="@Url.Action("ListSummaryReactionByUsers", "Admin", new { Area = "Laser.Orchard.UserReactions", ContentId = @Model.FirstOrDefault().Id, page=1, pageSize=2 })" class="colorbox">Apriti sesamo</a>
+<a href="@Url.Action("ListSummaryReactionByUsers", "Admin", new { Area = "Laser.Orchard.UserReactions", Content = @Model.FirstOrDefault().Id, page=1, pageSize=5 })" class="colorbox"><button>Open summary</button></a>
 
 <br />
 @using (Script.Head()) {
      <script type="text/javascript">
          $(document).ready(function () {
-            
-             $('.colorbox').colorbox({ iframe: true, href: $(this).href, innerWidth: 645, innerHeight: 509 });
+             $('.colorbox').colorbox({ resize: false, iframe: true, href: $(this).href, innerWidth: 800, innerHeight: 600 });
          });
     </script>
 }

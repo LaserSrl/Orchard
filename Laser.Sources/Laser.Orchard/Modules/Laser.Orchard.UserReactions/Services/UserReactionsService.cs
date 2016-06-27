@@ -369,7 +369,7 @@ namespace Laser.Orchard.UserReactions.Services {
 
         public List<UserReactionsClickRecord> GetListTotalReactions(int Content) 
         {
-            var retVal = GetClickTable().Where(z => z.ActionType == 1 && z.ContentItemRecordId==Content).ToList();
+            var retVal = GetClickTable().Where(z=>z.ContentItemRecordId==Content).ToList();
 
             return retVal;
         }
