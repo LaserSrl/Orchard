@@ -57,6 +57,9 @@ namespace Laser.Orchard.SEO.ViewModels {
     public class KeywordHelperKeyword {
         public string Keyword { get; set; }
 
+        public static Dictionary<string, string> langDictionary;
+        public static Dictionary<string, string> regionDictionary;
+
         public KeywordHelperKeyword() {
             Keyword = "";
         }
@@ -70,7 +73,7 @@ namespace Laser.Orchard.SEO.ViewModels {
         /// </summary>
         /// <returns>A duplicate of the Keyword string, from which whitespaces have been removed</returns>
         public string CleanKeyword() {
-            string clean = Regex.Replace(Keyword.Trim(), @"\s", "");
+            string clean = Regex.Replace(Keyword.Trim(), @"\s", " ");
 
             return clean;
         }

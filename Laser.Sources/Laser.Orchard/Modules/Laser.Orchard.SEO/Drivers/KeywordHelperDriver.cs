@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Reflection;
+using System.IO;
 
 namespace Laser.Orchard.SEO.Drivers {
     [OrchardFeature("Laser.Orchard.KeywordHelper")]
@@ -20,6 +22,40 @@ namespace Laser.Orchard.SEO.Drivers {
         /// GET Editor
         /// </summary>
         protected override DriverResult Editor(KeywordHelperPart part, dynamic shapeHelper) {
+
+
+            if (KeywordHelperKeyword.langDictionary == null) {
+                //Load languages from file
+                var assembly = Assembly.GetExecutingAssembly();
+                var langResourceName = "Laser.Orchard.SEO.LanguageCodes.txt";
+                KeywordHelperKeyword.langDictionary = new Dictionary<string, string>(); //value, text
+                using (Stream st = assembly.GetManifestResourceStream(langResourceName)) {
+                    using (StreamReader reader = new StreamReader(st)) {
+                        string line;
+                        while ((line = reader.ReadLine()) != null) {
+                            string[] parts = line.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries); //text, value
+                            KeywordHelperKeyword.langDictionary.Add(parts[1], parts[0]);
+                        }
+                    }
+                }
+                
+            }
+            if (KeywordHelperKeyword.regionDictionary == null) {
+                //Load regions from file
+                var assembly = Assembly.GetExecutingAssembly();
+                var regionResourceName = "Laser.Orchard.SEO.CountryCodes.txt";
+                KeywordHelperKeyword.regionDictionary = new Dictionary<string, string>(); //value, text
+                using (Stream st = assembly.GetManifestResourceStream(regionResourceName)) {
+                    using (StreamReader reader = new StreamReader(st)) {
+                        string line;
+                        while ((line = reader.ReadLine()) != null) {
+                            string[] parts = line.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries); //text, value
+                            KeywordHelperKeyword.regionDictionary.Add(parts[1], parts[0]);
+                        }
+                    }
+                }
+            }
+
             return ContentShape("Parts_KeywordHelper_Edit",
                 () => shapeHelper.EditorTemplate(
                     TemplateName: "Parts/KeywordHelper",

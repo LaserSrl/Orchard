@@ -1,15 +1,70 @@
 ﻿@using Laser.Orchard.SEO;
+@using Laser.Orchard.SEO.ViewModels;
 @using Laser.Orchard.Commons.Helpers;
+@using Orchard;
+
 
 @model Laser.Orchard.SEO.ViewModels.KeywordHelperKeyword
 @{ MvcHtmlString answerBlock = Html.UniqueClientId("SummaryAdminToolbarLabel"); }
 @{
     var appId = "phNum_" + answerBlock;
+
 }
 
 <div id="@appId" class="j_seokeyword">
-    @Html.TextBoxFor(m=>m.Keyword, new {placeholder=T("Keyword"), @class="text medium"})
-    @if (!string.IsNullOrWhiteSpace(Model.Keyword)) {
-        <script type="text/javascript" src="//www.google.com/trends/embed.js?hl=it&q=@Model.PercentEncode()&geo=IT&date=today+1-m&tz=Etc/GMT-2&content=1&cid=TOP_QUERIES_0_0&export=5&w=300&h=420"></script>
-    }
+    @Html.TextBoxFor(m=>m.Keyword, new {placeholder=T("Keyword").ToString(), @class="text medium", @title=T("Keyword").ToString()})
+    <select title="@T("Select time period.").ToString()" id="period_+@appId">
+        @Html.SelectOption("today+12-m", true, T("Past year").ToString());
+        @Html.SelectOption("today+3-m", false, T("Past 90 days").ToString());
+        @Html.SelectOption("today+2-m", false, T("Past 60 days").ToString());
+        @Html.SelectOption("today+1-m", false, T("Past 30 days").ToString());
+        @Html.SelectOption("today+7-d", false, T("Past week").ToString());
+    </select>
+    <select title="@T("Language").ToString()" id="lang_+@appId">
+        @*Insert languages from site settings*@
+        @{
+            IOrchardServices _orchardServices = WorkContext.Resolve<IOrchardServices>();
+            
+        }
+        @Html.SelectOption("it", true, T("Italian").ToString());
+        @Html.SelectOption("en", false, T("English").ToString());
+        @*Insert languages from file*@
+        @foreach (var lang in KeywordHelperKeyword.langDictionary) {
+            @Html.SelectOption(lang.Key, false, lang.Value);
+        }
+    </select>
+    <select title="@T("Region").ToString()" id="region_+@appId">
+        @Html.SelectOption("", true, T("Worldwide").ToString());
+        @*Insert regions from file*@
+        @foreach (var reg in KeywordHelperKeyword.regionDictionary) {
+            @Html.SelectOption(reg.Key, false, reg.Value);
+        }
+    </select>
+    <div>
+        @if (!string.IsNullOrWhiteSpace(Model.Keyword)) {
+            @*<iframe src="//www.google.com/trends/fetchComponent?hl=it&q=@Model.PercentEncode()&geo=IT&date=today+2-m&tz=Etc/GMT-2&content=1&cid=TOP_QUERIES_0_0&export=5&w=100&h=100" style="position: absolute; top:-200px; left:-200px;" id="iframe_trends"></iframe>*@
+            <script type="text/javascript" src="//www.google.com/trends/embed.js?hl=it&q=@Model.PercentEncode()&geo=IT&date=&tz=Etc/GMT-2&content=1&cid=TOP_QUERIES_0_0&export=5&w=400&h=550"></script>
+            <script type="text/javascript" src="//www.google.com/trends/embed.js?hl=it&q=@Model.PercentEncode()&geo=IT&date=today+1-m&cmpt=q&tz=Etc/GMT-2&tz=Etc/GMT-2&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=550&h=400"></script>
+        
+            @*using (Script.Foot()) {
+                <script>
+                    window.frames.iframe_trends.onload = function () {
+                        var iFrameDoc;
+                        if (window.frames) {
+                            alert("1");
+                            if (window.frames.iframe_trends) {
+                                alert("2");
+                                if (iFrameDoc = window.frames.iframe_trends.document) { //cannot access to this because of cross-domain limitations
+                                    var iFrameBody = iFrameDoc.body;
+                                    var iFrameContent = iFrameBody.innerHtml;
+                                    alert(iFrameContent);
+                                }
+                            }
+                        }
+                    }
+                </script>
+            }*@
+        
+        }
+    </div>
 </div>
