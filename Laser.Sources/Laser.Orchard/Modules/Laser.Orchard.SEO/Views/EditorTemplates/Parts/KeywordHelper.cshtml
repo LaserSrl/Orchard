@@ -25,12 +25,17 @@
                 document.getElementById("iframe_"+aId).src = ua;
             }
         }
+
+        function hideTrends(aId) {
+            document.getElementById("iframe_" + aId).height = "1px";
+            document.getElementById("iframe_" + aId).src = "";
+        }
     </script>
 }
 
 <fieldset>
     <legend>@T("Keywords selected for this content")</legend>
-    <div>
+    <div title="@T("You can add keywords and obtain the most relevant related ones on search engines.")">
         <i class="fa fa-plus" style="color: green"></i>
         @Html.LinkToAddNestedForm(x => x.Keywords, T("Add keyword").Text, "#seokeyword", ".j_seokeyword")
         <div id="seokeyword">

@@ -61,7 +61,7 @@
     </select>
     
     <a href="javascript:void(0)" onclick="refreshTrends('@appId')" class="btn btn-sm" id="button_@appId" title="@T("Click to refresh charts")">@T("Refresh charts")</a>
-
+    <a href="javascript:void(0)" onclick="hideTrends('@appId')" class="btn btn-sm" id="hide_@appId" title="@T("Click to hide charts")">@T("Hide charts")</a> 
     <i class="fa fa-times" style="color: red"></i>
     @Html.LinkToRemoveNestedForm(T("Remove").Text, ".j_seokeyword", "input.ph-mark-for-delete")
 
