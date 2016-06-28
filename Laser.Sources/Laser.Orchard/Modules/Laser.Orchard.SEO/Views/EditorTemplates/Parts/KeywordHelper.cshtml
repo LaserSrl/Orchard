@@ -20,7 +20,7 @@
                     .replace('__q__', q)
                     .replace('__geo__', geo)
                     .replace('__date__', date);
-                ua = ua.replace(/amp;/g, '');
+                ua = ua.replace(/amp;/g, ''); //Url.Action() puts &amp; instead of just &
                 document.getElementById("iframe_" + aId).height = "550px";
                 document.getElementById("iframe_"+aId).src = ua;
             }

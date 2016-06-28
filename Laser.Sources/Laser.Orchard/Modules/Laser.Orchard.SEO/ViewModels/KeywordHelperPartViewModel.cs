@@ -42,10 +42,10 @@ namespace Laser.Orchard.SEO.ViewModels {
         /// </summary>
         /// <returns>The comma-separated string representing the list of keywords.</returns>
         public string ListToString() {
-            if (Keywords == null || Keywords.Count() == 0)
+            if (Keywords == null || Keywords.Where(k => !k.Delete).Count() == 0)
                 return "";
 
-            string parsed = String.Join(",", Keywords.Select(x=>x.CleanKeyword()));
+            string parsed = String.Join(",", Keywords.Where(k => !k.Delete).Select(x=>x.CleanKeyword()));
             
 
             return parsed;
@@ -56,6 +56,7 @@ namespace Laser.Orchard.SEO.ViewModels {
     [OrchardFeature("Laser.Orchard.KeywordHelper")]
     public class KeywordHelperKeyword {
         public string Keyword { get; set; }
+        public bool Delete { get; set; }
 
         public static Dictionary<string, string> langDictionary;
         public static Dictionary<string, string> regionDictionary;
