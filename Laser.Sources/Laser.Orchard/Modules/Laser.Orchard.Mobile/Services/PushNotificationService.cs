@@ -618,10 +618,10 @@ namespace Laser.Orchard.Mobile.Services {
         // private IEnumerable<PushNotificationRecord> GetListMobileDevice(string queryDevice, TipoDispositivo tipodisp, bool produzione, string language, int[] queryIds) {
 
         private List<PushNotificationVM> GetListMobileDevice(string contenttype, string queryDevice, TipoDispositivo tipodisp, bool produzione, string language, int[] queryIds) {
-            if (contenttype == "CommunicationAdvertising") {
-       //         if (queryDevice.Trim() == "") {
+            var lista = new List<PushNotificationVM>();
+            try {
+                if (contenttype == "CommunicationAdvertising") {
                     var elenco = GetPushQueryResult(queryIds, tipodisp, produzione, language);
-                    var lista = new List<PushNotificationVM>();
                     foreach (Hashtable ht in elenco) {
                         lista.Add(new PushNotificationVM {
                             Id = Convert.ToInt32(ht["Id"]),
@@ -633,43 +633,36 @@ namespace Laser.Orchard.Mobile.Services {
                             Token = ht["Token"].ToString()
                         });
                     }
-                    return lista;
-                    //return _pushNotificationRepository.Fetch(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
-                //}
-                //else {
-                //    var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
-                //     .CreateSQLQuery(queryDevice)
-                //     .AddEntity(typeof(PushNotificationRecord))
-                //     .List<PushNotificationRecord>();
-                //    return estrazione.Where(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")).ToList();
-                //}
-            }
-            else {
-                IEnumerable<PushNotificationRecord> elenco = new List<PushNotificationRecord>();
-                if (queryDevice.Trim() == "") {
-                    elenco = _pushNotificationRepository.Fetch(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
                 }
                 else {
-                    var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
-                     .CreateSQLQuery(queryDevice)
-                     //.AddEntity(typeof(PushNotificationRecord))
-                     .List<PushNotificationRecord>();
-                    elenco = estrazione.Where(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
+                    IEnumerable<PushNotificationRecord> elenco = new List<PushNotificationRecord>();
+                    if (queryDevice.Trim() == "") {
+                        elenco = _pushNotificationRepository.Fetch(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
+                    }
+                    else {
+                        var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
+                         .CreateSQLQuery(queryDevice)
+                            //.AddEntity(typeof(PushNotificationRecord))
+                         .List<PushNotificationRecord>();
+                        elenco = estrazione.Where(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
+                    }
+                    foreach (PushNotificationRecord pnr in elenco) {
+                        lista.Add(new PushNotificationVM {
+                            Id = pnr.Id,
+                            Device = pnr.Device,
+                            Produzione = pnr.Produzione,
+                            Validated = pnr.Validated,
+                            Language = pnr.Language,
+                            UUIdentifier = pnr.UUIdentifier,
+                            Token = pnr.Token
+                        });
+                    }
                 }
-                var lista = new List<PushNotificationVM>();
-                foreach (PushNotificationRecord pnr in elenco) {
-                    lista.Add(new PushNotificationVM {
-                        Id = pnr.Id,
-                        Device = pnr.Device,
-                        Produzione = pnr.Produzione,
-                        Validated = pnr.Validated,
-                        Language = pnr.Language,
-                        UUIdentifier = pnr.UUIdentifier,
-                        Token = pnr.Token
-                    });
-                }
-                return lista;
             }
+            catch (Exception ex) {
+                _myLog.WriteLog(string.Format("Error in PushNotificationService.GetListMobileDevice(): {0} - {1}", ex.Message, ex.StackTrace));
+            }
+            return lista;
         }
 
         ////todo remove
