@@ -218,6 +218,7 @@ namespace Laser.Orchard.Mobile {
                       .Column<int>("PushNotificationRecord_Id")
                       .Column<int>("PushedItem")
                       .Column<DateTime>("SentDate")
+                      .Column<string>("DeviceType")
                       );
             return 20;
         }
