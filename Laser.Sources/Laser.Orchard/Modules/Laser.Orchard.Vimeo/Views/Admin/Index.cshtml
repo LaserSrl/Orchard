@@ -1,0 +1,17 @@
+﻿@model Laser.Orchard.Vimeo.ViewModels.VimeoSettingsPartViewModel
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.TextBoxFor(m=>m.AccessToken, new { placeholder = T("Authorized Access Token"), @class = "text medium" })
+        <span class="hint">@T("Insert your authorized Access Token. You cna find it inr your Vimeo App settings.")</span>
+    @Html.TextBoxFor(m=>m.ChannelName, new { placeholder = T("Channel Name"), @class = "text medium" })
+        <span class="hint">@T("Videos will be uploaded to/ read from this channel. Leave blank if unused.")</span>
+    @Html.TextBoxFor(m=>m.GroupName, new { placeholder = T("Group Name"), @class = "text medium" })
+        <span class="hint">@T("Videos will be uploaded to/ read from this group. Leave blank if unused.")</span>
+    @Html.TextBoxFor(m=>m.AlbumName, new { placeholder = T("Album Name"), @class = "text medium" })
+        <span class="hint">@T("Videos will be uploaded to/ read from this album. Leave blank if unused.")</span>
+
+    <div class="box-footer align-right padding-right-35">
+        <button id="testSettings" type="submit" name="submit.TestSettings" value="yes please">@T("Test")</button>
+        <button id="saveSettings" type="submit" name="submit.SaveSettings">@T("Save")</button>
+    </div>
+}
