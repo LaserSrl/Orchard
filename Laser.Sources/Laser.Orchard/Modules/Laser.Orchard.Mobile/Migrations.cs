@@ -211,5 +211,15 @@ namespace Laser.Orchard.Mobile {
                 .AddColumn<int>("PushSentNumber", col => col.WithDefault(0)));
             return 19;
         }
+        public int UpdateFrom19() {
+            SchemaBuilder.CreateTable("SentRecord",
+                      table => table
+                      .Column<int>("Id", column => column.PrimaryKey().Identity())
+                      .Column<int>("PushNotificationRecord_Id")
+                      .Column<int>("PushedItem")
+                      .Column<DateTime>("SentDate")
+                      );
+            return 20;
+        }
     }
 }

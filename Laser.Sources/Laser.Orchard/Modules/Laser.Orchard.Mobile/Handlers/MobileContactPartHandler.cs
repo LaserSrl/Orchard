@@ -17,12 +17,14 @@ namespace Laser.Orchard.Mobile.Handlers {
         private readonly IRepository<UserDeviceRecord> _userDeviceRepository;
         private readonly IOrchardServices _orchardServices;
         private readonly ICommunicationService _communicationService;
+        private readonly IRepository<SentRecord> _sentRepository;
 
-        public MobileContactPartHandler(IRepository<MobileContactPartRecord> repository, IRepository<PushNotificationRecord> ProviderRepository, IRepository<UserDeviceRecord> userDeviceRepository, IOrchardServices orchardServices, ICommunicationService communicationService) {
+        public MobileContactPartHandler(IRepository<MobileContactPartRecord> repository,IRepository<SentRecord> sentRepository, IRepository<PushNotificationRecord> ProviderRepository, IRepository<UserDeviceRecord> userDeviceRepository, IOrchardServices orchardServices, ICommunicationService communicationService) {
             Filters.Add(StorageFilter.For(repository));
             _deviceRepository = ProviderRepository;
             _userDeviceRepository = userDeviceRepository;
             _orchardServices = orchardServices;
+            _sentRepository = sentRepository;
             _communicationService = communicationService;
             Filters.Add(new ActivatingFilter<MobileContactPart>("CommunicationContact"));
             OnLoaded<MobileContactPart>(LazyLoadHandlers);

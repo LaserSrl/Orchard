@@ -52,6 +52,7 @@ namespace Laser.Orchard.Mobile.Services {
     }
 
     public class PushNotificationService : IPushNotificationService {
+        private readonly IRepository<SentRecord> _sentRepositor;
         private readonly IRepository<PushNotificationRecord> _pushNotificationRepository;
         private readonly IRepository<UserDeviceRecord> _userDeviceRecord;
         //private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
@@ -71,6 +72,7 @@ namespace Laser.Orchard.Mobile.Services {
         private string QueryDevice;
 
         public PushNotificationService(
+            IRepository<SentRecord> sentRepositor,
                 IOrchardServices orchardServices,
                 IRepository<PushNotificationRecord> pushNotificationRepository,
                 IRepository<UserDeviceRecord> userDeviceRecord,
@@ -85,6 +87,7 @@ namespace Laser.Orchard.Mobile.Services {
          ) {
             //      _repositoryCommunicationSmsRecord = repositoryCommunicationSmsRecord;
             _orchardServices = orchardServices;
+            _sentRepositor = sentRepositor;
             T = NullLocalizer.Instance;
             _pushNotificationRepository = pushNotificationRepository;
             _notifier = notifier;
@@ -694,6 +697,23 @@ namespace Laser.Orchard.Mobile.Services {
         //}
 
         private void SendAllAndroidJson(string contenttype, string JsonMessage, bool produzione, string language, string queryDevice = "", int[] queryIds = null) {
+
+            //            {
+            //  "registration_ids": [
+            //    "eYzpD13h0NI:APA91bEbl3clkXddPxwD_6UqPnKtkeOFaMsrjZ9cvi8Phsq6g8yUDB4oR8TEcsodfzo4Q3msH-Z7FHFGsHw6IIJPewxe6mYJ8iwGX6GxYhI0GHekJfMznc0Tbf0Yp6O4n7hQL-xjMYHa"
+            //  ],
+            //  "data": {
+            //    "Text": "Visit the exhibition dedicated to Escher at Palazzo Reale. Come and immerse yourself in his visionary fantasy world: find out all the useful info.",
+            //    "Rid": 3556,
+            //    "Id": 3564,
+            //    "Ct": "Evento",
+            //    "Al": "escher-a-palazzo-realeen-US"
+            //  }
+            //}
+
+
+//            notification.
+//_sentRepositor.
             var allDevice = GetListMobileDevice(contenttype,queryDevice, TipoDispositivo.Android, produzione, language, queryIds);
 
             string setting = "";

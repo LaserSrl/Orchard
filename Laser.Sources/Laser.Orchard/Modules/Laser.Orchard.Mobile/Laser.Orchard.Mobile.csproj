@@ -239,6 +239,7 @@
     <Compile Include="Handlers\SmsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\UserPwdRecoveryPartHandler.cs" />
     <Compile Include="Models\MobileContactPart.cs" />
+    <Compile Include="Models\SentRecord.cs" />
     <Compile Include="Models\SmsGatewayPart.cs" />
     <Compile Include="Models\SmsPlaceholdersSettingsPart.cs" />
     <Compile Include="Models\UserPwdRecoveryPart.cs" />
