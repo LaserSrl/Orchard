@@ -496,7 +496,7 @@ namespace Laser.Orchard.Mobile.Services {
                         string queryDevice = GetQueryDevice(Myobject, ci.As<MobilePushPart>());
 
                         if (locTipoDispositivo.HasValue == false) // tutti
-                    {
+                        {
                             SendAllAndroidPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
 
                             SendAllApplePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
@@ -526,11 +526,16 @@ namespace Laser.Orchard.Mobile.Services {
                                 counter = _pushNotificationRepository.Fetch(x => (x.Device == locTipoDispositivo || locTipoDispositivo == null) && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")).Count();
                             }
                             else {
+                                //var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
+                                // .CreateSQLQuery(queryDevice)
+                                // .AddEntity(typeof(PushNotificationRecord))
+                                // .List<PushNotificationRecord>();
+                                //counter = estrazione.Where(x => (x.Device == locTipoDispositivo || locTipoDispositivo == null) && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")).Count();
+
                                 var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
-                                 .CreateSQLQuery(queryDevice)
-                                 .AddEntity(typeof(PushNotificationRecord))
-                                 .List<PushNotificationRecord>();
-                                counter = estrazione.Where(x => (x.Device == locTipoDispositivo || locTipoDispositivo == null) && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")).Count();
+                                    .CreateSQLQuery(string.Format("select count(1) from ( {0} ) x where (x.Device = '{1}' or {1} is null) and x.Produzione = {2} and x.Validated = 1 and (x.Language = '{3}' or '{3}' = 'All') ", queryDevice, (locTipoDispositivo == null)? "All" : locTipoDispositivo.ToString(), (produzione) ? 1 : 0, language))
+                                 .UniqueResult();
+                                counter = Convert.ToInt32(estrazione);
                             }
                         }
                         mpp.TargetDeviceNumber = counter;
@@ -661,24 +666,37 @@ namespace Laser.Orchard.Mobile.Services {
                     IEnumerable<PushNotificationRecord> elenco = new List<PushNotificationRecord>();
                     if (queryDevice.Trim() == "") {
                         elenco = _pushNotificationRepository.Fetch(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
+                        foreach (PushNotificationRecord pnr in elenco) {
+                            lista.Add(new PushNotificationVM {
+                                Id = pnr.Id,
+                                Device = pnr.Device,
+                                Produzione = pnr.Produzione,
+                                Validated = pnr.Validated,
+                                Language = pnr.Language,
+                                UUIdentifier = pnr.UUIdentifier,
+                                Token = pnr.Token
+                            });
+                        }
                     }
                     else {
                         var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
-                         .CreateSQLQuery(queryDevice)
-                            //.AddEntity(typeof(PushNotificationRecord))
-                         .List<PushNotificationRecord>();
-                        elenco = estrazione.Where(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
-                    }
-                    foreach (PushNotificationRecord pnr in elenco) {
-                        lista.Add(new PushNotificationVM {
-                            Id = pnr.Id,
-                            Device = pnr.Device,
-                            Produzione = pnr.Produzione,
-                            Validated = pnr.Validated,
-                            Language = pnr.Language,
-                            UUIdentifier = pnr.UUIdentifier,
-                            Token = pnr.Token
-                        });
+                            .CreateSQLQuery(string.Format("select Id, Device, Produzione, Validated, Language, UUIdentifier, Token from ( {0} ) x where x.Device = '{1}' and x.Produzione = {2} and x.Validated = 1 and (x.Language = '{3}' or '{3}' = 'All') ", queryDevice, tipodisp, (produzione) ? 1 : 0, language))
+                         //.AddEntity(typeof(PushNotificationRecord))
+                         .List();
+                        //elenco = estrazione.Where(x => x.Device == tipodisp && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All"));
+                        object[] ht = null;
+                        foreach (var arr in estrazione) {
+                            ht = (object[])arr;
+                            lista.Add(new PushNotificationVM {
+                                Id = Convert.ToInt32(ht[0]),
+                                Device = (TipoDispositivo)(Enum.Parse(typeof(TipoDispositivo), ht[1].ToString())),
+                                Produzione = Convert.ToBoolean(ht[2], CultureInfo.InvariantCulture),
+                                Validated = Convert.ToBoolean(ht[3], CultureInfo.InvariantCulture),
+                                Language = ht[4].ToString(),
+                                UUIdentifier = ht[5].ToString(),
+                                Token = ht[6].ToString()
+                            });
+                        }
                     }
                 }
             }

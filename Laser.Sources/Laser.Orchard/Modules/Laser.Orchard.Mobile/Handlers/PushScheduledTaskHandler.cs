@@ -23,11 +23,8 @@ namespace Laser.Orchard.Mobile.Handlers {
                 if (context.Task.TaskType != TaskType) {
                     return;
                 }
-                // esegue l'invio in un thread asincrono
-                System.Threading.Tasks.Task.Run(() => {
-                    _pushNotificationService.PublishedPushEvent(context.Task.ContentItem);
-                });
-                //_pushNotificationService.PublishedPushEvent(context.Task.ContentItem);
+                // esegue l'invio in un task schedulato
+                _pushNotificationService.PublishedPushEvent(context.Task.ContentItem);
             }
             catch (Exception ex) {
                 Logger.Error(ex, "Error in PushScheduledTaskHandler. ContentItem: {0}, ScheduledUtc: {1:yyyy-MM-dd HH.mm.ss} Please verify if it is necessary sending your push again.", context.Task.ContentItem, context.Task.ScheduledUtc);
