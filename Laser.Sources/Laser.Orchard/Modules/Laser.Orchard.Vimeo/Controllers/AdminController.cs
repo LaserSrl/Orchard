@@ -52,12 +52,35 @@ namespace Laser.Orchard.Vimeo.Controllers {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage Vimeo settings")))
                 return new HttpUnauthorizedResult();
 
-            if (_vimeoServices.TokenIsValid(vm))
-                _orchardServices.Notifier.Information(T("Access Token Valid"));
-            else
-                _orchardServices.Notifier.Error(T("Access Token not valid"));
+            if (!string.IsNullOrWhiteSpace(vm.AccessToken)) {
+                if (_vimeoServices.TokenIsValid(vm)) {
+                    _orchardServices.Notifier.Information(T("Access Token Valid"));
+                    //now test group, channel and album
+                    if (!string.IsNullOrWhiteSpace(vm.GroupName)) {
+                        if(_vimeoServices.GroupIsValid(vm))
+                            _orchardServices.Notifier.Information(T("Group Name Valid"));
+                        else
+                            _orchardServices.Notifier.Error(T("Group Name not valid"));
+                    }
+                    if (!string.IsNullOrWhiteSpace(vm.ChannelName)) {
+
+                    }
+                    if (!string.IsNullOrWhiteSpace(vm.AlbumName)) {
+
+                    }
+                } else
+                    _orchardServices.Notifier.Error(T("Access Token not valid"));
+            }
+
 
             return View(vm);
+        }
+
+        [HttpPost, ActionName("Index")]
+        [OMvc.FormValueRequired("submit.SaveSettings")]
+        public ActionResult IndexSaveSettings(VimeoSettingsPartViewModel vm) {
+            _vimeoServices.UpdateSettings(vm);
+            return RedirectToAction("Index");
         }
     }
 }

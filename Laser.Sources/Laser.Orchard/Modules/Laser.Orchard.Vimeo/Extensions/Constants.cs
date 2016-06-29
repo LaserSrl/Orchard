@@ -11,8 +11,11 @@ namespace Laser.Orchard.Vimeo.Extensions {
     }
 
     public static class VimeoEndpoints {
-        public const string APIEntry = "https://api.vimeo.com/";
-        public const string Me = "https://api.vimeo.com/me";
-        public const string Authorize = "https://api.vimeo.com/oauth/authorize";
+        public const string APIEntry = "https://api.vimeo.com";
+        public const string Me = APIEntry + "/me";
+        public const string Authorize = APIEntry + "/oauth/authorize";
+        public const string MyAlbums = Me + "/albums";
+        public const string MyGroups = Me + "/groups";
+        public const string MyChannels = Me + "/channels";
     }
 }

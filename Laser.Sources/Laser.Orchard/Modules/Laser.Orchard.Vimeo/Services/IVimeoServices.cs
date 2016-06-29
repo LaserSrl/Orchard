@@ -11,9 +11,13 @@ namespace Laser.Orchard.Vimeo.Services {
         bool Create(VimeoSettingsPartViewModel settings);
         VimeoSettingsPartViewModel GetByToken(string aToken);
         VimeoSettingsPartViewModel Get();
+        void UpdateSettings(VimeoSettingsPartViewModel vm);
 
         bool TokenIsValid(VimeoSettingsPartViewModel vm);
         bool TokenIsValid(string aToken);
+
+        bool GroupIsValid(VimeoSettingsPartViewModel vm);
+        bool GroupIsValid(string gName, string aToken);
     }
 
 }
