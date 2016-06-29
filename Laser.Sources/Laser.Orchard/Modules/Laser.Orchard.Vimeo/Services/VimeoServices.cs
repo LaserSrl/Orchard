@@ -79,6 +79,10 @@ namespace Laser.Orchard.Vimeo.Services {
             };
         }
 
+        /// <summary>
+        /// Update values in the actual settings based off what is in the ViewModel.
+        /// </summary>
+        /// <param name="vm">The ViewModel coming from the form.</param>
         public void UpdateSettings(VimeoSettingsPartViewModel vm) {
             var settings = _orchardServices
                 .WorkContext
@@ -132,13 +136,18 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <returns><value>true</value> if the authenticated user has joined the given group. <value>false</value> otherwise.</returns>
         public bool GroupIsValid(string gName, string aToken) {
             HttpWebRequest wr = VimeoCreateRequest(aToken, VimeoEndpoints.MyGroups);
+            //we only care for the group names, so we use Vimeo's JSON filter options
+            //and add "?fields=name" to the querystring
 
             bool ret = false;
             try {
                 using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
                     if (resp.StatusCode == HttpStatusCode.OK)
                         using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
-                            
+                            string vimeoJson = reader.ReadToEnd();
+                            //The Json contains what we got back from Vimeo
+                            //In general, it has paging information and data
+                            //The paging information tells us how many results are there in total, and how many we got from this request
                         }
                     ret = resp.StatusCode == HttpStatusCode.OK;
                 }
