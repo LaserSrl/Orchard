@@ -5,7 +5,8 @@ Website: http://www.laser-group.com
 Version: 1.0
 OrchardVersion: 1.0
 Features:
-    Laser.Orchard.ChartaWS:
-		Name: Charta Web Services
-        Description: Web Services for Charta Project.
-		Dependencies: Laser.Orchard.StartupConfig.MailExtensions, Laser.Orchard.Braintree
+Laser.Orchard.ChartaWS:
+Name: Charta Web Services
+Description: Web Services for Charta Project.
+Dependencies: Laser.Orchard.StartupConfig.MailExtensions, Laser.Orchard.Braintree
+Category:Services

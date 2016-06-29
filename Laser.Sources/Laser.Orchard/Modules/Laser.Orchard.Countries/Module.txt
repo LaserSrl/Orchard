@@ -5,6 +5,6 @@ Website: http://www.laser-group.com
 Version: 1.8
 OrchardVersion: 1.8
 Description: Description for the module
-Features:
-    Laser.Orchard.Countries:
-        Description: Description for feature Laser.Orchard.Countries.
+Features: Laser.Orchard.Countries
+Category: Geolocation
+Description: Description for feature Laser.Orchard.Countries.

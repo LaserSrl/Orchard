@@ -8,3 +8,4 @@ Features:
     Laser.Orchard.OpenAuthentication:
 		Description: Provides OAuth functionality to orchard Site
 		Dependencies: Laser.Orchard.StartupConfig
+		Category:Content

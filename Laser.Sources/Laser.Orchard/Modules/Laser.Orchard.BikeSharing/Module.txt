@@ -7,4 +7,4 @@ OrchardVersion: 1.8
 Features:
     Laser.Orchard.BikeSharing:
 		Description: A module that allows you to display informations about bike sharing stations. BikeSharing supported providers: MobilityParc.
-		Category: Contents
+		Category: Content

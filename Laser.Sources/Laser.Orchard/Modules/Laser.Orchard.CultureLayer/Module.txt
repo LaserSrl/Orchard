@@ -10,4 +10,4 @@ Features:
         Name: Culture Layer
         Description: Define a layer that is visible only to users in the specified culture.
         Dependencies: Orchard.Widgets, Orchard.Localization, Laser.Orchard.CulturePicker
-        Category: Layer rules
+        Category: Localization

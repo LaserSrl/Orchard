@@ -6,7 +6,7 @@ Version: 1.0
 OrchardVersion: 1.8
 Description: Cookie management module
 Features:
-    Laser.Orchard.Cookies:
-        Description: Functionalities for cookie management
-		Dependencies: Orchard.jQuery
-		Category: Users
+Laser.Orchard.Cookies:
+Description: Functionalities for cookie management
+Dependencies: Orchard.jQuery
+Category: Input Editor

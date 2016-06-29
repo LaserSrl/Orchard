@@ -9,3 +9,4 @@ Features:
     Laser.Orchard.ShareLink:
         Description: Add Share Link -- Used by Mobile 
 		Dependencies: Orchard.Tokens,Orchard.MediaLibrary,Laser.Orchard.jQueryPlugins
+		Category: Social

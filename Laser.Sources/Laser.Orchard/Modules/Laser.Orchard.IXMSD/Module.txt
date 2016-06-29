@@ -9,3 +9,4 @@ Features:
     Laser.Orchard.IXMSD:
         Description: Description for feature Laser.Orchard.IXMSD.
 		Dependencies: Orchard.MediaLibrary,Laser.Orchard.StartupConfig
+		Category:Media

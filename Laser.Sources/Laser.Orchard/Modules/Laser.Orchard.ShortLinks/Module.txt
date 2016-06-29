@@ -8,3 +8,4 @@ Description: A module that allows you to insert a Short Link into your ContentTy
 Features:
     Laser.Orchard.ShortLinks:
         Description: Uses a ShortLink.
+		Category: Content
