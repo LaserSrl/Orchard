@@ -44,7 +44,8 @@ namespace Laser.Orchard.Mobile.Services {
         IEnumerable<PushNotificationRecord> SearchPushNotification(string texttosearch);
 
         //  void SendPush(Int32 iddispositivo, string message);
-        void PublishedPushEvent(dynamic mycontext, ContentItem ci);
+        //void PublishedPushEvent(dynamic mycontext, ContentItem ci);
+        void PublishedPushEvent(ContentItem ci);
 
         void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string JsonAndroid, string messageWindows, string sound, string queryDevice = "");
 
@@ -423,7 +424,8 @@ namespace Laser.Orchard.Mobile.Services {
             }
         }
 
-        public void PublishedPushEvent(dynamic mycontext, ContentItem ci) {
+        //public void PublishedPushEvent(dynamic mycontext, ContentItem ci) {
+        public void PublishedPushEvent(ContentItem ci) {
             ContentItem savedCi = _orchardServices.ContentManager.Get(ci.Id);
             MobilePushPart mpp = ci.As<MobilePushPart>();
             if ((mpp.ToPush) && (mpp.PushSent == false)) {
@@ -489,7 +491,7 @@ namespace Laser.Orchard.Mobile.Services {
                         }
                     }
 
-                    var Myobject = new Dictionary<string, object> { { "Content", mycontext.ContentItem } };
+                    var Myobject = new Dictionary<string, object> { { "Content", ci } };
                     string queryDevice = GetQueryDevice(Myobject, ci.As<MobilePushPart>());
 
                     if (locTipoDispositivo.HasValue == false) // tutti
@@ -1071,7 +1073,12 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         private void NotificationSent(object sender, INotification notification) {
-            _myLog.WriteLog(T("Sent: " + sender + " -> " + notification).ToString());
+            if (notification is AppleNotification) {
+                _myLog.WriteLog(T("Sent: " + sender + " -> " + (notification as AppleNotification).DeviceToken + " -> " + notification).ToString());
+            }
+            else {
+                _myLog.WriteLog(T("Sent: " + sender + " -> " + notification).ToString());
+            }
             messageSent++;
             //   _notifier.Information(T("Sent: " + sender + " -> " + notification));
         }

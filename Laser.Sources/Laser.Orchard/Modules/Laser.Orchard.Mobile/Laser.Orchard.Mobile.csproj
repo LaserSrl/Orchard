@@ -234,6 +234,7 @@
     <Compile Include="Feature\MobileCommunicationImportFeature.cs" />
     <Compile Include="Feature\SmsCommunicationImportFeature.cs" />
     <Compile Include="Handlers\MobileContactPartHandler.cs" />
+    <Compile Include="Handlers\PushScheduledTaskHandler.cs" />
     <Compile Include="Handlers\SmsGatewayPartHandler.cs" />
     <Compile Include="Handlers\SmsPlaceholdersSettingsHandler.cs" />
     <Compile Include="Handlers\SmsScheduledTaskHandler.cs" />
