@@ -87,7 +87,7 @@ button, .button, a.button {
   border: 0 none;
   border-radius: 3px;
   box-shadow: none;
-  color: #fff; /* !important;*/
+  color: #fff !important;
   height: 30px;
   line-height: 18px;
   min-width: 110px;
@@ -132,6 +132,10 @@ select, textarea, input.text, input.textMedium, input.text-medium, input.text-sm
     margin-bottom: -3px;
     border-radius: 3px;
     padding-left: 10px;
+}
+
+#placeholders input.text.small, #placeholders input.text.medium {
+    margin: 2px;
 }
 
 .permalink input.text {
@@ -260,6 +264,10 @@ button.link:hover {
 /*Ovverides jquery UI in order to make text into tabs same as the others */
 .ui-widget {
     font-size: 1em !important;
+}
+
+.ui-widget.ui-multiselect {
+    color: #555555 !important;
 }
 
 .breadcrumb {
