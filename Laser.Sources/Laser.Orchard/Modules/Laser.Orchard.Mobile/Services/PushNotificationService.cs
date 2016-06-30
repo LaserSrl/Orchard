@@ -130,7 +130,7 @@ namespace Laser.Orchard.Mobile.Services {
                 queryForPush = "SELECT count(MobileRecord) as Tot, sum(case MobileRecord.Device when 'Android' then 1 else 0 end) as Android, sum(case MobileRecord.Device when 'Apple' then 1 else 0 end) as Apple, sum(case MobileRecord.Device when 'WindowsMobile' then 1 else 0 end) as WindowsMobile";
             }
             else {
-                queryForPush = "SELECT cir.Id as Id, MobileRecord.Device as Device, MobileRecord.Produzione as Produzione, MobileRecord.Validated as Validated, MobileRecord.Language as Language, MobileRecord.UUIdentifier as UUIdentifier, MobileRecord.Token as Token";
+                queryForPush = "SELECT MobileRecord.Id as Id, MobileRecord.Device as Device, MobileRecord.Produzione as Produzione, MobileRecord.Validated as Validated, MobileRecord.Language as Language, MobileRecord.UUIdentifier as UUIdentifier, MobileRecord.Token as Token";
             }
             queryForPush += " FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr " +
                 "join civr.ContentItemRecord as cir " +
@@ -533,7 +533,7 @@ namespace Laser.Orchard.Mobile.Services {
                                 //counter = estrazione.Where(x => (x.Device == locTipoDispositivo || locTipoDispositivo == null) && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")).Count();
 
                                 var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
-                                    .CreateSQLQuery(string.Format("select count(1) from ( {0} ) x where (x.Device = '{1}' or {1} is null) and x.Produzione = {2} and x.Validated = 1 and (x.Language = '{3}' or '{3}' = 'All') ", queryDevice, (locTipoDispositivo == null)? "All" : locTipoDispositivo.ToString(), (produzione) ? 1 : 0, language))
+                                    .CreateSQLQuery(string.Format("select count(1) from ( {0} ) x where (x.Device = '{1}' or '{1}' = 'All') and x.Produzione = {2} and x.Validated = 1 and (x.Language = '{3}' or '{3}' = 'All') ", queryDevice, (locTipoDispositivo == null)? "All" : locTipoDispositivo.ToString(), (produzione) ? 1 : 0, language))
                                  .UniqueResult();
                                 counter = Convert.ToInt32(estrazione);
                             }
@@ -763,6 +763,7 @@ namespace Laser.Orchard.Mobile.Services {
                 //  PushAndroid(pnr, produzione, JsonMessage);
                 push.QueueNotification(new GcmNotification().ForDeviceRegistrationId(pnr.Token)
                 .WithJson(JsonMessage));
+
                 if (idcontenttopush>0){
                     SentRecord sr = new SentRecord();
                     sr.DeviceType="Android";
@@ -891,6 +892,10 @@ namespace Laser.Orchard.Mobile.Services {
             PushAppleVM mypush = new PushAppleVM();
             mypush.Title = mpp.TitlePush;
             mypush.Text = mpp.TextPush;
+            mypush.idContent = idcontent;
+            mypush.idRelated = idContentRelated;
+            mypush.Ct = ctype;
+            mypush.Al = displayalias;
             mypush.ValidPayload = true;
             if (mpp.ContentItem.ContentType == "CommunicationAdvertising") {
                 string chiave = "";
@@ -909,10 +914,6 @@ namespace Laser.Orchard.Mobile.Services {
                     .WithSound(mypush.Sound);
             }
             else {
-                mypush.idContent = idcontent;
-                mypush.idRelated = idContentRelated;
-                mypush.Ct = ctype;
-                mypush.Al = displayalias;
                 var partSettings = mpp.Settings.GetModel<PushMobilePartSettingVM>();
                 if (!(partSettings.AcceptZeroRelated) && mypush.idRelated == 0)
                     mypush.idRelated = mypush.idContent;
@@ -1084,6 +1085,7 @@ namespace Laser.Orchard.Mobile.Services {
                     }
                     else {
                         push.QueueNotification(appleNotification);
+
                         if (pushMessage.idContent > 0) {
                             SentRecord sr = new SentRecord();
                             sr.DeviceType = "Apple";
