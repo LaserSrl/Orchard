@@ -135,7 +135,7 @@ select, textarea, input.text, input.textMedium, input.text-medium, input.text-sm
 }
 
 #placeholders input.text.small, #placeholders input.text.medium {
-    margin: 2px;
+    margin: 1px;
 }
 
 .permalink input.text {
