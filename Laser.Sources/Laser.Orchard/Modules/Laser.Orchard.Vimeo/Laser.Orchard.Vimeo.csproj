@@ -96,6 +96,7 @@
     <Compile Include="Models\VimeoSettingsPart.cs" />
     <Compile Include="Models\VimeoSettingsPartRecord.cs" />
     <Compile Include="Models\VimeoUser.cs" />
+    <Compile Include="Models\VimeoVideo.cs" />
     <Compile Include="Models\VimeoWebsite.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Services\IVimeoServices.cs" />
