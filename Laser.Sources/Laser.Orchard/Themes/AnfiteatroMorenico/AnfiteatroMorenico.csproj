@@ -88,6 +88,7 @@
     <Content Include="Styles\images\loading.gif" />
     <Content Include="Styles\images\logo-mobile.png" />
     <Content Include="Styles\images\logo.png" />
+    <Content Include="Styles\images\logoTTP.png" />
     <Content Include="Styles\images\marker.png" />
     <Content Include="Styles\images\news1.jpg" />
     <Content Include="Styles\images\next.png" />

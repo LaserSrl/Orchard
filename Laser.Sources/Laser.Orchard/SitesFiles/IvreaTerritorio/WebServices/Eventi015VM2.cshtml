@@ -1,0 +1,242 @@
+@{    string tipoestrazione = PageData[0];
+    dynamic mymodel = PageData[1];
+    string pluraletipoestrazione = tipoestrazione + "s";
+     if (tipoestrazione == "Itinerary") {
+        pluraletipoestrazione = "Itineraries";
+    }
+}
+<ns:@pluraletipoestrazione xmlns:ns="http://www.e015.expo2015.org/schema/events/v1" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.e015.expo2015.org/schema/events/v1 http://www.anfiteatromorenicoivrea.it/Media/E015_Glossario_Eventi_POI_Itinerari_v1_1.xsd">  
+@using Laser.Orchard.WebServices.ViewModels
+@using Orchard.ContentManagement
+@using System.Web
+@using System.Xml
+@{
+    List<Eventi015VM> evList = new List<Eventi015VM>();
+    foreach (dynamic singleshape in mymodel) {
+        ContentItem ci = singleshape.ContentItem;
+        var localizationpart = ((dynamic)ci).LocalizationPart;
+        string lingua = "";
+        try{ lingua = localizationpart.Culture.Culture.Substring(0, 2);}
+        catch {
+            lingua = "it";}
+        var enumlingua = Enum.Parse(typeof(Lingue), lingua);
+        Laser.Orchard.WebServices.ViewModels.Eventi015VM selectev;
+        string idtoselect = "";
+        if (localizationpart.MasterContentItem == null || localizationpart.MasterContentItem.Id.ToString() == ci.Id.ToString()) {
+            foreach (Eventi015VM evobj in evList) {
+                if (evobj.Id == ci.Id.ToString()) {
+                    selectev = evobj;
+                    idtoselect = ci.Id.ToString();
+                }
+            }
+        }
+        else {
+            foreach (Eventi015VM evobj in evList) {
+                if (evobj.Id == localizationpart.MasterContentItem.Id.ToString()) {
+                    selectev = evobj;
+                    idtoselect = evobj.Id;
+                }
+            }
+        }
+        selectev = evList.Where(x => x.Id == idtoselect).FirstOrDefault();
+        if (selectev == null) {
+            selectev = new Eventi015VM();
+            selectev.tipoestrazione = tipoestrazione;
+            
+      
+            idtoselect = ci.Id.ToString();
+            selectev.Id = idtoselect;
+            selectev.Name = ((dynamic)ci).TitlePart.Title;
+            selectev.DataSource = "Visitami";
+            try {
+                if (((dynamic)ci).ActivityPart != null) {
+                    Occurrence oc = new Occurrence();
+                    oc.StartEnd.StartDateTime = ((dynamic)ci).ActivityPart.DateTimeStart;
+                    oc.StartEnd.EndDateTime = ((dynamic)ci).ActivityPart.DateTimeEnd;
+                    if (((dynamic)ci).ActivityPart.AllDay) {
+                        DateTime dt = (DateTime)((dynamic)ci).ActivityPart.DateTimeStart;
+                        oc.StartEnd.StartDateTime = Convert.ToDateTime(dt.Year.ToString() + "/" + dt.Month.ToString() + "/" + dt.Day.ToString() + " 00:00:00");
+                        dt = (DateTime)((dynamic)ci).ActivityPart.DateTimeEnd;
+                        oc.StartEnd.EndDateTime = Convert.ToDateTime(dt.Year.ToString() + "/" + dt.Month.ToString() + "/" + dt.Day.ToString() + " 23:59:59");
+                    }
+                    selectev.Schedule.Occurrence.Add(oc);
+                }
+            }
+            catch { }
+            try {
+                if (((dynamic)ci).CalendarEvent != null) {
+                    string name = ((dynamic)(((dynamic)ci).CalendarEvent.Contatti.ContentItems[0])).TitlePart.Title;
+                    string tel = ((dynamic)(((dynamic)ci).CalendarEvent.Contatti.ContentItems[0])).Contatto.Telefono.Value;
+                    string email = ((dynamic)ci).CalendarEvent.Contatti.ContentItems[0].Contatto.Email.Value;
+                    string sito = ((dynamic)ci).CalendarEvent.Contatti.ContentItems[0].Contatto.SitoWeb.Value;
+					string indirizzo = ((dynamic)ci).CalendarEvent.Contatti.ContentItems[0].Contatto.Indirizzo.Value;
+                    if (!string.IsNullOrEmpty(name)) {
+                        selectev.Contact.Add(new Contact { String = name, Type = "name" });
+                    }
+                    if (!string.IsNullOrEmpty(tel)) {
+                        selectev.Contact.Add(new Contact { String = tel, Type = "phone" });
+                    }
+                    if (!string.IsNullOrEmpty(email)) {
+                        selectev.Contact.Add(new Contact { String = email, Type = "email" });
+                    }
+                    if (!string.IsNullOrEmpty(sito)) {
+                        selectev.Contact.Add(new Contact { String = sito, Type = "www" });
+                    }
+					if (!string.IsNullOrEmpty(indirizzo)) {
+                        selectev.Contact.Add(new Contact { String = indirizzo, Type = "address" });
+                    }
+                }
+            }
+            catch { }
+            evList.Add(selectev);
+        }
+        selectev = evList.Where(x => x.Id == idtoselect).FirstOrDefault();
+        var Linguascelta = (Lingue)Enum.Parse(typeof(Lingue), lingua);
+       // ActionsCDataField acs = new ActionsCDataField();
+       // Action act=new Action();
+       // act.
+       //acs.Action
+
+        selectev.Description.Add(new InLinguaCData { Lingua = Linguascelta, _message = ((dynamic)ci).BodyPart.Text });
+        dynamic miocontenuto = null;
+        if (tipoestrazione.ToLower() == "event") {
+            miocontenuto = ((dynamic)ci).CalendarEvent;
+        }
+        if (tipoestrazione.ToLower() == "venue") {
+            miocontenuto = ((dynamic)ci).POI;
+        }
+        try {// itinerary non ha categoria
+            selectev.Category.Add(new InLingua { Lingua = Linguascelta, Valore = miocontenuto.Categoria.Terms[0].Name });
+        }
+        catch { }
+
+		try {
+			if (((dynamic)ci).POI != null) {
+                string name = ((dynamic)(((dynamic)ci).POI.Contatti.ContentItems[0])).TitlePart.Title;
+                string tel = ((dynamic)(((dynamic)ci).POI.Contatti.ContentItems[0])).Contatto.Telefono.Value;
+                string email = ((dynamic)ci).POI.Contatti.ContentItems[0].Contatto.Email.Value;
+                string sito = ((dynamic)ci).POI.Contatti.ContentItems[0].Contatto.SitoWeb.Value;
+				string indirizzo = ((dynamic)ci).POI.Contatti.ContentItems[0].Contatto.Indirizzo.Value;
+                if (!string.IsNullOrEmpty(name)) {
+                    selectev.Contact.Add(new Contact { String = name, Type = "name" });
+                }
+                if (!string.IsNullOrEmpty(tel)) {
+                    selectev.Contact.Add(new Contact { String = tel, Type = "phone" });
+                }
+                if (!string.IsNullOrEmpty(email)) {
+                    selectev.Contact.Add(new Contact { String = email, Type = "email" });
+                }
+                if (!string.IsNullOrEmpty(sito)) {
+                    selectev.Contact.Add(new Contact { String = sito, Type = "www" });
+                }
+				if (!string.IsNullOrEmpty(indirizzo)) {
+                    selectev.Contact.Add(new Contact { String = indirizzo, Type = "address" });
+                }
+            }
+		}
+		catch { }
+		
+        try {//itinerary non ha immagini
+            foreach (var img in miocontenuto.Gallery.MediaParts) {
+                if (selectev.MediaResource.Where(a => a.MediaUrl == img.MediaUrl).Count() > 0) {
+                    MediaResource mr = selectev.MediaResource.Where(a => a.MediaUrl == img.MediaUrl).FirstOrDefault();
+                    mr.Name.Add(new InLingua { Lingua = Linguascelta, Valore = miocontenuto.Categoria.Terms[0].Name });
+                }
+                else {
+                    MediaResource mr = new MediaResource();
+                    if (img.MimeType.StartsWith("image")) {
+                        mr.Type = "picture";
+                    }
+                    mr.MediaUrl = img.MediaUrl;
+                    mr.Name.Add(new InLingua { Lingua = Linguascelta, Valore = miocontenuto.Categoria.Terms[0].Name });
+                    var request = HttpContext.Current.Request;
+                    // var appUrl = HttpRuntime.AppDomainAppVirtualPath; 
+                    //  var baseUrl = string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Authority, appUrl);
+                    var baseUrl = string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Authority, "");
+                    mr.Uri = baseUrl + img.MediaUrl;
+                    selectev.MediaResource.Add(mr);
+                }
+            }
+        }
+        catch { }
+
+		try {
+			foreach (var allegato in miocontenuto.Allegato.MediaParts) {
+				MediaResource mr = new MediaResource();
+				if (allegato.MimeType.StartsWith("image")) {
+                    mr.Type = "picture";
+                }
+				else {
+					mr.Type = "document";
+				}
+				mr.MediaUrl = allegato.MediaUrl;
+				int position = allegato.MediaUrl.LastIndexOf('/') + 1;
+				string filename = allegato.MediaUrl.Substring(position, allegato.MediaUrl.LastIndexOf('.') - position);
+				mr.Name.Add(new InLingua { Lingua = Linguascelta, Valore = HttpUtility.UrlDecode(filename) });
+				var request = HttpContext.Current.Request;
+				var baseUrl = string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Authority, "");
+                mr.Uri = baseUrl + allegato.MediaUrl;
+                selectev.MediaResource.Add(mr);
+			}
+		}
+		catch {}
+
+        switch (tipoestrazione.ToLower()) {
+            case "event":
+                Venue vn = selectev.Venue.FirstOrDefault();
+                if (vn == null) {
+                    vn = new Venue();
+                    vn.Geolocation.Geocoordinates.XCoord = ((dynamic)ci).MapPart.Longitude.ToString("R").Replace(',', '.');
+                    vn.Geolocation.Geocoordinates.YCoord = ((dynamic)ci).MapPart.Latitude.ToString("R").Replace(',', '.');
+                    selectev.Venue.Add(vn);
+                }
+				vn.Name.Add(new InLingua { Lingua = Linguascelta, Valore = ((dynamic)ci).MapPart.LocationInfo.ToString() });
+				//if (!string.IsNullOrEmpty(((dynamic)ci).MapPart.LocationAddress)) {
+				//if (vn.Address==null){
+				//vn.Address=new Address		();
+				//}
+				//vn.Address.Street=((dynamic)ci).MapPart.LocationAddress.ToString();
+				//}
+                // selectev.Venue.Address = ((dynamic)ci).MapPart.LocationInfo.ToString();
+                break;
+            case "venue":
+                selectev.Geolocation.Geocoordinates.XCoord = ((dynamic)ci).MapPart.Longitude.ToString("R").Replace(',', '.');
+                selectev.Geolocation.Geocoordinates.YCoord = ((dynamic)ci).MapPart.Latitude.ToString("R").Replace(',', '.');
+                break;
+            case "itinerary":
+                //    selectev.ItineraryStep.Geocoordinates.XCoord = ((dynamic)ci).MapPart.Longitude.ToString("R").Replace(',', '.');
+                //    selectev.ItineraryStep.Geocoordinates.YCoord = ((dynamic)ci).MapPart.Latitude.ToString("R").Replace(',', '.');
+                foreach (ContentItem singleci in ((dynamic)ci).Itinerario.POIAssociati.ContentItems) {
+                    if (selectev.Venue.Where(x => x.MasterId == singleci.Id || ((dynamic)singleci).LocalizationPart.MasterContentItem==null || x.MasterId == ((dynamic)singleci).LocalizationPart.MasterContentItem.Id).FirstOrDefault() == null) {
+                        vn = new Venue();
+                        vn.Name.Add(new InLingua { Lingua = Linguascelta, Valore = ((dynamic)singleci).TitlePart.Title });
+
+                        vn.Geolocation.Geocoordinates.XCoord = ((dynamic)singleci).MapPart.Longitude.ToString("R").Replace(',','.');
+                        vn.Geolocation.Geocoordinates.YCoord = ((dynamic)singleci).MapPart.Latitude.ToString("R").Replace(',', '.');
+                        vn.MasterId = singleci.Id;
+                        selectev.Venue.Add(vn);
+                    }
+
+                    else {
+                       // vn = selectev.Venue.Where(x => x.MasterId == singleci.Id || ((dynamic)singleci).LocalizationPart.MasterContentItem==null  || x.MasterId == ((dynamic)singleci).LocalizationPart.MasterContentItem.Id).FirstOrDefault();
+                       // vn.Name.Add(new InLingua { Lingua = Linguascelta, Valore = ((dynamic)singleci).TitlePart.Title });
+                        vn = new Venue();
+                        vn.Name.Add(new InLingua { Lingua = Linguascelta, Valore = ((dynamic)singleci).TitlePart.Title });
+
+                        vn.Geolocation.Geocoordinates.XCoord = ((dynamic)singleci).MapPart.Longitude.ToString("R").Replace(',','.');
+                        vn.Geolocation.Geocoordinates.YCoord = ((dynamic)singleci).MapPart.Latitude.ToString("R").Replace(',', '.');
+                        vn.MasterId = singleci.Id;
+                        selectev.Venue.Add(vn);
+                    }
+
+                }
+                break;
+        }
+
+    }
+    foreach (Eventi015VM ev in evList) {
+    @Html.Raw(ev.Serialize.ToString());
+
+    }      
+}
+</ns:@pluraletipoestrazione>

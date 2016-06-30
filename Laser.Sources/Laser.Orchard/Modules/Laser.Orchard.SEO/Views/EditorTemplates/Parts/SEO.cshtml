@@ -1,4 +1,7 @@
-﻿@model Laser.Orchard.SEO.Models.SeoPart
+﻿
+@using Orchard.Localization.Services;
+
+@model Laser.Orchard.SEO.ViewModels.SeoPartViewModel
 @{
     var emptySeo = String.IsNullOrWhiteSpace(Model.Keywords) && String.IsNullOrWhiteSpace(Model.Description) && String.IsNullOrWhiteSpace(Model.TitleOverride);
     Style.Require("FontAwesome430").AtHead();
@@ -23,6 +26,23 @@
         </script>
     }
 }
+@using (Script.Foot()) {
+    @Display.DatePickerLocalization()
+    @Display.TimePickerLocalization()
+
+    <script type="text/javascript">
+        $(function () {
+            $('#unavailableAfterDate').datetimepicker({ 'showTimepicker': true, showAnim: "", changeYear: true, changeMonth: true });
+        })
+    </script>
+}
+
+@helper CbAndLabelFor(System.Linq.Expressions.Expression<Func<Laser.Orchard.SEO.ViewModels.SeoPartViewModel, bool>> expression){
+    @Html.CheckBoxFor(expression)
+    <label for="@Html.FieldIdFor(expression)" class="forcheckbox" style="font-weight: normal;">@Html.DisplayNameFor(expression)</label>
+    <text>&nbsp;&nbsp;</text>
+}
+
 <fieldset class="editor">
     <legend id="seo-label"><a href="#seo-label"><i class="fa fa-chevron-right"></i></a> @T("SEO attributes")</legend>
     @if (emptySeo){
@@ -52,6 +72,37 @@
         <div class="editor-field">
             @Html.TextBoxFor(m => m.Keywords, new { @class = "large text" })
             @Html.ValidationMessageFor(m => m.Keywords)
+        </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(m => m.RobotsNoIndex, @T("Robots settings"))
+        </div>
+        <div class="editor-field">
+            @CbAndLabelFor(m => m.RobotsNoIndex)
+            
+            @CbAndLabelFor(m => m.RobotsNoFollow)
+
+            @CbAndLabelFor(m => m.RobotsNoSnippet)
+
+            @CbAndLabelFor(m => m.RobotsNoOdp)
+
+            @CbAndLabelFor(m => m.RobotsNoArchive)
+
+            @CbAndLabelFor(m => m.RobotsUnavailableAfter)
+
+            @Html.TextBoxFor(m => m.RobotsUnavailableAfterDate, new { id = "unavailableAfterDate" })
+
+            @CbAndLabelFor(m => m.RobotsNoImageIndex)
+
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(m => m.RobotsNoIndex, @T("Google settings"))
+        </div>
+        <div class="editor-field">
+            @CbAndLabelFor(m => m.GoogleNoSiteLinkSearchBox)
+
+            @CbAndLabelFor(m => m.GoogleNoTranslate)
         </div>
     </div>
 </fieldset>
