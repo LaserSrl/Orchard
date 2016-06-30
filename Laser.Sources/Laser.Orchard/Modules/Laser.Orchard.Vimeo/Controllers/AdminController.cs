@@ -63,10 +63,16 @@ namespace Laser.Orchard.Vimeo.Controllers {
                             _orchardServices.Notifier.Error(T("Group Name not valid"));
                     }
                     if (!string.IsNullOrWhiteSpace(vm.ChannelName)) {
-
+                        if (_vimeoServices.ChannelIsValid(vm))
+                            _orchardServices.Notifier.Information(T("Channel Name Valid"));
+                        else
+                            _orchardServices.Notifier.Error(T("Channel Name not valid"));
                     }
                     if (!string.IsNullOrWhiteSpace(vm.AlbumName)) {
-
+                        if (_vimeoServices.AlbumIsValid(vm))
+                            _orchardServices.Notifier.Information(T("Album Name Valid"));
+                        else
+                            _orchardServices.Notifier.Error(T("Album Name not valid"));
                     }
                 } else
                     _orchardServices.Notifier.Error(T("Access Token not valid"));

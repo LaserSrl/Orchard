@@ -4,13 +4,9 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.Vimeo.Models {
-    public class VimeoUser {
-        public string uri { get; set; }
-        public string name { get; set; }
-        public string link { get; set; }
+    public class VimeoUser : VimeoBaseObject {
         public string location { get; set; }
         public string bio { get; set; }
-        public string createdTime { get; set; }
         public string account { get; set; }
         public List<VimeoWebsite> websites { get; set; }
         public VimeoUserMetadata metadata { get; set; }
@@ -19,11 +15,11 @@ namespace Laser.Orchard.Vimeo.Models {
         public string resourceKey { get; set; }
     }
 
-    public class VimeoUserMetadata {
+    public class VimeoUserMetadata : VimeoBaseMetadata {
 
     }
 
     public class VimeoUserPreferences {
-
+        public Dictionary<string, string> videos { get; set; }
     }
 }

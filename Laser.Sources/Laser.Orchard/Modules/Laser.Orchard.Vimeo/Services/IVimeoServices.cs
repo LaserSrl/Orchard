@@ -18,6 +18,10 @@ namespace Laser.Orchard.Vimeo.Services {
 
         bool GroupIsValid(VimeoSettingsPartViewModel vm);
         bool GroupIsValid(string gName, string aToken);
+        bool AlbumIsValid(VimeoSettingsPartViewModel vm);
+        bool AlbumIsValid(string aName, string aToken);
+        bool ChannelIsValid(VimeoSettingsPartViewModel vm);
+        bool ChannelIsValid(string cName, string aToken);
     }
 
 }
