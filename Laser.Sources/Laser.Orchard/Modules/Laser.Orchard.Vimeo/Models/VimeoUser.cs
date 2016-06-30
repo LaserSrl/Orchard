@@ -13,6 +13,7 @@ namespace Laser.Orchard.Vimeo.Models {
         public VimeoUserPreferences preferences { get; set; }
         public List<string> contentFilter { get; set; }
         public string resourceKey { get; set; }
+        public VimeoUploadQuota upload_quota { get; set; }
     }
 
     public class VimeoUserMetadata : VimeoBaseMetadata {
@@ -21,5 +22,19 @@ namespace Laser.Orchard.Vimeo.Models {
 
     public class VimeoUserPreferences {
         public Dictionary<string, string> videos { get; set; }
+    }
+
+    public class VimeoUploadQuota {
+        public VimeoSpace space { get; set; }
+        public VimeoQuota quota { get; set; }
+    }
+    public class VimeoSpace {
+        public int free { get; set; }
+        public int max { get; set; }
+        public int used { get; set; }
+    }
+    public class VimeoQuota {
+        public bool hd { get; set; }
+        public bool sd { get; set; }
     }
 }

@@ -318,6 +318,49 @@ namespace Laser.Orchard.Vimeo.Services {
             }
             return ret;
         }
+
+        /// <summary>
+        /// Check the quota available for upload
+        /// </summary>
+        /// <returns>A <type>VimeoUploadQuota</type> object containing upload quota information. Returns <value>null</value> in case of error.</returns>
+        public VimeoUploadQuota CheckQuota() {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
+            string queryString = "?fields=upload_quota";
+            HttpWebRequest wr = VimeoCreateRequest(settings.AccessToken, VimeoEndpoints.Me, qString: queryString);
+            VimeoUploadQuota quotaInfo = null;
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
+                            string vimeoJson = reader.ReadToEnd();
+                            quotaInfo = JsonConvert.DeserializeObject<VimeoUploadQuota>(vimeoJson);
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                return null;
+            }
+            return quotaInfo;
+        }
+        /// <summary>
+        /// Checks the number of Bytes used of the upload quota.
+        /// </summary>
+        /// <returns>The number of bytes used, or <value>-1</value> in case of error</returns>
+        public int UsedQuota() {
+            VimeoUploadQuota quotaInfo = CheckQuota();
+            return quotaInfo != null ? quotaInfo.space.used : -1;
+        }
+        /// <summary>
+        /// Checks the number of Bytes available of the upload quota.
+        /// </summary>
+        /// <returns>The number of available bytes, or <value>-1</value> in case of error</returns>
+        public int FreeQuota() {
+            VimeoUploadQuota quotaInfo = CheckQuota();
+            return quotaInfo != null ? quotaInfo.space.free : -1;
+        }
         
         /// <summary>
         /// Creates a default HttpWebRequest Using the Access Token and endpoint provided. By default, the Http Method is GET.

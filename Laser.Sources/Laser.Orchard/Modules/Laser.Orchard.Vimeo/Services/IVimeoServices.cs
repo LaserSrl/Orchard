@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.Vimeo.ViewModels;
+﻿using Laser.Orchard.Vimeo.Models;
+using Laser.Orchard.Vimeo.ViewModels;
 using Orchard;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,10 @@ namespace Laser.Orchard.Vimeo.Services {
         bool AlbumIsValid(string aName, string aToken);
         bool ChannelIsValid(VimeoSettingsPartViewModel vm);
         bool ChannelIsValid(string cName, string aToken);
+
+        VimeoUploadQuota CheckQuota();
+        int UsedQuota();
+        int FreeQuota();
     }
 
 }
