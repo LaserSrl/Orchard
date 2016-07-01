@@ -43,6 +43,8 @@ namespace Laser.Orchard.Mobile.Services {
         IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false);
         void StorePushNotification(PushNotificationRecord pushElement);
         IEnumerable<PushNotificationRecord> SearchPushNotification(string texttosearch);
+
+        void PublishedPushEventTest(ContentItem ci);
         void PublishedPushEvent(ContentItem ci);
         void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string JsonAndroid, string messageWindows, string sound, string queryDevice = "");
         void Synchronize();
@@ -359,6 +361,80 @@ namespace Laser.Orchard.Mobile.Services {
                 //if (device == TipoDispositivo.WindowsMobile.ToString()) {
                 //    SendAllWindowsMobile(ci.As<MobilePushPart>(), idContent, idContentRelated, language);
                 //}
+            }
+        }
+
+        public void PublishedPushEventTest(ContentItem ci) {
+            int maxIdVersionRecord = _orchardServices.ContentManager.GetAllVersions(ci.Id).Max(x => x.VersionRecord.Id);
+            ContentItem savedCi = _orchardServices.ContentManager.GetAllVersions(ci.Id).Where(x => x.VersionRecord.Id == maxIdVersionRecord).FirstOrDefault();
+            MobilePushPart mpp = ci.As<MobilePushPart>();
+            Int32 idContent = mpp.Id;
+            var relatedContent = ((dynamic)ci).MobilePushPart.RelatedContent;
+
+            // nel caso in cui la MobilePushPart sia contenuta nel content type CommunicationAdvertising, usa il related content di quest'ultimo
+            if (ci.ContentType == "CommunicationAdvertising") {
+                relatedContent = ((dynamic)savedCi).CommunicationAdvertisingPart.ContentLinked;
+            }
+
+            ContentItem relatedContentItem = null;
+            Int32 idContentRelated = 0;
+            dynamic contentForPush;
+            dynamic ciDynamic = (dynamic)ci;
+
+            if (relatedContent != null && relatedContent.Ids != null && ((int[])relatedContent.Ids).Count() > 0) {
+                idContentRelated = relatedContent.Ids[0];
+                relatedContentItem = _orchardServices.ContentManager.Get(idContentRelated);
+                if (relatedContentItem == null) {
+                    relatedContentItem = _orchardServices.ContentManager.GetLatest(idContentRelated);
+                }
+                contentForPush = (dynamic)relatedContentItem;
+            } else {
+                contentForPush = ciDynamic;
+            }
+
+            // tipo dispositivo (Android, Apple, Windows)
+            TipoDispositivo? locTipoDispositivo = null;
+            if (mpp.DevicePush != "All") {
+                TipoDispositivo auxTipoDispositivo;
+                if (Enum.TryParse<TipoDispositivo>(mpp.DevicePush, out auxTipoDispositivo)) {
+                    locTipoDispositivo = auxTipoDispositivo;
+                }
+            }
+
+            // determina il language
+            string language = _orchardServices.WorkContext.CurrentSite.SiteCulture;
+            try {
+                language = contentForPush.LocalizationPart.Culture != null ? contentForPush.LocalizationPart.Culture.Culture : language;
+            } catch (Exception ex) {
+                language = "All";
+            }
+
+            // determina le query impostate
+            int[] ids = null;
+            var aux = ci.As<QueryPickerPart>();
+            if (aux != null) {
+                ids = aux.Ids;
+            }
+
+            bool produzione = false;
+
+            var Myobject = new Dictionary<string, object> { { "Content", ci } };
+            string queryDevice = GetQueryDevice(Myobject, ci.As<MobilePushPart>());
+
+            if (locTipoDispositivo.HasValue == false) // tutti
+                    {
+                SendAllAndroidPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+
+                SendAllApplePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+
+                SendAllWindowsMobilePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+
+            } else if (locTipoDispositivo.Value == TipoDispositivo.Android) {
+                SendAllAndroidPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+            } else if (locTipoDispositivo.Value == TipoDispositivo.Apple) {
+                SendAllApplePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+            } else if (locTipoDispositivo.Value == TipoDispositivo.WindowsMobile) {
+                SendAllWindowsMobilePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
             }
         }
 
