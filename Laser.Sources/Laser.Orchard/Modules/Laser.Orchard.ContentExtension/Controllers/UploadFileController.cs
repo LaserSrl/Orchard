@@ -80,7 +80,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             string nomefile = System.IO.Path.GetFileName(file.FileName);
             if (_contentExtensionsServices.FileAllowed(nomefile)) {
                 int contatore = 0;
-                string cont = "";
+                string cont = ""; 
                 while (System.IO.File.Exists(System.IO.Path.Combine(pathString, cont + nomefile))) {
                     contatore++;
                     cont = contatore.ToString() + "_";
