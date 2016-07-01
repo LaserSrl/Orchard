@@ -1,0 +1,45 @@
+﻿@using Laser.Orchard.Commons.Helpers;
+
+@model Laser.Orchard.SEO.ViewModels.KeywordHelperPartViewModel
+
+@{
+    Script.Require("jQuery_NestedModels").AtHead();
+}
+
+@using (Script.Head()) {
+    <script>
+        function refreshTrends(aId) {
+            var q = document.getElementById("key_" + aId).value;
+            q = q.trim().replace(/\s+/g, ' ');
+            if (q) {
+                var date = document.getElementById("period_" + aId).value;
+                var hl = document.getElementById("lang_" + aId).value;
+                var geo = document.getElementById("region_" + aId).value;
+                var ua = '@Url.Action("RefreshTrends", "keywordhelper", new {area = "Laser.Orchard.SEO", _hl="__hl__", _q="__q__", _geo="__geo__", _date="__date__"})'
+                    .replace('__hl__', hl)
+                    .replace('__q__', q)
+                    .replace('__geo__', geo)
+                    .replace('__date__', date);
+                ua = ua.replace(/amp;/g, ''); //Url.Action() puts &amp; instead of just &
+                document.getElementById("iframe_" + aId).height = "550px";
+                document.getElementById("iframe_"+aId).src = ua;
+            }
+        }
+
+        function hideTrends(aId) {
+            document.getElementById("iframe_" + aId).height = "1px";
+            document.getElementById("iframe_" + aId).src = "";
+        }
+    </script>
+}
+
+<fieldset>
+    <legend>@T("Keywords selected for this content")</legend>
+    <div title="@T("You can add keywords and obtain the most relevant related ones on search engines.")">
+        <i class="fa fa-plus" style="color: green"></i>
+        @Html.LinkToAddNestedForm(x => x.Keywords, T("Add keyword").Text, "#seokeyword", ".j_seokeyword")
+        <div id="seokeyword">
+            @Html.EditorFor(x => x.Keywords)
+        </div>
+    </div>
+</fieldset>
