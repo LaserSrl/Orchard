@@ -8,3 +8,4 @@ Description: Description for the module
 Features:
     Laser.Orchard.MessageStore:
         Description: Description for feature Laser.Orchard.MessageStore.
+		Category: Messaging

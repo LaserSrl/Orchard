@@ -104,7 +104,7 @@ namespace Laser.Orchard.Mobile.Handlers {
                     }
                 }
                 else {
-                    Logger.Error(string.Format("UserDeviceHandler.LoggedIn: pushNotificationRecord non trovato per lo UUIdentifier {0}.", UUIdentifier));
+                    Logger.Information(string.Format("UserDeviceHandler.LoggedIn: pushNotificationRecord non trovato per lo UUIdentifier {0}. Probabilmente l'utente non ha abilitato le notifiche push.", UUIdentifier));
                 }
                 #endregion
             }

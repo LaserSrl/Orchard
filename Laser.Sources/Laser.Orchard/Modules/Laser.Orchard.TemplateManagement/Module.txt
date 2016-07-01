@@ -1,4 +1,4 @@
-﻿Name: Laser Orchard Template Management
+﻿Name: Laser Orchard Template ManagementLaser Orchard Template Email Activities
 AntiForgery: enabled
 Author:  Laser 
 Website: 
@@ -9,7 +9,8 @@ Features:
     Laser.Orchard.TemplateManagement:
         Name:  Laser Orchard Template Management
         Description: Template Management features.
-		Dependencies: Orchard.Tokens
+		Category: Content
+		Dependencies: Orchard.Tokens		
 	Laser.Orchard.TemplateManagement.Parsers.Razor:
         Name:  Laser Orchard Template Management Razor Parser
         Description: Implements Razor as the parser engine for  templates.
@@ -18,4 +19,6 @@ Features:
     Laser.Orchard.TemplateEmailActivities:
         Name:  Laser Orchard Template Email Activities
         Description: Add some tasks to send a Templated Email Messages.
+		Category: Messaging
 		Dependencies: Laser.Orchard.TemplateManagement, Orchard.Workflows,Laser.Orchard.StartupConfig, Orchard.Email
+		

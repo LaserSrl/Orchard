@@ -21,7 +21,7 @@ Features:
 	Laser.Orchard.StartupConfig.MailExtensions:
 		Name: Laser Mail Extension
 		Description: Extension to CC, BCC and Attachements
-		Category: Messaging, Orchard.Email
+		Category: Messaging
 		Dependencies: Orchard.Email
 	Laser.Orchard.StartupConfig.MediaExtensions:
 		Name: Laser Media Extension
