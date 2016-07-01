@@ -6,7 +6,7 @@
     <Author>Lorenzo Frediani</Author>
     <WebSite>laser-group.com</WebSite>
     <Tags></Tags>
-    <Version>1.8.1</Version>
+    <Version>1.8.2</Version>
   </Recipe>
 
   <Feature enable="Orchard.Blogs,
@@ -60,7 +60,10 @@
            Laser.Orchard.CommunicationGateway,
            Laser.Orchard.OpenAuthentication,
            Laser.Orchard.StartupConfig.WebApiProtection,
-           Laser.Orchard.DevTools" />
+           Laser.Orchard.DevTools,
+           Laser.Orchard.AdminToolbarExtensions,
+           Laser.Orchard.ContentExtension,
+           Laser.Orchard.UsersExtensions" />
   <Metadata>
     <Types>
       <Page ContentTypeSettings.Draftable="True"  TypeIndexing.Indexes="Search">
