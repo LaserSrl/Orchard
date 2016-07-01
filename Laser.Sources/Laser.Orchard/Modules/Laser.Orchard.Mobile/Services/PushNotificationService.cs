@@ -275,27 +275,38 @@ namespace Laser.Orchard.Mobile.Services {
                 pushElement.DataModifica = adesso;
                 pushElement.DataInserimento = OldPush.DataInserimento;
                 pushElement.Id = OldPush.Id;
-                pushElement.MobileContactPartRecord_Id = TryGetContactId(pushElement.UUIdentifier);
+                pushElement.MobileContactPartRecord_Id = EnsureContactId(pushElement.UUIdentifier);
                 _pushNotificationRepository.Update(pushElement);
             }
             else {
                 pushElement.Id = 0;
                 pushElement.DataInserimento = adesso;
                 pushElement.DataModifica = adesso;
-                pushElement.MobileContactPartRecord_Id = TryGetContactId(pushElement.UUIdentifier);
+                pushElement.MobileContactPartRecord_Id = EnsureContactId(pushElement.UUIdentifier);
                 _pushNotificationRepository.Create(pushElement);
             }
         }
 
-        private int TryGetContactId(string uuIdentifier) {
+        /// <summary>
+        /// Restituisce l'Id del contact relativo allo UUIdentifier specificato.
+        /// Se non trova un contact corrispondente, restituisce l'Id del Master Contact.
+        /// </summary>
+        /// <param name="uuIdentifier"></param>
+        /// <returns></returns>
+        private int EnsureContactId(string uuIdentifier) {
             int contactId = 0;
             try {
                 var userDevice = _userDeviceRecord.Fetch(x => x.UUIdentifier == uuIdentifier).FirstOrDefault();
                 if (userDevice != null) {
-                    var contactList = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where<CommunicationContactPartRecord>(x => x.UserPartRecord_Id == userDevice.UserPartRecord.Id).List();
-                    if (contactList.FirstOrDefault() != null) {
-                        contactId = contactList.FirstOrDefault().Id;
+                    var contact = _communicationService.TryEnsureContact(userDevice.UserPartRecord.Id);
+                    if (contact != null) {
+                        contactId = contact.Id;
                     }
+                }
+                // se non trova un contact a cui agganciarlo, lo aggancia al Master Contact
+                if (contactId == 0) {
+                    var masterContact = _communicationService.EnsureMasterContact();
+                    contactId = masterContact.Id;
                 }
             }
             catch (Exception ex) {
