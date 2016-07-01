@@ -4,6 +4,7 @@ using Laser.Orchard.Vimeo.ViewModels;
 using Orchard;
 using Orchard.Data;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Records;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,16 @@ using Newtonsoft.Json.Linq;
 namespace Laser.Orchard.Vimeo.Services {
     public class VimeoServices : IVimeoServices {
 
-        private readonly IRepository<VimeoSettingsPartRecord> _repository;
+        private readonly IRepository<VimeoSettingsPartRecord> _repositorySettings;
+        private readonly IRepository<UploadsInProgressRecord> _repositoryUploadsInProgress;
         private readonly IOrchardServices _orchardServices;
 
-        public VimeoServices(IRepository<VimeoSettingsPartRecord> repository, IOrchardServices orchardServices) {
-            _repository = repository;
+        public VimeoServices(IRepository<VimeoSettingsPartRecord> repositorySettings,
+            IRepository<UploadsInProgressRecord> repositoryUploadsInProgress,
+            IOrchardServices orchardServices) {
+
+            _repositorySettings = repositorySettings;
+            _repositoryUploadsInProgress = repositoryUploadsInProgress;
             _orchardServices = orchardServices;
         }
 
@@ -30,11 +36,11 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <returns><value>true</value> if it was able to create the Settings Part. <value>false</value> if it fails.</returns>
         public bool Create(VimeoSettingsPartViewModel settings) {
             //check whether there already is an entry in the db
-            if (_repository.Table.Count() > 0)
+            if (_repositorySettings.Table.Count() > 0)
                 return false;
 
             //since there was no entry, create a new one
-            _repository.Create(new VimeoSettingsPartRecord {
+            _repositorySettings.Create(new VimeoSettingsPartRecord {
                 AccessToken = settings.AccessToken,
                 ChannelName = settings.ChannelName,
                 GroupName = settings.GroupName,
@@ -49,7 +55,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="aToken">The Access Token</param>
         /// <returns><value>null</value> if no entry is found with the given Access Token. The ViewModel of the settings object otherwise.</returns>
         public VimeoSettingsPartViewModel GetByToken(string aToken) {
-            VimeoSettingsPartRecord rec = _repository.Get(r => r.AccessToken == aToken);
+            VimeoSettingsPartRecord rec = _repositorySettings.Get(r => r.AccessToken == aToken);
             if (rec == null)
                 return null;
 
@@ -66,10 +72,10 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <returns><value>null</value> if no settings were found. The settings' ViewModel if found.</returns>
         public VimeoSettingsPartViewModel Get() {
-            if (_repository.Table.Count() == 0)
+            if (_repositorySettings.Table.Count() == 0)
                 return null;
 
-            VimeoSettingsPartRecord rec = _repository.Table.FirstOrDefault();
+            VimeoSettingsPartRecord rec = _repositorySettings.Table.FirstOrDefault();
             if (rec == null)
                 return null;
 
@@ -330,13 +336,14 @@ namespace Laser.Orchard.Vimeo.Services {
                 .As<VimeoSettingsPart>();
             string queryString = "?fields=upload_quota";
             HttpWebRequest wr = VimeoCreateRequest(settings.AccessToken, VimeoEndpoints.Me, qString: queryString);
-            VimeoUploadQuota quotaInfo = null;
+            VimeoUploadQuota quotaInfo = new VimeoUploadQuota();
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                             string vimeoJson = reader.ReadToEnd();
-                            quotaInfo = JsonConvert.DeserializeObject<VimeoUploadQuota>(vimeoJson);
+                            JObject json = JObject.Parse(vimeoJson);
+                            quotaInfo = JsonConvert.DeserializeObject<VimeoUploadQuota>(json["upload_quota"].ToString());
                         }
                     }
                 }
@@ -361,7 +368,75 @@ namespace Laser.Orchard.Vimeo.Services {
             VimeoUploadQuota quotaInfo = CheckQuota();
             return quotaInfo != null ? quotaInfo.space.free : -1;
         }
-        
+
+        /// <summary>
+        /// Verifies that there is enough quota available.
+        /// </summary>
+        /// <param name="fileSize">The size of the file we would like to start uploading.</param>
+        /// <returns>An id of an UploadsInProgressRecord corresponding to the upload we are starting if we have enough quota available for that upload. <value>-1</value> otherwise</returns>
+        public int IsValidFileSize(int fileSize) {
+            //this method, as it is, does not handle concurrent upload attempts very well.
+            //We leave with Vimeo the responsiiblity for the final check on the upload size.
+
+            //the information about the uploads in progress is in the UploadsInProgressRecord table.
+            //We check the free quota with what we are trying to upload
+            int quotaBeingUploaded = 0;
+            if (_repositoryUploadsInProgress.Table.Count() > 0)
+                quotaBeingUploaded = _repositoryUploadsInProgress.Table.Sum(u => u.UploadSize) - _repositoryUploadsInProgress.Table.Sum(u => u.UploadedSize);
+            int remoteSpace = this.FreeQuota();
+            if (remoteSpace - quotaBeingUploaded < fileSize) {
+                return -1; //there is not enough space
+            }
+
+            //Add the file we want to upload to it, as a "temporary" upload
+            UploadsInProgressRecord entity = new UploadsInProgressRecord();
+            entity.UploadSize = fileSize;
+            _repositoryUploadsInProgress.Create(entity);
+            int recordId = entity.Id;
+
+            return recordId;
+        }
+
+        /// <summary>
+        /// Generates a 
+        /// </summary>
+        /// <param name="uploadId"></param>
+        /// <returns></returns>
+        public string GenerateUploadTicket(int uploadId) {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
+            HttpWebRequest wr = VimeoCreateRequest(
+                    settings.AccessToken,
+                    VimeoEndpoints.VideoUpload,
+                    method:WebRequestMethods.Http.Post,
+                    qString: "?type=streaming"
+                );
+            string uploadUrl = "";
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse){
+                    if (resp.StatusCode == HttpStatusCode.Created) {
+                        using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
+                            string vimeoJson = reader.ReadToEnd();
+                            JObject json = JObject.Parse(vimeoJson);
+                            UploadsInProgressRecord entity = _repositoryUploadsInProgress
+                                .Get(uploadId);
+                            entity.CompleteUri = json["complete_uri"].ToString();
+                            entity.TicketId = json["ticket_id"].ToString();
+                            entity.UploadLinkSecure = json["upload_link_secure"].ToString();
+                            entity.Uri = json["uri"].ToString();
+                            //_repositoryUploadsInProgress.Update(entity);
+                            uploadUrl = entity.UploadLinkSecure;
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                return "";
+            }
+            return uploadUrl;
+        }
+
         /// <summary>
         /// Creates a default HttpWebRequest Using the Access Token and endpoint provided. By default, the Http Method is GET.
         /// </summary>

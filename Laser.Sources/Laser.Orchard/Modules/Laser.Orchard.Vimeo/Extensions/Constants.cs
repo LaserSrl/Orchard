@@ -17,5 +17,6 @@ namespace Laser.Orchard.Vimeo.Extensions {
         public const string MyAlbums = Me + "/albums";
         public const string MyGroups = Me + "/groups";
         public const string MyChannels = Me + "/channels";
+        public const string VideoUpload = Me + "/videos";
     }
 }

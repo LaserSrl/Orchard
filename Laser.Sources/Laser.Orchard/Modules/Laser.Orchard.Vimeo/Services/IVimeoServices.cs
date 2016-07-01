@@ -27,6 +27,10 @@ namespace Laser.Orchard.Vimeo.Services {
         VimeoUploadQuota CheckQuota();
         int UsedQuota();
         int FreeQuota();
+
+        int IsValidFileSize(int fileSize);
+
+        string GenerateUploadTicket(int uploadId);
     }
 
 }

@@ -27,6 +27,11 @@ namespace Laser.Orchard.Vimeo.Models {
     public class VimeoUploadQuota {
         public VimeoSpace space { get; set; }
         public VimeoQuota quota { get; set; }
+
+        public VimeoUploadQuota() {
+            space = new VimeoSpace();
+            quota = new VimeoQuota();
+        }
     }
     public class VimeoSpace {
         public int free { get; set; }
