@@ -398,10 +398,10 @@ namespace Laser.Orchard.Vimeo.Services {
         }
 
         /// <summary>
-        /// Generates a 
+        /// Generates an upload ticket for a given upload attempt
         /// </summary>
-        /// <param name="uploadId"></param>
-        /// <returns></returns>
+        /// <param name="uploadId">The Id of the record created for the upload we are attempting.</param>
+        /// <returns>The Url where the client may upload the file.</returns>
         public string GenerateUploadTicket(int uploadId) {
             var settings = _orchardServices
                 .WorkContext
@@ -410,12 +410,12 @@ namespace Laser.Orchard.Vimeo.Services {
             HttpWebRequest wr = VimeoCreateRequest(
                     settings.AccessToken,
                     VimeoEndpoints.VideoUpload,
-                    method:WebRequestMethods.Http.Post,
+                    method: WebRequestMethods.Http.Post,
                     qString: "?type=streaming"
                 );
             string uploadUrl = "";
             try {
-                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse){
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.Created) {
                         using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                             string vimeoJson = reader.ReadToEnd();
@@ -437,6 +437,29 @@ namespace Laser.Orchard.Vimeo.Services {
             return uploadUrl;
         }
 
+        public void VerifyUpload(int uploadId) {
+            UploadsInProgressRecord entity = _repositoryUploadsInProgress
+                .Get(uploadId);
+            HttpWebRequest wr = VimeoCreateRequest(
+                    endpoint: entity.UploadLinkSecure,
+                    method: WebRequestMethods.Http.Put
+                );
+            wr.Headers.Add("Content-Range: bytes */*");
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusDescription == "Resume Incomplete") {
+                        
+                    }
+                }
+            } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null && resp.StatusDescription == "Resume Incomplete") {
+                    //we actually expect status code 308, but that fires an exception
+
+                }
+            }
+        }
+
         /// <summary>
         /// Creates a default HttpWebRequest Using the Access Token and endpoint provided. By default, the Http Method is GET.
         /// </summary>
@@ -444,7 +467,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="endpoint">The API endpoint for the request.</param>
         /// <param name="method">The Http Method for the request. <default>GET</default></param>
         /// <returns>An <type>HttpWebRequest</type> object, whose header is preset to the defaults for Vimeo.</returns>
-        private HttpWebRequest VimeoCreateRequest(string aToken, string endpoint, string method = WebRequestMethods.Http.Get, string qString = null) {
+        private HttpWebRequest VimeoCreateRequest(string aToken = "", string endpoint = VimeoEndpoints.Me, string method = WebRequestMethods.Http.Get, string qString = null) {
             Uri targetUri;
             if (string.IsNullOrWhiteSpace(qString)) {
                 targetUri = new Uri(endpoint);
@@ -453,7 +476,8 @@ namespace Laser.Orchard.Vimeo.Services {
             }
             HttpWebRequest wr = HttpWebRequest.CreateHttp(targetUri);
             wr.Accept = Constants.HeaderAcceptValue;
-            wr.Headers.Add(HttpRequestHeader.Authorization, Constants.HeaderAuthorizationValue + aToken);
+            if (!string.IsNullOrWhiteSpace(aToken))
+                wr.Headers.Add(HttpRequestHeader.Authorization, Constants.HeaderAuthorizationValue + aToken);
             wr.Method = method;
             return wr;
         }

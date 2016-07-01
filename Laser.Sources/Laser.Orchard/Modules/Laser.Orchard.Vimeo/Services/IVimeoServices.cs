@@ -31,6 +31,7 @@ namespace Laser.Orchard.Vimeo.Services {
         int IsValidFileSize(int fileSize);
 
         string GenerateUploadTicket(int uploadId);
+        void VerifyUpload(int uploadId);
     }
 
 }
