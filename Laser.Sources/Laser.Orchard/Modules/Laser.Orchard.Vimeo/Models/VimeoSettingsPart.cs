@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace Laser.Orchard.Vimeo.Models {
     public class VimeoSettingsPart : ContentPart<VimeoSettingsPartRecord> {
@@ -21,6 +22,40 @@ namespace Laser.Orchard.Vimeo.Models {
         public string AlbumName {
             get { return Record.AlbumName; }
             set { Record.AlbumName = value; }
+        }
+
+        //The following settings are used to set default values for uploaded videos
+        public string License {
+            get { return Record.License; }
+            set { Record.License = value; }
+        }
+        public VimeoVideoPrivacy Privacy {
+            get {
+                return JsonConvert.DeserializeObject<VimeoVideoPrivacy>(Record.Privacy);
+            }
+            set {
+                Record.Privacy = JsonConvert.SerializeObject(value);
+            }
+        }
+        public string Password {
+            get { return Record.Password; }
+            set { Record.Password = value; }
+        }
+        public bool ReviewLink {
+            get { return Record.ReviewLink; }
+            set { Record.ReviewLink = value; }
+        }
+        public string Locale {
+            get { return Record.Locale; }
+            set { Record.Locale = value; }
+        }
+        public List<string> ContentRatings {
+            get {
+                return JsonConvert.DeserializeObject<List<string>>(Record.ContentRatings);
+            }
+            set {
+                Record.ContentRatings = JsonConvert.SerializeObject(value);
+            }
         }
     }
 }

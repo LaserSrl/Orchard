@@ -20,7 +20,7 @@ namespace Laser.Orchard.Vimeo.Models {
         public string app { get; set; } //TODO: verify this, because in the videos we tested they were null
         public string status { get; set; }
         public string resource_key { get; set; }
-        public string embed_presents { get; set; } //TODO: verify this, because in the videos we tested they were null
+        public string embed_presets { get; set; } //TODO: verify this, because in the videos we tested they were null
     }
 
     public class VimeoVideoEmbed {

@@ -77,6 +77,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ContentRating.txt" />
+    <Content Include="CreativeCommonsOptions.txt" />
+    <Content Include="LanguageCodes.txt" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
