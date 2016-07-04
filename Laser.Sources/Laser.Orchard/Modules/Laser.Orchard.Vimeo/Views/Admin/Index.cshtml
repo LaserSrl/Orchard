@@ -9,6 +9,12 @@
         <span class="hint">@T("Videos will be uploaded to/ read from this group. Leave blank if unused.")</span>
     @Html.TextBoxFor(m=>m.AlbumName, new { placeholder = T("Album Name"), @class = "text medium" })
         <span class="hint">@T("Videos will be uploaded to/ read from this album. Leave blank if unused.")</span>
+    
+    <legend>@T("Default video settings")</legend>
+    @{
+        List<SelectListItem> LicenseDDItems = new List<SelectListItem>();
+        
+    }
 
     <div class="box-footer align-right padding-right-35">
         <button id="testSettings" type="submit" name="submit.TestSettings" value="yes please">@T("Test")</button>
