@@ -2,5 +2,3 @@
 drugs,Drug / alcohol use
 language,Profanity / sexually suggestive content
 nudity,Nudity
-safe,All Audiences
-unrated,Not Yet Rated

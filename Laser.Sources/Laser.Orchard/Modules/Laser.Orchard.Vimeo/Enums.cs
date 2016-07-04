@@ -8,4 +8,5 @@ namespace Laser.Orchard.Vimeo {
 
     public enum VimeoPrivacyViewOptions { anybody, nobody, contacts, password, users, unlisted, disable }
     public enum VimeoPrivacyCommentsOptions { anybody, nobody, contacts }
+    public enum VimeoPrivacyEmbedOptions { _public, _private, _whitelist }
 }

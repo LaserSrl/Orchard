@@ -17,6 +17,10 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual bool ReviewLink { get; set; }
         public virtual string Locale { get; set; } //set default language. Options are in LanguageCodes.txt
         public virtual string ContentRatings { get; set; } //A JSON array containing the content rating options from ContentRating.txt
+        //NOTE: ContentRating.txt does not contain 2 default ratings:
+        //  safe,All Audiences
+        //  unrated,Not Yet Rated
+        public virtual string Whitelist { get; set; } //JSON array of domains where video embedding is enabled
         //TODO: Embed settings
     }
 }

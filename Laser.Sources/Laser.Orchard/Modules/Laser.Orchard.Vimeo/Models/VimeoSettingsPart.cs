@@ -31,7 +31,9 @@ namespace Laser.Orchard.Vimeo.Models {
         }
         public VimeoVideoPrivacy Privacy {
             get {
-                return JsonConvert.DeserializeObject<VimeoVideoPrivacy>(Record.Privacy);
+                return Record.Privacy != null ?
+                    JsonConvert.DeserializeObject<VimeoVideoPrivacy>(Record.Privacy) :
+                    new VimeoVideoPrivacy();
             }
             set {
                 Record.Privacy = JsonConvert.SerializeObject(value);
@@ -51,11 +53,24 @@ namespace Laser.Orchard.Vimeo.Models {
         }
         public List<string> ContentRatings {
             get {
-                return JsonConvert.DeserializeObject<List<string>>(Record.ContentRatings);
+                return Record.ContentRatings != null ?
+                    JsonConvert.DeserializeObject<List<string>>(Record.ContentRatings) :
+                    new List<string>();
             }
             set {
                 Record.ContentRatings = JsonConvert.SerializeObject(value);
             }
         }
+        public List<string> Whitelist {
+            get {
+                return Record.Whitelist != null ?
+                    JsonConvert.DeserializeObject<List<string>>(Record.Whitelist) :
+                    new List<string>();
+            }
+            set {
+                Record.Whitelist = JsonConvert.SerializeObject(value);
+            }
+        }
+
     }
 }

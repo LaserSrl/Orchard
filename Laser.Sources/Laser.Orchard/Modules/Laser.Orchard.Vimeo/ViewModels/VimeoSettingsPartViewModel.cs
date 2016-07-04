@@ -11,15 +11,45 @@ namespace Laser.Orchard.Vimeo.ViewModels {
         public string GroupName { get; set; }
         public string AlbumName { get; set; }
 
+        public string License { get; set; } //get the corresponding options from CreativeCommonsOptions.txt
+        public VimeoVideoPrivacy Privacy { get; set; } //this string is already a JSON representing a VimeoVideoPrivacy object
+        public string Password { get; set; } //password for the case where privacy.view == password
+        public bool ReviewLink { get; set; }
+        public string Locale { get; set; } //set default language. Options are in LanguageCodes.txt
+        public bool ContentRatingsSafe { get; set; }
+        public Dictionary<string, bool> ContentRatingsUnsafe { get; set; }
+        public string Whitelist { get; set; }
+
         public VimeoSettingsPartViewModel() {
 
         }
 
         public VimeoSettingsPartViewModel(VimeoSettingsPart part) {
+            ContentRatingsUnsafe = new Dictionary<string, bool>();
+            foreach (var cr in ContentRatingDictionary) {
+                ContentRatingsUnsafe.Add(cr.Key, false);
+            }
+
             AccessToken = part.AccessToken;
             ChannelName = part.ChannelName;
             GroupName = part.GroupName;
             AlbumName = part.AlbumName;
+
+            License = part.License;
+            Privacy = part.Privacy;
+            Password = part.Password;
+            ReviewLink = part.ReviewLink;
+            Locale = part.Locale;
+            if (part.ContentRatings.Contains("safe")) {
+                ContentRatingsSafe = true;
+            } else {
+                foreach (var cr in ContentRatingDictionary) {
+                    if (part.ContentRatings.Contains(cr.Key)) {
+                        ContentRatingsUnsafe[cr.Key] = true;
+                    }
+                }
+            }
+            Whitelist = string.Join(", ", part.Whitelist);
         }
 
         public string CensoredAccessToken {
@@ -34,5 +64,7 @@ namespace Laser.Orchard.Vimeo.ViewModels {
         }
 
         public static Dictionary<string, string> CCLicenseDictionary;
+        public static Dictionary<string, string> LocaleDictionary;
+        public static Dictionary<string, string> ContentRatingDictionary;
     }
 }

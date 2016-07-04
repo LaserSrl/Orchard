@@ -97,5 +97,14 @@ namespace Laser.Orchard.Vimeo {
             return 4;
         }
 
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("Whitelist")
+                );
+
+            return 5;
+        }
+
     }
 }

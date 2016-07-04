@@ -103,6 +103,16 @@ namespace Laser.Orchard.Vimeo.Services {
             settings.AlbumName = vm.AlbumName;
             settings.GroupName = vm.GroupName;
             settings.ChannelName = vm.ChannelName;
+
+            settings.License = vm.License;
+            settings.Privacy = vm.Privacy;
+            settings.Password = vm.Password;
+            settings.ReviewLink = vm.ReviewLink;
+            settings.Locale = vm.Locale;
+            settings.ContentRatings = vm.ContentRatingsSafe ?
+                new string[]{"safe"}.ToList() : 
+                vm.ContentRatingsUnsafe.Where(cr => cr.Value == true).Select(cr => cr.Key).ToList();
+            settings.Whitelist = vm.Whitelist.Split(new string[]{", "}, StringSplitOptions.RemoveEmptyEntries).ToList();
         }
 
         /// <summary>
