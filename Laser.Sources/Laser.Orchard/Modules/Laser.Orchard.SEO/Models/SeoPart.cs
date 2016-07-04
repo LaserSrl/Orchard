@@ -51,7 +51,7 @@ namespace Laser.Orchard.SEO.Models {
             get { return this.Retrieve(x => x.RobotsUnavailableAfter); }
             set { this.Store(x => x.RobotsUnavailableAfter, value); }
         }
-        public DateTime RobotsUnavailableAfterDate {
+        public DateTime? RobotsUnavailableAfterDate {
             get { return this.Retrieve(x => x.RobotsUnavailableAfterDate); }
             set { this.Store(x => x.RobotsUnavailableAfterDate, value); }
         }

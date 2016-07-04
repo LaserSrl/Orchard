@@ -55,6 +55,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         void Synchronize();
         void UnboundFromUser(UserPart userPart);
         CommunicationContactPart EnsureMasterContact();
+        CommunicationContactPart TryEnsureContact(int userId);
     }
 
     public class CommunicationService : ICommunicationService {
@@ -111,6 +112,16 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             CommunicationContactPart master = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).List().FirstOrDefault();
             return master;
+        }
+
+        public CommunicationContactPart TryEnsureContact(int userId) {
+            CommunicationContactPart contact = null;
+            var user = _orchardServices.ContentManager.Get(userId).As<IUser>();
+            if (user != null) {
+                UserToContact(user);
+                contact = GetContactFromUser(userId);
+            }
+            return contact;
         }
 
         public void Synchronize() {
@@ -265,7 +276,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             try {
                 int idCampagna = ((int)((dynamic)part).CampaignId);
                 CampaignName = _orchardServices.ContentManager.Get(idCampagna).As<TitlePart>().Title;
-            } catch (Exception ex) {
+            } catch {
                 // cuomunicato non legato a campagna
             }
             //Logger.Error("GetCampaignLink: 03");

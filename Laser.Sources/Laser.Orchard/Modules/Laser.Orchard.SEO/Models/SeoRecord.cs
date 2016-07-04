@@ -20,7 +20,7 @@ namespace Laser.Orchard.SEO.Models {
         public virtual bool RobotsNoOdp { get; set; }
         public virtual bool RobotsNoArchive { get; set; }
         public virtual bool RobotsUnavailableAfter { get; set; }
-        public virtual DateTime RobotsUnavailableAfterDate { get; set; }
+        public virtual DateTime? RobotsUnavailableAfterDate { get; set; }
         public virtual bool RobotsNoImageIndex { get; set; }
         public virtual bool GoogleNoSiteLinkSearchBox { get; set; }
         public virtual bool GoogleNoTranslate { get; set; }

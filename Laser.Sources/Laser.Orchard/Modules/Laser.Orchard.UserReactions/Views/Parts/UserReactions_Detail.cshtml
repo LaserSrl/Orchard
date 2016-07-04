@@ -1,0 +1,148 @@
+﻿@using Laser.Orchard.UserReactions.Models
+@using Laser.Orchard.UserReactions.ViewModels
+@using Orchard.ContentManagement
+@using Laser.Orchard.UserReactions.Services
+@using Laser.Orchard.UserReactions
+
+@{
+    IUserReactionsService _reactionService;
+    WorkContext.TryResolve<IUserReactionsService>(out _reactionService);
+
+     //Setta i dati della vista collegandoli al modello settato dal controller che richiama la vista
+     List<UserReactionsVM> part = Model.UserReaction;
+     //Aggiungi il foglio di stile CSS definito nel file ResourceManifest.cs ed inserito nella cartella Styles
+    
+     var settings = WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
+     Style.Require(settings.StyleFileNameProvider.ToString());
+    }
+
+@{    
+   
+    //Aggiungi in testata la libreria jQuery
+    
+        Script.Require("jQuery").AtHead();
+    }
+
+@Html.AntiForgeryToken()
+
+
+
+@{foreach (var item in part) {
+      var quantità = "(" + @item.Quantity + ")";
+      var itemName = " " + _reactionService.GetReactionEnumTranslations((ReactionsNames)Enum.Parse(typeof(ReactionsNames), item.TypeName)) + " ";
+      string attCSS = @item.CssStyleName;
+      var id = @item.TypeId;
+      
+       
+      <div class="glyph"> 
+          <div class="reactiondiv" id="@item.TypeId">     
+              @*<span id="@item.TypeId" class="@attCSS"></span> *@
+              <span class="@attCSS"></span>
+              @{var itemNameCount = "itemName" + @id; }
+              @{var itemQtyCount = "itemQuantity" + @id; }
+          
+              <b id="@itemNameCount">@itemName</b>
+              <b id="@itemQtyCount">@quantità</b>
+          </div>
+      </div>
+      
+  }
+}
+
+
+<script type="text/javascript">
+    //Aggiungo il valore del campo nascosto AntiForgeryToken al valore data della funzione 
+    //richiamata di JQuery
+    function addRequestVerificationToken(data) {
+        data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
+        return data;
+    };
+
+    $(document).ready(function () {        
+
+        $("div.reactiondiv").hover(
+              function() {
+                  $(this).css('cursor', 'pointer');
+                  $(this).css('opacity', '0.4');
+              },
+              function() {
+                  $(this).css('opacity', '1');
+              });
+            
+        
+
+
+
+        //Esegui chiamata Ajax per calcolare la somma delle reactions al loading della page
+        //per ovviare al problema della cache di pagina di Orchard
+        var PageId = "@Model.ContentItem.Id";
+
+
+        $.ajax(
+        {
+            url: "@Url.Action("GetSummaryReaction", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",           
+            success: function (result) 
+            {
+
+                for (var i = 0; i < result.length; i++) {
+                    var nameitem = "#itemQuantity" + result[i].TypeId;
+                    var total = result[i].Quantity;
+                    $(nameitem).html("(" + total + ")");
+                    //se già cliccato
+                    if (result[i].Clicked == 1) {
+                        $(nameitem).css('color', 'red');
+                    }
+                    else {
+                        $(nameitem).css('color', 'black');
+                    }
+                }
+               // $("div.reactiondiv").css('cursor', 'default');
+            },
+                type: "POST",
+                data: addRequestVerificationToken({ pageId: PageId })
+        });
+
+         
+        
+        //////////////////////////////////////////////////////////////////
+
+
+        //Assegnazione evento click a div reactiondiv
+
+        $("div.reactiondiv").bind("click", function (event)
+        {           
+            //Parameters     
+            var PageId = "@Model.ContentItem.Id";
+            var ReactionTypeId = this.id;            
+
+            //Chiamata ajax richiama metodo server GetReactionClicked nel controller ReactionAjax 
+            //che verifica se l'utente deve fare un click in aggiunta oppure in decremento, quale icona cliccata 
+            $.ajax(
+            {               
+                url: "@Url.Action("GetReactionClicked", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",
+                success: function (result)
+                {
+                //    $("div.reactiondiv").css('cursor', 'wait');
+                    var nameitem = "#itemQuantity" + result.TypeId;                      
+                    $(nameitem).html("(" + result.Quantity + ")");
+
+                    if (result.Clicked == 1) {
+                        $(nameitem).css('color', 'red');
+                        $(nameitem).css('font-weight','Bold');
+                    } else {
+                        $(nameitem).css('color', 'black');
+                    }
+
+
+                },
+                type: "POST",
+                data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId})
+            });
+        
+           
+        });
+
+    });
+
+
+</script>

@@ -87,28 +87,23 @@ namespace Laser.Orchard.Mobile.Handlers {
                     }
                 }
 
-                #region Collegamento con la Contact profile part
-                var recordContact = _communicationContactPartRecord.Fetch(x => x.UserPartRecord_Id == user.Id).FirstOrDefault();
-                if (recordContact == null) {
-                    // non dovrebbe mai accadere che esista un utente senza il record di profilazione
-                    _communicationService.UserToContact(user);
-                    Logger.Error(string.Format("UserDeviceHandler.LoggedIn: creato contatto mancante per lo User ID {0}.", user.Id));
-                    recordContact = _communicationContactPartRecord.Fetch(x => x.UserPartRecord_Id == user.Id).FirstOrDefault();
-                }
-                var pushNotificationToLink=_pushNotificationRecord.Fetch(x => x.UUIdentifier == UUIdentifier).FirstOrDefault();
+                #region Collegamento con la Contact profile part e i device
+                var contact = _communicationService.TryEnsureContact(user.Id);
+                if (contact != null) {
+                    var pushNotificationToLink = _pushNotificationRecord.Fetch(x => x.UUIdentifier == UUIdentifier).FirstOrDefault();
                 if (pushNotificationToLink != null) {
-                    if (pushNotificationToLink.MobileContactPartRecord_Id != recordContact.Id) {
-                        pushNotificationToLink.MobileContactPartRecord_Id = recordContact.Id;
+                        if (pushNotificationToLink.MobileContactPartRecord_Id != contact.Id) {
+                            pushNotificationToLink.MobileContactPartRecord_Id = contact.Id;
                         _pushNotificationRecord.Update(pushNotificationToLink);
                         _pushNotificationRecord.Flush();
                     }
                 }
                 else {
-                    Logger.Information(string.Format("UserDeviceHandler.LoggedIn: pushNotificationRecord non trovato per lo UUIdentifier {0}. Probabilmente l'utente non ha abilitato le notifiche push.", UUIdentifier));
+                        Logger.Information(string.Format("UserDeviceHandler.LoggedIn: pushNotificationRecord non trovato per lo UUIdentifier {0}. Probabilmente l'utente non ha abilitato le notifiche push.", UUIdentifier));
+                }
                 }
                 #endregion
             }
-
         }
 
         public void LoggedOut(IUser user) {
