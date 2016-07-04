@@ -18,14 +18,17 @@ namespace Laser.Orchard.Vimeo.Services {
 
         private readonly IRepository<VimeoSettingsPartRecord> _repositorySettings;
         private readonly IRepository<UploadsInProgressRecord> _repositoryUploadsInProgress;
+        private readonly IRepository<UploadsCompleteRecord> _repositoryUploadsComplete;
         private readonly IOrchardServices _orchardServices;
 
         public VimeoServices(IRepository<VimeoSettingsPartRecord> repositorySettings,
             IRepository<UploadsInProgressRecord> repositoryUploadsInProgress,
+            IRepository<UploadsCompleteRecord> repositoryUploadsComplete,
             IOrchardServices orchardServices) {
 
             _repositorySettings = repositorySettings;
             _repositoryUploadsInProgress = repositoryUploadsInProgress;
+            _repositoryUploadsComplete = repositoryUploadsComplete;
             _orchardServices = orchardServices;
         }
 
@@ -437,9 +440,19 @@ namespace Laser.Orchard.Vimeo.Services {
             return uploadUrl;
         }
 
-        public void VerifyUpload(int uploadId) {
+        public VerifyUploadResults VerifyUpload(int uploadId) {
             UploadsInProgressRecord entity = _repositoryUploadsInProgress
                 .Get(uploadId);
+            if (entity == null) {
+                //could not find and Upload in progress with the given Id
+                //Chek to see if the uplaod is complete
+                UploadsCompleteRecord ucr = GetByProgressId(uploadId);
+                if (ucr == null) {
+                    //no, the upload actually never existed
+                    return VerifyUploadResults.NeverExisted;
+                }
+                return VerifyUploadResults.CompletedAlready;
+            }
             HttpWebRequest wr = VimeoCreateRequest(
                     endpoint: entity.UploadLinkSecure,
                     method: WebRequestMethods.Http.Put
@@ -447,17 +460,95 @@ namespace Laser.Orchard.Vimeo.Services {
             wr.Headers.Add("Content-Range: bytes */*");
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
-                    if (resp.StatusDescription == "Resume Incomplete") {
-                        
-                    }
+                    //if we end up here, something went really wrong
                 }
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null && resp.StatusDescription == "Resume Incomplete") {
-                    //we actually expect status code 308, but that fires an exception
-
+                    //we actually expect status code 308, but that fires an exception, so we have to handle things here
+                    //Check that everything has been sent, by reading from the "Range" Header of the response.
+                    var range = resp.Headers["Range"];
+                    int sent;
+                    if (int.TryParse(range.Substring(range.IndexOf('-') + 1), out sent)) {
+                        if (sent == entity.UploadSize) {
+                            //Upload finished
+                            return VerifyUploadResults.Complete;
+                        } else {
+                            //update the uploaded size
+                            entity.UploadedSize = sent;
+                            return VerifyUploadResults.Incomplete;
+                        }
+                    }
                 }
             }
+            return VerifyUploadResults.Error; //something went rather wrong
+        }
+
+        /// <summary>
+        /// Gets the UploadComplete corresponding to the upload in progress given by input
+        /// </summary>
+        /// <param name="pId">The Id of the upload in progress</param>
+        /// <returns>The <type>UploadsCompleteRecord</type>.</returns>
+        private UploadsCompleteRecord GetByProgressId(int pId) {
+            return _repositoryUploadsComplete.Get(r => r.ProgressId == pId);
+        }
+
+        /// <summary>
+        /// We terminate the Vimeo upload stream.
+        /// </summary>
+        /// <param name="uploadId">The Id we have been using internally to identify the upload in progress.</param>
+        /// <returns>The Id of the UploadCompleted, which we'll need to patch and publish the video.<value>-1</value> in case of errors.</returns>
+        public int TerminateUpload(int uploadId) {
+            UploadsCompleteRecord ucr = GetByProgressId(uploadId);
+            if (ucr != null)
+                return ucr.Id;
+            UploadsInProgressRecord entity = _repositoryUploadsInProgress
+                .Get(uploadId);
+            return TerminateUpload(entity);
+        }
+
+        /// <summary>
+        /// We terminate the Vimeo upload stream.
+        /// </summary>
+        /// <param name="entity">The Upload in progress that we wish to terminate.</param>
+        /// <returns>The Id of the UploadCompleted, which we'll need to patch and publish the video.<value>-1</value> in case of errors.</returns>
+        public int TerminateUpload(UploadsInProgressRecord entity) {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
+            //Make the DELETE call to terminate the upload: this gives us the video URI
+            HttpWebRequest del = VimeoCreateRequest(
+                aToken: settings.AccessToken,
+                endpoint: VimeoEndpoints.APIEntry + entity.CompleteUri,
+                method: "DELETE"
+                );
+            try {
+                using (HttpWebResponse resp = del.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.Created) {
+                        //this is the success condition for this call:
+                        //the response contains the video location in its "location" header
+                        //create an entry of UploadsCompletedRecord for this upload
+                        var ucr = new UploadsCompleteRecord();
+                        ucr.Uri = resp.Headers["Location"];
+                        ucr.ProgressId = entity.Id;
+                        _repositoryUploadsComplete.Create(ucr);
+                        //delete the entry from uploads in progress
+                        _repositoryUploadsInProgress.Delete(entity);
+                        return ucr.Id;
+                    }
+                }
+            } catch (Exception ex) {
+
+            }
+            return -1;
+        }
+
+        public void PatchVideo(int ucId) {
+            //The things we want to change of the video go in its body as a JSON.
+
+            //We must set the request header
+            // "Content-Type" to "application/json"
         }
 
         /// <summary>

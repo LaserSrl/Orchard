@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.Vimeo.Models {
-    public class UploadsInProgressRecord : ContentPartRecord {
+    public class UploadsInProgressRecord {
         public virtual int UploadSize { get; set; } //total size of the upload, in Bytes
         public virtual int UploadedSize { get; set; } //number of Bytes we have uploaded already
         //Information from the response to the streaming upload request
@@ -14,8 +14,10 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual string TicketId { get; set; } //Unique ticket ID
         public virtual string UploadLinkSecure { get; set; } //https upload url
 
-        public UploadsInProgressRecord() {
-            this.ContentItemRecord = new ContentItemRecord();
-        }
+        //public UploadsInProgressRecord() {
+        //    this.ContentItemRecord = new ContentItemRecord();
+        //}
+
+        public virtual int Id { get; set; } //primary key provided because we do not inherit from ContentItemRecord
     }
 }

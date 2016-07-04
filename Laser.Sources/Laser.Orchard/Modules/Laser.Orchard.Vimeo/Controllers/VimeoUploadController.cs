@@ -40,10 +40,32 @@ namespace Laser.Orchard.Vimeo.Controllers {
         public ActionResult FinishUpload(int uploadId) {
 
             //re-verify upload
-            _vimeoServices.VerifyUpload(uploadId);
-            //terminate upload
+            switch (_vimeoServices.VerifyUpload(uploadId)) {
+                case VerifyUploadResults.CompletedAlready:
+                    //the periodic task had already verified that the upload had completed
+                    break;
+                case VerifyUploadResults.Complete:
+                    //we just found out that the upload is complete
+                    //Make the DELETE call to terminate the upload: this gives us the video URI
+                    int ucId = _vimeoServices.TerminateUpload(uploadId);
+                    if (ucId > 0) {
+                        //Make the PATcH call to update the video settings (privacy and so on)
 
-            //update the task that creates the content items
+                    }
+                    break;
+                case VerifyUploadResults.Incomplete:
+                    //the upload is still going on
+                    break;
+                case VerifyUploadResults.NeverExisted:
+                    //we never started an upload with the given Id
+                    break;
+                case VerifyUploadResults.Error:
+                    //something went wrong
+                    break;
+                default:
+                    //we should never be here
+                    break;
+            }
 
             return null; //just here to avoid compilation errors
         }

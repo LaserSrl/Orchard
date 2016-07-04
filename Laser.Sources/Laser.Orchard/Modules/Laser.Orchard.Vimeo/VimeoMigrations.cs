@@ -47,5 +47,29 @@ namespace Laser.Orchard.Vimeo {
             return 3;
         }
 
+        public int UpdateFrom3() {
+            SchemaBuilder.DropTable("UploadsInProgressRecord");
+
+            SchemaBuilder.CreateTable("UploadsInProgressRecord",
+                table => table
+                    .Column<int>("Id", col => col.Identity().PrimaryKey())
+                    .Column<int>("UploadSize")
+                    .Column<int>("UploadedSize")
+                    .Column<string>("Uri")
+                    .Column<string>("CompleteUri")
+                    .Column<string>("TicketId")
+                    .Column<string>("UploadLinkSecure")
+                );
+
+            SchemaBuilder.CreateTable("UploadsCompleteRecord",
+                table => table
+                    .Column<int>("Id", col => col.Identity().PrimaryKey())
+                    .Column<string>("Uri")
+                    .Column<int>("ProgressId")
+                );
+
+            return 4;
+        }
+
     }
 }

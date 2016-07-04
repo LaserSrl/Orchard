@@ -86,8 +86,10 @@
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\VimeoUploadController.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Handlers\VimeoSettingsPartHandler.cs" />
+    <Compile Include="Models\UploadsCompleteRecord.cs" />
     <Compile Include="Models\UploadsInProgressRecord.cs" />
     <Compile Include="Models\VimeoAlbum.cs" />
     <Compile Include="Models\VimeoBaseObject.cs" />
