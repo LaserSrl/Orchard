@@ -1,6 +1,6 @@
 Name: Content sharing
 AntiForgery: enabled
-Author: Laser S.r.l.
+Author: Laser srl
 Website: http://www.laser-group.com
 Version: 1.6
 OrchardVersion: 1.8

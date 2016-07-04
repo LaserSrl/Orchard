@@ -3,7 +3,7 @@ AntiForgery: enabled
 Author: Darksky Development / Sipke Schoorstra
 Website: https://github.com/sfmskywalker/Contrib.Widgets
 Version: 1.6.3
-OrchardVersion: 1.6
+OrchardVersion: 1.8
 Description: Add widgets per content item without creating new layers. Attach the WidgetContainerPart to content types to which you want to be able to add widgets.
 Dependencies: Orchard.Widgets, Orchard.Themes, Orchard.jQuery, Orchard.Localization
 Category: Widget
