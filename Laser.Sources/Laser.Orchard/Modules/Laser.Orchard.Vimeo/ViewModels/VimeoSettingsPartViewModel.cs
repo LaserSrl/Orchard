@@ -32,5 +32,7 @@ namespace Laser.Orchard.Vimeo.ViewModels {
                         .PadLeft(AccessToken.Length, 'X');
             }
         }
+
+        public static Dictionary<string, string> CCLicenseDictionary;
     }
 }
