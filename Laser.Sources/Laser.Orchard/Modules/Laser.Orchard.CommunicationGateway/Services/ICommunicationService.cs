@@ -54,6 +54,13 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         void Synchronize();
         void UnboundFromUser(UserPart userPart);
+
+        /// <summary>
+        /// Elimina le mail e gli SMS (phone number) associati a un contatto.
+        /// </summary>
+        /// <param name="contactId"></param>
+        void RemoveMailsAndSms(int contactId);
+        
         CommunicationContactPart EnsureMasterContact();
         CommunicationContactPart TryEnsureContact(int userId);
     }
@@ -103,14 +110,55 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             return true;
         }
 
+        /// <summary>
+        /// Elimina le mail e gli SMS (phone number) associati a un contatto.
+        /// </summary>
+        /// <param name="contactId"></param>
+        public void RemoveMailsAndSms(int contactId) {
+            // elimina le mail associate
+            var elencoCer = _repositoryCommunicationEmailRecord.Fetch(x => x.EmailContactPartRecord_Id == contactId).ToList();
+            if (elencoCer != null) {
+                foreach (var cer in elencoCer) {
+                    _repositoryCommunicationEmailRecord.Delete(cer);
+                }
+            }
+
+            // elimina gli sms associati
+            var elencoCsr = _repositoryCommunicationSmsRecord.Fetch(x => x.SmsContactPartRecord_Id == contactId).ToList();
+            if (elencoCsr != null) {
+                foreach (var csr in elencoCsr) {
+                    _repositoryCommunicationSmsRecord.Delete(csr);
+                }
+            }
+        }
+
         public CommunicationContactPart EnsureMasterContact() {
-            if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
+            CommunicationContactPart master = null;
+            List<ContentItem> mastersToBeDeleted = new List<ContentItem>();
+            // cerca tutti i master contact attivi presenti nel sistema e sceglie il più recente
+            var activeMasters = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).OrderByDescending(y => y.Id).List();
+            foreach (var contact in activeMasters) {
+                if (master == null) {
+                    master = contact;
+                }
+                else {
+                    mastersToBeDeleted.Add(contact.ContentItem);
+                }
+            }
+
+            // se non c'è nessun master contact lo crea
+            if (master == null) {
                 var Contact = _orchardServices.ContentManager.Create("CommunicationContact");
                 Contact.As<TitlePart>().Title = "Master Contact";
                 Contact.As<CommunicationContactPart>().Master = true;
+                master = Contact.As<CommunicationContactPart>();
                 _notifier.Add(NotifyType.Information, T("Master Contact Created"));
             }
-            CommunicationContactPart master = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).List().FirstOrDefault();
+
+            // elimina i master contact in eccesso
+            foreach (var contact in mastersToBeDeleted) {
+                _orchardServices.ContentManager.Remove(contact);
+            }
             return master;
         }
 
@@ -125,29 +173,11 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         }
 
         public void Synchronize() {
-
-            #region Creazione di un Contact Master a cui agganciare tutte le parti che non hanno una profilazione
-
-            //if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(y => y.Master).Count() == 0) {
-            //    var Contact = _orchardServices.ContentManager.New("CommunicationContact");
-            //    _orchardServices.ContentManager.Create(Contact);
-            //    Contact.As<TitlePart>().Title = "Master Contact";
-            //    Contact.As<CommunicationContactPart>().Master = true;
-            //    _notifier.Add(NotifyType.Information, T("Master Contact Created"));
-            //}
             EnsureMasterContact();
-
-            #endregion Creazione di un Contact Master a cui agganciare tutte le parti che non hanno una profilazione
 
             #region Import dei profili degli utenti
 
-            List<Int32> contactsUsers = new List<int>();
             var users = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().List();
-            if (_orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Count() > 0) {
-                contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().List().Select(y => y.As<CommunicationContactPart>().UserIdentifier).ToList();
-            }
-            // var userWithNoConcat = users.Where(x => !contactsUsers.Contains(x.Id));
-            //  foreach (var user in userWithNoConcat) {
             foreach (var user in users) {
                 UserToContact(user);
             }
@@ -169,19 +199,6 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
 
             #endregion Ricreo collegamento con parte mobile preesistente
-
-            #region Ricreo collegamento con parte sms preesistente
-
-            if (features.ContainsKey("Laser.Orchard.SmsCommunicationImport")) {
-                if (features.ContainsKey("Laser.Orchard.Sms") && features["Laser.Orchard.Sms"].IsEnabled) {
-                    if (features["Laser.Orchard.SmsCommunicationImport"].IsEnabled) {
-                        _moduleService.DisableFeatures(new string[] { "Laser.Orchard.SmsCommunicationImport" });
-                    }
-                    _moduleService.EnableFeatures(new string[] { "Laser.Orchard.SmsCommunicationImport" }, true);
-                }
-            }
-
-            #endregion Ricreo collegamento con parte sms preesistente
 
             // aggiungo 200.000 record
             //for (int i = 0; i < 100000; i++) {
@@ -257,47 +274,32 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         /// <param name="part"></param>
         /// <returns></returns>
         public string GetCampaignLink(string CampaignSource, ContentPart generalpart) {
-            //string CampaignSource = "email";
-            //Logger.Error("GetCampaignLink: 01");
             string shortlink = "";
             ContentPart part = (ContentPart)(((dynamic)generalpart).ContentItem.CommunicationAdvertisingPart);
-            //Logger.Error("GetCampaignLink: 01.01");
             string CampaignTerm = "";
             var tagPart = part.ContentItem.As<TagsPart>();
             if (tagPart != null) {
                 CampaignTerm = string.Join("+", tagPart.CurrentTags.ToArray()).ToLower();
             }
-            //Logger.Error("GetCampaignLink: 01.02");
             string CampaignMedium = CampaignSource;
             string CampaignContent = part.ContentItem.As<TitlePart>().Title.ToLower();
-            //Logger.Error("GetCampaignLink: 01.03");
             string CampaignName = "Flash";
-            //Logger.Error("GetCampaignLink: 02");
             try {
                 int idCampagna = ((int)((dynamic)part).CampaignId);
                 CampaignName = _orchardServices.ContentManager.Get(idCampagna).As<TitlePart>().Title;
             } catch {
-                // cuomunicato non legato a campagna
+                // comunicato non legato a campagna
             }
-            //Logger.Error("GetCampaignLink: 03");
             string link = "";
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
-                //Logger.Error("GetCampaignLink: 03.01");
                 link = (string)(((dynamic)part).UrlLinked.Value);
             } else {
-                //Logger.Error("GetCampaignLink: 03.02");
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
-                //Logger.Error("GetCampaignLink: 03.03");
                 if (pickerField != null && pickerField.ContentItems != null) {
-                    //Logger.Error("GetCampaignLink: 03.04");
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
-                    //Logger.Error("GetCampaignLink: 03.05");
                     if (firstItem != null) {
-                        //Logger.Error("GetCampaignLink: 03.06");
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-                        //Logger.Error("GetCampaignLink: 03.07");
                         link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
-                        //Logger.Error("GetCampaignLink: 03.08");
                     } else {
                         return "";
                     }
@@ -305,19 +307,14 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     return "";
                 }
             }
-            //Logger.Error("GetCampaignLink: 04");
 
             string linkelaborated = ElaborateLink(link, CampaignSource, CampaignMedium, CampaignTerm, CampaignContent, CampaignName);
-            //Logger.Error("GetCampaignLink: 04.01");
             if (!string.IsNullOrEmpty(linkelaborated)) {
-                //Logger.Error("GetCampaignLink: 04.02");
                 shortlink = _shortLinksService.GetShortLink(linkelaborated);
-                //Logger.Error("GetCampaignLink: 04.03");
                 if (string.IsNullOrEmpty(shortlink)) {
                     throw new Exception("Url Creation Failed");
                 }
             }
-            //Logger.Error("GetCampaignLink: 05");
             return shortlink;
         }
 
@@ -357,7 +354,6 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             var uriBuilder = new UriBuilder(link);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query["utm_source"] = "Krake";
-            //query["referrer"] = string.Format("utm_source%3D{0}", CampaignSource);
             query["utm_medium"] = CampaignMedium;
             query["utm_term"] = CampaignTerm;
             query["utm_content"] = CampaignContent;
@@ -385,7 +381,6 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 var profpart = ((dynamic)UserContent).ProfilePart;
                 asProfilePart = true;
             } catch { asProfilePart = false; }
-            //int iduser = UserContent.Id;
 
             // identifica il Contact relativo a UserContent
             var contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == UserContent.Id).List().FirstOrDefault();
