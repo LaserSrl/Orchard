@@ -50,7 +50,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     int ucId = _vimeoServices.TerminateUpload(uploadId);
                     if (ucId > 0) {
                         //Make the PATcH call to update the video settings (privacy and so on)
-
+                        _vimeoServices.PatchVideo(ucId, "birra", "papppa");
                     }
                     break;
                 case VerifyUploadResults.Incomplete:

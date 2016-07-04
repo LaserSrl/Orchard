@@ -68,6 +68,32 @@ namespace Laser.Orchard.Vimeo {
                     .Column<int>("ProgressId")
                 );
 
+            //update to settings: added default video settings
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("License")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("Privacy")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("Password")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<bool>("ReviewLink", col => col.WithDefault(false))
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("Locale")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("ContentRatings")
+                );
+
             return 4;
         }
 

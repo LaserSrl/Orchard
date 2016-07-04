@@ -544,9 +544,20 @@ namespace Laser.Orchard.Vimeo.Services {
             return -1;
         }
 
-        public void PatchVideo(int ucId) {
+        public void PatchVideo(int ucId, string name = "", string description = "") {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
             //The things we want to change of the video go in its body as a JSON.
-
+            string jsonBody = "";
+            JObject json = JObject.FromObject(settings.License);
+            json.Add(JObject.FromObject(settings.Privacy));
+            json.Add(JObject.FromObject(settings.Password));
+            json.Add(JObject.FromObject(settings.ReviewLink));
+            json.Add(JObject.FromObject(settings.Locale));
+            json.Add(JObject.FromObject(settings.ContentRatings));
+            jsonBody = json.ToString();
             //We must set the request header
             // "Content-Type" to "application/json"
         }
