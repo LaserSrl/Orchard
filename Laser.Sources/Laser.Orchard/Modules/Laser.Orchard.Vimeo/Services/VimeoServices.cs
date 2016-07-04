@@ -12,6 +12,7 @@ using System.Net;
 using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Orchard.Tasks.Scheduling;
 
 namespace Laser.Orchard.Vimeo.Services {
     public class VimeoServices : IVimeoServices {
@@ -20,16 +21,19 @@ namespace Laser.Orchard.Vimeo.Services {
         private readonly IRepository<UploadsInProgressRecord> _repositoryUploadsInProgress;
         private readonly IRepository<UploadsCompleteRecord> _repositoryUploadsComplete;
         private readonly IOrchardServices _orchardServices;
+        private readonly IScheduledTaskManager _taskManager;
 
         public VimeoServices(IRepository<VimeoSettingsPartRecord> repositorySettings,
             IRepository<UploadsInProgressRecord> repositoryUploadsInProgress,
             IRepository<UploadsCompleteRecord> repositoryUploadsComplete,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            IScheduledTaskManager taskManager) {
 
             _repositorySettings = repositorySettings;
             _repositoryUploadsInProgress = repositoryUploadsInProgress;
             _repositoryUploadsComplete = repositoryUploadsComplete;
             _orchardServices = orchardServices;
+            _taskManager = taskManager;
         }
 
         /// <summary>
@@ -451,12 +455,15 @@ namespace Laser.Orchard.Vimeo.Services {
         }
 
         public VerifyUploadResults VerifyUpload(int uploadId) {
-            UploadsInProgressRecord entity = _repositoryUploadsInProgress
-                .Get(uploadId);
+            return VerifyUpload(_repositoryUploadsInProgress
+                .Get(uploadId));
+        }
+
+        public VerifyUploadResults VerifyUpload(UploadsInProgressRecord entity) {
             if (entity == null) {
                 //could not find and Upload in progress with the given Id
                 //Chek to see if the uplaod is complete
-                UploadsCompleteRecord ucr = GetByProgressId(uploadId);
+                UploadsCompleteRecord ucr = GetByProgressId(entity.Id);
                 if (ucr == null) {
                     //no, the upload actually never existed
                     return VerifyUploadResults.NeverExisted;
@@ -559,7 +566,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 .WorkContext
                 .CurrentSite
                 .As<VimeoSettingsPart>();
-            //The things we want to change of the video go in its body as a JSON.
+            //The things we want to change of the video go in the request body as a JSON.
             string jsonBody = "";
             JObject json = JObject.FromObject(settings.License);
             json.Add(JObject.FromObject(settings.Privacy));
@@ -570,6 +577,27 @@ namespace Laser.Orchard.Vimeo.Services {
             jsonBody = json.ToString();
             //We must set the request header
             // "Content-Type" to "application/json"
+        }
+
+        //CODE FOR TASKS
+        public void VerifyAllUploads() {
+            foreach (var uip in _repositoryUploadsInProgress.Table.ToList()) {
+                switch (VerifyUpload(uip)) {
+                    case VerifyUploadResults.CompletedAlready:
+                        break;
+                    case VerifyUploadResults.Complete:
+                        TerminateUpload(uip);
+                        break;
+                    case VerifyUploadResults.Incomplete:
+                        break;
+                    case VerifyUploadResults.NeverExisted:
+                        break;
+                    case VerifyUploadResults.Error:
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         /// <summary>

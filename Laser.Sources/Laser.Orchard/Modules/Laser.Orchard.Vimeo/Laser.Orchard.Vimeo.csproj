@@ -91,6 +91,7 @@
     <Compile Include="Controllers\VimeoUploadController.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\Constants.cs" />
+    <Compile Include="Handlers\VimeoScheduledTasksHandler.cs" />
     <Compile Include="Handlers\VimeoSettingsPartHandler.cs" />
     <Compile Include="Models\UploadsCompleteRecord.cs" />
     <Compile Include="Models\UploadsInProgressRecord.cs" />
