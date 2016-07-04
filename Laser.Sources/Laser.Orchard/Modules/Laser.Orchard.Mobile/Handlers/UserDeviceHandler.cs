@@ -91,8 +91,8 @@ namespace Laser.Orchard.Mobile.Handlers {
 
                 // aggiorna il collegamento del device con il contact, se il device è registrato
                 _pushNotificationService.UpdateDevice(UUIdentifier);
-                    }
-                }
+            }
+        }
 
         public void LoggedOut(IUser user) {
             //   throw new NotImplementedException();

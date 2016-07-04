@@ -19,7 +19,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
         private readonly IRepository<CommunicationEmailRecord> _Emailrepository;
         private readonly IRepository<CommunicationSmsRecord> _Smsrepository;
 
-        public CommunicationContactPartHandler(IRepository<CommunicationSmsRecord> Smsrepository,IRepository<CommunicationEmailRecord> Emailrepository,IRepository<CommunicationContactPartRecord> repository, ICommunicationService communicationService) {
+        public CommunicationContactPartHandler(IRepository<CommunicationSmsRecord> Smsrepository, IRepository<CommunicationEmailRecord> Emailrepository, IRepository<CommunicationContactPartRecord> repository, ICommunicationService communicationService) {
             _Smsrepository = Smsrepository;
             _communicationService = communicationService;
             Filters.Add(StorageFilter.For(repository));

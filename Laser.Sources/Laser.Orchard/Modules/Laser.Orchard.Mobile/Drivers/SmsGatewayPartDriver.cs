@@ -40,10 +40,10 @@ namespace Laser.Orchard.Mobile.Drivers {
                     return ContentShape("Parts_SmsGateway_SummaryAdmin",
                         () => shapeHelper.Parts_SmsGateway_SummaryAdmin(SmsMessageSent: part.SmsMessageSent, SendOnNextPublish: part.SendOnNextPublish, RecipientsNumber: part.SmsRecipientsNumber, SmsDeliveredOrAcceptedNumber: part.SmsDeliveredOrAcceptedNumber, SmsRejectedOrExpiredNumber: part.SmsRejectedOrExpiredNumber));
                 return null;
-            } else {
+            }
+            else {
                 return null;
             }
-
         }
 
 
@@ -104,7 +104,5 @@ namespace Laser.Orchard.Mobile.Drivers {
 
             return Editor(part, shapeHelper);
         }
-
-
     }
 }

@@ -44,16 +44,16 @@ namespace Laser.Orchard.Mobile.Handlers {
             return _deviceRepository
                     .Fetch(x => x.MobileContactPartRecord_Id == context.ContentItem.Id)
                     .Select(x => new PushNotificationRecord {
-                        DataInserimento=x.DataInserimento,
-                        Device=x.Device,
-                        DataModifica=x.DataModifica,
-                        Language=x.Language,
+                        DataInserimento = x.DataInserimento,
+                        Device = x.Device,
+                        DataModifica = x.DataModifica,
+                        Language = x.Language,
                         Id = x.Id,
-                        Produzione=x.Produzione,
-                        Token=x.Token,
+                        Produzione = x.Produzione,
+                        Token = x.Token,
                         MobileContactPartRecord_Id = x.MobileContactPartRecord_Id,
-                        UUIdentifier=x.UUIdentifier,
-                        Validated=x.Validated
+                        UUIdentifier = x.UUIdentifier,
+                        Validated = x.Validated
                     })
                     .ToList();
         }
