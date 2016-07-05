@@ -8,5 +8,6 @@ namespace Laser.Orchard.StartupConfig.Handlers {
     public interface IContactRelatedEventHandler : IEventHandler {
         void DeviceUpdated();
         void SmsUpdated();
+        void Synchronize();
     }
 }

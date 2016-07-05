@@ -67,6 +67,7 @@ namespace Laser.Orchard.Mobile.Services {
         private readonly ISessionLocator _sessionLocator;
         public ICommunicationService _communicationService;
         private readonly ITokenizer _tokenizer;
+        private readonly ITransactionManager _transactionManager;
         private Int32 messageSent;
 
         public PushNotificationService(
@@ -79,7 +80,8 @@ namespace Laser.Orchard.Mobile.Services {
                 ShellSettings shellSetting,
                 ISessionLocator sessionLocator,
                 ITokenizer tokenizer,
-                IQueryPickerService queryPickerService
+                IQueryPickerService queryPickerService,
+                ITransactionManager transactionManager
          ) {
             _orchardServices = orchardServices;
             _sentRepository = sentRepository;
@@ -94,6 +96,7 @@ namespace Laser.Orchard.Mobile.Services {
             _userDeviceRecord = userDeviceRecord;
             _orchardServices.WorkContext.TryResolve<ICommunicationService>(out _communicationService);
             _queryPickerServices = queryPickerService;
+            _transactionManager = transactionManager;
         }
 
         public IList GetPushQueryResult(Int32[] ids, bool countOnly = false) {
@@ -179,6 +182,7 @@ namespace Laser.Orchard.Mobile.Services {
 
         public void Synchronize() {
             CommunicationContactPart master = _communicationService.EnsureMasterContact();
+            _transactionManager.RequireNew();
 
             // assegna un contact a ogni device
             int idmaster = master.Id;
@@ -186,10 +190,12 @@ namespace Laser.Orchard.Mobile.Services {
             foreach (PushNotificationRecord rec in notificationrecords) {
                 rec.MobileContactPartRecord_Id = EnsureContactId(rec.UUIdentifier, idmaster);
                 _pushNotificationRepository.Update(rec);
+                _transactionManager.RequireNew();
             }
             _pushNotificationRepository.Flush();
             _notifier.Add(NotifyType.Information, T("Linked {0} device To Master contact", notificationrecords.Count().ToString()));
             _myLog.WriteLog(string.Format("Linked {0} device To Master contact", notificationrecords.Count().ToString()));
+            _transactionManager.RequireNew();
 
             // elimina gli userDevice riferiti a utenti inesistenti (perché cancellati)
             UserPart user = null;
@@ -198,9 +204,11 @@ namespace Laser.Orchard.Mobile.Services {
                 user = _orchardServices.ContentManager.Get<UserPart>(udr.UserPartRecord.Id);
                 if (user == null) {
                     _userDeviceRecord.Delete(udr);
+                    _transactionManager.RequireNew();
                 }
             }
             _userDeviceRecord.Flush();
+            _transactionManager.RequireNew();
         }
 
         #region [CRUD PushNotification]

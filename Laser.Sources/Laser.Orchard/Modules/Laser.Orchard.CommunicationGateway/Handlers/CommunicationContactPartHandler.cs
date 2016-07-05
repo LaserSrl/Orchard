@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace Laser.Orchard.CommunicationGateway.Handlers {
 
-    public class CommunicationContactPartHandler : ContentHandler, IContactRelatedEventHandler {
+    public class CommunicationContactPartHandler : ContentHandler {
         public Localizer T { get; set; }
         private readonly ICommunicationService _communicationService;
         private readonly IRepository<CommunicationEmailRecord> _Emailrepository;
@@ -94,14 +94,6 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             if (item.ContentType == "User") {
                 _communicationService.UserToContact((IUser)item.As<IUser>());
             }
-        }
-
-        public void DeviceUpdated() {
-            //throw new System.NotImplementedException();
-        }
-
-        public void SmsUpdated() {
-            //throw new System.NotImplementedException();
         }
     }
 }

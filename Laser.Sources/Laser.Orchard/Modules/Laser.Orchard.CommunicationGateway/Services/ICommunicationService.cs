@@ -34,6 +34,7 @@ using System.Text;
 using Orchard.Taxonomies.Services;
 using Orchard.Core.Common.Models;
 using Orchard.Localization.Services;
+using Laser.Orchard.StartupConfig.Handlers;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
 
@@ -74,13 +75,15 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly ISessionLocator _session;
         private readonly ITaxonomyService _taxonomyService;
         private readonly ICultureManager _cultureManager;
+        private readonly IContactRelatedEventHandler _contactRelatedEventHandler;
+        private readonly ITransactionManager _transactionManager;
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
 
-        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord) {
+        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, IContactRelatedEventHandler contactRelatedEventHandler, ITransactionManager transactionManager) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
@@ -91,6 +94,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _session = session;
             _taxonomyService = taxonomyService;
             _cultureManager = cultureManager;
+            _contactRelatedEventHandler = contactRelatedEventHandler;
+            _transactionManager = transactionManager;
 
             T = NullLocalizer.Instance;
         }
@@ -174,31 +179,18 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         public void Synchronize() {
             EnsureMasterContact();
+            _transactionManager.RequireNew();
 
-            #region Import dei profili degli utenti
-
+            // allinea i contatti
             var users = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().List();
             foreach (var user in users) {
                 UserToContact(user);
+                _transactionManager.RequireNew();
             }
             _notifier.Add(NotifyType.Information, T("Syncronized {0} user's profiles", users.Count().ToString()));
 
-            #endregion Import dei profili degli utenti
-
-
-            #region Ricreo collegamento con parte mobile preesistente
-
-            var features = _moduleService.GetAvailableFeatures().ToDictionary(m => m.Descriptor.Id, m => m);
-            if (features.ContainsKey("Laser.Orchard.MobileCommunicationImport")) {
-                if (features.ContainsKey("Laser.Orchard.Mobile") && features["Laser.Orchard.Mobile"].IsEnabled) {
-                    if (features["Laser.Orchard.MobileCommunicationImport"].IsEnabled) {
-                        _moduleService.DisableFeatures(new string[] { "Laser.Orchard.MobileCommunicationImport" });
-                    }
-                    _moduleService.EnableFeatures(new string[] { "Laser.Orchard.MobileCommunicationImport" }, true);
-                }
-            }
-
-            #endregion Ricreo collegamento con parte mobile preesistente
+            // triggera l'allineamento dei device
+            _contactRelatedEventHandler.Synchronize();
 
             // aggiungo 200.000 record
             //for (int i = 0; i < 100000; i++) {
@@ -373,6 +365,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             var contacts = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == userPart.Id).List();
             foreach (var contact in contacts) {
                 contact.UserIdentifier = 0;
+                contact.As<CommonPart>().Owner = _orchardServices.WorkContext.CurrentUser;
+                contact.As<CommonPart>().ModifiedUtc = DateTime.UtcNow;
             }
         }
 
