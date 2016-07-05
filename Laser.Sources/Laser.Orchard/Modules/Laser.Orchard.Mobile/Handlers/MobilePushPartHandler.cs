@@ -23,6 +23,7 @@ namespace Laser.Orchard.Mobile.Handlers   {
             OnPublished<MobilePushPart>((context, part) => {
                 try {
                     _taskManager.CreateTask("Laser.Orchard.PushNotification.Task", DateTime.UtcNow.AddMinutes(1), part.ContentItem);
+                    part.PushSent = true;
                 }
                 catch (Exception ex) {
                     Logger.Error(ex, "Error starting asynchronous thread to send push notifications.");

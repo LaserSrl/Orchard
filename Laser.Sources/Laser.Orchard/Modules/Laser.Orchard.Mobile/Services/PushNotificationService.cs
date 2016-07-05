@@ -189,6 +189,7 @@ namespace Laser.Orchard.Mobile.Services {
             }
             _pushNotificationRepository.Flush();
             _notifier.Add(NotifyType.Information, T("Linked {0} device To Master contact", notificationrecords.Count().ToString()));
+            _myLog.WriteLog(string.Format("Linked {0} device To Master contact", notificationrecords.Count().ToString()));
 
             // elimina gli userDevice riferiti a utenti inesistenti (perché cancellati)
             UserPart user = null;
@@ -354,6 +355,7 @@ namespace Laser.Orchard.Mobile.Services {
                 relatedContentItem = _orchardServices.ContentManager.Get(idContentRelated);
                 if (!relatedContentItem.IsPublished()) {
                     _notifier.Information(T("No push will be sent, related content must be published"));
+                    _myLog.WriteLog("No push will be sent, related content must be published");
                     stopPush = true;
                 }
                 var extra = getextrainfo(idContentRelated);
@@ -438,6 +440,7 @@ namespace Laser.Orchard.Mobile.Services {
 
         public void PublishedPushEvent(ContentItem ci) {
             try {
+                _myLog.WriteLog("Iniziato invio Push del content " + ci.Id);
                 ContentItem savedCi = _orchardServices.ContentManager.Get(ci.Id);
                 MobilePushPart mpp = ci.As<MobilePushPart>();
                 if ((mpp.ToPush) && (mpp.PushSent == false)) {
@@ -462,6 +465,7 @@ namespace Laser.Orchard.Mobile.Services {
                         contentForPush = (dynamic)relatedContentItem;
                         if (!relatedContentItem.IsPublished()) {
                             _notifier.Information(T("No push will be sent, related content must be published"));
+                            _myLog.WriteLog("No push will be sent, related content must be published");
                             stopPush = true;
                         }
                     }
@@ -543,6 +547,7 @@ namespace Laser.Orchard.Mobile.Services {
                         }
                         mpp.TargetDeviceNumber = counter;
                         _notifier.Information(T("Notification sent: " + messageSent.ToString()));
+                        _myLog.WriteLog("Notification sent: " + messageSent.ToString());
                     }
                 }
                 string title = "no title";
@@ -804,6 +809,7 @@ namespace Laser.Orchard.Mobile.Services {
             }
             if (appleNotification.Payload.ToJson().Length > 255) {
                 _notifier.Information(T("Sent: message payload exceed the limit"));
+                _myLog.WriteLog("Sent: message payload exceed the limit");
                 mypush.ValidPayload = false;
             }
             return mypush;
@@ -935,6 +941,7 @@ namespace Laser.Orchard.Mobile.Services {
                         }
                     if (appleNotification.Payload.ToJson().Length > 255) {
                         _notifier.Information(T("Sent: message payload exceed the limit"));
+                        _myLog.WriteLog("Sent: message payload exceed the limit");
                     }
                     else {
                         push.QueueNotification(appleNotification);
