@@ -1,9 +1,7 @@
 ﻿Name: Laser.Orchard.CommunicationGateway
 AntiForgery: enabled
-Author: Laser Group - Frediani Lorenzo
-Website: http://orchardproject.net
+Author: Laser srl - Frediani Lorenzo
+Website: http://www.laser-group.com
 Version: 1.0
-OrchardVersion: 1.0
-Description: Description for feature Laser.Orchard.CommunicationGateway.
-Category: Social
 Dependencies: Orchard.PublishLater, Orchard.Modules, Orchard.ContentPicker, Orchard.Projections, Laser.Orchard.Queries, Orchard.Tags, Laser.Orchard.ShortLinks, Laser.Orchard.StartupConfig,Orchard.Taxonomies,Orchard.Fields,Laser.Orchard.ZoneAlternates
+Category:Messaging

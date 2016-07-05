@@ -6,4 +6,4 @@ Version: 1.8
 OrchardVersion: 1.8
 Description: This module add ability to manage external content
 Dependencies: Orchard.Tokens,Orchard.Caching,Laser.Orchard.StartupConfig,Orchard.Autoroute
-Category: Fields
+Category: Content

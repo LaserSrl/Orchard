@@ -1,6 +1,6 @@
 Name: Laser Orchard Maps
 AntiForgery: enabled
-Author: Laser s.r.l. - Hermes Sbicego
+Author: Laser srl - Hermes Sbicego
 Website: https://www.laser-group.com
 Version: 1.8
 OrchardVersion: 1.8

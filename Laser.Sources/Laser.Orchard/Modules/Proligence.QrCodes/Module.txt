@@ -7,3 +7,4 @@ OrchardVersion: 1.8
 Description: Enables attaching QR codes to content items.
 FeatureDescription: Enables attaching QR codes to content items.
 Dependencies: Orchard.Tokens, Contents
+Category: Content
