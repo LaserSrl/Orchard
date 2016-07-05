@@ -7,6 +7,6 @@ OrchardVersion: 1.8
 Description: Description for the module
 Features:
 	Laser.Orchard.ButtonToWorkflows:
-	Description: Description for feature Laser.Orchard.ButtonToWorkflows.
-	Dependencies: Laser.Orchard.StartupConfig,Orchard.Workflows,Orchard.Forms
-	Category: Content
+		Description: Description for feature Laser.Orchard.ButtonToWorkflows
+		Category: Content
+		Dependencies: Laser.Orchard.StartupConfig,Orchard.Workflows,Orchard.Forms
