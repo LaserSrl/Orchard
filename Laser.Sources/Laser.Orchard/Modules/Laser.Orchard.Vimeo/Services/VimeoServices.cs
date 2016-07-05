@@ -103,20 +103,20 @@ namespace Laser.Orchard.Vimeo.Services {
                 .WorkContext
                 .CurrentSite
                 .As<VimeoSettingsPart>();
-            settings.AccessToken = vm.AccessToken;
-            settings.AlbumName = vm.AlbumName;
-            settings.GroupName = vm.GroupName;
-            settings.ChannelName = vm.ChannelName;
+            settings.AccessToken = vm.AccessToken ?? "";
+            settings.AlbumName = vm.AlbumName ?? "";
+            settings.GroupName = vm.GroupName ?? "";
+            settings.ChannelName = vm.ChannelName ?? "";
 
-            settings.License = vm.License;
+            settings.License = vm.License ?? "";
             settings.Privacy = vm.Privacy;
-            settings.Password = vm.Password;
+            settings.Password = vm.Password ?? "";
             settings.ReviewLink = vm.ReviewLink;
-            settings.Locale = vm.Locale;
+            settings.Locale = vm.Locale ?? "";
             settings.ContentRatings = vm.ContentRatingsSafe ?
-                new string[]{"safe"}.ToList() : 
+                new string[] { "safe" }.ToList() :
                 vm.ContentRatingsUnsafe.Where(cr => cr.Value == true).Select(cr => cr.Key).ToList();
-            settings.Whitelist = vm.Whitelist.Split(new string[]{", "}, StringSplitOptions.RemoveEmptyEntries).ToList();
+            settings.Whitelist = vm.Whitelist.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
         }
 
         /// <summary>
@@ -568,13 +568,30 @@ namespace Laser.Orchard.Vimeo.Services {
                 .As<VimeoSettingsPart>();
             //The things we want to change of the video go in the request body as a JSON.
             string jsonBody = "";
-            JObject json = JObject.FromObject(settings.License);
-            json.Add(JObject.FromObject(settings.Privacy));
-            json.Add(JObject.FromObject(settings.Password));
-            json.Add(JObject.FromObject(settings.ReviewLink));
-            json.Add(JObject.FromObject(settings.Locale));
-            json.Add(JObject.FromObject(settings.ContentRatings));
-            jsonBody = json.ToString();
+            VimeoPatch patchData = new VimeoPatch {
+                name = name,
+                description = description,
+                license = settings.License,
+                privacy = settings.Privacy,
+                password = settings.Password,
+                review_link = settings.ReviewLink,
+                locale = settings.Locale,
+                content_rating = settings.ContentRatings
+            };
+            //var json = new List<JObject>();
+            //if (!string.IsNullOrWhiteSpace(settings.License))
+            //    json.Add(JObject.FromObject(settings.License));
+            //if (settings.Privacy != null)
+            //    json.Add(JObject.FromObject(settings.Privacy));
+            //if (!string.IsNullOrWhiteSpace(settings.Password))
+            //    json.Add(JObject.FromObject(settings.Password));
+            //json.Add(JObject.FromObject(settings.ReviewLink));
+            //if (!string.IsNullOrWhiteSpace(settings.Locale))
+            //    json.Add(JObject.FromObject(settings.Locale));
+            //if (settings.ContentRatings != null && settings.ContentRatings.Count > 0)
+            //    json.Add(JObject.FromObject(settings.ContentRatings));
+            //jsonBody = json.ToString();
+            var json = JsonConvert.SerializeObject(patchData);
             //We must set the request header
             // "Content-Type" to "application/json"
         }

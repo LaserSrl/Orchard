@@ -67,7 +67,8 @@
     <span class="hint">@T("Who can view the video?")</span>
     <br />
     <label for="@Html.FieldIdFor(m => m.Privacy.embed)" class="forcheckbox">@Html.DisplayNameFor(m => m.Privacy.embed)</label>
-    @Html.DropDownListFor(m => m.Privacy.embed, new SelectList(Enum.GetValues(typeof(VimeoPrivacyEmbedOptions))));
+    //@Html.DropDownListFor(m => m.Privacy.embed, new SelectList(Enum.GetValues(typeof(VimeoPrivacyEmbedOptions))));
+    @Html.DropDownListFor(m => m.Privacy.embed, VimeoPrivacyEmbedOptions.GetValues());
     @Html.TextBoxFor(m => m.Whitelist, new { placeholder = T("Comma separated domains whitelist"), @class = "large text" });
     <span class="hint">@T("Where can the video be embedded?")</span>
     <br />
@@ -80,7 +81,7 @@
     <span class="hint">@T("Can the video be added to channels, groups, or albums?")</span>
     <br />
     <label for="@Html.FieldIdFor(m => m.Privacy.comments)" class="forcheckbox">@Html.DisplayNameFor(m => m.Privacy.comments)</label>
-    @Html.DropDownListFor(m => m.Privacy.comments, new SelectList(Enum.GetValues(typeof(VimeoPrivacyCommentsOptions))));
+    @Html.DropDownListFor(m => m.Privacy.comments, new SelectList(Enum.GetValues(typeof(VimeoPrivacyCommentsOptions))));    
     <span class="hint">@T("Who can comment on the video?")</span>
     <br />
         

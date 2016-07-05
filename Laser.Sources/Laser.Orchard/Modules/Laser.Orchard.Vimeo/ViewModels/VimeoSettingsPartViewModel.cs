@@ -30,16 +30,16 @@ namespace Laser.Orchard.Vimeo.ViewModels {
                 ContentRatingsUnsafe.Add(cr.Key, false);
             }
 
-            AccessToken = part.AccessToken;
-            ChannelName = part.ChannelName;
-            GroupName = part.GroupName;
-            AlbumName = part.AlbumName;
+            AccessToken = part.AccessToken ?? "";
+            ChannelName = part.ChannelName ?? "";
+            GroupName = part.GroupName ?? "";
+            AlbumName = part.AlbumName ?? "";
 
-            License = part.License;
+            License = part.License ?? "";
             Privacy = part.Privacy;
-            Password = part.Password;
+            Password = part.Password ?? "";
             ReviewLink = part.ReviewLink;
-            Locale = part.Locale;
+            Locale = part.Locale ?? "";
             if (part.ContentRatings.Contains("safe")) {
                 ContentRatingsSafe = true;
             } else {
