@@ -18,9 +18,9 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                 return;
             }
             try {
-                Logger.Information("SynchronizeContacts task started.");
+                Logger.Error("SynchronizeContacts task started.");
                 _communicationService.Synchronize();
-                Logger.Information("SynchronizeContacts task ended.");
+                Logger.Error("SynchronizeContacts task ended.");
             }
             catch (Exception ex) {
                 Logger.Error(ex, "SynchronizeContacts task error.");

@@ -1,6 +1,6 @@
 Name: Culture Layer
 AntiForgery: enabled
-Author: Laser S.r.l.
+Author: Laser srl
 Website: http://www.laser-group.com
 Version: 1.1
 OrchardVersion: 1.8

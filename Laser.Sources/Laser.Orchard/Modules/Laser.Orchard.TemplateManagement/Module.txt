@@ -1,6 +1,6 @@
 ﻿Name: Laser Orchard Template ManagementLaser Orchard Template Email Activities
 AntiForgery: enabled
-Author:  Laser 
+Author:  Laser srl
 Website: 
 Version: 1.8
 OrchardVersion: 1.8
