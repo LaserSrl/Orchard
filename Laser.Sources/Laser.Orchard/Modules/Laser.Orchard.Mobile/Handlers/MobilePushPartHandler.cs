@@ -9,9 +9,9 @@ using System;
 
 namespace Laser.Orchard.Mobile.Handlers   {
     public class MobilePushPartHandler: ContentHandler {
-        private readonly IOrchardServices _orchardServices;
         private readonly IPushNotificationService _pushNotificationService;
         private readonly IScheduledTaskManager _taskManager;
+        private readonly IOrchardServices _orchardServices;
 
         public MobilePushPartHandler(IRepository<MobilePushPartRecord> repository, IPushNotificationService pushNotificationService, IScheduledTaskManager taskManager, IOrchardServices orchardServices) {
             Logger = NullLogger.Instance;
@@ -29,7 +29,10 @@ namespace Laser.Orchard.Mobile.Handlers   {
 
             OnPublished<MobilePushPart>((context, part) => {
                 try {
+                    if (part.PushSent == false) {
                     _taskManager.CreateTask("Laser.Orchard.PushNotification.Task", DateTime.UtcNow.AddMinutes(1), part.ContentItem);
+                        part.PushSent = true;
+                }
                 }
                 catch (Exception ex) {
                     Logger.Error(ex, "Error starting asynchronous thread to send push notifications.");
