@@ -106,5 +106,30 @@ namespace Laser.Orchard.Vimeo {
             return 5;
         }
 
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<bool>("AlwaysUploadToGroup")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<bool>("AlwaysUploadToAlbum")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<bool>("AlwaysUploadToChannel")
+                );
+
+            SchemaBuilder.AlterTable("UploadsCompleteRecord",
+                table => table
+                    .AddColumn<DateTime>("CreatedTime")
+                );
+            SchemaBuilder.AlterTable("UploadsInProgressRecord",
+                table => table
+                    .AddColumn<DateTime>("CreatedTime")
+                );
+
+            return 6;
+        }
     }
 }

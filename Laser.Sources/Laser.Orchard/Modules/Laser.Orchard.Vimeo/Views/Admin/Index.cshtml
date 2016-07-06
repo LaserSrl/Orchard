@@ -6,17 +6,17 @@
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.TextBoxFor(m => m.AccessToken, new { placeholder = T("Authorized Access Token"), @class = "text medium" })
     <span class="hint">@T("Insert your authorized Access Token. You cna find it inr your Vimeo App settings.")</span>
-    @Html.TextBoxFor(m => m.ChannelName, new { placeholder = T("Channel Name"), @class = "text medium" })
+    @Html.TextBoxFor(m => m.ChannelName, new { placeholder = T("Channel Name"), @class = "text medium" })<text > &nbsp; &nbsp;</text>
     @Html.CheckBoxFor(m => m.AlwaysUploadToChannel)
-    <label for="@Html.FieldIdFor(m => m.AlwaysUploadToChannel)" class="forcheckbox">@Html.DisplayNameFor(m => m.AlwaysUploadToChannel)</label>
+    <label for="@Html.FieldIdFor(m => m.AlwaysUploadToChannel)" class="forcheckbox">@T("Always upload to this channel.")</label>
     <span class="hint">@T("Videos will be uploaded to/ read from this channel. Leave blank if unused.")</span>
-    @Html.TextBoxFor(m => m.GroupName, new { placeholder = T("Group Name"), @class = "text medium" })
+    @Html.TextBoxFor(m => m.GroupName, new { placeholder = T("Group Name"), @class = "text medium" })<text > &nbsp; &nbsp;</text>
     @Html.CheckBoxFor(m => m.AlwaysUploadToGroup)
-    <label for="@Html.FieldIdFor(m => m.AlwaysUploadToGroup)" class="forcheckbox">@Html.DisplayNameFor(m => m.AlwaysUploadToGroup)</label>
+    <label for="@Html.FieldIdFor(m => m.AlwaysUploadToGroup)" class="forcheckbox">@T("Always upload to this group.")</label>
     <span class="hint">@T("Videos will be uploaded to/ read from this group. Leave blank if unused.")</span>
-    @Html.TextBoxFor(m => m.AlbumName, new { placeholder = T("Album Name"), @class = "text medium" })
+    @Html.TextBoxFor(m => m.AlbumName, new { placeholder = T("Album Name"), @class = "text medium" })<text > &nbsp; &nbsp;</text>
     @Html.CheckBoxFor(m => m.AlwaysUploadToAlbum)
-    <label for="@Html.FieldIdFor(m => m.AlwaysUploadToAlbum)" class="forcheckbox">@Html.DisplayNameFor(m => m.AlwaysUploadToAlbum)</label>
+    <label for="@Html.FieldIdFor(m => m.AlwaysUploadToAlbum)" class="forcheckbox">@T("Always upload to this album.")</label>
     <span class="hint">@T("Videos will be uploaded to/ read from this album. Leave blank if unused.")</span>
     
     <legend>@T("Default video settings")</legend>

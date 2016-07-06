@@ -264,6 +264,7 @@ namespace Laser.Orchard.Vimeo.Services {
             } catch (Exception ex) {
                 ret = false;
             }
+
             return ret;
         }
         /// <summary>
@@ -483,7 +484,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 );
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
-                    if (resp.StatusCode == HttpStatusCode.OK || resp.StatusCode==HttpStatusCode.Created) {
+                    if (resp.StatusCode == HttpStatusCode.OK || resp.StatusCode == HttpStatusCode.Created) {
                         return "OK";
                     }
                 }
@@ -566,6 +567,7 @@ namespace Laser.Orchard.Vimeo.Services {
             //Add the file we want to upload to it, as a "temporary" upload
             UploadsInProgressRecord entity = new UploadsInProgressRecord();
             entity.UploadSize = fileSize;
+            entity.CreatedTime = DateTime.UtcNow;
             _repositoryUploadsInProgress.Create(entity);
             int recordId = entity.Id;
 
@@ -718,6 +720,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         var ucr = new UploadsCompleteRecord();
                         ucr.Uri = resp.Headers["Location"];
                         ucr.ProgressId = entity.Id;
+                        ucr.CreatedTime = DateTime.UtcNow;
                         _repositoryUploadsComplete.Create(ucr);
                         //delete the entry from uploads in progress
                         _repositoryUploadsInProgress.Delete(entity);
@@ -783,6 +786,104 @@ namespace Laser.Orchard.Vimeo.Services {
                 }
             }
             return "Record is null";
+        }
+
+        /// <summary>
+        /// Get from Vimeo the Id corresponding to the group set in the settings.
+        /// </summary>
+        /// <returns>The Id as a <type>string</type>, or null if the group cannot be found.</returns>
+        public string GetGroupId() {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
+            HttpWebRequest wr = VimeoCreateRequest(
+                aToken: settings.AccessToken,
+                endpoint: VimeoEndpoints.MyGroups,
+                method: "GET",
+                qString: "?query=" + settings.GroupName + "&fields=name,uri"
+                );
+            try {
+                bool morePages = false;
+                do {
+                    using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        if (resp.StatusCode == HttpStatusCode.OK) {
+                            using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
+                                string vimeoJson = reader.ReadToEnd();
+                                //The Json contains what we got back from Vimeo
+                                //In general, it has paging information and data
+                                //The paging information tells us how many results are there in total, and how many we got from this request.
+                                //we use this information to decide whether we have to fetch more stuff from the API.
+                                VimeoPager pager = JsonConvert.DeserializeObject<VimeoPager>(vimeoJson);
+                                if (pager.total > 0) {
+                                    //check the data to make sure that the name corresponds
+                                    JObject json = JObject.Parse(vimeoJson);
+                                    IList<JToken> res = json["data"].Children().ToList();
+                                    foreach (JToken result in res) {
+                                        VimeoGroup gr = JsonConvert.DeserializeObject<VimeoGroup>(result.ToString());
+                                        if (gr.name == settings.GroupName) {
+                                            //extract the Id from the uri
+                                            return gr.uri.Substring(gr.uri.IndexOf("/", 1) + 1);
+                                        }
+                                    }
+                                    if (pager.total > pager.per_page * pager.page) {
+                                        morePages = true;
+                                        //generate a new request
+                                        string pageQuery = "page=" + (pager.page + 1).ToString();
+                                        wr = VimeoCreateRequest(
+                                            aToken: settings.AccessToken,
+                                            endpoint: VimeoEndpoints.MyGroups,
+                                            method: "GET",
+                                            qString: "?query=" + settings.GroupName + "&fields=name,uri&" + pageQuery
+                                            );
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } while (morePages);
+            } catch (Exception ex) {
+
+            }
+
+            return null;
+        }
+
+        public string AddVideoToGroup(int ucId) {
+            string groupId = GetGroupId();
+            if (!string.IsNullOrWhiteSpace(groupId)) {
+                UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+                if (ucr != null) {
+                    var settings = _orchardServices
+                        .WorkContext
+                        .CurrentSite
+                        .As<VimeoSettingsPart>();
+                    HttpWebRequest wr = VimeoCreateRequest(
+                        aToken: settings.AccessToken,
+                        endpoint: VimeoEndpoints.Groups + "/" + groupId + ucr.Uri,
+                        method: "PUT"
+                        );
+                    try {
+                        using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                            if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
+                                return "OK";
+                            }
+                        }
+                    } catch (Exception ex) {
+                        HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                        if (resp != null) {
+                            if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                                return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                            }
+                        }
+                    }
+                } else {
+                    return "Cannot identify video";
+                }
+            } else {
+                return "Cannot access group";
+            }
+            return "Unknown error";
         }
 
         //TODO: CODE FOR TASKS
