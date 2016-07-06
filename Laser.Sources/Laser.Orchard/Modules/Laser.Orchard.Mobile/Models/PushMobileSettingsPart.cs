@@ -53,6 +53,10 @@ namespace Laser.Orchard.Mobile.Models {
             get { return Record.AndroidApiKeyDevelopment; }
             set { Record.AndroidApiKeyDevelopment = value; }
         }
+        public string AndroidPushServiceUrl {
+            get { return Record.AndroidPushServiceUrl; }
+            set { Record.AndroidPushServiceUrl = value; }
+        }
     }
 
     public class PushMobileSettingsPartRecord : ContentPartRecord {
@@ -67,10 +71,8 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual string WindowsAppSecurityIdentifier { get; set; }
         public virtual bool ShowTestOptions { get; set; }
         public virtual string AndroidApiKeyDevelopment { get; set; }
+        public virtual string AndroidPushServiceUrl { get; set; }
         public virtual string TaxonomyName { get; set; }
-        
-        
-        
     }
 }
 

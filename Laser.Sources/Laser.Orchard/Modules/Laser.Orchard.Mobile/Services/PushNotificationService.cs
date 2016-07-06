@@ -815,6 +815,10 @@ namespace Laser.Orchard.Mobile.Services {
             else
                 setting = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidApiKeyDevelopment;
             var config = new GcmConfiguration(setting);
+            var serviceUrl = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidPushServiceUrl;
+            if (string.IsNullOrWhiteSpace(serviceUrl) == false) {
+                config.OverrideUrl(serviceUrl);
+            }
             var push = new GcmServiceBroker(config);
             push.OnNotificationSucceeded += (notification) => {
                 NotificationSent(notification);
