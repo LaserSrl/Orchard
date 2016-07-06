@@ -20,6 +20,10 @@ namespace Laser.Orchard.Vimeo.ViewModels {
         public Dictionary<string, bool> ContentRatingsUnsafe { get; set; }
         public string Whitelist { get; set; }
 
+        public bool AlwaysUploadToGroup { get; set; }
+        public bool AlwaysUploadToAlbum { get; set; }
+        public bool AlwaysUploadToChannel { get; set; }
+
         public VimeoSettingsPartViewModel() {
 
         }
@@ -50,6 +54,10 @@ namespace Laser.Orchard.Vimeo.ViewModels {
                 }
             }
             Whitelist = string.Join(", ", part.Whitelist);
+
+            AlwaysUploadToGroup = part.AlwaysUploadToGroup;
+            AlwaysUploadToAlbum = part.AlwaysUploadToAlbum;
+            AlwaysUploadToChannel = part.AlwaysUploadToChannel;
         }
 
         public string CensoredAccessToken {

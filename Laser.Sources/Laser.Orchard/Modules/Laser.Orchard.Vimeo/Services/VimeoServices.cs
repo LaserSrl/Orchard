@@ -5,7 +5,9 @@ using Orchard;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
+using Orchard.UI.Notify;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -13,6 +15,7 @@ using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Orchard.Tasks.Scheduling;
+using Orchard.Localization;
 
 namespace Laser.Orchard.Vimeo.Services {
     public class VimeoServices : IVimeoServices {
@@ -22,6 +25,8 @@ namespace Laser.Orchard.Vimeo.Services {
         private readonly IRepository<UploadsCompleteRecord> _repositoryUploadsComplete;
         private readonly IOrchardServices _orchardServices;
         private readonly IScheduledTaskManager _taskManager;
+
+        public Localizer T { get; set; }
 
         public VimeoServices(IRepository<VimeoSettingsPartRecord> repositorySettings,
             IRepository<UploadsInProgressRecord> repositoryUploadsInProgress,
@@ -34,6 +39,8 @@ namespace Laser.Orchard.Vimeo.Services {
             _repositoryUploadsComplete = repositoryUploadsComplete;
             _orchardServices = orchardServices;
             _taskManager = taskManager;
+
+            T = NullLocalizer.Instance;
         }
 
         /// <summary>
@@ -108,6 +115,50 @@ namespace Laser.Orchard.Vimeo.Services {
             settings.GroupName = vm.GroupName ?? "";
             settings.ChannelName = vm.ChannelName ?? "";
 
+            //verify group, channel and album.
+            //if they do not exist, try to create them.
+            if (TokenIsValid(settings.AccessToken)) {
+                //group
+                if (!string.IsNullOrWhiteSpace(settings.GroupName)) {
+                    if (GroupIsValid(settings.GroupName, settings.AccessToken)) {
+                        _orchardServices.Notifier.Information(T("Group Name valid"));
+                    } else {
+                        string res = CreateNewGroup(settings.AccessToken, settings.GroupName);
+                        if (res == "OK") {
+                            _orchardServices.Notifier.Information(T("Group created"));
+                        } else {
+                            _orchardServices.Notifier.Error(T("Failed to create group. Internal message: {0}", res));
+                        }
+                    }
+                }
+                //channel
+                if (!string.IsNullOrWhiteSpace(settings.ChannelName)) {
+                    if (ChannelIsValid(settings.ChannelName, settings.AccessToken)) {
+                        _orchardServices.Notifier.Information(T("Channel Name valid"));
+                    } else {
+                        string res = CreateNewChannel(settings.AccessToken, settings.ChannelName);
+                        if (res == "OK") {
+                            _orchardServices.Notifier.Information(T("Channel created"));
+                        } else {
+                            _orchardServices.Notifier.Error(T("Failed to create channel. Internal message: {0}", res));
+                        }
+                    }
+                }
+                //album
+                if (!string.IsNullOrWhiteSpace(settings.AlbumName)) {
+                    if (AlbumIsValid(settings.AlbumName, settings.AccessToken)) {
+                        _orchardServices.Notifier.Information(T("Album Name valid"));
+                    } else {
+                        string res = CreateNewAlbum(settings.AccessToken, settings.AlbumName);
+                        if (res == "OK") {
+                            _orchardServices.Notifier.Information(T("Album created"));
+                        } else {
+                            _orchardServices.Notifier.Error(T("Failed to create album. Internal message: {0}", res));
+                        }
+                    }
+                }
+            }
+
             settings.License = vm.License ?? "";
             settings.Privacy = vm.Privacy;
             settings.Password = vm.Password ?? "";
@@ -117,6 +168,10 @@ namespace Laser.Orchard.Vimeo.Services {
                 new string[] { "safe" }.ToList() :
                 vm.ContentRatingsUnsafe.Where(cr => cr.Value == true).Select(cr => cr.Key).ToList();
             settings.Whitelist = vm.Whitelist.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            settings.AlwaysUploadToGroup = vm.AlwaysUploadToGroup;
+            settings.AlwaysUploadToAlbum = vm.AlwaysUploadToAlbum;
+            settings.AlwaysUploadToChannel = vm.AlwaysUploadToChannel;
         }
 
         /// <summary>
@@ -343,6 +398,109 @@ namespace Laser.Orchard.Vimeo.Services {
         }
 
         /// <summary>
+        /// Make the request to Vimeo to create a new Group. Since this can be called while updating the settings, 
+        /// we have to pass Access Token and Group Name directly, rather than read them from settings.
+        /// </summary>
+        /// <param name="aToken">The access Token</param>
+        /// <param name="gName">The name for the group</param>
+        /// <param name="gDesc">A description for the group</param>
+        /// <returns>A <type>string</type> with the response received.</returns>
+        public string CreateNewGroup(string aToken, string gName, string gDesc = "") {
+            HttpWebRequest wr = VimeoCreateRequest(
+                aToken: aToken,
+                endpoint: VimeoEndpoints.Groups,
+                method: "POST",
+                qString: "?name=" + gName + "&description=" + (string.IsNullOrWhiteSpace(gDesc) ? gName : gDesc)
+                );
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        return "OK";
+                    }
+                }
+            } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    if (resp.StatusCode == HttpStatusCode.BadRequest) {
+                        return "Bad Request: on of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    } else if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                        return "Access Denied: user is not allowed to create a Group. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    }
+                }
+            }
+            return "Unknown error";
+        }
+        /// <summary>
+        /// Make the request to Vimeo to create a new Channel. Since this can be called while updating the settings, 
+        /// we have to pass Access Token and Channel Name directly, rather than read them from settings.
+        /// </summary>
+        /// <param name="aToken">The access Token</param>
+        /// <param name="cName">The name for the Channel</param>
+        /// <param name="cDesc">A description for the Channel</param>
+        /// <param name="cPrivacy">The privacy level for the Channel (defaults at user only)</param>
+        /// <returns>A <type>string</type> with the response received.</returns>
+        public string CreateNewChannel(string aToken, string cName, string cDesc = "", string cPrivacy = "user") {
+            if (cPrivacy != "user" && cPrivacy != "anybody")
+                cPrivacy = "user";
+            HttpWebRequest wr = VimeoCreateRequest(
+                aToken: aToken,
+                endpoint: VimeoEndpoints.Channels,
+                method: "POST",
+                qString: "?name=" + cName + "&description=" + (string.IsNullOrWhiteSpace(cDesc) ? cName : cDesc)
+                );
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        return "OK";
+                    }
+                }
+            } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    if (resp.StatusCode == HttpStatusCode.BadRequest) {
+                        return "Bad Request: on of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    } else if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                        return "Access Denied: user is not allowed to create a channel. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    }
+                }
+            }
+            return "Unknown error";
+        }
+        /// <summary>
+        /// Make the request to Vimeo to create a new album. Since this can be called while updating the settings, 
+        /// we have to pass Access Token and Album Name directly, rather than read them from settings.
+        /// </summary>
+        /// <param name="aToken">The access Token</param>
+        /// <param name="aName">The name for the album</param>
+        /// <param name="aDesc">A description for the album</param>
+        /// <returns>A <type>string</type> with the response received.</returns>
+        public string CreateNewAlbum(string aToken, string aName, string aDesc = "") {
+            HttpWebRequest wr = VimeoCreateRequest(
+                aToken: aToken,
+                endpoint: VimeoEndpoints.MyAlbums,
+                method: "POST",
+                qString: "?name=" + aName + "&description=" + (string.IsNullOrWhiteSpace(aDesc) ? aName : aDesc)
+                );
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.OK || resp.StatusCode==HttpStatusCode.Created) {
+                        return "OK";
+                    }
+                }
+            } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    if (resp.StatusCode == HttpStatusCode.BadRequest) {
+                        return "Bad Request: on of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    } else if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                        return "Access Denied: user is not allowed to create an album. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    }
+                }
+            }
+            return "Unknown error";
+        }
+
+        /// <summary>
         /// Check the quota available for upload
         /// </summary>
         /// <returns>A <type>VimeoUploadQuota</type> object containing upload quota information. Returns <value>null</value> in case of error.</returns>
@@ -454,22 +612,33 @@ namespace Laser.Orchard.Vimeo.Services {
             return uploadUrl;
         }
 
+        /// <summary>
+        /// This method verifies in our records to check the state of an upload.
+        /// </summary>
+        /// <param name="uploadId">The Id of the upload we want to check</param>
+        /// <returns>A value describing the state of the upload.</returns>
         public VerifyUploadResults VerifyUpload(int uploadId) {
-            return VerifyUpload(_repositoryUploadsInProgress
-                .Get(uploadId));
-        }
-
-        public VerifyUploadResults VerifyUpload(UploadsInProgressRecord entity) {
+            UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(uploadId);
             if (entity == null) {
                 //could not find and Upload in progress with the given Id
                 //Chek to see if the uplaod is complete
-                UploadsCompleteRecord ucr = GetByProgressId(entity.Id);
+                UploadsCompleteRecord ucr = GetByProgressId(uploadId);
                 if (ucr == null) {
                     //no, the upload actually never existed
                     return VerifyUploadResults.NeverExisted;
                 }
                 return VerifyUploadResults.CompletedAlready;
             }
+            return VerifyUpload(entity);
+        }
+
+        /// <summary>
+        /// This method verifies in our records to check the state of an upload.
+        /// </summary>
+        /// <param name="uploadId">The record corresponding to the upload</param>
+        /// <returns>A value describing the state of the upload.</returns>
+        public VerifyUploadResults VerifyUpload(UploadsInProgressRecord entity) {
+
             HttpWebRequest wr = VimeoCreateRequest(
                     endpoint: entity.UploadLinkSecure,
                     method: WebRequestMethods.Http.Put
@@ -561,13 +730,19 @@ namespace Laser.Orchard.Vimeo.Services {
             return -1;
         }
 
-        public void PatchVideo(int ucId, string name = "", string description = "") {
+        /// <summary>
+        /// This method patches the information about a video on the vimeo servers.
+        /// </summary>
+        /// <param name="ucId">The Id of the COmplete upload we want to patch</param>
+        /// <param name="name">The title we want to assign to the video</param>
+        /// <param name="description">the description for the video</param>
+        /// <returns>A <type>string</type> that contains the response to the patch request.</returns>
+        public string PatchVideo(int ucId, string name = "", string description = "") {
             var settings = _orchardServices
                 .WorkContext
                 .CurrentSite
                 .As<VimeoSettingsPart>();
             //The things we want to change of the video go in the request body as a JSON.
-            string jsonBody = "";
             VimeoPatch patchData = new VimeoPatch {
                 name = name,
                 description = description,
@@ -578,25 +753,39 @@ namespace Laser.Orchard.Vimeo.Services {
                 locale = settings.Locale,
                 content_rating = settings.ContentRatings
             };
-            //var json = new List<JObject>();
-            //if (!string.IsNullOrWhiteSpace(settings.License))
-            //    json.Add(JObject.FromObject(settings.License));
-            //if (settings.Privacy != null)
-            //    json.Add(JObject.FromObject(settings.Privacy));
-            //if (!string.IsNullOrWhiteSpace(settings.Password))
-            //    json.Add(JObject.FromObject(settings.Password));
-            //json.Add(JObject.FromObject(settings.ReviewLink));
-            //if (!string.IsNullOrWhiteSpace(settings.Locale))
-            //    json.Add(JObject.FromObject(settings.Locale));
-            //if (settings.ContentRatings != null && settings.ContentRatings.Count > 0)
-            //    json.Add(JObject.FromObject(settings.ContentRatings));
-            //jsonBody = json.ToString();
             var json = JsonConvert.SerializeObject(patchData);
             //We must set the request header
             // "Content-Type" to "application/json"
+            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+            if (ucr != null) {
+                HttpWebRequest wr = VimeoCreateRequest(
+                    aToken: settings.AccessToken,
+                    endpoint: VimeoEndpoints.APIEntry + ucr.Uri,
+                    method: "PATCH"
+                    );
+                wr.ContentType = "application/json";
+                using (StreamWriter bWriter = new StreamWriter(wr.GetRequestStream())) {
+                    bWriter.Write(json);
+                }
+                try {
+                    using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                        if (resp.StatusCode == HttpStatusCode.OK) {
+                            return "OK";
+                        }
+                    }
+                } catch (Exception ex) {
+                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                    //if some parameter is wrong in the patch, we get status code 400 Bad Request
+                    if (resp != null && resp.StatusCode == HttpStatusCode.BadRequest) {
+                        return new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    }
+                    return resp.StatusCode.ToString() + " " + resp.StatusDescription;
+                }
+            }
+            return "Record is null";
         }
 
-        //CODE FOR TASKS
+        //TODO: CODE FOR TASKS
         public void VerifyAllUploads() {
             foreach (var uip in _repositoryUploadsInProgress.Table.ToList()) {
                 switch (VerifyUpload(uip)) {

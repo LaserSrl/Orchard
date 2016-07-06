@@ -7,6 +7,8 @@
     @Html.TextBoxFor(m => m.AccessToken, new { placeholder = T("Authorized Access Token"), @class = "text medium" })
     <span class="hint">@T("Insert your authorized Access Token. You cna find it inr your Vimeo App settings.")</span>
     @Html.TextBoxFor(m => m.ChannelName, new { placeholder = T("Channel Name"), @class = "text medium" })
+    @Html.CheckBoxFor(m => m.AlwaysUploadToChannel)
+    <label for="@Html.FieldIdFor(m => m.AlwaysUploadToChannel)" class="forcheckbox">@Html.DisplayNameFor(m => m.AlwaysUploadToChannel)</label>
     <span class="hint">@T("Videos will be uploaded to/ read from this channel. Leave blank if unused.")</span>
     @Html.TextBoxFor(m => m.GroupName, new { placeholder = T("Group Name"), @class = "text medium" })
     <span class="hint">@T("Videos will be uploaded to/ read from this group. Leave blank if unused.")</span>

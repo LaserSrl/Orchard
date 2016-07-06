@@ -33,7 +33,7 @@ namespace Laser.Orchard.Vimeo.Services {
         string GenerateUploadTicket(int uploadId);
         VerifyUploadResults VerifyUpload(int uploadId);
         int TerminateUpload(int uploadId);
-        void PatchVideo(int ucId, string name = "", string description = "");
+        string PatchVideo(int ucId, string name = "", string description = "");
     }
 
 }

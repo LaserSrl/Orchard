@@ -49,8 +49,15 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     //Make the DELETE call to terminate the upload: this gives us the video URI
                     int ucId = _vimeoServices.TerminateUpload(uploadId);
                     if (ucId > 0) {
-                        //Make the PATcH call to update the video settings (privacy and so on)
-                        _vimeoServices.PatchVideo(ucId, "birra", "papppa");
+                        //Make the PATCH call to update the video settings (privacy and so on)
+                        string res = _vimeoServices.PatchVideo(ucId);
+                        if (res == "OK") {
+
+                        } else if (res == "Record is null") {
+
+                        } else {
+                            //malformedrequest
+                        }
                     }
                     break;
                 case VerifyUploadResults.Incomplete:

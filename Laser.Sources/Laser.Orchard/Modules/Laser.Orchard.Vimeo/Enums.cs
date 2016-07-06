@@ -11,6 +11,11 @@ namespace Laser.Orchard.Vimeo {
     public enum VimeoPrivacyCommentsOptions { anybody, nobody, contacts }
     //public enum VimeoPrivacyEmbedOptions { _public, _private, _whitelist }
 
+    /// <summary>
+    /// Using static objects rather than an enum for this because the values we want (public and private) are
+    /// also keywords, and we cannot use them directly in an enum. An alternative to this would be writing a
+    /// class with an operator to "translate" enum values.
+    /// </summary>
     public sealed class VimeoPrivacyEmbedOptions {
         private readonly string name;
 

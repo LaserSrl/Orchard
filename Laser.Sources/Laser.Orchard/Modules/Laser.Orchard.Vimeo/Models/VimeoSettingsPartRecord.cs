@@ -22,5 +22,9 @@ namespace Laser.Orchard.Vimeo.Models {
         //  unrated,Not Yet Rated
         public virtual string Whitelist { get; set; } //JSON array of domains where video embedding is enabled
         //TODO: Embed settings
+
+        public virtual bool AlwaysUploadToGroup { get; set; }
+        public virtual bool AlwaysUploadToAlbum { get; set; }
+        public virtual bool AlwaysUploadToChannel { get; set; }
     }
 }

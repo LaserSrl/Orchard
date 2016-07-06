@@ -72,5 +72,17 @@ namespace Laser.Orchard.Vimeo.Models {
             }
         }
 
+        public bool AlwaysUploadToGroup {
+            get { return Record.AlwaysUploadToGroup; }
+            set { Record.AlwaysUploadToGroup = value; }
+        }
+        public bool AlwaysUploadToAlbum {
+            get { return Record.AlwaysUploadToAlbum; }
+            set { Record.AlwaysUploadToAlbum = value; }
+        }
+        public bool AlwaysUploadToChannel {
+            get { return Record.AlwaysUploadToChannel; }
+            set { Record.AlwaysUploadToChannel = value; }
+        }
     }
 }
