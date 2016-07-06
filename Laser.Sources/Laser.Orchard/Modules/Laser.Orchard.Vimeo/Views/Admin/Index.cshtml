@@ -11,8 +11,12 @@
     <label for="@Html.FieldIdFor(m => m.AlwaysUploadToChannel)" class="forcheckbox">@Html.DisplayNameFor(m => m.AlwaysUploadToChannel)</label>
     <span class="hint">@T("Videos will be uploaded to/ read from this channel. Leave blank if unused.")</span>
     @Html.TextBoxFor(m => m.GroupName, new { placeholder = T("Group Name"), @class = "text medium" })
+    @Html.CheckBoxFor(m => m.AlwaysUploadToGroup)
+    <label for="@Html.FieldIdFor(m => m.AlwaysUploadToGroup)" class="forcheckbox">@Html.DisplayNameFor(m => m.AlwaysUploadToGroup)</label>
     <span class="hint">@T("Videos will be uploaded to/ read from this group. Leave blank if unused.")</span>
     @Html.TextBoxFor(m => m.AlbumName, new { placeholder = T("Album Name"), @class = "text medium" })
+    @Html.CheckBoxFor(m => m.AlwaysUploadToAlbum)
+    <label for="@Html.FieldIdFor(m => m.AlwaysUploadToAlbum)" class="forcheckbox">@Html.DisplayNameFor(m => m.AlwaysUploadToAlbum)</label>
     <span class="hint">@T("Videos will be uploaded to/ read from this album. Leave blank if unused.")</span>
     
     <legend>@T("Default video settings")</legend>
