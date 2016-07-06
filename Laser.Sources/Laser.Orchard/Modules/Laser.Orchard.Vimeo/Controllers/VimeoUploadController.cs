@@ -50,14 +50,18 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     int ucId = _vimeoServices.TerminateUpload(uploadId);
                     if (ucId > 0) {
                         //Make the PATCH call to update the video settings (privacy and so on)
-                        string res = _vimeoServices.PatchVideo(ucId);
-                        if (res == "OK") {
+                        string resultsPatch = _vimeoServices.PatchVideo(ucId);
+                        if (resultsPatch == "OK") {
 
-                        } else if (res == "Record is null") {
+                        } else if (resultsPatch == "Record is null") {
 
                         } else {
                             //malformedrequest
                         }
+                        string resultsAddGroup = _vimeoServices.TryAddVideoToGroup(ucId);
+                        string resultsAddChannel = _vimeoServices.TryAddVideoToChannel(ucId);
+                        string resultsAddAlbum = _vimeoServices.TryAddVideoToAlbum(ucId);
+                        return Content(JsonConvert.SerializeObject(new { resultsPatch, resultsAddGroup, resultsAddChannel, resultsAddAlbum }));
                     }
                     break;
                 case VerifyUploadResults.Incomplete:

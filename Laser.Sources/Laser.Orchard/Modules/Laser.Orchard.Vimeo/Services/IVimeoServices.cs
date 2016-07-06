@@ -34,6 +34,9 @@ namespace Laser.Orchard.Vimeo.Services {
         VerifyUploadResults VerifyUpload(int uploadId);
         int TerminateUpload(int uploadId);
         string PatchVideo(int ucId, string name = "", string description = "");
+        string TryAddVideoToGroup(int ucId);
+        string TryAddVideoToChannel(int ucId);
+        string TryAddVideoToAlbum(int ucId);
     }
 
 }

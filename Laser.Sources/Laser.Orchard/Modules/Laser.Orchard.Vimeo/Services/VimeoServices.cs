@@ -115,6 +115,10 @@ namespace Laser.Orchard.Vimeo.Services {
             settings.GroupName = vm.GroupName ?? "";
             settings.ChannelName = vm.ChannelName ?? "";
 
+            settings.AlwaysUploadToGroup = vm.AlwaysUploadToGroup;
+            settings.AlwaysUploadToAlbum = vm.AlwaysUploadToAlbum;
+            settings.AlwaysUploadToChannel = vm.AlwaysUploadToChannel;
+
             //verify group, channel and album.
             //if they do not exist, try to create them.
             if (TokenIsValid(settings.AccessToken)) {
@@ -128,6 +132,8 @@ namespace Laser.Orchard.Vimeo.Services {
                             _orchardServices.Notifier.Information(T("Group created"));
                         } else {
                             _orchardServices.Notifier.Error(T("Failed to create group. Internal message: {0}", res));
+                            settings.AlwaysUploadToGroup = false;
+
                         }
                     }
                 }
@@ -141,6 +147,7 @@ namespace Laser.Orchard.Vimeo.Services {
                             _orchardServices.Notifier.Information(T("Channel created"));
                         } else {
                             _orchardServices.Notifier.Error(T("Failed to create channel. Internal message: {0}", res));
+                            settings.AlwaysUploadToChannel = false;
                         }
                     }
                 }
@@ -154,6 +161,7 @@ namespace Laser.Orchard.Vimeo.Services {
                             _orchardServices.Notifier.Information(T("Album created"));
                         } else {
                             _orchardServices.Notifier.Error(T("Failed to create album. Internal message: {0}", res));
+                            settings.AlwaysUploadToAlbum = false;
                         }
                     }
                 }
@@ -169,9 +177,6 @@ namespace Laser.Orchard.Vimeo.Services {
                 vm.ContentRatingsUnsafe.Where(cr => cr.Value == true).Select(cr => cr.Key).ToList();
             settings.Whitelist = vm.Whitelist.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-            settings.AlwaysUploadToGroup = vm.AlwaysUploadToGroup;
-            settings.AlwaysUploadToAlbum = vm.AlwaysUploadToAlbum;
-            settings.AlwaysUploadToChannel = vm.AlwaysUploadToChannel;
         }
 
         /// <summary>
@@ -747,8 +752,8 @@ namespace Laser.Orchard.Vimeo.Services {
                 .As<VimeoSettingsPart>();
             //The things we want to change of the video go in the request body as a JSON.
             VimeoPatch patchData = new VimeoPatch {
-                name = name,
-                description = description,
+                name = string.IsNullOrWhiteSpace(name)?"title":name,
+                description = string.IsNullOrWhiteSpace(description) ? "description" : description,
                 license = settings.License,
                 privacy = settings.Privacy,
                 password = settings.Password,
@@ -823,7 +828,7 @@ namespace Laser.Orchard.Vimeo.Services {
                                         VimeoGroup gr = JsonConvert.DeserializeObject<VimeoGroup>(result.ToString());
                                         if (gr.name == settings.GroupName) {
                                             //extract the Id from the uri
-                                            return gr.uri.Substring(gr.uri.IndexOf("/", 1) + 1);
+                                            return gr.uri.Substring(gr.uri.LastIndexOf("/") + 1);
                                         }
                                     }
                                     if (pager.total > pager.per_page * pager.page) {
@@ -883,7 +888,7 @@ namespace Laser.Orchard.Vimeo.Services {
                                         VimeoChannel ch = JsonConvert.DeserializeObject<VimeoChannel>(result.ToString());
                                         if (ch.name == settings.ChannelName) {
                                             //extract the id from the uri
-                                            return ch.uri.Substring(ch.uri.IndexOf("/", 1) + 1);
+                                            return ch.uri.Substring(ch.uri.LastIndexOf("/") + 1);
                                         }
                                     }
                                     if (pager.total > pager.per_page * pager.page) {
@@ -903,7 +908,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 } while (morePages);
             } catch (Exception ex) {
-                
+
             }
 
             return null;
@@ -941,8 +946,8 @@ namespace Laser.Orchard.Vimeo.Services {
                                     IList<JToken> res = json["data"].Children().ToList();
                                     foreach (JToken result in res) {
                                         VimeoAlbum al = JsonConvert.DeserializeObject<VimeoAlbum>(result.ToString());
-                                        if(al.name==settings.AlbumName){
-                                            return al.uri.Substring(al.uri.IndexOf("/", 1) + 1);
+                                        if (al.name == settings.AlbumName) {
+                                            return al.uri.Substring(al.uri.LastIndexOf("/") + 1);
                                         }
                                     }
                                     if (pager.total > pager.per_page * pager.page) {
@@ -962,12 +967,27 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 } while (morePages);
             } catch (Exception ex) {
-                
+
             }
 
             return null;
         }
 
+        /// <summary>
+        /// If we set things to automatically add videos to a group, it does so.
+        /// </summary>
+        /// <param name="ucId">The Id of a completed upload</param>
+        /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        public string TryAddVideoToGroup(int ucId) {
+            var settings = _orchardServices
+                        .WorkContext
+                        .CurrentSite
+                        .As<VimeoSettingsPart>();
+            if (settings.AlwaysUploadToGroup) {
+                return AddVideoToGroup(ucId);
+            }
+            return "Did not have to add.";
+        }
         /// <summary>
         /// Add the video corresponding to the Completed Upload whose id is passed to the group stored in the settings
         /// </summary>
@@ -1008,6 +1028,21 @@ namespace Laser.Orchard.Vimeo.Services {
                 return "Cannot access group";
             }
             return "Unknown error";
+        }
+        /// <summary>
+        /// If we set things to automatically add videos to a channel, it does so.
+        /// </summary>
+        /// <param name="ucId">The Id of a completed upload</param>
+        /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        public string TryAddVideoToChannel(int ucId) {
+            var settings = _orchardServices
+                        .WorkContext
+                        .CurrentSite
+                        .As<VimeoSettingsPart>();
+            if (settings.AlwaysUploadToChannel) {
+                return AddVideoToChannel(ucId);
+            }
+            return "Did not have to add.";
         }
         /// <summary>
         /// Add the video corresponding to the Completed Upload whose id is passed to the channel stored in the settings
@@ -1051,6 +1086,21 @@ namespace Laser.Orchard.Vimeo.Services {
                 return "Cannot access channel";
             }
             return "Unknown error";
+        }
+        /// <summary>
+        /// If we set things to automatically add videos to an album, it does so.
+        /// </summary>
+        /// <param name="ucId">The Id of a completed upload</param>
+        /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        public string TryAddVideoToAlbum(int ucId) {
+            var settings = _orchardServices
+                        .WorkContext
+                        .CurrentSite
+                        .As<VimeoSettingsPart>();
+            if (settings.AlwaysUploadToAlbum) {
+                return AddVideoToAlbum(ucId);
+            }
+            return "Did not have to add.";
         }
         /// <summary>
         /// Add the video corresponding to the Completed Upload whose id is passed to the album stored in the settings

@@ -38,7 +38,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage Vimeo settings")))
                 return new HttpUnauthorizedResult();
 
-            if (VimeoSettingsPartViewModel.CCLicenseDictionary == null) {
+            if (VimeoSettingsPartViewModel.CCLicenseDictionary == null || VimeoSettingsPartViewModel.CCLicenseDictionary.Count == 0) {
                 //load license options from file
                 var assembly = Assembly.GetExecutingAssembly();
                 var ccResourceName = "Laser.Orchard.Vimeo.CreativeCommonsOptions.txt";
@@ -53,7 +53,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     }
                 }
             }
-            if (VimeoSettingsPartViewModel.LocaleDictionary == null) {
+            if (VimeoSettingsPartViewModel.LocaleDictionary == null || VimeoSettingsPartViewModel.LocaleDictionary.Count == 0) {
                 //load languages from file
                 var assembly = Assembly.GetExecutingAssembly();
                 var locResourceName = "Laser.Orchard.Vimeo.LanguageCodes.txt";
@@ -68,7 +68,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     }
                 }
             }
-            if (VimeoSettingsPartViewModel.ContentRatingDictionary == null) {
+            if (VimeoSettingsPartViewModel.ContentRatingDictionary == null || VimeoSettingsPartViewModel.ContentRatingDictionary.Count == 0) {
                 //load ratings from file
                 //NOTE: "safe" and "unrated" settings are not in the file. The file only contains the "unsafe" rating options
                 var assembly = Assembly.GetExecutingAssembly();
