@@ -81,8 +81,56 @@ msgid "Add keyword"
 msgstr "Aggiungi parola chiave"
 
 msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
+msgid "Click to refresh summary chart"
+msgstr "Clicca per ricaricare il grafico di riepilogo"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
 msgid "Keywords selected for this content"
 msgstr "Parole chiave selezionate per questo contenuto"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
+msgid "Language"
+msgstr "Lingua"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
+msgid "Past 30 days"
+msgstr "Ultimi 30 giorni"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
+msgid "Past 60 days"
+msgstr "Ultimi 60 giorni"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
+msgid "Past 90 days"
+msgstr "Ultimi 90 giorni"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
+msgid "Past week"
+msgstr "Ultima settimana"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
+msgid "Past year"
+msgstr "Ultimo anno"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
+msgid "Refresh summary chart"
+msgstr "Ricarica grafico di riepilogo"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
+msgid "Region"
+msgstr "Regione"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
+msgid "Select time period."
+msgstr "Seleziona il periodo"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
+msgid "This chart compares the keywords' trends in time"
+msgstr "Questo grafico permette di confrontare l'evoluzione delle parole chiave nel tempo."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
+msgid "Worldwide"
+msgstr "Tutto il mondo"
 
 msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/KeywordHelper.cshtml"
 msgid "You can add keywords and obtain the most relevant related ones on search engines."
