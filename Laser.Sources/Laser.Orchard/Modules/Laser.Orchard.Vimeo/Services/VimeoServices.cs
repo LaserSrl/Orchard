@@ -848,7 +848,131 @@ namespace Laser.Orchard.Vimeo.Services {
 
             return null;
         }
+        /// <summary>
+        /// Get from vimeo the id corresponding to the channel set in settings.
+        /// </summary>
+        /// <returns>The Id as a <type>string</type>, or null if the channel cannot be found.</returns>
+        public string GetChannelId() {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
+            HttpWebRequest wr = VimeoCreateRequest(
+                aToken: settings.AccessToken,
+                endpoint: VimeoEndpoints.MyChannels,
+                method: "GET",
+                qString: "?query=" + settings.ChannelName + "&fields=name,uri"
+                );
+            try {
+                bool morePages = false;
+                do {
+                    using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        if (resp.StatusCode == HttpStatusCode.OK) {
+                            using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
+                                string vimeoJson = reader.ReadToEnd();
+                                //The Json contains what we got back from Vimeo
+                                //In general, it has paging information and data
+                                //The paging information tells us how many results are there in total, and how many we got from this request.
+                                //we use this information to decide whether we have to fetch more stuff from the API.
+                                VimeoPager pager = JsonConvert.DeserializeObject<VimeoPager>(vimeoJson);
+                                if (pager.total > 0) {
+                                    //check the data to make sure that the name corresponds
+                                    JObject json = JObject.Parse(vimeoJson);
+                                    IList<JToken> res = json["data"].Children().ToList();
+                                    foreach (JToken result in res) {
+                                        VimeoChannel ch = JsonConvert.DeserializeObject<VimeoChannel>(result.ToString());
+                                        if (ch.name == settings.ChannelName) {
+                                            //extract the id from the uri
+                                            return ch.uri.Substring(ch.uri.IndexOf("/", 1) + 1);
+                                        }
+                                    }
+                                    if (pager.total > pager.per_page * pager.page) {
+                                        morePages = true;
+                                        //generate a new request
+                                        string pageQuery = "page=" + (pager.page + 1).ToString();
+                                        wr = VimeoCreateRequest(
+                                            aToken: settings.AccessToken,
+                                            endpoint: VimeoEndpoints.MyChannels,
+                                            method: "GET",
+                                            qString: "?query=" + settings.ChannelName + "&fields=name,uri&" + pageQuery
+                                            );
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } while (morePages);
+            } catch (Exception ex) {
+                
+            }
 
+            return null;
+        }
+        /// <summary>
+        /// Get from vimeo the id corresponding to the album set in settings.
+        /// </summary>
+        /// <returns>The Id as a <type>string</type>, or null if the album cannot be found.</returns>
+        public string GetAlbumId() {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
+            HttpWebRequest wr = VimeoCreateRequest(
+                aToken: settings.AccessToken,
+                endpoint: VimeoEndpoints.MyAlbums,
+                method: "GET",
+                qString: "?query=" + settings.AlbumName + "&fields=name,uri"
+                );
+            try {
+                bool morePages = false;
+                do {
+                    using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        if (resp.StatusCode == HttpStatusCode.OK) {
+                            using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
+                                string vimeoJson = reader.ReadToEnd();
+                                //The Json contains what we got back from Vimeo
+                                //In general, it has paging information and data
+                                //The paging information tells us how many results are there in total, and how many we got from this request.
+                                //we use this information to decide whether we have to fetch more stuff from the API.
+                                VimeoPager pager = JsonConvert.DeserializeObject<VimeoPager>(vimeoJson);
+                                if (pager.total > 0) {
+                                    //check the data to make sure that the name corresponds
+                                    JObject json = JObject.Parse(vimeoJson);
+                                    IList<JToken> res = json["data"].Children().ToList();
+                                    foreach (JToken result in res) {
+                                        VimeoAlbum al = JsonConvert.DeserializeObject<VimeoAlbum>(result.ToString());
+                                        if(al.name==settings.AlbumName){
+                                            return al.uri.Substring(al.uri.IndexOf("/", 1) + 1);
+                                        }
+                                    }
+                                    if (pager.total > pager.per_page * pager.page) {
+                                        morePages = true;
+                                        //generate a new request
+                                        string pageQuery = "page=" + (pager.page + 1).ToString();
+                                        wr = VimeoCreateRequest(
+                                            aToken: settings.AccessToken,
+                                            endpoint: VimeoEndpoints.MyAlbums,
+                                            method: "GET",
+                                            qString: "?query=" + settings.AlbumName + "&fields=name,uri&" + pageQuery
+                                            );
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } while (morePages);
+            } catch (Exception ex) {
+                
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Add the video corresponding to the Completed Upload whose id is passed to the group stored in the settings
+        /// </summary>
+        /// <param name="ucId">The Id of a completed upload</param>
+        /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
         public string AddVideoToGroup(int ucId) {
             string groupId = GetGroupId();
             if (!string.IsNullOrWhiteSpace(groupId)) {
@@ -882,6 +1006,92 @@ namespace Laser.Orchard.Vimeo.Services {
                 }
             } else {
                 return "Cannot access group";
+            }
+            return "Unknown error";
+        }
+        /// <summary>
+        /// Add the video corresponding to the Completed Upload whose id is passed to the channel stored in the settings
+        /// </summary>
+        /// <param name="ucId">The Id of a completed upload</param>
+        /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        public string AddVideoToChannel(int ucId) {
+            string chanId = GetChannelId();
+            if (!string.IsNullOrWhiteSpace(chanId)) {
+                UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+                if (ucr != null) {
+                    var settings = _orchardServices
+                        .WorkContext
+                        .CurrentSite
+                        .As<VimeoSettingsPart>();
+                    HttpWebRequest wr = VimeoCreateRequest(
+                        aToken: settings.AccessToken,
+                        endpoint: VimeoEndpoints.Channels + "/" + chanId + ucr.Uri,
+                        method: "PUT"
+                        );
+                    try {
+                        using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                            if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
+                                return "OK";
+                            }
+                        }
+                    } catch (Exception ex) {
+                        HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                        if (resp != null) {
+                            if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                                return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                            } else if (resp.StatusCode == HttpStatusCode.NotFound) {
+                                return "Resource not found. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                            }
+                        }
+                    }
+                } else {
+                    return "Cannot identify video";
+                }
+            } else {
+                return "Cannot access channel";
+            }
+            return "Unknown error";
+        }
+        /// <summary>
+        /// Add the video corresponding to the Completed Upload whose id is passed to the album stored in the settings
+        /// </summary>
+        /// <param name="ucId">The Id of a completed upload</param>
+        /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        public string AddVideoToAlbum(int ucId) {
+            string alId = GetAlbumId();
+            if (!string.IsNullOrWhiteSpace(alId)) {
+                UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+                if (ucr != null) {
+                    var settings = _orchardServices
+                        .WorkContext
+                        .CurrentSite
+                        .As<VimeoSettingsPart>();
+                    HttpWebRequest wr = VimeoCreateRequest(
+                        aToken: settings.AccessToken,
+                        endpoint: VimeoEndpoints.MyAlbums + "/" + alId + ucr.Uri,
+                        method: "PUT"
+                        );
+                    try {
+                        using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                            if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
+                                return "OK";
+                            }
+                        }
+                    } catch (Exception ex) {
+                        HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                        if (resp != null) {
+                            if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                                return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                            } else if (resp.StatusCode == HttpStatusCode.NotFound) {
+                                return "Resource not found. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                            }
+                        }
+                    }
+                } else {
+                    return "Cannot identify video";
+                }
+            } else {
+                return "Cannot access album";
             }
             return "Unknown error";
         }
