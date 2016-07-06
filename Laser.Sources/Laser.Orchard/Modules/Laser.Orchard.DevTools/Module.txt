@@ -7,6 +7,6 @@ OrchardVersion: 1.8
 Features: 
 	Laser.Orchard.DevTools:
 		Name: Laser Developer Tools
-		Description: Description for feature Laser.Orchard.DevTools.
+		Description: Laser Developer Utility
 		Category: Developer
-		Dependencies: Laser.Orchard.StartupConfig,Orchard.Caching
+		Dependencies: Laser.Orchard.StartupConfig,Orchard.Caching,Laser.Orchard.JQueryPlugins
