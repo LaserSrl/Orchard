@@ -55,7 +55,6 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
         [AlwaysAccessible]
         public ActionResult ExternalLogOn(string returnUrl) {
-
             AuthenticationResult result = _orchardOpenAuthWebSecurity.VerifyAuthentication(Url.OpenAuthLogOn(returnUrl));
 
             if (!result.IsSuccessful) {

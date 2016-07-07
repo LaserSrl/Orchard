@@ -189,7 +189,9 @@
     <Content Include="Content\openid-selector\images\openid-inputicon.gif" />
     <Content Include="Content\openid-selector\images\openid-providers-en.png" />
     <Content Include="Content\openid-selector\images\openid-providers-ru.png" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
