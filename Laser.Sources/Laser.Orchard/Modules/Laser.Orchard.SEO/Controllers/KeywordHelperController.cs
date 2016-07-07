@@ -21,5 +21,16 @@ namespace Laser.Orchard.SEO.Controllers {
             };
             return PartialView((object)model);
         }
+
+        [Admin]
+        public ActionResult SummaryTrends(string _hl, string _q, string _geo, string _date) {
+            var model = new GoogleTrendsViewModel {
+                hl = _hl,
+                q = _q,
+                geo = _geo,
+                date = _date
+            };
+            return PartialView((object)model);
+        }
     }
 }
