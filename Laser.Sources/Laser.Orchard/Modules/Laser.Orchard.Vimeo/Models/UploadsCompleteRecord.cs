@@ -11,5 +11,13 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual int ProgressId { get; set; } //this is the Id this upload had when it was an upload in progress
 
         public virtual DateTime? CreatedTime { get; set; }
+
+        public virtual bool Patched { get; set; }
+        public virtual bool UploadedToGroup { get; set; }
+        public virtual bool UploadedToChannel { get; set; }
+        public virtual bool UploadedToAlbum { get; set; }
+        public virtual bool IsAvailable { get; set; }
+
+        public virtual int MediaPartId { get; set; }
     }
 }

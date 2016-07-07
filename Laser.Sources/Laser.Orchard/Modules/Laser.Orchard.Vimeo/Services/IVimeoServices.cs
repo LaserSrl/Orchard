@@ -37,6 +37,10 @@ namespace Laser.Orchard.Vimeo.Services {
         string TryAddVideoToGroup(int ucId);
         string TryAddVideoToChannel(int ucId);
         string TryAddVideoToAlbum(int ucId);
+
+#if DEBUG
+        string ExtractVimeoStreamURL(int ucId);
+#endif
     }
 
 }

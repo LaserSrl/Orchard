@@ -20,5 +20,6 @@ namespace Laser.Orchard.Vimeo.Extensions {
         public const string VideoUpload = Me + "/videos";
         public const string Groups = APIEntry + "/groups";
         public const string Channels = APIEntry + "/channels";
+        public const string PlayerEntry = "https://player.vimeo.com";
     }
 }

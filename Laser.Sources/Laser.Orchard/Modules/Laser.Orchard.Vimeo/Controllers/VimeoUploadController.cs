@@ -26,6 +26,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
                 //If there is enough quota available, open an upload ticket, by posting to VimeoEndpoints.VideoUpload
                 //with parameter type=streaming
                 string uploadUrl = _vimeoServices.GenerateUploadTicket(uploadId);
+                //create a new MediaPart of 
                 json = JsonConvert.SerializeObject(new { uploadId, uploadUrl });
                 return Content(json);
             } else {
@@ -37,8 +38,17 @@ namespace Laser.Orchard.Vimeo.Controllers {
 
         }
 
-        public ActionResult FinishUpload(int uploadId) {
+        
+#if DEBUG
+        //this method to test extracting the URL of the vimeo streams. It will not be present in the production systems
+        public ActionResult ExtractVimeoStreamUrl(int ucId) {
+            string ret = _vimeoServices.ExtractVimeoStreamURL(ucId);
+            return Content(ret); //JsonConvert.SerializeObject(new { ret })
+        }
+#endif
 
+        public ActionResult FinishUpload(int uploadId) {
+            string error = "";
             //re-verify upload
             switch (_vimeoServices.VerifyUpload(uploadId)) {
                 case VerifyUploadResults.CompletedAlready:
@@ -66,19 +76,22 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     break;
                 case VerifyUploadResults.Incomplete:
                     //the upload is still going on
+                    string uploadIncomplete = "The upload is still in progress.";
+                    return Content(JsonConvert.SerializeObject(new { uploadIncomplete }));
                     break;
                 case VerifyUploadResults.NeverExisted:
                     //we never started an upload with the given Id
+                    error = "The upload was not found.";
                     break;
                 case VerifyUploadResults.Error:
                     //something went wrong
+                    error = "Unknown error.";
                     break;
                 default:
                     //we should never be here
                     break;
             }
-
-            return null; //just here to avoid compilation errors
+            return Content(JsonConvert.SerializeObject(new { error }));
         }
     }
 }

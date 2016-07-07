@@ -131,5 +131,39 @@ namespace Laser.Orchard.Vimeo {
 
             return 6;
         }
+
+        public int UpdateFrom6() {
+            SchemaBuilder.AlterTable("UploadsInProgressRecord",
+                table => table
+                    .AddColumn<int>("MediaPartId")
+                );
+
+            SchemaBuilder.AlterTable("UploadsCompleteRecord",
+                table => table
+                    .AddColumn<bool>("Patched")
+                );
+            SchemaBuilder.AlterTable("UploadsCompleteRecord",
+                table => table
+                    .AddColumn<bool>("UploadedToGroup")
+                );
+            SchemaBuilder.AlterTable("UploadsCompleteRecord",
+                table => table
+                    .AddColumn<bool>("UploadedToChannel")
+                );
+            SchemaBuilder.AlterTable("UploadsCompleteRecord",
+                table => table
+                    .AddColumn<bool>("UploadedToAlbum")
+                );
+            SchemaBuilder.AlterTable("UploadsCompleteRecord",
+                table => table
+                    .AddColumn<bool>("IsAvailable")
+                );
+            SchemaBuilder.AlterTable("UploadsCompleteRecord",
+                table => table
+                    .AddColumn<int>("MediaPartId")
+                );
+
+            return 7;
+        }
     }
 }
