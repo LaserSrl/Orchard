@@ -312,6 +312,9 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                         return _utilsServices.GetResponse(ResponseType.UnAuthorized);
                 try {
                     _orchardServices.ContentManager.Remove(ContentToDelete);
+                    // propaga l'evento Removed per il ContentItem
+                    var context = new RemoveContentContext(ContentToDelete);
+                    Handlers.Invoke(handler => handler.Removed(context), Logger);
                 }
                 catch (Exception ex) {
                     return _utilsServices.GetResponse(ResponseType.None, ex.Message);
