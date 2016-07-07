@@ -461,13 +461,14 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             if (!rsp.Success)
                 _transactionManager.Cancel();
             else {
-                var context = new UpdateContentContext(NewOrModifiedContent);
-                Handlers.Invoke(handler => handler.Updated(context), Logger);
                 // forza il publish solo per i contenuti non draftable
                 var typeSettings = NewOrModifiedContent.TypeDefinition.Settings.TryGetModel<ContentTypeSettings>();
                 if ((typeSettings == null) || (typeSettings.Draftable == false)) {
                     _orchardServices.ContentManager.Publish(NewOrModifiedContent);
                 }
+                // propaga l'evento Updated per il ContentItem
+                var context = new UpdateContentContext(NewOrModifiedContent);
+                Handlers.Invoke(handler => handler.Updated(context), Logger);
             }
             return rsp;
         }
