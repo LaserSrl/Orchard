@@ -207,6 +207,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
         }
         public IEnumerable<PolicyTextInfoPart> GetUserLinkedPolicies(string culture = null) {
             IEnumerable<PolicyTextInfoPart> policies;
+            if (UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.No) return new List<PolicyTextInfoPart>(); // se selezionato No allora nessuna policy è obbligatoria e ritorno una collection vuota
             if (UserRegistrationExtensionsSettings.PolicyTextReferences.FirstOrDefault() == null || UserRegistrationExtensionsSettings.PolicyTextReferences.FirstOrDefault() == "{All}") {
                 policies = _policySerivces.GetPolicies(culture);
             } else {
