@@ -54,6 +54,8 @@ namespace Laser.Orchard.Vimeo.Services {
         void FinishMediaPart(int ucId);
 
         string GetVideoStatus(int ucId);
+
+        void ClearRepositoryTables();
 #endif
 
         

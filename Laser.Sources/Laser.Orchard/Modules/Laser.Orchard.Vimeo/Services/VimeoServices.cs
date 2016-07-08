@@ -1388,7 +1388,78 @@ namespace Laser.Orchard.Vimeo.Services {
                     foreach (var element in oembed.Elements()) {
                         oembedPart[element.Name.LocalName] = element.Value;
                     }
+                } else {
+                    //oeContent == null means we were not able to parse that stuff above. Maybe the video is set to private
+                    //or whitelisted. Anyway, we can get most ofthat stuff by calling the vimeo API.
+                    oembedPart["type"] = "video";
+                    oembedPart["provider_name"] = "Vimeo";
+                    oembedPart["provider_url"] = "https://vimeo.com/";
+
+                    oembedPart["uri"] = ucr.Uri;
+                    oembedPart["video_id"] = vId;
+                    oembedPart["version"] = "1.0";
+                    //call the API to get info on this video
+                    var settings = _orchardServices
+                        .WorkContext
+                        .CurrentSite
+                        .As<VimeoSettingsPart>();
+                    HttpWebRequest wr = VimeoCreateRequest(
+                        aToken: settings.AccessToken,
+                        endpoint: VimeoEndpoints.Me + ucr.Uri
+                        );
+                    try {
+                        using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                            if (resp.StatusCode == HttpStatusCode.OK) {
+                                using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
+                                    string vimeoJson = reader.ReadToEnd();
+                                    VimeoVideo video = JsonConvert.DeserializeObject<VimeoVideo>(vimeoJson);
+                                    oembedPart["title"] = video.name;
+                                    oembedPart["description"] = video.description;
+                                    oembedPart["duration"] = video.duration.ToString();
+                                    oembedPart["width"] = video.width.ToString();
+                                    oembedPart["height"] = video.height.ToString();
+                                    oembedPart["upload_date"] = video.release_time;
+                                    //embed section
+                                    oembedPart["html"] = video.embed.html;
+
+                                    //pictures section (get the ones that are closer in size to the video)
+                                    int picIndex = 0;
+                                    double sizeDistance = double.MaxValue;
+                                    int i = 0;
+                                    foreach (var aPic in video.pictures.sizes) {
+                                        double dist = (aPic.width - video.width) * (aPic.width - video.width) + (aPic.height - video.height) * (aPic.height - video.height);
+                                        if (dist < sizeDistance) {
+                                            picIndex = i;
+                                            sizeDistance = dist;
+                                        }
+                                        i++;
+                                    }
+                                    var myPic = video.pictures.sizes.ElementAt(picIndex);
+                                    oembedPart["thumbnail_url"] = myPic.link;
+                                    oembedPart["thumbnail_width"] = myPic.width.ToString();
+                                    oembedPart["thumbnail_height"] = myPic.height.ToString();
+                                    oembedPart["thumbnail_url_with_play_button"] = myPic.link_with_play_button;
+
+                                    //user section
+                                    oembedPart["author_name"] = video.user.name;
+                                    oembedPart["author_url"] = video.user.uri;
+                                    oembedPart["is_plus"] = video.user.account == "plus" ? "1" : "0";
+                                }
+                            }
+                        }
+                    } catch (Exception ex) {
+
+                    }
                 }
+            }
+        }
+
+        public void ClearRepositoryTables() {
+            foreach (var u in _repositoryUploadsInProgress.Table.ToList()) {
+                _repositoryUploadsInProgress.Delete(u);
+            }
+            foreach (var u in _repositoryUploadsComplete.Table.ToList()) {
+                _repositoryUploadsComplete.Delete(u);
             }
         }
 

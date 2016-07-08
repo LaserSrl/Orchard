@@ -48,6 +48,11 @@ namespace Laser.Orchard.Vimeo.Controllers {
             string ret = _vimeoServices.GetVideoStatus(ucId);//_vimeoServices.ExtractVimeoStreamURL(ucId);
             return Content(ret); //JsonConvert.SerializeObject(new { ret })
         }
+
+        public ActionResult ClearUploadRepositoryTables() {
+            _vimeoServices.ClearRepositoryTables();
+            return null;
+        }
 #endif
 
         //todo: change this around so that the parameter passed is the MediaPartId
