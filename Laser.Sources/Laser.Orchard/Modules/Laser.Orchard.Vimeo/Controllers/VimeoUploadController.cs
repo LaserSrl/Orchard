@@ -84,7 +84,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     break;
                 case VerifyUploadResults.NeverExisted:
                     //we never started an upload with the given Id
-                    message = T("The upload was not found.").ToString();
+                    message = T("The upload was never started, or the MediaPart is not for a Vimeo video.").ToString();
                     break;
                 case VerifyUploadResults.Error:
                     //something went wrong

@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Laser.Orchard.Vimeo.Controllers;
 using System.Xml.Linq;
+using Laser.Orchard.Vimeo.Handlers;
 
 namespace Laser.Orchard.Vimeo.Services {
     public class VimeoServices : IVimeoServices {
@@ -586,6 +587,7 @@ namespace Laser.Orchard.Vimeo.Services {
             entity.UploadSize = fileSize;
             entity.CreatedTime = DateTime.UtcNow;
             _repositoryUploadsInProgress.Create(entity);
+            ScheduleUploadVerification();
             int recordId = entity.Id;
 
             return recordId;
@@ -682,16 +684,21 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="uploadId">The Id of the MediaPart containing the video whose upload we want to check</param>
         /// <returns>A value describing the state of the upload.</returns>
         public VerifyUploadResults VerifyUpload(int mediaPartId) {
+            MediaPart mp = _contentManager.Get(mediaPartId).As<MediaPart>();
+            if (mp == null || mp.As<OEmbedPart>() == null)
+                return VerifyUploadResults.NeverExisted;
             UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(e => e.MediaPartId == mediaPartId);
             if (entity == null) {
                 //could not find and Upload in progress with the given Id
-                //Chek to see if the upload is complete
+                //since the media part exists, it either means the upload is complete, or that the mediaPart is of a different kind
                 UploadsCompleteRecord ucr = GetByMediaId(mediaPartId);
                 if (ucr == null) {
-                    //no, the upload actually never existed
+                    //the record gets deleted only after we have set things in the OEmbedPart
+                    if (mp.As<OEmbedPart>()["provider_name"] == "Vimeo") {
+                        return VerifyUploadResults.CompletedAlready;
+                    }
                     return VerifyUploadResults.NeverExisted;
                 }
-                return VerifyUploadResults.CompletedAlready;
             }
             return VerifyUpload(entity);
         }
@@ -803,6 +810,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         ucr.CreatedTime = DateTime.UtcNow;
                         ucr.MediaPartId = entity.MediaPartId;
                         _repositoryUploadsComplete.Create(ucr);
+                        ScheduleVideoCompletion();
                         //delete the entry from uploads in progress
                         _repositoryUploadsInProgress.Delete(entity);
                         return ucr.Id;
@@ -1483,7 +1491,21 @@ namespace Laser.Orchard.Vimeo.Services {
         }
 
         //TODO: CODE FOR TASKS
-        public void VerifyAllUploads() {
+        public void ScheduleUploadVerification() {
+            string taskTypeStr = VimeoScheduledTasksHandler.TaskTypeBase + VimeoScheduledTasksHandler.TaskSubTypeInProgress;
+            if (_taskManager.GetTasks(taskTypeStr).Count() == 0)
+                _taskManager.CreateTask(taskTypeStr, DateTime.UtcNow.AddMinutes(1), null);
+        }
+        public void ScheduleVideoCompletion() {
+            string taskTypeStr = VimeoScheduledTasksHandler.TaskTypeBase + VimeoScheduledTasksHandler.TaskSubTypeComplete;
+            if (_taskManager.GetTasks(taskTypeStr).Count() == 0)
+                _taskManager.CreateTask(taskTypeStr, DateTime.UtcNow.AddMinutes(1), null);
+        }
+        /// <summary>
+        /// Verifies the state of all uploads in progress.
+        /// </summary>
+        /// <returns>The number of uploads in progress.</returns>
+        public int VerifyAllUploads() {
             foreach (var uip in _repositoryUploadsInProgress.Table.ToList()) {
                 switch (VerifyUpload(uip)) {
                     case VerifyUploadResults.CompletedAlready:
@@ -1501,9 +1523,13 @@ namespace Laser.Orchard.Vimeo.Services {
                         break;
                 }
             }
+            return _repositoryUploadsInProgress.Table.Count();
         }
-
-        public void TerminateUploads() {
+        /// <summary>
+        /// Performs the operations required to close the processing of uploaded videos.
+        /// </summary>
+        /// <returns>The number of videos still to be closed.</returns>
+        public int TerminateUploads() {
             var settings = _orchardServices
                 .WorkContext
                 .CurrentSite
@@ -1536,6 +1562,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     _repositoryUploadsComplete.Delete(ucr);
                 }
             }
+            return _repositoryUploadsComplete.Table.Count();
         }
 
         /// <summary>

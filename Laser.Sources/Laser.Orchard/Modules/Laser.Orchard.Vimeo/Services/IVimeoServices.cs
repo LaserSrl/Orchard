@@ -31,8 +31,11 @@ namespace Laser.Orchard.Vimeo.Services {
         VerifyUploadResults VerifyUpload(int mediaPartId);
         bool TerminateUpload(int mediaPartId);
 
-
-
+        //task methods
+        void ScheduleUploadVerification();
+        void ScheduleVideoCompletion();
+        int VerifyAllUploads();
+        int TerminateUploads();
 
 #if DEBUG
         bool TokenIsValid(string aToken);
