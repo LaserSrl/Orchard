@@ -126,6 +126,7 @@
     <Compile Include="Controllers\CountPanelController.cs" />
     <Compile Include="Controllers\MailerResultController.cs" />
     <Compile Include="Controllers\MailerResultAPIController.cs" />
+    <Compile Include="Controllers\UnsubscribeController.cs" />
     <Compile Include="Drivers\MailCommunicationPartDriver.cs" />
     <Compile Include="Drivers\MailerSiteSettingsPartDriver.cs" />
     <Compile Include="Enums.cs" />
@@ -177,6 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\CustomTemplatePickerOverride_Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Unsubscribe.Confirm.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

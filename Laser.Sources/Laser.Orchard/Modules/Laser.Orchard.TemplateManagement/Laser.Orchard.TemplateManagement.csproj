@@ -316,6 +316,7 @@
     <Compile Include="Settings\TemplatePartSettingsEvents.cs" />
     <Compile Include="Shapes\ParserPickerShape.cs" />
     <Compile Include="ViewModels\CustomTemplatePickerViewModel.cs" />
+    <Compile Include="ViewModels\TemplatePlaceHolderViewModel.cs" />
     <Compile Include="ViewModels\TemplateSettingsViewModel.cs" />
     <Compile Include="Drivers\SiteSettingsPartDriver.cs" />
     <Compile Include="Drivers\TemplatePartDriver.cs" />

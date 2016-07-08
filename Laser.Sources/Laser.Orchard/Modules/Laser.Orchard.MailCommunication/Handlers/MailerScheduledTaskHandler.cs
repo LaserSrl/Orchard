@@ -20,6 +20,7 @@ using Laser.Orchard.Commons.Extensions;
 using Laser.Orchard.StartupConfig.Extensions;
 using Orchard.Services;
 using Orchard.Logging;
+using Laser.Orchard.TemplateManagement.ViewModels;
 
 namespace Laser.Orchard.MailCommunication.Handlers {
     public class MailerScheduledTaskHandler : IScheduledTaskHandler {
@@ -32,11 +33,11 @@ namespace Laser.Orchard.MailCommunication.Handlers {
         private readonly ICommunicationService _communicationService;
         private readonly ITemplateService _templateService;
         private readonly IScheduledTaskManager _taskManager;
-        private readonly IClock _clock; 
+        private readonly IClock _clock;
         private MailerSiteSettingsPart _mailerConfig;
         private const string TaskType = "Laser.Orchard.MailCommunication.Task";
 
-        public MailerScheduledTaskHandler(INotifier notifier, IOrchardServices orchardServices, IMailCommunicationService mailCommunicationService, 
+        public MailerScheduledTaskHandler(INotifier notifier, IOrchardServices orchardServices, IMailCommunicationService mailCommunicationService,
             ShellSettings shellSettings, ICommunicationService communicationService, ITemplateService templateService,
             IScheduledTaskManager taskManager, IClock clock) {
             _notifier = notifier;
@@ -73,29 +74,30 @@ namespace Laser.Orchard.MailCommunication.Handlers {
             var templateId = ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id;
             Dictionary<string, object> settings = GetSettings(content, templateId, part);
             if (settings.Count > 0) {
-                SendSettings(settings, part.Id);
+                if (lista.Count > 0) {
+                    SendSettings(settings, part.Id);
 
-                // impagina e invia i recipiens tramite FTP
-                int pageNum = 0;
-                List<object> pagina = new List<object>();
-                int pageSize = _mailerConfig.RecipientsPerJsonFile;
-                for (int i = 0; i < lista.Count; i++) {
-                    if (((i + 1) % pageSize) == 0) {
-                        SendRecipients(pagina, part.Id, pageNum);
-                        pageNum++;
-                        pagina = new List<object>();
+                    // impagina e invia i recipiens tramite FTP
+                    int pageNum = 0;
+                    List<object> pagina = new List<object>();
+                    int pageSize = _mailerConfig.RecipientsPerJsonFile;
+                    for (int i = 0; i < lista.Count; i++) {
+                        if (((i + 1) % pageSize) == 0) {
+                            SendRecipients(pagina, part.Id, pageNum);
+                            pageNum++;
+                            pagina = new List<object>();
+                        }
+                        pagina.Add(lista[i]);
                     }
-                    pagina.Add(lista[i]);
+                    // invia l'ultima pagina se non è vuota
+                    if (pagina.Count > 0) {
+                        SendRecipients(pagina, part.Id, pageNum);
+                    }
+                    part.RecipientsNumber = lista.Count;
+                    part.SentMailsNumber = 0;
+                    part.MailMessageSent = true;
                 }
-                // invia l'ultima pagina se non è vuota
-                if (pagina.Count > 0) {
-                    SendRecipients(pagina, part.Id, pageNum);
-                }
-                part.RecipientsNumber = lista.Count;
-                part.SentMailsNumber = 0;
-                part.MailMessageSent = true;
-            }
-            else {
+            } else {
                 _notifier.Error(T("Error parsing mail template."));
             }
         }
@@ -134,49 +136,25 @@ namespace Laser.Orchard.MailCommunication.Handlers {
         }
         private Dictionary<string, object> GetSettings(dynamic contentModel, int templateId, MailCommunicationPart part) {
             var data = new Dictionary<string, object>();
-            ParseTemplateContext templatectx = new ParseTemplateContext();
-            var template = _orchardServices.ContentManager.Get<TemplatePart>(templateId);
-            
             var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
-            var tenantPrefix = GetTenantUrlPrexix(_shellSettings);
-            
-            // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
-            // Nel template pertanto Model, diventa Model.Content
-            var host = string.Format("{0}://{1}{2}",
-                                    baseUri.Scheme,
-                                    baseUri.Host,
-                                    baseUri.Port == 80 ? string.Empty : ":" + baseUri.Port);
-            string mediaUrl = string.Format("/{0}/{1}{2}", baseUri.GetComponents(UriComponents.Path, UriFormat.Unescaped), tenantPrefix, @"Laser.Orchard.StartupConfig/MediaTransform/Image");
-            var dynamicModel = new {
-                WorkContext = _orchardServices.WorkContext,
-                Content = contentModel,
-                Urls = new {
-                    //SubscriptionSubscribe = urlHelper.SubscriptionSubscribe(),
-                    //SubscriptionUnsubscribe = urlHelper.SubscriptionUnsubscribe(),
-                    //SubscriptionConfirmSubscribe = urlHelper.SubscriptionConfirmSubscribe(),
-                    //SubscriptionConfirmUnsubscribe = urlHelper.SubscriptionConfirmUnsubscribe(),
-                    BaseUrl = baseUri,
-                    MediaUrl = mediaUrl,
-                    Domain = host,
-                }.ToExpando()
-            };
-            templatectx.Model = dynamicModel;
 
             Dictionary<string, object> similViewBag = new Dictionary<string, object>();
             similViewBag.Add("CampaignLink", _communicationService.GetCampaignLink("Email", part));
 
-            // converte similViewBag in un oggetto DynamicViewBag richiesto dal parser Razor
-            RazorEngine.Templating.DynamicViewBag vb = new RazorEngine.Templating.DynamicViewBag();
-            try {
-                foreach (string key in ((Dictionary<string, object>)similViewBag).Keys) {
-                    vb.AddValue(key, ((IDictionary<string, object>)similViewBag)["CampaignLink"]);
-                }
-            }
-            catch { }
-            templatectx.ViewBag = vb;
+            string body = _templateService.RitornaParsingTemplate(contentModel, templateId, similViewBag);
 
-            var body = _templateService.ParseTemplate(template, templatectx);
-            if (body.StartsWith("Error On Template") == false) {
+            if (!body.StartsWith("Error On Template")) {
+
+                // Add Link [UNSUBSCRIBE]
+                string ph_Unsubscribe = "[UNSUBSCRIBE]";
+                string unsubscribe = T("Non ricevere più mail").Text;
+                string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/UnsubscribeIndex", baseUri) + "'>" + unsubscribe + "</a>";
+
+                if (body.Contains(ph_Unsubscribe))
+                    body.Replace(ph_Unsubscribe, linkUnsubscribe);
+                else
+                    body += "<br /><br />" + linkUnsubscribe;
+
                 var subject = contentModel.TitlePart.Title;
                 var smtp = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
                 string priority = "L";
@@ -199,7 +177,9 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 var token = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHH"), (contentModel as ContentItem).Id);
                 token = Convert.ToBase64String(System.Text.Encoding.Unicode.GetBytes(token));
                 //var url = string.Format("{0}/Laser.Orchard.MailCommunication/MailerResult?tk={1}", baseUrl, token);  // versione per il GET
+                var tenantPrefix = GetTenantUrlPrexix(_shellSettings);
                 var url = string.Format("{0}/{1}api/Laser.Orchard.MailCommunication/MailerResultAPI?tk={2}", baseUrl, tenantPrefix, token);  // versione per il POST
+
                 data.Add("Subject", subject);
                 data.Add("Body", body);
                 data.Add("Sender", smtp.Address);
@@ -207,6 +187,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 data.Add("Url", url);  // url di ritorno per comunicare a Orchard il numero di mail inviate con successo
                 data.Add("Attachments", ""); // TODO esempio: "[\"prova.pdf\",\"prova.docx\"]" 2016-01-14: per ora non li gestiamo
             }
+
             return data;
         }
 
@@ -216,7 +197,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
         /// </summary>
         /// <param name="shellSettings"></param>
         /// <returns></returns>
-        public string GetTenantUrlPrexix(ShellSettings shellSettings) {
+        private string GetTenantUrlPrexix(ShellSettings shellSettings) {
             // calcola il prefix del tenant corrente
             string tenantPath = shellSettings.RequestUrlPrefix ?? "";
 
