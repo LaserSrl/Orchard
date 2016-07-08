@@ -24,7 +24,7 @@ namespace Laser.Orchard.MailCommunication.Controllers {
         }
 
         [Themed, HttpGet]
-        public ActionResult UnsubscribeIndex() {
+        public ActionResult Index() {
             return new ShapeResult(this, Shape.Unsubscribe_Confirm());
         }
 

@@ -1,6 +1,6 @@
 ﻿using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.MailCommunication.Models;
-using Laser.Orchard.Services.MailCommunication;
+using Laser.Orchard.MailCommunication.Services;
 using Laser.Orchard.TemplateManagement.Models;
 using Laser.Orchard.TemplateManagement.Services;
 using Newtonsoft.Json;
@@ -147,8 +147,8 @@ namespace Laser.Orchard.MailCommunication.Handlers {
 
                 // Add Link [UNSUBSCRIBE]
                 string ph_Unsubscribe = "[UNSUBSCRIBE]";
-                string unsubscribe = T("Non ricevere più mail").Text;
-                string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/UnsubscribeIndex", baseUri) + "'>" + unsubscribe + "</a>";
+                string unsubscribe = T("Clicca per non ricevere più mail ad uso commerciale").Text;
+                string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/Index", baseUri) + "'>" + unsubscribe + "</a>";
 
                 if (body.Contains(ph_Unsubscribe))
                     body.Replace(ph_Unsubscribe, linkUnsubscribe);

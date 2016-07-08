@@ -137,8 +137,10 @@
     <Compile Include="Services\IMailCommunicationService.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\MailCommunicationPart.cs" />
+    <Compile Include="Services\MailUnsubscribeService.cs" />
     <Compile Include="Services\MissingSettingsBanner.cs" />
     <Compile Include="ViewModels\RecipientData.cs" />
+    <Compile Include="ViewModels\UnsubscribeVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">

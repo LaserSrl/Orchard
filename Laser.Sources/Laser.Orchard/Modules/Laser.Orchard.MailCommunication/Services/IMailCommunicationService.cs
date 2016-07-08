@@ -11,7 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Laser.Orchard.Services.MailCommunication {
+namespace Laser.Orchard.MailCommunication.Services {
 
     public interface IMailCommunicationService : IDependency {
 

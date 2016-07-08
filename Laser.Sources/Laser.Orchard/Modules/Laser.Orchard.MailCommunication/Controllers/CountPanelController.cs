@@ -1,4 +1,4 @@
-﻿using Laser.Orchard.Services.MailCommunication;
+﻿using Laser.Orchard.MailCommunication.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;

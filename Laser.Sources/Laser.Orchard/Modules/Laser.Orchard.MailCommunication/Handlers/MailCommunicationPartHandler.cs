@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.MailCommunication.Models;
-using Laser.Orchard.Services.MailCommunication;
+using Laser.Orchard.MailCommunication.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.TemplateManagement.Services;
 using Orchard;
@@ -61,8 +61,8 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                         // Place Holder
                         List<TemplatePlaceHolderViewModel> listaPH = new List<TemplatePlaceHolderViewModel>();
 
-                        string unsubscribe = T("Non ricevere più mail").Text;
-                        string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/UnsubscribeIndex", baseUri) + "'>" + unsubscribe + "</a>";
+                        string unsubscribe = T("Clicca per non ricevere più mail ad uso commerciale").Text;
+                        string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/Index", baseUri) + "'>" + unsubscribe + "</a>";
 
                         TemplatePlaceHolderViewModel ph = new TemplatePlaceHolderViewModel();
                         ph.Name = "[UNSUBSCRIBE]";

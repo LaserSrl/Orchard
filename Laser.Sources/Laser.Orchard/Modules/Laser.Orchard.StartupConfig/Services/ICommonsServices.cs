@@ -9,5 +9,7 @@ namespace Laser.Orchard.StartupConfig.Services {
     public interface ICommonsServices : IDependency {
         DevicesBrands GetDeviceBrandByUserAgent();
         IContent GetContentByAlias(string displayAlias);
+        string CreateNonce(string parametri, TimeSpan delay);
+        bool DecryptNonce(string nonce, out string parametri, out DateTime validateByUtc);
     }
 }

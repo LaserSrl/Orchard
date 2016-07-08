@@ -5,12 +5,22 @@ using System.Web;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Autoroute.Models;
+using System.Xml.Linq;
+using System.Globalization;
+using Orchard.Services;
+using System.Text;
+using Orchard.Security;
 
 namespace Laser.Orchard.StartupConfig.Services {
     public class CommonsServices : ICommonsServices {
         private readonly IOrchardServices _orchardServices;
-        public CommonsServices(IOrchardServices orchardServices) {
+        private readonly IClock _clock;
+        private readonly IEncryptionService _encryptionService;
+
+        public CommonsServices(IOrchardServices orchardServices, IClock clock, IEncryptionService encryptionService) {
             _orchardServices = orchardServices;
+            _clock = clock;
+            _encryptionService = encryptionService;
         }
 
         public DevicesBrands GetDeviceBrandByUserAgent() {
@@ -40,7 +50,29 @@ namespace Laser.Orchard.StartupConfig.Services {
                 return null;
             }
             return item;
-
         }
+
+        public string CreateNonce(string parametri, TimeSpan delay) {
+            var challengeToken = new XElement("n", new XAttribute("par", parametri), new XAttribute("utc", _clock.UtcNow.ToUniversalTime().Add(delay).ToString(CultureInfo.InvariantCulture))).ToString();
+            var data = Encoding.UTF8.GetBytes(challengeToken);
+            return Convert.ToBase64String(_encryptionService.Encode(data));
+        }
+
+        public bool DecryptNonce(string nonce, out string parametri, out DateTime validateByUtc) {
+            parametri = null;
+            validateByUtc = _clock.UtcNow;
+
+            try {
+                var data = _encryptionService.Decode(Convert.FromBase64String(nonce));
+                var xml = Encoding.UTF8.GetString(data);
+                var element = XElement.Parse(xml);
+                parametri = element.Attribute("par").Value;
+                validateByUtc = DateTime.Parse(element.Attribute("utc").Value, CultureInfo.InvariantCulture);
+                return _clock.UtcNow <= validateByUtc;
+            } catch {
+                return false;
+            }
+        }
+
     }
 }
