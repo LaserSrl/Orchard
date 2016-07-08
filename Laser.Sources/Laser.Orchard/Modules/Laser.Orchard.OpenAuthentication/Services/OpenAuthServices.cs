@@ -9,6 +9,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Users.Models;
+using System.Collections;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOpenAuthMembershipServices : IDependency {
@@ -48,10 +49,24 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             return orchardUsersSettings.UsersCanRegister && openAuthenticationSettings.AutoRegistrationEnabled;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="createUserParams"></param>
+        /// <returns></returns>
         public IUser CreateUser(OpenAuthCreateUserParams createUserParams) {
+                   
             string emailAddress = string.Empty;
-            if (createUserParams.UserName.IsEmailAddress()) {
-                emailAddress = createUserParams.UserName;
+
+            var valoriRicavati = createUserParams.ExtraData.Values;
+            int countVal = 0;
+
+            foreach (string valric in valoriRicavati) {
+                if (countVal == 1) {
+                    emailAddress = valric;
+                }
+                countVal = countVal + 1;
             }
 
             var creatingContext = new CreatingOpenAuthUserContext(createUserParams.UserName, emailAddress, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
@@ -59,7 +74,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             _openAuthUserEventHandlers.Invoke(o => o.Creating(creatingContext), Logger);
 
             var createdUser = _membershipService.CreateUser(new CreateUserParams(
-                _usernameService.Calculate(createUserParams.UserName),
+                //_usernameService.Calculate(createUserParams.UserName),
+                createUserParams.UserName,
                 _passwordGeneratorService.Generate(),
                 creatingContext.EmailAddress,
                 @T("Auto Registered User").Text,

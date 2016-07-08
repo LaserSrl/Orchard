@@ -101,20 +101,17 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 });
         }
 
-        protected override IDictionary<string, string> GetUserData(string accessToken)
-        {
+        protected override IDictionary<string, string> GetUserData(string accessToken) {
             var uri = BuildUri(UserInfoEndpoint, new NameValueCollection { { "access_token", accessToken } });
 
-            var webRequest = (HttpWebRequest) WebRequest.Create(uri);
+            var webRequest = (HttpWebRequest)WebRequest.Create(uri);
 
             using (var webResponse = webRequest.GetResponse())
-            using (var stream = webResponse.GetResponseStream())
-            {
+            using (var stream = webResponse.GetResponseStream()) {
                 if (stream == null)
                     return null;
 
-                using (var textReader = new StreamReader(stream))
-                {
+                using (var textReader = new StreamReader(stream)) {
                     var json = textReader.ReadToEnd();
                     var extraData = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
                     return extraData;
@@ -159,7 +156,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             }
         }
 
-        private static Uri BuildUri(string baseUri, NameValueCollection queryParameters)
+        public static Uri BuildUri(string baseUri, NameValueCollection queryParameters)
         {
             var keyValuePairs = queryParameters.AllKeys.Select(k => HttpUtility.UrlEncode(k) + "=" + HttpUtility.UrlEncode(queryParameters[k]));
             var qs = String.Join("&", keyValuePairs);

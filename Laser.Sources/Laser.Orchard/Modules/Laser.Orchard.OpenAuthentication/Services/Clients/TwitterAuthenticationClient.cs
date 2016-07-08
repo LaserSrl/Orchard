@@ -9,6 +9,7 @@ using System.Web;
 using DotNetOpenAuth.AspNet;
 using DotNetOpenAuth.AspNet.Clients;
 using Laser.Orchard.OpenAuthentication.Models;
+using Laser.Orchard.OpenAuthentication.Security;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class TwitterAuthenticationClient : IExternalAuthenticationClient {
@@ -72,6 +73,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
                 isSuccessful: true, provider: this.ProviderName, providerUserId: id, userName: name, extraData: userData);
         }
 
+
         private HttpWebRequest PrepareAuthorizedRequest(string oauth_token, string oauth_token_secret, string oauth_consumer_key, string oauth_consumer_secret, string resource_url, string httpMethod) {
 
             var oauth_version = "1.0";
@@ -129,6 +131,10 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             request.Method = httpMethod.ToUpper();
             return request;
 
+        }
+
+        public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams) {
+            throw new System.NotImplementedException();
         }
 
 

@@ -8,6 +8,7 @@ using DotNetOpenAuth.AspNet.Clients;
 using DotNetOpenAuth.Messaging;
 using Laser.Orchard.OpenAuthentication.Models;
 using Orchard.Logging;
+using Laser.Orchard.OpenAuthentication.Security;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class FacebookAuthenticationClient : IExternalAuthenticationClient {
@@ -71,5 +72,9 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
 
+        public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

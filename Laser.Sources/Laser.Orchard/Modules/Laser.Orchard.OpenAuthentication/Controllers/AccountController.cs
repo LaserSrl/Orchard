@@ -2,6 +2,7 @@
 using Laser.Orchard.OpenAuthentication.Extensions;
 using Laser.Orchard.OpenAuthentication.Security;
 using Laser.Orchard.OpenAuthentication.Services;
+using Laser.Orchard.OpenAuthentication.Services.Clients;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard;
 using Orchard.Localization;
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
+using System.Linq;
 
 namespace Laser.Orchard.OpenAuthentication.Controllers {
     [Themed]
@@ -25,6 +27,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         private readonly IOpenAuthMembershipServices _openAuthMembershipServices;
         private readonly IOrchardOpenAuthClientProvider _openAuthClientProvider;
         private readonly IControllerContextAccessor _controllerContextAccessor;
+        private readonly IEnumerable<IExternalAuthenticationClient> _openAuthAuthenticationClients;
 
         public AccountController(
             INotifier notifier,
@@ -32,13 +35,15 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             IAuthenticationService authenticationService,
             IOpenAuthMembershipServices openAuthMembershipServices,
             IOrchardOpenAuthClientProvider openAuthClientProvider,
-            IControllerContextAccessor controllerContextAccessor) {
+            IControllerContextAccessor controllerContextAccessor,
+            IEnumerable<IExternalAuthenticationClient> openAuthAuthenticationClients) {
             _notifier = notifier;
             _orchardOpenAuthWebSecurity = orchardOpenAuthWebSecurity;
             _authenticationService = authenticationService;
             _openAuthMembershipServices = openAuthMembershipServices;
             _openAuthClientProvider = openAuthClientProvider;
             _controllerContextAccessor = controllerContextAccessor;
+            _openAuthAuthenticationClients = openAuthAuthenticationClients;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -56,6 +61,10 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         [AlwaysAccessible]
         public ActionResult ExternalLogOn(string returnUrl) {
             AuthenticationResult result = _orchardOpenAuthWebSecurity.VerifyAuthentication(Url.OpenAuthLogOn(returnUrl));
+
+            //LV
+            var client = _openAuthAuthenticationClients
+                .SingleOrDefault(o => o.ProviderName.Equals(result.Provider, StringComparison.OrdinalIgnoreCase));
 
             if (!result.IsSuccessful) {
                 _notifier.Error(T("Your authentication request failed."));
@@ -82,11 +91,18 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             }
 
             if (_openAuthMembershipServices.CanRegister()) {
+                
+                // LV Normalize data
+                OpenAuthCreateUserParams normalize = client.NormalizeData(new OpenAuthCreateUserParams(result.UserName,
+                                                                                                        result.Provider,
+                                                                                                        result.ProviderUserId,
+                                                                                                        result.ExtraData));
+
                 var newUser =
-                    _openAuthMembershipServices.CreateUser(new OpenAuthCreateUserParams(result.UserName,
+                    _openAuthMembershipServices.CreateUser(new OpenAuthCreateUserParams(normalize.UserName,
                                                                                         result.Provider,
                                                                                         result.ProviderUserId,
-                                                                                        result.ExtraData));
+                                                                                        normalize.ExtraData));
 
                 _notifier.Information(
                     T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, newUser.UserName));
