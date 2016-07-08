@@ -536,7 +536,9 @@ namespace Laser.Orchard.Mobile.Services {
                             Validated = Convert.ToBoolean(ht["Validated"], CultureInfo.InvariantCulture),
                             Language = ht["Language"].ToString(),
                             UUIdentifier = ht["UUIdentifier"].ToString(),
-                            Token = ht["Token"].ToString()
+                            Token = ht["Token"].ToString(),
+                            RegistrationUrlHost = ht["RegistrationUrlHost"].ToString(),
+                            RegistrationUrlPrefix = ht["RegistrationUrlPrefix"].ToString()
                         });
                     }
                 }
@@ -552,13 +554,15 @@ namespace Laser.Orchard.Mobile.Services {
                                 Validated = pnr.Validated,
                                 Language = pnr.Language,
                                 UUIdentifier = pnr.UUIdentifier,
-                                Token = pnr.Token
+                                Token = pnr.Token,
+                                RegistrationUrlHost = pnr.RegistrationUrlHost,
+                                RegistrationUrlPrefix = pnr.RegistrationUrlPrefix
                             });
                         }
                     }
                     else {
                         var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
-                            .CreateSQLQuery(string.Format("select Id, Device, Produzione, Validated, Language, UUIdentifier, Token from ( {0} ) x where x.Device = '{1}' and x.Produzione = {2} and x.Validated = 1 and (x.Language = '{3}' or '{3}' = 'All') ", queryDevice, tipodisp, (produzione) ? 1 : 0, language))
+                            .CreateSQLQuery(string.Format("select Id, Device, Produzione, Validated, Language, UUIdentifier, Token, RegistrationUrlHost, RegistrationUrlPrefix from ( {0} ) x where x.Device = '{1}' and x.Produzione = {2} and x.Validated = 1 and (x.Language = '{3}' or '{3}' = 'All') ", queryDevice, tipodisp, (produzione) ? 1 : 0, language))
                          .List();
                         object[] ht = null;
                         foreach (var arr in estrazione) {
@@ -570,7 +574,9 @@ namespace Laser.Orchard.Mobile.Services {
                                 Validated = Convert.ToBoolean(ht[3], CultureInfo.InvariantCulture),
                                 Language = ht[4].ToString(),
                                 UUIdentifier = ht[5].ToString(),
-                                Token = ht[6].ToString()
+                                Token = ht[6].ToString(),
+                                RegistrationUrlHost = ht[7].ToString(),
+                                RegistrationUrlPrefix = ht[8].ToString()
                             });
                         }
                     }
@@ -626,21 +632,26 @@ namespace Laser.Orchard.Mobile.Services {
                     return true;
                 });
             };
+            string hostCheck = _shellSetting.RequestUrlHost;
+            string prefixCheck = _shellSetting.RequestUrlPrefix;
             push.Start();
             foreach (PushNotificationVM pnr in allDevice) {
-                push.QueueNotification(new GcmNotification {
-                    RegistrationIds = new List<string> { pnr.Token },
-                    Data = JObject.Parse(JsonMessage)
-                });
+                // verifica che il device sia stato registrato nell'ambiente corrente
+                if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck)) {
+                    push.QueueNotification(new GcmNotification {
+                        RegistrationIds = new List<string> { pnr.Token },
+                        Data = JObject.Parse(JsonMessage)
+                    });
 
-                if (idcontenttopush > 0) {
-                    SentRecord sr = new SentRecord();
-                    sr.DeviceType = "Android";
-                    sr.PushNotificationRecord_Id = pnr.Id;
-                    sr.PushedItem = idcontenttopush;
-                    sr.SentDate = DateTime.UtcNow;
-                    _sentRepository.Create(sr);
-                    _sentRepository.Flush();
+                    if (idcontenttopush > 0) {
+                        SentRecord sr = new SentRecord();
+                        sr.DeviceType = "Android";
+                        sr.PushNotificationRecord_Id = pnr.Id;
+                        sr.PushedItem = idcontenttopush;
+                        sr.SentDate = DateTime.UtcNow;
+                        _sentRepository.Create(sr);
+                        _sentRepository.Flush();
+                    }
                 }
             }
             push.Stop();
@@ -674,10 +685,10 @@ namespace Laser.Orchard.Mobile.Services {
                     </binding>  
                 </visual>
             </toast>", winPush.Text);
-            SendAllWindowsMobile(mpp.ContentItem.ContentType, message, produzione, language, queryIds, queryDevice);
+            SendAllWindowsMobile(idcontent, mpp.ContentItem.ContentType, message, produzione, language, queryIds, queryDevice);
         }
 
-        private void SendAllWindowsMobile(string contenttype, string message, bool produzione, string language, int[] queryIds, string queryDevice = "") {
+        private void SendAllWindowsMobile(Int32 idcontenttopush, string contenttype, string message, bool produzione, string language, int[] queryIds, string queryDevice = "") {
             var allDevice = GetListMobileDevice(contenttype, queryDevice, TipoDispositivo.WindowsMobile, produzione, language, queryIds);
             var setting_WindowsAppPackageName = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().WindowsAppPackageName;
             var setting_WindowsAppSecurityIdentifier = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().WindowsAppSecurityIdentifier;
@@ -715,12 +726,27 @@ namespace Laser.Orchard.Mobile.Services {
 
             // TODO: da gestire produzione
 
+            string hostCheck = _shellSetting.RequestUrlHost;
+            string prefixCheck = _shellSetting.RequestUrlPrefix;
             push.Start();
             foreach (PushNotificationVM pnr in allDevice) {
-                push.QueueNotification(new WnsToastNotification {
-                    ChannelUri = pnr.Token,
-                    Payload = XElement.Parse(message)
-                });
+                // verifica che il device sia stato registrato nell'ambiente corrente
+                if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck)) {
+                    push.QueueNotification(new WnsToastNotification {
+                        ChannelUri = pnr.Token,
+                        Payload = XElement.Parse(message)
+                    });
+
+                    if (idcontenttopush > 0) {
+                        SentRecord sr = new SentRecord();
+                        sr.DeviceType = "Windows";
+                        sr.PushNotificationRecord_Id = pnr.Id;
+                        sr.PushedItem = idcontenttopush;
+                        sr.SentDate = DateTime.UtcNow;
+                        _sentRepository.Create(sr);
+                        _sentRepository.Flush();
+                    }
+                }
             }
             push.Stop();
         }
@@ -852,42 +878,47 @@ namespace Laser.Orchard.Mobile.Services {
                     });
                 };
 
+                string hostCheck = _shellSetting.RequestUrlHost;
+                string prefixCheck = _shellSetting.RequestUrlPrefix;
                 StringBuilder sb = new StringBuilder();
                 push.Start();
                 foreach (PushNotificationVM dispositivo in listdispositivo) {
-                    sb.Clear();
-                    sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", FormatJsonValue(pushMessage.Text), FormatJsonValue(pushMessage.Sound));
-                    if (!string.IsNullOrEmpty(pushMessage.Eu)) {
-                        sb.AppendFormat(",\"Eu\":\"{0}\"", FormatJsonValue(pushMessage.Eu));
-                    }
-                    else if (!string.IsNullOrEmpty(pushMessage.Iu)) {
-                        sb.AppendFormat(",\"Iu\":\"{0}\"", FormatJsonValue(pushMessage.Iu));
-                    }
-                    else {
-                        sb.AppendFormat(",\"Id\":{0}", pushMessage.idContent);
-                        sb.AppendFormat(",\"Rid\":{0}", pushMessage.idRelated);
-                        sb.AppendFormat(",\"Ct\":\"{0}\"", FormatJsonValue(pushMessage.Ct));
-                        sb.AppendFormat(",\"Al\":\"{0}\"", FormatJsonValue(pushMessage.Al));
-                    }
-                    sb.Append("}");
-                    if (pushMessage.Text.Length > MAX_PUSH_TEXT_LENGTH) {
-                        _notifier.Information(T("Sent: message payload exceed the limit"));
-                        _myLog.WriteLog("Sent: message payload exceed the limit");
-                    }
-                    else {
-                        push.QueueNotification(new ApnsNotification {
-                            DeviceToken = dispositivo.Token,
-                            Payload = JObject.Parse(sb.ToString())
-                        });
+                    // verifica che il device sia stato registrato nell'ambiente corrente
+                    if ((dispositivo.RegistrationUrlHost == hostCheck) && (dispositivo.RegistrationUrlPrefix == prefixCheck)) {
+                        sb.Clear();
+                        sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", FormatJsonValue(pushMessage.Text), FormatJsonValue(pushMessage.Sound));
+                        if (!string.IsNullOrEmpty(pushMessage.Eu)) {
+                            sb.AppendFormat(",\"Eu\":\"{0}\"", FormatJsonValue(pushMessage.Eu));
+                        }
+                        else if (!string.IsNullOrEmpty(pushMessage.Iu)) {
+                            sb.AppendFormat(",\"Iu\":\"{0}\"", FormatJsonValue(pushMessage.Iu));
+                        }
+                        else {
+                            sb.AppendFormat(",\"Id\":{0}", pushMessage.idContent);
+                            sb.AppendFormat(",\"Rid\":{0}", pushMessage.idRelated);
+                            sb.AppendFormat(",\"Ct\":\"{0}\"", FormatJsonValue(pushMessage.Ct));
+                            sb.AppendFormat(",\"Al\":\"{0}\"", FormatJsonValue(pushMessage.Al));
+                        }
+                        sb.Append("}");
+                        if (pushMessage.Text.Length > MAX_PUSH_TEXT_LENGTH) {
+                            _notifier.Information(T("Sent: message payload exceed the limit"));
+                            _myLog.WriteLog("Sent: message payload exceed the limit");
+                        }
+                        else {
+                            push.QueueNotification(new ApnsNotification {
+                                DeviceToken = dispositivo.Token,
+                                Payload = JObject.Parse(sb.ToString())
+                            });
 
-                        if (pushMessage.idContent > 0) {
-                            SentRecord sr = new SentRecord();
-                            sr.DeviceType = "Apple";
-                            sr.PushNotificationRecord_Id = dispositivo.Id;
-                            sr.PushedItem = pushMessage.idContent;
-                            sr.SentDate = DateTime.UtcNow;
-                            _sentRepository.Create(sr);
-                            _sentRepository.Flush();
+                            if (pushMessage.idContent > 0) {
+                                SentRecord sr = new SentRecord();
+                                sr.DeviceType = "Apple";
+                                sr.PushNotificationRecord_Id = dispositivo.Id;
+                                sr.PushedItem = pushMessage.idContent;
+                                sr.SentDate = DateTime.UtcNow;
+                                _sentRepository.Create(sr);
+                                _sentRepository.Flush();
+                            }
                         }
                     }
                 }

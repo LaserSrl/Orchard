@@ -166,6 +166,11 @@ namespace Laser.Orchard.Mobile.Services {
                 pushElement.DataInserimento = adesso;
                 pushElement.DataModifica = adesso;
                 pushElement.MobileContactPartRecord_Id = EnsureContactId(pushElement.UUIdentifier);
+                
+                // se è un nuovo dispositivo, registra anche host e prefix dell'ambiente corrente
+                pushElement.RegistrationUrlHost = _shellSetting.RequestUrlHost;
+                pushElement.RegistrationUrlPrefix = _shellSetting.RequestUrlPrefix;
+
                 _pushNotificationRepository.Create(pushElement);
             }
 
