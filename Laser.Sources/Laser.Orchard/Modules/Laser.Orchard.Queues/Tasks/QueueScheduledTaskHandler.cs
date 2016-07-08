@@ -71,7 +71,11 @@ namespace Laser.Orchard.Queues.Tasks
                 }
                 finally
                 {
-                    this.ScheduleNextTask();
+                    try {
+                        this.ScheduleNextTask();
+                    } catch (Exception e2) {
+                        this.Logger.Error(e2, e2.Message);
+                    }
                 }
             }
         }

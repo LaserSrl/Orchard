@@ -59,76 +59,83 @@ namespace Laser.Orchard.NewsLetters.Handlers {
             if (context.Task.TaskType != TaskType) {
                 return;
             }
-            dynamic content = context.Task.ContentItem;
-            NewsletterEditionPart part = context.Task.ContentItem.As<NewsletterEditionPart>();
-            _mailerConfig = _orchardServices.WorkContext.CurrentSite.As<MailerSiteSettingsPart>();
-            var urlHelper = GetUrlHelper();
-            int[] selectedAnnIds;
-            IList<AnnouncementPart> items = null;
-            IEnumerable<ExpandoObject> fullyItems;
-            if (!String.IsNullOrWhiteSpace(part.AnnouncementIds)) {
-                selectedAnnIds = !String.IsNullOrWhiteSpace(part.AnnouncementIds) ? part.AnnouncementIds.Split(',').Select(s => Convert.ToInt32(s)).ToArray() : null;
-                items = GetAnnouncements(selectedAnnIds);
-                fullyItems = items.Select(
-                    s => new {
-                        AnnouncementPart = s,
-                        DisplayUrl = urlHelper.ItemDisplayUrl(s)
-                    }.ToExpando());
-            }
-            else {
-                fullyItems = null;
-            }
-            var subscribers = _newslServices.GetSubscribers(part.NewsletterDefinitionPartRecord_Id).Where(w => w.Confirmed);
-            var subscribersEmails = subscribers.Select(s => new { s.Id, s.Name, s.Email });
+            try {
+                dynamic content = context.Task.ContentItem;
+                NewsletterEditionPart part = context.Task.ContentItem.As<NewsletterEditionPart>();
+                _mailerConfig = _orchardServices.WorkContext.CurrentSite.As<MailerSiteSettingsPart>();
+                var urlHelper = GetUrlHelper();
+                int[] selectedAnnIds;
+                IList<AnnouncementPart> items = null;
+                IEnumerable<ExpandoObject> fullyItems;
+                if (!String.IsNullOrWhiteSpace(part.AnnouncementIds)) {
+                    selectedAnnIds = !String.IsNullOrWhiteSpace(part.AnnouncementIds) ? part.AnnouncementIds.Split(',').Select(s => Convert.ToInt32(s)).ToArray() : null;
+                    items = GetAnnouncements(selectedAnnIds);
+                    fullyItems = items.Select(
+                        s => new {
+                            AnnouncementPart = s,
+                            DisplayUrl = urlHelper.ItemDisplayUrl(s)
+                        }.ToExpando());
+                } else {
+                    fullyItems = null;
+                }
+                var subscribers = _newslServices.GetSubscribers(part.NewsletterDefinitionPartRecord_Id).Where(w => w.Confirmed);
+                var subscribersEmails = subscribers.Select(s => new { s.Id, s.Name, s.Email });
 
-            // ricava i settings e li invia tramite FTP
-            var templateId = _newslServices.GetNewsletterDefinition(part.NewsletterDefinitionPartRecord_Id,
-                VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id;
-            var model = new {
-                NewsletterEdition = content,
-                ContentItems = fullyItems
-            }.ToExpando();
-            Dictionary<string, object> settings = GetSettings(model, templateId, part);
-            
-            if (settings.Count > 0) {
-                SendSettings(settings, part.Id);
+                // ricava i settings e li invia tramite FTP
+                var templateId = _newslServices.GetNewsletterDefinition(part.NewsletterDefinitionPartRecord_Id,
+                    VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id;
+                var model = new {
+                    NewsletterEdition = content,
+                    ContentItems = fullyItems
+                }.ToExpando();
+                Dictionary<string, object> settings = GetSettings(model, templateId, part);
 
-                // impagina e invia i recipiens tramite FTP
-                int pageNum = 0;
-                List<object> pagina = new List<object>();
-                List<object> listaSubscribers = new List<object>(subscribersEmails);
-                int pageSize = _mailerConfig.RecipientsPerJsonFile;
+                if (settings.Count > 0) {
+                    SendSettings(settings, part.Id);
 
-                for (int i = 0; i < listaSubscribers.Count; i++) {
-                    if (((i + 1) % pageSize) == 0) {
+                    // impagina e invia i recipiens tramite FTP
+                    int pageNum = 0;
+                    List<object> pagina = new List<object>();
+                    List<object> listaSubscribers = new List<object>(subscribersEmails);
+                    int pageSize = _mailerConfig.RecipientsPerJsonFile;
+
+                    for (int i = 0; i < listaSubscribers.Count; i++) {
+                        if (((i + 1) % pageSize) == 0) {
+                            SendRecipients(pagina, part.Id, pageNum);
+                            pageNum++;
+                            pagina = new List<object>();
+                        }
+                        pagina.Add(listaSubscribers[i]);
+                    }
+                    // invia l'ultima pagina se non è vuota
+                    if (pagina.Count > 0) {
                         SendRecipients(pagina, part.Id, pageNum);
-                        pageNum++;
-                        pagina = new List<object>();
                     }
-                    pagina.Add(listaSubscribers[i]);
-                }
-                // invia l'ultima pagina se non è vuota
-                if (pagina.Count > 0) {
-                    SendRecipients(pagina, part.Id, pageNum);
-                }
 
-                // Aggiorno la newsletter edition, e rimuovo la relazione tra Newletter e Announcement 
-                part.Dispatched = true;
-                part.DispatchDate = DateTime.Now;
-                part.Number = GetNextNumber(part.NewsletterDefinitionPartRecord_Id); ;
+                    // Aggiorno la newsletter edition, e rimuovo la relazione tra Newletter e Announcement 
+                    part.Dispatched = true;
+                    part.DispatchDate = DateTime.Now;
+                    part.Number = GetNextNumber(part.NewsletterDefinitionPartRecord_Id); ;
 
-                if (items != null) {
-                    foreach (var item in items) {
-                        var ids = ("," + item.AttachToNextNewsletterIds + ",").Replace("," + part.NewsletterDefinitionPartRecord_Id + ",", "");
-                        item.AttachToNextNewsletterIds = ids;
+                    if (items != null) {
+                        foreach (var item in items) {
+                            var ids = ("," + item.AttachToNextNewsletterIds + ",").Replace("," + part.NewsletterDefinitionPartRecord_Id + ",", "");
+                            item.AttachToNextNewsletterIds = ids;
+                        }
                     }
-                }
 
-                _contentManager.Publish(context.Task.ContentItem);
+                    _contentManager.Publish(context.Task.ContentItem);
+                } else {
+                    Logger.Error(T("Error parsing mail template.").Text);
+                }
+            } catch (Exception ex) {
+                string idcontenuto = "nessun id ";
+                try {
+                    idcontenuto = context.Task.ContentItem.Id.ToString();
+                } catch (Exception ex2) { Logger.Error(ex2, ex2.Message); }
+                Logger.Error(ex, "Error on " + TaskType + " for ContentItem id = " + idcontenuto + " : " + ex.Message);
             }
-            else {
-                Logger.Error(T("Error parsing mail template.").Text);
-            }
+
         }
 
         private IList<AnnouncementPart> GetAnnouncements(int[] selectedIds) {

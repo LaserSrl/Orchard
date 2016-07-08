@@ -26,36 +26,43 @@ namespace Laser.Orchard.Questionnaires.Handlers {
             try {
                 //DateTime firstDate = DateTime.UtcNow.AddHours(6);//DateTime.UtcNow.AddSeconds(30);//new DateTime().AddMinutes(5);
                 //ScheduleNextTask(firstDate);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 this.Logger.Error(e, e.Message);
             }
         }
 
         public void Process(ScheduledTaskContext context) {
-          //  this.Logger.Error("sono dentro process");
-            string taskTypeStr = context.Task.TaskType;
-            string[] taTypeParts = taskTypeStr.Split(new char[]{' '}, StringSplitOptions.RemoveEmptyEntries);
-            if (taTypeParts.Length == 2) {
-                if (taTypeParts[0] == TaskType) {
-                    bool sent = false;
-                    try {
-                        int gId = int.Parse(taTypeParts[1]);
-                        sent = _questionnairesServices.SendTemplatedEmailRanking(gId);
-                    } catch (Exception e) {
-                        this.Logger.Error(e, e.Message);
-                        throw;
-                    }
-                    if (!sent) {
-                        //reschedule
-                        DateTime nextDate = ((DateTime)(context.Task.ScheduledUtc)).AddMinutes(5);
-                        _taskManager.CreateTask(taskTypeStr, nextDate, context.Task.ContentItem);
+            try {
+                //  this.Logger.Error("sono dentro process");
+                string taskTypeStr = context.Task.TaskType;
+                string[] taTypeParts = taskTypeStr.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (taTypeParts.Length == 2) {
+                    if (taTypeParts[0] == TaskType) {
+                        bool sent = false;
+                        try {
+                            int gId = int.Parse(taTypeParts[1]);
+                            sent = _questionnairesServices.SendTemplatedEmailRanking(gId);
+                        } catch (Exception e) {
+                            this.Logger.Error(e, e.Message);
+                            throw;
+                        }
+                        if (!sent) {
+                            //reschedule
+                            DateTime nextDate = ((DateTime)(context.Task.ScheduledUtc)).AddMinutes(5);
+                            _taskManager.CreateTask(taskTypeStr, nextDate, context.Task.ContentItem);
+                        }
                     }
                 }
+            } catch (Exception ex) {
+                string idcontenuto = "nessun id ";
+                try {
+                    idcontenuto = context.Task.ContentItem.Id.ToString();
+                } catch (Exception ex2) { Logger.Error(ex2, ex2.Message); }
+                Logger.Error(ex, "Error on " + TaskType + " analized input: " + context.Task.TaskType + " for ContentItem id = " + idcontenuto + " : " + ex.Message);
             }
             //if (context.Task.TaskType == TaskType) {
             //    try {
-               
+
             //        bool sended= _questionnairesServices.SendTemplatedEmailRanking();
             //        //The following line does not work here, because the task does not contain the ContentItem
             //       //_questionnairesServices.SendTemplatedEmailRanking(context.Task.ContentItem.Id);

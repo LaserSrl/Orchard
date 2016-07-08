@@ -55,50 +55,60 @@ namespace Laser.Orchard.MailCommunication.Handlers {
             if (context.Task.TaskType != TaskType) {
                 return;
             }
-            dynamic content = context.Task.ContentItem;
-            MailCommunicationPart part = context.Task.ContentItem.As<MailCommunicationPart>();
-            Int32[] ids = null;
-            Int32? idLocalization = null;
+            try {
+                dynamic content = context.Task.ContentItem;
+                MailCommunicationPart part = context.Task.ContentItem.As<MailCommunicationPart>();
+                Int32[] ids = null;
+                Int32? idLocalization = null;
 
-            _mailerConfig = _orchardServices.WorkContext.CurrentSite.As<MailerSiteSettingsPart>();
-            if (content.QueryPickerPart != null && content.QueryPickerPart.Ids.Length > 0)
-                ids = content.QueryPickerPart.Ids;
+                _mailerConfig = _orchardServices.WorkContext.CurrentSite.As<MailerSiteSettingsPart>();
+                if (content.QueryPickerPart != null && content.QueryPickerPart.Ids.Length > 0)
+                    ids = content.QueryPickerPart.Ids;
 
-            var localizedPart = content.LocalizationPart;
-            if (localizedPart != null && localizedPart.Culture != null)
-                idLocalization = localizedPart.Culture.Id;
+                var localizedPart = content.LocalizationPart;
+                if (localizedPart != null && localizedPart.Culture != null)
+                    idLocalization = localizedPart.Culture.Id;
 
-            IList lista = _mailCommunicationService.GetMailQueryResult(ids, idLocalization);
+                IList lista = _mailCommunicationService.GetMailQueryResult(ids, idLocalization);
 
-            // ricava i settings e li invia tramite FTP
-            var templateId = ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id;
-            Dictionary<string, object> settings = GetSettings(content, templateId, part);
-            if (settings.Count > 0) {
-                if (lista.Count > 0) {
-                    SendSettings(settings, part.Id);
+                // ricava i settings e li invia tramite FTP
+                var templateId = ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id;
+                Dictionary<string, object> settings = GetSettings(content, templateId, part);
+                if (settings.Count > 0) {
+                    if (lista.Count > 0) {
+                        SendSettings(settings, part.Id);
 
-                    // impagina e invia i recipiens tramite FTP
-                    int pageNum = 0;
-                    List<object> pagina = new List<object>();
-                    int pageSize = _mailerConfig.RecipientsPerJsonFile;
-                    for (int i = 0; i < lista.Count; i++) {
-                        if (((i + 1) % pageSize) == 0) {
-                            SendRecipients(pagina, part.Id, pageNum);
-                            pageNum++;
-                            pagina = new List<object>();
+                        // impagina e invia i recipiens tramite FTP
+                        int pageNum = 0;
+                        List<object> pagina = new List<object>();
+                        int pageSize = _mailerConfig.RecipientsPerJsonFile;
+                        for (int i = 0; i < lista.Count; i++) {
+                            if (((i + 1) % pageSize) == 0) {
+                                SendRecipients(pagina, part.Id, pageNum);
+                                pageNum++;
+                                pagina = new List<object>();
+                            }
+                            pagina.Add(lista[i]);
                         }
-                        pagina.Add(lista[i]);
+                        // invia l'ultima pagina se non è vuota
+                        if (pagina.Count > 0) {
+                            SendRecipients(pagina, part.Id, pageNum);
+                        }
+                        part.RecipientsNumber = lista.Count;
+                        part.SentMailsNumber = 0;
+                        part.MailMessageSent = true;
+
                     }
-                    // invia l'ultima pagina se non è vuota
-                    if (pagina.Count > 0) {
-                        SendRecipients(pagina, part.Id, pageNum);
-                    }
-                    part.RecipientsNumber = lista.Count;
-                    part.SentMailsNumber = 0;
-                    part.MailMessageSent = true;
+                } else {
+                    _notifier.Error(T("Error parsing mail template."));
+                    Logger.Error(T("Error parsing mail template.").ToString());
                 }
-            } else {
-                _notifier.Error(T("Error parsing mail template."));
+            } catch (Exception ex) {
+                string idcontenuto = "nessun id ";
+                try {
+                    idcontenuto = context.Task.ContentItem.Id.ToString();
+                } catch (Exception ex2) { Logger.Error(ex2, ex2.Message); }
+                Logger.Error(ex, "Error on " + TaskType + " for ContentItem id = " + idcontenuto + " : " + ex.Message);
             }
         }
 
