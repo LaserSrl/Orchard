@@ -41,6 +41,8 @@ namespace Laser.Orchard.Vimeo.Services {
 #if DEBUG
         string ExtractVimeoStreamURL(int ucId);
 #endif
+
+        string GetVideoStatus(int ucId);
     }
 
 }

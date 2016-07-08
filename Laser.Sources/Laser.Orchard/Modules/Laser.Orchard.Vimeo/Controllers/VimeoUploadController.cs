@@ -42,7 +42,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
 #if DEBUG
         //this method to test extracting the URL of the vimeo streams. It will not be present in the production systems
         public ActionResult ExtractVimeoStreamUrl(int ucId) {
-            string ret = _vimeoServices.ExtractVimeoStreamURL(ucId);
+            string ret = _vimeoServices.GetVideoStatus(ucId);//_vimeoServices.ExtractVimeoStreamURL(ucId);
             return Content(ret); //JsonConvert.SerializeObject(new { ret })
         }
 #endif

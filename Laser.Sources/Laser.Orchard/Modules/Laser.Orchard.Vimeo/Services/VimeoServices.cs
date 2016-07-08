@@ -25,6 +25,7 @@ namespace Laser.Orchard.Vimeo.Services {
         private readonly IRepository<UploadsCompleteRecord> _repositoryUploadsComplete;
         private readonly IOrchardServices _orchardServices;
         private readonly IScheduledTaskManager _taskManager;
+        private readonly IContentManager _contentManager;
 
         public Localizer T { get; set; }
 
@@ -32,13 +33,15 @@ namespace Laser.Orchard.Vimeo.Services {
             IRepository<UploadsInProgressRecord> repositoryUploadsInProgress,
             IRepository<UploadsCompleteRecord> repositoryUploadsComplete,
             IOrchardServices orchardServices,
-            IScheduledTaskManager taskManager) {
+            IScheduledTaskManager taskManager,
+            IContentManager contentManager) {
 
             _repositorySettings = repositorySettings;
             _repositoryUploadsInProgress = repositoryUploadsInProgress;
             _repositoryUploadsComplete = repositoryUploadsComplete;
             _orchardServices = orchardServices;
             _taskManager = taskManager;
+            _contentManager = contentManager;
 
             T = NullLocalizer.Instance;
         }
@@ -620,6 +623,33 @@ namespace Laser.Orchard.Vimeo.Services {
         }
 
         /// <summary>
+        /// Generate a MediaPart that can be embedded in contents and that will contain the vimeo video we are uploading.
+        /// </summary>
+        /// <param name="uploadId">The Id of the upload in progress</param>
+        /// <returns>The Id of the new MediaPart, or <value>-1</value> in case of error.</returns>
+        public int GenerateNewMediaPart(int uploadId) {
+            UploadsInProgressRecord uIP = _repositoryUploadsInProgress.Get(uploadId);
+            if (uIP == null) return -1;
+            return GenerateNewMediaPart(uIP);
+        }
+        /// <summary>
+        /// Generate a MediaPart that can be embedded in contents and that will contain the vimeo video we are uploading.
+        /// </summary>
+        /// <param name="uploadId">The record of the upload in progress</param>
+        /// <returns>The Id of the new MediaPart, or <value>-1</value> in case of error.</returns>
+        public int GenerateNewMediaPart(UploadsInProgressRecord uIP) {
+            if (uIP == null) return -1;
+
+            //create new mediapart
+
+            //insert Id in the upload's record
+
+            //return the id
+
+            return -1;
+        }
+
+        /// <summary>
         /// This method verifies in our records to check the state of an upload.
         /// </summary>
         /// <param name="uploadId">The Id of the upload we want to check</param>
@@ -699,7 +729,6 @@ namespace Laser.Orchard.Vimeo.Services {
                 .Get(uploadId);
             return TerminateUpload(entity);
         }
-
         /// <summary>
         /// We terminate the Vimeo upload stream.
         /// </summary>
@@ -726,6 +755,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         ucr.Uri = resp.Headers["Location"];
                         ucr.ProgressId = entity.Id;
                         ucr.CreatedTime = DateTime.UtcNow;
+                        ucr.MediaPartId = entity.MediaPartId;
                         _repositoryUploadsComplete.Create(ucr);
                         //delete the entry from uploads in progress
                         _repositoryUploadsInProgress.Delete(entity);
@@ -1246,6 +1276,10 @@ namespace Laser.Orchard.Vimeo.Services {
             return System.Convert.ToBase64String(plainTextBytes);
         }
 
+        public string GetVideoStatus(int ucId) {
+            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+            return GetVideoStatus(ucr);
+        }
         public string GetVideoStatus(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Record is null";
 
@@ -1265,6 +1299,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                             string vimeoJson = reader.ReadToEnd();
                             //todo: "FILL THIS METHOD IN";
+                            return JObject.Parse(vimeoJson)["status"].ToString();
                         }
                     }
                 }
@@ -1314,7 +1349,16 @@ namespace Laser.Orchard.Vimeo.Services {
                     AddVideoToAlbum(ucr);
                 }
                 if (!ucr.IsAvailable) {
+                    ucr.IsAvailable = GetVideoStatus(ucr) == "available";
+                }
 
+                if (ucr.Patched
+                    && ucr.IsAvailable
+                    && (ucr.UploadedToGroup || !settings.AlwaysUploadToGroup)
+                    && (ucr.UploadedToChannel || !settings.AlwaysUploadToChannel)
+                    && (ucr.UploadedToAlbum || !settings.AlwaysUploadToAlbum)) {
+                    //We finished everything for this video upload, so we may remove its record
+                        _repositoryUploadsComplete.Delete(ucr);
                 }
             }
         }
