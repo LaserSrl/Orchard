@@ -124,6 +124,9 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
             return new RedirectResult(Url.LogOn(returnUrl, result.UserName, loginData));
         }
+
+
+
         [OutputCache(NoStore = true, Duration = 0)]
         public JsonResult ExternalTokenLogOn(string __provider__, string token, string secret = "") {
             return ExternalTokenLogOnLogic(__provider__, token, secret);

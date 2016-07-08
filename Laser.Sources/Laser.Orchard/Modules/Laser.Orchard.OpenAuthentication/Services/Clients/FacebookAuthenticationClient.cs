@@ -72,9 +72,36 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
 
-        public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams)
+        /// <summary>
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="createUserParams"></param>
+        /// <returns></returns>
+        public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams) 
         {
-            throw new System.NotImplementedException();
-        }
-    }
-}
+            OpenAuthCreateUserParams retVal;
+
+            retVal = createUserParams;
+            string emailAddress = string.Empty;
+           
+            var valoriRicavati = createUserParams.ExtraData.Values;
+            int countVal = 0;
+
+            foreach (string valric in valoriRicavati) 
+            {
+                if (countVal == 1) {
+                    emailAddress = valric;
+                    retVal.UserName = emailAddress;
+                }
+
+                countVal = countVal + 1;
+            }
+
+            return retVal;
+       
+       }
+
+
+     }
+  }
