@@ -43,6 +43,7 @@ namespace Laser.Orchard.Mobile.Services {
         void DeleteUserDeviceAssociation(int userId);
         void RebindDevicesToMasterContact(int contactId);
         void Synchronize();
+        IEnumerable<PushNotificationRecord> SearchPushNotification(string texttosearch);
     }
 
     public class PushNotificationService : IPushNotificationService {
@@ -288,6 +289,10 @@ namespace Laser.Orchard.Mobile.Services {
 
         private PushNotificationRecord GetPushNotificationBy_UUIdentifier(string uuidentifier, bool produzione) {
             return _pushNotificationRepository.Fetch(x => x.UUIdentifier == uuidentifier && x.Produzione == produzione).FirstOrDefault();
+        }
+
+        public IEnumerable<PushNotificationRecord> SearchPushNotification(string texttosearch) {
+            return _pushNotificationRepository.Fetch(x => x.UUIdentifier.Contains(texttosearch)).ToList();
         }
 
         #endregion [CRUD PushNotification]

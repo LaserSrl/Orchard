@@ -12,23 +12,19 @@ using System.Web.Mvc;
 
 
 namespace Laser.Orchard.Mobile.Controllers {
-    [OrchardFeature("Laser.Orchard.PushGateway")]
     public class PushNotificationController : Controller {
 
         private readonly IPushNotificationService _pushNotificationService;
-        private readonly IPushGatewayService _pushGatewayService;
         private readonly INotifier _notifier;
         private readonly IOrchardServices _orchardServices;
 
         public PushNotificationController(
             IOrchardServices orchardServices
             , IPushNotificationService pushNotificationService
-            , IPushGatewayService pushGatewayService
             , INotifier notifier
             ) {
             _orchardServices = orchardServices;
             _pushNotificationService = pushNotificationService;
-            _pushGatewayService = pushGatewayService;
             _notifier = notifier;
         }
 
@@ -46,7 +42,7 @@ namespace Laser.Orchard.Mobile.Controllers {
         [HttpPost]
         [Admin]
         public ActionResult Index(PagerParameters pagerParameters, PushSearch search) {
-            var AllRecord = _pushGatewayService.SearchPushNotification(search.Expression);
+            var AllRecord = _pushNotificationService.SearchPushNotification(search.Expression);
             var totRecord = AllRecord.Count();
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
             dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(totRecord);

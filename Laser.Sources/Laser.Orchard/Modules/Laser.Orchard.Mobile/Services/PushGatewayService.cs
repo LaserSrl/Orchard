@@ -35,7 +35,6 @@ namespace Laser.Orchard.Mobile.Services {
     public interface IPushGatewayService : IDependency {
         IList GetPushQueryResult(Int32[] ids, bool countOnly = false);
         IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false);
-        IEnumerable<PushNotificationRecord> SearchPushNotification(string texttosearch);
         void PublishedPushEventTest(ContentItem ci);
         void PublishedPushEvent(ContentItem ci);
         void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string JsonAndroid, string messageWindows, string sound, string queryDevice = "");
@@ -140,10 +139,6 @@ namespace Laser.Orchard.Mobile.Services {
                 .Where(x => x.ContentPartRecord<MobileContactPartRecord>(), x => x.IsNotEmpty("MobileRecord"));
 
             return query;
-        }
-
-        public IEnumerable<PushNotificationRecord> SearchPushNotification(string texttosearch) {
-            return _pushNotificationRepository.Fetch(x => x.UUIdentifier.Contains(texttosearch)).ToList();
         }
 
         /// <summary>
