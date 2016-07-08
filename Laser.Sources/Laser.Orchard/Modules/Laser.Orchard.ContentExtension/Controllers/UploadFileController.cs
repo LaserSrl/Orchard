@@ -55,32 +55,32 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         }
 
         [HttpPost]
-        public JsonResult PostFile(HttpPostedFileBase file) {
+        public JsonResult PostFile(HttpPostedFileBase file, string contentType="") {
             var currentUser = _orchardServices.WorkContext.CurrentUser;
             if (currentUser == null) {
-                return PostFileFunction(file);
+                return PostFileFunction(file, contentType);
             }
             else
                 if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
-                    return PostFileFunction(file);
+                    return PostFileFunction(file, contentType);
                 }
                 else {
                     return Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
                 }
         }
 
-        private JsonResult PostFileFunction(HttpPostedFileBase file) {
+        private JsonResult PostFileFunction(HttpPostedFileBase file, string contentType = "") {
             if (!_orchardServices.Authorizer.Authorize(MediaPermissions.InsertMedia)) {
                 return Json(_utilsServices.GetResponse(ResponseType.UnAuthorized));
             }
             Int32 output = 0;
             string LinkFile = "/Media/" + _settings.Name + "/Upload";
-            string pathString = Server.MapPath("~/Media/" + _settings.Name) + @"\Upload";
+            string pathString = Server.MapPath("~/Media/" + _settings.Name) + @"\Upload" + (contentType != "" ? "\\" + contentType : "");
             VerificaPath(pathString);
             string nomefile = System.IO.Path.GetFileName(file.FileName);
             if (_contentExtensionsServices.FileAllowed(nomefile)) {
                 int contatore = 0;
-                string cont = "";
+                string cont = ""; 
                 while (System.IO.File.Exists(System.IO.Path.Combine(pathString, cont + nomefile))) {
                     contatore++;
                     cont = contatore.ToString() + "_";
@@ -100,7 +100,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
 
         [HttpPost]
         public ActionResult Index(UploadFileVM filelist, HttpPostedFileBase file) {
-            string LinkFile = "/Media/" + _settings.Name;
+            string linkFile = "/Media/" + _settings.Name;
             string pathString = Server.MapPath("~/Media/" + _settings.Name);
             //         pathString += @"\Upload";
             //         LinkFile += "/Upload";
@@ -108,13 +108,13 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             if (filelist != null) {
                 if (filelist.FolderField != "") {
                     pathString += @"\" + filelist.FolderField;
-                    LinkFile += "/" + filelist.FolderField;
+                    linkFile += "/" + filelist.FolderField;
                     VerificaPath(pathString);
                 }
 
                 if (filelist.SubFolder == "random") {
                     pathString += @"\" + Session.SessionID;
-                    LinkFile += @"/" + Session.SessionID;
+                    linkFile += @"/" + Session.SessionID;
                     VerificaPath(pathString);
                 }
                 else
@@ -122,19 +122,19 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                         if (filelist.SubFolder == "") {
                             string folder = _orchardServices.WorkContext.CurrentUser.Id.ToString();
                             pathString += @"\" + folder;   //pathString += @"\" + Session.SessionID + @"\";
-                            LinkFile += "/" + folder;  //LinkFile += @"\" + Session.SessionID + @"\";
+                            linkFile += "/" + folder;  //LinkFile += @"\" + Session.SessionID + @"\";
                             VerificaPath(pathString);
                         }
                         else {
                             string folder = _orchardServices.WorkContext.CurrentUser.Id.ToString();
                             pathString += @"\" + filelist.SubFolder;   //pathString += @"\" + Session.SessionID + @"\";
-                            LinkFile += "/" + filelist.SubFolder;  //LinkFile += @"\" + Session.SessionID + @"\";
+                            linkFile += "/" + filelist.SubFolder;  //LinkFile += @"\" + Session.SessionID + @"\";
                             VerificaPath(pathString);
                         }
                     }
             }
             pathString += @"\";   //pathString += @"\" + Session.SessionID + @"\";
-            LinkFile += "/";
+            linkFile += "/";
             string nomefile = System.IO.Path.GetFileName(file.FileName);
             if (_contentExtensionsServices.FileAllowed(nomefile)) {
                 int contatore = 0;
@@ -153,7 +153,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                 _orchardServices.ContentManager.Create(mediaPart.ContentItem, VersionOptions.Published);
                 //          filelist.ElencoUrl.Add(mediaPart.ContentItem.As<MediaPart>().Id);
                 if (filelist != null) {
-                    filelist.ElencoUrl.Add(LinkFile.Replace("//", "/") + cont + nomefile);
+                    filelist.ElencoUrl.Add(linkFile.Replace("//", "/") + cont + nomefile);
                     filelist.ElencoId.Add(mediaPart.Id);
                 }
             }

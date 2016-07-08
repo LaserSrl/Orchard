@@ -8,7 +8,7 @@ namespace Laser.Orchard.Mobile.Controllers {
         public AppStoreRedirectController(IUserAgentRedirectServices userAgentRedirectServices) {
             _userAgentRedirectServices = userAgentRedirectServices;
         }
-        public RedirectResult Url(string url, string appName) {
+        public new RedirectResult Url(string url, string appName) {
             _userAgentRedirectServices.PersistAnswer(appName);
             if (String.IsNullOrWhiteSpace(url)) {
                 url = Request.UrlReferrer.ToString();
