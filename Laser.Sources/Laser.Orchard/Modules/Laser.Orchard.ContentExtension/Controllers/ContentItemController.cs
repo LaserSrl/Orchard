@@ -442,6 +442,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                         dynamic data = new ExpandoObject();
                         data.DisplayAlias = ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias;
                         data.Id = (Int32)(((dynamic)NewOrModifiedContent).Id);
+                        data.ContentType = ((dynamic)NewOrModifiedContent).ContentType;
                         rsp.Data = data;
                     }
                 }
