@@ -16,6 +16,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Orchard.Tasks.Scheduling;
 using Orchard.Localization;
+using Orchard.MediaLibrary.Services;
+using Orchard.MediaLibrary.Models;
+using System.Text.RegularExpressions;
+using System.Web.Mvc;
+using Laser.Orchard.Vimeo.Controllers;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.Vimeo.Services {
     public class VimeoServices : IVimeoServices {
@@ -26,6 +32,7 @@ namespace Laser.Orchard.Vimeo.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly IScheduledTaskManager _taskManager;
         private readonly IContentManager _contentManager;
+        private readonly IMediaLibraryService _mediaLibraryService;
 
         public Localizer T { get; set; }
 
@@ -34,7 +41,8 @@ namespace Laser.Orchard.Vimeo.Services {
             IRepository<UploadsCompleteRecord> repositoryUploadsComplete,
             IOrchardServices orchardServices,
             IScheduledTaskManager taskManager,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IMediaLibraryService mediaLibraryService) {
 
             _repositorySettings = repositorySettings;
             _repositoryUploadsInProgress = repositoryUploadsInProgress;
@@ -42,6 +50,7 @@ namespace Laser.Orchard.Vimeo.Services {
             _orchardServices = orchardServices;
             _taskManager = taskManager;
             _contentManager = contentManager;
+            _mediaLibraryService = mediaLibraryService;
 
             T = NullLocalizer.Instance;
         }
@@ -641,10 +650,28 @@ namespace Laser.Orchard.Vimeo.Services {
             if (uIP == null) return -1;
 
             //create new mediapart
+            //The MimeType should be text/html, because the type of the media part is oEmbed.
+            //We use oEmbed because that makes it easy to use it in a web client, once we can whitelist domains.
+            //in the handlers, we find that the oEmebd provider is Vimeo, if the request comes from a mobile,
+            //we can fiddle with things to avoid sending the oEmbed and instead sending astream URL
+            var oEmbedType = _mediaLibraryService.GetMediaTypes().Where(t => t.Name == "OEmbed").SingleOrDefault();
+            var mFolders = _mediaLibraryService.GetMediaFolders(null).Where(mf => mf.Name == "VimeoVideos");
+            if (mFolders.Count() == 0)
+                _mediaLibraryService.CreateFolder(null, "VimeoVideos");
 
-            //insert Id in the upload's record
+            var part = _contentManager.New<MediaPart>("OEmbed");
+            part.MimeType = "text/html";
+            part.FolderPath = "VimeoVideos";
+            part.LogicalType = "OEmbed";
 
-            //return the id
+            var oembedPart = part.As<OEmbedPart>();
+
+            if (oembedPart != null) {
+                //here we cannot fill and properly initialize the OEmbedPart, because the video does not exist yet
+                _contentManager.Create(oembedPart);
+                uIP.MediaPartId = part.Id;
+                return part.Id;
+            }
 
             return -1;
         }
@@ -1309,6 +1336,62 @@ namespace Laser.Orchard.Vimeo.Services {
             return "Unknown error";
         }
 
+        public void FinishMediaPart(int ucId) {
+            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+            if (ucr != null) FinishMediaPart(ucr);
+        }
+        public void FinishMediaPart(UploadsCompleteRecord ucr) {
+            string vId = ucr.Uri.Substring(ucr.Uri.LastIndexOf("/") + 1);
+            string url = "https://vimeo.com/" + vId;
+            MediaPart mPart = _contentManager.Get(ucr.MediaPartId).As<MediaPart>();
+            var oembedPart = mPart.As<OEmbedPart>();
+            //I took this code from Orchard.MediaLibrary.Controllers.OEmbedController
+            XDocument oeContent = null;
+            var wClient = new WebClient { Encoding = System.Text.Encoding.UTF8 };
+            try {
+                var source = wClient.DownloadString(url);
+                var oembedSignature = source.IndexOf("type=\"text/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
+                if (oembedSignature == -1) {
+                    oembedSignature = source.IndexOf("type=\"application/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
+                }
+                if (oembedSignature != -1) {
+                    var tagStart = source.Substring(0, oembedSignature).LastIndexOf('<');
+                    var tagEnd = source.IndexOf('>', oembedSignature);
+                    var tag = source.Substring(tagStart, tagEnd - tagStart);
+                    var matches = new Regex("href=\"([^\"]+)\"").Matches(tag);
+                    if (matches.Count > 0) {
+                        var href = matches[0].Groups[1].Value;
+                        try {
+                            var content = wClient.DownloadString(HttpUtility.HtmlDecode(href));
+                            oeContent = XDocument.Parse(content);
+                        } catch {
+                            //bubble
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+
+            }
+            if (oembedPart != null) {
+                //These steps actually fill the stuff in the OEMbedPart.
+                oembedPart.Source = url;
+                if (oeContent != null) {
+                    var oembed = oeContent.Root;
+                    if (oembed.Element("title") != null) {
+                        mPart.Title = oembed.Element("title").Value;
+                    } else {
+                        mPart.Title = oembed.Element("url").Value;
+                    }
+                    if (oembed.Element("description") != null) {
+                        mPart.Caption = oembed.Element("description").Value;
+                    }
+                    foreach (var element in oembed.Elements()) {
+                        oembedPart[element.Name.LocalName] = element.Value;
+                    }
+                }
+            }
+        }
+
         //TODO: CODE FOR TASKS
         public void VerifyAllUploads() {
             foreach (var uip in _repositoryUploadsInProgress.Table.ToList()) {
@@ -1357,8 +1440,10 @@ namespace Laser.Orchard.Vimeo.Services {
                     && (ucr.UploadedToGroup || !settings.AlwaysUploadToGroup)
                     && (ucr.UploadedToChannel || !settings.AlwaysUploadToChannel)
                     && (ucr.UploadedToAlbum || !settings.AlwaysUploadToAlbum)) {
+                    //Update the MediaPart
+                    FinishMediaPart(ucr);
                     //We finished everything for this video upload, so we may remove its record
-                        _repositoryUploadsComplete.Delete(ucr);
+                    _repositoryUploadsComplete.Delete(ucr);
                 }
             }
         }

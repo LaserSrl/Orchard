@@ -22,16 +22,18 @@ namespace Laser.Orchard.Vimeo.Controllers {
         public ActionResult TryStartUpload(int fileSize) {
             int uploadId = _vimeoServices.IsValidFileSize(fileSize);
             string json = "";
+            string message = T("Everything is fine").ToString();
             if (uploadId >= 0) {
                 //If there is enough quota available, open an upload ticket, by posting to VimeoEndpoints.VideoUpload
                 //with parameter type=streaming
                 string uploadUrl = _vimeoServices.GenerateUploadTicket(uploadId);
-                //create a new MediaPart of 
-                json = JsonConvert.SerializeObject(new { uploadId, uploadUrl });
+                //create a new MediaPart 
+                int MediaPartId = _vimeoServices.GenerateNewMediaPart(uploadId);
+                json = JsonConvert.SerializeObject(new { message, MediaPartId, uploadUrl });
                 return Content(json);
             } else {
                 //If there is not enough upload quota available, return an error or something.
-                string message = T("Error: Not enough upload quota available").ToString();
+                message = T("Error: Not enough upload quota available").ToString();
                 json = JsonConvert.SerializeObject(new { message });
             }
             return Content(json);
@@ -42,11 +44,13 @@ namespace Laser.Orchard.Vimeo.Controllers {
 #if DEBUG
         //this method to test extracting the URL of the vimeo streams. It will not be present in the production systems
         public ActionResult ExtractVimeoStreamUrl(int ucId) {
+            _vimeoServices.FinishMediaPart(ucId);
             string ret = _vimeoServices.GetVideoStatus(ucId);//_vimeoServices.ExtractVimeoStreamURL(ucId);
             return Content(ret); //JsonConvert.SerializeObject(new { ret })
         }
 #endif
 
+        //todo: change this around so that the parameter passed is the MediaPartId
         public ActionResult FinishUpload(int uploadId) {
             string error = "";
             //re-verify upload
