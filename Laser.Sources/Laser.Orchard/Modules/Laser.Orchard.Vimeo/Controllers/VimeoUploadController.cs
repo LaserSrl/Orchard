@@ -1,4 +1,6 @@
-﻿using Laser.Orchard.Vimeo.Services;
+﻿using Laser.Orchard.StartupConfig.Services;
+using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.Vimeo.Services;
 using Newtonsoft.Json;
 using Orchard.Localization;
 using System;
@@ -13,15 +15,16 @@ namespace Laser.Orchard.Vimeo.Controllers {
         public Localizer T { get; set; }
 
         private readonly IVimeoServices _vimeoServices;
+        private readonly IUtilsServices _utilsServices;
 
-        public VimeoUploadController(IVimeoServices vimeoServices) {
+        public VimeoUploadController(IVimeoServices vimeoServices, IUtilsServices utilsServices) {
             _vimeoServices = vimeoServices;
+            _utilsServices = utilsServices;
             T = NullLocalizer.Instance;
         }
 
         public ActionResult TryStartUpload(int fileSize) {
             int uploadId = _vimeoServices.IsValidFileSize(fileSize);
-            string json = "";
             string message = T("Everything is fine").ToString();
             if (uploadId >= 0) {
                 //If there is enough quota available, open an upload ticket, by posting to VimeoEndpoints.VideoUpload
@@ -29,14 +32,13 @@ namespace Laser.Orchard.Vimeo.Controllers {
                 string uploadUrl = _vimeoServices.GenerateUploadTicket(uploadId);
                 //create a new MediaPart 
                 int MediaPartId = _vimeoServices.GenerateNewMediaPart(uploadId);
-                json = JsonConvert.SerializeObject(new { message, MediaPartId, uploadUrl });
-                return Content(json);
+                object data = new {MediaPartId, uploadUrl};
+                return Json(_utilsServices.GetResponse(ResponseType.Success, message, data));
             } else {
                 //If there is not enough upload quota available, return an error or something.
                 message = T("Error: Not enough upload quota available").ToString();
-                json = JsonConvert.SerializeObject(new { message });
+                return Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF, message));
             }
-            return Content(json);
 
         }
 
@@ -56,51 +58,44 @@ namespace Laser.Orchard.Vimeo.Controllers {
 #endif
 
         //todo: change this around so that the parameter passed is the MediaPartId
-        public ActionResult FinishUpload(int uploadId) {
-            string error = "";
+        public ActionResult FinishUpload(int mediaPartId) {
+            string message="";
             //re-verify upload
-            switch (_vimeoServices.VerifyUpload(uploadId)) {
+            switch (_vimeoServices.VerifyUpload(mediaPartId)) {
                 case VerifyUploadResults.CompletedAlready:
                     //the periodic task had already verified that the upload had completed
+                    message = T("The upload process has finished.").ToString();
+                    return Json(_utilsServices.GetResponse(ResponseType.Success, message));
                     break;
                 case VerifyUploadResults.Complete:
                     //we just found out that the upload is complete
-                    //Make the DELETE call to terminate the upload: this gives us the video URI
-                    int ucId = _vimeoServices.TerminateUpload(uploadId);
-                    if (ucId > 0) {
-                        //Make the PATCH call to update the video settings (privacy and so on)
-                        string resultsPatch = _vimeoServices.PatchVideo(ucId);
-                        if (resultsPatch == "OK") {
-
-                        } else if (resultsPatch == "Record is null") {
-
-                        } else {
-                            //malformedrequest
-                        }
-                        string resultsAddGroup = _vimeoServices.TryAddVideoToGroup(ucId);
-                        string resultsAddChannel = _vimeoServices.TryAddVideoToChannel(ucId);
-                        string resultsAddAlbum = _vimeoServices.TryAddVideoToAlbum(ucId);
-                        return Content(JsonConvert.SerializeObject(new { resultsPatch, resultsAddGroup, resultsAddChannel, resultsAddAlbum }));
+                    if (_vimeoServices.TerminateUpload(mediaPartId)) {
+                        //Make sure the finisher task exists
+                        message = T("The upload process has finished.").ToString();
+                        return Json(_utilsServices.GetResponse(ResponseType.Success, message));
                     }
+                    message = T("The upload has completed, but there was an error while handling the finishing touches.").ToString();
+                    return Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF, message));
                     break;
                 case VerifyUploadResults.Incomplete:
                     //the upload is still going on
-                    string uploadIncomplete = "The upload is still in progress.";
-                    return Content(JsonConvert.SerializeObject(new { uploadIncomplete }));
+                    message = T("The upload is still in progress.").ToString();
+                    return Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF, message));
                     break;
                 case VerifyUploadResults.NeverExisted:
                     //we never started an upload with the given Id
-                    error = "The upload was not found.";
+                    message = T("The upload was not found.").ToString();
                     break;
                 case VerifyUploadResults.Error:
                     //something went wrong
-                    error = "Unknown error.";
+                    message = T("Unknown error.").ToString();
                     break;
                 default:
                     //we should never be here
+                    message = T("Unknown error.").ToString();
                     break;
             }
-            return Content(JsonConvert.SerializeObject(new { error }));
+            return Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF, message));
         }
     }
 }

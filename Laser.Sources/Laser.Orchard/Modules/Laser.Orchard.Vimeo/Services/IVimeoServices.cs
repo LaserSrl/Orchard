@@ -28,8 +28,8 @@ namespace Laser.Orchard.Vimeo.Services {
         int GenerateNewMediaPart(int uploadId);
 
         //these methods terminate an upload
-        VerifyUploadResults VerifyUpload(int uploadId);
-        int TerminateUpload(int uploadId);
+        VerifyUploadResults VerifyUpload(int mediaPartId);
+        bool TerminateUpload(int mediaPartId);
 
 
 

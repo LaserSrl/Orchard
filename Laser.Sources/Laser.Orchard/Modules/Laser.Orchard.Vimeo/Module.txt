@@ -9,4 +9,4 @@ Features:
     Laser.Orchard.Vimeo:
         Description: Enables connection to a Vimeo account and provides API endpoints to allow clent video uplaods and adding Vimeo videos to contents
 		Category: Media
-		Dependencies: Orchard.MediaLibrary, Orchard.PublishLater
+		Dependencies: Orchard.MediaLibrary, Orchard.PublishLater, Laser.Orchard.StartupConfig

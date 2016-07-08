@@ -679,14 +679,14 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <summary>
         /// This method verifies in our records to check the state of an upload.
         /// </summary>
-        /// <param name="uploadId">The Id of the upload we want to check</param>
+        /// <param name="uploadId">The Id of the MediaPart containing the video whose upload we want to check</param>
         /// <returns>A value describing the state of the upload.</returns>
-        public VerifyUploadResults VerifyUpload(int uploadId) {
-            UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(uploadId);
+        public VerifyUploadResults VerifyUpload(int mediaPartId) {
+            UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(e => e.MediaPartId == mediaPartId);
             if (entity == null) {
                 //could not find and Upload in progress with the given Id
-                //Chek to see if the uplaod is complete
-                UploadsCompleteRecord ucr = GetByProgressId(uploadId);
+                //Chek to see if the upload is complete
+                UploadsCompleteRecord ucr = GetByMediaId(mediaPartId);
                 if (ucr == null) {
                     //no, the upload actually never existed
                     return VerifyUploadResults.NeverExisted;
@@ -695,7 +695,6 @@ namespace Laser.Orchard.Vimeo.Services {
             }
             return VerifyUpload(entity);
         }
-
         /// <summary>
         /// This method verifies in our records to check the state of an upload.
         /// </summary>
@@ -742,20 +741,40 @@ namespace Laser.Orchard.Vimeo.Services {
         private UploadsCompleteRecord GetByProgressId(int pId) {
             return _repositoryUploadsComplete.Get(r => r.ProgressId == pId);
         }
+        /// <summary>
+        /// Gets the UploadComplete corresponding to the MediaPart with the given Id
+        /// </summary>
+        /// <param name="mId">The Id of the MediaPart</param>
+        /// <returns>The <type>UploadsCompleteRecord</type>.</returns>
+        private UploadsCompleteRecord GetByMediaId(int mId) {
+            return _repositoryUploadsComplete.Get(r => r.MediaPartId == mId);
+        }
 
         /// <summary>
         /// We terminate the Vimeo upload stream.
         /// </summary>
-        /// <param name="uploadId">The Id we have been using internally to identify the upload in progress.</param>
-        /// <returns>The Id of the UploadCompleted, which we'll need to patch and publish the video.<value>-1</value> in case of errors.</returns>
-        public int TerminateUpload(int uploadId) {
-            UploadsCompleteRecord ucr = GetByProgressId(uploadId);
+        /// <param name="uploadId">The Id we have been using internally to identify the MediaPart whose video's upload is in progress.</param>
+        /// <returns><value>true</value> in case of success.<value>false</value> in case of errors.</returns>
+        public bool TerminateUpload(int mediaPartId) {
+            UploadsCompleteRecord ucr = GetByMediaId(mediaPartId);
             if (ucr != null)
-                return ucr.Id;
-            UploadsInProgressRecord entity = _repositoryUploadsInProgress
-                .Get(uploadId);
-            return TerminateUpload(entity);
+                return true;
+            UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(e => e.MediaPartId == mediaPartId);
+            return TerminateUpload(entity) > 0;
         }
+        ///// <summary>
+        ///// We terminate the Vimeo upload stream.
+        ///// </summary>
+        ///// <param name="uploadId">The Id we have been using internally to identify the upload in progress.</param>
+        ///// <returns>The Id of the UploadCompleted, which we'll need to patch and publish the video.<value>-1</value> in case of errors.</returns>
+        //public int TerminateUpload(int uploadId) {
+        //    UploadsCompleteRecord ucr = GetByProgressId(uploadId);
+        //    if (ucr != null)
+        //        return ucr.Id;
+        //    UploadsInProgressRecord entity = _repositoryUploadsInProgress
+        //        .Get(uploadId);
+        //    return TerminateUpload(entity);
+        //}
         /// <summary>
         /// We terminate the Vimeo upload stream.
         /// </summary>
