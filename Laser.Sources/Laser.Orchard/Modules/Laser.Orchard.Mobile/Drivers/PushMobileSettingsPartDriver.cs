@@ -15,7 +15,7 @@ using System.Web.UI.WebControls;
 using System.Web.Hosting;
 
 namespace Laser.Orchard.Mobile.Drivers {
-    [OrchardFeature("Laser.Orchard.Mobile")]
+    [OrchardFeature("Laser.Orchard.PushGateway")]
     public class PushMobileSettingsPartDriver : ContentPartDriver<PushMobileSettingsPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly ShellSettings _shellSettings;

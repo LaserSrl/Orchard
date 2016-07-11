@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using System.Net.Http;
 using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
+using System.Web;
 
 namespace Laser.Orchard.Mobile.Controllers {
     [WebApiKeyFilter(false)]
@@ -47,6 +48,8 @@ namespace Laser.Orchard.Mobile.Controllers {
             }
             if (continuometodo) {
                 try {
+                    string host = HttpContext.Current.Request.Url.Host;
+
                     devicetostore.Validated = true;
                     devicetostore.Language = myDevice.Language;
                     devicetostore.Produzione = myDevice.Produzione;
