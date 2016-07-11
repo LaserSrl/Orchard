@@ -23,7 +23,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                 Logger.Error("SynchronizeContacts task ended.");
             }
             catch (Exception ex) {
-                Logger.Error(ex, "SynchronizeContacts task error.");
+                Logger.Error(ex, "SynchronizeContacts task error."+ex.Message);
             }
         }
     }

@@ -117,6 +117,14 @@ msgid "Email"
 msgstr "Email"
 
 msgctxt "~/Themes/KrakeDefaultTheme/Views/OpenAuthRegister.cshtml"
+msgid "I Agree"
+msgstr "Sono d'accordo"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/OpenAuthRegister.cshtml"
+msgid "I Disagree"
+msgstr "Non sono d'accordo"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/OpenAuthRegister.cshtml"
 msgid "Password"
 msgstr "Password"
 
