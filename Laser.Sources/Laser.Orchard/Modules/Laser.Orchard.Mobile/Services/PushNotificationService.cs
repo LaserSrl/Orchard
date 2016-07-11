@@ -451,7 +451,7 @@ namespace Laser.Orchard.Mobile.Services {
                 _myLog.WriteLog("Iniziato invio Push del content " + ci.Id);
                 ContentItem savedCi = _orchardServices.ContentManager.Get(ci.Id);
                 MobilePushPart mpp = ci.As<MobilePushPart>();
-                if ((mpp.ToPush) && (mpp.PushSent == false)) {
+                if ((mpp.ToPush)) {
                     bool stopPush = false;
                     Int32 idContent = mpp.Id;
                     var relatedContent = ((dynamic)ci).MobilePushPart.RelatedContent;
