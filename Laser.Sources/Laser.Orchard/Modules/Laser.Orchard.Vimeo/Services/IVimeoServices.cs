@@ -15,28 +15,55 @@ namespace Laser.Orchard.Vimeo.Services {
         void UpdateSettings(VimeoSettingsPartViewModel vm);
 
         bool TokenIsValid(VimeoSettingsPartViewModel vm);
-        bool TokenIsValid(string aToken);
 
         bool GroupIsValid(VimeoSettingsPartViewModel vm);
-        bool GroupIsValid(string gName, string aToken);
         bool AlbumIsValid(VimeoSettingsPartViewModel vm);
-        bool AlbumIsValid(string aName, string aToken);
         bool ChannelIsValid(VimeoSettingsPartViewModel vm);
+
+        
+
+        //call these methods to properly start an upload
+        int IsValidFileSize(int fileSize);
+        string GenerateUploadTicket(int uploadId);
+        int GenerateNewMediaPart(int uploadId);
+
+        //these methods terminate an upload
+        VerifyUploadResults VerifyUpload(int mediaPartId);
+        bool TerminateUpload(int mediaPartId);
+
+        //task methods
+        void ScheduleUploadVerification();
+        void ScheduleVideoCompletion();
+        int VerifyAllUploads();
+        int TerminateUploads();
+
+        string DestroyUpload(int mediaPartId);
+
+#if DEBUG
+        bool TokenIsValid(string aToken);
+        bool GroupIsValid(string gName, string aToken);
+        bool AlbumIsValid(string aName, string aToken);
         bool ChannelIsValid(string cName, string aToken);
 
         VimeoUploadQuota CheckQuota();
         int UsedQuota();
         int FreeQuota();
 
-        int IsValidFileSize(int fileSize);
-
-        string GenerateUploadTicket(int uploadId);
-        VerifyUploadResults VerifyUpload(int uploadId);
-        int TerminateUpload(int uploadId);
         string PatchVideo(int ucId, string name = "", string description = "");
         string TryAddVideoToGroup(int ucId);
         string TryAddVideoToChannel(int ucId);
         string TryAddVideoToAlbum(int ucId);
+
+        string ExtractVimeoStreamURL(int ucId);
+
+        void FinishMediaPart(int ucId);
+
+        string GetVideoStatus(int ucId);
+
+        void ClearRepositoryTables();
+#endif
+
+        
     }
 
 }

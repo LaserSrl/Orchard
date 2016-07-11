@@ -21,5 +21,7 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual int Id { get; set; } //primary key provided because we do not inherit from ContentItemRecord
 
         public virtual DateTime? CreatedTime { get; set; }
+
+        public virtual int MediaPartId { get; set; }
     }
 }

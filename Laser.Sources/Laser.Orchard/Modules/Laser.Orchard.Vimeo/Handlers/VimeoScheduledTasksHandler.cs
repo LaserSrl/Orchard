@@ -23,8 +23,16 @@ namespace Laser.Orchard.Vimeo.Handlers {
             string taskTypeStr = context.Task.TaskType;
             if (taskTypeStr == TaskTypeBase+TaskSubTypeInProgress) {
                 //call service to verify the state of the uploads
+                if (_vimeoServices.VerifyAllUploads() > 0) {
+                    //there is still stuff in the repository, so we should reschedule the task
+                    _vimeoServices.ScheduleUploadVerification();
+                }
             } else if (taskTypeStr == TaskTypeBase + TaskSubTypeComplete) {
                 //call service to verify status of completed uploads
+                if (_vimeoServices.TerminateUploads() > 0) {
+                    //there is still stuff in the repository, so we should reschedule the task
+                    _vimeoServices.ScheduleVideoCompletion();
+                }
             }
         }
     }

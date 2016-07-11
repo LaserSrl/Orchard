@@ -16,6 +16,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Orchard.Tasks.Scheduling;
 using Orchard.Localization;
+using Orchard.MediaLibrary.Services;
+using Orchard.MediaLibrary.Models;
+using System.Text.RegularExpressions;
+using System.Web.Mvc;
+using Laser.Orchard.Vimeo.Controllers;
+using System.Xml.Linq;
+using Laser.Orchard.Vimeo.Handlers;
+using System.Text;
 
 namespace Laser.Orchard.Vimeo.Services {
     public class VimeoServices : IVimeoServices {
@@ -25,6 +33,8 @@ namespace Laser.Orchard.Vimeo.Services {
         private readonly IRepository<UploadsCompleteRecord> _repositoryUploadsComplete;
         private readonly IOrchardServices _orchardServices;
         private readonly IScheduledTaskManager _taskManager;
+        private readonly IContentManager _contentManager;
+        private readonly IMediaLibraryService _mediaLibraryService;
 
         public Localizer T { get; set; }
 
@@ -32,13 +42,17 @@ namespace Laser.Orchard.Vimeo.Services {
             IRepository<UploadsInProgressRecord> repositoryUploadsInProgress,
             IRepository<UploadsCompleteRecord> repositoryUploadsComplete,
             IOrchardServices orchardServices,
-            IScheduledTaskManager taskManager) {
+            IScheduledTaskManager taskManager,
+            IContentManager contentManager,
+            IMediaLibraryService mediaLibraryService) {
 
             _repositorySettings = repositorySettings;
             _repositoryUploadsInProgress = repositoryUploadsInProgress;
             _repositoryUploadsComplete = repositoryUploadsComplete;
             _orchardServices = orchardServices;
             _taskManager = taskManager;
+            _contentManager = contentManager;
+            _mediaLibraryService = mediaLibraryService;
 
             T = NullLocalizer.Instance;
         }
@@ -165,11 +179,16 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 }
+            } else {
+                _orchardServices.Notifier.Error(T("Access token not valid"));
             }
 
             settings.License = vm.License ?? "";
             settings.Privacy = vm.Privacy;
             settings.Password = vm.Password ?? "";
+            if (vm.Privacy.view == "password" && string.IsNullOrWhiteSpace(vm.Password)) {
+                _orchardServices.Notifier.Error(T("The password must not be an empty string."));
+            }
             settings.ReviewLink = vm.ReviewLink;
             settings.Locale = vm.Locale ?? "";
             settings.ContentRatings = vm.ContentRatingsSafe ?
@@ -574,6 +593,7 @@ namespace Laser.Orchard.Vimeo.Services {
             entity.UploadSize = fileSize;
             entity.CreatedTime = DateTime.UtcNow;
             _repositoryUploadsInProgress.Create(entity);
+            ScheduleUploadVerification();
             int recordId = entity.Id;
 
             return recordId;
@@ -620,25 +640,77 @@ namespace Laser.Orchard.Vimeo.Services {
         }
 
         /// <summary>
+        /// Generate a MediaPart that can be embedded in contents and that will contain the vimeo video we are uploading.
+        /// </summary>
+        /// <param name="uploadId">The Id of the upload in progress</param>
+        /// <returns>The Id of the new MediaPart, or <value>-1</value> in case of error.</returns>
+        public int GenerateNewMediaPart(int uploadId) {
+            UploadsInProgressRecord uIP = _repositoryUploadsInProgress.Get(uploadId);
+            if (uIP == null) return -1;
+            return GenerateNewMediaPart(uIP);
+        }
+        /// <summary>
+        /// Generate a MediaPart that can be embedded in contents and that will contain the vimeo video we are uploading.
+        /// </summary>
+        /// <param name="uploadId">The record of the upload in progress</param>
+        /// <returns>The Id of the new MediaPart, or <value>-1</value> in case of error.</returns>
+        public int GenerateNewMediaPart(UploadsInProgressRecord uIP) {
+            if (uIP == null) return -1;
+
+            //create new mediapart
+            //The MimeType should be text/html, because the type of the media part is oEmbed.
+            //We use oEmbed because that makes it easy to use it in a web client, once we can whitelist domains.
+            //in the handlers, we find that the oEmebd provider is Vimeo, if the request comes from a mobile,
+            //we can fiddle with things to avoid sending the oEmbed and instead sending astream URL
+            var oEmbedType = _mediaLibraryService.GetMediaTypes().Where(t => t.Name == "OEmbed").SingleOrDefault();
+            var mFolders = _mediaLibraryService.GetMediaFolders(null).Where(mf => mf.Name == "VimeoVideos");
+            if (mFolders.Count() == 0)
+                _mediaLibraryService.CreateFolder(null, "VimeoVideos");
+
+            var part = _contentManager.New<MediaPart>("OEmbed");
+            part.MimeType = "text/html";
+            part.FolderPath = "VimeoVideos";
+            part.LogicalType = "OEmbed";
+
+            var oembedPart = part.As<OEmbedPart>();
+
+            if (oembedPart != null) {
+                //here we cannot fill and properly initialize the OEmbedPart, because the video does not exist yet
+                _contentManager.Create(oembedPart);
+                uIP.MediaPartId = part.Id;
+                oembedPart["type"] = "video";
+                oembedPart["provider_name"] = "Vimeo";
+                oembedPart["provider_url"] = "https://vimeo.com/";
+                return part.Id;
+            }
+
+            return -1;
+        }
+
+        /// <summary>
         /// This method verifies in our records to check the state of an upload.
         /// </summary>
-        /// <param name="uploadId">The Id of the upload we want to check</param>
+        /// <param name="uploadId">The Id of the MediaPart containing the video whose upload we want to check</param>
         /// <returns>A value describing the state of the upload.</returns>
-        public VerifyUploadResults VerifyUpload(int uploadId) {
-            UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(uploadId);
+        public VerifyUploadResults VerifyUpload(int mediaPartId) {
+            MediaPart mp = _contentManager.Get(mediaPartId).As<MediaPart>();
+            if (mp == null || mp.As<OEmbedPart>() == null)
+                return VerifyUploadResults.NeverExisted;
+            UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(e => e.MediaPartId == mediaPartId);
             if (entity == null) {
                 //could not find and Upload in progress with the given Id
-                //Chek to see if the uplaod is complete
-                UploadsCompleteRecord ucr = GetByProgressId(uploadId);
+                //since the media part exists, it either means the upload is complete, or that the mediaPart is of a different kind
+                UploadsCompleteRecord ucr = GetByMediaId(mediaPartId);
                 if (ucr == null) {
-                    //no, the upload actually never existed
+                    //the record gets deleted only after we have set things in the OEmbedPart
+                    if (mp.As<OEmbedPart>()["provider_name"] == "Vimeo") {
+                        return VerifyUploadResults.CompletedAlready;
+                    }
                     return VerifyUploadResults.NeverExisted;
                 }
-                return VerifyUploadResults.CompletedAlready;
             }
             return VerifyUpload(entity);
         }
-
         /// <summary>
         /// This method verifies in our records to check the state of an upload.
         /// </summary>
@@ -685,21 +757,40 @@ namespace Laser.Orchard.Vimeo.Services {
         private UploadsCompleteRecord GetByProgressId(int pId) {
             return _repositoryUploadsComplete.Get(r => r.ProgressId == pId);
         }
+        /// <summary>
+        /// Gets the UploadComplete corresponding to the MediaPart with the given Id
+        /// </summary>
+        /// <param name="mId">The Id of the MediaPart</param>
+        /// <returns>The <type>UploadsCompleteRecord</type>.</returns>
+        private UploadsCompleteRecord GetByMediaId(int mId) {
+            return _repositoryUploadsComplete.Get(r => r.MediaPartId == mId);
+        }
 
         /// <summary>
         /// We terminate the Vimeo upload stream.
         /// </summary>
-        /// <param name="uploadId">The Id we have been using internally to identify the upload in progress.</param>
-        /// <returns>The Id of the UploadCompleted, which we'll need to patch and publish the video.<value>-1</value> in case of errors.</returns>
-        public int TerminateUpload(int uploadId) {
-            UploadsCompleteRecord ucr = GetByProgressId(uploadId);
+        /// <param name="uploadId">The Id we have been using internally to identify the MediaPart whose video's upload is in progress.</param>
+        /// <returns><value>true</value> in case of success.<value>false</value> in case of errors.</returns>
+        public bool TerminateUpload(int mediaPartId) {
+            UploadsCompleteRecord ucr = GetByMediaId(mediaPartId);
             if (ucr != null)
-                return ucr.Id;
-            UploadsInProgressRecord entity = _repositoryUploadsInProgress
-                .Get(uploadId);
-            return TerminateUpload(entity);
+                return true;
+            UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(e => e.MediaPartId == mediaPartId);
+            return TerminateUpload(entity) > 0;
         }
-
+        ///// <summary>
+        ///// We terminate the Vimeo upload stream.
+        ///// </summary>
+        ///// <param name="uploadId">The Id we have been using internally to identify the upload in progress.</param>
+        ///// <returns>The Id of the UploadCompleted, which we'll need to patch and publish the video.<value>-1</value> in case of errors.</returns>
+        //public int TerminateUpload(int uploadId) {
+        //    UploadsCompleteRecord ucr = GetByProgressId(uploadId);
+        //    if (ucr != null)
+        //        return ucr.Id;
+        //    UploadsInProgressRecord entity = _repositoryUploadsInProgress
+        //        .Get(uploadId);
+        //    return TerminateUpload(entity);
+        //}
         /// <summary>
         /// We terminate the Vimeo upload stream.
         /// </summary>
@@ -726,7 +817,9 @@ namespace Laser.Orchard.Vimeo.Services {
                         ucr.Uri = resp.Headers["Location"];
                         ucr.ProgressId = entity.Id;
                         ucr.CreatedTime = DateTime.UtcNow;
+                        ucr.MediaPartId = entity.MediaPartId;
                         _repositoryUploadsComplete.Create(ucr);
+                        ScheduleVideoCompletion();
                         //delete the entry from uploads in progress
                         _repositoryUploadsInProgress.Delete(entity);
                         return ucr.Id;
@@ -746,13 +839,29 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="description">the description for the video</param>
         /// <returns>A <type>string</type> that contains the response to the patch request.</returns>
         public string PatchVideo(int ucId, string name = "", string description = "") {
+            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+            if (ucr != null) {
+                return PatchVideo(ucr, name, description);
+            }
+            return "Record is null";
+        }
+        /// <summary>
+        /// This method patches the information about a video on the vimeo servers.
+        /// </summary>
+        /// <param name="ucr">The COmplete upload we want to patch</param>
+        /// <param name="name">The title we want to assign to the video</param>
+        /// <param name="description">the description for the video</param>
+        /// <returns>A <type>string</type> that contains the response to the patch request.</returns>
+        public string PatchVideo(UploadsCompleteRecord ucr, string name = "", string description = "") {
+            if (ucr == null) return "Record is null";
+
             var settings = _orchardServices
                 .WorkContext
                 .CurrentSite
                 .As<VimeoSettingsPart>();
             //The things we want to change of the video go in the request body as a JSON.
             VimeoPatch patchData = new VimeoPatch {
-                name = string.IsNullOrWhiteSpace(name)?"title":name,
+                name = string.IsNullOrWhiteSpace(name) ? "title" : name,
                 description = string.IsNullOrWhiteSpace(description) ? "description" : description,
                 license = settings.License,
                 privacy = settings.Privacy,
@@ -764,33 +873,31 @@ namespace Laser.Orchard.Vimeo.Services {
             var json = JsonConvert.SerializeObject(patchData);
             //We must set the request header
             // "Content-Type" to "application/json"
-            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
-            if (ucr != null) {
-                HttpWebRequest wr = VimeoCreateRequest(
+            HttpWebRequest wr = VimeoCreateRequest(
                     aToken: settings.AccessToken,
                     endpoint: VimeoEndpoints.APIEntry + ucr.Uri,
                     method: "PATCH"
                     );
-                wr.ContentType = "application/json";
-                using (StreamWriter bWriter = new StreamWriter(wr.GetRequestStream())) {
-                    bWriter.Write(json);
-                }
-                try {
-                    using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
-                        if (resp.StatusCode == HttpStatusCode.OK) {
-                            return "OK";
-                        }
-                    }
-                } catch (Exception ex) {
-                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
-                    //if some parameter is wrong in the patch, we get status code 400 Bad Request
-                    if (resp != null && resp.StatusCode == HttpStatusCode.BadRequest) {
-                        return new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                    }
-                    return resp.StatusCode.ToString() + " " + resp.StatusDescription;
-                }
+            wr.ContentType = "application/json";
+            using (StreamWriter bWriter = new StreamWriter(wr.GetRequestStream())) {
+                bWriter.Write(json);
             }
-            return "Record is null";
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        ucr.Patched = true;
+                        return "OK";
+                    }
+                }
+            } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                //if some parameter is wrong in the patch, we get status code 400 Bad Request
+                if (resp != null && resp.StatusCode == HttpStatusCode.BadRequest) {
+                    return new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                }
+                return resp.StatusCode.ToString() + " " + resp.StatusDescription;
+            }
+            return "Unknown error";
         }
 
         /// <summary>
@@ -994,41 +1101,54 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="ucId">The Id of a completed upload</param>
         /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
         public string AddVideoToGroup(int ucId) {
+            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+            if (ucr != null) {
+                return AddVideoToGroup(ucr);
+            } else {
+                return "Cannot identify video";
+            }
+        }
+        /// <summary>
+        /// Add the video corresponding to the Completed Upload that is passed to the group stored in the settings
+        /// </summary>
+        /// <param name="ucId">The completed upload</param>
+        /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        public string AddVideoToGroup(UploadsCompleteRecord ucr) {
+            if (ucr == null) return "Cannot identify video";
+
             string groupId = GetGroupId();
             if (!string.IsNullOrWhiteSpace(groupId)) {
-                UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
-                if (ucr != null) {
-                    var settings = _orchardServices
+                var settings = _orchardServices
                         .WorkContext
                         .CurrentSite
                         .As<VimeoSettingsPart>();
-                    HttpWebRequest wr = VimeoCreateRequest(
-                        aToken: settings.AccessToken,
-                        endpoint: VimeoEndpoints.Groups + "/" + groupId + ucr.Uri,
-                        method: "PUT"
-                        );
-                    try {
-                        using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
-                            if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
-                                return "OK";
-                            }
-                        }
-                    } catch (Exception ex) {
-                        HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
-                        if (resp != null) {
-                            if (resp.StatusCode == HttpStatusCode.Forbidden) {
-                                return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                            }
+                HttpWebRequest wr = VimeoCreateRequest(
+                    aToken: settings.AccessToken,
+                    endpoint: VimeoEndpoints.Groups + "/" + groupId + ucr.Uri,
+                    method: "PUT"
+                    );
+                try {
+                    using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
+                            ucr.UploadedToGroup = true;
+                            return "OK";
                         }
                     }
-                } else {
-                    return "Cannot identify video";
+                } catch (Exception ex) {
+                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                    if (resp != null) {
+                        if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                            return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        }
+                    }
                 }
             } else {
                 return "Cannot access group";
             }
+
             return "Unknown error";
         }
+
         /// <summary>
         /// If we set things to automatically add videos to a channel, it does so.
         /// </summary>
@@ -1050,43 +1170,56 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="ucId">The Id of a completed upload</param>
         /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
         public string AddVideoToChannel(int ucId) {
+            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+            if (ucr != null) {
+                return AddVideoToChannel(ucr);
+            } else {
+                return "Cannot identify video";
+            }
+        }
+        /// <summary>
+        /// Add the video corresponding to the Completed Upload that is passed to the channel stored in the settings
+        /// </summary>
+        /// <param name="ucId">The completed upload</param>
+        /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        public string AddVideoToChannel(UploadsCompleteRecord ucr) {
+            if (ucr == null) return "Cannot identify video";
+
             string chanId = GetChannelId();
             if (!string.IsNullOrWhiteSpace(chanId)) {
-                UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
-                if (ucr != null) {
-                    var settings = _orchardServices
+                var settings = _orchardServices
                         .WorkContext
                         .CurrentSite
                         .As<VimeoSettingsPart>();
-                    HttpWebRequest wr = VimeoCreateRequest(
-                        aToken: settings.AccessToken,
-                        endpoint: VimeoEndpoints.Channels + "/" + chanId + ucr.Uri,
-                        method: "PUT"
-                        );
-                    try {
-                        using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
-                            if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
-                                return "OK";
-                            }
-                        }
-                    } catch (Exception ex) {
-                        HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
-                        if (resp != null) {
-                            if (resp.StatusCode == HttpStatusCode.Forbidden) {
-                                return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                            } else if (resp.StatusCode == HttpStatusCode.NotFound) {
-                                return "Resource not found. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                            }
+                HttpWebRequest wr = VimeoCreateRequest(
+                    aToken: settings.AccessToken,
+                    endpoint: VimeoEndpoints.Channels + "/" + chanId + ucr.Uri,
+                    method: "PUT"
+                    );
+                try {
+                    using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
+                            ucr.UploadedToChannel = true;
+                            return "OK";
                         }
                     }
-                } else {
-                    return "Cannot identify video";
+                } catch (Exception ex) {
+                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                    if (resp != null) {
+                        if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                            return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        } else if (resp.StatusCode == HttpStatusCode.NotFound) {
+                            return "Resource not found. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        }
+                    }
                 }
             } else {
                 return "Cannot access channel";
             }
+
             return "Unknown error";
         }
+
         /// <summary>
         /// If we set things to automatically add videos to an album, it does so.
         /// </summary>
@@ -1108,46 +1241,339 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="ucId">The Id of a completed upload</param>
         /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
         public string AddVideoToAlbum(int ucId) {
+            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+            if (ucr != null) {
+                return AddVideoToAlbum(ucr);
+            } else {
+                return "Cannot identify video";
+            }
+        }
+        /// <summary>
+        /// Add the video corresponding to the Completed Upload that is passed to the album stored in the settings
+        /// </summary>
+        /// <param name="ucId">The completed upload</param>
+        /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        public string AddVideoToAlbum(UploadsCompleteRecord ucr) {
+            if (ucr == null) return "Cannot identify video";
+
             string alId = GetAlbumId();
             if (!string.IsNullOrWhiteSpace(alId)) {
-                UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
-                if (ucr != null) {
+                var settings = _orchardServices
+                        .WorkContext
+                        .CurrentSite
+                        .As<VimeoSettingsPart>();
+                HttpWebRequest wr = VimeoCreateRequest(
+                    aToken: settings.AccessToken,
+                    endpoint: VimeoEndpoints.MyAlbums + "/" + alId + ucr.Uri,
+                    method: "PUT"
+                    );
+                try {
+                    using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
+                            ucr.UploadedToAlbum = true;
+                            return "OK";
+                        }
+                    }
+                } catch (Exception ex) {
+                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                    if (resp != null) {
+                        if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                            return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        } else if (resp.StatusCode == HttpStatusCode.NotFound) {
+                            return "Resource not found. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        }
+                    }
+                }
+            } else {
+                return "Cannot access album";
+            }
+
+            return "Unknown error";
+        }
+
+        public string ExtractVimeoStreamURL(int ucId) {
+            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+            return ucr == null ? null : ExtractVimeoStreamURL(ucr);
+        }
+
+        public string ExtractVimeoStreamURL(UploadsCompleteRecord ucr) {
+            var settings = _orchardServices
+                        .WorkContext
+                        .CurrentSite
+                        .As<VimeoSettingsPart>();
+            string vUri = ucr.Uri.Remove(ucr.Uri.IndexOf("video") + 5, 1); //the original uri is /videos/ID, but we want /video/ID
+
+            HttpWebRequest vimeoLoginPage = VimeoCreateRequest(endpoint: "https://vimeo.com/log_in");
+            try {
+                using (HttpWebResponse resp = vimeoLoginPage.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        return new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    }
+                }
+            } catch (Exception ex) {
+                return ex.Message;
+            }
+
+            HttpWebRequest wr = VimeoCreateRequest(
+                aToken: settings.AccessToken,
+                endpoint: VimeoEndpoints.PlayerEntry + vUri + "/config",
+                method: "GET"
+                );
+            //wr.Headers["Authorization"] = "Basic " + Base64Encode("laser.srl.ao@gmail.com:lasersrlao");
+            wr.Credentials = new NetworkCredential("laser.srl.ao@gmail.com", "lasersrlao", "vimeo.com");
+            wr.UserAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
+            wr.Accept = "*/*";
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        return new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    }
+                }
+            } catch (Exception ex) {
+                return ex.Message;
+            }
+            return null;
+        }
+        public static string Base64Encode(string plainText) {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        public string GetVideoStatus(int ucId) {
+            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+            return GetVideoStatus(ucr);
+        }
+        public string GetVideoStatus(UploadsCompleteRecord ucr) {
+            if (ucr == null) return "Record is null";
+
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
+            HttpWebRequest wr = VimeoCreateRequest(
+                    aToken: settings.AccessToken,
+                    endpoint: VimeoEndpoints.APIEntry + ucr.Uri,
+                    method: "GET",
+                    qString: "?fields=status"
+                    );
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
+                            string vimeoJson = reader.ReadToEnd();
+                            //todo: "FILL THIS METHOD IN";
+                            return JObject.Parse(vimeoJson)["status"].ToString();
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                return ex.Message;
+            }
+            return "Unknown error";
+        }
+
+        public void FinishMediaPart(int ucId) {
+            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
+            if (ucr != null) FinishMediaPart(ucr);
+        }
+        public void FinishMediaPart(UploadsCompleteRecord ucr) {
+            string vId = ucr.Uri.Substring(ucr.Uri.LastIndexOf("/") + 1);
+            string url = "https://vimeo.com/" + vId;
+            MediaPart mPart = _contentManager.Get(ucr.MediaPartId).As<MediaPart>();
+            var oembedPart = mPart.As<OEmbedPart>();
+            //I took this code from Orchard.MediaLibrary.Controllers.OEmbedController
+            XDocument oeContent = null;
+            var wClient = new WebClient { Encoding = System.Text.Encoding.UTF8 };
+            try {
+                var source = wClient.DownloadString(url);
+                var oembedSignature = source.IndexOf("type=\"text/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
+                if (oembedSignature == -1) {
+                    oembedSignature = source.IndexOf("type=\"application/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
+                }
+                if (oembedSignature != -1) {
+                    var tagStart = source.Substring(0, oembedSignature).LastIndexOf('<');
+                    var tagEnd = source.IndexOf('>', oembedSignature);
+                    var tag = source.Substring(tagStart, tagEnd - tagStart);
+                    var matches = new Regex("href=\"([^\"]+)\"").Matches(tag);
+                    if (matches.Count > 0) {
+                        var href = matches[0].Groups[1].Value;
+                        try {
+                            var content = wClient.DownloadString(HttpUtility.HtmlDecode(href));
+                            oeContent = XDocument.Parse(content);
+                        } catch {
+                            //bubble
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+
+            }
+            if (oembedPart != null) {
+                //These steps actually fill the stuff in the OEMbedPart.
+                oembedPart.Source = url;
+                if (oeContent != null) {
+                    var oembed = oeContent.Root;
+                    if (oembed.Element("title") != null) {
+                        mPart.Title = oembed.Element("title").Value;
+                    } else {
+                        mPart.Title = oembed.Element("url").Value;
+                    }
+                    if (oembed.Element("description") != null) {
+                        mPart.Caption = oembed.Element("description").Value;
+                    }
+                    foreach (var element in oembed.Elements()) {
+                        oembedPart[element.Name.LocalName] = element.Value;
+                    }
+                } else {
+                    //oeContent == null means we were not able to parse that stuff above. Maybe the video is set to private
+                    //or whitelisted. Anyway, we can get most ofthat stuff by calling the vimeo API.
+                    oembedPart["type"] = "video";
+                    oembedPart["provider_name"] = "Vimeo";
+                    oembedPart["provider_url"] = "https://vimeo.com/";
+
+                    oembedPart["uri"] = ucr.Uri;
+                    oembedPart["video_id"] = vId;
+                    oembedPart["version"] = "1.0";
+                    //call the API to get info on this video
                     var settings = _orchardServices
                         .WorkContext
                         .CurrentSite
                         .As<VimeoSettingsPart>();
                     HttpWebRequest wr = VimeoCreateRequest(
                         aToken: settings.AccessToken,
-                        endpoint: VimeoEndpoints.MyAlbums + "/" + alId + ucr.Uri,
-                        method: "PUT"
+                        endpoint: VimeoEndpoints.Me + ucr.Uri
                         );
                     try {
-                        using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
-                            if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
-                                return "OK";
+                        using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                            if (resp.StatusCode == HttpStatusCode.OK) {
+                                using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
+                                    string vimeoJson = reader.ReadToEnd();
+                                    VimeoVideo video = JsonConvert.DeserializeObject<VimeoVideo>(vimeoJson);
+                                    oembedPart["title"] = video.name;
+                                    oembedPart["description"] = video.description;
+                                    oembedPart["duration"] = video.duration.ToString();
+                                    oembedPart["width"] = video.width.ToString();
+                                    oembedPart["height"] = video.height.ToString();
+                                    oembedPart["upload_date"] = video.release_time;
+                                    //embed section
+                                    oembedPart["html"] = video.embed.html;
+
+                                    //pictures section (get the ones that are closer in size to the video)
+                                    int picIndex = 0;
+                                    double sizeDistance = double.MaxValue;
+                                    int i = 0;
+                                    foreach (var aPic in video.pictures.sizes) {
+                                        double dist = (aPic.width - video.width) * (aPic.width - video.width) + (aPic.height - video.height) * (aPic.height - video.height);
+                                        if (dist < sizeDistance) {
+                                            picIndex = i;
+                                            sizeDistance = dist;
+                                        }
+                                        i++;
+                                    }
+                                    var myPic = video.pictures.sizes.ElementAt(picIndex);
+                                    oembedPart["thumbnail_url"] = myPic.link;
+                                    oembedPart["thumbnail_width"] = myPic.width.ToString();
+                                    oembedPart["thumbnail_height"] = myPic.height.ToString();
+                                    oembedPart["thumbnail_url_with_play_button"] = myPic.link_with_play_button;
+
+                                    //user section
+                                    oembedPart["author_name"] = video.user.name;
+                                    oembedPart["author_url"] = video.user.uri;
+                                    oembedPart["is_plus"] = video.user.account == "plus" ? "1" : "0";
+                                }
                             }
                         }
                     } catch (Exception ex) {
-                        HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
-                        if (resp != null) {
-                            if (resp.StatusCode == HttpStatusCode.Forbidden) {
-                                return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                            } else if (resp.StatusCode == HttpStatusCode.NotFound) {
-                                return "Resource not found. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                            }
-                        }
+
                     }
-                } else {
-                    return "Cannot identify video";
                 }
-            } else {
-                return "Cannot access album";
             }
-            return "Unknown error";
         }
 
-        //TODO: CODE FOR TASKS
-        public void VerifyAllUploads() {
+        /// <summary>
+        /// Destroy all records related to the upload of a video for a given MediaPart. Moreover, destroy the MediaPart. 
+        /// Thisshould be called in error handling, for instance when a client tells us that the upload it was trying
+        /// to perform has been interrupted and may not be resumed.
+        /// </summary>
+        /// <param name="mediaPartId">The Id of the MediaPart that was created to contain the video.</param>
+        public string DestroyUpload(int mediaPartId) {
+            StringBuilder str = new StringBuilder();
+            str.AppendLine(T("Clearing references to uploads for MediaPart {0}", mediaPartId).ToString());
+            //destroy the in progress record, if any
+            UploadsInProgressRecord upr = _repositoryUploadsInProgress.Get(u => u.MediaPartId == mediaPartId);
+            if (upr != null) {
+                _repositoryUploadsInProgress.Delete(upr);
+                str.AppendLine(T("Cleared records of uploads in progress").ToString());
+            }
+            //destroy the completed upload, if any
+            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(u => u.MediaPartId == mediaPartId);
+            if (ucr != null) {
+                //destroy the video on Vimeo
+                var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
+                HttpWebRequest wr = VimeoCreateRequest(
+                    aToken: settings.AccessToken,
+                    endpoint: VimeoEndpoints.APIEntry + ucr.Uri,
+                    method: "DELETE"
+                    );
+                try {
+                    using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                        if (resp.StatusCode == HttpStatusCode.NoContent) {
+                            //success
+                            str.AppendLine(T("Removed video on Vimeo.com").ToString());
+                        } else {
+                            str.AppendLine(T("Failed to remove video on Vimeo.com").ToString());
+                        }
+                    }
+                } catch (Exception ex) {
+                    str.AppendLine(T("Failed to remove video on Vimeo.com").ToString());
+                }
+                //destroy the record
+                _repositoryUploadsComplete.Delete(ucr);
+                str.AppendLine(T("Cleared records of complete uploads").ToString());
+            }
+            //destroy the MediaPart, if any
+            MediaPart mp = _contentManager.Get(mediaPartId).As<MediaPart>();
+            if (mp != null) {
+                OEmbedPart ep = mp.As<OEmbedPart>();
+                if (ep != null) {
+                    if (!string.IsNullOrWhiteSpace(ep["provider_name"]) && ep["provider_name"] == "Vimeo") {
+                        //NOTE: this is a soft delete
+                        _contentManager.Remove(mp.ContentItem);
+                        str.AppendLine(T("Removed MediaPart").ToString());
+                    }
+                }
+            }
+            return str.ToString();
+        }
+
+        public void ClearRepositoryTables() {
+            foreach (var u in _repositoryUploadsInProgress.Table.ToList()) {
+                _repositoryUploadsInProgress.Delete(u);
+            }
+            foreach (var u in _repositoryUploadsComplete.Table.ToList()) {
+                _repositoryUploadsComplete.Delete(u);
+            }
+        }
+
+        #region Code for tasks
+        public void ScheduleUploadVerification() {
+            string taskTypeStr = VimeoScheduledTasksHandler.TaskTypeBase + VimeoScheduledTasksHandler.TaskSubTypeInProgress;
+            if (_taskManager.GetTasks(taskTypeStr).Count() == 0)
+                _taskManager.CreateTask(taskTypeStr, DateTime.UtcNow.AddMinutes(1), null);
+        }
+        public void ScheduleVideoCompletion() {
+            string taskTypeStr = VimeoScheduledTasksHandler.TaskTypeBase + VimeoScheduledTasksHandler.TaskSubTypeComplete;
+            if (_taskManager.GetTasks(taskTypeStr).Count() == 0)
+                _taskManager.CreateTask(taskTypeStr, DateTime.UtcNow.AddMinutes(1), null);
+        }
+        /// <summary>
+        /// Verifies the state of all uploads in progress.
+        /// </summary>
+        /// <returns>The number of uploads in progress.</returns>
+        public int VerifyAllUploads() {
             foreach (var uip in _repositoryUploadsInProgress.Table.ToList()) {
                 switch (VerifyUpload(uip)) {
                     case VerifyUploadResults.CompletedAlready:
@@ -1156,6 +1582,10 @@ namespace Laser.Orchard.Vimeo.Services {
                         TerminateUpload(uip);
                         break;
                     case VerifyUploadResults.Incomplete:
+                        //if more than 24 hours have passed since the beginning of the upload, cancel it
+                        if (DateTime.UtcNow > uip.CreatedTime.Value.AddDays(1)) {
+                            DestroyUpload(uip.MediaPartId);
+                        }
                         break;
                     case VerifyUploadResults.NeverExisted:
                         break;
@@ -1165,7 +1595,49 @@ namespace Laser.Orchard.Vimeo.Services {
                         break;
                 }
             }
+            return _repositoryUploadsInProgress.Table.Count();
         }
+        /// <summary>
+        /// Performs the operations required to close the processing of uploaded videos.
+        /// </summary>
+        /// <returns>The number of videos still to be closed.</returns>
+        public int TerminateUploads() {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
+            foreach (UploadsCompleteRecord ucr in _repositoryUploadsComplete.Table.ToList()) {
+                if (!ucr.Patched) {
+                    PatchVideo(ucr);
+                }
+                if (settings.AlwaysUploadToGroup && !ucr.UploadedToGroup) {
+                    AddVideoToGroup(ucr);
+                }
+                if (settings.AlwaysUploadToChannel && !ucr.UploadedToChannel) {
+                    AddVideoToChannel(ucr);
+                }
+                if (settings.AlwaysUploadToAlbum && !ucr.UploadedToAlbum) {
+                    AddVideoToAlbum(ucr);
+                }
+                if (!ucr.IsAvailable) {
+                    ucr.IsAvailable = GetVideoStatus(ucr) == "available";
+                }
+
+                if (ucr.Patched
+                    && ucr.IsAvailable
+                    && (ucr.UploadedToGroup || !settings.AlwaysUploadToGroup)
+                    && (ucr.UploadedToChannel || !settings.AlwaysUploadToChannel)
+                    && (ucr.UploadedToAlbum || !settings.AlwaysUploadToAlbum)) {
+                    //Update the MediaPart
+                    FinishMediaPart(ucr);
+                    //We finished everything for this video upload, so we may remove its record
+                    _repositoryUploadsComplete.Delete(ucr);
+                }
+            }
+            return _repositoryUploadsComplete.Table.Count();
+        }
+
+        #endregion
 
         /// <summary>
         /// Creates a default HttpWebRequest Using the Access Token and endpoint provided. By default, the Http Method is GET.
