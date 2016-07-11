@@ -15,5 +15,6 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public int MobileContactPartRecord_Id { get; set; }
         public string RegistrationUrlHost { get; set; }
         public string RegistrationUrlPrefix { get; set; }
+        public string RegistrationMachineName { get; set; }
     }
 }

@@ -258,5 +258,35 @@ namespace Laser.Orchard.Mobile {
             _repositoryDevice.Flush();
             return 22;
         }
+        public int UpdateFrom22() {
+            SchemaBuilder.AlterTable("PushNotificationRecord",
+                              table => table
+                              .AddColumn<string>("RegistrationMachineName"));
+
+            // aggiorna tutti i device già esistenti
+            string machineName = System.Environment.MachineName;
+            var elencoDevice = _repositoryDevice.Fetch(x => x.Id > 0);
+            foreach (var device in elencoDevice) {
+                device.RegistrationMachineName = machineName;
+                _repositoryDevice.Update(device);
+            }
+            _repositoryDevice.Flush();
+            return 23;
+        }
+        public int UpdateFrom23() {
+            // aggiorna tutti i device già esistenti (evitando il valore null)
+            string host = _shellSettings.RequestUrlHost ?? "";
+            string prefix = _shellSettings.RequestUrlPrefix ?? "";
+            string machineName = System.Environment.MachineName ?? "";
+            var elencoDevice = _repositoryDevice.Fetch(x => x.Id > 0);
+            foreach (var device in elencoDevice) {
+                device.RegistrationUrlHost = host;
+                device.RegistrationUrlPrefix = prefix;
+                device.RegistrationMachineName = machineName;
+                _repositoryDevice.Update(device);
+            }
+            _repositoryDevice.Flush();
+            return 24;
+        }
     }
 }

@@ -109,6 +109,10 @@ namespace Laser.Orchard.Mobile.Services {
                 "join cir.MobileContactPartRecord as MobileContact " +
                 "join MobileContact.MobileRecord as MobileRecord " +
                 "WHERE civr.Published=1 AND MobileRecord.Validated";
+            string hostCheck = _shellSetting.RequestUrlHost ?? "";
+            string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
+            string machineNameCheck = System.Environment.MachineName ?? "";
+            queryForPush += string.Format(" AND MobileRecord.RegistrationUrlHost='{0}' AND MobileRecord.RegistrationUrlPrefix='{1}' AND MobileRecord.RegistrationMachineName='{2}'", hostCheck.Replace("'", "''"), prefixCheck.Replace("'", "''"), machineNameCheck.Replace("'", "''"));
             if (tipodisp.HasValue) {
                 queryForPush += " AND MobileRecord.Device='" + tipodisp.Value + "'";
             }
@@ -526,14 +530,15 @@ namespace Laser.Orchard.Mobile.Services {
                     foreach (Hashtable ht in elenco) {
                         lista.Add(new PushNotificationVM {
                             Id = Convert.ToInt32(ht["Id"]),
-                            Device = (TipoDispositivo)(Enum.Parse(typeof(TipoDispositivo), ht["Device"].ToString())),
+                            Device = (TipoDispositivo)(Enum.Parse(typeof(TipoDispositivo), Convert.ToString(ht["Device"]))),
                             Produzione = Convert.ToBoolean(ht["Produzione"], CultureInfo.InvariantCulture),
                             Validated = Convert.ToBoolean(ht["Validated"], CultureInfo.InvariantCulture),
-                            Language = ht["Language"].ToString(),
-                            UUIdentifier = ht["UUIdentifier"].ToString(),
-                            Token = ht["Token"].ToString(),
-                            RegistrationUrlHost = ht["RegistrationUrlHost"].ToString(),
-                            RegistrationUrlPrefix = ht["RegistrationUrlPrefix"].ToString()
+                            Language = Convert.ToString(ht["Language"]),
+                            UUIdentifier = Convert.ToString(ht["UUIdentifier"]),
+                            Token = Convert.ToString(ht["Token"]),
+                            RegistrationUrlHost = Convert.ToString(ht["RegistrationUrlHost"]),
+                            RegistrationUrlPrefix = Convert.ToString(ht["RegistrationUrlPrefix"]),
+                            RegistrationMachineName = Convert.ToString(ht["RegistrationMachineName"])
                         });
                     }
                 }
@@ -551,27 +556,29 @@ namespace Laser.Orchard.Mobile.Services {
                                 UUIdentifier = pnr.UUIdentifier,
                                 Token = pnr.Token,
                                 RegistrationUrlHost = pnr.RegistrationUrlHost,
-                                RegistrationUrlPrefix = pnr.RegistrationUrlPrefix
+                                RegistrationUrlPrefix = pnr.RegistrationUrlPrefix,
+                                RegistrationMachineName = pnr.RegistrationMachineName
                             });
                         }
                     }
                     else {
                         var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
-                            .CreateSQLQuery(string.Format("select Id, Device, Produzione, Validated, Language, UUIdentifier, Token, RegistrationUrlHost, RegistrationUrlPrefix from ( {0} ) x where x.Device = '{1}' and x.Produzione = {2} and x.Validated = 1 and (x.Language = '{3}' or '{3}' = 'All') ", queryDevice, tipodisp, (produzione) ? 1 : 0, language))
+                            .CreateSQLQuery(string.Format("select Id, Device, Produzione, Validated, Language, UUIdentifier, Token, RegistrationUrlHost, RegistrationUrlPrefix, RegistrationMachineName from ( {0} ) x where x.Device = '{1}' and x.Produzione = {2} and x.Validated = 1 and (x.Language = '{3}' or '{3}' = 'All') ", queryDevice, tipodisp, (produzione) ? 1 : 0, language))
                          .List();
                         object[] ht = null;
                         foreach (var arr in estrazione) {
                             ht = (object[])arr;
                             lista.Add(new PushNotificationVM {
                                 Id = Convert.ToInt32(ht[0]),
-                                Device = (TipoDispositivo)(Enum.Parse(typeof(TipoDispositivo), ht[1].ToString())),
+                                Device = (TipoDispositivo)(Enum.Parse(typeof(TipoDispositivo), Convert.ToString(ht[1]))),
                                 Produzione = Convert.ToBoolean(ht[2], CultureInfo.InvariantCulture),
                                 Validated = Convert.ToBoolean(ht[3], CultureInfo.InvariantCulture),
-                                Language = ht[4].ToString(),
-                                UUIdentifier = ht[5].ToString(),
-                                Token = ht[6].ToString(),
-                                RegistrationUrlHost = ht[7].ToString(),
-                                RegistrationUrlPrefix = ht[8].ToString()
+                                Language = Convert.ToString(ht[4]),
+                                UUIdentifier = Convert.ToString(ht[5]),
+                                Token = Convert.ToString(ht[6]),
+                                RegistrationUrlHost = Convert.ToString(ht[7]),
+                                RegistrationUrlPrefix = Convert.ToString(ht[8]),
+                                RegistrationMachineName = Convert.ToString(ht[9])
                             });
                         }
                     }
@@ -627,12 +634,13 @@ namespace Laser.Orchard.Mobile.Services {
                     return true;
                 });
             };
-            string hostCheck = _shellSetting.RequestUrlHost;
-            string prefixCheck = _shellSetting.RequestUrlPrefix;
+            string hostCheck = _shellSetting.RequestUrlHost ?? "";
+            string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
+            string machineNameCheck = System.Environment.MachineName ?? "";
             push.Start();
             foreach (PushNotificationVM pnr in allDevice) {
                 // verifica che il device sia stato registrato nell'ambiente corrente
-                if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck)) {
+                if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck) && (pnr.RegistrationMachineName == machineNameCheck)) {
                     push.QueueNotification(new GcmNotification {
                         RegistrationIds = new List<string> { pnr.Token },
                         Data = JObject.Parse(JsonMessage)
@@ -721,12 +729,13 @@ namespace Laser.Orchard.Mobile.Services {
 
             // TODO: da gestire produzione
 
-            string hostCheck = _shellSetting.RequestUrlHost;
-            string prefixCheck = _shellSetting.RequestUrlPrefix;
+            string hostCheck = _shellSetting.RequestUrlHost ?? "";
+            string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
+            string machineNameCheck = System.Environment.MachineName ?? "";
             push.Start();
             foreach (PushNotificationVM pnr in allDevice) {
                 // verifica che il device sia stato registrato nell'ambiente corrente
-                if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck)) {
+                if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck) && (pnr.RegistrationMachineName == machineNameCheck)) {
                     push.QueueNotification(new WnsToastNotification {
                         ChannelUri = pnr.Token,
                         Payload = XElement.Parse(message)
@@ -873,13 +882,14 @@ namespace Laser.Orchard.Mobile.Services {
                     });
                 };
 
-                string hostCheck = _shellSetting.RequestUrlHost;
-                string prefixCheck = _shellSetting.RequestUrlPrefix;
+                string hostCheck = _shellSetting.RequestUrlHost ?? "";
+                string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
+                string machineNameCheck = System.Environment.MachineName ?? "";
                 StringBuilder sb = new StringBuilder();
                 push.Start();
                 foreach (PushNotificationVM dispositivo in listdispositivo) {
                     // verifica che il device sia stato registrato nell'ambiente corrente
-                    if ((dispositivo.RegistrationUrlHost == hostCheck) && (dispositivo.RegistrationUrlPrefix == prefixCheck)) {
+                    if ((dispositivo.RegistrationUrlHost == hostCheck) && (dispositivo.RegistrationUrlPrefix == prefixCheck) && (dispositivo.RegistrationMachineName == machineNameCheck)) {
                         sb.Clear();
                         sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", FormatJsonValue(pushMessage.Text), FormatJsonValue(pushMessage.Sound));
                         if (!string.IsNullOrEmpty(pushMessage.Eu)) {
