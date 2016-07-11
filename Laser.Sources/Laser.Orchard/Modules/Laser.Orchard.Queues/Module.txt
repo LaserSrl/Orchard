@@ -9,4 +9,4 @@ Features:
     Laser.Orchard.Queues:
         Description: Manage queues by interrogating periodically the current number and sending notifications to registered users.
 		Category: Services
-		Dependencies: Laser.Orchard.jQueryPlugins, Laser.Orchard.Mobile, Laser.Orchard.StartupConfig
+		Dependencies: Laser.Orchard.jQueryPlugins, Laser.Orchard.PushGateway, Laser.Orchard.StartupConfig

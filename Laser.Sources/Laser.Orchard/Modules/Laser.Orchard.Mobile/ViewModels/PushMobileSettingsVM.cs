@@ -2,15 +2,12 @@
 using System.IO;
 using System.Web.Hosting;
 using System.Web.Mvc;
-
-
 using System.Web;
-
-
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.Mobile.ViewModels {
+    [OrchardFeature("Laser.Orchard.PushGateway")]
     public class PushMobileSettingsVM {
-
         public string ApplePathCertificateFile { get; set; }
         public string AppleCertificatePassword { get; set; }
         public string ApplePathCertificateFileDevelopment { get; set; }
@@ -22,28 +19,21 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public string WindowsEndPoint { get; set; }
         public string WindowsAppPackageName { get; set; }
         public string WindowsAppSecurityIdentifier { get; set; }
-        public string AppleCertificateTenant{get;set;}
+        public string AppleCertificateTenant { get; set; }
         public bool ShowTestOptions { get; set; }
         public string TaxonomyName { get; set; }
-        public SelectList ListOfTaxonomies {get;set;}
-        
+        public SelectList ListOfTaxonomies { get; set; }
+
         public SelectList ListOfCertificates {
             get {
-               
-          //      VerificaPath(HostingEnvironment.MapPath("~/") + "Modules/Laser.Orchard.Mobile/AppleCertificate");
-           //     VerificaPath(HostingEnvironment.MapPath("~/") + "/Modules/Laser.Orchard.Mobile/AppleCertificate/" + AppleCertificateTenant);
-                string[] filelist = Directory.GetFiles(HostingEnvironment.MapPath(@"~/App_Data/Sites/"+AppleCertificateTenant+ @"/Mobile"));
+                string[] filelist = Directory.GetFiles(HostingEnvironment.MapPath(@"~/App_Data/Sites/" + AppleCertificateTenant + @"/Mobile"));
                 return new SelectList(filelist.Select(x => new SelectListItem { Text = Path.GetFileName(x), Value = Path.GetFileName(x) }), "Value", "Text", ApplePathCertificateFile);
-            
             }
         }
         public SelectList ListOfCertificatesDevelopment {
             get {
-            //    string[] filelistdev = Directory.GetFiles(HostingEnvironment.MapPath(@"~/Modules/Laser.Orchard.Mobile/AppleCertificate/" + AppleCertificateTenant));
                 string[] filelistdev = Directory.GetFiles(HostingEnvironment.MapPath(@"~/App_Data/Sites/" + AppleCertificateTenant + @"/Mobile"));
-       
                 return new SelectList(filelistdev.Select(x => new SelectListItem { Text = Path.GetFileName(x), Value = Path.GetFileName(x) }), "Value", "Text", ApplePathCertificateFileDevelopment);
-
             }
         }
         private void VerificaPath(string stringpath) {

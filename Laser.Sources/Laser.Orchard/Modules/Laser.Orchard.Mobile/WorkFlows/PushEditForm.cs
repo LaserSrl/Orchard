@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.Mobile.Services;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Localization.Services;
@@ -7,6 +8,7 @@ using System;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.Mobile.WorkFlows {
+    [OrchardFeature("Laser.Orchard.PushGateway")]
     public class PushEditForm : IFormProvider {
         private readonly IPushNotificationService _pushNotificationService;
         private readonly ICultureManager _cultureManager;
