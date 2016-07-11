@@ -18,6 +18,7 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public string ApplePushSound { get; set; }
         public string AndroidApiKey { get; set; }
         public string AndroidApiKeyDevelopment { get; set; }
+        public string AndroidPushServiceUrl { get; set; }
         public string WindowsEndPoint { get; set; }
         public string WindowsAppPackageName { get; set; }
         public string WindowsAppSecurityIdentifier { get; set; }

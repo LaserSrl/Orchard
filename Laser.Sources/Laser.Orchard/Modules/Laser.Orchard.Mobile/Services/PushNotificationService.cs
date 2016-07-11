@@ -69,6 +69,7 @@ namespace Laser.Orchard.Mobile.Services {
         private readonly ITokenizer _tokenizer;
         private readonly ITransactionManager _transactionManager;
         private Int32 messageSent;
+        private const int MAX_PUSH_TEXT_LENGTH = 160;
         private object lockMonitor;
 
         public PushNotificationService(
@@ -817,6 +818,10 @@ namespace Laser.Orchard.Mobile.Services {
             else
                 setting = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidApiKeyDevelopment;
             var config = new GcmConfiguration(setting);
+            var serviceUrl = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidPushServiceUrl;
+            if (string.IsNullOrWhiteSpace(serviceUrl) == false) {
+                config.OverrideUrl(serviceUrl);
+            }
             var push = new GcmServiceBroker(config);
             push.OnNotificationSucceeded += (notification) => {
                 NotificationSent(notification);
@@ -994,7 +999,7 @@ namespace Laser.Orchard.Mobile.Services {
                 sb.AppendFormat(",\"Al\":\"{0}\"", FormatJsonValue(mypush.Al));
                 sb.Append("}");
             }
-            if (sb.Length > 255) {
+            if (mypush.Text.Length > MAX_PUSH_TEXT_LENGTH) {
                 _notifier.Information(T("Sent: message payload exceed the limit"));
                 _myLog.WriteLog("Sent: message payload exceed the limit");
                 mypush.ValidPayload = false;
@@ -1094,7 +1099,7 @@ namespace Laser.Orchard.Mobile.Services {
                         sb.AppendFormat(",\"Al\":\"{0}\"", FormatJsonValue(pushMessage.Al));
                     }
                     sb.Append("}");
-                    if (sb.Length > 255) {
+                    if (pushMessage.Text.Length > MAX_PUSH_TEXT_LENGTH) {
                         _notifier.Information(T("Sent: message payload exceed the limit"));
                         _myLog.WriteLog("Sent: message payload exceed the limit");
                     }
