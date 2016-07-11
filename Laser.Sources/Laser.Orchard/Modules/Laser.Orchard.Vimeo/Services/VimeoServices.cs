@@ -23,6 +23,7 @@ using System.Web.Mvc;
 using Laser.Orchard.Vimeo.Controllers;
 using System.Xml.Linq;
 using Laser.Orchard.Vimeo.Handlers;
+using System.Text;
 
 namespace Laser.Orchard.Vimeo.Services {
     public class VimeoServices : IVimeoServices {
@@ -1479,6 +1480,64 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Destroy all records related to the upload of a video for a given MediaPart. Moreover, destroy the MediaPart. 
+        /// Thisshould be called in error handling, for instance when a client tells us that the upload it was trying
+        /// to perform has been interrupted and may not be resumed.
+        /// </summary>
+        /// <param name="mediaPartId">The Id of the MediaPart that was created to contain the video.</param>
+        public string DestroyUpload(int mediaPartId) {
+            StringBuilder str = new StringBuilder();
+            str.AppendLine(T("Clearing references to uploads for MediaPart {0}", mediaPartId).ToString());
+            //destroy the in progress record, if any
+            UploadsInProgressRecord upr = _repositoryUploadsInProgress.Get(u => u.MediaPartId == mediaPartId);
+            if (upr != null) {
+                _repositoryUploadsInProgress.Delete(upr);
+                str.AppendLine(T("Cleared records of uploads in progress").ToString());
+            }
+            //destroy the completed upload, if any
+            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(u => u.MediaPartId == mediaPartId);
+            if (ucr != null) {
+                //destroy the video on Vimeo
+                var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
+                HttpWebRequest wr = VimeoCreateRequest(
+                    aToken: settings.AccessToken,
+                    endpoint: VimeoEndpoints.APIEntry + ucr.Uri,
+                    method: "DELETE"
+                    );
+                try {
+                    using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                        if (resp.StatusCode == HttpStatusCode.NoContent) {
+                            //success
+                            str.AppendLine(T("Removed video on Vimeo.com").ToString());
+                        } else {
+                            str.AppendLine(T("Failed to remove video on Vimeo.com").ToString());
+                        }
+                    }
+                } catch (Exception ex) {
+                    str.AppendLine(T("Failed to remove video on Vimeo.com").ToString());
+                }
+                //destroy the record
+                _repositoryUploadsComplete.Delete(ucr);
+                str.AppendLine(T("Cleared records of complete uploads").ToString());
+            }
+            //destroy the MediaPart, if any
+            MediaPart mp = _contentManager.Get(mediaPartId).As<MediaPart>();
+            if (mp != null) {
+                OEmbedPart ep = mp.As<OEmbedPart>();
+                if (ep != null) {
+                    if (!string.IsNullOrWhiteSpace(ep["provider_name"]) && ep["provider_name"] == "Vimeo") {
+                        _contentManager.Remove(mp.ContentItem);
+                        str.AppendLine(T("Removed MediaPart").ToString());
+                    }
+                }
+            }
+            return str.ToString();
         }
 
         public void ClearRepositoryTables() {

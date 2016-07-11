@@ -37,6 +37,8 @@ namespace Laser.Orchard.Vimeo.Services {
         int VerifyAllUploads();
         int TerminateUploads();
 
+        string DestroyUpload(int mediaPartId);
+
 #if DEBUG
         bool TokenIsValid(string aToken);
         bool GroupIsValid(string gName, string aToken);

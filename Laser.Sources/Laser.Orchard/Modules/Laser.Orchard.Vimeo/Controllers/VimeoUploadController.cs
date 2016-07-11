@@ -3,6 +3,7 @@ using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.Vimeo.Services;
 using Newtonsoft.Json;
 using Orchard.Localization;
+using Orchard.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
     public class VimeoUploadController : Controller {
 
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         private readonly IVimeoServices _vimeoServices;
         private readonly IUtilsServices _utilsServices;
@@ -21,6 +23,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
             _vimeoServices = vimeoServices;
             _utilsServices = utilsServices;
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public ActionResult TryStartUpload(int fileSize) {
@@ -96,6 +99,71 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     break;
             }
             return Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF, message));
+        }
+
+        /// <summary>
+        /// Endpoint where the applications may send their error messages when there are upload issues. We accept the following messages:
+        /// 3001: User stopped the upload
+        /// 3002: Upload stopped, will not resume
+        /// 3003: Upload stopped, but may resume
+        /// </summary>
+        /// <param name="msgJson">A JSON representing a <type>Response</type> object describing the error.</param>
+        /// <returns></returns>
+        public ActionResult ErrorHandler(string msgJson) {
+            VimeoResponse resp = JsonConvert.DeserializeObject<VimeoResponse>(msgJson);
+            int mpId = resp.Data.id; //the id of the MediaPart for whom we were doing the upload
+            Laser.Orchard.StartupConfig.ViewModels.Response response;
+            string msg = "";
+            switch (resp.ErrorCode) {
+                case VimeoErrorCode.NoError:
+                    //nothing to do here. Honestly, the app should not have called the error action
+                    response = _utilsServices.GetResponse(ResponseType.None, "");
+                    break;
+                case VimeoErrorCode.GenericError:
+                    //Something happened, but we don not know what.
+                    //Just log this
+                    response = _utilsServices.GetResponse(ResponseType.None, "");
+                    break;
+                case VimeoErrorCode.UserStopped:
+                    //The user stopped the upload, with no intention of resuming it.
+                    //clear the records and destroy the MediaPart we were creating
+                    msg = _vimeoServices.DestroyUpload(mpId);
+                    response = _utilsServices.GetResponse(ResponseType.Success, msg);
+                    break;
+                case VimeoErrorCode.UploadStopped:
+                    //The upload stopped for an error, and there is no way to resume it.
+                    //clear the records and destroy the MediaPart we were creating
+                    msg = _vimeoServices.DestroyUpload(mpId);
+                    response = _utilsServices.GetResponse(ResponseType.Success, msg);
+                    break;
+                case VimeoErrorCode.UploadMayResume:
+                    //The upload stopped for an error, but may resume later.
+                    //Do not clear or destroy anything.
+                    response = _utilsServices.GetResponse(ResponseType.None, "");
+                    break;
+                default:
+                    //No reason why we should be here
+                    response = _utilsServices.GetResponse(ResponseType.None, "");
+                    break;
+            }
+
+            Logger.Error(msgJson);
+            if (!string.IsNullOrWhiteSpace(msg))
+                Logger.Information(msg);
+
+            return Json(response);
+        }
+    }
+
+    public enum VimeoErrorCode { NoError = 0, GenericError = 1, UserStopped = 3001, UploadStopped = 3002, UploadMayResume = 3003 }
+    public class VimeoResponse : Laser.Orchard.StartupConfig.ViewModels.Response {
+        public VimeoErrorCode ErrorCode {get;set;}
+
+        public VimeoResponse() {
+            this.ErrorCode = VimeoErrorCode.GenericError;
+            this.Success = false;
+            this.Message = "Generic Error";
+            this.ResolutionAction = ResolutionAction.NoAction;
         }
     }
 }
