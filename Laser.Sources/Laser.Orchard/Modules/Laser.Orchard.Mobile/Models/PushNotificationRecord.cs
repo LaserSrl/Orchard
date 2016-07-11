@@ -14,6 +14,7 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual int MobileContactPartRecord_Id { get; set; }
         public virtual string RegistrationUrlHost { get; set; }
         public virtual string RegistrationUrlPrefix { get; set; }
+        public virtual string RegistrationMachineName { get; set; }
     }
     public enum TipoDispositivo { Android, Apple, WindowsMobile }
 }
