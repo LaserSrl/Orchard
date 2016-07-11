@@ -6,6 +6,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -109,7 +110,8 @@ namespace Laser.Orchard.Vimeo.Controllers {
         /// </summary>
         /// <param name="msgJson">A JSON representing a <type>Response</type> object describing the error.</param>
         /// <returns></returns>
-        public ActionResult ErrorHandler(string msgJson) {
+        public ActionResult ErrorHandler() {
+            string msgJson = new StreamReader(Request.InputStream).ReadToEnd();
             VimeoResponse resp = JsonConvert.DeserializeObject<VimeoResponse>(msgJson);
             int mpId = resp.Data.id; //the id of the MediaPart for whom we were doing the upload
             Laser.Orchard.StartupConfig.ViewModels.Response response;

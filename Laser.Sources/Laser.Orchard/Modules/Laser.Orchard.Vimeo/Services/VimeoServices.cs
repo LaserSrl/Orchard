@@ -179,11 +179,16 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 }
+            } else {
+                _orchardServices.Notifier.Error(T("Access token not valid"));
             }
 
             settings.License = vm.License ?? "";
             settings.Privacy = vm.Privacy;
             settings.Password = vm.Password ?? "";
+            if (vm.Privacy.view == "password" && string.IsNullOrWhiteSpace(vm.Password)) {
+                _orchardServices.Notifier.Error(T("The password must not be an empty string."));
+            }
             settings.ReviewLink = vm.ReviewLink;
             settings.Locale = vm.Locale ?? "";
             settings.ContentRatings = vm.ContentRatingsSafe ?
@@ -673,6 +678,9 @@ namespace Laser.Orchard.Vimeo.Services {
                 //here we cannot fill and properly initialize the OEmbedPart, because the video does not exist yet
                 _contentManager.Create(oembedPart);
                 uIP.MediaPartId = part.Id;
+                oembedPart["type"] = "video";
+                oembedPart["provider_name"] = "Vimeo";
+                oembedPart["provider_url"] = "https://vimeo.com/";
                 return part.Id;
             }
 
@@ -1532,6 +1540,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 OEmbedPart ep = mp.As<OEmbedPart>();
                 if (ep != null) {
                     if (!string.IsNullOrWhiteSpace(ep["provider_name"]) && ep["provider_name"] == "Vimeo") {
+                        //NOTE: this is a soft delete
                         _contentManager.Remove(mp.ContentItem);
                         str.AppendLine(T("Removed MediaPart").ToString());
                     }
@@ -1549,7 +1558,7 @@ namespace Laser.Orchard.Vimeo.Services {
             }
         }
 
-        //TODO: CODE FOR TASKS
+        #region Code for tasks
         public void ScheduleUploadVerification() {
             string taskTypeStr = VimeoScheduledTasksHandler.TaskTypeBase + VimeoScheduledTasksHandler.TaskSubTypeInProgress;
             if (_taskManager.GetTasks(taskTypeStr).Count() == 0)
@@ -1573,6 +1582,10 @@ namespace Laser.Orchard.Vimeo.Services {
                         TerminateUpload(uip);
                         break;
                     case VerifyUploadResults.Incomplete:
+                        //if more than 24 hours have passed since the beginning of the upload, cancel it
+                        if (DateTime.UtcNow > uip.CreatedTime.Value.AddDays(1)) {
+                            DestroyUpload(uip.MediaPartId);
+                        }
                         break;
                     case VerifyUploadResults.NeverExisted:
                         break;
@@ -1623,6 +1636,8 @@ namespace Laser.Orchard.Vimeo.Services {
             }
             return _repositoryUploadsComplete.Table.Count();
         }
+
+        #endregion
 
         /// <summary>
         /// Creates a default HttpWebRequest Using the Access Token and endpoint provided. By default, the Http Method is GET.
