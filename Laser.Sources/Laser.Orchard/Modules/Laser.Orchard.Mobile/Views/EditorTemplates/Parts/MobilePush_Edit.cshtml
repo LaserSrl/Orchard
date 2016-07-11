@@ -46,7 +46,8 @@
             @Html.HiddenFor(m => m.TitlePush)
             <br />
             <div class="editor-label">@Html.LabelFor(m => m.TextPush, T("Text"))</div>
-            <div class="editor-field">@Html.TextAreaFor(m => m.TextPush, new { @class = "text large" })</div>
+            <div class="editor-field">@Html.TextAreaFor(m => m.TextPush, new { @class = "text large", @maxlength = 160 })</div>
+            <span class="hint">@T("Push text max length: 160 characters.")</span>
         </div>
     </fieldset>
     @if (Model.PushAdvertising) {

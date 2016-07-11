@@ -222,5 +222,12 @@ namespace Laser.Orchard.Mobile {
                       );
             return 20;
         }
+        public int UpdateFrom20() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                        .AddColumn<string>("AndroidPushServiceUrl")
+                        );
+
+            return 21;
+        }
     }
 }
