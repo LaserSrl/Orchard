@@ -15,3 +15,7 @@ Features:
         Description: Aggiunge la gestione della favicon alle impostazioni del sito.
         Dependencies: Orchard.Media, Settings
         Category: SEO
+	Laser.Orchard.KeywordHelper:
+		Name: Laser Keyword Helper
+		Description: This module is used by content creators to generate recommended keywords to use.
+		Category: SEO
