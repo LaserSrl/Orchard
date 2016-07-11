@@ -6,7 +6,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization;
 
 namespace Laser.Orchard.Mobile.Handlers {
-    [OrchardFeature("Laser.Orchard.Mobile")]
+    [OrchardFeature("Laser.Orchard.PushGateway")]
     public class SiteSettingsPartHandler : ContentHandler {
         public SiteSettingsPartHandler(IRepository<PushMobileSettingsPartRecord> repository) {
             Filters.Add(StorageFilter.For(repository));

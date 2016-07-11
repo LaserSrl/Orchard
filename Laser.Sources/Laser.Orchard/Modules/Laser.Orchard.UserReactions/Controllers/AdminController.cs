@@ -87,7 +87,7 @@ namespace Laser.Orchard.UserReactions.Controllers {
 
         [HttpGet]
         public ActionResult Settings() {
-            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Yout have to be an Administrator to edit Culture Picker settings!")))
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Yout have to be an Administrator to edit Reaction types settings!")))
                 return new HttpUnauthorizedResult();
 
             var model = _reactionsService.GetTypesTableWithStyles();
@@ -97,7 +97,7 @@ namespace Laser.Orchard.UserReactions.Controllers {
 
         [HttpPost]
         public ActionResult Settings(UserReactionsTypes model) {
-            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Yout have to be an Administrator to edit Culture Picker settings!")))
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Yout have to be an Administrator to edit Reaction types settings!")))
                 return new HttpUnauthorizedResult();
 
             if (!ModelState.IsValid) {

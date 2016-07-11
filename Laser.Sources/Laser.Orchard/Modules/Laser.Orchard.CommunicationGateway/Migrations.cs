@@ -3,6 +3,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using System;
+using System.Data;
 
 namespace Laser.Orchard.CommunicationGateway {
 
@@ -290,6 +291,12 @@ namespace Laser.Orchard.CommunicationGateway {
         public int UpdateFrom19() {
             _utilsServices.EnableFeature("Laser.Orchard.ZoneAlternates");
             return 20;
+        }
+        public int UpdateFrom20() {
+            SchemaBuilder.AlterTable("CommunicationContactPartRecord",
+               table => table
+                   .AlterColumn("Logs", x => x.WithType(DbType.String).Unlimited()));
+            return 21;
         }
 
     }

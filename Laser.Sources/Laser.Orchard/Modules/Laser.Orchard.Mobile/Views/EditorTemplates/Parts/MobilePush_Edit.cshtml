@@ -7,7 +7,7 @@
 }
 @using (Script.Foot()) {
     <script type="text/javascript">
-     $(function () {
+        $(function () {
             $('.rcswitcher-checkbox-push').rcSwitcher({
                 theme: 'flat',
                 blobOffset: 1,
@@ -15,47 +15,74 @@
                 offText: '@T("NO")'
             });
         });
+
+        $(function () {
+            $('.rcswitcher-checkbox-pushtest').rcSwitcher({
+                theme: 'flat',
+                blobOffset: 1,
+                onText: '@T("YES")',
+                offText: '@T("NO")'
+            }).on({
+                'turnon.rcSwitcher': function (e, dataObj) {
+                    if (e.target.id == '@Html.FieldIdFor(m => m.TestPush)') {
+                        $("#test-push-info").show(400);
+                    }
+                },
+                'turnoff.rcSwitcher': function (e, dataObj) {
+                    if (e.target.id == '@Html.FieldIdFor(m => m.TestPush)') {
+                        $("#test-push-info").hide(400);
+                    }
+                }
+            });
+        });
+
     </script>
 }
 <div id="mobile-comm-container" class="comm-tabbed">
     <fieldset>
         <legend>@T("Mobile Push")</legend>
         <div class="editor-field">
-           @Html.HiddenFor(m => m.PushSent)
-           @Html.HiddenFor(m => m.TitlePush)
+            @Html.HiddenFor(m => m.PushSent)
+            @Html.HiddenFor(m => m.TitlePush)
             <br />
             <div class="editor-label">@Html.LabelFor(m => m.TextPush, T("Text"))</div>
-            <div class="editor-field">@Html.TextAreaFor(m => m.TextPush, new { @class = "text large" })</div>
+            <div class="editor-field">@Html.TextAreaFor(m => m.TextPush, new { @class = "text large", @maxlength = 160 })</div>
+            <span class="hint">@T("Push text max length: 160 characters.")</span>
         </div>
     </fieldset>
-@if (Model.PushAdvertising)
-{
-    <fieldset>
-        @Html.LabelFor(m => m.ToPush, T("Approved").Text, new { @class = "forcheckbox" })
-        @if (disabledElements == false) { 
-            @Html.CheckBoxFor(model => model.ToPush, new { @class = "rcswitcher-checkbox-push" }) 
-            <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet sent.")
-        }
-        else {
-            @Html.CheckBoxFor(model => model.ToPush, new { @class = "rcswitcher-checkbox-push", @disabled = "disabled" }) 
-            <i class="fa fa-check-circle" style="color: green"></i> @T("Message already sent.")
-            <div class="message message-Error">@T("This Push message has been already sent. You will be able to edit and save it, but it will not be sent anymore on next publish.")</div>
-        }
-    </fieldset>
-    <fieldset id="test-push-container" style="@((!Model.ShowTestOptions) ? "display:none;" : "")">
-        @*@if (Model.ShowTestOptions){
-            *@<div class="checkbox-and-label">
+    @if (Model.PushAdvertising) {
+        <fieldset>
+            @Html.LabelFor(m => m.ToPush, T("Approved").Text, new { @class = "forcheckbox" })
+            @if (disabledElements == false) { 
+                @Html.CheckBoxFor(model => model.ToPush, new { @class = "rcswitcher-checkbox-push" }) 
+                <i class="fa fa-times-circle" style="color: red"></i> @T("Message not yet sent.")
+            } else {
+                @Html.CheckBoxFor(model => model.ToPush, new { @class = "rcswitcher-checkbox-push", @disabled = "disabled" }) 
+                <i class="fa fa-check-circle" style="color: green"></i> @T("Message already sent.")
+                <div class="message message-Error">@T("This Push message has been already sent. You will be able to edit and save it, but it will not be sent anymore on next publish.")</div>
+            }
+        </fieldset>
+        <fieldset id="test-push-container" style="@((!Model.ShowTestOptions) ? "display:none;" : "")">
+            @*@if (Model.ShowTestOptions){*@
+            <div class="checkbox-and-label">
                 <label for="@Html.FieldIdFor(m => m.TestPush)" class="forcheckbox">@T("Test Push on device") </label>
-                @if(disabledElements == false) {
-                    @Html.CheckBoxFor(m => m.TestPush, new { @class = "rcswitcher-checkbox-push" })
+                @if (disabledElements == false) {
+                    @Html.CheckBoxFor(m => m.TestPush, new { @class = "rcswitcher-checkbox-pushtest" })
+                } else {
+                    @Html.CheckBoxFor(m => m.TestPush, new { @class = "rcswitcher-checkbox-pushtest", @disabled = "disabled" })
                 }
-                else {
-                    @Html.CheckBoxFor(m => m.TestPush, new { @class = "rcswitcher-checkbox-push", @disabled = "disabled" })
-                }
+
+                <div id="test-push-info" style="@((!Model.TestPush) ? "display:none;" : "")">
+                    <div class="form-group">
+                        <span class="hint">@T("Number push test:") @Model.PushTestNumber</span>
+                        <button type="submit" name="submit.PushTest" value="submit.PushTest">@T("Send for test")</button>
+                    </div>
+                </div>
+
                 <span class="hint">@T("Mask to make test for Push... this option is set by settings of module")</span>
             </div>
-    </fieldset>
-}
+        </fieldset>
+    }
     <fieldset>
         <div class="editor-label">@Html.LabelFor(m => m.DevicePush, T("To Device"))</div>
         <div class="editor-field">@Html.DropDownListFor(m => m.DevicePush, Model.ListOfDevice)
@@ -66,11 +93,8 @@
 <div class="tab-folder">
     <a href="#mobile-comm-container"><i class="fa fa-mobile"></i>@T("Mobile")</a>
 </div>
-@if (Model.PushSent)
-{
-    <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalPush","CountPanel", new { area = "Laser.Orchard.Mobile", tot=Model.TargetDeviceNumber })"/>
-}
-else
-{
-    <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalPush","CountPanel", new { area = "Laser.Orchard.Mobile" })"/>
+@if (Model.PushSent) {
+    <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalPush", "CountPanel", new { area = "Laser.Orchard.Mobile", tot = Model.TargetDeviceNumber })"/>
+} else {
+    <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalPush", "CountPanel", new { area = "Laser.Orchard.Mobile" })"/>
 }

@@ -1,17 +1,26 @@
 ﻿using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.StartupConfig.Services;
+using Orchard;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Data;
 using Orchard.Data.Migration;
+using Orchard.Environment.Configuration;
 using System;
 
 namespace Laser.Orchard.Mobile {
 
     public class Migrations : DataMigrationImpl {
         private readonly IUtilsServices _utilsServices;
+        private readonly IOrchardServices _orchardServices;
+        private readonly ShellSettings _shellSettings;
+        private readonly IRepository<PushNotificationRecord> _repositoryDevice;
 
-        public Migrations(IUtilsServices utilsServices) {
+        public Migrations(IUtilsServices utilsServices, IOrchardServices orchardServices, ShellSettings shellSettings, IRepository<PushNotificationRecord> repositoryDevice) {
             _utilsServices = utilsServices;
+            _orchardServices = orchardServices;
+            _shellSettings = shellSettings;
+            _repositoryDevice = repositoryDevice;
         }
 
         public int Create() {
@@ -210,6 +219,44 @@ namespace Laser.Orchard.Mobile {
             SchemaBuilder.AlterTable("MobilePushPartRecord", table => table
                 .AddColumn<int>("PushSentNumber", col => col.WithDefault(0)));
             return 19;
+        }
+        public int UpdateFrom19() {
+            SchemaBuilder.CreateTable("SentRecord",
+                      table => table
+                      .Column<int>("Id", column => column.PrimaryKey().Identity())
+                      .Column<int>("PushNotificationRecord_Id")
+                      .Column<int>("PushedItem")
+                      .Column<DateTime>("SentDate")
+                      .Column<string>("DeviceType")
+                      );
+            return 20;
+        }
+        public int UpdateFrom20() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                        .AddColumn<string>("AndroidPushServiceUrl")
+                        );
+
+            return 21;
+        }
+        public int UpdateFrom21() {
+            SchemaBuilder.AlterTable("PushNotificationRecord",
+                              table => table
+                              .AddColumn<string>("RegistrationUrlHost"));
+            SchemaBuilder.AlterTable("PushNotificationRecord",
+                              table => table
+                              .AddColumn<string>("RegistrationUrlPrefix"));
+
+            // aggiorna tutti i device già esistenti
+            string host = _shellSettings.RequestUrlHost;
+            string prefix = _shellSettings.RequestUrlPrefix;
+            var elencoDevice = _repositoryDevice.Fetch(x => x.Id > 0);
+            foreach (var device in elencoDevice) {
+                device.RegistrationUrlHost = host;
+                device.RegistrationUrlPrefix = prefix;
+                _repositoryDevice.Update(device);
+            }
+            _repositoryDevice.Flush();
+            return 22;
         }
     }
 }

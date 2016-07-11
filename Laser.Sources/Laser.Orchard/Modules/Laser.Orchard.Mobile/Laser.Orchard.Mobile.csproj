@@ -212,12 +212,15 @@
     <Compile Include="Drivers\UserPwdRecoveryPartDriver.cs" />
     <Compile Include="Feature\MobileCommunicationImportFeature.cs" />
     <Compile Include="Feature\SmsCommunicationImportFeature.cs" />
+    <Compile Include="Handlers\ContactRelatedEventHandler.cs" />
     <Compile Include="Handlers\MobileContactPartHandler.cs" />
+    <Compile Include="Handlers\PushScheduledTaskHandler.cs" />
     <Compile Include="Handlers\SmsGatewayPartHandler.cs" />
     <Compile Include="Handlers\SmsPlaceholdersSettingsHandler.cs" />
     <Compile Include="Handlers\SmsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\UserPwdRecoveryPartHandler.cs" />
     <Compile Include="Models\MobileContactPart.cs" />
+    <Compile Include="Models\SentRecord.cs" />
     <Compile Include="Models\SmsGatewayPart.cs" />
     <Compile Include="Models\SmsPlaceholdersSettingsPart.cs" />
     <Compile Include="Models\UserPwdRecoveryPart.cs" />
@@ -228,6 +231,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Services\MissingSmsSettingsBanner.cs" />
+    <Compile Include="Services\PushGatewayService.cs" />
     <Compile Include="Services\SmsCommunicationService.cs" />
     <Compile Include="Services\SmsValidationService.cs" />
     <Compile Include="SMSGatewayMigration.cs" />
@@ -241,6 +245,7 @@
     <Compile Include="Settings\SmsSettingsPartHooks.cs" />
     <Compile Include="ViewModels\DeliveryReportVM.cs" />
     <Compile Include="ViewModels\PhoneNumberViewModel.cs" />
+    <Compile Include="ViewModels\PushNotificationVM.cs" />
     <Compile Include="ViewModels\SmsGatewayVM.cs" />
     <Compile Include="WorkFlows\PushEditForm.cs" />
     <Compile Include="Controllers\DeviceController.cs" />

@@ -312,6 +312,9 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                         return _utilsServices.GetResponse(ResponseType.UnAuthorized);
                 try {
                     _orchardServices.ContentManager.Remove(ContentToDelete);
+                    // propaga l'evento Removed per il ContentItem
+                    var context = new RemoveContentContext(ContentToDelete);
+                    Handlers.Invoke(handler => handler.Removed(context), Logger);
                 }
                 catch (Exception ex) {
                     return _utilsServices.GetResponse(ResponseType.None, ex.Message);
@@ -442,6 +445,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                         dynamic data = new ExpandoObject();
                         data.DisplayAlias = ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias;
                         data.Id = (Int32)(((dynamic)NewOrModifiedContent).Id);
+                        data.ContentType = ((dynamic)NewOrModifiedContent).ContentType;
                         rsp.Data = data;
                     }
                 }
@@ -460,13 +464,14 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             if (!rsp.Success)
                 _transactionManager.Cancel();
             else {
-                var context = new UpdateContentContext(NewOrModifiedContent);
-                Handlers.Invoke(handler => handler.Updated(context), Logger);
                 // forza il publish solo per i contenuti non draftable
                 var typeSettings = NewOrModifiedContent.TypeDefinition.Settings.TryGetModel<ContentTypeSettings>();
                 if ((typeSettings == null) || (typeSettings.Draftable == false)) {
                     _orchardServices.ContentManager.Publish(NewOrModifiedContent);
                 }
+                // propaga l'evento Updated per il ContentItem
+                var context = new UpdateContentContext(NewOrModifiedContent);
+                Handlers.Invoke(handler => handler.Updated(context), Logger);
             }
             return rsp;
         }

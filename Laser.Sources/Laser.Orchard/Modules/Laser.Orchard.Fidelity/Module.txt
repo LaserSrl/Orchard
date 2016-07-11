@@ -1,6 +1,6 @@
 ﻿Name: Laser.Orchard.Fidelity
 AntiForgery: enabled
-Author: Laser S.R.L.
+Author: Laser srl
 Website: https://www.laser-group.com
 Version: 1.0
 OrchardVersion: 1.8

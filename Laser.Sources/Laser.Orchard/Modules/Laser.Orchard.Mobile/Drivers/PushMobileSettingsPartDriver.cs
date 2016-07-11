@@ -15,7 +15,7 @@ using System.Web.UI.WebControls;
 using System.Web.Hosting;
 
 namespace Laser.Orchard.Mobile.Drivers {
-    [OrchardFeature("Laser.Orchard.Mobile")]
+    [OrchardFeature("Laser.Orchard.PushGateway")]
     public class PushMobileSettingsPartDriver : ContentPartDriver<PushMobileSettingsPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly ShellSettings _shellSettings;
@@ -48,6 +48,7 @@ namespace Laser.Orchard.Mobile.Drivers {
                 var getpart = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>();
                 viewModel.AndroidApiKey = getpart.AndroidApiKey;
                 viewModel.AndroidApiKeyDevelopment = getpart.AndroidApiKeyDevelopment;
+                viewModel.AndroidPushServiceUrl = getpart.AndroidPushServiceUrl;
                 viewModel.AppleCertificatePassword = getpart.AppleCertificatePassword;
                 viewModel.ApplePathCertificateFile = getpart.ApplePathCertificateFile;
                 viewModel.AppleCertificatePasswordDevelopment = getpart.AppleCertificatePasswordDevelopment;
@@ -76,6 +77,7 @@ namespace Laser.Orchard.Mobile.Drivers {
                     if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
                         part.AndroidApiKey = viewModel.AndroidApiKey;
                         part.AndroidApiKeyDevelopment = viewModel.AndroidApiKeyDevelopment;
+                        part.AndroidPushServiceUrl = viewModel.AndroidPushServiceUrl;
                         part.AppleCertificatePassword = viewModel.AppleCertificatePassword;
                         part.ApplePathCertificateFile = viewModel.ApplePathCertificateFile;
                         part.ApplePushSound = viewModel.ApplePushSound;
@@ -91,6 +93,7 @@ namespace Laser.Orchard.Mobile.Drivers {
                 else {
                     viewModel.AndroidApiKey = part.AndroidApiKey;
                     viewModel.AndroidApiKeyDevelopment = part.AndroidApiKeyDevelopment;
+                    viewModel.AndroidPushServiceUrl = part.AndroidPushServiceUrl;
                     viewModel.AppleCertificatePassword = part.AppleCertificatePassword;
                     viewModel.ApplePathCertificateFile = part.ApplePathCertificateFile;
                     viewModel.AppleCertificatePasswordDevelopment = part.AppleCertificatePasswordDevelopment;

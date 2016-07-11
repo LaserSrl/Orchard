@@ -51,7 +51,8 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                 IEnumerable<PolicyTextInfoPart> neededPolicies = _userExtensionServices.GetUserLinkedPolicies(language);
 
                 if (neededPolicies.Count() > 0) {
-                    var userPolicies = _policyServices.GetPoliciesForUserOrSession(false, language).Policies.Where(w => w.Accepted).Select(s => s.PolicyTextId).ToList();
+                    // estraggo le policy obbligatorie accettate + facoltative che hanno una data di risposta
+                    var userPolicies = _policyServices.GetPoliciesForUserOrSession(false, language).Policies.Where(w => w.Accepted || (w.AnswerDate > DateTime.MinValue && !w.PolicyText.UserHaveToAccept)).Select(s => s.PolicyTextId).ToList();
                     var missingPolicies = neededPolicies.Select(s => s.Id).ToList().Where(w => !userPolicies.Any(a => a == w));
 
                     if (missingPolicies.Count() > 0) {
