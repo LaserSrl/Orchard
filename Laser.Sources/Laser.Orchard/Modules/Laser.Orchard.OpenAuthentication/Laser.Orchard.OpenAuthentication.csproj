@@ -221,6 +221,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Models\UserProviderDisplayPart.cs" />
+    <Compile Include="Services\OpenAuthFacebookOAuth2.cs" />
     <Compile Include="Services\OpenAuthGoogleOAuth2.cs" />
     <Compile Include="Services\UserExtensionService.cs" />
     <Compile Include="Handlers\OpenAuthenticationSettingsPartHandler.cs" />

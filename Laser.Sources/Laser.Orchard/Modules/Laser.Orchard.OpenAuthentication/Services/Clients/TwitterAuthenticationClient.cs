@@ -18,6 +18,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
+           
             return new TwitterClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
         }
 
@@ -52,6 +53,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             var userData = new Dictionary<string, string>();
             userData["id"] = userAccessToken.Split('-')[0];
             userData["username"] = twitterUserData.Screen_Name;
+            
 
             if (userData == null) {
                 return AuthenticationResult.Failed;

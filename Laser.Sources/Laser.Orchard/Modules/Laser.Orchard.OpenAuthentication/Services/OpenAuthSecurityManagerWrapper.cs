@@ -59,9 +59,11 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         }
 
         public AuthenticationResult VerifyAuthentication(string returnUrl) {
-            GoogleOAuth2Client.RewriteRequest();
+                GoogleOAuth2Client.RewriteRequest();
+                FacebookOAuth2Client.RewriteRequest();
             return SecurityManager(ProviderName).VerifyAuthentication(returnUrl);
         }
+
 
         public void RequestAuthentication(string providerName, string returnUrl) {
             SecurityManager(providerName).RequestAuthentication(returnUrl);

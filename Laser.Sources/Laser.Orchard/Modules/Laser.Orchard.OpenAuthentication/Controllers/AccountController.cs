@@ -93,7 +93,14 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             if (_openAuthMembershipServices.CanRegister()) {
                 
                 // LV Normalize data
-                OpenAuthCreateUserParams normalize = client.NormalizeData(new OpenAuthCreateUserParams(result.UserName,
+                string UserName=string.Empty;
+                if (result.Provider == "twitter")
+                    UserName = result.UserName.Trim();
+                else
+                    UserName = result.UserName;
+
+
+                OpenAuthCreateUserParams normalize = client.NormalizeData(new OpenAuthCreateUserParams(UserName,
                                                                                                         result.Provider,
                                                                                                         result.ProviderUserId,
                                                                                                         result.ExtraData));

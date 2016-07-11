@@ -22,7 +22,15 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
-            return new FacebookClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
+           // return new FacebookClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
+            string ClientId = providerConfigurationRecord.ProviderIdKey;
+            string ClientSecret = providerConfigurationRecord.ProviderSecret;
+
+            var client = new FacebookOAuth2Client(ClientId, ClientSecret);
+
+            //var client2 = new GoogleOpenIdClient();
+            //return client2;
+            return client;
 
         }
 
