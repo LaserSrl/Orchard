@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.Vimeo {
-    public enum VerifyUploadResults { CompletedAlready, Complete, Incomplete, NeverExisted, Error }
+    public enum VerifyUploadResults { CompletedAlready, Complete, Incomplete, StillUploading, NeverExisted, Error }
 
     public enum VimeoPrivacyViewOptions { anybody, nobody, contacts, password, users, unlisted, disable }
     public enum VimeoPrivacyCommentsOptions { anybody, nobody, contacts }

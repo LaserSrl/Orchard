@@ -740,8 +740,12 @@ namespace Laser.Orchard.Vimeo.Services {
                             return VerifyUploadResults.Complete;
                         } else {
                             //update the uploaded size
+                            int old = entity.UploadedSize;
                             entity.UploadedSize = sent;
-                            return VerifyUploadResults.Incomplete;
+                            return old == sent ? VerifyUploadResults.Incomplete : VerifyUploadResults.StillUploading;
+                            //if the upload has been going on for some time, we may decide to destroy its information.
+                            //The distinction between Incomplete and StillUploading helps us understand whether it is
+                            //just a slow/long upload, or the upload actualy stopped and we may discard it safely.
                         }
                     }
                 }
@@ -1586,6 +1590,8 @@ namespace Laser.Orchard.Vimeo.Services {
                         if (DateTime.UtcNow > uip.CreatedTime.Value.AddDays(1)) {
                             DestroyUpload(uip.MediaPartId);
                         }
+                        break;
+                    case VerifyUploadResults.StillUploading:
                         break;
                     case VerifyUploadResults.NeverExisted:
                         break;

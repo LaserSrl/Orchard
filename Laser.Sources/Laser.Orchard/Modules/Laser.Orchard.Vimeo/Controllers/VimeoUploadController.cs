@@ -86,6 +86,11 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     message = T("The upload is still in progress.").ToString();
                     return Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF, message));
                     break;
+                case VerifyUploadResults.StillUploading:
+                    //the upload is still going on
+                    message = T("The upload is still in progress.").ToString();
+                    return Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF, message));
+                    break;
                 case VerifyUploadResults.NeverExisted:
                     //we never started an upload with the given Id
                     message = T("The upload was never started, or the MediaPart is not for a Vimeo video.").ToString();
