@@ -28,6 +28,8 @@ namespace Laser.Orchard.Vimeo.Controllers {
         }
 
         public ActionResult TryStartUpload(int fileSize) {
+            //TODO: make all the ticket creation in a single call from here. This is mostly so we do not send record ids
+            //or anything like that out of the services
             int uploadId = _vimeoServices.IsValidFileSize(fileSize);
             string message = T("Everything is fine").ToString();
             if (uploadId >= 0) {
@@ -49,6 +51,8 @@ namespace Laser.Orchard.Vimeo.Controllers {
         
 #if DEBUG
         //this method to test extracting the URL of the vimeo streams. It will not be present in the production systems
+        //NOTE: at any time, these methods here in this region may not be functional, as they are continuosly tweaked to 
+        //test different things.
         public ActionResult ExtractVimeoStreamUrl(int ucId) {
             _vimeoServices.FinishMediaPart(ucId);
             string ret = _vimeoServices.GetVideoStatus(ucId);//_vimeoServices.ExtractVimeoStreamURL(ucId);
@@ -162,6 +166,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
         }
     }
 
+    //We extend Laser.Orchard.StartupConfig.ViewModels.Response because we have specific error codes for Vimeo
     public enum VimeoErrorCode { NoError = 0, GenericError = 1, UserStopped = 3001, UploadStopped = 3002, UploadMayResume = 3003 }
     public class VimeoResponse : Laser.Orchard.StartupConfig.ViewModels.Response {
         public VimeoErrorCode ErrorCode {get;set;}

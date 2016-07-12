@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Laser.Orchard.Vimeo.Services {
     public interface IVimeoServices : IDependency {
-        bool Create(VimeoSettingsPartViewModel settings);
-        VimeoSettingsPartViewModel GetByToken(string aToken);
-        VimeoSettingsPartViewModel Get();
+        //bool Create(VimeoSettingsPartViewModel settings);
+        //VimeoSettingsPartViewModel GetByToken(string aToken);
+        //VimeoSettingsPartViewModel Get();
         void UpdateSettings(VimeoSettingsPartViewModel vm);
 
         bool TokenIsValid(VimeoSettingsPartViewModel vm);
@@ -23,6 +23,7 @@ namespace Laser.Orchard.Vimeo.Services {
         
 
         //call these methods to properly start an upload
+        //TODO: replace these with a single method
         int IsValidFileSize(int fileSize);
         string GenerateUploadTicket(int uploadId);
         int GenerateNewMediaPart(int uploadId);
@@ -32,6 +33,9 @@ namespace Laser.Orchard.Vimeo.Services {
         bool TerminateUpload(int mediaPartId);
 
         //task methods
+        //Should we really expose them here? as things stand, they can be called from the task handler (which is fine) 
+        //as well as from the admin controller and the upload controller, where we don't need them. We could separate
+        //the method definitions in different interfaces to make things more clean as the code grows larger.
         void ScheduleUploadVerification();
         void ScheduleVideoCompletion();
         int VerifyAllUploads();
@@ -40,6 +44,7 @@ namespace Laser.Orchard.Vimeo.Services {
         string DestroyUpload(int mediaPartId);
 
 #if DEBUG
+        //these methods here don't need to be exposed, but they are easier to test and debug if they may be called directly.
         bool TokenIsValid(string aToken);
         bool GroupIsValid(string gName, string aToken);
         bool AlbumIsValid(string aName, string aToken);

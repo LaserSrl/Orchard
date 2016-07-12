@@ -57,6 +57,8 @@ namespace Laser.Orchard.Vimeo.Services {
             T = NullLocalizer.Instance;
         }
 
+        //NOTE: These three methods are not really needed right now, because we "create" a settings object
+        //for the instance in the settings handler
         /// <summary>
         /// Creates a new entry in the db for the vimeo Settings. Only one entry may exist.
         /// </summary>
@@ -76,7 +78,6 @@ namespace Laser.Orchard.Vimeo.Services {
             });
             return true;
         }
-
         /// <summary>
         /// Gets the settings corresponding to the specified Access Token
         /// </summary>
@@ -94,7 +95,6 @@ namespace Laser.Orchard.Vimeo.Services {
                 AlbumName = rec.AlbumName
             };
         }
-
         /// <summary>
         /// Gets the existing Vimeo settings.
         /// </summary>

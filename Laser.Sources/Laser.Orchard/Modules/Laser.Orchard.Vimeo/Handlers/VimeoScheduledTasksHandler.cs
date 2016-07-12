@@ -7,6 +7,7 @@ using System.Web;
 
 namespace Laser.Orchard.Vimeo.Handlers {
     public class VimeoScheduledTasksHandler : IScheduledTaskHandler {
+        //move these to an interface, to avoid having to inherit this class in services
         public const string TaskTypeBase = "Laser.Orchard.Vimeo.Task";
         public const string TaskSubTypeInProgress = ".UploadsInProgress";
         public const string TaskSubTypeComplete = ".CompleteUploads";
