@@ -156,14 +156,20 @@ namespace Laser.Orchard.Mobile.Services {
         #region [CRUD PushNotification]
 
         public void StorePushNotification(PushNotificationRecord pushElement) {
-            PushNotificationRecord OldPush = _pushNotificationRepository.Fetch(x => (x.UUIdentifier == pushElement.UUIdentifier || x.Token == pushElement.Token) && x.Produzione == pushElement.Produzione && x.Device == pushElement.Device).FirstOrDefault();
+            PushNotificationRecord oldPush = _pushNotificationRepository.Fetch(x => (x.UUIdentifier == pushElement.UUIdentifier || x.Token == pushElement.Token) && x.Produzione == pushElement.Produzione && x.Device == pushElement.Device).FirstOrDefault();
             DateTime adesso = DateTime.Now;
-            if (OldPush != null) { // se dispositivo già registrato sovrascrivo lo stesso record
-                pushElement.DataModifica = adesso;
-                pushElement.DataInserimento = OldPush.DataInserimento;
-                pushElement.Id = OldPush.Id;
-                pushElement.MobileContactPartRecord_Id = EnsureContactId(pushElement.UUIdentifier);
-                _pushNotificationRepository.Update(pushElement);
+            string oldUUId = "";
+            if (oldPush != null) { // se dispositivo già registrato sovrascrivo lo stesso record
+                oldUUId = oldPush.UUIdentifier;
+                oldPush.Device = pushElement.Device;
+                oldPush.UUIdentifier = pushElement.UUIdentifier;
+                oldPush.Token = pushElement.Token;
+                oldPush.Validated = pushElement.Validated;
+                oldPush.DataModifica = adesso;
+                oldPush.Produzione = pushElement.Produzione;
+                oldPush.Language = pushElement.Language;
+                oldPush.MobileContactPartRecord_Id = EnsureContactId(oldPush.UUIdentifier);
+                _pushNotificationRepository.Update(oldPush);
             }
             else {
                 pushElement.Id = 0;
@@ -191,8 +197,8 @@ namespace Laser.Orchard.Mobile.Services {
                     _userDeviceRecord.Delete(record);
                 }
             }
-            if (OldPush != null && OldPush.UUIdentifier != pushElement.UUIdentifier) {
-                var elencoVecchi = _userDeviceRecord.Fetch(x => x.UUIdentifier == OldPush.UUIdentifier).OrderByDescending(y => y.Id).ToList();
+            if (oldPush != null && oldUUId != pushElement.UUIdentifier) {
+                var elencoVecchi = _userDeviceRecord.Fetch(x => x.UUIdentifier == oldUUId).OrderByDescending(y => y.Id).ToList();
                 foreach (var record in elencoVecchi) {
                     if (my_disp == null) {
                         // aggiorna uno dei record che aveva il vecchio UUIdentifier, quello con l'Id più recente
