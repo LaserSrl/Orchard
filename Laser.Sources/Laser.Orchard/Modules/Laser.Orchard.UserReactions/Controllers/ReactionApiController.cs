@@ -7,8 +7,11 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Laser.Orchard.UserReactions.Services;
 using Laser.Orchard.UserReactions.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 
 namespace Laser.Orchard.UserReactions.Controllers {
+    
+    [WebApiKeyFilter(true)]
     public class ReactionApiController : ApiController {
 
         private readonly IUserReactionsService _userReactionService;
