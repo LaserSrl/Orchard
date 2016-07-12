@@ -223,6 +223,7 @@
     <Compile Include="Models\UserProviderDisplayPart.cs" />
     <Compile Include="Services\OpenAuthFacebookOAuth2.cs" />
     <Compile Include="Services\OpenAuthGoogleOAuth2.cs" />
+    <Compile Include="Services\OpenAuthLinkedlnOAuth2Client.cs" />
     <Compile Include="Services\UserExtensionService.cs" />
     <Compile Include="Handlers\OpenAuthenticationSettingsPartHandler.cs" />
     <Compile Include="Handlers\UserProvidersPartHandler.cs" />
