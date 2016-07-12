@@ -1314,36 +1314,79 @@ namespace Laser.Orchard.Vimeo.Services {
                         .As<VimeoSettingsPart>();
 
             string vUri = part["uri"].Remove(part["uri"].IndexOf("video") + 5, 1);//ucr.Uri.Remove(ucr.Uri.IndexOf("video") + 5, 1); //the original uri is /videos/ID, but we want /video/ID
+            //is this a pro account?
+            //we can either store this information in the settings, or make an API call to /me and check the account field of the user object
+            bool proAccount = false;
+            if (proAccount) {
+                //if we have a pro account, we can get a static stream url
+            } else {
+                //if our account is not pro, under some conditions we may be able to extract a stream's url
+                //NOTE: this url expires after a while (it's not clear how long), and has to be reextracted
+                //make an API call to see if we can extract the video stream's url
+                HttpWebRequest apiCall = VimeoCreateRequest(
+                    aToken: settings.AccessToken,
+                    endpoint: VimeoEndpoints.APIEntry + part["uri"] //NOTE: this is not /me/videos
+                    );
+                //To get the stream's url, the video must be embeddable in our current domain
+                bool embeddable = false;
+                try {
+                    using (HttpWebResponse resp = apiCall.GetResponse() as HttpWebResponse) {
+                        if (resp.StatusCode == HttpStatusCode.OK) {
+                            string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                            var jsonTree = JObject.Parse(data);
+                            VimeoVideoPrivacy videoPrivacy = JsonConvert.DeserializeObject<VimeoVideoPrivacy>(jsonTree["privacy"].ToString());
+                            if (videoPrivacy.view == "anybody") {
+                                embeddable = videoPrivacy.embed == "public";
+                                if (!embeddable) {
+                                    //check if we are in a whitelisted domain
+                                    //if we are not in a whitelisted domain, there is no way to get the stream's url
+                                    //verify this, because baseUrl does not seem to contain the site name
+                                    string myDomain = _orchardServices.WorkContext.CurrentSite.BaseUrl;
+                                    embeddable = settings.Whitelist.Contains(myDomain);
+                                }
+                                    //(videoPrivacy.embed == "public" || 
+                                    //    (videoPrivacy.embed == "whitelist" ))) {
 
-            //HttpWebRequest vimeoLoginPage = VimeoCreateRequest(endpoint: "https://vimeo.com/log_in");
-            //try {
-            //    using (HttpWebResponse resp = vimeoLoginPage.GetResponse() as HttpWebResponse) {
-            //        if (resp.StatusCode == HttpStatusCode.OK) {
-            //            return new StreamReader(resp.GetResponseStream()).ReadToEnd();
-            //        }
-            //    }
-            //} catch (Exception ex) {
-            //    return ex.Message;
-            //}
-
-            HttpWebRequest wr = VimeoCreateRequest(
-                aToken: settings.AccessToken,
-                endpoint: VimeoEndpoints.PlayerEntry + vUri + "/config",
-                method: "GET"
-                );
-            //wr.Headers["Authorization"] = "Basic " + Base64Encode("laser.srl.ao@gmail.com:lasersrlao");
-            //wr.Credentials = new NetworkCredential("laser.srl.ao@gmail.com", "lasersrlao", "vimeo.com");
-            wr.UserAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
-            wr.Accept = "*/*";
-            try {
-                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
-                    if (resp.StatusCode == HttpStatusCode.OK) {
-                        return new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    return ex.Message;
+                }
+                if (embeddable) {
+                    HttpWebRequest wr = VimeoCreateRequest(
+                        aToken: settings.AccessToken,
+                        endpoint: VimeoEndpoints.PlayerEntry + vUri + "/config",
+                        method: "GET"
+                        );
+                    //wr.Headers["Authorization"] = "Basic " + Base64Encode("laser.srl.ao@gmail.com:lasersrlao");
+                    //wr.Credentials = new NetworkCredential("laser.srl.ao@gmail.com", "lasersrlao", "vimeo.com");
+                    wr.UserAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
+                    wr.Accept = "*/*";
+                    try {
+                        using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                            if (resp.StatusCode == HttpStatusCode.OK) {
+                                string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                                var jsonTree = JObject.Parse(data);
+                                IList<JToken> res = jsonTree["request"]["files"]["progressive"].Children().ToList();
+                                int quality = 0;
+                                string url = "";
+                                foreach (var item in res) {
+                                    int q = int.Parse(item["quality"].ToString().Trim(new char[] { 'p' }));
+                                    if (q > quality) {
+                                        quality = q;
+                                        url = item["url"].ToString();
+                                    }
+                                }
+                                return url;
+                            }
+                        }
+                    } catch (Exception ex) {
+                        return ex.Message;
                     }
                 }
-            } catch (Exception ex) {
-                return ex.Message;
             }
+            
             return null;
         }
         public static string Base64Encode(string plainText) {
