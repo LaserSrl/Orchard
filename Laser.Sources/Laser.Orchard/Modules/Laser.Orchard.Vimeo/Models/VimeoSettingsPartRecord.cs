@@ -21,7 +21,7 @@ namespace Laser.Orchard.Vimeo.Models {
         //  safe,All Audiences
         //  unrated,Not Yet Rated
         public virtual string Whitelist { get; set; } //JSON array of domains where video embedding is enabled
-        //TODO: Embed settings
+        //TODO: Embed settings: thesee are the setting that have to do with the default appearance of the Vimeo player on web pages
 
         public virtual bool AlwaysUploadToGroup { get; set; }
         public virtual bool AlwaysUploadToAlbum { get; set; }

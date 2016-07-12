@@ -14,10 +14,6 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual string TicketId { get; set; } //Unique ticket ID
         public virtual string UploadLinkSecure { get; set; } //https upload url
 
-        //public UploadsInProgressRecord() {
-        //    this.ContentItemRecord = new ContentItemRecord();
-        //}
-
         public virtual int Id { get; set; } //primary key provided because we do not inherit from ContentItemRecord
 
         public virtual DateTime? CreatedTime { get; set; }
