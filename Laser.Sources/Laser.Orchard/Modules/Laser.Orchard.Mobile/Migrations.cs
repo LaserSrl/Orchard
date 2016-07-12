@@ -298,8 +298,14 @@ namespace Laser.Orchard.Mobile {
             if (_utilsServices.FeatureIsEnabled("Laser.Orchard.CommunicationGateway")) {
                 _utilsServices.EnableFeature("Laser.Orchard.Mobile");
             }
-
             return 25;
+        }
+        public int UpdateFrom25() {
+            // se è attiva la feature Laser.Orchard.Queues, attiva anche Laser.Orchard.PushGateway
+            if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Queues")) {
+                _utilsServices.EnableFeature("Laser.Orchard.PushGateway");
+            }
+            return 26;
         }
     }
 }
