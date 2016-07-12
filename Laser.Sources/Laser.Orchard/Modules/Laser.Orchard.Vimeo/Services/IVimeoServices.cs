@@ -8,10 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Laser.Orchard.Vimeo.Services {
-    public interface IVimeoServices : IDependency {
-        bool Create(VimeoSettingsPartViewModel settings);
-        VimeoSettingsPartViewModel GetByToken(string aToken);
-        VimeoSettingsPartViewModel Get();
+
+    public interface IVimeoTaskServices : IDependency {
+        void ScheduleUploadVerification();
+        void ScheduleVideoCompletion();
+        int VerifyAllUploads();
+        int TerminateUploads();
+    }
+
+    public interface IVimeoAdminServices : IDependency {
+        //bool Create(VimeoSettingsPartViewModel settings);
+        //VimeoSettingsPartViewModel GetByToken(string aToken);
+        VimeoSettingsPartViewModel GetSettingsVM();
         void UpdateSettings(VimeoSettingsPartViewModel vm);
 
         bool TokenIsValid(VimeoSettingsPartViewModel vm);
@@ -19,10 +27,11 @@ namespace Laser.Orchard.Vimeo.Services {
         bool GroupIsValid(VimeoSettingsPartViewModel vm);
         bool AlbumIsValid(VimeoSettingsPartViewModel vm);
         bool ChannelIsValid(VimeoSettingsPartViewModel vm);
+    }
 
-        
-
+    public interface IVimeoUploadServices : IDependency {
         //call these methods to properly start an upload
+        //TODO: replace these with a single method
         int IsValidFileSize(int fileSize);
         string GenerateUploadTicket(int uploadId);
         int GenerateNewMediaPart(int uploadId);
@@ -31,15 +40,10 @@ namespace Laser.Orchard.Vimeo.Services {
         VerifyUploadResults VerifyUpload(int mediaPartId);
         bool TerminateUpload(int mediaPartId);
 
-        //task methods
-        void ScheduleUploadVerification();
-        void ScheduleVideoCompletion();
-        int VerifyAllUploads();
-        int TerminateUploads();
-
         string DestroyUpload(int mediaPartId);
 
 #if DEBUG
+        //these methods here don't need to be exposed, but they are easier to test and debug if they may be called directly.
         bool TokenIsValid(string aToken);
         bool GroupIsValid(string gName, string aToken);
         bool AlbumIsValid(string aName, string aToken);
@@ -62,8 +66,5 @@ namespace Laser.Orchard.Vimeo.Services {
 
         void ClearRepositoryTables();
 #endif
-
-        
     }
-
 }

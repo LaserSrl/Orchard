@@ -25,7 +25,10 @@ namespace Laser.Orchard.Vimeo.ViewModels {
         public bool AlwaysUploadToChannel { get; set; }
 
         public VimeoSettingsPartViewModel() {
-
+            ContentRatingsUnsafe = new Dictionary<string, bool>();
+            foreach (var cr in ContentRatingDictionary) {
+                ContentRatingsUnsafe.Add(cr.Key, false);
+            }
         }
 
         public VimeoSettingsPartViewModel(VimeoSettingsPart part) {

@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.Vimeo.Services;
+﻿using Laser.Orchard.Vimeo.Extensions;
+using Laser.Orchard.Vimeo.Services;
 using Orchard.Tasks.Scheduling;
 using System;
 using System.Collections.Generic;
@@ -7,31 +8,27 @@ using System.Web;
 
 namespace Laser.Orchard.Vimeo.Handlers {
     public class VimeoScheduledTasksHandler : IScheduledTaskHandler {
-        public const string TaskTypeBase = "Laser.Orchard.Vimeo.Task";
-        public const string TaskSubTypeInProgress = ".UploadsInProgress";
-        public const string TaskSubTypeComplete = ".CompleteUploads";
-
         private readonly IScheduledTaskManager _taskManager;
-        private readonly IVimeoServices _vimeoServices;
+        private readonly IVimeoTaskServices _vimeoTaskServices;
 
-        public VimeoScheduledTasksHandler(IScheduledTaskManager taskManager, IVimeoServices vimeoServices) {
+        public VimeoScheduledTasksHandler(IScheduledTaskManager taskManager, IVimeoTaskServices vimeoTaskServices) {
             _taskManager = taskManager;
-            _vimeoServices = vimeoServices;
+            _vimeoTaskServices = vimeoTaskServices;
         }
 
         public void Process(ScheduledTaskContext context){
             string taskTypeStr = context.Task.TaskType;
-            if (taskTypeStr == TaskTypeBase+TaskSubTypeInProgress) {
+            if (taskTypeStr == Constants.TaskTypeBase + Constants.TaskSubTypeInProgress) {
                 //call service to verify the state of the uploads
-                if (_vimeoServices.VerifyAllUploads() > 0) {
+                if (_vimeoTaskServices.VerifyAllUploads() > 0) {
                     //there is still stuff in the repository, so we should reschedule the task
-                    _vimeoServices.ScheduleUploadVerification();
+                    _vimeoTaskServices.ScheduleUploadVerification();
                 }
-            } else if (taskTypeStr == TaskTypeBase + TaskSubTypeComplete) {
+            } else if (taskTypeStr == Constants.TaskTypeBase + Constants.TaskSubTypeComplete) {
                 //call service to verify status of completed uploads
-                if (_vimeoServices.TerminateUploads() > 0) {
+                if (_vimeoTaskServices.TerminateUploads() > 0) {
                     //there is still stuff in the repository, so we should reschedule the task
-                    _vimeoServices.ScheduleVideoCompletion();
+                    _vimeoTaskServices.ScheduleVideoCompletion();
                 }
             }
         }
