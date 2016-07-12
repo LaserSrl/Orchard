@@ -3,6 +3,13 @@
 
 @model Laser.Orchard.Vimeo.ViewModels.VimeoSettingsPartViewModel
 
+@*After restarting an instance, the files with the lists of countries and stuff have not been readyet. People may try to directly
+access the URL of this view, without going through the controller, and that would cause errors. So here we force going through the
+controller if the files have not been processed.*@
+@if (VimeoSettingsPartViewModel.CCLicenseDictionary == null || VimeoSettingsPartViewModel.CCLicenseDictionary.Count == 0 || VimeoSettingsPartViewModel.LocaleDictionary == null || VimeoSettingsPartViewModel.LocaleDictionary.Count == 0 || VimeoSettingsPartViewModel.ContentRatingDictionary == null || VimeoSettingsPartViewModel.ContentRatingDictionary.Count == 0) {
+    { Response.Redirect(Url.Action("Index")); }
+}
+
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.TextBoxFor(m => m.AccessToken, new { placeholder = T("Authorized Access Token"), @class = "text medium" })
     <span class="hint">@T("Insert your authorized Access Token. You cna find it inr your Vimeo App settings.")</span>

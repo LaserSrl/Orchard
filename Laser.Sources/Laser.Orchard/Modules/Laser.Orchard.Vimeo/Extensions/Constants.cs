@@ -2,6 +2,11 @@
 namespace Laser.Orchard.Vimeo.Extensions {
     public static class Constants {
         public const string LocalArea = "Laser.Orchard.Vimeo";
+        
+        //strings for the tasks
+        public const string TaskTypeBase = "Laser.Orchard.Vimeo.Task";
+        public const string TaskSubTypeInProgress = ".UploadsInProgress";
+        public const string TaskSubTypeComplete = ".CompleteUploads";
 
         //the following strings have to do with the Vimeo API
         public const string HeaderAcceptName = "Accept";

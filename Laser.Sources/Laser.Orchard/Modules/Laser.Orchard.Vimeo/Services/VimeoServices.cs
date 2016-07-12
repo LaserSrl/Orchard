@@ -1,32 +1,35 @@
-﻿using Laser.Orchard.Vimeo.Extensions;
+﻿using Laser.Orchard.StartupConfig.WebApiProtection.Models;
+using Laser.Orchard.Vimeo.Controllers;
+using Laser.Orchard.Vimeo.Extensions;
 using Laser.Orchard.Vimeo.Models;
 using Laser.Orchard.Vimeo.ViewModels;
-using Orchard;
-using Orchard.Data;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Records;
-using Orchard.UI.Notify;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Orchard.Tasks.Scheduling;
+using Orchard;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Records;
+using Orchard.Data;
+using Orchard.Environment.Configuration;
 using Orchard.Localization;
-using Orchard.MediaLibrary.Services;
 using Orchard.MediaLibrary.Models;
-using System.Text.RegularExpressions;
-using System.Web.Mvc;
-using Laser.Orchard.Vimeo.Controllers;
-using System.Xml.Linq;
-using Laser.Orchard.Vimeo.Handlers;
+using Orchard.MediaLibrary.Services;
+using Orchard.Tasks.Scheduling;
+using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
+using System.Web.Mvc;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.Vimeo.Services {
-    public class VimeoServices : IVimeoServices {
+    public class VimeoServices : IVimeoTaskServices, IVimeoAdminServices, IVimeoUploadServices {
 
         private readonly IRepository<VimeoSettingsPartRecord> _repositorySettings;
         private readonly IRepository<UploadsInProgressRecord> _repositoryUploadsInProgress;
@@ -35,6 +38,7 @@ namespace Laser.Orchard.Vimeo.Services {
         private readonly IScheduledTaskManager _taskManager;
         private readonly IContentManager _contentManager;
         private readonly IMediaLibraryService _mediaLibraryService;
+        private readonly ShellSettings _shellSettings;
 
         public Localizer T { get; set; }
 
@@ -44,7 +48,8 @@ namespace Laser.Orchard.Vimeo.Services {
             IOrchardServices orchardServices,
             IScheduledTaskManager taskManager,
             IContentManager contentManager,
-            IMediaLibraryService mediaLibraryService) {
+            IMediaLibraryService mediaLibraryService,
+            ShellSettings shellSettings) {
 
             _repositorySettings = repositorySettings;
             _repositoryUploadsInProgress = repositoryUploadsInProgress;
@@ -53,11 +58,12 @@ namespace Laser.Orchard.Vimeo.Services {
             _taskManager = taskManager;
             _contentManager = contentManager;
             _mediaLibraryService = mediaLibraryService;
+            _shellSettings = shellSettings;
 
             T = NullLocalizer.Instance;
         }
 
-        //NOTE: These three methods are not really needed right now, because we "create" a settings object
+        //NOTE: These two methods are not really needed right now, because we "create" a settings object
         //for the instance in the settings handler
         /// <summary>
         /// Creates a new entry in the db for the vimeo Settings. Only one entry may exist.
@@ -95,24 +101,19 @@ namespace Laser.Orchard.Vimeo.Services {
                 AlbumName = rec.AlbumName
             };
         }
+        
         /// <summary>
         /// Gets the existing Vimeo settings.
         /// </summary>
         /// <returns><value>null</value> if no settings were found. The settings' ViewModel if found.</returns>
-        public VimeoSettingsPartViewModel Get() {
-            if (_repositorySettings.Table.Count() == 0)
-                return null;
+        public VimeoSettingsPartViewModel GetSettingsVM() {
 
-            VimeoSettingsPartRecord rec = _repositorySettings.Table.FirstOrDefault();
-            if (rec == null)
-                return null;
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
 
-            return new VimeoSettingsPartViewModel {
-                AccessToken = rec.AccessToken,
-                ChannelName = rec.ChannelName,
-                GroupName = rec.GroupName,
-                AlbumName = rec.AlbumName
-            };
+            return new VimeoSettingsPartViewModel (settings);
         }
 
         /// <summary>
@@ -1295,28 +1296,35 @@ namespace Laser.Orchard.Vimeo.Services {
             return "Unknown error";
         }
 
-        public string ExtractVimeoStreamURL(int ucId) {
-            UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
-            return ucr == null ? null : ExtractVimeoStreamURL(ucr);
+        /// <summary>
+        /// THIS METHOD DOES NOT WORK RIGHT NOW.
+        /// This method should get in touch with vimeo by pretending to login to "watch" private videos,
+        /// in order to be able to extract the vidoe stream url.
+        /// </summary>
+        /// <param name="ucId">The Id of the complete upload to test.</param>
+        /// <returns>The URL of the video stream.</returns>
+        public string ExtractVimeoStreamURL(int mediaPartId) {
+            OEmbedPart part = _contentManager.Get(mediaPartId).As<MediaPart>().As<OEmbedPart>();
+            return part == null ? null : ExtractVimeoStreamURL(part);
         }
-
-        public string ExtractVimeoStreamURL(UploadsCompleteRecord ucr) {
+        public string ExtractVimeoStreamURL(OEmbedPart part) {
             var settings = _orchardServices
                         .WorkContext
                         .CurrentSite
                         .As<VimeoSettingsPart>();
-            string vUri = ucr.Uri.Remove(ucr.Uri.IndexOf("video") + 5, 1); //the original uri is /videos/ID, but we want /video/ID
 
-            HttpWebRequest vimeoLoginPage = VimeoCreateRequest(endpoint: "https://vimeo.com/log_in");
-            try {
-                using (HttpWebResponse resp = vimeoLoginPage.GetResponse() as HttpWebResponse) {
-                    if (resp.StatusCode == HttpStatusCode.OK) {
-                        return new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                    }
-                }
-            } catch (Exception ex) {
-                return ex.Message;
-            }
+            string vUri = part["uri"].Remove(part["uri"].IndexOf("video") + 5, 1);//ucr.Uri.Remove(ucr.Uri.IndexOf("video") + 5, 1); //the original uri is /videos/ID, but we want /video/ID
+
+            //HttpWebRequest vimeoLoginPage = VimeoCreateRequest(endpoint: "https://vimeo.com/log_in");
+            //try {
+            //    using (HttpWebResponse resp = vimeoLoginPage.GetResponse() as HttpWebResponse) {
+            //        if (resp.StatusCode == HttpStatusCode.OK) {
+            //            return new StreamReader(resp.GetResponseStream()).ReadToEnd();
+            //        }
+            //    }
+            //} catch (Exception ex) {
+            //    return ex.Message;
+            //}
 
             HttpWebRequest wr = VimeoCreateRequest(
                 aToken: settings.AccessToken,
@@ -1324,7 +1332,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 method: "GET"
                 );
             //wr.Headers["Authorization"] = "Basic " + Base64Encode("laser.srl.ao@gmail.com:lasersrlao");
-            wr.Credentials = new NetworkCredential("laser.srl.ao@gmail.com", "lasersrlao", "vimeo.com");
+            //wr.Credentials = new NetworkCredential("laser.srl.ao@gmail.com", "lasersrlao", "vimeo.com");
             wr.UserAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
             wr.Accept = "*/*";
             try {
@@ -1386,6 +1394,7 @@ namespace Laser.Orchard.Vimeo.Services {
             MediaPart mPart = _contentManager.Get(ucr.MediaPartId).As<MediaPart>();
             var oembedPart = mPart.As<OEmbedPart>();
             //I took this code from Orchard.MediaLibrary.Controllers.OEmbedController
+            //(the example there is actually an embed of a vimeo video)
             XDocument oeContent = null;
             var wClient = new WebClient { Encoding = System.Text.Encoding.UTF8 };
             try {
@@ -1414,7 +1423,10 @@ namespace Laser.Orchard.Vimeo.Services {
             }
             if (oembedPart != null) {
                 //These steps actually fill the stuff in the OEMbedPart.
-                oembedPart.Source = url;
+                //oembedPart.Source = url;
+                //put in the Source a string "Vimeo: {0}", replacing into {0} the encrypted stream's URL
+                oembedPart.Source = "Vimeo: " + EncryptedVideoUrl();
+
                 if (oeContent != null) {
                     var oembed = oeContent.Root;
                     if (oembed.Element("title") != null) {
@@ -1494,6 +1506,61 @@ namespace Laser.Orchard.Vimeo.Services {
             }
         }
 
+
+        private string EncryptedVideoUrl() {
+            byte[] mykey = _shellSettings
+                    .EncryptionKey
+                    .ToByteArray();
+            byte[] iv = GetRandomIV();
+            string testUrl = "https://fpdl.vimeocdn.com/vimeo-prod-skyfire-std-us/01/4783/6/173915862/562965183.mp4?token=5784fa6a_0xe50aa62dee225b04625601b6854294244ebdbe94";
+            var encryptedUrl = Convert.ToBase64String(EncryptURL(testUrl, mykey, iv));
+            //NOTE: iv is 16 bytes long, so its base64 string representation has 4*ceiling(16/3) = 24 characters
+            return Convert.ToBase64String(iv) + encryptedUrl;
+        }
+        private byte[] EncryptURL(string url, byte[] Key, byte[] IV) {
+            // Check arguments.
+            if (url == null || url.Length <= 0)
+                throw new ArgumentNullException("plainText");
+            if (Key == null || Key.Length <= 0)
+                throw new ArgumentNullException("Key");
+            if (IV == null || IV.Length <= 0)
+                throw new ArgumentNullException("IV");
+            byte[] encrypted;
+            // Create an AesCryptoServiceProvider object
+            // with the specified key and IV.
+            using (AesCryptoServiceProvider aesAlg = CreateCryptoService(Key, IV)) {
+
+                // Create a decrytor to perform the stream transform.
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for encryption.
+                using (MemoryStream msEncrypt = new MemoryStream()) {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write)) {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt)) {
+
+                            //Write all data to the stream.
+                            swEncrypt.Write(url);
+                        }
+                        encrypted = msEncrypt.ToArray();
+                    }
+                }
+            }
+            // Return the encrypted bytes from the memory stream.
+            return encrypted;
+        }
+        private AesCryptoServiceProvider CreateCryptoService(byte[] key, byte[] iv) {
+            AesCryptoServiceProvider aesAlg = new AesCryptoServiceProvider();
+            aesAlg.Key = key;
+            aesAlg.IV = iv;
+            aesAlg.Mode = CipherMode.CBC;
+            aesAlg.Padding = PaddingMode.PKCS7;
+            return aesAlg;
+        }
+        private byte[] GetRandomIV() {
+            string iv = string.Format("{0}{0}", DateTime.UtcNow.ToString("ddMMyyyy").Substring(0, 8));
+            return Encoding.UTF8.GetBytes(iv);
+        }
+
         /// <summary>
         /// Destroy all records related to the upload of a video for a given MediaPart. Moreover, destroy the MediaPart. 
         /// Thisshould be called in error handling, for instance when a client tells us that the upload it was trying
@@ -1564,12 +1631,12 @@ namespace Laser.Orchard.Vimeo.Services {
 
         #region Code for tasks
         public void ScheduleUploadVerification() {
-            string taskTypeStr = VimeoScheduledTasksHandler.TaskTypeBase + VimeoScheduledTasksHandler.TaskSubTypeInProgress;
+            string taskTypeStr = Constants.TaskTypeBase + Constants.TaskSubTypeInProgress;
             if (_taskManager.GetTasks(taskTypeStr).Count() == 0)
                 _taskManager.CreateTask(taskTypeStr, DateTime.UtcNow.AddMinutes(1), null);
         }
         public void ScheduleVideoCompletion() {
-            string taskTypeStr = VimeoScheduledTasksHandler.TaskTypeBase + VimeoScheduledTasksHandler.TaskSubTypeComplete;
+            string taskTypeStr = Constants.TaskTypeBase + Constants.TaskSubTypeComplete;
             if (_taskManager.GetTasks(taskTypeStr).Count() == 0)
                 _taskManager.CreateTask(taskTypeStr, DateTime.UtcNow.AddMinutes(1), null);
         }

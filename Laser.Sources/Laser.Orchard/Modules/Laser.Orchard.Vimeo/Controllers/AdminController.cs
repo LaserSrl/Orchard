@@ -24,13 +24,13 @@ namespace Laser.Orchard.Vimeo.Controllers {
     public class AdminController : Controller {
 
         private readonly IOrchardServices _orchardServices;
-        private readonly IVimeoServices _vimeoServices;
+        private readonly IVimeoAdminServices _vimeoAdminServices;
 
         public Localizer T { get; set; }
 
-        public AdminController(IOrchardServices orchardServices, IVimeoServices vimeoServices) {
+        public AdminController(IOrchardServices orchardServices, IVimeoAdminServices vimeoAdminServices) {
             _orchardServices = orchardServices;
-            _vimeoServices = vimeoServices;
+            _vimeoAdminServices = vimeoAdminServices;
             T = NullLocalizer.Instance;
         }
 
@@ -85,12 +85,12 @@ namespace Laser.Orchard.Vimeo.Controllers {
                 }
             }
 
-            var settings = _orchardServices
-                .WorkContext
-                .CurrentSite
-                .As<VimeoSettingsPart>();
+            //var settings = _orchardServices
+            //    .WorkContext
+            //    .CurrentSite
+            //    .As<VimeoSettingsPart>();
 
-            var vm = new VimeoSettingsPartViewModel(settings);
+            var vm = _vimeoAdminServices.GetSettingsVM(); // new VimeoSettingsPartViewModel(settings);
 
             return View(vm);
         }
@@ -102,23 +102,23 @@ namespace Laser.Orchard.Vimeo.Controllers {
                 return new HttpUnauthorizedResult();
 
             if (!string.IsNullOrWhiteSpace(vm.AccessToken)) {
-                if (_vimeoServices.TokenIsValid(vm)) {
+                if (_vimeoAdminServices.TokenIsValid(vm)) {
                     _orchardServices.Notifier.Information(T("Access Token Valid"));
                     //now test group, channel and album
                     if (!string.IsNullOrWhiteSpace(vm.GroupName)) {
-                        if (_vimeoServices.GroupIsValid(vm))
+                        if (_vimeoAdminServices.GroupIsValid(vm))
                             _orchardServices.Notifier.Information(T("Group Name Valid"));
                         else
                             _orchardServices.Notifier.Error(T("Group Name not valid"));
                     }
                     if (!string.IsNullOrWhiteSpace(vm.ChannelName)) {
-                        if (_vimeoServices.ChannelIsValid(vm))
+                        if (_vimeoAdminServices.ChannelIsValid(vm))
                             _orchardServices.Notifier.Information(T("Channel Name Valid"));
                         else
                             _orchardServices.Notifier.Error(T("Channel Name not valid"));
                     }
                     if (!string.IsNullOrWhiteSpace(vm.AlbumName)) {
-                        if (_vimeoServices.AlbumIsValid(vm))
+                        if (_vimeoAdminServices.AlbumIsValid(vm))
                             _orchardServices.Notifier.Information(T("Album Name Valid"));
                         else
                             _orchardServices.Notifier.Error(T("Album Name not valid"));
@@ -134,7 +134,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
         [HttpPost, ActionName("Index")]
         [OMvc.FormValueRequired("submit.SaveSettings")]
         public ActionResult IndexSaveSettings(VimeoSettingsPartViewModel vm) {
-            _vimeoServices.UpdateSettings(vm);
+            _vimeoAdminServices.UpdateSettings(vm);
             return RedirectToAction("Index");
         }
     }

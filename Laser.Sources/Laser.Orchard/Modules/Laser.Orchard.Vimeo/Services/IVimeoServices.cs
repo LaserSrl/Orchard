@@ -8,10 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Laser.Orchard.Vimeo.Services {
-    public interface IVimeoServices : IDependency {
+
+    public interface IVimeoTaskServices : IDependency {
+        void ScheduleUploadVerification();
+        void ScheduleVideoCompletion();
+        int VerifyAllUploads();
+        int TerminateUploads();
+    }
+
+    public interface IVimeoAdminServices : IDependency {
         //bool Create(VimeoSettingsPartViewModel settings);
         //VimeoSettingsPartViewModel GetByToken(string aToken);
-        //VimeoSettingsPartViewModel Get();
+        VimeoSettingsPartViewModel GetSettingsVM();
         void UpdateSettings(VimeoSettingsPartViewModel vm);
 
         bool TokenIsValid(VimeoSettingsPartViewModel vm);
@@ -19,9 +27,9 @@ namespace Laser.Orchard.Vimeo.Services {
         bool GroupIsValid(VimeoSettingsPartViewModel vm);
         bool AlbumIsValid(VimeoSettingsPartViewModel vm);
         bool ChannelIsValid(VimeoSettingsPartViewModel vm);
+    }
 
-        
-
+    public interface IVimeoUploadServices : IDependency {
         //call these methods to properly start an upload
         //TODO: replace these with a single method
         int IsValidFileSize(int fileSize);
@@ -31,15 +39,6 @@ namespace Laser.Orchard.Vimeo.Services {
         //these methods terminate an upload
         VerifyUploadResults VerifyUpload(int mediaPartId);
         bool TerminateUpload(int mediaPartId);
-
-        //task methods
-        //Should we really expose them here? as things stand, they can be called from the task handler (which is fine) 
-        //as well as from the admin controller and the upload controller, where we don't need them. We could separate
-        //the method definitions in different interfaces to make things more clean as the code grows larger.
-        void ScheduleUploadVerification();
-        void ScheduleVideoCompletion();
-        int VerifyAllUploads();
-        int TerminateUploads();
 
         string DestroyUpload(int mediaPartId);
 
@@ -67,8 +66,5 @@ namespace Laser.Orchard.Vimeo.Services {
 
         void ClearRepositoryTables();
 #endif
-
-        
     }
-
 }
