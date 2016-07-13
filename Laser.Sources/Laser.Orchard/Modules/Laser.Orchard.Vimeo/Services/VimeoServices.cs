@@ -1297,9 +1297,8 @@ namespace Laser.Orchard.Vimeo.Services {
         }
 
         /// <summary>
-        /// THIS METHOD DOES NOT WORK RIGHT NOW.
-        /// This method should get in touch with vimeo by pretending to login to "watch" private videos,
-        /// in order to be able to extract the vidoe stream url.
+        /// This method extract a video stream's url. It is only able to do so for videos we own if
+        /// the video is not private and it can be embedded or we have a PRO account.
         /// </summary>
         /// <param name="ucId">The Id of the complete upload to test.</param>
         /// <returns>The URL of the video stream.</returns>
@@ -1312,7 +1311,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         .WorkContext
                         .CurrentSite
                         .As<VimeoSettingsPart>();
-
+            string uri = part["uri"];
             string vUri = part["uri"].Remove(part["uri"].IndexOf("video") + 5, 1);//ucr.Uri.Remove(ucr.Uri.IndexOf("video") + 5, 1); //the original uri is /videos/ID, but we want /video/ID
             //is this a pro account?
             //we can either store this information in the settings, or make an API call to /me and check the account field of the user object
@@ -1325,7 +1324,8 @@ namespace Laser.Orchard.Vimeo.Services {
                 //make an API call to see if we can extract the video stream's url
                 HttpWebRequest apiCall = VimeoCreateRequest(
                     aToken: settings.AccessToken,
-                    endpoint: VimeoEndpoints.APIEntry + part["uri"] //NOTE: this is not /me/videos
+                    //endpoint: VimeoEndpoints.APIEntry + part["uri"] //NOTE: this is not /me/videos
+                    endpoint: VimeoEndpoints.Me + part["uri"] //NOTE: this is /me/videos
                     );
                 //To get the stream's url, the video must be embeddable in our current domain
                 bool embeddable = false;
@@ -1344,9 +1344,6 @@ namespace Laser.Orchard.Vimeo.Services {
                                     string myDomain = _orchardServices.WorkContext.CurrentSite.BaseUrl;
                                     embeddable = settings.Whitelist.Contains(myDomain);
                                 }
-                                    //(videoPrivacy.embed == "public" || 
-                                    //    (videoPrivacy.embed == "whitelist" ))) {
-
                             }
                         }
                     }
@@ -1467,8 +1464,6 @@ namespace Laser.Orchard.Vimeo.Services {
             if (oembedPart != null) {
                 //These steps actually fill the stuff in the OEMbedPart.
                 //oembedPart.Source = url;
-                //put in the Source a string "Vimeo: {0}", replacing into {0} the encrypted stream's URL
-                oembedPart.Source = "Vimeo: " + EncryptedVideoUrl();
 
                 if (oeContent != null) {
                     var oembed = oeContent.Root;
@@ -1546,17 +1541,20 @@ namespace Laser.Orchard.Vimeo.Services {
 
                     }
                 }
+
+                //put in the Source a string "Vimeo: {0}", replacing into {0} the encrypted stream's URL
+                oembedPart.Source = "Vimeo: " + EncryptedVideoUrl(ExtractVimeoStreamURL(oembedPart));
             }
         }
 
 
-        private string EncryptedVideoUrl() {
+        private string EncryptedVideoUrl(string url) {
             byte[] mykey = _shellSettings
                     .EncryptionKey
                     .ToByteArray();
             byte[] iv = GetRandomIV();
-            string testUrl = "https://fpdl.vimeocdn.com/vimeo-prod-skyfire-std-us/01/4783/6/173915862/562965183.mp4?token=5784fa6a_0xe50aa62dee225b04625601b6854294244ebdbe94";
-            var encryptedUrl = Convert.ToBase64String(EncryptURL(testUrl, mykey, iv));
+            //string testUrl = "https://fpdl.vimeocdn.com/vimeo-prod-skyfire-std-us/01/4783/6/173915862/562965183.mp4?token=5784fa6a_0xe50aa62dee225b04625601b6854294244ebdbe94";
+            var encryptedUrl = Convert.ToBase64String(EncryptURL(url, mykey, iv));
             //NOTE: iv is 16 bytes long, so its base64 string representation has 4*ceiling(16/3) = 24 characters
             return Convert.ToBase64String(iv) + encryptedUrl;
         }
