@@ -4,14 +4,11 @@ using Laser.Orchard.Vimeo.Services;
 using Newtonsoft.Json;
 using Orchard.Localization;
 using Orchard.Logging;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.Vimeo.Controllers {
+
     public class VimeoUploadController : Controller {
 
         public Localizer T { get; set; }
@@ -65,7 +62,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
         }
 #endif
 
-        //todo: change this around so that the parameter passed is the MediaPartId
+        
         public ActionResult FinishUpload(int mediaPartId) {
             string message="";
             //re-verify upload

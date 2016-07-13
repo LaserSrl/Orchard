@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Laser.Orchard.Vimeo.Services;
+using Laser.Orchard.StartupConfig.WebApiProtection.Models;
 
 namespace Laser.Orchard.Vimeo.Handlers {
 
@@ -22,6 +23,19 @@ namespace Laser.Orchard.Vimeo.Handlers {
 
             _orchardServices = orchardServices;
             _vimeoContentServices = vimeoContentServices;
+
+            //try {
+            //    var protectionSettings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
+            //    if (protectionSettings != null) {
+            //        if (!protectionSettings.ProtectedEntries.Contains("Laser.Orchard.Vimeo")) {
+            //            protectionSettings.ProtectedEntries +=
+            //                ",Laser.Orchard.Vimeo.VimeoUpload.TryStartUpload,Laser.Orchard.Vimeo.VimeoUpload.FinishUpload,Laser.Orchard.Vimeo.VimeoUpload.ErrorHandler";
+            //        }
+            //    }
+            //} catch (Exception ex) {
+                
+            //}
+            
 
             ////ondisplaying of a mediapart containing a vimeo video, check controller: if the request is coming from a mobile
             ////app we need to send a crypted URL, rather than the oEmbed, because we cannot whitelist apps
