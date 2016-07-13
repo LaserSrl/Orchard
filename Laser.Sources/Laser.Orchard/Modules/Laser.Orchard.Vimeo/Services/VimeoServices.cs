@@ -29,7 +29,7 @@ using System.Web.Mvc;
 using System.Xml.Linq;
 
 namespace Laser.Orchard.Vimeo.Services {
-    public class VimeoServices : IVimeoTaskServices, IVimeoAdminServices, IVimeoUploadServices {
+    public class VimeoServices : IVimeoTaskServices, IVimeoAdminServices, IVimeoUploadServices, IVimeoContentServices {
 
         private readonly IRepository<VimeoSettingsPartRecord> _repositorySettings;
         private readonly IRepository<UploadsInProgressRecord> _repositoryUploadsInProgress;
@@ -1316,6 +1316,26 @@ namespace Laser.Orchard.Vimeo.Services {
             //is this a pro account?
             //we can either store this information in the settings, or make an API call to /me and check the account field of the user object
             bool proAccount = false;
+            //make the API call to check the account
+            HttpWebRequest userCall = VimeoCreateRequest(
+                aToken: settings.AccessToken,
+                endpoint: VimeoEndpoints.Me,
+                method: "GET",
+                qString: "?fields=account"
+                );
+            try {
+                using (HttpWebResponse resp = userCall.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        string json = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        var parsed = JObject.Parse(json);
+                        if (parsed["account"] != null) {
+                            proAccount = parsed["account"].ToString() == "pro";
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                
+            }
             if (proAccount) {
                 //if we have a pro account, we can get a static stream url
             } else {
@@ -1543,12 +1563,12 @@ namespace Laser.Orchard.Vimeo.Services {
                 }
 
                 //put in the Source a string "Vimeo: {0}", replacing into {0} the encrypted stream's URL
-                oembedPart.Source = "Vimeo: " + EncryptedVideoUrl(ExtractVimeoStreamURL(oembedPart));
+                oembedPart.Source = "Vimeo|" + EncryptedVideoUrl(ExtractVimeoStreamURL(oembedPart));
             }
         }
 
 
-        private string EncryptedVideoUrl(string url) {
+        public string EncryptedVideoUrl(string url) {
             byte[] mykey = _shellSettings
                     .EncryptionKey
                     .ToByteArray();

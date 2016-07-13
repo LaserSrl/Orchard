@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.Vimeo.Models;
 using Laser.Orchard.Vimeo.ViewModels;
 using Orchard;
+using Orchard.MediaLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,5 +67,10 @@ namespace Laser.Orchard.Vimeo.Services {
 
         void ClearRepositoryTables();
 #endif
+    }
+
+    public interface IVimeoContentServices : IDependency {
+        string ExtractVimeoStreamURL(OEmbedPart part);
+        string EncryptedVideoUrl(string url);
     }
 }
