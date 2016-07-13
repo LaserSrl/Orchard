@@ -143,6 +143,10 @@ namespace Laser.Orchard.UsersExtensions.Services {
                         }
                     }
                     _authenticationService.SignIn(createdUser, true);
+                    
+                    // solleva l'evento LoggedIn sull'utente
+                    _userEventHandler.LoggedIn(createdUser);
+
                     if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
                         _policySerivces.PolicyForUserMassiveUpdate(policyAnswers);
                     }
