@@ -35,8 +35,21 @@ namespace Laser.Orchard.Vimeo.Handlers {
         }
 
         protected override void BuildDisplayShape(BuildDisplayContext context) {
-            if (_orchardServices.WorkContext.HttpContext.Request.Url.AbsolutePath
-                .EndsWith("Laser.Orchard.WebServices/Json/GetByAlias", StringComparison.InvariantCultureIgnoreCase)) {
+            var request = _orchardServices.WorkContext.HttpContext.Request.RequestContext.RouteData;
+            var area = request.Values["area"];
+            var controller = request.Values["controller"];
+            var action = request.Values["action"];
+            string entry = "";
+            if (action == null) {
+                //ApiController for web apis
+                entry = String.Format("{0}.{1}", area, controller);
+            } else {
+                //other controllers
+                entry = String.Format("{0}.{1}.{2}", area, controller, action);
+            }
+
+            if (entry.Equals("Laser.Orchard.WebServices.Json.GetByAlias", StringComparison.InvariantCultureIgnoreCase) ||
+                entry.Equals("Laser.Orchard.WebServices.WebApiController", StringComparison.InvariantCultureIgnoreCase)) {
                     if (context.DisplayType == "Detail") {
                         var partsWithMediaFields = context
                             .ContentItem
