@@ -47,7 +47,8 @@ namespace Laser.Orchard.Vimeo.Handlers {
                 //other controllers
                 entry = String.Format("{0}.{1}.{2}", area, controller, action);
             }
-
+            //the methods called from the apps serialize the content items in such a way that the only fields that is being
+            //returned for an OEmbedPart is the Source string. SO here we update it with the stream's url.
             if (entry.Equals("Laser.Orchard.WebServices.Json.GetByAlias", StringComparison.InvariantCultureIgnoreCase) ||
                 entry.Equals("Laser.Orchard.WebServices.WebApiController", StringComparison.InvariantCultureIgnoreCase)) {
                     if (context.DisplayType == "Detail") {
