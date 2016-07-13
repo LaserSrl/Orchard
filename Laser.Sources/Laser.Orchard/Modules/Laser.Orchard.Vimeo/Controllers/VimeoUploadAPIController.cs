@@ -2,13 +2,17 @@
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Laser.Orchard.Vimeo.Services;
+using Newtonsoft.Json;
 using Orchard.Localization;
 using Orchard.Logging;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Web.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace Laser.Orchard.Vimeo.Controllers {
     [WebApiKeyFilter(true)]
@@ -20,30 +24,38 @@ namespace Laser.Orchard.Vimeo.Controllers {
         private readonly IVimeoUploadServices _vimeoUploadServices;
         private readonly IUtilsServices _utilsServices;
 
+        private VimeoUploadController _uploadController;
+
         public VimeoUploadAPIController(IVimeoUploadServices vimeoUploadServices, IUtilsServices utilsServices) {
             _vimeoUploadServices = vimeoUploadServices;
             _utilsServices = utilsServices;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
+
+            _uploadController = new VimeoUploadController(_vimeoUploadServices, _utilsServices);
         }
 
-        public Response TryStartUpload() {
+        [System.Web.Mvc.HttpPost]
+        public Response TryStartUpload([FromBody] int fileSize) {
+            //int fileSize = 7314887;
+            //string content = new StreamReader(HttpContext.Current.Request.GetBufferedInputStream()).ReadToEnd();
+            //var parsed = JObject.Parse(content);
 
-            int uploadId = _vimeoUploadServices.IsValidFileSize(fileSize);
-            string message = T("Everything is fine").ToString();
-            if (uploadId >= 0) {
-                //If there is enough quota available, open an upload ticket, by posting to VimeoEndpoints.VideoUpload
-                //with parameter type=streaming
-                string uploadUrl = _vimeoUploadServices.GenerateUploadTicket(uploadId);
-                //create a new MediaPart 
-                int MediaPartId = _vimeoUploadServices.GenerateNewMediaPart(uploadId);
-                object data = new { MediaPartId, uploadUrl };
-                return _utilsServices.GetResponse(ResponseType.Success, message, data);
-            } else {
-                //If there is not enough upload quota available, return an error or something.
-                message = T("Error: Not enough upload quota available").ToString();
-                return _utilsServices.GetResponse(ResponseType.InvalidXSRF, message);
-            }
+            JsonResult res = (JsonResult)_uploadController.TryStartUpload(fileSize);
+            return (Response)res.Data;// JsonConvert.DeserializeObject<Response>(res.ToString());
+        }
+
+        [System.Web.Mvc.HttpPost]
+        public Response FinishUpload(int mediaPartId) {
+            JsonResult res = (JsonResult)_uploadController.FinishUpload(mediaPartId);
+            return (Response)res.Data;
+        }
+
+        [System.Web.Mvc.HttpPost]
+        public Response ErrorHandler() {
+            string msgJson = new StreamReader(HttpContext.Current.Request.GetBufferedInputStream()).ReadToEnd();
+
+            return _uploadController.ErrorHandler(msgJson);
         }
     }
 }

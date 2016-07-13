@@ -121,6 +121,12 @@ namespace Laser.Orchard.Vimeo.Controllers {
         /// <returns></returns>
         public ActionResult ErrorHandler() {
             string msgJson = new StreamReader(Request.InputStream).ReadToEnd();
+            Laser.Orchard.StartupConfig.ViewModels.Response response = ErrorHandler(msgJson);
+
+            return Json(response);
+        }
+
+        internal Response ErrorHandler(string msgJson) {
             VimeoResponse resp = JsonConvert.DeserializeObject<VimeoResponse>(msgJson);
             int mpId = resp.Data.id; //the id of the MediaPart for whom we were doing the upload
             Laser.Orchard.StartupConfig.ViewModels.Response response;
@@ -162,9 +168,11 @@ namespace Laser.Orchard.Vimeo.Controllers {
             if (!string.IsNullOrWhiteSpace(msg))
                 Logger.Information(msg);
 
-            return Json(response);
+            return response;
         }
     }
+
+    
 
     //We extend Laser.Orchard.StartupConfig.ViewModels.Response because we have specific error codes for Vimeo
     public enum VimeoErrorCode { NoError = 0, GenericError = 1, UserStopped = 3001, UploadStopped = 3002, UploadMayResume = 3003 }
