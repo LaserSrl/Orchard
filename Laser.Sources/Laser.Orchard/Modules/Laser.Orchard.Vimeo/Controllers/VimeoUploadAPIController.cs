@@ -35,12 +35,10 @@ namespace Laser.Orchard.Vimeo.Controllers {
             _uploadController = new VimeoUploadController(_vimeoUploadServices, _utilsServices);
         }
 
-        [System.Web.Mvc.HttpPost]
-        public Response TryStartUpload([FromBody] int fileSize) {
-            //int fileSize = 7314887;
-            //string content = new StreamReader(HttpContext.Current.Request.GetBufferedInputStream()).ReadToEnd();
-            //var parsed = JObject.Parse(content);
+        //NOTE: The methods here are pretty much wrappers for those in VimeoUploadController
 
+        [System.Web.Mvc.HttpPost]
+        public Response TryStartUpload(int fileSize) {
             JsonResult res = (JsonResult)_uploadController.TryStartUpload(fileSize);
             return (Response)res.Data;// JsonConvert.DeserializeObject<Response>(res.ToString());
         }
@@ -54,7 +52,6 @@ namespace Laser.Orchard.Vimeo.Controllers {
         [System.Web.Mvc.HttpPost]
         public Response ErrorHandler() {
             string msgJson = new StreamReader(HttpContext.Current.Request.GetBufferedInputStream()).ReadToEnd();
-
             return _uploadController.ErrorHandler(msgJson);
         }
     }

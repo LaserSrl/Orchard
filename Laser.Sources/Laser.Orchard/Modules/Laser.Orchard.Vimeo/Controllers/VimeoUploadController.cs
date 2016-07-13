@@ -177,7 +177,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
     //We extend Laser.Orchard.StartupConfig.ViewModels.Response because we have specific error codes for Vimeo
     public enum VimeoErrorCode { NoError = 0, GenericError = 1, UserStopped = 3001, UploadStopped = 3002, UploadMayResume = 3003 }
     public class VimeoResponse : Laser.Orchard.StartupConfig.ViewModels.Response {
-        public VimeoErrorCode ErrorCode {get;set;}
+        new public VimeoErrorCode ErrorCode {get;set;}
 
         public VimeoResponse() {
             this.ErrorCode = VimeoErrorCode.GenericError;
