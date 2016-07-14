@@ -101,7 +101,7 @@ namespace Laser.Orchard.Mobile.Services {
                 queryForPush = "SELECT count(MobileRecord) as Tot, sum(case MobileRecord.Device when 'Android' then 1 else 0 end) as Android, sum(case MobileRecord.Device when 'Apple' then 1 else 0 end) as Apple, sum(case MobileRecord.Device when 'WindowsMobile' then 1 else 0 end) as WindowsMobile";
             }
             else {
-                queryForPush = "SELECT MobileRecord.Id as Id, MobileRecord.Device as Device, MobileRecord.Produzione as Produzione, MobileRecord.Validated as Validated, MobileRecord.Language as Language, MobileRecord.UUIdentifier as UUIdentifier, MobileRecord.Token as Token";
+                queryForPush = "SELECT MobileRecord.Id as Id, MobileRecord.Device as Device, MobileRecord.Produzione as Produzione, MobileRecord.Validated as Validated, MobileRecord.Language as Language, MobileRecord.UUIdentifier as UUIdentifier, MobileRecord.Token as Token, MobileRecord.RegistrationUrlHost as RegistrationUrlHost, MobileRecord.RegistrationUrlPrefix as RegistrationUrlPrefix, MobileRecord.RegistrationMachineName as RegistrationMachineName";
             }
             queryForPush += " FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr " +
                 "join civr.ContentItemRecord as cir " +

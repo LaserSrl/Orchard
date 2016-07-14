@@ -288,5 +288,24 @@ namespace Laser.Orchard.Mobile {
             _repositoryDevice.Flush();
             return 24;
         }
+        public int UpdateFrom24() {
+            // se è attiva la feature Laser.Orchard.Mobile, attiva anche Laser.Orchard.PushGateway
+            if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Mobile")) {
+                _utilsServices.EnableFeature("Laser.Orchard.PushGateway");
+            }
+
+            // se è attiva la feature Laser.Orchard.CommunicationGateway attiva anche Laser.Orchard.Mobile
+            if (_utilsServices.FeatureIsEnabled("Laser.Orchard.CommunicationGateway")) {
+                _utilsServices.EnableFeature("Laser.Orchard.Mobile");
+            }
+            return 25;
+        }
+        public int UpdateFrom25() {
+            // se è attiva la feature Laser.Orchard.Queues, attiva anche Laser.Orchard.PushGateway
+            if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Queues")) {
+                _utilsServices.EnableFeature("Laser.Orchard.PushGateway");
+            }
+            return 26;
+        }
     }
 }
