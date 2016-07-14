@@ -1,11 +1,12 @@
-﻿Name: Laser.Orchard.DevTools
+﻿Name: Laser Developer Tools
 AntiForgery: enabled
-Author: Laser Group - Frediani Lorenzo
-Website: http://orchardproject.net
+Author: Laser srl - Frediani Lorenzo
+Website: http://www.laser-group.com
 Version: 1.0
-OrchardVersion: 1.0
-Description: Description for the module
-Features:
-    Laser.Orchard.DevTools:
-        Description: Description for feature Laser.Orchard.DevTools.
-		Dependencies: Laser.Orchard.StartupConfig,Orchard.Caching
+OrchardVersion: 1.8
+Features: 
+	Laser.Orchard.DevTools:
+		Name: Laser Developer Tools
+		Description: Laser Developer Utility
+		Category: Developer
+		Dependencies: Laser.Orchard.StartupConfig,Orchard.Caching,Laser.Orchard.JQueryPlugins

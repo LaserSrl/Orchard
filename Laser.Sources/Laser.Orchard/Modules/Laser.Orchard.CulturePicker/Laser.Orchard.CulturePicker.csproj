@@ -53,9 +53,8 @@
       <HintPath>..\..\..\..\Orchard.Sources\lib\autofac\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Laser.Orchard.Questionnaires\bin\NHibernate.dll</HintPath>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\..\..\Orchard.Sources\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Alias, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

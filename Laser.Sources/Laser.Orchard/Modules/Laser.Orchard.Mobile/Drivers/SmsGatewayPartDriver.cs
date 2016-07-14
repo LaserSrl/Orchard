@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Orchard;
 using Orchard.UI.Admin;
 
 namespace Laser.Orchard.Mobile.Drivers {
@@ -41,10 +40,10 @@ namespace Laser.Orchard.Mobile.Drivers {
                     return ContentShape("Parts_SmsGateway_SummaryAdmin",
                         () => shapeHelper.Parts_SmsGateway_SummaryAdmin(SmsMessageSent: part.SmsMessageSent, SendOnNextPublish: part.SendOnNextPublish, RecipientsNumber: part.SmsRecipientsNumber, SmsDeliveredOrAcceptedNumber: part.SmsDeliveredOrAcceptedNumber, SmsRejectedOrExpiredNumber: part.SmsRejectedOrExpiredNumber));
                 return null;
-            } else {
+            }
+            else {
                 return null;
             }
-
         }
 
 
@@ -65,9 +64,9 @@ namespace Laser.Orchard.Mobile.Drivers {
 
             // Tolgo 16 caratteri necessari per lo shortlink
             int MaxLenght = smsSettingsPart.MaxLenghtSms;
-            if (shortlinkExist) {
-                MaxLenght = MaxLenght - 16;
-            }
+            //if (shortlinkExist) {
+            //    MaxLenght = MaxLenght - 16;
+            //}
 
             if (!smsSettingsPart.MamHaveAlias) {
                 part.HaveAlias = false;
@@ -105,7 +104,5 @@ namespace Laser.Orchard.Mobile.Drivers {
 
             return Editor(part, shapeHelper);
         }
-
-
     }
 }

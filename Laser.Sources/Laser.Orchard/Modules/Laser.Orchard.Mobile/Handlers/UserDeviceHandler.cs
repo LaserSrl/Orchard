@@ -15,6 +15,7 @@ using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.CommunicationGateway.Models;
 using Orchard.Logging;
 using Laser.Orchard.CommunicationGateway.Services;
+using Laser.Orchard.Mobile.Services;
 
 namespace Laser.Orchard.Mobile.Handlers {
     public class UserDeviceHandler : IUserEventHandler {
@@ -23,6 +24,7 @@ namespace Laser.Orchard.Mobile.Handlers {
         private readonly IRepository<PushNotificationRecord> _pushNotificationRecord;
         private readonly IRepository<CommunicationContactPartRecord> _communicationContactPartRecord;
         private readonly ICommunicationService _communicationService;
+        private readonly IPushNotificationService _pushNotificationService;
         public ILogger Logger { get; set; }
 
         public UserDeviceHandler(
@@ -30,13 +32,15 @@ namespace Laser.Orchard.Mobile.Handlers {
             IRepository<UserDeviceRecord> userDeviceRecord,
             IRepository<PushNotificationRecord> pushNotificationRecord,
             IRepository<CommunicationContactPartRecord> communicationContactPartRecord,
-            ICommunicationService communicationService
+            ICommunicationService communicationService,
+            IPushNotificationService pushNotificationService
             ) {
             _httpContextAccessor = httpContextAccessor;
             _userDeviceRecord = userDeviceRecord;
             _pushNotificationRecord = pushNotificationRecord;
             _communicationContactPartRecord = communicationContactPartRecord;
             _communicationService = communicationService;
+            _pushNotificationService = pushNotificationService;
             Logger = NullLogger.Instance;
         }
         public void AccessDenied(IUser user) {
@@ -64,11 +68,6 @@ namespace Laser.Orchard.Mobile.Handlers {
         }
 
         public void LoggedIn(IUser user) {
-            // codice spostato in startupconfig UserEventHandler    
-            //var Email = _httpContextAccessor.Current().Request.QueryString["Email"];
-            //if (!string.IsNullOrWhiteSpace(Email)) {
-            //    ((UserPart)user).Email = Email;
-            //}
             var UUIdentifier = _httpContextAccessor.Current().Request.QueryString["UUID"];
             if (!string.IsNullOrWhiteSpace(UUIdentifier)) {
                 var record = _userDeviceRecord.Fetch(x => x.UUIdentifier == UUIdentifier).FirstOrDefault();
@@ -87,28 +86,12 @@ namespace Laser.Orchard.Mobile.Handlers {
                     }
                 }
 
-                #region Collegamento con la Contact profile part
-                var recordContact = _communicationContactPartRecord.Fetch(x => x.UserPartRecord_Id == user.Id).FirstOrDefault();
-                if (recordContact == null) {
-                    // non dovrebbe mai accadere che esista un utente senza il record di profilazione
-                    _communicationService.UserToContact(user);
-                    Logger.Error(string.Format("UserDeviceHandler.LoggedIn: creato contatto mancante per lo User ID {0}.", user.Id));
-                    recordContact = _communicationContactPartRecord.Fetch(x => x.UserPartRecord_Id == user.Id).FirstOrDefault();
-                }
-                var pushNotificationToLink=_pushNotificationRecord.Fetch(x => x.UUIdentifier == UUIdentifier).FirstOrDefault();
-                if (pushNotificationToLink != null) {
-                    if (pushNotificationToLink.MobileContactPartRecord_Id != recordContact.Id) {
-                        pushNotificationToLink.MobileContactPartRecord_Id = recordContact.Id;
-                        _pushNotificationRecord.Update(pushNotificationToLink);
-                        _pushNotificationRecord.Flush();
-                    }
-                }
-                else {
-                    Logger.Error(string.Format("UserDeviceHandler.LoggedIn: pushNotificationRecord non trovato per lo UUIdentifier {0}.", UUIdentifier));
-                }
-                #endregion
-            }
+                // crea o aggiorna il contatto
+                _communicationService.UserToContact(user);
 
+                // aggiorna il collegamento del device con il contact, se il device è registrato
+                _pushNotificationService.UpdateDevice(UUIdentifier);
+            }
         }
 
         public void LoggedOut(IUser user) {

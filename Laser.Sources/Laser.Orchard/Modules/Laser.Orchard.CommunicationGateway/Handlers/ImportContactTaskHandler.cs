@@ -39,44 +39,52 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             if (context.Task.TaskType != TaskType) {
                 return;
             }
-            string path = HostingEnvironment.MapPath(_contactsImportRelativePath);
-            DirectoryInfo dir = new DirectoryInfo(path);
-            if (dir.Exists == false) {
-                dir.Create();
-            }
-            byte[] buffer = null;
-            FileInfo logFile = null;
-            foreach(var file in dir.GetFiles("*.csv", SearchOption.TopDirectoryOnly)) {
-                try {
-                    // avvia una nuova transazione per ogni file da elaborare
-                    _transactionManager.RequireNew();
-
-                    // importa solo i csv che non hanno già un log corrispondente
-                    logFile = new FileInfo(file.FullName + ".log");
-                    if (logFile.Exists == false) {
-                        buffer = File.ReadAllBytes(file.FullName);
-                        ImportUtil import = new ImportUtil(_orchardServices);
-                        import.ImportCsv(buffer);
-                        string result = string.Format("Import result: Errors: {0}, Mails: {1}, Sms: {2}.", import.Errors.Count, import.TotMail, import.TotSms);
-                        string strErrors = FormatErrors(import.Errors);
-                        File.WriteAllText(string.Format("{0}{1}{2}.log", dir.FullName, Path.DirectorySeparatorChar, file.Name),
-                            string.Format("{0}{1}{2}", result, Environment.NewLine, strErrors),
-                            Encoding.UTF8);
-                    }
-                } finally {
+            try {
+                string path = HostingEnvironment.MapPath(_contactsImportRelativePath);
+                DirectoryInfo dir = new DirectoryInfo(path);
+                if (dir.Exists == false) {
+                    dir.Create();
+                }
+                byte[] buffer = null;
+                FileInfo logFile = null;
+                foreach (var file in dir.GetFiles("*.csv", SearchOption.TopDirectoryOnly)) {
                     try {
-                        // sposta il file in una sottocartella
-                        DirectoryInfo archiveDir = new DirectoryInfo(dir.FullName + Path.DirectorySeparatorChar + "history");
-                        if (archiveDir.Exists == false) {
-                            archiveDir.Create();
+                        // avvia una nuova transazione per ogni file da elaborare
+                        _transactionManager.RequireNew();
+
+                        // importa solo i csv che non hanno già un log corrispondente
+                        logFile = new FileInfo(file.FullName + ".log");
+                        if (logFile.Exists == false) {
+                            buffer = File.ReadAllBytes(file.FullName);
+                            ImportUtil import = new ImportUtil(_orchardServices);
+                            import.ImportCsv(buffer);
+                            string result = string.Format("Import result: Errors: {0}, Mails: {1}, Sms: {2}.", import.Errors.Count, import.TotMail, import.TotSms);
+                            string strErrors = FormatErrors(import.Errors);
+                            File.WriteAllText(string.Format("{0}{1}{2}.log", dir.FullName, Path.DirectorySeparatorChar, file.Name),
+                                string.Format("{0}{1}{2}", result, Environment.NewLine, strErrors),
+                                Encoding.UTF8);
                         }
-                        string archivePath = archiveDir.FullName + Path.DirectorySeparatorChar + file.Name;
-                        file.MoveTo(archivePath);
-                    } catch {
-                        // se non riesce a spostare il file, lo elimina per non dare fastidio agli import successivi
-                        file.Delete();
+                    } finally {
+                        try {
+                            // sposta il file in una sottocartella
+                            DirectoryInfo archiveDir = new DirectoryInfo(dir.FullName + Path.DirectorySeparatorChar + "history");
+                            if (archiveDir.Exists == false) {
+                                archiveDir.Create();
+                            }
+                            string archivePath = archiveDir.FullName + Path.DirectorySeparatorChar + file.Name;
+                            file.MoveTo(archivePath);
+                        } catch {
+                            // se non riesce a spostare il file, lo elimina per non dare fastidio agli import successivi
+                            file.Delete();
+                        }
                     }
                 }
+            } catch (Exception ex) {
+                string idcontenuto = "nessun id ";
+                try {
+                    idcontenuto = context.Task.ContentItem.Id.ToString();
+                } catch (Exception ex2) { Logger.Error(ex2, ex2.Message); }
+                Logger.Error(ex, "Error on " + TaskType + " for ContentItem id = " + idcontenuto + " : " + ex.Message);
             }
         }
 
