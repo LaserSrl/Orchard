@@ -1,5 +1,4 @@
-﻿using Laser.Orchard.TemplateManagement.ViewModels;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,11 +70,13 @@ namespace Laser.Orchard.MailCommunication.Models
             set { this.Store(x => x.TokenValidity, value); }
         }
 
-        public CustomTemplatePickerViewModel TemplateUnsubscribe 
+        // Id Template Unsubscription
+        public int? IdTemplateUnsubscribe 
         {
-            get { return this.Retrieve(x => x.TemplateUnsubscribe); }
-            set { this.Store(x => x.TemplateUnsubscribe, value); }
+            get { return this.Retrieve(x => x.IdTemplateUnsubscribe); }
+            set { this.Store(x => x.IdTemplateUnsubscribe, value); }
         }
+
 
     }
 }

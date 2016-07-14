@@ -58,18 +58,19 @@ namespace Laser.Orchard.StartupConfig.Services {
             return Convert.ToBase64String(_encryptionService.Encode(data));
         }
 
-        public bool DecryptNonce(string nonce, out string parametri, out DateTime validateByUtc) {
+        public bool DecryptNonce(string nonce, out string parametri) {
             parametri = null;
-            validateByUtc = _clock.UtcNow;
+            DateTime validateByUtc = _clock.UtcNow;
 
             try {
                 var data = _encryptionService.Decode(Convert.FromBase64String(nonce));
+                //var data = _encryptionService.Decode(nonce.ToArray());
                 var xml = Encoding.UTF8.GetString(data);
                 var element = XElement.Parse(xml);
                 parametri = element.Attribute("par").Value;
                 validateByUtc = DateTime.Parse(element.Attribute("utc").Value, CultureInfo.InvariantCulture);
                 return _clock.UtcNow <= validateByUtc;
-            } catch {
+            } catch (Exception ex) {
                 return false;
             }
         }

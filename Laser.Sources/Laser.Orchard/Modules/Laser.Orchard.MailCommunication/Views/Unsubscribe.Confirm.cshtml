@@ -2,6 +2,7 @@
     Layout.Title = T("Unsubscribe Confirm");
 }
 
+<h1>@T("Email unsubscription")</h1>
 @using (Html.BeginForm("UnsubscribeMail", "Unsubscribe", new { area = "Laser.Orchard.MailCommunication" }, FormMethod.Post)) { 
     @Html.AntiForgeryTokenOrchard()
     <ul>

@@ -1,45 +1,46 @@
-﻿@model Laser.Orchard.MailCommunication.Models.MailerSiteSettingsPart
+﻿@model Laser.Orchard.MailCommunication.ViewModels.MailerSiteSettingsVM
 
 <fieldset>
     <legend>@T("Mailer")</legend>
     <div>
-        <label for="@Html.FieldIdFor(m => m.RecipientsPerJsonFile)">@T("Page Size for recipients")</label>
-        @Html.TextBoxFor(m => m.RecipientsPerJsonFile, new { @class = "text large" })
+        <label for="@Html.FieldIdFor(m => m.Settings.RecipientsPerJsonFile)">@T("Page Size for recipients")</label>
+        @Html.TextBoxFor(m => m.Settings.RecipientsPerJsonFile, new { @class = "text large" })
         <span class="hint">@T("Max number of recipients in each JSON file created by massive mailer.")</span>
     </div>
     <div>
-        <label for="@Html.FieldIdFor(m => m.MailPriority)">@T("Mail priority")</label>
-        @Html.DropDownListFor(m => m.MailPriority, new SelectList(Enum.GetNames(typeof(Laser.Orchard.MailCommunication.MailPriorityValues)), Model.MailPriority))
+        <label for="@Html.FieldIdFor(m => m.Settings.MailPriority)">@T("Mail priority")</label>
+        @Html.DropDownListFor(m => m.Settings.MailPriority, new SelectList(Enum.GetNames(typeof(Laser.Orchard.MailCommunication.MailPriorityValues)), Model.Settings.MailPriority))
         <span class="hint">@T("The priority to set on each mail.")</span>
     </div>
     <div>
-        <label for="@Html.FieldIdFor(m => m.FtpHost)">@T("FTP host")</label>
-        @Html.TextBoxFor(m => m.FtpHost, new { @class = "text large" })
+        <label for="@Html.FieldIdFor(m => m.Settings.FtpHost)">@T("FTP host")</label>
+        @Html.TextBoxFor(m => m.Settings.FtpHost, new { @class = "text large" })
         <span class="hint">@T("Remote FTP host (name or IP address).")</span>
     </div>
     <div>
-        <label for="@Html.FieldIdFor(m => m.FtpUser)">@T("FTP user")</label>
-        @Html.TextBoxFor(m => m.FtpUser, new { @class = "text large" })
+        <label for="@Html.FieldIdFor(m => m.Settings.FtpUser)">@T("FTP user")</label>
+        @Html.TextBoxFor(m => m.Settings.FtpUser, new { @class = "text large" })
         <span class="hint">@T("User for FTP connection.")</span>
     </div>
     <div>
-        <label for="@Html.FieldIdFor(m => m.FtpPassword)">@T("FTP password")</label>
-        @Html.TextBoxFor(m => m.FtpPassword, new { @class = "text large" })
+        <label for="@Html.FieldIdFor(m => m.Settings.FtpPassword)">@T("FTP password")</label>
+        @Html.TextBoxFor(m => m.Settings.FtpPassword, new { @class = "text large" })
         <span class="hint">@T("Password for FTP connection.")</span>
     </div>
     <div>
-        <label for="@Html.FieldIdFor(m => m.FtpPath)">@T("FTP path")</label>
-        @Html.TextBoxFor(m => m.FtpPath, new { @class = "text large" })
+        <label for="@Html.FieldIdFor(m => m.Settings.FtpPath)">@T("FTP path")</label>
+        @Html.TextBoxFor(m => m.Settings.FtpPath, new { @class = "text large" })
         <span class="hint">@T("Remote path for FTP connection.")</span>
     </div>
     <div>
-        <label for="@Html.FieldIdFor(m => m.TokenValidity)">@T("Token validity (days)")</label>
-        @Html.TextBoxFor(m => m.TokenValidity, new { @class = "text large" })
+        <label for="@Html.FieldIdFor(m => m.Settings.TokenValidity)">@T("Token validity (days)")</label>
+        @Html.TextBoxFor(m => m.Settings.TokenValidity, new { @class = "text large" })
         <span class="hint">@T("Validity (in days) of the token used by massive mailer to return the number of sent mails.")</span>
     </div>
     <div>
-        @Html.LabelFor(m => m.TemplateUnsubscribe.TemplateIdSelected, T("Pick a template Unsubscribe"))
-        @Html.DropDownListFor(m=>m.TemplateUnsubscribe.TemplateIdSelected, new SelectList(Model.TemplateUnsubscribe.TemplatesList, "Id","Title", Model.TemplateUnsubscribe.TemplateIdSelected))
+        <h2>@T("UNSUBSCRIPTION")</h2>
+        @Html.LabelFor(m => m.Settings.IdTemplateUnsubscribe, T("Pick a template Unsubscribe"))
+        @Html.DropDownListFor(m=>m.Settings.IdTemplateUnsubscribe, new SelectList(Model.TemplatesUnsubscribeList,"Id","Title", Model.Settings.IdTemplateUnsubscribe))
         <span class="hint">@T("The template to use for.")</span>
     </div>
 </fieldset>

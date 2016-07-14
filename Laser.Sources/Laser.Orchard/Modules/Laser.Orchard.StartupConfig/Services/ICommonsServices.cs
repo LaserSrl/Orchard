@@ -10,6 +10,6 @@ namespace Laser.Orchard.StartupConfig.Services {
         DevicesBrands GetDeviceBrandByUserAgent();
         IContent GetContentByAlias(string displayAlias);
         string CreateNonce(string parametri, TimeSpan delay);
-        bool DecryptNonce(string nonce, out string parametri, out DateTime validateByUtc);
+        bool DecryptNonce(string nonce, out string parametri);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Orchard.DisplayManagement;
+﻿using Laser.Orchard.MailCommunication.Services;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Themes;
@@ -13,13 +14,16 @@ namespace Laser.Orchard.MailCommunication.Controllers {
     public class UnsubscribeController : Controller {
 
         public Localizer T { get; set; }
-        private readonly INotifier _notifier;
         dynamic Shape { get; set; }
 
-        public UnsubscribeController(INotifier notifier, IShapeFactory shapeFactory) {
-            notifier = _notifier;
-            Shape = shapeFactory;
+        private readonly INotifier _notifier;
+        private readonly IMailUnsubscribeService _service;
 
+        public UnsubscribeController(INotifier notifier, IShapeFactory shapeFactory, IMailUnsubscribeService service) {
+            _notifier = notifier;
+            _service = service;
+
+            Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
@@ -30,14 +34,19 @@ namespace Laser.Orchard.MailCommunication.Controllers {
 
         [Themed, HttpPost]
         public ActionResult UnsubscribeMail(string email, string confirmEmail) {
+            bool allOK = false;
 
             if (HttpContext.Request.Form["Mail_Unsubscribe_Confirm"] == "") {
                 return null;
             } else {
                 if (email == confirmEmail && email.Trim() != "") {
 
-                    // TODO: CreateNonce e DecryptNonce inserirli nel StartupConfig
-                    // Send Mail dopo aver richiamato CreateNonce e passando il risultato in querystring
+                    try {
+                        allOK = _service.SendMailConfirmUnsubscribe(email);
+                    } 
+                    catch (Exception ex) {
+                        ModelState.AddModelError("UnsubscribeMailError", ex);
+                    }
 
                 } else {
                     if (email == "" || confirmEmail == "") {
@@ -47,28 +56,32 @@ namespace Laser.Orchard.MailCommunication.Controllers {
                     }
                 }
             }
-            return new ShapeResult(this, Shape.Unsubscribe_Confirm());
+
+            if (allOK) {
+                return new ShapeResult(this, Shape.Unsubscribe_EmailSent());
+            } else {
+                return new ShapeResult(this, Shape.Unsubscribe_Error());
+            } 
         }
 
+        [Themed]
+        public ActionResult ConfirmUnsubscribe(string key) {
+            bool allOK = false;
 
-        //[Themed]
-        //public ActionResult ConfirmUnsubscribe(string email, string token) {
-        //    var subRecord = _newsletterServices.TryUnregisterConfirmSubscriber(new SubscriberViewModel {
-        //        Email = email,
-        //        Guid = token
-        //    });
-        //    try {
-        //        ValidateModel(subRecord);
-        //    } catch (Exception ex) {
-        //        ModelState.AddModelError("SubscriberError", ex);
-        //    }
+            try {
+                allOK = _service.UnsubscribeMail(key);
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError("UnsubscribeMailError", ex);
+            }
 
-        //    if (subRecord != null) {
-        //        return new ShapeResult(this, Shape.Subscription_UnsubscribedEmail());
-        //    } else {
-        //        return new ShapeResult(this, Shape.Subscription_UnsubscribeError());
-        //    }
-        //}
+            if (allOK) {
+                return new ShapeResult(this, Shape.Unsubscribe_EmailSuccess());
+            } else {
+                return new ShapeResult(this, Shape.Unsubscribe_Error());
+            }
+        }
 
     }
 }

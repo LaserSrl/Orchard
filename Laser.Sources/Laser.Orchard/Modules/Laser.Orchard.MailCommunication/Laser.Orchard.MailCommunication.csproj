@@ -139,6 +139,7 @@
     <Compile Include="Models\MailCommunicationPart.cs" />
     <Compile Include="Services\MailUnsubscribeService.cs" />
     <Compile Include="Services\MissingSettingsBanner.cs" />
+    <Compile Include="ViewModels\MailerSiteSettingsVM.cs" />
     <Compile Include="ViewModels\RecipientData.cs" />
     <Compile Include="ViewModels\UnsubscribeVM.cs" />
   </ItemGroup>
@@ -183,6 +184,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Unsubscribe.Confirm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Unsubscribe.EmailSent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Unsubscribe.Error.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Unsubscribe.EmailSuccess.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

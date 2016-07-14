@@ -157,7 +157,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
 
                 // Add Link [UNSUBSCRIBE]
                 string ph_Unsubscribe = "[UNSUBSCRIBE]";
-                string unsubscribe = T("Clicca per non ricevere più mail ad uso commerciale").Text;
+                string unsubscribe = T("Click to stop receiving email for commercial use").Text;
                 string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/Index", baseUri) + "'>" + unsubscribe + "</a>";
 
                 if (body.Contains(ph_Unsubscribe))
