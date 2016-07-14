@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.StartupConfig.Models;
+﻿using Laser.Orchard.StartupConfig.Handlers;
+using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
@@ -19,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Text;
 using System.Web.Http;
 
 namespace Laser.Orchard.StartupConfig.Controllers {
@@ -30,13 +32,10 @@ namespace Laser.Orchard.StartupConfig.Controllers {
         private readonly ITaxonomyService _taxonomyService;
         private readonly IContentExtensionsServices _contentExtensionsServices;
         private readonly IUtilsServices _utilsServices;
-        private readonly IUserEventHandler _userEventHandler;
+        private readonly IContactRelatedEventHandler _contactEventHandler;
+        private readonly ILocalizedStringManager _localizedStringManager;
 
         public Localizer T { get; set; }
-
-        private readonly ILocalizedStringManager _localizedStringManager;
-        //  private string errore;
-
         public ILogger Log { get; set; }
 
         public UserController(
@@ -47,7 +46,7 @@ namespace Laser.Orchard.StartupConfig.Controllers {
             IAuthenticationService authenticationService,
             IContentExtensionsServices contentExtensionsServices,
             IUtilsServices utilsServices,
-            IUserEventHandler userEventHandler) {
+            IContactRelatedEventHandler contactEventHandler) {
             _csrfTokenHelper = csrfTokenHelper;
             _orchardServices = orchardServices;
             _taxonomyService = taxonomyService;
@@ -57,7 +56,7 @@ namespace Laser.Orchard.StartupConfig.Controllers {
             _authenticationService = authenticationService;
             _contentExtensionsServices = contentExtensionsServices;
             _utilsServices = utilsServices;
-            _userEventHandler = userEventHandler;
+            _contactEventHandler = contactEventHandler;
         }
 
         public dynamic Get(string Language = "it-IT") {
@@ -127,11 +126,6 @@ namespace Laser.Orchard.StartupConfig.Controllers {
 
             #endregion Tutti i field
 
-            //#region Tutte le Proprietà
-            //eObj.Add("Email",currentUser.Email);
-            //eObj.Add("UserName", currentUser.UserName);
-            //#endregion
-
             return eObj;
         }
 
@@ -162,13 +156,15 @@ namespace Laser.Orchard.StartupConfig.Controllers {
         /// <param name="eObj"></param>
         /// <returns></returns>
         public Response Post(ExpandoObject eObj) {
-            //         try {
             if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
                 var currentUser = _orchardServices.WorkContext.CurrentUser;
                 if (currentUser == null)
                     return _utilsServices.GetResponse(ResponseType.InvalidUser);
                 var result = _contentExtensionsServices.StoreInspectExpando(eObj, currentUser.ContentItem);
-                _userEventHandler.LoggedIn(currentUser);
+
+                // solleva l'evento di sincronizzazione del contact dopo l'aggiornamento del numero di telefono
+                _contactEventHandler.Synchronize(currentUser);
+
                 return result;
             }
             else {

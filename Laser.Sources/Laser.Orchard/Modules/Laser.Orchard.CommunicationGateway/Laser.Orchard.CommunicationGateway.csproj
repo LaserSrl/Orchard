@@ -165,6 +165,7 @@
     <Compile Include="Handlers\CommunicationCampaignPartHandler.cs" />
     <Compile Include="Handlers\CommunicationContactPartHandler.cs" />
     <Compile Include="Handlers\CommunicationPolicyChangedHandler.cs" />
+    <Compile Include="Handlers\ContactRelatedEventHandler.cs" />
     <Compile Include="Handlers\EmailContactPartHandler.cs" />
     <Compile Include="Handlers\ExportContactTaskHandler.cs" />
     <Compile Include="Handlers\ImportContactTaskHandler.cs" />
