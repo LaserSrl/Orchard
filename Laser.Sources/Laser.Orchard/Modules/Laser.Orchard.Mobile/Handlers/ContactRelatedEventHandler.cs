@@ -13,16 +13,12 @@ namespace Laser.Orchard.Mobile.Handlers {
             _pushNotificationservice = pushNotificationservice;
         }
 
-        public void DeviceUpdated() {
-            //throw new NotImplementedException();
-        }
-
-        public void SmsUpdated() {
-            //throw new NotImplementedException();
-        }
-
         public void Synchronize() {
             _pushNotificationservice.Synchronize();
+        }
+
+        public void Synchronize(global::Orchard.Security.IUser user) {
+            //throw new NotImplementedException();
         }
     }
 }
