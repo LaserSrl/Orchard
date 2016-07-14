@@ -14,6 +14,7 @@ using Orchard.Security;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
+using Orchard.Users.Events;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -29,6 +30,7 @@ namespace Laser.Orchard.StartupConfig.Controllers {
         private readonly ITaxonomyService _taxonomyService;
         private readonly IContentExtensionsServices _contentExtensionsServices;
         private readonly IUtilsServices _utilsServices;
+        private readonly IUserEventHandler _userEventHandler;
 
         public Localizer T { get; set; }
 
@@ -44,7 +46,8 @@ namespace Laser.Orchard.StartupConfig.Controllers {
             ILocalizedStringManager localizedStringManager,
             IAuthenticationService authenticationService,
             IContentExtensionsServices contentExtensionsServices,
-            IUtilsServices utilsServices) {
+            IUtilsServices utilsServices,
+            IUserEventHandler userEventHandler) {
             _csrfTokenHelper = csrfTokenHelper;
             _orchardServices = orchardServices;
             _taxonomyService = taxonomyService;
@@ -54,6 +57,7 @@ namespace Laser.Orchard.StartupConfig.Controllers {
             _authenticationService = authenticationService;
             _contentExtensionsServices = contentExtensionsServices;
             _utilsServices = utilsServices;
+            _userEventHandler = userEventHandler;
         }
 
         public dynamic Get(string Language = "it-IT") {
@@ -163,7 +167,9 @@ namespace Laser.Orchard.StartupConfig.Controllers {
                 var currentUser = _orchardServices.WorkContext.CurrentUser;
                 if (currentUser == null)
                     return _utilsServices.GetResponse(ResponseType.InvalidUser);
-                return _contentExtensionsServices.StoreInspectExpando(eObj, currentUser.ContentItem);
+                var result = _contentExtensionsServices.StoreInspectExpando(eObj, currentUser.ContentItem);
+                _userEventHandler.LoggedIn(currentUser);
+                return result;
             }
             else {
                 return (_utilsServices.GetResponse(ResponseType.InvalidXSRF));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
