@@ -65,6 +65,7 @@
 
 <fieldset>
     <legend>@T("Keywords selected for this content")</legend>
+
     <div title="@T("You can add keywords and obtain the most relevant related ones on search engines.")">
         <div title ="@T("This chart compares the keywords' trends in time")">
             <select title="@T("Select time period.").ToString()" id="period_SummaryChart">
@@ -82,11 +83,11 @@
                         foreach (var row in _cultureRepository.Table) {
                             var lCode = row.Culture;
                             var shortLCode = lCode.Substring(0, 2);
-                            var lText = KeywordHelperKeyword.langDictionary.ContainsKey(lCode) ? 
-                                KeywordHelperKeyword.langDictionary[lCode] : 
+                            var lText = KeywordHelperKeyword.langDictionary.ContainsKey(lCode) ?
+                                KeywordHelperKeyword.langDictionary[lCode] :
                                 KeywordHelperKeyword.langDictionary.ContainsKey(shortLCode) ?
                                 KeywordHelperKeyword.langDictionary[shortLCode] : "";
-                            if (!String.IsNullOrWhiteSpace(lText)){
+                            if (!String.IsNullOrWhiteSpace(lText)) {
                                 @Html.SelectOption(shortLCode, WorkContext.CurrentSite.SiteCulture == lCode, lText);
                             }
                         }
