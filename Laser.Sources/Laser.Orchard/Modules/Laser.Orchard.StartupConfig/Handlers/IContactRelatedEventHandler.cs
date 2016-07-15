@@ -9,5 +9,6 @@ namespace Laser.Orchard.StartupConfig.Handlers {
     public interface IContactRelatedEventHandler : IEventHandler {
         void Synchronize();
         void Synchronize(IUser user);
+        void ContactRemoved(int contactId);
     }
 }
