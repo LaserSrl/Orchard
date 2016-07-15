@@ -14,7 +14,7 @@
 
 
 <div id="@appId" class="j_seokeyword" style="border: 1px dotted red;">
-    @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete" })
+    @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete", @id="delete_"+@appId })
     @Html.TextBoxFor(m=>m.Keyword, new {placeholder=T("Keyword").ToString(), @class="text medium", @title=T("Keyword").ToString(), @id="key_"+@appId})
     <select title="@T("Select time period.").ToString()" id="period_@appId">
         @Html.SelectOption("today+12-m", true, T("Past year").ToString());
