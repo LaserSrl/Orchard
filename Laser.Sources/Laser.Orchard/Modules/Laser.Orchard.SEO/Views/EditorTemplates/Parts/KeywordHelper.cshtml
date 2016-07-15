@@ -39,10 +39,26 @@
             var qString = '';
             for (i = 0; i < keyDivs.length; i++) {
                 var aId = keyDivs[i].id;
-                var q = document.getElementById("key_" + aId).value;
-                q = q.trim().replace(/\s+/g, ' ');
-                if (q) {
-                    qString += q + ',';
+                var del = document.getElementById("delete_" + aId);
+                if (del.value.toLowerCase() == "false") {
+                    var q = document.getElementById("key_" + aId).value;
+                    q = q.trim().replace(/\s+/g, ' ');
+                    //to handle the case where people may put a comma in the keyword, we do the following:
+                    var qArray = q.split(",");
+                    if (qArray.length == 1) {
+                        if (q) {
+                            qString += q + ',';
+                        }
+                    } else {
+                        //there actually was (at least) a comma.
+                        var j;
+                        for (j = 0; j < qArray.length; j++) {
+                            var qq = qArray[j].trim(); //multiple spaces have already been removed, but we still have to retrim
+                            if (qq) {
+                                qString += qq + ',';
+                            }
+                        }
+                    }
                 }
             }
             if (qString.length > 0) {
@@ -113,7 +129,7 @@
             </select>
             <a href="javascript:void(0)" onclick="summaryChart()" class="btn btn-sm" id="button_SummaryChart" title="@T("Click to refresh summary chart")">@T("Refresh summary chart")</a>
             <div>
-                <iframe style="position:relative;top:5px;left:5px;" width="100%" height="1px" id="iframe_SummaryChart" style="overflow-y: hidden;" scrolling="no" seamless="seamless"></iframe>
+                <iframe style="position:relative;top:5px;left:5px;width:100%;overflow-y:hidden;" height="1px" id="iframe_SummaryChart" scrolling="no" seamless="seamless"></iframe>
             </div>
         </div>
 

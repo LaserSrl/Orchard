@@ -41,7 +41,7 @@ namespace Laser.Orchard.SEO.Controllers {
             string[] inWords = q.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             List<string> kWords = new List<string>();
             kWords.AddRange(inWords.Select(w => new KeywordHelperKeyword(w).PercentEncode()));
-            return String.Join(",", kWords);
+            return String.Join(",", kWords.Distinct());
         }
     }
 }
