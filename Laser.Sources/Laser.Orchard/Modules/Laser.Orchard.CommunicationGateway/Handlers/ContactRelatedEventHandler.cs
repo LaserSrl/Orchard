@@ -21,5 +21,8 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
         public void Synchronize(IUser user) {
             _communicationService.UserToContact(user);
         }
+
+        public void ContactRemoved(int contactId) {
+        }
     }
 }
