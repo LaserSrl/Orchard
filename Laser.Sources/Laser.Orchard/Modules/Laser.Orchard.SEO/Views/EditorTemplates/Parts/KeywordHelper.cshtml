@@ -108,7 +108,7 @@
                 .replace('__geo__', geo)
                 .replace('__date__', date);
             uaTab = uaTab.replace(/amp;/g, ''); //Url.Action() puts &amp; instead of just &
-            uaTab = uaTab.replace(' ', '+');
+            uaTab = uaTab.replace(/\s/g, '+');
             $("#summaryTables").load(uaTab);
         }
 
