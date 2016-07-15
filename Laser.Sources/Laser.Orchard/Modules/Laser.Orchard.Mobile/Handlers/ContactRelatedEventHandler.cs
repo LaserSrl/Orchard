@@ -18,7 +18,10 @@ namespace Laser.Orchard.Mobile.Handlers {
         }
 
         public void Synchronize(global::Orchard.Security.IUser user) {
-            //throw new NotImplementedException();
+        }
+
+        public void ContactRemoved(int contactId) {
+            _pushNotificationservice.RebindDevicesToMasterContact(contactId);
         }
     }
 }
