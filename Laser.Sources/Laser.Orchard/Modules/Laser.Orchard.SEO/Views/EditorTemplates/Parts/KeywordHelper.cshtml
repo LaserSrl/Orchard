@@ -102,7 +102,14 @@
             pathStr = window.location.protocol + "//" + window.location.host + pathStr + "Laser.Orchard.SEO/keywordhelper/TabbedCharts?" + "_hl=" + hl + "&_q=" + qString + "&_geo=" + geo + "&_date=" + date;
             //e.g. pathStr = "http://localhost/Laser.Orchard/ProvaFavicon/Laser.Orchard.SEO/keywordhelper/TabbedCharts?_hl=it&_q=Lemuri,pollo&_geo=&_date=today+12-m#home"
             //$("#SummaryTrendsActionLink").attr('href', link)
-            $("#summaryTables").load(pathStr);
+            var uaTab = '@Url.Action("TabbedCharts", "keywordhelper", new {area = "Laser.Orchard.SEO", _hl="__hl__", _q="__q__", _geo="__geo__", _date="__date__"})'
+                .replace('__hl__', hl)
+                .replace('__q__', qString)
+                .replace('__geo__', geo)
+                .replace('__date__', date);
+            uaTab = uaTab.replace(/amp;/g, ''); //Url.Action() puts &amp; instead of just &
+            uaTab = uaTab.replace(' ', '+');
+            $("#summaryTables").load(uaTab);
         }
 
         
@@ -114,9 +121,9 @@
             padding-bottom: 1px;
         }
       #allSEOKeywords { overflow: hidden; float: left; }
-      #allSEOKeywords div { float: left; background: #eee;  margin-bottom: -100%; padding-bottom: 100%; margin-right: 5px; cursor: pointer; }
+      #allSEOKeywords div { float: left; background: #fff;  margin-bottom: -100%; padding-bottom: 100%; margin-right: 5px; cursor: pointer; }
       #addButton { overflow: hidden; float: left; }
-      #addButton div { float: left; background: #eee;  margin-bottom: -100%; padding-bottom: 100%; margin-right: 5px; cursor: pointer; }
+      #addButton div { float: left; background: #fff;  margin-bottom: -100%; padding-bottom: 100%; margin-right: 5px; cursor: pointer; }
 	</style>
 }
 
