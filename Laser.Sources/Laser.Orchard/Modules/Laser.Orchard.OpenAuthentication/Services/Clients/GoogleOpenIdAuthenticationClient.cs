@@ -25,9 +25,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             string ClientSecret = providerConfigurationRecord.ProviderSecret;
             
             var client = new GoogleOAuth2Client(ClientId, ClientSecret);
- 
-            //var client2 = new GoogleOpenIdClient();
-            //return client2;
+
             return client;
         }
 

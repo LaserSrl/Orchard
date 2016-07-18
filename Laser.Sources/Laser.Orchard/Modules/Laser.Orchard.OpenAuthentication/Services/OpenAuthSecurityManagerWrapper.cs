@@ -39,6 +39,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             get { return OpenAuthSecurityManager.GetProviderName(_httpContextAccessor.Current()); }
         }
 
+
+
         public bool Login(string providerUserId, bool createPersistentCookie) {
             string userName = _orchardOpenAuthDataProvider.GetUserNameFromOpenAuth(ProviderName, providerUserId);
 

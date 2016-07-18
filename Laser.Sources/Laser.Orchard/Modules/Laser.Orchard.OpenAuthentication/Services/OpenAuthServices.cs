@@ -62,10 +62,19 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var valoriRicavati = createUserParams.ExtraData.Values;
             int countVal = 0;
 
-            foreach (string valric in valoriRicavati) {
-                if (countVal == 1) {
-                    emailAddress = valric;
+            foreach (string valric in valoriRicavati) 
+            {                
+                if (countVal == 1) 
+                {
+                    if (createUserParams.ProviderName != "linkedin")
+                        emailAddress = valric;
                 }
+
+                if (countVal == 3) {
+                    if (createUserParams.ProviderName == "linkedin")
+                        emailAddress = valric;
+                }
+
                 countVal = countVal + 1;
             }
 
