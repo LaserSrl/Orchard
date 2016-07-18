@@ -257,17 +257,23 @@ namespace Laser.Orchard.Mobile {
         }
         public int UpdateFrom23() {
             // aggiorna tutti i device già esistenti (evitando il valore null)
-            string host = _shellSettings.RequestUrlHost ?? "";
-            string prefix = _shellSettings.RequestUrlPrefix ?? "";
+            string host = "";
+            string prefix = "";
             string machineName = System.Environment.MachineName ?? "";
-            var elencoDevice = _repositoryDevice.Fetch(x => x.Id > 0);
-            foreach (var device in elencoDevice) {
-                device.RegistrationUrlHost = host;
-                device.RegistrationUrlPrefix = prefix;
-                device.RegistrationMachineName = machineName;
-                _repositoryDevice.Update(device);
+            try {
+                host = _shellSettings.RequestUrlHost ?? "";
+                prefix = _shellSettings.RequestUrlPrefix ?? "";
+                var elencoDevice = _repositoryDevice.Fetch(x => x.Id > 0);
+                foreach (var device in elencoDevice) {
+                    device.RegistrationUrlHost = host;
+                    device.RegistrationUrlPrefix = prefix;
+                    device.RegistrationMachineName = machineName;
+                    _repositoryDevice.Update(device);
+                }
             }
-            _repositoryDevice.Flush();
+            catch {
+                // ignora eventuali errori
+            }
             return 24;
         }
         public int UpdateFrom24() {
