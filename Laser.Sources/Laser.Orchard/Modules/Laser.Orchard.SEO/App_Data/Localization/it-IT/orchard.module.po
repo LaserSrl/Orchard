@@ -8,6 +8,42 @@
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
 
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "If this website has a search functionality powered by Google, this tag prevents a search box from being displayed in Google's search results."
+msgstr "Se il sito ha una funzionalità di ricerca abilitata da Google, questo tag impedisce a Google di mostrare una casella per la ricerca nel sito nei suoi risultati delle ricerche."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "Prevents crawlers from following page links"
+msgstr "Impedisci ai crawlers dei motori di ricerca di seguire i link nella pagina."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "Prevents displaying the cached link for a page"
+msgstr "Impedisci di mostrare link archiviati alla pagina."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "Prevents Google from providing a translation link for the page in its search results"
+msgstr "Impedisci a Google di mostrare nei risultati delle ricerche un link per tradurre la pagina"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "Prevents page snippets from being shown in search results"
+msgstr "Impedisci di mostrare parti della pagina nei risultati delle ricerche."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "Prevents the alternative description from the ODP/DMOZ from being used"
+msgstr "Impedisci l'utilizzo delle descrizioni alternative della pagina prese da ODP/DMOZ"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "Prevents the page from being indexed in search engines."
+msgstr "Impedisci alla pagina di essere indicizzata dai motori di ricerca."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "Prevents the page to appear as referring page for an image that appears in search results"
+msgstr "Impedisci ai motori di ricerca di utilizzare la pagina come riferimento per le immagini che appaiono come risultati delle ricerche."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "Specify the exact date to stop crawling and indexing the page"
+msgstr "Specifica la data esatta dalla quale la pagina non verrà più indicizzata."
+
 msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/KeywordHelperKeyword.cshtml"
 msgid "Click to hide charts"
 msgstr "Clicca per nascondere i grafici"
@@ -145,8 +181,40 @@ msgid "Google settings"
 msgstr "Settaggi per Google"
 
 msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "If this website has a search functionality powered by Google, this tag prevents a search box from being displayed in Google's search results."
+msgstr "Se il sito ha una funzionalità di ricerca abilitata da Google, questo tag impedisce a Google di mostrare una casella per la ricerca nel sito nei suoi risultati delle ricerche."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
 msgid "Keywords"
 msgstr "META Keywords"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "Prevents crawlers from following page links"
+msgstr "Impedisci ai crawlers dei motori di ricerca di seguire i link nella pagina."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "Prevents displaying the cached link for a page"
+msgstr "Impedisci di mostrare link archiviati alla pagina."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "Prevents Google from providing a translation link for the page in its search results"
+msgstr "Impedisci a Google di mostrare nei risultati delle ricerche un link per tradurre la pagina"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "Prevents page snippets from being shown in search results"
+msgstr "Impedisci di mostrare parti della pagina nei risultati delle ricerche."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "Prevents the alternative description from the ODP/DMOZ from being used"
+msgstr "Impedisci l'utilizzo delle descrizioni alternative della pagina prese da ODP/DMOZ"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "Prevents the page from being indexed in search engines."
+msgstr "Impedisci alla pagina di essere indicizzata dai motori di ricerca."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "Prevents the page to appear as referring page for an image that appears in search results"
+msgstr "Impedisci ai motori di ricerca di utilizzare la pagina come riferimento per le immagini che appaiono come risultati delle ricerche."
 
 msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
 msgid "Robots settings"
@@ -159,6 +227,22 @@ msgstr "Attributi SEO"
 msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
 msgid "SEO attributes are empty!"
 msgstr "Gli attributi SEO sono vuoti!"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "Specify the exact date to stop crawling and indexing the page"
+msgstr "Specifica la data esatta dalla quale la pagina non verrà più indicizzata."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "This is a list of keywords for the page. Note that this metadata tag is not used by search engines anymore."
+msgstr "Questa è una lista di parole chiave per la pagina. Nota che questo tag metadata non viene più utilizzato dai motori di ricerca."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "This is the page description. This is the most important metadata tag for search engine crawlers."
+msgstr "Questa è la descrizione della pagina. Questo è il tag metadata più importante per i motori di ricerca."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
+msgid "This value will replace the page title."
+msgstr "Questo valore rimpiazzerà il titolo della pagina."
 
 msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
 msgid "TitleOverride"
