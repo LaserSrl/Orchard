@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.Services;
+using Laser.Orchard.StartupConfig.Handlers;
 using Laser.Orchard.StartupConfig.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -18,7 +19,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
         private readonly IRepository<CommunicationEmailRecord> _Emailrepository;
         private readonly IRepository<CommunicationSmsRecord> _Smsrepository;
 
-        public CommunicationContactPartHandler(IRepository<CommunicationSmsRecord> Smsrepository,IRepository<CommunicationEmailRecord> Emailrepository,IRepository<CommunicationContactPartRecord> repository, ICommunicationService communicationService) {
+        public CommunicationContactPartHandler(IRepository<CommunicationSmsRecord> Smsrepository, IRepository<CommunicationEmailRecord> Emailrepository, IRepository<CommunicationContactPartRecord> repository, ICommunicationService communicationService) {
             _Smsrepository = Smsrepository;
             _communicationService = communicationService;
             Filters.Add(StorageFilter.For(repository));
@@ -36,12 +37,11 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             #region sync user profile
             OnCreated<UserPart>((context, part) => UpdateProfile(context.ContentItem));
             OnUpdated<UserPart>((context, part) => UpdateProfile(context.ContentItem));
-            OnRemoved<UserPart>((context, part) => RemoveUserLink(part));
-            OnRemoved<CommunicationContactPart>((context, part) => RemoveLinks(part));
+            OnRemoved<UserPart>((context, part) => { _communicationService.UnboundFromUser(part); });
+            OnRemoved<CommunicationContactPart>((context, part) => { _communicationService.RemoveMailsAndSms(part.Id); });
             #endregion
         }
 
-        
         protected void LazyLoadEmailHandlers(LoadContentContext context, EmailContactPart part) {
             // Add handlers that will load content for id's just-in-time
             part.EmailEntries.Loader(x => OnEmailLoader(context));
@@ -94,29 +94,6 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             if (item.ContentType == "User") {
                 _communicationService.UserToContact((IUser)item.As<IUser>());
             }
-        }
-        private void RemoveLinks(CommunicationContactPart item) {
-            item.UserIdentifier=0;
-
-            // elimina le mail associate
-            var elencoCer = _Emailrepository.Fetch(x => x.EmailContactPartRecord_Id == item.Id);
-            if (elencoCer != null) {
-                foreach (var cer in elencoCer) {
-                    _Emailrepository.Delete(cer);
-                }
-            }
-
-            // elimina gli sms associati
-            var elencoCsr = _Smsrepository.Fetch(x => x.SmsContactPartRecord_Id == item.Id);
-            if (elencoCsr != null) {
-                foreach (var csr in elencoCsr) {
-                    _Smsrepository.Delete(csr);
-                }
-            }
-        }
-
-        private void RemoveUserLink(UserPart part) {
-            _communicationService.UnboundFromUser(part);
         }
     }
 }

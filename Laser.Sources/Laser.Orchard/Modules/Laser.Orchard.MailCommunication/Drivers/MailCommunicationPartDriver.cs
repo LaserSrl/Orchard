@@ -56,10 +56,13 @@ namespace Laser.Orchard.MailCommunication.Drivers {
 
             if (updater != null) {
                 if (updater.TryUpdateModel(part, Prefix, null, null) && updater.TryUpdateModel(vModel, Prefix, null, null)) {
-                    part.ContentItem.As<CustomTemplatePickerPart>().SelectedTemplate = _contentManager.Get<TemplatePart>(vModel.TemplateIdSelected.Value);
-                    if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.MailTest") {
-                        // Logica di invio mail forse meglio metterla in un handler > OnUpdated
-                    }
+
+                    if (vModel.TemplateIdSelected != null)
+                        part.ContentItem.As<CustomTemplatePickerPart>().SelectedTemplate = _contentManager.Get<TemplatePart>(vModel.TemplateIdSelected.Value);
+
+                    //if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.MailTest") {
+                    //    // Logica di invio mail forse meglio metterla in un handler > OnUpdated
+                    //}
                 }
             }
             var shapes = new List<DriverResult>();
