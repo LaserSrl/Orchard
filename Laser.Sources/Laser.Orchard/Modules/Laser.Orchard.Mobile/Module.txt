@@ -39,5 +39,5 @@ Features:
 		Name: Laser Push Gateway
 		Description: Push communication channel
 		Category: Social
-		Dependencies: Laser.Orchard.CommunicationGateway
+		Dependencies: Laser.Orchard.CommunicationGateway,Laser.Orchard.Mobile
 		
