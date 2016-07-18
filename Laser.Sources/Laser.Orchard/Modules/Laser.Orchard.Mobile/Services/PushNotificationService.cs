@@ -105,49 +105,51 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         public void Synchronize() {
-            CommunicationContactPart master = _communicationService.EnsureMasterContact();
-            _transactionManager.RequireNew();
+            if (_communicationService != null) {
+                CommunicationContactPart master = _communicationService.EnsureMasterContact();
+                _transactionManager.RequireNew();
 
-            // assegna un contact a ogni device
-            int idmaster = master.Id;
-            var notificationrecords = _pushNotificationRepository.Fetch(x => x.Produzione && x.Validated).ToList();
-            foreach (PushNotificationRecord rec in notificationrecords) {
-                rec.MobileContactPartRecord_Id = EnsureContactId(rec.UUIdentifier, idmaster);
-                _pushNotificationRepository.Update(rec);
+                // assegna un contact a ogni device
+                int idmaster = master.Id;
+                var notificationrecords = _pushNotificationRepository.Fetch(x => x.Produzione && x.Validated).ToList();
+                foreach (PushNotificationRecord rec in notificationrecords) {
+                    rec.MobileContactPartRecord_Id = EnsureContactId(rec.UUIdentifier, idmaster);
+                    _pushNotificationRepository.Update(rec);
+                    _transactionManager.RequireNew();
+                }
+                _pushNotificationRepository.Flush();
+                _notifier.Add(NotifyType.Information, T("Linked {0} device To Master contact", notificationrecords.Count().ToString()));
+                _myLog.WriteLog(string.Format("Linked {0} device To Master contact", notificationrecords.Count().ToString()));
+                _transactionManager.RequireNew();
+
+                // elimina gli userDevice riferiti a utenti inesistenti (perché cancellati)
+                UserPart user = null;
+                List<UserDeviceRecord> elencoUdr = _userDeviceRecord.Fetch(x => x.UserPartRecord.Id > 0).ToList();
+                foreach (UserDeviceRecord udr in elencoUdr) {
+                    user = _orchardServices.ContentManager.Get<UserPart>(udr.UserPartRecord.Id);
+                    if (user == null) {
+                        _userDeviceRecord.Delete(udr);
+                        _transactionManager.RequireNew();
+                    }
+                }
+                _userDeviceRecord.Flush();
+                _transactionManager.RequireNew();
+
+                // elimina gli userDevice duplicati (con lo stesso UUIdentifier) e tiene il più recente (in base all'Id del record)
+                string uuidPrecedente = "";
+                elencoUdr = _userDeviceRecord.Fetch(x => x.UUIdentifier != null).OrderBy(y => y.UUIdentifier).OrderByDescending(z => z.Id).ToList();
+                foreach (UserDeviceRecord udr in elencoUdr) {
+                    if (udr.UUIdentifier == uuidPrecedente) {
+                        _userDeviceRecord.Delete(udr);
+                        _transactionManager.RequireNew();
+                    }
+                    else {
+                        uuidPrecedente = udr.UUIdentifier;
+                    }
+                }
+                _userDeviceRecord.Flush();
                 _transactionManager.RequireNew();
             }
-            _pushNotificationRepository.Flush();
-            _notifier.Add(NotifyType.Information, T("Linked {0} device To Master contact", notificationrecords.Count().ToString()));
-            _myLog.WriteLog(string.Format("Linked {0} device To Master contact", notificationrecords.Count().ToString()));
-            _transactionManager.RequireNew();
-
-            // elimina gli userDevice riferiti a utenti inesistenti (perché cancellati)
-            UserPart user = null;
-            List<UserDeviceRecord> elencoUdr = _userDeviceRecord.Fetch(x => x.UserPartRecord.Id > 0).ToList();
-            foreach (UserDeviceRecord udr in elencoUdr) {
-                user = _orchardServices.ContentManager.Get<UserPart>(udr.UserPartRecord.Id);
-                if (user == null) {
-                    _userDeviceRecord.Delete(udr);
-                    _transactionManager.RequireNew();
-                }
-            }
-            _userDeviceRecord.Flush();
-            _transactionManager.RequireNew();
-
-            // elimina gli userDevice duplicati (con lo stesso UUIdentifier) e tiene il più recente (in base all'Id del record)
-            string uuidPrecedente = "";
-            elencoUdr = _userDeviceRecord.Fetch(x => x.UUIdentifier != null).OrderBy(y => y.UUIdentifier).OrderByDescending(z => z.Id).ToList();
-            foreach (UserDeviceRecord udr in elencoUdr) {
-                if (udr.UUIdentifier == uuidPrecedente) {
-                    _userDeviceRecord.Delete(udr);
-                    _transactionManager.RequireNew();
-                }
-                else {
-                    uuidPrecedente = udr.UUIdentifier;
-                }
-            }
-            _userDeviceRecord.Flush();
-            _transactionManager.RequireNew();
         }
 
         #region [CRUD PushNotification]
@@ -219,17 +221,19 @@ namespace Laser.Orchard.Mobile.Services {
         private int EnsureContactId(string uuIdentifier) {
             int contactId = 0;
             try {
-                var userDevice = _userDeviceRecord.Fetch(x => x.UUIdentifier == uuIdentifier).FirstOrDefault();
-                if (userDevice != null) {
-                    var contact = _communicationService.TryEnsureContact(userDevice.UserPartRecord.Id);
-                    if (contact != null) {
-                        contactId = contact.Id;
+                if (_communicationService != null) {
+                    var userDevice = _userDeviceRecord.Fetch(x => x.UUIdentifier == uuIdentifier).FirstOrDefault();
+                    if (userDevice != null) {
+                        var contact = _communicationService.TryEnsureContact(userDevice.UserPartRecord.Id);
+                        if (contact != null) {
+                            contactId = contact.Id;
+                        }
                     }
-                }
-                // se non trova un contact a cui agganciarlo, lo aggancia al Master Contact
-                if (contactId == 0) {
-                    var masterContact = _communicationService.EnsureMasterContact();
-                    contactId = masterContact.Id;
+                    // se non trova un contact a cui agganciarlo, lo aggancia al Master Contact
+                    if (contactId == 0) {
+                        var masterContact = _communicationService.EnsureMasterContact();
+                        contactId = masterContact.Id;
+                    }
                 }
             }
             catch (Exception ex) {
@@ -247,16 +251,18 @@ namespace Laser.Orchard.Mobile.Services {
         private int EnsureContactId(string uuIdentifier, int masterContactId) {
             int contactId = 0;
             try {
-                var userDevice = _userDeviceRecord.Fetch(x => x.UUIdentifier == uuIdentifier).FirstOrDefault();
-                if (userDevice != null) {
-                    var contact = _communicationService.TryEnsureContact(userDevice.UserPartRecord.Id);
-                    if (contact != null) {
-                        contactId = contact.Id;
+                if (_communicationService != null) {
+                    var userDevice = _userDeviceRecord.Fetch(x => x.UUIdentifier == uuIdentifier).FirstOrDefault();
+                    if (userDevice != null) {
+                        var contact = _communicationService.TryEnsureContact(userDevice.UserPartRecord.Id);
+                        if (contact != null) {
+                            contactId = contact.Id;
+                        }
                     }
-                }
-                // se non trova un contact a cui agganciarlo, lo aggancia al Master Contact
-                if (contactId == 0) {
-                    contactId = masterContactId;
+                    // se non trova un contact a cui agganciarlo, lo aggancia al Master Contact
+                    if (contactId == 0) {
+                        contactId = masterContactId;
+                    }
                 }
             }
             catch (Exception ex) {
@@ -285,13 +291,15 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         public void RebindDevicesToMasterContact(int contactId) {
-            var masterContact = _communicationService.EnsureMasterContact();
-            var elencoDevice = _pushNotificationRepository.Fetch(x => x.MobileContactPartRecord_Id == contactId).ToList();
-            foreach (var device in elencoDevice) {
-                device.MobileContactPartRecord_Id = masterContact.Id;
-                _pushNotificationRepository.Update(device);
+            if (_communicationService != null) {
+                var masterContact = _communicationService.EnsureMasterContact();
+                var elencoDevice = _pushNotificationRepository.Fetch(x => x.MobileContactPartRecord_Id == contactId).ToList();
+                foreach (var device in elencoDevice) {
+                    device.MobileContactPartRecord_Id = masterContact.Id;
+                    _pushNotificationRepository.Update(device);
+                }
+                _pushNotificationRepository.Flush();
             }
-            _pushNotificationRepository.Flush();
         }
 
         private PushNotificationRecord GetPushNotificationBy_UUIdentifier(string uuidentifier, bool produzione) {
