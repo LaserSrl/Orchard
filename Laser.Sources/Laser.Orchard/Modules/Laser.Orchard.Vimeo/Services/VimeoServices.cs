@@ -195,7 +195,7 @@ namespace Laser.Orchard.Vimeo.Services {
             settings.ContentRatings = vm.ContentRatingsSafe ?
                 new string[] { "safe" }.ToList() :
                 vm.ContentRatingsUnsafe.Where(cr => cr.Value == true).Select(cr => cr.Key).ToList();
-            settings.Whitelist = vm.Whitelist.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            settings.Whitelist = string.IsNullOrWhiteSpace(vm.Whitelist) ? new List<string>() : vm.Whitelist.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
         }
 
