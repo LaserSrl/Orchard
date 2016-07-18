@@ -12,7 +12,7 @@ controller if the files have not been processed.*@
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.TextBoxFor(m => m.AccessToken, new { placeholder = T("Authorized Access Token"), @class = "text medium" })
-    <span class="hint">@T("Insert your authorized Access Token. You cna find it inr your Vimeo App settings.")</span>
+    <span class="hint">@T("Insert your authorized Access Token. You can find it in your Vimeo App settings.")</span>
     @Html.TextBoxFor(m => m.ChannelName, new { placeholder = T("Channel Name"), @class = "text medium" })<text > &nbsp; &nbsp;</text>
     @Html.CheckBoxFor(m => m.AlwaysUploadToChannel)
     <label for="@Html.FieldIdFor(m => m.AlwaysUploadToChannel)" class="forcheckbox">@T("Always upload to this channel.")</label>
