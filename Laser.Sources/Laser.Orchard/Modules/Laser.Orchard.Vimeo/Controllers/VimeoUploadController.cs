@@ -4,14 +4,11 @@ using Laser.Orchard.Vimeo.Services;
 using Newtonsoft.Json;
 using Orchard.Localization;
 using Orchard.Logging;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.Vimeo.Controllers {
+
     public class VimeoUploadController : Controller {
 
         public Localizer T { get; set; }
@@ -65,7 +62,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
         }
 #endif
 
-        //todo: change this around so that the parameter passed is the MediaPartId
+        
         public ActionResult FinishUpload(int mediaPartId) {
             string message="";
             //re-verify upload
@@ -121,6 +118,12 @@ namespace Laser.Orchard.Vimeo.Controllers {
         /// <returns></returns>
         public ActionResult ErrorHandler() {
             string msgJson = new StreamReader(Request.InputStream).ReadToEnd();
+            Laser.Orchard.StartupConfig.ViewModels.Response response = ErrorHandler(msgJson);
+
+            return Json(response);
+        }
+
+        internal Response ErrorHandler(string msgJson) {
             VimeoResponse resp = JsonConvert.DeserializeObject<VimeoResponse>(msgJson);
             int mpId = resp.Data.id; //the id of the MediaPart for whom we were doing the upload
             Laser.Orchard.StartupConfig.ViewModels.Response response;
@@ -162,14 +165,16 @@ namespace Laser.Orchard.Vimeo.Controllers {
             if (!string.IsNullOrWhiteSpace(msg))
                 Logger.Information(msg);
 
-            return Json(response);
+            return response;
         }
     }
+
+    
 
     //We extend Laser.Orchard.StartupConfig.ViewModels.Response because we have specific error codes for Vimeo
     public enum VimeoErrorCode { NoError = 0, GenericError = 1, UserStopped = 3001, UploadStopped = 3002, UploadMayResume = 3003 }
     public class VimeoResponse : Laser.Orchard.StartupConfig.ViewModels.Response {
-        public VimeoErrorCode ErrorCode {get;set;}
+        new public VimeoErrorCode ErrorCode {get;set;}
 
         public VimeoResponse() {
             this.ErrorCode = VimeoErrorCode.GenericError;
