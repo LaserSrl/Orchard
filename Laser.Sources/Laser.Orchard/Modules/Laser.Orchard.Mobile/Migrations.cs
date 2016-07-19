@@ -1,17 +1,26 @@
 ﻿using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.StartupConfig.Services;
+using Orchard;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Data;
 using Orchard.Data.Migration;
+using Orchard.Environment.Configuration;
 using System;
 
 namespace Laser.Orchard.Mobile {
 
     public class Migrations : DataMigrationImpl {
         private readonly IUtilsServices _utilsServices;
+        private readonly IOrchardServices _orchardServices;
+        private readonly ShellSettings _shellSettings;
+        private readonly IRepository<PushNotificationRecord> _repositoryDevice;
 
-        public Migrations(IUtilsServices utilsServices) {
+        public Migrations(IUtilsServices utilsServices, IOrchardServices orchardServices, ShellSettings shellSettings, IRepository<PushNotificationRecord> repositoryDevice) {
             _utilsServices = utilsServices;
+            _orchardServices = orchardServices;
+            _shellSettings = shellSettings;
+            _repositoryDevice = repositoryDevice;
         }
 
         public int Create() {
@@ -221,6 +230,52 @@ namespace Laser.Orchard.Mobile {
                       .Column<string>("DeviceType")
                       );
             return 20;
+        }
+        public int UpdateFrom20() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                        .AddColumn<string>("AndroidPushServiceUrl")
+                        );
+
+            return 21;
+        }
+        public int UpdateFrom21() {
+            SchemaBuilder.AlterTable("PushNotificationRecord",
+                              table => table
+                              .AddColumn<string>("RegistrationUrlHost"));
+            SchemaBuilder.AlterTable("PushNotificationRecord",
+                              table => table
+                              .AddColumn<string>("RegistrationUrlPrefix"));
+
+            return 22;
+        }
+        public int UpdateFrom22() {
+            SchemaBuilder.AlterTable("PushNotificationRecord",
+                              table => table
+                              .AddColumn<string>("RegistrationMachineName"));
+
+            return 23;
+        }
+        public int UpdateFrom23() {
+            return 24;
+        }
+        public int UpdateFrom24() {
+            // se è attiva la feature Laser.Orchard.Mobile, attiva anche Laser.Orchard.PushGateway
+            if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Mobile")) {
+                _utilsServices.EnableFeature("Laser.Orchard.PushGateway");
+            }
+
+            // se è attiva la feature Laser.Orchard.CommunicationGateway attiva anche Laser.Orchard.Mobile
+            if (_utilsServices.FeatureIsEnabled("Laser.Orchard.CommunicationGateway")) {
+                _utilsServices.EnableFeature("Laser.Orchard.Mobile");
+            }
+            return 25;
+        }
+        public int UpdateFrom25() {
+            // se è attiva la feature Laser.Orchard.Queues, attiva anche Laser.Orchard.PushGateway
+            if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Queues")) {
+                _utilsServices.EnableFeature("Laser.Orchard.PushGateway");
+            }
+            return 26;
         }
     }
 }

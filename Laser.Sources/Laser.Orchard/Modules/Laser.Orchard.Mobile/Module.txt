@@ -6,10 +6,10 @@ OrchardVersion: 1.8
 Description: Push Manager
 Features:
     Laser.Orchard.Mobile:
-		Name: Laser Mobile Push
-        Description: Manage push mobile
+		Name: Laser Mobile
+        Description: Manage mobile profile of users
 		Category: Social
-		Dependencies: Orchard.ContentPicker,Laser.Orchard.StartupConfig,Orchard.Forms,Orchard.Autoroute,Orchard.Taxonomies,Orchard.Tokens,Orchard.Users,Laser.Orchard.jQueryPlugins,Laser.Orchard.CommunicationGateway, Laser.Orchard.Queries
+		Dependencies: Orchard.ContentPicker,Laser.Orchard.StartupConfig,Orchard.Forms,Orchard.Autoroute,Orchard.Taxonomies,Orchard.Tokens,Orchard.Users,Laser.Orchard.jQueryPlugins,Laser.Orchard.Queries
     Laser.Orchard.Sms:
 		Name: Laser SMS
         Description: Extends Orchard with SMS functionality. Recovery password phone number will be added to users, in order to receive a Lost Passwrd link via SMS.
@@ -34,5 +34,10 @@ Features:
 		Name: Laser Mobile External Push
         Description: Web API to send push from outside Orchard
 		Category: Social
-		Dependencies: Laser.Orchard.Mobile, Laser.Orchard.StartupConfig.WebApiProtection
+		Dependencies: Laser.Orchard.PushGateway, Laser.Orchard.StartupConfig.WebApiProtection
+	Laser.Orchard.PushGateway:
+		Name: Laser Push Gateway
+		Description: Push communication channel
+		Category: Social
+		Dependencies: Laser.Orchard.CommunicationGateway,Laser.Orchard.Mobile
 		
