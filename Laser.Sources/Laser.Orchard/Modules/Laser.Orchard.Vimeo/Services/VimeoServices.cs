@@ -101,7 +101,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 AlbumName = rec.AlbumName
             };
         }
-        
+
         /// <summary>
         /// Gets the existing Vimeo settings.
         /// </summary>
@@ -113,7 +113,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 .CurrentSite
                 .As<VimeoSettingsPart>();
 
-            return new VimeoSettingsPartViewModel (settings);
+            return new VimeoSettingsPartViewModel(settings);
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Laser.Orchard.Vimeo.Services {
             settings.ContentRatings = vm.ContentRatingsSafe ?
                 new string[] { "safe" }.ToList() :
                 vm.ContentRatingsUnsafe.Where(cr => cr.Value == true).Select(cr => cr.Key).ToList();
-            settings.Whitelist = vm.Whitelist.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            settings.Whitelist = string.IsNullOrWhiteSpace(vm.Whitelist) ? new List<string>() : vm.Whitelist.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
         }
 
@@ -557,7 +557,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Checks the number of Bytes used of the upload quota.
         /// </summary>
         /// <returns>The number of bytes used, or <value>-1</value> in case of error</returns>
-        public int UsedQuota() {
+        public Int64 UsedQuota() {
             VimeoUploadQuota quotaInfo = CheckQuota();
             return quotaInfo != null ? quotaInfo.space.used : -1;
         }
@@ -565,7 +565,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Checks the number of Bytes available of the upload quota.
         /// </summary>
         /// <returns>The number of available bytes, or <value>-1</value> in case of error</returns>
-        public int FreeQuota() {
+        public Int64 FreeQuota() {
             VimeoUploadQuota quotaInfo = CheckQuota();
             return quotaInfo != null ? quotaInfo.space.free : -1;
         }
@@ -575,16 +575,16 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="fileSize">The size of the file we would like to start uploading.</param>
         /// <returns>An id of an UploadsInProgressRecord corresponding to the upload we are starting if we have enough quota available for that upload. <value>-1</value> otherwise</returns>
-        public int IsValidFileSize(int fileSize) {
+        public int IsValidFileSize(Int64 fileSize) {
             //this method, as it is, does not handle concurrent upload attempts very well.
             //We leave with Vimeo the responsiiblity for the final check on the upload size.
 
             //the information about the uploads in progress is in the UploadsInProgressRecord table.
             //We check the free quota with what we are trying to upload
-            int quotaBeingUploaded = 0;
+            Int64 quotaBeingUploaded = 0;
             if (_repositoryUploadsInProgress.Table.Count() > 0)
                 quotaBeingUploaded = _repositoryUploadsInProgress.Table.Sum(u => u.UploadSize) - _repositoryUploadsInProgress.Table.Sum(u => u.UploadedSize);
-            int remoteSpace = this.FreeQuota();
+            Int64 remoteSpace = this.FreeQuota();
             if (remoteSpace - quotaBeingUploaded < fileSize) {
                 return -1; //there is not enough space
             }
@@ -734,14 +734,14 @@ namespace Laser.Orchard.Vimeo.Services {
                     //we actually expect status code 308, but that fires an exception, so we have to handle things here
                     //Check that everything has been sent, by reading from the "Range" Header of the response.
                     var range = resp.Headers["Range"];
-                    int sent;
-                    if (int.TryParse(range.Substring(range.IndexOf('-') + 1), out sent)) {
+                    Int64 sent;
+                    if (Int64.TryParse(range.Substring(range.IndexOf('-') + 1), out sent)) {
                         if (sent == entity.UploadSize) {
                             //Upload finished
                             return VerifyUploadResults.Complete;
                         } else {
                             //update the uploaded size
-                            int old = entity.UploadedSize;
+                            Int64 old = entity.UploadedSize;
                             entity.UploadedSize = sent;
                             return old == sent ? VerifyUploadResults.Incomplete : VerifyUploadResults.StillUploading;
                             //if the upload has been going on for some time, we may decide to destroy its information.
@@ -1316,12 +1316,13 @@ namespace Laser.Orchard.Vimeo.Services {
             //is this a pro account?
             //we can either store this information in the settings, or make an API call to /me and check the account field of the user object
             bool proAccount = false;
+            string uId = ""; //user id on vimeo
             //make the API call to check the account
             HttpWebRequest userCall = VimeoCreateRequest(
                 aToken: settings.AccessToken,
                 endpoint: VimeoEndpoints.Me,
                 method: "GET",
-                qString: "?fields=account"
+                qString: "?fields=account,uri"
                 );
             try {
                 using (HttpWebResponse resp = userCall.GetResponse() as HttpWebResponse) {
@@ -1330,43 +1331,98 @@ namespace Laser.Orchard.Vimeo.Services {
                         var parsed = JObject.Parse(json);
                         if (parsed["account"] != null) {
                             proAccount = parsed["account"].ToString() == "pro";
+                            uId = parsed["uri"].ToString();
+                            uId = uId.Remove(0, uId.LastIndexOf("/"));
                         }
                     }
                 }
             } catch (Exception ex) {
-                
+
             }
-            if (proAccount) {
+            //NOTE: remember to verify if we own the video
+            //make an API call to get the info for this video
+            HttpWebRequest apiCall = VimeoCreateRequest(
+                aToken: settings.AccessToken,
+                endpoint: VimeoEndpoints.APIEntry + part["uri"], //NOTE: this is not /me/videos
+                //endpoint: VimeoEndpoints.Me + part["uri"], //me/videos/id
+                method: "GET",
+                qString: "?fields=files,user.uri,privacy" //the "files" field is an array with the info for the different resolutions available
+                );
+            JObject videoJsonTree = null;
+            try {
+                using (HttpWebResponse resp = apiCall.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        videoJsonTree = JObject.Parse(data);
+                    }
+                }
+            } catch (Exception ex) {
+                return ex.Message;
+            }
+
+
+
+            if (proAccount && videoJsonTree["files"] != null) {
                 //if we have a pro account, we can get a static stream url
+                //go through the files in the json
+                int width = 0;
+                int height = 0;
+                int pp = width * height;
+                string url = "";
+                //get the highest resolution file
+                foreach (var file in videoJsonTree["files"].Children()) {
+                    if (file["quality"].ToString() != "hls") {
+                        int w = int.Parse(file["width"].ToString());
+                        int h = int.Parse(file["height"].ToString());
+                        if (w * h > pp) {
+                            width = w;
+                            height = h;
+                            pp = w * h;
+                            url = file["link_secure"].ToString();
+                        }
+                    }
+                }
+                return url;
             } else {
                 //if our account is not pro, under some conditions we may be able to extract a stream's url
                 //NOTE: this url expires after a while (it's not clear how long), and has to be reextracted
                 //make an API call to see if we can extract the video stream's url
-                HttpWebRequest apiCall = VimeoCreateRequest(
-                    aToken: settings.AccessToken,
-                    //endpoint: VimeoEndpoints.APIEntry + part["uri"] //NOTE: this is not /me/videos
-                    endpoint: VimeoEndpoints.Me + part["uri"] //NOTE: this is /me/videos
-                    );
+                //HttpWebRequest apiCall = VimeoCreateRequest(
+                //    aToken: settings.AccessToken,
+                //    endpoint: VimeoEndpoints.APIEntry + part["uri"] //NOTE: this is not /me/videos
+                //    //endpoint: VimeoEndpoints.Me + part["uri"] //NOTE: this is /me/videos/id
+                //    );
                 //To get the stream's url, the video must be embeddable in our current domain
                 bool embeddable = false;
                 try {
-                    using (HttpWebResponse resp = apiCall.GetResponse() as HttpWebResponse) {
-                        if (resp.StatusCode == HttpStatusCode.OK) {
-                            string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                            var jsonTree = JObject.Parse(data);
-                            VimeoVideoPrivacy videoPrivacy = JsonConvert.DeserializeObject<VimeoVideoPrivacy>(jsonTree["privacy"].ToString());
-                            if (videoPrivacy.view == "anybody") {
-                                embeddable = videoPrivacy.embed == "public";
-                                if (!embeddable) {
-                                    //check if we are in a whitelisted domain
-                                    //if we are not in a whitelisted domain, there is no way to get the stream's url
-                                    //verify this, because baseUrl does not seem to contain the site name
-                                    string myDomain = _orchardServices.WorkContext.CurrentSite.BaseUrl;
-                                    embeddable = settings.Whitelist.Contains(myDomain);
-                                }
-                            }
+                    VimeoVideoPrivacy videoPrivacy = JsonConvert.DeserializeObject<VimeoVideoPrivacy>(videoJsonTree["privacy"].ToString());
+                    if (videoPrivacy.view == "anybody") {
+                        embeddable = videoPrivacy.embed == "public";
+                        if (!embeddable) {
+                            //check if we are in a whitelisted domain
+                            //if we are not in a whitelisted domain, there is no way to get the stream's url
+                            //verify this, because baseUrl does not seem to contain the site name
+                            string myDomain = _orchardServices.WorkContext.CurrentSite.BaseUrl;
+                            embeddable = settings.Whitelist.Contains(myDomain);
                         }
                     }
+                    //using (HttpWebResponse resp = apiCall.GetResponse() as HttpWebResponse) {
+                    //    if (resp.StatusCode == HttpStatusCode.OK) {
+                    //        string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    //        var jsonTree = JObject.Parse(data);
+                    //        VimeoVideoPrivacy videoPrivacy = JsonConvert.DeserializeObject<VimeoVideoPrivacy>(jsonTree["privacy"].ToString());
+                    //        if (videoPrivacy.view == "anybody") {
+                    //            embeddable = videoPrivacy.embed == "public";
+                    //            if (!embeddable) {
+                    //                //check if we are in a whitelisted domain
+                    //                //if we are not in a whitelisted domain, there is no way to get the stream's url
+                    //                //verify this, because baseUrl does not seem to contain the site name
+                    //                string myDomain = _orchardServices.WorkContext.CurrentSite.BaseUrl;
+                    //                embeddable = settings.Whitelist.Contains(myDomain);
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 } catch (Exception ex) {
                     return ex.Message;
                 }
@@ -1403,7 +1459,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 }
             }
-            
+
             return null;
         }
         public static string Base64Encode(string plainText) {

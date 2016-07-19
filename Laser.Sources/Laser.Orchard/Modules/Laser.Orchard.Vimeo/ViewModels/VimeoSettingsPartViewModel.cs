@@ -47,7 +47,7 @@ namespace Laser.Orchard.Vimeo.ViewModels {
             Password = part.Password ?? "";
             ReviewLink = part.ReviewLink;
             Locale = part.Locale ?? "";
-            if (part.ContentRatings.Contains("safe")) {
+            if (part.ContentRatings.Count == 0 || part.ContentRatings.Contains("safe")) {
                 ContentRatingsSafe = true;
             } else {
                 foreach (var cr in ContentRatingDictionary) {
