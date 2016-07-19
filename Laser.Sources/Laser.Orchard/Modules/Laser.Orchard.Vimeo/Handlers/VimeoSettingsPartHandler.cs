@@ -81,7 +81,7 @@ namespace Laser.Orchard.Vimeo.Handlers {
                                         oePart["provider_name"] == "Vimeo") {
                                         //we recompute the video stream's url, because it may have expired
                                         oePart.Source = "Vimeo|" + _vimeoContentServices.EncryptedVideoUrl(_vimeoContentServices.ExtractVimeoStreamURL(oePart));
-                                        mPart.FileName = oePart.Source;
+                                        //mPart.FileName = "";// oePart.Source;
                                     }
                                 }
                             }
