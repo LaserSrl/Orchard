@@ -1332,7 +1332,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         if (parsed["account"] != null) {
                             proAccount = parsed["account"].ToString() == "pro";
                             uId = parsed["uri"].ToString();
-                            uId = uId.Remove(0, uId.LastIndexOf("/"));
+                            uId = uId.Remove(0, uId.LastIndexOf("/") + 1);
                         }
                     }
                 }
@@ -1360,8 +1360,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 return ex.Message;
             }
 
-
-
+            //If we have access to the files, we can get the stream url from those
             if (proAccount && videoJsonTree["files"] != null) {
                 //if we have a pro account, we can get a static stream url
                 //go through the files in the json
@@ -1386,12 +1385,7 @@ namespace Laser.Orchard.Vimeo.Services {
             } else {
                 //if our account is not pro, under some conditions we may be able to extract a stream's url
                 //NOTE: this url expires after a while (it's not clear how long), and has to be reextracted
-                //make an API call to see if we can extract the video stream's url
-                //HttpWebRequest apiCall = VimeoCreateRequest(
-                //    aToken: settings.AccessToken,
-                //    endpoint: VimeoEndpoints.APIEntry + part["uri"] //NOTE: this is not /me/videos
-                //    //endpoint: VimeoEndpoints.Me + part["uri"] //NOTE: this is /me/videos/id
-                //    );
+                //We are also here for public videos we do not own, even with a pro account
                 //To get the stream's url, the video must be embeddable in our current domain
                 bool embeddable = false;
                 try {
@@ -1406,34 +1400,16 @@ namespace Laser.Orchard.Vimeo.Services {
                             embeddable = settings.Whitelist.Contains(myDomain);
                         }
                     }
-                    //using (HttpWebResponse resp = apiCall.GetResponse() as HttpWebResponse) {
-                    //    if (resp.StatusCode == HttpStatusCode.OK) {
-                    //        string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                    //        var jsonTree = JObject.Parse(data);
-                    //        VimeoVideoPrivacy videoPrivacy = JsonConvert.DeserializeObject<VimeoVideoPrivacy>(jsonTree["privacy"].ToString());
-                    //        if (videoPrivacy.view == "anybody") {
-                    //            embeddable = videoPrivacy.embed == "public";
-                    //            if (!embeddable) {
-                    //                //check if we are in a whitelisted domain
-                    //                //if we are not in a whitelisted domain, there is no way to get the stream's url
-                    //                //verify this, because baseUrl does not seem to contain the site name
-                    //                string myDomain = _orchardServices.WorkContext.CurrentSite.BaseUrl;
-                    //                embeddable = settings.Whitelist.Contains(myDomain);
-                    //            }
-                    //        }
-                    //    }
-                    //}
                 } catch (Exception ex) {
                     return ex.Message;
                 }
                 if (embeddable) {
+                    //here we make a call as if we were a browser
                     HttpWebRequest wr = VimeoCreateRequest(
                         aToken: settings.AccessToken,
                         endpoint: VimeoEndpoints.PlayerEntry + vUri + "/config",
                         method: "GET"
                         );
-                    //wr.Headers["Authorization"] = "Basic " + Base64Encode("laser.srl.ao@gmail.com:lasersrlao");
-                    //wr.Credentials = new NetworkCredential("laser.srl.ao@gmail.com", "lasersrlao", "vimeo.com");
                     wr.UserAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
                     wr.Accept = "*/*";
                     try {
@@ -1467,6 +1443,11 @@ namespace Laser.Orchard.Vimeo.Services {
             return System.Convert.ToBase64String(plainTextBytes);
         }
 
+        /// <summary>
+        /// Get from Vimeo the processing status of the video.
+        /// </summary>
+        /// <param name="ucId">The id of the record that contains the information on the video we are checking</param>
+        /// <returns>A string describing the video'sprocessing status in Vimeo's servers.</returns>
         public string GetVideoStatus(int ucId) {
             UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
             return GetVideoStatus(ucr);
@@ -1500,6 +1481,10 @@ namespace Laser.Orchard.Vimeo.Services {
             return "Unknown error";
         }
 
+        /// <summary>
+        /// Fill in the MediaPart information by pretending to embed the video.
+        /// </summary>
+        /// <param name="ucId">The id of the record that contains the information on the video we are checking</param>
         public void FinishMediaPart(int ucId) {
             UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
             if (ucr != null) FinishMediaPart(ucr);
@@ -1556,7 +1541,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 } else {
                     //oeContent == null means we were not able to parse that stuff above. Maybe the video is set to private
-                    //or whitelisted. Anyway, we can get most ofthat stuff by calling the vimeo API.
+                    //or whitelisted. Anyway, we can get most of that stuff by calling the vimeo API.
                     oembedPart["type"] = "video";
                     oembedPart["provider_name"] = "Vimeo";
                     oembedPart["provider_url"] = "https://vimeo.com/";
@@ -1623,7 +1608,11 @@ namespace Laser.Orchard.Vimeo.Services {
             }
         }
 
-
+        /// <summary>
+        /// Takes a string and encrypts it using the AES algorithm.
+        /// </summary>
+        /// <param name="url">The url string we want to encrypt</param>
+        /// <returns>A string representing the encrypted representation of the input url.</returns>
         public string EncryptedVideoUrl(string url) {
             byte[] mykey = _shellSettings
                     .EncryptionKey
@@ -1737,6 +1726,9 @@ namespace Laser.Orchard.Vimeo.Services {
             return str.ToString();
         }
 
+        /// <summary>
+        /// This method is only used in debug and testing. It allows clearing the uploads' repositories
+        /// </summary>
         public void ClearRepositoryTables() {
             foreach (var u in _repositoryUploadsInProgress.Table.ToList()) {
                 _repositoryUploadsInProgress.Delete(u);
