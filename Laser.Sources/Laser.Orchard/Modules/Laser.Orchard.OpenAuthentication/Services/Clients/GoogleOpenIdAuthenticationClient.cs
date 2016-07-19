@@ -61,8 +61,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
        
        }
 
-
-
+       
         /// <summary>
         /// 
         /// </summary>
@@ -76,8 +75,9 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             userData = GetUserDataGoogle(userAccessToken);
             userData["accesstoken"] = userAccessToken;
 
-            string id = userData["client_id"];
-            string name = "";
+            string id = userData["id"];
+            string name = userData["email"];
+            userData["name"] = userData["email"];
 
             return new AuthenticationResult(
                 isSuccessful: true, provider: this.ProviderName, providerUserId: id, userName: name, extraData: userData);

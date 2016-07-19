@@ -148,6 +148,10 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         public JsonResult ExternalTokenLogOnLogic(string __provider__, string token, string secret = "") {
             TempDataDictionary registeredServicesData = new TempDataDictionary();
 
+            //LV
+            var client = _openAuthAuthenticationClients
+                .SingleOrDefault(o => o.ProviderName.Equals(__provider__, StringComparison.OrdinalIgnoreCase));
+
             try {
                 if (String.IsNullOrWhiteSpace(__provider__) || String.IsNullOrWhiteSpace(token)) {
                     return Json(new { success = false, registeredServices = registeredServicesData, message = T("One or more of the required parameters was not provided or was an empty string.").Text }, JsonRequestBehavior.AllowGet);
@@ -183,8 +187,22 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                     }
 
                     if (_openAuthMembershipServices.CanRegister()) {
+
+                        // LV Normalize data
+                        string UserName = string.Empty;
+                        if (__provider__ == "twitter")
+                            UserName = authResult.UserName.Trim();
+                        else
+                            UserName = authResult.UserName;
+
+
+                        OpenAuthCreateUserParams normalize = client.NormalizeData(new OpenAuthCreateUserParams(UserName,
+                                                                                                                authResult.Provider,
+                                                                                                                authResult.ProviderUserId,
+                                                                                                                authResult.ExtraData));
+
                         var newUser =
-                            _openAuthMembershipServices.CreateUser(new OpenAuthCreateUserParams(authResult.UserName,
+                            _openAuthMembershipServices.CreateUser(new OpenAuthCreateUserParams(normalize.UserName,
                                                                                                 authResult.Provider,
                                                                                                 authResult.ProviderUserId,
                                                                                                 authResult.ExtraData));

@@ -2,12 +2,22 @@ using DotNetOpenAuth.AspNet;
 using DotNetOpenAuth.AspNet.Clients;
 using Laser.Orchard.OpenAuthentication.Models;
 using Laser.Orchard.OpenAuthentication.Security;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
+using System.Net;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class LinkedInAuthenticationClient : IExternalAuthenticationClient {
         public string ProviderName {
             get { return "LinkedIn"; }
         }
+
+        private const string UserInfoEndpoint = "https://api.linkedin.com/v1/people/~" + UserProfileFields;
+
+        //private const string UserProfileFields = ":(id,first-name,last-name,headline,location:(name),industry,summary,picture-url,email-address,phone-numbers,main-address)";
+        private const string UserProfileFields = ":(id,first-name,last-name,email-address)";
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
             string ClientId = providerConfigurationRecord.ProviderIdKey;
@@ -20,8 +30,43 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
 
 
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, string userAccessToken, string userAccessSecret = "") {
-            throw new System.NotImplementedException();
+            var userData = new Dictionary<string, string>();
+
+            userData = GetUserDataLinkedin(userAccessToken);
+            userData["accesstoken"] = userAccessToken;
+
+            string id = userData["id"];
+            string name = userData["email"];
+            userData["name"] = userData["email"];
+
+            return new AuthenticationResult(
+                isSuccessful: true, provider: this.ProviderName, providerUserId: id, userName: name, extraData: userData);
         }
+
+        /// <summary>
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="userAccessToken"></param>
+        /// <returns></returns>
+        public Dictionary<string, string> GetUserDataLinkedin(string userAccessToken) {
+            var uri = GoogleOAuth2Client.BuildUri(UserInfoEndpoint, new NameValueCollection { { "access_token", userAccessToken } });
+
+            var webRequest = (HttpWebRequest)WebRequest.Create(uri);
+
+            using (var webResponse = webRequest.GetResponse())
+            using (var stream = webResponse.GetResponseStream()) {
+                if (stream == null)
+                    return null;
+
+                using (var textReader = new StreamReader(stream)) {
+                    var json = textReader.ReadToEnd();
+                    var extraData = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                    return extraData;
+                }
+            }
+        }
+
 
         /// <summary>
         /// 
