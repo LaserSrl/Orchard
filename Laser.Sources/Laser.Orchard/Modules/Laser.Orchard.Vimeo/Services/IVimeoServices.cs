@@ -33,7 +33,7 @@ namespace Laser.Orchard.Vimeo.Services {
     public interface IVimeoUploadServices : IDependency {
         //call these methods to properly start an upload
         //TODO: replace these with a single method
-        int IsValidFileSize(int fileSize);
+        int IsValidFileSize(Int64 fileSize);
         string GenerateUploadTicket(int uploadId);
         int GenerateNewMediaPart(int uploadId);
 
@@ -51,8 +51,8 @@ namespace Laser.Orchard.Vimeo.Services {
         bool ChannelIsValid(string cName, string aToken);
 
         VimeoUploadQuota CheckQuota();
-        int UsedQuota();
-        int FreeQuota();
+        Int64 UsedQuota();
+        Int64 FreeQuota();
 
         string PatchVideo(int ucId, string name = "", string description = "");
         string TryAddVideoToGroup(int ucId);

@@ -34,9 +34,9 @@ namespace Laser.Orchard.Vimeo.Models {
         }
     }
     public class VimeoSpace {
-        public int free { get; set; }
-        public int max { get; set; }
-        public int used { get; set; }
+        public Int64 free { get; set; }
+        public Int64 max { get; set; }
+        public Int64 used { get; set; }
     }
     public class VimeoQuota {
         public bool hd { get; set; }

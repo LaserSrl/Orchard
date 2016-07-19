@@ -4,6 +4,7 @@ using Laser.Orchard.Vimeo.Services;
 using Newtonsoft.Json;
 using Orchard.Localization;
 using Orchard.Logging;
+using System;
 using System.IO;
 using System.Web.Mvc;
 
@@ -24,7 +25,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
             Logger = NullLogger.Instance;
         }
 
-        public ActionResult TryStartUpload(int fileSize) {
+        public ActionResult TryStartUpload(Int64 fileSize) {
             //TODO: make all the ticket creation in a single call from here. This is mostly so we do not send record ids
             //or anything like that out of the services
             int uploadId = _vimeoUploadServices.IsValidFileSize(fileSize);
