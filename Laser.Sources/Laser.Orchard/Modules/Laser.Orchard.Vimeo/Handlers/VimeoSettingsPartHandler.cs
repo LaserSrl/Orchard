@@ -33,9 +33,9 @@ namespace Laser.Orchard.Vimeo.Handlers {
             //        }
             //    }
             //} catch (Exception ex) {
-                
+
             //}
-            
+
 
             ////ondisplaying of a mediapart containing a vimeo video, check controller: if the request is coming from a mobile
             ////app we need to send a crypted URL, rather than the oEmbed, because we cannot whitelist apps
@@ -46,6 +46,16 @@ namespace Laser.Orchard.Vimeo.Handlers {
             //        }
             //    }
             //});
+
+            OnLoaded<MediaPart>((context, part) => {
+                OEmbedPart oePart = part.As<OEmbedPart>();
+                if (oePart != null &&
+                    !string.IsNullOrWhiteSpace(oePart["provider_name"]) &&
+                    oePart["provider_name"] == "Vimeo") {
+                    //part._publicUrl.Loader(x => part.As<OEmbedPart>().Source);
+                    part._publicUrl.Loader(x => "Vimeo|" + _vimeoContentServices.EncryptedVideoUrl(_vimeoContentServices.ExtractVimeoStreamURL(oePart)));
+                }
+            });
         }
 
         protected override void BuildDisplayShape(BuildDisplayContext context) {
@@ -65,30 +75,31 @@ namespace Laser.Orchard.Vimeo.Handlers {
             //returned for an OEmbedPart is the Source string. So here we update it with the stream's url.
             if (entry.Equals("Laser.Orchard.WebServices.Json.GetByAlias", StringComparison.InvariantCultureIgnoreCase) ||
                 entry.Equals("Laser.Orchard.WebServices.WebApiController", StringComparison.InvariantCultureIgnoreCase)) {
-                    if (context.DisplayType == "Detail") {
-                        var partsWithMediaFields = context
-                            .ContentItem
-                            .Parts
-                            .Where(p => p.Fields.Count() > 0)
-                            .Where(p => p.Fields.Any(f => f.FieldDefinition.Name == "MediaLibraryPickerField"))
-                            .ToList();
-                        foreach (var part in partsWithMediaFields) {
-                            foreach (var field in part.Fields.Where(f => f.FieldDefinition.Name == "MediaLibraryPickerField")) {
-                                foreach (var mPart in ((MediaLibraryPickerField)field).MediaParts) {
-                                    var oePart = mPart.As<OEmbedPart>();
-                                    if (oePart != null &&
-                                        !string.IsNullOrWhiteSpace(oePart["provider_name"]) &&
-                                        oePart["provider_name"] == "Vimeo") {
-                                        //we recompute the video stream's url, because it may have expired
-                                        oePart.Source = "Vimeo|" + _vimeoContentServices.EncryptedVideoUrl(_vimeoContentServices.ExtractVimeoStreamURL(oePart));
-                                        //mPart.FileName = "";// oePart.Source;
-                                    }
+                if (context.DisplayType == "Detail") {
+                    var partsWithMediaFields = context
+                        .ContentItem
+                        .Parts
+                        .Where(p => p.Fields.Count() > 0)
+                        .Where(p => p.Fields.Any(f => f.FieldDefinition.Name == "MediaLibraryPickerField"))
+                        .ToList();
+                    foreach (var part in partsWithMediaFields) {
+                        foreach (var field in part.Fields.Where(f => f.FieldDefinition.Name == "MediaLibraryPickerField")) {
+                            foreach (var mPart in ((MediaLibraryPickerField)field).MediaParts) {
+                                var oePart = mPart.As<OEmbedPart>();
+                                if (oePart != null &&
+                                    !string.IsNullOrWhiteSpace(oePart["provider_name"]) &&
+                                    oePart["provider_name"] == "Vimeo") {
+                                    //we recompute the video stream's url, because it may have expired
+                                    oePart.Source = mPart.MediaUrl; // "Vimeo|" + _vimeoContentServices.EncryptedVideoUrl(_vimeoContentServices.ExtractVimeoStreamURL(oePart));
+                                    //mPart.FileName = "";// oePart.Source;
+                                    //mPart._publicUrl.Loader(x => part.As<OEmbedPart>().Source);
                                 }
                             }
                         }
                     }
+                }
             }
-            
+
             base.BuildDisplayShape(context);
         }
     }
