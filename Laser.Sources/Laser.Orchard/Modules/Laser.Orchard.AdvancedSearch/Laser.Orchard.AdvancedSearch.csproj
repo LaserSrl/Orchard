@@ -71,7 +71,7 @@
     </Reference>
     <Reference Include="Orchard.Roles, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Laser.Orchard.Questionnaires\bin\Orchard.Roles.dll</HintPath>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Roles\bin\Orchard.Roles.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Taxonomies">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Taxonomies\bin\Orchard.Taxonomies.dll</HintPath>

@@ -521,6 +521,10 @@ msgid "Has terms (tokenized)"
 msgstr "Ha termini (con token)"
 
 msgctxt "Laser.Orchard.StartupConfig.Projections.TaxonomyTokenFilter"
+msgid "None of the ids \"{0}\" is a term."
+msgstr "Nessuno degli id \"{0}\" è un termine."
+
+msgctxt "Laser.Orchard.StartupConfig.Projections.TaxonomyTokenFilter"
 msgid "Taxonomy"
 msgstr "Tassonomia"
 
@@ -707,6 +711,22 @@ msgstr "Api Web"
 msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Migration"
 msgid "A default app named \"{0}\" has been created. Its Api Key is {1}."
 msgstr "E' stata creata un'App di default chiamata \"{0}\". La sua Api Key è {1}."
+
+msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Models.ValidateExternalApplication"
+msgid "ApiKey field is required."
+msgstr "il campo ApiKey è obbligatorio."
+
+msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Models.ValidateExternalApplication"
+msgid "ApiKey field must be minimum 22 characters length."
+msgstr "Il campo ApiKey deve essere di almeno 22 caratteri."
+
+msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Models.ValidateExternalApplication"
+msgid "Name field is required."
+msgstr "Il campo Nome è obbligatorio."
+
+msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Models.ValidateExternalApplication"
+msgid "Validity should be more than 0 minutes."
+msgstr "Validità deve essere maggiore di 0 minuti"
 
 msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Models.ValidateExternalApplicationAttribute"
 msgid "ApiKey field is required."
