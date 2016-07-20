@@ -61,8 +61,8 @@ namespace Laser.Orchard.Mobile.Services {
         private readonly ITokenizer _tokenizer;
         private readonly ITransactionManager _transactionManager;
         private Int32 messageSent;
-        private object lockMonitor;
         private const int MAX_PUSH_TEXT_LENGTH = 160;
+        private object lockMonitor;
 
         public PushNotificationService(
             IRepository<SentRecord> sentRepository,
