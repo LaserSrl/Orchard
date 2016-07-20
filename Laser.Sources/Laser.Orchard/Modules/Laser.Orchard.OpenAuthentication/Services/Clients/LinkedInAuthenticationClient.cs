@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
+using System.Xml.Linq;
+using System.Linq;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class LinkedInAuthenticationClient : IExternalAuthenticationClient {
@@ -36,8 +38,8 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             userData["accesstoken"] = userAccessToken;
 
             string id = userData["id"];
-            string name = userData["email"];
-            userData["name"] = userData["email"];
+            string name = userData["email-address"];
+            userData["name"] = userData["email-address"];
 
             return new AuthenticationResult(
                 isSuccessful: true, provider: this.ProviderName, providerUserId: id, userName: name, extraData: userData);
@@ -50,7 +52,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         /// <param name="userAccessToken"></param>
         /// <returns></returns>
         public Dictionary<string, string> GetUserDataLinkedin(string userAccessToken) {
-            var uri = GoogleOAuth2Client.BuildUri(UserInfoEndpoint, new NameValueCollection { { "access_token", userAccessToken } });
+            var uri = LinkedInOAuth2Client.BuildUri(UserInfoEndpoint, new NameValueCollection { { "oauth2_access_token", userAccessToken } });
 
             var webRequest = (HttpWebRequest)WebRequest.Create(uri);
 
@@ -60,8 +62,17 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
                     return null;
 
                 using (var textReader = new StreamReader(stream)) {
-                    var json = textReader.ReadToEnd();
-                    var extraData = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                    var xml = textReader.ReadToEnd();
+
+                    var extraData = XElement.Parse(xml)
+                    .Elements()
+                    .ToDictionary(
+                        el => el.Name.LocalName,
+                        el => el.Value
+                    );
+
+                    extraData.Add("accesstoken", userAccessToken);
+
                     return extraData;
                 }
             }

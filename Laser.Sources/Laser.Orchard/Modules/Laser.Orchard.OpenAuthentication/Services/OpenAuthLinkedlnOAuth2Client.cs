@@ -172,7 +172,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             }
         }
 
-        private static Uri BuildUri(string baseUri, NameValueCollection queryParameters)
+        public static Uri BuildUri(string baseUri, NameValueCollection queryParameters)
         {
             var q = System.Web.HttpUtility.ParseQueryString(string.Empty);
             q.Add(queryParameters);
