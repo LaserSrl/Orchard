@@ -46,6 +46,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             return CreateOpenIdClient(clientConfiguration);
         }
 
+
+
         public OrchardAuthenticationClientData GetClientData(string providerName) {
             Argument.ThrowIfNullOrEmpty(providerName, "providerName");
 
@@ -62,7 +64,10 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             IAuthenticationClient client = clientBuilder != null ?
                 clientBuilder.Build(clientConfiguration) : CreateOpenIdClient(clientConfiguration);
 
-            return new OrchardAuthenticationClientData(client, clientConfiguration.DisplayName, new Dictionary<string, object>());
+            if (client != null)
+                return new OrchardAuthenticationClientData(client, clientConfiguration.DisplayName, new Dictionary<string, object>());
+            else
+                return null;
         }
 
         public AuthenticationResult GetUserData(string providerName, string userAccessToken, string userAccessSecret = "") {

@@ -8,6 +8,7 @@ using DotNetOpenAuth.AspNet.Clients;
 using DotNetOpenAuth.Messaging;
 using Laser.Orchard.OpenAuthentication.Models;
 using Orchard.Logging;
+using Laser.Orchard.OpenAuthentication.Security;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class FacebookAuthenticationClient : IExternalAuthenticationClient {
@@ -21,7 +22,15 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
-            return new FacebookClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
+           // return new FacebookClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
+            string ClientId = providerConfigurationRecord.ProviderIdKey;
+            string ClientSecret = providerConfigurationRecord.ProviderSecret;
+
+            var client = new FacebookOAuth2Client(ClientId, ClientSecret);
+
+            //var client2 = new GoogleOpenIdClient();
+            //return client2;
+            return client;
 
         }
 
@@ -71,5 +80,36 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
 
-    }
-}
+        /// <summary>
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="createUserParams"></param>
+        /// <returns></returns>
+        public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams) 
+        {
+            OpenAuthCreateUserParams retVal;
+
+            retVal = createUserParams;
+            string emailAddress = string.Empty;
+           
+            var valoriRicavati = createUserParams.ExtraData.Values;
+            int countVal = 0;
+
+            foreach (string valric in valoriRicavati) 
+            {
+                if (countVal == 1) {
+                    emailAddress = valric;
+                    retVal.UserName = emailAddress;
+                }
+
+                countVal = countVal + 1;
+            }
+
+            return retVal;
+       
+       }
+
+
+     }
+  }

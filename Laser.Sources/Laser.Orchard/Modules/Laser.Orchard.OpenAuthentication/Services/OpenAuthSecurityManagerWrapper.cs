@@ -39,6 +39,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             get { return OpenAuthSecurityManager.GetProviderName(_httpContextAccessor.Current()); }
         }
 
+
+
         public bool Login(string providerUserId, bool createPersistentCookie) {
             string userName = _orchardOpenAuthDataProvider.GetUserNameFromOpenAuth(ProviderName, providerUserId);
 
@@ -59,8 +61,12 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         }
 
         public AuthenticationResult VerifyAuthentication(string returnUrl) {
+                GoogleOAuth2Client.RewriteRequest();
+                FacebookOAuth2Client.RewriteRequest();
+                LinkedInOAuth2Client.RewriteRequest();
             return SecurityManager(ProviderName).VerifyAuthentication(returnUrl);
         }
+
 
         public void RequestAuthentication(string providerName, string returnUrl) {
             SecurityManager(providerName).RequestAuthentication(returnUrl);
