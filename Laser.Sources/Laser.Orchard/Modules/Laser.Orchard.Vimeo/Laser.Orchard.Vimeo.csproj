@@ -107,6 +107,7 @@
     <Compile Include="Models\VimeoBaseObject.cs" />
     <Compile Include="Models\VimeoChannel.cs" />
     <Compile Include="Models\VimeoGroup.cs" />
+    <Compile Include="Models\VimeoMediaPart.cs" />
     <Compile Include="Models\VimeoPager.cs" />
     <Compile Include="Models\VimeoPatch.cs" />
     <Compile Include="Models\VimeoPicture.cs" />

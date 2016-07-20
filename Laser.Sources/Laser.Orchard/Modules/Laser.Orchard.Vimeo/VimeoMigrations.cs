@@ -183,5 +183,6 @@ namespace Laser.Orchard.Vimeo {
                 );
             return 8;
         }
+
     }
 }
