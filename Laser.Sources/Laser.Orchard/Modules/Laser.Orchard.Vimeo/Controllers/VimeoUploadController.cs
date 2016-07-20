@@ -68,36 +68,40 @@ namespace Laser.Orchard.Vimeo.Controllers {
             string message="";
             //re-verify upload
             switch (_vimeoUploadServices.VerifyUpload(mediaPartId)) {
-                case VerifyUploadResults.CompletedAlready:
+                case VerifyUploadResult.CompletedAlready:
                     //the periodic task had already verified that the upload had completed
                     message = T("The upload process has finished.").ToString();
                     return Json(_utilsServices.GetResponse(ResponseType.Success, message));
                     break;
-                case VerifyUploadResults.Complete:
+                case VerifyUploadResult.Complete:
                     //we just found out that the upload is complete
+                    try {
                     if (_vimeoUploadServices.TerminateUpload(mediaPartId)) {
                         //Make sure the finisher task exists
                         message = T("The upload process has finished.").ToString();
                         return Json(_utilsServices.GetResponse(ResponseType.Success, message));
                     }
+                    } catch (Exception ex) {
+                        //we might end up here in the case when the termination was requested at the same time from here and from the task
+                    }
                     message = T("The upload has completed, but there was an error while handling the finishing touches.").ToString();
                     return Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF, message));
                     break;
-                case VerifyUploadResults.Incomplete:
+                case VerifyUploadResult.Incomplete:
                     //the upload is still going on
                     message = T("The upload is still in progress.").ToString();
                     return Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF, message));
                     break;
-                case VerifyUploadResults.StillUploading:
+                case VerifyUploadResult.StillUploading:
                     //the upload is still going on
                     message = T("The upload is still in progress.").ToString();
                     return Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF, message));
                     break;
-                case VerifyUploadResults.NeverExisted:
+                case VerifyUploadResult.NeverExisted:
                     //we never started an upload with the given Id
                     message = T("The upload was never started, or the MediaPart is not for a Vimeo video.").ToString();
                     break;
-                case VerifyUploadResults.Error:
+                case VerifyUploadResult.Error:
                     //something went wrong
                     message = T("Unknown error.").ToString();
                     break;

@@ -38,7 +38,7 @@ namespace Laser.Orchard.Vimeo.Services {
         int GenerateNewMediaPart(int uploadId);
 
         //these methods terminate an upload
-        VerifyUploadResults VerifyUpload(int mediaPartId);
+        VerifyUploadResult VerifyUpload(int mediaPartId);
         bool TerminateUpload(int mediaPartId);
 
         string DestroyUpload(int mediaPartId);

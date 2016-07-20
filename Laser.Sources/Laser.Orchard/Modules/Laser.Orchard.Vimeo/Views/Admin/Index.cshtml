@@ -76,14 +76,14 @@ controller if the files have not been processed.*@
     //Default video privacy
     @Html.LabelFor(m => m.Privacy);
     <label for="@Html.FieldIdFor(m => m.Privacy.view)" class="forcheckbox">@Html.DisplayNameFor(m => m.Privacy.view)</label>
-    @Html.DropDownListFor(m => m.Privacy.view, new SelectList(Enum.GetValues(typeof(VimeoPrivacyViewOptions))));
+    @Html.DropDownListFor(m => m.Privacy.view, new SelectList(Enum.GetValues(typeof(VimeoPrivacyViewOption))));
     <text>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</text>
     @Html.TextBoxFor(m => m.Password, new { placeholder = T("Password"), @class = "medium text" });
     <span class="hint">@T("Who can view the video?")</span>
     <br />
     <label for="@Html.FieldIdFor(m => m.Privacy.embed)" class="forcheckbox">@Html.DisplayNameFor(m => m.Privacy.embed)</label>
     //@Html.DropDownListFor(m => m.Privacy.embed, new SelectList(Enum.GetValues(typeof(VimeoPrivacyEmbedOptions))));
-    @Html.DropDownListFor(m => m.Privacy.embed, VimeoPrivacyEmbedOptions.GetValues());
+    @Html.DropDownListFor(m => m.Privacy.embed, VimeoPrivacyEmbedOption.GetValues());
     @Html.TextBoxFor(m => m.Whitelist, new { placeholder = T("Comma separated domains whitelist"), @class = "large text" });
     <span class="hint">@T("Where can the video be embedded?")</span>
     <br />
@@ -96,7 +96,7 @@ controller if the files have not been processed.*@
     <span class="hint">@T("Can the video be added to channels, groups, or albums?")</span>
     <br />
     <label for="@Html.FieldIdFor(m => m.Privacy.comments)" class="forcheckbox">@Html.DisplayNameFor(m => m.Privacy.comments)</label>
-    @Html.DropDownListFor(m => m.Privacy.comments, new SelectList(Enum.GetValues(typeof(VimeoPrivacyCommentsOptions))));    
+    @Html.DropDownListFor(m => m.Privacy.comments, new SelectList(Enum.GetValues(typeof(VimeoPrivacyCommentsOption))));    
     <span class="hint">@T("Who can comment on the video?")</span>
     <br />
         

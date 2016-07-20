@@ -5,8 +5,8 @@ namespace Laser.Orchard.Vimeo.Extensions {
         
         //strings for the tasks
         public const string TaskTypeBase = "Laser.Orchard.Vimeo.Task";
-        public const string TaskSubTypeInProgress = ".UploadsInProgress";
-        public const string TaskSubTypeComplete = ".CompleteUploads";
+        public const string TaskSubtypeInProgress = ".UploadsInProgress";
+        public const string TaskSubtypeComplete = ".CompleteUploads";
 
         //the following strings have to do with the Vimeo API
         public const string HeaderAcceptName = "Accept";
