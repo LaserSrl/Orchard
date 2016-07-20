@@ -38,6 +38,7 @@ namespace Laser.Orchard.Mobile.Services {
         void PublishedPushEventTest(ContentItem ci);
         void PublishedPushEvent(ContentItem ci);
         void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string JsonAndroid, string messageWindows, string sound, string queryDevice = "");
+        IList GetMobileContacts(string nameFilter);
     }
 
     [OrchardFeature("Laser.Orchard.PushGateway")]
@@ -133,6 +134,15 @@ namespace Laser.Orchard.Mobile.Services {
                 .SetResultTransformer(Transformers.AliasToEntityMap)
                  .List();
             return lista;
+        }
+
+        public IList GetMobileContacts(string nameFilter) {
+            List<string> result = new List<string>();
+            var elenco = _orchardServices.ContentManager.Query<TitlePart>("CommunicationContact").Where<TitlePartRecord>(x => x.Title.Contains(nameFilter)).OrderBy(y => y.Title);
+            foreach (var contact in elenco.List()) {
+                result.Add(contact.Title);
+            }
+            return result;
         }
 
         private IHqlQuery IntegrateAdditionalConditions(IHqlQuery query) {

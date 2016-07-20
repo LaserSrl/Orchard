@@ -36,6 +36,15 @@
             });
         });
 
+        $(function () {
+            $("#contact-to-push").keydown(function () {
+                //alert("ciao");
+                var availableContacts = ["abc", "def", "ghi"];
+                $("#contact-to-push").autocomplete({
+                    source: availableContacts
+                });
+            });
+        });
     </script>
 }
 <div id="mobile-comm-container" class="comm-tabbed">
@@ -80,6 +89,10 @@
                 </div>
 
                 <span class="hint">@T("Mask to make test for Push... this option is set by settings of module")</span>
+            </div>
+            <div class="checkbox-and-label">
+                <input id="contact-to-push" />
+                <button>@T("Send push to selected contact")</button>
             </div>
         </fieldset>
     }
