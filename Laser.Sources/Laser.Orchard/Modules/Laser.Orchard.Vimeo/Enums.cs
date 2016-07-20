@@ -5,25 +5,25 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.Vimeo {
-    public enum VerifyUploadResults { CompletedAlready, Complete, Incomplete, StillUploading, NeverExisted, Error }
+    public enum VerifyUploadResult { CompletedAlready, Complete, Incomplete, StillUploading, NeverExisted, Error }
 
-    public enum VimeoPrivacyViewOptions { anybody, nobody, contacts, password, users, unlisted, disable }
-    public enum VimeoPrivacyCommentsOptions { anybody, nobody, contacts }
-    //public enum VimeoPrivacyEmbedOptions { _public, _private, _whitelist }
+    public enum VimeoPrivacyViewOption { anybody, nobody, contacts, password, users, unlisted, disable }
+    public enum VimeoPrivacyCommentsOption { anybody, nobody, contacts }
+    //public enum VimeoPrivacyEmbedOption { _public, _private, _whitelist }
 
     /// <summary>
     /// Using static objects rather than an enum for this because the values we want (public and private) are
     /// also keywords, and we cannot use them directly in an enum. An alternative to this would be writing a
     /// class with an operator to "translate" enum values.
     /// </summary>
-    public sealed class VimeoPrivacyEmbedOptions {
+    public sealed class VimeoPrivacyEmbedOption {
         private readonly string name;
 
-        public static readonly VimeoPrivacyEmbedOptions Public = new VimeoPrivacyEmbedOptions("public");
-        public static readonly VimeoPrivacyEmbedOptions Private = new VimeoPrivacyEmbedOptions("private");
-        public static readonly VimeoPrivacyEmbedOptions Whitelist = new VimeoPrivacyEmbedOptions("whitelist");
+        public static readonly VimeoPrivacyEmbedOption Public = new VimeoPrivacyEmbedOption("public");
+        public static readonly VimeoPrivacyEmbedOption Private = new VimeoPrivacyEmbedOption("private");
+        public static readonly VimeoPrivacyEmbedOption Whitelist = new VimeoPrivacyEmbedOption("whitelist");
 
-        private VimeoPrivacyEmbedOptions(string n) {
+        private VimeoPrivacyEmbedOption(string n) {
             name = n;
         }
 

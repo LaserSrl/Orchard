@@ -682,8 +682,13 @@ namespace Laser.Orchard.Vimeo.Services {
                 oembedPart["type"] = "video";
                 oembedPart["provider_name"] = "Vimeo";
                 oembedPart["provider_url"] = "https://vimeo.com/";
+                //Make it so the MediaPart cannot be seen in the MediaLibrary until it is finished
+                part.ContentItem.VersionRecord.Published = false;
+                part.ContentItem.VersionRecord.Latest = false;
+                //_contentManager.Unpublish(oembedPart.ContentItem);
                 return part.Id;
             }
+
 
             return -1;
         }
@@ -693,10 +698,13 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="uploadId">The Id of the MediaPart containing the video whose upload we want to check</param>
         /// <returns>A value describing the state of the upload.</returns>
-        public VerifyUploadResults VerifyUpload(int mediaPartId) {
-            MediaPart mp = _contentManager.Get(mediaPartId).As<MediaPart>();
+        public VerifyUploadResult VerifyUpload(int mediaPartId) {
+            var mps = _contentManager.GetAllVersions(mediaPartId);
+            var it = mps.Where(ci => ci.VersionRecord.Id == mps.Max(cv => cv.VersionRecord.Id)).SingleOrDefault();
+
+            MediaPart mp = it.As<MediaPart>(); // _contentManager.GetLatest(mediaPartId).As<MediaPart>();
             if (mp == null || mp.As<OEmbedPart>() == null)
-                return VerifyUploadResults.NeverExisted;
+                return VerifyUploadResult.NeverExisted;
             UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(e => e.MediaPartId == mediaPartId);
             if (entity == null) {
                 //could not find and Upload in progress with the given Id
@@ -705,10 +713,11 @@ namespace Laser.Orchard.Vimeo.Services {
                 if (ucr == null) {
                     //the record gets deleted only after we have set things in the OEmbedPart
                     if (mp.As<OEmbedPart>()["provider_name"] == "Vimeo") {
-                        return VerifyUploadResults.CompletedAlready;
+                        return VerifyUploadResult.CompletedAlready;
                     }
-                    return VerifyUploadResults.NeverExisted;
+                    return VerifyUploadResult.NeverExisted;
                 }
+                return VerifyUploadResult.CompletedAlready;
             }
             return VerifyUpload(entity);
         }
@@ -717,7 +726,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="uploadId">The record corresponding to the upload</param>
         /// <returns>A value describing the state of the upload.</returns>
-        public VerifyUploadResults VerifyUpload(UploadsInProgressRecord entity) {
+        public VerifyUploadResult VerifyUpload(UploadsInProgressRecord entity) {
 
             HttpWebRequest wr = VimeoCreateRequest(
                     endpoint: entity.UploadLinkSecure,
@@ -738,12 +747,12 @@ namespace Laser.Orchard.Vimeo.Services {
                     if (Int64.TryParse(range.Substring(range.IndexOf('-') + 1), out sent)) {
                         if (sent == entity.UploadSize) {
                             //Upload finished
-                            return VerifyUploadResults.Complete;
+                            return VerifyUploadResult.Complete;
                         } else {
                             //update the uploaded size
                             Int64 old = entity.UploadedSize;
                             entity.UploadedSize = sent;
-                            return old == sent ? VerifyUploadResults.Incomplete : VerifyUploadResults.StillUploading;
+                            return old == sent ? VerifyUploadResult.Incomplete : VerifyUploadResult.StillUploading;
                             //if the upload has been going on for some time, we may decide to destroy its information.
                             //The distinction between Incomplete and StillUploading helps us understand whether it is
                             //just a slow/long upload, or the upload actualy stopped and we may discard it safely.
@@ -751,7 +760,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 }
             }
-            return VerifyUploadResults.Error; //something went rather wrong
+            return VerifyUploadResult.Error; //something went rather wrong
         }
 
         /// <summary>
@@ -781,21 +790,10 @@ namespace Laser.Orchard.Vimeo.Services {
             if (ucr != null)
                 return true;
             UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(e => e.MediaPartId == mediaPartId);
+            if (entity == null)
+                return true;
             return TerminateUpload(entity) > 0;
         }
-        ///// <summary>
-        ///// We terminate the Vimeo upload stream.
-        ///// </summary>
-        ///// <param name="uploadId">The Id we have been using internally to identify the upload in progress.</param>
-        ///// <returns>The Id of the UploadCompleted, which we'll need to patch and publish the video.<value>-1</value> in case of errors.</returns>
-        //public int TerminateUpload(int uploadId) {
-        //    UploadsCompleteRecord ucr = GetByProgressId(uploadId);
-        //    if (ucr != null)
-        //        return ucr.Id;
-        //    UploadsInProgressRecord entity = _repositoryUploadsInProgress
-        //        .Get(uploadId);
-        //    return TerminateUpload(entity);
-        //}
         /// <summary>
         /// We terminate the Vimeo upload stream.
         /// </summary>
@@ -1303,7 +1301,11 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="ucId">The Id of the complete upload to test.</param>
         /// <returns>The URL of the video stream.</returns>
         public string ExtractVimeoStreamURL(int mediaPartId) {
-            OEmbedPart part = _contentManager.Get(mediaPartId).As<MediaPart>().As<OEmbedPart>();
+            var mps = _contentManager.GetAllVersions(mediaPartId);
+            var it = mps.Where(ci => ci.VersionRecord.Id == mps.Max(cv => cv.VersionRecord.Id)).SingleOrDefault();
+
+            OEmbedPart part = it.As<MediaPart>().As<OEmbedPart>();
+            //OEmbedPart part = _contentManager.GetLatest(mediaPartId).As<MediaPart>().As<OEmbedPart>();
             return part == null ? null : ExtractVimeoStreamURL(part);
         }
         public string ExtractVimeoStreamURL(OEmbedPart part) {
@@ -1492,7 +1494,11 @@ namespace Laser.Orchard.Vimeo.Services {
         public void FinishMediaPart(UploadsCompleteRecord ucr) {
             string vId = ucr.Uri.Substring(ucr.Uri.LastIndexOf("/") + 1);
             string url = "https://vimeo.com/" + vId;
-            MediaPart mPart = _contentManager.Get(ucr.MediaPartId).As<MediaPart>();
+            var mps = _contentManager.GetAllVersions(ucr.MediaPartId);
+            var it = mps.Where(ci => ci.VersionRecord.Id == mps.Max(cv => cv.VersionRecord.Id)).SingleOrDefault();
+
+            MediaPart mPart = it.As<MediaPart>();
+            //MediaPart mPart = _contentManager.GetLatest(ucr.MediaPartId).As<MediaPart>();
             var oembedPart = mPart.As<OEmbedPart>();
             //I took this code from Orchard.MediaLibrary.Controllers.OEmbedController
             //(the example there is actually an embed of a vimeo video)
@@ -1605,6 +1611,8 @@ namespace Laser.Orchard.Vimeo.Services {
 
                 //put in the Source a string "Vimeo: {0}", replacing into {0} the encrypted stream's URL
                 oembedPart.Source = "Vimeo|" + EncryptedVideoUrl(ExtractVimeoStreamURL(oembedPart));
+                _contentManager.Publish(mPart.ContentItem);
+                mPart.ContentItem.VersionRecord.Latest = true;
             }
         }
 
@@ -1712,7 +1720,11 @@ namespace Laser.Orchard.Vimeo.Services {
                 str.AppendLine(T("Cleared records of complete uploads").ToString());
             }
             //destroy the MediaPart, if any
-            MediaPart mp = _contentManager.Get(mediaPartId).As<MediaPart>();
+            var mps = _contentManager.GetAllVersions(mediaPartId);
+            var it = mps.Where(ci => ci.VersionRecord.Id == mps.Max(cv => cv.VersionRecord.Id)).SingleOrDefault();
+
+            MediaPart mp = it.As<MediaPart>();
+            //MediaPart mp = _contentManager.GetLatest(mediaPartId).As<MediaPart>();
             if (mp != null) {
                 OEmbedPart ep = mp.As<OEmbedPart>();
                 if (ep != null) {
@@ -1740,12 +1752,12 @@ namespace Laser.Orchard.Vimeo.Services {
 
         #region Code for tasks
         public void ScheduleUploadVerification() {
-            string taskTypeStr = Constants.TaskTypeBase + Constants.TaskSubTypeInProgress;
+            string taskTypeStr = Constants.TaskTypeBase + Constants.TaskSubtypeInProgress;
             if (_taskManager.GetTasks(taskTypeStr).Count() == 0)
                 _taskManager.CreateTask(taskTypeStr, DateTime.UtcNow.AddMinutes(1), null);
         }
         public void ScheduleVideoCompletion() {
-            string taskTypeStr = Constants.TaskTypeBase + Constants.TaskSubTypeComplete;
+            string taskTypeStr = Constants.TaskTypeBase + Constants.TaskSubtypeComplete;
             if (_taskManager.GetTasks(taskTypeStr).Count() == 0)
                 _taskManager.CreateTask(taskTypeStr, DateTime.UtcNow.AddMinutes(1), null);
         }
@@ -1756,22 +1768,26 @@ namespace Laser.Orchard.Vimeo.Services {
         public int VerifyAllUploads() {
             foreach (var uip in _repositoryUploadsInProgress.Table.ToList()) {
                 switch (VerifyUpload(uip)) {
-                    case VerifyUploadResults.CompletedAlready:
+                    case VerifyUploadResult.CompletedAlready:
                         break;
-                    case VerifyUploadResults.Complete:
-                        TerminateUpload(uip);
+                    case VerifyUploadResult.Complete:
+                        try {
+                            TerminateUpload(uip);
+                        } catch (Exception ex) {
+                            //we might end up here if the termination was called at the same time from here and the controller
+                        }
                         break;
-                    case VerifyUploadResults.Incomplete:
+                    case VerifyUploadResult.Incomplete:
                         //if more than 24 hours have passed since the beginning of the upload, cancel it
                         if (DateTime.UtcNow > uip.CreatedTime.Value.AddDays(1)) {
                             DestroyUpload(uip.MediaPartId);
                         }
                         break;
-                    case VerifyUploadResults.StillUploading:
+                    case VerifyUploadResult.StillUploading:
                         break;
-                    case VerifyUploadResults.NeverExisted:
+                    case VerifyUploadResult.NeverExisted:
                         break;
-                    case VerifyUploadResults.Error:
+                    case VerifyUploadResult.Error:
                         break;
                     default:
                         break;
