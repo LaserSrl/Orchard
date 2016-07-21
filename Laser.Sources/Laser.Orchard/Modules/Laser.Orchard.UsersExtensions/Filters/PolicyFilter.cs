@@ -6,6 +6,7 @@ using Laser.Orchard.UsersExtensions.Services;
 using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.Filters;
 using Orchard.UI.Admin;
@@ -28,6 +29,8 @@ namespace Laser.Orchard.UsersExtensions.Filters {
 
         private string[] allowedControllers;
 
+        public ILogger Logger { get; set; }
+
         public PolicyFilter(IContentSerializationServices contentSerializationServices,
                             IHttpContextAccessor httpContextAccessor,
                             IPolicyServices policyServices,
@@ -45,7 +48,6 @@ namespace Laser.Orchard.UsersExtensions.Filters {
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
-
             if (_workContext.GetContext().CurrentUser != null && !allowedControllers.Contains(filterContext.Controller.GetType().FullName) && !AdminFilter.IsApplied(filterContext.RequestContext)) {
                 var language = _workContext.GetContext().CurrentCulture;
                 IEnumerable<PolicyTextInfoPart> neededPolicies = _userExtensionServices.GetUserLinkedPolicies(language);
@@ -56,6 +58,49 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                     var missingPolicies = neededPolicies.Select(s => s.Id).ToList().Where(w => !userPolicies.Any(a => a == w));
 
                     if (missingPolicies.Count() > 0) {
+
+                        // logga la richiesta per un certo periodo di tempo
+                        if (DateTime.Today.ToString("yyyyMMdd").CompareTo("20160723") < 0) {
+                            string url = "";
+                            string controller = "";
+                            string action = "";
+
+                            try {
+                                if (filterContext != null) {
+                                    if (filterContext.HttpContext != null) {
+                                        if (filterContext.HttpContext.Request != null) {
+                                            url = filterContext.HttpContext.Request.RawUrl;
+                                        }
+                                        else {
+                                            url = "No URL available: Request is null.";
+                                        }
+                                    }
+                                    else {
+                                        url = "No URL available: HttpContext is null.";
+                                    }
+                                    if (filterContext.ActionDescriptor != null) {
+                                        action = filterContext.ActionDescriptor.ActionName;
+                                        if (filterContext.ActionDescriptor.ControllerDescriptor != null) {
+                                            controller = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
+                                        }
+                                        else {
+                                            controller = "No controller available: ControlerDescriptor is null.";
+                                        }
+                                    }
+                                    else {
+                                        controller = "No controller available: ActionDescriptor is null.";
+                                    }
+                                }
+                                else {
+                                    url = "No URL available: filterContext is null.";
+                                }
+                                Logger.Error(string.Format("UsersExtensions Policy Filter - Request: {0}, Controller: {1}, Action: {2}.", url, controller, action));
+                            }
+                            catch {
+                                // ignora volutamente qualsiasi errore
+                            }
+                        }
+
                         if (filterContext.Controller.GetType().FullName == "Laser.Orchard.WebServices.Controllers.JsonController") {
                             ObjectDumper dumper;
                             StringBuilder sb = new StringBuilder();
