@@ -61,7 +61,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                         // Place Holder
                         List<TemplatePlaceHolderViewModel> listaPH = new List<TemplatePlaceHolderViewModel>();
 
-                        string unsubscribe = T("Click to stop receiving email for commercial use").Text;
+                        string unsubscribe = T("Click here to stop receiving email for commercial use").Text;
                         string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/Index", baseUri) + "'>" + unsubscribe + "</a>";
 
                         TemplatePlaceHolderViewModel ph = new TemplatePlaceHolderViewModel();

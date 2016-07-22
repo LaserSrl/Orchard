@@ -26,7 +26,6 @@ namespace Laser.Orchard.MailCommunication.Handlers {
     public class MailerScheduledTaskHandler : IScheduledTaskHandler {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
-        private readonly INotifier _notifier;
         private readonly ShellSettings _shellSettings;
         private readonly IOrchardServices _orchardServices;
         private readonly IMailCommunicationService _mailCommunicationService;
@@ -37,10 +36,9 @@ namespace Laser.Orchard.MailCommunication.Handlers {
         private MailerSiteSettingsPart _mailerConfig;
         private const string TaskType = "Laser.Orchard.MailCommunication.Task";
 
-        public MailerScheduledTaskHandler(INotifier notifier, IOrchardServices orchardServices, IMailCommunicationService mailCommunicationService,
+        public MailerScheduledTaskHandler(IOrchardServices orchardServices, IMailCommunicationService mailCommunicationService,
             ShellSettings shellSettings, ICommunicationService communicationService, ITemplateService templateService,
             IScheduledTaskManager taskManager, IClock clock) {
-            _notifier = notifier;
             _orchardServices = orchardServices;
             _mailCommunicationService = mailCommunicationService;
             _shellSettings = shellSettings;
@@ -74,33 +72,29 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 // ricava i settings e li invia tramite FTP
                 var templateId = ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id;
                 Dictionary<string, object> settings = GetSettings(content, templateId, part);
-                if (settings.Count > 0) {
-                    if (lista.Count > 0) {
-                        SendSettings(settings, part.Id);
+                if ((settings.Count > 0) && (lista.Count > 0)) {
+                    SendSettings(settings, part.Id);
 
-                        // impagina e invia i recipiens tramite FTP
-                        int pageNum = 0;
-                        List<object> pagina = new List<object>();
-                        int pageSize = _mailerConfig.RecipientsPerJsonFile;
-                        for (int i = 0; i < lista.Count; i++) {
-                            if (((i + 1) % pageSize) == 0) {
-                                SendRecipients(pagina, part.Id, pageNum);
-                                pageNum++;
-                                pagina = new List<object>();
-                            }
-                            pagina.Add(lista[i]);
-                        }
-                        // invia l'ultima pagina se non è vuota
-                        if (pagina.Count > 0) {
+                    // impagina e invia i recipiens tramite FTP
+                    int pageNum = 0;
+                    List<object> pagina = new List<object>();
+                    int pageSize = _mailerConfig.RecipientsPerJsonFile;
+                    for (int i = 0; i < lista.Count; i++) {
+                        if (((i + 1) % pageSize) == 0) {
                             SendRecipients(pagina, part.Id, pageNum);
+                            pageNum++;
+                            pagina = new List<object>();
                         }
-                        part.RecipientsNumber = lista.Count;
-                        part.SentMailsNumber = 0;
-                        part.MailMessageSent = true;
-
+                        pagina.Add(lista[i]);
                     }
+                    // invia l'ultima pagina se non è vuota
+                    if (pagina.Count > 0) {
+                        SendRecipients(pagina, part.Id, pageNum);
+                    }
+                    part.RecipientsNumber = lista.Count;
+                    part.SentMailsNumber = 0;
+                    part.MailMessageSent = true;
                 } else {
-                    _notifier.Error(T("Error parsing mail template."));
                     Logger.Error(T("Error parsing mail template.").ToString());
                 }
             } catch (Exception ex) {
@@ -157,7 +151,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
 
                 // Add Link [UNSUBSCRIBE]
                 string ph_Unsubscribe = "[UNSUBSCRIBE]";
-                string unsubscribe = T("Click to stop receiving email for commercial use").Text;
+                string unsubscribe = T("Click here to stop receiving email for commercial use").Text;
                 string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/Index", baseUri) + "'>" + unsubscribe + "</a>";
 
                 if (body.Contains(ph_Unsubscribe))
