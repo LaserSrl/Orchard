@@ -25,10 +25,7 @@ namespace Laser.Orchard.Mobile.Controllers {
         public string valore { get; set; }
         public bool flag { get; set; }
     }
-    //public class response {
-    //    public bool Success { get; set; }
-    //    public string Message { get; set; }
-    //}
+
     [WebApiKeyFilter(false)]
     public class TaxonomiePushController : ApiController {
 
@@ -42,7 +39,7 @@ namespace Laser.Orchard.Mobile.Controllers {
         public TaxonomiePushController(
             IOrchardServices orchardServices,
             ITaxonomyService taxonomyService,
-             IAuthenticationService authenticationService,
+            IAuthenticationService authenticationService,
             ICsrfTokenHelper csrfTokenHelper,
             IUtilsServices utilsServices) {
             _orchardServices = orchardServices;
@@ -63,7 +60,7 @@ namespace Laser.Orchard.Mobile.Controllers {
         /// <returns></returns>
 
         //public List<category> Get(string Language) {
-        public dynamic Get(string Language){
+        public dynamic Get(string Language) {
             Language = Language ?? "";
             var authenticatedUser = _authenticationService.GetAuthenticatedUser();
             if (authenticatedUser != null) {
@@ -84,9 +81,9 @@ namespace Laser.Orchard.Mobile.Controllers {
                 return elements;
             }
             else {
-               // throw new OrchardSecurityException(T("Can't retrieve user category, user not logged in"));
+                // throw new OrchardSecurityException(T("Can't retrieve user category, user not logged in"));
                 return (_utilsServices.GetResponse(ResponseType.InvalidUser));
-    
+
             }
         }
 
@@ -97,33 +94,33 @@ namespace Laser.Orchard.Mobile.Controllers {
         /// <param name="elencocategorie"></param>
         /// <returns></returns>
         public Response Post([FromBody] List<category> elencocategorie) {
-          //  try {
-                if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
-                    var authenticatedUser = _authenticationService.GetAuthenticatedUser();
-                    if (authenticatedUser != null) {
-                        List<string> ElencoCategorie = elencocategorie.Where(y => y.flag).Select(x => x.valore).ToList();
-                        string taxonomyId = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().TaxonomyName;
-                        var taxobase = _taxonomyService.GetTaxonomy(Convert.ToInt32(taxonomyId)); // _taxonomyService.GetTaxonomyByName("Categorie Push");
-                        IEnumerable<TermPart> otp = _taxonomyService.GetTerms(taxobase.Id);
-                        List<TermPart> ltp = new List<TermPart>();
-                        foreach (TermPart tp in otp) {
-                            if (ElencoCategorie.Contains(((dynamic)tp).tipoUnivoco.Value))
-                                ltp.Add(tp);
-                        }
-                        #region [get taxonomy linked to user part of type declared on setting of pushmobile]
-                        //   string taxonomyId = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().TaxonomyName;
-                        string taxonomyname = _taxonomyService.GetTaxonomy(Convert.ToInt32(taxonomyId)).Name;
-                        string nomefield = authenticatedUser.ContentItem.Parts.SelectMany(x => x.Fields.Where(f => f.FieldDefinition.Name == typeof(TaxonomyField).Name && f.PartFieldDefinition.Settings["TaxonomyFieldSettings.Taxonomy"] == taxonomyname)).Cast<TaxonomyField>().FirstOrDefault().Name;
-                        #endregion
-                        _taxonomyService.UpdateTerms(authenticatedUser.ContentItem, ltp, nomefield);
-                        return (_utilsServices.GetResponse(ResponseType.Success));
+            //  try {
+            if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
+                var authenticatedUser = _authenticationService.GetAuthenticatedUser();
+                if (authenticatedUser != null) {
+                    List<string> ElencoCategorie = elencocategorie.Where(y => y.flag).Select(x => x.valore).ToList();
+                    string taxonomyId = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().TaxonomyName;
+                    var taxobase = _taxonomyService.GetTaxonomy(Convert.ToInt32(taxonomyId)); // _taxonomyService.GetTaxonomyByName("Categorie Push");
+                    IEnumerable<TermPart> otp = _taxonomyService.GetTerms(taxobase.Id);
+                    List<TermPart> ltp = new List<TermPart>();
+                    foreach (TermPart tp in otp) {
+                        if (ElencoCategorie.Contains(((dynamic)tp).tipoUnivoco.Value))
+                            ltp.Add(tp);
                     }
-                    else
-                        return (_utilsServices.GetResponse(ResponseType.InvalidUser));
-                  
+                    #region [get taxonomy linked to user part of type declared on setting of pushmobile]
+                    //   string taxonomyId = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().TaxonomyName;
+                    string taxonomyname = _taxonomyService.GetTaxonomy(Convert.ToInt32(taxonomyId)).Name;
+                    string nomefield = authenticatedUser.ContentItem.Parts.SelectMany(x => x.Fields.Where(f => f.FieldDefinition.Name == typeof(TaxonomyField).Name && f.PartFieldDefinition.Settings["TaxonomyFieldSettings.Taxonomy"] == taxonomyname)).Cast<TaxonomyField>().FirstOrDefault().Name;
+                    #endregion
+                    _taxonomyService.UpdateTerms(authenticatedUser.ContentItem, ltp, nomefield);
+                    return (_utilsServices.GetResponse(ResponseType.Success));
                 }
                 else
-                    return (_utilsServices.GetResponse(ResponseType.InvalidXSRF));
+                    return (_utilsServices.GetResponse(ResponseType.InvalidUser));
+
+            }
+            else
+                return (_utilsServices.GetResponse(ResponseType.InvalidXSRF));
             //}
             //catch (Exception ex) {
             //    return (_utilsServices.GetResponse { Success = false, Message = "Error: " + ex.Message });

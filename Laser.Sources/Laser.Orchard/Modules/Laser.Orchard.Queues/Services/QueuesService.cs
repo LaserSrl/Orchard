@@ -31,7 +31,7 @@ namespace Laser.Orchard.Queues
     public class QueuesService : IQueuesService
     {
         private readonly ILocalizedStringManager _localizedStringManager;
-        private readonly IPushNotificationService _pushNotificationService;
+        private readonly IPushGatewayService _pushGatewayService;
         private readonly IRepository<QueueRecord> _queueRecordRepository;
         private readonly IRepository<QueueUserRecord> _queueUserRecordRepository;
         private readonly IRepository<QueueUserPartRecord> _queueUserPartRecordRepository;
@@ -43,7 +43,7 @@ namespace Laser.Orchard.Queues
         public ILogger Logger { get; set; }
 
         public QueuesService(ILocalizedStringManager localizedStringManager,
-                             IPushNotificationService pushNotificationService,
+                             IPushGatewayService pushGatewayService,
                              IRepository<QueueRecord> queueRecordRepository,
                              IRepository<QueueUserRecord> queueUserRecordRepository,
                              IRepository<QueueUserPartRecord> queueUserPartRecordRepository,
@@ -53,7 +53,7 @@ namespace Laser.Orchard.Queues
                              IScheduledTaskManager scheduledTaskManager)
         {
             _localizedStringManager = localizedStringManager;
-            _pushNotificationService = pushNotificationService;
+            _pushGatewayService = pushGatewayService;
             _queueRecordRepository = queueRecordRepository;
             _queueUserRecordRepository = queueUserRecordRepository;
             _queueUserPartRecordRepository = queueUserPartRecordRepository;
@@ -159,7 +159,7 @@ namespace Laser.Orchard.Queues
                             query += String.Format("WHERE UDR.UserPartRecord_Id IN ({0})", String.Join(", ", usersToNotifyForLanguage));
 
                             string localizedMessage = _localizedStringManager.GetLocalizedString("Laser.Orchard.Queues.Tasks.QueueScheduledTaskHandler", defaultMessage, language);
-                            _pushNotificationService.SendPushService(pushMobileSettings.ShowTestOptions, "All", 0, language, localizedMessage, localizedMessage, "", localizedMessage, query);
+                            _pushGatewayService.SendPushService(pushMobileSettings.ShowTestOptions, "All", 0, language, localizedMessage, localizedMessage, "", localizedMessage, query);
 
                             notifiedUsers.AddRange(usersToNotifyForLanguage);
                         }

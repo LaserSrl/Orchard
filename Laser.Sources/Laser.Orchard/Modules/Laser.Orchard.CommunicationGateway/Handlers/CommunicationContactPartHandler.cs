@@ -18,13 +18,15 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
         private readonly ICommunicationService _communicationService;
         private readonly IRepository<CommunicationEmailRecord> _Emailrepository;
         private readonly IRepository<CommunicationSmsRecord> _Smsrepository;
+        private readonly IContactRelatedEventHandler _contactEventHandler;
 
-        public CommunicationContactPartHandler(IRepository<CommunicationSmsRecord> Smsrepository, IRepository<CommunicationEmailRecord> Emailrepository, IRepository<CommunicationContactPartRecord> repository, ICommunicationService communicationService) {
+        public CommunicationContactPartHandler(IRepository<CommunicationSmsRecord> Smsrepository, IRepository<CommunicationEmailRecord> Emailrepository, IRepository<CommunicationContactPartRecord> repository, ICommunicationService communicationService, IContactRelatedEventHandler contactEventHandler) {
             _Smsrepository = Smsrepository;
             _communicationService = communicationService;
             Filters.Add(StorageFilter.For(repository));
             _Emailrepository = Emailrepository;
             T = NullLocalizer.Instance;
+            _contactEventHandler = contactEventHandler;
 
             Filters.Add(new ActivatingFilter<EmailContactPart>("CommunicationContact"));
             OnLoaded<EmailContactPart>(LazyLoadEmailHandlers);
@@ -38,7 +40,10 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             OnCreated<UserPart>((context, part) => UpdateProfile(context.ContentItem));
             OnUpdated<UserPart>((context, part) => UpdateProfile(context.ContentItem));
             OnRemoved<UserPart>((context, part) => { _communicationService.UnboundFromUser(part); });
-            OnRemoved<CommunicationContactPart>((context, part) => { _communicationService.RemoveMailsAndSms(part.Id); });
+            OnRemoved<CommunicationContactPart>((context, part) => { 
+                _communicationService.RemoveMailsAndSms(part.Id);
+                _contactEventHandler.ContactRemoved(part.Id);
+            });
             #endregion
         }
 

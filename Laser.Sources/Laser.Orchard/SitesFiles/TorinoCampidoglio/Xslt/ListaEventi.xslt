@@ -111,6 +111,15 @@ public string UnixTicks( string dtstring)
   <xsl:template match="Event">
     <xsl:element name="Event">
       <xsl:apply-templates select="node()" />
+	  <ShareLinkPart>	
+		<SharedText>
+		      <xsl:value-of select="./Name" />
+		</SharedText>
+		<SharedLink>http://www.museoarteurbana.it</SharedLink>
+		<SharedImage>
+		      <xsl:value-of select="./MediaResource[1]/Uri" />
+		</SharedImage>
+	  </ShareLinkPart>
     </xsl:element>
   </xsl:template>
   <xsl:template match="/*">
