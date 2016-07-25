@@ -21,6 +21,7 @@ using Orchard.Mvc.Html;
 using Orchard.UI.Notify;
 using Orchard.Events;
 using System.Diagnostics;
+using Laser.Orchard.TemplateManagement.ViewModels;
 
 namespace Laser.Orchard.NewsLetters.Services {
     public interface IJobsQueueService : IEventHandler {
@@ -155,10 +156,33 @@ namespace Laser.Orchard.NewsLetters.Services {
             //    }
             //}
             if (!String.IsNullOrWhiteSpace(testEmail)) {
-                if (SendEmail((dynamic)model,
-                    GetNewsletterDefinition(newsletterEdition.NewsletterDefinitionPartRecord_Id,
-                        VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id,
-                        new List<string> { testEmail }, null))
+                var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+
+                // Place Holder
+                List<TemplatePlaceHolderViewModel> listaPH = new List<TemplatePlaceHolderViewModel>();
+
+                string unsubscribe = T("Click here to unsubscribe").Text;
+                string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/Unsubscribe", baseUri) + "'>" + unsubscribe + "</a>";
+
+                TemplatePlaceHolderViewModel ph = new TemplatePlaceHolderViewModel();
+                ph.Name = "[UNSUBSCRIBE]";
+                ph.Value = linkUnsubscribe;
+                ph.ShowForce = true;
+
+                listaPH.Add(ph);
+
+                //if (SendEmail((dynamic)model,
+                //    GetNewsletterDefinition(newsletterEdition.NewsletterDefinitionPartRecord_Id,
+                //        VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id,
+                //        new List<string> { testEmail }, null))
+                if (_templateService.SendTemplatedEmail((dynamic)model,
+                                                        GetNewsletterDefinition(newsletterEdition.NewsletterDefinitionPartRecord_Id, VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id,
+                                                        new List<string> { testEmail },
+                                                        null,
+                                                        null,
+                                                        true, 
+                                                        listaPH))
+                
                     _orchardServices.Notifier.Information(T("Newsletter edition sent to a test email!"));
             }
             else if (String.IsNullOrWhiteSpace(testEmail)) {
@@ -260,7 +284,11 @@ namespace Laser.Orchard.NewsLetters.Services {
                         NewsletterDefinition_Id = subs.NewsletterDefinition.Id,
                         NewsletterDefinition = _contentManager.Get(subs.NewsletterDefinition.Id)
                     };
-                    SendEmail(viewModel, subs.NewsletterDefinition.ConfirmSubscrptionTemplateRecord_Id, new List<string> { subs.Email }, null);
+                    //SendEmail(viewModel, subs.NewsletterDefinition.ConfirmSubscrptionTemplateRecord_Id, new List<string> { subs.Email }, null);
+                    _templateService.SendTemplatedEmail(viewModel,
+                                                        subs.NewsletterDefinition.ConfirmSubscrptionTemplateRecord_Id,
+                                                        new List<string> { subs.Email },
+                                                        null);
 
                 }
             }
@@ -322,8 +350,11 @@ namespace Laser.Orchard.NewsLetters.Services {
                         NewsletterDefinition_Id = subs.NewsletterDefinition.Id,
                         NewsletterDefinition = _contentManager.Get(subs.NewsletterDefinition.Id)
                     };
-                    SendEmail(viewModel, subs.NewsletterDefinition.DeleteSubscrptionTemplateRecord_Id, new List<string> { subs.Email }, null);
-
+                    //SendEmail(viewModel, subs.NewsletterDefinition.DeleteSubscrptionTemplateRecord_Id, new List<string> { subs.Email }, null);
+                    _templateService.SendTemplatedEmail(viewModel,
+                                                        subs.NewsletterDefinition.DeleteSubscrptionTemplateRecord_Id,
+                                                        new List<string> { subs.Email },
+                                                        null);
                 }
             }
             catch {
@@ -361,70 +392,70 @@ namespace Laser.Orchard.NewsLetters.Services {
         }
         #endregion
 
-        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, bool queued = true) {
-            ParseTemplateContext templatectx = new ParseTemplateContext();
-            var template = _templateService.GetTemplate(templateId);
-            var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+        //private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, bool queued = true) {
+        //    ParseTemplateContext templatectx = new ParseTemplateContext();
+        //    var template = _templateService.GetTemplate(templateId);
+        //    var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
 
-            // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
-            // Nel template pertanto Model, diventa Model.Content
-            var host = string.Format("{0}://{1}{2}",
-                                    _orchardServices.WorkContext.HttpContext.Request.Url.Scheme,
-                                    _orchardServices.WorkContext.HttpContext.Request.Url.Host,
-                                    _orchardServices.WorkContext.HttpContext.Request.Url.Port == 80
-                                        ? string.Empty
-                                        : ":" + _orchardServices.WorkContext.HttpContext.Request.Url.Port);
-            var dynamicModel = new {
-                Content = contentModel,
-                Urls = new {
-                    SubscriptionSubscribe = urlHelper.SubscriptionSubscribe(),
-                    SubscriptionUnsubscribe = urlHelper.SubscriptionUnsubscribe(),
-                    SubscriptionConfirmSubscribe = urlHelper.SubscriptionConfirmSubscribe(),
-                    SubscriptionConfirmUnsubscribe = urlHelper.SubscriptionConfirmUnsubscribe(),
-                    BaseUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl,
-                    MediaUrl = urlHelper.MediaExtensionsImageUrl(),
-                    Domain = host,
+        //    // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
+        //    // Nel template pertanto Model, diventa Model.Content
+        //    var host = string.Format("{0}://{1}{2}",
+        //                            _orchardServices.WorkContext.HttpContext.Request.Url.Scheme,
+        //                            _orchardServices.WorkContext.HttpContext.Request.Url.Host,
+        //                            _orchardServices.WorkContext.HttpContext.Request.Url.Port == 80
+        //                                ? string.Empty
+        //                                : ":" + _orchardServices.WorkContext.HttpContext.Request.Url.Port);
+        //    var dynamicModel = new {
+        //        Content = contentModel,
+        //        Urls = new {
+        //            SubscriptionSubscribe = urlHelper.SubscriptionSubscribe(),
+        //            SubscriptionUnsubscribe = urlHelper.SubscriptionUnsubscribe(),
+        //            SubscriptionConfirmSubscribe = urlHelper.SubscriptionConfirmSubscribe(),
+        //            SubscriptionConfirmUnsubscribe = urlHelper.SubscriptionConfirmUnsubscribe(),
+        //            BaseUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl,
+        //            MediaUrl = urlHelper.MediaExtensionsImageUrl(),
+        //            Domain = host,
 
-                }.ToExpando()
-            };
-            templatectx.Model = dynamicModel;
+        //        }.ToExpando()
+        //    };
+        //    templatectx.Model = dynamicModel;
 
-            var body = _templateService.ParseTemplate(template, templatectx);
-            if (body.StartsWith("Error On Template")) {
-                _notifier.Add(NotifyType.Error, T("Error on template, mail not sended"));
-                return false;
-            }
-            var data = new Dictionary<string, object>();
-            var smtp = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
-            var recipient = sendTo != null ? sendTo : new List<string> { smtp.Address };
-            data.Add("Subject", template.Subject);
-            data.Add("Body", body);
-            data.Add("Recipients", String.Join(",", recipient));
-            if (bcc != null) {
-                data.Add("Bcc", String.Join(",", bcc));
-            }
-            //var watch = Stopwatch.StartNew();
-            //int msgsent = 0;
+        //    var body = _templateService.ParseTemplate(template, templatectx);
+        //    if (body.StartsWith("Error On Template")) {
+        //        _notifier.Add(NotifyType.Error, T("Error on template, mail not sended"));
+        //        return false;
+        //    }
+        //    var data = new Dictionary<string, object>();
+        //    var smtp = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
+        //    var recipient = sendTo != null ? sendTo : new List<string> { smtp.Address };
+        //    data.Add("Subject", template.Subject);
+        //    data.Add("Body", body);
+        //    data.Add("Recipients", String.Join(",", recipient));
+        //    if (bcc != null) {
+        //        data.Add("Bcc", String.Join(",", bcc));
+        //    }
+        //    //var watch = Stopwatch.StartNew();
+        //    //int msgsent = 0;
 
-            //for(int i=0;i<20;i++) {
-            //    msgsent++;
-            //    data["Subject"] = msgsent.ToString();
-            //    data["Bcc"] = "lorenzo.frediani@laser-group.com";
-            //    _messageService.Send(SmtpMessageChannel.MessageType, data);
-            //}
-            //watch.Stop();
-            //_notifier.Add(NotifyType.Information, T("Sent " + msgsent.ToString()+" email in Milliseconds:" + watch.ElapsedMilliseconds.ToString()));            
-            if (!queued) {
-                _messageService.Send(SmtpMessageChannel.MessageType, data);
-            }
-            else {
-                var priority = 0;//normal 50 to hight -50 to low
+        //    //for(int i=0;i<20;i++) {
+        //    //    msgsent++;
+        //    //    data["Subject"] = msgsent.ToString();
+        //    //    data["Bcc"] = "lorenzo.frediani@laser-group.com";
+        //    //    _messageService.Send(SmtpMessageChannel.MessageType, data);
+        //    //}
+        //    //watch.Stop();
+        //    //_notifier.Add(NotifyType.Information, T("Sent " + msgsent.ToString()+" email in Milliseconds:" + watch.ElapsedMilliseconds.ToString()));            
+        //    if (!queued) {
+        //        _messageService.Send(SmtpMessageChannel.MessageType, data);
+        //    }
+        //    else {
+        //        var priority = 0;//normal 50 to hight -50 to low
 
-                _jobsQueueService.Enqueue("IMessageService.Send", new { type = SmtpMessageChannel.MessageType, parameters = data }, priority);
-            }
+        //        _jobsQueueService.Enqueue("IMessageService.Send", new { type = SmtpMessageChannel.MessageType, parameters = data }, priority);
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
     }
 }
