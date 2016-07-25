@@ -1386,6 +1386,20 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 }
+                //The url we get here is in the form http://player.vimeo.com/external/videoid.sd.mp4?stuff
+                //The players on mobile are not able to do anything with it, so we have to get the actual stream url out.
+                //By testing on fiddler, we saw that the initial response from a call to that url has no body, status 302, and a Location header
+                // for the redirect, which contains the stream url we want to pass to the apps.
+                //Let's get that.
+                HttpWebRequest playerCall = HttpWebRequest.CreateHttp(url);
+                playerCall.Method = "GET";
+                try {
+                    using (HttpWebResponse resp = playerCall.GetResponse() as HttpWebResponse) {
+                        //we get redirected, so our request gets changed
+                        url = playerCall.Address.AbsoluteUri;
+                    }
+                } catch (Exception ex) {
+                }
                 return url;
             } else {
                 //if our account is not pro, under some conditions we may be able to extract a stream's url
