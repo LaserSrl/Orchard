@@ -765,6 +765,23 @@ namespace Laser.Orchard.Vimeo.Services {
             }
             return VerifyUploadResult.Error; //something went rather wrong
         }
+        /// <summary>
+        /// Get the Upload Link to target with PUT requests to upload the video.
+        /// </summary>
+        /// <param name="mediaPartId">The Id of the MediaPart containing the video whose upload we want to check</param>
+        /// <returns>The Upload Url, or <value>null</value> in case of error</returns>
+        public string GetUploadUrl(int mediaPartId){
+            var mps = _contentManager.GetAllVersions(mediaPartId);
+            var it = mps.Where(ci => ci.VersionRecord.Id == mps.Max(cv => cv.VersionRecord.Id)).SingleOrDefault();
+
+            MediaPart mp = it.As<MediaPart>(); // _contentManager.GetLatest(mediaPartId).As<MediaPart>();
+            if (mp == null || mp.As<OEmbedPart>() == null)
+                return null;
+            UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(e => e.MediaPartId == mediaPartId);
+            if (entity == null || string.IsNullOrWhiteSpace(entity.UploadLinkSecure))
+                return null;
+            return entity.UploadLinkSecure;
+        }
 
         /// <summary>
         /// Gets the UploadComplete corresponding to the upload in progress given by input

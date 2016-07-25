@@ -68,6 +68,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
             string message = "";
             VimeoFinishErrorCode eCode = VimeoFinishErrorCode.GenericError;
             bool success = false;
+            string uploadUrl = null; //I use this in case we need to resume an upload
             //re-verify upload
             switch (_vimeoUploadServices.VerifyUpload(mediaPartId)) {
                 case VerifyUploadResult.CompletedAlready:
@@ -103,6 +104,8 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     message = T("The upload is still in progress.").ToString();
                     eCode = VimeoFinishErrorCode.InProgress;
                     success = false;
+                    //the client may want to resume the upload, so we send them the upload Url
+                    uploadUrl = _vimeoUploadServices.GetUploadUrl(mediaPartId);
                     break;
                 case VerifyUploadResult.NeverExisted:
                     //we never started an upload with the given Id
@@ -123,11 +126,16 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     success = false;
                     break;
             }
-            return Json(new VimeoFinishResponse {
+            var response = new VimeoFinishResponse {
                 ErrorCode = eCode,
                 Success = success,
                 Message = message
-            });
+            };
+            if (!string.IsNullOrWhiteSpace(uploadUrl)) {
+                response.Data = new { uploadUrl };
+            }
+
+            return Json(response);
         }
 
         //We extend Laser.Orchard.StartupConfig.ViewModels.Response because we have specific error codes for Vimeo
