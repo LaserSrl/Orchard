@@ -699,6 +699,7 @@ namespace Laser.Orchard.Mobile.Services {
             var config = new WnsConfiguration(setting_WindowsAppPackageName, setting_WindowsAppSecurityIdentifier, setting_WindowsEndPoint);
             var push = new WnsServiceBroker(config);
             push.OnNotificationSucceeded += (notification) => {
+                NotificationSent(notification);
             };
             push.OnNotificationFailed += (notification, aggregateEx) => {
                 aggregateEx.Handle(ex => {
@@ -854,6 +855,7 @@ namespace Laser.Orchard.Mobile.Services {
                 var config = new ApnsConfiguration(environment, setting_file, setting_password);
                 var push = new ApnsServiceBroker(config);
                 push.OnNotificationSucceeded += (notification) => {
+                    NotificationSent(notification);
                 };
                 push.OnNotificationFailed += (notification, aggregateEx) => {
                     aggregateEx.Handle(ex => {
@@ -932,7 +934,7 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         private string FormatJsonValue(string text) {
-            return (text ?? "").Replace("\"", "\\\"").Replace("\\", "\\\\");
+            return (text ?? "").Replace("\\", "\\\\").Replace("\"", "\\\"");
         }
 
         private void DeviceSubscriptionChangedAndroid(object sender, string oldSubscriptionId, string newSubscriptionId, INotification notification) {
