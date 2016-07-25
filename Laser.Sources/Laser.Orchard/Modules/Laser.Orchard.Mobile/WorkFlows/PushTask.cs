@@ -67,7 +67,6 @@ namespace Laser.Orchard.Mobile.WorkFlows {
             string messageApple = PushMessage;
             string messageAndroid = PushMessage;
             string messageWindows = PushMessage;
-            string jsonAndroid = "";
             string sound = "";
             string querydevice = "";
             if (device == "ContentOwner") {
@@ -93,7 +92,7 @@ namespace Laser.Orchard.Mobile.WorkFlows {
 
                 device = "All";
             }
-            _pushGatewayService.SendPushService(produzione, device, idRelated, language, messageApple, messageAndroid, jsonAndroid, messageWindows, sound, querydevice);
+            _pushGatewayService.SendPushService(produzione, device, idRelated, language, messageApple, messageAndroid, messageWindows, sound, querydevice);
 
             yield return T("Sent");
         }

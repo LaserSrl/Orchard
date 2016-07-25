@@ -29,6 +29,19 @@ namespace Laser.Orchard.Mobile.Handlers   {
                     // Invio Push di Test
                     _pushGatewayService.PublishedPushEventTest(part.ContentItem); 
                 }
+
+                if (_orchardServices.WorkContext.HttpContext.Request.Form["submit-PushContact"] != null) {
+                    // invia la push al contact selezionato
+                    string contactTitle = "";
+                    string aux = _orchardServices.WorkContext.HttpContext.Request.Form["contact-to-push"];
+                    // rimuove il numero di device racchiuso tra parentesi per ricavare il nome del contact
+                    int idx = aux.LastIndexOf(" (");
+                    if(idx > 0) {
+                        contactTitle = aux.Substring(0, idx);
+                    }
+                    // invia la push
+                    _pushGatewayService.SendPushToContact(part.ContentItem, contactTitle);
+                }
             });
 
             OnPublished<MobilePushPart>((context, part) => {

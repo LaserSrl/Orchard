@@ -38,6 +38,48 @@
 
     </script>
 }
+@using (Script.Head()) {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var searched = false;
+            $("#contact-to-push").keyup(function () {
+                var doSearch = false;
+                var nameFilter = $("#contact-to-push").val();
+                if (nameFilter.length > 2) {
+                    if (searched == false) {
+                        doSearch = true;
+                    }
+                }
+                else {
+                    if (searched == true) {
+                        searched = false;
+                    }
+                }
+
+                if (doSearch) {
+                    var elenco = "";
+                    var availableContacts = [];
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Model.SiteUrl/api/Laser.Orchard.Mobile/ContactsListApi?nameFilter=" + nameFilter,
+                        dataType: 'json',
+                        success: function (json, textStatus) {
+                            availableContacts = json.elenco;
+                            for (var ct in availableContacts) {
+                                elenco = elenco + "<option value='" + availableContacts[ct].name + " (" + availableContacts[ct].num + ")" + "'/>";
+                            }
+                            $("#contacts-list").html(elenco);
+                            searched = true;
+                        },
+                        error: function(xhr, textStatus, errorThrown) {
+                            //alert('An error occurred! ' + ( errorThrown ? errorThrown : xhr.status ));
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
 <div id="mobile-comm-container" class="comm-tabbed">
     <fieldset>
         <legend>@T("Mobile Push")</legend>
@@ -81,6 +123,13 @@
 
                 <span class="hint">@T("Mask to make test for Push... this option is set by settings of module")</span>
             </div>
+        </fieldset>
+        <fieldset>
+            <legend>@T("Test with production devices")</legend>
+            <label for="contact-to-push">@T("Contact"): </label>
+            <input id="contact-to-push" name="contact-to-push" list="contacts-list" autocomplete="off" />
+            <datalist id="contacts-list"></datalist>
+            <button type="submit" name="submit-PushContact" id="submit-PushContact">@T("Send push to selected contact")</button>
         </fieldset>
     }
     <fieldset>
