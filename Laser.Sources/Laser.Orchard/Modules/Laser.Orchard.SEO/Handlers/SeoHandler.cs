@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.SEO.Models;
 using Laser.Orchard.StartupConfig.Localization;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization.Services;
@@ -25,6 +26,21 @@ namespace Laser.Orchard.SEO.Handlers {
                 part.RobotsUnavailableAfterDate = new DateTime(currYear, currMonth, currDay);
             });
 
+
+            //load the presets from the settings
+            OnInitialized<SeoPart>((context, part) => {
+                var settings = part.Settings.GetModel<SeoPartSettings>();
+                //copy presets
+                part.RobotsNoIndex = settings.RobotsNoIndex;
+                part.RobotsNoFollow = settings.RobotsNoFollow;
+                part.RobotsNoSnippet = settings.RobotsNoSnippet;
+                part.RobotsNoOdp = settings.RobotsNoOdp;
+                part.RobotsNoArchive = settings.RobotsNoArchive;
+                part.RobotsUnavailableAfter = settings.RobotsUnavailableAfter;
+                part.RobotsNoImageIndex = settings.RobotsNoImageIndex;
+                part.GoogleNoSiteLinkSearchBox = settings.GoogleNoSiteLinkSearchBox;
+                part.GoogleNoTranslate = settings.GoogleNoTranslate;
+            });
         }
     }
 
