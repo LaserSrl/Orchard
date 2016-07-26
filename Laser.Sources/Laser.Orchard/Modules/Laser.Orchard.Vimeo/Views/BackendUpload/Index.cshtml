@@ -1,0 +1,29 @@
+﻿@model Laser.Orchard.Vimeo.ViewModels.BackendUploadViewModel
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    @{
+        Script.Require("jQuery").AtFoot();
+        Script.Require("jQueryUI").AtFoot();
+
+        Style.Include("orchard-medialibrary-admin.css");
+        Style.Include("orchard-mediaproviders-admin.css");
+        Style.Include("BackendUpload.css");
+
+        Script.Require("jQueryFileUpload").AtFoot();
+        Script.Include("knockout-2.3.0.js").AtFoot();
+    }
+
+    @Display.Metas()
+    @Display.HeadScripts()
+    @Display.HeadLinks()
+    @Display.StyleSheetLinks()
+</head>
+<body>
+    
+
+
+    @Display.FootScripts()
+</body>
+</html>
