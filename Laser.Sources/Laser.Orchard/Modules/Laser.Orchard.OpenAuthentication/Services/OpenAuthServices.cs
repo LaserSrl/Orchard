@@ -14,7 +14,7 @@ using System.Collections;
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOpenAuthMembershipServices : IDependency {
         bool CanRegister();
-        IUser CreateUser(OpenAuthCreateUserParams createUserParams);
+        UserAccountLogin CreateUser(OpenAuthCreateUserParams createUserParams);
     }
 
     public class OpenAuthMembershipServices : IOpenAuthMembershipServices {
@@ -55,24 +55,51 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         /// </summary>
         /// <param name="createUserParams"></param>
         /// <returns></returns>
-        public IUser CreateUser(OpenAuthCreateUserParams createUserParams) {
+        public UserAccountLogin CreateUser(OpenAuthCreateUserParams createUserParams) {
                    
             string emailAddress = string.Empty;
+            string name = string.Empty;
+            string firstname = string.Empty;
+            string username = string.Empty;
 
             var valoriRicavati = createUserParams.ExtraData.Values;
             int countVal = 0;
+
 
             foreach (string valric in valoriRicavati) 
             {                
                 if (countVal == 1) 
                 {
-                    if (createUserParams.ProviderName != "linkedin")
+                    if (createUserParams.ProviderName != "linkedin") {
                         emailAddress = valric;
+                    } 
+                    else 
+                    {
+                        name = valric;
+                    }
                 }
 
-                if (countVal == 3) {
+
+                if (countVal == 2)
+                {
                     if (createUserParams.ProviderName == "linkedin")
+                    {
+                        firstname = valric;
+                    }
+                }
+
+
+                if (countVal == 3) 
+                {
+                    if (createUserParams.ProviderName == "linkedin")
+                    {
                         emailAddress = valric;
+                    }
+
+                    if (createUserParams.ProviderName == "google") {
+                        username = valric;
+                    }
+
                 }
 
                 countVal = countVal + 1;
@@ -95,7 +122,15 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var createdContext = new CreatedOpenAuthUserContext(createdUser, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
             _openAuthUserEventHandlers.Invoke(o => o.Created(createdContext), Logger);
 
-            return createdUser;
+            UserAccountLogin retVal = new UserAccountLogin();
+            retVal.IUserParz = createdUser;
+            retVal.Email = createdUser.Email;
+            retVal.FirstName = firstname;
+            retVal.Name = name;
+            retVal.UserName = username;
+
+
+            return retVal;
         }
     }
 }
