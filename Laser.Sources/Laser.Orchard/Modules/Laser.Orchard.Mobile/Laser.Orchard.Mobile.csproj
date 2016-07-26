@@ -202,7 +202,7 @@
     <Content Include="Views\Parts\MobileContact.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\ContactsListApiController.cs" />
+    <Compile Include="Controllers\ContactListController.cs" />
     <Compile Include="Controllers\CountPanelController.cs" />
     <Compile Include="Controllers\ExternalPushController.cs" />
     <Compile Include="Controllers\TaxonomiePushController.cs" />
