@@ -8,11 +8,13 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.UI.Admin;
 using System.Collections.Generic;
 
 namespace Laser.Orchard.Mobile.Drivers {
+    [OrchardFeature("Laser.Orchard.PushGateway")]
     public class MobilePushPartDriver : ContentPartDriver<MobilePushPart> {
 
         private readonly IOrchardServices _orchardServices;
