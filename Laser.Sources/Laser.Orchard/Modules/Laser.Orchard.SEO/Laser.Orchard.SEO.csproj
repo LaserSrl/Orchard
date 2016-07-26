@@ -80,6 +80,9 @@
   <ItemGroup>
     <EmbeddedResource Include="CountryCodes.txt" />
     <EmbeddedResource Include="LanguageCodes.txt" />
+    <Content Include="Styles\KeywordHelper.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />

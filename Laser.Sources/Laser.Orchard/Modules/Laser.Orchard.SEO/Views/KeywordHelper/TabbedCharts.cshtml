@@ -44,18 +44,18 @@
                     }
                     string decoded = System.Web.HttpUtility.UrlDecode(kw);
                     string nospace = decoded.Replace(" ", "");
-                <div id="@nospace" class="@cc">
+                <div id="@nospace" class="@cc" style="background-color: white;">
                     @*<script type="text/javascript" src="//www.google.com/trends/embed.js?hl=@Model.hl&q=@kw&geo=@Model.geo&date=@Model.date&tz=Etc/GMT-2&content=1&cid=TOP_QUERIES_0_0&export=5&w=400&h=550"></script>*@
                     @*<script type="text/javascript" src="//www.google.com/trends/embed.js?hl=@Model.hl&date=@Model.date&cmpt=q&geo=@Model.geo&q=@kw&tz=Etc/GMT-2&content=1&cid=RISING_QUERIES_0_0&export=5&w=400&h=550"></script>*@
-                    <iframe style="position:relative;top:5px;left:5px;border:none;width:100%;" height="1px" id="iframe_@kw" style="overflow-y: hidden;" scrolling="no" seamless="seamless" class="myTrendsIFrame"></iframe>
-
+                    <iframe style="position:relative;top:5px;left:5px;border:none;width:100%;overflow-y: hidden; background-color:white;" height="1px" id="iframe_@kw" scrolling="no" seamless="seamless" class="myTrendsIFrame"></iframe>
+                    
                 </div>
                 }
             }
         </div>
     </div>
     
-    <script>
+    <script type="text/javascript">
         $(document).ready(function () {
             var frames = document.getElementsByClassName("myTrendsIFrame");
             if (frames) {

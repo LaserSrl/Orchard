@@ -9,7 +9,7 @@
 }
 
 @using (Script.Head()) {
-    <script>
+    <script type="text/javascript">
         function refreshTrends(aId) {
             var q = document.getElementById("key_" + aId).value;
             q = q.trim().replace(/\s+/g, ' ');
@@ -17,7 +17,7 @@
                 var date = document.getElementById("period_" + aId).value;
                 var hl = document.getElementById("lang_" + aId).value;
                 var geo = document.getElementById("region_" + aId).value;
-                var ua = '@Url.Action("RefreshTrends", "keywordhelper", new {area = "Laser.Orchard.SEO", _hl="__hl__", _q="__q__", _geo="__geo__", _date="__date__"})'
+                var ua = '@Url.Action("RefreshTrends", "keywordhelper", new { area = "Laser.Orchard.SEO", _hl = "__hl__", _q = "__q__", _geo = "__geo__", _date = "__date__" })'
                     .replace('__hl__', hl)
                     .replace('__q__', q)
                     .replace('__geo__', geo)
@@ -33,7 +33,7 @@
                 var date = document.getElementById("period_SummaryChart").value;
                 var hl = document.getElementById("lang_SummaryChart").value;
                 var geo = document.getElementById("region_SummaryChart").value;
-                var ua = '@Url.Action("RefreshTrends", "keywordhelper", new {area = "Laser.Orchard.SEO", _hl="__hl__", _q="__q__", _geo="__geo__", _date="__date__"})'
+                var ua = '@Url.Action("RefreshTrends", "keywordhelper", new { area = "Laser.Orchard.SEO", _hl = "__hl__", _q = "__q__", _geo = "__geo__", _date = "__date__" })'
                     .replace('__hl__', hl)
                     .replace('__q__', keyword)
                     .replace('__geo__', geo)
@@ -80,12 +80,12 @@
             if (qString.length > 0) {
                 qString = qString.slice(0, -1); //remove trailing comma
             }
-            
-           
+
+
             var date = document.getElementById("period_SummaryChart").value;
             var hl = document.getElementById("lang_SummaryChart").value;
             var geo = document.getElementById("region_SummaryChart").value;
-            var ua = '@Url.Action("SummaryTrends", "keywordhelper", new {area = "Laser.Orchard.SEO", _hl="__hl__", _q="__q__", _geo="__geo__", _date="__date__"})'
+            var ua = '@Url.Action("SummaryTrends", "keywordhelper", new { area = "Laser.Orchard.SEO", _hl = "__hl__", _q = "__q__", _geo = "__geo__", _date = "__date__" })'
                 .replace('__hl__', hl)
                 .replace('__q__', qString)
                 .replace('__geo__', geo)
@@ -102,7 +102,7 @@
             pathStr = window.location.protocol + "//" + window.location.host + pathStr + "Laser.Orchard.SEO/keywordhelper/TabbedCharts?" + "_hl=" + hl + "&_q=" + qString + "&_geo=" + geo + "&_date=" + date;
             //e.g. pathStr = "http://localhost/Laser.Orchard/ProvaFavicon/Laser.Orchard.SEO/keywordhelper/TabbedCharts?_hl=it&_q=Lemuri,pollo&_geo=&_date=today+12-m#home"
             //$("#SummaryTrendsActionLink").attr('href', link)
-            var uaTab = '@Url.Action("TabbedCharts", "keywordhelper", new {area = "Laser.Orchard.SEO", _hl="__hl__", _q="__q__", _geo="__geo__", _date="__date__"})'
+            var uaTab = '@Url.Action("TabbedCharts", "keywordhelper", new { area = "Laser.Orchard.SEO", _hl = "__hl__", _q = "__q__", _geo = "__geo__", _date = "__date__" })'
                 .replace('__hl__', hl)
                 .replace('__q__', qString)
                 .replace('__geo__', geo)
@@ -112,21 +112,14 @@
             $("#summaryTables").load(uaTab);
         }
 
-        
+
     </script>
-    
-    <style type="text/css">
-        .outerKeys {
-            float: left;
-            padding-bottom: 1px;
-        }
-      #allSEOKeywords { overflow: hidden; float: left; }
-      #allSEOKeywords div { float: left; background: #fff;  margin-bottom: -100%; padding-bottom: 100%; margin-right: 5px; cursor: pointer; }
-      #addButton { overflow: hidden; float: left; }
-      #addButton div { float: left; background: #fff;  margin-bottom: -100%; padding-bottom: 100%; margin-right: 5px; cursor: pointer; }
-	</style>
+
 }
 
+@{
+    Style.Include("~/Styles/KeywordHelper.css").AtHead();
+}
 <fieldset>
 
     <legend>@T("Keywords selected for this content")</legend>
@@ -137,14 +130,14 @@
         </div>
         <div id="addButton">
             <div>
-                <div style="margin:0; padding: 0 0 0 10px;">
-                    @Html.LinkToAddNestedForm(x => x.Keywords, "<i class=\"fa fa-plus\" style=\"color: green\"></i>" + T(" Add keyword").Text, "#allSEOKeywords", ".j_seokeyword")
+                <div style="margin: 0; padding: 0 0 0 10px;">
+                    @Html.LinkToAddNestedForm(x => x.Keywords, "<i class=\"fa fa-plus\" style=\"color: green\"></i> " + T(" Add keyword").Text, "#allSEOKeywords", ".j_seokeyword")
                 </div>
             </div>
         </div>
     </div>
 
-    <p style="clear:both;"></p>
+    <p style="clear: both;"></p>
 
     <div title="@T("You can add keywords and obtain the most relevant related ones on search engines.")">
         <div title ="@T("This chart compares the keywords' trends in time")">
@@ -168,7 +161,7 @@
                                 KeywordHelperKeyword.langDictionary.ContainsKey(shortLCode) ?
                                 KeywordHelperKeyword.langDictionary[shortLCode] : "";
                             if (!String.IsNullOrWhiteSpace(lText)) {
-                                @Html.SelectOption(shortLCode, WorkContext.CurrentSite.SiteCulture == lCode, lText);
+                    @Html.SelectOption(shortLCode, WorkContext.CurrentSite.SiteCulture == lCode, lText);
                             }
                         }
                     }
@@ -192,8 +185,8 @@
                 }
             </select>
             <a href="javascript:void(0)" onclick="summaryChart()" class="btn btn-sm" id="button_SummaryChart" title="@T("Click to refresh summary chart")">@T("Refresh summary chart")</a>
-            <div>
-                <iframe style="position:relative;top:5px;left:5px;overflow-y: hidden; width:100%;" height="1px" id="iframe_SummaryChart" scrolling="no" seamless="seamless"></iframe>
+            <div class="container">
+                <iframe style="position: relative; top: 5px; left: 5px; overflow-y: hidden; width: 100%;" height="1px" id="iframe_SummaryChart" scrolling="no" seamless="seamless"></iframe>
             </div>
             <div id="summaryTables"></div>
         </div>
