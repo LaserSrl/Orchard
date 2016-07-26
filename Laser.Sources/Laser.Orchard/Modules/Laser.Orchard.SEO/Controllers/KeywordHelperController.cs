@@ -25,6 +25,19 @@ namespace Laser.Orchard.SEO.Controllers {
         }
 
         [Admin]
+        public ActionResult TabbedCharts(string _hl, string _q, string _geo, string _date) {
+            string query = ParseQString(_q);
+
+            var model = new GoogleTrendsViewModel {
+                hl = _hl,
+                q = query,
+                geo = _geo,
+                date = _date
+            };
+            return PartialView((object)model);
+        }
+
+        [Admin]
         public ActionResult SummaryTrends(string _hl, string _q, string _geo, string _date) {
             string query = ParseQString(_q);
 

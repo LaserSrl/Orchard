@@ -11,62 +11,18 @@
 
 }
 
-
-
-<div id="@appId" class="j_seokeyword" style="border: 1px dotted red;">
-    @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete", @id="delete_"+@appId })
-    @Html.TextBoxFor(m=>m.Keyword, new {placeholder=T("Keyword").ToString(), @class="text medium", @title=T("Keyword").ToString(), @id="key_"+@appId})
-    <select title="@T("Select time period.").ToString()" id="period_@appId">
-        @Html.SelectOption("today+12-m", true, T("Past year").ToString());
-        @Html.SelectOption("today+3-m", false, T("Past 90 days").ToString());
-        @Html.SelectOption("today+2-m", false, T("Past 60 days").ToString());
-        @Html.SelectOption("today+1-m", false, T("Past 30 days").ToString());
-        @Html.SelectOption("today+7-d", false, T("Past week").ToString());
-    </select>
-    <select title="@T("Language").ToString()" id="lang_@appId">
-        @*Insert languages from site settings*@
-        @{
-            Orchard.Data.IRepository<Orchard.Localization.Records.CultureRecord> _cultureRepository;
-            if (WorkContext.TryResolve<Orchard.Data.IRepository<Orchard.Localization.Records.CultureRecord>>(out _cultureRepository)) {
-                foreach (var row in _cultureRepository.Table) {
-                    var lCode = row.Culture;
-                    var shortLCode = lCode.Substring(0, 2);
-                    var lText = KeywordHelperKeyword.langDictionary.ContainsKey(lCode) ? 
-                        KeywordHelperKeyword.langDictionary[lCode] : 
-                        KeywordHelperKeyword.langDictionary.ContainsKey(shortLCode) ?
-                        KeywordHelperKeyword.langDictionary[shortLCode] : "";
-                    if (!String.IsNullOrWhiteSpace(lText)){
-                        @Html.SelectOption(shortLCode, WorkContext.CurrentSite.SiteCulture == lCode, lText);
-                    }
-                }
-            }
-        }
-        @*Insert languages from file*@
-        @if (KeywordHelperKeyword.langDictionary.Count() > 0) {
-            <option disabled>_________</option>
-        }
-        @foreach (var lang in KeywordHelperKeyword.langDictionary) {
-            @Html.SelectOption(lang.Key, false, lang.Value);
-        }
-    </select>
-    <select title="@T("Region").ToString()" id="region_@appId">
-        @Html.SelectOption("", true, T("Worldwide").ToString());
-        @*Insert regions from file*@
-        @if (KeywordHelperKeyword.regionDictionary.Count() > 0) {
-            <option disabled>_________</option>
-        }
-        @foreach (var reg in KeywordHelperKeyword.regionDictionary) {
-            @Html.SelectOption(reg.Key, false, reg.Value);
-        }
-    </select>
+@using (Script.Head()) {
     
-    <a href="javascript:void(0)" onclick="refreshTrends('@appId')" class="btn btn-sm" id="button_@appId" title="@T("Click to refresh charts")">@T("Refresh charts")</a>
-    <a href="javascript:void(0)" onclick="hideTrends('@appId')" class="btn btn-sm" id="hide_@appId" title="@T("Click to hide charts")">@T("Hide charts")</a> 
-    <i class="fa fa-times" style="color: red"></i>
-    @Html.LinkToRemoveNestedForm(T("Remove").Text, ".j_seokeyword", "input.ph-mark-for-delete")
+}
 
-    <div>
-        <iframe style="position:relative;top:5px;left:5px;border:none;" width="100%" height="1px" id="iframe_@appId" style="overflow-y: hidden;" scrolling="no" seamless="seamless"></iframe>
-        
+<div id="@appId" class="j_seokeyword">
+    <div id="inner_@appId" style="margin:0; padding: 0 0 0 10px; cursor:pointer;">
+        @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete", @id="delete_"+@appId })
+        @Html.TextBoxFor(m=>m.Keyword, new {placeholder=T("Keyword").ToString(), @title=T("Keyword").ToString(), @id="key_"+@appId })
+        @*<i class="fa fa-times" style="color: red"></i>*@
+        @*@Html.LinkToRemoveNestedForm(T("Remove").Text, ".j_seokeyword", "input.ph-mark-for-delete")*@
+        @Html.LinkToRemoveNestedForm("<i class=\"fa fa-times\" style=\"color: red\"></i>", ".j_seokeyword", "input.ph-mark-for-delete")
     </div>
+
 </div>
+
