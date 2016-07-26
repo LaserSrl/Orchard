@@ -8,6 +8,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.UI.Admin;
@@ -20,17 +21,19 @@ namespace Laser.Orchard.Mobile.Drivers {
         private readonly IOrchardServices _orchardServices;
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IRepository<PushNotificationRecord> _repoPushNotification;
+        private readonly ShellSettings _shellSettings;
         public Localizer T { get; set; }
 
         protected override string Prefix {
             get { return "Laser.Mobile.MobilePush"; }
         }
 
-        public MobilePushPartDriver(IOrchardServices orchardServices, IControllerContextAccessor controllerContextAccessor, 
-                                    IRepository<PushNotificationRecord> repoPushNotification) {
+        public MobilePushPartDriver(IOrchardServices orchardServices, IControllerContextAccessor controllerContextAccessor,
+                                    IRepository<PushNotificationRecord> repoPushNotification, ShellSettings shellSettings) {
             _orchardServices = orchardServices;
             _controllerContextAccessor = controllerContextAccessor;
             _repoPushNotification = repoPushNotification;
+            _shellSettings = shellSettings;
         }
 
         protected override DriverResult Display(MobilePushPart part, string displayType, dynamic shapeHelper)
@@ -94,6 +97,8 @@ namespace Laser.Orchard.Mobile.Drivers {
                 viewModel.TargetDeviceNumber = part.TargetDeviceNumber;
                 viewModel.PushSentNumber = part.PushSentNumber;
             }
+
+            viewModel.SiteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix;
 
             viewModel.HideRelated = part.Settings.GetModel<PushMobilePartSettingVM>().HideRelated;
             _controllerContextAccessor.Context.Controller.TempData["HideRelated"] = viewModel.HideRelated;
