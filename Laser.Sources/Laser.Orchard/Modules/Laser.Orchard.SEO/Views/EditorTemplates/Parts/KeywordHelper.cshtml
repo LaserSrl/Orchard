@@ -1,0 +1,126 @@
+﻿@using Laser.Orchard.Commons.Helpers;
+@using Laser.Orchard.SEO;
+@using Laser.Orchard.SEO.ViewModels;
+
+@model Laser.Orchard.SEO.ViewModels.KeywordHelperPartViewModel
+
+@{
+    Script.Require("jQuery_NestedModels").AtHead();
+}
+
+@using (Script.Head()) {
+    <script>
+        function refreshTrends(aId) {
+            var q = document.getElementById("key_" + aId).value;
+            q = q.trim().replace(/\s+/g, ' ');
+            if (q) {
+                var date = document.getElementById("period_" + aId).value;
+                var hl = document.getElementById("lang_" + aId).value;
+                var geo = document.getElementById("region_" + aId).value;
+                var ua = '@Url.Action("RefreshTrends", "keywordhelper", new {area = "Laser.Orchard.SEO", _hl="__hl__", _q="__q__", _geo="__geo__", _date="__date__"})'
+                    .replace('__hl__', hl)
+                    .replace('__q__', q)
+                    .replace('__geo__', geo)
+                    .replace('__date__', date);
+                ua = ua.replace(/amp;/g, ''); //Url.Action() puts &amp; instead of just &
+                document.getElementById("iframe_" + aId).height = "550px";
+                document.getElementById("iframe_"+aId).src = ua;
+            }
+        }
+
+        function hideTrends(aId) {
+            document.getElementById("iframe_" + aId).height = "1px";
+            document.getElementById("iframe_" + aId).src = "";
+        }
+
+        function summaryChart() {
+            var keyDivs = document.getElementsByClassName("j_seokeyword");
+            var i;
+            var qString = '';
+            for (i = 0; i < keyDivs.length; i++) {
+                var aId = keyDivs[i].id;
+                var q = document.getElementById("key_" + aId).value;
+                q = q.trim().replace(/\s+/g, ' ');
+                if (q) {
+                    qString += q + ',';
+                }
+            }
+            if (qString.length > 0) {
+                qString = qString.slice(0, -1); //remove trailing comma
+            }
+            var date = document.getElementById("period_SummaryChart").value;
+            var hl = document.getElementById("lang_SummaryChart").value;
+            var geo = document.getElementById("region_SummaryChart").value;
+            var ua = '@Url.Action("SummaryTrends", "keywordhelper", new {area = "Laser.Orchard.SEO", _hl="__hl__", _q="__q__", _geo="__geo__", _date="__date__"})'
+                .replace('__hl__', hl)
+                .replace('__q__', qString)
+                .replace('__geo__', geo)
+                .replace('__date__', date);
+            ua = ua.replace(/amp;/g, ''); //Url.Action() puts &amp; instead of just &
+            document.getElementById("iframe_SummaryChart").height = "550px";
+            document.getElementById("iframe_SummaryChart").src = ua;
+        }
+    </script>
+}
+
+<fieldset>
+    <legend>@T("Keywords selected for this content")</legend>
+    <div title="@T("You can add keywords and obtain the most relevant related ones on search engines.")">
+        <div title ="@T("This chart compares the keywords' trends in time")">
+            <select title="@T("Select time period.").ToString()" id="period_SummaryChart">
+                @Html.SelectOption("today+12-m", true, T("Past year").ToString());
+                @Html.SelectOption("today+3-m", false, T("Past 90 days").ToString());
+                @Html.SelectOption("today+2-m", false, T("Past 60 days").ToString());
+                @Html.SelectOption("today+1-m", false, T("Past 30 days").ToString());
+                @Html.SelectOption("today+7-d", false, T("Past week").ToString());
+            </select>
+            <select title="@T("Language").ToString()" id="lang_SummaryChart">
+                @*Insert languages from site settings*@
+                @{
+                    Orchard.Data.IRepository<Orchard.Localization.Records.CultureRecord> _cultureRepository;
+                    if (WorkContext.TryResolve<Orchard.Data.IRepository<Orchard.Localization.Records.CultureRecord>>(out _cultureRepository)) {
+                        foreach (var row in _cultureRepository.Table) {
+                            var lCode = row.Culture;
+                            var shortLCode = lCode.Substring(0, 2);
+                            var lText = KeywordHelperKeyword.langDictionary.ContainsKey(lCode) ? 
+                                KeywordHelperKeyword.langDictionary[lCode] : 
+                                KeywordHelperKeyword.langDictionary.ContainsKey(shortLCode) ?
+                                KeywordHelperKeyword.langDictionary[shortLCode] : "";
+                            if (!String.IsNullOrWhiteSpace(lText)){
+                                @Html.SelectOption(shortLCode, WorkContext.CurrentSite.SiteCulture == lCode, lText);
+                            }
+                        }
+                    }
+                }
+                @*Insert languages from file*@
+                @if (KeywordHelperKeyword.langDictionary.Count() > 0) {
+                    <option disabled>_________</option>
+                }
+                @foreach (var lang in KeywordHelperKeyword.langDictionary) {
+                    @Html.SelectOption(lang.Key, false, lang.Value);
+                }
+            </select>
+            <select title="@T("Region").ToString()" id="region_SummaryChart">
+                @Html.SelectOption("", true, T("Worldwide").ToString());
+                @*Insert regions from file*@
+                @if (KeywordHelperKeyword.regionDictionary.Count() > 0) {
+                    <option disabled>_________</option>
+                }
+                @foreach (var reg in KeywordHelperKeyword.regionDictionary) {
+                    @Html.SelectOption(reg.Key, false, reg.Value);
+                }
+            </select>
+            <a href="javascript:void(0)" onclick="summaryChart()" class="btn btn-sm" id="button_SummaryChart" title="@T("Click to refresh summary chart")">@T("Refresh summary chart")</a>
+            <div>
+                <iframe style="position:relative;top:5px;left:5px;" width="100%" height="1px" id="iframe_SummaryChart" style="overflow-y: hidden;" scrolling="no" seamless="seamless"></iframe>
+            </div>
+        </div>
+
+        
+        <i class="fa fa-plus" style="color: green"></i>
+        @Html.LinkToAddNestedForm(x => x.Keywords, T("Add keyword").Text, "#seokeyword", ".j_seokeyword")
+        <div id="seokeyword">
+            @Html.EditorFor(x => x.Keywords)
+        </div>
+    </div>
+</fieldset>

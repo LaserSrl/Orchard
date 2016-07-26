@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.StartupConfig.Models;
+﻿using Laser.Orchard.StartupConfig.Handlers;
+using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
@@ -14,10 +15,12 @@ using Orchard.Security;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
+using Orchard.Users.Events;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Text;
 using System.Web.Http;
 
 namespace Laser.Orchard.StartupConfig.Controllers {
@@ -29,12 +32,10 @@ namespace Laser.Orchard.StartupConfig.Controllers {
         private readonly ITaxonomyService _taxonomyService;
         private readonly IContentExtensionsServices _contentExtensionsServices;
         private readonly IUtilsServices _utilsServices;
+        private readonly IContactRelatedEventHandler _contactEventHandler;
+        private readonly ILocalizedStringManager _localizedStringManager;
 
         public Localizer T { get; set; }
-
-        private readonly ILocalizedStringManager _localizedStringManager;
-        //  private string errore;
-
         public ILogger Log { get; set; }
 
         public UserController(
@@ -44,7 +45,8 @@ namespace Laser.Orchard.StartupConfig.Controllers {
             ILocalizedStringManager localizedStringManager,
             IAuthenticationService authenticationService,
             IContentExtensionsServices contentExtensionsServices,
-            IUtilsServices utilsServices) {
+            IUtilsServices utilsServices,
+            IContactRelatedEventHandler contactEventHandler) {
             _csrfTokenHelper = csrfTokenHelper;
             _orchardServices = orchardServices;
             _taxonomyService = taxonomyService;
@@ -54,6 +56,7 @@ namespace Laser.Orchard.StartupConfig.Controllers {
             _authenticationService = authenticationService;
             _contentExtensionsServices = contentExtensionsServices;
             _utilsServices = utilsServices;
+            _contactEventHandler = contactEventHandler;
         }
 
         public dynamic Get(string Language = "it-IT") {
@@ -123,11 +126,6 @@ namespace Laser.Orchard.StartupConfig.Controllers {
 
             #endregion Tutti i field
 
-            //#region Tutte le Proprietà
-            //eObj.Add("Email",currentUser.Email);
-            //eObj.Add("UserName", currentUser.UserName);
-            //#endregion
-
             return eObj;
         }
 
@@ -158,12 +156,16 @@ namespace Laser.Orchard.StartupConfig.Controllers {
         /// <param name="eObj"></param>
         /// <returns></returns>
         public Response Post(ExpandoObject eObj) {
-            //         try {
             if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
                 var currentUser = _orchardServices.WorkContext.CurrentUser;
                 if (currentUser == null)
                     return _utilsServices.GetResponse(ResponseType.InvalidUser);
-                return _contentExtensionsServices.StoreInspectExpando(eObj, currentUser.ContentItem);
+                var result = _contentExtensionsServices.StoreInspectExpando(eObj, currentUser.ContentItem);
+
+                // solleva l'evento di sincronizzazione del contact dopo l'aggiornamento del numero di telefono
+                _contactEventHandler.Synchronize(currentUser);
+
+                return result;
             }
             else {
                 return (_utilsServices.GetResponse(ResponseType.InvalidXSRF));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });

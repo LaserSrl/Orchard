@@ -14,8 +14,8 @@ using Orchard.Data;
 using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.CommunicationGateway.Models;
 using Orchard.Logging;
-using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.Mobile.Services;
+using Laser.Orchard.StartupConfig.Handlers;
 
 namespace Laser.Orchard.Mobile.Handlers {
     public class UserDeviceHandler : IUserEventHandler {
@@ -23,7 +23,7 @@ namespace Laser.Orchard.Mobile.Handlers {
         private readonly IRepository<UserDeviceRecord> _userDeviceRecord;
         private readonly IRepository<PushNotificationRecord> _pushNotificationRecord;
         private readonly IRepository<CommunicationContactPartRecord> _communicationContactPartRecord;
-        private readonly ICommunicationService _communicationService;
+        private readonly IContactRelatedEventHandler _contactEventHandler;
         private readonly IPushNotificationService _pushNotificationService;
         public ILogger Logger { get; set; }
 
@@ -32,14 +32,14 @@ namespace Laser.Orchard.Mobile.Handlers {
             IRepository<UserDeviceRecord> userDeviceRecord,
             IRepository<PushNotificationRecord> pushNotificationRecord,
             IRepository<CommunicationContactPartRecord> communicationContactPartRecord,
-            ICommunicationService communicationService,
+            IContactRelatedEventHandler contactEventHandler,
             IPushNotificationService pushNotificationService
             ) {
             _httpContextAccessor = httpContextAccessor;
             _userDeviceRecord = userDeviceRecord;
             _pushNotificationRecord = pushNotificationRecord;
             _communicationContactPartRecord = communicationContactPartRecord;
-            _communicationService = communicationService;
+            _contactEventHandler = contactEventHandler;
             _pushNotificationService = pushNotificationService;
             Logger = NullLogger.Instance;
         }
@@ -87,7 +87,7 @@ namespace Laser.Orchard.Mobile.Handlers {
                 }
 
                 // crea o aggiorna il contatto
-                _communicationService.UserToContact(user);
+                _contactEventHandler.Synchronize(user);
 
                 // aggiorna il collegamento del device con il contact, se il device è registrato
                 _pushNotificationService.UpdateDevice(UUIdentifier);
