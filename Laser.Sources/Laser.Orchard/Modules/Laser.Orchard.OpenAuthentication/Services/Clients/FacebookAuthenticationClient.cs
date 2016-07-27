@@ -100,7 +100,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
 
             foreach (string valric in valoriRicavati) 
             {
-                if (countVal == 1) {
+                if (countVal == 6) {
                     
                     emailAddress = valric;
 
