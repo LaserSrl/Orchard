@@ -135,7 +135,8 @@ namespace Laser.Orchard.Vimeo.Controllers {
                 response.Data = new { uploadUrl };
             }
 
-            return Json(response);
+            //return Json(new { ErrorCode = eCode, Success = success, Message = message, Data = response.Data }); //this breaks the api controller, so no
+            return Json(response); //weirdly, ajax reads this wrong, because of the override of ErrorCode
         }
 
         //We extend Laser.Orchard.StartupConfig.ViewModels.Response because we have specific error codes for Vimeo

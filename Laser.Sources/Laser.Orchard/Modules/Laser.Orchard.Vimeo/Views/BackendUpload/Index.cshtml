@@ -128,6 +128,7 @@
                 console.log('uploadToVimeo');
                 var content = blob;
                 if (offset) { //this for when we want to implement resumable uploads
+                    console.log('offset = ' + offset);
                     content = content.slice(offset, fileSize);
                 } else {
                     offset = 0;
@@ -138,16 +139,26 @@
                 uploadCall.open('PUT', uploadUrl, true);
                 uploadCall.setRequestHeader('Content-Type', contentType);
                 uploadCall.setRequestHeader('Content-Range', 'bytes ' + offset + '-' + (fileSize - 1) + '/' + fileSize);
+                uploadCall.timeout = 20000;// time in milliseconds
                 if (uploadCall.upload) { //i am not 100% about this
                     uploadCall.upload.addEventListener('progress', onProgress);
                 }
 
                 uploadCall.onload = function (response) {
                     console.log('success on upload');
+                    terminateUpload(mediaPartId, uploadUrl, fileSize, contentType, blob);
                 };
 
                 uploadCall.onerror = function (error) {
                     console.log('error on upload');
+                };
+
+                uploadCall.onprogress = function () {
+                    onProgress;
+                };
+
+                uploadCall.ontimeout = function () {
+                    verifyAndResume(mediaPartId, uploadUrl, fileSize, contentType, blob);
                 };
 
                 uploadCall.send(content);
@@ -155,6 +166,64 @@
 
             function onProgress() {
 
+            }
+
+            function verifyAndResume(mediaPartId, uploadUrl, fileSize, contentType, blob) {
+                // 4. Verify the upload
+                console.log('verify');
+                var sent = 0;
+                var verifyCall = new XMLHttpRequest();
+                verifyCall.open('PUT', uploadUrl, true);
+                verifyCall.setRequestHeader('Content-Range', 'bytes */*'); // + fileSize);
+                //verifyCall.setRequestHeader('Content-Type', contentType);
+                verifyCall.timeout = 20000;
+                verifyCall.onload = function (response) {
+                    var range = response.target.getResponseHeader("Range");
+                    if (range) {
+                        sent = parseInt(range.match(/\d+/g).pop(), 10);
+                    }
+                    console.log('sent = ' + sent.toString());
+                    // 5. If required, resume the upload
+                    if (sent < fileSize) {
+                        uploadToVimeo(mediaPartId, uploadUrl, fileSize, contentType, blob, sent + 1);
+                    } else {
+                        //upload finished
+                        terminateUpload(mediaPartId, uploadUrl, fileSize, contentType, blob);
+                    }
+                };
+                verifyCall.onerror = function (error) {
+                    console.log('error on verify');
+                };
+                verifyCall.ontimeout = function () {
+                    verifyAndResume(mediaPartId, uploadUrl, fileSize, contentType, blob); //try again
+                };
+                verifyCall.send()
+            }
+
+            function terminateUpload(mPId, uploadUrl, fileSize, contentType, blob) {
+                console.log('terminate');
+                var url = '@Url.Action("FinishUpload", "VimeoUpload", new { area = "Laser.Orchard.Vimeo", mediaPartId = "__id__" })'
+                        .replace('__id__', mPId);
+                var formData = {
+                        __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
+                    }
+                $.ajax({
+                    url: url,
+                    data: formData,
+                    type: "POST",
+                    success: function (response) {
+                        if (response.Success) {
+                            console.log('Upload complete for media part ' + mPId);
+                        } else {
+                            if (response.ErrorCode == 4001 || response.ErrorCode == 4003) { 
+                                //InProgress || FinishingErrors
+                                verifyAndResume(mPId, uploadUrl, fileSize, contentType, blob);
+                            } else {
+                                alert('@T("Critical error while uploading").ToString()');
+                            } 
+                        }
+                    }
+                });
             }
 
         }())
