@@ -9,6 +9,7 @@ using DotNetOpenAuth.Messaging;
 using Laser.Orchard.OpenAuthentication.Models;
 using Orchard.Logging;
 using Laser.Orchard.OpenAuthentication.Security;
+using System.Text.RegularExpressions;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class FacebookAuthenticationClient : IExternalAuthenticationClient {
@@ -53,7 +54,8 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             // this dictionary must contains 
             var userData = new Dictionary<string, string>();
             userData["id"] = graphData.Id;
-            userData["username"] = graphData.Email;
+            userData["username"] = graphData.Name;
+            userData["mail"] = graphData.Email;
             userData["name"] = graphData.Name;
             userData["link"] = graphData.Link == null ? null : graphData.Link.AbsoluteUri;
             userData["gender"] = graphData.Gender;
@@ -99,8 +101,13 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             foreach (string valric in valoriRicavati) 
             {
                 if (countVal == 1) {
+                    
                     emailAddress = valric;
-                    retVal.UserName = emailAddress;
+
+                    if (!Regex.IsMatch(retVal.UserName, "^[A-Za-z0-9]")) 
+                    {
+                        retVal.UserName = emailAddress;
+                    }                      
                 }
 
                 countVal = countVal + 1;

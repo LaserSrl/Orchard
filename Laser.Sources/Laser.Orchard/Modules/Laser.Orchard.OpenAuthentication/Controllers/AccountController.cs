@@ -78,9 +78,9 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 return new RedirectResult(Url.LogOn(returnUrl));
             }
 
+
             if (_orchardOpenAuthWebSecurity.Login(result.Provider, result.ProviderUserId)) {
                 _notifier.Information(T("You have been logged using your {0} account.", result.Provider));
-
                 return this.RedirectLocal(returnUrl);
             }
 
@@ -92,6 +92,8 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 newAuthenticatedUser.UserName = authenticatedUser.UserName;
             }
 
+
+            //LINKEDIN E' SEMPRE NON AUTENTICATO?
             if (authenticatedUser != null) {
                 // If the current user is logged in add the new account
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId,
@@ -124,7 +126,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                                                                                         normalize.ExtraData));
 
                 _notifier.Information(
-                    T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, newUser.UserName));
+                    T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, normalize.UserName));
 
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider,
                                                                   result.ProviderUserId,
@@ -194,7 +196,9 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
                 if (!authResult.IsSuccessful) {
                     return Json(new { success = false, registeredServices = registeredServicesData, message = T("Token authentication failed.").Text }, JsonRequestBehavior.AllowGet);
-                } else {
+                } 
+                else 
+                {
                     if (_orchardOpenAuthWebSecurity.Login(authResult.Provider, authResult.ProviderUserId)) {
                         if (HttpContext.Response.Cookies.Count == 0)
                             return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);

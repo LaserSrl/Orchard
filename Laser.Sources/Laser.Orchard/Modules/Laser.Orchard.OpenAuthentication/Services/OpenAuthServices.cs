@@ -136,6 +136,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             _openAuthUserEventHandlers.Invoke(o => o.Created(createdContext), Logger);
 
             UserAccountLogin retVal = new UserAccountLogin();
+            retVal.Id = createdUser.Id;
             retVal.IUserParz = createdUser;
             retVal.Email = createdUser.Email;
             retVal.FirstName = firstname;

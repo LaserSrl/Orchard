@@ -9,7 +9,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         UserProviderRecord Get(string providerName, string providerUserId);
         void Create(string providerName, string providerUserId, UserAccountLogin user);
         void Update(string providerName, string providerUserId, UserAccountLogin user);
-        IEnumerable<UserProviderRecord> Get(UserAccountLogin user);
+        IEnumerable<UserProviderRecord> Get(IUser user);
         IEnumerable<UserProviderRecord> Get(int userId);
     }
 
@@ -24,7 +24,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             return _repository.Get(o => o.ProviderName == providerName && o.ProviderUserId == providerUserId);
         }
 
-        public IEnumerable<UserProviderRecord> Get(UserAccountLogin user) {
+        public IEnumerable<UserProviderRecord> Get(IUser user) {
             return Get(user.Id);
         }
 
