@@ -202,6 +202,7 @@
     <Content Include="Views\Parts\MobileContact.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ContactListController.cs" />
     <Compile Include="Controllers\CountPanelController.cs" />
     <Compile Include="Controllers\ExternalPushController.cs" />
     <Compile Include="Controllers\TaxonomiePushController.cs" />
@@ -245,6 +246,7 @@
     <Compile Include="Settings\SmsSettingsPartHooks.cs" />
     <Compile Include="ViewModels\DeliveryReportVM.cs" />
     <Compile Include="ViewModels\PhoneNumberViewModel.cs" />
+    <Compile Include="ViewModels\PushMessage.cs" />
     <Compile Include="ViewModels\PushNotificationVM.cs" />
     <Compile Include="ViewModels\SmsGatewayVM.cs" />
     <Compile Include="WorkFlows\PushEditForm.cs" />
@@ -271,13 +273,10 @@
     <Compile Include="Settings\PushMobilePartSettingVM.cs" />
     <Compile Include="ViewModels\DeviceVM.cs" />
     <Compile Include="ViewModels\MobilePushVM.cs" />
-    <Compile Include="ViewModels\PushAppleVM.cs" />
     <Compile Include="ViewModels\PushIndex.cs" />
     <Compile Include="Models\PushNotificationRecord.cs" />
     <Compile Include="ViewModels\PushMobileSettingsVM.cs" />
     <Compile Include="ViewModels\PushSearch.cs" />
-    <Compile Include="ViewModels\PushAndroidVM.cs" />
-    <Compile Include="ViewModels\PushWindowsMobileVM.cs" />
     <Compile Include="ViewModels\UserAgentRedirectEdit.cs" />
     <Compile Include="WorkFlows\PushTask.cs" />
   </ItemGroup>

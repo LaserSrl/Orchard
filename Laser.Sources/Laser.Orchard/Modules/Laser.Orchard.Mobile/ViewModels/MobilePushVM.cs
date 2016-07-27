@@ -47,5 +47,6 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public bool HideRelated { get; set; }
         public bool PushAdvertising { get; set; }
         public int PushTestNumber { get; set; }
+        public string SiteUrl { get; set; }
     }
 }
