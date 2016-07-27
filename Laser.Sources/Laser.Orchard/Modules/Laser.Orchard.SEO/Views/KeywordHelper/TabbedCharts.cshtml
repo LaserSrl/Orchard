@@ -21,7 +21,7 @@
                     string cc = "";
                     string decoded = System.Web.HttpUtility.UrlDecode(kw);
                     string nospace = new System.Text.RegularExpressions.Regex("[^a-zA-Z0-9-]").Replace(decoded, ""); // decoded.Replace(" ", "");
-                    int kwCount = ids.Where(s => s == nospace).Count();
+                    int kwCount = ids.Where(s => s.IndexOf(nospace)>=0).Count();  //int kwCount = ids.Where(s => s == nospace).Count();
                     nospace = nospace + kwCount.ToString();
                     ids.Add(nospace);
                     if (first) {
