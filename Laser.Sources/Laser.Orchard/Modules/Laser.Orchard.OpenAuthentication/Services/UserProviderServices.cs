@@ -38,7 +38,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                     UserId = user.Id,
                     ProviderName = providerName,
                     ProviderUserId = providerUserId,
-                    ProviderUserData = ((user.UserName != string.Empty) ? user.UserName : "") + " " + ((user.Name != string.Empty) ? user.Name : "") + ((user.Email != string.Empty) ? user.Email : "")
+                    ProviderUserData = ((user.UserName != string.Empty) ? user.UserName : "") + " " + ((user.FirstName != string.Empty) ? user.FirstName : "") +
+                                        " " + ((user.Name != string.Empty) ? user.Name : "") + " " + ((user.Email != string.Empty) ? user.Email : "") + " " + ((user.Sesso != string.Empty) ? user.Sesso : "")
                 };
 
             _repository.Create(record);
@@ -48,7 +49,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var record = Get(providerName, providerUserId);
 
             record.UserId = user.Id;
-            record.ProviderUserData = ((user.UserName != string.Empty) ? user.UserName : "") + " " + ((user.Name != string.Empty) ? user.Name : "") + ((user.Email != string.Empty) ? user.Email : "");
+            record.ProviderUserData = ((user.UserName != string.Empty) ? user.UserName : "") + " " + ((user.FirstName != string.Empty) ? user.FirstName : "") +
+                                        " " + ((user.Name != string.Empty) ? user.Name : "") + " " + ((user.Email != string.Empty) ? user.Email : "") + " " + ((user.Sesso != string.Empty) ? user.Sesso : "");
             _repository.Update(record);
         }
     }

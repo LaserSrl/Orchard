@@ -13,6 +13,7 @@ namespace Laser.Orchard.OpenAuthentication.Models {
         public string UserName { get; set; }
         public string Name { get; set; }
         public string FirstName { get; set; }
+        public string Sesso { get; set; }
     
     }
 }

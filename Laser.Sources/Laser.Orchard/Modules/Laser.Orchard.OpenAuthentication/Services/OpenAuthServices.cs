@@ -61,10 +61,10 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             string name = string.Empty;
             string firstname = string.Empty;
             string username = string.Empty;
+            string sesso = string.Empty;
 
             var valoriRicavati = createUserParams.ExtraData.Values;
             int countVal = 0;
-
 
             foreach (string valric in valoriRicavati) 
             {                
@@ -75,19 +75,21 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                     } 
                     else 
                     {
-                        name = valric;
+                        firstname = valric;
                     }
                 }
-
 
                 if (countVal == 2)
                 {
                     if (createUserParams.ProviderName == "linkedin")
                     {
-                        firstname = valric;
+                        name = valric;
                     }
-                }
 
+                    if (createUserParams.ProviderName == "facebook") {
+                        username = valric;
+                    } 
+                }
 
                 if (countVal == 3) 
                 {
@@ -102,8 +104,19 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
                 }
 
+                if (countVal == 4) {
+
+                    if (createUserParams.ProviderName == "facebook") {
+                        sesso = valric;
+                    }
+                }
+
                 countVal = countVal + 1;
             }
+
+            if (createUserParams.ProviderName == "twitter")
+                username = createUserParams.UserName;
+
 
             var creatingContext = new CreatingOpenAuthUserContext(createUserParams.UserName, emailAddress, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
 
@@ -128,8 +141,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             retVal.FirstName = firstname;
             retVal.Name = name;
             retVal.UserName = username;
-
-
+            retVal.Sesso = sesso;
             return retVal;
         }
     }
