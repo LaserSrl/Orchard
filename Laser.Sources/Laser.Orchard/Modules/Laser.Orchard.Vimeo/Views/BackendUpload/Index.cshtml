@@ -21,9 +21,143 @@
     @Display.StyleSheetLinks()
 </head>
 <body>
-    
 
+    <div id="backendupload-main">
+        <div id="message">@T("Click here or drop a video file")</div>
+        <div id="fileupload">
+            <input type="file" id="videoFileInput" name="videoFile" />
+        </div>
+    </div>
 
     @Display.FootScripts()
+    <script type="text/javascript">
+        $(function () {
+
+            var fileInput = document.getElementById("videoFileInput");
+            var fileDropArea = document.getElementById("fileupload");
+
+            //when clicking anywhere on the div, trigger the click of the input element
+            $('#fileupload').click(function () {
+                $('#fileupload > input').trigger('click');
+            });
+            //when the input gets clicked (even by the above function) make sure nothing else happens
+            $('#fileupload > input').click(function (event) {
+                event.stopPropagation(); //the event here is the click
+            });
+
+            //When we have a file to upload:
+            // 1. Verify it is a video
+            // 2. Call TryStartUpload on the UploadController
+            // 3. Use the url we got to make the upload
+            // 4. Verify the upload
+            // 5. If required, resume the upload
+            // 6. Display a message saying the upload is complete, but some processing will still happen behind the scenes
+
+            fileInput.onchange = function () {
+                console.log('tryUpload');
+                // 1. Verify it is a video
+                if (fileInput.files.length != 0 && fileInput.files[0].type.match(/video.*/)) {
+                    console.log('It is a video');
+                    startUpload(fileInput.files[0]);
+                    fileInput.files.length = 0;
+                } else {
+                    fileInput.files.length = 0; //we do not need non-video files
+                    console.log('CLEAR');
+                }
+            }
+
+            function handleDragOver(event) {
+                event.stopPropagation();
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'copy'; // Makes the browser display a "copy" cursor.
+            }
+            function handleDrop(event) {
+                console.log('drop');
+                event.stopPropagation();
+                event.preventDefault();
+
+                var files = event.dataTransfer.files;
+                if (files.length == 0) return;
+                var file = files[0];
+                // 1. Verify it is a video
+                if (file.type.match(/video.*/)) {
+                    console.log('It is a video');
+                    startUpload(file);
+                }
+            }
+
+            fileDropArea.addEventListener("dragover", handleDragOver, false);
+            fileDropArea.addEventListener("drop", handleDrop, false);
+
+            function startUpload(file) {
+                var reader = new FileReader();
+                reader.onload = function (fileRead) {
+                    //console.log(fileRead);
+                    // 2. Call TryStartUpload on the UploadController
+                    var url = '@Url.Action("TryStartUpload", "VimeoUpload", new { area = "Laser.Orchard.Vimeo", fileSize = "__fs__" })'
+                        .replace('__fs__', file.size);
+                    var formData = {
+                        @*folderPath: '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.FolderPath))',
+                        type: '@HttpUtility.JavaScriptStringEncode(Model.Type)',*@
+                        __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
+                    }
+                    console.log(url);
+                    $.ajax({
+                        url: url,
+                        data: formData,
+                        type: "POST",
+                        success: function (response) {
+                            if (response.Success) {
+                                var mId = response.Data.MediaPartId; //the id of the media part, that Imay need later
+                                var uUrl = response.Data.uploadUrl; //the upload url
+                                //console.log(response);
+                                //console.log(mId),
+                                console.log(uUrl);
+                                var content = fileRead.target.result; //the blob for the file
+                                // 3. Use the url we got to make the upload
+                                uploadToVimeo(mId, uUrl, file.size, file.type, file);
+                            }
+                        }
+                    });
+
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function uploadToVimeo(mediaPartId, uploadUrl, fileSize, contentType, blob, offset) {
+                console.log('uploadToVimeo');
+                var content = blob;
+                if (offset) { //this for when we want to implement resumable uploads
+                    content = content.slice(offset, fileSize);
+                } else {
+                    offset = 0;
+                }
+
+                // 3. Use the url we got to make the upload
+                var uploadCall = new XMLHttpRequest();
+                uploadCall.open('PUT', uploadUrl, true);
+                uploadCall.setRequestHeader('Content-Type', contentType);
+                uploadCall.setRequestHeader('Content-Range', 'bytes ' + offset + '-' + (fileSize - 1) + '/' + fileSize);
+                if (uploadCall.upload) { //i am not 100% about this
+                    uploadCall.upload.addEventListener('progress', onProgress);
+                }
+
+                uploadCall.onload = function (response) {
+                    console.log('success on upload');
+                };
+
+                uploadCall.onerror = function (error) {
+                    console.log('error on upload');
+                };
+
+                uploadCall.send(content);
+            }
+
+            function onProgress() {
+
+            }
+
+        }())
+    </script>
 </body>
 </html>
