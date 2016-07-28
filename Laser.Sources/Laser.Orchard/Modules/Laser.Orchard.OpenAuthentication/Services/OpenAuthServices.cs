@@ -150,6 +150,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             retVal.Name = name;
             retVal.UserName = username;
             retVal.Sesso = sesso;
+            retVal.UserNameOrchard = createdUser.UserName;
             return retVal;
         }
     }
