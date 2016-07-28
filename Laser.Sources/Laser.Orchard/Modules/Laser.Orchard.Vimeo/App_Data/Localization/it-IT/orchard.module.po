@@ -108,6 +108,30 @@ msgctxt "~/Modules/Laser.Orchard.Vimeo/Views/Admin/Index.cshtml"
 msgid "Who can view the video?"
 msgstr "Chi può visualizzare il video?"
 
+msgctxt "~/Modules/Laser.Orchard.Vimeo/Views/BackendUpload/Index.cshtml"
+msgid "Attempts at communication with Vimeo's servers failed. Try again later."
+msgstr "Impossibile comunicare con i servers di Vimeo. Ritenta più tardi."
+
+msgctxt "~/Modules/Laser.Orchard.Vimeo/Views/BackendUpload/Index.cshtml"
+msgid "Click here or drop a video file"
+msgstr "Clicca qui, o trascina e rilascia un file video"
+
+msgctxt "~/Modules/Laser.Orchard.Vimeo/Views/BackendUpload/Index.cshtml"
+msgid "Critical error while contacting servers."
+msgstr "Errore critico nel tentativo di contattare i servers"
+
+msgctxt "~/Modules/Laser.Orchard.Vimeo/Views/BackendUpload/Index.cshtml"
+msgid "Critical error while uploading"
+msgstr "Errore critico durante il tentativo di upload"
+
+msgctxt "~/Modules/Laser.Orchard.Vimeo/Views/BackendUpload/Index.cshtml"
+msgid "Upload complete for media part"
+msgstr "Upload completato"
+
+msgctxt "~/Modules/Laser.Orchard.Vimeo/Views/BackendUpload/Index.cshtml"
+msgid "Uploading: do not leave this page or close the browser."
+msgstr "Upload in corso: non lasciare la pagina o chiudere il browser."
+
 msgctxt "Laser.Orchard.Vimeo.Controllers.AdminController"
 msgid "Access Token not valid"
 msgstr "Token di accesso non valido"
@@ -179,6 +203,10 @@ msgstr "Impostazioni"
 msgctxt "Laser.Orchard.Vimeo.Navigation.AdminMenu"
 msgid "Vimeo"
 msgstr "Vimeo"
+
+msgctxt "Laser.Orchard.Vimeo.Providers.VimeoMenu"
+msgid "Upload to Vimeo"
+msgstr "Carica su Vimeo"
 
 msgctxt "Laser.Orchard.Vimeo.Services.VimeoServices"
 msgid "Access token not valid"

@@ -98,6 +98,8 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     message = T("The upload is still in progress.").ToString();
                     eCode = VimeoFinishErrorCode.InProgress;
                     success = false;
+                    //the client may want to resume the upload, so we send them the upload Url
+                    uploadUrl = _vimeoUploadServices.GetUploadUrl(mediaPartId);
                     break;
                 case VerifyUploadResult.StillUploading:
                     //the upload is still going on
@@ -131,10 +133,18 @@ namespace Laser.Orchard.Vimeo.Controllers {
                 Success = success,
                 Message = message
             };
+            //There are issues with using ajax to get the return value from this method:
+            // response is a VimeoFinishResponse, that overrides the ErrorCode field from the Response class.
+            // Ajax sees the ErrorCode value from the base object, rather than the correct one. As a fix, we
+            // put the error code also in the Data object. Ajax will read that rather than the correct field.
+            var ErrorCode = eCode;
             if (!string.IsNullOrWhiteSpace(uploadUrl)) {
-                response.Data = new { uploadUrl };
+                response.Data = new { uploadUrl, ErrorCode };
+            } else {
+                response.Data = new { ErrorCode };
             }
 
+            //return Json(new { ErrorCode = eCode, Success = success, Message = message, Data = response.Data }); //this breaks the api controller, so no
             return Json(response);
         }
 
