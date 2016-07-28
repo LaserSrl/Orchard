@@ -98,6 +98,8 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     message = T("The upload is still in progress.").ToString();
                     eCode = VimeoFinishErrorCode.InProgress;
                     success = false;
+                    //the client may want to resume the upload, so we send them the upload Url
+                    uploadUrl = _vimeoUploadServices.GetUploadUrl(mediaPartId);
                     break;
                 case VerifyUploadResult.StillUploading:
                     //the upload is still going on
