@@ -3,6 +3,9 @@ using Laser.Orchard.OpenAuthentication.Models;
 using Orchard;
 using Orchard.Data;
 using Orchard.Security;
+using System.IO;
+using System.Runtime.Serialization.Json;
+using System.Web.Script.Serialization;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IUserProviderServices : IDependency {
@@ -32,14 +35,28 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             return _repository.Fetch(o => o.UserId == userId);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="providerName"></param>
+        /// <param name="providerUserId"></param>
+        /// <param name="user"></param>
         public void Create(string providerName, string providerUserId, UserAccountLogin user) {
+
+            List<string> userParn = new List<string>();
+            userParn = GetListValue(user);
+
+            var serializer = new JavaScriptSerializer();
+            var serializedResult = serializer.Serialize(userParn);
+
             var record = new UserProviderRecord
                 {
                     UserId = user.Id,
                     ProviderName = providerName,
                     ProviderUserId = providerUserId,
-                    ProviderUserData = ((user.UserName != string.Empty) ? user.UserName : "") + " " + ((user.FirstName != string.Empty) ? user.FirstName : "") +
-                                        " " + ((user.Name != string.Empty) ? user.Name : "") + " " + ((user.Email != string.Empty) ? user.Email : "") + " " + ((user.Sesso != string.Empty) ? user.Sesso : "")
+                    ProviderUserData = serializedResult
+                    //ProviderUserData = ((user.UserName != string.Empty) ? user.UserName : "") + " " + ((user.FirstName != string.Empty) ? user.FirstName : "") +
+                    //                    " " + ((user.Name != string.Empty) ? user.Name : "") + " " + ((user.Email != string.Empty) ? user.Email : "") + " " + ((user.Sesso != string.Empty) ? user.Sesso : "")
                 };
 
             _repository.Create(record);
@@ -49,9 +66,29 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var record = Get(providerName, providerUserId);
 
             record.UserId = user.Id;
-            record.ProviderUserData = ((user.UserName != string.Empty) ? user.UserName : "") + " " + ((user.FirstName != string.Empty) ? user.FirstName : "") +
-                                        " " + ((user.Name != string.Empty) ? user.Name : "") + " " + ((user.Email != string.Empty) ? user.Email : "") + " " + ((user.Sesso != string.Empty) ? user.Sesso : "");
+
+            List<string> userParn = new List<string>();
+            userParn=GetListValue(user);
+
+            var serializer = new JavaScriptSerializer();
+            var serializedResult = serializer.Serialize(userParn);
+
+            //record.ProviderUserData = ((user.UserName != string.Empty) ? user.UserName : "") + " " + ((user.FirstName != string.Empty) ? user.FirstName : "") +
+            //                            " " + ((user.Name != string.Empty) ? user.Name : "") + " " + ((user.Email != string.Empty) ? user.Email : "") + " " + ((user.Sesso != string.Empty) ? user.Sesso : "");
+            record.ProviderUserData = serializedResult;
             _repository.Update(record);
         }
+
+
+        public List<string> GetListValue(UserAccountLogin user) {
+            List<string> userPar = new List<string>();
+            userPar.Add(user.FirstName);
+            userPar.Add(user.Name);
+            userPar.Add(user.UserName);
+            userPar.Add(user.Email);
+            userPar.Add(user.Sesso);
+            return userPar;
+        }
+
     }
 }

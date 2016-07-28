@@ -92,8 +92,6 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 newAuthenticatedUser.UserName = authenticatedUser.UserName;
             }
 
-
-            //LINKEDIN E' SEMPRE NON AUTENTICATO?
             if (authenticatedUser != null) {
                 // If the current user is logged in add the new account
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId,
@@ -126,7 +124,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                                                                                         normalize.ExtraData));
 
                 _notifier.Information(
-                    T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, normalize.UserName));
+                    T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, newUser.UserNameOrchard));
 
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider,
                                                                   result.ProviderUserId,
