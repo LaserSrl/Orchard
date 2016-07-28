@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\AdminServiceAttribute.cs" />
     <Compile Include="Core\MigrationExtentionHelpers.cs" />
     <Compile Include="Enums\BodyPartFlavor.cs" />
     <Compile Include="Enums\TextFieldFlavor.cs" />
