@@ -29,6 +29,7 @@
     color: grey;
     font-weight: bold;
     text-align: center;
+    line-height: 1em;
 }
 #fileupload {
     position: absolute;
@@ -50,4 +51,20 @@
     height: 0;
     cursor: none;
     z-index: 1000;
+}
+.ui-progress-bar {
+    position: absolute;
+    bottom: 30%;
+    left: 5%;
+    width: 90%;
+}
+
+.ui-progress {
+    height: 5px;
+    background-color: rgb(0,176,240);
+    width: 0;
+}
+
+.ui-label {
+    padding-left: 5px;
 }
