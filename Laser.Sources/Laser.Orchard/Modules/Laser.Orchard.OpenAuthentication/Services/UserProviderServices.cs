@@ -43,7 +43,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         /// <param name="user"></param>
         public void Create(string providerName, string providerUserId, UserAccountLogin user) {
 
-            List<string> userParn = new List<string>();
+            Dictionary<string, string> userParn = new Dictionary<string, string>();
             userParn = GetListValue(user);
 
             var serializer = new JavaScriptSerializer();
@@ -67,8 +67,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
             record.UserId = user.Id;
 
-            List<string> userParn = new List<string>();
-            userParn=GetListValue(user);
+            Dictionary<string, string> userParn = new Dictionary<string, string>();
+            userParn= GetListValue(user);
 
             var serializer = new JavaScriptSerializer();
             var serializedResult = serializer.Serialize(userParn);
@@ -80,13 +80,13 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         }
 
 
-        public List<string> GetListValue(UserAccountLogin user) {
-            List<string> userPar = new List<string>();
-            userPar.Add(user.FirstName);
-            userPar.Add(user.Name);
-            userPar.Add(user.UserName);
-            userPar.Add(user.Email);
-            userPar.Add(user.Sesso);
+        public Dictionary<string, string> GetListValue(UserAccountLogin user) {
+            Dictionary<string, string> userPar = new Dictionary<string, string>();
+            userPar.Add("FirstName",user.FirstName);
+            userPar.Add("Name", user.Name);
+            userPar.Add("UserName",user.UserName);
+            userPar.Add("Email", user.Email);
+            userPar.Add("Sesso", user.Sesso);
             return userPar;
         }
 
