@@ -111,6 +111,13 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                     }
                 }
 
+                if (countVal == 6) {
+
+                    if (createUserParams.ProviderName == "facebook") {
+                        emailAddress = valric;
+                    }
+                }
+
                 countVal = countVal + 1;
             }
 
@@ -123,8 +130,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             _openAuthUserEventHandlers.Invoke(o => o.Creating(creatingContext), Logger);
 
             var createdUser = _membershipService.CreateUser(new CreateUserParams(
-                //_usernameService.Calculate(createUserParams.UserName),
-                createUserParams.UserName,
+                _usernameService.Calculate(createUserParams.UserName),
+               // createUserParams.UserName,
                 _passwordGeneratorService.Generate(),
                 creatingContext.EmailAddress,
                 @T("Auto Registered User").Text,
