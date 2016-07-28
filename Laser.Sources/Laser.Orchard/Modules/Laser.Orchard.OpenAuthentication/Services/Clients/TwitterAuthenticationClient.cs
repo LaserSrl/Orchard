@@ -136,7 +136,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
         public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams) {
-            throw new System.NotImplementedException();
+            return createUserParams;
         }
 
 

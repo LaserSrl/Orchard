@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.OpenAuthentication.Services;
+﻿using Laser.Orchard.OpenAuthentication.Models;
+using Laser.Orchard.OpenAuthentication.Services;
 using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.Users.Events;
@@ -50,7 +51,12 @@ namespace Laser.Orchard.OpenAuthentication.Events {
                                                                           out providerUserId))
                 return;
 
-            _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(providerName, providerUserId, user);
+            UserAccountLogin newAuthenticatedUser = new UserAccountLogin();
+
+            newAuthenticatedUser.Email = user.Email;
+            newAuthenticatedUser.UserName = user.UserName;
+
+            _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(providerName, providerUserId, newAuthenticatedUser);
         }
 
         public void LoggedOut(IUser user) {

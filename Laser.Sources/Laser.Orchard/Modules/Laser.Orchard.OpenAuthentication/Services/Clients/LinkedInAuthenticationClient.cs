@@ -13,7 +13,7 @@ using System.Linq;
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class LinkedInAuthenticationClient : IExternalAuthenticationClient {
         public string ProviderName {
-            get { return "LinkedIn"; }
+            get { return "Linkedin"; }
         }
 
         private const string UserInfoEndpoint = "https://api.linkedin.com/v1/people/~" + UserProfileFields;

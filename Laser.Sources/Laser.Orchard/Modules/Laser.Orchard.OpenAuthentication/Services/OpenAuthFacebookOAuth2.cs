@@ -115,7 +115,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             // this dictionary must contains 
             var userData = new Dictionary<string, string>();
             userData["id"] = graphData.Id;
-            userData["username"] = graphData.Email;
+            userData["username"] = graphData.Name;
             userData["name"] = graphData.Name;
             userData["link"] = graphData.Link == null ? null : graphData.Link.AbsoluteUri;
             userData["gender"] = graphData.Gender;

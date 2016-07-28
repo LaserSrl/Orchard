@@ -17,6 +17,7 @@ using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
 using System.Linq;
+using Laser.Orchard.OpenAuthentication.Models;
 
 namespace Laser.Orchard.OpenAuthentication.Controllers {
     [Themed]
@@ -58,6 +59,11 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             return new OpenAuthLoginResult(providerName, Url.OpenAuthLogOn(returnUrl));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [AlwaysAccessible]
         public ActionResult ExternalLogOn(string returnUrl) {
             AuthenticationResult result = _orchardOpenAuthWebSecurity.VerifyAuthentication(Url.OpenAuthLogOn(returnUrl));
@@ -72,18 +78,26 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 return new RedirectResult(Url.LogOn(returnUrl));
             }
 
+
             if (_orchardOpenAuthWebSecurity.Login(result.Provider, result.ProviderUserId)) {
                 _notifier.Information(T("You have been logged using your {0} account.", result.Provider));
-
                 return this.RedirectLocal(returnUrl);
             }
 
             var authenticatedUser = _authenticationService.GetAuthenticatedUser();
 
+            UserAccountLogin newAuthenticatedUser = new UserAccountLogin();
+            if (authenticatedUser != null) {
+                newAuthenticatedUser.Email = authenticatedUser.Email;
+                newAuthenticatedUser.UserName = authenticatedUser.UserName;
+            }
+
+
+            //LINKEDIN E' SEMPRE NON AUTENTICATO?
             if (authenticatedUser != null) {
                 // If the current user is logged in add the new account
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId,
-                                                                  authenticatedUser);
+                                                                  newAuthenticatedUser);
 
                 _notifier.Information(T("Your {0} account has been attached to your local account.", result.Provider));
 
@@ -112,13 +126,14 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                                                                                         normalize.ExtraData));
 
                 _notifier.Information(
-                    T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, newUser.UserName));
+                    T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, normalize.UserName));
 
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider,
                                                                   result.ProviderUserId,
                                                                   newUser);
-
-                _authenticationService.SignIn(newUser, false);
+                
+                IUser newUserI = newUser.IUserParz;
+                _authenticationService.SignIn(newUserI, false);
 
                 return this.RedirectLocal(returnUrl);
             }
@@ -133,17 +148,37 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__provider__"></param>
+        /// <param name="token"></param>
+        /// <param name="secret"></param>
+        /// <returns></returns>
         [OutputCache(NoStore = true, Duration = 0)]
         public JsonResult ExternalTokenLogOn(string __provider__, string token, string secret = "") {
             return ExternalTokenLogOnLogic(__provider__, token, secret);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__provider__"></param>
+        /// <param name="token"></param>
+        /// <param name="secret"></param>
+        /// <returns></returns>
         [OutputCache(NoStore = true, Duration = 0)]
         public JsonResult ExternalTokenLogOnSsl(string __provider__, string token, string secret = "") {
             return ExternalTokenLogOnLogic(__provider__, token, secret);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="__provider__"></param>
+        /// <param name="token"></param>
+        /// <param name="secret"></param>
+        /// <returns></returns>
         [OutputCache(NoStore = true, Duration = 0)]
         public JsonResult ExternalTokenLogOnLogic(string __provider__, string token, string secret = "") {
             TempDataDictionary registeredServicesData = new TempDataDictionary();
@@ -161,7 +196,9 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
                 if (!authResult.IsSuccessful) {
                     return Json(new { success = false, registeredServices = registeredServicesData, message = T("Token authentication failed.").Text }, JsonRequestBehavior.AllowGet);
-                } else {
+                } 
+                else 
+                {
                     if (_orchardOpenAuthWebSecurity.Login(authResult.Provider, authResult.ProviderUserId)) {
                         if (HttpContext.Response.Cookies.Count == 0)
                             return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);
@@ -173,10 +210,19 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
                     var authenticatedUser = _authenticationService.GetAuthenticatedUser();
 
+
+                    UserAccountLogin newAuthenticatedUser = new UserAccountLogin(); 
+                    if (authenticatedUser != null)
+                    {
+                        newAuthenticatedUser.Email=authenticatedUser.Email;
+                        newAuthenticatedUser.UserName = authenticatedUser.UserName;
+                    }
+
+
                     if (authenticatedUser != null) {
                         // If the current user is logged in add the new account
                         _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider, authResult.ProviderUserId,
-                                                                          authenticatedUser);
+                                                                          newAuthenticatedUser);
 
                         if (HttpContext.Response.Cookies.Count == 0)
                             return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);
@@ -210,7 +256,8 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                                                                           authResult.ProviderUserId,
                                                                           newUser);
 
-                        _authenticationService.SignIn(newUser, false);
+                        IUser newUserI = newUser.IUserParz;
+                        _authenticationService.SignIn(newUserI, false);
 
                         if (HttpContext.Response.Cookies.Count == 0)
                             return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);
