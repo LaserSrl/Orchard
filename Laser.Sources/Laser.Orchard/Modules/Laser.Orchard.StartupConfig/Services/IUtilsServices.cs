@@ -136,6 +136,17 @@ namespace Laser.Orchard.StartupConfig.Services {
                     rsp.Data = data;
                     rsp.ResolutionAction = ResolutionAction.NoAction;
                     break;
+
+                case ResponseType.MissingPolicies:
+                    rsp.Success = false;
+                    if (message != "")
+                        rsp.Message = message;
+                    else
+                        rsp.Message = T("Missing Policies").ToString();
+                    rsp.ErrorCode = ErrorCode.MissingPolicies;
+                    rsp.Data = data;
+                    rsp.ResolutionAction = ResolutionAction.AcceptPolicies;
+                    break;
             }
             return rsp;
         }

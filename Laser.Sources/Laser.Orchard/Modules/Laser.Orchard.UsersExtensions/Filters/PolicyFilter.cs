@@ -2,10 +2,10 @@
 using Laser.Orchard.Policy.Models;
 using Laser.Orchard.Policy.Services;
 using Laser.Orchard.StartupConfig.Services;
+using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.UsersExtensions.Services;
 using Newtonsoft.Json.Linq;
 using Orchard;
-using Orchard.ContentManagement;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.Filters;
@@ -60,117 +60,90 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                     if (missingPolicies.Count() > 0) {
 
                         // logga la richiesta per un certo periodo di tempo
-                        if (DateTime.Today.ToString("yyyyMMdd").CompareTo("20160723") < 0) {
-                            string url = "";
-                            string controller = "";
-                            string action = "";
+                        //if (DateTime.Today.ToString("yyyyMMdd").CompareTo("20160723") < 0) {
+                        //    string url = "";
+                        //    string controller = "";
+                        //    string action = "";
 
-                            try {
-                                if (filterContext != null) {
-                                    if (filterContext.HttpContext != null) {
-                                        if (filterContext.HttpContext.Request != null) {
-                                            url = filterContext.HttpContext.Request.RawUrl;
-                                        }
-                                        else {
-                                            url = "No URL available: Request is null.";
-                                        }
-                                    }
-                                    else {
-                                        url = "No URL available: HttpContext is null.";
-                                    }
-                                    if (filterContext.ActionDescriptor != null) {
-                                        action = filterContext.ActionDescriptor.ActionName;
-                                        if (filterContext.ActionDescriptor.ControllerDescriptor != null) {
-                                            controller = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
-                                        }
-                                        else {
-                                            controller = "No controller available: ControlerDescriptor is null.";
-                                        }
-                                    }
-                                    else {
-                                        controller = "No controller available: ActionDescriptor is null.";
-                                    }
-                                }
-                                else {
-                                    url = "No URL available: filterContext is null.";
-                                }
-                                Logger.Error(string.Format("UsersExtensions Policy Filter - Request: {0}, Controller: {1}, Action: {2}.", url, controller, action));
-                            }
-                            catch {
-                                // ignora volutamente qualsiasi errore
-                            }
-                        }
+                        //    try {
+                        //        if (filterContext != null) {
+                        //            if (filterContext.HttpContext != null) {
+                        //                if (filterContext.HttpContext.Request != null) {
+                        //                    url = filterContext.HttpContext.Request.RawUrl;
+                        //                }
+                        //                else {
+                        //                    url = "No URL available: Request is null.";
+                        //                }
+                        //            }
+                        //            else {
+                        //                url = "No URL available: HttpContext is null.";
+                        //            }
+                        //            if (filterContext.ActionDescriptor != null) {
+                        //                action = filterContext.ActionDescriptor.ActionName;
+                        //                if (filterContext.ActionDescriptor.ControllerDescriptor != null) {
+                        //                    controller = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
+                        //                }
+                        //                else {
+                        //                    controller = "No controller available: ControlerDescriptor is null.";
+                        //                }
+                        //            }
+                        //            else {
+                        //                controller = "No controller available: ActionDescriptor is null.";
+                        //            }
+                        //        }
+                        //        else {
+                        //            url = "No URL available: filterContext is null.";
+                        //        }
+                        //        Logger.Error(string.Format("UsersExtensions Policy Filter - Request: {0}, Controller: {1}, Action: {2}.", url, controller, action));
+                        //    }
+                        //    catch {
+                        //        // ignora volutamente qualsiasi errore
+                        //    }
+                        //}
 
                         if (filterContext.Controller.GetType().FullName == "Laser.Orchard.WebServices.Controllers.JsonController") {
-                            ObjectDumper dumper;
-                            StringBuilder sb = new StringBuilder();
-                            XElement dump = null;
+                            string data = PoliciesLMNVSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
 
-                            var realFormat = false;
-                            var minified = false; 
-                            bool.TryParse(_workContext.GetContext().HttpContext.Request["realformat"], out realFormat);
-                            bool.TryParse(_workContext.GetContext().HttpContext.Request["minified"], out minified);
-
-
-
-                            var policies = neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id));
-
-                            sb.Insert(0, "{");
-                            sb.AppendFormat("\"n\": \"{0}\"", "Model");
-                            sb.AppendFormat(", \"v\": \"{0}\"", "VirtualContent");
-                            sb.Append(", \"m\": [{");
-                            sb.AppendFormat("\"n\": \"{0}\"", "VirtualId");
-                            sb.AppendFormat(", \"v\": \"{0}\"", "0");
-                            sb.Append("}]");
-
-                            sb.Append(", \"l\":[");
-
-                            int i = 0;
-                            sb.Append("{");
-                            sb.AppendFormat("\"n\": \"{0}\"", "PendingPolicies");
-                            sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
-                            sb.Append(", \"m\": [");
-
-                            foreach (var item in policies) {
-                                if (i > 0) {
-                                    sb.Append(",");
-                                }
-                                sb.Append("{");
-                                dumper = new ObjectDumper(10);
-                                dump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
-                                JsonConverter.ConvertToJSon(dump, sb, minified, realFormat);
-                                sb.Append("}");
-                                i++;
-                            }
-                            sb.Append("]");
-                            sb.Append("}");
-
-                            sb.Append("]");
-                            sb.Append("}");
-
-                            filterContext.Result = new ContentResult { Content = sb.ToString(), ContentType = "application/json" };
+                            filterContext.Result = new ContentResult { Content = data, ContentType = "application/json" };
                         }
                         else if (filterContext.Controller.GetType().FullName == "Laser.Orchard.WebServices.Controllers.WebApiController") {
-                            JObject json = new JObject();
-                            var resultArray = new JArray();
+                            string data = PoliciesPureJsonSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
 
-                            var policies = neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id));
-
-                            foreach (var pendingPolicy in policies) {
-                                resultArray.Add(new JObject(_contentSerializationServices.SerializeContentItem(pendingPolicy.ContentItem, 0)));
-                            }
-
-                            json.Add("PendingPolicies", resultArray);
-
-                            filterContext.Result = new ContentResult { Content = json.ToString(Newtonsoft.Json.Formatting.None), ContentType = "application/json" };
+                            filterContext.Result = new ContentResult { Content = data, ContentType = "application/json" };
                         }
                         else {
-                            var encodedAssociatedPolicies = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Join(",", missingPolicies)));
+                            string outputFormat = _workContext.GetContext().HttpContext.Request.Headers["OutputFormat"];
 
-                            UrlHelper urlHelper = new UrlHelper(_httpContextAccessor.Current().Request.RequestContext);
-                            var url = urlHelper.Action("Index", "Policies", new { area = "Laser.Orchard.Policy", lang = language, policies = encodedAssociatedPolicies, returnUrl = _httpContextAccessor.Current().Request.RawUrl });
+                            if (String.Equals(outputFormat, "LMNV", StringComparison.OrdinalIgnoreCase)) {
+                                string data = PoliciesLMNVSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
+                                Response response = _utilsServices.GetResponse(ResponseType.MissingPolicies, "", Newtonsoft.Json.JsonConvert.DeserializeObject(data));
 
-                            filterContext.Result = new RedirectResult(url);
+                                filterContext.Result = new ContentResult { Content = Newtonsoft.Json.JsonConvert.SerializeObject(response), ContentType = "application/json" };
+                            }
+                            else if (String.Equals(outputFormat, "PureJson", StringComparison.OrdinalIgnoreCase)) {
+                                string data = PoliciesPureJsonSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
+                                Response response = _utilsServices.GetResponse(ResponseType.MissingPolicies, "", Newtonsoft.Json.JsonConvert.DeserializeObject(data));
+
+                                filterContext.Result = new ContentResult { Content = Newtonsoft.Json.JsonConvert.SerializeObject(response), ContentType = "application/json" };
+                            }
+                            else {
+                                var returnType = ((ReflectedActionDescriptor)filterContext.ActionDescriptor).MethodInfo.ReturnType;
+
+                                if (returnType == typeof(JsonResult)) {
+                                    string data = PoliciesPureJsonSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
+                                    Response response = _utilsServices.GetResponse(ResponseType.MissingPolicies, "", Newtonsoft.Json.JsonConvert.DeserializeObject(data));
+
+                                    filterContext.Result = new ContentResult { Content = Newtonsoft.Json.JsonConvert.SerializeObject(response), ContentType = "application/json" };
+                                }
+                                else {
+                                    var encodedAssociatedPolicies = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Join(",", missingPolicies)));
+
+                                    UrlHelper urlHelper = new UrlHelper(_httpContextAccessor.Current().Request.RequestContext);
+                                    var url = urlHelper.Action("Index", "Policies", new { area = "Laser.Orchard.Policy", lang = language, policies = encodedAssociatedPolicies, returnUrl = _httpContextAccessor.Current().Request.RawUrl });
+
+                                    filterContext.Result = new RedirectResult(url);
+                                }
+                            }
                         }
                     }
                 }
@@ -180,5 +153,64 @@ namespace Laser.Orchard.UsersExtensions.Filters {
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) { }
+
+        private string PoliciesLMNVSerialization(IEnumerable<PolicyTextInfoPart> policies) {
+            ObjectDumper dumper;
+            StringBuilder sb = new StringBuilder();
+            XElement dump = null;
+
+            var realFormat = false;
+            var minified = false;
+            bool.TryParse(_workContext.GetContext().HttpContext.Request["realformat"], out realFormat);
+            bool.TryParse(_workContext.GetContext().HttpContext.Request["minified"], out minified);
+
+            sb.Insert(0, "{");
+            sb.AppendFormat("\"n\": \"{0}\"", "Model");
+            sb.AppendFormat(", \"v\": \"{0}\"", "VirtualContent");
+            sb.Append(", \"m\": [{");
+            sb.AppendFormat("\"n\": \"{0}\"", "VirtualId");
+            sb.AppendFormat(", \"v\": \"{0}\"", "0");
+            sb.Append("}]");
+
+            sb.Append(", \"l\":[");
+
+            int i = 0;
+            sb.Append("{");
+            sb.AppendFormat("\"n\": \"{0}\"", "PendingPolicies");
+            sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
+            sb.Append(", \"m\": [");
+
+            foreach (var item in policies) {
+                if (i > 0) {
+                    sb.Append(",");
+                }
+                sb.Append("{");
+                dumper = new ObjectDumper(10);
+                dump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
+                JsonConverter.ConvertToJSon(dump, sb, minified, realFormat);
+                sb.Append("}");
+                i++;
+            }
+            sb.Append("]");
+            sb.Append("}");
+
+            sb.Append("]");
+            sb.Append("}");
+
+            return sb.ToString();
+        }
+
+        private string PoliciesPureJsonSerialization(IEnumerable<PolicyTextInfoPart> policies) {
+            JObject json = new JObject();
+            var resultArray = new JArray();
+
+            foreach (var pendingPolicy in policies) {
+                resultArray.Add(new JObject(_contentSerializationServices.SerializeContentItem(pendingPolicy.ContentItem, 0)));
+            }
+
+            json.Add("PendingPolicies", resultArray);
+
+            return json.ToString(Newtonsoft.Json.Formatting.None);
+        }
     }
 }
