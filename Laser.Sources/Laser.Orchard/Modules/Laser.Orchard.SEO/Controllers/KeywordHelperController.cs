@@ -13,6 +13,8 @@ namespace Laser.Orchard.SEO.Controllers {
 
         [Admin]
         public ActionResult RefreshTrends(string _hl, string _q, string _geo, string _date) {
+            string query = ParseQString(_q);
+
             var model = new GoogleTrendsViewModel {
                 hl = _hl,
                 q = _q,
@@ -23,14 +25,36 @@ namespace Laser.Orchard.SEO.Controllers {
         }
 
         [Admin]
-        public ActionResult SummaryTrends(string _hl, string _q, string _geo, string _date) {
+        public ActionResult TabbedCharts(string _hl, string _q, string _geo, string _date) {
+            string query = ParseQString(_q);
+
             var model = new GoogleTrendsViewModel {
                 hl = _hl,
-                q = _q,
+                q = query,
                 geo = _geo,
                 date = _date
             };
             return PartialView((object)model);
+        }
+
+        [Admin]
+        public ActionResult SummaryTrends(string _hl, string _q, string _geo, string _date) {
+            string query = ParseQString(_q);
+
+            var model = new GoogleTrendsViewModel {
+                hl = _hl,
+                q = query,
+                geo = _geo,
+                date = _date
+            };
+            return PartialView((object)model);
+        }
+
+        private string ParseQString(string q) {
+            string[] inWords = q.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> kWords = new List<string>();
+            kWords.AddRange(inWords.Select(w => new KeywordHelperKeyword(w).PercentEncode()));
+            return String.Join(",", kWords.Distinct());
         }
     }
 }
