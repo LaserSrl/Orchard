@@ -92,15 +92,14 @@
             function startUpload(file) {
                 var reader = new FileReader();
                 reader.onload = function (fileRead) {
-                    //console.log(fileRead);
+                    //I am not using anything of the FileReader. However, if I don't wrap my upload call in the reader
+                    // the upload for some reason appears to fail.
                     // 2. Call TryStartUpload on the UploadController
                     var url = '@Url.Action("TryStartUpload", "VimeoUpload", new { area = "Laser.Orchard.Vimeo", fileSize = "__fs__" })'
-                        .replace('__fs__', file.size);
+			            .replace('__fs__', file.size);
                     var formData = {
-                        @*folderPath: '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.FolderPath))',
-                        type: '@HttpUtility.JavaScriptStringEncode(Model.Type)',*@
                         __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
-                    }
+                    };
                     console.log(url);
                     $.ajax({
                         url: url,
@@ -139,7 +138,7 @@
                 uploadCall.open('PUT', uploadUrl, true);
                 uploadCall.setRequestHeader('Content-Type', contentType);
                 uploadCall.setRequestHeader('Content-Range', 'bytes ' + offset + '-' + (fileSize - 1) + '/' + fileSize);
-                uploadCall.timeout = 20000;// time in milliseconds
+                uploadCall.timeout = 5000;// time in milliseconds
                 if (uploadCall.upload) { //i am not 100% about this
                     uploadCall.upload.addEventListener('progress', onProgress);
                 }
@@ -151,6 +150,7 @@
 
                 uploadCall.onerror = function (error) {
                     console.log('error on upload');
+                    verifyAndResume(mediaPartId, uploadUrl, fileSize, contentType, blob);
                 };
 
                 uploadCall.onprogress = function () {
@@ -168,15 +168,21 @@
 
             }
 
-            function verifyAndResume(mediaPartId, uploadUrl, fileSize, contentType, blob) {
+            function verifyAndResume(mediaPartId, uploadUrl, fileSize, contentType, blob, times) {
                 // 4. Verify the upload
-                console.log('verify');
+                if (!times) {
+                    times = 0; //how many times has the verify failed?
+                }
+                console.log('verify ' + times);
+                if (times > 10) {
+                    alert('@T("Attempts at communication with Vimeo's servers failed. Try again later.").ToString()');
+            } else {
                 var sent = 0;
                 var verifyCall = new XMLHttpRequest();
                 verifyCall.open('PUT', uploadUrl, true);
                 verifyCall.setRequestHeader('Content-Range', 'bytes */*'); // + fileSize);
-                //verifyCall.setRequestHeader('Content-Type', contentType);
-                verifyCall.timeout = 20000;
+                    //verifyCall.setRequestHeader('Content-Type', contentType);
+                verifyCall.timeout = 5000;
                 verifyCall.onload = function (response) {
                     var range = response.target.getResponseHeader("Range");
                     if (range) {
@@ -193,20 +199,22 @@
                 };
                 verifyCall.onerror = function (error) {
                     console.log('error on verify');
+                    verifyAndResume(mediaPartId, uploadUrl, fileSize, contentType, blob, times + 1);
                 };
                 verifyCall.ontimeout = function () {
-                    verifyAndResume(mediaPartId, uploadUrl, fileSize, contentType, blob); //try again
+                    verifyAndResume(mediaPartId, uploadUrl, fileSize, contentType, blob, times + 1); //try again
                 };
-                verifyCall.send()
+                verifyCall.send();
             }
+        }
 
             function terminateUpload(mPId, uploadUrl, fileSize, contentType, blob) {
                 console.log('terminate');
                 var url = '@Url.Action("FinishUpload", "VimeoUpload", new { area = "Laser.Orchard.Vimeo", mediaPartId = "__id__" })'
                         .replace('__id__', mPId);
                 var formData = {
-                        __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
-                    }
+                    __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
+                }
                 $.ajax({
                     url: url,
                     data: formData,
@@ -215,12 +223,12 @@
                         if (response.Success) {
                             console.log('Upload complete for media part ' + mPId);
                         } else {
-                            if (response.ErrorCode == 4001 || response.ErrorCode == 4003) { 
+                            if (response.Data.ErrorCode == 4001 || response.Data.ErrorCode == 4003) {
                                 //InProgress || FinishingErrors
                                 verifyAndResume(mPId, uploadUrl, fileSize, contentType, blob);
                             } else {
                                 alert('@T("Critical error while uploading").ToString()');
-                            } 
+                            }
                         }
                     }
                 });
