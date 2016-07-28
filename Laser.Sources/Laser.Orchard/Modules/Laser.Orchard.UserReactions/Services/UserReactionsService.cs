@@ -15,7 +15,8 @@ using Orchard.ContentManagement;
 using System.Web.Script.Serialization;
 using Orchard.Localization;
 using Orchard.Logging;
-
+using Orchard.Security.Permissions;
+using Orchard.Roles.Services;
 
 namespace Laser.Orchard.UserReactions.Services {
 
@@ -32,7 +33,6 @@ namespace Laser.Orchard.UserReactions.Services {
         List<UserReactionsClickRecord> GetListTotalReactions(int Content);
     }
 
-
     //Class definition to user type
     /// <summary>
     /// 
@@ -48,10 +48,10 @@ namespace Laser.Orchard.UserReactions.Services {
         private readonly IRepository<UserReactionsPartRecord> _repoPartRec;
         private readonly IRepository<UserReactionsPart> _repoPart;
         private readonly IOrchardServices _orchardServices;
+        private readonly IRoleService _roleService;
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        //private readonly IRepository<ContentItemRecord> _repoContent;
         /// <summary>
         /// 
         /// </summary>
@@ -71,7 +71,8 @@ namespace Laser.Orchard.UserReactions.Services {
                                     IRepository<UserReactionsPartRecord> repoPartRec,
                                     IRepository<UserReactionsSummaryRecord> repoSummary,
                                     IOrchardServices orchardServices,
-                                    IRepository<UserReactionsPart> repoPart) {
+                                    IRepository<UserReactionsPart> repoPart,
+                                    IRoleService roleService) {
             _repoTypes = repoTypes;
             _repoTot = repoTot;
             _authenticationService = authenticationService;
@@ -82,6 +83,7 @@ namespace Laser.Orchard.UserReactions.Services {
             _repoSummary = repoSummary;
             _orchardServices = orchardServices;
             _repoPart = repoPart;
+            _roleService = roleService;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -321,6 +323,19 @@ namespace Laser.Orchard.UserReactions.Services {
             return retData;
         }
 
+        private Permission GetPermissionByName(string permission) {
+            if (!string.IsNullOrEmpty(permission)) {
+                var listpermissions = _roleService.GetInstalledPermissions().Values;
+                foreach (IEnumerable<Permission> sad in listpermissions) {
+                    foreach (Permission perm in sad) {
+                        if (perm.Name == permission) {
+                            return perm;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
 
         /// <param name="CurrentUser"></param>
         /// <param name="IconType"></param>
@@ -330,14 +345,10 @@ namespace Laser.Orchard.UserReactions.Services {
             IUser userId = this.CurrentUser(); 
             UserReactionsClickRecord res = new UserReactionsClickRecord();
             string userCookie = string.Empty;
-
             var part = _orchardServices.ContentManager.Get<UserReactionsPart>(CurrentPage);
             var items = GetTot(part);
-            
             UserReactionsUser reactionsCurrentUser = new UserReactionsUser();
             reactionsCurrentUser = ReactionsCurrentUser(userId);
-
-
             List<UserReactionsVM> newSommaryRecord = new List<UserReactionsVM>();
             foreach (UserReactionsVM item in items) {
                 UserReactionsVM newItem = new UserReactionsVM();
@@ -364,7 +375,8 @@ namespace Laser.Orchard.UserReactions.Services {
 
         public List<UserReactionsClickRecord> GetListTotalReactions(int Content) 
         {
-            var retVal = GetOrderedClickTable().Where(z=>z.ContentItemRecordId==Content).Reverse().ToList();
+            var retVal = GetOrderedClickTable().Where(z=>z.ContentItemRecordId==Content).ToList();
+            retVal.Reverse();
             return retVal;
         }
 

@@ -54,6 +54,10 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Roles, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Roles\bin\Orchard.Roles.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Users">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
     </Reference>
@@ -140,6 +144,7 @@
     <Compile Include="Models\UserReactionsUser.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Security\UserReactionsPermission.cs" />
     <Compile Include="Services\UserReactionsService.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Settings\UserReactionsPartSettingsHooks.cs" />
