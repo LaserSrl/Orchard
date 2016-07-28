@@ -146,6 +146,7 @@ namespace Laser.Orchard.UserReactions.Services {
 
             retval.TypeReactionsPartsSelected = viewmodel;
             retval.Filtering = Model.Filtering;
+            retval.UserChoiceBehaviour = Model.UserChoiceBehaviour;
             return retval;
         }
 
@@ -163,7 +164,7 @@ namespace Laser.Orchard.UserReactions.Services {
 
             var userRT = new UserReactionsTypes();
             userRT.CssName = reactionSettings.StyleFileNameProvider;
-
+            userRT.AllowMultipleChoices = reactionSettings.AllowMultipleChoices;
             userRT.UserReactionsType = GetTypesTable().Select(r => new UserReactionsTypeVM {
                 Id = r.Id,
                 Priority = r.Priority,
