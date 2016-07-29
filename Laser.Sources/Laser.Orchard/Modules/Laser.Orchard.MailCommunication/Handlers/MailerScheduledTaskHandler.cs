@@ -21,8 +21,11 @@ using Laser.Orchard.StartupConfig.Extensions;
 using Orchard.Services;
 using Orchard.Logging;
 using Laser.Orchard.TemplateManagement.ViewModels;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.MailCommunication.Handlers {
+
+    [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class MailerScheduledTaskHandler : IScheduledTaskHandler {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
@@ -155,7 +158,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/Index", baseUri) + "'>" + unsubscribe + "</a>";
 
                 if (body.Contains(ph_Unsubscribe))
-                    body.Replace(ph_Unsubscribe, linkUnsubscribe);
+                    body = body.Replace(ph_Unsubscribe, linkUnsubscribe);
                 else
                     body += "<br /><br />" + linkUnsubscribe;
 

@@ -175,36 +175,6 @@ namespace Laser.Orchard.NewsLetters.Handlers {
             var data = new Dictionary<string, object>();
             var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
 
-            #region old
-            //ParseTemplateContext templatectx = new ParseTemplateContext();
-            //var template = _templateService.GetTemplate(templateId);
-            //var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
-            //var host = string.Format("{0}://{1}{2}",
-            //                        baseUri.Scheme,
-            //                        baseUri.Host,
-            //                        baseUri.Port == 80 ? string.Empty : ":" + baseUri.Port);
-            //var urlHelper = GetUrlHelper();
-
-            //// Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
-            //// Nel template pertanto Model, diventa Model.Content
-            //var dynamicModel = new {
-            //    Content = contentModel,
-            //    Urls = new {
-            //        SubscriptionSubscribe = urlHelper.SubscriptionSubscribe(),
-            //        SubscriptionUnsubscribe = urlHelper.SubscriptionUnsubscribe(),
-            //        SubscriptionConfirmSubscribe = urlHelper.SubscriptionConfirmSubscribe(),
-            //        SubscriptionConfirmUnsubscribe = urlHelper.SubscriptionConfirmUnsubscribe(),
-            //        BaseUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl,
-            //        MediaUrl = urlHelper.MediaExtensionsImageUrl(),
-            //        Domain = host,
-
-            //    }.ToExpando()
-            //};
-            //templatectx.Model = dynamicModel;
-
-            //var body = _templateService.ParseTemplate(template, templatectx);
-            #endregion
-
             var template = _templateService.GetTemplate(templateId);
             string body = _templateService.RitornaParsingTemplate(contentModel, templateId);
 
@@ -213,10 +183,10 @@ namespace Laser.Orchard.NewsLetters.Handlers {
                 // Add Link [UNSUBSCRIBE]
                 string ph_Unsubscribe = "[UNSUBSCRIBE]";
                 string unsubscribe = T("Click here to unsubscribe").Text;
-                string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/Unsubscribe", baseUri) + "'>" + unsubscribe + "</a>";
+                string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/Unsubscribe?newsletterId={1}", baseUri, part.NewsletterDefinitionPartRecord_Id) + "'>" + unsubscribe + "</a>";
 
                 if (body.Contains(ph_Unsubscribe))
-                    body.Replace(ph_Unsubscribe, linkUnsubscribe);
+                    body = body.Replace(ph_Unsubscribe, linkUnsubscribe);
                 else
                     body += "<br /><br />" + linkUnsubscribe;
 

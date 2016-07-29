@@ -140,5 +140,21 @@ namespace Laser.Orchard.Newsletters {
             return 3;
         }
 
+        public int UpdateFrom3() {
+            _utilServices.EnableFeature("Laser.Orchard.MailerUtility");
+            return 4;
+        }
+
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("SubscriberRecord",
+                table => table.AddColumn<string>("UnsubscriptionKey", column => column.WithLength(500))
+               );
+            SchemaBuilder.AlterTable("SubscriberRecord",
+                table => table.AlterColumn("Guid", col => col.WithType(System.Data.DbType.String).WithLength(500))
+               );
+
+            return 5;
+        }
+
     }
 }

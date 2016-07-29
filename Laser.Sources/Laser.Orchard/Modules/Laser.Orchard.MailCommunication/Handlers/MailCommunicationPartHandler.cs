@@ -16,9 +16,11 @@ using Orchard.Localization;
 using Orchard.UI.Notify;
 using Orchard.Tasks.Scheduling;
 using Laser.Orchard.TemplateManagement.ViewModels;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.MailCommunication.Handlers {
 
+    [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class MailCommunicationPartHandler : ContentHandler {
         public Localizer T { get; set; }
         private readonly INotifier _notifier;

@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.MailCommunication.Services;
+using Orchard.Environment.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Web.Mvc;
 
 namespace Laser.Orchard.MailCommunication.Controllers {
 
+    [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class CountPanelController : Controller {
         private readonly IMailCommunicationService _mailCommunicationService;
         public CountPanelController(IMailCommunicationService mailCommunicationService) {

@@ -37,11 +37,5 @@
         @Html.TextBoxFor(m => m.Settings.TokenValidity, new { @class = "text large" })
         <span class="hint">@T("Validity (in days) of the token used by massive mailer to return the number of sent mails.")</span>
     </div>
-    <div>
-        <h2>@T("UNSUBSCRIPTION")</h2>
-        @Html.LabelFor(m => m.Settings.IdTemplateUnsubscribe, T("Pick a template Unsubscribe"))
-        @Html.DropDownListFor(m=>m.Settings.IdTemplateUnsubscribe, new SelectList(Model.TemplatesUnsubscribeList,"Id","Title", Model.Settings.IdTemplateUnsubscribe))
-        <span class="hint">@T("The template to use for.")</span>
-    </div>
 </fieldset>
 

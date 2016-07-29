@@ -6,6 +6,7 @@ using Laser.Orchard.TemplateManagement.Services;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.UI.Notify;
@@ -21,6 +22,7 @@ namespace Laser.Orchard.MailCommunication.Services {
         bool UnsubscribeMail(string keyUnsubscribe);
     }
 
+    [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class MailUnsubscribeService : IMailUnsubscribeService {
         private readonly IOrchardServices _orchardServices;
         private readonly IRepository<CommunicationEmailRecord> _emailrepository;
@@ -74,15 +76,15 @@ namespace Laser.Orchard.MailCommunication.Services {
                 UnsubscriptionDate = DateTime.Now
             };
 
-            var mailerConfig = _orchardServices.WorkContext.CurrentSite.As<MailerSiteSettingsPart>();
+            var settings = _orchardServices.WorkContext.CurrentSite.As<MailCommunicationSettingsPart>();
 
-            if (mailerConfig.IdTemplateUnsubscribe == null) {
+            if (settings.IdTemplateUnsubscribe == null) {
                 _orchardServices.Notifier.Information(T("Select in settings or create a template for e-mail unsubscribe"));
                 return false;
             }
 
             // Send Mail
-            _templateServices.SendTemplatedEmail(viewModel, (int)mailerConfig.IdTemplateUnsubscribe, null, new List<string> { email }, null, false, null);
+            _templateServices.SendTemplatedEmail(viewModel, (int)settings.IdTemplateUnsubscribe, null, new List<string> { email }, null, false, null);
 
             return true;
         }

@@ -11,8 +11,11 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.UI.Admin;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.MailCommunication.Drivers {
+
+    [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class MailCommunicationPartDriver : ContentPartDriver<MailCommunicationPart> {
         private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;

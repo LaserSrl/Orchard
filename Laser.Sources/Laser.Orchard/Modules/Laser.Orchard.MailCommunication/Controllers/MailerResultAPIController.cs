@@ -10,10 +10,12 @@ using Orchard.ContentManagement;
 using Orchard;
 using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.MailCommunication.Models;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.MailCommunication.Controllers
 {
     // questa API utilizza un proprio token per la protezione
+    [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class MailerResultAPIController : ApiController
     {
         public class DatiPost

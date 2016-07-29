@@ -22,6 +22,7 @@ using Orchard.UI.Notify;
 using Orchard.Events;
 using System.Diagnostics;
 using Laser.Orchard.TemplateManagement.ViewModels;
+using Laser.Orchard.StartupConfig.Services;
 
 namespace Laser.Orchard.NewsLetters.Services {
     public interface IJobsQueueService : IEventHandler {
@@ -37,17 +38,20 @@ namespace Laser.Orchard.NewsLetters.Services {
         private readonly ITemplateService _templateService;
         private readonly IMessageService _messageService;
         private readonly INotifier _notifier;
-        public NewsletterServices(
+        private readonly ICommonsServices _commonServices;
 
+        public NewsletterServices(
             IJobsQueueService jobsQueueService,
             IContentManager contentManager,
             IOrchardServices orchardServices,
             ITemplateService templateService,
-             IMessageService messageService,
+            IMessageService messageService,
             IRepository<SubscriberRecord> repositorySubscribers,
             IRepository<NewsletterDefinitionPartRecord> repositoryNewsletterDefinition,
             IRepository<NewsletterEditionPartRecord> repositoryNewsletterEdition,
-             INotifier notifier) {
+            ICommonsServices commonServices,
+            INotifier notifier) {
+
             _notifier = notifier;
             _contentManager = contentManager;
             _orchardServices = orchardServices;
@@ -58,6 +62,7 @@ namespace Laser.Orchard.NewsLetters.Services {
             _templateService = templateService;
             _repositoryNewsletterEdition = repositoryNewsletterEdition;
             _jobsQueueService = jobsQueueService;
+            _commonServices = commonServices;
         }
 
         public Localizer T { get; set; }
@@ -140,10 +145,9 @@ namespace Laser.Orchard.NewsLetters.Services {
                 ContentItems = fullyItems
             }.ToExpando();
             //if (!isTest) {
-            //    if (SendEmail((dynamic)model,
-            //        GetNewsletterDefinition(newsletterEdition.NewsletterDefinitionPartRecord_Id,
-            //            VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id,
-            //            null, subscribersEmails)) {
+            //  if (_templateService.SendTemplatedEmail((dynamic)model,
+            //                                        GetNewsletterDefinition(newsletterEdition.NewsletterDefinitionPartRecord_Id,VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id,
+            //                                        new List<string> { testEmail }, null, null, false, null)) {
 
             //        // Aggiorno la newsletter edition, e rimuovo la relazione tra Newletter e Announcement 
             //        newsletterEdition.Dispatched = true;
@@ -162,7 +166,7 @@ namespace Laser.Orchard.NewsLetters.Services {
                 List<TemplatePlaceHolderViewModel> listaPH = new List<TemplatePlaceHolderViewModel>();
 
                 string unsubscribe = T("Click here to unsubscribe").Text;
-                string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/Unsubscribe", baseUri) + "'>" + unsubscribe + "</a>";
+                string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/Unsubscribe?newsletterId={1}", baseUri, newsletterEdition.NewsletterDefinitionPartRecord_Id) + "'>" + unsubscribe + "</a>";
 
                 TemplatePlaceHolderViewModel ph = new TemplatePlaceHolderViewModel();
                 ph.Name = "[UNSUBSCRIBE]";
@@ -171,17 +175,9 @@ namespace Laser.Orchard.NewsLetters.Services {
 
                 listaPH.Add(ph);
 
-                //if (SendEmail((dynamic)model,
-                //    GetNewsletterDefinition(newsletterEdition.NewsletterDefinitionPartRecord_Id,
-                //        VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id,
-                //        new List<string> { testEmail }, null))
                 if (_templateService.SendTemplatedEmail((dynamic)model,
                                                         GetNewsletterDefinition(newsletterEdition.NewsletterDefinitionPartRecord_Id, VersionOptions.Published).As<NewsletterDefinitionPart>().TemplateRecord_Id,
-                                                        new List<string> { testEmail },
-                                                        null,
-                                                        null,
-                                                        true, 
-                                                        listaPH))
+                                                        new List<string> { testEmail }, null, null, false, listaPH))
                 
                     _orchardServices.Notifier.Information(T("Newsletter edition sent to a test email!"));
             }
@@ -189,7 +185,6 @@ namespace Laser.Orchard.NewsLetters.Services {
                 _orchardServices.Notifier.Error(T("Enter a test email!"));
             }
         }
-
 
         public IList<AnnouncementLookupViewModel> GetNextAnnouncements(int newsltterId, int[] selectedIds) {
             var list = _contentManager.Query<AnnouncementPart, AnnouncementPartRecord>(VersionOptions.Published)
@@ -241,10 +236,17 @@ namespace Laser.Orchard.NewsLetters.Services {
             SubscriberRecord returnValue = null;
             try {
                 var subs = _repositorySubscribers.Table.Where(w => w.Email == subscriber.Email &&
-                    w.NewsletterDefinition.Id == subscriber.NewsletterDefinition_Id).SingleOrDefault();
+                                                                   w.NewsletterDefinition.Id == subscriber.NewsletterDefinition_Id).SingleOrDefault();
+
+                // Create Nonce
+                string parametri = "Email=" + subscriber.Email + "&Guid=" + Guid.NewGuid().ToString();
+                TimeSpan delay = new TimeSpan(1, 0, 0);
+                string Nonce = _commonServices.CreateNonce(parametri, delay);
+
                 if (subs == null) {
                     subs = new SubscriberRecord {
                         Email = subscriber.Email,
+                        Guid = Nonce,
                         Confirmed = false,
                         SubscriptionDate = DateTime.Now,
                         Name = subscriber.Name,
@@ -263,7 +265,7 @@ namespace Laser.Orchard.NewsLetters.Services {
                 else if (!subs.Confirmed) {
                     subs.SubscriptionDate = DateTime.Now;
                     subs.Name = subscriber.Name;
-                    subs.Guid = Guid.NewGuid().ToString();
+                    subs.Guid = Nonce;
                     try {
                         _repositorySubscribers.Update(subs);
                         returnValue = subs;
@@ -277,19 +279,22 @@ namespace Laser.Orchard.NewsLetters.Services {
                     _orchardServices.Notifier.Information(T("Email already registered!"));
                 }
                 if (returnValue != null) {
+
+                    // Model template Mail
+                    var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+
                     dynamic viewModel = new SubscriberViewModel {
                         Email = subs.Email,
                         Name = subs.Name,
                         Guid = subs.Guid,
+                        LinkSubscription = string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/ConfirmSubscribe?key={1}", baseUri, System.Web.HttpUtility.HtmlEncode(Nonce)),
                         NewsletterDefinition_Id = subs.NewsletterDefinition.Id,
                         NewsletterDefinition = _contentManager.Get(subs.NewsletterDefinition.Id)
                     };
-                    //SendEmail(viewModel, subs.NewsletterDefinition.ConfirmSubscrptionTemplateRecord_Id, new List<string> { subs.Email }, null);
+
                     _templateService.SendTemplatedEmail(viewModel,
                                                         subs.NewsletterDefinition.ConfirmSubscrptionTemplateRecord_Id,
-                                                        new List<string> { subs.Email },
-                                                        null);
-
+                                                        new List<string> { subs.Email }, null, null, false, null);
                 }
             }
             catch {
@@ -299,31 +304,48 @@ namespace Laser.Orchard.NewsLetters.Services {
             return returnValue;
         }
 
-        public SubscriberRecord TryRegisterConfirmSubscriber(SubscriberViewModel subscriber) {
-            try {
-                var subs = _repositorySubscribers.Table.Where(w => w.Email == subscriber.Email &&
-                w.Guid == subscriber.Guid).SingleOrDefault();
-                if (subs != null && !subs.Confirmed) {
-                    subs.ConfirmationDate = DateTime.Now;
-                    subs.Confirmed = true;
-                    try {
-                        _repositorySubscribers.Update(subs);
-                        return subs;
-                    }
-                    catch (Exception ex) {
-                        _orchardServices.Notifier.Error(T(ex.Message));
-                        return null;
-                    }
-                }
-                else if (subs != null && subs.Confirmed) {
-                    _orchardServices.Notifier.Information(T("Email already registered!"));
-                    return null;
-                }
-            }
-            catch {
+        public SubscriberRecord TryRegisterConfirmSubscriber(string keySubscribe) {
+            string parametri = "";
+
+            // Ritorno al Nonce originale
+            keySubscribe = System.Web.HttpUtility.HtmlDecode(keySubscribe);
+
+            // Verifico che non sia passata più di 1 ora dalla richiesta di Unsubscribe
+            bool decryptOk = _commonServices.DecryptNonce(keySubscribe, out parametri);
+
+            if (!decryptOk) {
+                _orchardServices.Notifier.Information(T("Subscribe impossible. Please try again."));
+                return null;
             }
 
-            return null;
+            string[] infoKey = parametri.Split('&');
+            string[] parEmail = infoKey[0].Split('=');
+            string email = parEmail[1];
+
+            var subs = _repositorySubscribers.Table.Where(w => w.Email == email && w.Guid == keySubscribe).SingleOrDefault();
+
+            if (subs == null) {
+                _orchardServices.Notifier.Information(T("Subscriber not found!"));
+                return null;
+            }
+
+            if (subs.Confirmed) {
+                _orchardServices.Notifier.Information(T("Email already registered!"));
+                    return null;
+            }
+            
+            subs.Guid = null;
+            subs.ConfirmationDate = DateTime.Now;
+            subs.Confirmed = true;
+
+            try {
+                _repositorySubscribers.Update(subs);
+                return subs;
+            }
+            catch (Exception ex) {
+                _orchardServices.Notifier.Error(T(ex.Message));
+                return null;
+            }
         }
 
         public SubscriberRecord TryUnregisterSubscriber(SubscriberViewModel subscriber) {
@@ -343,18 +365,31 @@ namespace Laser.Orchard.NewsLetters.Services {
                     return null;
                 }
                 if (returnValue != null) {
+
+                    // Create Nonce
+                    string parametri = "Email=" + subs.Email + "&Guid=" + subs.Guid;
+                    TimeSpan delay = new TimeSpan(1, 0, 0);
+                    string Nonce = _commonServices.CreateNonce(parametri, delay);
+
+                    // Update SubscriberRecord - Save Nonce
+                    returnValue.UnsubscriptionKey = Nonce;
+                    _repositorySubscribers.Update(returnValue);
+
+                    // Model template Mail
+                    var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+
                     dynamic viewModel = new SubscriberViewModel {
                         Email = subs.Email,
                         Name = subs.Name,
-                        Guid = subs.Guid,
+                        LinkUnsubscription = string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/ConfirmUnsubscribe?key={1}", baseUri, System.Web.HttpUtility.HtmlEncode(Nonce)),
+                        KeyUnsubscription = Nonce,
                         NewsletterDefinition_Id = subs.NewsletterDefinition.Id,
                         NewsletterDefinition = _contentManager.Get(subs.NewsletterDefinition.Id)
                     };
-                    //SendEmail(viewModel, subs.NewsletterDefinition.DeleteSubscrptionTemplateRecord_Id, new List<string> { subs.Email }, null);
+
                     _templateService.SendTemplatedEmail(viewModel,
                                                         subs.NewsletterDefinition.DeleteSubscrptionTemplateRecord_Id,
-                                                        new List<string> { subs.Email },
-                                                        null);
+                                                        new List<string> { subs.Email }, null, null, false, null);
                 }
             }
             catch {
@@ -364,98 +399,52 @@ namespace Laser.Orchard.NewsLetters.Services {
             return returnValue;
         }
 
-        public SubscriberRecord TryUnregisterConfirmSubscriber(SubscriberViewModel subscriber) {
-            try {
-                var subs = _repositorySubscribers.Table.Where(w => w.Email == subscriber.Email &&
-                    w.Guid == subscriber.Guid).SingleOrDefault();
-                if (subs != null && subs.Confirmed) {
-                    subs.UnsubscriptionDate = DateTime.Now;
-                    subs.Confirmed = false;
-                    try {
-                        _repositorySubscribers.Update(subs);
-                        return subs;
-                    }
-                    catch (Exception ex) {
-                        _orchardServices.Notifier.Error(T(ex.Message));
-                        return null;
-                    }
-                }
-                else if (subs != null && !subs.Confirmed) {
-                    _orchardServices.Notifier.Information(T("Email not yet registered!"));
-                    return null;
-                }
-            }
-            catch {
+        public SubscriberRecord TryUnregisterConfirmSubscriber(string keyUnsubscribe) {
+            string parametri = "";
 
+            // Ritorno al Nonce originale
+            keyUnsubscribe = System.Web.HttpUtility.HtmlDecode(keyUnsubscribe);
+
+            // Verifico che non sia passata più di 1 ora dalla richiesta di Unsubscribe
+            bool decryptOk = _commonServices.DecryptNonce(keyUnsubscribe, out parametri);
+
+            if (!decryptOk) {
+                _orchardServices.Notifier.Information(T("Unsubscribe impossible. Please try again."));
+                return null;
             }
-            return null;
+
+            string[] infoKey = parametri.Split('&');
+            string[] parEmail = infoKey[0].Split('=');
+            string email = parEmail[1];
+
+            // Verifico tra gli iscritti sia presente la mail e la key (nonce)
+            var subs = _repositorySubscribers.Table.Where(w => w.Email == email && w.UnsubscriptionKey.Equals(keyUnsubscribe)).SingleOrDefault();
+
+            if (subs == null) {
+                _orchardServices.Notifier.Information(T("Subscriber not found!"));
+                return null;
+            }
+
+            if (!subs.Confirmed) {
+                _orchardServices.Notifier.Information(T("Email not yet registered!"));
+                return null;
+            }
+
+            subs.UnsubscriptionKey = null;
+            subs.UnsubscriptionDate = DateTime.Now;
+            subs.Confirmed = false;
+
+            try 
+            {
+                _repositorySubscribers.Update(subs);
+                return subs;
+            } 
+            catch (Exception ex) {
+                _orchardServices.Notifier.Error(T(ex.Message));
+                return null;
+            }
         }
+        
         #endregion
-
-        //private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, bool queued = true) {
-        //    ParseTemplateContext templatectx = new ParseTemplateContext();
-        //    var template = _templateService.GetTemplate(templateId);
-        //    var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-
-        //    // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
-        //    // Nel template pertanto Model, diventa Model.Content
-        //    var host = string.Format("{0}://{1}{2}",
-        //                            _orchardServices.WorkContext.HttpContext.Request.Url.Scheme,
-        //                            _orchardServices.WorkContext.HttpContext.Request.Url.Host,
-        //                            _orchardServices.WorkContext.HttpContext.Request.Url.Port == 80
-        //                                ? string.Empty
-        //                                : ":" + _orchardServices.WorkContext.HttpContext.Request.Url.Port);
-        //    var dynamicModel = new {
-        //        Content = contentModel,
-        //        Urls = new {
-        //            SubscriptionSubscribe = urlHelper.SubscriptionSubscribe(),
-        //            SubscriptionUnsubscribe = urlHelper.SubscriptionUnsubscribe(),
-        //            SubscriptionConfirmSubscribe = urlHelper.SubscriptionConfirmSubscribe(),
-        //            SubscriptionConfirmUnsubscribe = urlHelper.SubscriptionConfirmUnsubscribe(),
-        //            BaseUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl,
-        //            MediaUrl = urlHelper.MediaExtensionsImageUrl(),
-        //            Domain = host,
-
-        //        }.ToExpando()
-        //    };
-        //    templatectx.Model = dynamicModel;
-
-        //    var body = _templateService.ParseTemplate(template, templatectx);
-        //    if (body.StartsWith("Error On Template")) {
-        //        _notifier.Add(NotifyType.Error, T("Error on template, mail not sended"));
-        //        return false;
-        //    }
-        //    var data = new Dictionary<string, object>();
-        //    var smtp = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
-        //    var recipient = sendTo != null ? sendTo : new List<string> { smtp.Address };
-        //    data.Add("Subject", template.Subject);
-        //    data.Add("Body", body);
-        //    data.Add("Recipients", String.Join(",", recipient));
-        //    if (bcc != null) {
-        //        data.Add("Bcc", String.Join(",", bcc));
-        //    }
-        //    //var watch = Stopwatch.StartNew();
-        //    //int msgsent = 0;
-
-        //    //for(int i=0;i<20;i++) {
-        //    //    msgsent++;
-        //    //    data["Subject"] = msgsent.ToString();
-        //    //    data["Bcc"] = "lorenzo.frediani@laser-group.com";
-        //    //    _messageService.Send(SmtpMessageChannel.MessageType, data);
-        //    //}
-        //    //watch.Stop();
-        //    //_notifier.Add(NotifyType.Information, T("Sent " + msgsent.ToString()+" email in Milliseconds:" + watch.ElapsedMilliseconds.ToString()));            
-        //    if (!queued) {
-        //        _messageService.Send(SmtpMessageChannel.MessageType, data);
-        //    }
-        //    else {
-        //        var priority = 0;//normal 50 to hight -50 to low
-
-        //        _jobsQueueService.Enqueue("IMessageService.Send", new { type = SmtpMessageChannel.MessageType, parameters = data }, priority);
-        //    }
-
-        //    return true;
-        //}
-
     }
 }

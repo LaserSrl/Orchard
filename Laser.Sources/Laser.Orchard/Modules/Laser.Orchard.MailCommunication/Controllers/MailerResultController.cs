@@ -9,10 +9,12 @@ using Orchard.ContentManagement;
 using Orchard;
 using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.MailCommunication.Models;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.MailCommunication.Controllers
 {
     [OutputCache(NoStore = true, Duration = 0)]
+    [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class MailerResultController : Controller
     {
         //private readonly IUtilsServices _utilsServices;

@@ -113,7 +113,7 @@ namespace Laser.Orchard.TemplateManagement.Services {
                 foreach (TemplatePlaceHolderViewModel ph in listaPH) {
 
                     if (body.Contains(ph.Name)) {
-                        body.Replace(ph.Name, ph.Value);
+                        body = body.Replace(ph.Name, ph.Value);
                     } else {
                         if (ph.ShowForce)
                             body += "<br /><br />" + ph.Value;

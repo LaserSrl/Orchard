@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.MailCommunication.Services;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Themes;
@@ -11,6 +12,8 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.MailCommunication.Controllers {
+
+    [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class UnsubscribeController : Controller {
 
         public Localizer T { get; set; }

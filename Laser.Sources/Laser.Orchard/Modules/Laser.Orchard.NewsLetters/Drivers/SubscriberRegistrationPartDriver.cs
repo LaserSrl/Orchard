@@ -60,7 +60,12 @@ namespace Laser.Orchard.NewsLetters.Drivers {
             }
             var selectedNews = HttpContext.Current.Request.Form[Prefix + ".Subscription_Newsletters_Ids"];
             selectedNews = String.Join(",", selectedNews.Split(',').Where(w => w != "false"));
-            part.NewsletterDefinitionIds = selectedNews;
+
+            if (string.IsNullOrEmpty(selectedNews))
+                updater.AddModelError("SubscriberRegistrationPartValidationError", T("Subscription for newsletter is mandatory"));
+            else
+                part.NewsletterDefinitionIds = selectedNews;
+
             return Editor(part, shapeHelper);
         }
 

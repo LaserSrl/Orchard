@@ -5,6 +5,7 @@ using NHibernate.Transform;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
 using System;
 using System.Collections;
@@ -19,6 +20,7 @@ namespace Laser.Orchard.MailCommunication.Services {
         IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false);
     }
 
+    [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class DefaultMailCommunicationService : IMailCommunicationService {
         private readonly IOrchardServices _orchardServices;
         private readonly ICultureManager _cultureManager;
