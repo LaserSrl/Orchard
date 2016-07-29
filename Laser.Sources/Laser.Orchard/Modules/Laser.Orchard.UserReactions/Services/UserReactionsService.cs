@@ -31,6 +31,7 @@ namespace Laser.Orchard.UserReactions.Services {
         UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model);
         LocalizedString GetReactionEnumTranslations(ReactionsNames reactionName);
         List<UserReactionsClickRecord> GetListTotalReactions(int Content);
+        bool HasPermission(string contentType);
     }
 
     //Class definition to user type
@@ -512,9 +513,11 @@ namespace Laser.Orchard.UserReactions.Services {
 
         }
 
-
-
-
+        public bool HasPermission(string contentType) {
+            bool result = false;
+            Permission permissionToTest = GetPermissionByName("ReactionsFor" + contentType);
+            result = _orchardServices.Authorizer.Authorize(permissionToTest);
+            return result;
+        }
     }
-
 }

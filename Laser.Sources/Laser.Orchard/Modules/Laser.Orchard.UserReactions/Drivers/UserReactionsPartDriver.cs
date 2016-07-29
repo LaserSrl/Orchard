@@ -42,10 +42,14 @@ namespace Laser.Orchard.UserReactions.Drivers {
 
             //Passare la view model da definire 
             if (displayType == "Detail") {
-                viewmodel = _userReactionService.GetTot(part);              
+                viewmodel = _userReactionService.GetTot(part);
+                bool authorized = _userReactionService.HasPermission(part.ContentItem.ContentType);
+                bool requireLogin = false;
+                if(authorized == false && _orchardServices.WorkContext.CurrentUser == null) {
+                    requireLogin = true;
+                }
                 return ContentShape("Parts_UserReactions_Detail", () => shapeHelper
-                    .Parts_UserReactions_Detail(UserReaction: viewmodel));
-
+                    .Parts_UserReactions_Detail(UserReaction: viewmodel, Authorized: authorized, RequireLogin: requireLogin));
             }
 
             //Passare la view model da definire 
