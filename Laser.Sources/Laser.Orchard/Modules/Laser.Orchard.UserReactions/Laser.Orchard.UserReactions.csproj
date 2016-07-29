@@ -148,6 +148,7 @@
     <Compile Include="Services\UserReactionsService.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Settings\UserReactionsPartSettingsHooks.cs" />
+    <Compile Include="Settings\UserReactionsSettingsHooks.cs" />
     <Compile Include="ViewModels\UserReactionsTypesVM.cs" />
     <Compile Include="ViewModels\UserReactionsVM.cs" />
   </ItemGroup>
