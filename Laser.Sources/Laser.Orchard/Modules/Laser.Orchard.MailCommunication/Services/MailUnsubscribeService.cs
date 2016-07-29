@@ -68,10 +68,11 @@ namespace Laser.Orchard.MailCommunication.Services {
 
             // Model template Mail
             var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+            string parametriEncode = System.Web.HttpUtility.HtmlEncode(Nonce.Replace('+', '_').Replace('/', '-'));
 
             dynamic viewModel = new UnsubscribeVM {
                 Email = email,
-                LinkUnsubscription = string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/ConfirmUnsubscribe?key={1}", baseUri, System.Web.HttpUtility.HtmlEncode(Nonce)),
+                LinkUnsubscription = string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/ConfirmUnsubscribe?key={1}", baseUri, parametriEncode),
                 KeyUnsubscription = Nonce,
                 UnsubscriptionDate = DateTime.Now
             };
@@ -93,7 +94,7 @@ namespace Laser.Orchard.MailCommunication.Services {
             string parametri = "";
 
             // Ritorno al Nonce originale
-            keyUnsubscribe = System.Web.HttpUtility.HtmlDecode(keyUnsubscribe);
+            keyUnsubscribe = System.Web.HttpUtility.HtmlDecode(keyUnsubscribe.Replace('_', '+').Replace('-', '/'));
 
             // Verifico che non sia passata più di 1 ora dalla richiesta di Unsubscribe
             bool decryptOk = _commonServices.DecryptNonce(keyUnsubscribe, out parametri);

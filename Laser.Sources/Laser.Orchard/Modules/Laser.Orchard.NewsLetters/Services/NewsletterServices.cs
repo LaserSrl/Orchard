@@ -282,12 +282,13 @@ namespace Laser.Orchard.NewsLetters.Services {
 
                     // Model template Mail
                     var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+                    string parametriEncode = System.Web.HttpUtility.HtmlEncode(Nonce.Replace('+', '_').Replace('/', '-'));
 
                     dynamic viewModel = new SubscriberViewModel {
                         Email = subs.Email,
                         Name = subs.Name,
                         Guid = subs.Guid,
-                        LinkSubscription = string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/ConfirmSubscribe?key={1}", baseUri, System.Web.HttpUtility.HtmlEncode(Nonce)),
+                        LinkSubscription = string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/ConfirmSubscribe?key={1}", baseUri, parametriEncode),
                         NewsletterDefinition_Id = subs.NewsletterDefinition.Id,
                         NewsletterDefinition = _contentManager.Get(subs.NewsletterDefinition.Id)
                     };
@@ -308,7 +309,7 @@ namespace Laser.Orchard.NewsLetters.Services {
             string parametri = "";
 
             // Ritorno al Nonce originale
-            keySubscribe = System.Web.HttpUtility.HtmlDecode(keySubscribe);
+            keySubscribe = System.Web.HttpUtility.HtmlDecode(keySubscribe.Replace('_', '+').Replace('-', '/'));
 
             // Verifico che non sia passata più di 1 ora dalla richiesta di Unsubscribe
             bool decryptOk = _commonServices.DecryptNonce(keySubscribe, out parametri);
@@ -377,11 +378,12 @@ namespace Laser.Orchard.NewsLetters.Services {
 
                     // Model template Mail
                     var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+                    string parametriEncode = System.Web.HttpUtility.HtmlEncode(Nonce.Replace('+', '_').Replace('/', '-'));
 
                     dynamic viewModel = new SubscriberViewModel {
                         Email = subs.Email,
                         Name = subs.Name,
-                        LinkUnsubscription = string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/ConfirmUnsubscribe?key={1}", baseUri, System.Web.HttpUtility.HtmlEncode(Nonce)),
+                        LinkUnsubscription = string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/ConfirmUnsubscribe?key={1}", baseUri, parametriEncode),
                         KeyUnsubscription = Nonce,
                         NewsletterDefinition_Id = subs.NewsletterDefinition.Id,
                         NewsletterDefinition = _contentManager.Get(subs.NewsletterDefinition.Id)
@@ -403,7 +405,7 @@ namespace Laser.Orchard.NewsLetters.Services {
             string parametri = "";
 
             // Ritorno al Nonce originale
-            keyUnsubscribe = System.Web.HttpUtility.HtmlDecode(keyUnsubscribe);
+            keyUnsubscribe = System.Web.HttpUtility.HtmlDecode(keyUnsubscribe.Replace('_', '+').Replace('-', '/'));
 
             // Verifico che non sia passata più di 1 ora dalla richiesta di Unsubscribe
             bool decryptOk = _commonServices.DecryptNonce(keyUnsubscribe, out parametri);
