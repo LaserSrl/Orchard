@@ -32,6 +32,8 @@ namespace Laser.Orchard.NewsLetters.Models {
         [Required]
         public virtual NewsletterDefinitionPartRecord NewsletterDefinition { get; set; }
         public virtual int UserRecord_Id { get; set; }
+
+        public virtual string SubscriptionKey { get; set; }
         public virtual string UnsubscriptionKey { get; set; }
     }
 

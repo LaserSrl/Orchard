@@ -12,6 +12,7 @@ namespace Laser.Orchard.NewsLetters.ViewModels {
         public string Guid { get; set; }
         public string Email { get; set; }
         public string LinkSubscription { get; set; }
+        public string KeySubscription { get; set; }
         public string LinkUnsubscription { get; set; }
         public string KeyUnsubscription { get; set; }
         public DateTime SubscriptionDate { get; set; }

@@ -238,17 +238,20 @@ namespace Laser.Orchard.NewsLetters.Services {
                 var subs = _repositorySubscribers.Table.Where(w => w.Email == subscriber.Email &&
                                                                    w.NewsletterDefinition.Id == subscriber.NewsletterDefinition_Id).SingleOrDefault();
 
+                string guid = Guid.NewGuid().ToString();
+
                 // Create Nonce
-                string parametri = "Email=" + subscriber.Email + "&Guid=" + Guid.NewGuid().ToString();
+                string parametri = "Email=" + subscriber.Email + "&Guid=" + guid;
                 TimeSpan delay = new TimeSpan(1, 0, 0);
                 string Nonce = _commonServices.CreateNonce(parametri, delay);
 
                 if (subs == null) {
                     subs = new SubscriberRecord {
                         Email = subscriber.Email,
-                        Guid = Nonce,
+                        Guid = guid,
                         Confirmed = false,
                         SubscriptionDate = DateTime.Now,
+                        SubscriptionKey = Nonce,
                         Name = subscriber.Name,
                         NewsletterDefinition = _repositoryNewsletterDefinition.Get(subscriber.NewsletterDefinition_Id)
                     };
@@ -263,9 +266,9 @@ namespace Laser.Orchard.NewsLetters.Services {
                     }
                 }
                 else if (!subs.Confirmed) {
-                    subs.SubscriptionDate = DateTime.Now;
                     subs.Name = subscriber.Name;
-                    subs.Guid = Nonce;
+                    subs.SubscriptionDate = DateTime.Now;
+                    subs.SubscriptionKey = Nonce;
                     subs.UnsubscriptionDate = null;
 
                     try {
@@ -291,6 +294,7 @@ namespace Laser.Orchard.NewsLetters.Services {
                         Name = subs.Name,
                         Guid = subs.Guid,
                         LinkSubscription = string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/ConfirmSubscribe?key={1}", baseUri, parametriEncode),
+                        KeySubscription = Nonce,
                         NewsletterDefinition_Id = subs.NewsletterDefinition.Id,
                         NewsletterDefinition = _contentManager.Get(subs.NewsletterDefinition.Id)
                     };
@@ -325,7 +329,7 @@ namespace Laser.Orchard.NewsLetters.Services {
             string[] parEmail = infoKey[0].Split('=');
             string email = parEmail[1];
 
-            var subs = _repositorySubscribers.Table.Where(w => w.Email == email && w.Guid == keySubscribe).SingleOrDefault();
+            var subs = _repositorySubscribers.Table.Where(w => w.Email == email && w.SubscriptionKey == keySubscribe).SingleOrDefault();
 
             if (subs == null) {
                 _orchardServices.Notifier.Information(T("Subscriber not found!"));
@@ -337,7 +341,7 @@ namespace Laser.Orchard.NewsLetters.Services {
                     return null;
             }
             
-            subs.Guid = null;
+            subs.SubscriptionKey = null;
             subs.ConfirmationDate = DateTime.Now;
             subs.Confirmed = true;
 

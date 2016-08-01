@@ -147,12 +147,11 @@ namespace Laser.Orchard.Newsletters {
 
         public int UpdateFrom4() {
             SchemaBuilder.AlterTable("SubscriberRecord",
-                table => table.AddColumn<string>("UnsubscriptionKey", column => column.WithLength(500))
+                table => table.AddColumn<string>("SubscriptionKey", column => column.WithLength(500))
                );
             SchemaBuilder.AlterTable("SubscriberRecord",
-                table => table.AlterColumn("Guid", col => col.WithType(System.Data.DbType.String).WithLength(500))
+                table => table.AddColumn<string>("UnsubscriptionKey", column => column.WithLength(500))
                );
-
             return 5;
         }
 
