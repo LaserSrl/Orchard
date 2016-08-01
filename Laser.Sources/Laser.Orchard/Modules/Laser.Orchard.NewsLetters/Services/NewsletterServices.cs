@@ -252,6 +252,7 @@ namespace Laser.Orchard.NewsLetters.Services {
                         Name = subscriber.Name,
                         NewsletterDefinition = _repositoryNewsletterDefinition.Get(subscriber.NewsletterDefinition_Id)
                     };
+
                     try {
                         _repositorySubscribers.Create(subs);
                         returnValue = subs;
@@ -260,12 +261,13 @@ namespace Laser.Orchard.NewsLetters.Services {
                         _orchardServices.Notifier.Error(T(ex.Message));
                         returnValue = null;
                     }
-
                 }
                 else if (!subs.Confirmed) {
                     subs.SubscriptionDate = DateTime.Now;
                     subs.Name = subscriber.Name;
                     subs.Guid = Nonce;
+                    subs.UnsubscriptionDate = null;
+
                     try {
                         _repositorySubscribers.Update(subs);
                         returnValue = subs;
