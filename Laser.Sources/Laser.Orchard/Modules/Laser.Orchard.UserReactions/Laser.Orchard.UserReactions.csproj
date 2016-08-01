@@ -149,6 +149,8 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Settings\UserReactionsPartSettingsHooks.cs" />
     <Compile Include="Settings\UserReactionsSettingsHooks.cs" />
+    <Compile Include="ViewModels\ReactionsClickVM.cs" />
+    <Compile Include="ViewModels\ReactionsSummaryVM.cs" />
     <Compile Include="ViewModels\UserReactionsTypesVM.cs" />
     <Compile Include="ViewModels\UserReactionsVM.cs" />
   </ItemGroup>

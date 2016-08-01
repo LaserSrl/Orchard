@@ -57,39 +57,36 @@
         return data;
     };
 
-    $(document).ready(function () {        
+    $(document).ready(function () {
+        function refreshSummary(status) {
+            for (var i = 0; i < status.Reactions.length; i++) {
+                var nameitem = "#itemQuantity" + status.Reactions[i].TypeId;
+                var total = status.Reactions[i].Quantity;
+                $(nameitem).html("(" + total + ")");
+                //se già cliccato
+                if (status.Reactions[i].Clicked == 1) {
+                    $(nameitem).css('color', 'red');
+                }
+                else {
+                    $(nameitem).css('color', 'black');
+                }
+            }
+        }
 
         //Esegui chiamata Ajax per calcolare la somma delle reactions al loading della page
         //per ovviare al problema della cache di pagina di Orchard
         var PageId = "@Model.ContentItem.Id";
 
-
         $.ajax(
         {
-            url: "@Url.Action("GetSummaryReaction", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",           
-            success: function (result) 
-            {
-
-                for (var i = 0; i < result.length; i++) {
-                    var nameitem = "#itemQuantity" + result[i].TypeId;
-                    var total = result[i].Quantity;
-                    $(nameitem).html("(" + total + ")");
-                    //se già cliccato
-                    if (result[i].Clicked == 1) {
-                        $(nameitem).css('color', 'red');
-                    }
-                    else {
-                        $(nameitem).css('color', 'black');
-                    }
-                }
-               // $("div.reactiondiv").css('cursor', 'default');
+            url: "@Url.Action("GetSummaryReaction", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",
+            success: function (result) {
+                refreshSummary(result);
             },
-                type: "POST",
-                data: addRequestVerificationToken({ pageId: PageId })
+            type: "POST",
+            data: addRequestVerificationToken({ pageId: PageId })
         });
 
-         
-        
         //////////////////////////////////////////////////////////////////
 
         @if(Model.Authorized) {
@@ -118,15 +115,7 @@
                     url: "@Url.Action("GetReactionClicked", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",
                     success: function (result)
                     {
-                        var nameitem = "#itemQuantity" + result.TypeId;                      
-                        $(nameitem).html("(" + result.Quantity + ")");
-
-                        if (result.Clicked == 1) {
-                            $(nameitem).css('color', 'red');
-                            $(nameitem).css('font-weight','Bold');
-                        } else {
-                            $(nameitem).css('color', 'black');
-                        }
+                        refreshSummary(result.Status);
                     },
                     type: "POST",
                     data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId})
