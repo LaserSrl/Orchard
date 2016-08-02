@@ -17,6 +17,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security.Permissions;
 using Orchard.Roles.Services;
+using Orchard.Workflows.Services;
 
 namespace Laser.Orchard.UserReactions.Services {
 
@@ -31,6 +32,7 @@ namespace Laser.Orchard.UserReactions.Services {
         LocalizedString GetReactionEnumTranslations(ReactionsNames reactionName);
         List<UserReactionsClickRecord> GetListTotalReactions(int Content);
         bool HasPermission(string contentType);
+        IQueryable<UserReactionsTypesRecord> GetTypesTableFiltered();
     }
 
     //Class definition to user type
@@ -47,6 +49,7 @@ namespace Laser.Orchard.UserReactions.Services {
         private readonly IRepository<UserReactionsPartRecord> _repoPartRec;
         private readonly IOrchardServices _orchardServices;
         private readonly IRoleService _roleService;
+        private readonly IWorkflowManager _workflowManager;
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
@@ -69,7 +72,8 @@ namespace Laser.Orchard.UserReactions.Services {
                                     IRepository<UserReactionsPartRecord> repoPartRec,
                                     IRepository<UserReactionsSummaryRecord> repoSummary,
                                     IOrchardServices orchardServices,
-                                    IRoleService roleService) {
+                                    IRoleService roleService,
+                                    IWorkflowManager workflowManager) {
             _repoTypes = repoTypes;
             _authenticationService = authenticationService;
             _repoClick = repoClick;
@@ -79,6 +83,7 @@ namespace Laser.Orchard.UserReactions.Services {
             _repoSummary = repoSummary;
             _orchardServices = orchardServices;
             _roleService = roleService;
+            _workflowManager = workflowManager;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -362,7 +367,7 @@ namespace Laser.Orchard.UserReactions.Services {
 
                 newSommaryRecord.Add(item);
             }
-
+            result.ContentId = part.ContentItem.Id;
             if (reactionsCurrentUser.Id != 0) {
                 result.UserAuthenticated = true;
             }
@@ -439,6 +444,13 @@ namespace Laser.Orchard.UserReactions.Services {
                     retVal.Quantity = qty;
                     retVal.TypeId = iconTypeId;
                     retVal.Id = pageId;
+
+                    //solleva l'evento per il workflow
+                    _workflowManager.TriggerEvent("ReactionClicked", contentItem, () => new Dictionary<string, object> { 
+                        { "Content", contentItem },
+                        { "ReactionId", iconTypeId },
+                        { "Action", actionType }
+                    });
                 }
                 catch (Exception) {
                     retVal.Clicked = 5;
