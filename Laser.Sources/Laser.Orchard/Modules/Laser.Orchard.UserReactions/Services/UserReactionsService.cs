@@ -577,7 +577,7 @@ namespace Laser.Orchard.UserReactions.Services {
             if (partSetting.Value == "RestrictToSingle") {
                 result = true;
             }
-            else if (partSetting.Value == "Inherit") {
+            else if (partSetting.Value == "Inherit" || string.IsNullOrWhiteSpace(partSetting.Value)) {
                 var globalSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
                 if (globalSettings.AllowMultipleChoices == false) {
                     result = true;
