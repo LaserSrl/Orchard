@@ -31,6 +31,11 @@ namespace Laser.Orchard.UserReactions {
         like,
         iwasthere
     }; // Se si aggiungono enumeratori, provvedere opportuna traduzione in UserReactionsService.GetReactionEnumTranslations
+    public enum UserChoiceBehaviourValues {
+        Inherit,
+        AllowMultiple,
+        RestrictToSingle
+    }
 
     public class StyleAcroName {
         public string StyleAcronime = "glyph-icon flaticon-";

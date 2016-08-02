@@ -108,6 +108,7 @@ namespace Laser.Orchard.UserReactions.Controllers {
             var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
 
             reactionSettings.StyleFileNameProvider = model.CssName;
+            reactionSettings.AllowMultipleChoices = model.AllowMultipleChoices;
 
             foreach (var item in model.UserReactionsType) {
                 
