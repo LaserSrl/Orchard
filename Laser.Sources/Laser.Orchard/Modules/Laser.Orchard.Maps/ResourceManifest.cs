@@ -24,10 +24,11 @@ namespace Laser.Orchard.Maps {
             // Google Maps
             //Scripts
             manifest.DefineScript("GoogleMapsAPI")
-              .SetUrl("https://maps.googleapis.com/maps/api/js?v=3&key=" + apiKey + "&sensor=false");
+                .SetUrl("https://maps.googleapis.com/maps/api/js?v=3&key=" + apiKey + "&sensor=false");
             manifest.DefineScript("GoogleMapsPlacesLib")
-        .SetUrl("https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places");
-            manifest.DefineScript("MarkerClusterer").SetUrl("MarkerClusterer.js");
+                .SetUrl("https://maps.googleapis.com/maps/api/js?v=3.exp&key=" + apiKey + "&sensor=false&libraries=places");
+            manifest.DefineScript("MarkerClusterer")
+                .SetUrl("MarkerClusterer.js");
 
             // CSS
             manifest.DefineStyle("GoogleMaps").SetUrl("GoogleMaps.css");
