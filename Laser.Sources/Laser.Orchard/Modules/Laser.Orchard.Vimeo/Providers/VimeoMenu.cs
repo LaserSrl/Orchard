@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Orchard.MediaLibrary;
 
 namespace Laser.Orchard.Vimeo.Providers {
     public class VimeoMenu : INavigationProvider {
@@ -18,7 +19,8 @@ namespace Laser.Orchard.Vimeo.Providers {
         public void GetNavigation(NavigationBuilder builder) {
             builder
                 .Add(T("Upload to Vimeo"), "10",
-                    menu => menu.Action("Index", "BackendUpload", new { area = "Laser.Orchard.Vimeo" }));
+                    menu => menu.Action("Index", "BackendUpload", new { area = "Laser.Orchard.Vimeo" })
+                    .Permission(Permissions.ManageMediaContent));
         }
     }
 }
