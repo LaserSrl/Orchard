@@ -10,6 +10,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using System.Collections;
+using Orchard.ContentManagement.Handlers;
 
 
 namespace Laser.Orchard.UserReactions.Drivers {
@@ -77,6 +78,10 @@ namespace Laser.Orchard.UserReactions.Drivers {
         }
 
 
+        //protected override void Describe(DescribeMembersContext context) {
+        //    context
+        //        .Member(null, typeof(string), T("Value"), T("The string associated with the part."))
+        //    }
 
     }
 }

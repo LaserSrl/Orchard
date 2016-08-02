@@ -17,21 +17,31 @@ using System.ComponentModel.DataAnnotations;
 namespace Laser.Orchard.UserReactions {
     public enum StyleFileNameProviders { Reactions };
     public enum ReactionsNames {
-        angry,
-        boring,
-        exahausted,
-        happy,
-        joke,
-        kiss,
-        love,
-        pain,
-        sad,
-        shocked,
-        silent,
-        like,
-        iwasthere
-    }; // Se si aggiungono enumeratori, provvedere opportuna traduzione in UserReactionsService.GetReactionEnumTranslations
+                    angry,
+                    boring,
+                    exahausted,
+                    happy,
+                    joke,
+                    kiss,
+                    love,
+                    pain,
+                    sad,
+                    shocked,
+                    silent,
+                    like,
+                    iwasthere
+            }; // Se si aggiungono enumeratori, provvedere opportuna traduzione in UserReactionsService.GetReactionEnumTranslations
 
+    public enum UserReactionsFieldOperator {
+        LessThan,
+        LessThanEquals,
+        Equals,
+        NotEquals,
+        GreaterThanEquals,
+        GreaterThan,
+        Between,
+        NotBetween
+    }
     public class StyleAcroName {
         public string StyleAcronime = "glyph-icon flaticon-";
 
