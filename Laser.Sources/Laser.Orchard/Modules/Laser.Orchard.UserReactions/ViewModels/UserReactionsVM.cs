@@ -14,7 +14,7 @@ namespace Laser.Orchard.UserReactions.ViewModels {
         public List<UserReactionsVM> UserReactionsTotalRecord { get; set; }
     }
 
- public class UserReactionsVM {
+    public class UserReactionsVM {
         public int Id { get; set; }
         public string TypeName { get; set; }
         public int Quantity { get; set; }
@@ -24,6 +24,4 @@ namespace Laser.Orchard.UserReactions.ViewModels {
         public bool Activating { get; set; }
         public int Clicked { get; set; }
     }
-
-
 }

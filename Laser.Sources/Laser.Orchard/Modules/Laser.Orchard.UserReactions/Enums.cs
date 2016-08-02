@@ -32,6 +32,14 @@ namespace Laser.Orchard.UserReactions {
                     iwasthere
             }; // Se si aggiungono enumeratori, provvedere opportuna traduzione in UserReactionsService.GetReactionEnumTranslations
 
+      
+    public enum UserChoiceBehaviourValues {
+        Inherit,
+        AllowMultiple,
+        RestrictToSingle
+    }
+
+
     public enum UserReactionsFieldOperator {
         LessThan,
         LessThanEquals,

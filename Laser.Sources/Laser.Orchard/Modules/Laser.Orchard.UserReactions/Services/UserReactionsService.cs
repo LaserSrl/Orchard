@@ -15,7 +15,8 @@ using Orchard.ContentManagement;
 using System.Web.Script.Serialization;
 using Orchard.Localization;
 using Orchard.Logging;
-
+using Orchard.Security.Permissions;
+using Orchard.Roles.Services;
 
 namespace Laser.Orchard.UserReactions.Services {
 
@@ -24,14 +25,13 @@ namespace Laser.Orchard.UserReactions.Services {
         UserReactionsTypes GetTypes();
         UserReactionsTypes GetTypesTableWithStyles();
         IList<UserReactionsVM> GetTot(UserReactionsPart part);
-        IUser CurrentUser();
         UserReactionsVM CalculateTypeClick(int IconType, int CurrentPage);
-        UserReactionsVM[] GetSummaryReaction(int CurrentPage);
+        ReactionsSummaryVM GetSummaryReaction(int CurrentPage);
         UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model);
         LocalizedString GetReactionEnumTranslations(ReactionsNames reactionName);
         List<UserReactionsClickRecord> GetListTotalReactions(int Content);
+        bool HasPermission(string contentType);
     }
-
 
     //Class definition to user type
     /// <summary>
@@ -39,19 +39,17 @@ namespace Laser.Orchard.UserReactions.Services {
     /// </summary>
     public class UserReactionsService : IUserReactionsService {
         private readonly IRepository<UserReactionsTypesRecord> _repoTypes;
-        private readonly IRepository<UserReactionsVM> _repoTot;
         private readonly IAuthenticationService _authenticationService;
         private readonly IRepository<UserReactionsSummaryRecord> _repoSummary;
         private readonly IRepository<UserReactionsClickRecord> _repoClick;
         private readonly IClock _clock;
         private readonly IRepository<UserPartRecord> _repoUser;
         private readonly IRepository<UserReactionsPartRecord> _repoPartRec;
-        private readonly IRepository<UserReactionsPart> _repoPart;
         private readonly IOrchardServices _orchardServices;
+        private readonly IRoleService _roleService;
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        //private readonly IRepository<ContentItemRecord> _repoContent;
         /// <summary>
         /// 
         /// </summary>
@@ -63,7 +61,7 @@ namespace Laser.Orchard.UserReactions.Services {
         /// <param name="repoUser"></param>
         /// <param name="repoPartRec"></param>
         /// <param name="repoSummary"></param>
-        public UserReactionsService(IRepository<UserReactionsTypesRecord> repoTypes, IRepository<UserReactionsVM> repoTot,
+        public UserReactionsService(IRepository<UserReactionsTypesRecord> repoTypes,
                                     IRepository<UserReactionsClickRecord> repoClick,
                                     IAuthenticationService authenticationService,
                                     IClock clock,
@@ -71,9 +69,8 @@ namespace Laser.Orchard.UserReactions.Services {
                                     IRepository<UserReactionsPartRecord> repoPartRec,
                                     IRepository<UserReactionsSummaryRecord> repoSummary,
                                     IOrchardServices orchardServices,
-                                    IRepository<UserReactionsPart> repoPart) {
+                                    IRoleService roleService) {
             _repoTypes = repoTypes;
-            _repoTot = repoTot;
             _authenticationService = authenticationService;
             _repoClick = repoClick;
             _clock = clock;
@@ -81,7 +78,7 @@ namespace Laser.Orchard.UserReactions.Services {
             _repoPartRec = repoPartRec;
             _repoSummary = repoSummary;
             _orchardServices = orchardServices;
-            _repoPart = repoPart;
+            _roleService = roleService;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -146,6 +143,7 @@ namespace Laser.Orchard.UserReactions.Services {
 
             retval.TypeReactionsPartsSelected = viewmodel;
             retval.Filtering = Model.Filtering;
+            retval.UserChoiceBehaviour = Model.UserChoiceBehaviour;
             return retval;
         }
 
@@ -163,7 +161,7 @@ namespace Laser.Orchard.UserReactions.Services {
 
             var userRT = new UserReactionsTypes();
             userRT.CssName = reactionSettings.StyleFileNameProvider;
-
+            userRT.AllowMultipleChoices = reactionSettings.AllowMultipleChoices;
             userRT.UserReactionsType = GetTypesTable().Select(r => new UserReactionsTypeVM {
                 Id = r.Id,
                 Priority = r.Priority,
@@ -178,10 +176,11 @@ namespace Laser.Orchard.UserReactions.Services {
 
         /// <summary>
         /// ClickTable ordered by date descending.
+        /// If there are records with same date, uses Id to order descending.
         /// </summary>
         /// <returns></returns>
         private IQueryable<UserReactionsClickRecord> GetOrderedClickTable() {
-            return _repoClick.Table.OrderByDescending(o => o.CreatedUtc);
+            return _repoClick.Table.OrderByDescending(o => o.CreatedUtc).OrderByDescending(o => o.Id);
         }
 
 
@@ -208,7 +207,7 @@ namespace Laser.Orchard.UserReactions.Services {
         /// 
         /// </summary>
         /// <returns></returns>
-        public IUser CurrentUser() {
+        private IUser CurrentUser() {
             return _authenticationService.GetAuthenticatedUser();
         }
 
@@ -216,31 +215,29 @@ namespace Laser.Orchard.UserReactions.Services {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="CurrentUser"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        public UserReactionsUser ReactionsCurrentUser(IUser CurrentUser) {
-            UserReactionsUser reactionsCurrentUser = new UserReactionsUser();
+        private ReactionsUserIds GetReactionsUserIds(IUser user) {
+            ReactionsUserIds ids = new ReactionsUserIds();
             string userCookie = string.Empty;
 
-            if (CurrentUser != null) {
-                reactionsCurrentUser.Id = CurrentUser.Id;
-            } else {
+            if (user != null) {
+                ids.Id = user.Id;
+            }
+            else {
                 if (HttpContext.Current.Request.Cookies["userCookie"] != null) {
                     userCookie = HttpContext.Current.Request.Cookies["userCookie"].Value.ToString();
-                } else {
+                }
+                else {
                     Guid userNameCookie = System.Guid.NewGuid();
                     HttpContext.Current.Response.Cookies.Add(new HttpCookie("userCookie", userNameCookie.ToString()));
                     userCookie = userNameCookie.ToString();
-
                 }
-                reactionsCurrentUser.Id = 0;
-                reactionsCurrentUser.Guid = userCookie;
+                ids.Id = 0;
+                ids.Guid = userCookie;
             }
-
-            return reactionsCurrentUser;
+            return ids;
         }
-
-
 
         /// <summary>
         /// 
@@ -278,7 +275,8 @@ namespace Laser.Orchard.UserReactions.Services {
                     OrderPriority = x.Priority,
                     Activating = x.Activating,
                 }).ToList();
-            } else {
+            }
+            else {
                 // prendi i valori filtrati
                 listType = GetTypesTableFilteredByTypeReactions(SettingType)
                                 .Select(x => new UserReactionsVM {
@@ -320,188 +318,277 @@ namespace Laser.Orchard.UserReactions.Services {
             return retData;
         }
 
+        private Permission GetPermissionByName(string permission) {
+            if (!string.IsNullOrEmpty(permission)) {
+                var listpermissions = _roleService.GetInstalledPermissions().Values;
+                foreach (IEnumerable<Permission> sad in listpermissions) {
+                    foreach (Permission perm in sad) {
+                        if (perm.Name == permission) {
+                            return perm;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
 
         /// <param name="CurrentUser"></param>
         /// <param name="IconType"></param>
         /// <param name="CurrentPage"></param>
         /// <returns></returns>
-        public UserReactionsVM[] GetSummaryReaction(int CurrentPage) {
-            IUser userId = this.CurrentUser(); 
+        public ReactionsSummaryVM GetSummaryReaction(int CurrentPage) {
+            ReactionsSummaryVM result = new ReactionsSummaryVM();
+            IUser userId = this.CurrentUser();
             UserReactionsClickRecord res = new UserReactionsClickRecord();
             string userCookie = string.Empty;
-
             var part = _orchardServices.ContentManager.Get<UserReactionsPart>(CurrentPage);
             var items = GetTot(part);
-            
-            UserReactionsUser reactionsCurrentUser = new UserReactionsUser();
-            reactionsCurrentUser = ReactionsCurrentUser(userId);
-
-
+            ReactionsUserIds reactionsCurrentUser = new ReactionsUserIds();
+            reactionsCurrentUser = GetReactionsUserIds(userId);
             List<UserReactionsVM> newSommaryRecord = new List<UserReactionsVM>();
             foreach (UserReactionsVM item in items) {
-                UserReactionsVM newItem = new UserReactionsVM();
-                newItem = item;
-
                 int IconType = item.TypeId;
                 //Verifica che non sia già stato eseguito un click 
                 if (reactionsCurrentUser.Id > 0) {
                     res = GetOrderedClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserPartRecord.Id.Equals(reactionsCurrentUser.Id) && w.ContentItemRecordId.Equals(CurrentPage)).FirstOrDefault();
-                } else {
+                }
+                else {
                     userCookie = reactionsCurrentUser.Guid;
                     res = GetOrderedClickTable().Where(w => w.UserReactionsTypesRecord.Id.Equals(IconType) && w.UserGuid.Equals(userCookie) && w.ContentItemRecordId.Equals(CurrentPage)).FirstOrDefault();
                 }
-              
-                if(res!=null)
-                    newItem.Clicked = res.ActionType;
-                       
-                newSommaryRecord.Add(newItem);
+
+                if (res != null)
+                    item.Clicked = res.ActionType;
+
+                newSommaryRecord.Add(item);
             }
 
-            return newSommaryRecord.ToArray();
+            if (reactionsCurrentUser.Id != 0) {
+                result.UserAuthenticated = true;
+            }
+            if (HasPermission(part.ContentItem.ContentType)) {
+                result.UserAuthorized = true;
+            }
+            result.Reactions = newSommaryRecord.ToArray();
+            return result;
         }
 
 
-        public List<UserReactionsClickRecord> GetListTotalReactions(int Content) 
-        {
-            var retVal = GetOrderedClickTable().Where(z=>z.ContentItemRecordId==Content).Reverse().ToList();
+        public List<UserReactionsClickRecord> GetListTotalReactions(int Content) {
+            var retVal = GetOrderedClickTable().Where(z => z.ContentItemRecordId == Content).ToList();
+            retVal.Reverse();
             return retVal;
         }
 
 
 
-        /// <param name="IconType"></param>
-        /// <param name="CurrentPage"></param>
+        /// <param name="iconTypeId"></param>
+        /// <param name="pageId"></param>
         /// <returns></returns>
-        public UserReactionsVM CalculateTypeClick(int IconType, int CurrentPage) {
-            UserPartRecord userRec = new UserPartRecord();
-            UserReactionsTypesRecord reactType = new UserReactionsTypesRecord();
-            UserReactionsPartRecord userPart = new UserReactionsPartRecord();
-            UserReactionsClickRecord res = new UserReactionsClickRecord();
-            UserReactionsClickRecord result = new UserReactionsClickRecord();
+        public UserReactionsVM CalculateTypeClick(int iconTypeId, int pageId) {
+            UserReactionsClickRecord previousState = new UserReactionsClickRecord();
             UserReactionsVM retVal = new ViewModels.UserReactionsVM();
-            UserReactionsSummaryRecord summaryRecord = new UserReactionsSummaryRecord();
-            string userCookie = string.Empty;
-            string summaryQty = string.Empty;
-            string returnVal = string.Empty;
             int actionType = 1;
             bool previouslyClicked = false;
 
             //Verifica user
-            IUser userId = CurrentUser();
-            UserReactionsUser reactionsCurrentUser = new UserReactionsUser();
-            reactionsCurrentUser = ReactionsCurrentUser(userId);
+            IUser currentUser = CurrentUser();
+            ReactionsUserIds userIds = GetReactionsUserIds(currentUser);
+            var contentItem = _orchardServices.ContentManager.Get(pageId);
 
-            //Verifica che non sia già stato eseguito un click 
-            if (reactionsCurrentUser.Id > 0) {
-                res = GetOrderedClickTable().Where(w => w.UserReactionsTypesRecord.Id == IconType && w.UserPartRecord.Id == reactionsCurrentUser.Id && w.ContentItemRecordId == CurrentPage).FirstOrDefault();
-            } 
+            if (HasPermission(contentItem.ContentType)) {
+                //Verifica che non sia già stato eseguito un click 
+                if (userIds.Id > 0) {
+                    previousState = GetOrderedClickTable().Where(w => w.UserReactionsTypesRecord.Id == iconTypeId && w.UserPartRecord.Id == userIds.Id && w.ContentItemRecordId == pageId).FirstOrDefault();
+                }
+                else {
+                    previousState = GetOrderedClickTable().Where(w => w.UserReactionsTypesRecord.Id == iconTypeId && w.UserGuid.Equals(userIds.Guid) && w.ContentItemRecordId == pageId).FirstOrDefault();
+                }
+
+                //Se già cliccato quella reaction
+                if (previousState != null) {
+                    previouslyClicked = true;
+                    if (previousState.ActionType == 1) {
+                        // se era cliccato allora diventa unclicked
+                        actionType = -1;
+                    }
+                }
+
+                //Salva i dati
+                try {
+                    UserReactionsTypesRecord reactType = GetTypesTable().Where(w => w.Id.Equals(iconTypeId)).FirstOrDefault();
+                    InsertClick(pageId, userIds, actionType, reactType);
+                    int qty = UpdateSummary(pageId, userIds, actionType, reactType, previouslyClicked);
+
+                    //gestisce la scelta esclusiva, se richiesto
+                    bool isExclusive = IsExclusive(contentItem.ContentType);
+                    if (isExclusive && actionType == 1) {
+                        // cerca tutti i clicked diversi da quello corrente per lo stesso utente e la stessa pagina
+                        var clicked = GetClickedReactions(pageId, userIds);
+
+                        foreach (var reaction in clicked) {
+                            // non agisce sulla reaction appena cliccata
+                            if (reaction.Id != reactType.Id) {
+                                InsertClick(pageId, userIds, -1, reaction);
+                                UpdateSummary(pageId, userIds, -1, reaction);
+                            }
+                        }
+                    }
+
+                    retVal.Clicked = 1;
+                    retVal.Quantity = qty;
+                    retVal.TypeId = iconTypeId;
+                    retVal.Id = pageId;
+                }
+                catch (Exception) {
+                    retVal.Clicked = 5;
+                }
+            }
             else {
-               userCookie = reactionsCurrentUser.Guid;
-               res = GetOrderedClickTable().Where(w => w.UserReactionsTypesRecord.Id == IconType && w.UserGuid.Equals(userCookie) && w.ContentItemRecordId == CurrentPage).FirstOrDefault();
-            }
-
-            //Se già cliccato quella reaction
-            if (res != null) {
-                previouslyClicked = true;
-                //Già cliccato (Update dati) e ActionType=1   
-                if (res.ActionType == 1) {
-                    actionType = -1;
-                }
-            }
-
-            //Salva i dati
-            try {
-                //Crea nuovo record dati click
-                result.CreatedUtc = _clock.UtcNow;
-                result.ContentItemRecordId = CurrentPage;
-                result.ActionType = actionType;
-                reactType = GetTypesTable().Where(w => w.Id.Equals(IconType)).FirstOrDefault();
-                result.UserReactionsTypesRecord = reactType;
-                if (reactionsCurrentUser.Id > 0) {
-                    userRec = _repoUser.Table.Where(w => w.Id.Equals(reactionsCurrentUser.Id)).FirstOrDefault();
-                }
-                else {
-                    userRec = null;
-                    result.UserGuid = userCookie;
-                }
-                result.UserPartRecord = userRec;
-                _repoClick.Create(result);
-
-                //Verifica che ci sia già un record cliccato per quell' icona in quel documento
-                summaryRecord = _repoSummary.Table.Where(z => z.UserReactionsTypesRecord.Id.Equals(IconType) && z.UserReactionsPartRecord.Id.Equals(CurrentPage)).FirstOrDefault();
-
-                // se 0 record aggiungi il record
-                if (summaryRecord == null) {
-                    //Create
-                    summaryRecord = new UserReactionsSummaryRecord();
-                    userPart = _repoPartRec.Table.FirstOrDefault(z => z.Id.Equals(CurrentPage));
-                    summaryRecord.Quantity = 1;
-                    summaryRecord.UserReactionsTypesRecord = reactType;
-                    summaryRecord.UserReactionsPartRecord = userPart;
-                    _repoSummary.Create(summaryRecord);
-
-                    if (previouslyClicked) {
-                        Logger.Error("UserReactionsService.CalculateTypeClick -> Added missing summary record!");
-                    }
-                }
-                else {
-                    // Va in update ed aggiorna il campo Quantity
-                    if (actionType == 1) {
-                        summaryRecord.Quantity++;
-                    }
-                    else {
-                        summaryRecord.Quantity--;
-                    }
-                    _repoSummary.Update(summaryRecord);
-                }
-
+                // l'utente non ha le permission
                 retVal.Clicked = 1;
-                retVal.Quantity = summaryRecord.Quantity;
-                retVal.TypeId = IconType;
-                retVal.Id = CurrentPage;
+                retVal.Quantity = 0;
+                retVal.TypeId = iconTypeId;
+                retVal.Id = pageId;
             }
-            catch (Exception) {
-                retVal.Clicked = 5;
-            }
-
             return retVal;
         }
         public LocalizedString GetReactionEnumTranslations(ReactionsNames reactionName) {
             if (reactionName.Equals(ReactionsNames.angry)) {
                 return T("Angry");
-            } else if (reactionName.Equals(ReactionsNames.boring)) {
+            }
+            else if (reactionName.Equals(ReactionsNames.boring)) {
                 return T("Boring");
-            } else if (reactionName.Equals(ReactionsNames.exahausted)) {
+            }
+            else if (reactionName.Equals(ReactionsNames.exahausted)) {
                 return T("Exahausted");
-            } else if (reactionName.Equals(ReactionsNames.happy)) {
+            }
+            else if (reactionName.Equals(ReactionsNames.happy)) {
                 return T("Happy");
-            } else if (reactionName.Equals(ReactionsNames.like)) {
+            }
+            else if (reactionName.Equals(ReactionsNames.like)) {
                 return T("I Like");
-            } else if (reactionName.Equals(ReactionsNames.iwasthere)) {
+            }
+            else if (reactionName.Equals(ReactionsNames.iwasthere)) {
                 return T("I Was There");
-            } else if (reactionName.Equals(ReactionsNames.joke)) {
+            }
+            else if (reactionName.Equals(ReactionsNames.joke)) {
                 return T("Joke");
-            } else if (reactionName.Equals(ReactionsNames.kiss)) {
+            }
+            else if (reactionName.Equals(ReactionsNames.kiss)) {
                 return T("Kiss");
-            } else if (reactionName.Equals(ReactionsNames.love)) {
+            }
+            else if (reactionName.Equals(ReactionsNames.love)) {
                 return T("Love");
-            } else if (reactionName.Equals(ReactionsNames.pain)) {
+            }
+            else if (reactionName.Equals(ReactionsNames.pain)) {
                 return T("Pain");
-            } else if (reactionName.Equals(ReactionsNames.sad)) {
+            }
+            else if (reactionName.Equals(ReactionsNames.sad)) {
                 return T("Sad");
-            } else if (reactionName.Equals(ReactionsNames.shocked)) {
+            }
+            else if (reactionName.Equals(ReactionsNames.shocked)) {
                 return T("Shocked");
-            } else if (reactionName.Equals(ReactionsNames.silent)) {
+            }
+            else if (reactionName.Equals(ReactionsNames.silent)) {
                 return T("Silent");
-            } else {
+            }
+            else {
                 return T("None");
             }
-
         }
 
+        public bool HasPermission(string contentType) {
+            bool result = false;
+            Permission permissionToTest = GetPermissionByName("ReactionsFor" + contentType);
+            result = _orchardServices.Authorizer.Authorize(permissionToTest);
+            return result;
+        }
+        /// <summary>
+        /// Crea nuovo record dati click.
+        /// </summary>
+        private void InsertClick(int pageId, ReactionsUserIds reactionsUserIds, int actionType, UserReactionsTypesRecord reactType) {
+            UserPartRecord userRec = null;
+            string guid = null;
+            UserReactionsClickRecord clickRecord = new UserReactionsClickRecord();
+            clickRecord.CreatedUtc = _clock.UtcNow;
+            clickRecord.ContentItemRecordId = pageId;
+            clickRecord.ActionType = actionType;
+            clickRecord.UserReactionsTypesRecord = reactType;
+            if (reactionsUserIds.Id > 0) {
+                userRec = _repoUser.Table.Where(w => w.Id.Equals(reactionsUserIds.Id)).FirstOrDefault();
+            }
+            else {
+                guid = reactionsUserIds.Guid;
+            }
+            clickRecord.UserPartRecord = userRec;
+            clickRecord.UserGuid = guid;
+            _repoClick.Create(clickRecord);
+        }
+        private int UpdateSummary(int pageId, ReactionsUserIds reactionsUserIds, int actionType, UserReactionsTypesRecord reactType, bool previouslyClicked = false) {
+            UserReactionsSummaryRecord summaryRecord = null;
+            UserReactionsPartRecord reactionsPart = null;
+            //Verifica che ci sia già un record cliccato per quell' icona in quel documento
+            summaryRecord = _repoSummary.Table.Where(z => z.UserReactionsTypesRecord.Id == reactType.Id && z.UserReactionsPartRecord.Id == pageId).FirstOrDefault();
 
+            // se 0 record aggiungi il record
+            if (summaryRecord == null) {
+                //Create
+                summaryRecord = new UserReactionsSummaryRecord();
+                reactionsPart = _repoPartRec.Table.FirstOrDefault(z => z.Id.Equals(pageId));
+                summaryRecord.Quantity = 1;
+                summaryRecord.UserReactionsTypesRecord = reactType;
+                summaryRecord.UserReactionsPartRecord = reactionsPart;
+                _repoSummary.Create(summaryRecord);
 
-
+                if (previouslyClicked) {
+                    Logger.Error("UserReactionsService.UpdateSummary -> Missing summary record!");
+                }
+            }
+            else {
+                // Va in update ed aggiorna il campo Quantity
+                if (actionType == 1) {
+                    summaryRecord.Quantity++;
+                }
+                else {
+                    summaryRecord.Quantity--;
+                }
+                _repoSummary.Update(summaryRecord);
+            }
+            return summaryRecord.Quantity;
+        }
+        private bool IsExclusive(string contentType) {
+            bool result = false;
+            var ctypeDefinition = _orchardServices.ContentManager.GetContentTypeDefinitions().Where(x => x.Name == contentType).FirstOrDefault();
+            var part = ctypeDefinition.Parts.FirstOrDefault(x => x.PartDefinition.Name == "UserReactionsPart");
+            var partSetting = part.Settings.FirstOrDefault(x => x.Key == "UserReactionsPartSettings.UserChoiceBehaviour");
+            if (partSetting.Value == "RestrictToSingle") {
+                result = true;
+            }
+            else if (partSetting.Value == "Inherit") {
+                var globalSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
+                if (globalSettings.AllowMultipleChoices == false) {
+                    result = true;
+                }
+            }
+            return result;
+        }
+        private List<UserReactionsTypesRecord> GetClickedReactions(int pageId, ReactionsUserIds userIds) {
+            List<UserReactionsTypesRecord> clicked = new List<UserReactionsTypesRecord>();
+            List<UserReactionsTypesRecord> unclicked = new List<UserReactionsTypesRecord>();
+            var elenco = GetOrderedClickTable().Where(x => (x.UserPartRecord.Id == userIds.Id || x.UserGuid == userIds.Guid) && x.ContentItemRecordId == pageId);
+            foreach (var item in elenco) {
+                if (clicked.Contains(item.UserReactionsTypesRecord) == false
+                    && unclicked.Contains(item.UserReactionsTypesRecord) == false) {
+                    if (item.ActionType == 1) {
+                        clicked.Add(item.UserReactionsTypesRecord);
+                    }
+                    else {
+                        unclicked.Add(item.UserReactionsTypesRecord);
+                    }
+                }
+            }
+            return clicked;
+        }
     }
-
 }

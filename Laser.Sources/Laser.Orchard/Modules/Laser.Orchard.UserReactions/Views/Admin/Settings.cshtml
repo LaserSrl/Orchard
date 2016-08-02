@@ -22,6 +22,10 @@
 
     <div>
         @Html.DropDownListFor(m => m.CssName, new SelectList(Enum.GetNames(typeof(Laser.Orchard.UserReactions.StyleFileNameProviders)), Model.CssName))
+        <span style="padding-left:50px">
+            @Html.CheckBoxFor(m => m.AllowMultipleChoices)
+            @Html.LabelFor(m => m.AllowMultipleChoices, T("Allow multiple choices"))
+        </span>
     </div>
     <br />
     <fieldset>
