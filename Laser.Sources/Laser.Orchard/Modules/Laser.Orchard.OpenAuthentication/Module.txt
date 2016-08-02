@@ -1,6 +1,6 @@
 ﻿Name: Laser OpenAuthentication
 AntiForgery: enabled
-Author: Laser srl
+Author: Laser s.r.l.
 Website: http://laser-group.com
 Version: 1.0
 OrchardVersion: 1.8
