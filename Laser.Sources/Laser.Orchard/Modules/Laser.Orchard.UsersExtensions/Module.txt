@@ -7,5 +7,5 @@ OrchardVersion: 1.8
 Features:
     Laser.Orchard.UsersExtensions:
         Description: Exposes Register/Login/Logout actions via WebApi, Integrate policy acceptation if policy module is enabled
-        Dependencies: Orchard.Users, Orchard.Localization, Laser.Orchard.StartupConfig,Laser.Orchard.Policy,itWORKS.ExtendedRegistration
+        Dependencies: Orchard.Users, Orchard.Localization, Laser.Orchard.StartupConfig, Laser.Orchard.Policy, itWORKS.ExtendedRegistration
         Category: Security
