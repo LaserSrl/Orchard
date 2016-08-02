@@ -1,31 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Laser.Orchard.Mobile.Handlers;
+using Laser.Orchard.Mobile.Models;
+using Laser.Orchard.Mobile.Services;
+using Laser.Orchard.Policy.Models;
 using Laser.Orchard.Policy.Services;
+using Laser.Orchard.Policy.ViewModels;
+using Laser.Orchard.StartupConfig.Models;
+using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.UsersExtensions.Models;
 using Orchard;
-using Orchard.Localization;
-using Orchard.Logging;
-using Orchard.Security;
-using Orchard.Users.Models;
 using Orchard.ContentManagement;
-using System.Security;
-using Laser.Orchard.StartupConfig.Services;
-using Laser.Orchard.Policy.Models;
-using Laser.Orchard.Policy.ViewModels;
-using System.Text.RegularExpressions;
-using Orchard.Users.Services;
-using Laser.Orchard.Commons.Helpers;
-using Orchard.Users.Events;
-using Orchard.DisplayManagement;
-using Laser.Orchard.Mobile.Services;
-using Laser.Orchard.Mobile.Models;
-using Laser.Orchard.Mobile.Handlers;
-using Laser.Orchard.StartupConfig.Models;
 using Orchard.Data;
+using Orchard.DisplayManagement;
+using Orchard.Localization;
 using Orchard.Localization.Records;
 using Orchard.Localization.Services;
+using Orchard.Logging;
+using Orchard.Security;
+using Orchard.Users.Events;
+using Orchard.Users.Models;
+using Orchard.Users.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security;
+using System.Text.RegularExpressions;
 
 
 namespace Laser.Orchard.UsersExtensions.Services {
@@ -209,6 +207,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
 
             return "FALSE";
         }
+
         public IEnumerable<PolicyTextInfoPart> GetUserLinkedPolicies(string culture = null) {
             IEnumerable<PolicyTextInfoPart> policies;
             if (UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.No) return new List<PolicyTextInfoPart>(); // se selezionato No allora nessuna policy è obbligatoria e ritorno una collection vuota

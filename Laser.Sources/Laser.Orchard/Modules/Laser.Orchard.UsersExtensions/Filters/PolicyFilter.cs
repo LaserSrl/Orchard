@@ -1,11 +1,9 @@
 ﻿using Laser.Orchard.Commons.Attributes;
-using Laser.Orchard.Commons.Services;
 using Laser.Orchard.Policy.Models;
 using Laser.Orchard.Policy.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.UsersExtensions.Services;
-using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.Logging;
 using Orchard.Mvc;
@@ -16,7 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using System.Xml.Linq;
 
 namespace Laser.Orchard.UsersExtensions.Filters {
     public class PolicyFilter : FilterProvider, IActionFilter {
@@ -87,7 +84,7 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                         //                    controller = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
                         //                }
                         //                else {
-                        //                    controller = "No controller available: ControlerDescriptor is null.";
+                        //                    controller = "No controller available: ControllerDescriptor is null.";
                         //                }
                         //            }
                         //            else {
@@ -105,12 +102,12 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                         //}
 
                         if (filterContext.Controller.GetType().FullName == "Laser.Orchard.WebServices.Controllers.JsonController") {
-                            string data = PoliciesLMNVSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
+                            string data = _policyServices.PoliciesLMNVSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
 
                             filterContext.Result = new ContentResult { Content = data, ContentType = "application/json" };
                         }
                         else if (filterContext.Controller.GetType().FullName == "Laser.Orchard.WebServices.Controllers.WebApiController") {
-                            string data = PoliciesPureJsonSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
+                            string data = _policyServices.PoliciesPureJsonSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
 
                             filterContext.Result = new ContentResult { Content = data, ContentType = "application/json" };
                         }
@@ -118,13 +115,13 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                             string outputFormat = _workContext.GetContext().HttpContext.Request.Headers["OutputFormat"];
 
                             if (String.Equals(outputFormat, "LMNV", StringComparison.OrdinalIgnoreCase)) {
-                                string data = PoliciesLMNVSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
+                                string data = _policyServices.PoliciesLMNVSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
                                 Response response = _utilsServices.GetResponse(ResponseType.MissingPolicies, "", Newtonsoft.Json.JsonConvert.DeserializeObject(data));
 
                                 filterContext.Result = new ContentResult { Content = Newtonsoft.Json.JsonConvert.SerializeObject(response), ContentType = "application/json" };
                             }
                             else if (String.Equals(outputFormat, "PureJson", StringComparison.OrdinalIgnoreCase)) {
-                                string data = PoliciesPureJsonSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
+                                string data = _policyServices.PoliciesPureJsonSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
                                 Response response = _utilsServices.GetResponse(ResponseType.MissingPolicies, "", Newtonsoft.Json.JsonConvert.DeserializeObject(data));
 
                                 filterContext.Result = new ContentResult { Content = Newtonsoft.Json.JsonConvert.SerializeObject(response), ContentType = "application/json" };
@@ -133,7 +130,7 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                                 var returnType = ((ReflectedActionDescriptor)filterContext.ActionDescriptor).MethodInfo.ReturnType;
 
                                 if (returnType == typeof(JsonResult)) {
-                                    string data = PoliciesPureJsonSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
+                                    string data = _policyServices.PoliciesPureJsonSerialization(neededPolicies.Where(w => missingPolicies.Any(a => a == w.Id)));
                                     Response response = _utilsServices.GetResponse(ResponseType.MissingPolicies, "", Newtonsoft.Json.JsonConvert.DeserializeObject(data));
 
                                     filterContext.Result = new ContentResult { Content = Newtonsoft.Json.JsonConvert.SerializeObject(response), ContentType = "application/json" };
@@ -156,64 +153,5 @@ namespace Laser.Orchard.UsersExtensions.Filters {
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) { }
-
-        private string PoliciesLMNVSerialization(IEnumerable<PolicyTextInfoPart> policies) {
-            ObjectDumper dumper;
-            StringBuilder sb = new StringBuilder();
-            XElement dump = null;
-
-            var realFormat = false;
-            var minified = false;
-            bool.TryParse(_workContext.GetContext().HttpContext.Request["realformat"], out realFormat);
-            bool.TryParse(_workContext.GetContext().HttpContext.Request["minified"], out minified);
-
-            sb.Insert(0, "{");
-            sb.AppendFormat("\"n\": \"{0}\"", "Model");
-            sb.AppendFormat(", \"v\": \"{0}\"", "VirtualContent");
-            sb.Append(", \"m\": [{");
-            sb.AppendFormat("\"n\": \"{0}\"", "VirtualId");
-            sb.AppendFormat(", \"v\": \"{0}\"", "0");
-            sb.Append("}]");
-
-            sb.Append(", \"l\":[");
-
-            int i = 0;
-            sb.Append("{");
-            sb.AppendFormat("\"n\": \"{0}\"", "PendingPolicies");
-            sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
-            sb.Append(", \"m\": [");
-
-            foreach (var item in policies) {
-                if (i > 0) {
-                    sb.Append(",");
-                }
-                sb.Append("{");
-                dumper = new ObjectDumper(10);
-                dump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
-                JsonConverter.ConvertToJSon(dump, sb, minified, realFormat);
-                sb.Append("}");
-                i++;
-            }
-            sb.Append("]");
-            sb.Append("}");
-
-            sb.Append("]");
-            sb.Append("}");
-
-            return sb.ToString();
-        }
-
-        private string PoliciesPureJsonSerialization(IEnumerable<PolicyTextInfoPart> policies) {
-            JObject json = new JObject();
-            var resultArray = new JArray();
-
-            foreach (var pendingPolicy in policies) {
-                resultArray.Add(new JObject(_contentSerializationServices.SerializeContentItem(pendingPolicy.ContentItem, 0)));
-            }
-
-            json.Add("PendingPolicies", resultArray);
-
-            return json.ToString(Newtonsoft.Json.Formatting.None);
-        }
     }
 }
