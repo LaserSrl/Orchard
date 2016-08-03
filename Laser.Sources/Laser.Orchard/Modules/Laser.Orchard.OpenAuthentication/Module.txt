@@ -1,5 +1,5 @@
 ﻿Name: Laser OpenAuthentication
-AntiForgery: disabled
+AntiForgery: enabled
 Author: Laser s.r.l.
 Website: http://laser-group.com
 Version: 1.0
