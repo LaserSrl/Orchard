@@ -14,7 +14,7 @@ using Laser.Orchard.OpenAuthentication.Security;
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class TwitterAuthenticationClient : IExternalAuthenticationClient {
         public string ProviderName {
-            get { return "Twitter"; }
+            get { return "twitter"; }
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
