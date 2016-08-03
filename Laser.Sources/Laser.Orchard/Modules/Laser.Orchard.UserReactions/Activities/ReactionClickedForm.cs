@@ -28,7 +28,7 @@ namespace Laser.Orchard.UserReactions.Activities {
                         _reactionList: _shapeFactory.SelectList(
                             Id: "ReactionClickedActivity_reactionList",
                             Name: "ReactionClickedActivity_reactionList",
-                            title: T("Reaction list"),
+                            Title: T("Reaction list"),
                             Description: T("Select one or more reactions"),
                             Size: 10,
                             Multiple: true
