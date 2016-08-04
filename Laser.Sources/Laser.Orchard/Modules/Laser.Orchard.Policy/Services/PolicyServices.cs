@@ -355,8 +355,17 @@ namespace Laser.Orchard.Policy.Services {
 
             var realFormat = false;
             var minified = false;
-            bool.TryParse(_workContext.GetContext().HttpContext.Request["realformat"], out realFormat);
-            bool.TryParse(_workContext.GetContext().HttpContext.Request["minified"], out minified);
+            string[] complexBehaviours = null;
+            string outputFormat = _workContext.GetContext().HttpContext.Request.Headers["OutputFormat"];
+
+            if (outputFormat != null && outputFormat.Equals("LMNV", StringComparison.OrdinalIgnoreCase)) { 
+                complexBehaviours= new string[]{"returnnulls"};
+                realFormat = true;
+                minified = false;
+            } else {
+                bool.TryParse(_workContext.GetContext().HttpContext.Request["realformat"], out realFormat);
+                bool.TryParse(_workContext.GetContext().HttpContext.Request["minified"], out minified);
+            }
 
             sb.Insert(0, "{");
             sb.AppendFormat("\"n\": \"{0}\"", "Model");
@@ -379,7 +388,7 @@ namespace Laser.Orchard.Policy.Services {
                     sb.Append(",");
                 }
                 sb.Append("{");
-                dumper = new ObjectDumper(10);
+                dumper = new ObjectDumper(10,null,false,true,complexBehaviours);
                 dump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
                 JsonConverter.ConvertToJSon(dump, sb, minified, realFormat);
                 sb.Append("}");
