@@ -151,6 +151,7 @@
     <Compile Include="FilterEditors\UserReactionsFieldFilterEditor.cs" />
     <Compile Include="Projections\UserReactionsFieldFilter.cs" />
     <Compile Include="Handlers\UserReactionsPartHandler.cs" />
+    <Compile Include="Projections\UserReactionsQueryFilter.cs" />
     <Compile Include="Handlers\UserReactionsSettingsPartHandler.cs" />
     <Compile Include="Models\UserReactionsClickRecord.cs" />
     <Compile Include="Models\UserReactionsPartRecord.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Models\UserReactionsTypesRecord.cs" />
     <Compile Include="Models\UserReactionsUser.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
+    <Compile Include="Projections\UserReactionsQueryFilterForm.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Security\UserReactionsPermission.cs" />
     <Compile Include="Services\UserReactionsService.cs" />
