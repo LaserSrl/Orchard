@@ -58,6 +58,10 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Projections, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Roles, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Roles\bin\Orchard.Roles.dll</HintPath>
@@ -140,7 +144,12 @@
     <Compile Include="Controllers\ReactionAjaxController..cs" />
     <Compile Include="Controllers\ReactionApiController.cs" />
     <Compile Include="DataMigrations.cs" />
+    <Compile Include="Drivers\UserReactionsFieldDriver.cs" />
     <Compile Include="Drivers\UserReactionsPartDriver.cs" />
+    <Compile Include="Fields\UserReactionsField.cs" />
+    <Compile Include="FilterEditors\Forms\UserReactionsFieldFilterForm.cs" />
+    <Compile Include="FilterEditors\UserReactionsFieldFilterEditor.cs" />
+    <Compile Include="Projections\UserReactionsFieldFilter.cs" />
     <Compile Include="Handlers\UserReactionsPartHandler.cs" />
     <Compile Include="Handlers\UserReactionsSettingsPartHandler.cs" />
     <Compile Include="Models\UserReactionsClickRecord.cs" />
