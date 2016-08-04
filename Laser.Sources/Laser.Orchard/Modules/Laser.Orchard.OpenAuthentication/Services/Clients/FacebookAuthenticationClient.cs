@@ -10,6 +10,7 @@ using Laser.Orchard.OpenAuthentication.Models;
 using Orchard.Logging;
 using Laser.Orchard.OpenAuthentication.Security;
 using System.Text.RegularExpressions;
+using Laser.Orchard.OpenAuthentication.Extensions;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class FacebookAuthenticationClient : IExternalAuthenticationClient {
@@ -19,7 +20,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             _logger =NullLogger.Instance;
         }
         public string ProviderName {
-            get { return "Facebook"; }
+            get { return "facebook"; }
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
@@ -95,23 +96,17 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             retVal = createUserParams;
             string emailAddress = string.Empty;
            
-            var valoriRicavati = createUserParams.ExtraData.Values;
-            int countVal = 0;
+            var valoriRicavati = createUserParams.ExtraData.Keys;
 
-            foreach (string valric in valoriRicavati) 
-            {
-                if (countVal == 6) {
-                    
-                    emailAddress = valric;
-
-                    if (!Regex.IsMatch(retVal.UserName, "^[A-Za-z0-9]")) 
-                    {
-                        retVal.UserName = emailAddress;
-                    }                      
-                }
-
-                countVal = countVal + 1;
+            foreach (KeyValuePair<string, string> values in createUserParams.ExtraData) {
+                if (values.Key == "mail" || values.Key == "email") 
+                {
+                    retVal.UserName = values.Value.IsEmailAddress() ? values.Value.Substring(0, values.Value.IndexOf('@')) : values.Value; 
+                }                  
             }
+                   
+            // if (!Regex.IsMatch(retVal.UserName, "^[A-Za-z0-9]")) 
+                   
 
             return retVal;
        

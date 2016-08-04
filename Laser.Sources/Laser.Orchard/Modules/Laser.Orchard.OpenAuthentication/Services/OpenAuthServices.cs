@@ -10,6 +10,7 @@ using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Users.Models;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOpenAuthMembershipServices : IDependency {
@@ -63,74 +64,60 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             string username = string.Empty;
             string sesso = string.Empty;
 
-            var valoriRicavati = createUserParams.ExtraData.Values;
-            int countVal = 0;
+          
+             foreach (KeyValuePair<string, string> values in createUserParams.ExtraData) {
 
-            foreach (string valric in valoriRicavati) 
-            {                
-                if (countVal == 1) 
-                {
-                    if (createUserParams.ProviderName != "linkedin") {
-                        emailAddress = valric;
+                 if (createUserParams.ProviderName.ToLower() == "facebook") 
+                 {
+                    //if (values.Key == "username") 
+                    //{
+                    //    username = values.Value.IsEmailAddress() ? values.Value.Substring(0, values.Value.IndexOf('@')) : values.Value;
+                    //    createUserParams.UserName = username;
+                    //}
+
+                    if (values.Key == "email" || values.Key =="mail") {
+                        emailAddress = values.Value.IsEmailAddress() ? values.Value : "";
+                        username = values.Value.IsEmailAddress() ? values.Value.Substring(0, values.Value.IndexOf('@')) : values.Value;
+                        createUserParams.UserName = username;
+                    }
+
+                    if (values.Key == "gender") {
+                        sesso = values.Value;
+                    }
+
+                    if (values.Key == "name") {
+                        name = values.Value;
+                    }
+
+                    if (values.Key == "firstname") {
+                        firstname = values.Value;
                     } 
-                    else 
-                    {
-                        firstname = valric;
-                    }
-                }
+                 }
 
-                if (countVal == 2)
-                {
-                    if (createUserParams.ProviderName == "linkedin")
-                    {
-                        name = valric;
-                    }
+                 if (createUserParams.ProviderName.ToLower() == "google") {
+                     if (values.Key == "email") {
+                         emailAddress = values.Value.IsEmailAddress() ? values.Value : "";
+                         username = values.Value.IsEmailAddress() ? values.Value.Substring(0, values.Value.IndexOf('@')) : values.Value;
+                         createUserParams.UserName = username;
+                     }
+                 }
 
-                    if (createUserParams.ProviderName == "facebook") {
-                        username = valric;
-                    } 
-                }
-
-                if (countVal == 3) 
-                {
-                    if (createUserParams.ProviderName == "linkedin")
-                    {
-                        emailAddress = valric;
-                    }
-
-                    if (createUserParams.ProviderName == "google") {
-                        username = valric;
-                    }
-
-                }
-
-                if (countVal == 4) {
-
-                    if (createUserParams.ProviderName == "facebook") {
-                        sesso = valric;
-                    }
-                }
-
-                if (countVal == 6) {
-
-                    if (createUserParams.ProviderName == "facebook") {
-                        emailAddress = valric;
-                    }
-                }
-
-                countVal = countVal + 1;
+                 if (createUserParams.ProviderName.ToLower() == "linkedin") {
+                     if (values.Key == "email-address") {
+                         emailAddress = values.Value.IsEmailAddress() ? values.Value : "";
+                     }
+                 }
             }
 
-            if (createUserParams.ProviderName == "twitter")
+            if (createUserParams.ProviderName.ToLower() == "twitter")
                 username = createUserParams.UserName;
-
 
             var creatingContext = new CreatingOpenAuthUserContext(createUserParams.UserName, emailAddress, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
 
             _openAuthUserEventHandlers.Invoke(o => o.Creating(creatingContext), Logger);
 
             var createdUser = _membershipService.CreateUser(new CreateUserParams(
-                _usernameService.Calculate(createUserParams.UserName),
+                _usernameService.Calculate(createUserParams.UserName, createUserParams.ProviderName.ToLower().ToString()),
                // createUserParams.UserName,
                 _passwordGeneratorService.Generate(),
                 creatingContext.EmailAddress,

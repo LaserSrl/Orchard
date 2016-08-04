@@ -6,7 +6,7 @@ using Laser.Orchard.OpenAuthentication.Security;
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class YahooOpenIdAuthenticationClient : IExternalAuthenticationClient {
         public string ProviderName {
-            get { return "Yahoo"; }
+            get { return "yahoo"; }
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {

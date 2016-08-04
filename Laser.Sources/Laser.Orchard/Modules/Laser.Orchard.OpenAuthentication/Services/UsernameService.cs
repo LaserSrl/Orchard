@@ -4,7 +4,7 @@ using Orchard.Security;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IUsernameService : IDependency {
-        string Calculate(string currentValue);
+        string Calculate(string currentValue, string provider);
     }
 
     public class UsernameService : IUsernameService {
@@ -14,9 +14,18 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             _membershipService = membershipService;
         }
 
-        public string Calculate(string currentValue) {
+        
+        public string Calculate(string currentValue, string provider) {
             /* I Dont want to user an email address as a Username...*/
-            string userName = currentValue.IsEmailAddress() ? currentValue.Substring(0, currentValue.IndexOf('@')) : currentValue;
+            string userName = string.Empty;
+
+            if (provider == "facebook" || provider=="google") {
+                userName = currentValue.IsEmailAddress() ? currentValue.Substring(0, currentValue.IndexOf('@')) : currentValue;
+            } 
+            else 
+            {
+                userName = currentValue;
+            }
 
             int uniqueValue = 0;
 
