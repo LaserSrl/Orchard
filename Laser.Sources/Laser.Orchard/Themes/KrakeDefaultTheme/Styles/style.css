@@ -350,9 +350,13 @@ label {
 }
 
 .social-login-buttons button {
-    background-color: #fff;
+    color: #fff;
+    background-color: transparent;
 }
 
+.social-login-buttons i {
+    /*font-size: 2em;*/
+}
 .social-hover:hover {
     cursor:pointer;
 }
