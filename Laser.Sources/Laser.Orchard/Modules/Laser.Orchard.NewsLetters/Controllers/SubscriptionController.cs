@@ -17,6 +17,7 @@ namespace Laser.Orchard.NewsLetters.Controllers {
     public class SubscriptionController : Controller {
         private readonly INewsletterServices _newsletterServices;
         private readonly IOrchardServices _orchardServices;
+
         public SubscriptionController(INewsletterServices newsletterServices, IOrchardServices orchardServices, IShapeFactory shapeFactory) {
             _newsletterServices = newsletterServices;
             _orchardServices = orchardServices;
@@ -25,13 +26,13 @@ namespace Laser.Orchard.NewsLetters.Controllers {
         }
 
         dynamic Shape { get; set; }
-
         public Localizer T { get; set; }
 
         [HttpPost]
         [Themed]
         public ActionResult Subscribe(string name, string email, string confirmEmail, string[] subscription_Newsletters_Ids) {
             bool allOK = true;
+
             if (HttpContext.Request.Form["Newsletter_Subscriber_Subscribe"] == "") {
                 return null;
             }
@@ -47,9 +48,12 @@ namespace Laser.Orchard.NewsLetters.Controllers {
                         };
                         var subRecord = _newsletterServices.TryRegisterSubscriber(subscriber);
                         allOK = allOK && subRecord != null;
-                        try {
+                        
+                        try 
+                        {
                             ValidateModel(subRecord);
-                        } catch (Exception ex) {
+                        } 
+                        catch (Exception ex) {
                             allOK = false;
                             var errors = ModelState.Values.Where(w => w.Errors.Count() > 0);
                             foreach (var error in errors) {
@@ -58,7 +62,8 @@ namespace Laser.Orchard.NewsLetters.Controllers {
                         }
                     }
                 }
-            } else {
+            } 
+            else {
                 if (subscription_Newsletters_Ids == null || subscription_Newsletters_Ids.Length == 0) {
                     _orchardServices.Notifier.Error(T("Please select at least one newsletter!"));
                 } else if (email != confirmEmail) {
@@ -74,7 +79,8 @@ namespace Laser.Orchard.NewsLetters.Controllers {
                 viewModel.Metadata.Alternates.Add("Subscription.ConfirmationEmailSent");
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return new ShapeResult(this, viewModel);
-            } else {
+            } 
+            else {
                 dynamic viewModel = Shape.Subscription_SubscribeError().Subscriber(new SubscriberViewModel { Name = name, Email = email });
                 viewModel.Metadata.Alternates.Add("Subscription.SubscribeError");
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
@@ -84,14 +90,14 @@ namespace Laser.Orchard.NewsLetters.Controllers {
         }
 
         [Themed]
-        public ActionResult ConfirmSubscribe(string email, string token) {
-            var subRecord = _newsletterServices.TryRegisterConfirmSubscriber(new SubscriberViewModel {
-                Email = email,
-                Guid = token
-            });
-            try {
+        public ActionResult ConfirmSubscribe(string key) {
+            var subRecord = _newsletterServices.TryRegisterConfirmSubscriber(key);
+
+            try 
+            {
                 ValidateModel(subRecord);
-            } catch (Exception ex) {
+            } 
+            catch (Exception ex) {
                 ModelState.AddModelError("SubscriberError", ex);
             }
 
@@ -147,14 +153,14 @@ namespace Laser.Orchard.NewsLetters.Controllers {
         }
 
         [Themed]
-        public ActionResult ConfirmUnsubscribe(string email, string token) {
-            var subRecord = _newsletterServices.TryUnregisterConfirmSubscriber(new SubscriberViewModel {
-                Email = email,
-                Guid = token
-            });
-            try {
+        public ActionResult ConfirmUnsubscribe(string key) {
+
+            var subRecord = _newsletterServices.TryUnregisterConfirmSubscriber(key);
+            try 
+            {
                 ValidateModel(subRecord);
-            } catch (Exception ex) {
+            } 
+            catch (Exception ex) {
                 ModelState.AddModelError("SubscriberError", ex);
             }
 

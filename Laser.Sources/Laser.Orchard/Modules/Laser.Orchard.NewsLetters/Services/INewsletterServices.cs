@@ -29,9 +29,9 @@ namespace Laser.Orchard.NewsLetters.Services {
         SubscriberRecord GetSubscriber(int id);
         IEnumerable<SubscriberRecord> GetSubscribers(int newsletterId);
         SubscriberRecord TryRegisterSubscriber(SubscriberViewModel subscriber);
-        SubscriberRecord TryRegisterConfirmSubscriber(SubscriberViewModel subscriber);
+        SubscriberRecord TryRegisterConfirmSubscriber(string keySubscribe);
         SubscriberRecord TryUnregisterSubscriber(SubscriberViewModel subscriber);
-        SubscriberRecord TryUnregisterConfirmSubscriber(SubscriberViewModel subscriber);
+        SubscriberRecord TryUnregisterConfirmSubscriber(string keyUnsubscribe);
 
         #endregion
     }

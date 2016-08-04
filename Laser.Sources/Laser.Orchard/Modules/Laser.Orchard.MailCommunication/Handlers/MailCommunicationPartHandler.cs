@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.MailCommunication.Models;
-using Laser.Orchard.Services.MailCommunication;
+using Laser.Orchard.MailCommunication.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.TemplateManagement.Services;
 using Orchard;
@@ -15,9 +15,12 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.UI.Notify;
 using Orchard.Tasks.Scheduling;
+using Laser.Orchard.TemplateManagement.ViewModels;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.MailCommunication.Handlers {
 
+    [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class MailCommunicationPartHandler : ContentHandler {
         public Localizer T { get; set; }
         private readonly INotifier _notifier;
@@ -52,22 +55,47 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.MailTest") {
                     if (part.SendToTestEmail && part.EmailForTest != string.Empty) {
                         dynamic content = context.ContentItem;
+                        var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+
                         Dictionary<string, object> similViewBag = new Dictionary<string, object>();
                         similViewBag.Add("CampaignLink", _communicationService.GetCampaignLink("Email", part));
-                        _templateService.SendTemplatedEmail(content,
-                            ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id,
-                            null,
-                            new List<string> { part.EmailForTest },
-                            similViewBag,
-                            false);
+
+                        // Place Holder
+                        List<TemplatePlaceHolderViewModel> listaPH = new List<TemplatePlaceHolderViewModel>();
+
+                        string unsubscribe = T("Click here to stop receiving email for commercial use").Text;
+                        string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/Index", baseUri) + "'>" + unsubscribe + "</a>";
+
+                        TemplatePlaceHolderViewModel ph = new TemplatePlaceHolderViewModel();
+                        ph.Name = "[UNSUBSCRIBE]";
+                        ph.Value = linkUnsubscribe;
+                        ph.ShowForce = true;
+
+                        listaPH.Add(ph);
+
+                        if (((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate != null) {
+                            _templateService.SendTemplatedEmail(content,
+                                ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id,
+                                null,
+                                new List<string> { part.EmailForTest },
+                                similViewBag,
+                                false, listaPH);
+                        } else {
+                            _notifier.Error(T("Select or create a template for e-mail"));
+                        }
                     }
                 }
             });
             OnPublished<MailCommunicationPart>((context, part) => {
                 if (part.SendOnNextPublish && !part.MailMessageSent) {
                     ContentItem ci = _orchardServices.ContentManager.Get(part.ContentItem.Id);
-                    _taskManager.CreateTask("Laser.Orchard.MailCommunication.Task", DateTime.UtcNow.AddMinutes(1), ci);
-                    part.MailMessageSent = true;
+                    dynamic content = ci;
+                    if (((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate != null) {
+                        _taskManager.CreateTask("Laser.Orchard.MailCommunication.Task", DateTime.UtcNow.AddMinutes(1), ci);
+                        part.MailMessageSent = true;
+                    } else {
+                        _notifier.Error(T("Select or create a template for e-mail"));
+                    }
                 }
             });
         }
