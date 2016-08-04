@@ -143,7 +143,10 @@ namespace Laser.Orchard.MailCommunication.Handlers {
         }
         private Dictionary<string, object> GetSettings(dynamic contentModel, int templateId, MailCommunicationPart part) {
             var data = new Dictionary<string, object>();
+
             var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+            if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
+                baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
 
             Dictionary<string, object> similViewBag = new Dictionary<string, object>();
             similViewBag.Add("CampaignLink", _communicationService.GetCampaignLink("Email", part));

@@ -6,6 +6,7 @@ using Laser.Orchard.TemplateManagement.Services;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -29,16 +30,18 @@ namespace Laser.Orchard.MailCommunication.Services {
         private readonly INotifier _notifier;
         private readonly ICommonsServices _commonServices;
         private readonly ITemplateService _templateServices;
+        private readonly ShellSettings _shellSettings;
 
         public Localizer T { get; set; }
 
         public MailUnsubscribeService(IOrchardServices orchardServices, IRepository<CommunicationEmailRecord> Emailrepository, INotifier notifier,
-                                      ICommonsServices commonServices, ITemplateService templateServices) {
+                                      ICommonsServices commonServices, ITemplateService templateServices, ShellSettings shellSettings) {
             _orchardServices = orchardServices;
             _emailrepository = Emailrepository;
             _notifier = notifier;
             _commonServices = commonServices;
             _templateServices = templateServices;
+            _shellSettings = shellSettings;
 
             T = NullLocalizer.Instance;
         }
@@ -66,10 +69,13 @@ namespace Laser.Orchard.MailCommunication.Services {
                 _emailrepository.Update(recordMail);
             }
 
-            // Model template Mail
             var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+            if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
+                baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
+
             string parametriEncode = System.Web.HttpUtility.HtmlEncode(Nonce.Replace('+', '_').Replace('/', '-'));
 
+            // Model template Mail
             dynamic viewModel = new UnsubscribeVM {
                 Email = email,
                 LinkUnsubscription = string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/ConfirmUnsubscribe?key={1}", baseUri, parametriEncode),
