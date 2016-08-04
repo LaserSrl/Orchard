@@ -69,6 +69,10 @@
     <Reference Include="Orchard.Users">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Workflows, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Workflows\bin\Orchard.Workflows.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -135,6 +139,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\ReactionClickedForm.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ReactionAjaxController..cs" />
     <Compile Include="Controllers\ReactionApiController.cs" />
@@ -166,6 +171,7 @@
     <Compile Include="ViewModels\ReactionsSummaryVM.cs" />
     <Compile Include="ViewModels\UserReactionsTypesVM.cs" />
     <Compile Include="ViewModels\UserReactionsVM.cs" />
+    <Compile Include="Activities\ReactionClickedActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Settings.cshtml" />
