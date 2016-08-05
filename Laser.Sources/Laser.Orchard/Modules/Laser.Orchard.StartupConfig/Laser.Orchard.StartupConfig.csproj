@@ -226,6 +226,7 @@
     <Compile Include="Extensions\MediaHelperExtensions.cs" />
     <Compile Include="Filters\ControllerContextFilter.cs" />
     <Compile Include="Handlers\ContentPickerFieldExtensionHandler.cs" />
+    <Compile Include="Handlers\ExternalMediaHandler.cs" />
     <Compile Include="Handlers\FavoriteCulturePartHandler.cs" />
     <Compile Include="Handlers\IContactRelatedEventHandler.cs" />
     <Compile Include="Handlers\MaintenancePartHandler.cs" />
