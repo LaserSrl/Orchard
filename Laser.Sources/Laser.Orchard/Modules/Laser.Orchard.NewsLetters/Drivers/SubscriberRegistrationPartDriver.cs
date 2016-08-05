@@ -59,8 +59,19 @@ namespace Laser.Orchard.NewsLetters.Drivers {
                 updater.AddModelError("SubscriberRegistrationPartError", T("SubscriberRegistration Error"));
             }
             var selectedNews = HttpContext.Current.Request.Form[Prefix + ".Subscription_Newsletters_Ids"];
-            selectedNews = String.Join(",", selectedNews.Split(',').Where(w => w != "false"));
-            part.NewsletterDefinitionIds = selectedNews;
+
+            if (selectedNews == null)
+                updater.AddModelError("SubscriberRegistrationPartNewsletterError", T("Subscription for newsletters not found"));
+            else 
+            {
+                selectedNews = String.Join(",", selectedNews.Split(',').Where(w => w != "false"));
+
+                if (string.IsNullOrEmpty(selectedNews))
+                    updater.AddModelError("SubscriberRegistrationPartValidationError", T("Subscription for newsletters is mandatory"));
+                else
+                    part.NewsletterDefinitionIds = selectedNews;
+            }
+
             return Editor(part, shapeHelper);
         }
 

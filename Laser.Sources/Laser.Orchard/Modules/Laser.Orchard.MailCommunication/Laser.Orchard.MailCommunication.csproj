@@ -126,18 +126,26 @@
     <Compile Include="Controllers\CountPanelController.cs" />
     <Compile Include="Controllers\MailerResultController.cs" />
     <Compile Include="Controllers\MailerResultAPIController.cs" />
+    <Compile Include="Controllers\UnsubscribeController.cs" />
     <Compile Include="Drivers\MailCommunicationPartDriver.cs" />
+    <Compile Include="Drivers\MailCommunicationSettingsPartDriver.cs" />
     <Compile Include="Drivers\MailerSiteSettingsPartDriver.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Handlers\MailCommunicationPartHandler.cs" />
+    <Compile Include="Handlers\MailCommunicationSettingsPartHandler.cs" />
     <Compile Include="Handlers\MailerScheduledTaskHandler.cs" />
     <Compile Include="Handlers\MailerSiteSettingsHandler.cs" />
+    <Compile Include="Models\MailCommunicationSettingsPart.cs" />
     <Compile Include="Models\MailerSiteSettingsPart.cs" />
     <Compile Include="Services\IMailCommunicationService.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\MailCommunicationPart.cs" />
+    <Compile Include="Services\MailUnsubscribeService.cs" />
     <Compile Include="Services\MissingSettingsBanner.cs" />
+    <Compile Include="ViewModels\MailCommunicationSettingsVM.cs" />
+    <Compile Include="ViewModels\MailerSiteSettingsVM.cs" />
     <Compile Include="ViewModels\RecipientData.cs" />
+    <Compile Include="ViewModels\UnsubscribeVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">
@@ -177,6 +185,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\CustomTemplatePickerOverride_Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Unsubscribe.Confirm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Unsubscribe.EmailSent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Unsubscribe.Error.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Unsubscribe.EmailSuccess.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\MailCommunicationSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

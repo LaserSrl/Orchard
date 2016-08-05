@@ -8,6 +8,7 @@
     />
   <Place Parts_MailerSiteSettings_Edit="Content:1"/>
   <Place Parts_MailCommunication="Content:2" />
+  <Place Parts_MailCommunicationSettings_Edit="Content:1"/>
   <Match ContentType="CommunicationAdvertising">
     <Place Parts_CustomTemplatePicker_Edit="-" />
     <Place Parts_MailCommunication_Edit="Content:5.3"/>
