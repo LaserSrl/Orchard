@@ -55,7 +55,10 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.MailTest") {
                     if (part.SendToTestEmail && part.EmailForTest != string.Empty) {
                         dynamic content = context.ContentItem;
+
                         var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+                        if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
+                            baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
 
                         Dictionary<string, object> similViewBag = new Dictionary<string, object>();
                         similViewBag.Add("CampaignLink", _communicationService.GetCampaignLink("Email", part));

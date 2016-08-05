@@ -173,7 +173,10 @@ namespace Laser.Orchard.NewsLetters.Handlers {
 
         private Dictionary<string, object> GetSettings(dynamic contentModel, int templateId, NewsletterEditionPart part) {
             var data = new Dictionary<string, object>();
+
             var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+            if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
+                baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
 
             var template = _templateService.GetTemplate(templateId);
             string body = _templateService.RitornaParsingTemplate(contentModel, templateId);

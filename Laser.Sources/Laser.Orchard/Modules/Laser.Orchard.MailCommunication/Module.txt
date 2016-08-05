@@ -10,6 +10,7 @@ Features:
 		Dependencies: Laser.Orchard.CommunicationGateway, Laser.Orchard.TemplateManagement, Orchard.ContentPicker, Orchard.Fields, Orchard.JQuery, Laser.Orchard.jQueryPlugins, Laser.Orchard.Queries, Orchard.Localization, Laser.Orchard.StartupConfig, Laser.Orchard.MailerUtility
 		Category: Messaging
 	Laser.Orchard.MailerUtility:
+		Name: Mailer Utility
 		Description: Set the information for sending email via FTP.
 		Dependencies: Orchard.Localization
 		Category: Messaging

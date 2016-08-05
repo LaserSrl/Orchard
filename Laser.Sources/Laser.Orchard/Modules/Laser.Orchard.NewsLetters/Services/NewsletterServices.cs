@@ -23,6 +23,7 @@ using Orchard.Events;
 using System.Diagnostics;
 using Laser.Orchard.TemplateManagement.ViewModels;
 using Laser.Orchard.StartupConfig.Services;
+using Orchard.Environment.Configuration;
 
 namespace Laser.Orchard.NewsLetters.Services {
     public interface IJobsQueueService : IEventHandler {
@@ -39,6 +40,7 @@ namespace Laser.Orchard.NewsLetters.Services {
         private readonly IMessageService _messageService;
         private readonly INotifier _notifier;
         private readonly ICommonsServices _commonServices;
+        private readonly ShellSettings _shellSettings;
 
         public NewsletterServices(
             IJobsQueueService jobsQueueService,
@@ -50,7 +52,8 @@ namespace Laser.Orchard.NewsLetters.Services {
             IRepository<NewsletterDefinitionPartRecord> repositoryNewsletterDefinition,
             IRepository<NewsletterEditionPartRecord> repositoryNewsletterEdition,
             ICommonsServices commonServices,
-            INotifier notifier) {
+            INotifier notifier,
+            ShellSettings shellSettings) {
 
             _notifier = notifier;
             _contentManager = contentManager;
@@ -63,6 +66,7 @@ namespace Laser.Orchard.NewsLetters.Services {
             _repositoryNewsletterEdition = repositoryNewsletterEdition;
             _jobsQueueService = jobsQueueService;
             _commonServices = commonServices;
+            _shellSettings = shellSettings;
         }
 
         public Localizer T { get; set; }
@@ -160,7 +164,10 @@ namespace Laser.Orchard.NewsLetters.Services {
             //    }
             //}
             if (!String.IsNullOrWhiteSpace(testEmail)) {
+
                 var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+                if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
+                    baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
 
                 // Place Holder
                 List<TemplatePlaceHolderViewModel> listaPH = new List<TemplatePlaceHolderViewModel>();
@@ -285,10 +292,13 @@ namespace Laser.Orchard.NewsLetters.Services {
                 }
                 if (returnValue != null) {
 
-                    // Model template Mail
                     var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+                    if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
+                        baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
+
                     string parametriEncode = System.Web.HttpUtility.HtmlEncode(Nonce.Replace('+', '_').Replace('/', '-'));
 
+                    // Model template Mail
                     dynamic viewModel = new SubscriberViewModel {
                         Email = subs.Email,
                         Name = subs.Name,
@@ -321,7 +331,7 @@ namespace Laser.Orchard.NewsLetters.Services {
             bool decryptOk = _commonServices.DecryptNonce(keySubscribe, out parametri);
 
             if (!decryptOk) {
-                _orchardServices.Notifier.Information(T("Subscribe impossible. Please try again."));
+                _orchardServices.Notifier.Error(T("Subscribe impossible. Please try again."));
                 return null;
             }
 
@@ -332,12 +342,12 @@ namespace Laser.Orchard.NewsLetters.Services {
             var subs = _repositorySubscribers.Table.Where(w => w.Email == email && w.SubscriptionKey == keySubscribe).SingleOrDefault();
 
             if (subs == null) {
-                _orchardServices.Notifier.Information(T("Subscriber not found!"));
+                _orchardServices.Notifier.Error(T("Subscriber not found!"));
                 return null;
             }
 
             if (subs.Confirmed) {
-                _orchardServices.Notifier.Information(T("Email already registered!"));
+                _orchardServices.Notifier.Error(T("Email already registered!"));
                     return null;
             }
             
@@ -361,14 +371,14 @@ namespace Laser.Orchard.NewsLetters.Services {
                 var subs = _repositorySubscribers.Table.Where(w => w.Email == subscriber.Email &&
                     w.NewsletterDefinition.Id == subscriber.NewsletterDefinition_Id).SingleOrDefault();
                 if (subs == null) {
-                    _orchardServices.Notifier.Information(T("Email not found!"));
+                    _orchardServices.Notifier.Error(T("Email not found!"));
                     return null;
                 }
                 else if (subs.Confirmed) {
                     returnValue = subs;
                 }
                 else {
-                    _orchardServices.Notifier.Information(T("Email not found!"));
+                    _orchardServices.Notifier.Error(T("Email not found!"));
                     return null;
                 }
                 if (returnValue != null) {
@@ -382,10 +392,13 @@ namespace Laser.Orchard.NewsLetters.Services {
                     returnValue.UnsubscriptionKey = Nonce;
                     _repositorySubscribers.Update(returnValue);
 
-                    // Model template Mail
                     var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
+                    if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
+                        baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
+
                     string parametriEncode = System.Web.HttpUtility.HtmlEncode(Nonce.Replace('+', '_').Replace('/', '-'));
 
+                    // Model template Mail
                     dynamic viewModel = new SubscriberViewModel {
                         Email = subs.Email,
                         Name = subs.Name,
@@ -417,7 +430,7 @@ namespace Laser.Orchard.NewsLetters.Services {
             bool decryptOk = _commonServices.DecryptNonce(keyUnsubscribe, out parametri);
 
             if (!decryptOk) {
-                _orchardServices.Notifier.Information(T("Unsubscribe impossible. Please try again."));
+                _orchardServices.Notifier.Error(T("Unsubscribe impossible. Please try again."));
                 return null;
             }
 
@@ -429,12 +442,12 @@ namespace Laser.Orchard.NewsLetters.Services {
             var subs = _repositorySubscribers.Table.Where(w => w.Email == email && w.UnsubscriptionKey.Equals(keyUnsubscribe)).SingleOrDefault();
 
             if (subs == null) {
-                _orchardServices.Notifier.Information(T("Subscriber not found!"));
+                _orchardServices.Notifier.Error(T("Subscriber not found!"));
                 return null;
             }
 
             if (!subs.Confirmed) {
-                _orchardServices.Notifier.Information(T("Email not yet registered!"));
+                _orchardServices.Notifier.Error(T("Email not yet registered!"));
                 return null;
             }
 
