@@ -53,7 +53,7 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Activities {
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            var result = _razorExecuteService.Execute(activityContext.GetState<string>("RazorExecuteActivity_RazorView"), workflowContext.Content).Trim();
+            var result = _razorExecuteService.Execute(activityContext.GetState<string>("RazorExecuteActivity_RazorView"), workflowContext.Content, workflowContext.Tokens).Trim();
             if (result == null) {
                 result = "Error";
             } else if (result == "") {

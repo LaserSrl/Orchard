@@ -10,6 +10,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using System.Collections;
+using Orchard.ContentManagement.Handlers;
 
 
 namespace Laser.Orchard.UserReactions.Drivers {
@@ -27,10 +28,15 @@ namespace Laser.Orchard.UserReactions.Drivers {
         }
 
         public Localizer T { get; set; }
+
+
+        
+       
+
         //Evento display 
         protected override DriverResult Display(UserReactionsPart part, string displayType, dynamic shapeHelper) {
 
-            IList<UserReactionsVM> viewmodel = null;
+            IList<UserReactionsVM> viewmodel = null;           
 
             //Gestione visualizzazione amministratore
             if (displayType == "SummaryAdmin") {
@@ -42,10 +48,14 @@ namespace Laser.Orchard.UserReactions.Drivers {
 
             //Passare la view model da definire 
             if (displayType == "Detail") {
-                viewmodel = _userReactionService.GetTot(part);              
+                viewmodel = _userReactionService.GetTot(part);
+                bool authorized = _userReactionService.HasPermission(part.ContentItem.ContentType);
+                bool requireLogin = false;
+                if(authorized == false && _orchardServices.WorkContext.CurrentUser == null) {
+                    requireLogin = true;
+                }
                 return ContentShape("Parts_UserReactions_Detail", () => shapeHelper
-                    .Parts_UserReactions_Detail(UserReaction: viewmodel));
-
+                    .Parts_UserReactions_Detail(UserReaction: viewmodel, Authorized: authorized, RequireLogin: requireLogin));
             }
 
             //Passare la view model da definire 
@@ -77,6 +87,11 @@ namespace Laser.Orchard.UserReactions.Drivers {
         }
 
 
+        
+        //protected override void Describe(DescribeMembersContext context) {
+        //    context
+        //        .Member(null, typeof(string), T("Value"), T("The string associated with the part."))
+        //    }
 
     }
 }

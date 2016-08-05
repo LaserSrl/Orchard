@@ -12,6 +12,11 @@ namespace Laser.Orchard.UserReactions.Models {
             get { return this.Retrieve(x => x.StyleFileNameProvider); }
             set { this.Store(x => x.StyleFileNameProvider, value); }
         }
+
+        public bool AllowMultipleChoices {
+            get { return this.Retrieve(x => x.AllowMultipleChoices); }
+            set { this.Store(x => x.AllowMultipleChoices, value); }
+        }
     }
     
 }

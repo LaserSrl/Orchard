@@ -348,6 +348,7 @@
     <Content Include="Views\displaynone.cshtml" />
     <Content Include="Views\Activity-RazorExecute.cshtml" />
     <Content Include="Views\Parts\FavoriteCulturePart.cshtml" />
+    <Content Include="RazorCodeExecution\Snippets\EsempioUserReactionsActivity.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
