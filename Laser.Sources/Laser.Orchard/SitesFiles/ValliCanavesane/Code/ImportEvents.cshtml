@@ -91,17 +91,17 @@
         Dictionary<string,CalendarEventStorage> translatableEvents, 
         string thisLanguage){
 
-        retString += thisLanguage;
+        //retString += thisLanguage;
 
         var fiPart = newCalEvent.As<FieldIndexPart>();
         //Title
         newCalEvent.As<TitlePart>().Title = translatableEvents[thisLanguage].name ?? translatableEvents[""].name;
-        retString += " ok " + newCalEvent.As<TitlePart>().Title;
+        //retString += " ok " + newCalEvent.As<TitlePart>().Title;
         //Gallery
         //do not import the contents of the media parts: We added in StartupConfig an handler for the OnLoaded event of MediaParts:
         //if the FileName points to a http or https location, it uses that location for the MediaUrl, meaning that the media is then
         //fetched from the remote location. We need to add media from both the localized and the locale-agnostic "gallery"
-        retString += " gallery";
+        //retString += " gallery";
         List<RemoteMediaStorage> wholeGallery = new List<RemoteMediaStorage>();
         if (translatableEvents[""].remoteGallery != null) {
             wholeGallery.AddRange(translatableEvents[""].remoteGallery);
@@ -181,7 +181,7 @@
                 typeof(string)
             );
         }
-        retString += " ok";
+        //retString += " ok";
         //Categoria
         List<string> categoryList = null;
         if (translatableEvents[thisLanguage].category != null) {
@@ -467,7 +467,7 @@
                             ContentItem newCalEvent = _contentManager.New("CalendarEvent");//_contentManager.Create("CalendarEvent");
                             _contentManager.Create(newCalEvent);
                             UpdateEvent(newCalEvent, translatableEvents, thisLanguage); //update all except localization part
-                            retString+= " update new part done\n";
+                            //retString+= " update new part done\n";
                             //Localization
                             if (i == 1) {
                                 masterContentItemId = newCalEvent.Id;
@@ -491,7 +491,7 @@
                             if (calEvent != null) {
                                 //update all except localization part
                                 UpdateEvent(calEvent, translatableEvents, thisLanguage); 
-                                retString+= " update existing part done\n";
+                               // retString+= " update existing part done\n";
                             } else {
                                 //new event 
                                 calEvent = _contentManager.Create("CalendarEvent");
@@ -508,14 +508,15 @@
                 }
                 
             } catch (Exception ex){
-                retString += "\n INNER: " + ex.Message;
+                //retString += "\n INNER: " + ex.Message;
                 throw;
             }
             
         }
-        retString += "Done";
+        retString = "Done";
     } catch (Exception ex){
-        retString += "\n OUTER: " + ex.Message;
+        //retString += "\n OUTER: " + ex.Message;
+        retString = "Error";
     }
     
 }@retString
