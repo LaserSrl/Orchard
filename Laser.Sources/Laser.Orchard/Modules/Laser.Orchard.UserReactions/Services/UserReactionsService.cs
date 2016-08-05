@@ -631,7 +631,8 @@ namespace Laser.Orchard.UserReactions.Services {
         private List<UserReactionsTypesRecord> GetClickedReactions(int pageId, ReactionsUserIds userIds) {
             List<UserReactionsTypesRecord> clicked = new List<UserReactionsTypesRecord>();
             List<UserReactionsTypesRecord> unclicked = new List<UserReactionsTypesRecord>();
-            var elenco = GetOrderedClickTable().Where(x => (x.UserPartRecord.Id == userIds.Id || x.UserGuid == userIds.Guid) && x.ContentItemRecordId == pageId);
+            var elenco = GetOrderedClickTable().Where(
+                x => (x.UserPartRecord.Id == userIds.Id || (userIds.Guid != null && x.UserGuid == userIds.Guid)) && x.ContentItemRecordId == pageId);
             foreach (var item in elenco) {
                 if (clicked.Contains(item.UserReactionsTypesRecord) == false
                     && unclicked.Contains(item.UserReactionsTypesRecord) == false) {
