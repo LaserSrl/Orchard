@@ -83,6 +83,8 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                                 new List<string> { part.EmailForTest },
                                 similViewBag,
                                 false, listaPH);
+
+                            _notifier.Information(T("Sent e-mail test!"));
                         } else {
                             _notifier.Error(T("Select or create a template for e-mail"));
                         }

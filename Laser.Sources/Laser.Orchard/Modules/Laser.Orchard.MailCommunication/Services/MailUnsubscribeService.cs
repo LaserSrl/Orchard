@@ -54,7 +54,7 @@ namespace Laser.Orchard.MailCommunication.Services {
                                                                       select m).ToList();
 
             if (listaCommunicationEmail == null) {
-                _orchardServices.Notifier.Information(T("Email not found!"));
+                _orchardServices.Notifier.Error(T("Email not found!"));
                 return false;
             }
 
@@ -86,7 +86,7 @@ namespace Laser.Orchard.MailCommunication.Services {
             var settings = _orchardServices.WorkContext.CurrentSite.As<MailCommunicationSettingsPart>();
 
             if (settings.IdTemplateUnsubscribe == null) {
-                _orchardServices.Notifier.Information(T("Select in settings or create a template for e-mail unsubscribe"));
+                _orchardServices.Notifier.Error(T("Select in settings or create a template for e-mail unsubscribe"));
                 return false;
             }
 
@@ -106,7 +106,7 @@ namespace Laser.Orchard.MailCommunication.Services {
             bool decryptOk = _commonServices.DecryptNonce(keyUnsubscribe, out parametri);
 
             if (!decryptOk) {
-                _orchardServices.Notifier.Information(T("Unsubscribe impossible. Please try again."));
+                _orchardServices.Notifier.Error(T("Unsubscribe impossible. Please try again."));
                 return false;
             }
 
@@ -120,7 +120,7 @@ namespace Laser.Orchard.MailCommunication.Services {
                                                                       select m).ToList();
 
             if (listaCommunicationEmail == null) {
-                _orchardServices.Notifier.Information(T("Email not found!"));
+                _orchardServices.Notifier.Error(T("Email not found!"));
                 return false;
             }
 
