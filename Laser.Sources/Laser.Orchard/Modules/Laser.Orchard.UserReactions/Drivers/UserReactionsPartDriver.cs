@@ -28,10 +28,15 @@ namespace Laser.Orchard.UserReactions.Drivers {
         }
 
         public Localizer T { get; set; }
+
+
+        
+       
+
         //Evento display 
         protected override DriverResult Display(UserReactionsPart part, string displayType, dynamic shapeHelper) {
 
-            IList<UserReactionsVM> viewmodel = null;
+            IList<UserReactionsVM> viewmodel = null;           
 
             //Gestione visualizzazione amministratore
             if (displayType == "SummaryAdmin") {
@@ -82,6 +87,7 @@ namespace Laser.Orchard.UserReactions.Drivers {
         }
 
 
+        
         //protected override void Describe(DescribeMembersContext context) {
         //    context
         //        .Member(null, typeof(string), T("Value"), T("The string associated with the part."))

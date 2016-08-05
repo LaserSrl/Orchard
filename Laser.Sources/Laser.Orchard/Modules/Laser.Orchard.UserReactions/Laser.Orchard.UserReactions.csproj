@@ -122,6 +122,7 @@
     <Content Include="Styles\flaticon.css" />
     <Content Include="Styles\fonts\flaticon.svg" />
     <None Include="Views\Admin\ListSummaryReactionByUsers.cshtml" />
+    <None Include="Views\Parts\UserReactionsListForm.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -145,10 +146,12 @@
     <Compile Include="Controllers\ReactionApiController.cs" />
     <Compile Include="DataMigrations.cs" />
     <Compile Include="Drivers\UserReactionsFieldDriver.cs" />
+    <Compile Include="Drivers\UserReactionsListPartDriver.cs" />
     <Compile Include="Drivers\UserReactionsPartDriver.cs" />
     <Compile Include="Fields\UserReactionsField.cs" />
     <Compile Include="FilterEditors\Forms\UserReactionsFieldFilterForm.cs" />
     <Compile Include="FilterEditors\UserReactionsFieldFilterEditor.cs" />
+    <Compile Include="Handlers\SettingsScheduledTaskHandler.cs" />
     <Compile Include="Projections\UserReactionsFieldFilter.cs" />
     <Compile Include="Handlers\UserReactionsPartHandler.cs" />
     <Compile Include="Projections\UserReactionsQueryFilter.cs" />
@@ -164,6 +167,7 @@
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Projections\UserReactionsQueryFilterForm.cs" />
     <Compile Include="Projections\UserReactionsQuerySort.cs" />
+    <Compile Include="Projections\UserReactionsQueryFilterFormValidation.cs" />
     <Compile Include="Projections\UserReactionsQuerySortForm.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Security\UserReactionsPermission.cs" />

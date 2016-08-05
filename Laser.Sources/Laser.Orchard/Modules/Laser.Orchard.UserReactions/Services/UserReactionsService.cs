@@ -33,6 +33,8 @@ namespace Laser.Orchard.UserReactions.Services {
         List<UserReactionsClickRecord> GetListTotalReactions(int Content);
         bool HasPermission(string contentType);
         IQueryable<UserReactionsTypesRecord> GetTypesTableFiltered();
+        void NormalizeSummary(UserReactionsPartRecord partRecord);
+        void NormalizeAllSummaries();
     }
 
     //Class definition to user type
@@ -515,6 +517,47 @@ namespace Laser.Orchard.UserReactions.Services {
             Permission permissionToTest = GetPermissionByName("ReactionsFor" + contentType);
             result = _orchardServices.Authorizer.Authorize(permissionToTest);
             return result;
+        }
+
+        public void NormalizeSummary(UserReactionsPartRecord partRecord) {
+            // recupera tutte le reaction type, anche quelle non abilitate
+            var elencoTypes = GetTypesTable();
+
+            // recupera tutti i summary per il contenuto specificato
+            var elencoSummary = _repoSummary.Fetch(x => x.UserReactionsPartRecord.Id == partRecord.Id);
+
+            // controlla che esista un valore per ogni reaction type, se non c'è inserisce zero
+            foreach (var type in elencoTypes) {
+                if (elencoSummary.FirstOrDefault(x => x.UserReactionsTypesRecord.Id == type.Id) == null) {
+                    _repoSummary.Create(new UserReactionsSummaryRecord {
+                        Quantity = 0,
+                        UserReactionsPartRecord=partRecord,
+                        UserReactionsTypesRecord = type
+                    });
+                }
+            }
+        }
+
+        public void NormalizeAllSummaries() {
+            // recupera tutte le reaction type, anche quelle non abilitate
+            var elencoTypes = GetTypesTable();
+
+            // recupera tutti i contenuti con le reactions
+            var elencoContenuti = _repoPartRec.Fetch(x => x.Id > 0);
+
+            // controlla che esista un valore per ogni reaction type, se non c'è inserisce zero
+            foreach (var record in elencoContenuti) {
+                var elencoSummary = _repoSummary.Fetch(x => x.UserReactionsPartRecord.Id == record.Id);
+                foreach (var type in elencoTypes) {
+                    if (elencoSummary.FirstOrDefault(x => x.UserReactionsTypesRecord.Id == type.Id) == null) {
+                        _repoSummary.Create(new UserReactionsSummaryRecord {
+                            Quantity = 0,
+                            UserReactionsPartRecord = record,
+                            UserReactionsTypesRecord = type
+                        });
+                    }
+                }
+            }
         }
         /// <summary>
         /// Crea nuovo record dati click.
