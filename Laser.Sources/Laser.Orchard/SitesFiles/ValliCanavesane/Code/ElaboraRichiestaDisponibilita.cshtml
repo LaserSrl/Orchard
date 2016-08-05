@@ -1,0 +1,26 @@
+@using Orchard.ContentManagement;
+@{
+    string result = "Done";
+    try {
+        //Title should become "Richiesta disponibilità {title POI} - {nome} {cognome}"
+        dynamic ci = Model.ContentItem;
+        var poiId = ci.RichiestaDisponibilita.POIcorrelato.Ids;
+        dynamic poiCorrelato = null;
+        string titlePOI = "";
+        if (poiId != null) {
+            if (poiId.Length > 0) {
+                poiCorrelato = Model.OrchardServices.ContentManager.Get(poiId[0]);
+                titlePOI = poiCorrelato.TitlePart.Title;
+            }
+        }
+        //get owner's name and surname from CommonPart
+        int idOwner = ci.CommonPart.Owner.Id;
+        dynamic owner = (dynamic)(Model.OrchardServices.ContentManager.Get(idOwner));
+        string nome = owner.ProfilePart.Nome.Value;
+        string cognome = owner.ProfilePart.Cognome.Value;
+        Model.ContentItem.TitlePart.Title = string.Format("Richiesta disponibilità {0} - {1} {2}", titlePOI, nome, cognome);
+
+    } catch (Exception ex) {
+        result = "Error";
+    }
+}@result
