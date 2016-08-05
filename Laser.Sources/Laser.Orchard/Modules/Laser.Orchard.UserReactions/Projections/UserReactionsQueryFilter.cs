@@ -36,38 +36,36 @@ namespace Laser.Orchard.UserReactions.Projections {
             int min = Convert.ToInt32(context.State.Min);
             int max = Convert.ToInt32(context.State.Max);
 
+            context.Query.Join(a => a.ContentPartRecord<UserReactionsPartRecord>()
+                .Property("Reactions", "reactionsSummary")
+                .Property("UserReactionsTypesRecord", "reactionType"));
+            context.Query.Where(a => a.Named("reactionType"), x => x.Eq("Id", reaction));
+
             switch (op) {
                 case UserReactionsFieldOperator.LessThan:
-                    ids = _repoSummary.Fetch(x => x.UserReactionsTypesRecord.Id == reaction && x.Quantity < value).Select(x => x.UserReactionsPartRecord.Id).ToList();
+                    context.Query.Where(a => a.Named("reactionsSummary"), x => x.Lt("Quantity", value));
                     break;
                 case UserReactionsFieldOperator.LessThanEquals:
-                    ids = _repoSummary.Fetch(x => x.UserReactionsTypesRecord.Id == reaction && x.Quantity <= value).Select(x => x.UserReactionsPartRecord.Id).ToList();
+                    context.Query.Where(a => a.Named("reactionsSummary"), x => x.Le("Quantity", value));
                     break;
                 case UserReactionsFieldOperator.Equals:
-                    ids = _repoSummary.Fetch(x => x.UserReactionsTypesRecord.Id == reaction && x.Quantity == value).Select(x => x.UserReactionsPartRecord.Id).ToList();
+                    context.Query.Where(a => a.Named("reactionsSummary"), x => x.Eq("Quantity", value));
                     break;
                 case UserReactionsFieldOperator.NotEquals:
-                    ids = _repoSummary.Fetch(x => x.UserReactionsTypesRecord.Id == reaction && x.Quantity != value).Select(x => x.UserReactionsPartRecord.Id).ToList();
+                    context.Query.Where(a => a.Named("reactionsSummary"), x => x.Not(z => z.Eq("Quantity", value)));
                     break;
                 case UserReactionsFieldOperator.GreaterThan:
-                    ids = _repoSummary.Fetch(x => x.UserReactionsTypesRecord.Id == reaction && x.Quantity > value).Select(x => x.UserReactionsPartRecord.Id).ToList();
+                    context.Query.Where(a => a.Named("reactionsSummary"), x => x.Gt("Quantity", value));
                     break;
                 case UserReactionsFieldOperator.GreaterThanEquals:
-                    ids = _repoSummary.Fetch(x => x.UserReactionsTypesRecord.Id == reaction && x.Quantity >= value).Select(x => x.UserReactionsPartRecord.Id).ToList();
+                    context.Query.Where(a => a.Named("reactionsSummary"), x => x.Ge("Quantity", value));
                     break;
                 case UserReactionsFieldOperator.Between:
-                    ids = _repoSummary.Fetch(x => x.UserReactionsTypesRecord.Id == reaction && x.Quantity >= min && x.Quantity <= max).Select(x => x.UserReactionsPartRecord.Id).ToList();
+                    context.Query.Where(a => a.Named("reactionsSummary"), x => x.Between("Quantity", min, max));
                     break;
                 case UserReactionsFieldOperator.NotBetween:
-                    ids = _repoSummary.Fetch(x => x.UserReactionsTypesRecord.Id == reaction && x.Quantity < min && x.Quantity > max).Select(x => x.UserReactionsPartRecord.Id).ToList();
+                    context.Query.Where(a => a.Named("reactionsSummary"), x => x.Not(z => z.Between("Quantity", min, max)));
                     break;
-            }
-            if (ids.Count > 0) {
-                context.Query.Where(x => x.ContentItem(), x => x.InG<int>("Id", ids));
-            }
-            else {
-                // non deve estrare nulla quindi metto la condizione Id = 0
-                context.Query.Where(x => x.ContentItem(), x => x.Eq("Id", 0));
             }
         }
 

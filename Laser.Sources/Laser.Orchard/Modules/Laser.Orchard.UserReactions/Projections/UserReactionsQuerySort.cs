@@ -28,15 +28,17 @@ namespace Laser.Orchard.UserReactions.Projections {
         private void ApplySort(SortCriterionContext context) {
             bool ascending = Convert.ToBoolean(context.State.Sort);
             int reactionTypeId = Convert.ToInt32(context.State.Reaction);
-            context.Query.Join(a => a.ContentPartRecord<UserReactionsPartRecord>()
-                .Property("Reactions", "ReactionsSummary")
-                .Property("UserReactionsTypesRecord", "ReactionType"));
-            context.Query.Where(a => a.Named("ReactionType"), x => x.Eq("Id", reactionTypeId));
+            context.Query = context.Query.Join(
+                x => x.ContentPartRecord<UserReactionsPartRecord>()
+                .Property("Reactions", "reactionsSummarySort")
+                .Property("UserReactionsTypesRecord", "reactionTypeSort"));
+            context.Query.Where(a => a.Named("reactionTypeSort"), x => x.Eq("Id", reactionTypeId));
+
             if (ascending) {
-                context.Query.OrderBy(a => a.Named("ReactionsSummary"), x => x.Asc("Quantity"));
+                context.Query.OrderBy(a => a.Named("reactionsSummarySort"), x => x.Asc("Quantity"));
             }
             else {
-                context.Query.OrderBy(a => a.Named("ReactionsSummary"), x => x.Desc("Quantity"));
+                context.Query.OrderBy(a => a.Named("reactionsSummarySort"), x => x.Desc("Quantity"));
             }
         }
 

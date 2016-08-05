@@ -149,6 +149,7 @@
     <Compile Include="Fields\UserReactionsField.cs" />
     <Compile Include="FilterEditors\Forms\UserReactionsFieldFilterForm.cs" />
     <Compile Include="FilterEditors\UserReactionsFieldFilterEditor.cs" />
+    <Compile Include="Handlers\SettingsScheduledTaskHandler.cs" />
     <Compile Include="Projections\UserReactionsFieldFilter.cs" />
     <Compile Include="Handlers\UserReactionsPartHandler.cs" />
     <Compile Include="Projections\UserReactionsQueryFilter.cs" />
