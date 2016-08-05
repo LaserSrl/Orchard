@@ -102,6 +102,7 @@ namespace Laser.Orchard.NewsLetters.Controllers {
             }
 
             if (subRecord != null) {
+                _orchardServices.Notifier.Information(T("Subscription success"));
                 return new ShapeResult(this, Shape.Subscription_ConfirmedEmail());
             } else {
                 return new ShapeResult(this, Shape.Subscription_UnconfirmedEmail());
@@ -165,6 +166,7 @@ namespace Laser.Orchard.NewsLetters.Controllers {
             }
 
             if (subRecord != null) {
+                _orchardServices.Notifier.Information(T("Unsubscription success"));
                 return new ShapeResult(this, Shape.Subscription_UnsubscribedEmail());
             } else {
                 return new ShapeResult(this, Shape.Subscription_UnsubscribeError());

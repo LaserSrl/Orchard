@@ -80,6 +80,7 @@ namespace Laser.Orchard.MailCommunication.Controllers {
             }
 
             if (allOK) {
+                _notifier.Information(T("Unsubscription success"));
                 return new ShapeResult(this, Shape.Unsubscribe_EmailSuccess());
             } else {
                 return new ShapeResult(this, Shape.Unsubscribe_Error());
