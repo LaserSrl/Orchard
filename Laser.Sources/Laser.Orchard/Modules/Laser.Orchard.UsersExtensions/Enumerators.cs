@@ -7,4 +7,8 @@ namespace Laser.Orchard.UsersExtensions {
     public enum LostPasswordUserOptions {
         Account, Phone
     };
+
+    public enum PoliciesRequestType {
+        All, ForRegistration, NotForRegistration
+    };
 }

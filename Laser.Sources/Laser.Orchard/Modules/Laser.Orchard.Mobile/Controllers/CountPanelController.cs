@@ -1,12 +1,10 @@
-﻿using Laser.Orchard.Mobile.Models;
+﻿using Laser.Orchard.Commons.Attributes;
 using Laser.Orchard.Mobile.Services;
 using Orchard;
 using Orchard.Environment.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.Mobile.Controllers
@@ -23,7 +21,9 @@ namespace Laser.Orchard.Mobile.Controllers
             _pushGatewayService = pushGatewayService;
             _orchardServices.WorkContext.TryResolve<ISmsCommunicationService>(out _smsCommunicationService);
         }
+
         [HttpGet]
+        [AdminService]
         public JsonResult GetTotalPush(Int32[] ids, Int32? idlocalization, Int32? tot)
         {
             Dictionary<string, string> Total = new Dictionary<string, string>();
@@ -42,7 +42,9 @@ namespace Laser.Orchard.Mobile.Controllers
             }
             return Json(Total, JsonRequestBehavior.AllowGet);
         }
+
         [HttpGet]
+        [AdminService]
         public JsonResult GetTotalSms(Int32[] ids, Int32? idlocalization, Int32? tot)
         {
             Dictionary<string, string> Total = new Dictionary<string, string>();
