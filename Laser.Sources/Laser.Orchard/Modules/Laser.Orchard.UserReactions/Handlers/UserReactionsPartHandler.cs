@@ -8,9 +8,6 @@ namespace Laser.Orchard.UserReactions.Handlers {
     public class UserReactionsPartHandler : ContentHandler {
         public UserReactionsPartHandler(IRepository<UserReactionsPartRecord> repository, IUserReactionsService reactionsService) {
             Filters.Add(StorageFilter.For(repository));
-            OnUpdated<UserReactionsPart>((context, part) => {
-                reactionsService.NormalizeSummary(part.Record);
-            });
         }
     }
 }
