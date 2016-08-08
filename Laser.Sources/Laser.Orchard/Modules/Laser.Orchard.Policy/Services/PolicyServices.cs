@@ -1,7 +1,9 @@
-﻿using Laser.Orchard.Policy.Events;
+﻿using Laser.Orchard.Commons.Services;
+using Laser.Orchard.Policy.Events;
 using Laser.Orchard.Policy.Models;
 using Laser.Orchard.Policy.ViewModels;
 using Laser.Orchard.StartupConfig.Services;
+using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
@@ -16,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Xml.Linq;
 using OrchardNS = Orchard;
 
 namespace Laser.Orchard.Policy.Services {
@@ -28,10 +31,13 @@ namespace Laser.Orchard.Policy.Services {
         string[] GetPoliciesForContent(PolicyPart part);
         IEnumerable<PolicyTextInfoPart> GetPolicies(string culture = null, int[] ids = null);
         List<PolicyHistoryViewModel> GetPolicyHistoryForUser(int userId);
+        string PoliciesLMNVSerialization(IEnumerable<PolicyTextInfoPart> policies);
+        string PoliciesPureJsonSerialization(IEnumerable<PolicyTextInfoPart> policies);
     }
 
     public class PolicyServices : IPolicyServices {
         private readonly IContentManager _contentManager;
+        private readonly IContentSerializationServices _contentSerializationServices;
         private readonly OrchardNS.IWorkContextAccessor _workContext;
         private readonly ICultureManager _cultureManager;
         private readonly IRepository<UserPolicyAnswersRecord> _userPolicyAnswersRepository;
@@ -40,6 +46,7 @@ namespace Laser.Orchard.Policy.Services {
         private readonly IPolicyEventHandler _policyEventHandler;
 
         public PolicyServices(IContentManager contentManager,
+                              IContentSerializationServices contentSerializationServices,
                               OrchardNS.IWorkContextAccessor workContext,
                               ICultureManager cultureManager,
                               IRepository<UserPolicyAnswersRecord> userPolicyAnswersRepository,
@@ -47,6 +54,7 @@ namespace Laser.Orchard.Policy.Services {
                               IControllerContextAccessor controllerContextAccessor,
                               IPolicyEventHandler policyEventHandler) {
             _contentManager = contentManager;
+            _contentSerializationServices = contentSerializationServices;
             _workContext = workContext;
             _cultureManager = cultureManager;
             _userPolicyAnswersRepository = userPolicyAnswersRepository;
@@ -338,6 +346,74 @@ namespace Laser.Orchard.Policy.Services {
             }).Where(w => w != null));
 
             return policyHistory.OrderBy(o => o.PolicyId).ThenBy(o => o.PolicyTitle).ThenBy(o => o.AnswerDate).ToList();
+        }
+
+        public string PoliciesLMNVSerialization(IEnumerable<PolicyTextInfoPart> policies) {
+            ObjectDumper dumper;
+            StringBuilder sb = new StringBuilder();
+            XElement dump = null;
+
+            var realFormat = false;
+            var minified = false;
+            string[] complexBehaviours = null;
+            string outputFormat = _workContext.GetContext().HttpContext.Request.Headers["OutputFormat"];
+
+            if (outputFormat != null && outputFormat.Equals("LMNV", StringComparison.OrdinalIgnoreCase)) { 
+                complexBehaviours= new string[]{"returnnulls"};
+                realFormat = true;
+                minified = false;
+            } else {
+                bool.TryParse(_workContext.GetContext().HttpContext.Request["realformat"], out realFormat);
+                bool.TryParse(_workContext.GetContext().HttpContext.Request["minified"], out minified);
+            }
+
+            sb.Insert(0, "{");
+            sb.AppendFormat("\"n\": \"{0}\"", "Model");
+            sb.AppendFormat(", \"v\": \"{0}\"", "VirtualContent");
+            sb.Append(", \"m\": [{");
+            sb.AppendFormat("\"n\": \"{0}\"", "VirtualId");
+            sb.AppendFormat(", \"v\": \"{0}\"", "0");
+            sb.Append("}]");
+
+            sb.Append(", \"l\":[");
+
+            int i = 0;
+            sb.Append("{");
+            sb.AppendFormat("\"n\": \"{0}\"", "PendingPolicies");
+            sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
+            sb.Append(", \"m\": [");
+
+            foreach (var item in policies) {
+                if (i > 0) {
+                    sb.Append(",");
+                }
+                sb.Append("{");
+                dumper = new ObjectDumper(10,null,false,true,complexBehaviours);
+                dump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
+                JsonConverter.ConvertToJSon(dump, sb, minified, realFormat);
+                sb.Append("}");
+                i++;
+            }
+            sb.Append("]");
+            sb.Append("}");
+
+            sb.Append("]");
+            sb.Append("}");
+
+            return sb.ToString();
+        }
+
+        public string PoliciesPureJsonSerialization(IEnumerable<PolicyTextInfoPart> policies) {
+            JObject json = new JObject();
+            var resultArray = new JArray();
+
+            foreach (var pendingPolicy in policies) {
+                resultArray.Add(new JObject(_contentSerializationServices.SerializeContentItem(pendingPolicy.ContentItem, 0)));
+            }
+
+            json.Add("PendingPolicies", resultArray);
+
+            return json.ToString(Newtonsoft.Json.Formatting.None);
         }
 
         private IList<PolicyForUserViewModel> GetCookieAnswers() {
