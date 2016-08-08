@@ -11,8 +11,11 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.UI.Admin;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.MailCommunication.Drivers {
+
+    [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class MailCommunicationPartDriver : ContentPartDriver<MailCommunicationPart> {
         private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;
@@ -56,15 +59,15 @@ namespace Laser.Orchard.MailCommunication.Drivers {
 
             if (updater != null) {
                 if (updater.TryUpdateModel(part, Prefix, null, null) && updater.TryUpdateModel(vModel, Prefix, null, null)) {
-
-                    if (vModel.TemplateIdSelected != null)
+                    if (vModel.TemplateIdSelected != null) {
                         part.ContentItem.As<CustomTemplatePickerPart>().SelectedTemplate = _contentManager.Get<TemplatePart>(vModel.TemplateIdSelected.Value);
-
+                    }
                     //if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.MailTest") {
                     //    // Logica di invio mail forse meglio metterla in un handler > OnUpdated
                     //}
                 }
             }
+
             var shapes = new List<DriverResult>();
             shapes.Add(ContentShape("Parts_MailCommunication_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/MailCommunication_Edit", Model: part, Prefix: Prefix)));
             shapes.Add(ContentShape("Parts_MailCommunicationActions_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/MailCommunicationActions_Edit", Model: part, Prefix: Prefix)));

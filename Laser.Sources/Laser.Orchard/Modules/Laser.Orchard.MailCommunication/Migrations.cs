@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement.MetaData;
+﻿using Laser.Orchard.StartupConfig.Services;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
@@ -6,6 +7,13 @@ using Orchard.Environment.Extensions;
 namespace Laser.Orchard.MailCommunication {
     [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class Migrations : DataMigrationImpl {
+
+        private readonly IUtilsServices _utilServices;
+
+        public Migrations(IUtilsServices utilsServices) {
+            _utilServices = utilsServices;
+        }
+
         public int Create() {
             SchemaBuilder.CreateTable("MailCommunicationPartRecord", table => table
                 .ContentPartRecord()
@@ -32,6 +40,11 @@ namespace Laser.Orchard.MailCommunication {
             ContentDefinitionManager.AlterTypeDefinition("CustomTemplate",
                 type => type.WithPart("CustomTemplate"));
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            _utilServices.EnableFeature("Laser.Orchard.MailerUtility");
+            return 3;
         }
     }
 }

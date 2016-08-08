@@ -13,5 +13,7 @@ namespace Laser.Orchard.CommunicationGateway.Models {
         public virtual bool Produzione { get; set; }
         public virtual bool AccettatoUsoCommerciale { get; set; } //since we add these fields here, we need to add them to View_EmailVM_element for transfers
         public virtual bool AutorizzatoTerzeParti { get; set; } //we also need to update the OnEmailLoader() handler in CommunicationContactPartHandler.cs
+        public virtual string KeyUnsubscribe { get; set; }
+        public virtual DateTime? DataUnsubscribe { get; set; }
     }
 }

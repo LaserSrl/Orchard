@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Orchard.ContentManagement;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.MailCommunication.Models {
+
+    [OrchardFeature("Laser.Orchard.MailCommunication")]
     public class MailCommunicationPart : ContentPart {
         public bool MailMessageSent {
             get { return this.Retrieve(r => r.MailMessageSent); }

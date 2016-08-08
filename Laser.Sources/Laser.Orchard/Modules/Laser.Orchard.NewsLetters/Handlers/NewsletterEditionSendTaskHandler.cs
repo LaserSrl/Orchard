@@ -80,6 +80,7 @@ namespace Laser.Orchard.NewsLetters.Handlers {
                 }
                 var subscribers = _newslServices.GetSubscribers(part.NewsletterDefinitionPartRecord_Id).Where(w => w.Confirmed);
                 var subscribersEmails = subscribers.Select(s => new { s.Id, s.Name, s.Email });
+                List<object> listaSubscribers = new List<object>(subscribersEmails);
 
                 // ricava i settings e li invia tramite FTP
                 var templateId = _newslServices.GetNewsletterDefinition(part.NewsletterDefinitionPartRecord_Id,
@@ -90,13 +91,12 @@ namespace Laser.Orchard.NewsLetters.Handlers {
                 }.ToExpando();
                 Dictionary<string, object> settings = GetSettings(model, templateId, part);
 
-                if (settings.Count > 0) {
+                if ((settings.Count > 0) && (listaSubscribers.Count > 0)) {
                     SendSettings(settings, part.Id);
 
                     // impagina e invia i recipiens tramite FTP
                     int pageNum = 0;
                     List<object> pagina = new List<object>();
-                    List<object> listaSubscribers = new List<object>(subscribersEmails);
                     int pageSize = _mailerConfig.RecipientsPerJsonFile;
 
                     for (int i = 0; i < listaSubscribers.Count; i++) {
@@ -174,35 +174,25 @@ namespace Laser.Orchard.NewsLetters.Handlers {
         private Dictionary<string, object> GetSettings(dynamic contentModel, int templateId, NewsletterEditionPart part) {
             var data = new Dictionary<string, object>();
 
-            ParseTemplateContext templatectx = new ParseTemplateContext();
-            var template = _templateService.GetTemplate(templateId);
             var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
-            var host = string.Format("{0}://{1}{2}",
-                                    baseUri.Scheme,
-                                    baseUri.Host,
-                                    baseUri.Port == 80 ? string.Empty : ":" + baseUri.Port);
-            var urlHelper = GetUrlHelper();
+            if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
+                baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
 
-            // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
-            // Nel template pertanto Model, diventa Model.Content
-            var dynamicModel = new {
-                Content = contentModel,
-                Urls = new {
-                    SubscriptionSubscribe = urlHelper.SubscriptionSubscribe(),
-                    SubscriptionUnsubscribe = urlHelper.SubscriptionUnsubscribe(),
-                    SubscriptionConfirmSubscribe = urlHelper.SubscriptionConfirmSubscribe(),
-                    SubscriptionConfirmUnsubscribe = urlHelper.SubscriptionConfirmUnsubscribe(),
-                    BaseUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl,
-                    MediaUrl = urlHelper.MediaExtensionsImageUrl(),
-                    Domain = host,
-
-                }.ToExpando()
-            };
-            templatectx.Model = dynamicModel;
-
-            var body = _templateService.ParseTemplate(template, templatectx);
+            var template = _templateService.GetTemplate(templateId);
+            string body = _templateService.RitornaParsingTemplate(contentModel, templateId);
 
             if (!body.StartsWith("Error On Template")) {
+
+                // Add Link [UNSUBSCRIBE]
+                string ph_Unsubscribe = "[UNSUBSCRIBE]";
+                string unsubscribe = T("Click here to unsubscribe").Text;
+                string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/Unsubscribe?newsletterId={1}", baseUri, part.NewsletterDefinitionPartRecord_Id) + "'>" + unsubscribe + "</a>";
+
+                if (body.Contains(ph_Unsubscribe))
+                    body = body.Replace(ph_Unsubscribe, linkUnsubscribe);
+                else
+                    body += "<br /><br />" + linkUnsubscribe;
+
                 var subject = template.Subject;
                 var smtp = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
                 string priority = "L";

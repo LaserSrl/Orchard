@@ -16,6 +16,8 @@ using Orchard.JobsQueue.Services;
 using RazorEngine.Templating;
 using Newtonsoft.Json;
 using Orchard.UI.Notify;
+using Orchard.Environment.Configuration;
+using Laser.Orchard.TemplateManagement.ViewModels;
 
 
 namespace Laser.Orchard.TemplateManagement.Services {
@@ -28,7 +30,8 @@ namespace Laser.Orchard.TemplateManagement.Services {
         IEnumerable<IParserEngine> GetParsers();
         IParserEngine GetParser(string id);
         IParserEngine SelectParser(TemplatePart template);
-        bool SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, object viewBag = null, bool queued = true);
+        bool SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, object viewBag = null, bool queued = true, List<TemplatePlaceHolderViewModel> listaPH = null);
+        string RitornaParsingTemplate(dynamic contentModel, int templateId, object viewBag = null);
    }
 
     [OrchardFeature("Laser.Orchard.TemplateManagement")]
@@ -39,14 +42,16 @@ namespace Laser.Orchard.TemplateManagement.Services {
         private readonly IMessageService _messageService;
         private readonly IJobsQueueService _jobsQueueService;
         private readonly INotifier _notifier;
+        private readonly ShellSettings _shellSettings;
 
-        public TemplateService(INotifier notifier,IEnumerable<IParserEngine> parsers, IOrchardServices services, IMessageService messageService, IJobsQueueService jobsQueueService) {
+        public TemplateService(INotifier notifier, IEnumerable<IParserEngine> parsers, IOrchardServices services, IMessageService messageService, IJobsQueueService jobsQueueService, ShellSettings shellSettings) {
             _contentManager = services.ContentManager;
             _parsers = parsers;
             _services = services;
             _messageService = messageService;
             _jobsQueueService = jobsQueueService;
             _notifier = notifier;
+            _shellSettings = shellSettings;
         }
 
         public IEnumerable<TemplatePart> GetLayouts() {
@@ -94,47 +99,26 @@ namespace Laser.Orchard.TemplateManagement.Services {
             return _parsers;
         }
 
-        public bool SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, object viewBag=null, bool queued = true) {
-            ParseTemplateContext templatectx = new ParseTemplateContext();
+        public bool SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, object viewBag=null, bool queued = true, List<TemplatePlaceHolderViewModel> listaPH = null) {
             var template = GetTemplate(templateId);
-            var urlHelper = new UrlHelper(_services.WorkContext.HttpContext.Request.RequestContext);
+            string body = RitornaParsingTemplate(contentModel, templateId, viewBag);
 
-            // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
-            // Nel template pertanto Model, diventa Model.Content
-            var host = string.Format("{0}://{1}{2}",
-                                    _services.WorkContext.HttpContext.Request.Url.Scheme,
-                                    _services.WorkContext.HttpContext.Request.Url.Host,
-                                    _services.WorkContext.HttpContext.Request.Url.Port == 80
-                                        ? string.Empty
-                                        : ":" + _services.WorkContext.HttpContext.Request.Url.Port);
-            var dynamicModel = new {
-                WorkContext = _services.WorkContext,
-                Content = contentModel,
-                Urls = new {
-                    //SubscriptionSubscribe = urlHelper.SubscriptionSubscribe(),
-                    //SubscriptionUnsubscribe = urlHelper.SubscriptionUnsubscribe(),
-                    //SubscriptionConfirmSubscribe = urlHelper.SubscriptionConfirmSubscribe(),
-                    //SubscriptionConfirmUnsubscribe = urlHelper.SubscriptionConfirmUnsubscribe(),
-                    BaseUrl = _services.WorkContext.CurrentSite.BaseUrl,
-                    MediaUrl = urlHelper.MediaExtensionsImageUrl(),
-                    Domain = host,
-
-                }.ToExpando()
-            };
-            templatectx.Model = dynamicModel;
-            var razorviewBag = viewBag;
-            RazorEngine.Templating.DynamicViewBag vb = new DynamicViewBag();
-            try {
-                foreach (string key in ((Dictionary<string, object>)viewBag).Keys) {
-                    vb.AddValue(key, ((IDictionary<string, object>)viewBag)[key]);
-                }
-            }
-            catch { }
-            templatectx.ViewBag = vb;
-            var body = ParseTemplate(template, templatectx);
             if (body.StartsWith("Error On Template")) {
                 _notifier.Add(NotifyType.Error,T("Error on template, mail not sent"));
                 return false;
+            }
+
+            // Place Holder - es. [UNSUBSCRIBE]
+            if (listaPH != null) {
+                foreach (TemplatePlaceHolderViewModel ph in listaPH) {
+
+                    if (body.Contains(ph.Name)) {
+                        body = body.Replace(ph.Name, ph.Value);
+                    } else {
+                        if (ph.ShowForce)
+                            body += "<br /><br />" + ph.Value;
+                    }
+                }
             }
 
             var data = new Dictionary<string, object>();
@@ -166,6 +150,77 @@ namespace Laser.Orchard.TemplateManagement.Services {
             }
 
             return true;
+        }
+
+        public string RitornaParsingTemplate(dynamic contentModel, int templateId, object viewBag = null) {
+
+            ParseTemplateContext templatectx = new ParseTemplateContext();
+            var template = GetTemplate(templateId);
+
+            var baseUri = new Uri(_services.WorkContext.CurrentSite.BaseUrl);
+            string host = "";
+            string mediaUrl = "";
+
+            if (_services.WorkContext.HttpContext != null) {
+                var urlHelper = new UrlHelper(_services.WorkContext.HttpContext.Request.RequestContext);
+
+                // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
+                // Nel template pertanto Model, diventa Model.Content
+                host = string.Format("{0}://{1}{2}",
+                                     _services.WorkContext.HttpContext.Request.Url.Scheme,
+                                     _services.WorkContext.HttpContext.Request.Url.Host,
+                                     _services.WorkContext.HttpContext.Request.Url.Port == 80
+                                     ? string.Empty
+                                     : ":" + _services.WorkContext.HttpContext.Request.Url.Port);
+
+                mediaUrl = urlHelper.MediaExtensionsImageUrl();
+            } else {
+                host = string.Format("{0}://{1}{2}",
+                                     baseUri.Scheme,
+                                     baseUri.Host,
+                                     baseUri.Port == 80 ? string.Empty : ":" + baseUri.Port);
+
+                var tenantPrefix = GetTenantUrlPrexix(_shellSettings);
+                mediaUrl = string.Format("/{0}/{1}{2}", baseUri.GetComponents(UriComponents.Path, UriFormat.Unescaped), tenantPrefix, @"Laser.Orchard.StartupConfig/MediaTransform/Image");
+            }
+
+            var dynamicModel = new {
+                WorkContext = _services.WorkContext,
+                Content = contentModel,
+                Urls = new {
+                    //SubscriptionSubscribe = urlHelper.SubscriptionSubscribe(),
+                    //SubscriptionUnsubscribe = urlHelper.SubscriptionUnsubscribe(),
+                    //SubscriptionConfirmSubscribe = urlHelper.SubscriptionConfirmSubscribe(),
+                    //SubscriptionConfirmUnsubscribe = urlHelper.SubscriptionConfirmUnsubscribe(),
+                    BaseUrl = baseUri,
+                    MediaUrl = mediaUrl,
+                    Domain = host,
+
+                }.ToExpando()
+            };
+            templatectx.Model = dynamicModel;
+
+            // TODO: Passare link Campagna come per il test
+            var razorviewBag = viewBag;
+            RazorEngine.Templating.DynamicViewBag vb = new DynamicViewBag();
+            try {
+                foreach (string key in ((Dictionary<string, object>)viewBag).Keys) {
+                    vb.AddValue(key, ((IDictionary<string, object>)viewBag)[key]);
+                }
+            } catch { }
+            templatectx.ViewBag = vb;
+
+            return ParseTemplate(template, templatectx);
+        }
+
+        private string GetTenantUrlPrexix(ShellSettings shellSettings) {
+            // calcola il prefix del tenant corrente
+            string tenantPath = shellSettings.RequestUrlPrefix ?? "";
+
+            if (tenantPath != "") {
+                tenantPath = tenantPath + "/";
+            }
+            return tenantPath;
         }
 
 
