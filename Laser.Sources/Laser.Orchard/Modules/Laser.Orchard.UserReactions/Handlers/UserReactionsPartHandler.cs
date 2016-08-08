@@ -7,16 +7,13 @@ using Laser.Orchard.UserReactions.Drivers;
 
 namespace Laser.Orchard.UserReactions.Handlers {
     public class UserReactionsPartHandler : ContentHandler {
+
         public UserReactionsPartHandler(IRepository<UserReactionsPartRecord> repository, 
                                         IUserReactionsService reactionsService) {
            
             
-            OnUpdated<UserReactionsPart>((context, part) => {
-                reactionsService.NormalizeSummary(part.Record);
-
-          // Filters.Add(new ActivatingFilter<UserReactionsListPartDriver>("Site"));
-           Filters.Add(StorageFilter.For(repository));
             });
+           Filters.Add(StorageFilter.For(repository));
         }
     }
 }
