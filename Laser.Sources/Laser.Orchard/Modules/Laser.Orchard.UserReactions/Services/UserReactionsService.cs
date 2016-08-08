@@ -23,7 +23,6 @@ namespace Laser.Orchard.UserReactions.Services {
 
     public interface IUserReactionsService : IDependency {
         IQueryable<UserReactionsTypesRecord> GetTypesTable();
-        UserReactionsTypes GetTypes();
         UserReactionsTypes GetTypesTableWithStyles();
         IList<UserReactionsVM> GetTot(UserReactionsPart part);
         UserReactionsVM CalculateTypeClick(int IconType, int CurrentPage);
@@ -160,11 +159,7 @@ namespace Laser.Orchard.UserReactions.Services {
         /// </summary>
         /// <returns></returns>
         public UserReactionsTypes GetTypesTableWithStyles() {
-
             var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
-            //UserReactionsSettingsPart fileCssName = new UserReactionsSettingsPart();
-
-
             var userRT = new UserReactionsTypes();
             userRT.CssName = reactionSettings.StyleFileNameProvider;
             userRT.AllowMultipleChoices = reactionSettings.AllowMultipleChoices;
@@ -205,26 +200,6 @@ namespace Laser.Orchard.UserReactions.Services {
             return _repoClick.Table.OrderByDescending(o => o.CreatedUtc).OrderByDescending(o => o.Id);
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public UserReactionsTypes GetTypes() {
-
-            var userRT = new UserReactionsTypes();
-
-            userRT.UserReactionsType = GetTypesTable().Select(r => new UserReactionsTypeVM {
-                Id = r.Id,
-                Priority = r.Priority,
-                TypeCssClass = r.TypeCssClass,
-                TypeName = r.TypeName,
-                Activating = r.Activating,
-                Delete = false
-            }).ToList();
-            return userRT;
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -245,6 +220,7 @@ namespace Laser.Orchard.UserReactions.Services {
 
             if (user != null) {
                 ids.Id = user.Id;
+                ids.Guid = string.Empty;
             }
             else {
                 if (HttpContext.Current.Request.Cookies["userCookie"] != null) {
@@ -419,13 +395,9 @@ namespace Laser.Orchard.UserReactions.Services {
             var contentItem = _orchardServices.ContentManager.Get(pageId);
 
             if (HasPermission(contentItem.ContentType)) {
-                //Verifica che non sia già stato eseguito un click 
-                if (userIds.Id > 0) {
-                    previousState = GetOrderedClickTable().Where(w => w.UserReactionsTypesRecord.Id == iconTypeId && w.UserPartRecord.Id == userIds.Id && w.ContentItemRecordId == pageId).FirstOrDefault();
-                }
-                else {
-                    previousState = GetOrderedClickTable().Where(w => w.UserReactionsTypesRecord.Id == iconTypeId && w.UserGuid.Equals(userIds.Guid) && w.ContentItemRecordId == pageId).FirstOrDefault();
-                }
+                //Verifica che non sia già stato eseguito un click
+                var elencoUserReactions = GetUserReactions(pageId, userIds);
+                previousState = elencoUserReactions.FirstOrDefault(x => x.UserReactionsTypesRecord.Id == iconTypeId);
 
                 //Se già cliccato quella reaction
                 if (previousState != null) {
@@ -446,7 +418,7 @@ namespace Laser.Orchard.UserReactions.Services {
                     bool isExclusive = IsExclusive(contentItem.ContentType);
                     if (isExclusive && actionType == 1) {
                         // cerca tutti i clicked diversi da quello corrente per lo stesso utente e la stessa pagina
-                        var clicked = GetClickedReactions(pageId, userIds);
+                        var clicked = GetClickedReactions(elencoUserReactions);
 
                         foreach (var reaction in clicked) {
                             // non agisce sulla reaction appena cliccata
@@ -624,12 +596,20 @@ namespace Laser.Orchard.UserReactions.Services {
             }
             return result;
         }
-        private List<UserReactionsTypesRecord> GetClickedReactions(int pageId, ReactionsUserIds userIds) {
+        private List<UserReactionsClickRecord> GetUserReactions(int pageId, ReactionsUserIds userIds) {
+            if (userIds.Id == 0) {
+                return GetOrderedClickTable().Where(
+                    x => userIds.Guid != null && x.UserGuid == userIds.Guid && x.ContentItemRecordId == pageId).ToList();
+            }
+            else {
+                return GetOrderedClickTable().Where(
+                    x => x.UserPartRecord.Id == userIds.Id && x.ContentItemRecordId == pageId).ToList();
+            }
+        }
+        private List<UserReactionsTypesRecord> GetClickedReactions(List<UserReactionsClickRecord> reactions) {
             List<UserReactionsTypesRecord> clicked = new List<UserReactionsTypesRecord>();
             List<UserReactionsTypesRecord> unclicked = new List<UserReactionsTypesRecord>();
-            var elenco = GetOrderedClickTable().Where(
-                x => (x.UserPartRecord.Id == userIds.Id || (userIds.Guid != null && x.UserGuid == userIds.Guid)) && x.ContentItemRecordId == pageId);
-            foreach (var item in elenco) {
+            foreach (var item in reactions) {
                 if (clicked.Contains(item.UserReactionsTypesRecord) == false
                     && unclicked.Contains(item.UserReactionsTypesRecord) == false) {
                     if (item.ActionType == 1) {

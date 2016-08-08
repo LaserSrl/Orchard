@@ -139,6 +139,7 @@ namespace Laser.Orchard.UserReactions.Controllers {
             if (newTypesCreated) {
                 // allinea i contenuti tramite un task schedulato
                 _taskManager.CreateTask("Laser.Orchard.UserReactionsSettings.Task", DateTime.UtcNow.AddSeconds(5), null);
+                _notifier.Add(NotifyType.Warning, T("A task has been scheduled to update reaction summaries for existing contents."));
             }
             _notifier.Add(NotifyType.Information, T("UserReaction settings updating"));
             return RedirectToActionPermanent("Settings");
