@@ -1,0 +1,35 @@
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using Orchard;
+@using Orchard.Data;
+@using Orchard.Workflows.Models;
+@functions{
+    string retString = ""; //possible outcomes: "Running","NotRunning"
+
+    //Services we will need
+    Orchard.Data.IRepository<Orchard.Workflows.Models.WorkflowRecord> _workflowRepository;
+}
+@{
+    try {
+        _workflowRepository = Model.OrchardServices.WorkContext.Resolve<Orchard.Data.IRepository<WorkflowRecord>>();
+        Func<WorkflowRecord, bool> IsImportWorkflow = wr => wr.WorkflowDefinitionRecord.Name.Equals("IMPORTEVENTSE015", StringComparison.InvariantCultureIgnoreCase);
+        var workflows = _workflowRepository.Table.Where(IsImportWorkflow).ToList();
+        if (workflows == null){
+            retString = "NotRunning"; //should never be here
+            //retString += " workflows is null"; //DEBUG
+        } else {
+            if (workflows.Count == 0) {
+                //the import workflow is not running, so we may create it properly
+                retString = "NotRunning";
+                //retString += " workflows has 0 elements"; //DEBUG
+            } else {
+                //workflow running already
+                retString = "Running";
+                //retString += " workflows has " + workflows.Count.ToString() + " elements"; //DEBUG
+            }
+        }
+    } catch (Exception ex) {
+        //retString += ex.Message;
+    }
+}@retString

@@ -1,0 +1,524 @@
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Net;
+@using System.Text;
+@using System.Xml;
+@using System.Xml.Linq;
+@using System.Web;
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+@using Orchard;
+@using Orchard.Autoroute.Models;
+@using Orchard.Autoroute.Services;
+@using Orchard.Caching;
+@using Orchard.ContentManagement;
+@using Orchard.Core.Common.Models;
+@using Orchard.Core.Title.Models;
+@using Orchard.Data;
+@using Orchard.Fields.Fields;
+@using Orchard.Localization.Models;
+@using Orchard.Localization.Records;
+@using Orchard.MediaLibrary.Fields;
+@using Orchard.MediaLibrary.Models;
+@using Orchard.MediaLibrary.Services;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
+@using Orchard.Taxonomies.Models;
+@using Orchard.Taxonomies.Services;
+@using Orchard.Utility.Extensions;
+@using Laser.Orchard.Events.Models;
+@using Laser.Orchard.HiddenFields.Fields;
+@using Laser.Orchard.Maps.Models;
+@using Laser.Orchard.ShareLink.Models;
+@functions{
+    
+    string retString = "";
+
+    //declare services
+    IContentManager _contentManager;
+    ITaxonomyService _taxonomyService;
+    Orchard.Data.IRepository<Orchard.Localization.Records.CultureRecord> _cultureRepository;
+    IAutorouteService _autorouteService;
+    Orchard.Data.IRepository<TermPartRecord> _termPartRepository;
+    IFieldIndexService _fieldIndexService;
+    Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
+    IMediaLibraryService _mediaLibraryService;
+    IEnumerable<TermPart> taxoTerms;
+
+    XmlDocument ToXmlDocument(XDocument xDocument){
+        var xmlDocument = new XmlDocument();
+        using(var xmlReader = xDocument.CreateReader())
+        {
+            xmlReader.MoveToContent();
+            XmlNode cd = xmlDocument.ReadNode(xmlReader);
+            xmlDocument.AppendChild(cd);
+            //xmlDocument.Load(xmlReader); //this does not work with the xml coming in with html encoded characters
+        }
+        return xmlDocument;
+    }
+
+    //translated items should come as a single Event entry in the xml.
+    //The translatable elements would have an attribute xml:lang with the shortened language string ("it", "en", ...)
+    //In the code we'll use a Dictionary<string, CalendarEventStorage>. The first key will be "", and it will be used
+    //for those elements that do not have a translation. The other keys will each correspond to a language string. To
+    //avoid duplicating too much information, elements placed in the language-agnostic CalendarEventStorage will have no
+    //corresponding value in the language-specific CalendarEventStorage instances. 
+    public class CalendarEventStorage {
+        //the comments tell the corresponding field form each imported event
+        public int remoteId { get; set; } //Id
+        public string name { get; set; } //Name - translatable
+        public string description { get; set; } //Description - translatable
+        public List<string> category { get; set; } //Category - translatable
+        public Dictionary<string, string> contact { get; set; } //Contact
+        public List<RemoteMediaStorage> remoteGallery { get; set; } //MediaResource
+        public DateTime? startTime { get; set; } //Schedule.Occurrence.StartEnd.StartDateTime
+        public DateTime? endTime { get; set; } //Schedule.Occurrence.StartEnd.EndDateTime
+        public string venueName { get; set; } //Venue.Name - translatable
+        public double xCoord { get; set; } //Venue.Geolocation.Geocoordinates.XCoord
+        public double yCoord { get; set; } //Venue.Geolocation.Geocoordinates.YCoord
+    }
+
+    public class RemoteMediaStorage {
+        public string name { get; set; } //MediaResource.Name - translatable
+        public string type { get; set; } //MediaResource.Type
+        public string uri { get; set; } //MediaResource.Uri
+    }
+
+    //update everything except the localization part
+    public void UpdateEvent(ContentItem newCalEvent, 
+        Dictionary<string,CalendarEventStorage> translatableEvents, 
+        string thisLanguage){
+
+        //retString += thisLanguage;
+
+        var fiPart = newCalEvent.As<FieldIndexPart>();
+        //Title
+        newCalEvent.As<TitlePart>().Title = translatableEvents[thisLanguage].name ?? translatableEvents[""].name;
+        //retString += " ok " + newCalEvent.As<TitlePart>().Title;
+        //Gallery
+        //do not import the contents of the media parts: We added in StartupConfig an handler for the OnLoaded event of MediaParts:
+        //if the FileName points to a http or https location, it uses that location for the MediaUrl, meaning that the media is then
+        //fetched from the remote location. We need to add media from both the localized and the locale-agnostic "gallery"
+        //retString += " gallery";
+        List<RemoteMediaStorage> wholeGallery = new List<RemoteMediaStorage>();
+        if (translatableEvents[""].remoteGallery != null) {
+            wholeGallery.AddRange(translatableEvents[""].remoteGallery);
+        }
+        if (translatableEvents[thisLanguage].remoteGallery != null) {
+            wholeGallery.AddRange(translatableEvents[thisLanguage].remoteGallery);
+        }
+        if (wholeGallery.Count > 0) {
+            var mFolders = _mediaLibraryService.GetMediaFolders(null).Where(mf => mf.Name == "ImportedMediaResources");
+            if (mFolders.Count() == 0)
+                _mediaLibraryService.CreateFolder(null, "ImportedMediaResources");
+        }
+        //store the ids for the final gallery, so that we are able to remove any old ones that should not be there anymore
+        List<int> galleryIds = new List<int>();
+        //Get the actual gallery, if any
+        Func<ContentPart, bool> IsCalendarPart = part => part.PartDefinition.Name == "CalendarEvent";
+        Func<ContentField, bool> IsGallery = fi => fi.Name == "Gallery";
+        var calPart = newCalEvent.Parts.Where(IsCalendarPart).SingleOrDefault();
+        MediaLibraryPickerField gallery = (MediaLibraryPickerField)calPart.Fields.Where(IsGallery).SingleOrDefault();
+        foreach (RemoteMediaStorage rms in wholeGallery) {
+            MediaPart part = null;
+            //Check whether the gallery for the calendarEvent already contains a media with the same uri.
+            bool galleryContainsMedia = false;
+            if (gallery.Ids.Length > 0) {
+                foreach (int mid in gallery.Ids) {
+                    part = _contentManager.Get<MediaPart>(mid);
+                    galleryContainsMedia = part.FileName.Equals(rms.uri);
+                    if (galleryContainsMedia) {
+                        break; //found the media. No need to search further
+                    }
+                }
+            }
+            if (!galleryContainsMedia) {//if the gallery does not contain this media, create new media part
+                if (rms.type.Equals("picture", StringComparison.InvariantCultureIgnoreCase)) {
+                    //this is an image part
+                    part = _contentManager.New<MediaPart>("Image");
+                } else {
+                    //a generic MediaPart 
+                    part = _contentManager.New<MediaPart>("Document");
+                }
+            }
+
+            if (part != null) { //this condition makes things safe
+                if (rms.type.Equals("picture", StringComparison.InvariantCultureIgnoreCase)) {
+                    //this is an image part
+                    //set mime type "image/" and the extension from the uri
+                    string exte = rms.uri.Substring(rms.uri.LastIndexOf(".") + 1);
+                    part.MimeType = "image/" + exte;
+                    part.LogicalType = "Picture";
+                    //right now we don't have a way to get width and height of the picture without downloading it, which we do not want to do
+                } else {
+                    //a generic MediaPart 
+                    part.MimeType = "Document";
+                    part.LogicalType = "Document";
+                }
+                part.FolderPath = "ImportedMediaResources";
+                part.Title = rms.name;
+                part.FileName = rms.uri;
+
+                if (!galleryContainsMedia) {
+                    _contentManager.Create(part);
+                }
+                //add part to the content's media gallery
+                galleryIds.Add(part.Id);
+            }
+        }
+        gallery.Ids = galleryIds.ToArray();
+        if (gallery.Ids.Length > 0) { //update field record
+            IEnumerable<string> mids = galleryIds.Select<int, string>(mid => "{" + mid.ToString() + "}");
+            string allIds = String.Join(",", mids);
+            _fieldIndexService.Set(
+                fiPart,
+                "CalendarEvent",
+                "Gallery",
+                "",
+                allIds,
+                typeof(string)
+            );
+        }
+        //retString += " ok";
+        //Categoria
+        List<string> categoryList = null;
+        if (translatableEvents[thisLanguage].category != null) {
+            categoryList = translatableEvents[thisLanguage].category;
+        } else if (translatableEvents[""] != null) {
+            categoryList = translatableEvents[""].category;
+        }
+        if (categoryList != null) {
+            foreach (string cate in categoryList) {
+                //Define this lambda here because it depends on cate
+                Func<TermPart, bool> IsSameTerm = t => t.Name.Equals(cate, StringComparison.InvariantCultureIgnoreCase);
+                var term = taxoTerms.Where(IsSameTerm).FirstOrDefault();
+                newCalEvent.As<TermsPart>().Terms.Add(new TermContentItem {
+                    TermsPartRecord = newCalEvent.As<TermsPart>().Record,
+                    TermRecord = term.Record,
+                    Field = "Categoria"
+                });
+            }
+        }
+        //Autoroute
+        newCalEvent.As<AutoroutePart>().DisplayAlias = _autorouteService.GenerateAlias(newCalEvent.As<AutoroutePart>());
+        _autorouteService.PublishAlias(newCalEvent.As<AutoroutePart>());
+        //Activity Part
+        newCalEvent.As<ActivityPart>().DateTimeEnd = translatableEvents[""].endTime;
+        newCalEvent.As<ActivityPart>().DateTimeStart = translatableEvents[""].startTime;
+        //Share Link
+        var shareLinkSettings = ((dynamic)Model.OrchardServices.WorkContext.CurrentSite.ContentItem).ShareLinkModuleSettingPart; //.As<ShareLinkModuleSettingPart>();
+        newCalEvent.As<ShareLinkPart>().SharedText = shareLinkSettings.SharedText;
+        newCalEvent.As<ShareLinkPart>().SharedLink = shareLinkSettings.SharedLink;
+        //Body
+        newCalEvent.As<BodyPart>().Format = "";
+        newCalEvent.As<BodyPart>().Text = translatableEvents[thisLanguage].description ?? translatableEvents[""].description;
+        //Map
+        newCalEvent.As<MapPart>().LocationInfo = translatableEvents[thisLanguage].venueName ?? translatableEvents[""].venueName;
+        newCalEvent.As<MapPart>().Latitude = (float)translatableEvents[""].yCoord;
+        newCalEvent.As<MapPart>().Longitude = (float)translatableEvents[""].xCoord;
+        //Contact Part
+        //define funcs we will need because otherwise cshtml does not compile
+        Func<ContentPart, bool> IsContactPart = part => part.PartDefinition.Name == "ContactPart";
+        Func<ContentField, bool> IsTelefono = fi => fi.Name == "Telefono";
+        Func<ContentField, bool> IsSitoWeb = fi => fi.Name == "SitoWeb";
+        Func<ContentField, bool> IsEMail = fi => fi.Name == "EMail";
+        var contactPart = newCalEvent.Parts.Where(IsContactPart).SingleOrDefault();
+        if (contactPart != null) {
+            if (translatableEvents[""].contact.ContainsKey("phone")) {
+                ((InputField)contactPart.Fields.Where(IsTelefono).SingleOrDefault()).Value = translatableEvents[""].contact["phone"];
+                _fieldIndexService.Set(
+                    fiPart,
+                    "ContactPart",
+                    "Telefono",
+                    "",
+                    translatableEvents[""].contact["phone"],
+                    typeof(string)
+                );
+            }
+            if (translatableEvents[""].contact.ContainsKey("www")) {
+            ((InputField)contactPart.Fields.Where(IsSitoWeb).SingleOrDefault()).Value = translatableEvents[""].contact["www"];
+                _fieldIndexService.Set(
+                    fiPart,
+                    "ContactPart",
+                    "SitoWeb",
+                    "",
+                    translatableEvents[""].contact["www"],
+                    typeof(string)
+                );
+            }
+            if (translatableEvents[""].contact.ContainsKey("email")) {
+                ((InputField)contactPart.Fields.Where(IsEMail).SingleOrDefault()).Value = translatableEvents[""].contact["email"];
+                _fieldIndexService.Set(
+                    fiPart,
+                    "ContactPart",
+                    "EMail",
+                    "",
+                    translatableEvents[""].contact["email"],
+                    typeof(string)
+                );
+            }
+        }
+        //Social Part //the imported data has no info for this
+        //Publish Later //the imported data has no info for this
+        //RemoteId
+        Func<ContentPart, bool> IsEventFields = part => part.PartDefinition.Name == "CalendarEvent";
+        Func<ContentField, bool> IsRemoteId = fi => fi.Name == "RemoteId";
+        var idField = (HiddenStringField)newCalEvent.Parts.Where(IsEventFields).FirstOrDefault().Fields.Where(IsRemoteId).FirstOrDefault();
+        idField.Value = "{" + translatableEvents[""].remoteId.ToString() + "}";
+        _fieldIndexService.Set(
+            fiPart,
+            "CalendarEvent",
+            "RemoteId",
+            "",
+            "{" + translatableEvents[""].remoteId.ToString() + "}",
+            typeof(string)
+        );
+    }
+
+}
+@{
+    try {
+
+        //get services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _taxonomyService = Model.OrchardServices.WorkContext.Resolve<ITaxonomyService>();
+        _cultureRepository = Model.OrchardServices.WorkContext.Resolve<Orchard.Data.IRepository<Orchard.Localization.Records.CultureRecord>>();
+        _autorouteService = Model.OrchardServices.WorkContext.Resolve<IAutorouteService>();
+        _termPartRepository = Model.OrchardServices.WorkContext.Resolve<Orchard.Data.IRepository<Orchard.Taxonomies.Models.TermPartRecord>>();
+        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<Orchard.Data.IRepository<FieldIndexPartRecord>>();
+        _mediaLibraryService = Model.OrchardServices.WorkContext.Resolve<IMediaLibraryService>();
+        taxoTerms = _taxonomyService.GetTerms(_taxonomyService.GetTaxonomyByName("Categoria Eventi").Id);
+
+        WebResponse resp;
+        string url = String.Format("http://www.anfiteatromorenicoivrea.it/WebServices/E015/2?displayAlias=EventListByDate&StartDate={0}&EndDate=31/12/9999", DateTime.UtcNow.ToShortDateString());
+        //retString += url;
+        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url); //("http://www.anfiteatromorenicoivrea.it/WebServices/E015/2?displayAlias=EventListByDate&StartDate=01/06/2016&EndDate=07/06/2016");
+        req.Headers.Add(HttpRequestHeader.ContentEncoding, "gzip");
+        req.Method = "GET";
+        req.ContentType = "application/x-www-form-urlencoded";
+        resp = req.GetResponse();
+
+        XDocument xxDoc = XDocument.Load(resp.GetResponseStream());
+        XmlDocument myDoc = ToXmlDocument(xxDoc);
+        
+        var children = myDoc.DocumentElement.ChildNodes;
+        foreach(XmlElement child in children){
+            try {
+                
+                if (string.Equals(child.Name, "Event", StringComparison.InvariantCultureIgnoreCase)) {
+                    //Content creation should actually be conditional. Since there's no guarantee that the xml node for the ID
+                    //Is at a specific position, what we actually do is we create an object to store everything we receive, and check
+                    //for the content creation later. (see the functions block for the class declaration)
+                    //here we do the mapping from the E015 stuff we imported to the content item
+                    Dictionary<string, CalendarEventStorage> translatableEvents = new Dictionary<string, CalendarEventStorage>();
+                    //create the first entry in the dictionary, that will contain the language-independent elements
+                    translatableEvents.Add("", new CalendarEventStorage());
+                    foreach (XmlElement item in child.ChildNodes) {
+                        //all elements use langAttribute as key in the dictionary
+                        string langAttribute = item.Attributes["xml:lang"] == null ? "" : item.Attributes["xml:lang"].Value;
+                        if (!translatableEvents.ContainsKey(langAttribute)) {
+                            translatableEvents.Add(langAttribute, new CalendarEventStorage());
+                        }
+                        //switch-case statements using IgnoreCase are not allowed in C#, and a straight == comparison
+                        //is not really robust. Hence we use the following if-else tree. Note that a switch-case using ==
+                        //would not be much faster anyway, because of the way string comparison works.
+                        if (item.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase)) {
+                            //compare the Id of the received event with ids of events we imported already
+                            //We store the Id we imported from in an HiddenStringField in our CalendarEvents, so we need to see if
+                            //any of those are equal to the Id we just received. In that case, we just have to update the existing
+                            //content item. Otherwise, we create a new one.
+                            translatableEvents[langAttribute].remoteId = int.Parse(item.InnerText);
+                        } else if (item.Name.Equals("Name", StringComparison.InvariantCultureIgnoreCase)) {
+                            //this goes in the title for the calendar event
+                            translatableEvents[langAttribute].name = item.InnerText;
+                        } else if (item.Name.Equals("Description", StringComparison.InvariantCultureIgnoreCase)) {
+                            //this goes in the body for the calendar event
+                            translatableEvents[langAttribute].description = item.InnerText;
+                        } else if (item.Name.Equals("Category", StringComparison.InvariantCultureIgnoreCase)) {
+                            //this tells us the taxonomy we have to use. The taxonomies in this instance and the one we import from are
+                            //equal by design.
+                            if (translatableEvents[langAttribute].category == null) {
+                                translatableEvents[langAttribute].category = new List<string>();
+                            }
+                            translatableEvents[langAttribute].category.Add(item.InnerText);
+                        } else if (item.Name.Equals("Contact", StringComparison.InvariantCultureIgnoreCase)) {
+                            //use this to build the contact part of the calendar event
+                            string str = null, type = null; //the two components of a Contact entry
+                            foreach (XmlElement cInfo in item) {
+                                if (cInfo.Name.Equals("String", StringComparison.InvariantCultureIgnoreCase)) {
+                                    str = cInfo.InnerText;
+                                } else if (cInfo.Name.Equals("Type", StringComparison.InvariantCultureIgnoreCase)) {
+                                    type = cInfo.InnerText;
+                                }
+                            }
+                            if (!string.IsNullOrWhiteSpace(str) && !string.IsNullOrWhiteSpace(type)) {
+                                if (translatableEvents[langAttribute].contact == null) {
+                                    translatableEvents[langAttribute].contact = new Dictionary<string, string>();
+                                }
+                                translatableEvents[langAttribute].contact.Add(type, str);
+                            }
+                        } else if (item.Name.Equals("MediaResource", StringComparison.InvariantCultureIgnoreCase)) {
+                            //use this to fill in the gallery for the calendar event
+                            //the MediaResource name is translatable, but its other fields are not.
+                            //For this element, we have to use its own language, if any
+                            string mrLanguage = "";
+                            RemoteMediaStorage mediaResource = new RemoteMediaStorage();
+                            foreach (XmlElement mrInfo in item) {
+                                if (mrInfo.Name.Equals("Name", StringComparison.InvariantCultureIgnoreCase)) {
+                                    mrLanguage = mrInfo.Attributes["xml:lang"] == null ? "" : mrInfo.Attributes["xml:lang"].Value;
+                                    if (!translatableEvents.ContainsKey(mrLanguage)) {
+                                        translatableEvents.Add(mrLanguage, new CalendarEventStorage());
+                                    }
+                                    mediaResource.name = mrInfo.InnerText;
+                                } else if (mrInfo.Name.Equals("Type", StringComparison.InvariantCultureIgnoreCase)) {
+                                    mediaResource.type = mrInfo.InnerText;
+                                } else if (mrInfo.Name.Equals("Uri", StringComparison.InvariantCultureIgnoreCase)) {
+                                    mediaResource.uri = mrInfo.InnerText;
+                                }
+                            }
+                            if (!string.IsNullOrWhiteSpace(mediaResource.name) && !string.IsNullOrWhiteSpace(mediaResource.type) && !string.IsNullOrWhiteSpace(mediaResource.uri)) {
+                                if (translatableEvents[mrLanguage].remoteGallery == null) {
+                                    translatableEvents[mrLanguage].remoteGallery = new List<RemoteMediaStorage>();
+                                }
+                                translatableEvents[mrLanguage].remoteGallery.Add(mediaResource);
+                            }
+                        } else if (item.Name.Equals("Schedule", StringComparison.InvariantCultureIgnoreCase)) { 
+                            //use this to fill in the Activity part for the calendar event
+                            foreach (XmlElement occ in item) {
+                                if (occ.Name.Equals("Occurrence", StringComparison.InvariantCultureIgnoreCase)) {
+                                    foreach (XmlElement se in occ) {
+                                        if (se.Name.Equals("StartEnd", StringComparison.InvariantCultureIgnoreCase)) {
+                                            foreach (XmlElement time in se) {
+                                                if (time.Name.Equals("StartDateTime", StringComparison.InvariantCultureIgnoreCase)) {
+                                                    translatableEvents[langAttribute].startTime = DateTime.Parse(time.InnerText);
+                                                } else if (time.Name.Equals("EndDateTime", StringComparison.InvariantCultureIgnoreCase)) {
+                                                    translatableEvents[langAttribute].endTime = DateTime.Parse(time.InnerText);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else if (item.Name.Equals("Venue", StringComparison.InvariantCultureIgnoreCase)) {
+                            //use this to fill in the Map part for the calendar event
+                            foreach (XmlElement ven in item) {
+                                if (ven.Name.Equals("Name", StringComparison.InvariantCultureIgnoreCase)) {
+                                    string nLanguage = ven.Attributes["xml:lang"] == null ? "" : ven.Attributes["xml:lang"].Value;
+                                    if (!translatableEvents.ContainsKey(nLanguage)) {
+                                        translatableEvents.Add(nLanguage, new CalendarEventStorage());
+                                    }
+                                    translatableEvents[nLanguage].venueName = ven.InnerText;
+                                } else if (ven.Name.Equals("Geolocation", StringComparison.InvariantCultureIgnoreCase)) {
+                                    foreach (XmlElement geo in ven) {
+                                        if (geo.Name.Equals("Geocoordinates", StringComparison.InvariantCultureIgnoreCase)) {
+                                            foreach (XmlElement coord in geo) {
+                                                if (coord.Name.Equals("XCoord", StringComparison.InvariantCultureIgnoreCase)) {
+                                                    translatableEvents[langAttribute].xCoord = double.Parse(coord.InnerText, CultureInfo.CreateSpecificCulture("en-US"));
+                                                } else if (coord.Name.Equals("YCoord", StringComparison.InvariantCultureIgnoreCase)) {
+                                                    translatableEvents[langAttribute].yCoord = double.Parse(coord.InnerText, CultureInfo.CreateSpecificCulture("en-US"));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    //check the created object against the existing calendar events, to decide if we have to create a new one or update
+                    //an existing one.
+                    //If Calendar Events exist whose value in the HiddenStringField called RemoteId equals the Id we just received, 
+                    //then we should be updating them. Otherwise, we create new ones.
+                    //Lambda expressions (if I write them inline the cshtml does not compile). I define these ones here because they depend
+                    //on the value of remoteId
+                    Func<StringFieldIndexRecord, bool> HasRemoteId = sfi =>
+                        sfi.PropertyName.Contains("CalendarEvent.RemoteId.")
+                        //&& !string.IsNullOrWhiteSpace(sfi.Value) //weird, but this is always false, so no record would be retrieved
+                        && sfi.Value.Contains("{" + translatableEvents[""].remoteId + "}");
+                    System.Linq.Expressions.Expression<Func<FieldIndexPartRecord, bool>> CheckFieldIndexRecord = fip =>
+                        fip.StringFieldIndexRecords.Any(sfi =>
+                            sfi.PropertyName.Contains("CalendarEvent.RemoteId.")
+                            //&& !string.IsNullOrWhiteSpace(sfi.Value) //weird, but this is always false, so no record would be retrieved
+                            && sfi.Value.Contains("{" + translatableEvents[""].remoteId + "}"));
+                    /*var query = _contentManager
+                        .Query(VersionOptions.Latest)
+                        .ForType("CalendarEvent")
+                        .Join<FieldIndexPartRecord>()
+                        .Where(CheckFieldIndexRecord);
+                    var existingCalendarEvent = query.List().ToList();*/
+
+                    System.Linq.Expressions.Expression<Func<FieldIndexPartRecord, int>> GetIds = fip => fip.ContentItemRecord.Id;
+                    var existingCalendarEvent = new List<ContentItem>();
+                    var fieldsQuery = _fieldIndexPartRecord.Table.Where(CheckFieldIndexRecord);
+                    List<int> calEventsIds = fieldsQuery.Select(GetIds).ToList();
+                    foreach (int ciId in calEventsIds){
+                        var ci = _contentManager.Get(ciId, VersionOptions.Latest);
+                        if (ci != null){
+                            existingCalendarEvent.Add(ci);
+                        } 
+                    }
+
+                    int masterContentItemId = 0; //used for localization part 
+                    if (existingCalendarEvent == null || existingCalendarEvent.Count == 0) {
+                        //this event does not exist, so we create it
+                        //We actually have to create a new Calendar Event for each language
+                        for (int i = 1; i < translatableEvents.Count; i++) {
+                            string thisLanguage = translatableEvents.Keys.ToArray()[i];
+                            ContentItem newCalEvent = _contentManager.New("CalendarEvent");//_contentManager.Create("CalendarEvent");
+                            _contentManager.Create(newCalEvent);
+                            UpdateEvent(newCalEvent, translatableEvents, thisLanguage); //update all except localization part
+                            //retString+= " update new part done\n";
+                            //Localization
+                            if (i == 1) {
+                                masterContentItemId = newCalEvent.Id;
+                            } else {
+                                newCalEvent.As<LocalizationPart>().MasterContentItem = _contentManager.Get(masterContentItemId, VersionOptions.Latest);
+                            }
+                            newCalEvent.As<LocalizationPart>().Culture = _cultureRepository.Table.ToList().Where(cr => cr.Culture.IndexOf(thisLanguage) == 0).FirstOrDefault(); 
+                            
+                        }
+                    } else {
+                        //the event exists
+                        //check out of all the localizations with this remote id the one to use as master content in case there is a new localization
+                        Func<ContentItem, bool> IsMasterContent = evt => evt.As<LocalizationPart>().MasterContentItem == null;
+                        var localizationMaster = existingCalendarEvent.Where(IsMasterContent).FirstOrDefault();
+                        //as a consequence we need to update it
+                        for (int i = 1; i < translatableEvents.Count; i++) {
+                            string thisLanguage = translatableEvents.Keys.ToArray()[i];
+                            //find the event with this very language
+                            Func<ContentItem, bool> IsThisLocale = evt => evt.As<LocalizationPart>().Culture.Culture.IndexOf(thisLanguage) == 0;
+                            var calEvent = existingCalendarEvent.Where(IsThisLocale).FirstOrDefault();
+                            if (calEvent != null) {
+                                //update all except localization part
+                                UpdateEvent(calEvent, translatableEvents, thisLanguage); 
+                               // retString+= " update existing part done\n";
+                            } else {
+                                //new event 
+                                calEvent = _contentManager.Create("CalendarEvent");
+                                UpdateEvent(calEvent, translatableEvents, thisLanguage); //update all except localization part
+
+                                //Localization
+                                calEvent.As<LocalizationPart>().MasterContentItem = localizationMaster;
+                                Func<CultureRecord, bool> IsThisCulture = cr => cr.Culture.IndexOf(thisLanguage) == 0;
+                                calEvent.As<LocalizationPart>().Culture = _cultureRepository.Table.ToList().Where(IsThisCulture).FirstOrDefault();
+                            }
+                        }
+                    }
+                    
+                }
+                
+            } catch (Exception ex){
+                //retString += "\n INNER: " + ex.Message;
+                throw;
+            }
+            
+        }
+        retString = "Done";
+    } catch (Exception ex){
+        //retString += "\n OUTER: " + ex.Message;
+        retString = "Error";
+    }
+    
+}@retString
