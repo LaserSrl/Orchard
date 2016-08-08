@@ -22,11 +22,15 @@
 
     <div>
         @Html.DropDownListFor(m => m.CssName, new SelectList(Enum.GetNames(typeof(Laser.Orchard.UserReactions.StyleFileNameProviders)), Model.CssName))
+        <span style="padding-left:50px">
+            @Html.CheckBoxFor(m => m.AllowMultipleChoices)
+            @Html.LabelFor(m => m.AllowMultipleChoices, T("Allow multiple choices"))
+        </span>
     </div>
     <br />
     <fieldset>
         <legend></legend>
-        <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.UserReactionsType, T("Add Reaction").Text, "#reactions", ".j_reaction", "reaction-add-new")
+        @*<i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.UserReactionsType, T("Add Reaction").Text, "#reactions", ".j_reaction", "reaction-add-new")*@
         <div id="reactions">
 
             @Html.EditorFor(x => x.UserReactionsType)
