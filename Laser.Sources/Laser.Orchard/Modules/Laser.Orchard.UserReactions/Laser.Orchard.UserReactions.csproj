@@ -145,14 +145,9 @@
     <Compile Include="Controllers\ReactionAjaxController..cs" />
     <Compile Include="Controllers\ReactionApiController.cs" />
     <Compile Include="DataMigrations.cs" />
-    <Compile Include="Drivers\UserReactionsFieldDriver.cs" />
     <Compile Include="Drivers\UserReactionsListPartDriver.cs" />
     <Compile Include="Drivers\UserReactionsPartDriver.cs" />
-    <Compile Include="Fields\UserReactionsField.cs" />
-    <Compile Include="FilterEditors\Forms\UserReactionsFieldFilterForm.cs" />
-    <Compile Include="FilterEditors\UserReactionsFieldFilterEditor.cs" />
     <Compile Include="Handlers\SettingsScheduledTaskHandler.cs" />
-    <Compile Include="Projections\UserReactionsFieldFilter.cs" />
     <Compile Include="Handlers\UserReactionsPartHandler.cs" />
     <Compile Include="Projections\UserReactionsQueryFilter.cs" />
     <Compile Include="Handlers\UserReactionsSettingsPartHandler.cs" />
