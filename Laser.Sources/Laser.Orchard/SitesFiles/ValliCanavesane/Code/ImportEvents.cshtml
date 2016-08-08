@@ -293,7 +293,9 @@
         taxoTerms = _taxonomyService.GetTerms(_taxonomyService.GetTaxonomyByName("Categoria Eventi").Id);
 
         WebResponse resp;
-        HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://www.anfiteatromorenicoivrea.it/WebServices/E015/2?displayAlias=EventListByDate&StartDate=01/06/2016&EndDate=07/06/2016");
+        string url = String.Format("http://www.anfiteatromorenicoivrea.it/WebServices/E015/2?displayAlias=EventListByDate&StartDate={0}&EndDate=31/12/9999", DateTime.UtcNow.ToShortDateString());
+        //retString += url;
+        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url); //("http://www.anfiteatromorenicoivrea.it/WebServices/E015/2?displayAlias=EventListByDate&StartDate=01/06/2016&EndDate=07/06/2016");
         req.Headers.Add(HttpRequestHeader.ContentEncoding, "gzip");
         req.Method = "GET";
         req.ContentType = "application/x-www-form-urlencoded";
