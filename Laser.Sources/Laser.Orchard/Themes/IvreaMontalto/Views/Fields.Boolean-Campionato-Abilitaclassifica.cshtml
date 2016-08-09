@@ -5,6 +5,10 @@
 @using System.Linq;
 
 @{
+    var id = Model.ContentItem.Id;
+}
+<div id="collapse_@id" class="collapse">
+@{
     var field = (BooleanField)Model.ContentField;
     if (field.Value.Value) {
         Func<ContentPart, bool> IsCampionatoPart = part => part.PartDefinition.Name == "Campionato";

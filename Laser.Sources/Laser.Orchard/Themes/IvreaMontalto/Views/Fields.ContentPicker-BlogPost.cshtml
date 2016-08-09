@@ -3,6 +3,8 @@
 @using Orchard.ContentPicker.Fields
 
 @{
+    Style.Require("Accordion").AtHead();
+    
     var field = (ContentPickerField) Model.ContentField;
     int[] ids = field.Ids;
 

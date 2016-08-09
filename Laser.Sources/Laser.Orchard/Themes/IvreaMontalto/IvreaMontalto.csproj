@@ -271,6 +271,9 @@
   <ItemGroup>
     <Content Include="Views\Fields.Boolean-Campionato-Abilitamarcatori.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Title-Campionato.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
