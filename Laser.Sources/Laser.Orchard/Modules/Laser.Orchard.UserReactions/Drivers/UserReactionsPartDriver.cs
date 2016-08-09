@@ -88,10 +88,7 @@ namespace Laser.Orchard.UserReactions.Drivers {
 
 
         
-        //protected override void Describe(DescribeMembersContext context) {
-        //    context
-        //        .Member(null, typeof(string), T("Value"), T("The string associated with the part."))
-        //    }
+      
 
     }
 }

@@ -4,8 +4,10 @@ using Laser.Orchard.UserReactions.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
+using Orchard.Environment;
 using Orchard.Forms.Services;
 using Orchard.Localization;
+using Orchard.UI.Resources;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,18 +22,23 @@ namespace Laser.Orchard.UserReactions.Projections {
         private readonly IOrchardServices _orchardServices;
         private readonly IUserReactionsService _reactionsService;
         private readonly WorkContext _workContext;
+        private readonly Work<IResourceManager> _resourceManager;
 
         public const string FormName = "ReactionsFilterForm";
 
         protected dynamic _shapeFactory { get; set; }
         public Localizer T { get; set; }
 
-        public UserReactionsQueryFilterForm(WorkContext workContext, IShapeFactory shapeFactory, IOrchardServices orchardServices, IUserReactionsService reactionsService) {
+        public UserReactionsQueryFilterForm(WorkContext workContext, IShapeFactory shapeFactory, 
+                                            IOrchardServices orchardServices, 
+                                            IUserReactionsService reactionsService,
+                                            Work<IResourceManager> resourceManager) {
             _shapeFactory = shapeFactory;
             _orchardServices = orchardServices;
             _reactionsService = reactionsService;
             _workContext = workContext;
             T = NullLocalizer.Instance;
+            _resourceManager = resourceManager;
         }
 
 
@@ -39,12 +46,10 @@ namespace Laser.Orchard.UserReactions.Projections {
 
         public void Describe(DescribeContext context) {
 
-            
 
             context.Form("ReactionsFilterForm", shape => {
                 var f = _shapeFactory.Form(                    
                     Id: "ReactionsFilterForm",
-
 
                      _Reaction: _shapeFactory.FieldSet(
                             Id: "reaction",
@@ -54,7 +59,7 @@ namespace Laser.Orchard.UserReactions.Projections {
                             Classes: new[] { "tokenized" }
                             )
                         ),
-                        
+
 
                     //_Reaction: _shapeFactory.SelectList(
                     //            Id: "reaction", Name: "Reaction",
@@ -64,7 +69,7 @@ namespace Laser.Orchard.UserReactions.Projections {
                     //            Classes: new[] { "tokenized" }
                     //            ),
 
-                 
+
 
                     _Operator: _shapeFactory.SelectList(
                         Id: "operator", Name: "Operator",
@@ -114,8 +119,10 @@ namespace Laser.Orchard.UserReactions.Projections {
                 //var body = _workContext.Layout.Body;
                 //body.Add(_shapeFactory.Parts_UserReactionsList());
 
+                _resourceManager.Value.Require("script", "jQuery");
+                _resourceManager.Value.Include("script", "~/Modules/Laser.Orchard.UserReactions/Scripts/numeric-editor-filter.js", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js");
 
-
+               
                 f._Operator.Add(new SelectListItem { Value = Convert.ToString(UserReactionsFieldOperator.Equals), Text = T("Is equal to").Text });
                 f._Operator.Add(new SelectListItem { Value = Convert.ToString(UserReactionsFieldOperator.NotEquals), Text = T("Is not equal to").Text });
                 f._Operator.Add(new SelectListItem { Value = Convert.ToString(UserReactionsFieldOperator.Between), Text = T("Is between to").Text });
@@ -129,89 +136,6 @@ namespace Laser.Orchard.UserReactions.Projections {
         }
 
 
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formState"></param>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        //public static Action<IHqlExpressionFactory> GetFilterPredicate(dynamic formState, string property) {
-
-        //    var op = (UserReactionsFieldOperator)Enum.Parse(typeof(UserReactionsFieldOperator), Convert.ToString(formState.Operator));
-
-        //    decimal min, max;
-
-        //    if (op == UserReactionsFieldOperator.Between || op == UserReactionsFieldOperator.NotBetween) {
-        //        min = Decimal.Parse(Convert.ToString(formState.Min), CultureInfo.InvariantCulture);
-        //        max = Decimal.Parse(Convert.ToString(formState.Max), CultureInfo.InvariantCulture);
-        //    }
-        //    else {
-        //        min = max = Decimal.Parse(Convert.ToString(formState.Value), CultureInfo.InvariantCulture);
-        //    }
-
-        //    switch (op) {
-        //        case UserReactionsFieldOperator.LessThan:
-        //            return x => x.Lt(property, max);
-        //        case UserReactionsFieldOperator.LessThanEquals:
-        //            return x => x.Le(property, max);
-        //        case UserReactionsFieldOperator.Equals:
-        //            if (min == max) {
-        //                return x => x.Eq(property, min);
-        //            }
-        //            return y => y.And(x => x.Ge(property, min), x => x.Le(property, max));
-        //        case UserReactionsFieldOperator.NotEquals:
-        //            return min == max ? (Action<IHqlExpressionFactory>)(x => x.Not(y => y.Eq(property, min))) : (y => y.Or(x => x.Lt(property, min), x => x.Gt(property, max)));
-        //        case UserReactionsFieldOperator.GreaterThan:
-        //            return x => x.Gt(property, min);
-        //        case UserReactionsFieldOperator.GreaterThanEquals:
-        //            return x => x.Ge(property, min);
-        //        case UserReactionsFieldOperator.Between:
-        //            return y => y.And(x => x.Ge(property, min), x => x.Le(property, max));
-        //        case UserReactionsFieldOperator.NotBetween:
-        //            return y => y.Or(x => x.Lt(property, min), x => x.Gt(property, max));
-        //        default:
-        //            throw new ArgumentOutOfRangeException();
-        //    }
-        //}
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="fieldName"></param>
-        ///// <param name="formState"></param>
-        ///// <param name="T"></param>
-        ///// <returns></returns>
-        //public static LocalizedString DisplayFilter(string fieldName, dynamic formState, Localizer T) {
-        //    var op = (UserReactionsFieldOperator)Enum.Parse(typeof(UserReactionsFieldOperator), Convert.ToString(formState.Operator));
-        //    string value = Convert.ToString(formState.Value);
-        //    string min = Convert.ToString(formState.Min);
-        //    string max = Convert.ToString(formState.Max);
-
-        //    switch (op) {
-        //        case UserReactionsFieldOperator.LessThan:
-        //            return T("{0} is less than {1}", fieldName, value);
-        //        case UserReactionsFieldOperator.LessThanEquals:
-        //            return T("{0} is less or equal than {1}", fieldName, value);
-        //        case UserReactionsFieldOperator.Equals:
-        //            return T("{0} equals {1}", fieldName, value);
-        //        case UserReactionsFieldOperator.NotEquals:
-        //            return T("{0} is not equal to {1}", fieldName, value);
-        //        case UserReactionsFieldOperator.GreaterThan:
-        //            return T("{0} is greater than {1}", fieldName, value);
-        //        case UserReactionsFieldOperator.GreaterThanEquals:
-        //            return T("{0} is greater or equal than {1}", fieldName, value);
-        //        case UserReactionsFieldOperator.Between:
-        //            return T("{0} is between {1} and {2}", fieldName, min, max);
-        //        case UserReactionsFieldOperator.NotBetween:
-        //            return T("{0} is not between {1} and {2}", fieldName, min, max);
-        //    }
-
-        //    // should never be hit, but fail safe
-        //    return new LocalizedString(fieldName);
-        //}
 
 
         ////Loading UserReactions
@@ -237,5 +161,8 @@ namespace Laser.Orchard.UserReactions.Projections {
 
         //    return retVal;
         //}
+
+
+
     }
 }

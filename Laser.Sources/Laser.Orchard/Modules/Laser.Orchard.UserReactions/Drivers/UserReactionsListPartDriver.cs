@@ -13,7 +13,7 @@ using System.Collections;
 using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.UserReactions.Drivers {
-    public class UserReactionsListPartDriver : ContentPartDriver<UserReactionsPart> {
+    public class UserReactionsListPartDriver : ContentPartDriver<UserReactionsListPart> {
 
         //richiamo il service per settaggio dati 
         //Definisci una variabile settata alla interfaccia
@@ -27,44 +27,33 @@ namespace Laser.Orchard.UserReactions.Drivers {
         }
 
         public Localizer T { get; set; }
+        private const string TemplateName = "Parts/UserReactionsListForm";
 
 
-
-
-
-        protected override DriverResult Display(UserReactionsPart part, string displayType, dynamic shapeHelper) {
-            //return ContentShape("Parts_Map",
-            //                    () => shapeHelper.Parts_Map(
-            //                          Longitude: part.Longitude,
-            //                          Latitude: part.Latitude));
-
-           List<UserReactionsTypeVM> reactionType = GetTypesTable();
-           return ContentShape("Parts_UserReactionsList", 
-                              () => shapeHelper.DisplayTemplate(TemplateName: "Parts/UserReactionsListForm", Model: reactionType, Prefix: Prefix));
-            
-            
-
+        protected override DriverResult Display(UserReactionsListPart part, string displayType, dynamic shapeHelper) {
+            List<UserReactionsTypeVM> reactionType = GetTypesTable();
+            return ContentShape("Parts_UserReactionsList",
+                               () => shapeHelper.DisplayTemplate(TemplateName: TemplateName, 
+                                                                 Model: reactionType, Prefix: Prefix));
         }
 
-        //GET
-        //protected override DriverResult Editor(
-        //    MapPart part, dynamic shapeHelper) {
-        //    return ContentShape("Parts_Map_Edit",
-        //                        () => shapeHelper.EditorTemplate(
-        //                              TemplateName: "Parts/Map",
-        //                              Model: part));
-        //}
-
-        ////POST
-        //protected override DriverResult Editor(
-        //    MapPart part, IUpdateModel updater, dynamic shapeHelper) {
-        //    updater.TryUpdateModel(part, Prefix, null, null);
-        //    return Editor(part, shapeHelper);
-        //}
 
 
-            public List<UserReactionsTypeVM> GetTypesTable() {
+        protected override DriverResult Editor(UserReactionsListPart part, dynamic shapeHelper) {
 
+            return ContentShape("Parts_UserReactionsList",
+                       () => shapeHelper.EditorTemplate(
+                           TemplateName: TemplateName,
+                           Model: part,
+                           Prefix: Prefix));
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<UserReactionsTypeVM> GetTypesTable() {
            
             var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
             var userRT = new UserReactionsTypes();
@@ -74,8 +63,6 @@ namespace Laser.Orchard.UserReactions.Drivers {
                 TypeName = r.TypeName,
 
             }).ToList();
-
-
 
             return userRT.UserReactionsType;
         }

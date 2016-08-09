@@ -30,7 +30,7 @@
     <br />
     <fieldset>
         <legend></legend>
-        <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.UserReactionsType, T("Add Reaction").Text, "#reactions", ".j_reaction", "reaction-add-new")
+        @*<i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.UserReactionsType, T("Add Reaction").Text, "#reactions", ".j_reaction", "reaction-add-new")*@
         <div id="reactions">
 
             @Html.EditorFor(x => x.UserReactionsType)
