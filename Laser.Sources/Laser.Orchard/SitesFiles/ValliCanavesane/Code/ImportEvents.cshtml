@@ -189,6 +189,7 @@
         } else if (translatableEvents[""] != null) {
             categoryList = translatableEvents[""].category;
         }
+        newCalEvent.As<TermsPart>().Terms.Clear();
         if (categoryList != null) {
             foreach (string cate in categoryList) {
                 //Define this lambda here because it depends on cate
