@@ -2,6 +2,7 @@
 using Orchard.ContentManagement.Handlers;
 using Laser.Orchard.UserReactions.Models;
 using Laser.Orchard.UserReactions.Services;
+using Laser.Orchard.UserReactions.Drivers;
 
 
 namespace Laser.Orchard.UserReactions.Handlers {
