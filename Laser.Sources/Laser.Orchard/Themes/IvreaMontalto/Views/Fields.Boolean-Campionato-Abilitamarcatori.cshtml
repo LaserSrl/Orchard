@@ -14,7 +14,7 @@
         Func<ContentField, bool> IsLeagueCode = fi => fi.Name == "Codicecampionato";
         string code = ((TextField)fields.Where(IsLeagueCode).FirstOrDefault()).Value;
         <text>
-<iframe src='http://www.tuttocampo.it/Widget/Marcatori/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
+<iframe src='http://www.tuttocampo.it/Widget/Marcatori/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0' ></iframe>
         </text>
     }
 }
