@@ -14,3 +14,18 @@
         @Display(BuildDisplay(campio, "Detail"))
     }
 }
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function() {
+            var length = parseInt(@ids.Length);
+            if (length == 1) {
+                var idTitle = "#campionato_" + "@(ids[0].ToString())";
+                $(idTitle).html("@(((dynamic)_contentManager.Get(ids[0])).TitlePart.Title)");
+                var idDiv = "#collapse_" + "@(ids[0].ToString())";
+                $(idDiv).removeClass("collapse");
+            }
+        }());
+    </script>
+
+}
