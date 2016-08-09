@@ -19,6 +19,15 @@
     </Match>
     <Match DisplayType="Detail">
       <Place Parts_Common_Metadata="Content:2" />
+      <Place Parts_Common_Body="Content:2.5" />
+      <Place Fields_ContentPicker="Content:3" />
+    </Match>
+  </Match>
+
+  <Match ContentType="Campionato">
+    <Match DisplayType="Detail">
+      <Place Fields_Common_Text="-" />
+      <Place Fields_Input="-" />
     </Match>
   </Match>
   <!-- Customize where the shapes are rendered -->

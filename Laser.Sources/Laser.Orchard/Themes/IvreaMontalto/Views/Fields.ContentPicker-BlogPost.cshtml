@@ -1,0 +1,14 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Utility.Extensions;
+@using Orchard.ContentPicker.Fields
+
+@{
+    var field = (ContentPickerField) Model.ContentField;
+    int[] ids = field.Ids;
+
+    IContentManager _contentManager = WorkContext.Resolve<IContentManager>();
+    foreach(int id in ids){
+        var campio = _contentManager.Get(id);
+        @Display(BuildDisplay(campio, "Detail"))
+    }
+}
