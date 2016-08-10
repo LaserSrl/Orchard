@@ -47,7 +47,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             if (string.IsNullOrWhiteSpace(userName))
                 return false;
 
-            _authenticationService.SignIn(_membershipService.GetUser(userName), createPersistentCookie);
+            if (_membershipService.GetUser(userName) != null)
+                _authenticationService.SignIn(_membershipService.GetUser(userName), createPersistentCookie);
 
             var authenticatedUser = _authenticationService.GetAuthenticatedUser();
 

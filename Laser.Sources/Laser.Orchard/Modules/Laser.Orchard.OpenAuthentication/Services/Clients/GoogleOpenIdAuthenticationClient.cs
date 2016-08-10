@@ -1,19 +1,25 @@
-using DotNetOpenAuth.AspNet;
-using DotNetOpenAuth.AspNet.Clients;
-using Laser.Orchard.OpenAuthentication.Models;
-using Laser.Orchard.OpenAuthentication.Security;
-using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Net;
+using System.Runtime.Serialization.Json;
+using DotNetOpenAuth.AspNet;
+using DotNetOpenAuth.AspNet.Clients;
+using DotNetOpenAuth.Messaging;
+using Laser.Orchard.OpenAuthentication.Models;
+using Orchard.Logging;
+using Laser.Orchard.OpenAuthentication.Security;
+using System.Text.RegularExpressions;
+using Laser.Orchard.OpenAuthentication.Extensions;
+using System.Collections.Specialized;
+using Newtonsoft.Json;
 
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class GoogleOpenIdAuthenticationClient : IExternalAuthenticationClient {
         
         public string ProviderName {
-            get { return "Google"; }
+            get { return "google"; }
         }
 
         private const string UserInfoEndpoint = "https://www.googleapis.com/oauth2/v1/userinfo";
@@ -43,19 +49,17 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
 
             retVal = createUserParams;
             string emailAddress = string.Empty;
-           
-            var valoriRicavati = createUserParams.ExtraData.Values;
-            int countVal = 0;
 
-            foreach (string valric in valoriRicavati) 
-            {
-                if (countVal == 1) {
-                    emailAddress = valric;
-                    retVal.UserName = emailAddress;
+            var valoriRicavati = createUserParams.ExtraData.Keys;
+
+            foreach (KeyValuePair<string, string> values in createUserParams.ExtraData) {
+                if (values.Key == "mail") {
+                    retVal.UserName = values.Value.IsEmailAddress() ? values.Value.Substring(0, values.Value.IndexOf('@')) : values.Value;
                 }
-
-                countVal = countVal + 1;
             }
+
+            // if (!Regex.IsMatch(retVal.UserName, "^[A-Za-z0-9]")) 
+
 
             return retVal;
        

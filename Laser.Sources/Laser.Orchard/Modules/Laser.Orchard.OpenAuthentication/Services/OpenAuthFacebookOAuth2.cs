@@ -8,6 +8,7 @@ using System.Web;
 using DotNetOpenAuth.AspNet.Clients;
 using Newtonsoft.Json;
 using System.Runtime.Serialization.Json;
+using Laser.Orchard.OpenAuthentication.Extensions; 
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public class FacebookOAuth2Client :  OAuth2Client {
@@ -80,6 +81,11 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             _requestedScopes = requestedScopes;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         protected override Uri GetServiceLoginUrl(Uri returnUrl)
         {
             var state = string.IsNullOrEmpty(returnUrl.Query) ? string.Empty : returnUrl.Query.Substring(1);
@@ -93,6 +99,13 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 });
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <returns></returns>
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
            
@@ -115,7 +128,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             // this dictionary must contains 
             var userData = new Dictionary<string, string>();
             userData["id"] = graphData.Id;
-            userData["username"] = graphData.Name;
+            userData["username"] = graphData.Email.IsEmailAddress() ? graphData.Email.Substring(0, graphData.Email.IndexOf('@')) : graphData.Email; 
             userData["name"] = graphData.Name;
             userData["link"] = graphData.Link == null ? null : graphData.Link.AbsoluteUri;
             userData["gender"] = graphData.Gender;
