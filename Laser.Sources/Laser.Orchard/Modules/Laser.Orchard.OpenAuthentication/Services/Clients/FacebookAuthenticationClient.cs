@@ -9,34 +9,24 @@ using DotNetOpenAuth.Messaging;
 using Laser.Orchard.OpenAuthentication.Models;
 using Orchard.Logging;
 using Laser.Orchard.OpenAuthentication.Security;
-using System.Text.RegularExpressions;
-using Laser.Orchard.OpenAuthentication.Extensions;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class FacebookAuthenticationClient : IExternalAuthenticationClient {
         public ILogger _logger { get; set; }
 
         public FacebookAuthenticationClient() {
-            _logger =NullLogger.Instance;
+            _logger = NullLogger.Instance;
         }
         public string ProviderName {
-            get { return "facebook"; }
+            get { return "Facebook"; }
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
-           // return new FacebookClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
-            string ClientId = providerConfigurationRecord.ProviderIdKey;
-            string ClientSecret = providerConfigurationRecord.ProviderSecret;
-
-            var client = new FacebookOAuth2Client(ClientId, ClientSecret);
-
-            //var client2 = new GoogleOpenIdClient();
-            //return client2;
-            return client;
+            return new FacebookClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
 
         }
 
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, string userAccessToken, string userAccessSecret="") {
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
             var serializer = new DataContractJsonSerializer(typeof(FacebookGraphData));
             FacebookGraphData graphData;
             var request =
@@ -49,14 +39,15 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
                         graphData = (FacebookGraphData)serializer.ReadObject(responseStream);
                     }
                 }
-            } catch {
+            }
+            catch {
                 return AuthenticationResult.Failed;
             }
             // this dictionary must contains 
             var userData = new Dictionary<string, string>();
             userData["id"] = graphData.Id;
-            userData["username"] = graphData.Name;
-            userData["mail"] = graphData.Email;
+            userData["username"] = graphData.Email;
+            userData["email"] = graphData.Email;
             userData["name"] = graphData.Name;
             userData["link"] = graphData.Link == null ? null : graphData.Link.AbsoluteUri;
             userData["gender"] = graphData.Gender;
@@ -82,36 +73,8 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
                 isSuccessful: true, provider: this.ProviderName, providerUserId: id, userName: name, extraData: userData);
         }
 
-
-        /// <summary>
-        /// 
-        /// 
-        /// </summary>
-        /// <param name="createUserParams"></param>
-        /// <returns></returns>
-        public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams) 
-        {
-            OpenAuthCreateUserParams retVal;
-
-            retVal = createUserParams;
-            string emailAddress = string.Empty;
-           
-            var valoriRicavati = createUserParams.ExtraData.Keys;
-
-            foreach (KeyValuePair<string, string> values in createUserParams.ExtraData) {
-                if (values.Key == "mail" || values.Key == "email") 
-                {
-                    retVal.UserName = values.Value.IsEmailAddress() ? values.Value.Substring(0, values.Value.IndexOf('@')) : values.Value; 
-                }                  
-            }
-                   
-            // if (!Regex.IsMatch(retVal.UserName, "^[A-Za-z0-9]")) 
-                   
-
-            return retVal;
-       
-       }
-
-
-     }
-  }
+        public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams clientData) {
+            return clientData;
+        }
+    }
+}

@@ -3,15 +3,12 @@ using Laser.Orchard.OpenAuthentication.Models;
 using Orchard;
 using Orchard.Data;
 using Orchard.Security;
-using System.IO;
-using System.Runtime.Serialization.Json;
-using System.Web.Script.Serialization;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IUserProviderServices : IDependency {
         UserProviderRecord Get(string providerName, string providerUserId);
-        void Create(string providerName, string providerUserId, UserAccountLogin user);
-        void Update(string providerName, string providerUserId, UserAccountLogin user);
+        void Create(string providerName, string providerUserId, IUser user, string providerUserData = null);
+        void Update(string providerName, string providerUserId, IUser user);
         IEnumerable<UserProviderRecord> Get(IUser user);
         IEnumerable<UserProviderRecord> Get(int userId);
     }
@@ -35,60 +32,23 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             return _repository.Fetch(o => o.UserId == userId);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="providerName"></param>
-        /// <param name="providerUserId"></param>
-        /// <param name="user"></param>
-        public void Create(string providerName, string providerUserId, UserAccountLogin user) {
-
-            Dictionary<string, string> userParn = new Dictionary<string, string>();
-            userParn = GetListValue(user);
-
-            var serializer = new JavaScriptSerializer();
-            var serializedResult = serializer.Serialize(userParn);
-
-            var record = new UserProviderRecord
-                {
-                    UserId = user.Id,
-                    ProviderName = providerName,
-                    ProviderUserId = providerUserId,
-                    ProviderUserData = serializedResult
-                    //ProviderUserData = ((user.UserName != string.Empty) ? user.UserName : "") + " " + ((user.FirstName != string.Empty) ? user.FirstName : "") +
-                    //                    " " + ((user.Name != string.Empty) ? user.Name : "") + " " + ((user.Email != string.Empty) ? user.Email : "") + " " + ((user.Sesso != string.Empty) ? user.Sesso : "")
-                };
+        public void Create(string providerName, string providerUserId, IUser user, string providerUserData = null) {
+            var record = new UserProviderRecord {
+                UserId = user.Id,
+                ProviderName = providerName,
+                ProviderUserId = providerUserId,
+                ProviderUserData = providerUserData
+            };
 
             _repository.Create(record);
         }
 
-        public void Update(string providerName, string providerUserId, UserAccountLogin user) {
+        public void Update(string providerName, string providerUserId, IUser user) {
             var record = Get(providerName, providerUserId);
 
             record.UserId = user.Id;
 
-            Dictionary<string, string> userParn = new Dictionary<string, string>();
-            userParn= GetListValue(user);
-
-            var serializer = new JavaScriptSerializer();
-            var serializedResult = serializer.Serialize(userParn);
-
-            //record.ProviderUserData = ((user.UserName != string.Empty) ? user.UserName : "") + " " + ((user.FirstName != string.Empty) ? user.FirstName : "") +
-            //                            " " + ((user.Name != string.Empty) ? user.Name : "") + " " + ((user.Email != string.Empty) ? user.Email : "") + " " + ((user.Sesso != string.Empty) ? user.Sesso : "");
-            record.ProviderUserData = serializedResult;
             _repository.Update(record);
         }
-
-
-        public Dictionary<string, string> GetListValue(UserAccountLogin user) {
-            Dictionary<string, string> userPar = new Dictionary<string, string>();
-            userPar.Add("FirstName",user.FirstName);
-            userPar.Add("Name", user.Name);
-            userPar.Add("UserName",user.UserName);
-            userPar.Add("Email", user.Email);
-            userPar.Add("Sesso", user.Sesso);
-            return userPar;
-        }
-
     }
 }
