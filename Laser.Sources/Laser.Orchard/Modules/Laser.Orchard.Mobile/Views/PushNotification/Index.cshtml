@@ -38,6 +38,9 @@
             <th scope="col">@T("DataModifica")</th>
             <th scope="col">@T("Produzione")</th>
             <th scope="col">@T("Language")</th>
+            <th scope="col">@T("Registration Host")</th>
+            <th scope="col">@T("Registration Prefix")</th>
+            <th scope="col">@T("Registration Machine")</th>
             <th scope="col">@T("Actions")</th>
         </tr>
     </thead>
@@ -54,6 +57,9 @@
             <td>@singlerecord.DataModifica</td>
             <td>@singlerecord.Produzione</td>
             <td>@singlerecord.Language</td>
+            <td>@singlerecord.RegistrationUrlHost</td>
+            <td>@singlerecord.RegistrationUrlPrefix</td>
+            <td>@singlerecord.RegistrationMachineName</td>
             <td>
                 <div>
                     @*@Html.ItemEditLinkWithReturnUrl(T("Edit").Text, (Orchard.ContentManagement.IContent)order)*@

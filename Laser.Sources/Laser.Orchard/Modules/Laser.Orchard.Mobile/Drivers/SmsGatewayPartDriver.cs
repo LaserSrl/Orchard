@@ -64,9 +64,9 @@ namespace Laser.Orchard.Mobile.Drivers {
 
             // Tolgo 16 caratteri necessari per lo shortlink
             int MaxLenght = smsSettingsPart.MaxLenghtSms;
-            if (shortlinkExist) {
-                MaxLenght = MaxLenght - 16;
-            }
+            //if (shortlinkExist) {
+            //    MaxLenght = MaxLenght - 16;
+            //}
 
             if (!smsSettingsPart.MamHaveAlias) {
                 part.HaveAlias = false;

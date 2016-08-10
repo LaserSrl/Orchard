@@ -1,6 +1,6 @@
 Name: Culture Layer
 AntiForgery: enabled
-Author: Laser S.r.l.
+Author: Laser srl
 Website: http://www.laser-group.com
 Version: 1.1
 OrchardVersion: 1.8
@@ -10,4 +10,4 @@ Features:
         Name: Culture Layer
         Description: Define a layer that is visible only to users in the specified culture.
         Dependencies: Orchard.Widgets, Orchard.Localization, Laser.Orchard.CulturePicker
-        Category: Layer rules
+        Category: Localization

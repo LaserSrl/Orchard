@@ -7,24 +7,33 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Data;
+using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.UI.Admin;
 using System.Collections.Generic;
 
 namespace Laser.Orchard.Mobile.Drivers {
+    [OrchardFeature("Laser.Orchard.PushGateway")]
     public class MobilePushPartDriver : ContentPartDriver<MobilePushPart> {
 
         private readonly IOrchardServices _orchardServices;
         private readonly IControllerContextAccessor _controllerContextAccessor;
+        private readonly IRepository<PushNotificationRecord> _repoPushNotification;
+        private readonly ShellSettings _shellSettings;
         public Localizer T { get; set; }
 
         protected override string Prefix {
             get { return "Laser.Mobile.MobilePush"; }
         }
 
-        public MobilePushPartDriver(IOrchardServices orchardServices, IControllerContextAccessor controllerContextAccessor) {
+        public MobilePushPartDriver(IOrchardServices orchardServices, IControllerContextAccessor controllerContextAccessor,
+                                    IRepository<PushNotificationRecord> repoPushNotification, ShellSettings shellSettings) {
             _orchardServices = orchardServices;
             _controllerContextAccessor = controllerContextAccessor;
+            _repoPushNotification = repoPushNotification;
+            _shellSettings = shellSettings;
         }
 
         protected override DriverResult Display(MobilePushPart part, string displayType, dynamic shapeHelper)
@@ -63,7 +72,7 @@ namespace Laser.Orchard.Mobile.Drivers {
                     viewModel.TestPush = false;
                 // We are in "postback" mode, so update our part
                 if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-                    // forza il valore di ToPush che altrimenti sembra non venir aggiornato correttamente
+                    // forza il valore di ToPush che altrimenti sembra non venire aggiornato correttamente
                     if (viewModel.PushSent)
                     {
                         viewModel.ToPush = true;
@@ -89,9 +98,14 @@ namespace Laser.Orchard.Mobile.Drivers {
                 viewModel.PushSentNumber = part.PushSentNumber;
             }
 
+            viewModel.SiteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix;
+
             viewModel.HideRelated = part.Settings.GetModel<PushMobilePartSettingVM>().HideRelated;
             _controllerContextAccessor.Context.Controller.TempData["HideRelated"] = viewModel.HideRelated;
 
+            // Valorizzo TextNumberPushTest
+            viewModel.PushTestNumber = _repoPushNotification.Count(x => x.Produzione == false);
+            
             if (part.ContentItem.ContentType == "CommunicationAdvertising") {
                 // Flag Approvato all'interno del tab
                 viewModel.PushAdvertising = true;

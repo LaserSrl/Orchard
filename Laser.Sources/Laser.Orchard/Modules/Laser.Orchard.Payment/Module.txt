@@ -1,7 +1,8 @@
 ﻿Name: Laser.Orchard.Payment
 AntiForgery: enabled
-Author: Laser Group - Frediani Lorenzo
+Author: Laser srl - Frediani Lorenzo
 Website: http://www.laser-group.com
 Version: 1.8
 OrchardVersion: 1.8
 Description: Description for feature Laser.Orchard.Payment.
+Category:Content

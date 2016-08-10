@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.Mobile.Services;
 using Orchard;
+using Orchard.Environment.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,15 +11,16 @@ using System.Web.Mvc;
 
 namespace Laser.Orchard.Mobile.Controllers
 {
+    [OrchardFeature("Laser.Orchard.PushGateway")]
     public class CountPanelController : Controller
     {
         private readonly IOrchardServices _orchardServices;
-        private readonly IPushNotificationService _pushNotificationService;
+        private readonly IPushGatewayService _pushGatewayService;
         private readonly ISmsCommunicationService _smsCommunicationService;
-        public CountPanelController(IOrchardServices orchardServices, IPushNotificationService pushNotificationService)
+        public CountPanelController(IOrchardServices orchardServices, IPushGatewayService pushGatewayService)
         {
             _orchardServices = orchardServices;
-            _pushNotificationService = pushNotificationService;
+            _pushGatewayService = pushGatewayService;
             _orchardServices.WorkContext.TryResolve<ISmsCommunicationService>(out _smsCommunicationService);
         }
         [HttpGet]
@@ -32,7 +34,7 @@ namespace Laser.Orchard.Mobile.Controllers
             }
             else
             {
-                var elenco = _pushNotificationService.GetPushQueryResult(ids, true);
+                var elenco = _pushGatewayService.GetPushQueryResult(ids, true);
                 var android = Convert.ToInt64((((Hashtable)(elenco[0]))["Android"]) ?? 0); //elenco.Where(x => x.Device == TipoDispositivo.Android).Count();
                 var apple = Convert.ToInt64((((Hashtable)(elenco[0]))["Apple"]) ?? 0);  //elenco.Where(x => x.Device == TipoDispositivo.Apple).Count();
                 var win = Convert.ToInt64((((Hashtable)(elenco[0]))["WindowsMobile"]) ?? 0);  //elenco.Where(x => x.Device == TipoDispositivo.WindowsMobile).Count();

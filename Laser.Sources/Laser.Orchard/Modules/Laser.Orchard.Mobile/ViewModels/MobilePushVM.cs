@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.Mobile.Models;
+using Orchard.Environment.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.Mobile.ViewModels {
+    [OrchardFeature("Laser.Orchard.PushGateway")]
     public class MobilePushVM {
         public MobilePushVM() {
             TitlePush = "";
@@ -17,6 +19,7 @@ namespace Laser.Orchard.Mobile.ViewModels {
             TargetDeviceNumber = 0;
             PushSentNumber = 0;
             PushAdvertising = true;
+            PushTestNumber = 0;
         }
         public string TitlePush { get; set; }
         public string TextPush { get; set; }
@@ -43,5 +46,7 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public bool ShowTestOptions { get; set; }
         public bool HideRelated { get; set; }
         public bool PushAdvertising { get; set; }
+        public int PushTestNumber { get; set; }
+        public string SiteUrl { get; set; }
     }
 }

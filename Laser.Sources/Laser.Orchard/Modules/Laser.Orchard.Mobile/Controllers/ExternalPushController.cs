@@ -12,21 +12,21 @@ namespace Laser.Orchard.Mobile.Controllers {
     [WebApiKeyFilter(true)]
     [OrchardFeature("Laser.Orchard.Mobile.ExternalPush")]
     public class ExternalPushController : ApiController {
-        private readonly IPushNotificationService _pushService;
+        private readonly IPushGatewayService _pushGatewayService;
         public class PushRequest {
             public string Text { get; set; }
             public string DevType { get; set; }
             public bool Prod { get; set; }
         }
 
-        public ExternalPushController(IPushNotificationService pushService) {
-            _pushService = pushService;
+        public ExternalPushController(IPushGatewayService pushGatewayService) {
+            _pushGatewayService = pushGatewayService;
         }
 
         public HttpResponseMessage Post(PushRequest req) {
             HttpResponseMessage message = null;
             try {
-                _pushService.SendPushService(req.Prod, req.DevType, 0, "", req.Text, req.Text, "", req.Text, null);
+                _pushGatewayService.SendPushService(req.Prod, req.DevType, 0, "", req.Text, req.Text, req.Text, null);
                 message = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
                 message.Content = new StringContent("OK");
             }

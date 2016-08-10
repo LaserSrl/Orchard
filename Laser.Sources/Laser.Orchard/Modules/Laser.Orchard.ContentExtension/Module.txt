@@ -1,7 +1,7 @@
 ﻿Name: Laser.Orchard.ContentExtension
 AntiForgery: disabled
-Author: Lorenzo Frediani - Laser srl
-Website: Laser-group.com
+Author: Laser srl -Lorenzo Frediani 
+Website: http://www.laser-group.com
 Version: 1.0
 OrchardVersion: 1.8
 Description: Enable Content Manipulation feature from extarnal orchard's environment

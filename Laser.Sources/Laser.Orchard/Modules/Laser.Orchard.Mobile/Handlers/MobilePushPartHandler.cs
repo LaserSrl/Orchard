@@ -1,31 +1,62 @@
 ﻿using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.Mobile.Services;
 using Orchard;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
-using Orchard.Environment;
+using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
+using Orchard.UI.Notify;
 using System;
 
 namespace Laser.Orchard.Mobile.Handlers   {
-    public class MobilePushPartHandler: ContentHandler {
-        private readonly IPushNotificationService _pushNotificationService;
+    [OrchardFeature("Laser.Orchard.PushGateway")]
+    public class MobilePushPartHandler : ContentHandler {
+        private readonly INotifier _notifier;
         private readonly IScheduledTaskManager _taskManager;
+        private readonly IOrchardServices _orchardServices;
+        private readonly IPushGatewayService _pushGatewayService;
+        public Localizer T { get; set; }
 
-        public MobilePushPartHandler(IRepository<MobilePushPartRecord> repository,IPushNotificationService pushNotificationService, IScheduledTaskManager taskManager) {
+        public MobilePushPartHandler(IRepository<MobilePushPartRecord> repository, INotifier notifier, IScheduledTaskManager taskManager, IOrchardServices orchardServices, IPushGatewayService pushGatewayService) {
             Logger = NullLogger.Instance;
-            _pushNotificationService=pushNotificationService;
+            T = NullLocalizer.Instance;
+            _notifier = notifier;
+            _orchardServices = orchardServices;
+            _pushGatewayService = pushGatewayService;
             _taskManager = taskManager;
             Filters.Add(StorageFilter.For(repository));
+
+            OnUpdated<MobilePushPart>((context, part) => {
+                if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.PushTest"] == "submit.PushTest") {
+                    // Invio Push di Test
+                    _pushGatewayService.PublishedPushEventTest(part.ContentItem); 
+                }
+
+                if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.PushContact") {
+                    // invia la push al contact selezionato
+                    string contactTitle = "";
+                    string aux = _orchardServices.WorkContext.HttpContext.Request.Form["contact-to-push"];
+                    // rimuove il numero di device racchiuso tra parentesi per ricavare il nome del contact
+                    int idx = aux.LastIndexOf(" (");
+                    if(idx > 0) {
+                        contactTitle = aux.Substring(0, idx);
+                    }
+                    // invia la push
+                    if ((string.IsNullOrWhiteSpace(contactTitle) == false) && (string.IsNullOrWhiteSpace(part.TextPush) == false)) {
+                        _pushGatewayService.SendPushToContact(part.ContentItem, contactTitle);
+                        _notifier.Information(T("Push message sent to contact {0}.", contactTitle));
+                    }
+                }
+            });
 
             OnPublished<MobilePushPart>((context, part) => {
                 try {
                     if (part.PushSent == false) {
-                        _taskManager.CreateTask("Laser.Orchard.PushNotification.Task", DateTime.UtcNow.AddMinutes(1), part.ContentItem);
+                    _taskManager.CreateTask("Laser.Orchard.PushNotification.Task", DateTime.UtcNow.AddMinutes(1), part.ContentItem);
                         part.PushSent = true;
-                    }
+                }
                 }
                 catch (Exception ex) {
                     Logger.Error(ex, "Error starting asynchronous thread to send push notifications.");
