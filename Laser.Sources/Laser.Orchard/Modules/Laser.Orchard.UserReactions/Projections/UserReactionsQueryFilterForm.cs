@@ -106,14 +106,14 @@ namespace Laser.Orchard.UserReactions.Projections {
                         )
                 );
 
-                Dictionary<string, string> reactionType = GetTypesTable();
+                Dictionary<string, string> reactionType = GetTypesReactions();
 
                 foreach (var item in reactionType) {
                     f._ReactionsList.Add(item.Value.ToString(), item.Key.ToString());
                 }
 
                 _resourceManager.Value.Require("script", "jQuery");
-                _resourceManager.Value.Include("script", "~/Modules/Laser.Orchard.UserReactions/Scripts/numeric-editor-filter.js", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js");
+                _resourceManager.Value.Include("script", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js");
 
                 f._Operator.Add(new SelectListItem { Value = Convert.ToString(UserReactionsFieldOperator.Equals), Text = T("Is equal to").Text });
                 f._Operator.Add(new SelectListItem { Value = Convert.ToString(UserReactionsFieldOperator.NotEquals), Text = T("Is not equal to").Text });
@@ -135,7 +135,7 @@ namespace Laser.Orchard.UserReactions.Projections {
         ///// 
         ///// </summary>
         ///// <returns></returns>
-        public Dictionary<string, string> GetTypesTable() {
+        public Dictionary<string, string> GetTypesReactions() {
 
             Dictionary<string, string> retVal = new Dictionary<string, string>();
             var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
