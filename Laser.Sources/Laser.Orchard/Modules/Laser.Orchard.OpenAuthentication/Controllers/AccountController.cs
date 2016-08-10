@@ -84,7 +84,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             }
 
             if (_openAuthMembershipServices.CanRegister()) {
-                result = _openAuthClientProvider.GetUserData(result.Provider, result.ExtraData["accesstoken"]);
+                result = _openAuthClientProvider.GetUserData(result.Provider, result, result.ExtraData["accesstoken"]);
                 var createUserParams = new OpenAuthCreateUserParams(result.UserName,
                                                                     result.Provider,
                                                                     result.ProviderUserId,
@@ -132,7 +132,8 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                     return Json(new { success = false, registeredServices = registeredServicesData, message = T("One or more of the required parameters was not provided or was an empty string.").Text }, JsonRequestBehavior.AllowGet);
                 }
 
-                AuthenticationResult authResult = _openAuthClientProvider.GetUserData(__provider__, token, secret);
+                AuthenticationResult dummy = new AuthenticationResult(true);
+                AuthenticationResult authResult = _openAuthClientProvider.GetUserData(__provider__, dummy, token, secret);
                 
                 if (!authResult.IsSuccessful) {
                     return Json(new { success = false, registeredServices = registeredServicesData, message = T("Token authentication failed.").Text }, JsonRequestBehavior.AllowGet);

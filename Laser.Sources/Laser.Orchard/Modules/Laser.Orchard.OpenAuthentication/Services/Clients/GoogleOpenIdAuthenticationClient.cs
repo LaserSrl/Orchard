@@ -73,7 +73,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         /// <param name="userAccessToken"></param>
         /// <param name="userAccessSecret"></param>
         /// <returns></returns>
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, string userAccessToken, string userAccessSecret = "") {
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
             var userData = new Dictionary<string, string>();
 
             userData = GetUserDataGoogle(userAccessToken);

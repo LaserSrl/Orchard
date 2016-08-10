@@ -23,9 +23,10 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
 
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, string userAccessToken, string userAccessSecret = "") {
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
             if (String.IsNullOrWhiteSpace(userAccessSecret)) {
-                throw new ArgumentException("Access Token Secret is required for oAuth");
+                //throw new ArgumentException("Access Token Secret is required for oAuth");
+                return new AuthenticationResult(isSuccessful: true, provider: this.ProviderName, providerUserId: previosAuthResult.ProviderUserId, userName: previosAuthResult.UserName, extraData: new Dictionary<string, string> { { "accesstoken", userAccessToken } });
             }
             var twitterUserSerializer = new DataContractJsonSerializer(typeof(TwitterUserData));
 

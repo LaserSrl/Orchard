@@ -15,7 +15,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOrchardOpenAuthClientProvider : IDependency {
         IAuthenticationClient GetClient(string providerName);
         OrchardAuthenticationClientData GetClientData(string providerName);
-        AuthenticationResult GetUserData(string providerName, string userAccessToken, string userAccessSecret = "");
+        AuthenticationResult GetUserData(string providerName, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "");
         OpenAuthCreateUserParams NormalizeData(string providerName, OpenAuthCreateUserParams userData);
     }
 
@@ -72,7 +72,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 return null;
         }
 
-        public AuthenticationResult GetUserData(string providerName, string userAccessToken, string userAccessSecret = "") {
+        public AuthenticationResult GetUserData(string providerName, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
             Argument.ThrowIfNullOrEmpty(providerName, "providerName");
             // Do we have a configuration?
             var clientConfiguration = _providerConfigurationService.Get(providerName);
@@ -84,8 +84,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var client = _openAuthAuthenticationClients
                 .SingleOrDefault(o => o.ProviderName.Equals(providerName, StringComparison.OrdinalIgnoreCase));
 
-            return client.GetUserData(clientConfiguration, userAccessToken, userAccessSecret);
-
+            return client.GetUserData(clientConfiguration, previosAuthResult, userAccessToken, userAccessSecret);
         }
 
         public OpenAuthCreateUserParams NormalizeData(string providerName, OpenAuthCreateUserParams userData) {

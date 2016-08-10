@@ -31,7 +31,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
 
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, string userAccessToken, string userAccessSecret = "") {
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
             var userData = new Dictionary<string, string>();
 
             userData = GetUserDataLinkedin(userAccessToken);

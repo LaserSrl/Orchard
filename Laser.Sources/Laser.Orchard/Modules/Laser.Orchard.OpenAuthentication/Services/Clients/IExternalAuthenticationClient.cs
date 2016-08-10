@@ -8,8 +8,8 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         string ProviderName { get; }
         
         IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord);
-        
-        AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, string userAccessToken, string userAccessSecretKey="");
+
+        AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecretKey = "");
         
         OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams clientData);
 
