@@ -54,7 +54,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 _userProviderServices.Create(providerName, providerUserId, user, providerUserData);
             }
             else {
-                _userProviderServices.Update(providerName, providerUserId, user);
+                _userProviderServices.Update(providerName, providerUserId, user, providerUserData);
             }
         }
 

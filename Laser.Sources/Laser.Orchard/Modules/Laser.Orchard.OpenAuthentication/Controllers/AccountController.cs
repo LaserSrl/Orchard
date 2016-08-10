@@ -76,7 +76,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             if (authenticatedUser != null) {
                 // If the current user is logged in add the new account
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId,
-                                                                  authenticatedUser);
+                                                                  authenticatedUser, result.ExtraData.ToJson());
 
                 _notifier.Information(T("Your {0} account has been attached to your local account.", result.Provider));
 
@@ -153,7 +153,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                     if (authenticatedUser != null) {
                         // If the current user is logged in add the new account
                         _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider, authResult.ProviderUserId,
-                                                                          authenticatedUser);
+                                                                          authenticatedUser, authResult.ExtraData.ToJson());
 
                         if (HttpContext.Response.Cookies.Count == 0)
                             return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);
@@ -172,7 +172,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         var newUser = _openAuthMembershipServices.CreateUser(createUserParams);
                         _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider,
                                                                           authResult.ProviderUserId,
-                                                                          newUser);
+                                                                          newUser, authResult.ExtraData.ToJson());
 
                         _authenticationService.SignIn(newUser, false);
 

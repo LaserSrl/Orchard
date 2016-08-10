@@ -14,7 +14,7 @@ using Laser.Orchard.OpenAuthentication.Security;
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class TwitterAuthenticationClient : IExternalAuthenticationClient {
         public string ProviderName {
-            get { return "twitter"; }
+            get { return "Twitter"; }
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
@@ -23,10 +23,12 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
 
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken, string userAccessSecret = "") {
             if (String.IsNullOrWhiteSpace(userAccessSecret)) {
-                //throw new ArgumentException("Access Token Secret is required for oAuth");
-                return new AuthenticationResult(isSuccessful: true, provider: this.ProviderName, providerUserId: previosAuthResult.ProviderUserId, userName: previosAuthResult.UserName, extraData: new Dictionary<string, string> { { "accesstoken", userAccessToken } });
+                if (previousAuthResult.ExtraData.ContainsKey("accesstoken") == false) {
+                    previousAuthResult.ExtraData.Add("accesstoken", userAccessToken);
+                }
+                return new AuthenticationResult(true, this.ProviderName, previousAuthResult.ProviderUserId, previousAuthResult.UserName, previousAuthResult.ExtraData);
             }
             var twitterUserSerializer = new DataContractJsonSerializer(typeof(TwitterUserData));
 
