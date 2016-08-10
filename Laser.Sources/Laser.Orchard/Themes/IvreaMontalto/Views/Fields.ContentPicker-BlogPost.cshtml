@@ -1,0 +1,31 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Utility.Extensions;
+@using Orchard.ContentPicker.Fields
+
+@{
+    Style.Require("Accordion").AtHead();
+    
+    var field = (ContentPickerField) Model.ContentField;
+    int[] ids = field.Ids;
+
+    IContentManager _contentManager = WorkContext.Resolve<IContentManager>();
+    foreach(int id in ids){
+        var campio = _contentManager.Get(id);
+        @Display(BuildDisplay(campio, "Detail"))
+    }
+}
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function() {
+            var length = parseInt(@ids.Length);
+            if (length == 1) {
+                var idTitle = "#campionato_" + "@(ids[0].ToString())";
+                $(idTitle).html("@(((dynamic)_contentManager.Get(ids[0])).TitlePart.Title)");
+                var idDiv = "#collapse_" + "@(ids[0].ToString())";
+                $(idDiv).removeClass("collapse");
+            }
+        }());
+    </script>
+
+}
