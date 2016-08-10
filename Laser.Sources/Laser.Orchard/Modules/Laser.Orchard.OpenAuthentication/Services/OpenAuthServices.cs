@@ -9,12 +9,12 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Users.Models;
-using System.Collections;
+using Laser.Orchard.StartupConfig.Handlers;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOpenAuthMembershipServices : IDependency {
         bool CanRegister();
-        UserAccountLogin CreateUser(OpenAuthCreateUserParams createUserParams);
+        IUser CreateUser(OpenAuthCreateUserParams createUserParams);
     }
 
     public class OpenAuthMembershipServices : IOpenAuthMembershipServices {
@@ -23,18 +23,20 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         private readonly IUsernameService _usernameService;
         private readonly IPasswordGeneratorService _passwordGeneratorService;
         private readonly IEnumerable<IOpenAuthUserEventHandler> _openAuthUserEventHandlers;
+        private readonly IContactRelatedEventHandler _contactEventHandler;
 
         public OpenAuthMembershipServices(IOrchardServices orchardServices,
             IMembershipService membershipService,
             IUsernameService usernameService,
             IPasswordGeneratorService passwordGeneratorService,
-            IEnumerable<IOpenAuthUserEventHandler> openAuthUserEventHandlers) {
+            IEnumerable<IOpenAuthUserEventHandler> openAuthUserEventHandlers,
+            IContactRelatedEventHandler contactEventHandler) {
             _orchardServices = orchardServices;
             _membershipService = membershipService;
             _usernameService = usernameService;
             _passwordGeneratorService = passwordGeneratorService;
             _openAuthUserEventHandlers = openAuthUserEventHandlers;
-
+            _contactEventHandler = contactEventHandler;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -49,82 +51,30 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             return orchardUsersSettings.UsersCanRegister && openAuthenticationSettings.AutoRegistrationEnabled;
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="createUserParams"></param>
-        /// <returns></returns>
-        public UserAccountLogin CreateUser(OpenAuthCreateUserParams createUserParams) {
-                   
+        public IUser CreateUser(OpenAuthCreateUserParams createUserParams) {
             string emailAddress = string.Empty;
-            string name = string.Empty;
-            string firstname = string.Empty;
-            string username = string.Empty;
-            string sesso = string.Empty;
-
-            var valoriRicavati = createUserParams.ExtraData.Values;
-            int countVal = 0;
-
-            foreach (string valric in valoriRicavati) 
-            {                
-                if (countVal == 1) 
-                {
-                    if (createUserParams.ProviderName != "linkedin") {
-                        emailAddress = valric;
-                    } 
-                    else 
-                    {
-                        firstname = valric;
+            if (createUserParams.UserName.IsEmailAddress()) {
+                emailAddress = createUserParams.UserName;
+            }
+            else {
+                foreach (var key in createUserParams.ExtraData.Keys) {
+                    switch (key.ToLower()) {
+                        case "mail":
+                        case "email":
+                        case "e-mail":
+                            emailAddress = createUserParams.ExtraData[key];
+                            break;
                     }
                 }
-
-                if (countVal == 2)
-                {
-                    if (createUserParams.ProviderName == "linkedin")
-                    {
-                        name = valric;
-                    }
-
-                    if (createUserParams.ProviderName == "facebook") {
-                        username = valric;
-                    } 
-                }
-
-                if (countVal == 3) 
-                {
-                    if (createUserParams.ProviderName == "linkedin")
-                    {
-                        emailAddress = valric;
-                    }
-
-                    if (createUserParams.ProviderName == "google") {
-                        username = valric;
-                    }
-
-                }
-
-                if (countVal == 4) {
-
-                    if (createUserParams.ProviderName == "facebook") {
-                        sesso = valric;
-                    }
-                }
-
-                countVal = countVal + 1;
             }
 
-            if (createUserParams.ProviderName == "twitter")
-                username = createUserParams.UserName;
-
-
+            createUserParams.UserName = _usernameService.Normalize(createUserParams.UserName);
             var creatingContext = new CreatingOpenAuthUserContext(createUserParams.UserName, emailAddress, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
 
             _openAuthUserEventHandlers.Invoke(o => o.Creating(creatingContext), Logger);
 
             var createdUser = _membershipService.CreateUser(new CreateUserParams(
-                //_usernameService.Calculate(createUserParams.UserName),
-                createUserParams.UserName,
+                _usernameService.Calculate(createUserParams.UserName),
                 _passwordGeneratorService.Generate(),
                 creatingContext.EmailAddress,
                 @T("Auto Registered User").Text,
@@ -135,15 +85,10 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var createdContext = new CreatedOpenAuthUserContext(createdUser, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
             _openAuthUserEventHandlers.Invoke(o => o.Created(createdContext), Logger);
 
-            UserAccountLogin retVal = new UserAccountLogin();
-            retVal.Id = createdUser.Id;
-            retVal.IUserParz = createdUser;
-            retVal.Email = createdUser.Email;
-            retVal.FirstName = firstname;
-            retVal.Name = name;
-            retVal.UserName = username;
-            retVal.Sesso = sesso;
-            return retVal;
+            //solleva l'evento di sincronizzazione dell'utente orchard
+            _contactEventHandler.Synchronize(createdUser);
+
+            return createdUser;
         }
     }
 }

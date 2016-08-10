@@ -9,12 +9,14 @@ using Laser.Orchard.OpenAuthentication.Models;
 using Laser.Orchard.OpenAuthentication.Services.Clients;
 using Orchard;
 using Orchard.Validation;
+using Laser.Orchard.OpenAuthentication.Security;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOrchardOpenAuthClientProvider : IDependency {
         IAuthenticationClient GetClient(string providerName);
         OrchardAuthenticationClientData GetClientData(string providerName);
         AuthenticationResult GetUserData(string providerName, string userAccessToken, string userAccessSecret = "");
+        OpenAuthCreateUserParams NormalizeData(string providerName, OpenAuthCreateUserParams userData);
     }
 
     public class OrchardOpenAuthClientProvider : IOrchardOpenAuthClientProvider {
@@ -84,6 +86,21 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
             return client.GetUserData(clientConfiguration, userAccessToken, userAccessSecret);
 
+        }
+
+        public OpenAuthCreateUserParams NormalizeData(string providerName, OpenAuthCreateUserParams userData) {
+            Argument.ThrowIfNullOrEmpty(providerName, "providerName");
+            // Do we have a configuration?
+            var clientConfiguration = _providerConfigurationService.Get(providerName);
+
+            if (clientConfiguration == null)
+                return null;
+
+            // Is this a known internal client
+            var client = _openAuthAuthenticationClients
+                .SingleOrDefault(o => o.ProviderName.Equals(providerName, StringComparison.OrdinalIgnoreCase));
+
+            return client.NormalizeData(userData);
         }
 
         private static IAuthenticationClient CreateOpenIdClient(ProviderConfigurationRecord clientConfiguration) {
