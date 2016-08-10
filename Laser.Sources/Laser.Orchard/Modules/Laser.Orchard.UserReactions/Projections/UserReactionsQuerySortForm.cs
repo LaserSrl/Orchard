@@ -31,6 +31,8 @@ namespace Laser.Orchard.UserReactions.Projections {
                         Title: T("Reaction"),
                         Size: 1,
                         Multiple: false),
+                    _Separator: _shapeFactory.Markup( // separatore
+                        Value: "<br/>"),
                     _SortAsc: _shapeFactory.Radio(
                         Id: "sortAsc", Name: "Sort",
                         Title: T("Sort order ascending"),

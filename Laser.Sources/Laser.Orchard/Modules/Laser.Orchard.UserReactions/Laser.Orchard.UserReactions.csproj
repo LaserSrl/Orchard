@@ -145,7 +145,6 @@
     <Compile Include="Controllers\ReactionAjaxController..cs" />
     <Compile Include="Controllers\ReactionApiController.cs" />
     <Compile Include="DataMigrations.cs" />
-    <Compile Include="Drivers\UserReactionsListPartDriver.cs" />
     <Compile Include="Drivers\UserReactionsPartDriver.cs" />
     <Compile Include="Handlers\SettingsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\UserReactionsPartHandler.cs" />
