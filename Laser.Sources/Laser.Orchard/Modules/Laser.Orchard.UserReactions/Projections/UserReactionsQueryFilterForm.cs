@@ -42,10 +42,7 @@ namespace Laser.Orchard.UserReactions.Projections {
         }
 
 
-
-
         public void Describe(DescribeContext context) {
-
 
             context.Form("ReactionsFilterForm", shape => {
                 var f = _shapeFactory.Form(                    
@@ -55,21 +52,20 @@ namespace Laser.Orchard.UserReactions.Projections {
                             Id: "reaction",
                             _Reaction: _shapeFactory.TextBox(
                             Name: "Reaction",
-                            Title: T("Reaction"),
+                            Title: T("Reactions types"),
                             Classes: new[] { "tokenized" }
                             )
                         ),
 
+                    _ReactionTitle: _shapeFactory.Markup(
+                        Value: "<fieldset><legend>Reactions list available:</legend>"),
 
-                    //_Reaction: _shapeFactory.SelectList(
-                    //            Id: "reaction", Name: "Reaction",
-                    //            Title: T("Reaction"),
-                    //            Size: 1,
-                    //            Multiple: false,
-                    //            Classes: new[] { "tokenized" }
-                    //            ),
+                    _ReactionsList: _shapeFactory.List(
+                    Id: "reactionslist"
+                    ),
 
-
+                     _ReactionPanel: _shapeFactory.Markup(
+                        Value: " </fieldset>"),
 
                     _Operator: _shapeFactory.SelectList(
                         Id: "operator", Name: "Operator",
@@ -109,20 +105,16 @@ namespace Laser.Orchard.UserReactions.Projections {
                             )
                         )
                 );
-                
-                //Dictionary<string, string> reactionType = GetTypesTable();
 
-                //foreach (var item in reactionType) {
-                //    f._Reaction.Add(new SelectListItem { Value = item.Key.ToString(), Text = item.Value.ToString() });
-                //}
+                Dictionary<string, string> reactionType = GetTypesReactions();
 
-                //var body = _workContext.Layout.Body;
-                //body.Add(_shapeFactory.Parts_UserReactionsList());
+                foreach (var item in reactionType) {
+                    f._ReactionsList.Add(item.Value.ToString(), item.Key.ToString());
+                }
 
                 _resourceManager.Value.Require("script", "jQuery");
-                _resourceManager.Value.Include("script", "~/Modules/Laser.Orchard.UserReactions/Scripts/numeric-editor-filter.js", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js");
+                _resourceManager.Value.Include("script", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js");
 
-               
                 f._Operator.Add(new SelectListItem { Value = Convert.ToString(UserReactionsFieldOperator.Equals), Text = T("Is equal to").Text });
                 f._Operator.Add(new SelectListItem { Value = Convert.ToString(UserReactionsFieldOperator.NotEquals), Text = T("Is not equal to").Text });
                 f._Operator.Add(new SelectListItem { Value = Convert.ToString(UserReactionsFieldOperator.Between), Text = T("Is between to").Text });
@@ -143,24 +135,24 @@ namespace Laser.Orchard.UserReactions.Projections {
         ///// 
         ///// </summary>
         ///// <returns></returns>
-        //public Dictionary<string, string> GetTypesTable() {
+        public Dictionary<string, string> GetTypesReactions() {
 
-        //    Dictionary<string, string> retVal = new Dictionary<string, string>();
-        //    var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
-        //    var userRT = new UserReactionsTypes();
+            Dictionary<string, string> retVal = new Dictionary<string, string>();
+            var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
+            var userRT = new UserReactionsTypes();
 
-        //    userRT.UserReactionsType = _reactionsService.GetTypesTable().Select(r => new UserReactionsTypeVM {
-        //        Id = r.Id,
-        //        TypeName = r.TypeName,
+            userRT.UserReactionsType = _reactionsService.GetTypesTable().Select(r => new UserReactionsTypeVM {
+                Id = r.Id,
+                TypeName = r.TypeName,
 
-        //    }).ToList();
+            }).ToList();
 
-        //    foreach (UserReactionsTypeVM retval in userRT.UserReactionsType) {
-        //        retVal.Add(retval.Id.ToString(), retval.TypeName);
-        //    }
+            foreach (UserReactionsTypeVM retval in userRT.UserReactionsType) {
+                retVal.Add(retval.Id.ToString(), retval.TypeName);
+            }
 
-        //    return retVal;
-        //}
+            return retVal;
+        }
 
 
 
