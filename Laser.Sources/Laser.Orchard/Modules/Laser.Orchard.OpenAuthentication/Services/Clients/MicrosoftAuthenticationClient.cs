@@ -6,7 +6,7 @@ using Laser.Orchard.OpenAuthentication.Security;
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class MicrosoftAuthenticationClient : IExternalAuthenticationClient {
         public string ProviderName {
-            get { return "microsoft"; }
+            get { return "Microsoft"; }
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
