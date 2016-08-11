@@ -1,0 +1,74 @@
+﻿@using Laser.Orchard.TaskScheduler.ViewModels;
+@using Laser.Orchard.Commons.Helpers;
+@using Laser.Orchard.TaskScheduler;
+@using Orchard;
+
+@model Laser.Orchard.TaskScheduler.ViewModels.ScheduledTaskViewModel
+
+@{
+    MvcHtmlString taskBlock = Html.UniqueClientId("ScheduledTaskViewModel");
+
+    var appId = "st_" + taskBlock;
+}
+
+@*<fieldset>
+    <legend>@T("Scheduled task")</legend>*@
+    <div id="@appId" class="j_scheduledtasks">
+        @Html.HiddenFor(m => m.Id) @*This value must be in the form to pass it forward*@
+        @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete", @id = "delete_" + @appId })
+        @Html.HiddenFor(m => m.Scheduling, new { @class = "ph-mark-for-scheduling", @id = "schedule_" + @appId })
+
+        <label for="sig_@appId">@T("Signal name")</label>
+        @Html.TextBoxFor(m => m.SignalName, new {
+           placeholder = T("Signal name").ToString(),
+           @title = T("Signal name").ToString(),
+           @id = "sig_" + @appId,
+           @class = "text medium"
+       })
+
+        <label for="@Html.FieldIdFor(m => m.ScheduledStartUTC)">@T("Start Date")</label>
+        @Html.TextBoxFor(m => m.ScheduledStartUTC, new { @class = "text" })
+
+        <label>@T("Periodicity")</label>
+        @Html.TextBoxFor(m => m.PeriodicityTime, new {
+           @title = T("Amount of time that should pass between repetitions of the task").ToString(),
+           @id = "time_" + @appId,
+           @class = "text small",
+           @pattern = "[0-9]*"
+       })
+
+        @Html.DropDownListFor(m => m.PeriodicityUnit, new SelectList(Enum.GetValues(typeof(TimeUnits))))
+
+        <label>@T("Content Item Id")</label>
+        @Html.TextBoxFor(m => m.ContentItemId, new { 
+            @class = "text small",
+            @pattern = "[0-9]*"})
+
+        @Html.HiddenFor(m => m.Running) @*I need to have the value of running somewhere in the form*@
+        @if (Model.Running > 0) {
+            <text>
+                <button id="unscheduleTask_@appId" type="submit" name="submit.UnscheduleTask" value="yes please" onclick="FlagForSchedulingEvent(@appId)">@T("Unschedule")</button>
+                @*@Html.ActionLink(T("Unschedule this task").ToString(), "IndexUnscheduleTask", "Admin", new { }, new { @class = "button" })*@
+            </text>
+        } else {
+            <text>
+                <button id="scheduleTask_@appId" type="submit" name="submit.ScheduleTask" value="yes please" onclick="FlagForSchedulingEvent('@appId');">@T("Schedule")</button>
+                @*@Html.ActionLink(T("Schedule this task").ToString(), "IndexScheduleTask", "Admin", new { }, new { @class = "button" })*@
+                <br />
+                @Html.LinkToRemoveNestedForm("<i class=\"fa fa-times\" style=\"color: red\"></i> " + T(" Remove this task").ToString(), ".j_scheduledtasks", "input.ph-mark-for-delete")
+            </text>
+        }
+    </div>
+@*</fieldset>*@
+
+
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function () {
+            $('#@Html.FieldIdFor(m => m.ScheduledStartUTC)').datetimepicker({ 'showTimepicker': true, showAnim: "", changeYear: true, changeMonth: true });
+        })
+    </script>
+    
+    
+}

@@ -5,12 +5,13 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.TaskScheduler.Models {
-    public class ScheduledTaskRecord : ContentPartRecord {
+    public class LaserTaskSchedulerRecord : ContentPartRecord {
 
         public virtual string SignalName { get; set; }
         public virtual DateTime? ScheduledStartUTC { get; set; }
         public virtual int PeriodicityTime { get; set; }
         public virtual string PeriodicityUnit { get; set; }
-        public virtual int ContentItem_id { get; set; }
+        public virtual int ContentItemId { get; set; }
+        public virtual int RunningTaskId { get; set; }
     }
 }
