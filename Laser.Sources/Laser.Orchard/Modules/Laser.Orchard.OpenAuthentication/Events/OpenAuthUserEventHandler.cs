@@ -8,7 +8,7 @@ namespace Laser.Orchard.OpenAuthentication.Events {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IOrchardOpenAuthWebSecurity _orchardOpenAuthWebSecurity;
 
-        public OpenAuthUserEventHandler(IHttpContextAccessor httpContextAccessor, 
+        public OpenAuthUserEventHandler(IHttpContextAccessor httpContextAccessor,
             IOrchardOpenAuthWebSecurity orchardOpenAuthWebSecurity) {
             _httpContextAccessor = httpContextAccessor;
             _orchardOpenAuthWebSecurity = orchardOpenAuthWebSecurity;

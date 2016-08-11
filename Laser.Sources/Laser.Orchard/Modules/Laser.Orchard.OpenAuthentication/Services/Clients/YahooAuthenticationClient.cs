@@ -4,15 +4,14 @@ using Laser.Orchard.OpenAuthentication.Models;
 using Laser.Orchard.OpenAuthentication.Security;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
-    public class MicrosoftAuthenticationClient : IExternalAuthenticationClient {
+    public class YahooAuthenticationClient : IExternalAuthenticationClient {
         public string ProviderName {
-            get { return "Microsoft"; }
+            get { return "Yahoo"; }
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
-            return new MicrosoftClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
+            return new YahooOpenIdClient();
         }
-
 
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
             throw new System.NotImplementedException();

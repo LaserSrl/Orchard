@@ -2,6 +2,7 @@
 using Laser.Orchard.OpenAuthentication.Extensions;
 using Laser.Orchard.OpenAuthentication.Security;
 using Laser.Orchard.OpenAuthentication.Services;
+using Laser.Orchard.OpenAuthentication.Services.Clients;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard;
 using Orchard.Localization;
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace Laser.Orchard.OpenAuthentication.Controllers {
     [Themed]
@@ -74,7 +76,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             if (authenticatedUser != null) {
                 // If the current user is logged in add the new account
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId,
-                                                                  authenticatedUser);
+                                                                  authenticatedUser, result.ExtraData.ToJson());
 
                 _notifier.Information(T("Your {0} account has been attached to your local account.", result.Provider));
 
@@ -82,18 +84,21 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             }
 
             if (_openAuthMembershipServices.CanRegister()) {
-                var newUser =
-                    _openAuthMembershipServices.CreateUser(new OpenAuthCreateUserParams(result.UserName,
-                                                                                        result.Provider,
-                                                                                        result.ProviderUserId,
-                                                                                        result.ExtraData));
+                result = _openAuthClientProvider.GetUserData(result.Provider, result, result.ExtraData["accesstoken"]);
+                var createUserParams = new OpenAuthCreateUserParams(result.UserName,
+                                                                    result.Provider,
+                                                                    result.ProviderUserId,
+                                                                    result.ExtraData);
+                createUserParams = _openAuthClientProvider.NormalizeData(result.Provider, createUserParams);
+                var newUser = _openAuthMembershipServices.CreateUser(createUserParams);
 
                 _notifier.Information(
                     T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, newUser.UserName));
 
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider,
                                                                   result.ProviderUserId,
-                                                                  newUser);
+                                                                  newUser,
+                                                                  result.ExtraData.ToJson());
 
                 _authenticationService.SignIn(newUser, false);
 
@@ -127,11 +132,13 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                     return Json(new { success = false, registeredServices = registeredServicesData, message = T("One or more of the required parameters was not provided or was an empty string.").Text }, JsonRequestBehavior.AllowGet);
                 }
 
-                AuthenticationResult authResult = _openAuthClientProvider.GetUserData(__provider__, token, secret);
-
+                AuthenticationResult dummy = new AuthenticationResult(true);
+                AuthenticationResult authResult = _openAuthClientProvider.GetUserData(__provider__, dummy, token, secret);
+                
                 if (!authResult.IsSuccessful) {
                     return Json(new { success = false, registeredServices = registeredServicesData, message = T("Token authentication failed.").Text }, JsonRequestBehavior.AllowGet);
-                } else {
+                }
+                else {
                     if (_orchardOpenAuthWebSecurity.Login(authResult.Provider, authResult.ProviderUserId)) {
                         if (HttpContext.Response.Cookies.Count == 0)
                             return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);
@@ -146,7 +153,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                     if (authenticatedUser != null) {
                         // If the current user is logged in add the new account
                         _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider, authResult.ProviderUserId,
-                                                                          authenticatedUser);
+                                                                          authenticatedUser, authResult.ExtraData.ToJson());
 
                         if (HttpContext.Response.Cookies.Count == 0)
                             return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);
@@ -157,14 +164,15 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                     }
 
                     if (_openAuthMembershipServices.CanRegister()) {
-                        var newUser =
-                            _openAuthMembershipServices.CreateUser(new OpenAuthCreateUserParams(authResult.UserName,
-                                                                                                authResult.Provider,
-                                                                                                authResult.ProviderUserId,
-                                                                                                authResult.ExtraData));
+                        var createUserParams = new OpenAuthCreateUserParams(authResult.UserName,
+                                                                            authResult.Provider,
+                                                                            authResult.ProviderUserId,
+                                                                            authResult.ExtraData);
+                        createUserParams = _openAuthClientProvider.NormalizeData(authResult.Provider, createUserParams);
+                        var newUser = _openAuthMembershipServices.CreateUser(createUserParams);
                         _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider,
                                                                           authResult.ProviderUserId,
-                                                                          newUser);
+                                                                          newUser, authResult.ExtraData.ToJson());
 
                         _authenticationService.SignIn(newUser, false);
 
@@ -178,7 +186,8 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
                     return Json(new { success = false, registeredServices = registeredServicesData, message = T("Login failed.").Text }, JsonRequestBehavior.AllowGet);
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 return Json(new { success = false, registeredServices = registeredServicesData, message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }

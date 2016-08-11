@@ -4,5 +4,6 @@
         public virtual int UserId { get; set; }
         public virtual string ProviderName { get; set; }
         public virtual string ProviderUserId { get; set; }
+        public virtual string ProviderUserData { get; set; }
     }
 }

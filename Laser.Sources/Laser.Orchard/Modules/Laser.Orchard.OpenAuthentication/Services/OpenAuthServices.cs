@@ -9,6 +9,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Users.Models;
+using Laser.Orchard.StartupConfig.Handlers;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOpenAuthMembershipServices : IDependency {
@@ -22,18 +23,20 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         private readonly IUsernameService _usernameService;
         private readonly IPasswordGeneratorService _passwordGeneratorService;
         private readonly IEnumerable<IOpenAuthUserEventHandler> _openAuthUserEventHandlers;
+        private readonly IContactRelatedEventHandler _contactEventHandler;
 
         public OpenAuthMembershipServices(IOrchardServices orchardServices,
             IMembershipService membershipService,
             IUsernameService usernameService,
             IPasswordGeneratorService passwordGeneratorService,
-            IEnumerable<IOpenAuthUserEventHandler> openAuthUserEventHandlers) {
+            IEnumerable<IOpenAuthUserEventHandler> openAuthUserEventHandlers,
+            IContactRelatedEventHandler contactEventHandler) {
             _orchardServices = orchardServices;
             _membershipService = membershipService;
             _usernameService = usernameService;
             _passwordGeneratorService = passwordGeneratorService;
             _openAuthUserEventHandlers = openAuthUserEventHandlers;
-
+            _contactEventHandler = contactEventHandler;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -53,7 +56,19 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             if (createUserParams.UserName.IsEmailAddress()) {
                 emailAddress = createUserParams.UserName;
             }
+            else {
+                foreach (var key in createUserParams.ExtraData.Keys) {
+                    switch (key.ToLower()) {
+                        case "mail":
+                        case "email":
+                        case "e-mail":
+                            emailAddress = createUserParams.ExtraData[key];
+                            break;
+                    }
+                }
+            }
 
+            createUserParams.UserName = _usernameService.Normalize(createUserParams.UserName);
             var creatingContext = new CreatingOpenAuthUserContext(createUserParams.UserName, emailAddress, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
 
             _openAuthUserEventHandlers.Invoke(o => o.Creating(creatingContext), Logger);
@@ -69,6 +84,9 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
             var createdContext = new CreatedOpenAuthUserContext(createdUser, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
             _openAuthUserEventHandlers.Invoke(o => o.Created(createdContext), Logger);
+
+            //solleva l'evento di sincronizzazione dell'utente orchard
+            _contactEventHandler.Synchronize(createdUser);
 
             return createdUser;
         }

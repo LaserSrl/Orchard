@@ -5,7 +5,6 @@
 @{ MvcHtmlString answerBlock = Html.UniqueClientId("UserReactionType"); }
 @{ var phId = "phNum_" + answerBlock;
 
-   Script.Require("Autocomplete").AtHead();
    var styleAcronime = new Laser.Orchard.UserReactions.StyleAcroName();
    string styleAcronimeName = styleAcronime.StyleAcronime;
 }
