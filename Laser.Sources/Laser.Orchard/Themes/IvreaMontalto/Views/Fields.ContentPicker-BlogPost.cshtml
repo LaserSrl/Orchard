@@ -4,28 +4,70 @@
 
 @{
     Style.Require("Accordion").AtHead();
+
+    int[] ids = ((dynamic)Model.ContentField).Ids;
+    var length = ids.Length;
+
+    foreach (dynamic content in Model.ContentField.ContentItems) {
+
+        string years = content.Campionato.Annodelcampionato.Value;
+        string code = content.Campionato.Codicecampionato.Value;
+
+
+        if (length > 1) {
+        
+    <h2 class="titolo" id="campionato_@content.Id">
+        <a class="accordion-section-title" role="button" data-toggle="collapse" href="#collapse_@content.Id" aria-expanded="false" aria-controls="collapseExample">
+            @content.TitlePart.Title
+        </a>
+    </h2>
     
-    var field = (ContentPickerField) Model.ContentField;
-    int[] ids = field.Ids;
+    <div id="collapse_@content.Id" class="collapse">
 
-    IContentManager _contentManager = WorkContext.Resolve<IContentManager>();
-    foreach(int id in ids){
-        var campio = _contentManager.Get(id);
-        @Display(BuildDisplay(campio, "Detail"))
-    }
-}
-
-@using (Script.Foot()) {
-    <script type="text/javascript">
-        $(function() {
-            var length = parseInt(@ids.Length);
-            if (length == 1) {
-                var idTitle = "#campionato_" + "@(ids[0].ToString())";
-                $(idTitle).html("@(((dynamic)_contentManager.Get(ids[0])).TitlePart.Title)");
-                var idDiv = "#collapse_" + "@(ids[0].ToString())";
-                $(idDiv).removeClass("collapse");
+        @if (content.Campionato.AbilitaClassifica.Value == true) {
+            <text>
+            <iframe src='http://www.tuttocampo.it/Widget/Classifica/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
+            </text>
+        }
+        @if (content.Campionato.AbilitaRisultati.Value == true) {
+            <text>
+            <iframe src='http://www.tuttocampo.it/Widget/Risultati/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
+            </text>
+        }
+        @if (content.Campionato.AbilitaMarcatori.Value == true) {
+            <text>
+            <iframe src='http://www.tuttocampo.it/Widget/Marcatori/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
+            </text>
+        }
+    </div>
+        } 
+        
+        else {
+            
+    <h2 class="titolo" id="campionato_@content.Id">
+        @content.TitlePart.Title
+    </h2>
+            
+            if (content.Campionato.AbilitaClassifica.Value == true) {
+    <text>
+    <iframe src='http://www.tuttocampo.it/Widget/Classifica/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
+    </text>
             }
-        }());
-    </script>
-
+            if (content.Campionato.AbilitaRisultati.Value == true) {
+    <text>
+    <iframe src='http://www.tuttocampo.it/Widget/Risultati/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
+    </text>
+            }
+            if (content.Campionato.AbilitaMarcatori.Value == true) {
+    <text>
+    <iframe src='http://www.tuttocampo.it/Widget/Marcatori/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
+    </text>
+            }
+        }
+    }
+    
 }
+
+
+
+
