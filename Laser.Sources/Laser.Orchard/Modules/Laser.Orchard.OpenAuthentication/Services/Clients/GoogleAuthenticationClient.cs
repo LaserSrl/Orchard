@@ -34,13 +34,8 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
         public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams) {
-            OpenAuthCreateUserParams retVal;
-
-            retVal = createUserParams;
+            OpenAuthCreateUserParams retVal = createUserParams;
             string emailAddress = string.Empty;
-
-            var valoriRicavati = createUserParams.ExtraData.Keys;
-
             foreach (KeyValuePair<string, string> values in createUserParams.ExtraData) {
                 if (values.Key == "mail") {
                     retVal.UserName = values.Value.IsEmailAddress() ? values.Value.Substring(0, values.Value.IndexOf('@')) : values.Value;

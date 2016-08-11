@@ -2,6 +2,7 @@ using DotNetOpenAuth.AspNet;
 using DotNetOpenAuth.AspNet.Clients;
 using Laser.Orchard.OpenAuthentication.Models;
 using Laser.Orchard.OpenAuthentication.Security;
+using Laser.Orchard.OpenAuthentication.Extensions;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -86,25 +87,14 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         /// <param name="createUserParams"></param>
         /// <returns></returns>
         public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams) {
-            OpenAuthCreateUserParams retVal;
-
-            retVal = createUserParams;
+            OpenAuthCreateUserParams retVal = createUserParams;
             string emailAddress = string.Empty;
-
-            var valoriRicavati = createUserParams.ExtraData.Values;
-            int countVal = 0;
-
-            foreach (string valric in valoriRicavati) {
-                if (countVal == 3) {
-                    emailAddress = valric;
-                    retVal.UserName = emailAddress;
+            foreach (KeyValuePair<string, string> values in createUserParams.ExtraData) {
+                if (values.Key == "email-address") {
+                    retVal.UserName = values.Value.IsEmailAddress() ? values.Value.Substring(0, values.Value.IndexOf('@')) : values.Value;
                 }
-
-                countVal = countVal + 1;
             }
-
             return retVal;
-
         }
 
         public bool RewriteRequest() {
