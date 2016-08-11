@@ -24,17 +24,17 @@
     
     <div id="collapse_@content.Id" class="collapse">
 
-        @if (content.Campionato.AbilitaClassifica.Value == true) {
+        @if (content.Campionato.Abilitaclassifica.Value == true) {
             <text>
             <iframe src='http://www.tuttocampo.it/Widget/Classifica/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
             </text>
         }
-        @if (content.Campionato.AbilitaRisultati.Value == true) {
+        @if (content.Campionato.Abilitarisultati.Value == true) {
             <text>
             <iframe src='http://www.tuttocampo.it/Widget/Risultati/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
             </text>
         }
-        @if (content.Campionato.AbilitaMarcatori.Value == true) {
+        @if (content.Campionato.Abilitamarcatori.Value == true) {
             <text>
             <iframe src='http://www.tuttocampo.it/Widget/Marcatori/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
             </text>
@@ -48,17 +48,17 @@
         @content.TitlePart.Title
     </h2>
             
-            if (content.Campionato.AbilitaClassifica.Value == true) {
+            if (content.Campionato.Abilitaclassifica.Value == true) {
     <text>
     <iframe src='http://www.tuttocampo.it/Widget/Classifica/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
     </text>
             }
-            if (content.Campionato.AbilitaRisultati.Value == true) {
+            if (content.Campionato.Abilitarisultati.Value == true) {
     <text>
     <iframe src='http://www.tuttocampo.it/Widget/Risultati/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
     </text>
             }
-            if (content.Campionato.AbilitaMarcatori.Value == true) {
+            if (content.Campionato.Abilitamarcatori.Value == true) {
     <text>
     <iframe src='http://www.tuttocampo.it/Widget/Marcatori/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
     </text>
