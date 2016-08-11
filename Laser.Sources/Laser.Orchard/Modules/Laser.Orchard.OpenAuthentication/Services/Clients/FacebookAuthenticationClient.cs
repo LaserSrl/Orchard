@@ -8,13 +8,14 @@ using DotNetOpenAuth.AspNet.Clients;
 using DotNetOpenAuth.Messaging;
 using Laser.Orchard.OpenAuthentication.Models;
 using Orchard.Logging;
+using Laser.Orchard.OpenAuthentication.Security;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class FacebookAuthenticationClient : IExternalAuthenticationClient {
         public ILogger _logger { get; set; }
 
         public FacebookAuthenticationClient() {
-            _logger =NullLogger.Instance;
+            _logger = NullLogger.Instance;
         }
         public string ProviderName {
             get { return "Facebook"; }
@@ -25,7 +26,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
 
         }
 
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, string userAccessToken, string userAccessSecret="") {
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
             var serializer = new DataContractJsonSerializer(typeof(FacebookGraphData));
             FacebookGraphData graphData;
             var request =
@@ -38,13 +39,15 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
                         graphData = (FacebookGraphData)serializer.ReadObject(responseStream);
                     }
                 }
-            } catch {
+            }
+            catch {
                 return AuthenticationResult.Failed;
             }
             // this dictionary must contains 
             var userData = new Dictionary<string, string>();
             userData["id"] = graphData.Id;
             userData["username"] = graphData.Email;
+            userData["email"] = graphData.Email;
             userData["name"] = graphData.Name;
             userData["link"] = graphData.Link == null ? null : graphData.Link.AbsoluteUri;
             userData["gender"] = graphData.Gender;
@@ -70,6 +73,12 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
                 isSuccessful: true, provider: this.ProviderName, providerUserId: id, userName: name, extraData: userData);
         }
 
+        public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams clientData) {
+            return clientData;
+        }
 
+        public bool RewriteRequest() {
+            return false;
+        }
     }
 }

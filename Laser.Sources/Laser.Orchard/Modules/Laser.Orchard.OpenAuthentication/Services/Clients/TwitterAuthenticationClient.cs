@@ -9,6 +9,7 @@ using System.Web;
 using DotNetOpenAuth.AspNet;
 using DotNetOpenAuth.AspNet.Clients;
 using Laser.Orchard.OpenAuthentication.Models;
+using Laser.Orchard.OpenAuthentication.Security;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class TwitterAuthenticationClient : IExternalAuthenticationClient {
@@ -17,13 +18,17 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
+           
             return new TwitterClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
         }
 
 
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, string userAccessToken, string userAccessSecret = "") {
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken, string userAccessSecret = "") {
             if (String.IsNullOrWhiteSpace(userAccessSecret)) {
-                throw new ArgumentException("Access Token Secret is required for oAuth");
+                if (previousAuthResult.ExtraData.ContainsKey("accesstoken") == false) {
+                    previousAuthResult.ExtraData.Add("accesstoken", userAccessToken);
+                }
+                return new AuthenticationResult(true, this.ProviderName, previousAuthResult.ProviderUserId, previousAuthResult.UserName, previousAuthResult.ExtraData);
             }
             var twitterUserSerializer = new DataContractJsonSerializer(typeof(TwitterUserData));
 
@@ -51,6 +56,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             var userData = new Dictionary<string, string>();
             userData["id"] = userAccessToken.Split('-')[0];
             userData["username"] = twitterUserData.Screen_Name;
+            userData["email"] = twitterUserData.Email;
 
             if (userData == null) {
                 return AuthenticationResult.Failed;
@@ -71,6 +77,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             return new AuthenticationResult(
                 isSuccessful: true, provider: this.ProviderName, providerUserId: id, userName: name, extraData: userData);
         }
+
 
         private HttpWebRequest PrepareAuthorizedRequest(string oauth_token, string oauth_token_secret, string oauth_consumer_key, string oauth_consumer_secret, string resource_url, string httpMethod) {
 
@@ -131,6 +138,12 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
 
         }
 
+        public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams) {
+            return createUserParams;
+        }
 
+        public bool RewriteRequest() {
+            return false;
+        }
     }
 }
