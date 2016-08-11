@@ -76,5 +76,9 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams clientData) {
             return clientData;
         }
+
+        public bool RewriteRequest() {
+            return false;
+        }
     }
 }

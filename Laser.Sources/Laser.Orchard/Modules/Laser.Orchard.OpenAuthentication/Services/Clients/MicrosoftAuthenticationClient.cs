@@ -21,5 +21,9 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams) {
             throw new System.NotImplementedException();
         }
+
+        public bool RewriteRequest() {
+            throw new System.NotImplementedException();
+        }
     }
 }

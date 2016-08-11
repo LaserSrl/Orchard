@@ -227,6 +227,8 @@
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Models\UserAccountLogin.cs" />
     <Compile Include="Models\UserProviderDisplayPart.cs" />
+    <Compile Include="Services\Clients\GoogleAuthenticationClient.cs" />
+    <Compile Include="Services\Clients\YahooAuthenticationClient.cs" />
     <Compile Include="Services\OpenAuthFacebookOAuth2.cs" />
     <Compile Include="Services\OpenAuthGoogleOAuth2.cs" />
     <Compile Include="Services\OpenAuthLinkedlnOAuth2Client.cs" />
@@ -245,13 +247,11 @@
     <Compile Include="Security\OpenAuthCreateUserParams.cs" />
     <Compile Include="Services\Clients\CustomOpenIdAuthenticationClient.cs" />
     <Compile Include="Services\Clients\FacebookAuthenticationClient.cs" />
-    <Compile Include="Services\Clients\GoogleOpenIdAuthenticationClient.cs" />
     <Compile Include="Services\Clients\IExternalAuthenticationClient.cs" />
     <Compile Include="Services\Clients\LinkedInAuthenticationClient.cs" />
     <Compile Include="Services\Clients\MicrosoftAuthenticationClient.cs" />
     <Compile Include="Services\Clients\TwitterAuthenticationClient.cs" />
     <Compile Include="Services\Clients\TwitterUserData.cs" />
-    <Compile Include="Services\Clients\YahooOpenIdAuthenticationClient.cs" />
     <Compile Include="Services\OpenAuthSecurityManagerWrapper.cs" />
     <Compile Include="Services\OpenAuthServices.cs" />
     <Compile Include="Services\OrchardOpenAuthClientProvider.cs" />
