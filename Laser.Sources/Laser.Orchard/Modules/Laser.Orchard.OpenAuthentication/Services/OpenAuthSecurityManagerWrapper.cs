@@ -84,17 +84,6 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             return new OpenAuthSecurityManager(_httpContextAccessor.Current(), _orchardOpenAuthClientProvider.GetClient(providerName), _orchardOpenAuthDataProvider); 
         }
         private void RewriteRequest() {
-            //var ctx = HttpContext.Current;
-
-            //var stateString = HttpUtility.UrlDecode(ctx.Request.QueryString["state"]);
-            //if (stateString != null && stateString.Contains("__provider__=google")) {
-            //    // Google requires that all return data be packed into a "state" parameter
-            //    var q = HttpUtility.ParseQueryString(stateString);
-            //    q.Add(ctx.Request.QueryString);
-            //    q.Remove("state");
-            //    ctx.RewritePath(ctx.Request.Path + "?" + q.ToString());
-            //}
-
             foreach (var client in _openAuthAuthenticationClients) {
                 if (client.RewriteRequest()) {
                     break;
