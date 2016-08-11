@@ -117,7 +117,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\jquery.textcomplete.js" />
     <Content Include="Styles\coloredflaticon.css" />
     <Content Include="Styles\flaticon.css" />
     <Content Include="Styles\fonts\flaticon.svg" />

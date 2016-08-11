@@ -112,7 +112,7 @@ namespace Laser.Orchard.UserReactions.Projections {
                     f._ReactionsList.Add(item.Value.ToString(), item.Key.ToString());
                 }
 
-                _resourceManager.Value.Require("script", "jQuery");
+               // _resourceManager.Value.Require("script", "jQuery");
                 _resourceManager.Value.Include("script", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js");
 
                 f._Operator.Add(new SelectListItem { Value = Convert.ToString(UserReactionsFieldOperator.Equals), Text = T("Is equal to").Text });
