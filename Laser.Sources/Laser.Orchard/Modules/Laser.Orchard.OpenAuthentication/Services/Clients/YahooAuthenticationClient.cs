@@ -4,7 +4,7 @@ using Laser.Orchard.OpenAuthentication.Models;
 using Laser.Orchard.OpenAuthentication.Security;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
-    public class YahooOpenIdAuthenticationClient : IExternalAuthenticationClient {
+    public class YahooAuthenticationClient : IExternalAuthenticationClient {
         public string ProviderName {
             get { return "Yahoo"; }
         }
@@ -18,6 +18,10 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
         public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams) {
+            throw new System.NotImplementedException();
+        }
+
+        public bool RewriteRequest() {
             throw new System.NotImplementedException();
         }
     }

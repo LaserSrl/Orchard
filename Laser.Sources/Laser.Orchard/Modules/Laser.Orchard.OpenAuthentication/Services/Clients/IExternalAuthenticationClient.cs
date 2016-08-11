@@ -13,5 +13,6 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         
         OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams clientData);
 
+        bool RewriteRequest();
     }
 }

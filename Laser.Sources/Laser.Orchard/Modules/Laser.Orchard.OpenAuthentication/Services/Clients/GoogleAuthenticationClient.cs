@@ -13,10 +13,11 @@ using System.Text.RegularExpressions;
 using Laser.Orchard.OpenAuthentication.Extensions;
 using System.Collections.Specialized;
 using Newtonsoft.Json;
+using System.Web;
 
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
-    public class GoogleOpenIdAuthenticationClient : IExternalAuthenticationClient {
+    public class GoogleAuthenticationClient : IExternalAuthenticationClient {
 
         public string ProviderName {
             get { return "Google"; }
@@ -75,6 +76,21 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
                     return extraData;
                 }
             }
+        }
+
+        public bool RewriteRequest() {
+            bool result = false;
+            var ctx = HttpContext.Current;
+            var stateString = HttpUtility.UrlDecode(ctx.Request.QueryString["state"]);
+            if (stateString != null && stateString.Contains("__provider__=google")) {
+                // Google requires that all return data be packed into a "state" parameter
+                var q = HttpUtility.ParseQueryString(stateString);
+                q.Add(ctx.Request.QueryString);
+                q.Remove("state");
+                ctx.RewritePath(ctx.Request.Path + "?" + q.ToString());
+                result = true;
+            }
+            return result;
         }
     }
 }

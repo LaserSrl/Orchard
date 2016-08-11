@@ -1,9 +1,12 @@
 ﻿using DotNetOpenAuth.AspNet;
 using DotNetOpenAuth.AspNet.Clients;
+using Laser.Orchard.OpenAuthentication.Services.Clients;
 using Orchard;
 using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.Users.Events;
+using System.Collections.Generic;
+using System.Web;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOpenAuthSecurityManagerWrapper : IDependency {
@@ -19,13 +22,15 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         private readonly IAuthenticationService _authenticationService;
         private readonly IMembershipService _membershipService;
         private readonly IUserEventHandler _userEventHandler;
+        private readonly IEnumerable<IExternalAuthenticationClient> _openAuthAuthenticationClients;
 
         public OpenAuthSecurityManagerWrapper(IHttpContextAccessor httpContextAccessor, 
                                               IOrchardOpenAuthClientProvider orchardOpenAuthClientProvider,
                                               IOrchardOpenAuthDataProvider orchardOpenAuthDataProvider,
                                               IAuthenticationService authenticationService,
                                               IMembershipService membershipService,
-                                              IUserEventHandler userEventHandler)
+                                              IUserEventHandler userEventHandler,
+                                              IEnumerable<IExternalAuthenticationClient> openAuthAuthenticationClients)
         {
             _httpContextAccessor = httpContextAccessor;
             _orchardOpenAuthClientProvider = orchardOpenAuthClientProvider;
@@ -33,6 +38,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             _authenticationService = authenticationService;
             _membershipService = membershipService;
             _userEventHandler = userEventHandler;
+            _openAuthAuthenticationClients = openAuthAuthenticationClients;
         }
 
         private string ProviderName {
@@ -62,9 +68,10 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         }
 
         public AuthenticationResult VerifyAuthentication(string returnUrl) {
-                //GoogleOAuth2Client.RewriteRequest();
-                //FacebookOAuth2Client.RewriteRequest();
-                //LinkedInOAuth2Client.RewriteRequest();
+            if (string.IsNullOrEmpty(ProviderName)) {
+                // se non è noto il provider quindi richiama il RewriteRequest di tutti i client registrati
+                RewriteRequest();
+            }
             return SecurityManager(ProviderName).VerifyAuthentication(returnUrl);
         }
 
@@ -75,6 +82,24 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
         private OpenAuthSecurityManager SecurityManager(string providerName) {
             return new OpenAuthSecurityManager(_httpContextAccessor.Current(), _orchardOpenAuthClientProvider.GetClient(providerName), _orchardOpenAuthDataProvider); 
+        }
+        private void RewriteRequest() {
+            //var ctx = HttpContext.Current;
+
+            //var stateString = HttpUtility.UrlDecode(ctx.Request.QueryString["state"]);
+            //if (stateString != null && stateString.Contains("__provider__=google")) {
+            //    // Google requires that all return data be packed into a "state" parameter
+            //    var q = HttpUtility.ParseQueryString(stateString);
+            //    q.Add(ctx.Request.QueryString);
+            //    q.Remove("state");
+            //    ctx.RewritePath(ctx.Request.Path + "?" + q.ToString());
+            //}
+
+            foreach (var client in _openAuthAuthenticationClients) {
+                if (client.RewriteRequest()) {
+                    break;
+                }
+            }
         }
     }
 }

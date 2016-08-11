@@ -142,6 +142,8 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             return createUserParams;
         }
 
-
+        public bool RewriteRequest() {
+            return false;
+        }
     }
 }
