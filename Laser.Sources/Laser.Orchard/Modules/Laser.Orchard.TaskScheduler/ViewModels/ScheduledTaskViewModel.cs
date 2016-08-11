@@ -71,8 +71,13 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
 
         public void UpdatePart(ScheduledTaskPart part) {
             part.SignalName = this.SignalName;
-            part.ScheduledStartUTC = this.ScheduledStartUTC == null ? (DateTime?)null :
-                this.ScheduledStartUTC.Value.ToUniversalTime();
+            try {
+                part.ScheduledStartUTC = this.ScheduledStartUTC == null ? (DateTime?)null :
+                    this.ScheduledStartUTC.Value.ToUniversalTime();
+            } catch (Exception) {
+                //the date in the input was not valid
+                part.ScheduledStartUTC = null;
+            }
             part.PeriodicityTime = this.PeriodicityTime;
             part.PeriodicityUnit = this.PeriodicityUnit;
             part.ContentItemId = this.ContentItemId;

@@ -21,14 +21,14 @@
         <label for="sig_@appId">@T("Signal name")</label>
         @Html.TextBoxFor(m => m.SignalName, new {
            placeholder = T("Signal name").ToString(),
-           @title = T("Signal name").ToString(),
+           @title = T("Name of the signal that will be triggered by the task").ToString(),
            @id = "sig_" + @appId,
            @class = "text medium",
            @required = "required"
        })
 
         <label for="@Html.FieldIdFor(m => m.ScheduledStartUTC)">@T("Start Date")</label>
-        @Html.TextBoxFor(m => m.ScheduledStartUTC, new { @class = "text" })
+        @Html.TextBoxFor(m => m.ScheduledStartUTC, new { @class = "text", @title = @T("Invalid dates will be ignored") })
 
         <label>@T("Periodicity")</label>
         @Html.TextBoxFor(m => m.PeriodicityTime, new {
@@ -39,13 +39,16 @@
            @required = "required"
        })
 
-        @Html.DropDownListFor(m => m.PeriodicityUnit, new SelectList(Enum.GetValues(typeof(TimeUnits))))
+        @Html.DropDownListFor(m => m.PeriodicityUnit, new SelectList(Enum.GetValues(typeof(TimeUnits))), new {
+            @title = @T("The time units for the repetitions of the task.")
+        })
 
         <label>@T("Content Item Id")</label>
         @Html.TextBoxFor(m => m.ContentItemId, new { 
             @class = "text small",
             @pattern = "[0-9]*", 
-            @required = "required"})
+            @required = "required",
+            @title = @T("Id of the Content Item that will be passed with the task. 0 for no item.")})
 
         @Html.HiddenFor(m => m.Running) @*I need to have the value of running somewhere in the form*@
         @if (Model.Running > 0) {
@@ -67,6 +70,7 @@
                 $('#@Html.FieldIdFor(m => m.ScheduledStartUTC)').datetimepicker({ 'showTimepicker': true, showAnim: "", changeYear: true, changeMonth: true });
             })
         </script>
+        <hr />
     </div>
 @*</fieldset>*@
 

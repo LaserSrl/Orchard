@@ -61,10 +61,17 @@ namespace Laser.Orchard.TaskScheduler.Services {
             //if those are changed for any reason, the strings in this method should reflect that
             for (int i = 0; i < nVms; i++) {
                 string thisObject = String.Format("allTasks[{0}].", i);
+                DateTime? inputDate;
+                try {
+                    inputDate = String.IsNullOrWhiteSpace(formData[thisObject + "ScheduledStartUTC"]) ? (DateTime?)null :
+                        Convert.ToDateTime(formData[thisObject + "ScheduledStartUTC"]);
+                } catch (Exception) {
+                    inputDate = null;
+                }
                 vmsForTasks.Add(new ScheduledTaskViewModel {
                     Id = int.Parse(formData[thisObject + "Id"]),
                     SignalName = formData[thisObject + "SignalName"],
-                    ScheduledStartUTC = String.IsNullOrWhiteSpace(formData[thisObject + "ScheduledStartUTC"]) ? (DateTime?)null : Convert.ToDateTime(formData[thisObject + "ScheduledStartUTC"]),
+                    ScheduledStartUTC = inputDate,
                     PeriodicityTime = int.Parse(formData[thisObject + "PeriodicityTime"]),
                     PeriodicityUnit = EnumExtension.ParseEnum(formData[thisObject + "PeriodicityUnit"]),
                     ContentItemId = int.Parse(formData[thisObject + "ContentItemId"]),
