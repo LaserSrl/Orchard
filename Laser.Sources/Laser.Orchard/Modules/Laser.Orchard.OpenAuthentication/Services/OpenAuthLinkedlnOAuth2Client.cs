@@ -184,19 +184,19 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         /// LinkedIn requires that all return data be packed into a "state" parameter.
         /// This should be called before verifying the request, so that the url is rewritten to support this.
         /// </summary>
-        public static void RewriteRequest()
-        {
-            var ctx = HttpContext.Current;
+        //public static void RewriteRequest()
+        //{
+        //    var ctx = HttpContext.Current;
 
-            var stateString = System.Web.HttpUtility.UrlDecode(ctx.Request.QueryString["state"]);
-            if (stateString == null || !stateString.Contains("__provider__=linkedin"))
-                return;
+        //    var stateString = System.Web.HttpUtility.UrlDecode(ctx.Request.QueryString["state"]);
+        //    if (stateString == null || !stateString.Contains("__provider__=linkedin"))
+        //        return;
 
-            var q = System.Web.HttpUtility.ParseQueryString(stateString);
-            q.Add(ctx.Request.QueryString);
-            q.Remove("state");
+        //    var q = System.Web.HttpUtility.ParseQueryString(stateString);
+        //    q.Add(ctx.Request.QueryString);
+        //    q.Remove("state");
 
-            ctx.RewritePath(ctx.Request.Path + "?" + q);
-        }
+        //    ctx.RewritePath(ctx.Request.Path + "?" + q);
+        //}
     }
 }
