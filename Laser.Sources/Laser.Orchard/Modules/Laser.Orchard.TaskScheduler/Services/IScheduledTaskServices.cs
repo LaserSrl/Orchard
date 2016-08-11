@@ -15,5 +15,8 @@ namespace Laser.Orchard.TaskScheduler.Services {
         List<ScheduledTaskViewModel> GetTaskViewModelsFromForm(NameValueCollection formData);
         void UpdateRecords(List<ScheduledTaskViewModel> vms);
         void ScheduleTask(ScheduledTaskViewModel vm);
+        void UnscheduleTask(ScheduledTaskViewModel vm);
+
+        DateTime ComputeNextScheduledTime(ScheduledTaskPart part);
     }
 }

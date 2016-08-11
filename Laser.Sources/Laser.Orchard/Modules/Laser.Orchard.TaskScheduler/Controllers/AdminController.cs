@@ -53,6 +53,12 @@ namespace Laser.Orchard.TaskScheduler.Controllers {
         public ActionResult IndexUnscheduleTask(IndexViewModel ivm) {
             var formData = ControllerContext.RequestContext.HttpContext.Request.Form;
             List<ScheduledTaskViewModel> vmsForTasks = _scheduledTaskService.GetTaskViewModelsFromForm(formData);
+            _scheduledTaskService.UpdateRecords(vmsForTasks);
+            //get the vm for the task we are trying to unschedule
+            ScheduledTaskViewModel vmToUnschedule = vmsForTasks.Where(vm => vm.Scheduling).FirstOrDefault();
+            if (vmToUnschedule != null) {
+                _scheduledTaskService.UnscheduleTask(vmToUnschedule); ;
+            }
 
             return RedirectToAction("Index");
         }
@@ -62,6 +68,7 @@ namespace Laser.Orchard.TaskScheduler.Controllers {
         public ActionResult IndexScheduleTask(IndexViewModel ivm) {
             var formData = ControllerContext.RequestContext.HttpContext.Request.Form;
             List<ScheduledTaskViewModel> vmsForTasks = _scheduledTaskService.GetTaskViewModelsFromForm(formData);
+            _scheduledTaskService.UpdateRecords(vmsForTasks);
             //get the vm for the task we are trying to schedule
             ScheduledTaskViewModel vmToSchedule = vmsForTasks.Where(vm => vm.Scheduling).FirstOrDefault();
             if (vmToSchedule != null) {

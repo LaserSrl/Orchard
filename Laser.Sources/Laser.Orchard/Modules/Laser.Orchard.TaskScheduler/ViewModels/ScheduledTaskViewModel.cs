@@ -30,7 +30,8 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
         public ScheduledTaskViewModel(ScheduledTaskPart part) {
             Id = part.Id;
             SignalName = part.SignalName;
-            ScheduledStartUTC = part.ScheduledStartUTC;
+            ScheduledStartUTC = part.ScheduledStartUTC == null ? (DateTime?)null :
+                part.ScheduledStartUTC.Value.ToLocalTime();
             PeriodicityTime = part.PeriodicityTime;
             PeriodicityUnit = part.PeriodicityUnit;
             ContentItemId = part.ContentItemId;
@@ -70,7 +71,8 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
 
         public void UpdatePart(ScheduledTaskPart part) {
             part.SignalName = this.SignalName;
-            part.ScheduledStartUTC = this.ScheduledStartUTC;
+            part.ScheduledStartUTC = this.ScheduledStartUTC == null ? (DateTime?)null :
+                this.ScheduledStartUTC.Value.ToUniversalTime();
             part.PeriodicityTime = this.PeriodicityTime;
             part.PeriodicityUnit = this.PeriodicityUnit;
             part.ContentItemId = this.ContentItemId;

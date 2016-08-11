@@ -111,7 +111,7 @@ namespace Laser.Orchard.TaskScheduler.Services {
             //get the part
             ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.Get<ScheduledTaskPart>(vm.Id);
             //define tasktype
-            string taskTypeStr = Constants.TaskTypeBase + part.SignalName;
+            string taskTypeStr = Constants.TaskTypeBase + "_" + part.SignalName + "_" + part.Id;
             ContentItem ci = null;
             if (part.ContentItemId > 0) {
                 ci = _orchardServices.ContentManager.Get(part.ContentItemId);
@@ -121,5 +121,47 @@ namespace Laser.Orchard.TaskScheduler.Services {
             
         }
 
+        public void UnscheduleTask(ScheduledTaskViewModel vm) {
+            //get the part
+            ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.Get<ScheduledTaskPart>(vm.Id);
+            int tId = part.RunningTaskId;
+            var str = _repoTasks.Get(tId);
+            if (str != null){
+                _repoTasks.Delete(str);
+            }
+            part.RunningTaskId = 0;
+
+        }
+
+
+        public DateTime ComputeNextScheduledTime(ScheduledTaskPart part) {
+            DateTime result = DateTime.UtcNow;
+            switch (part.PeriodicityUnit) {
+                case TimeUnits.Seconds:
+                    result = result.AddSeconds(part.PeriodicityTime);
+                    break;
+                case TimeUnits.Minutes:
+                    result = result.AddMinutes(part.PeriodicityTime);
+                    break;
+                case TimeUnits.Hours:
+                    result = result.AddHours(part.PeriodicityTime);
+                    break;
+                case TimeUnits.Days:
+                    result = result.AddDays(part.PeriodicityTime);
+                    break;
+                case TimeUnits.Weeks:
+                    result = result.AddDays(7 * part.PeriodicityTime);
+                    break;
+                case TimeUnits.Months:
+                    result = result.AddMonths(part.PeriodicityTime);
+                    break;
+                case TimeUnits.Years:
+                    result = result.AddYears(part.PeriodicityTime);
+                    break;
+                default:
+                    break;
+            }
+            return result;
+        }
     }
 }

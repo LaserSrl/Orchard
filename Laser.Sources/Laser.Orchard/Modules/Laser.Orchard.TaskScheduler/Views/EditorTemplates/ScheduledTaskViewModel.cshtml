@@ -47,7 +47,7 @@
         @Html.HiddenFor(m => m.Running) @*I need to have the value of running somewhere in the form*@
         @if (Model.Running > 0) {
             <text>
-                <button id="unscheduleTask_@appId" type="submit" name="submit.UnscheduleTask" value="yes please" onclick="FlagForSchedulingEvent(@appId)">@T("Unschedule")</button>
+                <button id="unscheduleTask_@appId" type="submit" name="submit.UnscheduleTask" value="yes please" onclick="FlagForSchedulingEvent('@appId');">@T("Unschedule")</button>
                 @*@Html.ActionLink(T("Unschedule this task").ToString(), "IndexUnscheduleTask", "Admin", new { }, new { @class = "button" })*@
             </text>
         } else {
