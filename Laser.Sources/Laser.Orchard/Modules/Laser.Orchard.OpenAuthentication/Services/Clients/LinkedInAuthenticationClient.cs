@@ -9,6 +9,7 @@ using System.IO;
 using System.Net;
 using System.Xml.Linq;
 using System.Linq;
+using System.Web;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class LinkedInAuthenticationClient : IExternalAuthenticationClient {
@@ -107,7 +108,18 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
         public bool RewriteRequest() {
-            throw new System.NotImplementedException();
+            bool result = false;
+            var ctx = HttpContext.Current;
+            var stateString = System.Web.HttpUtility.UrlDecode(ctx.Request.QueryString["state"]);
+            if (stateString != null && stateString.Contains("__provider__=linkedin")) {
+                // LinkedIn requires that all return data be packed into a "state" parameter
+                var q = System.Web.HttpUtility.ParseQueryString(stateString);
+                q.Add(ctx.Request.QueryString);
+                q.Remove("state");
+                ctx.RewritePath(ctx.Request.Path + "?" + q.ToString());
+                result = true;
+            }
+            return result;
         }
     }
 }

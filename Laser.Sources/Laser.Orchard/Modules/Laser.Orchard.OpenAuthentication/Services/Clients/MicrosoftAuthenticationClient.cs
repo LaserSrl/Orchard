@@ -23,7 +23,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
         public bool RewriteRequest() {
-            throw new System.NotImplementedException();
+            return false;
         }
     }
 }
