@@ -7,15 +7,10 @@
 @{
     var field = (BooleanField)Model.ContentField;
     if (field.Value.Value) {
-        Func<ContentPart, bool> IsCampionatoPart = part => part.PartDefinition.Name == "Campionato";
-        var fields =  ((List<ContentPart>)Model.ContentItem.Parts).Where(IsCampionatoPart).FirstOrDefault().Fields;
-        Func<ContentField, bool> IsYearField = fi => fi.Name == "Annodelcampionato";
-        string years = ((InputField)fields.Where(IsYearField).FirstOrDefault()).Value;
-        Func<ContentField, bool> IsLeagueCode = fi => fi.Name == "Codicecampionato";
-        string code = ((TextField)fields.Where(IsLeagueCode).FirstOrDefault()).Value;
+        string years = Model.ContentItem.Campionato.Annodelcampionato.Value;
+        string code = Model.ContentItem.Campionato.Codicecampionato.Value;
         <text>
 <iframe src='http://www.tuttocampo.it/Widget/Marcatori/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0' ></iframe>
         </text>
     }
 }
-</div>

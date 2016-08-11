@@ -109,6 +109,15 @@
     <Content Include="Styles\images\utente.jpg" />
     <Content Include="Styles\prettyPhoto.css" />
     <Content Include="Styles\style.css" />
+    <Content Include="Views\Fields.Boolean-Campionato-Abilitaclassifica.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Fields.Boolean-Campionato-Abilitamarcatori.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Fields.Boolean-Campionato-Abilitarisultati.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -261,18 +270,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Fields.ContentPicker-BlogPost.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Fields.Boolean-Campionato-Abilitaclassifica.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Fields.Boolean-Campionato-Abilitarisultati.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Fields.Boolean-Campionato-Abilitamarcatori.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts.Title-Campionato.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
