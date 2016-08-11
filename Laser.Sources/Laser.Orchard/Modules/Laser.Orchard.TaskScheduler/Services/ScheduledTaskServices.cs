@@ -55,7 +55,7 @@ namespace Laser.Orchard.TaskScheduler.Services {
             var keys = formData.AllKeys.Where(k => k.IndexOf("allTasks[") == 0).ToList();
 
             List<ScheduledTaskViewModel> vmsForTasks = new List<ScheduledTaskViewModel>();
-            int nVms = keys.Count / 9;
+            int nVms = keys.Count / 9; //this is the number of fields we get from the views, and should be the number of fields in the ScheduledTaskViewModel
 
             //note: here we are using the name of the properties and fields in the strings:
             //if those are changed for any reason, the strings in this method should reflect that
@@ -77,21 +77,24 @@ namespace Laser.Orchard.TaskScheduler.Services {
             return vmsForTasks;
         }
 
-
+        /// <summary>
+        /// Updates the reords for the schedulers based on the changes from the UI
+        /// </summary>
+        /// <param name="vms">A list of view models that hold the updated information</param>
         public void UpdateRecords(List<ScheduledTaskViewModel> vms) {
             foreach (ScheduledTaskViewModel vm in vms) {
                 //if Id != 0 the task was already in the db
                 if (vm.Id != 0) {
                     //Should we try to delete?
                     if (vm.Delete) {
-                        //TODO: the way we designed the form, we should not have tried to delete any task that was running. However
-                        //it's better to add a check on that later on, just in case.
                         //if there is a corresponding task that is running, we should stop it first
                         if (vm.Running > 0) {
                             //stop the task with id == vm.Running
+                            UnscheduleTask(vm);
                         }
                         //the task is definitely not running, so we may safely remove the scheduler
                         _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get(vm.Id));
+                        //(note that a handler is invoked to clean up the repositor)
                     } else {
                         //update the part
                         ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.Get<ScheduledTaskPart>(vm.Id);
@@ -106,11 +109,14 @@ namespace Laser.Orchard.TaskScheduler.Services {
             }
         }
 
-
+        /// <summary>
+        /// Schedule a new task based on the information in the view model
+        /// </summary>
+        /// <param name="vm">The view model we are basing the new task on</param>
         public void ScheduleTask(ScheduledTaskViewModel vm) {
             //get the part
             ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.Get<ScheduledTaskPart>(vm.Id);
-            //define tasktype
+            //define tasktype: BASE_SIGNALNAME_ID
             string taskTypeStr = Constants.TaskTypeBase + "_" + part.SignalName + "_" + part.Id;
             ContentItem ci = null;
             if (part.ContentItemId > 0) {
@@ -120,20 +126,41 @@ namespace Laser.Orchard.TaskScheduler.Services {
             part.RunningTaskId = _repoTasks.Get(str => str.TaskType.Equals(taskTypeStr)).Id;
             
         }
-
+        /// <summary>
+        /// Unschedule an existing task based on the view model
+        /// </summary>
+        /// <param name="vm">The view model corresponding to the task we want to unschedule</param>
         public void UnscheduleTask(ScheduledTaskViewModel vm) {
             //get the part
             ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.Get<ScheduledTaskPart>(vm.Id);
             int tId = part.RunningTaskId;
-            var str = _repoTasks.Get(tId);
-            if (str != null){
-                _repoTasks.Delete(str);
+            if (tId > 0) {
+                var str = _repoTasks.Get(tId);
+                if (str != null) {
+                    _repoTasks.Delete(str);
+                } else {
+                    //tId might have changed since the moment we got the information into the view models
+                    //e.g. if the task is periodic, it will generate a new Id and update it.
+                    //let's check here if there are tasks with the part id in the TaskType
+                    //(see the ScheduleTask method for the format we are using)
+                    var records = _repoTasks.Table.Where(rec => 
+                        rec.TaskType.Split(new string[]{"_"}, StringSplitOptions.RemoveEmptyEntries).Last().Equals(part.Id.ToString())
+                        ).ToList();
+                    foreach (var item in records) {
+                        _repoTasks.Delete(item);
+                    }
+                }
             }
+            
             part.RunningTaskId = 0;
 
         }
 
-
+        /// <summary>
+        /// computes the next DateTime for scheduling based off the information in the part
+        /// </summary>
+        /// <param name="part">The part containing the scheduling information</param>
+        /// <returns>A <type>DateTime</type> object containing the moment when the task whoudl be scheduled next.</returns>
         public DateTime ComputeNextScheduledTime(ScheduledTaskPart part) {
             DateTime result = DateTime.UtcNow;
             switch (part.PeriodicityUnit) {
