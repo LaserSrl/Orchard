@@ -113,9 +113,12 @@ namespace Laser.Orchard.TaskScheduler.Services {
                     }
                 } else {
                     //we have to create a new record
-                    ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.New<ScheduledTaskPart>("ScheduledTaskPart");
-                    vm.UpdatePart(part);
-                    _orchardServices.ContentManager.Create(part);
+                    if (!vm.Delete) {
+                        //we only create it if it was not also deleted already
+                        ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.New<ScheduledTaskPart>("ScheduledTaskPart");
+                        vm.UpdatePart(part);
+                        _orchardServices.ContentManager.Create(part);
+                    }
                 }
             }
         }
@@ -154,8 +157,11 @@ namespace Laser.Orchard.TaskScheduler.Services {
                     //e.g. if the task is periodic, it will generate a new Id and update it.
                     //let's check here if there are tasks with the part id in the TaskType
                     //(see the ScheduleTask method for the format we are using)
-                    var records = _repoTasks.Table.Where(rec => 
-                        rec.TaskType.Split(new string[]{"_"}, StringSplitOptions.RemoveEmptyEntries).Last().Equals(part.Id.ToString())
+                    var records = _repoTasks.Table.ToList().Where(rec =>
+                        //rec.TaskType.Split(new string[]{"_"}, StringSplitOptions.RemoveEmptyEntries).Last().Equals(part.Id.ToString())
+                        rec.TaskType.IndexOf(Constants.TaskTypeBase) == 0
+                        ).ToList().Where(rec =>
+                        rec.TaskType.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries).Last().Equals(part.Id.ToString())
                         ).ToList();
                     foreach (var item in records) {
                         _repoTasks.Delete(item);

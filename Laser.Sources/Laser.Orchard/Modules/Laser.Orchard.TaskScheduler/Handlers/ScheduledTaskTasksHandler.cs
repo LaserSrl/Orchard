@@ -49,8 +49,8 @@ namespace Laser.Orchard.TaskScheduler.Handlers {
                         { "Content", context.Task.ContentItem },
                         { SignalActivity.SignalEventName, part.SignalName }}
                     );
-                //if the part has periodicity, we may reschedule the task
-                if (part.PeriodicityTime > 0) {
+                //if the part has periodicity and it was not unscheduled, we may reschedule the task
+                if (part.PeriodicityTime > 0 && part.RunningTaskId > 0) {
                     //define tasktype
                     string newTaskTypeStr = Constants.TaskTypeBase + "_" + part.SignalName + "_" + part.Id;
                     ContentItem ci = null;
