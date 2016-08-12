@@ -25,8 +25,10 @@
 @using Orchard.MediaLibrary.Services;
 @using Orchard.Projections.Models;
 @using Orchard.Projections.Services;
+@using Orchard.Security;
 @using Orchard.Taxonomies.Models;
 @using Orchard.Taxonomies.Services;
+@using Orchard.Users.Models;
 @using Orchard.Utility.Extensions;
 @using Laser.Orchard.Events.Models;
 @using Laser.Orchard.HiddenFields.Fields;
@@ -46,6 +48,9 @@
     Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
     IMediaLibraryService _mediaLibraryService;
     IEnumerable<TermPart> taxoTerms;
+    IMembershipService _membershipService;
+    UserPart creator;
+    int creatorId;
 
     XmlDocument ToXmlDocument(XDocument xDocument){
         var xmlDocument = new XmlDocument();
@@ -239,7 +244,7 @@
                 );
             }
             if (translatableEvents[""].contact.ContainsKey("www")) {
-            ((InputField)contactPart.Fields.Where(IsSitoWeb).SingleOrDefault()).Value = translatableEvents[""].contact["www"];
+                ((InputField)contactPart.Fields.Where(IsSitoWeb).SingleOrDefault()).Value = translatableEvents[""].contact["www"];
                 _fieldIndexService.Set(
                     fiPart,
                     "ContactPart",
@@ -276,6 +281,31 @@
             "{" + translatableEvents[""].remoteId.ToString() + "}",
             typeof(string)
         );
+        //CommonPart: here we set the creator for the imported content item
+        Func<ContentPart, bool> IsCommonPart = part => part.PartDefinition.Name == "CommonPart";
+        Func<ContentField, bool> IsCreatorField = fi => fi.Name == "Creator";
+        Func<ContentField, bool> IsModifierField = fi => fi.Name == "LastModifier";
+        var commonPart = newCalEvent.Parts.Where(IsCommonPart).SingleOrDefault();
+        if (commonPart != null){
+            ((NumericField)commonPart.Fields.Where(IsCreatorField).SingleOrDefault()).Value = creatorId;
+            _fieldIndexService.Set(
+                fiPart,
+                "CommonPart",
+                "Creator",
+                "",
+                creatorId,
+                typeof(int)
+            );
+            ((NumericField)commonPart.Fields.Where(IsModifierField).SingleOrDefault()).Value = creatorId;
+            _fieldIndexService.Set(
+                fiPart,
+                "CommonPart",
+                "LastModifier",
+                "",
+                creatorId,
+                typeof(int)
+            );
+        }
     }
 
 }
@@ -292,6 +322,9 @@
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<Orchard.Data.IRepository<FieldIndexPartRecord>>();
         _mediaLibraryService = Model.OrchardServices.WorkContext.Resolve<IMediaLibraryService>();
         taxoTerms = _taxonomyService.GetTerms(_taxonomyService.GetTaxonomyByName("Categoria Eventi").Id);
+        _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
+        creator = (UserPart)_membershipService.GetUser("ImportRobot");
+        creatorId = creator.Id;
 
         WebResponse resp;
         string url = String.Format("http://www.anfiteatromorenicoivrea.it/WebServices/E015/2?displayAlias=EventListByDate&StartDate={0}&EndDate=31/12/9999", DateTime.UtcNow.ToShortDateString());
@@ -505,6 +538,8 @@
                                 Func<CultureRecord, bool> IsThisCulture = cr => cr.Culture.IndexOf(thisLanguage) == 0;
                                 calEvent.As<LocalizationPart>().Culture = _cultureRepository.Table.ToList().Where(IsThisCulture).FirstOrDefault();
                             }
+                            calEvent.As<CommonPart>().Owner = creator;
+                            calEvent.As<CommonPart>().ModifiedUtc = DateTime.UtcNow;
                         }
                     }
                     
@@ -518,8 +553,8 @@
         }
         retString = "Done";
     } catch (Exception ex){
-        //retString += "\n OUTER: " + ex.Message;
-        retString = "Error";
+        retString += "\n OUTER: " + ex.Message;
+        //retString = "Error";
     }
     
 }@retString
