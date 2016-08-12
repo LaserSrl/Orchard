@@ -237,6 +237,7 @@
     <Compile Include="Services\OpenAuthInstagramOAuth2Client.cs" />
     <Compile Include="Services\OpenAuthLinkedlnOAuth2Client.cs" />
     <Compile Include="Services\OpenAuthPinterestOAuth2Client.cs" />
+    <Compile Include="Services\ServiceUtility.cs" />
     <Compile Include="Services\UserExtensionService.cs" />
     <Compile Include="Handlers\OpenAuthenticationSettingsPartHandler.cs" />
     <Compile Include="Handlers\UserProvidersPartHandler.cs" />
