@@ -151,19 +151,17 @@
             <select title="@T("Language").ToString()" id="lang_SummaryChart">
                 @*Insert languages from site settings*@
                 @{
-                    Orchard.Data.IRepository<Orchard.Localization.Records.CultureRecord> _cultureRepository;
-                    if (WorkContext.TryResolve<Orchard.Data.IRepository<Orchard.Localization.Records.CultureRecord>>(out _cultureRepository)) {
-                        foreach (var row in _cultureRepository.Table) {
-                            var lCode = row.Culture;
-                            if (!string.IsNullOrWhiteSpace(lCode)){
-                                var shortLCode = lCode.Substring(0, 2);
-                                var lText = KeywordHelperKeyword.langDictionary.ContainsKey(lCode) ?
-                                    KeywordHelperKeyword.langDictionary[lCode] :
-                                    KeywordHelperKeyword.langDictionary.ContainsKey(shortLCode) ?
-                                    KeywordHelperKeyword.langDictionary[shortLCode] : "";
-                                if (!String.IsNullOrWhiteSpace(lText)) {
-                                    @Html.SelectOption(shortLCode, WorkContext.CurrentSite.SiteCulture == lCode, lText);
-                                }
+                    Orchard.Localization.Services.ICultureManager _cultureManager;
+                    if (WorkContext.TryResolve<Orchard.Localization.Services.ICultureManager>(out _cultureManager)) {
+                        var cultures = _cultureManager.ListCultures();
+                        foreach (var lCode in cultures) { 
+                            var shortLCode = lCode.Substring(0, 2);
+                            var lText = KeywordHelperKeyword.langDictionary.ContainsKey(lCode) ?
+                                KeywordHelperKeyword.langDictionary[lCode] :
+                                KeywordHelperKeyword.langDictionary.ContainsKey(shortLCode) ?
+                                KeywordHelperKeyword.langDictionary[shortLCode] : "";
+                            if (!String.IsNullOrWhiteSpace(lText)) {
+                                @Html.SelectOption(shortLCode, WorkContext.CurrentSite.SiteCulture == lCode, lText);
                             }
                            
                         }
