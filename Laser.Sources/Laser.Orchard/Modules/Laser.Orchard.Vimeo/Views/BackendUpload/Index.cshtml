@@ -243,6 +243,8 @@
                 //console.log('verify ' + times);
                 if (times > 10) {
                     alert('@T("Attempts at communication with Vimeo's servers failed. Try again later.").ToString()');
+                    dMessage.innerHTML = "@defaultMessage";
+                    pBar.style.visibility = 'hidden';
                     fileInput.disabled = false;
                     fileDropArea.disabled = false;
                 } else {
