@@ -2,6 +2,7 @@
 using Laser.Orchard.OpenAuthentication.Models;
 using Laser.Orchard.OpenAuthentication.Security;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -11,24 +12,24 @@ using System.Net;
 using System.Web;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
-    public class PinterestAuthenticationClient : IExternalAuthenticationClient {
+    public class InstagramAuthenticationClient : IExternalAuthenticationClient {
         public string ProviderName {
-            get { return "Pinterest"; }
+            get { return "Instagram"; }
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
             string ClientId = providerConfigurationRecord.ProviderIdKey;
             string ClientSecret = providerConfigurationRecord.ProviderSecret;
-            var client = new PinterestOAuth2Client(ClientId, ClientSecret);
+            var client = new InstagramOAuth2Client(ClientId, ClientSecret);
             return client;
         }
 
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken, string userAccessSecretKey = "") {
-            var userData = (Build(clientConfiguration) as PinterestOAuth2Client).GetUserDataDictionary(userAccessToken);
+            var userData = (Build(clientConfiguration) as InstagramOAuth2Client).GetUserDataDictionary(userAccessToken);
             userData["accesstoken"] = userAccessToken;
             string id = userData["id"];
-            string name = userData["first_name"] + userData["last_name"];
-            return new AuthenticationResult(true, this.ProviderName, id, name, userData);
+            string username = userData["username"];
+            return new AuthenticationResult(true, this.ProviderName, id, username, userData);
         }
 
         public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams clientData) {

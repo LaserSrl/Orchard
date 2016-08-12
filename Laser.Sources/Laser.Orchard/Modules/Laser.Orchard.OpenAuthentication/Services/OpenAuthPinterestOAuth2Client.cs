@@ -59,6 +59,10 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             _clientSecret = clientSecret;
         }
 
+        public IDictionary<string, string> GetUserDataDictionary(string accessToken) {
+            return GetUserData(accessToken);
+        }
+
         protected override Uri GetServiceLoginUrl(Uri returnUrl) {
             var scopes = _requestedScopes.Select(x => !x.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? ScopeBaseUri + x : x);
 

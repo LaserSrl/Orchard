@@ -23,9 +23,6 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             get { return "Google"; }
         }
 
-        private const string UserInfoEndpoint = "https://www.googleapis.com/oauth2/v1/userinfo";
-
-
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
             string ClientId = providerConfigurationRecord.ProviderIdKey;
             string ClientSecret = providerConfigurationRecord.ProviderSecret;
@@ -44,10 +41,8 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             return retVal;
         }
 
-
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
-            var userData = new Dictionary<string, string>();
-            userData = GetUserDataGoogle(userAccessToken);
+            var userData = (Build(clientConfiguration) as GoogleOAuth2Client).GetUserDataDictionary(userAccessToken);
             userData["accesstoken"] = userAccessToken;
             string id = userData["id"];
             string name = userData["email"];
@@ -55,37 +50,8 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             return new AuthenticationResult(true, this.ProviderName, id, name, userData);
         }
         
-        private Dictionary<string, string> GetUserDataGoogle(string userAccessToken) {
-            var uri = GoogleOAuth2Client.BuildUri(UserInfoEndpoint, new NameValueCollection { { "access_token", userAccessToken } });
-
-            var webRequest = (HttpWebRequest)WebRequest.Create(uri);
-
-            using (var webResponse = webRequest.GetResponse())
-            using (var stream = webResponse.GetResponseStream()) {
-                if (stream == null)
-                    return null;
-
-                using (var textReader = new StreamReader(stream)) {
-                    var json = textReader.ReadToEnd();
-                    var extraData = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-                    return extraData;
-                }
-            }
-        }
-
         public bool RewriteRequest() {
-            bool result = false;
-            var ctx = HttpContext.Current;
-            var stateString = HttpUtility.UrlDecode(ctx.Request.QueryString["state"]);
-            if (stateString != null && stateString.Contains("__provider__=google")) {
-                // Google requires that all return data be packed into a "state" parameter
-                var q = HttpUtility.ParseQueryString(stateString);
-                q.Add(ctx.Request.QueryString);
-                q.Remove("state");
-                ctx.RewritePath(ctx.Request.Path + "?" + q.ToString());
-                result = true;
-            }
-            return result;
+            return new ServiceUtility().RewriteRequestByState();
         }
     }
 }

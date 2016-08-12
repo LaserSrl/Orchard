@@ -103,19 +103,6 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             return client.NormalizeData(userData);
         }
 
-        //public void RewriteRequest() {
-        //    var clientConfiguration = _providerConfigurationService.Get(providerName);
-
-        //    if (clientConfiguration == null)
-        //        return null;
-
-        //    // Is this a known internal client
-        //    var client = _openAuthAuthenticationClients
-        //        .SingleOrDefault(o => o.ProviderName.Equals(providerName, StringComparison.OrdinalIgnoreCase));
-
-        //    client
-        //}
-
         private static IAuthenticationClient CreateOpenIdClient(ProviderConfigurationRecord clientConfiguration) {
             return new CustomOpenIdAuthenticationClient(clientConfiguration.ProviderName).Build(clientConfiguration);
         }

@@ -69,7 +69,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
         public AuthenticationResult VerifyAuthentication(string returnUrl) {
             if (string.IsNullOrEmpty(ProviderName)) {
-                // se non è noto il provider quindi richiama il RewriteRequest di tutti i client registrati
+                // se non è noto il provider richiama il RewriteRequest di tutti i client registrati
                 RewriteRequest();
             }
             return SecurityManager(ProviderName).VerifyAuthentication(returnUrl);
