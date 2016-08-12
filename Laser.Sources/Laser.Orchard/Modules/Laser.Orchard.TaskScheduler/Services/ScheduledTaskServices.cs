@@ -52,15 +52,19 @@ namespace Laser.Orchard.TaskScheduler.Services {
         /// <param name="formData">The collection representing the data from the form</param>
         /// <returns>The list of view models</returns>
         public List<ScheduledTaskViewModel> GetTaskViewModelsFromForm(NameValueCollection formData) {
-            var keys = formData.AllKeys.Where(k => k.IndexOf("allTasks[") == 0).ToList();
+            var keys = formData.AllKeys.Where(k => k.IndexOf("allTasks[") == 0).ToArray();
 
             List<ScheduledTaskViewModel> vmsForTasks = new List<ScheduledTaskViewModel>();
-            int nVms = keys.Count / 9; //this is the number of fields we get from the views, and should be the number of fields in the ScheduledTaskViewModel
+            int nVms = keys.Length / 9; //this is the number of fields we get from the views, and should be the number of fields in the ScheduledTaskViewModel
 
             //note: here we are using the name of the properties and fields in the strings:
             //if those are changed for any reason, the strings in this method should reflect that
             for (int i = 0; i < nVms; i++) {
-                string thisObject = String.Format("allTasks[{0}].", i);
+                //get the number to use as index for the keys. It may not correspond to i in the case where
+                //some schedulers have been deleted
+                string kk = keys[i * 9];
+                int index = int.Parse(kk.Split(new string[] { "[", "]" }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                string thisObject = String.Format("allTasks[{0}].", index);
                 DateTime? inputDate;
                 try {
                     inputDate = String.IsNullOrWhiteSpace(formData[thisObject + "ScheduledStartUTC"]) ? (DateTime?)null :
