@@ -512,6 +512,8 @@
                             }
                             newCalEvent.As<LocalizationPart>().Culture = _cultureRepository.Table.ToList().Where(cr => cr.Culture.IndexOf(thisLanguage) == 0).FirstOrDefault(); 
                             
+                            newCalEvent.As<CommonPart>().Owner = creator;
+                            newCalEvent.As<CommonPart>().ModifiedUtc = DateTime.UtcNow;
                         }
                     } else {
                         //the event exists
