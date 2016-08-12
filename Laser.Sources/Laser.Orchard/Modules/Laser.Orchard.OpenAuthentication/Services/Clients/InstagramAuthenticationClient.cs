@@ -2,6 +2,7 @@
 using Laser.Orchard.OpenAuthentication.Models;
 using Laser.Orchard.OpenAuthentication.Security;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -11,31 +12,31 @@ using System.Net;
 using System.Web;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
-    public class PinterestAuthenticationClient : IExternalAuthenticationClient {
+    public class InstagramAuthenticationClient : IExternalAuthenticationClient {
         public string ProviderName {
-            get { return "Pinterest"; }
+            get { return "Instagram"; }
         }
 
-        private const string UserInfoEndpoint = "https://api.pinterest.com/v1/me/";
+        private const string UserInfoEndpoint = "https://api.instagram.com/v1/users/self/";
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
             string ClientId = providerConfigurationRecord.ProviderIdKey;
             string ClientSecret = providerConfigurationRecord.ProviderSecret;
-            var client = new PinterestOAuth2Client(ClientId, ClientSecret);
+            var client = new InstagramOAuth2Client(ClientId, ClientSecret);
             return client;
         }
 
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken, string userAccessSecretKey = "") {
             var userData = new Dictionary<string, string>();
-            userData = GetUserDataPinterest(userAccessToken);
+            userData = GetUserDataInstagram(userAccessToken);
             userData["accesstoken"] = userAccessToken;
             string id = userData["id"];
-            string name = userData["first_name"] + userData["last_name"];
-            return new AuthenticationResult(true, this.ProviderName, id, name, userData);
+            string username = userData["username"];
+            return new AuthenticationResult(true, this.ProviderName, id, username, userData);
         }
 
-        private Dictionary<string, string> GetUserDataPinterest(string userAccessToken) {
-            var uri = PinterestOAuth2Client.BuildUri(UserInfoEndpoint, new NameValueCollection { { "access_token", userAccessToken } });
+        private Dictionary<string, string> GetUserDataInstagram(string userAccessToken) {
+            var uri = InstagramOAuth2Client.BuildUri(UserInfoEndpoint, new NameValueCollection { { "access_token", userAccessToken } });
             var webRequest = (HttpWebRequest)WebRequest.Create(uri);
 
             using (var webResponse = webRequest.GetResponse())
@@ -45,8 +46,13 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
 
                 using (var textReader = new StreamReader(stream)) {
                     var json = textReader.ReadToEnd();
-                    var valori = JsonConvert.DeserializeObject<PinterestUserData>(json);
-                    var extraData = valori.data;
+                    var valori = JObject.Parse(json);
+                    var data = valori.SelectToken("data");
+                    Dictionary<string, string> extraData = new Dictionary<string, string>();
+                    extraData.Add("id", data.Value<string>("id"));
+                    extraData.Add("username", data.Value<string>("username"));
+                    extraData.Add("full_name", data.Value<string>("full_name"));
+                    extraData.Add("profile_picture", data.Value<string>("profile_picture"));
                     return extraData;
                 }
             }
@@ -60,8 +66,8 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             bool result = false;
             var ctx = HttpContext.Current;
             var stateString = System.Web.HttpUtility.UrlDecode(ctx.Request.QueryString["state"]);
-            if (stateString != null && stateString.Contains("__provider__=Pinterest")) {
-                // Pinterest requires that all return data be packed into a "state" parameter
+            if (stateString != null && stateString.Contains("__provider__=Instagram")) {
+                // Instagram requires that all return data be packed into a "state" parameter
                 var q = System.Web.HttpUtility.ParseQueryString(stateString);
                 q.Add(ctx.Request.QueryString);
                 q.Remove("state");

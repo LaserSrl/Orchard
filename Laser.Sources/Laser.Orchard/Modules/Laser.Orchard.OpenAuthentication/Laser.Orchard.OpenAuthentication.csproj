@@ -228,11 +228,13 @@
     <Compile Include="Models\UserAccountLogin.cs" />
     <Compile Include="Models\UserProviderDisplayPart.cs" />
     <Compile Include="Services\Clients\GoogleAuthenticationClient.cs" />
+    <Compile Include="Services\Clients\InstagramAuthenticationClient.cs" />
     <Compile Include="Services\Clients\PinterestAuthenticationClient.cs" />
     <Compile Include="Services\Clients\PinterestUserData.cs" />
     <Compile Include="Services\Clients\YahooAuthenticationClient.cs" />
     <Compile Include="Services\OpenAuthFacebookOAuth2.cs" />
     <Compile Include="Services\OpenAuthGoogleOAuth2.cs" />
+    <Compile Include="Services\OpenAuthInstagramOAuth2Client.cs" />
     <Compile Include="Services\OpenAuthLinkedlnOAuth2Client.cs" />
     <Compile Include="Services\OpenAuthPinterestOAuth2Client.cs" />
     <Compile Include="Services\UserExtensionService.cs" />
