@@ -10,7 +10,7 @@ namespace Laser.Orchard.OpenAuthentication.Security {
             ExtraData = extraData;
         }
 
-        public string UserName { get; private set; }
+        public string UserName { get; set; }
         public string ProviderName { get; private set; }
         public string ProviderUserId { get; private set; }
         public IDictionary<string, string> ExtraData { get; private set; }

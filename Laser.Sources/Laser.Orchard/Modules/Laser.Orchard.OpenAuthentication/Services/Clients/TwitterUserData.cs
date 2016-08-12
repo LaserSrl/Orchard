@@ -15,6 +15,9 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         /// <value> The name. </value>
         [DataMember(Name = "screen_name", IsRequired = true)]
         public string Screen_Name { get; set; }
+
+        [DataMember(Name = "email")]
+        public String Email { get; set; }
     }
 
 }

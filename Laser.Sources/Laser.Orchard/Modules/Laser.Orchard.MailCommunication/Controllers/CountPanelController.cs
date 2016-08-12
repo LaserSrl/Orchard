@@ -1,6 +1,6 @@
-﻿using Laser.Orchard.MailCommunication.Services;
+﻿using Laser.Orchard.Commons.Attributes;
+using Laser.Orchard.MailCommunication.Services;
 using Orchard.Environment.Extensions;
-using Laser.Orchard.Commons.Attributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
