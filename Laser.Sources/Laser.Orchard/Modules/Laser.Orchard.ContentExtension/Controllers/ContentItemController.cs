@@ -378,7 +378,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
 
         #region private method
         /// <summary>
-        /// Formato DateTime: 2009-06-15T13:45:30  yyyy-MM-ddThh:mm:ss NB: L’ora deve essere riferita all’ora di Greenwich
+        /// Formato DateTimeField: 2009-06-15T13:45:30  yyyy-MM-ddThh:mm:ss NB: L’ora deve essere riferita all’ora di Greenwich
         /// </summary>
         /// <param name="eObj"></param>
         /// <param name="TheContentItem"></param>
