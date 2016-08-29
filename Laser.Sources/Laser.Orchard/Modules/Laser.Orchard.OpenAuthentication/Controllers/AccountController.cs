@@ -84,7 +84,12 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             }
 
             if (_openAuthMembershipServices.CanRegister()) {
-                result = _openAuthClientProvider.GetUserData(result.Provider, result, result.ExtraData["accesstoken"]);
+                if (result.ExtraData.ContainsKey("accesstoken")) {
+                    result = _openAuthClientProvider.GetUserData(result.Provider, result, result.ExtraData["accesstoken"]);
+                }
+                else {
+                    result = _openAuthClientProvider.GetUserData(result.Provider, result, "");
+                }
                 var createUserParams = new OpenAuthCreateUserParams(result.UserName,
                                                                     result.Provider,
                                                                     result.ProviderUserId,
