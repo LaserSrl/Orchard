@@ -298,6 +298,16 @@ namespace Laser.Orchard.CommunicationGateway {
                    .AlterColumn("Logs", x => x.WithType(DbType.String).Unlimited()));
             return 21;
         }
+        public int UpdateFrom21() {
+            SchemaBuilder.AlterTable("CommunicationEmailRecord",
+                table => table.AddColumn<string>("KeyUnsubscribe", column => column.WithLength(500))
+               );
+            SchemaBuilder.AlterTable("CommunicationEmailRecord",
+                table => table.AddColumn<DateTime>("DataUnsubscribe", column => column.Nullable())
+               );
+
+            return 22;
+        }
 
     }
 }

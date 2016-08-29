@@ -16,6 +16,7 @@ namespace Laser.Orchard.UserReactions.ViewModels {
 
         public StyleFileNameProviders CssName { get; set; }
         public List<UserReactionsTypeVM> UserReactionsType { get; set; }
+        public bool AllowMultipleChoices { get; set; }
     }
 
     public class UserReactionsTypeVM {

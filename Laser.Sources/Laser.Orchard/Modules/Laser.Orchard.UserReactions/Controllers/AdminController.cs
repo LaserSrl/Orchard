@@ -14,6 +14,7 @@ using Orchard.UI.Navigation;
 using Orchard.DisplayManagement;
 using Orchard.Themes;
 using Orchard.UI.Admin;
+using Orchard.Tasks.Scheduling;
 
 
 namespace Laser.Orchard.UserReactions.Controllers {
@@ -25,6 +26,7 @@ namespace Laser.Orchard.UserReactions.Controllers {
         private readonly IUserReactionsService _reactionsService;
         private readonly IRepository<Models.UserReactionsTypesRecord> _repoTypes;
         private readonly INotifier _notifier;
+        private readonly IScheduledTaskManager _taskManager;
 
         public Localizer T { get; set; }
         dynamic Shape { get; set; }
@@ -36,7 +38,8 @@ namespace Laser.Orchard.UserReactions.Controllers {
              IUserReactionsService reactionsService,
             IRepository<UserReactions.Models.UserReactionsTypesRecord> repoTypes,
             INotifier notifier,
-            IShapeFactory shapeFactory
+            IShapeFactory shapeFactory,
+            IScheduledTaskManager taskManager
             ) {
             _authenticationService = authenticationService;
             _membershipService = membershipService;
@@ -46,6 +49,7 @@ namespace Laser.Orchard.UserReactions.Controllers {
             _repoTypes = repoTypes;
             _notifier = notifier;
             Shape = shapeFactory;
+            _taskManager = taskManager;
         }
 
         
@@ -106,47 +110,37 @@ namespace Laser.Orchard.UserReactions.Controllers {
             }
 
             var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
-
             reactionSettings.StyleFileNameProvider = model.CssName;
+            reactionSettings.AllowMultipleChoices = model.AllowMultipleChoices;
+            bool newTypesCreated = false;
 
             foreach (var item in model.UserReactionsType) {
-                
-                if (item.Delete && item.Id > 0) 
-                {
-                    _repoTypes.Delete(_repoTypes.Get(item.Id));
-                } 
-                else 
-                {
-                    if (item.Id > 0) 
-                    {
-                        var record = _repoTypes.Get(item.Id);
-                        record.Priority = item.Priority;
-                        record.TypeCssClass = item.TypeCssClass;
-                        record.TypeName = item.TypeName;
-                        record.Activating = item.Activating;
-                        _repoTypes.Update(record);
-                    } 
-                    else 
-                    {
-                        var styleAcronime = new Laser.Orchard.UserReactions.StyleAcroName();
-                        string styleAcronimeName = styleAcronime.StyleAcronime + item.TypeName;
-
-                            _repoTypes.Create(new Models.UserReactionsTypesRecord {
-                            Priority = item.Priority,
-                            TypeCssClass = styleAcronimeName,
-                            TypeName = item.TypeName,
-                            Activating=item.Activating
-                            
-                        });
-
-
-                        _repoTypes.Flush();
-                    }
-
+                if (item.Id == 0) {
+                    var styleAcronime = new Laser.Orchard.UserReactions.StyleAcroName();
+                    string styleAcronimeName = styleAcronime.StyleAcronime + item.TypeName;
+                    _repoTypes.Create(new Models.UserReactionsTypesRecord {
+                        Priority = item.Priority,
+                        TypeCssClass = styleAcronimeName,
+                        TypeName = item.TypeName,
+                        Activating = item.Activating
+                    });
+                    newTypesCreated = true;
                 }
-
+                else {
+                    var record = _repoTypes.Get(item.Id);
+                    record.Priority = item.Priority;
+                    record.TypeCssClass = item.TypeCssClass;
+                    record.TypeName = item.TypeName;
+                    record.Activating = item.Activating;
+                    _repoTypes.Update(record);
+                }
             }
 
+            if (newTypesCreated) {
+                // allinea i contenuti tramite un task schedulato
+                _taskManager.CreateTask("Laser.Orchard.UserReactionsSettings.Task", DateTime.UtcNow.AddSeconds(5), null);
+                _notifier.Add(NotifyType.Warning, T("A task has been scheduled to update reaction summaries for existing contents."));
+            }
             _notifier.Add(NotifyType.Information, T("UserReaction settings updating"));
             return RedirectToActionPermanent("Settings");
         }

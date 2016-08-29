@@ -1,0 +1,16 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Fields.Fields
+@using Orchard.Core.Common.Fields;
+@using System;
+@using System.Linq;
+
+@{
+    var field = (BooleanField)Model.ContentField;
+    if (field.Value.Value) {
+        string years = Model.ContentItem.Campionato.Annodelcampionato.Value;
+        string code = Model.ContentItem.Campionato.Codicecampionato.Value;
+        <text>
+<iframe src='http://www.tuttocampo.it/Widget/Classifica/@code?y=@years' width='100%' height='600' scrolling='no' frameborder='0'></iframe>
+        </text>
+    }
+}

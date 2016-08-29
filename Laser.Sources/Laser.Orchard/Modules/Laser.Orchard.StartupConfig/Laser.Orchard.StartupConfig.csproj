@@ -226,6 +226,7 @@
     <Compile Include="Extensions\MediaHelperExtensions.cs" />
     <Compile Include="Filters\ControllerContextFilter.cs" />
     <Compile Include="Handlers\ContentPickerFieldExtensionHandler.cs" />
+    <Compile Include="Handlers\ExternalMediaHandler.cs" />
     <Compile Include="Handlers\FavoriteCulturePartHandler.cs" />
     <Compile Include="Handlers\IContactRelatedEventHandler.cs" />
     <Compile Include="Handlers\MaintenancePartHandler.cs" />
@@ -348,6 +349,7 @@
     <Content Include="Views\displaynone.cshtml" />
     <Content Include="Views\Activity-RazorExecute.cshtml" />
     <Content Include="Views\Parts\FavoriteCulturePart.cshtml" />
+    <Content Include="RazorCodeExecution\Snippets\EsempioUserReactionsActivity.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

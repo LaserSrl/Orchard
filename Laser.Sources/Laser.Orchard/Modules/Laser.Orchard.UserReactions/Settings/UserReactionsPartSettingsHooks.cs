@@ -55,7 +55,7 @@ namespace Laser.Orchard.UserReactions.Settings {
            
             builder.WithSetting("UserReactionsPartSettings.Filtering", ((bool)model.Filtering).ToString());            
             builder.WithSetting("UserReactionsPartSettings.TypeReactionsPartsSelected", jsonTypeReactions);
-          
+            builder.WithSetting("UserReactionsPartSettings.UserChoiceBehaviour", ((UserChoiceBehaviourValues)model.UserChoiceBehaviour).ToString());            
 
             yield return DefinitionTemplate(model);
         }
