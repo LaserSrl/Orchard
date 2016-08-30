@@ -18,10 +18,15 @@ using System.Web;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class GoogleAuthenticationClient : IExternalAuthenticationClient {
+        public GoogleAuthenticationClient() {
+            Logger = NullLogger.Instance;
+        }
 
         public string ProviderName {
             get { return "Google"; }
         }
+
+        public ILogger Logger { get; set; }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
             string ClientId = providerConfigurationRecord.ProviderIdKey;
@@ -43,6 +48,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
 
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken) {
             var userData = (Build(clientConfiguration) as GoogleOAuth2Client).GetUserDataDictionary(userAccessToken);
+            Logger.Error("user data count: {0}", userData.Count);
             userData["accesstoken"] = userAccessToken;
             string id = userData["id"];
             string name = userData["email"];
@@ -52,7 +58,9 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
 
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string token, string userAccessSecret, string returnUrl) {
             var client = Build(clientConfiguration) as GoogleOAuth2Client;
+            Logger.Error("Inizio chiamata Google");
             string userAccessToken = client.GetAccessToken(new Uri(returnUrl), token);
+            Logger.Error("access token: {0}", userAccessToken);
             return GetUserData(clientConfiguration, previousAuthResult, userAccessToken);
         }
         
