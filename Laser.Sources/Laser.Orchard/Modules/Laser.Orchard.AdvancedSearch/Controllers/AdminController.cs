@@ -44,6 +44,8 @@ using System.Linq.Expressions;
 using Orchard.Core.Settings.Metadata.Records;
 using Orchard.ContentManagement.Records;
 
+//using System.Diagnostics;
+
 
 namespace Laser.Orchard.AdvancedSearch.Controllers {
     public class AdminController : Controller, IUpdateModel {
@@ -329,7 +331,87 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             var list = Shape.List();
             IEnumerable<ContentItem> pageOfContentItems = (IEnumerable<ContentItem>)null;
 
+            //Stopwatch sw = Stopwatch.StartNew();
+
             //the user may not have permission to see anything: in that case, do not execute the query
+            #region original query 
+            //this is roughly 1000 slower than the variant below
+            //if (Services.Authorizer.Authorize(AdvancedSearchPermissions.CanSeeOwnContents)) {
+            //    // language query
+            //    //For any language query, remember that Orchard's localization table, as of Orchard 1.8, has an issue where the content
+            //    //created but never translated does not have the default Culture assigned to it.
+            //    Expression<Func<LocalizationPartRecord, bool>> selLangPredicate = null;
+            //    if (model.AdvancedOptions.SelectedLanguageId > 0) {
+            //        bool siteCultureSelected = _cultureManager.GetSiteCulture() == _cultureManager.GetCultureById(model.AdvancedOptions.SelectedLanguageId).Culture;
+            //        if (siteCultureSelected) {
+            //            selLangPredicate =
+            //                x => x.CultureId == model.AdvancedOptions.SelectedLanguageId ||
+            //                    x.CultureId == 0;
+            //        } else {
+            //            selLangPredicate =
+            //                x => x.CultureId == model.AdvancedOptions.SelectedLanguageId;
+            //        }
+            //    }
+            //    if (model.AdvancedOptions.SelectedLanguageId > 0) {
+            //        query = query.Join<LocalizationPartRecord>().Where(selLangPredicate);
+            //    }
+            //    //if we want only items that do not have a specific translation, we have to do things differently,
+            //    //because the check is done after the query. Hence, for example, we cannot directly page.
+            //    if (model.AdvancedOptions.SelectedUntranslatedLanguageId > 0) {
+            //        var allCi = query.List();
+            //        //for (int i = 0; i < allCi.Count(); i++) { //this loop is used to test null conditions and other stuff like that while debugging
+            //        //    var ci = allCi.ElementAt(i);
+            //        //    if (ci.Is<LocalizationPart>()) {
+            //        //        var lci = _localizationService.GetLocalizations(ci, versionOptions);
+            //        //        var clci = lci.Count();
+            //        //        var bo = lci.Any(li => li.Culture.Id == model.AdvancedOptions.SelectedUntranslatedLanguageId);
+            //        //    }
+            //        //}
+            //        var untranslatedCi = allCi
+            //            .Where(x =>
+            //                x.Is<LocalizationPart>() && //the content is translatable
+            //                (
+            //                    x.As<LocalizationPart>().Culture == null || //this is the case where the content was created and never translated to any other culture.
+            //                    x.As<LocalizationPart>().Culture.Id != model.AdvancedOptions.SelectedUntranslatedLanguageId //not a content in the language in which we are looking translations
+            //                ) &&
+            //                _localizationService.GetLocalizations(x, versionOptions) != null &&
+            //                !_localizationService.GetLocalizations(x, versionOptions).Any(li =>
+            //                    li.Culture != null &&
+            //                    li.Culture.Id == model.AdvancedOptions.SelectedUntranslatedLanguageId
+            //                )
+            //            );
+            //        //.Where(x =>
+            //        //    x.Is<LocalizationPart>() && //some content items may not be translatable
+            //        //    (
+            //        //        (x.As<LocalizationPart>().Culture != null && x.As<LocalizationPart>().Culture.Id != model.AdvancedOptions.SelectedUntranslatedLanguageId) ||
+            //        //        (x.As<LocalizationPart>().Culture == null) //this is the case where the content was created and never translated to any other culture. 
+            //        //        //In that case, in Orchard 1.8, no culture is directly assigned to it, even though the default culture is assumed.
+            //        //    ) &&
+            //        //    x.As<LocalizationPart>().MasterContentItem == null &&
+            //        //    !allCi.Any(y =>
+            //        //        y.Is<LocalizationPart>() &&
+            //        //        (y.As<LocalizationPart>().MasterContentItem == x || y.As<LocalizationPart>().MasterContentItem == x.As<LocalizationPart>().MasterContentItem) &&
+            //        //        y.As<LocalizationPart>().Culture.Id == model.AdvancedOptions.SelectedUntranslatedLanguageId
+            //        //    )
+            //        //);
+            //        //Paging
+            //        pagerShape = Shape.Pager(pager).TotalItemCount(untranslatedCi.Count());
+            //        int pSize = pager.PageSize != 0 ? pager.PageSize : untranslatedCi.Count();
+            //        pageOfContentItems = untranslatedCi
+            //            .Skip(pager.GetStartIndex())
+            //            .Take((pager.GetStartIndex() + pSize) > untranslatedCi.Count() ?
+            //                untranslatedCi.Count() - pager.GetStartIndex() :
+            //                pSize)
+            //            .ToList();
+            //    } else {
+            //        pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
+            //        pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
+            //    }
+            //} else {
+            //    Services.Notifier.Error(T("Not authorized to visualize any item."));
+            //}
+            #endregion
+
             if (Services.Authorizer.Authorize(AdvancedSearchPermissions.CanSeeOwnContents)) {
                 // language queries
                 //For any language query, remember that Orchard's localization table, as of Orchard 1.8, has an issue where the content
@@ -345,6 +427,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                         selLangPredicate =
                             x => x.CultureId == model.AdvancedOptions.SelectedLanguageId;
                     }
+
                     query = query.Join<LocalizationPartRecord>().Where(selLangPredicate);
                 }
                 Expression<Func<LocalizationPartRecord, bool>> untranLangPredicate = null;
@@ -377,6 +460,9 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             } else {
                 Services.Notifier.Error(T("Not authorized to visualize any item."));
             }
+
+            //sw.Stop();
+            //Services.Notifier.Error(new LocalizedString(sw.Elapsed.TotalMilliseconds.ToString()));
 
             if (pageOfContentItems != null) {
                 list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
