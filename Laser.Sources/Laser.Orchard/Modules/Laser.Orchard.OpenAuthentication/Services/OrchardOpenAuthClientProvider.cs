@@ -10,6 +10,7 @@ using Laser.Orchard.OpenAuthentication.Services.Clients;
 using Orchard;
 using Orchard.Validation;
 using Laser.Orchard.OpenAuthentication.Security;
+using Orchard.Logging;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOrchardOpenAuthClientProvider : IDependency {
@@ -27,7 +28,10 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             IEnumerable<IExternalAuthenticationClient> openAuthAuthenticationClients) {
             _providerConfigurationService = providerConfigurationService;
             _openAuthAuthenticationClients = openAuthAuthenticationClients;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public IAuthenticationClient GetClient(string providerName) {
             Argument.ThrowIfNullOrEmpty(providerName, "providerName");
@@ -84,11 +88,12 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var client = _openAuthAuthenticationClients
                 .SingleOrDefault(o => o.ProviderName.Equals(providerName, StringComparison.OrdinalIgnoreCase));
 
-            // smista la chiamata in base alla presenza del secret dell'utente
-            if (string.IsNullOrEmpty(userAccessSecret)) {
+            // smista la chiamata in base alla presenza del redirectUrl che è presente solo se la chiamata proviene da mobile
+            if (string.IsNullOrEmpty(returnUrl)) {
                 return client.GetUserData(clientConfiguration, previosAuthResult, token);
             }
             else {
+                Logger.Error("provider: {0}, auth code: {1}, redirect url: {2}", providerName, token, returnUrl);
                 return client.GetUserData(clientConfiguration, previosAuthResult, token, userAccessSecret, returnUrl);
             }
         }
