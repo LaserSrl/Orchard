@@ -24,12 +24,18 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             return client;
         }
 
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken, string userAccessSecretKey = "") {
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken) {
             var userData = (Build(clientConfiguration) as InstagramOAuth2Client).GetUserDataDictionary(userAccessToken);
             userData["accesstoken"] = userAccessToken;
             string id = userData["id"];
             string username = userData["username"];
             return new AuthenticationResult(true, this.ProviderName, id, username, userData);
+        }
+
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string token, string userAccessSecretKey, string returnUrl) {
+            var client = Build(clientConfiguration) as InstagramOAuth2Client;
+            string userAccessToken = client.GetAccessToken(new Uri(returnUrl), token);
+            return GetUserData(clientConfiguration, previousAuthResult, userAccessToken);
         }
 
         public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams clientData) {

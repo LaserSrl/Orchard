@@ -137,8 +137,10 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                     return Json(new { success = false, registeredServices = registeredServicesData, message = T("One or more of the required parameters was not provided or was an empty string.").Text }, JsonRequestBehavior.AllowGet);
                 }
 
+                // ricava il return URL così come registrato nella configurazione del provider di OAuth (es. Google)
+                var returnUrl = Url.Action("ExternalTokenLogOn", "Account");
                 AuthenticationResult dummy = new AuthenticationResult(true);
-                AuthenticationResult authResult = _openAuthClientProvider.GetUserData(__provider__, dummy, token, secret);
+                AuthenticationResult authResult = _openAuthClientProvider.GetUserData(__provider__, dummy, token, secret, returnUrl);
                 
                 if (!authResult.IsSuccessful) {
                     return Json(new { success = false, registeredServices = registeredServicesData, message = T("Token authentication failed.").Text }, JsonRequestBehavior.AllowGet);

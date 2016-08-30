@@ -41,13 +41,19 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             return retVal;
         }
 
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken) {
             var userData = (Build(clientConfiguration) as GoogleOAuth2Client).GetUserDataDictionary(userAccessToken);
             userData["accesstoken"] = userAccessToken;
             string id = userData["id"];
             string name = userData["email"];
             userData["name"] = userData["email"];
             return new AuthenticationResult(true, this.ProviderName, id, name, userData);
+        }
+
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string token, string userAccessSecret, string returnUrl) {
+            var client = Build(clientConfiguration) as GoogleOAuth2Client;
+            string userAccessToken = client.GetAccessToken(new Uri(returnUrl), token);
+            return GetUserData(clientConfiguration, previousAuthResult, userAccessToken);
         }
         
         public bool RewriteRequest() {
