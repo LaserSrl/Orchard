@@ -101,6 +101,10 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             }
         }
 
+        public string GetAccessToken(Uri returnUrl, string authorizationCode) {
+            return QueryAccessToken(returnUrl, authorizationCode);
+        }
+
         protected override string QueryAccessToken(Uri returnUrl, string authorizationCode) {
             var postData = HttpUtility.ParseQueryString(string.Empty);
             postData.Add(new NameValueCollection

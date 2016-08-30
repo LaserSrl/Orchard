@@ -23,12 +23,16 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             return client;
         }
 
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken, string userAccessSecretKey = "") {
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken) {
             var userData = (Build(clientConfiguration) as PinterestOAuth2Client).GetUserDataDictionary(userAccessToken);
             userData["accesstoken"] = userAccessToken;
             string id = userData["id"];
             string name = userData["first_name"] + userData["last_name"];
             return new AuthenticationResult(true, this.ProviderName, id, name, userData);
+        }
+
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string token, string userAccessSecretKey, string returnUrl) {
+            return GetUserData(clientConfiguration, previousAuthResult, token);
         }
 
         public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams clientData) {

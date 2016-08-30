@@ -22,8 +22,15 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             return new TwitterClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
         }
 
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken) {
+            if (previousAuthResult.ExtraData.ContainsKey("accesstoken") == false) {
+                previousAuthResult.ExtraData.Add("accesstoken", userAccessToken);
+            }
+            return new AuthenticationResult(true, this.ProviderName, previousAuthResult.ProviderUserId, previousAuthResult.UserName, previousAuthResult.ExtraData);
+        }
 
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken, string userAccessSecret = "") {
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string token, string userAccessSecret, string returnUrl) {
+            var userAccessToken = token;
             if (String.IsNullOrWhiteSpace(userAccessSecret)) {
                 if (previousAuthResult.ExtraData.ContainsKey("accesstoken") == false) {
                     previousAuthResult.ExtraData.Add("accesstoken", userAccessToken);
@@ -49,7 +56,8 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
                         }
                     }
                 }
-            } catch {
+            }
+            catch {
                 return AuthenticationResult.Failed;
             }
 
@@ -77,7 +85,6 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             return new AuthenticationResult(
                 isSuccessful: true, provider: this.ProviderName, providerUserId: id, userName: name, extraData: userData);
         }
-
 
         private HttpWebRequest PrepareAuthorizedRequest(string oauth_token, string oauth_token_secret, string oauth_consumer_key, string oauth_consumer_secret, string resource_url, string httpMethod) {
 

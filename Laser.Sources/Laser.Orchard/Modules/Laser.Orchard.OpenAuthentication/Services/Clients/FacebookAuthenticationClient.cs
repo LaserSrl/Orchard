@@ -25,7 +25,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             return new FacebookClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
         }
 
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken) {
             var serializer = new DataContractJsonSerializer(typeof(FacebookGraphData));
             FacebookGraphData graphData;
             var request =
@@ -70,6 +70,10 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
 
             return new AuthenticationResult(
                 isSuccessful: true, provider: this.ProviderName, providerUserId: id, userName: name, extraData: userData);
+        }
+
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string token, string userAccessSecret, string returnUrl) {
+            return GetUserData(clientConfiguration, previosAuthResult, token);
         }
 
         public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams clientData) {
