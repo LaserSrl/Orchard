@@ -123,6 +123,9 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             }
 
             var query = _contentManager.Query(versionOptions, GetCreatableTypes(false).Select(ctd => ctd.Name).ToArray());
+            //the lQuery is used only in the case where we have the language queries, but since we cannot clone IContentQuery objects,
+            //we create it here and build is as we build the other
+            var lQuery = _contentManager.Query(versionOptions, GetCreatableTypes(false).Select(ctd => ctd.Name).ToArray());
 
             if (!string.IsNullOrEmpty(model.TypeName)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
@@ -133,6 +136,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                                             ? contentTypeDefinition.DisplayName
                                             : contentTypeDefinition.Name;
                 query = query.ForType(model.TypeName);
+                lQuery = lQuery.ForType(model.TypeName);
             }
             // FILTER QUERIES: START //
 
@@ -142,6 +146,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             if (model.AdvancedOptions.SelectedTermId > 0) {
                 var termId = model.AdvancedOptions.SelectedTermId;
                 query = query.Join<TermsPartRecord>().Where(x => x.Terms.Any(a => a.TermRecord.Id == termId));
+                lQuery = lQuery.Join<TermsPartRecord>().Where(x => x.Terms.Any(a => a.TermRecord.Id == termId));
             }
 
             // owner query
@@ -161,12 +166,14 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 var email = Services.WorkContext.CurrentUser.Email;
                 var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName || u.Email == email).List().FirstOrDefault();
                 query = query.Join<CommonPartRecord>().Where(x => x.OwnerId == user.Id);
+                lQuery = lQuery.Join<CommonPartRecord>().Where(x => x.OwnerId == user.Id);
             } else if (!String.IsNullOrWhiteSpace(model.AdvancedOptions.SelectedOwner)) {
                 var lowerName = model.AdvancedOptions.SelectedOwner == null ? "" : model.AdvancedOptions.SelectedOwner.ToLowerInvariant();
                 var email = model.AdvancedOptions.SelectedOwner;
                 var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName || u.Email == email).List().FirstOrDefault();
                 if (user != null) {
                     query = query.Join<CommonPartRecord>().Where(x => x.OwnerId == user.Id);
+                    lQuery = lQuery.Join<CommonPartRecord>().Where(x => x.OwnerId == user.Id);
                 } else {
                     _notifier.Add(NotifyType.Warning, T("No user found. Ownership filter not applied."));
                 }
@@ -178,12 +185,16 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 var fromD = _dataLocalization.StringToDatetime(model.AdvancedOptions.SelectedFromDate, "") ?? _dataLocalization.StringToDatetime("09/05/1985", "");
                 var toD = _dataLocalization.StringToDatetime(model.AdvancedOptions.SelectedToDate, "") ?? DateTime.Now;
 
-                if (model.AdvancedOptions.DateFilterType == DateFilterOptions.Created)
+                if (model.AdvancedOptions.DateFilterType == DateFilterOptions.Created) {
                     query = query.Join<CommonPartRecord>().Where(x => x.CreatedUtc >= fromD && x.CreatedUtc <= toD);
-                else if (model.AdvancedOptions.DateFilterType == DateFilterOptions.Modified)
+                    lQuery = lQuery.Join<CommonPartRecord>().Where(x => x.CreatedUtc >= fromD && x.CreatedUtc <= toD);
+                } else if (model.AdvancedOptions.DateFilterType == DateFilterOptions.Modified) {
                     query = query.Join<CommonPartRecord>().Where(x => x.ModifiedUtc >= fromD && x.ModifiedUtc <= toD);
-                else if (model.AdvancedOptions.DateFilterType == DateFilterOptions.Published)
+                    lQuery = lQuery.Join<CommonPartRecord>().Where(x => x.ModifiedUtc >= fromD && x.ModifiedUtc <= toD);
+                } else if (model.AdvancedOptions.DateFilterType == DateFilterOptions.Published) {
                     query = query.Join<CommonPartRecord>().Where(x => x.PublishedUtc >= fromD && x.PublishedUtc <= toD);
+                    lQuery = lQuery.Join<CommonPartRecord>().Where(x => x.PublishedUtc >= fromD && x.PublishedUtc <= toD);
+                }
             }
 
             // Has media query
@@ -200,11 +211,17 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 query = query.Join<FieldIndexPartRecord>().Where(w => w.StringFieldIndexRecords.Any(
                     w2 => listFields.Contains(w2.PropertyName) && w2.Value != ""
                     ));
+                lQuery = lQuery.Join<FieldIndexPartRecord>().Where(w => w.StringFieldIndexRecords.Any(
+                    w2 => listFields.Contains(w2.PropertyName) && w2.Value != ""
+                    ));
             }
 
             // Extended Status query
             if (!String.IsNullOrWhiteSpace(model.AdvancedOptions.SelectedStatus)) {
                 query = query.Join<FieldIndexPartRecord>().Where(w => w.StringFieldIndexRecords.Any(
+                    w2 => w2.PropertyName == "PublishExtensionPart.PublishExtensionStatus." && w2.Value == model.AdvancedOptions.SelectedStatus
+                    ));
+                lQuery = lQuery.Join<FieldIndexPartRecord>().Where(w => w.StringFieldIndexRecords.Any(
                     w2 => w2.PropertyName == "PublishExtensionPart.PublishExtensionStatus." && w2.Value == model.AdvancedOptions.SelectedStatus
                     ));
             }
@@ -215,13 +232,16 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 case ContentsOrder.Modified:
                     //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.ContentItemRecord.Versions.Single(civr => civr.Latest).Id);
                     query = query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
+                    lQuery = lQuery.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
                     break;
                 case ContentsOrder.Published:
                     query = query.OrderByDescending<CommonPartRecord>(cr => cr.PublishedUtc);
+                    lQuery = lQuery.OrderByDescending<CommonPartRecord>(cr => cr.PublishedUtc);
                     break;
                 case ContentsOrder.Created:
                     //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.Id);
                     query = query.OrderByDescending<CommonPartRecord>(cr => cr.CreatedUtc);
+                    lQuery = lQuery.OrderByDescending<CommonPartRecord>(cr => cr.CreatedUtc);
                     break;
             }
 
@@ -289,7 +309,14 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                                 && sfi.Value.Contains("{" + model.AdvancedOptions.CPFIdToSearch.ToString() + "}")
                             )
                     );
-
+                lQuery = lQuery.Join<FieldIndexPartRecord>()
+                    .Where(fip =>
+                        fip.StringFieldIndexRecords
+                            .Any(sfi =>
+                                sfi.PropertyName.Contains(fieldName)
+                                && sfi.Value.Contains("{" + model.AdvancedOptions.CPFIdToSearch.ToString() + "}")
+                            )
+                    );
             }
             #endregion
 
@@ -318,42 +345,30 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                         selLangPredicate =
                             x => x.CultureId == model.AdvancedOptions.SelectedLanguageId;
                     }
-                }
-
-
-
-                if (model.AdvancedOptions.SelectedLanguageId > 0 && model.AdvancedOptions.SelectedUntranslatedLanguageId > 0) {
-                    Expression<Func<LocalizationPartRecord, bool>> tarLangPredicate =
-                        x => x.CultureId == model.AdvancedOptions.SelectedUntranslatedLanguageId &&
-                            x.MasterContentItemId != 0;
-                    var query2 = query.Join<LocalizationPartRecord>().Where(tarLangPredicate);
-                    var masters = query2.List().Select(x => x.As<LocalizationPart>().Record.MasterContentItemId);
-
-                    Expression<Func<LocalizationPartRecord, bool>> sulPredicate =
-                        x => x.CultureId != model.AdvancedOptions.SelectedUntranslatedLanguageId &&
-                            !masters.Contains(x.Id) && !masters.Contains(x.MasterContentItemId);
-                    query = query.Join<LocalizationPartRecord>().Where((Expression<Func<LocalizationPartRecord, bool>>)Expression.AndAlso(selLangPredicate, sulPredicate).Reduce());
-
-
-
-                } else if (model.AdvancedOptions.SelectedLanguageId > 0) {
                     query = query.Join<LocalizationPartRecord>().Where(selLangPredicate);
-                } else if (model.AdvancedOptions.SelectedUntranslatedLanguageId > 0) {
-                    //Get the ids of items for which we have a translation
-                    Expression<Func<LocalizationPartRecord, bool>> tarLangPredicate =
-                        x => x.CultureId == model.AdvancedOptions.SelectedUntranslatedLanguageId &&
-                            x.MasterContentItemId != 0;
-                    var query2 = query.Join<LocalizationPartRecord>().Where(tarLangPredicate);
-                    var masters = query2.List().Select(x => x.As<LocalizationPart>().Record.MasterContentItemId).ToList();
+                }
+                Expression<Func<LocalizationPartRecord, bool>> untranLangPredicate = null;
+                if (model.AdvancedOptions.SelectedUntranslatedLanguageId > 0) {
+                    bool siteCultureSelected = _cultureManager.GetSiteCulture() == _cultureManager.GetCultureById(model.AdvancedOptions.SelectedUntranslatedLanguageId).Culture;
+                    if (siteCultureSelected) {
+                        untranLangPredicate =
+                            x => x.CultureId == model.AdvancedOptions.SelectedUntranslatedLanguageId ||
+                                x.CultureId == 0;
+                    } else {
+                        untranLangPredicate =
+                            x => x.CultureId == model.AdvancedOptions.SelectedUntranslatedLanguageId;
+                    }
+
+                    lQuery = lQuery.Join<LocalizationPartRecord>().Where(untranLangPredicate);
+                    var lRes = lQuery.List();
+                    var masters = lRes.Where(x => x.As<LocalizationPart>().Record.MasterContentItemId != 0).Select(x => x.As<LocalizationPart>().Record.MasterContentItemId).ToList();
+                    var items = lRes.Select(x => x.Id).ToList();
 
                     Expression<Func<LocalizationPartRecord, bool>> sulPredicate =
                         x => x.CultureId != model.AdvancedOptions.SelectedUntranslatedLanguageId &&
-                            !masters.Contains(x.Id) && !masters.Contains(x.MasterContentItemId);
+                            !masters.Contains(x.Id) && !masters.Contains(x.MasterContentItemId) && !items.Contains(x.MasterContentItemId);
 
                     query = query.Join<LocalizationPartRecord>().Where(sulPredicate);
-                } else {
-                    //no language related query
-
                 }
 
                 pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
@@ -366,8 +381,6 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             if (pageOfContentItems != null) {
                 list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
             }
-
-
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)
