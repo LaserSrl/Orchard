@@ -234,5 +234,22 @@ namespace Laser.Orchard.Vimeo {
 
             return 10;
         }
+
+        public int UpdateFrom10() {
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("ChannelId")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("GroupId")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("AlbumId")
+                );
+
+            return 11;
+        }
     }
 }

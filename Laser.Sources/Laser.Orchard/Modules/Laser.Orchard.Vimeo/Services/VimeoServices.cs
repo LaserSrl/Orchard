@@ -144,14 +144,15 @@ namespace Laser.Orchard.Vimeo.Services {
                 if (!string.IsNullOrWhiteSpace(settings.GroupName)) {
                     if (GroupIsValid(settings.GroupName, settings.AccessToken)) {
                         _orchardServices.Notifier.Information(T("Group Name valid"));
+                        settings.GroupId = GetGroupId();
                     } else {
                         string res = CreateNewGroup(settings.AccessToken, settings.GroupName);
                         if (res == "OK") {
                             _orchardServices.Notifier.Information(T("Group created"));
+                            settings.GroupId = GetGroupId();
                         } else {
                             _orchardServices.Notifier.Error(T("Failed to create group. Internal message: {0}", res));
                             settings.AlwaysUploadToGroup = false;
-
                         }
                     }
                 }
@@ -159,10 +160,12 @@ namespace Laser.Orchard.Vimeo.Services {
                 if (!string.IsNullOrWhiteSpace(settings.ChannelName)) {
                     if (ChannelIsValid(settings.ChannelName, settings.AccessToken)) {
                         _orchardServices.Notifier.Information(T("Channel Name valid"));
+                        settings.ChannelId = GetChannelId();
                     } else {
                         string res = CreateNewChannel(settings.AccessToken, settings.ChannelName);
                         if (res == "OK") {
                             _orchardServices.Notifier.Information(T("Channel created"));
+                            settings.ChannelId = GetChannelId();
                         } else {
                             _orchardServices.Notifier.Error(T("Failed to create channel. Internal message: {0}", res));
                             settings.AlwaysUploadToChannel = false;
@@ -173,10 +176,12 @@ namespace Laser.Orchard.Vimeo.Services {
                 if (!string.IsNullOrWhiteSpace(settings.AlbumName)) {
                     if (AlbumIsValid(settings.AlbumName, settings.AccessToken)) {
                         _orchardServices.Notifier.Information(T("Album Name valid"));
+                        settings.AlbumId = GetAlbumId();
                     } else {
                         string res = CreateNewAlbum(settings.AccessToken, settings.AlbumName);
                         if (res == "OK") {
                             _orchardServices.Notifier.Information(T("Album created"));
+                            settings.AlbumId = GetAlbumId();
                         } else {
                             _orchardServices.Notifier.Error(T("Failed to create album. Internal message: {0}", res));
                             settings.AlwaysUploadToAlbum = false;
@@ -1274,13 +1279,14 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
         public string AddVideoToGroup(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Cannot identify video";
+            
+            var settings = _orchardServices
+                    .WorkContext
+                    .CurrentSite
+                    .As<VimeoSettingsPart>();
 
-            string groupId = GetGroupId();
+            string groupId = settings.GroupId;
             if (!string.IsNullOrWhiteSpace(groupId)) {
-                var settings = _orchardServices
-                        .WorkContext
-                        .CurrentSite
-                        .As<VimeoSettingsPart>();
                 HttpWebRequest wr = VimeoCreateRequest(
                     aToken: settings.AccessToken,
                     endpoint: VimeoEndpoints.Groups + "/" + groupId + ucr.Uri,
@@ -1298,8 +1304,15 @@ namespace Laser.Orchard.Vimeo.Services {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
                         UpdateAPIRateLimits(settings, resp);
+                        //in all error cases, we mark this video as added correctly. Note that these errors come as responses,
+                        //so we have been able to connect but Vimeo refused our request.
+                        ucr.UploadedToGroup = true;
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                            //we end up here if the video is already in the group
+                            ucr.UploadedToGroup = true;
                             return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        } else {
+                            return "Code " + resp.StatusCode.ToString() + ": " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         }
                     }
                 }
@@ -1346,12 +1359,13 @@ namespace Laser.Orchard.Vimeo.Services {
         public string AddVideoToChannel(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Cannot identify video";
 
-            string chanId = GetChannelId();
+            var settings = _orchardServices
+                    .WorkContext
+                    .CurrentSite
+                    .As<VimeoSettingsPart>();
+
+            string chanId = settings.ChannelId;
             if (!string.IsNullOrWhiteSpace(chanId)) {
-                var settings = _orchardServices
-                        .WorkContext
-                        .CurrentSite
-                        .As<VimeoSettingsPart>();
                 HttpWebRequest wr = VimeoCreateRequest(
                     aToken: settings.AccessToken,
                     endpoint: VimeoEndpoints.Channels + "/" + chanId + ucr.Uri,
@@ -1369,10 +1383,15 @@ namespace Laser.Orchard.Vimeo.Services {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
                         UpdateAPIRateLimits(settings, resp);
+                        //in all error cases, we mark this video as added correctly. Note that these errors come as responses,
+                        //so we have been able to connect but Vimeo refused our request.
+                        ucr.UploadedToChannel = true;
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
                             return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         } else if (resp.StatusCode == HttpStatusCode.NotFound) {
                             return "Resource not found. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        } else {
+                            return "Code " + resp.StatusCode.ToString() + ": " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         }
                     }
                 }
@@ -1419,12 +1438,13 @@ namespace Laser.Orchard.Vimeo.Services {
         public string AddVideoToAlbum(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Cannot identify video";
 
-            string alId = GetAlbumId();
+            var settings = _orchardServices
+                    .WorkContext
+                    .CurrentSite
+                    .As<VimeoSettingsPart>();
+
+            string alId = settings.AlbumId;
             if (!string.IsNullOrWhiteSpace(alId)) {
-                var settings = _orchardServices
-                        .WorkContext
-                        .CurrentSite
-                        .As<VimeoSettingsPart>();
                 HttpWebRequest wr = VimeoCreateRequest(
                     aToken: settings.AccessToken,
                     endpoint: VimeoEndpoints.MyAlbums + "/" + alId + ucr.Uri,
@@ -1442,10 +1462,15 @@ namespace Laser.Orchard.Vimeo.Services {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
                         UpdateAPIRateLimits(settings, resp);
+                        //in all error cases, we mark this video as added correctly. Note that these errors come as responses,
+                        //so we have been able to connect but Vimeo refused our request.
+                        ucr.UploadedToAlbum = true;
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
                             return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         } else if (resp.StatusCode == HttpStatusCode.NotFound) {
                             return "Resource not found. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        } else {
+                            return "Code " + resp.StatusCode.ToString() + ": " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         }
                     }
                 }
@@ -1637,7 +1662,6 @@ namespace Laser.Orchard.Vimeo.Services {
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                             string vimeoJson = reader.ReadToEnd();
-                            //todo: "FILL THIS METHOD IN";
                             return JObject.Parse(vimeoJson)["status"].ToString();
                         }
                     }

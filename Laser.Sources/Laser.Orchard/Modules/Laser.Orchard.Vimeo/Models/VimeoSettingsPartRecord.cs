@@ -40,5 +40,9 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual Int64 UploadQuotaSpaceMax { get; set; }
         public virtual Int64 UploadQuotaSpaceUsed { get; set; }
         public virtual DateTime? LastTimeQuotaWasChecked { get; set; }
+        //cache some ids
+        public virtual string ChannelId { get; set; }
+        public virtual string GroupId { get; set; }
+        public virtual string AlbumId { get; set; }
     }
 }

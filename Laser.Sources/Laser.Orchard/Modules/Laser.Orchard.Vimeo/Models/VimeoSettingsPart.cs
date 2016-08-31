@@ -133,5 +133,18 @@ namespace Laser.Orchard.Vimeo.Models {
             get { return Record.LastTimeQuotaWasChecked; }
             set { Record.LastTimeQuotaWasChecked = value; }
         }
+        //store the user Ids associated with the categories
+        public string ChannelId {
+            get { return Record.ChannelId; }
+            set { Record.ChannelId = value; }
+        }
+        public string GroupId {
+            get { return Record.GroupId; }
+            set { Record.GroupId = value; }
+        }
+        public string AlbumId {
+            get { return Record.AlbumId; }
+            set { Record.AlbumId = value; }
+        }
     }
 }
