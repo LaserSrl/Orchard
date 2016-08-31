@@ -1670,6 +1670,10 @@ namespace Laser.Orchard.Vimeo.Services {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(settings, resp);
+                    if (resp.StatusCode == HttpStatusCode.NotFound) {
+                        //this is for non existing videos, or videos that are private to someone else
+                        return "Video not found";
+                    }
                 }
                 return ex.Message;
             }
@@ -1882,7 +1886,7 @@ namespace Laser.Orchard.Vimeo.Services {
 
         /// <summary>
         /// Destroy all records related to the upload of a video for a given MediaPart. Moreover, destroy the MediaPart. 
-        /// Thisshould be called in error handling, for instance when a client tells us that the upload it was trying
+        /// This should be called in error handling, for instance when a client tells us that the upload it was trying
         /// to perform has been interrupted and may not be resumed.
         /// </summary>
         /// <param name="mediaPartId">The Id of the MediaPart that was created to contain the video.</param>
@@ -2028,7 +2032,12 @@ namespace Laser.Orchard.Vimeo.Services {
                     AddVideoToAlbum(ucr);
                 }
                 if (!ucr.IsAvailable) {
-                    ucr.IsAvailable = GetVideoStatus(ucr) == "available";
+                    string status = GetVideoStatus(ucr);
+                    if (status == "Video not found") {
+                        //destroy everything
+                        DestroyUpload(ucr.MediaPartId);
+                    }
+                    ucr.IsAvailable = status == "available";
                 }
 
                 if (ucr.Patched
