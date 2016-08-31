@@ -69,7 +69,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
         public AuthenticationResult VerifyAuthentication(string returnUrl) {
             if (string.IsNullOrEmpty(ProviderName)) {
-                // se non è noto il provider quindi richiama il RewriteRequest di tutti i client registrati
+                // se non è noto il provider richiama il RewriteRequest di tutti i client registrati
                 RewriteRequest();
             }
             return SecurityManager(ProviderName).VerifyAuthentication(returnUrl);
@@ -84,17 +84,6 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             return new OpenAuthSecurityManager(_httpContextAccessor.Current(), _orchardOpenAuthClientProvider.GetClient(providerName), _orchardOpenAuthDataProvider); 
         }
         private void RewriteRequest() {
-            //var ctx = HttpContext.Current;
-
-            //var stateString = HttpUtility.UrlDecode(ctx.Request.QueryString["state"]);
-            //if (stateString != null && stateString.Contains("__provider__=google")) {
-            //    // Google requires that all return data be packed into a "state" parameter
-            //    var q = HttpUtility.ParseQueryString(stateString);
-            //    q.Add(ctx.Request.QueryString);
-            //    q.Remove("state");
-            //    ctx.RewritePath(ctx.Request.Path + "?" + q.ToString());
-            //}
-
             foreach (var client in _openAuthAuthenticationClients) {
                 if (client.RewriteRequest()) {
                     break;
