@@ -635,27 +635,38 @@ namespace Laser.Orchard.Vimeo.Services {
                 .WorkContext
                 .CurrentSite
                 .As<VimeoSettingsPart>();
-            string queryString = "?fields=upload_quota";
-            HttpWebRequest wr = VimeoCreateRequest(settings.AccessToken, VimeoEndpoints.Me, qString: queryString);
-            VimeoUploadQuota quotaInfo = new VimeoUploadQuota();
-            try {
-                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
-                    UpdateAPIRateLimits(settings, resp);
-                    if (resp.StatusCode == HttpStatusCode.OK) {
-                        using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
-                            string vimeoJson = reader.ReadToEnd();
-                            JObject json = JObject.Parse(vimeoJson);
-                            quotaInfo = JsonConvert.DeserializeObject<VimeoUploadQuota>(json["upload_quota"].ToString());
+            VimeoUploadQuota quotaInfo = null;
+            //Only check the quota if we have not checked it in a while
+            if (DateTime.UtcNow < settings.LastTimeQuotaWasChecked.Value.AddHours(24)) {
+                string queryString = "?fields=upload_quota";
+                HttpWebRequest wr = VimeoCreateRequest(settings.AccessToken, VimeoEndpoints.Me, qString: queryString);
+                try {
+                    using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                        UpdateAPIRateLimits(settings, resp);
+                        if (resp.StatusCode == HttpStatusCode.OK) {
+                            using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
+                                string vimeoJson = reader.ReadToEnd();
+                                JObject json = JObject.Parse(vimeoJson);
+                                quotaInfo = new VimeoUploadQuota();
+                                quotaInfo = JsonConvert.DeserializeObject<VimeoUploadQuota>(json["upload_quota"].ToString());
+                                settings.UploadQuotaSpaceFree = quotaInfo.space.free;
+                                settings.UploadQuotaSpaceMax = quotaInfo.space.max;
+                                settings.UploadQuotaSpaceUsed = quotaInfo.space.used;
+                                settings.LastTimeQuotaWasChecked = DateTime.UtcNow;
+                            }
                         }
                     }
+                } catch (Exception ex) {
+                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                    if (resp != null) {
+                        UpdateAPIRateLimits(settings, resp);
+                    }
+                    quotaInfo = null;
                 }
-            } catch (Exception ex) {
-                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
-                if (resp != null) {
-                    UpdateAPIRateLimits(settings, resp);
-                }
-                return null;
+            } else {
+                quotaInfo = new VimeoUploadQuota(settings.UploadQuotaSpaceFree, settings.UploadQuotaSpaceMax, settings.UploadQuotaSpaceUsed);
             }
+            
             return quotaInfo;
         }
         /// <summary>

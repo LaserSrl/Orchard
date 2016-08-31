@@ -32,11 +32,28 @@ namespace Laser.Orchard.Vimeo.Models {
             space = new VimeoSpace();
             quota = new VimeoQuota();
         }
+
+        public VimeoUploadQuota(Int64 ff, Int64 mm, Int64 uu) {
+            space = new VimeoSpace(ff, mm, uu);
+            quota = new VimeoQuota();
+        }
     }
     public class VimeoSpace {
         public Int64 free { get; set; }
         public Int64 max { get; set; }
         public Int64 used { get; set; }
+
+        public VimeoSpace() {
+            free = 0;
+            max = 0;
+            used = 0;
+        }
+
+        public VimeoSpace(Int64 f, Int64 m, Int64 u) {
+            free = f;
+            max = m;
+            used = u;
+        }
     }
     public class VimeoQuota {
         public bool hd { get; set; }

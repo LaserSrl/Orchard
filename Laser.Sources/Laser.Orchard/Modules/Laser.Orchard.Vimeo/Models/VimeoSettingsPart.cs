@@ -116,5 +116,22 @@ namespace Laser.Orchard.Vimeo.Models {
             get{return Record.RateLimitReset;}
             set { Record.RateLimitReset = value; }
         }
+        //cache for upload quota
+        public Int64 UploadQuotaSpaceFree {
+            get { return Record.UploadQuotaSpaceFree; }
+            set { Record.UploadQuotaSpaceFree = value; }
+        }
+        public Int64 UploadQuotaSpaceMax {
+            get { return Record.UploadQuotaSpaceMax; }
+            set { Record.UploadQuotaSpaceMax = value; }
+        }
+        public Int64 UploadQuotaSpaceUsed {
+            get { return Record.UploadQuotaSpaceUsed; }
+            set { Record.UploadQuotaSpaceUsed = value; }
+        }
+        public DateTime? LastTimeQuotaWasChecked {
+            get { return Record.LastTimeQuotaWasChecked; }
+            set { Record.LastTimeQuotaWasChecked = value; }
+        }
     }
 }

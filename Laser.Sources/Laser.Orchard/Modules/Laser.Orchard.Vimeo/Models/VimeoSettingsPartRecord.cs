@@ -35,6 +35,10 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual int RateLimitLimit { get; set; }
         public virtual int RateLimitRemaining { get; set; }
         public virtual DateTime? RateLimitReset { get; set; }
-
+        //cache quota
+        public virtual Int64 UploadQuotaSpaceFree { get; set; }
+        public virtual Int64 UploadQuotaSpaceMax { get; set; }
+        public virtual Int64 UploadQuotaSpaceUsed { get; set; }
+        public virtual DateTime? LastTimeQuotaWasChecked { get; set; }
     }
 }

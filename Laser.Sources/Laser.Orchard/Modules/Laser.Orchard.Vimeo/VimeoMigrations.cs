@@ -213,5 +213,26 @@ namespace Laser.Orchard.Vimeo {
 
             return 9;
         }
+
+        public int UpdateFrom9() {
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<Int64>("UploadQuotaSpaceFree")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<Int64>("UploadQuotaSpaceMax")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<Int64>("UploadQuotaSpaceUsed")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<DateTime>("LastTimeQuotaWasChecked")
+                );
+
+            return 10;
+        }
     }
 }
