@@ -200,6 +200,72 @@ namespace Laser.Orchard.Vimeo.Services {
                 vm.ContentRatingsUnsafe.Where(cr => cr.Value == true).Select(cr => cr.Key).ToList();
             settings.Whitelist = string.IsNullOrWhiteSpace(vm.Whitelist) ? new List<string>() : vm.Whitelist.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
+            RetrieveAccountType(settings);
+            settings.LastTimeAccountTypeWasChecked = DateTime.UtcNow;
+        }
+
+        /// <summary>
+        /// This method makes an API call to Vimeo to retrieve acount information (type and userId).
+        /// </summary>
+        /// <param name="settings">The part containing the vimeo Settings</param>
+        private void RetrieveAccountType(VimeoSettingsPart settings) {
+            //make the API call to check the account
+            HttpWebRequest userCall = VimeoCreateRequest(
+                aToken: settings.AccessToken,
+                endpoint: VimeoEndpoints.Me,
+                method: "GET",
+                qString: "?fields=account,uri"
+                );
+            try {
+                using (HttpWebResponse resp = userCall.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        string json = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        var parsed = JObject.Parse(json);
+                        if (parsed["account"] != null) {
+                            settings.AccountType = parsed["account"].ToString();
+                        }
+                        if (parsed["uri"] != null) { //uri is in the form "/users/USERID"
+                            string uid = parsed["uri"].ToString();
+                            settings.UserId = uid.Remove(0, uid.LastIndexOf("/") + 1);
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// This method check the headers in the response we receive from Vimeo to update the information on the rate limits.
+        /// It should be called EVERY TIME a request is made to the Vimeo API. Even (especially) when the response code is not 200.
+        /// </summary>
+        /// <param name="settings">The part containing the vimeo Settings.</param>
+        /// <param name="resp">The response we received from the API.</param>
+        private void UpdateAPIRateLimits(VimeoSettingsPart settings, HttpWebResponse resp) {
+            var heads = resp.Headers;
+            int tmp;
+            if (int.TryParse(heads["X-RateLimit-Limit"], out tmp)) {
+                settings.RateLimitLimit = tmp;
+            }
+            if (int.TryParse(heads["X-RateLimit-Remaining"], out tmp)) {
+                settings.RateLimitRemaining = tmp;
+            }
+            DateTime temp;
+            if (DateTime.TryParse(heads["X-RateLimit-Reset"], out temp)) {
+                settings.RateLimitReset = temp.ToUniversalTime();
+            }
+        }
+        private void UpdateAPIRateLimits(HttpWebResponse resp) {
+            var settings = _orchardServices
+               .WorkContext
+               .CurrentSite
+               .As<VimeoSettingsPart>();
+            UpdateAPIRateLimits(settings, resp);
         }
 
         /// <summary>
@@ -216,14 +282,23 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="aToken">The Access Token to test.</param>
         /// <returns><value>true</value> if the access token is authenticated and valid. <value>false</value> otherwise.</returns>
         public bool TokenIsValid(string aToken) {
-            HttpWebRequest wr = VimeoCreateRequest(aToken, VimeoEndpoints.Me);
+            HttpWebRequest wr = VimeoCreateRequest(
+                aToken: aToken, 
+                endpoint: VimeoEndpoints.Me,
+                qString: "?fields=name" //using a json filter to receive less data and allow a higher api rate limit
+                ); 
 
             bool ret = false;
             try {
                 using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                    UpdateAPIRateLimits(resp);
                     ret = resp.StatusCode == HttpStatusCode.OK;
                 }
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(resp);
+                }
                 ret = false;
             }
             return ret;
@@ -258,6 +333,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 bool morePages = false;
                 do {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(resp);
                         if (resp.StatusCode == HttpStatusCode.OK) {
                             using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                 string vimeoJson = reader.ReadToEnd();
@@ -290,6 +366,10 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 } while (morePages);
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(resp);
+                }
                 ret = false;
             }
 
@@ -324,6 +404,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 bool morePages = false;
                 do {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(resp);
                         if (resp.StatusCode == HttpStatusCode.OK) {
                             using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                 string vimeoJson = reader.ReadToEnd();
@@ -356,6 +437,10 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 } while (morePages);
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(resp);
+                }
                 ret = false;
             }
             return ret;
@@ -389,6 +474,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 bool morePages = false;
                 do {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(resp);
                         if (resp.StatusCode == HttpStatusCode.OK) {
                             using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                 string vimeoJson = reader.ReadToEnd();
@@ -421,6 +507,10 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 } while (morePages);
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(resp);
+                }
                 ret = false;
             }
             return ret;
@@ -443,6 +533,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 );
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(resp);
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         return "OK";
                     }
@@ -450,12 +541,14 @@ namespace Laser.Orchard.Vimeo.Services {
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
+                    UpdateAPIRateLimits(resp);
                     if (resp.StatusCode == HttpStatusCode.BadRequest) {
-                        return "Bad Request: on of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        return "Bad Request: one of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                     } else if (resp.StatusCode == HttpStatusCode.Forbidden) {
                         return "Access Denied: user is not allowed to create a Group. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                     }
                 }
+
             }
             return "Unknown error";
         }
@@ -479,6 +572,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 );
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(resp);
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         return "OK";
                     }
@@ -486,8 +580,9 @@ namespace Laser.Orchard.Vimeo.Services {
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
+                    UpdateAPIRateLimits(resp);
                     if (resp.StatusCode == HttpStatusCode.BadRequest) {
-                        return "Bad Request: on of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        return "Bad Request: one of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                     } else if (resp.StatusCode == HttpStatusCode.Forbidden) {
                         return "Access Denied: user is not allowed to create a channel. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                     }
@@ -512,6 +607,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 );
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(resp);
                     if (resp.StatusCode == HttpStatusCode.OK || resp.StatusCode == HttpStatusCode.Created) {
                         return "OK";
                     }
@@ -519,6 +615,7 @@ namespace Laser.Orchard.Vimeo.Services {
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
+                    UpdateAPIRateLimits(resp);
                     if (resp.StatusCode == HttpStatusCode.BadRequest) {
                         return "Bad Request: on of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                     } else if (resp.StatusCode == HttpStatusCode.Forbidden) {
@@ -543,6 +640,7 @@ namespace Laser.Orchard.Vimeo.Services {
             VimeoUploadQuota quotaInfo = new VimeoUploadQuota();
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                             string vimeoJson = reader.ReadToEnd();
@@ -552,6 +650,10 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 }
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                }
                 return null;
             }
             return quotaInfo;
@@ -622,6 +724,7 @@ namespace Laser.Orchard.Vimeo.Services {
             string uploadUrl = "";
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
                     if (resp.StatusCode == HttpStatusCode.Created) {
                         using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                             string vimeoJson = reader.ReadToEnd();
@@ -638,6 +741,10 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 }
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                }
                 return "";
             }
             return uploadUrl;
@@ -832,6 +939,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 );
             try {
                 using (HttpWebResponse resp = del.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
                     if (resp.StatusCode == HttpStatusCode.Created) {
                         //this is the success condition for this call:
                         //the response contains the video location in its "location" header
@@ -849,7 +957,10 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 }
             } catch (Exception ex) {
-
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                }
             }
             return -1;
         }
@@ -907,6 +1018,7 @@ namespace Laser.Orchard.Vimeo.Services {
             }
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         ucr.Patched = true;
                         return "OK";
@@ -914,6 +1026,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 }
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                UpdateAPIRateLimits(settings, resp);
                 //if some parameter is wrong in the patch, we get status code 400 Bad Request
                 if (resp != null && resp.StatusCode == HttpStatusCode.BadRequest) {
                     return new StreamReader(resp.GetResponseStream()).ReadToEnd();
@@ -942,6 +1055,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 bool morePages = false;
                 do {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.OK) {
                             using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                 string vimeoJson = reader.ReadToEnd();
@@ -978,7 +1092,10 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 } while (morePages);
             } catch (Exception ex) {
-
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                }
             }
 
             return null;
@@ -1002,6 +1119,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 bool morePages = false;
                 do {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.OK) {
                             using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                 string vimeoJson = reader.ReadToEnd();
@@ -1038,7 +1156,10 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 } while (morePages);
             } catch (Exception ex) {
-
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                }
             }
 
             return null;
@@ -1062,6 +1183,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 bool morePages = false;
                 do {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.OK) {
                             using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                 string vimeoJson = reader.ReadToEnd();
@@ -1097,7 +1219,10 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 } while (morePages);
             } catch (Exception ex) {
-
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                }
             }
 
             return null;
@@ -1152,6 +1277,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     );
                 try {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
                             ucr.UploadedToGroup = true;
                             return "OK";
@@ -1160,6 +1286,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 } catch (Exception ex) {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
                             return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         }
@@ -1221,6 +1348,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     );
                 try {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
                             ucr.UploadedToChannel = true;
                             return "OK";
@@ -1229,6 +1357,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 } catch (Exception ex) {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
                             return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         } else if (resp.StatusCode == HttpStatusCode.NotFound) {
@@ -1292,6 +1421,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     );
                 try {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
                             ucr.UploadedToAlbum = true;
                             return "OK";
@@ -1300,6 +1430,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 } catch (Exception ex) {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
                             return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         } else if (resp.StatusCode == HttpStatusCode.NotFound) {
@@ -1336,31 +1467,14 @@ namespace Laser.Orchard.Vimeo.Services {
             string uri = part["uri"];
             string vUri = part["uri"].Remove(part["uri"].IndexOf("video") + 5, 1);//ucr.Uri.Remove(ucr.Uri.IndexOf("video") + 5, 1); //the original uri is /videos/ID, but we want /video/ID
             //is this a pro account?
-            //we can either store this information in the settings, or make an API call to /me and check the account field of the user object
-            bool proAccount = false;
-            string uId = ""; //user id on vimeo
-            //make the API call to check the account
-            HttpWebRequest userCall = VimeoCreateRequest(
-                aToken: settings.AccessToken,
-                endpoint: VimeoEndpoints.Me,
-                method: "GET",
-                qString: "?fields=account,uri"
-                );
-            try {
-                using (HttpWebResponse resp = userCall.GetResponse() as HttpWebResponse) {
-                    if (resp.StatusCode == HttpStatusCode.OK) {
-                        string json = new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                        var parsed = JObject.Parse(json);
-                        if (parsed["account"] != null) {
-                            proAccount = parsed["account"].ToString() == "pro";
-                            uId = parsed["uri"].ToString();
-                            uId = uId.Remove(0, uId.LastIndexOf("/") + 1);
-                        }
-                    }
-                }
-            } catch (Exception ex) {
-
+            //we can either store this information in the settings, or make an API call to /me and check the account field of the user object            
+            //only verify the account status if more than 24 hours have passed. Otherwise we use the cached info.
+            if (DateTime.UtcNow < settings.LastTimeAccountTypeWasChecked.Value.AddHours(24)) {
+                RetrieveAccountType(settings);
             }
+            bool proAccount = settings.AccountType ==  "pro";
+            string uId = settings.UserId; //user id on vimeo
+
             //NOTE: remember to verify if we own the video
             //make an API call to get the info for this video
             HttpWebRequest apiCall = VimeoCreateRequest(
@@ -1373,12 +1487,17 @@ namespace Laser.Orchard.Vimeo.Services {
             JObject videoJsonTree = null;
             try {
                 using (HttpWebResponse resp = apiCall.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         videoJsonTree = JObject.Parse(data);
                     }
                 }
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                }
                 return ex.Message;
             }
 
@@ -1503,6 +1622,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     );
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                             string vimeoJson = reader.ReadToEnd();
@@ -1512,6 +1632,10 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                 }
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                }
                 return ex.Message;
             }
             return "Unknown error";
@@ -1600,6 +1724,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         );
                     try {
                         using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                            UpdateAPIRateLimits(settings, resp);
                             if (resp.StatusCode == HttpStatusCode.OK) {
                                 using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                     string vimeoJson = reader.ReadToEnd();
@@ -1639,7 +1764,10 @@ namespace Laser.Orchard.Vimeo.Services {
                             }
                         }
                     } catch (Exception ex) {
-
+                        HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                        if (resp != null) {
+                            UpdateAPIRateLimits(settings, resp);
+                        }
                     }
                 }
 
@@ -1739,6 +1867,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     );
                 try {
                     using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.NoContent) {
                             //success
                             str.AppendLine(T("Removed video on Vimeo.com").ToString());
@@ -1747,6 +1876,10 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } catch (Exception ex) {
+                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                    if (resp != null) {
+                        UpdateAPIRateLimits(settings, resp);
+                    }
                     str.AppendLine(T("Failed to remove video on Vimeo.com").ToString());
                 }
                 //destroy the record

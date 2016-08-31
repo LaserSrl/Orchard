@@ -184,5 +184,34 @@ namespace Laser.Orchard.Vimeo {
             return 8;
         }
 
+        //Update 2019/08/31: Optimization of API calls
+        public int UpdateFrom8() {
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("AccountType")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<DateTime>("LastTimeAccountTypeWasChecked")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("UserId")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<int>("RateLimitLimit")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<int>("RateLimitRemaining")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<DateTime>("RateLimitReset")
+                );
+
+            return 9;
+        }
     }
 }

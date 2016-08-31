@@ -84,5 +84,37 @@ namespace Laser.Orchard.Vimeo.Models {
             get { return Record.AlwaysUploadToChannel; }
             set { Record.AlwaysUploadToChannel = value; }
         }
+
+        //edit 2016/08/31: Optimization of API calls
+        //store account type to avoid checking for it every time we need to retrieve an URL
+        public string AccountType {
+            get { return Record.AccountType; }
+            set { Record.AccountType = value; }
+        }
+        //Save the time when we most recently retrieved the account type from Vimeo.
+        public DateTime? LastTimeAccountTypeWasChecked {
+            get { return Record.LastTimeAccountTypeWasChecked; }
+            set { Record.LastTimeAccountTypeWasChecked = value; }
+        }
+        //store the user Id associated with the Vimeo account
+        public string UserId {
+            get { return Record.UserId; }
+            set { Record.UserId = value; }
+        }
+        //Total number of API requests we are allowed to make in an hour
+        public int RateLimitLimit {
+            get { return Record.RateLimitLimit; }
+            set { Record.RateLimitLimit = value; }
+        }
+        //Number of API requests we can still make before the next reset
+        public int RateLimitRemaining {
+            get { return Record.RateLimitRemaining; }
+            set { Record.RateLimitRemaining = value; }
+        }
+        //Timestamp of when the rate limit will reset next
+        public DateTime? RateLimitReset{
+            get{return Record.RateLimitReset;}
+            set { Record.RateLimitReset = value; }
+        }
     }
 }
