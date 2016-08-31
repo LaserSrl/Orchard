@@ -22,15 +22,15 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         public ILogger Logger { get; set; }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
-           
-            return new TwitterClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
+            return new TwitterCustomClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
         }
 
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken) {
-            if (previousAuthResult.ExtraData.ContainsKey("accesstoken") == false) {
-                previousAuthResult.ExtraData.Add("accesstoken", userAccessToken);
+            string secret = "";
+            if (previousAuthResult.ExtraData.ContainsKey("secret")) {
+                secret = previousAuthResult.ExtraData["secret"];
             }
-            return new AuthenticationResult(true, this.ProviderName, previousAuthResult.ProviderUserId, previousAuthResult.UserName, previousAuthResult.ExtraData);
+            return GetUserData(clientConfiguration, previousAuthResult, userAccessToken, secret, "");
         }
 
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string token, string userAccessSecret, string returnUrl) {
@@ -44,7 +44,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             var twitterUserSerializer = new DataContractJsonSerializer(typeof(TwitterUserData));
 
             TwitterUserData twitterUserData;
-            // recupero lo User_Name e la mail relativi al token 
+            // recupero lo User_Name e la mail relativi al token
             var accountSettingsRequest = PrepareAuthorizedRequestGet(userAccessToken,
                 userAccessSecret,
                 clientConfiguration.ProviderIdKey,
