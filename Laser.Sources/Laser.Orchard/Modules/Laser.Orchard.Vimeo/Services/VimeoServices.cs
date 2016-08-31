@@ -1720,7 +1720,8 @@ namespace Laser.Orchard.Vimeo.Services {
                         .As<VimeoSettingsPart>();
                     HttpWebRequest wr = VimeoCreateRequest(
                         aToken: settings.AccessToken,
-                        endpoint: VimeoEndpoints.Me + ucr.Uri
+                        endpoint: VimeoEndpoints.Me + ucr.Uri,
+                        qString: "?fields=name,uri,description,duration,width,height,release_time,embed.html,pictures.sizes,user.name,user.uri,user.account"
                         );
                     try {
                         using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
@@ -1736,7 +1737,14 @@ namespace Laser.Orchard.Vimeo.Services {
                                     oembedPart["height"] = video.height.ToString();
                                     oembedPart["upload_date"] = video.release_time;
                                     //embed section
-                                    oembedPart["html"] = video.embed.html;
+                                    if (video.embed.html != null) {
+                                        oembedPart["html"] = video.embed.html;
+                                    } else {
+                                        //this correctly populates the html. However, if the video embed settings are "private" it will still not be possible
+                                        //to watch it in the embed object
+                                        string iframe = string.Format("<iframe src=\"https://player.vimeo.com{0}\" width=\"{1}\" height=\"{2}\" frameborder=\"0\" title=\"title\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>", ucr.Uri.Remove(ucr.Uri.IndexOf("video") + 5, 1), video.width.ToString(), video.height.ToString());
+                                        oembedPart["html"] = iframe;
+                                    }
 
                                     //pictures section (get the ones that are closer in size to the video)
                                     int picIndex = 0;
