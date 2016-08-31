@@ -59,10 +59,6 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         public ActionResult ExternalLogOn(string returnUrl) {
             AuthenticationResult result = _orchardOpenAuthWebSecurity.VerifyAuthentication(Url.OpenAuthLogOn(returnUrl));
 
-            var aux = Url.MakeAbsolute(Url.Action("ExternalLogOn", "Account"));
-            Logger.Error("redirect url: {0}", aux);
-
-
             if (!result.IsSuccessful) {
                 _notifier.Error(T("Your authentication request failed."));
 
