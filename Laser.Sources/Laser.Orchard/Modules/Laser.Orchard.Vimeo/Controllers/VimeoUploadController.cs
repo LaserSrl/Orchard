@@ -38,7 +38,12 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     //create a new MediaPart 
                     int MediaPartId = _vimeoUploadServices.GenerateNewMediaPart(uploadId);
                     object data = new { MediaPartId, uploadUrl };
-                    return Json(_utilsServices.GetResponse(ResponseType.Success, message, data));
+                    return Json(new VimeoOrchardResponse{
+                        ErrorCode = VimeoOrchardErrorCode.NoError,
+                        Success = true,
+                        Message = message,
+                        Data = data
+                    });
                 } else {
                     //If there is not enough upload quota available, return an error or something.
                     message = T("Error: Not enough upload quota available").ToString();
@@ -57,8 +62,6 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     ResolutionAction = VimeoResolutionAction.NoAction
                 });
             }
-            
-
         }
 
 

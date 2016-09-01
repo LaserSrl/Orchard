@@ -140,7 +140,13 @@ namespace Laser.Orchard.Vimeo.Controllers {
         [HttpPost, ActionName("Index")]
         [OMvc.FormValueRequired("submit.SaveSettings")]
         public ActionResult IndexSaveSettings(VimeoSettingsPartViewModel vm) {
-            _vimeoAdminServices.UpdateSettings(vm);
+            try {
+                _vimeoAdminServices.UpdateSettings(vm);
+            } catch (VimeoRateException vre) {
+                _orchardServices.Notifier.Error(T("Too many requests to Vimeo. Rate limits will reset on {0} UTC", vre.resetTime.Value.ToString()));
+            } catch (Exception ex) {
+                _orchardServices.Notifier.Error(T("{0}", ex.Message));
+            }
             return RedirectToAction("Index");
         }
     }

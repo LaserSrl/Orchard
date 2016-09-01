@@ -219,6 +219,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// This method makes an API call to Vimeo to retrieve acount information (type and userId).
         /// </summary>
         /// <param name="settings">The part containing the vimeo Settings</param>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         private void RetrieveAccountType(VimeoSettingsPart settings) {
             //make the API call to check the account
             HttpWebRequest userCall = VimeoCreateRequest(
@@ -300,14 +301,20 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="vm">The settings ViewModel to test.</param>
         /// <returns><value>true</value> if the access token is authenticated and valid. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool TokenIsValid(VimeoSettingsPartViewModel vm) {
-            return !string.IsNullOrWhiteSpace(vm.AccessToken) && this.TokenIsValid(vm.AccessToken);
+            try {
+                return !string.IsNullOrWhiteSpace(vm.AccessToken) && this.TokenIsValid(vm.AccessToken);
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
         /// <summary>
         /// Verifies whether the token is valid by attempting an API request
         /// </summary>
         /// <param name="aToken">The Access Token to test.</param>
         /// <returns><value>true</value> if the access token is authenticated and valid. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool TokenIsValid(string aToken) {
             HttpWebRequest wr = VimeoCreateRequest(
                 aToken: aToken,
@@ -340,8 +347,13 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="vm">The settings ViewModel to test.</param>
         /// <returns><value>true</value> if the authenticated user has joined the given group. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool GroupIsValid(VimeoSettingsPartViewModel vm) {
-            return !string.IsNullOrWhiteSpace(vm.GroupName) && this.GroupIsValid(vm.GroupName, vm.AccessToken);
+            try {
+                return !string.IsNullOrWhiteSpace(vm.GroupName) && this.GroupIsValid(vm.GroupName, vm.AccessToken);
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
         /// <summary>
         /// Verifies whether the Group Name is valid by attempting an API request
@@ -349,6 +361,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="gName">The Group Name to test.</param>
         /// <param name="aToken">The Access Token.</param>
         /// <returns><value>true</value> if the authenticated user has joined the given group. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool GroupIsValid(string gName, string aToken) {
 
             //we only care for the album names, so we use Vimeo's JSON filter options
@@ -415,8 +428,13 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="vm">The settings ViewModel to test.</param>
         /// <returns><value>true</value> if the authenticated user has access to the given album. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool AlbumIsValid(VimeoSettingsPartViewModel vm) {
-            return !string.IsNullOrWhiteSpace(vm.AlbumName) && this.AlbumIsValid(vm.AlbumName, vm.AccessToken);
+            try {
+                return !string.IsNullOrWhiteSpace(vm.AlbumName) && this.AlbumIsValid(vm.AlbumName, vm.AccessToken);
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
         /// <summary>
         /// Verifies whether the Album Name is valid by attempting an API request
@@ -424,6 +442,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="aName">The Album Name to test</param>
         /// <param name="aToken">The Access Token.</param>
         /// <returns><value>true</value> if the authenticated user has access to the given album. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool AlbumIsValid(string aName, string aToken) {
 
             //we only care for the album names, so we use Vimeo's JSON filter options
@@ -489,8 +508,13 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="vm">The settings ViewModel to test.</param>
         /// <returns><value>true</value> if the authenticated user has access to the given channel. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool ChannelIsValid(VimeoSettingsPartViewModel vm) {
-            return !string.IsNullOrWhiteSpace(vm.AlbumName) && this.ChannelIsValid(vm.ChannelName, vm.AccessToken);
+            try {
+                return !string.IsNullOrWhiteSpace(vm.AlbumName) && this.ChannelIsValid(vm.ChannelName, vm.AccessToken);
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
         /// <summary>
         /// Verifies whether the Channel Name is valid by attempting an API request
@@ -498,6 +522,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="aName">The Channel Name to test</param>
         /// <param name="aToken">The Access Token.</param>
         /// <returns><value>true</value> if the authenticated user has access to the given Channel. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool ChannelIsValid(string cName, string aToken) {
 
             //we only care for the album names, so we use Vimeo's JSON filter options
@@ -567,6 +592,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="gName">The name for the group</param>
         /// <param name="gDesc">A description for the group</param>
         /// <returns>A <type>string</type> with the response received.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string CreateNewGroup(string aToken, string gName, string gDesc = "") {
             HttpWebRequest wr = VimeoCreateRequest(
                 aToken: aToken,
@@ -649,6 +675,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="aName">The name for the album</param>
         /// <param name="aDesc">A description for the album</param>
         /// <returns>A <type>string</type> with the response received.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string CreateNewAlbum(string aToken, string aName, string aDesc = "") {
             HttpWebRequest wr = VimeoCreateRequest(
                 aToken: aToken,
@@ -685,6 +712,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Check the quota available for upload
         /// </summary>
         /// <returns>A <type>VimeoUploadQuota</type> object containing upload quota information. Returns <value>null</value> in case of error.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public VimeoUploadQuota CheckQuota() {
             var settings = _orchardServices
                 .WorkContext
@@ -732,24 +760,36 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Checks the number of Bytes used of the upload quota.
         /// </summary>
         /// <returns>The number of bytes used, or <value>-1</value> in case of error</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public Int64 UsedQuota() {
-            VimeoUploadQuota quotaInfo = CheckQuota();
-            return quotaInfo != null ? quotaInfo.space.used : -1;
+            try {
+                VimeoUploadQuota quotaInfo = CheckQuota();
+                return quotaInfo != null ? quotaInfo.space.used : -1;
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
         /// <summary>
         /// Checks the number of Bytes available of the upload quota.
         /// </summary>
         /// <returns>The number of available bytes, or <value>-1</value> in case of error</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public Int64 FreeQuota() {
-            VimeoUploadQuota quotaInfo = CheckQuota();
-            return quotaInfo != null ? quotaInfo.space.free : -1;
+            try {
+                VimeoUploadQuota quotaInfo = CheckQuota();
+                return quotaInfo != null ? quotaInfo.space.free : -1;
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
 
         /// <summary>
         /// Verifies that there is enough quota available.
         /// </summary>
         /// <param name="fileSize">The size of the file we would like to start uploading.</param>
-        /// <returns>An id of an UploadsInProgressRecord corresponding to the upload we are starting if we have enough quota available for that upload. <value>-1</value> otherwise</returns>
+        /// <returns>An id of an UploadsInProgressRecord corresponding to the upload we are starting if we have enough 
+        /// quota available for that upload. <value>-1</value> otherwise</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public int IsValidFileSize(Int64 fileSize) {
             //this method, as it is, does not handle concurrent upload attempts very well.
             //We leave with Vimeo the responsiiblity for the final check on the upload size.
@@ -759,7 +799,12 @@ namespace Laser.Orchard.Vimeo.Services {
             Int64 quotaBeingUploaded = 0;
             if (_repositoryUploadsInProgress.Table.Count() > 0)
                 quotaBeingUploaded = _repositoryUploadsInProgress.Table.Sum(u => u.UploadSize) - _repositoryUploadsInProgress.Table.Sum(u => u.UploadedSize);
-            Int64 remoteSpace = this.FreeQuota();
+            Int64 remoteSpace;
+            try {
+                remoteSpace = this.FreeQuota();
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
             if (remoteSpace - quotaBeingUploaded < fileSize) {
                 return -1; //there is not enough space
             }
@@ -783,6 +828,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="uploadId">The Id of the record created for the upload we are attempting.</param>
         /// <returns>The Url where the client may upload the file.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GenerateUploadTicket(int uploadId) {
             var settings = _orchardServices
                 .WorkContext
@@ -1039,6 +1085,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="uploadId">The Id we have been using internally to identify the MediaPart whose video's upload is in progress.</param>
         /// <returns><value>true</value> in case of success.<value>false</value> in case of errors.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool TerminateUpload(int mediaPartId) {
             UploadsCompleteRecord ucr = GetByMediaId(mediaPartId);
             if (ucr != null)
@@ -1046,13 +1093,18 @@ namespace Laser.Orchard.Vimeo.Services {
             UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(e => e.MediaPartId == mediaPartId);
             if (entity == null)
                 return true;
-            return TerminateUpload(entity) > 0;
+            try {
+                return TerminateUpload(entity) > 0;
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
         /// <summary>
         /// We terminate the Vimeo upload stream.
         /// </summary>
         /// <param name="entity">The Upload in progress that we wish to terminate.</param>
         /// <returns>The Id of the UploadCompleted, which we'll need to patch and publish the video.<value>-1</value> in case of errors.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public int TerminateUpload(UploadsInProgressRecord entity) {
             var settings = _orchardServices
                 .WorkContext
@@ -1177,6 +1229,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Get from Vimeo the Id corresponding to the group set in the settings.
         /// </summary>
         /// <returns>The Id as a <type>string</type>, or null if the group cannot be found.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GetGroupId() {
             var settings = _orchardServices
                 .WorkContext
@@ -1245,6 +1298,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Get from vimeo the id corresponding to the channel set in settings.
         /// </summary>
         /// <returns>The Id as a <type>string</type>, or null if the channel cannot be found.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GetChannelId() {
             var settings = _orchardServices
                 .WorkContext
@@ -1313,6 +1367,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Get from vimeo the id corresponding to the album set in settings.
         /// </summary>
         /// <returns>The Id as a <type>string</type>, or null if the album cannot be found.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GetAlbumId() {
             var settings = _orchardServices
                 .WorkContext
