@@ -1129,6 +1129,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         ucr.Uri = resp.Headers["Location"];
                         ucr.ProgressId = entity.Id;
                         ucr.CreatedTime = DateTime.UtcNow;
+                        ucr.ScheduledTerminationTime = DateTime.UtcNow;
                         ucr.MediaPartId = entity.MediaPartId;
                         _repositoryUploadsComplete.Create(ucr);
                         ScheduleVideoCompletion();
@@ -1153,7 +1154,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <summary>
         /// This method patches the information about a video on the vimeo servers.
         /// </summary>
-        /// <param name="ucId">The Id of the COmplete upload we want to patch</param>
+        /// <param name="ucId">The Id of the Complete upload we want to patch</param>
         /// <param name="name">The title we want to assign to the video</param>
         /// <param name="description">the description for the video</param>
         /// <returns>A <type>string</type> that contains the response to the patch request.</returns>
@@ -1167,10 +1168,11 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <summary>
         /// This method patches the information about a video on the vimeo servers.
         /// </summary>
-        /// <param name="ucr">The COmplete upload we want to patch</param>
+        /// <param name="ucr">The Complete upload we want to patch</param>
         /// <param name="name">The title we want to assign to the video</param>
         /// <param name="description">the description for the video</param>
         /// <returns>A <type>string</type> that contains the response to the patch request.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string PatchVideo(UploadsCompleteRecord ucr, string name = "", string description = "") {
             if (ucr == null) return "Record is null";
 
@@ -1467,6 +1469,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="ucId">The completed upload</param>
         /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string AddVideoToGroup(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Cannot identify video";
 
@@ -1550,6 +1553,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="ucId">The completed upload</param>
         /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string AddVideoToChannel(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Cannot identify video";
 
@@ -1633,6 +1637,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="ucId">The completed upload</param>
         /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string AddVideoToAlbum(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Cannot identify video";
 
@@ -1846,10 +1851,17 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="ucId">The id of the record that contains the information on the video we are checking</param>
         /// <returns>A string describing the video'sprocessing status in Vimeo's servers.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GetVideoStatus(int ucId) {
             UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
             return GetVideoStatus(ucr);
         }
+        /// <summary>
+        /// Get from Vimeo the processing status of the video.
+        /// </summary>
+        /// <param name="ucr">The record that contains the information on the video we are checking</param>
+        /// <returns>A string describing the video'sprocessing status in Vimeo's servers.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GetVideoStatus(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Record is null";
 
@@ -1895,10 +1907,15 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Fill in the MediaPart information by pretending to embed the video.
         /// </summary>
         /// <param name="ucId">The id of the record that contains the information on the video we are checking</param>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public void FinishMediaPart(int ucId) {
             UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
             if (ucr != null) FinishMediaPart(ucr);
-        }
+        }/// <summary>
+        /// Fill in the MediaPart information by pretending to embed the video.
+        /// </summary>
+        /// <param name="ucr">The record that contains the information on the video we are checking</param>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public void FinishMediaPart(UploadsCompleteRecord ucr) {
             string vId = ucr.Uri.Substring(ucr.Uri.LastIndexOf("/") + 1);
             string url = "https://vimeo.com/" + vId;
@@ -2105,6 +2122,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// to perform has been interrupted and may not be resumed.
         /// </summary>
         /// <param name="mediaPartId">The Id of the MediaPart that was created to contain the video.</param>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string DestroyUpload(int mediaPartId) {
             StringBuilder str = new StringBuilder();
             str.AppendLine(T("Clearing references to uploads for MediaPart {0}", mediaPartId).ToString());
@@ -2199,40 +2217,67 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <returns>The number of uploads in progress.</returns>
         public int VerifyAllUploads() {
-            foreach (var uip in _repositoryUploadsInProgress.Table.ToList()) {
-                if (DateTime.UtcNow >= uip.ScheduledVerificationTime.Value) {
-                    switch (VerifyUpload(uip)) {
-                        case VerifyUploadResult.CompletedAlready:
-                            break;
-                        case VerifyUploadResult.Complete:
-                            try {
-                                TerminateUpload(uip);
-                            } catch (Exception ex) {
-                                //we might end up here if the termination was called at the same time from here and the controller
-                            }
-                            break;
-                        case VerifyUploadResult.Incomplete:
-                            //there was no upload progress
-                            //if more than 24 hours have passed since the last progress of the upload, cancel it
-                            if (DateTime.UtcNow > uip.LastProgressTime.Value.AddDays(1)) {
-                                //Basically we are assuming that the upload was interrupted, but the client failed to notify us.
-                                DestroyUpload(uip.MediaPartId);
-                            }
-                            break;
-                        case VerifyUploadResult.StillUploading:
-                            break;
-                        case VerifyUploadResult.NeverExisted:
-                            break;
-                        case VerifyUploadResult.Error:
-                            break;
-                        default:
-                            break;
-                    }
-                } else if (uip.ScheduledVerificationTime.Value == DateTime.MaxValue && DateTime.UtcNow > uip.LastProgressTime.Value.AddDays(1)) {
-                    //we still keep the faulty upload information for roughly 24 hours
-                    DestroyUpload(uip.MediaPartId);
-                }
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
 
+            DateTime dNow = DateTime.UtcNow;
+            if (settings.RateLimitRemaining == 0 && dNow <= settings.RateLimitReset.Value) {
+                //we cannot make API calls right now, so postpone everything until after the reset
+                var uips = _repositoryUploadsInProgress.Table.ToList()
+                    .Where(uip => uip.ScheduledVerificationTime.Value <= settings.RateLimitReset.Value);
+                DateTime later = settings.RateLimitReset.Value.AddMinutes(1);
+                foreach (var uip in uips) {
+                    uip.ScheduledVerificationTime = later;
+                }
+            } else {
+                var uploadsInProgressToVerify = _repositoryUploadsInProgress.Table.ToList()
+                    .Where(uip => uip.ScheduledVerificationTime.Value <= dNow);
+                foreach (var uip in uploadsInProgressToVerify) {
+                    if (dNow >= uip.ScheduledVerificationTime.Value) {
+                        try {
+                            switch (VerifyUpload(uip)) {
+                                case VerifyUploadResult.CompletedAlready:
+                                    break;
+                                case VerifyUploadResult.Complete:
+                                    try {
+                                        TerminateUpload(uip);
+                                    } catch (VimeoRateException vre) {
+                                        throw vre;
+                                    } catch (Exception ex) {
+                                        //we might end up here if the termination was called at the same time from here and the controller
+                                    }
+                                    break;
+                                case VerifyUploadResult.Incomplete:
+                                    //there was no upload progress
+                                    //if more than 24 hours have passed since the last progress of the upload, cancel it
+                                    if (dNow > uip.LastProgressTime.Value.AddDays(1)) {
+                                        //Basically we are assuming that the upload was interrupted, but the client failed to notify us.
+                                        DestroyUpload(uip.MediaPartId);
+                                    }
+                                    break;
+                                case VerifyUploadResult.StillUploading:
+                                    break;
+                                case VerifyUploadResult.NeverExisted:
+                                    break;
+                                case VerifyUploadResult.Error:
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } catch (VimeoRateException vre) {
+                            //in case we finished our API calls, postpone calling the verification
+                            //until after the reset
+                            uip.ScheduledVerificationTime = vre.resetTime.Value.AddMinutes(1);
+                            //break out of the loop, because there is no point in trying to process the remaining uploads
+                            break;
+                        }
+                    } else if (uip.ScheduledVerificationTime.Value == DateTime.MaxValue && dNow > uip.LastProgressTime.Value.AddDays(1)) {
+                        //we still keep the faulty upload information for roughly 24 hours
+                        DestroyUpload(uip.MediaPartId);
+                    }
+                }
             }
             return _repositoryUploadsInProgress.Table.Count();
         }
@@ -2245,37 +2290,60 @@ namespace Laser.Orchard.Vimeo.Services {
                 .WorkContext
                 .CurrentSite
                 .As<VimeoSettingsPart>();
-            foreach (UploadsCompleteRecord ucr in _repositoryUploadsComplete.Table.ToList()) {
-                if (!ucr.Patched) {
-                    PatchVideo(ucr);
-                }
-                if (settings.AlwaysUploadToGroup && !ucr.UploadedToGroup) {
-                    AddVideoToGroup(ucr);
-                }
-                if (settings.AlwaysUploadToChannel && !ucr.UploadedToChannel) {
-                    AddVideoToChannel(ucr);
-                }
-                if (settings.AlwaysUploadToAlbum && !ucr.UploadedToAlbum) {
-                    AddVideoToAlbum(ucr);
-                }
-                if (!ucr.IsAvailable) {
-                    string status = GetVideoStatus(ucr);
-                    if (status == "Video not found") {
-                        //destroy everything
-                        DestroyUpload(ucr.MediaPartId);
-                    }
-                    ucr.IsAvailable = status == "available";
-                }
 
-                if (ucr.Patched
-                    && ucr.IsAvailable
-                    && (ucr.UploadedToGroup || !settings.AlwaysUploadToGroup)
-                    && (ucr.UploadedToChannel || !settings.AlwaysUploadToChannel)
-                    && (ucr.UploadedToAlbum || !settings.AlwaysUploadToAlbum)) {
-                    //Update the MediaPart
-                    FinishMediaPart(ucr);
-                    //We finished everything for this video upload, so we may remove its record
-                    _repositoryUploadsComplete.Delete(ucr);
+            DateTime dNow = DateTime.UtcNow;
+            if (settings.RateLimitRemaining == 0 && dNow <= settings.RateLimitReset.Value) {
+                //we cannot make API calls right now, so postpone everything until after the reset
+                var ucrs = _repositoryUploadsComplete.Table.ToList()
+                    .Where(ucr => ucr.ScheduledTerminationTime.Value <= settings.RateLimitReset.Value);
+                DateTime later = settings.RateLimitReset.Value.AddMinutes(1);
+                foreach (var ucr in ucrs) {
+                    ucr.ScheduledTerminationTime = later;
+                }
+            } else {
+                var recordsToVerify = _repositoryUploadsComplete.Table.ToList()
+                    .Where(ucr => ucr.ScheduledTerminationTime <= dNow);
+                foreach (UploadsCompleteRecord ucr in recordsToVerify) {
+                    try {
+                        if (!ucr.Patched) {
+                            PatchVideo(ucr);
+                        }
+                        if (settings.AlwaysUploadToGroup && !ucr.UploadedToGroup) {
+                            AddVideoToGroup(ucr);
+                        }
+                        if (settings.AlwaysUploadToChannel && !ucr.UploadedToChannel) {
+                            AddVideoToChannel(ucr);
+                        }
+                        if (settings.AlwaysUploadToAlbum && !ucr.UploadedToAlbum) {
+                            AddVideoToAlbum(ucr);
+                        }
+                        if (!ucr.IsAvailable) {
+                            string status = GetVideoStatus(ucr);
+                            if (status == "Video not found") {
+                                //destroy everything
+                                DestroyUpload(ucr.MediaPartId);
+                            }
+                            ucr.IsAvailable = status == "available";
+                        }
+
+                        if (ucr.Patched
+                            && ucr.IsAvailable
+                            && (ucr.UploadedToGroup || !settings.AlwaysUploadToGroup)
+                            && (ucr.UploadedToChannel || !settings.AlwaysUploadToChannel)
+                            && (ucr.UploadedToAlbum || !settings.AlwaysUploadToAlbum)) {
+                            //Update the MediaPart
+                            FinishMediaPart(ucr);
+                            //We finished everything for this video upload, so we may remove its record
+                            _repositoryUploadsComplete.Delete(ucr);
+                        }
+                    } catch (VimeoRateException vre) {
+                        //in case we have run out of API calls postpone further terminations 
+                        //until after the reset
+                        ucr.ScheduledTerminationTime = vre.resetTime.Value.AddMinutes(1);
+                        //break out of the loop, because there is no point in trying to process the other records
+                        break;
+                    }
+                    
                 }
             }
             return _repositoryUploadsComplete.Table.Count();

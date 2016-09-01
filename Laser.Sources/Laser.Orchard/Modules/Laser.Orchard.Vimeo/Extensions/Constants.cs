@@ -20,6 +20,8 @@ namespace Laser.Orchard.Vimeo.Extensions {
         public const double MinDelayBetweenVerifications = 1; //minutes
         public const double MinDelaySeconds = 60 * MinDelayBetweenVerifications;
         public const double SecToMinMultiplier = 1.0 / 60.0;
+        public const double MinDelayBetweenTerminations = 1; //minutes
+        public const double HoursToRefreshURLs = 12; //duration of cache for video URLs
     }
 
     public static class VimeoEndpoints {

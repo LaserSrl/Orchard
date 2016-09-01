@@ -273,5 +273,14 @@ namespace Laser.Orchard.Vimeo {
 
             return 13;
         }
+
+        public int UpdateFrom13() {
+            SchemaBuilder.AlterTable("UploadsCompleteRecord",
+                table => table
+                    .AddColumn<DateTime>("ScheduledTerminationTime")
+                );
+
+            return 14;
+        }
     }
 }

@@ -19,5 +19,7 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual bool IsAvailable { get; set; }
 
         public virtual int MediaPartId { get; set; }
+
+        public virtual DateTime? ScheduledTerminationTime { get; set; } //when we will try to terminate the upload next
     }
 }
