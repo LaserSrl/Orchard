@@ -1,0 +1,85 @@
+@using System;
+@using System.Collections;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Net;
+@using System.Text;
+@using System.Web;
+@using System.Globalization;
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Core.Common.Models;
+@using Orchard.Core.Title.Models;
+@using Orchard.Data;
+@using Orchard.Fields.Fields;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
+@using Orchard.Security;
+@using Orchard.Utility.Extensions;
+@using  Orchard.ContentPicker.Fields;
+
+@functions{
+
+IContentManager _contentManager;
+IFieldIndexService _fieldIndexService;
+string retString = "";
+
+}
+
+@{
+    try {
+
+        // get services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+		_fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+		
+		// Vai sulla Parte cerca quella denominata MessaggioPromozionale
+		Func<ContentPart, bool> IsMessaggioPromozionalePart = part => part.PartDefinition.Name == "MessaggioPromozionale";
+		
+		// Prendi il contenuto -- ATTENZIONE -- NON ASSEGNARE DIRETTAMENTE I TIPI ALTRIMENTI ISTRUZIONE WHERE FALLISCE
+		ContentItem ci = Model.ContentItem;
+		List<ContentPart> _parts = ci.Parts.ToList();		
+		var messPromPart = _parts.Where(IsMessaggioPromozionalePart).SingleOrDefault();
+			
+	    // Definisci un content field
+		Func<ContentField, bool> IsPuntoVendita = fi => fi.Name == "PuntoVendita";
+		
+		// Seleziona oggetto ContentPickerField (agg using) denominato PuntoVendita -- ATTENZIONE -- NON ASSEGNARE DIRETTAMENTE I TIPI ALTRIMENTI ISTRUZIONE WHERE FALLISCE
+		ContentPickerField PuntoVendita  = (ContentPickerField)messPromPart.Fields.Where(IsPuntoVendita).SingleOrDefault();
+		
+		// Verifica condizione (Ids è un oggetto Orchard)		
+		if (PuntoVendita.Ids == null || !PuntoVendita.Ids.Any()) 
+		{
+			var fiPart = ci.As<FieldIndexPart>();			
+					
+			var GetAllPuntiVendita = _contentManager.Query(VersionOptions.Latest).ForType("PuntoVendita").List().ToList();
+			
+			Func<ContentItem, int> VenditaIds = x => x.Id;
+			
+			//Definisco un'elenco di punti vendita (tramite id)
+			var Elenco= GetAllPuntiVendita.Select(VenditaIds);
+			
+			//Assegnazione al contentpicker i valori
+			PuntoVendita.Ids = Elenco.ToArray();
+			
+			// Assegnazione anche dei valori anche all' oggetto _fieldIndexService (da fare sempre)
+			IEnumerable<string> pvids = Elenco.Select<int, string>(mid => "{" + mid.ToString() + "}");
+            string allIds = String.Join(",", pvids);
+            _fieldIndexService.Set(
+                fiPart,
+                "MessaggioPromozionale",
+                "PuntoVendita",
+                "",
+                allIds,
+                typeof(string)
+            );
+		}
+				
+		 } catch (Exception ex){
+                //retString += "\n INNER: " + ex.Message;
+                throw;
+            }
+}@retString		
+		
+		
