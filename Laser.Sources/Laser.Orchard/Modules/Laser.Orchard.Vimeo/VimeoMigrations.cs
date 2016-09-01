@@ -251,5 +251,27 @@ namespace Laser.Orchard.Vimeo {
 
             return 11;
         }
+
+        public int UpdateFrom11() {
+            SchemaBuilder.AlterTable("UploadsInProgressRecord",
+                table => table
+                    .AddColumn<DateTime>("LastVerificationTime")
+                );
+            SchemaBuilder.AlterTable("UploadsInProgressRecord",
+                table => table
+                    .AddColumn<DateTime>("ScheduledVerificationTime")
+                );
+
+            return 12;
+        }
+
+        public int UpdateFrom12() {
+            SchemaBuilder.AlterTable("UploadsInProgressRecord",
+                table => table
+                    .AddColumn<DateTime>("LastProgressTime")
+                );
+
+            return 13;
+        }
     }
 }

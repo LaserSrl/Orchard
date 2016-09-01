@@ -714,6 +714,9 @@ namespace Laser.Orchard.Vimeo.Services {
             UploadsInProgressRecord entity = new UploadsInProgressRecord();
             entity.UploadSize = fileSize;
             entity.CreatedTime = DateTime.UtcNow;
+            entity.LastVerificationTime = DateTime.UtcNow;
+            entity.ScheduledVerificationTime = DateTime.UtcNow.AddMinutes(Constants.MinDelayBetweenVerifications);
+            entity.LastProgressTime = DateTime.UtcNow;
             _repositoryUploadsInProgress.Create(entity);
             ScheduleUploadVerification();
             int recordId = entity.Id;
@@ -853,6 +856,10 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="uploadId">The record corresponding to the upload</param>
         /// <returns>A value describing the state of the upload.</returns>
         public VerifyUploadResult VerifyUpload(UploadsInProgressRecord entity) {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
 
             HttpWebRequest wr = VimeoCreateRequest(
                     endpoint: entity.UploadLinkSecure,
@@ -862,30 +869,76 @@ namespace Laser.Orchard.Vimeo.Services {
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     //if we end up here, something went really wrong
+                    //schedule the next verification for never
+                    entity.ScheduledVerificationTime = DateTime.MaxValue;
                 }
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
-                if (resp != null && resp.StatusDescription == "Resume Incomplete") {
-                    //we actually expect status code 308, but that fires an exception, so we have to handle things here
-                    //Check that everything has been sent, by reading from the "Range" Header of the response.
-                    var range = resp.Headers["Range"];
-                    Int64 sent;
-                    if (Int64.TryParse(range.Substring(range.IndexOf('-') + 1), out sent)) {
-                        if (sent == entity.UploadSize) {
-                            //Upload finished
-                            return VerifyUploadResult.Complete;
-                        } else {
+                if (resp != null) {
+                    if (resp.StatusDescription == "Resume Incomplete") {
+                        //we actually expect status code 308, but that fires an exception, so we have to handle things here
+                        //Check that everything has been sent, by reading from the "Range" Header of the response.
+                        var range = resp.Headers["Range"];
+                        Int64 sent;
+                        if (Int64.TryParse(range.Substring(range.IndexOf('-') + 1), out sent)) {
                             //update the uploaded size
                             Int64 old = entity.UploadedSize;
                             entity.UploadedSize = sent;
-                            return old == sent ? VerifyUploadResult.Incomplete : VerifyUploadResult.StillUploading;
-                            //if the upload has been going on for some time, we may decide to destroy its information.
-                            //The distinction between Incomplete and StillUploading helps us understand whether it is
-                            //just a slow/long upload, or the upload actualy stopped and we may discard it safely.
+                            Int64 lastSlice = sent - old; //bytes uploaded since last verification
+                            //update the cached quota based on what we sent here. This should track the actual quota closely,
+                            //but it may not be 100% exact.
+                            settings.UploadQuotaSpaceFree -= lastSlice;
+                            settings.UploadQuotaSpaceUsed += lastSlice;
+                            if (sent == entity.UploadSize) {
+                                //Upload finished                            
+                                return VerifyUploadResult.Complete;
+                            } else if (sent > entity.UploadSize) {
+                                //this is a terrible error that we have no way of recovering from.
+                                //schedule the next verification for never
+                                entity.ScheduledVerificationTime = DateTime.MaxValue;
+                                return VerifyUploadResult.Error;
+                            } else {
+                                //determine how much we should wait before the next verification event;
+                                DateTime dtNow = DateTime.UtcNow;
+                                if (lastSlice == 0) {
+                                    entity.ScheduledVerificationTime = dtNow.AddMinutes(Constants.MaxDelayBetweenVerifications);
+                                    return VerifyUploadResult.Incomplete;
+                                } else {
+                                    entity.LastProgressTime = dtNow; //since the previous verification the upload has made progress
+                                    double lSlice = (double)lastSlice;
+                                    //I use seconds here instead of minutes to have finer granularity
+                                    double secondsPassed = (dtNow - entity.LastVerificationTime.Value).TotalSeconds;
+                                    //double bytesPerSecond = lSlice / secondsPassed;
+                                    double remaining = (double)(entity.UploadSize - sent); //bytes still to upload
+                                    //double secondsToFinish = remaining / bytesPerSecond;
+                                    if (remaining * secondsPassed <= Constants.MinDelaySeconds * lSlice) {
+                                        entity.ScheduledVerificationTime = dtNow.AddMinutes(Constants.MinDelayBetweenVerifications);
+                                    } else if (remaining * secondsPassed >= Constants.MaxDelaySeconds * lSlice) {
+                                        entity.ScheduledVerificationTime = dtNow.AddMinutes(Constants.MaxDelayBetweenVerifications);
+                                    } else {
+                                        //pretend the upload speed will remain constant
+                                        entity.ScheduledVerificationTime = dtNow.AddMinutes((remaining * secondsPassed / lSlice) * Constants.SecToMinMultiplier);
+                                    }
+                                }
+                                entity.LastVerificationTime = dtNow;
+                                return old == sent ? VerifyUploadResult.Incomplete : VerifyUploadResult.StillUploading;
+                                //if the upload has been going on for some time, we may decide to destroy its information.
+                                //The distinction between Incomplete and StillUploading helps us understand whether it is
+                                //just a slow/long upload, or the upload actualy stopped and we may discard it safely.
+                            }
                         }
+                    } else {
+                        //The Vimeo specification says there is no other possible response status. If we are here, something went 
+                        //terribly wrong, most likely on their side of things.
+                        //schedule the next verification for never
+                        entity.ScheduledVerificationTime = DateTime.MaxValue;
+                        return VerifyUploadResult.Error;
                     }
                 }
+                
             }
+            //errors take us here. Note that we handled most communication errors above, so the most likely cause for us being here
+            //is connection issues.
             return VerifyUploadResult.Error; //something went rather wrong
         }
         /// <summary>
@@ -1981,31 +2034,39 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <returns>The number of uploads in progress.</returns>
         public int VerifyAllUploads() {
             foreach (var uip in _repositoryUploadsInProgress.Table.ToList()) {
-                switch (VerifyUpload(uip)) {
-                    case VerifyUploadResult.CompletedAlready:
-                        break;
-                    case VerifyUploadResult.Complete:
-                        try {
-                            TerminateUpload(uip);
-                        } catch (Exception ex) {
-                            //we might end up here if the termination was called at the same time from here and the controller
-                        }
-                        break;
-                    case VerifyUploadResult.Incomplete:
-                        //if more than 24 hours have passed since the beginning of the upload, cancel it
-                        if (DateTime.UtcNow > uip.CreatedTime.Value.AddDays(1)) {
-                            DestroyUpload(uip.MediaPartId);
-                        }
-                        break;
-                    case VerifyUploadResult.StillUploading:
-                        break;
-                    case VerifyUploadResult.NeverExisted:
-                        break;
-                    case VerifyUploadResult.Error:
-                        break;
-                    default:
-                        break;
+                if (DateTime.UtcNow >= uip.ScheduledVerificationTime.Value) {
+                    switch (VerifyUpload(uip)) {
+                        case VerifyUploadResult.CompletedAlready:
+                            break;
+                        case VerifyUploadResult.Complete:
+                            try {
+                                TerminateUpload(uip);
+                            } catch (Exception ex) {
+                                //we might end up here if the termination was called at the same time from here and the controller
+                            }
+                            break;
+                        case VerifyUploadResult.Incomplete:
+                            //there was no upload progress
+                            //if more than 24 hours have passed since the last progress of the upload, cancel it
+                            if (DateTime.UtcNow > uip.LastProgressTime.Value.AddDays(1)) {
+                                //Basically we are assuming that the upload was interrupted, but the client failed to notify us.
+                                DestroyUpload(uip.MediaPartId);
+                            }
+                            break;
+                        case VerifyUploadResult.StillUploading:
+                            break;
+                        case VerifyUploadResult.NeverExisted:
+                            break;
+                        case VerifyUploadResult.Error:
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (uip.ScheduledVerificationTime.Value == DateTime.MaxValue && DateTime.UtcNow > uip.LastProgressTime.Value.AddDays(1)) {
+                    //we still keep the faulty upload information for roughly 24 hours
+                    DestroyUpload(uip.MediaPartId);
                 }
+                
             }
             return _repositoryUploadsInProgress.Table.Count();
         }
