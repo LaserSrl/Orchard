@@ -123,6 +123,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Update values in the actual settings based off what is in the ViewModel.
         /// </summary>
         /// <param name="vm">The ViewModel coming from the form.</param>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public void UpdateSettings(VimeoSettingsPartViewModel vm) {
             var settings = _orchardServices
                 .WorkContext
@@ -634,6 +635,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="cDesc">A description for the Channel</param>
         /// <param name="cPrivacy">The privacy level for the Channel (defaults at user only)</param>
         /// <returns>A <type>string</type> with the response received.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string CreateNewChannel(string aToken, string cName, string cDesc = "", string cPrivacy = "user") {
             if (cPrivacy != "user" && cPrivacy != "anybody")
                 cPrivacy = "user";
@@ -1729,14 +1731,14 @@ namespace Laser.Orchard.Vimeo.Services {
                         videoJsonTree = JObject.Parse(data);
                     }
                 }
-            } catch (VimeoRateException vre) {
-                throw vre;
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
-                    UpdateAPIRateLimits(settings, resp);
-                } else {
-                    throw new Exception(T("Failed to read response").ToString(), ex);
+                    try {
+                        UpdateAPIRateLimits(settings, resp);
+                    } catch (Exception vre) {
+                        return vre.Message;
+                    }
                 }
                 return ex.Message;
             }
@@ -1775,6 +1777,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         url = playerCall.Address.AbsoluteUri;
                     }
                 } catch (Exception ex) {
+                    return ex.Message;
                 }
                 return url;
             } else {
