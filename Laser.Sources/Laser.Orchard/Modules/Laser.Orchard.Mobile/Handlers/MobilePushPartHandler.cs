@@ -29,7 +29,7 @@ namespace Laser.Orchard.Mobile.Handlers   {
             Filters.Add(StorageFilter.For(repository));
 
             OnUpdated<MobilePushPart>((context, part) => {
-                if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.PushTest"] == "submit.PushTest") {
+                if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.PushTest") {
                     // Invio Push di Test
                     _pushGatewayService.PublishedPushEventTest(part.ContentItem); 
                 }
