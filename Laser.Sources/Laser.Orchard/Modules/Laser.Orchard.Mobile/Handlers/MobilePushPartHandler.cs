@@ -10,7 +10,7 @@ using Orchard.Tasks.Scheduling;
 using Orchard.UI.Notify;
 using System;
 
-namespace Laser.Orchard.Mobile.Handlers   {
+namespace Laser.Orchard.Mobile.Handlers {
     [OrchardFeature("Laser.Orchard.PushGateway")]
     public class MobilePushPartHandler : ContentHandler {
         private readonly INotifier _notifier;
@@ -29,9 +29,9 @@ namespace Laser.Orchard.Mobile.Handlers   {
             Filters.Add(StorageFilter.For(repository));
 
             OnUpdated<MobilePushPart>((context, part) => {
-                if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.PushTest"] == "submit.PushTest") {
+                if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.PushTest") {
                     // Invio Push di Test
-                    _pushGatewayService.PublishedPushEventTest(part.ContentItem); 
+                    _pushGatewayService.PublishedPushEventTest(part.ContentItem);
                 }
 
                 if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.PushContact") {
@@ -40,7 +40,7 @@ namespace Laser.Orchard.Mobile.Handlers   {
                     string aux = _orchardServices.WorkContext.HttpContext.Request.Form["contact-to-push"];
                     // rimuove il numero di device racchiuso tra parentesi per ricavare il nome del contact
                     int idx = aux.LastIndexOf(" (");
-                    if(idx > 0) {
+                    if (idx > 0) {
                         contactTitle = aux.Substring(0, idx);
                     }
                     // invia la push
@@ -53,10 +53,10 @@ namespace Laser.Orchard.Mobile.Handlers   {
 
             OnPublished<MobilePushPart>((context, part) => {
                 try {
-                    if (part.PushSent == false) {
-                    _taskManager.CreateTask("Laser.Orchard.PushNotification.Task", DateTime.UtcNow.AddMinutes(1), part.ContentItem);
+                    if ((part.ToPush == true) && (part.PushSent == false)) {
+                        _taskManager.CreateTask("Laser.Orchard.PushNotification.Task", DateTime.UtcNow.AddMinutes(1), part.ContentItem);
                         part.PushSent = true;
-                }
+                    }
                 }
                 catch (Exception ex) {
                     Logger.Error(ex, "Error starting asynchronous thread to send push notifications.");

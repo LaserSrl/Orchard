@@ -15,21 +15,15 @@
     }
 </fieldset>
 <fieldset id="test-push-container" style="@((!Model.ShowTestOptions) ? "display:none;" : "")">
-    @*@if (Model.ShowTestOptions){
-        *@<div class="checkbox-and-label">
-            <label for="@Html.FieldIdFor(m => m.TestPush)" class="forcheckbox">@T("Test Push on device") </label>
-            @if(disabledElements == false) {
-                @Html.CheckBoxFor(m => m.TestPush, new { @class = "rcswitcher-checkbox-pushtest" })
-            }
-            else {
-                @Html.CheckBoxFor(m => m.TestPush, new { @class = "rcswitcher-checkbox-pushtest", @disabled = "disabled" })
-            }
-            <div id="test-push-info" style="@((!Model.TestPush) ? "display:none;" : "")">
-                <div class="form-group">
-                    <span class="hint">@T("Number push test:") @Model.PushTestNumber</span>
-                    <button type="submit" name="submit.PushTest" value="submit.PushTest">@T("Send for test")</button>
-                </div>
+    <div class="checkbox-and-label">
+        <label for="@Html.FieldIdFor(m => m.TestPush)" class="forcheckbox">@T("Test Push on device") </label>
+        @Html.CheckBoxFor(m => m.TestPush, new { @class = "rcswitcher-checkbox-pushtest" })
+        <div id="test-push-info" style="@((!Model.TestPush) ? "display:none;" : "")">
+            <div class="form-group">
+                <span class="hint">@T("Number push test:") @Model.PushTestNumber</span>
+                <button type="submit" name="submit.Save" value="submit.PushTest">@T("Send for test")</button>
             </div>
-            <span class="hint">@T("Mask to make test for Push... this option is set by settings of module")</span>
         </div>
+        <span class="hint">@T("Mask to make test for Push... this option is set by settings of module")</span>
+    </div>
 </fieldset>
