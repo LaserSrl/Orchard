@@ -62,6 +62,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                         case "mail":
                         case "email":
                         case "e-mail":
+                        case "email-address":
                             emailAddress = createUserParams.ExtraData[key];
                             break;
                     }
