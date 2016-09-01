@@ -136,77 +136,83 @@ namespace Laser.Orchard.Vimeo.Services {
             settings.AlwaysUploadToGroup = vm.AlwaysUploadToGroup;
             settings.AlwaysUploadToAlbum = vm.AlwaysUploadToAlbum;
             settings.AlwaysUploadToChannel = vm.AlwaysUploadToChannel;
-
-            //verify group, channel and album.
-            //if they do not exist, try to create them.
-            if (TokenIsValid(settings.AccessToken)) {
-                //group
-                if (!string.IsNullOrWhiteSpace(settings.GroupName)) {
-                    if (GroupIsValid(settings.GroupName, settings.AccessToken)) {
-                        _orchardServices.Notifier.Information(T("Group Name valid"));
-                        settings.GroupId = GetGroupId();
-                    } else {
-                        string res = CreateNewGroup(settings.AccessToken, settings.GroupName);
-                        if (res == "OK") {
-                            _orchardServices.Notifier.Information(T("Group created"));
+            try {
+                //verify group, channel and album.
+                //if they do not exist, try to create them.
+                if (TokenIsValid(settings.AccessToken)) {
+                    //group
+                    if (!string.IsNullOrWhiteSpace(settings.GroupName)) {
+                        if (GroupIsValid(settings.GroupName, settings.AccessToken)) {
+                            _orchardServices.Notifier.Information(T("Group Name valid"));
                             settings.GroupId = GetGroupId();
                         } else {
-                            _orchardServices.Notifier.Error(T("Failed to create group. Internal message: {0}", res));
-                            settings.AlwaysUploadToGroup = false;
+                            string res = CreateNewGroup(settings.AccessToken, settings.GroupName);
+                            if (res == "OK") {
+                                _orchardServices.Notifier.Information(T("Group created"));
+                                settings.GroupId = GetGroupId();
+                            } else {
+                                _orchardServices.Notifier.Error(T("Failed to create group. Internal message: {0}", res));
+                                settings.AlwaysUploadToGroup = false;
+                            }
                         }
                     }
-                }
-                //channel
-                if (!string.IsNullOrWhiteSpace(settings.ChannelName)) {
-                    if (ChannelIsValid(settings.ChannelName, settings.AccessToken)) {
-                        _orchardServices.Notifier.Information(T("Channel Name valid"));
-                        settings.ChannelId = GetChannelId();
-                    } else {
-                        string res = CreateNewChannel(settings.AccessToken, settings.ChannelName);
-                        if (res == "OK") {
-                            _orchardServices.Notifier.Information(T("Channel created"));
+                    //channel
+                    if (!string.IsNullOrWhiteSpace(settings.ChannelName)) {
+                        if (ChannelIsValid(settings.ChannelName, settings.AccessToken)) {
+                            _orchardServices.Notifier.Information(T("Channel Name valid"));
                             settings.ChannelId = GetChannelId();
                         } else {
-                            _orchardServices.Notifier.Error(T("Failed to create channel. Internal message: {0}", res));
-                            settings.AlwaysUploadToChannel = false;
+                            string res = CreateNewChannel(settings.AccessToken, settings.ChannelName);
+                            if (res == "OK") {
+                                _orchardServices.Notifier.Information(T("Channel created"));
+                                settings.ChannelId = GetChannelId();
+                            } else {
+                                _orchardServices.Notifier.Error(T("Failed to create channel. Internal message: {0}", res));
+                                settings.AlwaysUploadToChannel = false;
+                            }
                         }
                     }
-                }
-                //album
-                if (!string.IsNullOrWhiteSpace(settings.AlbumName)) {
-                    if (AlbumIsValid(settings.AlbumName, settings.AccessToken)) {
-                        _orchardServices.Notifier.Information(T("Album Name valid"));
-                        settings.AlbumId = GetAlbumId();
-                    } else {
-                        string res = CreateNewAlbum(settings.AccessToken, settings.AlbumName);
-                        if (res == "OK") {
-                            _orchardServices.Notifier.Information(T("Album created"));
+                    //album
+                    if (!string.IsNullOrWhiteSpace(settings.AlbumName)) {
+                        if (AlbumIsValid(settings.AlbumName, settings.AccessToken)) {
+                            _orchardServices.Notifier.Information(T("Album Name valid"));
                             settings.AlbumId = GetAlbumId();
                         } else {
-                            _orchardServices.Notifier.Error(T("Failed to create album. Internal message: {0}", res));
-                            settings.AlwaysUploadToAlbum = false;
+                            string res = CreateNewAlbum(settings.AccessToken, settings.AlbumName);
+                            if (res == "OK") {
+                                _orchardServices.Notifier.Information(T("Album created"));
+                                settings.AlbumId = GetAlbumId();
+                            } else {
+                                _orchardServices.Notifier.Error(T("Failed to create album. Internal message: {0}", res));
+                                settings.AlwaysUploadToAlbum = false;
+                            }
                         }
                     }
+                } else {
+                    _orchardServices.Notifier.Error(T("Access token not valid"));
                 }
-            } else {
-                _orchardServices.Notifier.Error(T("Access token not valid"));
-            }
 
-            settings.License = vm.License ?? "";
-            settings.Privacy = vm.Privacy;
-            settings.Password = vm.Password ?? "";
-            if (vm.Privacy.view == "password" && string.IsNullOrWhiteSpace(vm.Password)) {
-                _orchardServices.Notifier.Error(T("The password must not be an empty string."));
-            }
-            settings.ReviewLink = vm.ReviewLink;
-            settings.Locale = vm.Locale ?? "";
-            settings.ContentRatings = vm.ContentRatingsSafe ?
-                new string[] { "safe" }.ToList() :
-                vm.ContentRatingsUnsafe.Where(cr => cr.Value == true).Select(cr => cr.Key).ToList();
-            settings.Whitelist = string.IsNullOrWhiteSpace(vm.Whitelist) ? new List<string>() : vm.Whitelist.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                settings.License = vm.License ?? "";
+                settings.Privacy = vm.Privacy;
+                settings.Password = vm.Password ?? "";
+                if (vm.Privacy.view == "password" && string.IsNullOrWhiteSpace(vm.Password)) {
+                    _orchardServices.Notifier.Error(T("The password must not be an empty string."));
+                }
+                settings.ReviewLink = vm.ReviewLink;
+                settings.Locale = vm.Locale ?? "";
+                settings.ContentRatings = vm.ContentRatingsSafe ?
+                    new string[] { "safe" }.ToList() :
+                    vm.ContentRatingsUnsafe.Where(cr => cr.Value == true).Select(cr => cr.Key).ToList();
+                settings.Whitelist = string.IsNullOrWhiteSpace(vm.Whitelist) ? new List<string>() : vm.Whitelist.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-            RetrieveAccountType(settings);
-            settings.LastTimeAccountTypeWasChecked = DateTime.UtcNow;
+                RetrieveAccountType(settings);
+                settings.LastTimeAccountTypeWasChecked = DateTime.UtcNow;
+                CheckQuota();
+            } catch (VimeoRateException vre) {
+                _orchardServices.Notifier.Error(T("Too many requests to Vimeo. Rate limits will reset on {0} UTC", vre.resetTime.Value.ToString()));
+            } catch (Exception ex) {
+                _orchardServices.Notifier.Error(T("{0}", ex.Message));
+            }
         }
 
         /// <summary>
@@ -240,6 +246,8 @@ namespace Laser.Orchard.Vimeo.Services {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(settings, resp);
+                } else {
+                    throw ex;
                 }
             }
 
@@ -251,7 +259,9 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="settings">The part containing the vimeo Settings.</param>
         /// <param name="resp">The response we received from the API.</param>
-        private void UpdateAPIRateLimits(VimeoSettingsPart settings, HttpWebResponse resp) {
+        /// <returns>The number of remaining requests.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
+        private int UpdateAPIRateLimits(VimeoSettingsPart settings, HttpWebResponse resp) {
             var heads = resp.Headers;
             int tmp;
             if (int.TryParse(heads["X-RateLimit-Limit"], out tmp)) {
@@ -264,13 +274,23 @@ namespace Laser.Orchard.Vimeo.Services {
             if (DateTime.TryParse(heads["X-RateLimit-Reset"], out temp)) {
                 settings.RateLimitReset = temp.ToUniversalTime();
             }
+            if (settings.RateLimitRemaining == 0) {
+                throw new VimeoRateException(settings.RateLimitReset);
+            }
+            return settings.RateLimitRemaining;
         }
-        private void UpdateAPIRateLimits(HttpWebResponse resp) {
+        private int UpdateAPIRateLimits(HttpWebResponse resp) {
             var settings = _orchardServices
                .WorkContext
                .CurrentSite
                .As<VimeoSettingsPart>();
-            UpdateAPIRateLimits(settings, resp);
+            try {
+                UpdateAPIRateLimits(settings, resp);
+            } catch (Exception ex) {
+
+                throw ex;
+            }
+            return settings.RateLimitRemaining;
         }
 
         /// <summary>
@@ -288,10 +308,10 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <returns><value>true</value> if the access token is authenticated and valid. <value>false</value> otherwise.</returns>
         public bool TokenIsValid(string aToken) {
             HttpWebRequest wr = VimeoCreateRequest(
-                aToken: aToken, 
+                aToken: aToken,
                 endpoint: VimeoEndpoints.Me,
                 qString: "?fields=name" //using a json filter to receive less data and allow a higher api rate limit
-                ); 
+                );
 
             bool ret = false;
             try {
@@ -671,7 +691,7 @@ namespace Laser.Orchard.Vimeo.Services {
             } else {
                 quotaInfo = new VimeoUploadQuota(settings.UploadQuotaSpaceFree, settings.UploadQuotaSpaceMax, settings.UploadQuotaSpaceUsed);
             }
-            
+
             return quotaInfo;
         }
         /// <summary>
@@ -935,7 +955,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         return VerifyUploadResult.Error;
                     }
                 }
-                
+
             }
             //errors take us here. Note that we handled most communication errors above, so the most likely cause for us being here
             //is connection issues.
@@ -946,7 +966,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="mediaPartId">The Id of the MediaPart containing the video whose upload we want to check</param>
         /// <returns>The Upload Url, or <value>null</value> in case of error</returns>
-        public string GetUploadUrl(int mediaPartId){
+        public string GetUploadUrl(int mediaPartId) {
             var mps = _contentManager.GetAllVersions(mediaPartId);
             var it = mps.Where(ci => ci.VersionRecord.Id == mps.Max(cv => cv.VersionRecord.Id)).SingleOrDefault();
 
@@ -1332,7 +1352,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
         public string AddVideoToGroup(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Cannot identify video";
-            
+
             var settings = _orchardServices
                     .WorkContext
                     .CurrentSite
@@ -1561,7 +1581,7 @@ namespace Laser.Orchard.Vimeo.Services {
             if (DateTime.UtcNow < settings.LastTimeAccountTypeWasChecked.Value.AddHours(24)) {
                 RetrieveAccountType(settings);
             }
-            bool proAccount = settings.AccountType ==  "pro";
+            bool proAccount = settings.AccountType == "pro";
             string uId = settings.UserId; //user id on vimeo
 
             //NOTE: remember to verify if we own the video
@@ -2066,7 +2086,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     //we still keep the faulty upload information for roughly 24 hours
                     DestroyUpload(uip.MediaPartId);
                 }
-                
+
             }
             return _repositoryUploadsInProgress.Table.Count();
         }
@@ -2137,6 +2157,34 @@ namespace Laser.Orchard.Vimeo.Services {
                 wr.Headers.Add(HttpRequestHeader.Authorization, Constants.HeaderAuthorizationValue + aToken);
             wr.Method = method;
             return wr;
+        }
+    }
+
+    public class VimeoRateException : Exception {
+        public DateTime? resetTime { get; set; }
+        public VimeoRateException() {
+        }
+
+        public VimeoRateException(string message)
+            : base(message) {
+        }
+
+        public VimeoRateException(string message, Exception inner)
+            : base(message, inner) {
+        }
+
+        public VimeoRateException(DateTime? resetTime) {
+            this.resetTime = resetTime;
+        }
+
+        public VimeoRateException(DateTime? resetTime, string message)
+            : base(message) {
+            this.resetTime = resetTime;
+        }
+
+        public VimeoRateException(DateTime? resetTime, string message, Exception inner)
+            : base(message, inner) {
+            this.resetTime = resetTime;
         }
     }
 }

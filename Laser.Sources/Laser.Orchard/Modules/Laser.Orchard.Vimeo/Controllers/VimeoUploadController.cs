@@ -28,21 +28,36 @@ namespace Laser.Orchard.Vimeo.Controllers {
         public ActionResult TryStartUpload(Int64 fileSize) {
             //TODO: make all the ticket creation in a single call from here. This is mostly so we do not send record ids
             //or anything like that out of the services
-            int uploadId = _vimeoUploadServices.IsValidFileSize(fileSize);
-            string message = T("Everything is fine").ToString();
-            if (uploadId >= 0) {
-                //If there is enough quota available, open an upload ticket, by posting to VimeoEndpoints.VideoUpload
-                //with parameter type=streaming
-                string uploadUrl = _vimeoUploadServices.GenerateUploadTicket(uploadId);
-                //create a new MediaPart 
-                int MediaPartId = _vimeoUploadServices.GenerateNewMediaPart(uploadId);
-                object data = new { MediaPartId, uploadUrl };
-                return Json(_utilsServices.GetResponse(ResponseType.Success, message, data));
-            } else {
-                //If there is not enough upload quota available, return an error or something.
-                message = T("Error: Not enough upload quota available").ToString();
-                return Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF, message));
+            try {
+                int uploadId = _vimeoUploadServices.IsValidFileSize(fileSize);
+                string message = T("Everything is fine").ToString();
+                if (uploadId >= 0) {
+                    //If there is enough quota available, open an upload ticket, by posting to VimeoEndpoints.VideoUpload
+                    //with parameter type=streaming
+                    string uploadUrl = _vimeoUploadServices.GenerateUploadTicket(uploadId);
+                    //create a new MediaPart 
+                    int MediaPartId = _vimeoUploadServices.GenerateNewMediaPart(uploadId);
+                    object data = new { MediaPartId, uploadUrl };
+                    return Json(_utilsServices.GetResponse(ResponseType.Success, message, data));
+                } else {
+                    //If there is not enough upload quota available, return an error or something.
+                    message = T("Error: Not enough upload quota available").ToString();
+                    return Json(new VimeoOrchardResponse {
+                        ErrorCode = VimeoOrchardErrorCode.NotEnoughQuota,
+                        Success = false,
+                        Message = message,
+                        ResolutionAction = VimeoResolutionAction.NoAction
+                    });
+                }
+            } catch (VimeoRateException vre) {
+                return Json(new VimeoOrchardResponse {
+                    ErrorCode = VimeoOrchardErrorCode.RateLimited,
+                    Success = false,
+                    Message = string.Format("Rate will reset on {0} UTC", vre.resetTime.Value.ToString()),
+                    ResolutionAction = VimeoResolutionAction.NoAction
+                });
             }
+            
 
         }
 
@@ -66,75 +81,101 @@ namespace Laser.Orchard.Vimeo.Controllers {
 
         public ActionResult FinishUpload(int mediaPartId) {
             string message = "";
-            VimeoFinishErrorCode eCode = VimeoFinishErrorCode.GenericError;
+            VimeoOrchardErrorCode eCode = VimeoOrchardErrorCode.GenericError;
+            VimeoResolutionAction rAction = VimeoResolutionAction.NoAction;
             bool success = false;
             string uploadUrl = null; //I use this in case we need to resume an upload
             //re-verify upload
-            switch (_vimeoUploadServices.VerifyUpload(mediaPartId)) {
-                case VerifyUploadResult.CompletedAlready:
-                    //the periodic task had already verified that the upload had completed
-                    message = T("The upload process has finished.").ToString();
-                    eCode = VimeoFinishErrorCode.NoError;
-                    success = true;
-                    break;
-                case VerifyUploadResult.Complete:
-                    //we just found out that the upload is complete
-                    try {
-                        if (_vimeoUploadServices.TerminateUpload(mediaPartId)) {
-                            //Make sure the finisher task exists
-                            message = T("The upload process has finished.").ToString();
-                            eCode = VimeoFinishErrorCode.NoError;
-                            success = true;
+            try {
+                switch (_vimeoUploadServices.VerifyUpload(mediaPartId)) {
+                    case VerifyUploadResult.CompletedAlready:
+                        //the periodic task had already verified that the upload had completed
+                        message = T("The upload process has finished.").ToString();
+                        eCode = VimeoOrchardErrorCode.NoError;
+                        rAction = VimeoResolutionAction.NoAction;
+                        success = true;
+                        break;
+                    case VerifyUploadResult.Complete:
+                        //we just found out that the upload is complete
+                        try {
+                            if (_vimeoUploadServices.TerminateUpload(mediaPartId)) {
+                                //Make sure the finisher task exists
+                                message = T("The upload process has finished.").ToString();
+                                eCode = VimeoOrchardErrorCode.NoError;
+                                rAction = VimeoResolutionAction.NoAction;
+                                success = true;
+                            } else {
+                                //we might end up here in the case when the termination was requested at the same time from here and from the task
+                                message = T("The upload has completed, but there was an error while handling the finishing touches.").ToString();
+                                eCode = VimeoOrchardErrorCode.FinishingErrors;
+                                rAction = VimeoResolutionAction.NoAction;
+                                success = false;
+                            }
+                        } catch (Exception ex) {
+                            //we might end up here in the case when the termination was requested at the same time from here and from the task
+                            message = T("The upload has completed, but there was an error while handling the finishing touches.").ToString();
+                            eCode = VimeoOrchardErrorCode.FinishingErrors;
+                            rAction = VimeoResolutionAction.NoAction;
+                            success = false;
                         }
-                    } catch (Exception ex) {
-                        //we might end up here in the case when the termination was requested at the same time from here and from the task
-                    }
-                    message = T("The upload has completed, but there was an error while handling the finishing touches.").ToString();
-                    eCode = VimeoFinishErrorCode.FinishingErrors;
-                    success = false;
-                    break;
-                case VerifyUploadResult.Incomplete:
-                    //the upload is still going on
-                    message = T("The upload is still in progress.").ToString();
-                    eCode = VimeoFinishErrorCode.InProgress;
-                    success = false;
-                    //the client may want to resume the upload, so we send them the upload Url
-                    uploadUrl = _vimeoUploadServices.GetUploadUrl(mediaPartId);
-                    break;
-                case VerifyUploadResult.StillUploading:
-                    //the upload is still going on
-                    message = T("The upload is still in progress.").ToString();
-                    eCode = VimeoFinishErrorCode.InProgress;
-                    success = false;
-                    //the client may want to resume the upload, so we send them the upload Url
-                    uploadUrl = _vimeoUploadServices.GetUploadUrl(mediaPartId);
-                    break;
-                case VerifyUploadResult.NeverExisted:
-                    //we never started an upload with the given Id
-                    message = T("The upload was never started, or the MediaPart is not for a Vimeo video.").ToString();
-                    eCode = VimeoFinishErrorCode.UploadNeverStarted;
-                    success = false;
-                    break;
-                case VerifyUploadResult.Error:
-                    //something went wrong
-                    message = T("Unknown error.").ToString();
-                    eCode = VimeoFinishErrorCode.GenericError;
-                    success = false;
-                    break;
-                default:
-                    //we should never be here
-                    message = T("Unknown error.").ToString();
-                    eCode = VimeoFinishErrorCode.GenericError;
-                    success = false;
-                    break;
+                        break;
+                    case VerifyUploadResult.Incomplete:
+                        //the upload is still going on
+                        message = T("The upload is still in progress.").ToString();
+                        eCode = VimeoOrchardErrorCode.InProgress;
+                        rAction = VimeoResolutionAction.ContinueUpload;
+                        success = false;
+                        //the client may want to resume the upload, so we send them the upload Url
+                        uploadUrl = _vimeoUploadServices.GetUploadUrl(mediaPartId);
+                        break;
+                    case VerifyUploadResult.StillUploading:
+                        //the upload is still going on
+                        message = T("The upload is still in progress.").ToString();
+                        eCode = VimeoOrchardErrorCode.InProgress;
+                        rAction = VimeoResolutionAction.ContinueUpload;
+                        success = false;
+                        //the client may want to resume the upload, so we send them the upload Url
+                        uploadUrl = _vimeoUploadServices.GetUploadUrl(mediaPartId);
+                        break;
+                    case VerifyUploadResult.NeverExisted:
+                        //we never started an upload with the given Id
+                        message = T("The upload was never started, or the MediaPart is not for a Vimeo video.").ToString();
+                        eCode = VimeoOrchardErrorCode.UploadNeverStarted;
+                        rAction = VimeoResolutionAction.RestartUpload;
+                        success = false;
+                        break;
+                    case VerifyUploadResult.Error:
+                        //something went wrong
+                        message = T("Unknown error.").ToString();
+                        eCode = VimeoOrchardErrorCode.GenericError;
+                        rAction = VimeoResolutionAction.RestartUpload;
+                        success = false;
+                        break;
+                    default:
+                        //we should never be here
+                        message = T("Unknown error.").ToString();
+                        eCode = VimeoOrchardErrorCode.GenericError;
+                        rAction = VimeoResolutionAction.RestartUpload;
+                        success = false;
+                        break;
+                }
+            } catch (VimeoRateException vre) {
+                return Json(new VimeoOrchardResponse {
+                    ErrorCode = VimeoOrchardErrorCode.RateLimited,
+                    Success = false,
+                    Message = string.Format("Rate will reset on {0} UTC", vre.resetTime.Value.ToString()),
+                    ResolutionAction = VimeoResolutionAction.NoAction
+                });
             }
-            var response = new VimeoFinishResponse {
+            
+            var response = new VimeoOrchardResponse {
                 ErrorCode = eCode,
                 Success = success,
-                Message = message
+                Message = message,
+                ResolutionAction =  rAction
             };
             //There are issues with using ajax to get the return value from this method:
-            // response is a VimeoFinishResponse, that overrides the ErrorCode field from the Response class.
+            // response is a VimeoOrchardResponse, that overrides the ErrorCode field from the Response class.
             // Ajax sees the ErrorCode value from the base object, rather than the correct one. As a fix, we
             // put the error code also in the Data object. Ajax will read that rather than the correct field.
             var ErrorCode = eCode;
@@ -149,15 +190,22 @@ namespace Laser.Orchard.Vimeo.Controllers {
         }
 
         //We extend Laser.Orchard.StartupConfig.ViewModels.Response because we have specific error codes for Vimeo
-        public enum VimeoFinishErrorCode { NoError = 0, GenericError = 1, InProgress = 4001, UploadNeverStarted = 4002, FinishingErrors = 4003 }
-        public class VimeoFinishResponse : Laser.Orchard.StartupConfig.ViewModels.Response {
-            new public VimeoFinishErrorCode ErrorCode { get; set; }
+        public enum VimeoOrchardErrorCode { NoError = 0, GenericError = 1,
+            //errors we may get from the attemtp to finish an upload
+            InProgress = 4001, UploadNeverStarted = 4002, FinishingErrors = 4003,
+            //other vimeo errors
+            NotEnoughQuota = 4004, RateLimited = 4005
+        }
+        public enum VimeoResolutionAction { NoAction = 0, ContinueUpload = 4001, RestartUpload = 4002 }
+        public class VimeoOrchardResponse : Laser.Orchard.StartupConfig.ViewModels.Response {
+            new public VimeoOrchardErrorCode ErrorCode { get; set; }
+            new public VimeoResolutionAction ResolutionAction { get; set; }
 
-            public VimeoFinishResponse() {
-                this.ErrorCode = VimeoFinishErrorCode.GenericError;
+            public VimeoOrchardResponse() {
+                this.ErrorCode = VimeoOrchardErrorCode.GenericError;
                 this.Success = false;
                 this.Message = "Generic Error";
-                this.ResolutionAction = ResolutionAction.NoAction;
+                this.ResolutionAction = VimeoResolutionAction.NoAction;
             }
         }
 
@@ -187,7 +235,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     response = _utilsServices.GetResponse(ResponseType.None, "");
                     break;
                 case VimeoErrorCode.GenericError:
-                    //Something happened, but we don not know what.
+                    //Something happened, but we do not know what.
                     //Just log this
                     response = _utilsServices.GetResponse(ResponseType.None, "");
                     break;
