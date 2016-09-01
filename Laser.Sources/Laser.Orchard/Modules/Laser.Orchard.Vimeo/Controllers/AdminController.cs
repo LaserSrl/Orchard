@@ -100,32 +100,38 @@ namespace Laser.Orchard.Vimeo.Controllers {
         public ActionResult IndexTestSettings(VimeoSettingsPartViewModel vm) {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage Vimeo settings")))
                 return new HttpUnauthorizedResult();
-
-            if (!string.IsNullOrWhiteSpace(vm.AccessToken)) {
-                if (_vimeoAdminServices.TokenIsValid(vm)) {
-                    _orchardServices.Notifier.Information(T("Access Token Valid"));
-                    //now test group, channel and album
-                    if (!string.IsNullOrWhiteSpace(vm.GroupName)) {
-                        if (_vimeoAdminServices.GroupIsValid(vm))
-                            _orchardServices.Notifier.Information(T("Group Name Valid"));
-                        else
-                            _orchardServices.Notifier.Error(T("Group Name not valid"));
-                    }
-                    if (!string.IsNullOrWhiteSpace(vm.ChannelName)) {
-                        if (_vimeoAdminServices.ChannelIsValid(vm))
-                            _orchardServices.Notifier.Information(T("Channel Name Valid"));
-                        else
-                            _orchardServices.Notifier.Error(T("Channel Name not valid"));
-                    }
-                    if (!string.IsNullOrWhiteSpace(vm.AlbumName)) {
-                        if (_vimeoAdminServices.AlbumIsValid(vm))
-                            _orchardServices.Notifier.Information(T("Album Name Valid"));
-                        else
-                            _orchardServices.Notifier.Error(T("Album Name not valid"));
-                    }
-                } else
-                    _orchardServices.Notifier.Error(T("Access Token not valid"));
+            try {
+                if (!string.IsNullOrWhiteSpace(vm.AccessToken)) {
+                    if (_vimeoAdminServices.TokenIsValid(vm)) {
+                        _orchardServices.Notifier.Information(T("Access Token Valid"));
+                        //now test group, channel and album
+                        if (!string.IsNullOrWhiteSpace(vm.GroupName)) {
+                            if (_vimeoAdminServices.GroupIsValid(vm))
+                                _orchardServices.Notifier.Information(T("Group Name Valid"));
+                            else
+                                _orchardServices.Notifier.Error(T("Group Name not valid"));
+                        }
+                        if (!string.IsNullOrWhiteSpace(vm.ChannelName)) {
+                            if (_vimeoAdminServices.ChannelIsValid(vm))
+                                _orchardServices.Notifier.Information(T("Channel Name Valid"));
+                            else
+                                _orchardServices.Notifier.Error(T("Channel Name not valid"));
+                        }
+                        if (!string.IsNullOrWhiteSpace(vm.AlbumName)) {
+                            if (_vimeoAdminServices.AlbumIsValid(vm))
+                                _orchardServices.Notifier.Information(T("Album Name Valid"));
+                            else
+                                _orchardServices.Notifier.Error(T("Album Name not valid"));
+                        }
+                    } else
+                        _orchardServices.Notifier.Error(T("Access Token not valid"));
+                }
+            } catch (VimeoRateException vre) {
+                _orchardServices.Notifier.Error(T("Too many requests to Vimeo. Rate limits will reset on {0} UTC", vre.resetTime.Value.ToString()));
+            } catch (Exception ex) {
+                _orchardServices.Notifier.Error(T("{0}", ex.Message));
             }
+            
 
 
             return View(vm);
