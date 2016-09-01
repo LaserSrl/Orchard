@@ -752,7 +752,11 @@ namespace Laser.Orchard.Mobile.Services {
                 setting = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidApiKeyDevelopment;
             var config = new GcmConfiguration(setting);
             var serviceUrl = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidPushServiceUrl;
-            if (string.IsNullOrWhiteSpace(serviceUrl) == false) {
+            if (string.IsNullOrWhiteSpace(serviceUrl)) {
+                // default: FCM
+                config.OverrideUrl("https://fcm.googleapis.com/fcm/send");
+            }
+            else {
                 config.OverrideUrl(serviceUrl);
             }
             var push = new GcmServiceBroker(config);
