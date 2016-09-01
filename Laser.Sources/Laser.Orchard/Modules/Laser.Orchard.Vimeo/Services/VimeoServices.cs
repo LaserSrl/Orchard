@@ -642,7 +642,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 .As<VimeoSettingsPart>();
             VimeoUploadQuota quotaInfo = null;
             //Only check the quota if we have not checked it in a while
-            if (DateTime.UtcNow < settings.LastTimeQuotaWasChecked.Value.AddHours(24)) {
+            if (settings.LastTimeQuotaWasChecked == null || DateTime.UtcNow < settings.LastTimeQuotaWasChecked.Value.AddHours(24)) {
                 string queryString = "?fields=upload_quota";
                 HttpWebRequest wr = VimeoCreateRequest(settings.AccessToken, VimeoEndpoints.Me, qString: queryString);
                 try {
