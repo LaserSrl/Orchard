@@ -234,13 +234,13 @@ namespace Laser.Orchard.Mobile.Services {
                 singoloDevice = new List<PushNotificationVM>();
                 singoloDevice.Add(device);
                 if(device.Device == TipoDispositivo.Android) {
-                    PushAndroid(singoloDevice, true, pushMessage, true);
+                    PushAndroid(singoloDevice, device.Produzione, pushMessage, true);
                 }
                 if (device.Device == TipoDispositivo.Apple) {
-                    PushApple(singoloDevice, true, pushMessage, true);
+                    PushApple(singoloDevice, device.Produzione, pushMessage, true);
                 }
                 if (device.Device == TipoDispositivo.WindowsMobile) {
-                    PushWindows(singoloDevice, true, pushMessage, true);
+                    PushWindows(singoloDevice, device.Produzione, pushMessage, true);
                 }
             }
         }
