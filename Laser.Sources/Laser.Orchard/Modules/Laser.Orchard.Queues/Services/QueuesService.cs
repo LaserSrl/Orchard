@@ -159,7 +159,7 @@ namespace Laser.Orchard.Queues
                             query += String.Format("WHERE UDR.UserPartRecord_Id IN ({0})", String.Join(", ", usersToNotifyForLanguage));
 
                             string localizedMessage = _localizedStringManager.GetLocalizedString("Laser.Orchard.Queues.Tasks.QueueScheduledTaskHandler", defaultMessage, language);
-                            _pushGatewayService.SendPushService(pushMobileSettings.ShowTestOptions, "All", 0, language, localizedMessage, localizedMessage, localizedMessage, query);
+                            _pushGatewayService.SendPushService(pushMobileSettings.ShowTestOptions, "All", 0, language, localizedMessage, localizedMessage, localizedMessage, "", query);
 
                             notifiedUsers.AddRange(usersToNotifyForLanguage);
                         }
