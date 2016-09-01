@@ -16,7 +16,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
-            return new MicrosoftClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
+            return new MicrosoftClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret, "wl.basic", "wl.emails");
         }
 
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken) {
@@ -31,7 +31,17 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
 
                     using (var textReader = new StreamReader(stream)) {
                         var json = textReader.ReadToEnd();
-                        userData = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                        var valori = JObject.Parse(json);
+                        var data = valori.Root; // .SelectToken("data");
+                        userData.Add("id", data.Value<string>("id"));
+                        userData.Add("name", data.Value<string>("name"));
+                        userData.Add("first_name", data.Value<string>("first_name"));
+                        userData.Add("last_name", data.Value<string>("last_name"));
+                        userData.Add("gender", data.Value<string>("gender"));
+                        userData.Add("locale", data.Value<string>("locale"));
+                        userData.Add("updated_time", data.Value<string>("updated_time"));
+                        var emails = valori.SelectToken("emails");
+                        userData.Add("email", emails.Value<string>("preferred"));
                     }
                 }
             }
