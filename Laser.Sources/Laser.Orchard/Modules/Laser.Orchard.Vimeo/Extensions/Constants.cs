@@ -23,6 +23,10 @@ namespace Laser.Orchard.Vimeo.Extensions {
         public const double MinDelayBetweenTerminations = 1; //minutes
         public const double HoursToRefreshURLs = 12; //duration of cache for video URLs
         public const int SecondsInAnHour = 3600;
+
+        //string for events
+        public const string BaseSignalName = "LaserVimeo";
+        public const string PublishedSignalName = BaseSignalName + "Published";
     }
 
     public static class VimeoEndpoints {

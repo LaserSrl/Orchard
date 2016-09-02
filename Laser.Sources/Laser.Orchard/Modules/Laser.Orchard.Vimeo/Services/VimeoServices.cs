@@ -16,6 +16,7 @@ using Orchard.MediaLibrary.Services;
 using Orchard.Tasks.Scheduling;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
+using Orchard.Workflows.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,6 +43,7 @@ namespace Laser.Orchard.Vimeo.Services {
         private readonly IContentManager _contentManager;
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly ShellSettings _shellSettings;
+        private readonly IWorkflowManager _workflowManager;
 
         public Localizer T { get; set; }
 
@@ -52,7 +54,8 @@ namespace Laser.Orchard.Vimeo.Services {
             IScheduledTaskManager taskManager,
             IContentManager contentManager,
             IMediaLibraryService mediaLibraryService,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings,
+            IWorkflowManager workflowManager) {
 
             _repositorySettings = repositorySettings;
             _repositoryUploadsInProgress = repositoryUploadsInProgress;
@@ -62,6 +65,7 @@ namespace Laser.Orchard.Vimeo.Services {
             _contentManager = contentManager;
             _mediaLibraryService = mediaLibraryService;
             _shellSettings = shellSettings;
+            _workflowManager = workflowManager;
 
             T = NullLocalizer.Instance;
         }
@@ -1707,6 +1711,7 @@ namespace Laser.Orchard.Vimeo.Services {
             return part == null ? null : ExtractVimeoStreamURL(part);
         }
         public string ExtractVimeoStreamURL(OEmbedPart part) {
+
             var settings = _orchardServices
                         .WorkContext
                         .CurrentSite
@@ -2058,6 +2063,13 @@ namespace Laser.Orchard.Vimeo.Services {
                 oembedPart.Source = "Vimeo|" + EncryptedVideoUrl(ExtractVimeoStreamURL(oembedPart));
                 _contentManager.Publish(mPart.ContentItem);
                 mPart.ContentItem.VersionRecord.Latest = true;
+                //raise event to be used in activities/workflows
+                _workflowManager.TriggerEvent(Constants.PublishedSignalName,
+                    mPart.ContentItem,
+                    () => new Dictionary<string, object> {
+                            {"Content", mPart.ContentItem}//, {}
+                        }
+                    );
                 ucr.MediaPartFinished = true;
             }
         }
