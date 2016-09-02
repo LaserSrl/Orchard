@@ -165,15 +165,16 @@ namespace Laser.Orchard.NewsLetters.Services {
             //}
             if (!String.IsNullOrWhiteSpace(testEmail)) {
 
-                var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
-                if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
-                    baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
+                string host = string.Format("{0}://{1}{2}",
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Scheme,
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Host,
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Port == 80 ? string.Empty : ":" + _orchardServices.WorkContext.HttpContext.Request.Url.Port);
 
                 // Place Holder
                 List<TemplatePlaceHolderViewModel> listaPH = new List<TemplatePlaceHolderViewModel>();
 
                 string unsubscribe = T("Click here to unsubscribe").Text;
-                string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/Unsubscribe?newsletterId={1}", baseUri, newsletterEdition.NewsletterDefinitionPartRecord_Id) + "'>" + unsubscribe + "</a>";
+                string linkUnsubscribe = "<a href='" + string.Format("{0}{1}?newsletterId={2}", host, urlHelper.SubscriptionUnsubscribe(), newsletterEdition.NewsletterDefinitionPartRecord_Id) + "'>" + unsubscribe + "</a>";
 
                 TemplatePlaceHolderViewModel ph = new TemplatePlaceHolderViewModel();
                 ph.Name = "[UNSUBSCRIBE]";
@@ -291,19 +292,22 @@ namespace Laser.Orchard.NewsLetters.Services {
                     _orchardServices.Notifier.Information(T("Email already registered!"));
                 }
                 if (returnValue != null) {
-
-                    var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
-                    if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
-                        baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
-
+                    // Encode Nonce
                     string parametriEncode = System.Web.HttpUtility.HtmlEncode(Nonce.Replace('+', '_').Replace('/', '-'));
+
+                    string host = string.Format("{0}://{1}{2}",
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Scheme,
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Host,
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Port == 80 ? string.Empty : ":" + _orchardServices.WorkContext.HttpContext.Request.Url.Port);
+
+                    var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
 
                     // Model template Mail
                     dynamic viewModel = new SubscriberViewModel {
                         Email = subs.Email,
                         Name = subs.Name,
                         Guid = subs.Guid,
-                        LinkSubscription = string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/ConfirmSubscribe?key={1}", baseUri, parametriEncode),
+                        LinkSubscription = string.Format("{0}{1}?key={2}", host, urlHelper.SubscriptionConfirmSubscribe(), parametriEncode),
                         KeySubscription = Nonce,
                         NewsletterDefinition_Id = subs.NewsletterDefinition.Id,
                         NewsletterDefinition = _contentManager.Get(subs.NewsletterDefinition.Id)
@@ -392,17 +396,21 @@ namespace Laser.Orchard.NewsLetters.Services {
                     returnValue.UnsubscriptionKey = Nonce;
                     _repositorySubscribers.Update(returnValue);
 
-                    var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
-                    if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
-                        baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
-
+                    // Encode Nonce
                     string parametriEncode = System.Web.HttpUtility.HtmlEncode(Nonce.Replace('+', '_').Replace('/', '-'));
+
+                    string host = string.Format("{0}://{1}{2}",
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Scheme,
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Host,
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Port == 80 ? string.Empty : ":" + _orchardServices.WorkContext.HttpContext.Request.Url.Port);
+
+                    var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
 
                     // Model template Mail
                     dynamic viewModel = new SubscriberViewModel {
                         Email = subs.Email,
                         Name = subs.Name,
-                        LinkUnsubscription = string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/ConfirmUnsubscribe?key={1}", baseUri, parametriEncode),
+                        LinkUnsubscription = string.Format("{0}{1}?key={2}", host, urlHelper.SubscriptionConfirmUnsubscribe(), parametriEncode),
                         KeyUnsubscription = Nonce,
                         NewsletterDefinition_Id = subs.NewsletterDefinition.Id,
                         NewsletterDefinition = _contentManager.Get(subs.NewsletterDefinition.Id)
