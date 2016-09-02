@@ -21,5 +21,6 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual int MediaPartId { get; set; }
 
         public virtual DateTime? ScheduledTerminationTime { get; set; } //when we will try to terminate the upload next
+        public virtual bool MediaPartFinished { get; set; } //toggle this on once the media part gets finished
     }
 }

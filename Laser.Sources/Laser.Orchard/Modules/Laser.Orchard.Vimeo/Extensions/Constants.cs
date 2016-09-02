@@ -22,6 +22,7 @@ namespace Laser.Orchard.Vimeo.Extensions {
         public const double SecToMinMultiplier = 1.0 / 60.0;
         public const double MinDelayBetweenTerminations = 1; //minutes
         public const double HoursToRefreshURLs = 12; //duration of cache for video URLs
+        public const int SecondsInAnHour = 3600;
     }
 
     public static class VimeoEndpoints {

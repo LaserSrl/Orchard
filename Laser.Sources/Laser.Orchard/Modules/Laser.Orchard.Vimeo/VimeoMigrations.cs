@@ -282,5 +282,14 @@ namespace Laser.Orchard.Vimeo {
 
             return 14;
         }
+
+        public int UpdateFrom14() {
+            SchemaBuilder.AlterTable("UploadsCompleteRecord",
+                table => table
+                    .AddColumn<bool>("MediaPartFinished")
+                );
+
+            return 15;
+        }
     }
 }

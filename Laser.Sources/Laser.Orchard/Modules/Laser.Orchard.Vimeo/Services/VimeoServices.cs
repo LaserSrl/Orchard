@@ -2054,6 +2054,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 oembedPart.Source = "Vimeo|" + EncryptedVideoUrl(ExtractVimeoStreamURL(oembedPart));
                 _contentManager.Publish(mPart.ContentItem);
                 mPart.ContentItem.VersionRecord.Latest = true;
+                ucr.MediaPartFinished = true;
             }
         }
 
@@ -2303,6 +2304,7 @@ namespace Laser.Orchard.Vimeo.Services {
             } else {
                 var recordsToVerify = _repositoryUploadsComplete.Table.ToList()
                     .Where(ucr => ucr.ScheduledTerminationTime <= dNow);
+                DateTime rescheduleTime = dNow.AddMinutes(Constants.MinDelayBetweenTerminations);
                 foreach (UploadsCompleteRecord ucr in recordsToVerify) {
                     try {
                         if (!ucr.Patched) {
@@ -2326,16 +2328,57 @@ namespace Laser.Orchard.Vimeo.Services {
                             ucr.IsAvailable = status == "available";
                         }
 
-                        if (ucr.Patched
-                            && ucr.IsAvailable
-                            && (ucr.UploadedToGroup || !settings.AlwaysUploadToGroup)
-                            && (ucr.UploadedToChannel || !settings.AlwaysUploadToChannel)
-                            && (ucr.UploadedToAlbum || !settings.AlwaysUploadToAlbum)) {
-                            //Update the MediaPart
-                            FinishMediaPart(ucr);
-                            //We finished everything for this video upload, so we may remove its record
-                            _repositoryUploadsComplete.Delete(ucr);
+                        //The video status is the only thing we actually require for finishing the MediaPart. Everything
+                        //else has a much lower priority, except perhaps the call to patch the video information since that
+                        //is where wee configure, among other things, the privacy settings.
+                        if (ucr.Patched && ucr.IsAvailable) {
+                            if (!ucr.MediaPartFinished) {
+                                FinishMediaPart(ucr);
+                            }
+                            //if we finished everything else we may conclude things for this record
+                            if (ucr.MediaPartFinished //should not require this here, but bettere safe than sorry
+                                && (ucr.UploadedToGroup || !settings.AlwaysUploadToGroup)
+                                && (ucr.UploadedToChannel || !settings.AlwaysUploadToChannel)
+                                && (ucr.UploadedToAlbum || !settings.AlwaysUploadToAlbum)) {
+                                //We finished everything for this video upload, so we may remove its record
+                                _repositoryUploadsComplete.Delete(ucr);
+                            } else {
+                                //reschedule these less important finishing touches
+                                int timeToRateReset = (settings.RateLimitReset.Value - dNow).Seconds;
+                                //consider the frequency at which we have been making API calls since the last reset.
+                                //If continuing at that pace would not have us hit the limit, it's fine. We keep a 2/3
+                                //margin just in case.
+                                // call:
+                                int l = settings.RateLimitLimit;
+                                int r = settings.RateLimitRemaining;
+                                int h = Constants.SecondsInAnHour;
+                                int t = timeToRateReset;
+                                //  frequency = f = (l-r) / (h-t) in calls per second
+                                //  we want f * t < (2/3) * r
+                                //  substituting we get (l - r) * t < 2/3 * r * (h - t)
+                                if ((l - r) * t * 3 < 2 * r * (h - t)
+                                    || timeToRateReset < 0) { //we should not have passed the expected reset time, but it's better to check
+                                    //we still have quite a bit of API calls we can do in the time left before it resets
+                                    ucr.ScheduledTerminationTime = rescheduleTime; //the reschedule time is computed above with the default delay
+                                } else {
+                                    //compute a longer delay to try and not overload the Vimeo API endpoints
+                                    DateTime newScheduleTime = settings.RateLimitReset.Value.AddMinutes(1);
+                                    //recompute the new frequency we want to have from
+                                    // f * t = 2/3 r
+                                    //what we really want is t
+                                    // t * (l - r) / (h - t) = 2/3 * r
+                                    // (l - r) * t = 2/3 * r * ( h - t)
+                                    // (l - r + 2/3 * r) * t = 2/3 * r * h 
+                                    double newt = ((2.0/3.0) * (double)(r * h)) / ((double)l - (1.0/3.0)*(double)r);
+                                    DateTime targetTime = settings.RateLimitReset.Value.AddSeconds(-newt);
+                                    ucr.ScheduledTerminationTime = newScheduleTime > targetTime ? newScheduleTime : targetTime;
+                                }
+                            }
+                        } else {
+                            //reschedule
+                            ucr.ScheduledTerminationTime = rescheduleTime;
                         }
+
                     } catch (VimeoRateException vre) {
                         //in case we have run out of API calls postpone further terminations 
                         //until after the reset
