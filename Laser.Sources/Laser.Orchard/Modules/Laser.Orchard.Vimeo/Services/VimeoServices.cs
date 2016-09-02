@@ -1223,7 +1223,8 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                     return resp.StatusCode.ToString() + " " + resp.StatusDescription;
                 } else {
-                    throw new Exception(T("Failed to read response").ToString(), ex);
+                    //throw new Exception(T("Failed to read response").ToString(), ex);
+                    //Do not raise an exception if we failed to read a response, to avoid messing up the terminations of the uploads
                 }
             }
             return "Unknown error";
@@ -1501,7 +1502,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         UpdateAPIRateLimits(settings, resp);
                         //in all error cases, we mark this video as added correctly. Note that these errors come as responses,
                         //so we have been able to connect but Vimeo refused our request.
-                        ucr.UploadedToGroup = true;
+                        //ucr.UploadedToGroup = true;
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
                             //we end up here if the video is already in the group
                             ucr.UploadedToGroup = true;
@@ -1510,7 +1511,8 @@ namespace Laser.Orchard.Vimeo.Services {
                             return "Code " + resp.StatusCode.ToString() + ": " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         }
                     } else {
-                        throw new Exception(T("Failed to read response").ToString(), ex);
+                        //throw new Exception(T("Failed to read response").ToString(), ex);
+                        //Do not raise an exception if we failed to read a response, to avoid messing up the terminations of the uploads
                     }
                 }
             } else {
@@ -1585,7 +1587,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         UpdateAPIRateLimits(settings, resp);
                         //in all error cases, we mark this video as added correctly. Note that these errors come as responses,
                         //so we have been able to connect but Vimeo refused our request.
-                        ucr.UploadedToChannel = true;
+                        //ucr.UploadedToChannel = true;
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
                             return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         } else if (resp.StatusCode == HttpStatusCode.NotFound) {
@@ -1594,7 +1596,8 @@ namespace Laser.Orchard.Vimeo.Services {
                             return "Code " + resp.StatusCode.ToString() + ": " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         }
                     } else {
-                        throw new Exception(T("Failed to read response").ToString(), ex);
+                        //throw new Exception(T("Failed to read response").ToString(), ex);
+                        //Do not raise an exception if we failed to read a response, to avoid messing up the terminations of the uploads
                     }
                 }
             } else {
@@ -1669,7 +1672,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         UpdateAPIRateLimits(settings, resp);
                         //in all error cases, we mark this video as added correctly. Note that these errors come as responses,
                         //so we have been able to connect but Vimeo refused our request.
-                        ucr.UploadedToAlbum = true;
+                        //ucr.UploadedToAlbum = true;
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
                             return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         } else if (resp.StatusCode == HttpStatusCode.NotFound) {
@@ -1678,7 +1681,8 @@ namespace Laser.Orchard.Vimeo.Services {
                             return "Code " + resp.StatusCode.ToString() + ": " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         }
                     } else {
-                        throw new Exception(T("Failed to read response").ToString(), ex);
+                        //throw new Exception(T("Failed to read response").ToString(), ex);
+                        //Do not raise an exception if we failed to read a response, to avoid messing up the terminations of the uploads
                     }
                 }
             } else {
