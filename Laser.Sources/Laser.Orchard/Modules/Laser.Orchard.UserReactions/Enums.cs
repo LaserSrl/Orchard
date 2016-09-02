@@ -19,7 +19,7 @@ namespace Laser.Orchard.UserReactions {
     public enum ReactionsNames {
                     angry,
                     boring,
-                    exahausted,
+                    exhausted,
                     happy,
                     joke,
                     kiss,

@@ -10,14 +10,14 @@ using Laser.Orchard.OpenAuthentication.Services.Clients;
 using Orchard;
 using Orchard.Validation;
 using Laser.Orchard.OpenAuthentication.Security;
+using Orchard.Logging;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOrchardOpenAuthClientProvider : IDependency {
         IAuthenticationClient GetClient(string providerName);
         OrchardAuthenticationClientData GetClientData(string providerName);
-        AuthenticationResult GetUserData(string providerName, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "");
+        AuthenticationResult GetUserData(string providerName, AuthenticationResult previosAuthResult, string token, string userAccessSecret = "", string returnUrl = "");
         OpenAuthCreateUserParams NormalizeData(string providerName, OpenAuthCreateUserParams userData);
-        //void RewriteRequest();
     }
 
     public class OrchardOpenAuthClientProvider : IOrchardOpenAuthClientProvider {
@@ -28,7 +28,10 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             IEnumerable<IExternalAuthenticationClient> openAuthAuthenticationClients) {
             _providerConfigurationService = providerConfigurationService;
             _openAuthAuthenticationClients = openAuthAuthenticationClients;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public IAuthenticationClient GetClient(string providerName) {
             Argument.ThrowIfNullOrEmpty(providerName, "providerName");
@@ -73,7 +76,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 return null;
         }
 
-        public AuthenticationResult GetUserData(string providerName, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
+        public AuthenticationResult GetUserData(string providerName, AuthenticationResult previosAuthResult, string token, string userAccessSecret = "", string returnUrl = "") {
             Argument.ThrowIfNullOrEmpty(providerName, "providerName");
             // Do we have a configuration?
             var clientConfiguration = _providerConfigurationService.Get(providerName);
@@ -85,7 +88,14 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var client = _openAuthAuthenticationClients
                 .SingleOrDefault(o => o.ProviderName.Equals(providerName, StringComparison.OrdinalIgnoreCase));
 
-            return client.GetUserData(clientConfiguration, previosAuthResult, userAccessToken, userAccessSecret);
+            // smista la chiamata in base alla presenza del redirectUrl che è presente solo se la chiamata proviene da mobile
+            if (string.IsNullOrEmpty(returnUrl)) {
+                return client.GetUserData(clientConfiguration, previosAuthResult, token);
+            }
+            else {
+                Logger.Error("provider: {0}, auth code: {1}, redirect url: {2}", providerName, token, returnUrl);
+                return client.GetUserData(clientConfiguration, previosAuthResult, token, userAccessSecret, returnUrl);
+            }
         }
 
         public OpenAuthCreateUserParams NormalizeData(string providerName, OpenAuthCreateUserParams userData) {
@@ -102,19 +112,6 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
             return client.NormalizeData(userData);
         }
-
-        //public void RewriteRequest() {
-        //    var clientConfiguration = _providerConfigurationService.Get(providerName);
-
-        //    if (clientConfiguration == null)
-        //        return null;
-
-        //    // Is this a known internal client
-        //    var client = _openAuthAuthenticationClients
-        //        .SingleOrDefault(o => o.ProviderName.Equals(providerName, StringComparison.OrdinalIgnoreCase));
-
-        //    client
-        //}
 
         private static IAuthenticationClient CreateOpenIdClient(ProviderConfigurationRecord clientConfiguration) {
             return new CustomOpenIdAuthenticationClient(clientConfiguration.ProviderName).Build(clientConfiguration);
