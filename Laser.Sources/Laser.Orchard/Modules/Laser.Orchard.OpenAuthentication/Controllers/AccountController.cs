@@ -11,6 +11,7 @@ using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Notify;
+using Orchard.Users.Events;
 using System;
 using System.Collections.Generic;
 using System.Transactions;
@@ -22,6 +23,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
     [Themed]
     public class AccountController : Controller {
         private readonly INotifier _notifier;
+        private readonly IUserEventHandler _userEventHandler;
         private readonly IOrchardOpenAuthWebSecurity _orchardOpenAuthWebSecurity;
         private readonly IAuthenticationService _authenticationService;
         private readonly IOpenAuthMembershipServices _openAuthMembershipServices;
@@ -34,13 +36,15 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             IAuthenticationService authenticationService,
             IOpenAuthMembershipServices openAuthMembershipServices,
             IOrchardOpenAuthClientProvider openAuthClientProvider,
-            IControllerContextAccessor controllerContextAccessor) {
+            IControllerContextAccessor controllerContextAccessor,
+            IUserEventHandler userEventHandler) {
             _notifier = notifier;
             _orchardOpenAuthWebSecurity = orchardOpenAuthWebSecurity;
             _authenticationService = authenticationService;
             _openAuthMembershipServices = openAuthMembershipServices;
             _openAuthClientProvider = openAuthClientProvider;
             _controllerContextAccessor = controllerContextAccessor;
+            _userEventHandler = userEventHandler;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -141,21 +145,25 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 var returnUrl = Url.MakeAbsolute(Url.Action("ExternalLogOn", "Account"));
                 AuthenticationResult dummy = new AuthenticationResult(true);
                 AuthenticationResult authResult = _openAuthClientProvider.GetUserData(__provider__, dummy, token, secret, returnUrl);
-                
+                IUser authenticatedUser;
                 if (!authResult.IsSuccessful) {
                     return Json(new { success = false, registeredServices = registeredServicesData, message = T("Token authentication failed.").Text }, JsonRequestBehavior.AllowGet);
                 }
                 else {
+
                     if (_orchardOpenAuthWebSecurity.Login(authResult.Provider, authResult.ProviderUserId)) {
                         if (HttpContext.Response.Cookies.Count == 0)
                             return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);
                         else {
                             registeredServicesData = _controllerContextAccessor.Context.Controller.TempData;
+                            authenticatedUser = _authenticationService.GetAuthenticatedUser();
+                            _userEventHandler.LoggedIn(authenticatedUser);
+
                             return Json(new { success = true, registeredServices = registeredServicesData, message = T("You have been logged using your {0} account.", authResult.Provider).Text }, JsonRequestBehavior.AllowGet);
                         }
+                    } else {
+                        authenticatedUser = _authenticationService.GetAuthenticatedUser(); 
                     }
-
-                    var authenticatedUser = _authenticationService.GetAuthenticatedUser();
 
                     if (authenticatedUser != null) {
                         // If the current user is logged in add the new account
@@ -166,6 +174,9 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                             return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);
                         else {
                             registeredServicesData = _controllerContextAccessor.Context.Controller.TempData;
+                            // Handle LoggedIn Event
+                            _userEventHandler.LoggedIn(authenticatedUser);
+
                             return Json(new { success = true, registeredServices = registeredServicesData, message = T("Your {0} account has been attached to your local account.", authResult.Provider).Text }, JsonRequestBehavior.AllowGet);
                         }
                     }
@@ -187,6 +198,10 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                             return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);
                         else {
                             registeredServicesData = _controllerContextAccessor.Context.Controller.TempData;
+
+                            // Handle LoggedIn Event
+                            _userEventHandler.LoggedIn(newUser);
+
                             return Json(new { success = true, registeredServices = registeredServicesData, message = T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text }, JsonRequestBehavior.AllowGet);
                         }
                     }
