@@ -5,19 +5,19 @@ using System.Web;
 
 namespace Laser.Orchard.PaymentGateway.Models {
     public class PaymentRecord {
-        public int Id { get; set; }
-        public string Reason { get; set; }
-        public string PosName { get; set; }
-        public DateTime CreationDate { get; set; }
-        public DateTime UpdateDate { get; set; }
-        public string PosUrl { get; set; }
-        public decimal Amount { get; set; }
-        public string Currency { get; set; }
-        public bool Success { get; set; }
-        public string Error { get; set; }
-        public string TransactionId { get; set; }
-        public string ReturnUrl { get; set; }
-        public string Info { get; set; }
-        public int ContentItemId { get; set; }
+        public virtual int Id { get; set; }
+        public virtual string Reason { get; set; }
+        public virtual string PosName { get; set; }
+        public virtual DateTime CreationDate { get; set; }
+        public virtual DateTime UpdateDate { get; set; }
+        public virtual string PosUrl { get; set; }
+        public virtual decimal Amount { get; set; }
+        public virtual string Currency { get; set; }
+        public virtual bool Success { get; set; }
+        public virtual string Error { get; set; }
+        public virtual string TransactionId { get; set; }
+        public virtual string ReturnUrl { get; set; }
+        public virtual string Info { get; set; }
+        public virtual int ContentItemId { get; set; }
     }
 }

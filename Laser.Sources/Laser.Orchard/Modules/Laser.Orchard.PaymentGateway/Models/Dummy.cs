@@ -1,5 +1,6 @@
 ﻿using Orchard;
 using Orchard.Data;
+using Orchard.Environment.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,6 @@ namespace Laser.Orchard.PaymentGateway.Models {
         public Dummy(IOrchardServices services, IRepository<PaymentRecord> repository)
             : base(services, repository) {
         }
-        public override string PosName {
-            get { return "Dummy"; }
-        }
-
         protected override string GetPosUrl(PaymentRecord values) {
             return "/dummy";
         }

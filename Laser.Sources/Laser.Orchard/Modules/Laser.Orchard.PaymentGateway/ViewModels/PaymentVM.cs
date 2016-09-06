@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Orchard.ContentManagement;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,5 +12,6 @@ namespace Laser.Orchard.PaymentGateway.ViewModels {
         public string Info { get; set; }
         public int ContentItemId { get; set; }
         public List<string> PosList { get; set; }
+        public ContentItem ContentItem { get; set; }
     }
 }

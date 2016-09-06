@@ -1,6 +1,7 @@
 ﻿@model Laser.Orchard.PaymentGateway.Models.PaymentRecord
 Dettagli del pagamneto<br />
 POS: @Model.PosName<br />
-Importo: @Model.Amount @Model.Currency
-Success: @Model.Success
-Data: @Model.UpdateDate.ToString("dd-MM-yyyy HH:mm")
+Causale: @Model.Reason<br />
+Importo: @Model.Amount.ToString("0.00") @Model.Currency<br />
+Success: @Model.Success<br />
+Data: @Model.UpdateDate.ToString("dd-MM-yyyy HH:mm")<br />

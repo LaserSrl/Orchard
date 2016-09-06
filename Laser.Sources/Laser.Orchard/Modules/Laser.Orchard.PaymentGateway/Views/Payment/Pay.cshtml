@@ -1,5 +1,8 @@
 ﻿@model Laser.Orchard.PaymentGateway.ViewModels.PaymentVM
 Pagina di pagamento<br />
+Riepilogo:<br />
+@Display(BuildDisplay(Model.ContentItem, "Detail"))
+<br />
 La reason è: @Model.Reason
 <br />
 Paga con:

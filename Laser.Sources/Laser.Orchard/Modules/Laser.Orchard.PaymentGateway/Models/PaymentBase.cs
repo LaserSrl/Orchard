@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.PaymentGateway.Models {
-    public abstract class PaymentBase : IPayment {
+    public abstract class PaymentBase {
         private readonly IOrchardServices _orchardServices;
         private readonly IRepository<PaymentRecord> _repository;
 
@@ -44,10 +44,6 @@ namespace Laser.Orchard.PaymentGateway.Models {
             payment.Info = info;
             SavePaymentInfo(payment);
         }
-        /// <summary>
-        /// Programmatic name of the virtual POS (es. "Braintree", "GestPay", "CartaSi").
-        /// </summary>
-        public abstract string PosName {get;}
         /// <summary>
         /// Get the return URL passed to the virtual POS.
         /// </summary>
