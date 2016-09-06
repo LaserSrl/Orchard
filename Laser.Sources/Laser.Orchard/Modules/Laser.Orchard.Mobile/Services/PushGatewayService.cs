@@ -808,14 +808,6 @@ namespace Laser.Orchard.Mobile.Services {
             }
             sb.Append("}");
 
-            // compone la sezione notification
-            StringBuilder sbNotification = new StringBuilder();
-            sbNotification.Clear();
-            sbNotification.AppendFormat("{{ \"body\": \"{0}\"", FormatJsonValue(pushMessage.Text));
-            sbNotification.AppendFormat(", \"title\":\"{0}\"", _shellSetting.Name);
-            sbNotification.AppendFormat(", \"icon\":\"{0}\"", "ic_push_icon");
-            sbNotification.Append("}");
-
             string hostCheck = _shellSetting.RequestUrlHost ?? "";
             string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
             string machineNameCheck = System.Environment.MachineName ?? "";
@@ -825,7 +817,6 @@ namespace Laser.Orchard.Mobile.Services {
                 if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck) && (pnr.RegistrationMachineName == machineNameCheck)) {
                     push.QueueNotification(new GcmNotification {
                         RegistrationIds = new List<string> { pnr.Token },
-                        Notification = JObject.Parse(sbNotification.ToString()),
                         Data = JObject.Parse(sb.ToString())
                     });
 
