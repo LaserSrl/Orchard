@@ -1,0 +1,10 @@
+﻿@model Laser.Orchard.PaymentGateway.ViewModels.PaymentVM
+Pagina di pagamento<br />
+La reason è: @Model.Reason
+<br />
+Paga con:
+<ul>
+@foreach(var pos in Model.PosList) {
+    <li><button>@pos</button></li>
+}
+</ul>
