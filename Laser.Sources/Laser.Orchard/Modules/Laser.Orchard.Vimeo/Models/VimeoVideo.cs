@@ -17,7 +17,7 @@ namespace Laser.Orchard.Vimeo.Models {
         public List<VimeoVideoTag> tags { get; set; }
         public VimeoVideoStats stats { get; set; }
         public VimeoVideoMetadata metadata { get; set; }
-        public string app { get; set; } //TODO: verify this, because in the videos we tested they were null
+        public VimeoBaseObject app { get; set; } //TODO: verify this, because in the videos we tested they were null
         public string status { get; set; }
         public string resource_key { get; set; }
         public string embed_presets { get; set; } //TODO: verify this, because in the videos we tested they were null
