@@ -10,6 +10,9 @@ using System.Globalization;
 using Orchard.Services;
 using System.Text;
 using Orchard.Security;
+using System.Web.Mvc;
+using System.IO;
+using System.Web.Routing;
 
 namespace Laser.Orchard.StartupConfig.Services {
     public class CommonsServices : ICommonsServices {
@@ -73,6 +76,20 @@ namespace Laser.Orchard.StartupConfig.Services {
             } catch (Exception ex) {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Costruisce un UrlHelper senza usare HttpContext perché questo non è disponibile all'interno del task.
+        /// </summary>
+        /// <returns></returns>
+        public UrlHelper GetUrlHelper() {
+            var httpRequest = new HttpRequest("/", _orchardServices.WorkContext.CurrentSite.BaseUrl, "");
+            var httpResponse = new HttpResponse(new StringWriter());
+            var httpContext = new HttpContext(httpRequest, httpResponse);
+            var httpContextBase = new HttpContextWrapper(httpContext);
+            var virtualRequestContext = new RequestContext(httpContextBase, new RouteData());
+            var urlHelper = new UrlHelper(virtualRequestContext);
+            return urlHelper;
         }
 
     }

@@ -3,6 +3,7 @@ using Laser.Orchard.MailCommunication.Models;
 using Laser.Orchard.NewsLetters.Services;
 using Laser.Orchard.NewsLetters.Extensions;
 using Laser.Orchard.StartupConfig.Extensions;
+using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.Commons.Extensions;
 using Laser.Orchard.TemplateManagement.Services;
 using Laser.Orchard.MailCommunication;
@@ -26,6 +27,7 @@ using Orchard.Logging;
 using System.Dynamic;
 
 
+
 namespace Laser.Orchard.NewsLetters.Handlers {
     public class NewsletterEditionSendTaskHandler : IScheduledTaskHandler {
 
@@ -38,6 +40,7 @@ namespace Laser.Orchard.NewsLetters.Handlers {
         private readonly ITemplateService _templateService;
         private readonly IRepository<NewsletterEditionPartRecord> _repositoryNewsletterEdition;
         private readonly ShellSettings _shellSettings;
+        private readonly ICommonsServices _commonServices;
         
         private MailerSiteSettingsPart _mailerConfig;
         
@@ -45,13 +48,14 @@ namespace Laser.Orchard.NewsLetters.Handlers {
 
         public NewsletterEditionSendTaskHandler(IContentManager contentManager, IOrchardServices orchardServices,
                                                 INewsletterServices newslServices, ITemplateService templateService,
-                                                ShellSettings shellSettings,
+                                                ShellSettings shellSettings, ICommonsServices commonServices,
                                                 IRepository<NewsletterEditionPartRecord> repositoryNewsletterEdition) {
             _contentManager = contentManager;
             _orchardServices = orchardServices;
             _newslServices = newslServices;
             _templateService = templateService;
             _shellSettings = shellSettings;
+            _commonServices = commonServices;
             _repositoryNewsletterEdition = repositoryNewsletterEdition;
         }
 
@@ -63,7 +67,7 @@ namespace Laser.Orchard.NewsLetters.Handlers {
                 dynamic content = context.Task.ContentItem;
                 NewsletterEditionPart part = context.Task.ContentItem.As<NewsletterEditionPart>();
                 _mailerConfig = _orchardServices.WorkContext.CurrentSite.As<MailerSiteSettingsPart>();
-                var urlHelper = GetUrlHelper();
+                var urlHelper = _commonServices.GetUrlHelper();
                 int[] selectedAnnIds;
                 IList<AnnouncementPart> items = null;
                 IEnumerable<ExpandoObject> fullyItems;
@@ -175,18 +179,23 @@ namespace Laser.Orchard.NewsLetters.Handlers {
             var data = new Dictionary<string, object>();
 
             var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
-            if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
-                baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
 
             var template = _templateService.GetTemplate(templateId);
             string body = _templateService.RitornaParsingTemplate(contentModel, templateId);
 
             if (!body.StartsWith("Error On Template")) {
 
+                string host = string.Format("{0}://{1}{2}",
+                                       baseUri.Scheme,
+                                       baseUri.Host,
+                                       baseUri.Port == 80 ? string.Empty : ":" + baseUri.Port);
+
+                var urlHelper = _commonServices.GetUrlHelper();
+
                 // Add Link [UNSUBSCRIBE]
                 string ph_Unsubscribe = "[UNSUBSCRIBE]";
                 string unsubscribe = T("Click here to unsubscribe").Text;
-                string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.NewsLetters/Subscription/Unsubscribe?newsletterId={1}", baseUri, part.NewsletterDefinitionPartRecord_Id) + "'>" + unsubscribe + "</a>";
+                string linkUnsubscribe = "<a href='" + string.Format("{0}{1}?newsletterId={2}", host, urlHelper.SubscriptionUnsubscribe(), part.NewsletterDefinitionPartRecord_Id) + "'>" + unsubscribe + "</a>";
 
                 if (body.Contains(ph_Unsubscribe))
                     body = body.Replace(ph_Unsubscribe, linkUnsubscribe);
@@ -218,7 +227,6 @@ namespace Laser.Orchard.NewsLetters.Handlers {
             return data;
         }
 
-
         public int GetNextNumber(int newsltterId) {
             var maxNumber = _repositoryNewsletterEdition.Table
                  .Where(w => w.NewsletterDefinitionPartRecord_Id == newsltterId)
@@ -227,18 +235,5 @@ namespace Laser.Orchard.NewsLetters.Handlers {
             return (maxNumber.HasValue ? maxNumber.Value + 1 : 1);
         }
 
-        /// <summary>
-        /// Costruisce un UrlHelper senza usare HttpContext perché questo non è disponibile all'interno del task.
-        /// </summary>
-        /// <returns></returns>
-        private UrlHelper GetUrlHelper() {
-            var httpRequest = new HttpRequest("/", _orchardServices.WorkContext.CurrentSite.BaseUrl, "");
-            var httpResponse = new HttpResponse(new StringWriter());
-            var httpContext = new HttpContext(httpRequest, httpResponse);
-            var httpContextBase = new HttpContextWrapper(httpContext);
-            var virtualRequestContext = new RequestContext(httpContextBase, new RouteData());
-            var urlHelper = new UrlHelper(virtualRequestContext);
-            return urlHelper;
-        }
     }
 }

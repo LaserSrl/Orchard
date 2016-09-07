@@ -131,12 +131,14 @@
     <Compile Include="Drivers\MailCommunicationSettingsPartDriver.cs" />
     <Compile Include="Drivers\MailerSiteSettingsPartDriver.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Handlers\MailCommunicationPartHandler.cs" />
     <Compile Include="Handlers\MailCommunicationSettingsPartHandler.cs" />
     <Compile Include="Handlers\MailerScheduledTaskHandler.cs" />
     <Compile Include="Handlers\MailerSiteSettingsHandler.cs" />
     <Compile Include="Models\MailCommunicationSettingsPart.cs" />
     <Compile Include="Models\MailerSiteSettingsPart.cs" />
+    <Compile Include="Routes.cs" />
     <Compile Include="Services\IMailCommunicationService.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\MailCommunicationPart.cs" />
