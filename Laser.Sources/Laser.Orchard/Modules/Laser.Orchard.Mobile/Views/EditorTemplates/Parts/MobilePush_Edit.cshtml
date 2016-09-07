@@ -51,6 +51,10 @@
                         type: 'POST',
                         url: "@Model.SiteUrl/Laser.Orchard.Mobile/ContactList/Search",
                         data: { term: request.term, __RequestVerificationToken: aft },
+                        messages: {
+                            noResults: '',
+                            results: ''
+                        },
                         success: function (data) {
                             if (!data.length) {
                                 var result = [

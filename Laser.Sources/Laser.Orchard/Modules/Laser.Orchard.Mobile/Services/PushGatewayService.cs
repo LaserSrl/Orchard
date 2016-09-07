@@ -423,19 +423,20 @@ namespace Laser.Orchard.Mobile.Services {
             var Myobject = new Dictionary<string, object> { { "Content", ci } };
             string queryDevice = GetQueryDevice(Myobject, ci.As<MobilePushPart>());
 
+            // it is a test so all submissions are repeatable
             if (locTipoDispositivo.HasValue == false) {// tutti
-                SendAllAndroidPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
-                SendAllApplePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
-                SendAllWindowsPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+                SendAllAndroidPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable:true);
+                SendAllApplePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable: true);
+                SendAllWindowsPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable: true);
             }
             else if (locTipoDispositivo.Value == TipoDispositivo.Android) {
-                SendAllAndroidPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+                SendAllAndroidPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable: true);
             }
             else if (locTipoDispositivo.Value == TipoDispositivo.Apple) {
-                SendAllApplePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+                SendAllApplePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable: true);
             }
             else if (locTipoDispositivo.Value == TipoDispositivo.WindowsMobile) {
-                SendAllWindowsPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+                SendAllWindowsPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable: true);
             }
         }
 
@@ -615,9 +616,9 @@ namespace Laser.Orchard.Mobile.Services {
             return pushMessage;
         }
 
-        private void SendAllAndroidPart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds) {
+        private void SendAllAndroidPart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds, bool repeatable=false) {
             PushMessage pushMessage = GeneratePushMessage(mpp, idcontent, idContentRelated);
-            SendAllAndroid(mpp.ContentItem.ContentType, pushMessage, produzione, language, queryDevice, queryIds);
+            SendAllAndroid(mpp.ContentItem.ContentType, pushMessage, produzione, language, queryDevice, queryIds, repeatable);
         }
 
         private string GetQueryDevice(Dictionary<string, object> contesto, MobilePushPart mpp) {
@@ -696,12 +697,12 @@ namespace Laser.Orchard.Mobile.Services {
             return lista;
         }
 
-        private void SendAllAndroid(string contenttype, PushMessage pushMessage, bool produzione, string language, string queryDevice = "", int[] queryIds = null) {
+        private void SendAllAndroid(string contenttype, PushMessage pushMessage, bool produzione, string language, string queryDevice = "", int[] queryIds = null, bool repeatable=false) {
             var allDevice = GetListMobileDevice(contenttype, queryDevice, TipoDispositivo.Android, produzione, language, queryIds);
-            PushAndroid(allDevice, produzione, pushMessage);
+            PushAndroid(allDevice, produzione, pushMessage, repeatable);
         }
 
-        private void SendAllApplePart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds) {
+        private void SendAllApplePart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds, bool repeatable = false) {
             PushMessage newpush = new PushMessage();
             newpush = GeneratePushMessage(mpp, idcontent, idContentRelated);
             if (newpush.Text.Length > MAX_PUSH_TEXT_LENGTH) {
@@ -709,28 +710,28 @@ namespace Laser.Orchard.Mobile.Services {
                 _myLog.WriteLog("Apple send: message payload exceed the limit");
                 newpush.ValidPayload = false;
             }
-            SendAllApple(mpp.ContentItem.ContentType, newpush, produzione, language, queryDevice, queryIds);
+            SendAllApple(mpp.ContentItem.ContentType, newpush, produzione, language, queryDevice, queryIds, repeatable);
         }
 
-        private void SendAllApple(string contenttype, PushMessage newpush, bool produzione, string language, string queryDevice = "", int[] queryIds = null) {
+        private void SendAllApple(string contenttype, PushMessage newpush, bool produzione, string language, string queryDevice = "", int[] queryIds = null, bool repeatable = false) {
             var allDevice = GetListMobileDevice(contenttype, queryDevice, TipoDispositivo.Apple, produzione, language, queryIds);
             if (newpush.ValidPayload) {
-                PushApple(allDevice, produzione, newpush);
+                PushApple(allDevice, produzione, newpush, repeatable);
             }
         }
 
-        private void SendAllWindowsPart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds) {
+        private void SendAllWindowsPart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds, bool repeatable = false) {
             PushMessage pushMessage = new PushMessage {
                 Text = mpp.TextPush,
                 Title = mpp.TitlePush,
                 idContent = idcontent,
                 idRelated = idContentRelated
             };
-            SendAllWindows(mpp.ContentItem.ContentType, pushMessage, produzione, language, queryDevice, queryIds);
+            SendAllWindows(mpp.ContentItem.ContentType, pushMessage, produzione, language, queryDevice, queryIds, repeatable);
         }
-        private void SendAllWindows(string contenttype, PushMessage pushMessage, bool produzione, string language, string queryDevice = "", int[] queryIds = null) {
+        private void SendAllWindows(string contenttype, PushMessage pushMessage, bool produzione, string language, string queryDevice = "", int[] queryIds = null, bool repeatable = false) {
             var allDevice = GetListMobileDevice(contenttype, queryDevice, TipoDispositivo.WindowsMobile, produzione, language, queryIds);
-            PushWindows(allDevice, produzione, pushMessage);
+            PushWindows(allDevice, produzione, pushMessage, repeatable);
         }
         private List<PushNotificationVM> RemoveSent(List<PushNotificationVM> listdispositivo, Int32 IdContent) {
             if (IdContent > 0) {
