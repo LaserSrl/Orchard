@@ -1,0 +1,14 @@
+﻿@{
+    Script.Require("jQuery");
+    var payment = Model.Payment;
+}
+@using (Script.Head()) {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#payButton").click(function () {
+                self.location = "@Url.Action("Pay", "Payment", new {reason = payment.Reason, amount = payment.Amount, currency = payment.Currency, itemId = payment.ContentItemId})";
+            });
+        });
+    </script>
+}
+<button type="button" id="payButton">Pay</button>

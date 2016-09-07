@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Laser.Orchard.PaymentGateway.Models;
 
 namespace Laser.Orchard.PaymentGateway {
     public class PaymentMigrations : DataMigrationImpl {
@@ -27,6 +28,13 @@ namespace Laser.Orchard.PaymentGateway {
                     .Column<int>("ContentItemId")
                 );
             return 1;
+        }
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition(
+                typeof(PayButtonPart).Name,
+                p => p.Attachable()
+            );
+            return 2;
         }
     }
 }
