@@ -26,5 +26,23 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual bool AlwaysUploadToGroup { get; set; }
         public virtual bool AlwaysUploadToAlbum { get; set; }
         public virtual bool AlwaysUploadToChannel { get; set; }
+
+        //edit 2016/08/31: Optimization of API calls
+        public virtual string AccountType { get; set; }
+        public virtual DateTime? LastTimeAccountTypeWasChecked { get; set; }
+        public virtual string UserId { get; set; }
+        //Limits on API calls
+        public virtual int RateLimitLimit { get; set; }
+        public virtual int RateLimitRemaining { get; set; }
+        public virtual DateTime? RateLimitReset { get; set; }
+        //cache quota
+        public virtual Int64 UploadQuotaSpaceFree { get; set; }
+        public virtual Int64 UploadQuotaSpaceMax { get; set; }
+        public virtual Int64 UploadQuotaSpaceUsed { get; set; }
+        public virtual DateTime? LastTimeQuotaWasChecked { get; set; }
+        //cache some ids
+        public virtual string ChannelId { get; set; }
+        public virtual string GroupId { get; set; }
+        public virtual string AlbumId { get; set; }
     }
 }

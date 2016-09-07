@@ -13,6 +13,20 @@ namespace Laser.Orchard.Vimeo.Extensions {
         public const string HeaderAcceptValue = "application/vnd.vimeo.*+json;version=3.2";
         public const string HeaderAuthorizationName = "Authorization"; 
         public const string HeaderAuthorizationValue = "Bearer "; //add the Access Token after this
+
+        //optimize api calls
+        public const double MaxDelayBetweenVerifications = 100; //minutes
+        public const double MaxDelaySeconds = 60 * MaxDelayBetweenVerifications;
+        public const double MinDelayBetweenVerifications = 1; //minutes
+        public const double MinDelaySeconds = 60 * MinDelayBetweenVerifications;
+        public const double SecToMinMultiplier = 1.0 / 60.0;
+        public const double MinDelayBetweenTerminations = 1; //minutes
+        public const double HoursToRefreshURLs = 12; //duration of cache for video URLs
+        public const int SecondsInAnHour = 3600;
+
+        //string for events
+        public const string BaseSignalName = "LaserVimeo";
+        public const string PublishedSignalName = BaseSignalName + "Published";
     }
 
     public static class VimeoEndpoints {
