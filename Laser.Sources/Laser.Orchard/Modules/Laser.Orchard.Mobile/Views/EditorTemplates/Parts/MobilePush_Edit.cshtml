@@ -45,18 +45,19 @@
         $(document).ready(function () {
             var aft = $("input[name=__RequestVerificationToken]:first").val();
             $("#contact-to-push").autocomplete({
-                type: "POST",
+                messages: {
+                    noResults: "@T("No search results.")",
+                    results: function (amount) {
+                        return amount + " @T("result(s)")";
+                    }
+                },
                 source: function (request, response) {
                     $.ajax({
                         type: 'POST',
                         url: "@Model.SiteUrl/Laser.Orchard.Mobile/ContactList/Search",
                         data: { term: request.term, __RequestVerificationToken: aft },
-                        messages: {
-                            noResults: '',
-                            results: ''
-                        },
                         success: function (data) {
-                            if (!data.length) {
+@*                            if (!data.length) {
                                 var result = [
                                  {
                                      label: '@T("No matches found").Text.Replace("'","\'")',
@@ -65,9 +66,9 @@
                                 ];
                                 response(result);
                             }
-                            else {
+                            else {*@
                                 response(data);
-                            }
+                            //}
                         }
                     });
                 },

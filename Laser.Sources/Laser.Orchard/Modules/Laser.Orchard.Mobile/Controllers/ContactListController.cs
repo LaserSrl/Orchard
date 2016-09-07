@@ -24,7 +24,7 @@ namespace Laser.Orchard.Mobile.Controllers {
             var contatti = _pushService.GetContactsWithDevice(term);
             foreach (var contact in contatti) {
                 result.Add(new FoundContact { 
-                    label = String.Format(Convert.ToString(contact["Title"])+"({0})", Convert.ToInt32(contact["NumDevice"])),
+                    label = String.Format(Convert.ToString(contact["Title"])+" ({0})", Convert.ToInt32(contact["NumDevice"])),
                     value = Convert.ToString(contact["Title"]).Trim()
                 });
             }
