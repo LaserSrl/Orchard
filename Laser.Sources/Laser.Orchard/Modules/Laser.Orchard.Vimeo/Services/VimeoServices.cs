@@ -1721,7 +1721,7 @@ namespace Laser.Orchard.Vimeo.Services {
             //is this a pro account?
             //we can either store this information in the settings, or make an API call to /me and check the account field of the user object            
             //only verify the account status if more than 24 hours have passed. Otherwise we use the cached info.
-            if (DateTime.UtcNow < settings.LastTimeAccountTypeWasChecked.Value.AddHours(24)) {
+            if (settings.LastTimeAccountTypeWasChecked == null || DateTime.UtcNow < settings.LastTimeAccountTypeWasChecked.Value.AddHours(24)) {
                 RetrieveAccountType(settings);
             }
             bool proAccount = settings.AccountType == "pro";

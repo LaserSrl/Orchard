@@ -9,7 +9,6 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.Vimeo.Activities {
-    [OrchardFeature("Laser.Orchard.VimeoWorkflow")]
     public abstract class VimeoVideoActivity : Event {
 
         public Localizer T { get; set; }
