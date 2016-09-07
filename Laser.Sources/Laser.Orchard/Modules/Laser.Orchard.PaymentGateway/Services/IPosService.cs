@@ -5,5 +5,5 @@ public interface IPosService : IDependency {
     string GetPosName();
     PaymentRecord StartPayment(PaymentRecord values);
     PaymentRecord GetPaymentInfo(int paymentId);
-    void SetOutcome(int paymentId, bool success, string error, string info);
+    void EndPayment(int paymentId, bool success, string error, string info);
 }

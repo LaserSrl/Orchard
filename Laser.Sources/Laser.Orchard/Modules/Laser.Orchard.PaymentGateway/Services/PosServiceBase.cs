@@ -40,7 +40,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
             PaymentRecord result = _repository.Get(paymentId);
             return result;
         }
-        public void SetOutcome(int paymentId, bool success, string error, string info) {
+        public void EndPayment(int paymentId, bool success, string error, string info) {
             PaymentRecord payment = GetPaymentInfo(paymentId);
             payment.Success = success;
             payment.Error = error;
