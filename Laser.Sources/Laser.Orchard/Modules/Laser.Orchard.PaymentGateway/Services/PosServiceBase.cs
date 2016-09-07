@@ -59,7 +59,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        protected abstract string GetPosUrl(PaymentRecord values);
+        public abstract string GetPosUrl(PaymentRecord values);
         /// <summary>
         /// Salva il pagamento e eestituisce il PaymentId.
         /// </summary>
