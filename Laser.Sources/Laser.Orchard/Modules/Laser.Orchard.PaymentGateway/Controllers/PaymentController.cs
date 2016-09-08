@@ -25,18 +25,17 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         [Themed]
         public ActionResult Pay(string reason, decimal amount, string currency, int itemId = 0) {
             ContentItem item = null;
-            List<string> posNames = _posServices.Select(x => x.GetPosName()).ToList(); //GetAllPos(); //new List<string>();
-            //posNames.Add("Dummy"); // _posList.Select(x => x.PosName).ToList();
-            string featurePrefix = "Laser.Orchard.PaymentPos";
-            //posNames = _moduleService.GetAvailableFeatures().Where(x => x.Descriptor.Id.StartsWith(featurePrefix)).Select(x => x.Descriptor.Id.Substring(featurePrefix.Length)).ToList();
-            if (itemId > 0){
+            //List<string> posNames = _posServices.Select(x => x.GetPosName()).ToList();
+            if (itemId > 0) {
                 item = _orchardServices.ContentManager.Get(itemId);
             }
             PaymentVM model = new PaymentVM {
-                Reason = reason,
-                Amount = amount,
-                Currency = currency,
-                PosList = posNames,
+                Record = new PaymentRecord {
+                    Reason = reason,
+                    Amount = amount,
+                    Currency = currency
+                },
+                PosList = _posServices.ToList(),
                 ContentItem = item
             };
             return View("Pay", model);

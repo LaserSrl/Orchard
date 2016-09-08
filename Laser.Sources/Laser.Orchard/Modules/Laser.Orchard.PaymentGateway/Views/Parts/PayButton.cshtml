@@ -6,7 +6,8 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#payButton").click(function () {
-                self.location = "@Url.Action("Pay", "Payment", new {reason = payment.Reason, amount = payment.Amount, currency = payment.Currency, itemId = payment.ContentItemId})";
+                var query = "reason=@Url.Encode(payment.Reason)&amount=@Convert.ToString(payment.Amount, System.Globalization.CultureInfo.InvariantCulture)&currency=@Url.Encode(payment.Currency)&itemId=@payment.ContentItemId.ToString()";
+                self.location = "@Url.Action("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway" })?" + query;    
             });
         });
     </script>

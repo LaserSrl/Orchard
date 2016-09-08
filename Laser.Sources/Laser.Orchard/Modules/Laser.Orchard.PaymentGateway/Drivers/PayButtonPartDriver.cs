@@ -7,6 +7,7 @@ using Orchard.Core.Common.Fields;
 using Orchard.Fields.Fields;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Fields;
+using Orchard.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,9 +17,11 @@ using System.Web;
 namespace Laser.Orchard.PaymentGateway.Drivers {
     public class PayButtonPartDriver : ContentPartDriver<PayButtonPart> {
         private Localizer L;
+        private readonly ITokenizer _tokenizer;
 
-        public PayButtonPartDriver() {
+        public PayButtonPartDriver(ITokenizer tokenizer) {
             L = NullLocalizer.Instance;
+            _tokenizer = tokenizer;
         }
         protected override string Prefix {
             get {
@@ -28,20 +31,18 @@ namespace Laser.Orchard.PaymentGateway.Drivers {
         protected override DriverResult Display(PayButtonPart part, string displayType, dynamic shapeHelper) {
             if (displayType == "Detail") {
                 var partSettings = part.Settings.GetModel<PayButtonPartSettings>();
+                var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
                 dynamic ci = part.ContentItem;
                 var viewModel = new PaymentVM();
-                viewModel.ContentItemId = part.Id;
+                viewModel.Record.ContentItemId = part.Id;
                 viewModel.ContentItem = part.ContentItem;
-                viewModel.Currency = partSettings.DefaultCurrency;
+                viewModel.Record.Currency = partSettings.DefaultCurrency;
                 if (string.IsNullOrWhiteSpace(partSettings.CurrencyField) == false) {
-                    var currency = GetDynamicValue<string>(ci, partSettings.CurrencyField);
-                    if (string.IsNullOrWhiteSpace(currency) == false) {
-                        viewModel.Currency = currency;
-                    }
+                    viewModel.Record.Currency = _tokenizer.Replace(partSettings.CurrencyField, tokens);
                 }
-                viewModel.Amount = GetDynamicValue<decimal>(ci, partSettings.AmountField);
+                viewModel.Record.Amount = Convert.ToDecimal(_tokenizer.Replace(partSettings.AmountField, tokens), CultureInfo.InvariantCulture);
                 if(ci.TitlePart != null){
-                    viewModel.Reason = ci.TitlePart.Title;
+                    viewModel.Record.Reason = ci.TitlePart.Title;
                 }
                 return ContentShape("Parts_PayButton",
                     () => shapeHelper.Parts_PayButton(Payment: viewModel));
@@ -68,44 +69,44 @@ namespace Laser.Orchard.PaymentGateway.Drivers {
             return Editor(part, shapeHelper);
         }
 
-        private T GetDynamicValue<T>(ContentItem ci, string property) {
-            T result = default(T);
-            string[] properties = property.Split('.');
-            ContentPart part = null;
-            ContentField field = null;
-            part = ci.Parts.SingleOrDefault(x => x.PartDefinition.Name == properties[0]);
-            if (part != null) {
-                field = part.Fields.SingleOrDefault(x => x.Name == properties[1]);
-                if (field != null) {
-                    switch (field.FieldDefinition.Name) {
-                        case "NumericField":    
-                            result = (T)Convert.ChangeType(((NumericField)field).Value, typeof(T));
-                            break;
-                        case "TextField":
-                            result = (T)Convert.ChangeType(((TextField)field).Value, typeof(T));
-                            break;
-                        case "InputField":
-                            result = (T)Convert.ChangeType(((InputField)field).Value, typeof(T));
-                            break;
-                        case "DateTimeField":
-                            result = (T)Convert.ChangeType(((DateTimeField)field).DateTime, typeof(T));
-                            break;
-                        case "EnumerationField":
-                            result = (T)Convert.ChangeType(((EnumerationField)field).Value, typeof(T));
-                            break;
-                        case "ContentPickerField":
-                            result = (T)Convert.ChangeType(((ContentPickerField)field).Ids, typeof(T));
-                            break;
-                        case "MediaLibraryPickerField":
-                            result = (T)Convert.ChangeType(((MediaLibraryPickerField)field).Ids, typeof(T));
-                            break;
-                        case "BooleanField":
-                            result = (T)Convert.ChangeType(((BooleanField)field).Value, typeof(T));
-                            break;
-                    }
-                }
-            }
-            return result;
-        }
+        //private T GetDynamicValue<T>(ContentItem ci, string property) {
+        //    T result = default(T);
+        //    string[] properties = property.Split('.');
+        //    ContentPart part = null;
+        //    ContentField field = null;
+        //    part = ci.Parts.SingleOrDefault(x => x.PartDefinition.Name == properties[0]);
+        //    if (part != null) {
+        //        field = part.Fields.SingleOrDefault(x => x.Name == properties[1]);
+        //        if (field != null) {
+        //            switch (field.FieldDefinition.Name) {
+        //                case "NumericField":    
+        //                    result = (T)Convert.ChangeType(((NumericField)field).Value, typeof(T));
+        //                    break;
+        //                case "TextField":
+        //                    result = (T)Convert.ChangeType(((TextField)field).Value, typeof(T));
+        //                    break;
+        //                case "InputField":
+        //                    result = (T)Convert.ChangeType(((InputField)field).Value, typeof(T));
+        //                    break;
+        //                case "DateTimeField":
+        //                    result = (T)Convert.ChangeType(((DateTimeField)field).DateTime, typeof(T));
+        //                    break;
+        //                case "EnumerationField":
+        //                    result = (T)Convert.ChangeType(((EnumerationField)field).Value, typeof(T));
+        //                    break;
+        //                case "ContentPickerField":
+        //                    result = (T)Convert.ChangeType(((ContentPickerField)field).Ids, typeof(T));
+        //                    break;
+        //                case "MediaLibraryPickerField":
+        //                    result = (T)Convert.ChangeType(((MediaLibraryPickerField)field).Ids, typeof(T));
+        //                    break;
+        //                case "BooleanField":
+        //                    result = (T)Convert.ChangeType(((BooleanField)field).Value, typeof(T));
+        //                    break;
+        //            }
+        //        }
+        //    }
+        //    return result;
+        //}
     }
 }

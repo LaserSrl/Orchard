@@ -66,6 +66,10 @@
     <Reference Include="Orchard.Modules">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Modules\bin\Orchard.Modules.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Tokens, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -105,9 +109,7 @@
     <Compile Include="PaymentMigrations.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\DummyService.cs" />
-    <Compile Include="Services\IPaymentService.cs" />
     <Compile Include="Services\IPosService.cs" />
-    <Compile Include="Services\PaymentService.cs" />
     <Compile Include="Services\PosServiceBase.cs" />
     <Compile Include="Services\EsempioPosService.cs" />
     <Compile Include="Settings\PayButtonPartSettingsHooks.cs" />

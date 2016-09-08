@@ -16,7 +16,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
             return "EsempioPos";
         }
 
-        protected override string GetPosUrl(Models.PaymentRecord values) {
+        public override string GetPosUrl(Models.PaymentRecord values) {
             return "/esempiopos";
         }
     }
