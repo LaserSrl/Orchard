@@ -59,14 +59,16 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -79,11 +81,31 @@
     <EmbeddedResource Include="PaymentTypeCodeTable.txt" />
     <EmbeddedResource Include="PayPalCountryCodeTable.txt" />
     <EmbeddedResource Include="StateCodeTable.txt" />
+    <Content Include="Properties\DataSources\System.Xml.XmlNode.datasource" />
+    <Content Include="Service References\CryptDecryptProd\Laser.Orchard.PaymentGestPay.CryptDecryptProd.EncryptResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\CryptDecryptProd\WsCryptDecrypt.wsdl" />
+    <None Include="Service References\CryptDecryptTest\WsCryptDecrypt.disco" />
+    <None Include="Service References\CryptDecryptTest\configuration91.svcinfo" />
+    <None Include="Service References\CryptDecryptTest\configuration.svcinfo" />
+    <None Include="Service References\CryptDecryptTest\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Service References\CryptDecryptProd\WsCryptDecrypt.disco" />
+    <Content Include="Service References\CryptDecryptProd\configuration91.svcinfo" />
+    <Content Include="Service References\CryptDecryptProd\configuration.svcinfo" />
+    <Content Include="Service References\CryptDecryptProd\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Laser.Orchard.PaymentGateway\Laser.Orchard.PaymentGateway.csproj">
@@ -91,14 +113,42 @@
       <Name>Laser.Orchard.PaymentGateway</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
-    <Folder Include="Views\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\Constants.cs" />
+    <Compile Include="GestPayMigrations.cs" />
+    <Compile Include="Models\PaymentGestPaySettingsPart.cs" />
+    <Compile Include="Models\PaymentGestPaySettingsPartRecord.cs" />
+    <Compile Include="Service References\CryptDecryptProd\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\CryptDecryptTest\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Services\IGestPayAdminServices.cs" />
+    <Compile Include="Services\PosServiceGestPay.cs" />
+    <Compile Include="ViewModels\GestPaySettingsViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\CryptDecryptProd\" />
+    <WCFMetadataStorage Include="Service References\CryptDecryptTest\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CryptDecryptTest\WsCryptDecrypt.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Service References\CryptDecryptTest\Laser.Orchard.PaymentGestPay.CryptDecryptTest.EncryptResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

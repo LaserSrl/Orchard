@@ -1,0 +1,14 @@
+﻿@model Laser.Orchard.PaymentGestPay.ViewModels.GestPaySettingsViewModel
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.TextBoxFor(m => m.GestPayShopLogin, new { placeholder = T("GestPay Shop Login"), @class = "text medium" })
+    <span class="hint">@T("Insert your GestPay Shop Login.")</span>
+    
+     @Html.CheckBoxFor(m => m.UseTestEnvironment)
+    <label for="@Html.FieldIdFor(m => m.UseTestEnvironment)" class="forcheckbox">@T("Use test environment.")</label>
+    <span class="hint">@T("Selecting this checkbox will mean that we are using GestPay's test environment. Payments there are fake.")</span>
+    
+    <div class="box-footer align-right padding-right-35">
+        <button id="saveSettings" type="submit" name="submit.SaveSettings" value="yes please">@T("Save")</button>
+    </div>
+}

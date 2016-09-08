@@ -8,7 +8,7 @@ using System.Web;
 
 namespace Laser.Orchard.PaymentGateway.Services {
     public abstract class PosServiceBase : IPosService {
-        private readonly IOrchardServices _orchardServices;
+        protected readonly IOrchardServices _orchardServices;
         private readonly IRepository<PaymentRecord> _repository;
         private readonly IPaymentEventHandler _paymentEventHandler;
 

@@ -5,6 +5,7 @@ using System.Web;
 
 namespace Laser.Orchard.PaymentGestPay.Extensions {
     public static class Constants {
+        public const string PosName = "GestPay";
     }
 
     public static class Endpoints {
