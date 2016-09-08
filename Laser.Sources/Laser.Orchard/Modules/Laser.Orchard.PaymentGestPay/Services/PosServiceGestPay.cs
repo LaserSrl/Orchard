@@ -62,12 +62,12 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             //get the encrypted parameter string
             if (settings.UseTestEnvironment) {
                 var client = new CryptDecryptTest.WSCryptDecryptSoapClient();
-                XmlNode encryptXML = client.Encrypt(
-                    shopLogin: settings.GestPayShopLogin,
-                    uicCode:
-                );
+                //XmlNode encryptXML = client.Encrypt(
+                //    shopLogin: settings.GestPayShopLogin,
+                //    uicCode:
+                //);
             } else {
-
+                var client = new CryptDecryptProd.WSCryptDecryptSoapClient();
             }
         }
 

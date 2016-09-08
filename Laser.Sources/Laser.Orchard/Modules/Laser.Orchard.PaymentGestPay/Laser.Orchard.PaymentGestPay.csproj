@@ -120,6 +120,7 @@
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="GestPayMigrations.cs" />
     <Compile Include="Handlers\PaymentGestPaySettingsPartHandler.cs" />
+    <Compile Include="Models\GestPayTransaction.cs" />
     <Compile Include="Models\PaymentGestPaySettingsPart.cs" />
     <Compile Include="Models\PaymentGestPaySettingsPartRecord.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
