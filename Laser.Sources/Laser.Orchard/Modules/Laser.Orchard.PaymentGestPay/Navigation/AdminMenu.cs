@@ -14,9 +14,15 @@ namespace Laser.Orchard.PaymentGestPay.Navigation {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Settings"), menu => menu
-                .Add(new LocalizedString(Constants.PosName), "10.0", subMenu => subMenu
+                .Add(T("Payments"), "10.0", subMenu => subMenu
                     .Action("Index", "Admin", new { area = Constants.LocalArea })
-                ));
+                    .LinkToFirstChild(true)
+                    .Add(new LocalizedString(Constants.PosName), "10.0", item => item
+                        .Action("Index", "Admin", new { area = Constants.LocalArea })
+                        .LocalNav()
+                    )
+                )
+            );
         }
     }
 }

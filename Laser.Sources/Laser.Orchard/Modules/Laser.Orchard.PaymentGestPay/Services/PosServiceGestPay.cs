@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml;
 
 namespace Laser.Orchard.PaymentGestPay.Services {
     public class PosServiceGestPay : PosServiceBase, IGestPayAdminServices {
@@ -51,5 +52,24 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             settings.UseTestEnvironment = vm.UseTestEnvironment;
         }
         #endregion
+
+        public void StartGestPayTransaction() {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<PaymentGestPaySettingsPart>();
+
+            //get the encrypted parameter string
+            if (settings.UseTestEnvironment) {
+                var client = new CryptDecryptTest.WSCryptDecryptSoapClient();
+                XmlNode encryptXML = client.Encrypt(
+                    shopLogin: settings.GestPayShopLogin,
+                    uicCode:
+                );
+            } else {
+
+            }
+        }
+
     }
 }
