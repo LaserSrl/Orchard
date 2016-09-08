@@ -40,6 +40,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         public GenericRedCustomerData Red_CustomerData { get; set; }
         public string[] Red_CustomInfo { get; set; }
         public GenericRedItems Red_Items { get; set; }
+        [StringLength(3)]
+        public string Consel_MerchantPro { get; set; } //merchant promotional code (mandatory to show consel in the pagam's payment method)
+        public GenericConselCustomerInfo Consel_CustomerInfo { get; set; }
         #endregion
     }
     /// <summary>
@@ -588,5 +591,116 @@ namespace Laser.Orchard.PaymentGestPay.Models {
             };
         }
     }
+    /// <summary>
+    /// This class contains the same exact information of the ConselCustomerInfo classes from both the Test and Prod
+    /// remote GestPay services. By using this, we can carry the info without resorting to either specific implementation.
+    /// </summary>
+    public partial class GenericConselCustomerInfo {
+        [StringLength(30)]
+        public string Surname { get; set; } //customer surname
+        [StringLength(30)]
+        public string Name { get; set; } //customer name
+        [StringLength(16)]
+        public string TaxationCode { get; set; } //customer taxation code
+        [StringLength(60)]
+        public string Address { get; set; } //customer address
+        [StringLength(30)]
+        public string City { get; set; } //customer city
+        [StringLength(2)]
+        public string StateCode { get; set; } //customer state code
+        [StringLength(10)]
+        public string DateAddress { get; set; } //date since the customer lives in the declared address dd/mm/yyyy
+        [StringLength(15)]
+        public string Phone { get; set; } //customer phone
+        [StringLength(15)]
+        public string MobilePhone { get; set; } //customer mobile phone
+        public string MunicipalCode { get; set; }
+        public string StateBirthDate { get; set; }
+        public string BirthDate { get; set; }
+        public string Mail { get; set; }
+        public string MunicipalDocumentCode { get; set; }
+        public string Employment { get; set; }
+        public string WorkingAddress { get; set; }
+        public string MunicipalWorkingCode { get; set; }
+        public string DocumentState { get; set; }
+        public string DocumentNumber { get; set; }
+        public string MunicipalBirthCode { get; set; }
+        public string VisaExpiryDate { get; set; }
+        public string Iban { get; set; }
+        public string DocumentDate { get; set; }
+        public string WorkingTelNumber { get; set; }
+        public string WorkingState { get; set; }
+        public string MonthlyPay { get; set; }
 
+        /// <summary>
+        /// This method computes the object used to provide customer details to the encrypt methods in the Test
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptTest.ConselCustomerInfo TestVersion() {
+            return new CryptDecryptTest.ConselCustomerInfo {
+                Surname = this.Surname,
+                Name = this.Name,
+                TaxationCode = this.TaxationCode,
+                Address = this.Address,
+                City = this.City,
+                StateCode = this.StateCode,
+                DateAddress = this.DateAddress,
+                Phone = this.Phone,
+                MobilePhone = this.MobilePhone,
+                MunicipalCode = this.MunicipalCode,
+                StateBirthDate = this.StateBirthDate,
+                BirthDate = this.BirthDate,
+                Mail = this.Mail,
+                MunicipalDocumentCode = this.MunicipalDocumentCode,
+                Employment = this.Employment,
+                WorkingAddress = this.WorkingAddress,
+                MunicipalWorkingCode = this.MunicipalWorkingCode,
+                DocumentState = this.DocumentState,
+                DocumentNumber = this.DocumentNumber,
+                MunicipalBirthCode = this.MunicipalBirthCode,
+                VisaExpiryDate = this.VisaExpiryDate,
+                Iban = this.Iban,
+                DocumentDate = this.DocumentDate,
+                WorkingTelNumber = this.WorkingTelNumber,
+                WorkingState = this.WorkingState,
+                MonthlyPay = this.MonthlyPay
+            };
+        }
+        /// <summary>
+        /// This method computes the object used to provide customer details to the encrypt methods in the Prod
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptProd.ConselCustomerInfo ProdVersion() {
+            return new CryptDecryptProd.ConselCustomerInfo {
+                Surname = this.Surname,
+                Name = this.Name,
+                TaxationCode = this.TaxationCode,
+                Address = this.Address,
+                City = this.City,
+                StateCode = this.StateCode,
+                DateAddress = this.DateAddress,
+                Phone = this.Phone,
+                MobilePhone = this.MobilePhone,
+                MunicipalCode = this.MunicipalCode,
+                StateBirthDate = this.StateBirthDate,
+                BirthDate = this.BirthDate,
+                Mail = this.Mail,
+                MunicipalDocumentCode = this.MunicipalDocumentCode,
+                Employment = this.Employment,
+                WorkingAddress = this.WorkingAddress,
+                MunicipalWorkingCode = this.MunicipalWorkingCode,
+                DocumentState = this.DocumentState,
+                DocumentNumber = this.DocumentNumber,
+                MunicipalBirthCode = this.MunicipalBirthCode,
+                VisaExpiryDate = this.VisaExpiryDate,
+                Iban = this.Iban,
+                DocumentDate = this.DocumentDate,
+                WorkingTelNumber = this.WorkingTelNumber,
+                WorkingState = this.WorkingState,
+                MonthlyPay = this.MonthlyPay
+            };
+        }
+    }
 }
