@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Laser.Orchard.PaymentGateway {
     public interface IPaymentEventHandler : IEventHandler {
-        void OnSuccess(int contentItemId);
-        void OnError(int contentItemId);
+        void OnSuccess(int paymentId, int contentItemId);
+        void OnError(int paymentId, int contentItemId);
     }
 }
