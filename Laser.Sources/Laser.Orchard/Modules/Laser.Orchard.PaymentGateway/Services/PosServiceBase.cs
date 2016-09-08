@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Laser.Orchard.PaymentGateway.Services {
     public abstract class PosServiceBase : IPosService {
@@ -65,6 +66,14 @@ namespace Laser.Orchard.PaymentGateway.Services {
             else {
                 _paymentEventHandler.OnError(payment.Id, payment.ContentItemId);
             }
+        }
+        /// <summary>
+        /// Fornisce l'URL per consultare l'esito del pagamento
+        /// </summary>
+        /// <param name="paymentId"></param>
+        /// <returns></returns>
+        public string GetPaymentInfoUrl(int paymentId) {
+            return new UrlHelper(HttpContext.Current.Request.RequestContext).Action("Info", "Payment", new { area = "Laser.Orchard.PaymentGateway", paymentId = paymentId });
         }
         /// <summary>
         /// Salva il pagamento e restituisce il PaymentId.

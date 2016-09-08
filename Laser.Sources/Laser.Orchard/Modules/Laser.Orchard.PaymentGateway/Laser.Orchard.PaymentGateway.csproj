@@ -108,10 +108,8 @@
     <Compile Include="Models\PaymentRecord.cs" />
     <Compile Include="PaymentMigrations.cs" />
     <Compile Include="Routes.cs" />
-    <Compile Include="Services\DummyService.cs" />
     <Compile Include="Services\IPosService.cs" />
     <Compile Include="Services\PosServiceBase.cs" />
-    <Compile Include="Services\EsempioPosService.cs" />
     <Compile Include="Settings\PayButtonPartSettingsHooks.cs" />
     <Compile Include="ViewModels\PaymentVM.cs" />
   </ItemGroup>

@@ -71,7 +71,7 @@ namespace Laser.Orchard.Braintree.Controllers {
             }
             string info = JsonConvert.SerializeObject(payResult);
             _posService.EndPayment(pid, payResult.Success, error, info, transactionId);
-            return RedirectToAction("Info", "Payment", new { area = "Laser.Orchard.PaymentGateway", paymentId = pid });
+            return Redirect(_posService.GetPaymentInfoUrl(pid));
         }
     }
 }
