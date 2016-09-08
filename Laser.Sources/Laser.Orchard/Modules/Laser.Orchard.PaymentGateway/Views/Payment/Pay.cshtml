@@ -11,7 +11,7 @@ Paga con:
 @using(Html.BeginFormAntiForgeryPost()){
     <ul>
     @foreach(var pos in Model.PosList) {
-        <li><button type="submit" formaction="@Html.Raw(pos.GetPosUrl(Model.Record))">@pos.GetPosName()</button></li>
+        <li><button type="submit" formaction="@Html.Raw(pos.GetPosUrl(Model.Record.Id))">@pos.GetPosName()</button></li>
     }
     </ul>
 }

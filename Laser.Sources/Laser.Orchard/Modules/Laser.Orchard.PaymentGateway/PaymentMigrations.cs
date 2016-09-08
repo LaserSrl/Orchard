@@ -36,5 +36,10 @@ namespace Laser.Orchard.PaymentGateway {
             );
             return 2;
         }
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("PaymentRecord",
+                table => table.DropColumn("ReturnUrl"));
+            return 3;
+        }
     }
 }

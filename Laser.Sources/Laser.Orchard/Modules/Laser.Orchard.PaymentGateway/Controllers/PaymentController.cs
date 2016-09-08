@@ -19,11 +19,11 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                 : base(orchardServices, repository, paymentEventHandler) {
             }
             public override string GetPosName() {
-                return "Empty";
+                return "";
             }
 
-            public override string GetPosUrl(PaymentRecord values) {
-                return "/";
+            public override string GetPosUrl(int paymentId) {
+                return "";
             }
         }
         private readonly PosServiceEmpty _posServiceEmpty;
@@ -44,7 +44,8 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                 Record = new PaymentRecord {
                     Reason = reason,
                     Amount = amount,
-                    Currency = currency
+                    Currency = currency,
+                    ContentItemId = itemId
                 },
                 PosList = _posServices.ToList(),
                 ContentItem = item

@@ -3,8 +3,8 @@ using Orchard;
 
 public interface IPosService : IDependency {
     string GetPosName();
-    string GetPosUrl(PaymentRecord values);
+    string GetPosUrl(int paymentId);
     PaymentRecord StartPayment(PaymentRecord values);
     PaymentRecord GetPaymentInfo(int paymentId);
-    void EndPayment(int paymentId, bool success, string error, string info);
+    void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "");
 }

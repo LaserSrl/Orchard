@@ -18,7 +18,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public abstract string GetPosUrl(PaymentRecord values);
+        public abstract string GetPosUrl(int paymentId);
 
         public PosServiceBase(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler) {
             _orchardServices = orchardServices;
@@ -34,7 +34,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
             }
             values.PosName = GetPosName();
             if (string.IsNullOrWhiteSpace(values.PosUrl)) {
-                string posUrl = GetPosUrl(values);
+                string posUrl = GetPosUrl(values.Id);
                 values.PosUrl = posUrl;
             }
             int paymentId = SavePaymentInfo(values);
@@ -49,11 +49,14 @@ namespace Laser.Orchard.PaymentGateway.Services {
             PaymentRecord result = _repository.Get(paymentId);
             return result;
         }
-        public void EndPayment(int paymentId, bool success, string error, string info) {
+        public void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "") {
             PaymentRecord payment = GetPaymentInfo(paymentId);
             payment.Success = success;
             payment.Error = error;
             payment.Info = info;
+            payment.TransactionId = transactionId;
+            payment.PosName = GetPosName(); // forza la valorizzazione del PosName
+            payment.PosUrl = GetPosUrl(paymentId);
             SavePaymentInfo(payment);
             // solleva l'evento di termine della transazione
             if (success) {
@@ -69,18 +72,16 @@ namespace Laser.Orchard.PaymentGateway.Services {
         /// <param name="values"></param>
         /// <returns></returns>
         private int SavePaymentInfo(PaymentRecord values) {
-            bool create = false;
+            PaymentRecord record = null;
             DateTime now = DateTime.Now;
-            if (values.Id == 0) {
-                create = true;
+            if (values.Id > 0) {
+                record = _repository.Get(values.Id);
             }
-            else {
-                int num = _repository.Count(x => x.Id == values.Id);
-                if (num == 0) {
-                    create = true;
-                }
+            // 4000 è la massima lunghezza di stringa che nhibernate riesce a gestire
+            if ((values.Info != null) && (values.Info.Length > 4000)) {
+                values.Info = values.Info.Substring(0, 4000);
             }
-            if (create) {
+            if (record == null) {
                 values.CreationDate = now;
                 values.UpdateDate = now;
                 _repository.Create(values);
