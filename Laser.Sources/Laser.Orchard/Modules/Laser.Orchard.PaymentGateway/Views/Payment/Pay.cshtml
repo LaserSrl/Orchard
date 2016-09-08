@@ -8,10 +8,10 @@ Riepilogo:<br />
 La reason è: @Model.Record.Reason
 <br />
 Paga con:
-@using(Html.BeginForm()){
+@using(Html.BeginFormAntiForgeryPost()){
     <ul>
     @foreach(var pos in Model.PosList) {
-        <li><button type="submit" formaction="@pos.GetPosUrl(Model.Record)">@pos.GetPosName()</button></li>
+        <li><button type="submit" formaction="@Html.Raw(pos.GetPosUrl(Model.Record))">@pos.GetPosName()</button></li>
     }
     </ul>
 }
