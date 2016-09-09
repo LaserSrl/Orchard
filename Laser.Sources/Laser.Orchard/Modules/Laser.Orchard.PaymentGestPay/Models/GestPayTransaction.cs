@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.PaymentGestPay.Attributes;
+﻿using Laser.Orchard.PaymentGateway.Models;
+using Laser.Orchard.PaymentGestPay.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -97,6 +98,8 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         public GenericEcommGestpayPaymentDetails OrderDetails { get; set; }
         #endregion
 
+        public PaymentRecord record { get; set; }
+
         public GestPayTransaction() {
             shippingDetails = new GenericShippingDetails();
             paymentTypes = new List<string>();
@@ -109,6 +112,10 @@ namespace Laser.Orchard.PaymentGestPay.Models {
             Red_Items = new GenericRedItems();
             Consel_CustomerInfo = new GenericConselCustomerInfo();
             OrderDetails = new GenericEcommGestpayPaymentDetails();
+        }
+        public GestPayTransaction(PaymentRecord pr)
+            : this() {
+                record = pr;
         }
     }
     /// <summary>
@@ -222,18 +229,8 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [ValidRedGestPayParameter]
         public string Customer_Surname { get; set; } //customer last name
         [StringLength(45)]
-        [ValidRedGestPayParameter]
-        private string _customerEmail;
-        public string Customer_Email {
-            get { return _customerEmail; }
-            set {
-                if (value.Contains("@")) { //not a full regex validation of an email field
-                    _customerEmail = value;
-                } else {
-                    throw new System.FormatException("Not a valid email address. Must contain @ character.");
-                }
-            }
-        } //customer email address - value must contain @
+        [ValidRedGestPayEmailParameter]
+        public string Customer_Email { get; set; } //customer email address - value must contain @
         [StringLength(30)]
         [ValidRedGestPayParameter]
         public string Customer_Address { get; set; } //customer address line 1
@@ -253,19 +250,8 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [ValidRedGestPayParameter]
         public string Customer_PostalCode { get; set; } //customer post/zip code
         [StringLength(19)]
-        [ValidRedGestPayParameter]
-        private string _customerPhone;
-        public string Customer_Phone {
-            get { return _customerPhone; }
-            set {
-                string tmp = Regex.Replace(value, "[\n\r\t/s]", " ");
-                if (tmp.Contains(" ")) {
-                    throw new System.FormatException("Not a valid phone. Must not contain whitespace.");
-                } else {
-                    _customerPhone = value;
-                }
-            }
-        } //Customer phone - no spaces
+        [ValidRedGestPayEmailParameter]
+        public string Customer_Phone { get; set; } //Customer phone - no spaces
 
         /// <summary>
         /// This method computes the object used to provide customer info details to the encrypt methods in the Test
@@ -320,18 +306,8 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [ValidRedGestPayParameter]
         public string Shipping_Surname { get; set; } //shipping last name
         [StringLength(45)]
-        [ValidRedGestPayParameter]
-        private string _shippingEmail;
-        public string Shipping_Email {
-            get{return _shippingEmail;}
-            set {
-                if (value.Contains("@")) { //not a full regex validation of an email field
-                    _shippingEmail = value;
-                } else {
-                    throw new System.FormatException("Not a valid email address. Must contain @ character.");
-                }
-            }
-        } //customer email address - value must contain @
+        [ValidRedGestPayEmailParameter]
+        public string Shipping_Email { get; set; } //customer email address - value must contain @
         [StringLength(30)]
         [ValidRedGestPayParameter]
         public string Shipping_Address { get; set; } //shipping address line 1
@@ -351,33 +327,11 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [ValidRedGestPayParameter]
         public string Shipping_PostalCode { get; set; } //shipping post/zip code
         [StringLength(19)]
-        [ValidRedGestPayParameter]
-        private string _homePhone;
-        public string Shipping_HomePhone {
-            get { return _homePhone; }
-            set {
-                string tmp = Regex.Replace(value, "[\n\r\t/s]", " ");
-                if (tmp.Contains(" ")) {
-                    throw new System.FormatException("Not a valid phone. Must not contain whitespace.");
-                } else {
-                    _homePhone = value;
-                }
-            }
-        } //Customer home phone - no spaces
+        [ValidRedGestPayNoSpaceParameter]
+        public string Shipping_HomePhone { get; set; } //Customer home phone - no spaces
         [StringLength(12)]
-        [ValidRedGestPayParameter]
-        private string _faxPhone;
-        public string Shipping_FaxPhone {
-            get { return _faxPhone; }
-            set {
-                string tmp = Regex.Replace(value, "[\n\r\t/s]", " ");
-                if (tmp.Contains(" ")) {
-                    throw new System.FormatException("Not a valid phone. Must not contain whitespace.");
-                } else {
-                    _faxPhone = value;
-                }
-            }
-        } //Customer fax phone - no spaces
+        [ValidRedGestPayNoSpaceParameter]
+        public string Shipping_FaxPhone { get; set; } //Customer fax phone - no spaces
         [StringLength(19)]
         [ValidRedGestPayParameter]
         public string Shipping_MobilePhone { get; set; } //Customer mobile phone
@@ -448,18 +402,8 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [ValidRedGestPayParameter]
         public string Billing_DateOfBirth { get; set; } //billing date of birth - format YYYYMMDD
         [StringLength(45)]
-        [ValidRedGestPayParameter]
-        private string _billingEmail;
-        public string Billing_Email {
-            get { return _billingEmail; }
-            set {
-                if (value.Contains("@")) { //not a full regex validation of an email field
-                    _billingEmail = value;
-                } else {
-                    throw new System.FormatException("Not a valid email address. Must contain @ character.");
-                }
-            }
-        } //billing email address - value must contain @
+        [ValidRedGestPayEmailParameter]
+        public string Billing_Email { get; set; } //billing email address - value must contain @
         [StringLength(30)]
         [ValidRedGestPayParameter]
         public string Billing_Address { get; set; } //Billing address line 1
@@ -479,33 +423,11 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [ValidRedGestPayParameter]
         public string Billing_PostalCode { get; set; } //Billing post/zip code
         [StringLength(19)]
-        [ValidRedGestPayParameter]
-        private string _homePhone;
-        public string Billing_HomePhone {
-            get { return _homePhone; }
-            set {
-                string tmp = Regex.Replace(value, "[\n\r\t/s]", " ");
-                if (tmp.Contains(" ")) {
-                    throw new System.FormatException("Not a valid phone. Must not contain whitespace.");
-                } else {
-                    _homePhone = value;
-                }
-            }
-        } //billing home phone - no spaces
+        [ValidRedGestPayNoSpaceParameter]
+        public string Billing_HomePhone { get; set; } //billing home phone - no spaces
         [StringLength(19)]
-        [ValidRedGestPayParameter]
-        private string _workPhone;
-        public string Billing_WorkPhone {
-            get { return _workPhone; }
-            set {
-                string tmp = Regex.Replace(value, "[\n\r\t/s]", " ");
-                if (tmp.Contains(" ")) {
-                    throw new System.FormatException("Not a valid phone. Must not contain whitespace.");
-                } else {
-                    _workPhone = value;
-                }
-            }
-        } //billing work phone - no spaces
+        [ValidRedGestPayNoSpaceParameter]
+        public string Billing_WorkPhone { get; set; } //billing work phone - no spaces
         [StringLength(19)]
         [ValidRedGestPayParameter]
         public string Billing_MobilePhone { get; set; } //billing mobile phone

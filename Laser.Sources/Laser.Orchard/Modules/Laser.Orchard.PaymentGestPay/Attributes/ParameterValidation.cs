@@ -122,4 +122,41 @@ namespace Laser.Orchard.PaymentGestPay.Attributes {
             return true;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+    sealed public class ValidRedGestPayEmailParameter : ValidRedGestPayParameter {
+        public override bool IsValid(object value) {
+            string param = (string)value;
+            if (string.IsNullOrWhiteSpace(param))
+                return true;
+            if (!ValidateRedParameter(param))
+                return false;
+            if (!param.Contains("@"))
+                return false;
+            return true;
+        }
+
+        public override string FormatErrorMessage(string name) {
+            return string.Format("Parameter {0} must contain @ character.", name);
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+    sealed public class ValidRedGestPayNoSpaceParameter : ValidRedGestPayParameter {
+        public override bool IsValid(object value) {
+            string param = (string)value;
+            if (string.IsNullOrWhiteSpace(param))
+                return true;
+            if (!ValidateRedParameter(param))
+                return false;
+            string tmp = Regex.Replace(param, "[\n\r\t/s]", " ");
+            if (tmp.Contains(" "))
+                return false;
+            return true;
+        }
+
+        public override string FormatErrorMessage(string name) {
+            return string.Format("Parameter {0} must not contain whitespace.", name);
+        }
+    }
 }
