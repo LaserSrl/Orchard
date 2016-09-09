@@ -1,7 +1,12 @@
-﻿using Laser.Orchard.PaymentGestPay.Services;
+﻿using Laser.Orchard.PaymentGestPay.Models;
+using Laser.Orchard.PaymentGestPay.Services;
 using Laser.Orchard.PaymentGestPay.ViewModels;
+using Orchard;
+using Orchard.Localization;
+using Orchard.UI.Notify;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,14 +15,20 @@ using OMvc = Orchard.Mvc;
 namespace Laser.Orchard.PaymentGestPay.Controllers {
     public class AdminController : Controller {
 
+        private readonly IOrchardServices _orchardServices;
         private IGestPayAdminServices _gestPayAdminServices;
+        public Localizer T { get; set; }
 
-        public AdminController(IGestPayAdminServices gestPayAdminServices) {
+        public AdminController(IOrchardServices orchardServices, IGestPayAdminServices gestPayAdminServices) {
+            _orchardServices = orchardServices;
             _gestPayAdminServices = gestPayAdminServices;
+
+            T = NullLocalizer.Instance;
         }
 
         public ActionResult Index() {
             //TODO: add permission verification
+
 
             return View(_gestPayAdminServices.GetSettingsVM());
         }

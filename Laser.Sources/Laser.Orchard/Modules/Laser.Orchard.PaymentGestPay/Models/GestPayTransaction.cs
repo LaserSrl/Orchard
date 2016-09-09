@@ -33,12 +33,15 @@ namespace Laser.Orchard.PaymentGestPay.Models {
     
     public class GestPayTransaction {
         #region Mandatory properties
+        [Required]
         [StringLength(3)]
         [ValidGestPayParameter]
         public string uicCode { get; set; } //code identifying currency in which transaction amount is denominated
+        [Required]
         [StringLength(9)]
         [ValidGestPayParameter]
         public string amount { get; set; } //Transaction amount. Do not insert thousands separator. Decimals, max 2 digits, are optional and separator is point
+        [Required]
         [StringLength(50)]
         [ValidGestPayParameter]
         public string shopTransactionID { get; set; } //Identifier attributed to merchant's transaction
@@ -71,18 +74,18 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [ValidGestPayParameter]
         public string ppSellerProtection { get; set; } //Parameter to set the use of a confirmed address
         public GenericShippingDetails shippingDetails { get; set; }
-        //TODO: should not directly set any array here, because we need to allow string validation
-        public string[] paymentTypes { get; set; } //set of tags to set the visibility of payment systems on payment page (see CodeTables.PaymentTypeCodes)
+        [ValidGestPayListParameter]
+        public List<string> paymentTypes { get; set; } //set of tags to set the visibility of payment systems on payment page (see CodeTables.PaymentTypeCodes)
         public GenericPaymentTypeDetail paymentTypeDetail { get; set; }
         [StringLength(1)]
-        [ValidGestPayParameter]
+        [ValidRedGestPayParameter]
         public string redFraudPrevention { get; set; } //flag to activate Red Fraud Prevention (redFraudPrevention = "1")
         public GenericRedCustomerInfo Red_CustomerInfo { get; set; }
         public GenericRedShippingInfo Red_ShippingInfo { get; set; }
         public GenericRedBillingInfo Red_BillingInfo { get; set; }
         public GenericRedCustomerData Red_CustomerData { get; set; }
-        //TODO: should not directly set any array here, because we need to allow string validation
-        public string[] Red_CustomInfo { get; set; }
+        [ValidRedGestPayListParameter]
+        public List<string> Red_CustomInfo { get; set; }
         public GenericRedItems Red_Items { get; set; }
         [StringLength(3)]
         [ValidGestPayParameter]
@@ -94,6 +97,19 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         public GenericEcommGestpayPaymentDetails OrderDetails { get; set; }
         #endregion
 
+        public GestPayTransaction() {
+            shippingDetails = new GenericShippingDetails();
+            paymentTypes = new List<string>();
+            paymentTypeDetail = new GenericPaymentTypeDetail();
+            Red_CustomerInfo = new GenericRedCustomerInfo();
+            Red_ShippingInfo = new GenericRedShippingInfo();
+            Red_BillingInfo = new GenericRedBillingInfo();
+            Red_CustomerData = new GenericRedCustomerData();
+            Red_CustomInfo = new List<string>();
+            Red_Items = new GenericRedItems();
+            Consel_CustomerInfo = new GenericConselCustomerInfo();
+            OrderDetails = new GenericEcommGestpayPaymentDetails();
+        }
     }
     /// <summary>
     /// This class contains the same exact information of the ShippingDetails classes from both the Test and Prod
@@ -198,19 +214,15 @@ namespace Laser.Orchard.PaymentGestPay.Models {
     public partial class GenericRedCustomerInfo {
         [StringLength(5)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Customer_Title { get; set; } //customer title
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Customer_Name { get; set; } //customer first name
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Customer_Surname { get; set; } //customer last name
         [StringLength(45)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         private string _customerEmail;
         public string Customer_Email {
             get { return _customerEmail; }
@@ -224,31 +236,24 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         } //customer email address - value must contain @
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Customer_Address { get; set; } //customer address line 1
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Customer_Address2 { get; set; } //customer address line 2
         [StringLength(20)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Customer_City { get; set; } //customer address city
         [StringLength(2)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Customer_StateCode { get; set; } //customer address state code
         [StringLength(3)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Customer_Country { get; set; } //customer country code - ISO-Alpha 3 (see CodeTables.ISOCountryCodes)
         [StringLength(9)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Customer_PostalCode { get; set; } //customer post/zip code
         [StringLength(19)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         private string _customerPhone;
         public string Customer_Phone {
             get { return _customerPhone; }
@@ -310,15 +315,12 @@ namespace Laser.Orchard.PaymentGestPay.Models {
     public partial class GenericRedShippingInfo {
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Shipping_Name { get; set; } //shipping first name
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Shipping_Surname { get; set; } //shipping last name
         [StringLength(45)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         private string _shippingEmail;
         public string Shipping_Email {
             get{return _shippingEmail;}
@@ -332,31 +334,24 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         } //customer email address - value must contain @
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Shipping_Address { get; set; } //shipping address line 1
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Shipping_Address2 { get; set; } //shipping address line 2
         [StringLength(20)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Shipping_City { get; set; } //shipping address city
         [StringLength(2)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Shipping_StateCode { get; set; } //shipping address state code
         [StringLength(3)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Shipping_Country { get; set; } //shipping country code  - ISO-Alpha 3 (see CodeTables.ISOCountryCodes)
         [StringLength(9)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Shipping_PostalCode { get; set; } //shipping post/zip code
         [StringLength(19)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         private string _homePhone;
         public string Shipping_HomePhone {
             get { return _homePhone; }
@@ -371,7 +366,6 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         } //Customer home phone - no spaces
         [StringLength(12)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         private string _faxPhone;
         public string Shipping_FaxPhone {
             get { return _faxPhone; }
@@ -386,11 +380,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         } //Customer fax phone - no spaces
         [StringLength(19)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Shipping_MobilePhone { get; set; } //Customer mobile phone
         [StringLength(19)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Shipping_TimeToDeparture { get; set; } //shipping time to departure
 
         /// <summary>
@@ -445,23 +437,18 @@ namespace Laser.Orchard.PaymentGestPay.Models {
     public partial class GenericRedBillingInfo {
         [StringLength(16)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Billing_Id { get; set; } //billing id
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Billing_Name { get; set; } //Billing first name
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Billing_Surname { get; set; } //Billing last name
         [StringLength(10)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Billing_DateOfBirth { get; set; } //billing date of birth - format YYYYMMDD
         [StringLength(45)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         private string _billingEmail;
         public string Billing_Email {
             get { return _billingEmail; }
@@ -475,31 +462,24 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         } //billing email address - value must contain @
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Billing_Address { get; set; } //Billing address line 1
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Billing_Address2 { get; set; } //Billing address line 2
         [StringLength(20)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Billing_City { get; set; } //Billing address city
         [StringLength(2)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Billing_StateCode { get; set; } //Billing address state code
         [StringLength(3)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Billing_Country { get; set; } //Billing country code  - ISO-Alpha 3 (see CodeTables.ISOCountryCodes)
         [StringLength(9)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Billing_PostalCode { get; set; } //Billing post/zip code
         [StringLength(19)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         private string _homePhone;
         public string Billing_HomePhone {
             get { return _homePhone; }
@@ -514,7 +494,6 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         } //billing home phone - no spaces
         [StringLength(19)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         private string _workPhone;
         public string Billing_WorkPhone {
             get { return _workPhone; }
@@ -529,7 +508,6 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         } //billing work phone - no spaces
         [StringLength(19)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Billing_MobilePhone { get; set; } //billing mobile phone
 
         /// <summary>
@@ -586,27 +564,21 @@ namespace Laser.Orchard.PaymentGestPay.Models {
     public partial class GenericRedCustomerData {
         [StringLength(60)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string MerchantWebSite { get; set; } //transaction source website
         [StringLength(45)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Customer_IpAddress { get; set; } //ip of customer - Format: nnn.nnn.nnn.nnn
         [StringLength(4000)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string PC_FingerPrint { get; set; } //PC Finger Print. If the RED configuration is defined with the chance to fill this valu, but for some reasons it's left empty, then fill Red=ServiceType="N" to avoid error
         [StringLength(1)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string PreviousCustomer { get; set; } //previous customer flag - format "Y" or "N"
         [StringLength(12)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Red_Merchant_ID { get; set; } //optional only for merchant with a specific set of rules (code provided by Sella)
         [StringLength(1)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Red_ServiceType { get; set; } //optional only for merchant with a specific set of rules (code provided by Sella)
 
         /// <summary>
@@ -647,9 +619,12 @@ namespace Laser.Orchard.PaymentGestPay.Models {
     public partial class GenericRedItems {
         [StringLength(2)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string NumberOfItems { get; set; }
-        public GenericRedItem[] Red_Item { get; set; }
+        public List<GenericRedItem> Red_Item { get; set; }
+
+        public GenericRedItems() {
+            Red_Item = new List<GenericRedItem>();
+        }
 
         /// <summary>
         /// This method computes the object used to provide item details to the encrypt methods in the Test
@@ -681,43 +656,33 @@ namespace Laser.Orchard.PaymentGestPay.Models {
     public partial class GenericRedItem {
         [StringLength(12)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Item_ProductCode { get; set; } //item product code
         [StringLength(12)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Item_StockKeepingUnit { get; set; } //item stock keeping unit
         [StringLength(26)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Item_Description { get; set; } //item description
         [StringLength(12)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Item_Quantity { get; set; } //item quantity - 1 should be sent as "10000"
         [StringLength(12)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Item_UnitCost { get; set; } //item cost amount - €5.00 should be sent as 50000
         [StringLength(12)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Item_TotalCost { get; set; } //total item amount (item qty * item cost), no decimal
         [StringLength(19)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Item_ShippingNumber { get; set; } //item shippping/tracking numberr
         [StringLength(160)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Item_GiftMessage { get; set; } //item gift message
         [StringLength(30)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Item_PartEAN_Number { get; set; } //item Park or EAN number
         [StringLength(160)]
         [ValidRedGestPayParameter]
-        [ValidGestPayParameter]
         public string Item_ShippingComments { get; set; } //item shipping comments
 
         /// <summary>
@@ -906,9 +871,19 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         public GenericCustomerDetail CustomerDetail { get; set; }
         public GenericShippingAddress ShippingAddress { get; set; }
         public GenericBillingAddress BillingAddress { get; set; }
-        public GenericProductDetail[] ProductDetails { get; set; }
-        public GenericDiscountCode[] DiscountCodes { get; set; }
-        public GenericShippingLine[] ShippingLines { get; set; }
+        public List<GenericProductDetail> ProductDetails { get; set; }
+        public List<GenericDiscountCode> DiscountCodes { get; set; }
+        public List<GenericShippingLine> ShippingLines { get; set; }
+
+        public GenericEcommGestpayPaymentDetails() {
+            FraudPrevention = new GenericFraudPrevention();
+            CustomerDetail = new GenericCustomerDetail();
+            ShippingAddress = new GenericShippingAddress();
+            BillingAddress = new GenericBillingAddress();
+            ProductDetails = new List<GenericProductDetail>();
+            DiscountCodes = new List<GenericDiscountCode>();
+            ShippingLines = new List<GenericShippingLine>();
+        }
 
         /// <summary>
         /// This method computes the object used to provide payment details to the encrypt methods in the Test
@@ -1043,6 +1018,10 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [ValidGestPayParameter]
         public string AccountType { get; set; }
         public GenericCustomerSocial Social { get; set; }
+
+        public GenericCustomerDetail() {
+            Social = new GenericCustomerSocial();
+        }
 
         /// <summary>
         /// This method computes the object used to provide customer details to the encrypt methods in the Test

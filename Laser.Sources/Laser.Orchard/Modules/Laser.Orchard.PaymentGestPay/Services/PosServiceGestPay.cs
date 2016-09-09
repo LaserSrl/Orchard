@@ -10,6 +10,7 @@ using Orchard.ContentManagement;
 using Orchard.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Xml;
@@ -59,6 +60,14 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                 .CurrentSite
                 .As<PaymentGestPaySettingsPart>();
 
+            //parameter validation
+            try {
+                Validator.ValidateObject(gpt, new ValidationContext(gpt), true);
+            } catch (Exception ex) {
+                //TODO: manage validation failure
+                throw;
+            }
+
             //get the encrypted parameter string
             if (settings.UseTestEnvironment) {
                 var client = new CryptDecryptTest.WSCryptDecryptSoapClient();
@@ -78,14 +87,14 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                     requestToken:gpt.requestToken,
                     ppSellerProtection:gpt.ppSellerProtection,
                     shippingDetails:gpt.shippingDetails.TestVersion(),
-                    paymentTypes:gpt.paymentTypes,
+                    paymentTypes:gpt.paymentTypes.ToArray(),
                     paymentTypeDetail: gpt.paymentTypeDetail.TestVersion(),
                     redFraudPrevention:gpt.redFraudPrevention,
                     Red_CustomerInfo:gpt.Red_CustomerInfo.TestVersion(),
                     Red_ShippingInfo:gpt.Red_ShippingInfo.TestVersion(),
                     Red_BillingInfo:gpt.Red_BillingInfo.TestVersion(),
                     Red_CustomerData: gpt.Red_CustomerData.TestVersion(),
-                    Red_CustomInfo:gpt.Red_CustomInfo,
+                    Red_CustomInfo:gpt.Red_CustomInfo.ToArray(),
                     Red_Items:gpt.Red_Items.TestVersion(),
                     Consel_MerchantPro:gpt.Consel_MerchantPro,
                     Consel_CustomerInfo:gpt.Consel_CustomerInfo.TestVersion(),
