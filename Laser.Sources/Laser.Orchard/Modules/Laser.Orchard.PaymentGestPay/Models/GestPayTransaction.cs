@@ -17,12 +17,16 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         public string shopTransactionID { get; set; } //Identifier attributed to merchant's transaction
         #endregion
         #region Optional properties
+        public string cardNumber { get; set; }
+        public string expiryMonth { get; set; }
+        public string expiryYear { get; set; }
         [StringLength(50)]
         public string buyerName { get; set; } //Buyer's name and surname
         [StringLength(50)]
         public string buyerEmail { get; set; } //Buyer's email address
         [StringLength(2)]
         public string languageId { get; set; } //Code identifying language used in communication with buyer
+        public string cvv { get; set; }
         [StringLength(1000)]
         public string customInfo { get; set; } //String containing specific infomation as configured in the merchant's profile
         [StringLength(25)]
@@ -35,7 +39,7 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [StringLength(1)]
         public string redFraudPrevention { get; set; } //flag to activate Red Fraud Prevention (redFraudPrevention = "1")
         public GenericRedCustomerInfo Red_CustomerInfo { get; set; }
-        public GenericShippingDetails Red_ShippingInfo { get; set; }
+        public GenericRedShippingInfo Red_ShippingInfo { get; set; }
         public GenericRedBillingInfo Red_BillingInfo { get; set; }
         public GenericRedCustomerData Red_CustomerData { get; set; }
         public string[] Red_CustomInfo { get; set; }
@@ -43,6 +47,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [StringLength(3)]
         public string Consel_MerchantPro { get; set; } //merchant promotional code (mandatory to show consel in the pagam's payment method)
         public GenericConselCustomerInfo Consel_CustomerInfo { get; set; }
+        [StringLength(127)]
+        public string payPalBillingAgreementDescription { get; set; } //description of the goods, terms and conditions of the billing agreement
+        public GenericEcommGestpayPaymentDetails OrderDetails { get; set; }
         #endregion
     }
     /// <summary>
@@ -703,4 +710,580 @@ namespace Laser.Orchard.PaymentGestPay.Models {
             };
         }
     }
+    /// <summary>
+    /// This class contains the same exact information of the EcommGestpayPaymentDetails classes from both the Test and Prod
+    /// remote GestPay services. By using this, we can carry the info without resorting to either specific implementation.
+    /// </summary>
+    public partial class GenericEcommGestpayPaymentDetails {
+        public GenericFraudPrevention FraudPrevention { get; set; }
+        public GenericCustomerDetail CustomerDetail { get; set; }
+        public GenericShippingAddress ShippingAddress { get; set; }
+        public GenericBillingAddress BillingAddress { get; set; }
+        public GenericProductDetail[] ProductDetails { get; set; }
+        public GenericDiscountCode[] DiscountCodes { get; set; }
+        public GenericShippingLine[] ShippingLines { get; set; }
+
+        /// <summary>
+        /// This method computes the object used to provide payment details to the encrypt methods in the Test
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptTest.EcommGestpayPaymentDetails TestVersion() {
+            return new CryptDecryptTest.EcommGestpayPaymentDetails {
+                FraudPrevention = this.FraudPrevention.TestVersion(),
+                CustomerDetail = this.CustomerDetail.TestVersion(),
+                ShippingAddress = this.ShippingAddress.TestVersion(),
+                BillingAddress = this.BillingAddress.TestVersion(),
+                ProductDetails = this.ProductDetails.Select(pd => pd.TestVersion()).ToArray(),
+                DiscountCodes = this.DiscountCodes.Select(dc => dc.TestVersion()).ToArray(),
+                ShippingLines = this.ShippingLines.Select(sl => sl.TestVersion()).ToArray()
+            };
+        }
+        /// <summary>
+        /// This method computes the object used to provide payment details to the encrypt methods in the Prod
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptProd.EcommGestpayPaymentDetails ProdVersion() {
+            return new CryptDecryptProd.EcommGestpayPaymentDetails {
+                FraudPrevention = this.FraudPrevention.ProdVersion(),
+                CustomerDetail = this.CustomerDetail.ProdVersion(),
+                ShippingAddress = this.ShippingAddress.ProdVersion(),
+                BillingAddress = this.BillingAddress.ProdVersion(),
+                ProductDetails = this.ProductDetails.Select(pd => pd.ProdVersion()).ToArray(),
+                DiscountCodes = this.DiscountCodes.Select(dc => dc.ProdVersion()).ToArray(),
+                ShippingLines = this.ShippingLines.Select(sl => sl.ProdVersion()).ToArray()
+            };
+        }
+    }
+    /// <summary>
+    /// This class contains the same exact information of the FraudPrevention classes from both the Test and Prod
+    /// remote GestPay services. By using this, we can carry the info without resorting to either specific implementation.
+    /// </summary>
+    public partial class GenericFraudPrevention {
+        public string SubmitForReview { get; set; }
+        public string OrderDateTime { get; set; }
+        public string OrderNote { get; set; }
+        public string Source { get; set; }
+        public string SubmissionReason { get; set; }
+        public string BeaconSessionID { get; set; }
+
+        /// <summary>
+        /// This method computes the object used to provide fraud prevention details to the encrypt methods in the Test
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptTest.FraudPrevention TestVersion() {
+            return new CryptDecryptTest.FraudPrevention {
+                SubmitForReview = this.SubmitForReview,
+                OrderDateTime = this.OrderDateTime,
+                OrderNote = this.OrderNote,
+                Source = this.Source,
+                SubmissionReason = this.SubmissionReason,
+                BeaconSessionID = this.BeaconSessionID
+            };
+        }
+        /// <summary>
+        /// This method computes the object used to provide fraud prevention details to the encrypt methods in the Prod
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptProd.FraudPrevention ProdVersion() {
+            return new CryptDecryptProd.FraudPrevention {
+                SubmitForReview = this.SubmitForReview,
+                OrderDateTime = this.OrderDateTime,
+                OrderNote = this.OrderNote,
+                Source = this.Source,
+                SubmissionReason = this.SubmissionReason,
+                BeaconSessionID = this.BeaconSessionID
+            };
+        }
+    }
+    /// <summary>
+    /// This class contains the same exact information of the CustomerDetail classes from both the Test and Prod
+    /// remote GestPay services. By using this, we can carry the info without resorting to either specific implementation.
+    /// </summary>
+    public partial class GenericCustomerDetail {
+        [StringLength(12)]
+        public string ProfileID { get; set; } //customer profile ID
+        [StringLength(50)]
+        public string MerchantCustomerID { get; set; } //merchant customer ID
+        [StringLength(65)]
+        public string FirstName { get; set; } //customer first name
+        [StringLength(65)]
+        public string MiddleName { get; set; } //customer middle name
+        [StringLength(65)]
+        public string Lastname { get; set; } //customer last name
+        [StringLength(100)]
+        public string PrimaryEmail { get; set; } //customer primary email
+        [StringLength(100)]
+        public string SecondaryEmail { get; set; } //customer secondary email
+        [StringLength(20)]
+        public string PrimaryPhone { get; set; } //customer's phone including prefix
+        [StringLength(20)]
+        public string SecondaryPhone { get; set; } //customer's phone including prefix
+        [StringLength(10)]
+        public string DateOfBirth { get; set; } //customer date of birth dd/mm/yyyy
+        [StringLength(1)]
+        public string Gender { get; set; } //customer gender ("0"=Male "1"=Female)
+        [StringLength(20)]
+        public string SocialSecurityNumber { get; set; } //customer's social or fiscal identifier (for klarna use)
+        [StringLength(255)]
+        public string Company { get; set; } //customer company
+        public string CreatedAtDate { get; set; }
+        public string VerfiedEmail { get; set; }
+        public string AccountType { get; set; }
+        public GenericCustomerSocial Social { get; set; }
+
+        /// <summary>
+        /// This method computes the object used to provide customer details to the encrypt methods in the Test
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptTest.CustomerDetail TestVersion() {
+            return new CryptDecryptTest.CustomerDetail {
+                ProfileID = this.ProfileID,
+                MerchantCustomerID = this.MerchantCustomerID,
+                FirstName = this.FirstName,
+                MiddleName = this.MiddleName,
+                Lastname = this.Lastname,
+                PrimaryEmail = this.PrimaryEmail,
+                SecondaryEmail = this.SecondaryEmail,
+                PrimaryPhone = this.PrimaryPhone,
+                SecondaryPhone = this.SecondaryPhone,
+                DateOfBirth = this.DateOfBirth,
+                Gender = this.Gender,
+                SocialSecurityNumber = this.SocialSecurityNumber,
+                Company = this.Company,
+                CreatedAtDate = this.CreatedAtDate,
+                VerifiedEmail = this.VerfiedEmail,
+                AccountType = this.AccountType,
+                Social = this.Social.TestVersion()
+            };
+        }
+        /// <summary>
+        /// This method computes the object used to provide customer details to the encrypt methods in the Prod
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptProd.CustomerDetail ProdVersion() {
+            return new CryptDecryptProd.CustomerDetail {
+                ProfileID = this.ProfileID,
+                MerchantCustomerID = this.MerchantCustomerID,
+                FirstName = this.FirstName,
+                MiddleName = this.MiddleName,
+                Lastname = this.Lastname,
+                PrimaryEmail = this.PrimaryEmail,
+                SecondaryEmail = this.SecondaryEmail,
+                PrimaryPhone = this.PrimaryPhone,
+                SecondaryPhone = this.SecondaryPhone,
+                DateOfBirth = this.DateOfBirth,
+                Gender = this.Gender,
+                SocialSecurityNumber = this.SocialSecurityNumber,
+                Company = this.Company,
+                CreatedAtDate = this.CreatedAtDate,
+                VerifiedEmail = this.VerfiedEmail,
+                AccountType = this.AccountType,
+                Social = this.Social.ProdVersion()
+            };
+        }
+    }
+    /// <summary>
+    /// This class contains the same exact information of the CustomerSocial classes from both the Test and Prod
+    /// remote GestPay services. By using this, we can carry the info without resorting to either specific implementation.
+    /// </summary>
+    public partial class GenericCustomerSocial {
+        public string Network { get; set; }
+        public string PublicUsername { get; set; }
+        public string CommunityScore { get; set; }
+        public string ProfilePicrture { get; set; }
+        public string Email { get; set; }
+        public string Bio { get; set; }
+        public string AccountUrl { get; set; }
+        public string Following { get; set; }
+        public string Followed { get; set; }
+        public string Posts { get; set; }
+        public string Id { get; set; }
+        public string AuthToken { get; set; }
+        public string SocialData { get; set; }
+
+        /// <summary>
+        /// This method computes the object used to provide social data details to the encrypt methods in the Test
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptTest.CustomerSocial TestVersion() {
+            return new CryptDecryptTest.CustomerSocial {
+                Network = this.Network,
+                PublicUsername = this.PublicUsername,
+                CommunityScore = this.CommunityScore,
+                ProfilePicture = this.ProfilePicrture,
+                Email = this.Email,
+                Bio = this.Bio,
+                AccountUrl = this.AccountUrl,
+                Following = this.Following,
+                Followed = this.Followed,
+                Posts = this.Posts,
+                Id = this.Id,
+                AuthToken = this.AuthToken,
+                SocialData = this.SocialData
+            };
+        }
+        /// <summary>
+        /// This method computes the object used to provide social data details to the encrypt methods in the Prod
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptProd.CustomerSocial ProdVersion() {
+            return new CryptDecryptProd.CustomerSocial {
+                Network = this.Network,
+                PublicUsername = this.PublicUsername,
+                CommunityScore = this.CommunityScore,
+                ProfilePicture = this.ProfilePicrture,
+                Email = this.Email,
+                Bio = this.Bio,
+                AccountUrl = this.AccountUrl,
+                Following = this.Following,
+                Followed = this.Followed,
+                Posts = this.Posts,
+                Id = this.Id,
+                AuthToken = this.AuthToken,
+                SocialData = this.SocialData
+            };
+        }
+    }
+    /// <summary>
+    /// This class contains the same exact information of the ShippingAddress classes from both the Test and Prod
+    /// remote GestPay services. By using this, we can carry the info without resorting to either specific implementation.
+    /// </summary>
+    public partial class GenericShippingAddress {
+        [StringLength(12)]
+        public string ProfileID { get; set; } //profile ID
+        [StringLength(65)]
+        public string FirstName { get; set; } //first name
+        [StringLength(65)]
+        public string MiddleName { get; set; } //middle name
+        [StringLength(65)]
+        public string Lastname { get; set; } //last name
+        [StringLength(100)]
+        public string StreetName { get; set; } //shipping street
+        [StringLength(100)]
+        public string Streetname2 { get; set; } //shipping street second line
+        [StringLength(5)]
+        public string HouseNumber { get; set; } //
+        [StringLength(5)]
+        public string HouseExtension { get; set; } //
+        [StringLength(50)]
+        public string City { get; set; } //shipping city
+        [StringLength(50)]
+        public string ZipCode { get; set; } //shipping zip code
+        [StringLength(50)]
+        public string State { get; set; } //shipping state
+        [StringLength(2)]
+        public string CountryCode { get; set; } //alpha-2 country code (see CodeTables.ISOCountryCodes)
+        [StringLength(100)]
+        public string Email { get; set; } //shipping contact email
+        [StringLength(20)]
+        public string PrimaryPhone { get; set; } //shipping primary phone
+        [StringLength(20)]
+        public string SecondaryPhone { get; set; } //shipping secondary phone
+        public string Company { get; set; }
+        public string StateCode { get; set; }
+
+        /// <summary>
+        /// This method computes the object used to provide shipping address details to the encrypt methods in the Test
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptTest.ShippingAddress TestVersion() {
+            return new CryptDecryptTest.ShippingAddress {
+                ProfileID = this.ProfileID,
+                FirstName = this.FirstName,
+                MiddleName = this.MiddleName,
+                Lastname = this.Lastname,
+                StreetName = this.StreetName,
+                Streetname2 = this.Streetname2,
+                HouseNumber = this.HouseNumber,
+                HouseExtention = this.HouseExtension,
+                City = this.City,
+                ZipCode = this.ZipCode,
+                State = this.State,
+                CountryCode = this.CountryCode,
+                Email = this.Email,
+                PrimaryPhone = this.PrimaryPhone,
+                SecondaryPhone = this.SecondaryPhone,
+                Company = this.Company,
+                StateCode = this.StateCode
+            };
+        }
+        /// <summary>
+        /// This method computes the object used to provide shipping address details to the encrypt methods in the Prod
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptProd.ShippingAddress ProdVersion() {
+            return new CryptDecryptProd.ShippingAddress {
+                ProfileID = this.ProfileID,
+                FirstName = this.FirstName,
+                MiddleName = this.MiddleName,
+                Lastname = this.Lastname,
+                StreetName = this.StreetName,
+                Streetname2 = this.Streetname2,
+                HouseNumber = this.HouseNumber,
+                HouseExtention = this.HouseExtension,
+                City = this.City,
+                ZipCode = this.ZipCode,
+                State = this.State,
+                CountryCode = this.CountryCode,
+                Email = this.Email,
+                PrimaryPhone = this.PrimaryPhone,
+                SecondaryPhone = this.SecondaryPhone,
+                Company = this.Company,
+                StateCode = this.StateCode
+            };
+        }
+    }
+    /// <summary>
+    /// This class contains the same exact information of the BillingAddress classes from both the Test and Prod
+    /// remote GestPay services. By using this, we can carry the info without resorting to either specific implementation.
+    /// </summary>
+    public partial class GenericBillingAddress {
+        [StringLength(12)]
+        public string ProfileID { get; set; } //profile ID
+        [StringLength(65)]
+        public string FirstName { get; set; } //first name
+        [StringLength(65)]
+        public string MiddleName { get; set; } //middle name
+        [StringLength(65)]
+        public string Lastname { get; set; } //last name
+        [StringLength(100)]
+        public string StreetName { get; set; } //shipping street
+        [StringLength(100)]
+        public string Streetname2 { get; set; } //shipping street second line
+        [StringLength(5)]
+        public string HouseNumber { get; set; } //
+        [StringLength(5)]
+        public string HouseExtension { get; set; } //
+        [StringLength(50)]
+        public string City { get; set; } //billing city
+        [StringLength(50)]
+        public string ZipCode { get; set; } //billing zip code
+        [StringLength(50)]
+        public string State { get; set; } //billing state
+        [StringLength(2)]
+        public string CountryCode { get; set; } //alpha-2 country code (see CodeTables.ISOCountryCodes)
+        [StringLength(100)]
+        public string Email { get; set; }
+        [StringLength(20)]
+        public string PrimaryPhone { get; set; } //
+        [StringLength(20)]
+        public string SecondaryPhone { get; set; } //
+        public string Company { get; set; }
+        public string StateCode { get; set; }
+
+        /// <summary>
+        /// This method computes the object used to provide billing address details to the encrypt methods in the Test
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptTest.BillingAddress TestVersion() {
+            return new CryptDecryptTest.BillingAddress {
+                ProfileID = this.ProfileID,
+                FirstName = this.FirstName,
+                MiddleName = this.MiddleName,
+                Lastname = this.Lastname,
+                StreetName = this.StreetName,
+                Streetname2 = this.Streetname2,
+                HouseNumber = this.HouseNumber,
+                HouseExtention = this.HouseExtension,
+                City = this.City,
+                ZipCode = this.ZipCode,
+                State = this.State,
+                CountryCode = this.CountryCode,
+                Email = this.Email,
+                PrimaryPhone = this.PrimaryPhone,
+                SecondaryPhone = this.SecondaryPhone,
+                Company = this.Company,
+                StateCode = this.StateCode
+            };
+        }
+        /// <summary>
+        /// This method computes the object used to provide billing address details to the encrypt methods in the Prod
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptProd.BillingAddress ProdVersion() {
+            return new CryptDecryptProd.BillingAddress {
+                ProfileID = this.ProfileID,
+                FirstName = this.FirstName,
+                MiddleName = this.MiddleName,
+                Lastname = this.Lastname,
+                StreetName = this.StreetName,
+                Streetname2 = this.Streetname2,
+                HouseNumber = this.HouseNumber,
+                HouseExtention = this.HouseExtension,
+                City = this.City,
+                ZipCode = this.ZipCode,
+                State = this.State,
+                CountryCode = this.CountryCode,
+                Email = this.Email,
+                PrimaryPhone = this.PrimaryPhone,
+                SecondaryPhone = this.SecondaryPhone,
+                Company = this.Company,
+                StateCode = this.StateCode
+            };
+        }
+    }
+    /// <summary>
+    /// This class contains the same exact information of the ProductDetail classes from both the Test and Prod
+    /// remote GestPay services. By using this, we can carry the info without resorting to either specific implementation.
+    /// </summary>
+    public partial class GenericProductDetail {
+        [StringLength(12)]
+        public string ProductCode { get; set; } //Article's product code
+        [StringLength(50)]
+        public string SKU { get; set; } //article's stock keeping unit
+        [StringLength(100)]
+        public string Name { get; set; } //article's name
+        [StringLength(255)]
+        public string Description { get; set; } //article's description
+        [StringLength(3)]
+        public string Quantity { get; set; } //the number of products
+        [StringLength(12)]
+        public string Price { get; set; } //the number of products
+        [StringLength(12)]
+        public string UnitPrice { get; set; } //article's unit price
+        [StringLength(2)]
+        public string Type { get; set; } //the type of article: 1-product,, 2-shipping, 3-handling
+        [StringLength(2)]
+        public string Vat { get; set; } //value added tax (the value of the tax)
+        [StringLength(2)]
+        public string Discount { get; set; } //the amount offered by you as discount
+        public string RequiresShipping { get; set; }
+        public string Condition { get; set; }
+        public string Seller { get; set; }
+        public string Category { get; set; }
+        public string SubCategory { get; set; }
+        public string Brand { get; set; }
+        public string DeliveryAt { get; set; }
+
+        /// <summary>
+        /// This method computes the object used to provide product details to the encrypt methods in the Test
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptTest.ProductDetail TestVersion() {
+            return new CryptDecryptTest.ProductDetail {
+                ProductCode = this.ProductCode,
+                SKU = this.SKU,
+                Name = this.Name,
+                Description = this.Description,
+                Quantity = this.Quantity,
+                Price = this.Price,
+                UnitPrice = this.UnitPrice,
+                Type = this.Type,
+                Vat = this.Vat,
+                Discount = this.Discount,
+                RequiresShipping = this.RequiresShipping,
+                Condition = this.Condition,
+                Seller = this.Seller,
+                Category = this.Category,
+                SubCategory = this.SubCategory,
+                Brand = this.Brand,
+                DeliveryAt = this.DeliveryAt
+            };
+        }
+        /// <summary>
+        /// This method computes the object used to provide product details to the encrypt methods in the Prod
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptProd.ProductDetail ProdVersion() {
+            return new CryptDecryptProd.ProductDetail {
+                ProductCode = this.ProductCode,
+                SKU = this.SKU,
+                Name = this.Name,
+                Description = this.Description,
+                Quantity = this.Quantity,
+                Price = this.Price,
+                UnitPrice = this.UnitPrice,
+                Type = this.Type,
+                Vat = this.Vat,
+                Discount = this.Discount,
+                RequiresShipping = this.RequiresShipping,
+                Condition = this.Condition,
+                Seller = this.Seller,
+                Category = this.Category,
+                SubCategory = this.SubCategory,
+                Brand = this.Brand,
+                DeliveryAt = this.DeliveryAt
+            };
+        }
+    }
+    /// <summary>
+    /// This class contains the same exact information of the DiscountCode classes from both the Test and Prod
+    /// remote GestPay services. By using this, we can carry the info without resorting to either specific implementation.
+    /// </summary>
+    public partial class GenericDiscountCode {
+        public string Amount { get; set; }
+        public string Code { get; set; }
+
+        /// <summary>
+        /// This method computes the object used to provide discount code details to the encrypt methods in the Test
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptTest.DiscountCode TestVersion() {
+            return new CryptDecryptTest.DiscountCode {
+                Amount = this.Amount,
+                Code = this.Code
+            };
+        }
+        /// <summary>
+        /// This method computes the object used to provide discount code details to the encrypt methods in the Prod
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptProd.DiscountCode ProdVersion() {
+            return new CryptDecryptProd.DiscountCode {
+                Amount = this.Amount,
+                Code = this.Code
+            };
+        }
+    }
+    /// <summary>
+    /// This class contains the same exact information of the ShippingLine classes from both the Test and Prod
+    /// remote GestPay services. By using this, we can carry the info without resorting to either specific implementation.
+    /// </summary>
+    public partial class GenericShippingLine {
+        public string Price { get; set; }
+        public string Title { get; set; }
+        public string Code { get; set; }
+
+        /// <summary>
+        /// This method computes the object used to provide shipping line details to the encrypt methods in the Test
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptTest.ShippingLine TestVersion() {
+            return new CryptDecryptTest.ShippingLine {
+                Price = this.Price,
+                Title = this.Title,
+                Code = this.Code
+            };
+        }
+        /// <summary>
+        /// This method computes the object used to provide shipping line details to the encrypt methods in the Prod
+        /// GestPay remote service.
+        /// </summary>
+        /// <returns></returns>
+        public CryptDecryptProd.ShippingLine ProdVersion() {
+            return new CryptDecryptProd.ShippingLine {
+                Price = this.Price,
+                Title = this.Title,
+                Code = this.Code
+            };
+        }
+    }
+
 }
