@@ -115,6 +115,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="Attributes\ParameterValidation.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\Constants.cs" />
