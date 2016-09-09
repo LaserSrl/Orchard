@@ -17,6 +17,7 @@ namespace Laser.Orchard.Mobile.Controllers {
             public string Text { get; set; }
             public string DevType { get; set; }
             public bool Prod { get; set; }
+            public string ExternalUrl { get; set; }
         }
 
         public ExternalPushController(IPushGatewayService pushGatewayService) {
@@ -26,7 +27,7 @@ namespace Laser.Orchard.Mobile.Controllers {
         public HttpResponseMessage Post(PushRequest req) {
             HttpResponseMessage message = null;
             try {
-                _pushGatewayService.SendPushService(req.Prod, req.DevType, 0, "", req.Text, req.Text, req.Text, null);
+                _pushGatewayService.SendPushService(req.Prod, req.DevType, 0, "", req.Text, req.Text, req.Text, null, "", req.ExternalUrl);
                 message = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
                 message.Content = new StringContent("OK");
             }

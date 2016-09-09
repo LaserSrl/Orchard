@@ -1,6 +1,8 @@
 ﻿@model Laser.Orchard.Mobile.ViewModels.MobilePushVM
 @{
     Script.Require("jQuery");
+    Script.Require("jQueryUI_Autocomplete");
+    Style.Require("jQuery_Autocomplete");
     Script.Require("rcswitcher").AtHead();
     Style.Require("rcswitcher").AtHead();
     bool disabledElements = Model.PushSent;
@@ -41,44 +43,41 @@
 @using (Script.Head()) {
     <script type="text/javascript">
         $(document).ready(function () {
-            var searched = false;
-            $("#contact-to-push").keyup(function () {
-                var doSearch = false;
-                var aft = $("input[name=__RequestVerificationToken]:first").val();
-                var nameFilter = $("#contact-to-push").val();
-                if (nameFilter.length > 2) {
-                    if (searched == false) {
-                        doSearch = true;
-                    }
-                }
-                else {
-                    if (searched == true) {
-                        searched = false;
-                    }
-                }
-
-                if (doSearch) {
-                    var elenco = "";
-                    var availableContacts = [];
+            var aft = $("input[name=__RequestVerificationToken]:first").val();
+            $("#contact-to-push").autocomplete({
+                type: "POST",
+                source: function (request, response) {
                     $.ajax({
                         type: 'POST',
                         url: "@Model.SiteUrl/Laser.Orchard.Mobile/ContactList/Search",
-                        data: "nameFilter=" + nameFilter + "&__RequestVerificationToken=" + aft,
-                        dataType: 'json',
-                        success: function (json, textStatus) {
-                            availableContacts = json.elenco;
-                            for (var ct in availableContacts) {
-                                elenco = elenco + "<option value='" + availableContacts[ct].name + " (" + availableContacts[ct].num + ")" + "'/>";
-                            }
-                            $("#contacts-list").html(elenco);
-                            searched = true;
+                        data: { term: request.term, __RequestVerificationToken: aft },
+                        messages: {
+                            noResults: '',
+                            results: ''
                         },
-                        error: function(xhr, textStatus, errorThrown) {
-                            //alert('An error occurred! ' + ( errorThrown ? errorThrown : xhr.status ));
+                        success: function (data) {
+                            if (!data.length) {
+                                var result = [
+                                 {
+                                     label: '@T("No matches found").Text.Replace("'","\'")',
+                                     value: response.term
+                                 }
+                                ];
+                                response(result);
+                            }
+                            else {
+                                response(data);
+                            }
                         }
                     });
-                }
+                },
+                select: function (event, ui) {
+                    this.value = ui.item.value;
+                },
+                minLength: 3
             });
+
+
         });
     </script>
 }
@@ -107,19 +106,13 @@
             }
         </fieldset>
         <fieldset id="test-push-container" style="@((!Model.ShowTestOptions) ? "display:none;" : "")">
-            @*@if (Model.ShowTestOptions){*@
             <div class="checkbox-and-label">
                 <label for="@Html.FieldIdFor(m => m.TestPush)" class="forcheckbox">@T("Test Push on device") </label>
-                @if (disabledElements == false) {
-                    @Html.CheckBoxFor(m => m.TestPush, new { @class = "rcswitcher-checkbox-pushtest" })
-                } else {
-                    @Html.CheckBoxFor(m => m.TestPush, new { @class = "rcswitcher-checkbox-pushtest", @disabled = "disabled" })
-                }
-
+                @Html.CheckBoxFor(m => m.TestPush, new { @class = "rcswitcher-checkbox-pushtest" })
                 <div id="test-push-info" style="@((!Model.TestPush) ? "display:none;" : "")">
                     <div class="form-group">
                         <span class="hint">@T("Number push test:") @Model.PushTestNumber</span>
-                        <button type="submit" name="submit.PushTest" value="submit.PushTest">@T("Send for test")</button>
+                        <button type="submit" name="submit.Save" value="submit.PushTest">@T("Send for test")</button>
                     </div>
                 </div>
 
@@ -128,10 +121,9 @@
         </fieldset>
     }
     <fieldset>
-        <legend>@T("Test with production devices")</legend>
+        <legend>@T("Test with user devices")</legend>
         <label for="contact-to-push">@T("Contact"): </label>
-        <input id="contact-to-push" name="contact-to-push" list="contacts-list" autocomplete="off" />
-        <datalist id="contacts-list"></datalist>
+        <input id="contact-to-push" name="contact-to-push" placeholder="@T("Type user's first 3 chars...")" class="text-medium"/>
         <button type="submit" name="submit.Save" value="submit.PushContact" id="submit-PushContact">@T("Send push to selected contact")</button>
     </fieldset>
     <fieldset>
