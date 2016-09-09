@@ -1,0 +1,20 @@
+﻿@{
+    var tagsHtml = new List<IHtmlString>();
+    foreach (var t in Model.Tags) {
+        if (tagsHtml.Any()) {
+            tagsHtml.Add(new HtmlString(", "));
+        }
+        tagsHtml.Add(new HtmlString(t.TagName));
+    }
+}
+
+@if (tagsHtml.Any()) {
+    <div class="space-20"></div>
+
+    <div class="row pull-right">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <span>@T("Tags:")</span>
+            @foreach (var htmlString in tagsHtml) { @htmlString }
+        </div>
+    </div>
+}
