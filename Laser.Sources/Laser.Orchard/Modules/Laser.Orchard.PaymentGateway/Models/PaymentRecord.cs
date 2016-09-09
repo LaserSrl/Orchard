@@ -16,7 +16,6 @@ namespace Laser.Orchard.PaymentGateway.Models {
         public virtual bool Success { get; set; }
         public virtual string Error { get; set; }
         public virtual string TransactionId { get; set; }
-        public virtual string ReturnUrl { get; set; }
         public virtual string Info { get; set; }
         public virtual int ContentItemId { get; set; }
     }

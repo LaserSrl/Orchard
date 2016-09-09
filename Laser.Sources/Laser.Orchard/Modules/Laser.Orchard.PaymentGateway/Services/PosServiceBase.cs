@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Laser.Orchard.PaymentGateway.Services {
     public abstract class PosServiceBase : IPosService {
@@ -12,24 +13,33 @@ namespace Laser.Orchard.PaymentGateway.Services {
         private readonly IRepository<PaymentRecord> _repository;
         private readonly IPaymentEventHandler _paymentEventHandler;
 
+        public abstract string GetPosName();
+        /// <summary>
+        /// Get the return URL passed to the virtual POS.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public abstract string GetPosUrl(int paymentId);
+
         public PosServiceBase(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler) {
             _orchardServices = orchardServices;
             _repository = repository;
             _paymentEventHandler = paymentEventHandler;
         }
-        public abstract string GetPosName();
         public PaymentRecord StartPayment(PaymentRecord values) {
             // verifica che siano presenti i valori necessari
             if (string.IsNullOrWhiteSpace(values.Reason)
                 || (values.Amount <= 0)
-                || string.IsNullOrWhiteSpace(values.ReturnUrl)
                 || string.IsNullOrWhiteSpace(values.Currency)) {
-                throw new Exception("Parameters missing. Required parameters: Reason, Amount, Currency, ReturnUrl.");
+                throw new Exception("Parameters missing. Required parameters: Reason, Amount, Currency.");
+            }
+            values.PosName = GetPosName();
+            if (string.IsNullOrWhiteSpace(values.PosUrl)) {
+                string posUrl = GetPosUrl(values.Id);
+                values.PosUrl = posUrl;
             }
             int paymentId = SavePaymentInfo(values);
             values.Id = paymentId;
-            string posUrl = GetPosUrl(values);
-            values.PosUrl = posUrl;
             return values;
         }
         public PaymentRecord GetPaymentInfo(int paymentId) {
@@ -40,46 +50,53 @@ namespace Laser.Orchard.PaymentGateway.Services {
             PaymentRecord result = _repository.Get(paymentId);
             return result;
         }
-        public void EndPayment(int paymentId, bool success, string error, string info) {
+        public void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "") {
             PaymentRecord payment = GetPaymentInfo(paymentId);
             payment.Success = success;
             payment.Error = error;
             payment.Info = info;
+            payment.TransactionId = transactionId;
+            payment.PosName = GetPosName(); // forza la valorizzazione del PosName
+            payment.PosUrl = GetPosUrl(paymentId);
             SavePaymentInfo(payment);
             // solleva l'evento di termine della transazione
             if (success) {
-                _paymentEventHandler.OnSuccess(payment.ContentItemId);
+                _paymentEventHandler.OnSuccess(payment.Id, payment.ContentItemId);
             }
             else {
-                _paymentEventHandler.OnError(payment.ContentItemId);
+                _paymentEventHandler.OnError(payment.Id, payment.ContentItemId);
             }
         }
         /// <summary>
-        /// Get the return URL passed to the virtual POS.
+        /// Fornisce l'URL per consultare l'esito del pagamento
         /// </summary>
-        /// <param name="values"></param>
+        /// <param name="paymentId"></param>
         /// <returns></returns>
-        public abstract string GetPosUrl(PaymentRecord values);
+        public string GetPaymentInfoUrl(int paymentId) {
+            return new UrlHelper(HttpContext.Current.Request.RequestContext).Action("Info", "Payment", new { area = "Laser.Orchard.PaymentGateway", paymentId = paymentId });
+        }
         /// <summary>
-        /// Salva il pagamento e eestituisce il PaymentId.
+        /// Salva il pagamento e restituisce il PaymentId.
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
         private int SavePaymentInfo(PaymentRecord values) {
-            bool create = false;
-            if (values.Id == 0) {
-                create = true;
+            PaymentRecord record = null;
+            DateTime now = DateTime.Now;
+            if (values.Id > 0) {
+                record = _repository.Get(values.Id);
             }
-            else {
-                int num = _repository.Count(x => x.Id == values.Id);
-                if (num == 0) {
-                    create = true;
-                }
+            // 4000 è la massima lunghezza di stringa che nhibernate riesce a gestire
+            if ((values.Info != null) && (values.Info.Length > 4000)) {
+                values.Info = values.Info.Substring(0, 4000);
             }
-            if (create) {
+            if (record == null) {
+                values.CreationDate = now;
+                values.UpdateDate = now;
                 _repository.Create(values);
             }
             else {
+                values.UpdateDate = now;
                 _repository.Update(values);
             }
             return values.Id;
