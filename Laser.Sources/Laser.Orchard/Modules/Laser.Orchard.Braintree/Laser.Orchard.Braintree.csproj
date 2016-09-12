@@ -92,16 +92,16 @@
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
     <Content Include="Views\Braintree\Index.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\BraintreeSiteSettings.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BraintreeController.cs" />
     <Compile Include="Controllers\Paypal.cs" />
     <Compile Include="Controllers\TestController.cs" />
-    <Compile Include="Drivers\BraintreeSiteSettingsPartDriver.cs" />
-    <Compile Include="Handlers\BraintreeSiteSettingsHandler.cs" />
+    <Compile Include="Handlers\BraintreeSiteSettingsHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Models\BraintreeSiteSettingsPart.cs" />
     <Compile Include="Models\TransactionResult.cs" />
     <Compile Include="Routes.cs" />
