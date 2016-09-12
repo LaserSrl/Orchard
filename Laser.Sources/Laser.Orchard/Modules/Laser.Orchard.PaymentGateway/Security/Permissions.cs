@@ -8,7 +8,7 @@ using System.Web;
 namespace Laser.Orchard.PaymentGateway.Security {
     public class Permissions : IPermissionProvider {
         public static readonly Permission ConfigurePayment = new Permission { Description = "Configure Payment POS", Name = "ConfigurePayment" };
-        public virtual Feature Feature { get; set; }
+        public Feature Feature { get; set; }
 
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
             Permission[] noPermission = new Permission[0];

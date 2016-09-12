@@ -70,6 +70,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Workflows">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Workflows\bin\Orchard.Workflows.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -100,6 +103,7 @@
     <Content Include="Views\Payment\Info.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\PaymentEventActivity.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\PosAdminBaseController.cs" />
@@ -109,6 +113,7 @@
     <Compile Include="Models\PayButtonPartSettings.cs" />
     <Compile Include="Models\PaymentRecord.cs" />
     <Compile Include="Navigation.cs" />
+    <Compile Include="PaymentEventHandler.cs" />
     <Compile Include="PaymentMigrations.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\Permissions.cs" />
@@ -132,6 +137,7 @@
   <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

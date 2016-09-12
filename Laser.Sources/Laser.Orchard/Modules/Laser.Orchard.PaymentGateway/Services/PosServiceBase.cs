@@ -28,10 +28,9 @@ namespace Laser.Orchard.PaymentGateway.Services {
         }
         public PaymentRecord StartPayment(PaymentRecord values) {
             // verifica che siano presenti i valori necessari
-            if (string.IsNullOrWhiteSpace(values.Reason)
-                || (values.Amount <= 0)
+            if ((values.Amount <= 0)
                 || string.IsNullOrWhiteSpace(values.Currency)) {
-                throw new Exception("Parameters missing. Required parameters: Reason, Amount, Currency.");
+                throw new Exception("Parameters missing. Required parameters: Amount, Currency.");
             }
             values.PosName = GetPosName();
             if (string.IsNullOrWhiteSpace(values.PosUrl)) {
