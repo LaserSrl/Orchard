@@ -20,15 +20,9 @@ namespace Laser.Orchard.PaymentGestPay.CryptDecryptTest {
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         Laser.Orchard.PaymentGestPay.CryptDecryptTest.EncryptResponse Encrypt(Laser.Orchard.PaymentGestPay.CryptDecryptTest.EncryptRequest request);
         
-        [System.ServiceModel.OperationContractAttribute(Action="https://ecomm.sella.it/Encrypt", ReplyAction="*")]
-        System.Threading.Tasks.Task<Laser.Orchard.PaymentGestPay.CryptDecryptTest.EncryptResponse> EncryptAsync(Laser.Orchard.PaymentGestPay.CryptDecryptTest.EncryptRequest request);
-        
         [System.ServiceModel.OperationContractAttribute(Action="https://ecomm.sella.it/Decrypt", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Xml.XmlNode Decrypt(string shopLogin, string CryptedString);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="https://ecomm.sella.it/Decrypt", ReplyAction="*")]
-        System.Threading.Tasks.Task<System.Xml.XmlNode> DecryptAsync(string shopLogin, string CryptedString);
     }
     
     /// <remarks/>
@@ -3299,78 +3293,8 @@ namespace Laser.Orchard.PaymentGestPay.CryptDecryptTest {
             return retVal.EncryptResult;
         }
         
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Laser.Orchard.PaymentGestPay.CryptDecryptTest.EncryptResponse> Laser.Orchard.PaymentGestPay.CryptDecryptTest.WSCryptDecryptSoap.EncryptAsync(Laser.Orchard.PaymentGestPay.CryptDecryptTest.EncryptRequest request) {
-            return base.Channel.EncryptAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Laser.Orchard.PaymentGestPay.CryptDecryptTest.EncryptResponse> EncryptAsync(
-                    string shopLogin, 
-                    string uicCode, 
-                    string amount, 
-                    string shopTransactionId, 
-                    string cardNumber, 
-                    string expiryMonth, 
-                    string expiryYear, 
-                    string buyerName, 
-                    string buyerEmail, 
-                    string languageId, 
-                    string cvv, 
-                    string customInfo, 
-                    string requestToken, 
-                    string ppSellerProtection, 
-                    Laser.Orchard.PaymentGestPay.CryptDecryptTest.ShippingDetails shippingDetails, 
-                    string[] paymentTypes, 
-                    Laser.Orchard.PaymentGestPay.CryptDecryptTest.PaymentTypeDetail paymentTypeDetail, 
-                    string redFraudPrevention, 
-                    Laser.Orchard.PaymentGestPay.CryptDecryptTest.RedCustomerInfo Red_CustomerInfo, 
-                    Laser.Orchard.PaymentGestPay.CryptDecryptTest.RedShippingInfo Red_ShippingInfo, 
-                    Laser.Orchard.PaymentGestPay.CryptDecryptTest.RedBillingInfo Red_BillingInfo, 
-                    Laser.Orchard.PaymentGestPay.CryptDecryptTest.RedCustomerData Red_CustomerData, 
-                    string[] Red_CustomInfo, 
-                    Laser.Orchard.PaymentGestPay.CryptDecryptTest.RedItems Red_Items, 
-                    string Consel_MerchantPro, 
-                    Laser.Orchard.PaymentGestPay.CryptDecryptTest.ConselCustomerInfo Consel_CustomerInfo, 
-                    string payPalBillingAgreementDescription, 
-                    Laser.Orchard.PaymentGestPay.CryptDecryptTest.EcommGestpayPaymentDetails OrderDetails) {
-            Laser.Orchard.PaymentGestPay.CryptDecryptTest.EncryptRequest inValue = new Laser.Orchard.PaymentGestPay.CryptDecryptTest.EncryptRequest();
-            inValue.shopLogin = shopLogin;
-            inValue.uicCode = uicCode;
-            inValue.amount = amount;
-            inValue.shopTransactionId = shopTransactionId;
-            inValue.cardNumber = cardNumber;
-            inValue.expiryMonth = expiryMonth;
-            inValue.expiryYear = expiryYear;
-            inValue.buyerName = buyerName;
-            inValue.buyerEmail = buyerEmail;
-            inValue.languageId = languageId;
-            inValue.cvv = cvv;
-            inValue.customInfo = customInfo;
-            inValue.requestToken = requestToken;
-            inValue.ppSellerProtection = ppSellerProtection;
-            inValue.shippingDetails = shippingDetails;
-            inValue.paymentTypes = paymentTypes;
-            inValue.paymentTypeDetail = paymentTypeDetail;
-            inValue.redFraudPrevention = redFraudPrevention;
-            inValue.Red_CustomerInfo = Red_CustomerInfo;
-            inValue.Red_ShippingInfo = Red_ShippingInfo;
-            inValue.Red_BillingInfo = Red_BillingInfo;
-            inValue.Red_CustomerData = Red_CustomerData;
-            inValue.Red_CustomInfo = Red_CustomInfo;
-            inValue.Red_Items = Red_Items;
-            inValue.Consel_MerchantPro = Consel_MerchantPro;
-            inValue.Consel_CustomerInfo = Consel_CustomerInfo;
-            inValue.payPalBillingAgreementDescription = payPalBillingAgreementDescription;
-            inValue.OrderDetails = OrderDetails;
-            return ((Laser.Orchard.PaymentGestPay.CryptDecryptTest.WSCryptDecryptSoap)(this)).EncryptAsync(inValue);
-        }
-        
         public System.Xml.XmlNode Decrypt(string shopLogin, string CryptedString) {
             return base.Channel.Decrypt(shopLogin, CryptedString);
-        }
-        
-        public System.Threading.Tasks.Task<System.Xml.XmlNode> DecryptAsync(string shopLogin, string CryptedString) {
-            return base.Channel.DecryptAsync(shopLogin, CryptedString);
         }
     }
 }

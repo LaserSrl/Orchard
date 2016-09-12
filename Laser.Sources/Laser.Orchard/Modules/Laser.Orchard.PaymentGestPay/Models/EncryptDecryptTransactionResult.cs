@@ -12,19 +12,34 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [StringLength(2)]
         [Required]
         public string TransactionResult { get; set; } //"OK", or "KO"
-        [Required]
-        public string CryptDecryptString { get; set; } //encrypted string
+        public string CryptDecryptString { get; set; } //encrypted string. May not be here in case o error
         [StringLength(9)]
         public string ErrorCode { get; set; } //error code
         [StringLength(255)]
         public string ErrorDescription { get; set; } //error description
 
         public EncryptDecryptTransactionResult(XmlNode xml) {
-            TransactionType = xml.SelectSingleNode("TransactionType").InnerText;
-            TransactionResult = xml.SelectSingleNode("TransactionResult").InnerText;
-            CryptDecryptString = xml.SelectSingleNode("CryptDecryptString").InnerText;
-            ErrorCode = xml.SelectSingleNode("ErrorCode").InnerText;
-            ErrorDescription = xml.SelectSingleNode("ErrorDescription").InnerText;
+            XmlNode node;
+            node = xml.SelectSingleNode("TransactionType");
+            if (node != null) {
+                TransactionType = node.InnerText;
+            }
+            node = xml.SelectSingleNode("TransactionResult");
+            if (node != null) {
+                TransactionResult = node.InnerText;
+            }
+            node = xml.SelectSingleNode("CryptDecryptString");
+            if (node != null) {
+                CryptDecryptString = node.InnerText;
+            }
+            node = xml.SelectSingleNode("ErrorCode");
+            if (node != null) {
+                ErrorCode = node.InnerText;
+            }
+            node = xml.SelectSingleNode("ErrorDescription");
+            if (node != null) {
+                ErrorDescription = node.InnerText;
+            }
         }
     }
 }

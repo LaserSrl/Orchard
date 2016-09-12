@@ -116,6 +116,10 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         public GestPayTransaction(PaymentRecord pr)
             : this() {
                 record = pr;
+                uicCode = pr.Currency;
+                amount = pr.Amount.ToString("0.##");
+                shopTransactionID = pr.Id.ToString();
+                customInfo = pr.Reason;
         }
     }
     /// <summary>
