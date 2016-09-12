@@ -41,7 +41,7 @@ namespace Laser.Orchard.PaymentGateway.Drivers {
                     viewModel.Record.Currency = _tokenizer.Replace(partSettings.CurrencyField, tokens);
                 }
                 viewModel.Record.Amount = Convert.ToDecimal(_tokenizer.Replace(partSettings.AmountField, tokens), CultureInfo.InvariantCulture);
-                if(ci.TitlePart != null){
+                if(part.ContentItem.Parts.SingleOrDefault(x => x.PartDefinition.Name == "TitlePart") != null) {
                     viewModel.Record.Reason = ci.TitlePart.Title;
                 }
                 return ContentShape("Parts_PayButton",
