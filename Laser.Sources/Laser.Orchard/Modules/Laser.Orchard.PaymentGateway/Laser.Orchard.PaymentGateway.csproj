@@ -111,6 +111,7 @@
     <Compile Include="Navigation.cs" />
     <Compile Include="PaymentMigrations.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Security\Permissions.cs" />
     <Compile Include="Services\IPosService.cs" />
     <Compile Include="Services\PosServiceBase.cs" />
     <Compile Include="Settings\PayButtonPartSettingsHooks.cs" />
