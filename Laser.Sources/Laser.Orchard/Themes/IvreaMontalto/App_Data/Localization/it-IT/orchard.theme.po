@@ -12,6 +12,14 @@ msgctxt "~/Themes/IvreaMontalto/Views/EditorTemplates/Parts.Comment.cshtml"
 msgid "Hi, {0}!"
 msgstr "Salve, {0}"
 
+msgctxt "~/Themes/IvreaMontalto/Views/ElencoConFoto.cshtml"
+msgid "Show more..."
+msgstr "Mostra tutto..."
+
+msgctxt "~/Themes/IvreaMontalto/Views/ElencoConFoto.cshtml"
+msgid "thumbnail for {0}"
+msgstr "Anteprima di {0}"
+
 msgctxt "~/Themes/IvreaMontalto/Views/ListByArchive.cshtml"
 msgid "Archives"
 msgstr "Archivi"
@@ -87,6 +95,10 @@ msgstr "Carica allegato"
 msgctxt "~/Themes/IvreaMontalto/Views/Parts.ContactForm-Contatti.cshtml"
 msgid "Your Name"
 msgstr "Il vostro nome"
+
+msgctxt "~/Themes/IvreaMontalto/Views/Parts.Tags.ShowTags.cshtml"
+msgid "Tags:"
+msgstr "Tags:"
 
 msgctxt "~/Themes/IvreaMontalto/Views/Parts.Title-Squadra.cshtml"
 msgid "Teams"
