@@ -14,12 +14,6 @@ namespace Laser.Orchard.PaymentGateway.Services {
         private readonly IPaymentEventHandler _paymentEventHandler;
 
         public abstract string GetPosName();
-        /// <summary>
-        /// Get the name of the controller used to manage settings (without trailing "Controller") eg. "Admin" or "Settings".
-        /// If no controller is used for settings management, it returns null or an empty string.
-        /// </summary>
-        /// <returns></returns>
-        public abstract string GetSettingsControllerName();
 
         /// <summary>
         /// Get the return URL passed to the virtual POS.

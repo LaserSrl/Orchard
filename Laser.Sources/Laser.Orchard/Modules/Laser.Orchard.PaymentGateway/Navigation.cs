@@ -20,16 +20,12 @@ namespace Laser.Orchard.PaymentGateway {
             get { return "admin"; }
         }
         public void GetNavigation(NavigationBuilder builder) {
-            string controllerName = null;
             builder.Add(T("Settings"), menu => menu
                 .Add(T("Payment Gateway"), "10.0", subMenu => {
                     subMenu.Action("Index", "Admin", new { area = "Laser.Orchard.PaymentGateway" }).Permission(Permissions.ConfigurePayment);
                     subMenu.Add(T("Info"), "10.0", item => item.Action("Index", "Admin", new { area = "Laser.Orchard.PaymentGateway" }).LocalNav());
                     foreach (var pos in _posServices) {
-                        controllerName = pos.GetSettingsControllerName();
-                        if (string.IsNullOrWhiteSpace(controllerName) == false) {
-                            subMenu.Add(T(pos.GetPosName()), "10.0", item => item.Action("Index", controllerName, new { area = pos.GetType().Assembly.GetName().Name }).LocalNav());
-                        }
+                        subMenu.Add(T(pos.GetPosName()), "10.0", item => item.Action("Index", "Admin", new { area = pos.GetType().Assembly.GetName().Name }).LocalNav());
                     }
                 })
             );
