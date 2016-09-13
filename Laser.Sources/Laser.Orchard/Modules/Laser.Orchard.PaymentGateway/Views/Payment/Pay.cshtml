@@ -1,18 +1,7 @@
 ﻿@model Laser.Orchard.PaymentGateway.ViewModels.PaymentVM
-Pagina di pagamento<br />
-Riepilogo:<br />
-<hr style="border-width:2px;border-style:dotted" />
+<h2>@T("Summary")</h2>
+<hr style="border-width:2px;border-style:dashed" />
 @Display(BuildDisplay(Model.ContentItem, "Summary"))
-<hr style="border-width:2px;border-style:dotted" />
-<br />
-La reason è: @Model.Record.Reason
-<br />
-Paga con:
-@using(Html.BeginFormAntiForgeryPost()){
-    <ul>
-    @foreach(var pos in Model.PosList) {
-        <li><button type="submit" formaction="@Html.Raw(pos.GetPosUrl(Model.Record.Id))">@pos.GetPosName()</button></li>
-    }
-    </ul>
-}
-
+<hr style="border-width:2px;border-style:dashed" />
+<h2>@T("Pay using:")</h2>
+@Display(New.PosList(Model))

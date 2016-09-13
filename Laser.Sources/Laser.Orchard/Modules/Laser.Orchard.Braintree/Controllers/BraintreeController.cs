@@ -55,10 +55,9 @@ namespace Laser.Orchard.Braintree.Controllers {
         [HttpPost]
         public ActionResult Pay() {
             string nonce = Request["payment_method_nonce"];
-            string sAmount = Request["amount"];
             string sPid = Request["pid"];
-            decimal amount = decimal.Parse(sAmount, CultureInfo.InvariantCulture);
             int pid = int.Parse(sPid);
+            decimal amount = _posService.GetPaymentInfo(pid).Amount;
             var payResult = _braintreeService.Pay(nonce, amount, null);
             string error = "";
             string transactionId = "";
