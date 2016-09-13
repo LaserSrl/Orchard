@@ -1,4 +1,8 @@
 ﻿@using Orchard.Environment.Configuration
+@using Laser.Orchard.Maps.Models
+@using Orchard.UI.Resources
+@using Orchard.ContentManagement
+
 @{
     var settings = WorkContext.Resolve<ShellSettings>();
     var tenantName = settings.Name;
@@ -8,6 +12,11 @@
     	title =WorkContext.CurrentSite.SiteName;
     }
     var subthemePath = "~/Themes/IvreaMontalto/Styles/";
+    var apiKey = "AIzaSyBFtkJDbWgDxEDJDfYvVu93L1W9z_IHHOg";
+    var mapsSettings = WorkContext.CurrentSite.As<MapsSiteSettingsPart>();
+    if (!string.IsNullOrWhiteSpace(mapsSettings.GoogleApiKey)) {
+        apiKey = mapsSettings.GoogleApiKey;
+    }
 
 }
 @{
@@ -33,6 +42,7 @@
     <title>@title</title>
 
     @Display(Model.Head)
+    <script src="http://maps.googleapis.com/maps/api/js?key=@(apiKey)"></script>
 
 </head>
 <body>
