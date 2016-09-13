@@ -15,6 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+using Laser.Orchard.MailCommunication.Extensions;
 
 namespace Laser.Orchard.MailCommunication.Services {
 
@@ -69,16 +71,20 @@ namespace Laser.Orchard.MailCommunication.Services {
                 _emailrepository.Update(recordMail);
             }
 
-            var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
-            if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
-                baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
-
+            // Encode Nonce
             string parametriEncode = System.Web.HttpUtility.HtmlEncode(Nonce.Replace('+', '_').Replace('/', '-'));
 
+            string host = string.Format("{0}://{1}{2}",
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Scheme,
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Host,
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Port == 80 ? string.Empty : ":" + _orchardServices.WorkContext.HttpContext.Request.Url.Port);
+
+            var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            
             // Model template Mail
             dynamic viewModel = new UnsubscribeVM {
                 Email = email,
-                LinkUnsubscription = string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/ConfirmUnsubscribe?key={1}", baseUri, parametriEncode),
+                LinkUnsubscription = string.Format("{0}{1}?key={2}", host, urlHelper.ConfirmUnsubscribeMailCommunication(), parametriEncode),
                 KeyUnsubscription = Nonce,
                 UnsubscriptionDate = DateTime.Now
             };

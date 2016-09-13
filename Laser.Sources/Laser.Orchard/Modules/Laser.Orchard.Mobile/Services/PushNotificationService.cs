@@ -87,7 +87,9 @@ namespace Laser.Orchard.Mobile.Services {
             _sessionLocator = sessionLocator;
             _tokenizer = tokenizer;
             _userDeviceRecord = userDeviceRecord;
-            _orchardServices.WorkContext.TryResolve<ICommunicationService>(out _communicationService);
+            if (_orchardServices.WorkContext != null) {
+                _orchardServices.WorkContext.TryResolve<ICommunicationService>(out _communicationService);
+            }
             _queryPickerServices = queryPickerService;
             _transactionManager = transactionManager;
         }

@@ -188,10 +188,6 @@ namespace Laser.Orchard.TemplateManagement.Services {
                 WorkContext = _services.WorkContext,
                 Content = contentModel,
                 Urls = new {
-                    //SubscriptionSubscribe = urlHelper.SubscriptionSubscribe(),
-                    //SubscriptionUnsubscribe = urlHelper.SubscriptionUnsubscribe(),
-                    //SubscriptionConfirmSubscribe = urlHelper.SubscriptionConfirmSubscribe(),
-                    //SubscriptionConfirmUnsubscribe = urlHelper.SubscriptionConfirmUnsubscribe(),
                     BaseUrl = baseUri,
                     MediaUrl = mediaUrl,
                     Domain = host,
@@ -200,7 +196,6 @@ namespace Laser.Orchard.TemplateManagement.Services {
             };
             templatectx.Model = dynamicModel;
 
-            // TODO: Passare link Campagna come per il test
             var razorviewBag = viewBag;
             RazorEngine.Templating.DynamicViewBag vb = new DynamicViewBag();
             try {

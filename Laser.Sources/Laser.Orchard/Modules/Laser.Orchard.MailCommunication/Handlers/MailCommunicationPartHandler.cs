@@ -17,6 +17,8 @@ using Orchard.UI.Notify;
 using Orchard.Tasks.Scheduling;
 using Laser.Orchard.TemplateManagement.ViewModels;
 using Orchard.Environment.Extensions;
+using System.Web.Mvc;
+using Laser.Orchard.MailCommunication.Extensions;
 
 namespace Laser.Orchard.MailCommunication.Handlers {
 
@@ -56,9 +58,12 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                     if (part.SendToTestEmail && part.EmailForTest != string.Empty) {
                         dynamic content = context.ContentItem;
 
-                        var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
-                        if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
-                            baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
+                        string host = string.Format("{0}://{1}{2}",
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Scheme,
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Host,
+                                     _orchardServices.WorkContext.HttpContext.Request.Url.Port == 80 ? string.Empty : ":" + _orchardServices.WorkContext.HttpContext.Request.Url.Port);
+
+                        var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
 
                         Dictionary<string, object> similViewBag = new Dictionary<string, object>();
                         similViewBag.Add("CampaignLink", _communicationService.GetCampaignLink("Email", part));
@@ -67,7 +72,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                         List<TemplatePlaceHolderViewModel> listaPH = new List<TemplatePlaceHolderViewModel>();
 
                         string unsubscribe = T("Click here to stop receiving email for commercial use").Text;
-                        string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/Index", baseUri) + "'>" + unsubscribe + "</a>";
+                        string linkUnsubscribe = "<a href='" + string.Format("{0}{1}", host, urlHelper.UnsubscribeMailCommunication()) + "'>" + unsubscribe + "</a>";
 
                         TemplatePlaceHolderViewModel ph = new TemplatePlaceHolderViewModel();
                         ph.Name = "[UNSUBSCRIBE]";

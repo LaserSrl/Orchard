@@ -16,6 +16,7 @@ using Orchard.MediaLibrary.Services;
 using Orchard.Tasks.Scheduling;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
+using Orchard.Workflows.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,6 +43,7 @@ namespace Laser.Orchard.Vimeo.Services {
         private readonly IContentManager _contentManager;
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly ShellSettings _shellSettings;
+        private readonly IWorkflowManager _workflowManager;
 
         public Localizer T { get; set; }
 
@@ -52,7 +54,8 @@ namespace Laser.Orchard.Vimeo.Services {
             IScheduledTaskManager taskManager,
             IContentManager contentManager,
             IMediaLibraryService mediaLibraryService,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings,
+            IWorkflowManager workflowManager) {
 
             _repositorySettings = repositorySettings;
             _repositoryUploadsInProgress = repositoryUploadsInProgress;
@@ -62,6 +65,7 @@ namespace Laser.Orchard.Vimeo.Services {
             _contentManager = contentManager;
             _mediaLibraryService = mediaLibraryService;
             _shellSettings = shellSettings;
+            _workflowManager = workflowManager;
 
             T = NullLocalizer.Instance;
         }
@@ -123,6 +127,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Update values in the actual settings based off what is in the ViewModel.
         /// </summary>
         /// <param name="vm">The ViewModel coming from the form.</param>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public void UpdateSettings(VimeoSettingsPartViewModel vm) {
             var settings = _orchardServices
                 .WorkContext
@@ -136,70 +141,164 @@ namespace Laser.Orchard.Vimeo.Services {
             settings.AlwaysUploadToGroup = vm.AlwaysUploadToGroup;
             settings.AlwaysUploadToAlbum = vm.AlwaysUploadToAlbum;
             settings.AlwaysUploadToChannel = vm.AlwaysUploadToChannel;
+            try {
+                //verify group, channel and album.
+                //if they do not exist, try to create them.
+                if (TokenIsValid(settings.AccessToken)) {
+                    //group
+                    if (!string.IsNullOrWhiteSpace(settings.GroupName)) {
+                        if (GroupIsValid(settings.GroupName, settings.AccessToken)) {
+                            _orchardServices.Notifier.Information(T("Group Name valid"));
+                            settings.GroupId = GetGroupId();
+                        } else {
+                            string res = CreateNewGroup(settings.AccessToken, settings.GroupName);
+                            if (res == "OK") {
+                                _orchardServices.Notifier.Information(T("Group created"));
+                                settings.GroupId = GetGroupId();
+                            } else {
+                                _orchardServices.Notifier.Error(T("Failed to create group. Internal message: {0}", res));
+                                settings.AlwaysUploadToGroup = false;
+                            }
+                        }
+                    }
+                    //channel
+                    if (!string.IsNullOrWhiteSpace(settings.ChannelName)) {
+                        if (ChannelIsValid(settings.ChannelName, settings.AccessToken)) {
+                            _orchardServices.Notifier.Information(T("Channel Name valid"));
+                            settings.ChannelId = GetChannelId();
+                        } else {
+                            string res = CreateNewChannel(settings.AccessToken, settings.ChannelName);
+                            if (res == "OK") {
+                                _orchardServices.Notifier.Information(T("Channel created"));
+                                settings.ChannelId = GetChannelId();
+                            } else {
+                                _orchardServices.Notifier.Error(T("Failed to create channel. Internal message: {0}", res));
+                                settings.AlwaysUploadToChannel = false;
+                            }
+                        }
+                    }
+                    //album
+                    if (!string.IsNullOrWhiteSpace(settings.AlbumName)) {
+                        if (AlbumIsValid(settings.AlbumName, settings.AccessToken)) {
+                            _orchardServices.Notifier.Information(T("Album Name valid"));
+                            settings.AlbumId = GetAlbumId();
+                        } else {
+                            string res = CreateNewAlbum(settings.AccessToken, settings.AlbumName);
+                            if (res == "OK") {
+                                _orchardServices.Notifier.Information(T("Album created"));
+                                settings.AlbumId = GetAlbumId();
+                            } else {
+                                _orchardServices.Notifier.Error(T("Failed to create album. Internal message: {0}", res));
+                                settings.AlwaysUploadToAlbum = false;
+                            }
+                        }
+                    }
+                } else {
+                    _orchardServices.Notifier.Error(T("Access token not valid"));
+                }
 
-            //verify group, channel and album.
-            //if they do not exist, try to create them.
-            if (TokenIsValid(settings.AccessToken)) {
-                //group
-                if (!string.IsNullOrWhiteSpace(settings.GroupName)) {
-                    if (GroupIsValid(settings.GroupName, settings.AccessToken)) {
-                        _orchardServices.Notifier.Information(T("Group Name valid"));
-                    } else {
-                        string res = CreateNewGroup(settings.AccessToken, settings.GroupName);
-                        if (res == "OK") {
-                            _orchardServices.Notifier.Information(T("Group created"));
-                        } else {
-                            _orchardServices.Notifier.Error(T("Failed to create group. Internal message: {0}", res));
-                            settings.AlwaysUploadToGroup = false;
+                settings.License = vm.License ?? "";
+                settings.Privacy = vm.Privacy;
+                settings.Password = vm.Password ?? "";
+                if (vm.Privacy.view == "password" && string.IsNullOrWhiteSpace(vm.Password)) {
+                    _orchardServices.Notifier.Error(T("The password must not be an empty string."));
+                }
+                settings.ReviewLink = vm.ReviewLink;
+                settings.Locale = vm.Locale ?? "";
+                settings.ContentRatings = vm.ContentRatingsSafe ?
+                    new string[] { "safe" }.ToList() :
+                    vm.ContentRatingsUnsafe.Where(cr => cr.Value == true).Select(cr => cr.Key).ToList();
+                settings.Whitelist = string.IsNullOrWhiteSpace(vm.Whitelist) ? new List<string>() : vm.Whitelist.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
+                RetrieveAccountType(settings);
+                settings.LastTimeAccountTypeWasChecked = DateTime.UtcNow;
+                CheckQuota();
+            } catch (VimeoRateException vre) {
+                _orchardServices.Notifier.Error(T("Too many requests to Vimeo. Rate limits will reset on {0} UTC", vre.resetTime.Value.ToString()));
+            } catch (Exception ex) {
+                _orchardServices.Notifier.Error(T("{0}", ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// This method makes an API call to Vimeo to retrieve acount information (type and userId).
+        /// </summary>
+        /// <param name="settings">The part containing the vimeo Settings</param>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
+        private void RetrieveAccountType(VimeoSettingsPart settings) {
+            //make the API call to check the account
+            HttpWebRequest userCall = VimeoCreateRequest(
+                aToken: settings.AccessToken,
+                endpoint: VimeoEndpoints.Me,
+                method: "GET",
+                qString: "?fields=account,uri"
+                );
+            try {
+                using (HttpWebResponse resp = userCall.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        string json = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        var parsed = JObject.Parse(json);
+                        if (parsed["account"] != null) {
+                            settings.AccountType = parsed["account"].ToString();
+                        }
+                        if (parsed["uri"] != null) { //uri is in the form "/users/USERID"
+                            string uid = parsed["uri"].ToString();
+                            settings.UserId = uid.Remove(0, uid.LastIndexOf("/") + 1);
                         }
                     }
                 }
-                //channel
-                if (!string.IsNullOrWhiteSpace(settings.ChannelName)) {
-                    if (ChannelIsValid(settings.ChannelName, settings.AccessToken)) {
-                        _orchardServices.Notifier.Information(T("Channel Name valid"));
-                    } else {
-                        string res = CreateNewChannel(settings.AccessToken, settings.ChannelName);
-                        if (res == "OK") {
-                            _orchardServices.Notifier.Information(T("Channel created"));
-                        } else {
-                            _orchardServices.Notifier.Error(T("Failed to create channel. Internal message: {0}", res));
-                            settings.AlwaysUploadToChannel = false;
-                        }
-                    }
+            } catch (VimeoRateException vre) {
+                throw vre;
+            } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
                 }
-                //album
-                if (!string.IsNullOrWhiteSpace(settings.AlbumName)) {
-                    if (AlbumIsValid(settings.AlbumName, settings.AccessToken)) {
-                        _orchardServices.Notifier.Information(T("Album Name valid"));
-                    } else {
-                        string res = CreateNewAlbum(settings.AccessToken, settings.AlbumName);
-                        if (res == "OK") {
-                            _orchardServices.Notifier.Information(T("Album created"));
-                        } else {
-                            _orchardServices.Notifier.Error(T("Failed to create album. Internal message: {0}", res));
-                            settings.AlwaysUploadToAlbum = false;
-                        }
-                    }
-                }
-            } else {
-                _orchardServices.Notifier.Error(T("Access token not valid"));
             }
 
-            settings.License = vm.License ?? "";
-            settings.Privacy = vm.Privacy;
-            settings.Password = vm.Password ?? "";
-            if (vm.Privacy.view == "password" && string.IsNullOrWhiteSpace(vm.Password)) {
-                _orchardServices.Notifier.Error(T("The password must not be an empty string."));
-            }
-            settings.ReviewLink = vm.ReviewLink;
-            settings.Locale = vm.Locale ?? "";
-            settings.ContentRatings = vm.ContentRatingsSafe ?
-                new string[] { "safe" }.ToList() :
-                vm.ContentRatingsUnsafe.Where(cr => cr.Value == true).Select(cr => cr.Key).ToList();
-            settings.Whitelist = string.IsNullOrWhiteSpace(vm.Whitelist) ? new List<string>() : vm.Whitelist.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        }
 
+        /// <summary>
+        /// This method check the headers in the response we receive from Vimeo to update the information on the rate limits.
+        /// It should be called EVERY TIME a request is made to the Vimeo API. Even (especially) when the response code is not 200.
+        /// </summary>
+        /// <param name="settings">The part containing the vimeo Settings.</param>
+        /// <param name="resp">The response we received from the API.</param>
+        /// <returns>The number of remaining requests.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
+        private int UpdateAPIRateLimits(VimeoSettingsPart settings, HttpWebResponse resp) {
+            var heads = resp.Headers;
+            int tmp;
+            if (int.TryParse(heads["X-RateLimit-Limit"], out tmp)) {
+                settings.RateLimitLimit = tmp;
+            }
+            if (int.TryParse(heads["X-RateLimit-Remaining"], out tmp)) {
+                settings.RateLimitRemaining = tmp;
+            }
+            DateTime temp;
+            if (DateTime.TryParse(heads["X-RateLimit-Reset"], out temp)) {
+                settings.RateLimitReset = temp.ToUniversalTime();
+            }
+            if (settings.RateLimitRemaining == 0) {
+                throw new VimeoRateException(settings.RateLimitReset);
+            }
+            return settings.RateLimitRemaining;
+        }
+        private int UpdateAPIRateLimits(HttpWebResponse resp) {
+            var settings = _orchardServices
+               .WorkContext
+               .CurrentSite
+               .As<VimeoSettingsPart>();
+            try {
+                UpdateAPIRateLimits(settings, resp);
+            } catch (Exception ex) {
+
+                throw ex;
+            }
+            return settings.RateLimitRemaining;
         }
 
         /// <summary>
@@ -207,23 +306,42 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="vm">The settings ViewModel to test.</param>
         /// <returns><value>true</value> if the access token is authenticated and valid. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool TokenIsValid(VimeoSettingsPartViewModel vm) {
-            return !string.IsNullOrWhiteSpace(vm.AccessToken) && this.TokenIsValid(vm.AccessToken);
+            try {
+                return !string.IsNullOrWhiteSpace(vm.AccessToken) && this.TokenIsValid(vm.AccessToken);
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
         /// <summary>
         /// Verifies whether the token is valid by attempting an API request
         /// </summary>
         /// <param name="aToken">The Access Token to test.</param>
         /// <returns><value>true</value> if the access token is authenticated and valid. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool TokenIsValid(string aToken) {
-            HttpWebRequest wr = VimeoCreateRequest(aToken, VimeoEndpoints.Me);
+            HttpWebRequest wr = VimeoCreateRequest(
+                aToken: aToken,
+                endpoint: VimeoEndpoints.Me,
+                qString: "?fields=name" //using a json filter to receive less data and allow a higher api rate limit
+                );
 
             bool ret = false;
             try {
                 using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                    UpdateAPIRateLimits(resp);
                     ret = resp.StatusCode == HttpStatusCode.OK;
                 }
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(resp);
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
+                }
                 ret = false;
             }
             return ret;
@@ -234,8 +352,13 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="vm">The settings ViewModel to test.</param>
         /// <returns><value>true</value> if the authenticated user has joined the given group. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool GroupIsValid(VimeoSettingsPartViewModel vm) {
-            return !string.IsNullOrWhiteSpace(vm.GroupName) && this.GroupIsValid(vm.GroupName, vm.AccessToken);
+            try {
+                return !string.IsNullOrWhiteSpace(vm.GroupName) && this.GroupIsValid(vm.GroupName, vm.AccessToken);
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
         /// <summary>
         /// Verifies whether the Group Name is valid by attempting an API request
@@ -243,6 +366,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="gName">The Group Name to test.</param>
         /// <param name="aToken">The Access Token.</param>
         /// <returns><value>true</value> if the authenticated user has joined the given group. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool GroupIsValid(string gName, string aToken) {
 
             //we only care for the album names, so we use Vimeo's JSON filter options
@@ -258,6 +382,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 bool morePages = false;
                 do {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(resp);
                         if (resp.StatusCode == HttpStatusCode.OK) {
                             using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                 string vimeoJson = reader.ReadToEnd();
@@ -289,7 +414,15 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } while (morePages);
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(resp);
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
+                }
                 ret = false;
             }
 
@@ -300,8 +433,13 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="vm">The settings ViewModel to test.</param>
         /// <returns><value>true</value> if the authenticated user has access to the given album. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool AlbumIsValid(VimeoSettingsPartViewModel vm) {
-            return !string.IsNullOrWhiteSpace(vm.AlbumName) && this.AlbumIsValid(vm.AlbumName, vm.AccessToken);
+            try {
+                return !string.IsNullOrWhiteSpace(vm.AlbumName) && this.AlbumIsValid(vm.AlbumName, vm.AccessToken);
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
         /// <summary>
         /// Verifies whether the Album Name is valid by attempting an API request
@@ -309,6 +447,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="aName">The Album Name to test</param>
         /// <param name="aToken">The Access Token.</param>
         /// <returns><value>true</value> if the authenticated user has access to the given album. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool AlbumIsValid(string aName, string aToken) {
 
             //we only care for the album names, so we use Vimeo's JSON filter options
@@ -324,6 +463,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 bool morePages = false;
                 do {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(resp);
                         if (resp.StatusCode == HttpStatusCode.OK) {
                             using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                 string vimeoJson = reader.ReadToEnd();
@@ -355,7 +495,15 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } while (morePages);
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(resp);
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
+                }
                 ret = false;
             }
             return ret;
@@ -365,8 +513,13 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="vm">The settings ViewModel to test.</param>
         /// <returns><value>true</value> if the authenticated user has access to the given channel. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool ChannelIsValid(VimeoSettingsPartViewModel vm) {
-            return !string.IsNullOrWhiteSpace(vm.AlbumName) && this.ChannelIsValid(vm.ChannelName, vm.AccessToken);
+            try {
+                return !string.IsNullOrWhiteSpace(vm.AlbumName) && this.ChannelIsValid(vm.ChannelName, vm.AccessToken);
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
         /// <summary>
         /// Verifies whether the Channel Name is valid by attempting an API request
@@ -374,6 +527,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="aName">The Channel Name to test</param>
         /// <param name="aToken">The Access Token.</param>
         /// <returns><value>true</value> if the authenticated user has access to the given Channel. <value>false</value> otherwise.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool ChannelIsValid(string cName, string aToken) {
 
             //we only care for the album names, so we use Vimeo's JSON filter options
@@ -389,6 +543,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 bool morePages = false;
                 do {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(resp);
                         if (resp.StatusCode == HttpStatusCode.OK) {
                             using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                 string vimeoJson = reader.ReadToEnd();
@@ -420,7 +575,15 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } while (morePages);
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(resp);
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
+                }
                 ret = false;
             }
             return ret;
@@ -434,6 +597,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="gName">The name for the group</param>
         /// <param name="gDesc">A description for the group</param>
         /// <returns>A <type>string</type> with the response received.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string CreateNewGroup(string aToken, string gName, string gDesc = "") {
             HttpWebRequest wr = VimeoCreateRequest(
                 aToken: aToken,
@@ -443,19 +607,26 @@ namespace Laser.Orchard.Vimeo.Services {
                 );
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(resp);
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         return "OK";
                     }
                 }
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
+                    UpdateAPIRateLimits(resp);
                     if (resp.StatusCode == HttpStatusCode.BadRequest) {
-                        return "Bad Request: on of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        return "Bad Request: one of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                     } else if (resp.StatusCode == HttpStatusCode.Forbidden) {
                         return "Access Denied: user is not allowed to create a Group. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                     }
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
                 }
+
             }
             return "Unknown error";
         }
@@ -468,6 +639,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="cDesc">A description for the Channel</param>
         /// <param name="cPrivacy">The privacy level for the Channel (defaults at user only)</param>
         /// <returns>A <type>string</type> with the response received.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string CreateNewChannel(string aToken, string cName, string cDesc = "", string cPrivacy = "user") {
             if (cPrivacy != "user" && cPrivacy != "anybody")
                 cPrivacy = "user";
@@ -479,18 +651,24 @@ namespace Laser.Orchard.Vimeo.Services {
                 );
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(resp);
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         return "OK";
                     }
                 }
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
+                    UpdateAPIRateLimits(resp);
                     if (resp.StatusCode == HttpStatusCode.BadRequest) {
-                        return "Bad Request: on of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        return "Bad Request: one of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                     } else if (resp.StatusCode == HttpStatusCode.Forbidden) {
                         return "Access Denied: user is not allowed to create a channel. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                     }
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
                 }
             }
             return "Unknown error";
@@ -503,6 +681,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="aName">The name for the album</param>
         /// <param name="aDesc">A description for the album</param>
         /// <returns>A <type>string</type> with the response received.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string CreateNewAlbum(string aToken, string aName, string aDesc = "") {
             HttpWebRequest wr = VimeoCreateRequest(
                 aToken: aToken,
@@ -512,18 +691,24 @@ namespace Laser.Orchard.Vimeo.Services {
                 );
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(resp);
                     if (resp.StatusCode == HttpStatusCode.OK || resp.StatusCode == HttpStatusCode.Created) {
                         return "OK";
                     }
                 }
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
+                    UpdateAPIRateLimits(resp);
                     if (resp.StatusCode == HttpStatusCode.BadRequest) {
                         return "Bad Request: on of the parameters is invalid. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                     } else if (resp.StatusCode == HttpStatusCode.Forbidden) {
                         return "Access Denied: user is not allowed to create an album. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                     }
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
                 }
             }
             return "Unknown error";
@@ -533,51 +718,84 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Check the quota available for upload
         /// </summary>
         /// <returns>A <type>VimeoUploadQuota</type> object containing upload quota information. Returns <value>null</value> in case of error.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public VimeoUploadQuota CheckQuota() {
             var settings = _orchardServices
                 .WorkContext
                 .CurrentSite
                 .As<VimeoSettingsPart>();
-            string queryString = "?fields=upload_quota";
-            HttpWebRequest wr = VimeoCreateRequest(settings.AccessToken, VimeoEndpoints.Me, qString: queryString);
-            VimeoUploadQuota quotaInfo = new VimeoUploadQuota();
-            try {
-                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
-                    if (resp.StatusCode == HttpStatusCode.OK) {
-                        using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
-                            string vimeoJson = reader.ReadToEnd();
-                            JObject json = JObject.Parse(vimeoJson);
-                            quotaInfo = JsonConvert.DeserializeObject<VimeoUploadQuota>(json["upload_quota"].ToString());
+            VimeoUploadQuota quotaInfo = null;
+            //Only check the quota if we have not checked it in a while
+            if (settings.LastTimeQuotaWasChecked == null || DateTime.UtcNow < settings.LastTimeQuotaWasChecked.Value.AddHours(24)) {
+                string queryString = "?fields=upload_quota";
+                HttpWebRequest wr = VimeoCreateRequest(settings.AccessToken, VimeoEndpoints.Me, qString: queryString);
+                try {
+                    using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                        UpdateAPIRateLimits(settings, resp);
+                        if (resp.StatusCode == HttpStatusCode.OK) {
+                            using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
+                                string vimeoJson = reader.ReadToEnd();
+                                JObject json = JObject.Parse(vimeoJson);
+                                quotaInfo = new VimeoUploadQuota();
+                                quotaInfo = JsonConvert.DeserializeObject<VimeoUploadQuota>(json["upload_quota"].ToString());
+                                settings.UploadQuotaSpaceFree = quotaInfo.space.free;
+                                settings.UploadQuotaSpaceMax = quotaInfo.space.max;
+                                settings.UploadQuotaSpaceUsed = quotaInfo.space.used;
+                                settings.LastTimeQuotaWasChecked = DateTime.UtcNow;
+                            }
                         }
                     }
+                } catch (VimeoRateException vre) {
+                    throw vre;
+                } catch (Exception ex) {
+                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                    if (resp != null) {
+                        UpdateAPIRateLimits(settings, resp);
+                    } else {
+                        throw new Exception(T("Failed to read response").ToString(), ex);
+                    }
+                    quotaInfo = null;
                 }
-            } catch (Exception ex) {
-                return null;
+            } else {
+                quotaInfo = new VimeoUploadQuota(settings.UploadQuotaSpaceFree, settings.UploadQuotaSpaceMax, settings.UploadQuotaSpaceUsed);
             }
+
             return quotaInfo;
         }
         /// <summary>
         /// Checks the number of Bytes used of the upload quota.
         /// </summary>
         /// <returns>The number of bytes used, or <value>-1</value> in case of error</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public Int64 UsedQuota() {
-            VimeoUploadQuota quotaInfo = CheckQuota();
-            return quotaInfo != null ? quotaInfo.space.used : -1;
+            try {
+                VimeoUploadQuota quotaInfo = CheckQuota();
+                return quotaInfo != null ? quotaInfo.space.used : -1;
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
         /// <summary>
         /// Checks the number of Bytes available of the upload quota.
         /// </summary>
         /// <returns>The number of available bytes, or <value>-1</value> in case of error</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public Int64 FreeQuota() {
-            VimeoUploadQuota quotaInfo = CheckQuota();
-            return quotaInfo != null ? quotaInfo.space.free : -1;
+            try {
+                VimeoUploadQuota quotaInfo = CheckQuota();
+                return quotaInfo != null ? quotaInfo.space.free : -1;
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
 
         /// <summary>
         /// Verifies that there is enough quota available.
         /// </summary>
         /// <param name="fileSize">The size of the file we would like to start uploading.</param>
-        /// <returns>An id of an UploadsInProgressRecord corresponding to the upload we are starting if we have enough quota available for that upload. <value>-1</value> otherwise</returns>
+        /// <returns>An id of an UploadsInProgressRecord corresponding to the upload we are starting if we have enough 
+        /// quota available for that upload. <value>-1</value> otherwise</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public int IsValidFileSize(Int64 fileSize) {
             //this method, as it is, does not handle concurrent upload attempts very well.
             //We leave with Vimeo the responsiiblity for the final check on the upload size.
@@ -587,7 +805,12 @@ namespace Laser.Orchard.Vimeo.Services {
             Int64 quotaBeingUploaded = 0;
             if (_repositoryUploadsInProgress.Table.Count() > 0)
                 quotaBeingUploaded = _repositoryUploadsInProgress.Table.Sum(u => u.UploadSize) - _repositoryUploadsInProgress.Table.Sum(u => u.UploadedSize);
-            Int64 remoteSpace = this.FreeQuota();
+            Int64 remoteSpace;
+            try {
+                remoteSpace = this.FreeQuota();
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
             if (remoteSpace - quotaBeingUploaded < fileSize) {
                 return -1; //there is not enough space
             }
@@ -596,6 +819,9 @@ namespace Laser.Orchard.Vimeo.Services {
             UploadsInProgressRecord entity = new UploadsInProgressRecord();
             entity.UploadSize = fileSize;
             entity.CreatedTime = DateTime.UtcNow;
+            entity.LastVerificationTime = DateTime.UtcNow;
+            entity.ScheduledVerificationTime = DateTime.UtcNow.AddMinutes(Constants.MinDelayBetweenVerifications);
+            entity.LastProgressTime = DateTime.UtcNow;
             _repositoryUploadsInProgress.Create(entity);
             ScheduleUploadVerification();
             int recordId = entity.Id;
@@ -608,6 +834,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="uploadId">The Id of the record created for the upload we are attempting.</param>
         /// <returns>The Url where the client may upload the file.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GenerateUploadTicket(int uploadId) {
             var settings = _orchardServices
                 .WorkContext
@@ -622,6 +849,7 @@ namespace Laser.Orchard.Vimeo.Services {
             string uploadUrl = "";
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
                     if (resp.StatusCode == HttpStatusCode.Created) {
                         using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                             string vimeoJson = reader.ReadToEnd();
@@ -637,7 +865,15 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 }
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
+                }
                 return "";
             }
             return uploadUrl;
@@ -730,6 +966,10 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="uploadId">The record corresponding to the upload</param>
         /// <returns>A value describing the state of the upload.</returns>
         public VerifyUploadResult VerifyUpload(UploadsInProgressRecord entity) {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
 
             HttpWebRequest wr = VimeoCreateRequest(
                     endpoint: entity.UploadLinkSecure,
@@ -739,30 +979,76 @@ namespace Laser.Orchard.Vimeo.Services {
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     //if we end up here, something went really wrong
+                    //schedule the next verification for never
+                    entity.ScheduledVerificationTime = DateTime.MaxValue;
                 }
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
-                if (resp != null && resp.StatusDescription == "Resume Incomplete") {
-                    //we actually expect status code 308, but that fires an exception, so we have to handle things here
-                    //Check that everything has been sent, by reading from the "Range" Header of the response.
-                    var range = resp.Headers["Range"];
-                    Int64 sent;
-                    if (Int64.TryParse(range.Substring(range.IndexOf('-') + 1), out sent)) {
-                        if (sent == entity.UploadSize) {
-                            //Upload finished
-                            return VerifyUploadResult.Complete;
-                        } else {
+                if (resp != null) {
+                    if (resp.StatusDescription == "Resume Incomplete") {
+                        //we actually expect status code 308, but that fires an exception, so we have to handle things here
+                        //Check that everything has been sent, by reading from the "Range" Header of the response.
+                        var range = resp.Headers["Range"];
+                        Int64 sent;
+                        if (Int64.TryParse(range.Substring(range.IndexOf('-') + 1), out sent)) {
                             //update the uploaded size
                             Int64 old = entity.UploadedSize;
                             entity.UploadedSize = sent;
-                            return old == sent ? VerifyUploadResult.Incomplete : VerifyUploadResult.StillUploading;
-                            //if the upload has been going on for some time, we may decide to destroy its information.
-                            //The distinction between Incomplete and StillUploading helps us understand whether it is
-                            //just a slow/long upload, or the upload actualy stopped and we may discard it safely.
+                            Int64 lastSlice = sent - old; //bytes uploaded since last verification
+                            //update the cached quota based on what we sent here. This should track the actual quota closely,
+                            //but it may not be 100% exact.
+                            settings.UploadQuotaSpaceFree -= lastSlice;
+                            settings.UploadQuotaSpaceUsed += lastSlice;
+                            if (sent == entity.UploadSize) {
+                                //Upload finished                            
+                                return VerifyUploadResult.Complete;
+                            } else if (sent > entity.UploadSize) {
+                                //this is a terrible error that we have no way of recovering from.
+                                //schedule the next verification for never
+                                entity.ScheduledVerificationTime = DateTime.MaxValue;
+                                return VerifyUploadResult.Error;
+                            } else {
+                                //determine how much we should wait before the next verification event;
+                                DateTime dtNow = DateTime.UtcNow;
+                                if (lastSlice == 0) {
+                                    entity.ScheduledVerificationTime = dtNow.AddMinutes(Constants.MaxDelayBetweenVerifications);
+                                    return VerifyUploadResult.Incomplete;
+                                } else {
+                                    entity.LastProgressTime = dtNow; //since the previous verification the upload has made progress
+                                    double lSlice = (double)lastSlice;
+                                    //I use seconds here instead of minutes to have finer granularity
+                                    double secondsPassed = (dtNow - entity.LastVerificationTime.Value).TotalSeconds;
+                                    //double bytesPerSecond = lSlice / secondsPassed;
+                                    double remaining = (double)(entity.UploadSize - sent); //bytes still to upload
+                                    //double secondsToFinish = remaining / bytesPerSecond;
+                                    if (remaining * secondsPassed <= Constants.MinDelaySeconds * lSlice) {
+                                        entity.ScheduledVerificationTime = dtNow.AddMinutes(Constants.MinDelayBetweenVerifications);
+                                    } else if (remaining * secondsPassed >= Constants.MaxDelaySeconds * lSlice) {
+                                        entity.ScheduledVerificationTime = dtNow.AddMinutes(Constants.MaxDelayBetweenVerifications);
+                                    } else {
+                                        //pretend the upload speed will remain constant
+                                        entity.ScheduledVerificationTime = dtNow.AddMinutes((remaining * secondsPassed / lSlice) * Constants.SecToMinMultiplier);
+                                    }
+                                }
+                                entity.LastVerificationTime = dtNow;
+                                return old == sent ? VerifyUploadResult.Incomplete : VerifyUploadResult.StillUploading;
+                                //if the upload has been going on for some time, we may decide to destroy its information.
+                                //The distinction between Incomplete and StillUploading helps us understand whether it is
+                                //just a slow/long upload, or the upload actualy stopped and we may discard it safely.
+                            }
                         }
+                    } else {
+                        //The Vimeo specification says there is no other possible response status. If we are here, something went 
+                        //terribly wrong, most likely on their side of things.
+                        //schedule the next verification for never
+                        entity.ScheduledVerificationTime = DateTime.MaxValue;
+                        return VerifyUploadResult.Error;
                     }
                 }
+
             }
+            //errors take us here. Note that we handled most communication errors above, so the most likely cause for us being here
+            //is connection issues.
             return VerifyUploadResult.Error; //something went rather wrong
         }
         /// <summary>
@@ -770,7 +1056,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="mediaPartId">The Id of the MediaPart containing the video whose upload we want to check</param>
         /// <returns>The Upload Url, or <value>null</value> in case of error</returns>
-        public string GetUploadUrl(int mediaPartId){
+        public string GetUploadUrl(int mediaPartId) {
             var mps = _contentManager.GetAllVersions(mediaPartId);
             var it = mps.Where(ci => ci.VersionRecord.Id == mps.Max(cv => cv.VersionRecord.Id)).SingleOrDefault();
 
@@ -805,6 +1091,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="uploadId">The Id we have been using internally to identify the MediaPart whose video's upload is in progress.</param>
         /// <returns><value>true</value> in case of success.<value>false</value> in case of errors.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public bool TerminateUpload(int mediaPartId) {
             UploadsCompleteRecord ucr = GetByMediaId(mediaPartId);
             if (ucr != null)
@@ -812,13 +1099,18 @@ namespace Laser.Orchard.Vimeo.Services {
             UploadsInProgressRecord entity = _repositoryUploadsInProgress.Get(e => e.MediaPartId == mediaPartId);
             if (entity == null)
                 return true;
-            return TerminateUpload(entity) > 0;
+            try {
+                return TerminateUpload(entity) > 0;
+            } catch (VimeoRateException vre) {
+                throw vre;
+            }
         }
         /// <summary>
         /// We terminate the Vimeo upload stream.
         /// </summary>
         /// <param name="entity">The Upload in progress that we wish to terminate.</param>
         /// <returns>The Id of the UploadCompleted, which we'll need to patch and publish the video.<value>-1</value> in case of errors.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public int TerminateUpload(UploadsInProgressRecord entity) {
             var settings = _orchardServices
                 .WorkContext
@@ -832,6 +1124,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 );
             try {
                 using (HttpWebResponse resp = del.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
                     if (resp.StatusCode == HttpStatusCode.Created) {
                         //this is the success condition for this call:
                         //the response contains the video location in its "location" header
@@ -840,6 +1133,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         ucr.Uri = resp.Headers["Location"];
                         ucr.ProgressId = entity.Id;
                         ucr.CreatedTime = DateTime.UtcNow;
+                        ucr.ScheduledTerminationTime = DateTime.UtcNow;
                         ucr.MediaPartId = entity.MediaPartId;
                         _repositoryUploadsComplete.Create(ucr);
                         ScheduleVideoCompletion();
@@ -848,8 +1142,15 @@ namespace Laser.Orchard.Vimeo.Services {
                         return ucr.Id;
                     }
                 }
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
-
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
+                }
             }
             return -1;
         }
@@ -857,7 +1158,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <summary>
         /// This method patches the information about a video on the vimeo servers.
         /// </summary>
-        /// <param name="ucId">The Id of the COmplete upload we want to patch</param>
+        /// <param name="ucId">The Id of the Complete upload we want to patch</param>
         /// <param name="name">The title we want to assign to the video</param>
         /// <param name="description">the description for the video</param>
         /// <returns>A <type>string</type> that contains the response to the patch request.</returns>
@@ -871,10 +1172,11 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <summary>
         /// This method patches the information about a video on the vimeo servers.
         /// </summary>
-        /// <param name="ucr">The COmplete upload we want to patch</param>
+        /// <param name="ucr">The Complete upload we want to patch</param>
         /// <param name="name">The title we want to assign to the video</param>
         /// <param name="description">the description for the video</param>
         /// <returns>A <type>string</type> that contains the response to the patch request.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string PatchVideo(UploadsCompleteRecord ucr, string name = "", string description = "") {
             if (ucr == null) return "Record is null";
 
@@ -907,18 +1209,27 @@ namespace Laser.Orchard.Vimeo.Services {
             }
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         ucr.Patched = true;
                         return "OK";
                     }
                 }
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
-                //if some parameter is wrong in the patch, we get status code 400 Bad Request
-                if (resp != null && resp.StatusCode == HttpStatusCode.BadRequest) {
-                    return new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                    //if some parameter is wrong in the patch, we get status code 400 Bad Request
+                    if (resp.StatusCode == HttpStatusCode.BadRequest) {
+                        return new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    }
+                    return resp.StatusCode.ToString() + " " + resp.StatusDescription;
+                } else {
+                    //throw new Exception(T("Failed to read response").ToString(), ex);
+                    //Do not raise an exception if we failed to read a response, to avoid messing up the terminations of the uploads
                 }
-                return resp.StatusCode.ToString() + " " + resp.StatusDescription;
             }
             return "Unknown error";
         }
@@ -927,6 +1238,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Get from Vimeo the Id corresponding to the group set in the settings.
         /// </summary>
         /// <returns>The Id as a <type>string</type>, or null if the group cannot be found.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GetGroupId() {
             var settings = _orchardServices
                 .WorkContext
@@ -942,6 +1254,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 bool morePages = false;
                 do {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.OK) {
                             using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                 string vimeoJson = reader.ReadToEnd();
@@ -977,8 +1290,15 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } while (morePages);
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
-
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
+                }
             }
 
             return null;
@@ -987,6 +1307,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Get from vimeo the id corresponding to the channel set in settings.
         /// </summary>
         /// <returns>The Id as a <type>string</type>, or null if the channel cannot be found.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GetChannelId() {
             var settings = _orchardServices
                 .WorkContext
@@ -1002,6 +1323,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 bool morePages = false;
                 do {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.OK) {
                             using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                 string vimeoJson = reader.ReadToEnd();
@@ -1037,8 +1359,15 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } while (morePages);
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
-
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
+                }
             }
 
             return null;
@@ -1047,6 +1376,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Get from vimeo the id corresponding to the album set in settings.
         /// </summary>
         /// <returns>The Id as a <type>string</type>, or null if the album cannot be found.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GetAlbumId() {
             var settings = _orchardServices
                 .WorkContext
@@ -1062,6 +1392,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 bool morePages = false;
                 do {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.OK) {
                             using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                 string vimeoJson = reader.ReadToEnd();
@@ -1096,8 +1427,15 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } while (morePages);
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
-
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
+                }
             }
 
             return null;
@@ -1136,15 +1474,17 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="ucId">The completed upload</param>
         /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string AddVideoToGroup(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Cannot identify video";
 
-            string groupId = GetGroupId();
+            var settings = _orchardServices
+                    .WorkContext
+                    .CurrentSite
+                    .As<VimeoSettingsPart>();
+
+            string groupId = settings.GroupId;
             if (!string.IsNullOrWhiteSpace(groupId)) {
-                var settings = _orchardServices
-                        .WorkContext
-                        .CurrentSite
-                        .As<VimeoSettingsPart>();
                 HttpWebRequest wr = VimeoCreateRequest(
                     aToken: settings.AccessToken,
                     endpoint: VimeoEndpoints.Groups + "/" + groupId + ucr.Uri,
@@ -1152,17 +1492,31 @@ namespace Laser.Orchard.Vimeo.Services {
                     );
                 try {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
                             ucr.UploadedToGroup = true;
                             return "OK";
                         }
                     }
+                } catch (VimeoRateException vre) {
+                    throw vre;
                 } catch (Exception ex) {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
+                        UpdateAPIRateLimits(settings, resp);
+                        //in all error cases, we mark this video as added correctly. Note that these errors come as responses,
+                        //so we have been able to connect but Vimeo refused our request.
+                        //ucr.UploadedToGroup = true;
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                            //we end up here if the video is already in the group
+                            ucr.UploadedToGroup = true;
                             return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        } else {
+                            return "Code " + resp.StatusCode.ToString() + ": " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         }
+                    } else {
+                        //throw new Exception(T("Failed to read response").ToString(), ex);
+                        //Do not raise an exception if we failed to read a response, to avoid messing up the terminations of the uploads
                     }
                 }
             } else {
@@ -1205,15 +1559,17 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="ucId">The completed upload</param>
         /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string AddVideoToChannel(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Cannot identify video";
 
-            string chanId = GetChannelId();
+            var settings = _orchardServices
+                    .WorkContext
+                    .CurrentSite
+                    .As<VimeoSettingsPart>();
+
+            string chanId = settings.ChannelId;
             if (!string.IsNullOrWhiteSpace(chanId)) {
-                var settings = _orchardServices
-                        .WorkContext
-                        .CurrentSite
-                        .As<VimeoSettingsPart>();
                 HttpWebRequest wr = VimeoCreateRequest(
                     aToken: settings.AccessToken,
                     endpoint: VimeoEndpoints.Channels + "/" + chanId + ucr.Uri,
@@ -1221,19 +1577,31 @@ namespace Laser.Orchard.Vimeo.Services {
                     );
                 try {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
                             ucr.UploadedToChannel = true;
                             return "OK";
                         }
                     }
+                } catch (VimeoRateException vre) {
+                    throw vre;
                 } catch (Exception ex) {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
+                        UpdateAPIRateLimits(settings, resp);
+                        //in all error cases, we mark this video as added correctly. Note that these errors come as responses,
+                        //so we have been able to connect but Vimeo refused our request.
+                        //ucr.UploadedToChannel = true;
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
                             return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         } else if (resp.StatusCode == HttpStatusCode.NotFound) {
                             return "Resource not found. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        } else {
+                            return "Code " + resp.StatusCode.ToString() + ": " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         }
+                    } else {
+                        //throw new Exception(T("Failed to read response").ToString(), ex);
+                        //Do not raise an exception if we failed to read a response, to avoid messing up the terminations of the uploads
                     }
                 }
             } else {
@@ -1276,15 +1644,17 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="ucId">The completed upload</param>
         /// <returns>A <type>string</type> describing the result of the operation. <value>"OK"</value> in case of success.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string AddVideoToAlbum(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Cannot identify video";
 
-            string alId = GetAlbumId();
+            var settings = _orchardServices
+                    .WorkContext
+                    .CurrentSite
+                    .As<VimeoSettingsPart>();
+
+            string alId = settings.AlbumId;
             if (!string.IsNullOrWhiteSpace(alId)) {
-                var settings = _orchardServices
-                        .WorkContext
-                        .CurrentSite
-                        .As<VimeoSettingsPart>();
                 HttpWebRequest wr = VimeoCreateRequest(
                     aToken: settings.AccessToken,
                     endpoint: VimeoEndpoints.MyAlbums + "/" + alId + ucr.Uri,
@@ -1292,19 +1662,31 @@ namespace Laser.Orchard.Vimeo.Services {
                     );
                 try {
                     using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.Accepted || resp.StatusCode == HttpStatusCode.NoContent) {
                             ucr.UploadedToAlbum = true;
                             return "OK";
                         }
                     }
+                } catch (VimeoRateException vre) {
+                    throw vre;
                 } catch (Exception ex) {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
+                        UpdateAPIRateLimits(settings, resp);
+                        //in all error cases, we mark this video as added correctly. Note that these errors come as responses,
+                        //so we have been able to connect but Vimeo refused our request.
+                        //ucr.UploadedToAlbum = true;
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
                             return "Access Denied: cannot add video. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         } else if (resp.StatusCode == HttpStatusCode.NotFound) {
                             return "Resource not found. " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        } else {
+                            return "Code " + resp.StatusCode.ToString() + ": " + new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         }
+                    } else {
+                        //throw new Exception(T("Failed to read response").ToString(), ex);
+                        //Do not raise an exception if we failed to read a response, to avoid messing up the terminations of the uploads
                     }
                 }
             } else {
@@ -1329,6 +1711,7 @@ namespace Laser.Orchard.Vimeo.Services {
             return part == null ? null : ExtractVimeoStreamURL(part);
         }
         public string ExtractVimeoStreamURL(OEmbedPart part) {
+
             var settings = _orchardServices
                         .WorkContext
                         .CurrentSite
@@ -1336,31 +1719,14 @@ namespace Laser.Orchard.Vimeo.Services {
             string uri = part["uri"];
             string vUri = part["uri"].Remove(part["uri"].IndexOf("video") + 5, 1);//ucr.Uri.Remove(ucr.Uri.IndexOf("video") + 5, 1); //the original uri is /videos/ID, but we want /video/ID
             //is this a pro account?
-            //we can either store this information in the settings, or make an API call to /me and check the account field of the user object
-            bool proAccount = false;
-            string uId = ""; //user id on vimeo
-            //make the API call to check the account
-            HttpWebRequest userCall = VimeoCreateRequest(
-                aToken: settings.AccessToken,
-                endpoint: VimeoEndpoints.Me,
-                method: "GET",
-                qString: "?fields=account,uri"
-                );
-            try {
-                using (HttpWebResponse resp = userCall.GetResponse() as HttpWebResponse) {
-                    if (resp.StatusCode == HttpStatusCode.OK) {
-                        string json = new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                        var parsed = JObject.Parse(json);
-                        if (parsed["account"] != null) {
-                            proAccount = parsed["account"].ToString() == "pro";
-                            uId = parsed["uri"].ToString();
-                            uId = uId.Remove(0, uId.LastIndexOf("/") + 1);
-                        }
-                    }
-                }
-            } catch (Exception ex) {
-
+            //we can either store this information in the settings, or make an API call to /me and check the account field of the user object            
+            //only verify the account status if more than 24 hours have passed. Otherwise we use the cached info.
+            if (settings.LastTimeAccountTypeWasChecked == null || DateTime.UtcNow < settings.LastTimeAccountTypeWasChecked.Value.AddHours(24)) {
+                RetrieveAccountType(settings);
             }
+            bool proAccount = settings.AccountType == "pro";
+            string uId = settings.UserId; //user id on vimeo
+
             //NOTE: remember to verify if we own the video
             //make an API call to get the info for this video
             HttpWebRequest apiCall = VimeoCreateRequest(
@@ -1373,12 +1739,21 @@ namespace Laser.Orchard.Vimeo.Services {
             JObject videoJsonTree = null;
             try {
                 using (HttpWebResponse resp = apiCall.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         videoJsonTree = JObject.Parse(data);
                     }
                 }
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    try {
+                        UpdateAPIRateLimits(settings, resp);
+                    } catch (Exception vre) {
+                        return vre.Message;
+                    }
+                }
                 return ex.Message;
             }
 
@@ -1416,6 +1791,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         url = playerCall.Address.AbsoluteUri;
                     }
                 } catch (Exception ex) {
+                    return ex.Message;
                 }
                 return url;
             } else {
@@ -1484,10 +1860,17 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="ucId">The id of the record that contains the information on the video we are checking</param>
         /// <returns>A string describing the video'sprocessing status in Vimeo's servers.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GetVideoStatus(int ucId) {
             UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
             return GetVideoStatus(ucr);
         }
+        /// <summary>
+        /// Get from Vimeo the processing status of the video.
+        /// </summary>
+        /// <param name="ucr">The record that contains the information on the video we are checking</param>
+        /// <returns>A string describing the video'sprocessing status in Vimeo's servers.</returns>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GetVideoStatus(UploadsCompleteRecord ucr) {
             if (ucr == null) return "Record is null";
 
@@ -1503,15 +1886,27 @@ namespace Laser.Orchard.Vimeo.Services {
                     );
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    UpdateAPIRateLimits(settings, resp);
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                             string vimeoJson = reader.ReadToEnd();
-                            //todo: "FILL THIS METHOD IN";
                             return JObject.Parse(vimeoJson)["status"].ToString();
                         }
                     }
                 }
+            } catch (VimeoRateException vre) {
+                throw vre;
             } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    UpdateAPIRateLimits(settings, resp);
+                    if (resp.StatusCode == HttpStatusCode.NotFound) {
+                        //this is for non existing videos, or videos that are private to someone else
+                        return "Video not found";
+                    }
+                } else {
+                    throw new Exception(T("Failed to read response").ToString(), ex);
+                }
                 return ex.Message;
             }
             return "Unknown error";
@@ -1521,10 +1916,15 @@ namespace Laser.Orchard.Vimeo.Services {
         /// Fill in the MediaPart information by pretending to embed the video.
         /// </summary>
         /// <param name="ucId">The id of the record that contains the information on the video we are checking</param>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public void FinishMediaPart(int ucId) {
             UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
             if (ucr != null) FinishMediaPart(ucr);
-        }
+        }/// <summary>
+        /// Fill in the MediaPart information by pretending to embed the video.
+        /// </summary>
+        /// <param name="ucr">The record that contains the information on the video we are checking</param>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public void FinishMediaPart(UploadsCompleteRecord ucr) {
             string vId = ucr.Uri.Substring(ucr.Uri.LastIndexOf("/") + 1);
             string url = "https://vimeo.com/" + vId;
@@ -1596,10 +1996,12 @@ namespace Laser.Orchard.Vimeo.Services {
                         .As<VimeoSettingsPart>();
                     HttpWebRequest wr = VimeoCreateRequest(
                         aToken: settings.AccessToken,
-                        endpoint: VimeoEndpoints.Me + ucr.Uri
+                        endpoint: VimeoEndpoints.Me + ucr.Uri,
+                        qString: "?fields=name,uri,description,duration,width,height,release_time,embed.html,pictures.sizes,user.name,user.uri,user.account"
                         );
                     try {
                         using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                            UpdateAPIRateLimits(settings, resp);
                             if (resp.StatusCode == HttpStatusCode.OK) {
                                 using (var reader = new System.IO.StreamReader(resp.GetResponseStream())) {
                                     string vimeoJson = reader.ReadToEnd();
@@ -1611,7 +2013,14 @@ namespace Laser.Orchard.Vimeo.Services {
                                     oembedPart["height"] = video.height.ToString();
                                     oembedPart["upload_date"] = video.release_time;
                                     //embed section
-                                    oembedPart["html"] = video.embed.html;
+                                    if (video.embed.html != null) {
+                                        oembedPart["html"] = video.embed.html;
+                                    } else {
+                                        //this correctly populates the html. However, if the video embed settings are "private" it will still not be possible
+                                        //to watch it in the embed object
+                                        string iframe = string.Format("<iframe src=\"https://player.vimeo.com{0}\" width=\"{1}\" height=\"{2}\" frameborder=\"0\" title=\"title\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>", ucr.Uri.Remove(ucr.Uri.IndexOf("video") + 5, 1), video.width.ToString(), video.height.ToString());
+                                        oembedPart["html"] = iframe;
+                                    }
 
                                     //pictures section (get the ones that are closer in size to the video)
                                     int picIndex = 0;
@@ -1638,8 +2047,15 @@ namespace Laser.Orchard.Vimeo.Services {
                                 }
                             }
                         }
+                    } catch (VimeoRateException vre) {
+                        throw vre;
                     } catch (Exception ex) {
-
+                        HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                        if (resp != null) {
+                            UpdateAPIRateLimits(settings, resp);
+                        } else {
+                            throw new Exception(T("Failed to read response").ToString(), ex);
+                        }
                     }
                 }
 
@@ -1647,6 +2063,14 @@ namespace Laser.Orchard.Vimeo.Services {
                 oembedPart.Source = "Vimeo|" + EncryptedVideoUrl(ExtractVimeoStreamURL(oembedPart));
                 _contentManager.Publish(mPart.ContentItem);
                 mPart.ContentItem.VersionRecord.Latest = true;
+                //raise event to be used in activities/workflows
+                _workflowManager.TriggerEvent(Constants.PublishedSignalName,
+                    mPart.ContentItem,
+                    () => new Dictionary<string, object> {
+                            {"Content", mPart.ContentItem}//, {}
+                        }
+                    );
+                ucr.MediaPartFinished = true;
             }
         }
 
@@ -1711,10 +2135,11 @@ namespace Laser.Orchard.Vimeo.Services {
 
         /// <summary>
         /// Destroy all records related to the upload of a video for a given MediaPart. Moreover, destroy the MediaPart. 
-        /// Thisshould be called in error handling, for instance when a client tells us that the upload it was trying
+        /// This should be called in error handling, for instance when a client tells us that the upload it was trying
         /// to perform has been interrupted and may not be resumed.
         /// </summary>
         /// <param name="mediaPartId">The Id of the MediaPart that was created to contain the video.</param>
+        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string DestroyUpload(int mediaPartId) {
             StringBuilder str = new StringBuilder();
             str.AppendLine(T("Clearing references to uploads for MediaPart {0}", mediaPartId).ToString());
@@ -1739,6 +2164,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     );
                 try {
                     using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                        UpdateAPIRateLimits(settings, resp);
                         if (resp.StatusCode == HttpStatusCode.NoContent) {
                             //success
                             str.AppendLine(T("Removed video on Vimeo.com").ToString());
@@ -1746,7 +2172,15 @@ namespace Laser.Orchard.Vimeo.Services {
                             str.AppendLine(T("Failed to remove video on Vimeo.com").ToString());
                         }
                     }
+                } catch (VimeoRateException vre) {
+                    throw vre;
                 } catch (Exception ex) {
+                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                    if (resp != null) {
+                        UpdateAPIRateLimits(settings, resp);
+                    } else {
+                        throw new Exception(T("Failed to read response").ToString(), ex);
+                    }
                     str.AppendLine(T("Failed to remove video on Vimeo.com").ToString());
                 }
                 //destroy the record
@@ -1800,31 +2234,66 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <returns>The number of uploads in progress.</returns>
         public int VerifyAllUploads() {
-            foreach (var uip in _repositoryUploadsInProgress.Table.ToList()) {
-                switch (VerifyUpload(uip)) {
-                    case VerifyUploadResult.CompletedAlready:
-                        break;
-                    case VerifyUploadResult.Complete:
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<VimeoSettingsPart>();
+
+            DateTime dNow = DateTime.UtcNow;
+            if (settings.RateLimitRemaining == 0 && dNow <= settings.RateLimitReset.Value) {
+                //we cannot make API calls right now, so postpone everything until after the reset
+                var uips = _repositoryUploadsInProgress.Table.ToList()
+                    .Where(uip => uip.ScheduledVerificationTime.Value <= settings.RateLimitReset.Value);
+                DateTime later = settings.RateLimitReset.Value.AddMinutes(1);
+                foreach (var uip in uips) {
+                    uip.ScheduledVerificationTime = later;
+                }
+            } else {
+                var uploadsInProgressToVerify = _repositoryUploadsInProgress.Table.ToList()
+                    .Where(uip => uip.ScheduledVerificationTime.Value <= dNow);
+                foreach (var uip in uploadsInProgressToVerify) {
+                    if (dNow >= uip.ScheduledVerificationTime.Value) {
                         try {
-                            TerminateUpload(uip);
-                        } catch (Exception ex) {
-                            //we might end up here if the termination was called at the same time from here and the controller
+                            switch (VerifyUpload(uip)) {
+                                case VerifyUploadResult.CompletedAlready:
+                                    break;
+                                case VerifyUploadResult.Complete:
+                                    try {
+                                        TerminateUpload(uip);
+                                    } catch (VimeoRateException vre) {
+                                        throw vre;
+                                    } catch (Exception ex) {
+                                        //we might end up here if the termination was called at the same time from here and the controller
+                                    }
+                                    break;
+                                case VerifyUploadResult.Incomplete:
+                                    //there was no upload progress
+                                    //if more than 24 hours have passed since the last progress of the upload, cancel it
+                                    if (dNow > uip.LastProgressTime.Value.AddDays(1)) {
+                                        //Basically we are assuming that the upload was interrupted, but the client failed to notify us.
+                                        DestroyUpload(uip.MediaPartId);
+                                    }
+                                    break;
+                                case VerifyUploadResult.StillUploading:
+                                    break;
+                                case VerifyUploadResult.NeverExisted:
+                                    break;
+                                case VerifyUploadResult.Error:
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } catch (VimeoRateException vre) {
+                            //in case we finished our API calls, postpone calling the verification
+                            //until after the reset
+                            uip.ScheduledVerificationTime = vre.resetTime.Value.AddMinutes(1);
+                            //break out of the loop, because there is no point in trying to process the remaining uploads
+                            break;
                         }
-                        break;
-                    case VerifyUploadResult.Incomplete:
-                        //if more than 24 hours have passed since the beginning of the upload, cancel it
-                        if (DateTime.UtcNow > uip.CreatedTime.Value.AddDays(1)) {
-                            DestroyUpload(uip.MediaPartId);
-                        }
-                        break;
-                    case VerifyUploadResult.StillUploading:
-                        break;
-                    case VerifyUploadResult.NeverExisted:
-                        break;
-                    case VerifyUploadResult.Error:
-                        break;
-                    default:
-                        break;
+                    } else if (uip.ScheduledVerificationTime.Value == DateTime.MaxValue && dNow > uip.LastProgressTime.Value.AddDays(1)) {
+                        //we still keep the faulty upload information for roughly 24 hours
+                        DestroyUpload(uip.MediaPartId);
+                    }
                 }
             }
             return _repositoryUploadsInProgress.Table.Count();
@@ -1838,32 +2307,102 @@ namespace Laser.Orchard.Vimeo.Services {
                 .WorkContext
                 .CurrentSite
                 .As<VimeoSettingsPart>();
-            foreach (UploadsCompleteRecord ucr in _repositoryUploadsComplete.Table.ToList()) {
-                if (!ucr.Patched) {
-                    PatchVideo(ucr);
-                }
-                if (settings.AlwaysUploadToGroup && !ucr.UploadedToGroup) {
-                    AddVideoToGroup(ucr);
-                }
-                if (settings.AlwaysUploadToChannel && !ucr.UploadedToChannel) {
-                    AddVideoToChannel(ucr);
-                }
-                if (settings.AlwaysUploadToAlbum && !ucr.UploadedToAlbum) {
-                    AddVideoToAlbum(ucr);
-                }
-                if (!ucr.IsAvailable) {
-                    ucr.IsAvailable = GetVideoStatus(ucr) == "available";
-                }
 
-                if (ucr.Patched
-                    && ucr.IsAvailable
-                    && (ucr.UploadedToGroup || !settings.AlwaysUploadToGroup)
-                    && (ucr.UploadedToChannel || !settings.AlwaysUploadToChannel)
-                    && (ucr.UploadedToAlbum || !settings.AlwaysUploadToAlbum)) {
-                    //Update the MediaPart
-                    FinishMediaPart(ucr);
-                    //We finished everything for this video upload, so we may remove its record
-                    _repositoryUploadsComplete.Delete(ucr);
+            DateTime dNow = DateTime.UtcNow;
+            if (settings.RateLimitRemaining == 0 && dNow <= settings.RateLimitReset.Value) {
+                //we cannot make API calls right now, so postpone everything until after the reset
+                var ucrs = _repositoryUploadsComplete.Table.ToList()
+                    .Where(ucr => ucr.ScheduledTerminationTime.Value <= settings.RateLimitReset.Value);
+                DateTime later = settings.RateLimitReset.Value.AddMinutes(1);
+                foreach (var ucr in ucrs) {
+                    ucr.ScheduledTerminationTime = later;
+                }
+            } else {
+                var recordsToVerify = _repositoryUploadsComplete.Table.ToList()
+                    .Where(ucr => ucr.ScheduledTerminationTime <= dNow);
+                DateTime rescheduleTime = dNow.AddMinutes(Constants.MinDelayBetweenTerminations);
+                foreach (UploadsCompleteRecord ucr in recordsToVerify) {
+                    try {
+                        if (!ucr.Patched) {
+                            PatchVideo(ucr);
+                        }
+                        if (settings.AlwaysUploadToGroup && !ucr.UploadedToGroup) {
+                            AddVideoToGroup(ucr);
+                        }
+                        if (settings.AlwaysUploadToChannel && !ucr.UploadedToChannel) {
+                            AddVideoToChannel(ucr);
+                        }
+                        if (settings.AlwaysUploadToAlbum && !ucr.UploadedToAlbum) {
+                            AddVideoToAlbum(ucr);
+                        }
+                        if (!ucr.IsAvailable) {
+                            string status = GetVideoStatus(ucr);
+                            if (status == "Video not found") {
+                                //destroy everything
+                                DestroyUpload(ucr.MediaPartId);
+                            }
+                            ucr.IsAvailable = status == "available";
+                        }
+
+                        //The video status is the only thing we actually require for finishing the MediaPart. Everything
+                        //else has a much lower priority, except perhaps the call to patch the video information since that
+                        //is where wee configure, among other things, the privacy settings.
+                        if (ucr.Patched && ucr.IsAvailable) {
+                            if (!ucr.MediaPartFinished) {
+                                FinishMediaPart(ucr);
+                            }
+                            //if we finished everything else we may conclude things for this record
+                            if (ucr.MediaPartFinished //should not require this here, but bettere safe than sorry
+                                && (ucr.UploadedToGroup || !settings.AlwaysUploadToGroup)
+                                && (ucr.UploadedToChannel || !settings.AlwaysUploadToChannel)
+                                && (ucr.UploadedToAlbum || !settings.AlwaysUploadToAlbum)) {
+                                //We finished everything for this video upload, so we may remove its record
+                                _repositoryUploadsComplete.Delete(ucr);
+                            } else {
+                                //reschedule these less important finishing touches
+                                int timeToRateReset = (settings.RateLimitReset.Value - dNow).Seconds;
+                                //consider the frequency at which we have been making API calls since the last reset.
+                                //If continuing at that pace would not have us hit the limit, it's fine. We keep a 2/3
+                                //margin just in case.
+                                // call:
+                                int l = settings.RateLimitLimit;
+                                int r = settings.RateLimitRemaining;
+                                int h = Constants.SecondsInAnHour;
+                                int t = timeToRateReset;
+                                //  frequency = f = (l-r) / (h-t) in calls per second
+                                //  we want f * t < (2/3) * r
+                                //  substituting we get (l - r) * t < 2/3 * r * (h - t)
+                                if ((l - r) * t * 3 < 2 * r * (h - t)
+                                    || timeToRateReset < 0) { //we should not have passed the expected reset time, but it's better to check
+                                    //we still have quite a bit of API calls we can do in the time left before it resets
+                                    ucr.ScheduledTerminationTime = rescheduleTime; //the reschedule time is computed above with the default delay
+                                } else {
+                                    //compute a longer delay to try and not overload the Vimeo API endpoints
+                                    DateTime newScheduleTime = settings.RateLimitReset.Value.AddMinutes(1);
+                                    //recompute the new frequency we want to have from
+                                    // f * t = 2/3 r
+                                    //what we really want is t
+                                    // t * (l - r) / (h - t) = 2/3 * r
+                                    // (l - r) * t = 2/3 * r * ( h - t)
+                                    // (l - r + 2/3 * r) * t = 2/3 * r * h 
+                                    double newt = ((2.0/3.0) * (double)(r * h)) / ((double)l - (1.0/3.0)*(double)r);
+                                    DateTime targetTime = settings.RateLimitReset.Value.AddSeconds(-newt);
+                                    ucr.ScheduledTerminationTime = newScheduleTime > targetTime ? newScheduleTime : targetTime;
+                                }
+                            }
+                        } else {
+                            //reschedule
+                            ucr.ScheduledTerminationTime = rescheduleTime;
+                        }
+
+                    } catch (VimeoRateException vre) {
+                        //in case we have run out of API calls postpone further terminations 
+                        //until after the reset
+                        ucr.ScheduledTerminationTime = vre.resetTime.Value.AddMinutes(1);
+                        //break out of the loop, because there is no point in trying to process the other records
+                        break;
+                    }
+                    
                 }
             }
             return _repositoryUploadsComplete.Table.Count();
@@ -1891,6 +2430,34 @@ namespace Laser.Orchard.Vimeo.Services {
                 wr.Headers.Add(HttpRequestHeader.Authorization, Constants.HeaderAuthorizationValue + aToken);
             wr.Method = method;
             return wr;
+        }
+    }
+
+    public class VimeoRateException : Exception {
+        public DateTime? resetTime { get; set; }
+        public VimeoRateException() {
+        }
+
+        public VimeoRateException(string message)
+            : base(message) {
+        }
+
+        public VimeoRateException(string message, Exception inner)
+            : base(message, inner) {
+        }
+
+        public VimeoRateException(DateTime? resetTime) {
+            this.resetTime = resetTime;
+        }
+
+        public VimeoRateException(DateTime? resetTime, string message)
+            : base(message) {
+            this.resetTime = resetTime;
+        }
+
+        public VimeoRateException(DateTime? resetTime, string message, Exception inner)
+            : base(message, inner) {
+            this.resetTime = resetTime;
         }
     }
 }
