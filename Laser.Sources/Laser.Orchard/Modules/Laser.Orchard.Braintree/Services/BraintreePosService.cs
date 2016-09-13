@@ -24,5 +24,8 @@ namespace Laser.Orchard.Braintree.Services {
             return urlHelper.Action("Index", "Braintree", new { area = "Laser.Orchard.Braintree" })
                 + "?pid=" + paymentId.ToString();
         }
+        public override string GetSettingsControllerName() {
+            return "Admin";
+        }
     }
 }
