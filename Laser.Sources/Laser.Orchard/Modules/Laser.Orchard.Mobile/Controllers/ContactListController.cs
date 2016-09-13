@@ -16,16 +16,19 @@ namespace Laser.Orchard.Mobile.Controllers {
             _pushService = pushService;
         }
 
+        [Authorize]
         [HttpPost]
-        public JsonResult Search(string nameFilter) {
+        public JsonResult Search(string term) {
             List<FoundContact> result = new List<FoundContact>();
             ContactsArray array = new ContactsArray();
-            var contatti = _pushService.GetContactsWithDevice(nameFilter);
+            var contatti = _pushService.GetContactsWithDevice(term);
             foreach (var contact in contatti) {
-                result.Add(new FoundContact { name = Convert.ToString(contact["Title"]), num= Convert.ToInt32(contact["NumDevice"]) });
+                result.Add(new FoundContact { 
+                    label = String.Format(Convert.ToString(contact["Title"])+" ({0})", Convert.ToInt32(contact["NumDevice"])),
+                    value = Convert.ToString(contact["Title"]).Trim()
+                });
             }
-            array.elenco = result.ToArray();
-            return Json(array);
+            return Json(result.ToArray());
         }
 
         private class ContactsArray {
@@ -33,8 +36,8 @@ namespace Laser.Orchard.Mobile.Controllers {
         }
 
         private class FoundContact {
-            public string name { get; set; }
-            public int num { get; set; }
+            public string value { get; set; }
+            public string label { get; set; }
         }
     }
 }
