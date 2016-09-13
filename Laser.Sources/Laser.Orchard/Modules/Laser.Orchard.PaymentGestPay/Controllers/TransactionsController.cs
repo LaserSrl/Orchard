@@ -37,7 +37,7 @@ namespace Laser.Orchard.PaymentGestPay.Controllers {
                 } else if (outcome.TransactionResult == "OK") {
                     shapeString += T("Transaction successful.").Text;
                 } else {
-                    shapeString += T(" Transactions till in progress.").Text;
+                    shapeString += T(" Transactions still in progress.").Text;
                 }
             }
 

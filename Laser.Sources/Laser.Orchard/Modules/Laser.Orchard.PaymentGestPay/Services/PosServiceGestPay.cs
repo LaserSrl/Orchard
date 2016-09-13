@@ -275,8 +275,12 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                     Logger.Error(exception.Text);
                     //update the PaymentRecord for this transaction
                     int pId;
-                    if (result != null && int.TryParse(result.ShopTransactionID, out pId))
+                    if (result != null && int.TryParse(result.ShopTransactionID, out pId)) {
                         EndPayment(pId, false, exception.Text, null);
+                    } else {
+                        exception = T("Failed to identify transaction from GestPay's response. Additional error: {0}", exception.Text);
+                        Logger.Error(exception.Text);
+                    }
 
                     result.TransactionResult = "KO";
                     result.ErrorDescription = exception.Text;
@@ -338,6 +342,10 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                     if (result != null && int.TryParse(result.ShopTransactionID, out pId)) {
                         EndPayment(pId, false, exception.Text, null);
                         return GetPaymentInfoUrl(pId);
+                    } else {
+                        exception = T("Failed to identify transaction from GestPay's response. Additional error: {0}", exception.Text);
+                        Logger.Error(exception.Text);
+                        throw new Exception(exception.Text);
                     }
                 }
 
@@ -350,12 +358,13 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                     }
                     return GetPaymentInfoUrl(paymentId);
                 } else {
-                    //failed to get the transaction Id back from GestPay
+                    throw new Exception(T("Failed to get the transaction Id back from GestPay.").Text);
                 }
             }
 
             LocalizedString ErrorHere = T("GestPay sent transaction information, but the Shop Login was wrong ({0})", a);
             Logger.Error(ErrorHere.Text);
+            throw new Exception(ErrorHere.Text);
             return null;
         }
     }
