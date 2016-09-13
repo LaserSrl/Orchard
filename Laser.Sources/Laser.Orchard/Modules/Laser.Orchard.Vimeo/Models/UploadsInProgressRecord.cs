@@ -19,5 +19,9 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual DateTime? CreatedTime { get; set; }
 
         public virtual int MediaPartId { get; set; }
+
+        public virtual DateTime? LastVerificationTime { get; set; } //when we last verified the upload
+        public virtual DateTime? ScheduledVerificationTime { get; set; } //when we will verify the upload next
+        public virtual DateTime? LastProgressTime { get; set; } //last time when we saw some progress in the upload
     }
 }
