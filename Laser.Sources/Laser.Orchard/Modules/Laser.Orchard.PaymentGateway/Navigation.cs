@@ -25,7 +25,9 @@ namespace Laser.Orchard.PaymentGateway {
                     subMenu.Action("Index", "Admin", new { area = "Laser.Orchard.PaymentGateway" }).Permission(Permissions.ConfigurePayment);
                     subMenu.Add(T("Info"), "10.0", item => item.Action("Index", "Admin", new { area = "Laser.Orchard.PaymentGateway" }).LocalNav());
                     foreach (var pos in _posServices) {
-                        subMenu.Add(T(pos.GetPosName()), "10.0", item => item.Action("Index", "Admin", new { area = pos.GetType().Assembly.GetName().Name }).LocalNav());
+                        if (string.IsNullOrWhiteSpace(pos.GetSettingsControllerName()) == false) {
+                            subMenu.Add(T(pos.GetPosName()), "10.0", item => item.Action("Index", pos.GetSettingsControllerName(), new { area = pos.GetType().Assembly.GetName().Name }).LocalNav());
+                        }
                     }
                 })
             );
