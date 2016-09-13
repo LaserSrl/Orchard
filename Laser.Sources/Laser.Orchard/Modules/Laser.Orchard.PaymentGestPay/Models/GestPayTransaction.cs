@@ -8,6 +8,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 
+
+//The first tests with GestPay return on 2016/09/13 error 1107: Unexpected parameter.
+//We change things so that if the parameters are not populated, we return null when converting the
+//objects to the GestPay representations.
+
 namespace Laser.Orchard.PaymentGestPay.Models {
 
     public abstract class TransactionBase {
@@ -31,7 +36,7 @@ namespace Laser.Orchard.PaymentGestPay.Models {
             }
         }
     }
-    
+
     public class GestPayTransaction {
         #region Mandatory properties
         [Required]
@@ -115,11 +120,11 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         }
         public GestPayTransaction(PaymentRecord pr)
             : this() {
-                record = pr;
-                uicCode = pr.Currency;
-                amount = pr.Amount.ToString("0.##");
-                shopTransactionID = pr.Id.ToString();
-                //customInfo = pr.Reason;
+            record = pr;
+            uicCode = pr.Currency;
+            amount = pr.Amount.ToString("0.##");
+            shopTransactionID = pr.Id.ToString();
+            //customInfo = pr.Reason;
         }
     }
     /// <summary>
@@ -155,6 +160,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.ShippingDetails TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.ShippingDetails {
                 shipToName = this.shipToName,
                 shipToStreet = this.shipToStreet,
@@ -171,6 +179,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.ShippingDetails ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.ShippingDetails {
                 shipToName = this.shipToName,
                 shipToStreet = this.shipToStreet,
@@ -180,6 +191,15 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 shipToZip = this.shipToZip,
                 shipToStreet2 = this.shipToStreet2
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { shipToName, shipToStreet, shipToCity, shipToState, shipToCountryCode, shipToZip, shipToStreet2 };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
     }
@@ -201,6 +221,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.PaymentTypeDetail TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.PaymentTypeDetail {
                 MyBankBankCode = this.MyBankBankCode,
                 IdealBankCode = this.IdealBankCode
@@ -212,10 +235,22 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.PaymentTypeDetail ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.PaymentTypeDetail {
                 MyBankBankCode = this.MyBankBankCode,
                 IdealBankCode = this.IdealBankCode
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { MyBankBankCode, IdealBankCode };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -262,7 +297,10 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// GestPay remote service.
         /// </summary>
         /// <returns></returns>
-        public CryptDecryptTest.RedCustomerInfo TestVersion(){
+        public CryptDecryptTest.RedCustomerInfo TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.RedCustomerInfo {
                 Customer_Title = this.Customer_Title,
                 Customer_Name = this.Customer_Name,
@@ -282,7 +320,10 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// GestPay remote service.
         /// </summary>
         /// <returns></returns>
-        public CryptDecryptProd.RedCustomerInfo ProdVersion(){
+        public CryptDecryptProd.RedCustomerInfo ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.RedCustomerInfo {
                 Customer_Title = this.Customer_Title,
                 Customer_Name = this.Customer_Name,
@@ -296,6 +337,15 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 Customer_PostalCode = this.Customer_PostalCode,
                 Customer_Phone = this.Customer_Phone
             };
+        }
+        
+        private bool ParamsAreAllNull() {
+            string[] para = { Customer_Title, Customer_Name, Customer_Surname, Customer_Email, Customer_Address, Customer_Address2, Customer_City, Customer_StateCode, Customer_Country, Customer_PostalCode, Customer_Phone };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -349,6 +399,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.RedShippingInfo TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.RedShippingInfo {
                 Shipping_Name = this.Shipping_Name,
                 Shipping_Surname = this.Shipping_Surname,
@@ -371,6 +424,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.RedShippingInfo ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.RedShippingInfo {
                 Shipping_Name = this.Shipping_Name,
                 Shipping_Surname = this.Shipping_Surname,
@@ -386,6 +442,16 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 Shipping_MobilePhone = this.Shipping_MobilePhone,
                 Shipping_TimeToDeparture = this.Shipping_TimeToDeparture
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { Shipping_Name, Shipping_Surname, Shipping_Email, Shipping_Address, Shipping_Address2,  Shipping_City, Shipping_StateCode, Shipping_Country, Shipping_PostalCode, 
+                Shipping_HomePhone,  Shipping_FaxPhone, Shipping_MobilePhone, Shipping_TimeToDeparture };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -442,6 +508,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.RedBillingInfo TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.RedBillingInfo {
                 Billing_Id = this.Billing_Id,
                 Billing_Name = this.Billing_Name,
@@ -465,6 +534,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.RedBillingInfo ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.RedBillingInfo {
                 Billing_Id = this.Billing_Id,
                 Billing_Name = this.Billing_Name,
@@ -481,6 +553,16 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 Billing_WorkPhone = this.Billing_WorkPhone,
                 Billing_MobilePhone = this.Billing_MobilePhone
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { Billing_Id, Billing_Name, Billing_Surname, Billing_DateOfBirth, Billing_Email, Billing_Address, Billing_Address2,  Billing_City, Billing_StateCode, Billing_Country, 
+                Billing_PostalCode, Billing_HomePhone, Billing_WorkPhone, Billing_MobilePhone };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -513,6 +595,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.RedCustomerData TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.RedCustomerData {
                 MerchantWebSite = this.MerchantWebSite,
                 Customer_IPAddress = this.Customer_IpAddress,
@@ -528,6 +613,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.RedCustomerData ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.RedCustomerData {
                 MerchantWebSite = this.MerchantWebSite,
                 Customer_IPAddress = this.Customer_IpAddress,
@@ -536,6 +624,15 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 Red_Merchant_ID = this.Red_Merchant_ID,
                 Red_ServiceType = this.Red_ServiceType
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { MerchantWebSite, Customer_IpAddress, PC_FingerPrint, PreviousCustomer, Red_Merchant_ID, Red_ServiceType };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -558,9 +655,13 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.RedItems TestVersion() {
+            if (string.IsNullOrWhiteSpace(NumberOfItems) &&
+                this.Red_Item.Where(ri => ri.TestVersion() != null).Count() == 0) {
+                return null;
+            }
             return new CryptDecryptTest.RedItems {
                 NumberOfItems = this.NumberOfItems,
-                Red_Item = this.Red_Item.Select(ri => ri.TestVersion()).ToArray()
+                Red_Item = this.Red_Item.Where(ri => ri.TestVersion() != null).Select(ri => ri.TestVersion()).ToArray()
             };
         }
         /// <summary>
@@ -569,9 +670,13 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.RedItems ProdVersion() {
+            if (string.IsNullOrWhiteSpace(NumberOfItems) &&
+                this.Red_Item.Where(ri => ri.ProdVersion() != null).Count() == 0) {
+                return null;
+            }
             return new CryptDecryptProd.RedItems {
                 NumberOfItems = this.NumberOfItems,
-                Red_Item = this.Red_Item.Select(ri => ri.ProdVersion()).ToArray()
+                Red_Item = this.Red_Item.Where(ri => ri.ProdVersion() != null).Select(ri => ri.ProdVersion()).ToArray()
             };
         }
     }
@@ -617,6 +722,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.RedItem TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.RedItem {
                 Item_ProductCode = this.Item_ProductCode,
                 Item_StockKeepingUnit = this.Item_StockKeepingUnit,
@@ -636,6 +744,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.RedItem ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.RedItem {
                 Item_ProductCode = this.Item_ProductCode,
                 Item_StockKeepingUnit = this.Item_StockKeepingUnit,
@@ -648,6 +759,15 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 Item_PartEAN_Number = this.Item_PartEAN_Number,
                 Item_ShippingComments = this.Item_ShippingComments
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { Item_ProductCode, Item_StockKeepingUnit, Item_Description, Item_Quantity, Item_UnitCost, Item_TotalCost, Item_ShippingNumber, Item_GiftMessage, Item_PartEAN_Number, Item_ShippingComments };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -723,6 +843,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.ConselCustomerInfo TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.ConselCustomerInfo {
                 Surname = this.Surname,
                 Name = this.Name,
@@ -758,6 +881,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.ConselCustomerInfo ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.ConselCustomerInfo {
                 Surname = this.Surname,
                 Name = this.Name,
@@ -786,6 +912,16 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 WorkingState = this.WorkingState,
                 MonthlyPay = this.MonthlyPay
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { Surname, Name, TaxationCode, Address, City, StateCode, DateAddress, Phone, MobilePhone, MunicipalCode,  StateBirthDate, BirthDate, Mail, MunicipalDocumentCode, 
+                Employment, WorkingAddress, MunicipalWorkingCode, DocumentState, DocumentNumber, MunicipalBirthCode, VisaExpiryDate, Iban, DocumentDate, WorkingTelNumber,  WorkingState, MonthlyPay };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -817,14 +953,20 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.EcommGestpayPaymentDetails TestVersion() {
+            if (this.FraudPrevention.TestVersion() == null && this.CustomerDetail.TestVersion() == null && this.ShippingAddress.TestVersion() == null &&
+                this.BillingAddress.TestVersion() == null && this.ProductDetails.Where(pd => pd.TestVersion() != null).Count() == 0 &&
+                this.DiscountCodes.Where(dc => dc.TestVersion() != null).Count() == 0 &&
+                this.ShippingLines.Where(sl => sl.TestVersion() != null).Count() == 0) {
+                return null;
+            }
             return new CryptDecryptTest.EcommGestpayPaymentDetails {
                 FraudPrevention = this.FraudPrevention.TestVersion(),
                 CustomerDetail = this.CustomerDetail.TestVersion(),
                 ShippingAddress = this.ShippingAddress.TestVersion(),
                 BillingAddress = this.BillingAddress.TestVersion(),
-                ProductDetails = this.ProductDetails.Select(pd => pd.TestVersion()).ToArray(),
-                DiscountCodes = this.DiscountCodes.Select(dc => dc.TestVersion()).ToArray(),
-                ShippingLines = this.ShippingLines.Select(sl => sl.TestVersion()).ToArray()
+                ProductDetails = this.ProductDetails.Where(pd => pd.TestVersion() != null).Select(pd => pd.TestVersion()).ToArray(),
+                DiscountCodes = this.DiscountCodes.Where(dc => dc.TestVersion() != null).Select(dc => dc.TestVersion()).ToArray(),
+                ShippingLines = this.ShippingLines.Where(sl => sl.TestVersion() != null).Select(sl => sl.TestVersion()).ToArray()
             };
         }
         /// <summary>
@@ -833,14 +975,20 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.EcommGestpayPaymentDetails ProdVersion() {
+            if (this.FraudPrevention.ProdVersion() == null && this.CustomerDetail.ProdVersion() == null && this.ShippingAddress.ProdVersion() == null &&
+                this.BillingAddress.ProdVersion() == null && this.ProductDetails.Where(pd => pd.ProdVersion() != null).Count() == 0 &&
+                this.DiscountCodes.Where(dc => dc.ProdVersion() != null).Count() == 0 &&
+                this.ShippingLines.Where(sl => sl.ProdVersion() != null).Count() == 0) {
+                return null;
+            }
             return new CryptDecryptProd.EcommGestpayPaymentDetails {
                 FraudPrevention = this.FraudPrevention.ProdVersion(),
                 CustomerDetail = this.CustomerDetail.ProdVersion(),
                 ShippingAddress = this.ShippingAddress.ProdVersion(),
                 BillingAddress = this.BillingAddress.ProdVersion(),
-                ProductDetails = this.ProductDetails.Select(pd => pd.ProdVersion()).ToArray(),
-                DiscountCodes = this.DiscountCodes.Select(dc => dc.ProdVersion()).ToArray(),
-                ShippingLines = this.ShippingLines.Select(sl => sl.ProdVersion()).ToArray()
+                ProductDetails = this.ProductDetails.Where(pd => pd.ProdVersion() != null).Select(pd => pd.ProdVersion()).ToArray(),
+                DiscountCodes = this.DiscountCodes.Where(dc => dc.ProdVersion() != null).Select(dc => dc.ProdVersion()).ToArray(),
+                ShippingLines = this.ShippingLines.Where(sl => sl.ProdVersion() != null).Select(sl => sl.ProdVersion()).ToArray()
             };
         }
     }
@@ -868,6 +1016,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.FraudPrevention TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.FraudPrevention {
                 SubmitForReview = this.SubmitForReview,
                 OrderDateTime = this.OrderDateTime,
@@ -883,6 +1034,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.FraudPrevention ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.FraudPrevention {
                 SubmitForReview = this.SubmitForReview,
                 OrderDateTime = this.OrderDateTime,
@@ -891,6 +1045,15 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 SubmissionReason = this.SubmissionReason,
                 BeaconSessionID = this.BeaconSessionID
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { SubmitForReview, OrderDateTime, OrderNote, Source, SubmissionReason, BeaconSessionID };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -940,7 +1103,7 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [ValidGestPayParameter]
         public string CreatedAtDate { get; set; }
         [ValidGestPayParameter]
-        public string VerfiedEmail { get; set; }
+        public string VerifiedEmail { get; set; }
         [ValidGestPayParameter]
         public string AccountType { get; set; }
         public GenericCustomerSocial Social { get; set; }
@@ -955,6 +1118,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.CustomerDetail TestVersion() {
+            if (this.ParamsAreAllNull() && this.Social.TestVersion() == null) {
+                return null;
+            }
             return new CryptDecryptTest.CustomerDetail {
                 ProfileID = this.ProfileID,
                 MerchantCustomerID = this.MerchantCustomerID,
@@ -970,7 +1136,7 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 SocialSecurityNumber = this.SocialSecurityNumber,
                 Company = this.Company,
                 CreatedAtDate = this.CreatedAtDate,
-                VerifiedEmail = this.VerfiedEmail,
+                VerifiedEmail = this.VerifiedEmail,
                 AccountType = this.AccountType,
                 Social = this.Social.TestVersion()
             };
@@ -981,6 +1147,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.CustomerDetail ProdVersion() {
+            if (this.ParamsAreAllNull() && this.Social.ProdVersion() == null) {
+                return null;
+            }
             return new CryptDecryptProd.CustomerDetail {
                 ProfileID = this.ProfileID,
                 MerchantCustomerID = this.MerchantCustomerID,
@@ -996,10 +1165,19 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 SocialSecurityNumber = this.SocialSecurityNumber,
                 Company = this.Company,
                 CreatedAtDate = this.CreatedAtDate,
-                VerifiedEmail = this.VerfiedEmail,
+                VerifiedEmail = this.VerifiedEmail,
                 AccountType = this.AccountType,
                 Social = this.Social.ProdVersion()
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { ProfileID, MerchantCustomerID, FirstName, MiddleName, Lastname, PrimaryEmail, SecondaryEmail, PrimaryPhone, SecondaryPhone, DateOfBirth, Gender, SocialSecurityNumber, Company, CreatedAtDate, VerifiedEmail };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -1014,7 +1192,7 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [ValidGestPayParameter]
         public string CommunityScore { get; set; }
         [ValidGestPayParameter]
-        public string ProfilePicrture { get; set; }
+        public string ProfilePicture { get; set; }
         [ValidGestPayParameter]
         public string Email { get; set; }
         [ValidGestPayParameter]
@@ -1040,11 +1218,14 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.CustomerSocial TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.CustomerSocial {
                 Network = this.Network,
                 PublicUsername = this.PublicUsername,
                 CommunityScore = this.CommunityScore,
-                ProfilePicture = this.ProfilePicrture,
+                ProfilePicture = this.ProfilePicture,
                 Email = this.Email,
                 Bio = this.Bio,
                 AccountUrl = this.AccountUrl,
@@ -1062,11 +1243,14 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.CustomerSocial ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.CustomerSocial {
                 Network = this.Network,
                 PublicUsername = this.PublicUsername,
                 CommunityScore = this.CommunityScore,
-                ProfilePicture = this.ProfilePicrture,
+                ProfilePicture = this.ProfilePicture,
                 Email = this.Email,
                 Bio = this.Bio,
                 AccountUrl = this.AccountUrl,
@@ -1077,6 +1261,15 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 AuthToken = this.AuthToken,
                 SocialData = this.SocialData
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { Network, PublicUsername, CommunityScore, ProfilePicture, Email, Bio, AccountUrl, Following, Followed, Posts, Id, AuthToken, SocialData };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -1140,6 +1333,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.ShippingAddress TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.ShippingAddress {
                 ProfileID = this.ProfileID,
                 FirstName = this.FirstName,
@@ -1166,6 +1362,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.ShippingAddress ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.ShippingAddress {
                 ProfileID = this.ProfileID,
                 FirstName = this.FirstName,
@@ -1185,6 +1384,15 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 Company = this.Company,
                 StateCode = this.StateCode
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { ProfileID, FirstName, MiddleName, Lastname, StreetName, Streetname2, HouseNumber, HouseExtension, City, ZipCode, State, CountryCode, Email, PrimaryPhone, SecondaryPhone, Company, StateCode };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -1248,6 +1456,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.BillingAddress TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.BillingAddress {
                 ProfileID = this.ProfileID,
                 FirstName = this.FirstName,
@@ -1274,6 +1485,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.BillingAddress ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.BillingAddress {
                 ProfileID = this.ProfileID,
                 FirstName = this.FirstName,
@@ -1293,6 +1507,15 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 Company = this.Company,
                 StateCode = this.StateCode
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { ProfileID, FirstName, MiddleName, Lastname, StreetName, Streetname2, HouseNumber, HouseExtension, City, ZipCode, State, CountryCode, Email, PrimaryPhone, SecondaryPhone, Company, StateCode };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -1351,6 +1574,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.ProductDetail TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.ProductDetail {
                 ProductCode = this.ProductCode,
                 SKU = this.SKU,
@@ -1377,6 +1603,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.ProductDetail ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.ProductDetail {
                 ProductCode = this.ProductCode,
                 SKU = this.SKU,
@@ -1397,6 +1626,15 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 DeliveryAt = this.DeliveryAt
             };
         }
+
+        private bool ParamsAreAllNull() {
+            string[] para = { ProductCode, SKU, Name, Description, Quantity, Price, UnitPrice, Type, Vat, Discount, RequiresShipping, Condition, Brand, DeliveryAt };
+            if (string.IsNullOrWhiteSpace(string.Join("", para))) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
     /// <summary>
     /// This class contains the same exact information of the DiscountCode classes from both the Test and Prod
@@ -1414,6 +1652,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.DiscountCode TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.DiscountCode {
                 Amount = this.Amount,
                 Code = this.Code
@@ -1425,10 +1666,21 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.DiscountCode ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.DiscountCode {
                 Amount = this.Amount,
                 Code = this.Code
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            if (string.IsNullOrWhiteSpace(Amount) && string.IsNullOrWhiteSpace(Code)) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     /// <summary>
@@ -1449,6 +1701,9 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptTest.ShippingLine TestVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptTest.ShippingLine {
                 Price = this.Price,
                 Title = this.Title,
@@ -1461,11 +1716,22 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         /// </summary>
         /// <returns></returns>
         public CryptDecryptProd.ShippingLine ProdVersion() {
+            if (this.ParamsAreAllNull()) {
+                return null;
+            }
             return new CryptDecryptProd.ShippingLine {
                 Price = this.Price,
                 Title = this.Title,
                 Code = this.Code
             };
+        }
+
+        private bool ParamsAreAllNull() {
+            if (string.IsNullOrWhiteSpace(Price) && string.IsNullOrWhiteSpace(Title) && string.IsNullOrWhiteSpace(Code)) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
