@@ -1,0 +1,38 @@
+﻿@model Laser.Orchard.Braintree.ViewModels.PaymentVM
+@{
+    Script.Require("jQuery");
+}
+@using (Script.Head()) {
+    <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+    <script>
+	    $(document).ready(function() {
+		    $.ajax({
+			    type: "GET",
+			    url: "@Html.Raw(Model.TenantBaseUrl)/Laser.Orchard.Braintree/Braintree/GetToken",
+			    data: "",
+			    dataType: "text",
+			    success: letUserPay,
+			    error: showError
+		    });
+	    });
+	    function letUserPay(data, textStatus, jqXHR) {
+	        var clientToken = data;
+
+	        braintree.setup(clientToken, "dropin", {
+	          container: "payment-form"
+	        });
+	    }
+	    function showError(jqXHR, textStatus) {
+		    alert("Error: " + textStatus);
+	    }
+    </script>
+}
+<h1>@T("Pay with Braintree and PayPal")</h1>
+<form id="checkout" method="post" action="@Html.Raw(Model.TenantBaseUrl)/Laser.Orchard.Braintree/Braintree/Pay">
+    <div id="payment-form" style="border: 1px solid black"></div>
+    Amount: <input type="text" name="amount" value="@Model.Record.Amount.ToString(System.Globalization.CultureInfo.InvariantCulture)" /><br />
+    <input type="hidden" name="pid" value="@Model.Record.Id" />
+    <input type="submit" value="@T("Pay now")">
+    @Html.AntiForgeryToken()
+</form>
+

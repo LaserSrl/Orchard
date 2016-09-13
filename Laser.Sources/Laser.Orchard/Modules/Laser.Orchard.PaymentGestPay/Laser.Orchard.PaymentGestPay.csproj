@@ -6,12 +6,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{DDF6FDC9-29A3-43E6-8724-3CE9E26289B6}</ProjectGuid>
+    <ProjectGuid>{778D102C-6FA6-423E-87BE-1C31051AF3E7}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laser.Orchard.Braintree</RootNamespace>
-    <AssemblyName>Laser.Orchard.Braintree</AssemblyName>
+    <RootNamespace>Laser.Orchard.PaymentGestPay</RootNamespace>
+    <AssemblyName>Laser.Orchard.PaymentGestPay</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
@@ -47,13 +47,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Braintree-2.54.0">
-      <HintPath>Lib\Braintree-2.54.0.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\Orchard.Sources\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
@@ -65,12 +59,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
@@ -84,45 +75,84 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\Braintree-2.54.0.dll" />
-    <None Include="Placement.info" />
+    <EmbeddedResource Include="CurrencyCodeTable.txt" />
+    <EmbeddedResource Include="ErrorCodeTable.txt" />
+    <EmbeddedResource Include="ISOCountryCodeTable.txt" />
+    <EmbeddedResource Include="PaymentTypeCodeTable.txt" />
+    <EmbeddedResource Include="PayPalCountryCodeTable.txt" />
+    <EmbeddedResource Include="StateCodeTable.txt" />
+    <Content Include="Properties\DataSources\System.Xml.XmlNode.datasource" />
+    <Content Include="Service References\CryptDecryptProd\Laser.Orchard.PaymentGestPay.CryptDecryptProd.EncryptResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\CryptDecryptProd\WsCryptDecrypt.wsdl" />
+    <None Include="Service References\CryptDecryptTest\WsCryptDecrypt.disco" />
+    <None Include="Service References\CryptDecryptTest\configuration91.svcinfo" />
+    <None Include="Service References\CryptDecryptTest\configuration.svcinfo" />
+    <None Include="Service References\CryptDecryptTest\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\CryptDecryptProd\WsCryptDecrypt.disco" />
+    <None Include="Service References\CryptDecryptProd\configuration91.svcinfo" />
+    <None Include="Service References\CryptDecryptProd\configuration.svcinfo" />
+    <None Include="Service References\CryptDecryptProd\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
-    <Content Include="Views\Braintree\Index.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\BraintreeController.cs" />
-    <Compile Include="Controllers\Paypal.cs" />
-    <Compile Include="Controllers\TestController.cs" />
-    <Compile Include="Handlers\BraintreeSiteSettingsHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Models\BraintreeSiteSettingsPart.cs" />
-    <Compile Include="Models\TransactionResult.cs" />
-    <Compile Include="Routes.cs" />
-    <Compile Include="Services\BraintreePosService.cs" />
-    <Compile Include="Services\DefaultBraintreeService.cs" />
-    <Compile Include="Services\IBraintreeService.cs" />
-    <Compile Include="Services\MissingSettingsBanner.cs" />
-    <Compile Include="ViewModels\PaymentVM.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="Views\GestPayS2SEndpoint.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Laser.Orchard.PaymentGateway\Laser.Orchard.PaymentGateway.csproj">
       <Project>{e6900a95-3d80-497d-ad29-998adc8ad3d7}</Project>
       <Name>Laser.Orchard.PaymentGateway</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
-      <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
-      <Name>Laser.Orchard.StartupConfig</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Attributes\ParameterValidation.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\TransactionsController.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Extensions\Constants.cs" />
+    <Compile Include="GestPayMigrations.cs" />
+    <Compile Include="Handlers\PaymentGestPaySettingsPartHandler.cs" />
+    <Compile Include="Models\EncryptDecryptTransactionResult.cs" />
+    <Compile Include="Models\GestPayTransaction.cs" />
+    <Compile Include="Models\PaymentGestPaySettingsPart.cs" />
+    <Compile Include="Models\PaymentGestPaySettingsPartRecord.cs" />
+    <Compile Include="Models\TransactionOutcome.cs" />
+    <Compile Include="Navigation\AdminMenu.cs" />
+    <Compile Include="Service References\CryptDecryptProd\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\CryptDecryptTest\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Services\IGestPayAdminServices.cs" />
+    <Compile Include="Services\IGestPayTransactionServices.cs" />
+    <Compile Include="Services\PosServiceGestPay.cs" />
+    <Compile Include="ViewModels\GestPaySettingsViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\CryptDecryptProd\" />
+    <WCFMetadataStorage Include="Service References\CryptDecryptTest\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CryptDecryptTest\WsCryptDecrypt.wsdl" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

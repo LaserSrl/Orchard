@@ -6,12 +6,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{DDF6FDC9-29A3-43E6-8724-3CE9E26289B6}</ProjectGuid>
+    <ProjectGuid>{E6900A95-3D80-497D-AD29-998ADC8AD3D7}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laser.Orchard.Braintree</RootNamespace>
-    <AssemblyName>Laser.Orchard.Braintree</AssemblyName>
+    <RootNamespace>Laser.Orchard.PaymentGateway</RootNamespace>
+    <AssemblyName>Laser.Orchard.PaymentGateway</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
@@ -47,30 +47,38 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Braintree-2.54.0">
-      <HintPath>Lib\Braintree-2.54.0.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\Orchard.Sources\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Orchard.ContentPicker">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPicker\bin\Orchard.ContentPicker.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Fields">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Fields\bin\Orchard.Fields.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.MediaLibrary">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.MediaLibrary\bin\Orchard.MediaLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Modules">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Modules\bin\Orchard.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Tokens, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Workflows">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Workflows\bin\Orchard.Workflows.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
@@ -84,46 +92,52 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\Braintree-2.54.0.dll" />
-    <None Include="Placement.info" />
+    <Content Include="Placement.info" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
-    <Content Include="Views\Braintree\Index.cshtml" />
-    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Payment\Info.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Activities\PaymentEventActivity.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\BraintreeController.cs" />
-    <Compile Include="Controllers\Paypal.cs" />
-    <Compile Include="Controllers\TestController.cs" />
-    <Compile Include="Handlers\BraintreeSiteSettingsHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Models\BraintreeSiteSettingsPart.cs" />
-    <Compile Include="Models\TransactionResult.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
+    <Compile Include="Controllers\PosAdminBaseController.cs" />
+    <Compile Include="Drivers\PayButtonPartDriver.cs" />
+    <Compile Include="IPaymentEventHandler.cs" />
+    <Compile Include="Models\PayButton.cs" />
+    <Compile Include="Models\PayButtonPartSettings.cs" />
+    <Compile Include="Models\PaymentRecord.cs" />
+    <Compile Include="Navigation.cs" />
+    <Compile Include="PaymentEventHandler.cs" />
+    <Compile Include="PaymentMigrations.cs" />
     <Compile Include="Routes.cs" />
-    <Compile Include="Services\BraintreePosService.cs" />
-    <Compile Include="Services\DefaultBraintreeService.cs" />
-    <Compile Include="Services\IBraintreeService.cs" />
-    <Compile Include="Services\MissingSettingsBanner.cs" />
+    <Compile Include="Security\Permissions.cs" />
+    <Compile Include="Services\IPosService.cs" />
+    <Compile Include="Services\PosServiceBase.cs" />
+    <Compile Include="Settings\PayButtonPartSettingsHooks.cs" />
     <Compile Include="ViewModels\PaymentVM.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="Views\Payment\Pay.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Laser.Orchard.PaymentGateway\Laser.Orchard.PaymentGateway.csproj">
-      <Project>{e6900a95-3d80-497d-ad29-998adc8ad3d7}</Project>
-      <Name>Laser.Orchard.PaymentGateway</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
-      <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
-      <Name>Laser.Orchard.StartupConfig</Name>
-    </ProjectReference>
+    <Content Include="Views\Parts\PayButton.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\PayButtonEdit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\PayButtonPartSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
