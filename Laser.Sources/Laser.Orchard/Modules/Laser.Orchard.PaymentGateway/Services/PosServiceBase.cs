@@ -14,6 +14,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
         private readonly IPaymentEventHandler _paymentEventHandler;
 
         public abstract string GetPosName();
+
         /// <summary>
         /// Get the return URL passed to the virtual POS.
         /// </summary>
