@@ -24,7 +24,7 @@ namespace Laser.Orchard.ContentExtension.Services {
     public enum Methods { Get, Post, Delete, Publish };
 
     public interface IContentExtensionService : IDependency {
-  
+
         Response StoreInspectExpando(ExpandoObject theExpando, ContentItem TheContentItem);
 
         void StoreInspectExpandoFields(List<ContentPart> listpart, string key, object value, ContentItem theContentItem);
@@ -162,8 +162,7 @@ namespace Laser.Orchard.ContentExtension.Services {
                             break;
                     }
                 }
-            }
-            else {
+            } else {
                 // test generic permission for contenttype
 
                 switch (method) {
@@ -202,16 +201,13 @@ namespace Laser.Orchard.ContentExtension.Services {
                     string tipofield = fieldObj.GetType().Name;
                     if (tipofield == typeof(EnumerationField).Name) {
                         RegistraValoreEnumerator(fieldObj, "SelectedValues", value);
-                    }
-                    else
+                    } else
                         if (tipofield == typeof(DateTimeField).Name) {
                             RegistraValore(fieldObj, "DateTime", value);
-                        }
-                        else {
+                        } else {
                             if (tipofield == typeof(ContentPickerField).Name || tipofield == typeof(MediaLibraryPickerField).Name) {
                                 RegistraValoreContentPickerField(fieldObj, "Ids", value);
-                            }
-                            else {
+                            } else {
                                 if (tipofield == typeof(TaxonomyField).Name) {
                                     var taxobase = _taxonomyService.GetTaxonomyByName(fieldObj.PartFieldDefinition.Settings["TaxonomyFieldSettings.Taxonomy"]);
 
@@ -222,45 +218,44 @@ namespace Laser.Orchard.ContentExtension.Services {
                                     if (_taxonomyService.GetTerm(ElencoCategorie.FirstOrDefault()) == null && ElencoCategorie.Count > 0)
                                         throw new Exception("Field " + key + " Taxonomy term with id=" + ElencoCategorie[0].ToString() + " not exist");
                                     else {
-                                        var taxo_sended_user = _taxonomyService.GetTaxonomy(_taxonomyService.GetTerm(ElencoCategorie.FirstOrDefault()).TaxonomyId);
+                                        // Se l'elenco delle categorie è nullo salta questa parte e aggiorna
+                                        if (_taxonomyService.GetTerm(ElencoCategorie.FirstOrDefault()) != null) {
+                                            var taxo_sended_user = _taxonomyService.GetTaxonomy(_taxonomyService.GetTerm(ElencoCategorie.FirstOrDefault()).TaxonomyId);
 
-                                        foreach (Int32 idtermine in ElencoCategorie) {
-                                            TermPart termine_selezionato = taxo_sended_user.Terms.Where(x => x.Id == idtermine).FirstOrDefault();
+                                            foreach (Int32 idtermine in ElencoCategorie) {
+                                                TermPart termine_selezionato = taxo_sended_user.Terms.Where(x => x.Id == idtermine).FirstOrDefault();
 
-                                            #region [ Tassonomia in Lingua ]
+                                                #region [ Tassonomia in Lingua ]
 
-                                            if (theContentItem.As<LocalizationPart>() == null || theContentItem.ContentType == "User") { // se il contenuto non ha localization oppure è user salvo il mastercontent del termine
-                                                Int32 idmaster = 0;
-                                                if (termine_selezionato.ContentItem.As<LocalizationPart>() == null) {
-                                                    idmaster = termine_selezionato.ContentItem.Id;
+                                                if (theContentItem.As<LocalizationPart>() == null || theContentItem.ContentType == "User") { // se il contenuto non ha localization oppure è user salvo il mastercontent del termine
+                                                    Int32 idmaster = 0;
+                                                    if (termine_selezionato.ContentItem.As<LocalizationPart>() == null) {
+                                                        idmaster = termine_selezionato.ContentItem.Id;
+                                                    } else if (termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem == null)
+                                                        idmaster = termine_selezionato.ContentItem.As<LocalizationPart>().Id;
+                                                    else
+                                                        idmaster = termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem.Id;
+                                                    TermPart toAdd = taxobase.Terms.Where(x => x.Id == idmaster).FirstOrDefault();
+                                                    if (toAdd == null)
+                                                        toAdd = taxobase.Terms.Where(x => x.ContentItem.As<LocalizationPart>().MasterContentItem.Id == idmaster).FirstOrDefault();
+                                                    ListTermPartToAdd.Add(toAdd);
+                                                } else { // se il contenuto ha localization e non è user salvo il termine come mi viene passato
+                                                    // TODO: testare pertinenza della lingua Contenuto in italianao=>termine in italiano
+                                                    TermPart toAdd = termine_selezionato;
+                                                    ListTermPartToAdd.Add(toAdd);
                                                 }
-                                                else if (termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem == null)
-                                                    idmaster = termine_selezionato.ContentItem.As<LocalizationPart>().Id;
-                                                else
-                                                    idmaster = termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem.Id;
-                                                TermPart toAdd = taxobase.Terms.Where(x => x.Id == idmaster).FirstOrDefault();
-                                                if (toAdd == null)
-                                                    toAdd = taxobase.Terms.Where(x => x.ContentItem.As<LocalizationPart>().MasterContentItem.Id == idmaster).FirstOrDefault();
-                                                ListTermPartToAdd.Add(toAdd);
-                                            }
-                                            else { // se il contenuto ha localization e non è user salvo il termine come mi viene passato
-                                                // TODO: testare pertinenza della lingua Contenuto in italianao=>termine in italiano
-                                                TermPart toAdd = termine_selezionato;
-                                                ListTermPartToAdd.Add(toAdd);
-                                            }
 
-                                            #endregion [ Tassonomia in Lingua ]
+                                                #endregion [ Tassonomia in Lingua ]
+                                            }
                                         }
                                     }
                                     _taxonomyService.UpdateTerms(theContentItem, ListTermPartToAdd, fieldObj.Name);
-                                }
-                                else {
+                                } else {
                                     RegistraValore(fieldObj, "Value", value);
                                 }
                             }
                         }
-                }
-                else {
+                } else {
                     //provo a registrare il dato nella proprieta dello current user
                     //RegistraValore(currentUser, key, value);
                     if (!(key.IndexOf(".") > 0) && key.ToLower() != "contenttype" && key.ToLower() != "id" && key.ToLower() != "language") {
@@ -269,8 +264,7 @@ namespace Laser.Orchard.ContentExtension.Services {
                     //   if (TheContentItem.ContentType == "User")
                     //
                 }
-            }
-            else {
+            } else {
                 //provo a registrare il dato nella proprieta dello current user
                 // RegistraValore(currentUser, key, value);
                 // currentUser.GetType().GetProperty(key).SetValue(currentUser, value, null);
@@ -297,8 +291,7 @@ namespace Laser.Orchard.ContentExtension.Services {
 
                     StoreInspectExpandoFields(theContentItem.Parts.ToList(), key, value, theContentItem);
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Log.Error("ContentExtension -> ContentExtensionService -> StoreInspectExpando : " + ex.Message + " <Stack> " + ex.StackTrace);
                 return (_utilsServices.GetResponse(ResponseType.None, "Error:" + ex.Message));
             }
@@ -315,8 +308,7 @@ namespace Laser.Orchard.ContentExtension.Services {
                         StoreLikeDynamic(key, value, TheContentItem);
                     }
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Log.Error("ContentExtension -> ContentExtensionService -> StoreInspectExpandoPart : " + ex.Message + " <Stack> " + ex.StackTrace);
                 return _utilsServices.GetResponse(ResponseType.None, ex.Message);
             }
@@ -339,8 +331,7 @@ namespace Laser.Orchard.ContentExtension.Services {
                             subobject.GetType().GetProperty(property).SetValue(subobject, Convert.ChangeType(value, subobject.GetType().GetProperty(property).PropertyType), null);
                             // potrei ancora tentare di scrivere direttamente con
                             // subobject.GetType().GetProperty(property).SetValue(subobject, value, null);
-                        }
-                        catch { // é un field della parte
+                        } catch { // é un field della parte
                             List<ContentPart> lcp = new List<ContentPart>();
                             lcp.Add((ContentPart)subobject);
                             StoreInspectExpandoFields(lcp, property, value, TheContentItem);
@@ -375,14 +366,12 @@ namespace Laser.Orchard.ContentExtension.Services {
                         if (((dynamic)value).Count == 1) {
                             value = ((dynamic)value)[0];
                         }
-                    }
-                    catch { }
+                    } catch { }
                     // string myvalue = ((List<object>)value).Select(x => x.ToString()).FirstOrDefault();
                     //  object safeValue = (value == null) ? null : Convert.ChangeType(myvalue, t);
                     //  property.SetValue(obj, myvalue, null);
                     RegistraValore(obj, key, value);
-                }
-                else {
+                } else {
                     if (t.Name == "String[]") { // caso di enumerationfield con multivalue
                         object safeValue = (value == null) ? null : ((List<object>)value).Select(x => x.ToString()).ToArray();
                         property.SetValue(obj, safeValue, null);

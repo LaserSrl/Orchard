@@ -230,6 +230,9 @@ namespace Laser.Orchard.Commons.Services {
             var members = dynJsonObject.GetDynamicMemberNames();
             string padrearray = "";
             foreach (var member in members) {
+                if ((((dynamic)dynObject)[member]) == null) {
+                    continue;
+                }
                 if (member != "ToRemove") {
                     if ((((dynamic)dynObject)[member]).GetType().Equals(typeof(DynamicJsonArray))) {
                         padrearray = member;
