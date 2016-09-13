@@ -95,7 +95,9 @@ namespace Laser.Orchard.ExternalContent.Services {
             Logger = NullLogger.Instance;
             //   _cacheService = cacheService;
             _orchardServices = orchardServices;
-            _orchardServices.WorkContext.TryResolve<ICacheStorageProvider>(out _cacheStorageProvider);
+            if (_orchardServices.WorkContext != null) {
+                _orchardServices.WorkContext.TryResolve<ICacheStorageProvider>(out _cacheStorageProvider);
+            }
             _scheduledTaskManager = scheduledTaskManager;
 
             //    _cacheStorageProvider = cacheStorageProvider;

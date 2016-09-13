@@ -22,6 +22,8 @@ using Orchard.Services;
 using Orchard.Logging;
 using Laser.Orchard.TemplateManagement.ViewModels;
 using Orchard.Environment.Extensions;
+using Laser.Orchard.StartupConfig.Services;
+using Laser.Orchard.MailCommunication.Extensions;
 
 namespace Laser.Orchard.MailCommunication.Handlers {
 
@@ -36,18 +38,21 @@ namespace Laser.Orchard.MailCommunication.Handlers {
         private readonly ITemplateService _templateService;
         private readonly IScheduledTaskManager _taskManager;
         private readonly IClock _clock;
+        private readonly ICommonsServices _commonServices;
+
         private MailerSiteSettingsPart _mailerConfig;
         private const string TaskType = "Laser.Orchard.MailCommunication.Task";
 
         public MailerScheduledTaskHandler(IOrchardServices orchardServices, IMailCommunicationService mailCommunicationService,
-            ShellSettings shellSettings, ICommunicationService communicationService, ITemplateService templateService,
-            IScheduledTaskManager taskManager, IClock clock) {
+                                          ShellSettings shellSettings, ICommunicationService communicationService, ITemplateService templateService,
+                                          IScheduledTaskManager taskManager, IClock clock, ICommonsServices commonServices) {
             _orchardServices = orchardServices;
             _mailCommunicationService = mailCommunicationService;
             _shellSettings = shellSettings;
             _communicationService = communicationService;
             _templateService = templateService;
             _taskManager = taskManager;
+            _commonServices = commonServices;
             _clock = clock;
             Logger = NullLogger.Instance;
         }
@@ -75,6 +80,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 // ricava i settings e li invia tramite FTP
                 var templateId = ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id;
                 Dictionary<string, object> settings = GetSettings(content, templateId, part);
+
                 if ((settings.Count > 0) && (lista.Count > 0)) {
                     SendSettings(settings, part.Id);
 
@@ -145,8 +151,6 @@ namespace Laser.Orchard.MailCommunication.Handlers {
             var data = new Dictionary<string, object>();
 
             var baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl);
-            if (_shellSettings.RequestUrlPrefix != null && _shellSettings.RequestUrlPrefix != "")
-                baseUri = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix);
 
             Dictionary<string, object> similViewBag = new Dictionary<string, object>();
             similViewBag.Add("CampaignLink", _communicationService.GetCampaignLink("Email", part));
@@ -155,10 +159,18 @@ namespace Laser.Orchard.MailCommunication.Handlers {
 
             if (!body.StartsWith("Error On Template")) {
 
+                string host = string.Format("{0}://{1}{2}",
+                                       baseUri.Scheme,
+                                       baseUri.Host,
+                                       baseUri.Port == 80 ? string.Empty : ":" + baseUri.Port);
+
+                var urlHelper = _commonServices.GetUrlHelper();
+
+
                 // Add Link [UNSUBSCRIBE]
                 string ph_Unsubscribe = "[UNSUBSCRIBE]";
                 string unsubscribe = T("Click here to stop receiving email for commercial use").Text;
-                string linkUnsubscribe = "<a href='" + string.Format("{0}/Laser.Orchard.MailCommunication/Unsubscribe/Index", baseUri) + "'>" + unsubscribe + "</a>";
+                string linkUnsubscribe = "<a href='" + string.Format("{0}{1}", host, urlHelper.UnsubscribeMailCommunication()) + "'>" + unsubscribe + "</a>";
 
                 if (body.Contains(ph_Unsubscribe))
                     body = body.Replace(ph_Unsubscribe, linkUnsubscribe);
