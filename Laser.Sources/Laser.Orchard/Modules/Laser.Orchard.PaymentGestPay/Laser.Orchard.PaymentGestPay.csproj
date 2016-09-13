@@ -106,6 +106,7 @@
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
     <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\GestPayS2SEndpoint.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Laser.Orchard.PaymentGateway\Laser.Orchard.PaymentGateway.csproj">
@@ -126,6 +127,7 @@
     <Compile Include="Models\GestPayTransaction.cs" />
     <Compile Include="Models\PaymentGestPaySettingsPart.cs" />
     <Compile Include="Models\PaymentGestPaySettingsPartRecord.cs" />
+    <Compile Include="Models\TransactionOutcome.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Service References\CryptDecryptProd\Reference.cs">
       <AutoGen>True</AutoGen>

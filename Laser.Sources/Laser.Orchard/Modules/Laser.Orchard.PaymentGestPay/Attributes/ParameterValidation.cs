@@ -15,7 +15,7 @@ namespace Laser.Orchard.PaymentGestPay.Attributes {
         /// </summary>
         /// <param name="parameter"></param>
         internal bool ValidateGestPayParameter(string parameter) {
-            if (Regex.IsMatch(parameter, "[& §()*<>,;:\\[ \\]/%?=]")) {
+            if (Regex.IsMatch(parameter, "[& §()*<>,;:\\[ \\]/%?=]") || Regex.IsMatch(parameter, @"(*P1*)")) {
                 return false;
             }
             return true;

@@ -34,8 +34,8 @@ namespace Laser.Orchard.PaymentGestPay.Services {
         public PosServiceGestPay(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler) :
             base(orchardServices, repository, paymentEventHandler) {
 
-                T = NullLocalizer.Instance;
-                Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
 
             ////update THe instances Web.Config with the settings required to connect to the GestPay services
             //    var wConf = WebConfigurationManager.OpenWebConfiguration("~");
@@ -94,17 +94,14 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             settings.UseTestEnvironment = vm.UseTestEnvironment;
         }
         #endregion
-        
+
         /// <summary>
         /// This gets called by the Action actually starting the transaction.
         /// </summary>
         /// <param name="paymentId">The id corresponding to a <type>PaymentRecord</type> for the transaction we want to start.</param>
         /// <returns>The url of a page to which we redirect the client's browser to complete the payment.</returns>
         public string StartGestPayTransaction(int paymentId) {
-        //    return StartGestPayTransaction(new GestPayTransaction(GetPaymentInfo(paymentId)));
-        //}
 
-        //public string StartGestPayTransaction(GestPayTransaction gpt) {
             var settings = _orchardServices
                 .WorkContext
                 .CurrentSite
@@ -113,7 +110,6 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             var gpt = new GestPayTransaction(GetPaymentInfo(paymentId));
             //parameter validation
             if (gpt == null) {
-                //TODO: manage this case
                 //Log the error
                 Logger.Error(T("Transaction object cannot be null.").Text);
                 //update the PaymentRecord for this transaction
@@ -124,7 +120,6 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             try {
                 Validator.ValidateObject(gpt, new ValidationContext(gpt), true);
             } catch (Exception ex) {
-                //TODO: manage validation failure
                 //Log the error
                 Logger.Error(T("Transaction information not valid: {0}", ex.Message).Text);
                 //update the PaymentRecord for this transaction
@@ -184,14 +179,11 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             } else {
                 string endpoint = string.Format(Endpoints.ProdWSEntry, Endpoints.CryptDecryptEndPoint);
                 endpoint = endpoint.Substring(0, endpoint.Length - 4);
-                //WSHttpBinding binding = new WSHttpBinding();
-                //binding.Security.Mode = SecurityMode.Transport;
-                //binding.MessageEncoding = WSMessageEncoding.Text;
                 BasicHttpBinding binding = new BasicHttpBinding();
                 endpoint = Regex.Replace(endpoint, "(https)", "http"); //https gives errors
                 EndpointAddress address = new EndpointAddress(endpoint);
 
-                using (var client = new CryptDecryptProd.WSCryptDecryptSoapClient(binding, address)){
+                using (var client = new CryptDecryptProd.WSCryptDecryptSoapClient(binding, address)) {
                     encryptXML = client.Encrypt(
                         shopLogin: settings.GestPayShopLogin,
                         uicCode: gpt.uicCode,
@@ -230,7 +222,6 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                 res = new EncryptDecryptTransactionResult(encryptXML);
                 Validator.ValidateObject(res, new ValidationContext(res), true);
             } catch (Exception ex) {
-                //TODO: manage validation errors in the results received from the GestPay servers
                 //Log the error
                 Logger.Error(T("Validation problems on the response received: {0}", ex.Message).Text);
                 //update the PaymentRecord for this transaction
@@ -242,7 +233,6 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             if (res.TransactionResult.ToUpperInvariant() == "OK") {
                 return string.Format(urlFormat, settings.GestPayShopLogin, res.CryptDecryptString);
             } else {
-                //TODO: manage errors received 
                 //Log the error
                 Logger.Error(T("Remote service replied with an error. Error {0}: {1}", res.ErrorCode, res.ErrorDescription).Text);
                 //update the PaymentRecord for this transaction
@@ -250,7 +240,7 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                 //return the URL of a suitable error page (call this.GetPaymentInfoUrl after inserting the error in the PaymentRecord)
                 return GetPaymentInfoUrl(paymentId);
             }
-            //If we are here, something went really wrong
+            //If we are here, something went really wrong. This code is unreachable, really.
             //Log the error
             Logger.Error(T("Unknown critical error.").Text);
             //update the PaymentRecord for this transaction
@@ -259,5 +249,114 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             return GetPaymentInfoUrl(paymentId);
         }
 
+        /// <summary>
+        /// After receiving a call form the GestPay servers, we use this method to parse what we have been sent and 
+        /// interpret it to an actual response.
+        /// </summary>
+        /// <param name="a">The GestPay Shop Login used in the transaction.</param>
+        /// <param name="b">An encrypted string representing the transaction results.</param>
+        public TransactionOutcome ReceiveS2STransaction(string a, string b) {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<PaymentGestPaySettingsPart>();
+
+            if (a == settings.GestPayShopLogin) {
+                //decrypt the string b
+                XmlNode outcome = Decrypt(a, b, settings.UseTestEnvironment);
+
+                TransactionOutcome result = new TransactionOutcome();
+                try {
+                    result = new TransactionOutcome(outcome);
+                    Validator.ValidateObject(result, new ValidationContext(result), true);
+                } catch (Exception ex) {
+                    LocalizedString exception = T("Validation problems on the response received: {0}", ex.Message);
+                    //Log the error
+                    Logger.Error(exception.Text);
+                    //update the PaymentRecord for this transaction
+                    int pId;
+                    if (result != null && int.TryParse(result.ShopTransactionID, out pId))
+                        EndPayment(pId, false, exception.Text, null);
+
+                    result.TransactionResult = "KO";
+                    result.ErrorDescription = exception.Text;
+                }
+
+
+
+                return result;
+            }
+
+            LocalizedString ErrorHere = T("GestPay sent transaction information, but the Shop Login was wrong ({0})", a);
+            Logger.Error(ErrorHere.Text);
+            return TransactionOutcome.InternalError(ErrorHere.Text);
+        }
+
+        private XmlNode Decrypt(string shop, string cryptedInfo, bool testEnvironmanet) {
+            XmlNode outcome;
+            if (testEnvironmanet) {
+                string endpoint = string.Format(Endpoints.TestWSEntry, Endpoints.CryptDecryptEndPoint);
+                endpoint = endpoint.Substring(0, endpoint.Length - 4);
+                BasicHttpBinding binding = new BasicHttpBinding();
+                endpoint = Regex.Replace(endpoint, "(https)", "http"); //https gives errors
+                EndpointAddress address = new EndpointAddress(endpoint);
+                using (var client = new CryptDecryptTest.WSCryptDecryptSoapClient(binding, address)) {
+                    outcome = client.Decrypt(shop, cryptedInfo);
+                }
+            } else {
+                string endpoint = string.Format(Endpoints.ProdWSEntry, Endpoints.CryptDecryptEndPoint);
+                endpoint = endpoint.Substring(0, endpoint.Length - 4);
+                BasicHttpBinding binding = new BasicHttpBinding();
+                endpoint = Regex.Replace(endpoint, "(https)", "http"); //https gives errors
+                EndpointAddress address = new EndpointAddress(endpoint);
+                using (var client = new CryptDecryptProd.WSCryptDecryptSoapClient(binding, address)) {
+                    outcome = client.Decrypt(shop, cryptedInfo);
+                }
+            }
+            return outcome;
+        }
+
+        public string InterpretTransactionResult(string a, string b) {
+            var settings = _orchardServices
+                .WorkContext
+                .CurrentSite
+                .As<PaymentGestPaySettingsPart>();
+
+            if (a == settings.GestPayShopLogin) {
+                XmlNode outcome = Decrypt(a, b, settings.UseTestEnvironment);
+
+                TransactionOutcome result = new TransactionOutcome();
+                try {
+                    result = new TransactionOutcome(outcome);
+                    Validator.ValidateObject(result, new ValidationContext(result), true);
+                } catch (Exception ex) {
+                    LocalizedString exception = T("Validation problems on the response received: {0}", ex.Message);
+                    //Log the error
+                    Logger.Error(exception.Text);
+                    //update the PaymentRecord for this transaction
+                    int pId;
+                    if (result != null && int.TryParse(result.ShopTransactionID, out pId)) {
+                        EndPayment(pId, false, exception.Text, null);
+                        return GetPaymentInfoUrl(pId);
+                    }
+                }
+
+                int paymentId;
+                if (int.TryParse(result.ShopTransactionID, out paymentId)) {
+                    if (result.TransactionResult == "OK") {
+                        EndPayment(paymentId, true, null, null);
+                    } else {
+                        EndPayment(paymentId, false, result.ErrorCode, result.ErrorDescription);
+                    }
+                    return GetPaymentInfoUrl(paymentId);
+                } else {
+                    //failed to get the transaction Id back from GestPay
+                }
+            }
+
+            LocalizedString ErrorHere = T("GestPay sent transaction information, but the Shop Login was wrong ({0})", a);
+            Logger.Error(ErrorHere.Text);
+            return null;
+        }
     }
 }

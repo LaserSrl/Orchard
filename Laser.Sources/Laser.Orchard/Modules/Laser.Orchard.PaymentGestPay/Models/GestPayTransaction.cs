@@ -119,7 +119,7 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 uicCode = pr.Currency;
                 amount = pr.Amount.ToString("0.##");
                 shopTransactionID = pr.Id.ToString();
-                customInfo = pr.Reason;
+                //customInfo = pr.Reason;
         }
     }
     /// <summary>
