@@ -10,7 +10,14 @@
     <text>@T("Outcome"): @T("Succeeded")<br />
     @T("Transacion ID"): @Model.TransactionId<br /></text>
 } else {
-    <text>@T("Outcome"): @T("Failed")<br />
-    @T("Error"): @Model.Error<br /></text>
+    <text>@T("Outcome"): <span style="color:red;font-weight:700">@T("Failed")</span><br />
+    @T("Error"): @Model.Error<br />
+    @{
+        var query = string.Format("reason={0}&amount={1}&currency={2}&itemId={3}", Url.Encode(Model.Reason), Convert.ToString(Model.Amount, System.Globalization.CultureInfo.InvariantCulture), Url.Encode(Model.Currency), Model.ContentItemId);
+        var payUrl = Url.Action("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway" }) + "?" + query;    
+    }
+    <br />
+    @Html.Link(T("Back to payment page"), payUrl)<br />
+    </text>
 }
 <br />
