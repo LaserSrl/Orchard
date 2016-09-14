@@ -54,6 +54,9 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.MediaLibrary">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.MediaLibrary\bin\Orchard.MediaLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Themes">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Themes\bin\Orchard.Themes.dll</HintPath>
     </Reference>
@@ -174,7 +177,9 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\MediaVideoThumbnail.cshtml" />
+    <Content Include="Views\Media-Video.Thumbnail.cshtml" />
+    <Content Include="Views\Media-Image.Thumbnail.cshtml" />
+    <Content Include="Views\Media-Audio.Thumbnail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminThemeOverride.cs" />
