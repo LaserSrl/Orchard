@@ -14,6 +14,12 @@ namespace Laser.Orchard.PaymentGateway.Services {
         private readonly IPaymentEventHandler _paymentEventHandler;
 
         public abstract string GetPosName();
+        /// <summary>
+        /// Restituisce il nome del controller utilizzato per la gestione dei settings del POS che deve ereditare da PosAdminBaseController.
+        /// Il nome non deve avere il suffisso "Controller" (es. "Admin", non "AdminController").
+        /// Restiuisce null o stringa vuota se non è necessario un controller per i settings.
+        /// </summary>
+        /// <returns></returns>
         public abstract string GetSettingsControllerName();
 
         /// <summary>
