@@ -1,6 +1,7 @@
 ﻿using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.PaymentGateway.Controllers {
+    [Admin]
     public abstract class PosAdminBaseController : Controller {
         protected readonly IOrchardServices _orchardServices;
         public Localizer T { get; set; }

@@ -25,12 +25,20 @@ namespace Laser.Orchard.MailCommunication.Services
 
         public IEnumerable<NotifyEntry> GetNotifications()
         {
-            var settings = _orchardServices.WorkContext.CurrentSite.As<MailerSiteSettingsPart>();
-            if (settings == null || string.IsNullOrWhiteSpace(settings.FtpHost))
+            var settingsMailer = _orchardServices.WorkContext.CurrentSite.As<MailerSiteSettingsPart>();
+            if (settingsMailer == null || string.IsNullOrWhiteSpace(settingsMailer.FtpHost))
             {
                 var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
                 var url = urlHelper.Action("Mailer", "Admin", new { Area = "Settings"});
-                yield return new NotifyEntry { Message = T("The <a href=\"{0}\"> Mailer</a> settings need to be configured.", url), Type = NotifyType.Warning };
+                yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Mailer</a> settings need to be configured.", url), Type = NotifyType.Warning };
+            }
+
+            var settingsMailCommunication = _orchardServices.WorkContext.CurrentSite.As<MailCommunicationSettingsPart>();
+            if (settingsMailCommunication == null || settingsMailCommunication.IdTemplateUnsubscribe == null) 
+            {
+                var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                var url = urlHelper.Action("Mail Communication", "Admin", new { Area = "Settings" });
+                yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Mail Communication</a> settings need to be configured.", url), Type = NotifyType.Warning };
             }
         }
     }

@@ -31,12 +31,13 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             IShapeFactory shapeFactory,
             IShapeDisplay shapeDisplay,
             ISiteService siteService,
-            IOrchardServices orchardServices
+            IOrchardServices orchardServices,
+            IUserProviderServices userProviderService
             )
             : base(contentManager, membershipService, clock, messageService, shellSettings, encryptionService, shapeFactory, shapeDisplay, siteService) {
             _contentManager = contentManager;
             _orchardservices = orchardServices;
-            _userProviderService = _orchardservices.WorkContext.Resolve<IUserProviderServices>();
+            _userProviderService = userProviderService;
         }
 
         public new bool VerifyUserUnicity(string userName, string email) {
