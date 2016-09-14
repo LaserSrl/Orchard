@@ -12,6 +12,7 @@
 } else {
     <text>@T("Outcome"): <span style="color:red;font-weight:700">@T("Failed")</span><br />
     @T("Error"): @Model.Error<br />
+    @T("Additional informations"): @Model.Info<br />
     @{
         var query = string.Format("reason={0}&amount={1}&currency={2}&itemId={3}", Url.Encode(Model.Reason), Convert.ToString(Model.Amount, System.Globalization.CultureInfo.InvariantCulture), Url.Encode(Model.Currency), Model.ContentItemId);
         var payUrl = Url.Action("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway" }) + "?" + query;    

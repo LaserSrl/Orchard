@@ -58,20 +58,32 @@ namespace Laser.Orchard.PaymentGateway.Services {
             return result;
         }
         public void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "") {
+            PaymentRecord paymentToSave = null;
             PaymentRecord payment = GetPaymentInfo(paymentId);
-            payment.Success = success;
-            payment.Error = error;
-            payment.Info = info;
-            payment.TransactionId = transactionId;
-            payment.PosName = GetPosName(); // forza la valorizzazione del PosName
-            payment.PosUrl = GetPosUrl(paymentId);
-            SavePaymentInfo(payment);
-            // solleva l'evento di termine della transazione
-            if (success) {
-                _paymentEventHandler.OnSuccess(payment.Id, payment.ContentItemId);
+            if (string.IsNullOrWhiteSpace(payment.PosName)) {
+                paymentToSave = payment;
             }
             else {
-                _paymentEventHandler.OnError(payment.Id, payment.ContentItemId);
+                // forza la creazione di un nuovo record perché c'è già stato un tentativo di pagamento
+                paymentToSave = new PaymentRecord();
+                paymentToSave.Reason = payment.Reason;
+                paymentToSave.Amount = payment.Amount;
+                paymentToSave.Currency = payment.Currency;
+                paymentToSave.ContentItemId = payment.ContentItemId;
+            }
+            paymentToSave.Success = success;
+            paymentToSave.Error = error;
+            paymentToSave.Info = info;
+            paymentToSave.TransactionId = transactionId;
+            paymentToSave.PosName = GetPosName(); // forza la valorizzazione del PosName
+            paymentToSave.PosUrl = GetPosUrl(paymentId);
+            SavePaymentInfo(paymentToSave);
+            // solleva l'evento di termine della transazione
+            if (success) {
+                _paymentEventHandler.OnSuccess(paymentToSave.Id, paymentToSave.ContentItemId);
+            }
+            else {
+                _paymentEventHandler.OnError(paymentToSave.Id, paymentToSave.ContentItemId);
             }
         }
         /// <summary>
