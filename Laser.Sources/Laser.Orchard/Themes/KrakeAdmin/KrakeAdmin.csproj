@@ -179,6 +179,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Media-Video.Thumbnail.cshtml" />
     <Content Include="Views\Media-Image.Thumbnail.cshtml" />
+    <Content Include="Views\Media-Audio.Thumbnail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminThemeOverride.cs" />
