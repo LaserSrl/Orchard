@@ -13,19 +13,14 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [Required]
         public string TransactionResult { get; set; } //"OK", or "KO", or "XX". In case of "XX" we are actually expecting a further call.
         [StringLength(50)]
-        [Required]
         public string ShopTransactionID { get; set; } //Identifier attributed to transaction (the id we sent)
         [StringLength(9)]
-        [Required]
         public string BankTransactionID { get; set; } //Identifier attributed to the transaction by GestPay
         [StringLength(6)]
-        [Required]
         public string AuthorizationCode { get; set; } //transaction authorization code
         [StringLength(3)]
-        [Required]
         public string Currency { get; set; } //code identifying the currency in which the transaction amount is denominated. see CodeTables.CurrencyCodes
         [StringLength(9)]
-        [Required]
         public string Amount { get; set; } //Transaction amount. Do not insert thousands separator. Decimals, max 2 digits, are optional and separator is point
         [StringLength(30)]
         public string Country { get; set; } //nationality of institute issuing card
@@ -83,7 +78,7 @@ namespace Laser.Orchard.PaymentGestPay.Models {
             Amount = ReadXmlNode(xml, "Amount");
             Country = ReadXmlNode(xml, "Country");
             CustomInfo = ReadXmlNode(xml, "CustomInfo");
-            Buyer = new GenericOutcomeBuyer(xml.SelectSingleNode("Buyer"));
+            Buyer = xml.SelectSingleNode("Buyer") == null ? null : new GenericOutcomeBuyer(xml.SelectSingleNode("Buyer"));
             TDLevel = ReadXmlNode(xml, "TDLevel");
             ErrorCode = ReadXmlNode(xml, "ErrorCode");
             ErrorDescription = ReadXmlNode(xml, "ErrorDescription");

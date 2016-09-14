@@ -16,7 +16,7 @@ using Bt = Braintree;
 
 namespace Laser.Orchard.Braintree.Controllers
 {
-    [WebApiKeyFilter(false)]
+    [WebApiKeyFilter(true)]
     public class Paypal : ApiController
     {
         private readonly IOrchardServices _orchardServices;

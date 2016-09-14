@@ -42,7 +42,7 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         [Required]
         [StringLength(3)]
         [ValidGestPayParameter]
-        public string uicCode { get; set; } //code identifying currency in which transaction amount is denominated
+        public string uicCode { get; set; } //code identifying currency in which transaction amount is denominated. THis is the number code, not the alpha3
         [Required]
         [StringLength(9)]
         [ValidGestPayParameter]
@@ -121,7 +121,14 @@ namespace Laser.Orchard.PaymentGestPay.Models {
         public GestPayTransaction(PaymentRecord pr)
             : this() {
             record = pr;
-            uicCode = pr.Currency;
+            //uicCode = pr.Currency;
+            var curCode = CodeTables.CurrencyCodes.Where(cc => cc.isoCode.ToUpperInvariant() == pr.Currency.ToUpperInvariant()).SingleOrDefault();
+            if (curCode == null) {
+                //TODO: this is currently just a workaround
+                //unable to identify currency. Set to EURO for now
+                curCode = CodeTables.CurrencyCodes.Where(cc => cc.isoCode.ToUpperInvariant() == "EUR").SingleOrDefault();
+            }
+            uicCode = curCode.codeUIC.ToString();
             amount = pr.Amount.ToString("0.##");
             shopTransactionID = pr.Id.ToString();
             //customInfo = pr.Reason;
