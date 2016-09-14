@@ -93,10 +93,13 @@ namespace Laser.Orchard.PaymentGateway.Services {
             if (values.Id > 0) {
                 record = _repository.Get(values.Id);
             }
+            values.PosName = GetValidString(values.PosName, 255);
+            values.Reason = GetValidString(values.Reason, 255);
+            values.Error = GetValidString(values.Error, 255);
+            values.TransactionId = GetValidString(values.TransactionId, 255);
             // 4000 è la massima lunghezza di stringa che nhibernate riesce a gestire
-            if ((values.Info != null) && (values.Info.Length > 4000)) {
-                values.Info = values.Info.Substring(0, 4000);
-            }
+            values.PosUrl = GetValidString(values.PosUrl, 4000);
+            values.Info = GetValidString(values.Info, 4000);
             if (record == null) {
                 values.CreationDate = now;
                 values.UpdateDate = now;
@@ -107,6 +110,13 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 _repository.Update(values);
             }
             return values.Id;
+        }
+        private string GetValidString(string text, int maxLength) {
+            string result = text;
+            if ((result != null) && (result.Length > maxLength)) {
+                result = result.Substring(0, maxLength);
+            }
+            return result;
         }
     }
 }

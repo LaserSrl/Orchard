@@ -14,6 +14,11 @@
             <span class="hint">@T("The Merchant ID assigned by Braintree during merchant registration.")</span>
         </div>
         <div>
+            <label for="@Html.FieldIdFor(m => m.CurrencyCode)">@T("Currency Code")</label>
+            @Html.TextBoxFor(m => m.CurrencyCode, new { @class = "text large" })
+            <span class="hint">@T("Currency code bound to the merchant ID in Braintree configuration.")</span>
+        </div>
+        <div>
             <label for="@Html.FieldIdFor(m => m.PublicKey)">@T("Public Key")</label>
             @Html.TextBoxFor(m => m.PublicKey, new { @class = "text large" })
             <span class="hint">@T("The Public Key assigned by Braintree during merchant registration.")</span>

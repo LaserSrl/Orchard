@@ -41,5 +41,10 @@ namespace Laser.Orchard.PaymentGateway {
                 table => table.DropColumn("ReturnUrl"));
             return 3;
         }
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("PaymentRecord",
+                table => table.AlterColumn("PosUrl", col => col.WithType(System.Data.DbType.String).Unlimited()));
+            return 4;
+        }
     }
 }
