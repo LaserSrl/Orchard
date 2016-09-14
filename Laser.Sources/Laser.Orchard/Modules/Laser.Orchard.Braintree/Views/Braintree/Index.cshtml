@@ -30,9 +30,10 @@
 <h1>@T("Pay with Braintree and PayPal")</h1>
 <form id="checkout" method="post" action="@Html.Raw(Model.TenantBaseUrl)/Laser.Orchard.Braintree/Braintree/Pay">
     <div id="payment-form" style="border: 1px solid black"></div>
-    Amount: <input type="text" name="amount" value="@Model.Record.Amount.ToString(System.Globalization.CultureInfo.InvariantCulture)" /><br />
+    <br />
+    @T("Amount"): @Model.Record.Amount.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) @Model.Record.Currency<br />
     <input type="hidden" name="pid" value="@Model.Record.Id" />
-    <input type="submit" value="@T("Pay now")">
+    <button type="submit" style="padding: 10px 10px">@T("Pay now")</button>
     @Html.AntiForgeryToken()
 </form>
 

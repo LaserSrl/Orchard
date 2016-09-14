@@ -8,4 +8,5 @@ public interface IPosService : IDependency {
     PaymentRecord StartPayment(PaymentRecord values);
     PaymentRecord GetPaymentInfo(int paymentId);
     void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "");
+    string GetSettingsControllerName();
 }

@@ -1,13 +1,16 @@
 ﻿@model Laser.Orchard.PaymentGateway.Models.PaymentRecord
-Dettagli del pagamneto<br />
-POS: @Model.PosName<br />
-Causale: @Model.Reason<br />
-Importo: @Model.Amount.ToString("0.00") @Model.Currency<br />
-Success: @Model.Success<br />
-Data: @Model.UpdateDate.ToString("dd-MM-yyyy HH:mm")<br />
+
+<h2>@T("Payment details")</h2>
+@T("POS"): @Model.PosName<br />
+@T("Reason"): @Model.Reason<br />
+@T("Amount"): @Model.Amount.ToString("0.00") @Model.Currency<br />
+@T("Date"): @Model.UpdateDate.ToString("yyyy-MM-dd HH:mm")<br />
 
 @if(Model.Success) {
-    <text>Transaction ID: @Model.TransactionId<br /></text>
+    <text>@T("Outcome"): @T("Succeeded")<br />
+    @T("Transacion ID"): @Model.TransactionId<br /></text>
 } else {
-    <text>Error: @Model.Error<br /></text>
+    <text>@T("Outcome"): @T("Failed")<br />
+    @T("Error"): @Model.Error<br /></text>
 }
+<br />
