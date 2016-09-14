@@ -15,15 +15,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.ServiceModel;
+using System.ServiceModel.Configuration;
+using System.Text.RegularExpressions;
 using System.Web;
-using System.Xml;
-
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Web.Configuration;
-using System.ServiceModel.Configuration;
-using System.ServiceModel;
-using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace Laser.Orchard.PaymentGestPay.Services {
     public class PosServiceGestPay : PosServiceBase, IGestPayAdminServices, IGestPayTransactionServices {
@@ -37,16 +36,6 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
 
-            ////update THe instances Web.Config with the settings required to connect to the GestPay services
-            //    var wConf = WebConfigurationManager.OpenWebConfiguration("~");
-            //    ServicesSection sSection = wConf.GetSection("system.serviceModel") as ServicesSection;
-            //    if (sSection == null) {
-            //        //section is not there yet
-            //        sSection = new ServicesSection();
-            //    } else {
-            //        //the section is there already. We must check whether we have to add the GestPay services.
-
-            //    }
         }
 
         #region Implementation of abstract class
@@ -71,6 +60,13 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             };
             //var ub = new UrlHelper().Action("RedirectToGestPayPage", "Transactions", new { Id = paymentId });
             return ub.Uri.ToString();
+        }
+        /// <summary>
+        /// Gets the name of the controller where the Action for the editor of the POS settings is.
+        /// </summary>
+        /// <returns>The name of that controller.</returns>
+        public override string GetSettingsControllerName() {
+            return "Admin";
         }
         #endregion
 
