@@ -180,6 +180,8 @@
     <Content Include="Views\Media-Video.Thumbnail.cshtml" />
     <Content Include="Views\Media-Image.Thumbnail.cshtml" />
     <Content Include="Views\Media-Audio.Thumbnail.cshtml" />
+    <Content Include="Views\Media-Document.Thumbnail.cshtml" />
+    <Content Include="Views\Media-OEmbed.Thumbnail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminThemeOverride.cs" />

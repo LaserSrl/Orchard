@@ -1440,8 +1440,10 @@ html.dashboard #content {
 }
 
 .media-thumbnail {
-    width: 120px;
-    height: 120px;
+    width: 180px;
+    height: 180px;
+    vertical-align:middle;
+    align-content:center;
 }
 
 .media-thumbnail-document {
@@ -1452,7 +1454,9 @@ html.dashboard #content {
 }
 
 .media-thumbnail-o-embed {
-    overflow:hidden;
+   /*overflow:hidden;*/
+    vertical-align:middle;
+    align-content:center;
 }
 
 .media-thumbnail-audio {
@@ -1460,10 +1464,10 @@ html.dashboard #content {
     background-repeat: no-repeat;
     background-position: center;
     border: 1px solid #e0e0e0;
+    
 }
-.media-thumbnail-o-embed {
-    overflow:hidden;
-}
+
+
 
 
 .media-thumbnail-video {
@@ -1474,6 +1478,7 @@ html.dashboard #content {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+    
 }
 
 .media-thumbnail-cloud-video {
@@ -1484,4 +1489,5 @@ html.dashboard #content {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+   
 }
