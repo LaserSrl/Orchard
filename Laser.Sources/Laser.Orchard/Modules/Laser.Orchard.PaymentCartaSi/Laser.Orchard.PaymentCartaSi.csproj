@@ -80,6 +80,7 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\CartaSiValidationAttributes.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Models\StartPaymentMessage.cs" />
