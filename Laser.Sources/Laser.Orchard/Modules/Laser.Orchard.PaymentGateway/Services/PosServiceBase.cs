@@ -58,20 +58,32 @@ namespace Laser.Orchard.PaymentGateway.Services {
             return result;
         }
         public void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "") {
+            PaymentRecord paymentToSave = null;
             PaymentRecord payment = GetPaymentInfo(paymentId);
-            payment.Success = success;
-            payment.Error = error;
-            payment.Info = info;
-            payment.TransactionId = transactionId;
-            payment.PosName = GetPosName(); // forza la valorizzazione del PosName
-            payment.PosUrl = GetPosUrl(paymentId);
-            SavePaymentInfo(payment);
-            // solleva l'evento di termine della transazione
-            if (success) {
-                _paymentEventHandler.OnSuccess(payment.Id, payment.ContentItemId);
+            if (string.IsNullOrWhiteSpace(payment.PosName)) {
+                paymentToSave = payment;
             }
             else {
-                _paymentEventHandler.OnError(payment.Id, payment.ContentItemId);
+                // forza la creazione di un nuovo record perché c'è già stato un tentativo di pagamento
+                paymentToSave = new PaymentRecord();
+                paymentToSave.Reason = payment.Reason;
+                paymentToSave.Amount = payment.Amount;
+                paymentToSave.Currency = payment.Currency;
+                paymentToSave.ContentItemId = payment.ContentItemId;
+            }
+            paymentToSave.Success = success;
+            paymentToSave.Error = error;
+            paymentToSave.Info = info;
+            paymentToSave.TransactionId = transactionId;
+            paymentToSave.PosName = GetPosName(); // forza la valorizzazione del PosName
+            paymentToSave.PosUrl = GetPosUrl(paymentId);
+            SavePaymentInfo(paymentToSave);
+            // solleva l'evento di termine della transazione
+            if (success) {
+                _paymentEventHandler.OnSuccess(paymentToSave.Id, paymentToSave.ContentItemId);
+            }
+            else {
+                _paymentEventHandler.OnError(paymentToSave.Id, paymentToSave.ContentItemId);
             }
         }
         /// <summary>
@@ -93,10 +105,13 @@ namespace Laser.Orchard.PaymentGateway.Services {
             if (values.Id > 0) {
                 record = _repository.Get(values.Id);
             }
+            values.PosName = GetValidString(values.PosName, 255);
+            values.Reason = GetValidString(values.Reason, 255);
+            values.Error = GetValidString(values.Error, 255);
+            values.TransactionId = GetValidString(values.TransactionId, 255);
             // 4000 è la massima lunghezza di stringa che nhibernate riesce a gestire
-            if ((values.Info != null) && (values.Info.Length > 4000)) {
-                values.Info = values.Info.Substring(0, 4000);
-            }
+            values.PosUrl = GetValidString(values.PosUrl, 4000);
+            values.Info = GetValidString(values.Info, 4000);
             if (record == null) {
                 values.CreationDate = now;
                 values.UpdateDate = now;
@@ -107,6 +122,13 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 _repository.Update(values);
             }
             return values.Id;
+        }
+        private string GetValidString(string text, int maxLength) {
+            string result = text;
+            if ((result != null) && (result.Length > maxLength)) {
+                result = result.Substring(0, maxLength);
+            }
+            return result;
         }
     }
 }
