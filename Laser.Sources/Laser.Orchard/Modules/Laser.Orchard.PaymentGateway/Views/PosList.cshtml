@@ -1,4 +1,7 @@
-﻿<h2>@T("Pay using:")</h2>
+﻿@{
+    Script.Require("jQuery").AtHead();
+}
+<h2>@T("Pay using:")</h2>
 @using(Html.BeginFormAntiForgeryPost()){
     <ul style="list-style-type:none">
     @foreach(var pos in Model.PosList) {
