@@ -4,6 +4,8 @@ using Laser.Orchard.PaymentGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Localization;
+using Orchard.Security;
 using Orchard.Themes;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,12 +33,14 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             }
         }
         private readonly PosServiceEmpty _posServiceEmpty;
+        public Localizer T { get; set; }
 
         public PaymentController(IRepository<PaymentRecord> repository, IOrchardServices orchardServices, IEnumerable<IPosService> posServices) {
             _repository = repository;
             _orchardServices = orchardServices;
             _posServices = posServices;
             _posServiceEmpty = new PosServiceEmpty(orchardServices, repository, null);
+            T = NullLocalizer.Instance;
         }
         [Themed]
         public ActionResult Pay(string reason, decimal amount, string currency, int itemId = 0) {
@@ -59,7 +63,16 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         }
         [Themed]
         public ActionResult Info(int paymentId) {
+            int currentUserId = -1; // utente inesistente
+            var user = _orchardServices.WorkContext.CurrentUser;
+            if (user != null) {
+                currentUserId = user.Id;
+            }
             var payment = _repository.Get(paymentId);
+            if((_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner) == false)
+                && (payment.UserId != currentUserId)) {
+                return new HttpUnauthorizedResult();
+            }
             return View("Info", payment);
         }
     }
