@@ -6,10 +6,9 @@
 @{
     ContentItem contentItem = Model.ContentItem;
     var media = contentItem.As<MediaPart>();
-    var image = contentItem.As<ImagePart>();
+    var document = contentItem.As<DocumentPart>();
 }
 
 <div class="media-thumbnail media-thumbnail-@contentItem.ContentType.HtmlClassify() mime-type-@media.MimeType.HtmlClassify()">
-    <img src="@Display.ResizeMediaUrl(Width: 180, Height: 180, Mode: "crop", Alignment: "middlecenter", Path: media.MediaUrl)" />
+  <div style="height:180px; width:180px;vertical-align:middle;"></div>
 </div>
-
