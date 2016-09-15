@@ -1,27 +1,25 @@
 ﻿using Contrib.Widgets.Services;
 using Laser.Orchard.Events.Services;
 using Laser.Orchard.StartupConfig.Services;
+using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
+using Laser.Orchard.WebServices.Services;
+using Newtonsoft.Json;
+//using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Orchard;
-using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
 using Orchard.Projections.Services;
 using Orchard.Security;
 using Orchard.Taxonomies.Services;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-//using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using Laser.Orchard.StartupConfig.ViewModels;
-using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 namespace Laser.Orchard.WebServices.Controllers {
     [WebApiKeyFilter(true)]
-    public class WebApiController : Controller {
+    public class WebApiController : Controller, IWebApiService {
         private readonly IOrchardServices _orchardServices;
         private readonly IProjectionManager _projectionManager;
         private readonly ITaxonomyService _taxonomyService;
@@ -30,18 +28,9 @@ namespace Laser.Orchard.WebServices.Controllers {
 
         private readonly ShellSettings _shellSetting;
         private readonly IUtilsServices _utilsServices;
-        private IWidgetManager _widgetManager;
-        private IEventsService _eventsService;
         private readonly ICsrfTokenHelper _csrfTokenHelper;
         private readonly IAuthenticationService _authenticationService;
 
-        private readonly string[] _skipPartNames;
-        private readonly string[] _skipPartTypes;
-        private readonly string[] _skipPartProperties;
-        private readonly string[] _skipFieldTypes;
-        private readonly string[] _skipFieldProperties;
-        private readonly string[] _skipAlwaysProperties;
-        private readonly Type[] _basicTypes;
         private readonly ICommonsServices _commonServices;
 
         private readonly HttpRequest _request;
@@ -71,26 +60,6 @@ namespace Laser.Orchard.WebServices.Controllers {
             _csrfTokenHelper = csrfTokenHelper;
             _authenticationService = authenticationService;
             _contentSerializationServices = contentSerializationServices;
-            _skipPartNames = new string[]{
-                "InfosetPart","FieldIndexPart","IdentityPart","UserPart","UserRolesPart", "AdminMenuPart", "MenuPart"};
-            _skipPartTypes = new string[]{
-                "ContentItem","Zones","TypeDefinition","TypePartDefinition","PartDefinition", "Settings", "Fields", "Record"};
-            _skipAlwaysProperties = new string[]{
-                "ContentItemRecord","ContentItemVersionRecord"};
-            _skipPartProperties = new string[] { };
-            _skipFieldTypes = new string[]{
-                "FieldDefinition","PartFieldDefinition"};
-            _skipFieldProperties = new string[]{
-                "Storage", "Name", "DisplayName", "Setting"};
-            _basicTypes = new Type[] {
-                typeof(string),
-                typeof(decimal),
-                typeof(float),
-                typeof(int),
-                typeof(bool),
-                typeof(DateTime),
-                typeof(Enum)
-            };
             processedItems = new List<string>();
         }
 
