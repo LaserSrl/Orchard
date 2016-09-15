@@ -1,6 +1,6 @@
 ﻿@model Laser.Orchard.Braintree.ViewModels.PaymentVM
 @{
-    Script.Require("jQuery");
+    Script.Require("jQuery").AtHead();
 }
 @using (Script.Head()) {
     <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
