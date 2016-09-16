@@ -11,6 +11,10 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
             get { return Record.CartaSiShopAlias; }
             set { Record.CartaSiShopAlias = value; }
         }
+        public string CartaSiSecretKey {
+            get { return Record.CartaSiSecretKey; }
+            set { Record.CartaSiSecretKey = value; }
+        }
         public bool UseTestEnvironment {
             get { return Record.UseTestEnvironment; }
             set { Record.UseTestEnvironment = value; }

@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 
 namespace Laser.Orchard.PaymentCartaSi.Attributes {
+    //TODO: add validation attributes based on codetables
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class ValidAmount : ValidationAttribute {

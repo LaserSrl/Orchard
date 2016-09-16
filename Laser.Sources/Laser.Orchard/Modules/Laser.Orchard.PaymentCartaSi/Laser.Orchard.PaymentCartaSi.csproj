@@ -85,11 +85,12 @@
     <Compile Include="CartaSiMigrations.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\TransactionsController.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Handlers\PaymentCartaSiSettingsPartHandler.cs" />
     <Compile Include="Models\PaymentCartaSiSettingsPart.cs" />
     <Compile Include="Models\PaymentCartaSiSettingsPartRecord.cs" />
-    <Compile Include="Models\StartPaymentMessage.cs" />
+    <Compile Include="Models\CartaSiMessages.cs" />
     <Compile Include="Services\CartaSiPosService.cs" />
     <Compile Include="Services\ICartaSiTransactionService.cs" />
   </ItemGroup>

@@ -61,10 +61,10 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
         }
         public string StartCartaSiTransaction(int paymentId) {
             var settings = _orchardServices.WorkContext.CurrentSite.As<PaymentCartaSiSettingsPart>();
-            
+
             string pURL = settings.UseTestEnvironment ? EndPoints.TestPaymentURL : EndPoints.PaymentURL;
 
-            StartPaymentMessage spMsg = new StartPaymentMessage(settings.CartaSiShopAlias, GetPaymentInfo(paymentId));
+            StartPaymentMessage spMsg = new StartPaymentMessage(settings.CartaSiShopAlias, settings.CartaSiSecretKey, GetPaymentInfo(paymentId));
             spMsg.url = ActionUrl("CartaSiOutcome");
             spMsg.url_back = ActionUrl("CartaSiUndo");
             spMsg.mac = spMsg.TransactionStartMAC;
@@ -80,7 +80,45 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                 return GetPaymentInfoUrl(paymentId);
             }
 
+            //from the parameters, make the query string for the payment request
+            string qString = "";
+            try {
+                qString = spMsg.MakeQueryString();
+                if (string.IsNullOrWhiteSpace(qString)) {
+                    throw new Exception(T("Errors while creating the query string. The query string cannot be empty.").Text);
+                }
+            } catch (Exception ex) {
+                //Log the error
+                Logger.Error(ex.Message);
+                //update the PaymentRecord for this transaction
+                EndPayment(paymentId, false, null, ex.Message);
+                //return the URL of a suitable error page (call this.GetPaymentInfoUrl after inserting the error in the PaymentRecord)
+                return GetPaymentInfoUrl(paymentId);
+            }
+
+            pURL = string.Format("{0}?{1}", pURL, qString);
             return null;
+        }
+
+        public string ReceiveUndo(string importo, string divisa, string codTrans, string esito) {
+            int id;
+            if (int.TryParse(codTrans, out id)) {
+                LocalizedString error;
+                if (esito.ToUpperInvariant() == "ANNULLO") {
+                    error = T("Transaction canceled.");
+                } else if (esito.ToUpperInvariant() == "ERRORE") {
+                    error = T("Formal error in the call.");
+                } else {
+                    error = T("Unknown error.");
+                }
+                EndPayment(id, false, error.Text, error.Text);
+                return GetPaymentInfoUrl(id);
+            } else {
+                //Log the error
+                LocalizedString error = T("Receved wrong information while coming back from payment: wrong Id format.");
+                Logger.Error(error.Text);
+                throw new Exception(error.Text);
+            }
         }
     }
 }

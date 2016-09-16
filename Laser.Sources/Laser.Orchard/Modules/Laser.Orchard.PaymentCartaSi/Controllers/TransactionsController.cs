@@ -19,14 +19,13 @@ namespace Laser.Orchard.PaymentCartaSi.Controllers {
         }
 
         public ActionResult CartaSiOutcome() {
-            //read the querystring that contains the transaction results
+            //read the querystring that contains the transaction results (Request.QueryString)
             return null;
         }
 
         public ActionResult CartaSiUndo(string importo, string divisa, string codTrans, string esito) {
             //this gets called when the transaction was canceled or if a call had errors
-            //read the 
-            return null;
+            return Redirect(_cartaSiTransactionService.ReceiveUndo(importo, divisa, codTrans, esito));
         }
     }
 }

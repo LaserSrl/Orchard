@@ -17,5 +17,14 @@ namespace Laser.Orchard.PaymentCartaSi {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.AlterTable("PaymentCartaSiSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("CartaSiSecretKey")
+                );
+
+            return 2;
+        }
     }
 }
