@@ -1,0 +1,222 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2016 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Admin/Index.cshtml"
+msgid "Please refer to each POS tab for POS specific settings."
+msgstr "Fare riferimento alle schede di ogni POS per le relative impostazioni."
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/EditorTemplates/Parts/PayButtonEdit.cshtml"
+msgid "This item is payable"
+msgstr "E' possibile pagare questo articolo"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Parts/PayButton.cshtml"
+msgid "Pay"
+msgstr "Paga"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Info.cshtml"
+msgid "Additional informations"
+msgstr "Ulteriori informazioni"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Info.cshtml"
+msgid "Amount"
+msgstr "Importo"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Info.cshtml"
+msgid "Back to payment page"
+msgstr "Torna alla pagina di pagamento"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Info.cshtml"
+msgid "Date"
+msgstr "Data"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Info.cshtml"
+msgid "Error"
+msgstr "Errore"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Info.cshtml"
+msgid "Failed"
+msgstr "Fallito"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Info.cshtml"
+msgid "Outcome"
+msgstr "Esito"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Info.cshtml"
+msgid "Payment details"
+msgstr "Dettagli pagamento"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Info.cshtml"
+msgid "POS"
+msgstr "POS"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Info.cshtml"
+msgid "Reason"
+msgstr "Causale"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Info.cshtml"
+msgid "Succeeded"
+msgstr "Riuscito"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Info.cshtml"
+msgid "Transacion ID"
+msgstr "ID Transazione"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Payment/Pay.cshtml"
+msgid "Summary"
+msgstr "Riepilogo"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "Abandoned"
+msgstr "Annullata"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "Amount"
+msgstr "Importo"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "Content"
+msgstr "Contenuto"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "Currency"
+msgstr "Valuta"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "Date"
+msgstr "Data"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "Failed"
+msgstr "Fallito"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "No data found."
+msgstr "Nessun dato trovato."
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "Ok"
+msgstr "Ok"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "Outcome"
+msgstr "Esito"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "Payments of all users"
+msgstr "Pagamenti di tutti gli utenti"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "POS"
+msgstr "POS"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "Reason"
+msgstr "Causale"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "Transaction ID"
+msgstr "ID Transazione"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/All.cshtml"
+msgid "User ID"
+msgstr "ID Utente"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "Abandoned"
+msgstr "Annullata"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "Amount"
+msgstr "Importo"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "Anonymous"
+msgstr "Anonimo"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "Currency"
+msgstr "Valuta"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "Date"
+msgstr "Data"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "Failed"
+msgstr "Fallito"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "No data found."
+msgstr "Nessun dato trovato."
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "Ok"
+msgstr "Ok"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "Outcome"
+msgstr "Esito"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "Payments of user"
+msgstr "Pagamenti dell'utente"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "POS"
+msgstr "POS"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "Reason"
+msgstr "Causale"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PaymentInfo/Index.cshtml"
+msgid "Transaction ID"
+msgstr "ID Transazione"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PosList.cshtml"
+msgid "Pay using:"
+msgstr "Paga con"
+
+msgctxt "Laser.Orchard.PaymentGateway.Activities.PaymentEventActivity"
+msgid "Failed"
+msgstr "Fallito"
+
+msgctxt "Laser.Orchard.PaymentGateway.Activities.PaymentEventActivity"
+msgid "Manage payment result"
+msgstr "Gestisce l'esito del pagamento"
+
+msgctxt "Laser.Orchard.PaymentGateway.Activities.PaymentEventActivity"
+msgid "Payment"
+msgstr "Pagamento"
+
+msgctxt "Laser.Orchard.PaymentGateway.Activities.PaymentEventActivity"
+msgid "Succeeded"
+msgstr "Riuscito"
+
+msgctxt "Laser.Orchard.PaymentGateway.Controllers.PosAdminBaseController"
+msgid "Could not save settings."
+msgstr "Impossibile salvare le impostazioni."
+
+msgctxt "Laser.Orchard.PaymentGateway.Controllers.PosAdminBaseController"
+msgid "Settings saved successfully."
+msgstr "Impostazioni salvate correttamente."
+
+msgctxt "Laser.Orchard.PaymentGateway.Navigation"
+msgid "Info"
+msgstr "Info"
+
+msgctxt "Laser.Orchard.PaymentGateway.Navigation"
+msgid "Payment Gateway"
+msgstr "Gateway di Pagamento"
+
+msgctxt "Laser.Orchard.PaymentGateway.Navigation"
+msgid "Settings"
+msgstr "Impostazioni"
+
