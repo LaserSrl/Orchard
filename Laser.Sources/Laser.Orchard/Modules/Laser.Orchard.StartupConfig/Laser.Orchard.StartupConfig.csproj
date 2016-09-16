@@ -322,6 +322,7 @@
     <Compile Include="WebApiProtection\Handlers\ProtectionSettingsHandler.cs" />
     <Compile Include="WebApiProtection\Migrations.cs" />
     <Compile Include="WebApiProtection\Models\ProtectionSettingsPart.cs" />
+    <Compile Include="WebApiProtection\Services\IWebApiFilterService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity-RequestInspector.cshtml" />
