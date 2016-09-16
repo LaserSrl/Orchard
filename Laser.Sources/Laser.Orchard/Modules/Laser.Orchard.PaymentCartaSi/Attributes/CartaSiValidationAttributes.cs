@@ -82,4 +82,29 @@ namespace Laser.Orchard.PaymentCartaSi.Attributes {
             return string.Format("Parameter {0} failed to validate as a correct URL.", name);
         }
     }
+
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+    public class IsValidParametersDictionary : ValidationAttribute {
+
+        internal static string[] InvalidKeys = { "TRANSACTION_TYPE", "return-ok", "tid", "INFO_PAGE", "RECALL_PAGE", 
+                                                  "back_url", "ERROR_URL", @"$EMAIL", @"$NOME", @"$COGNOME", "EMAIL" };
+
+        public override bool IsValid(object value) {
+            Dictionary<string, string> dic = (Dictionary<string, string>)value;
+            if (dic == null || dic.Count == 0) {
+                //empty dictionaries are fine
+                return true;
+            }
+            string[] keys = dic.Keys.ToArray();
+            if (keys.Intersect(InvalidKeys).Count() > 0) {
+                //the dictionary contains invalid keys
+                return false;
+            }
+            return true;
+        }
+
+        public override string FormatErrorMessage(string name) {
+            return string.Format("Dictionary {0} had some invalid keys or values", name);
+        }
+    }
 }

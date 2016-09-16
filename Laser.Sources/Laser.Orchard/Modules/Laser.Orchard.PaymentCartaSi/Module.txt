@@ -7,4 +7,5 @@ OrchardVersion: 1.0
 Description: Description for the module
 Features:
     Laser.Orchard.PaymentCartaSi:
-        Description: Description for feature Laser.Orchard.PaymentCartaSi.
+        Description: Enables payments using CartaSì as a provider
+		Dependencies: Laser.Orchard.PaymentGateway

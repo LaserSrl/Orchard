@@ -11,5 +11,6 @@ namespace Laser.Orchard.PaymentCartaSi.Extensions {
 
     public class EndPoints {
         public const string PaymentURL = "https://ecommerce.keyclient.it/ecomm/ecom/DispatcherServlet";
+        public const string TestPaymentURL = "https://coll-ecommerce.keyclient.it/ecomm/ecomm/DispatcherServlet";
     }
 }

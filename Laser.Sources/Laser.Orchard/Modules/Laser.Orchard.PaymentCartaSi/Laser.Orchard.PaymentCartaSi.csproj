@@ -59,6 +59,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -81,10 +82,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\CartaSiValidationAttributes.cs" />
+    <Compile Include="CartaSiMigrations.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\TransactionsController.cs" />
     <Compile Include="Extensions\Constants.cs" />
+    <Compile Include="Handlers\PaymentCartaSiSettingsPartHandler.cs" />
+    <Compile Include="Models\PaymentCartaSiSettingsPart.cs" />
+    <Compile Include="Models\PaymentCartaSiSettingsPartRecord.cs" />
     <Compile Include="Models\StartPaymentMessage.cs" />
     <Compile Include="Services\CartaSiPosService.cs" />
+    <Compile Include="Services\ICartaSiTransactionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Laser.Orchard.PaymentGateway\Laser.Orchard.PaymentGateway.csproj">
@@ -92,8 +99,9 @@
       <Name>Laser.Orchard.PaymentGateway</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Views\" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

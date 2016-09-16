@@ -1,5 +1,7 @@
-﻿using Laser.Orchard.PaymentGateway.Controllers;
+﻿using Laser.Orchard.PaymentCartaSi.Models;
+using Laser.Orchard.PaymentGateway.Controllers;
 using Orchard;
+using Orchard.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,7 @@ namespace Laser.Orchard.PaymentCartaSi.Controllers {
         }
 
         protected override dynamic GetSettingsPart() {
-            throw new NotImplementedException();
+            return _orchardServices.WorkContext.CurrentSite.As<PaymentCartaSiSettingsPart>();
         }
     }
 }
