@@ -106,6 +106,7 @@
     <Compile Include="Activities\PaymentEventActivity.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
+    <Compile Include="Controllers\PaymentInfoController.cs" />
     <Compile Include="Controllers\PosAdminBaseController.cs" />
     <Compile Include="Drivers\PayButtonPartDriver.cs" />
     <Compile Include="IPaymentEventHandler.cs" />
@@ -117,9 +118,13 @@
     <Compile Include="PaymentMigrations.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\Permissions.cs" />
+    <Compile Include="Services\IPaymentService.cs" />
     <Compile Include="Services\IPosService.cs" />
+    <Compile Include="Services\PaymentService.cs" />
     <Compile Include="Services\PosServiceBase.cs" />
     <Compile Include="Settings\PayButtonPartSettingsHooks.cs" />
+    <Compile Include="ViewModels\PaymentListVM.cs" />
+    <Compile Include="ViewModels\UserPayments.cs" />
     <Compile Include="ViewModels\PaymentVM.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +144,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PosList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PaymentInfo\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PaymentInfo\All.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

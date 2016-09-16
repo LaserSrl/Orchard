@@ -45,6 +45,12 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 string posUrl = GetPosUrl(values.Id);
                 values.PosUrl = posUrl;
             }
+            // salva l'eventuale informazione sull'utente
+            var user = _orchardServices.WorkContext.CurrentUser;
+            if (user != null) {
+                values.UserId = user.Id;
+            }
+
             int paymentId = SavePaymentInfo(values);
             values.Id = paymentId;
             return values;
@@ -70,6 +76,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 paymentToSave.Amount = payment.Amount;
                 paymentToSave.Currency = payment.Currency;
                 paymentToSave.ContentItemId = payment.ContentItemId;
+                paymentToSave.UserId = payment.UserId;
             }
             paymentToSave.Success = success;
             paymentToSave.Error = error;
