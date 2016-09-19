@@ -15,6 +15,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -148,7 +149,12 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
         public string HandleS2STransaction(NameValueCollection qs) {
             var settings = _orchardServices.WorkContext.CurrentSite.As<PaymentCartaSiSettingsPart>();
             //this is the method where the transaction information is trustworthy
-            Logger.Error("HandleS2STransaction: START");
+            StringBuilder sr = new StringBuilder();
+            sr.AppendLine("HandleS2STransaction: START");
+            foreach (var item in qs) {
+                sr.AppendLine(string.Format("{0}: {1}", item.ToString(), qs[item.ToString()]));
+            }
+            Logger.Error(sr.ToString());
             int paymentId = 0; //assign here because compiler does not understand that we won't use this without assigning it first
             bool validMessage = !string.IsNullOrWhiteSpace(qs["codTrans"]) && int.TryParse(qs["codTrans"].Replace("LASER", ""), out paymentId); //has an id
             validMessage = validMessage && !string.IsNullOrWhiteSpace(qs["esito"]); //has a result
