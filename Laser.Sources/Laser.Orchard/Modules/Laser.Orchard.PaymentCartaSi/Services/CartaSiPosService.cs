@@ -161,6 +161,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             validMessage = validMessage && !string.IsNullOrWhiteSpace(qs["alias"]) && qs["alias"] == settings.CartaSiShopAlias; //has right shop alias
             if (validMessage) {
                 PaymentOutcomeMessage pom = new PaymentOutcomeMessage(qs);
+                pom.secret = settings.CartaSiSecretKey;
                 try {
                     Validator.ValidateObject(pom, new ValidationContext(pom), true);
                 } catch (Exception ex) {
