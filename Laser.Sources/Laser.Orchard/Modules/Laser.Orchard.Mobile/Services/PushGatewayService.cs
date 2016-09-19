@@ -808,6 +808,13 @@ namespace Laser.Orchard.Mobile.Services {
                 sb.AppendFormat(",\"Al\":\"{0}\"", FormatJsonValue(pushMessage.Al));
             }
             sb.Append("}");
+            // sezione notification
+            StringBuilder sbNotification = new StringBuilder();
+            sbNotification.Clear();
+            sbNotification.AppendFormat("{{ \"body\": \"{0}\"", FormatJsonValue(pushMessage.Text));
+            //sbNotification.AppendFormat(",\"title\":\"{0}\"", FormatJsonValue(pushMessage.Text));
+            //sbNotification.AppendFormat(",\"icon\":\"{0}\"", "new");
+            sbNotification.Append("}");
 
             string hostCheck = _shellSetting.RequestUrlHost ?? "";
             string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
@@ -818,7 +825,10 @@ namespace Laser.Orchard.Mobile.Services {
                 if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck) && (pnr.RegistrationMachineName == machineNameCheck)) {
                     push.QueueNotification(new GcmNotification {
                         RegistrationIds = new List<string> { pnr.Token },
-                        Data = JObject.Parse(sb.ToString())
+                        Notification = JObject.Parse(sbNotification.ToString()),
+                        Data = JObject.Parse(sb.ToString()),
+                        Priority = GcmNotificationPriority.High, // necessario per bypassare il fatto che l'app non sia in whitelist
+                        TimeToLive = 172800 //2 giorni espressi in secondi
                     });
 
                     if ((repeatable == false) && (pushMessage.idContent > 0)) {
