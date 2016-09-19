@@ -164,12 +164,18 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                 PaymentOutcomeMessage pom = new PaymentOutcomeMessage(qs);
                 sr.Clear();
                 sr.AppendLine("HandleS2STransaction: MESSAGE VALID");
-
+                sr.AppendLine(pom.AdditionalParametersDictionary.Count.ToString());
+                foreach (var item in pom.AdditionalParametersDictionary) {
+                    sr.AppendLine(string.Format("{0}={1}", item.Key, item.Value));
+                }
+                sr.AppendLine("------------------------------------------");
                 Logger.Error(sr.ToString());
                 pom.secret = settings.CartaSiSecretKey;
                 try {
                     Validator.ValidateObject(pom, new ValidationContext(pom), true);
                 } catch (Exception ex) {
+                    Logger.Error(ex.Message);
+                    throw ex;
                     LocalizedString error = T("Transaction information not valid for transaction {0}: {1}", paymentId.ToString(), ex.Message);
                     //Log the error
                     Logger.Error(error.Text);
@@ -177,6 +183,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                     //We do not update the PaymentRecord here, because we have been unable to verify the hash that we received
                     
                 }
+                sr.AppendLine("HandleS2STransaction: VALIDATION PASSED");
                 //verify the hash
                 if (pom.PaymentOutcomeMAC == qs["mac"]) {
                     //transaction valid
