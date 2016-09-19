@@ -100,7 +100,9 @@
       <Name>Laser.Orchard.PaymentGateway</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\CartaSiS2S.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>

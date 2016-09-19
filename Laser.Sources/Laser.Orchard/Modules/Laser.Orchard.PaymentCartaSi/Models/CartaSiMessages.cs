@@ -2,6 +2,7 @@
 using Laser.Orchard.PaymentGateway.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Cryptography;
@@ -29,7 +30,7 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
             byte[] sigBytes = System.Text.Encoding.UTF8.GetBytes(sig);
             SHA1 sha = new SHA1CryptoServiceProvider();
             byte[] macBytes = sha.ComputeHash(sigBytes);
-            return BitConverter.ToString(macBytes).Replace("-", string.Empty);
+            return BitConverter.ToString(macBytes).Replace("-", string.Empty).ToLowerInvariant();
         }
     }
 
@@ -124,7 +125,7 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
         private string TransactionStartSignature {
             get { return string.Format("codTrans={0}divisa={1}importo={2}{3}", codTrans, divisa, importo, secret); }
         }
-        
+
         public string TransactionStartMAC {
             get {
                 return MACFromSignature(TransactionStartSignature);
@@ -134,15 +135,16 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
         public StartPaymentMessage() {
             AdditionalParametersDictionary = new Dictionary<string, string>();
         }
-        public StartPaymentMessage(string al, string secret)
+        public StartPaymentMessage(string al, string se)
             : this() {
             alias = al;
+            secret = se;
         }
-        public StartPaymentMessage(string al,  string secret, PaymentRecord pr)
-            : this(al, secret) {
+        public StartPaymentMessage(string al, string se, PaymentRecord pr)
+            : this(al, se) {
             importo = (pr.Amount * 100).ToString("0");
             divisa = pr.Currency;
-            codTrans = pr.Id.ToString();
+            codTrans = pr.Id.ToString() + "LASER";
         }
         /// <summary>
         /// Uses the properties of the object to build a querystring for the CartaSì request
@@ -224,9 +226,6 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
     }
 
     public class PaymentOutcomeMessage : CartaSiMessageBase {
-        [Required]
-        [StringLength(30)]
-        public string alias { get; set; } //shop identifier (constant given by CartaSì)
         [Required]
         [StringLength(7)]
         [ValidAmount]
@@ -310,20 +309,20 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
                         AdditionalParametersDictionary.Add(HttpUtility.UrlEncode(pair[0]), HttpUtility.UrlEncode(pair[1]));
                     }
                 }
-            } 
+            }
         }
         [IsValidParametersDictionary]
         public Dictionary<string, string> AdditionalParametersDictionary { get; set; }
         [StringLength(7)]
         public string languageId { get; set; } //language identifier, from the corresponding table, for the POS
         [StringLength(20)]
-        public string TipoTransazione { get; set; } //transaction type, from the codetable
+        public string tipoTransazione { get; set; } //transaction type, from the codetable
         [StringLength(30)]
         public string tipoProdotto { get; set; } //description of card type
         [StringLength(15)]
         public string dccRate { get; set; } //currency exchange rate for dcc service
         [StringLength(20, MinimumLength = 20)]
-        public string dccAMount { get; set; } //amount in the exchanged dcc currency
+        public string dccAmount { get; set; } //amount in the exchanged dcc currency
         [StringLength(3, MinimumLength = 3)]
         public string dccCurrency { get; set; } //currency the payment was exchanged into, in numeric code from the tables
         [StringLength(2, MinimumLength = 2)]
@@ -337,8 +336,10 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
 
 
         private string PaymentOutcomeSignature {
-            get { return string.Format("codTrans={0}esito={1}importo={2}divisa{3}data{4}orario{%}codAut{6}{7}",
-                codTrans, esito, importo, divisa, data, orario, codAut, secret); }
+            get {
+                return string.Format("codTrans={0}esito={1}importo={2}divisa{3}data{4}orario{%}codAut{6}{7}",
+                    codTrans, esito, importo, divisa, data, orario, codAut, secret);
+            }
         }
         public string PaymentOutcomeMAC {
             get {
@@ -346,6 +347,54 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
             }
         }
 
+        private static string[] propertyNames = { "alias", "importo", "divisa", "codTrans", "session_id", "brand", "nome", "cognome", "mail", "num_contratto",
+                                                    "esito", "data", "codiceEsito", "orario", "codAut", "pan", "scadenza_pan", "regione", "nazionalita",
+                                                    "messaggio", "hash", "check", "codiceConvenzione", "descrizione", "languageId", "tipoTransazione", 
+                                                    "tipoProdotto", "dccRate", "dccAmount", "dccCurrency", "dccState", "infoc", "infob", "modo_gestione_consegna" };
 
+        public PaymentOutcomeMessage(NameValueCollection qs) {
+            //map the querystring to the object
+            this.alias = qs["alias"];
+            this.importo = qs["importo"];
+            this.divisa = qs["divisa"];
+            this.codTrans = qs["codTrans"];
+            this.session_id = qs["session_id"];
+            this.brand = qs["brand"];
+            this.nome = qs["nome"];
+            this.cognome = qs["cognome"];
+            this.mail = qs["mail"];
+            this.num_contratto = qs["num_contratto"];
+            this.esito = qs["esito"];
+            this.data = qs["data"];
+            this.codiceEsito = qs["codiceEsito"];
+            this.orario = qs["orario"];
+            this.codAut = qs["codAut"];
+            this.pan = qs["pan"];
+            this.scadenza_pan = qs["scadenza_pan"];
+            this.regione = qs["regione"];
+            this.nazionalita = qs["nazionalita"];
+            this.messaggio = qs["messaggio"];
+            this.hash = qs["hash"];
+            this.check = qs["check"];
+            this.codiceConvenzione = qs["codiceConvenzione"];
+            this.descrizione = qs["descrizione"];
+            this.languageId = qs["languageId"];
+            this.tipoTransazione = qs["tipoTransazione"];
+            this.tipoProdotto = qs["tipoProdotto"];
+            this.dccRate = qs["dccRate"];
+            this.dccAmount = qs["dccAmount"];
+            this.dccCurrency = qs["dccCurrency"];
+            this.dccState = qs["dccState"];
+            this.infoc = qs["infoc"];
+            this.infob = qs["infob"];
+            this.modo_gestione_consegna = qs["modo_gestione_consegna"];
+            //additional parameters should be handled by themselves
+            AdditionalParametersDictionary = new Dictionary<string, string>();
+            foreach (var item in qs) {
+                if (!propertyNames.Contains(item.ToString())) {
+                    AdditionalParametersDictionary.Add(item.ToString(), qs[item.ToString()]);
+                }
+            }
+        }
     }
 }
