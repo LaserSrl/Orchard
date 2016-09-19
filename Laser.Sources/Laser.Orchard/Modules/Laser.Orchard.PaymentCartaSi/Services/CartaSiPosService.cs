@@ -178,7 +178,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                     //update the PaymentRecord for this transaction
                     //TODO: add to info the decoding of the pom.codiceEsito based off the codetables
                     EndPayment(paymentId, pom.esito == "OK", pom.codiceEsito, pom.messaggio);
-                    Logger.Error(string.Format("Payment {0} S2S outcome {1}", paymentId, pom.esito));
+                    Logger.Error(string.Format("Payment {0} S2S outcome {1}", paymentId.ToString(), pom.esito));
                     //return the URL of a suitable error page (call this.GetPaymentInfoUrl after inserting the error in the PaymentRecord)
                     return pom.esito;
                 }
