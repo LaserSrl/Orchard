@@ -42,6 +42,8 @@ namespace Laser.Orchard.Mobile.Handlers {
                     int idx = aux.LastIndexOf(" (");
                     if (idx > 0) {
                         contactTitle = aux.Substring(0, idx);
+                    } else {
+                        contactTitle = aux;
                     }
                     // invia la push
                     if ((string.IsNullOrWhiteSpace(contactTitle) == false) && (string.IsNullOrWhiteSpace(part.TextPush) == false)) {

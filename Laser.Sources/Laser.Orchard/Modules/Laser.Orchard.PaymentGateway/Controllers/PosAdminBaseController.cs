@@ -1,4 +1,5 @@
-﻿using Orchard;
+﻿using Laser.Orchard.PaymentGateway.Security;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.UI.Admin;
@@ -26,11 +27,17 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             T = NullLocalizer.Instance;
         }
         public ActionResult Index() {
+            if (_orchardServices.Authorizer.Authorize(Permissions.ConfigurePayment) == false) {
+                return new HttpUnauthorizedResult();
+            }
             var settings = GetSettingsPart();
             return View(settings);
         }
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPost() {
+            if (_orchardServices.Authorizer.Authorize(Permissions.ConfigurePayment) == false) {
+                return new HttpUnauthorizedResult();
+            }
             var settings = GetSettingsPart();
             if (TryUpdateModel(settings)) {
                 _orchardServices.Notifier.Information(T("Settings saved successfully."));

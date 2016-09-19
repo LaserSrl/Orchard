@@ -46,5 +46,10 @@ namespace Laser.Orchard.PaymentGateway {
                 table => table.AlterColumn("PosUrl", col => col.WithType(System.Data.DbType.String).Unlimited()));
             return 4;
         }
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("PaymentRecord",
+                table => table.AddColumn("UserId", System.Data.DbType.Int32));
+            return 5;
+        }
     }
 }

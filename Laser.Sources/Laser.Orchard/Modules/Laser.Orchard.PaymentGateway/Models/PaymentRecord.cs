@@ -18,5 +18,6 @@ namespace Laser.Orchard.PaymentGateway.Models {
         public virtual string TransactionId { get; set; }
         public virtual string Info { get; set; }
         public virtual int ContentItemId { get; set; }
+        public virtual int UserId { get; set; }
     }
 }
