@@ -184,7 +184,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                 }
             }
             Logger.Error("HandleS2STransaction: MESSAGE NOT VALID");
-            return null;
+            throw new Exception(string.Format("Transaction message not valid: codTrans: {0}, esito: {1}, alias: {2}", qs["codTrans"] ?? "null", qs["esito"] ?? "null", qs["alias"] ?? "null"));
         }
         /// <summary>
         /// Gets the inforation about the transaction result back from CartaSì and returns an URL showing the transaction's result

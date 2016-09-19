@@ -388,6 +388,7 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
             this.infoc = qs["infoc"];
             this.infob = qs["infob"];
             this.modo_gestione_consegna = qs["modo_gestione_consegna"];
+            this.mac = qs["mac"];
             //additional parameters should be handled by themselves
             AdditionalParametersDictionary = new Dictionary<string, string>();
             foreach (var item in qs) {
