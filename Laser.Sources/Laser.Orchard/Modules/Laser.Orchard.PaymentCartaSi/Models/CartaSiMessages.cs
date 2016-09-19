@@ -350,7 +350,7 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
         private static string[] propertyNames = { "alias", "importo", "divisa", "codTrans", "session_id", "brand", "nome", "cognome", "mail", "num_contratto",
                                                     "esito", "data", "codiceEsito", "orario", "codAut", "pan", "scadenza_pan", "regione", "nazionalita",
                                                     "messaggio", "hash", "check", "codiceConvenzione", "descrizione", "languageId", "tipoTransazione", 
-                                                    "tipoProdotto", "dccRate", "dccAmount", "dccCurrency", "dccState", "infoc", "infob", "modo_gestione_consegna" };
+                                                    "tipoProdotto", "dccRate", "dccAmount", "dccCurrency", "dccState", "infoc", "infob", "modo_gestione_consegna", "mac" };
 
         public PaymentOutcomeMessage(NameValueCollection qs) {
             //map the querystring to the object
