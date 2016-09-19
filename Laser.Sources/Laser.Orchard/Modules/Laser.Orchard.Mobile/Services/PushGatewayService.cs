@@ -812,8 +812,8 @@ namespace Laser.Orchard.Mobile.Services {
             StringBuilder sbNotification = new StringBuilder();
             sbNotification.Clear();
             sbNotification.AppendFormat("{{ \"body\": \"{0}\"", FormatJsonValue(pushMessage.Text));
-            sbNotification.AppendFormat(",\"title\":\"{0}\"", FormatJsonValue(pushMessage.Text));
-            sbNotification.AppendFormat(",\"icon\":\"{0}\"", "new");
+            //sbNotification.AppendFormat(",\"title\":\"{0}\"", FormatJsonValue(pushMessage.Text));
+            //sbNotification.AppendFormat(",\"icon\":\"{0}\"", "new");
             sbNotification.Append("}");
 
             string hostCheck = _shellSetting.RequestUrlHost ?? "";
@@ -827,7 +827,8 @@ namespace Laser.Orchard.Mobile.Services {
                         RegistrationIds = new List<string> { pnr.Token },
                         Notification = JObject.Parse(sbNotification.ToString()),
                         Data = JObject.Parse(sb.ToString()),
-                        Priority = GcmNotificationPriority.High // necessario per bypassare il fatto che l'app non sia in whitelist
+                        Priority = GcmNotificationPriority.High, // necessario per bypassare il fatto che l'app non sia in whitelist
+                        TimeToLive = 172800 //2 giorni espressi in secondi
                     });
 
                     if ((repeatable == false) && (pushMessage.idContent > 0)) {
