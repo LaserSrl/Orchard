@@ -152,7 +152,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             StringBuilder sr = new StringBuilder();
             sr.AppendLine("HandleS2STransaction: START");
             foreach (var item in qs) {
-                sr.AppendLine(string.Format("{0}: {1}", item.ToString(), qs[item.ToString()]));
+                sr.AppendLine(string.Format(@"{0}: {1}", item.ToString(), qs[item.ToString()]));
             }
             Logger.Error(sr.ToString());
             int paymentId = 0; //assign here because compiler does not understand that we won't use this without assigning it first
@@ -166,7 +166,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                 sr.AppendLine("HandleS2STransaction: MESSAGE VALID");
                 sr.AppendLine(pom.AdditionalParametersDictionary.Count.ToString());
                 foreach (var item in pom.AdditionalParametersDictionary) {
-                    sr.AppendLine(string.Format("{0}={1}", item.Key, item.Value));
+                    sr.AppendLine(string.Format(@"{0}={1}", item.Key, item.Value));
                 }
                 sr.AppendLine("------------------------------------------");
                 Logger.Error(sr.ToString());
@@ -176,7 +176,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                 } catch (Exception ex) {
                     Logger.Error(ex.Message);
                     throw ex;
-                    LocalizedString error = T("Transaction information not valid for transaction {0}: {1}", paymentId.ToString(), ex.Message);
+                    LocalizedString error = T(@"Transaction information not valid for transaction {0}: {1}", paymentId.ToString(), ex.Message);
                     //Log the error
                     Logger.Error(error.Text);
                     throw new Exception(error.Text);
@@ -190,7 +190,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                     //update the PaymentRecord for this transaction
                     //TODO: add to info the decoding of the pom.codiceEsito based off the codetables
                     EndPayment(paymentId, pom.esito == "OK", pom.codiceEsito, pom.messaggio);
-                    Logger.Error(string.Format("Payment {0} S2S outcome {1}", paymentId.ToString(), pom.esito));
+                    Logger.Error(string.Format(@"Payment {0} S2S outcome {1}", paymentId.ToString(), pom.esito));
                     //return the URL of a suitable error page (call this.GetPaymentInfoUrl after inserting the error in the PaymentRecord)
                     return pom.esito;
                 }
