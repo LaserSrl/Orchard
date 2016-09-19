@@ -28,7 +28,8 @@ namespace Laser.Orchard.PaymentCartaSi.Controllers {
             //we need to do it because it may ont be really hard to cheat if we only used stuff on the client's side
 
             string shapeString = "S2S";
-            shapeString += _cartaSiTransactionService.HandleS2STransaction(Request.QueryString);
+
+            shapeString += _cartaSiTransactionService.HandleS2STransaction(Request.Form);
             Shape.Outcome = shapeString;
             return View(Shape);
         }
