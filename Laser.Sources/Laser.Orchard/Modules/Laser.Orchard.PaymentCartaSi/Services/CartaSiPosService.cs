@@ -159,6 +159,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             bool validMessage = !string.IsNullOrWhiteSpace(qs["codTrans"]) && int.TryParse(qs["codTrans"].Replace("LASER", ""), out paymentId); //has an id
             validMessage = validMessage && !string.IsNullOrWhiteSpace(qs["esito"]); //has a result
             validMessage = validMessage && !string.IsNullOrWhiteSpace(qs["alias"]) && qs["alias"] == settings.CartaSiShopAlias; //has right shop alias
+            Logger.Error("HandleS2STransaction: " + paymentId.ToString());
             if (validMessage) {
                 PaymentOutcomeMessage pom = new PaymentOutcomeMessage(qs);
                 sr.Clear();
