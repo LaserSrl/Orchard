@@ -161,11 +161,15 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             validMessage = validMessage && !string.IsNullOrWhiteSpace(qs["alias"]) && qs["alias"] == settings.CartaSiShopAlias; //has right shop alias
             if (validMessage) {
                 PaymentOutcomeMessage pom = new PaymentOutcomeMessage(qs);
+                sr.Clear();
+                sr.AppendLine("HandleS2STransaction: MESSAGE VALID");
+
+                Logger.Error(sr.ToString());
                 pom.secret = settings.CartaSiSecretKey;
                 try {
                     Validator.ValidateObject(pom, new ValidationContext(pom), true);
                 } catch (Exception ex) {
-                    LocalizedString error = T("Transaction information not valid for transaction {0}: {1}", paymentId, ex.Message);
+                    LocalizedString error = T("Transaction information not valid for transaction {0}: {1}", paymentId.ToString(), ex.Message);
                     //Log the error
                     Logger.Error(error.Text);
                     throw new Exception(error.Text);
