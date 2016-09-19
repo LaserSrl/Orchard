@@ -357,7 +357,7 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
             this.alias = qs["alias"];
             this.importo = qs["importo"];
             this.divisa = qs["divisa"];
-            this.codTrans = qs["codTrans"];
+            this.codTrans = qs["codTrans"].Replace("LASER", "");
             this.session_id = qs["session_id"];
             this.brand = qs["brand"];
             this.nome = qs["nome"];
