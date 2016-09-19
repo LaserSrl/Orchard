@@ -148,6 +148,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
         public string HandleS2STransaction(NameValueCollection qs) {
             var settings = _orchardServices.WorkContext.CurrentSite.As<PaymentCartaSiSettingsPart>();
             //this is the method where the transaction information is trustworthy
+            Logger.Error("HandleS2STransaction: START");
             int paymentId = 0; //assign here because compiler does not understand that we won't use this without assigning it first
             bool validMessage = !string.IsNullOrWhiteSpace(qs["codTrans"]) && int.TryParse(qs["codTrans"].Replace("LASER", ""), out paymentId); //has an id
             validMessage = validMessage && !string.IsNullOrWhiteSpace(qs["esito"]); //has a result
@@ -175,6 +176,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                     return pom.esito;
                 }
             }
+            Logger.Error("HandleS2STransaction: MESSAGE NOT VALID");
             return null;
         }
         /// <summary>
