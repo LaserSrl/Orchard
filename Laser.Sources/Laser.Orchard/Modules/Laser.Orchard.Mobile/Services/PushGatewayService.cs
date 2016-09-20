@@ -827,8 +827,8 @@ namespace Laser.Orchard.Mobile.Services {
                         RegistrationIds = new List<string> { pnr.Token },
                         Notification = JObject.Parse(sbNotification.ToString()),
                         Data = JObject.Parse(sb.ToString()),
-                        Priority = GcmNotificationPriority.High, // necessario per bypassare il fatto che l'app non sia in whitelist
-                        TimeToLive = 172800 //2 giorni espressi in secondi
+                        Priority = GcmNotificationPriority.High // necessario per bypassare il fatto che l'app non sia in whitelist
+                        //TimeToLive = 172800 //2 giorni espressi in secondi
                     });
 
                     if ((repeatable == false) && (pushMessage.idContent > 0)) {
