@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 
 namespace Laser.Orchard.PaymentCartaSi.Models {
@@ -31,6 +32,14 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
             SHA1 sha = new SHA1CryptoServiceProvider();
             byte[] macBytes = sha.ComputeHash(sigBytes);
             return BitConverter.ToString(macBytes).Replace("-", string.Empty).ToLowerInvariant();
+        }
+
+        public override string ToString() {
+            StringBuilder sr = new StringBuilder();
+            sr.AppendLine(string.Format("secret: {0}", secret));
+            sr.AppendLine(string.Format("MAC: {0}", mac));
+            sr.AppendLine(string.Format("alias: {0}", alias));
+            return sr.ToString();
         }
     }
 
@@ -333,11 +342,12 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
         public string infob { get; set; } //additional information related to the single payment
         [StringLength(8)]
         public string modo_gestione_consegna { get; set; } //only for payments using MySi wallets
+        public string terminalId { get; set; }
 
 
         private string PaymentOutcomeSignature {
             get {
-                return string.Format("codTrans={0}esito={1}importo={2}divisa{3}data{4}orario{%}codAut{6}{7}",
+                return string.Format("codTrans={0}esito={1}importo={2}divisa{3}data{4}orario{5}codAut{6}{7}",
                     codTrans, esito, importo, divisa, data, orario, codAut, secret);
             }
         }
@@ -347,12 +357,16 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
             }
         }
 
-        private static string[] propertyNames = { "alias", "importo", "divisa", "codTrans", "session_id", "brand", "nome", "cognome", "mail", "num_contratto",
-                                                    "esito", "data", "codiceEsito", "orario", "codAut", "pan", "scadenza_pan", "regione", "nazionalita",
-                                                    "messaggio", "hash", "check", "codiceConvenzione", "descrizione", "languageId", "tipoTransazione", 
-                                                    "tipoProdotto", "dccRate", "dccAmount", "dccCurrency", "dccState", "infoc", "infob", "modo_gestione_consegna" };
+        private static string[] propertyNames = { "alias", "importo", "divisa", "codTrans", "session_id", "brand", "nome", "cognome", "mail", 
+                                                    "num_contratto", "esito", "data", "codiceEsito", "orario", "codAut", "pan", "scadenza_pan", 
+                                                    "regione", "nazionalita", "messaggio", "hash", "check", "codiceConvenzione", "descrizione", 
+                                                    "languageId", "tipoTransazione", "tipoProdotto", "dccRate", "dccAmount", "dccCurrency", 
+                                                    "dccState", "infoc", "infob", "modo_gestione_consegna", "mac", "terminalId" };
 
-        public PaymentOutcomeMessage(NameValueCollection qs) {
+        public PaymentOutcomeMessage() {
+            AdditionalParametersDictionary = new Dictionary<string, string>();
+        }
+        public PaymentOutcomeMessage(NameValueCollection qs) : this() {
             //map the querystring to the object
             this.alias = qs["alias"];
             this.importo = qs["importo"];
@@ -389,13 +403,52 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
             this.infob = qs["infob"];
             this.modo_gestione_consegna = qs["modo_gestione_consegna"];
             this.mac = qs["mac"];
+            this.terminalId = qs["terminalId"];
             //additional parameters should be handled by themselves
-            AdditionalParametersDictionary = new Dictionary<string, string>();
             foreach (var item in qs) {
                 if (!propertyNames.Contains(item.ToString())) {
                     AdditionalParametersDictionary.Add(item.ToString(), qs[item.ToString()]);
                 }
             }
+        }
+
+        public override string ToString() {
+            StringBuilder sr = new StringBuilder(base.ToString());
+            sr.AppendLine(string.Format("importo: {0}", importo));
+            sr.AppendLine(string.Format("divisa: {0}", divisa));
+            sr.AppendLine(string.Format("codTrans: {0}", codTrans));
+            sr.AppendLine(string.Format("session_id: {0}", session_id));
+            sr.AppendLine(string.Format("brand: {0}", brand));
+            sr.AppendLine(string.Format("nome: {0}", nome));
+            sr.AppendLine(string.Format("cognome: {0}", cognome));
+            sr.AppendLine(string.Format("mail: {0}", mail));
+            sr.AppendLine(string.Format("num_contratto: {0}", num_contratto));
+            sr.AppendLine(string.Format("esito: {0}", esito));
+            sr.AppendLine(string.Format("data: {0}", data));
+            sr.AppendLine(string.Format("codiceEsito: {0}", codiceEsito));
+            sr.AppendLine(string.Format("orario: {0}", orario));
+            sr.AppendLine(string.Format("codAut: {0}", codAut));
+            sr.AppendLine(string.Format("pan: {0}", pan));
+            sr.AppendLine(string.Format("scadenza_pan: {0}", scadenza_pan));
+            sr.AppendLine(string.Format("regione: {0}", regione));
+            sr.AppendLine(string.Format("nazionalita: {0}", nazionalita));
+            sr.AppendLine(string.Format("messaggio: {0}", messaggio));
+            sr.AppendLine(string.Format("hash: {0}", hash));
+            sr.AppendLine(string.Format("check: {0}", check));
+            sr.AppendLine(string.Format("codiceConvenzione: {0}", codiceConvenzione));
+            sr.AppendLine(string.Format("descrizione: {0}", descrizione));
+            sr.AppendLine(string.Format("additional parameters: {0}", AdditionalParameters));
+            sr.AppendLine(string.Format("languageId: {0}", languageId));
+            sr.AppendLine(string.Format("tipoTransazione: {0}", tipoTransazione));
+            sr.AppendLine(string.Format("tipoProdotto: {0}", tipoProdotto));
+            sr.AppendLine(string.Format("dccRate: {0}", dccRate));
+            sr.AppendLine(string.Format("dccAmount: {0}", dccAmount));
+            sr.AppendLine(string.Format("dccCurrency: {0}", dccCurrency));
+            sr.AppendLine(string.Format("dccState: {0}", dccState));
+            sr.AppendLine(string.Format("infoc: {0}", infoc));
+            sr.AppendLine(string.Format("infob: {0}", infob));
+            sr.AppendLine(string.Format("modo_gestione_consegna: {0}", modo_gestione_consegna));
+            return sr.ToString();
         }
     }
 }

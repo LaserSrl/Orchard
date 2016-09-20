@@ -27,7 +27,7 @@ namespace Laser.Orchard.PaymentCartaSi.Attributes {
         }
 
         public override string FormatErrorMessage(string name) {
-            return string.Format("Invalid format in amount {0}.", name);
+            return string.Format(@"Invalid format in amount {0}.", name);
         }
     }
 
@@ -43,7 +43,7 @@ namespace Laser.Orchard.PaymentCartaSi.Attributes {
         }
 
         public override string FormatErrorMessage(string name) {
-            return string.Format("Parameter {0} may not contain the # character", name);
+            return string.Format(@"Parameter {0} may not contain the # character", name);
         }
     }
 
@@ -80,7 +80,7 @@ namespace Laser.Orchard.PaymentCartaSi.Attributes {
         }
 
         public override string FormatErrorMessage(string name) {
-            return string.Format("Parameter {0} failed to validate as a correct URL.", name);
+            return string.Format(@"Parameter {0} failed to validate as a correct URL.", name);
         }
     }
 
@@ -105,7 +105,7 @@ namespace Laser.Orchard.PaymentCartaSi.Attributes {
         }
 
         public override string FormatErrorMessage(string name) {
-            return string.Format("Dictionary {0} had some invalid keys or values", name);
+            return string.Format(@"Dictionary {0} had some invalid keys or values", name);
         }
     }
 }

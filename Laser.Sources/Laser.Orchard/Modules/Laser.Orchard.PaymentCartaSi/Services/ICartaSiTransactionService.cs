@@ -11,5 +11,6 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
         string ReceiveUndo(string importo, string divisa, string codTrans, string esito);
         string HandleOutcomeTransaction(NameValueCollection qs);
         string HandleS2STransaction(NameValueCollection qs);
+
     }
 }
