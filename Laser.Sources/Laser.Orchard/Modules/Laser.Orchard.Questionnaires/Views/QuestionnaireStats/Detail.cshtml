@@ -78,7 +78,13 @@
                 if (question.QuestionType == Laser.Orchard.Questionnaires.QuestionType.OpenAnswer && question.Answers.Count > answersToShow) {
             <div style="margin-top: 5px; margin-left: 9px;">
                 <a href="@Url.Action("QuestionDetail", "QuestionnaireStats",
-                           new { area = "Laser.Orchard.Questionnaires", idQuestionario = Model.First().QuestionnairePart_Id, idDomanda = question.QuestionId })">
+                           new {
+                               area = "Laser.Orchard.Questionnaires",
+                               idQuestionario = Model.First().QuestionnairePart_Id,
+                               idDomanda = question.QuestionId,
+                               from = Request.QueryString["from"],
+                               to = Request.QueryString["to"]
+                           })">
                     @T("Show all answers")
                 </a>
             </div>
@@ -104,15 +110,15 @@
                         }
             $.jqplot('answerchart-@question.QuestionId', [data], {
                 title: '@question.Question',
-                    seriesDefaults: {
-                        renderer: jQuery.jqplot.PieRenderer,
-                        rendererOptions: {
-                            showDataLabels: true,
-                            dataLabelFormatString: '%.2f'
-                        }
-                    },
-                    legend: { show: true, location: 'e' }
-                });
+                seriesDefaults: {
+                    renderer: jQuery.jqplot.PieRenderer,
+                    rendererOptions: {
+                        showDataLabels: true,
+                        dataLabelFormatString: '%.2f'
+                    }
+                },
+                legend: { show: true, location: 'e' }
+            });
             </Text>
                     }
                 }

@@ -26,9 +26,9 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         [Admin]
         public ActionResult QuestionDetail(int idQuestionario, int idDomanda, int? page, int? pageSize, string from = null, string to = null) {
             DateTime fromDate, toDate;
-            CultureInfo provider = CultureInfo.InvariantCulture;
-            DateTime.TryParseExact(from, "yyyyMMdd", provider, DateTimeStyles.None, out fromDate);
-            DateTime.TryParseExact(to, "yyyyMMdd", provider, DateTimeStyles.None, out toDate);
+            CultureInfo provider = CultureInfo.GetCultureInfo(_orchardServices.WorkContext.CurrentCulture);
+            DateTime.TryParse(from, provider, DateTimeStyles.None, out fromDate);
+            DateTime.TryParse(to, provider, DateTimeStyles.None, out toDate);
 
             var stats = _questionnairesServices.GetStats(idQuestionario, (DateTime?)fromDate, (DateTime?)toDate).Where(x => x.QuestionId == idDomanda).FirstOrDefault();
 
