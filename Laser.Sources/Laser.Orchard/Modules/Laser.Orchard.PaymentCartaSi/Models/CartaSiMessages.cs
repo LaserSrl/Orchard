@@ -371,7 +371,7 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
             this.alias = qs["alias"];
             this.importo = qs["importo"];
             this.divisa = qs["divisa"];
-            this.codTrans = qs["codTrans"].Replace("LASER", "");
+            this.codTrans = qs["codTrans"];//.Replace("LASER", "");
             this.session_id = qs["session_id"];
             this.brand = qs["brand"];
             this.nome = qs["nome"];
@@ -414,6 +414,7 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
 
         public override string ToString() {
             StringBuilder sr = new StringBuilder(base.ToString());
+            sr.AppendLine(string.Format("Computed MAC: {0}", PaymentOutcomeMAC));
             sr.AppendLine(string.Format("importo: {0}", importo));
             sr.AppendLine(string.Format("divisa: {0}", divisa));
             sr.AppendLine(string.Format("codTrans: {0}", codTrans));
