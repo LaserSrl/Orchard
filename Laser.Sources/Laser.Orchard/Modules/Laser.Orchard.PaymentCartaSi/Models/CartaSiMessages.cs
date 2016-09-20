@@ -347,7 +347,7 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
 
         private string PaymentOutcomeSignature {
             get {
-                return string.Format("codTrans={0}esito={1}importo={2}divisa{3}data{4}orario{5}codAut{6}{7}",
+                return string.Format("codTrans={0}esito={1}importo={2}divisa={3}data={4}orario={5}codAut={6}{7}",
                     codTrans, esito, importo, divisa, data, orario, codAut, secret);
             }
         }
@@ -371,7 +371,7 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
             this.alias = qs["alias"];
             this.importo = qs["importo"];
             this.divisa = qs["divisa"];
-            this.codTrans = qs["codTrans"].Replace("LASER", "");
+            this.codTrans = qs["codTrans"];//.Replace("LASER", "");
             this.session_id = qs["session_id"];
             this.brand = qs["brand"];
             this.nome = qs["nome"];
@@ -414,6 +414,7 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
 
         public override string ToString() {
             StringBuilder sr = new StringBuilder(base.ToString());
+            sr.AppendLine(string.Format("Computed MAC: {0}", PaymentOutcomeMAC));
             sr.AppendLine(string.Format("importo: {0}", importo));
             sr.AppendLine(string.Format("divisa: {0}", divisa));
             sr.AppendLine(string.Format("codTrans: {0}", codTrans));
