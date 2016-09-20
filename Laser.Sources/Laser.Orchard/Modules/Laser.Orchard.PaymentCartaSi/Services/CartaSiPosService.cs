@@ -68,7 +68,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             var hp = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             string aPath = hp.Action(aName, cName, new { Area = areaName });
             int cut = aPath.IndexOf(sName) - 1;
-                return bUrl + aPath.Substring(cut);
+            return bUrl + aPath.Substring(cut);
         }
         /// <summary>
         /// Computes the url of CartaSì's web service to which the buyer has to be redirected.
@@ -150,11 +150,6 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             var settings = _orchardServices.WorkContext.CurrentSite.As<PaymentCartaSiSettingsPart>();
             //this is the method where the transaction information is trustworthy
             StringBuilder sr = new StringBuilder();
-            //sr.AppendLine("HandleS2STransaction: START");
-            //foreach (var item in qs) {
-            //    sr.AppendLine(string.Format(@"{0}: {1}", item.ToString(), qs[item.ToString()]));
-            //}
-            //Logger.Error(sr.ToString());
             int paymentId = 0; //assign here because compiler does not understand that we won't use this without assigning it first
             bool validMessage = !string.IsNullOrWhiteSpace(qs["codTrans"]) && int.TryParse(qs["codTrans"].Replace("LASER", ""), out paymentId); //has an id
             validMessage = validMessage && !string.IsNullOrWhiteSpace(qs["esito"]); //has a result
@@ -178,7 +173,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                     //Logger.Error(error.Text);
                     //throw new Exception(error.Text);
                     //We do not update the PaymentRecord here, because we have been unable to verify the hash that we received
-                    
+
                 }
                 //Logger.Error("HandleS2STransaction: VALIDATION PASSED");
                 //verify the hash
@@ -186,7 +181,8 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                     //transaction valid
                     //update the PaymentRecord for this transaction
                     //TODO: add to info the decoding of the pom.codiceEsito based off the codetables
-                    EndPayment(paymentId, pom.esito == "OK", pom.codiceEsito, pom.messaggio);
+                    string info = CodeTables.ErrorCodes[int.Parse(pom.codiceEsito)];
+                    EndPayment(paymentId, pom.esito == "OK", pom.codiceEsito, pom.messaggio + (string.IsNullOrWhiteSpace(info) ? "" : (" " + info)));
                     //Logger.Error(string.Format(@"Payment {0} S2S outcome {1}", paymentId.ToString(), pom.esito));
                     //return the URL of a suitable error page (call this.GetPaymentInfoUrl after inserting the error in the PaymentRecord)
                     return pom.esito;
