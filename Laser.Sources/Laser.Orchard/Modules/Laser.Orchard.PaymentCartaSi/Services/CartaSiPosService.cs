@@ -150,56 +150,53 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             var settings = _orchardServices.WorkContext.CurrentSite.As<PaymentCartaSiSettingsPart>();
             //this is the method where the transaction information is trustworthy
             StringBuilder sr = new StringBuilder();
-            sr.AppendLine("HandleS2STransaction: START");
-            foreach (var item in qs) {
-                sr.AppendLine(string.Format(@"{0}: {1}", item.ToString(), qs[item.ToString()]));
-            }
-            Logger.Error(sr.ToString());
+            //sr.AppendLine("HandleS2STransaction: START");
+            //foreach (var item in qs) {
+            //    sr.AppendLine(string.Format(@"{0}: {1}", item.ToString(), qs[item.ToString()]));
+            //}
+            //Logger.Error(sr.ToString());
             int paymentId = 0; //assign here because compiler does not understand that we won't use this without assigning it first
             bool validMessage = !string.IsNullOrWhiteSpace(qs["codTrans"]) && int.TryParse(qs["codTrans"].Replace("LASER", ""), out paymentId); //has an id
             validMessage = validMessage && !string.IsNullOrWhiteSpace(qs["esito"]); //has a result
             validMessage = validMessage && !string.IsNullOrWhiteSpace(qs["alias"]) && qs["alias"] == settings.CartaSiShopAlias; //has right shop alias
-            Logger.Error("HandleS2STransaction: " + paymentId.ToString());
+            //Logger.Error("HandleS2STransaction: " + paymentId.ToString());
             if (validMessage) {
                 PaymentOutcomeMessage pom = new PaymentOutcomeMessage(qs);
                 pom.secret = settings.CartaSiSecretKey;
-                sr.Clear();
+                //sr.Clear();
                 sr.AppendLine("HandleS2STransaction: MESSAGE VALID");
-                sr.AppendLine(pom.AdditionalParametersDictionary.Count.ToString());
-                foreach (var item in pom.AdditionalParametersDictionary) {
-                    sr.AppendLine(string.Format(@"{0}={1}", item.Key, item.Value));
-                }
-                sr.AppendLine("------------------------------------------");
                 sr.AppendLine(pom.ToString());
-                Logger.Error(sr.ToString());
+                //Logger.Error(sr.ToString());
                 try {
                     Validator.ValidateObject(pom, new ValidationContext(pom), true);
                 } catch (Exception ex) {
-                    Logger.Error(ex.Message);
-                    throw ex;
+                    //Logger.Error(ex.Message);
+                    //throw ex;
                     LocalizedString error = T(@"Transaction information not valid for transaction {0}: {1}", paymentId.ToString(), ex.Message);
                     //Log the error
-                    Logger.Error(error.Text);
-                    throw new Exception(error.Text);
+                    sr.AppendLine(string.Format("ERROR: {0}", error.Text));
+                    //Logger.Error(error.Text);
+                    //throw new Exception(error.Text);
                     //We do not update the PaymentRecord here, because we have been unable to verify the hash that we received
                     
                 }
-                Logger.Error("HandleS2STransaction: VALIDATION PASSED");
+                //Logger.Error("HandleS2STransaction: VALIDATION PASSED");
                 //verify the hash
                 if (pom.PaymentOutcomeMAC == qs["mac"]) {
                     //transaction valid
                     //update the PaymentRecord for this transaction
                     //TODO: add to info the decoding of the pom.codiceEsito based off the codetables
                     EndPayment(paymentId, pom.esito == "OK", pom.codiceEsito, pom.messaggio);
-                    Logger.Error(string.Format(@"Payment {0} S2S outcome {1}", paymentId.ToString(), pom.esito));
+                    //Logger.Error(string.Format(@"Payment {0} S2S outcome {1}", paymentId.ToString(), pom.esito));
                     //return the URL of a suitable error page (call this.GetPaymentInfoUrl after inserting the error in the PaymentRecord)
                     return pom.esito;
                 } else {
-                    Logger.Error(string.Format("HandleS2STransaction: MAC NOT VALID:\nComputed: {0}\nReceived: {1}", pom.PaymentOutcomeMAC, qs["mac"]));
+                    LocalizedString error = T("HandleS2STransaction: MAC NOT VALID:\nComputed: {0}\nReceived: {1}", pom.PaymentOutcomeMAC, qs["mac"]);
+                    sr.AppendLine(string.Format("ERROR: {0}", error.Text));
                 }
 
             }
-            Logger.Error("HandleS2STransaction: MESSAGE NOT VALID");
+            Logger.Error(sr.ToString());
             throw new Exception(string.Format("Transaction message not valid: codTrans: {0}, esito: {1}, alias: {2}", qs["codTrans"] ?? "null", qs["esito"] ?? "null", qs["alias"] ?? "null"));
         }
 
