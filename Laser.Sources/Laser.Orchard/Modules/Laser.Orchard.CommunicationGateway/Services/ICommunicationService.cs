@@ -370,6 +370,15 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
         }
 
+        private string TruncateFromStart(string text, int max) {
+            string result = text;
+            int len = text.Length;
+            if (len > max) {
+                result = result.Substring(len - max);
+            }
+            return result;
+        }
+
         public void UserToContact(IUser UserContent) {
             // verifiche preliminari
             if (UserContent.Id == 0) {
@@ -393,7 +402,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     if ((contactEmail != null) && (contactEmail.ContentType == "CommunicationContact")) {
                         if ((contactEmail.As<CommunicationContactPart>().Record.UserPartRecord_Id == 0) && (contactEmail.As<CommunicationContactPart>().Master == false)) {
                             contact = contactEmail;
-                            contact.As<CommunicationContactPart>().Logs += string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function.").Text, DateTime.Now);
+                            contact.As<CommunicationContactPart>().Logs = TruncateFromStart(contact.As<CommunicationContactPart>().Logs + string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function. ").Text, DateTime.Now), 4000); //4000 sembra essere la lunghezza massima gestita da NHibernate per gli nvarchar(max)
                             contact.As<CommunicationContactPart>().UserIdentifier = UserContent.Id;
                             break; // associa solo il primo contatto che trova
                         }

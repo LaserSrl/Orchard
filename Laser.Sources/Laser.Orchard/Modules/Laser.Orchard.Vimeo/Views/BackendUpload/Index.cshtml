@@ -88,9 +88,10 @@
                 if (fileInput.files.length != 0 && fileInput.files[0].type.match(/video.*/)) {
                     //console.log('It is a video');
                     startUpload(fileInput.files[0]);
-                    fileInput.files.length = 0;
+                    fileInput.value = null;
+                    //fileInput.files.length = 0;
                 } else {
-                    fileInput.files.length = 0; //we do not need non-video files
+                    fileInput.value = null; //we do not need non-video files
                     //console.log('CLEAR');
                     fileInput.disabled = false;
                     fileDropArea.disabled = false;
@@ -102,6 +103,7 @@
                 event.preventDefault();
                 event.dataTransfer.dropEffect = 'copy'; // Makes the browser display a "copy" cursor.
             }
+
             function handleDrop(event) {
                 fileInput.disabled = true;
                 fileDropArea.disabled = true;
@@ -110,11 +112,20 @@
                 event.preventDefault();
 
                 var files = event.dataTransfer.files;
+
                 if (files.length == 0) {
                     fileInput.disabled = false;
                     fileDropArea.disabled = false;
                     return;
                 }
+                else if (files.length > 1)
+                {
+                    alert("Only one file at once.");
+                    fileInput.disabled = false;
+                    fileDropArea.disabled = false;
+                    return;
+                }
+
                 var file = files[0];
                 // 1. Verify it is a video
                 if (file.type.match(/video.*/)) {
@@ -129,7 +140,8 @@
             //fileInput.addEventListener("onchange", handleFileSelection, false);
             fileInput.onchange = function () {
                 handleFileSelection();
-            }
+            }           
+          
             fileDropArea.addEventListener("dragover", handleDragOver, false);
             fileDropArea.addEventListener("drop", handleDrop, false);
 

@@ -18,13 +18,15 @@ using System.Web;
 
 namespace Laser.Orchard.OpenAuthentication.Services.Clients {
     public class GoogleAuthenticationClient : IExternalAuthenticationClient {
+        public GoogleAuthenticationClient() {
+            Logger = NullLogger.Instance;
+        }
 
         public string ProviderName {
             get { return "Google"; }
         }
 
-        private const string UserInfoEndpoint = "https://www.googleapis.com/oauth2/v1/userinfo";
-
+        public ILogger Logger { get; set; }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
             string ClientId = providerConfigurationRecord.ProviderIdKey;
@@ -34,13 +36,8 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
         public OpenAuthCreateUserParams NormalizeData(OpenAuthCreateUserParams createUserParams) {
-            OpenAuthCreateUserParams retVal;
-
-            retVal = createUserParams;
+            OpenAuthCreateUserParams retVal = createUserParams;
             string emailAddress = string.Empty;
-
-            var valoriRicavati = createUserParams.ExtraData.Keys;
-
             foreach (KeyValuePair<string, string> values in createUserParams.ExtraData) {
                 if (values.Key == "mail") {
                     retVal.UserName = values.Value.IsEmailAddress() ? values.Value.Substring(0, values.Value.IndexOf('@')) : values.Value;
@@ -49,48 +46,26 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             return retVal;
         }
 
-
-        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken, string userAccessSecret = "") {
-            var userData = new Dictionary<string, string>();
-            userData = GetUserDataGoogle(userAccessToken);
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken) {
+            var userData = (Build(clientConfiguration) as GoogleOAuth2Client).GetUserDataDictionary(userAccessToken);
+            Logger.Error("user data count: {0}", userData.Count);
             userData["accesstoken"] = userAccessToken;
             string id = userData["id"];
             string name = userData["email"];
             userData["name"] = userData["email"];
             return new AuthenticationResult(true, this.ProviderName, id, name, userData);
         }
-        
-        private Dictionary<string, string> GetUserDataGoogle(string userAccessToken) {
-            var uri = GoogleOAuth2Client.BuildUri(UserInfoEndpoint, new NameValueCollection { { "access_token", userAccessToken } });
 
-            var webRequest = (HttpWebRequest)WebRequest.Create(uri);
-
-            using (var webResponse = webRequest.GetResponse())
-            using (var stream = webResponse.GetResponseStream()) {
-                if (stream == null)
-                    return null;
-
-                using (var textReader = new StreamReader(stream)) {
-                    var json = textReader.ReadToEnd();
-                    var extraData = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-                    return extraData;
-                }
-            }
+        public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string token, string userAccessSecret, string returnUrl) {
+            var client = Build(clientConfiguration) as GoogleOAuth2Client;
+            Logger.Error("Inizio chiamata Google");
+            string userAccessToken = client.GetAccessToken(new Uri(returnUrl), token);
+            Logger.Error("access token: {0}", userAccessToken);
+            return GetUserData(clientConfiguration, previousAuthResult, userAccessToken);
         }
-
+        
         public bool RewriteRequest() {
-            bool result = false;
-            var ctx = HttpContext.Current;
-            var stateString = HttpUtility.UrlDecode(ctx.Request.QueryString["state"]);
-            if (stateString != null && stateString.Contains("__provider__=google")) {
-                // Google requires that all return data be packed into a "state" parameter
-                var q = HttpUtility.ParseQueryString(stateString);
-                q.Add(ctx.Request.QueryString);
-                q.Remove("state");
-                ctx.RewritePath(ctx.Request.Path + "?" + q.ToString());
-                result = true;
-            }
-            return result;
+            return new ServiceUtility().RewriteRequestByState();
         }
     }
 }

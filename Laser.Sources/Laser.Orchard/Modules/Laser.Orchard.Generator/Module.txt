@@ -8,6 +8,6 @@ Description: Description for the module
 Features:
     Laser.Orchard.Generator:
 		Name: Laser Generator
-        Description: Enable only in development environment
+        Description: It should be enabled ONLY in development environment
 		Dependencies: Laser.Orchard.WebServices, Laser.Orchard.StartupConfig,Orchard.Autoroute,Orchard.Projections,Orchard.Taxonomies
 		Category: Services

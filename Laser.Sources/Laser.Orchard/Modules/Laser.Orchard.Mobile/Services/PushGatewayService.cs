@@ -37,7 +37,7 @@ namespace Laser.Orchard.Mobile.Services {
         IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false);
         void PublishedPushEventTest(ContentItem ci);
         void PublishedPushEvent(ContentItem ci);
-        void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "");
+        void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "", string externalUrl = "");
         IList<IDictionary> GetContactsWithDevice(string nameFilter);
         void SendPushToContact(ContentItem ci, string contactTitle);
     }
@@ -234,13 +234,13 @@ namespace Laser.Orchard.Mobile.Services {
                 singoloDevice = new List<PushNotificationVM>();
                 singoloDevice.Add(device);
                 if(device.Device == TipoDispositivo.Android) {
-                    PushAndroid(singoloDevice, true, pushMessage, true);
+                    PushAndroid(singoloDevice, device.Produzione, pushMessage, true);
                 }
                 if (device.Device == TipoDispositivo.Apple) {
-                    PushApple(singoloDevice, true, pushMessage, true);
+                    PushApple(singoloDevice, device.Produzione, pushMessage, true);
                 }
                 if (device.Device == TipoDispositivo.WindowsMobile) {
-                    PushWindows(singoloDevice, true, pushMessage, true);
+                    PushWindows(singoloDevice, device.Produzione, pushMessage, true);
                 }
             }
         }
@@ -264,7 +264,7 @@ namespace Laser.Orchard.Mobile.Services {
         /// <param name="JsonAndroid">If JsonAndroid is empty messageAndroid will be sent</param>
         /// <param name="messageWindows"></param>
         /// <param name="sound">Used in Apple Message</param>
-        public void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "") {
+        public void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "", string externalUrl = "") {
             bool stopPush = false;
             ContentItem relatedContentItem = null;
             string ctype = "";
@@ -304,6 +304,7 @@ namespace Laser.Orchard.Mobile.Services {
                     pushandroid.Text = messageAndroid;
                     pushandroid.Ct = ctype;
                     pushandroid.Al = displayalias;
+                    pushandroid.Eu = externalUrl;
                     SendAllAndroid("unknown", pushandroid, produzione, language, queryDevice);
 
                     PushMessage pushapple = new PushMessage();
@@ -314,6 +315,7 @@ namespace Laser.Orchard.Mobile.Services {
                     pushapple.Title = "";
                     pushapple.Ct = ctype;
                     pushapple.Al = displayalias;
+                    pushapple.Eu = externalUrl;
                     pushapple.ValidPayload = true;
                     SendAllApple("unknown", pushapple, produzione, language, queryDevice);
                     
@@ -323,6 +325,7 @@ namespace Laser.Orchard.Mobile.Services {
                     pushwindows.Text = messageAndroid;
                     pushwindows.Ct = ctype;
                     pushwindows.Al = displayalias;
+                    pushwindows.Eu = externalUrl;
                     SendAllWindows(ctype, pushwindows, produzione, language, queryDevice);
                 }
                 if (device == TipoDispositivo.Android.ToString()) {
@@ -332,6 +335,7 @@ namespace Laser.Orchard.Mobile.Services {
                     pushandroid.Text = messageAndroid;
                     pushandroid.Ct = ctype;
                     pushandroid.Al = displayalias;
+                    pushandroid.Eu = externalUrl;
                     SendAllAndroid("unknown", pushandroid, produzione, language, queryDevice);
                 }
                 if (device == TipoDispositivo.Apple.ToString()) {
@@ -343,6 +347,7 @@ namespace Laser.Orchard.Mobile.Services {
                     pushapple.Title = "";
                     pushapple.Ct = ctype;
                     pushapple.Al = displayalias;
+                    pushapple.Eu = externalUrl;
                     pushapple.ValidPayload = true;
                     SendAllApple("unknown", pushapple, produzione, language, queryDevice);
                 }
@@ -353,6 +358,7 @@ namespace Laser.Orchard.Mobile.Services {
                     pushwindows.Text = messageAndroid;
                     pushwindows.Ct = ctype;
                     pushwindows.Al = displayalias;
+                    pushwindows.Eu = externalUrl;
                     SendAllWindows(ctype, pushwindows, produzione, language, queryDevice);
                 }
             }
@@ -417,19 +423,20 @@ namespace Laser.Orchard.Mobile.Services {
             var Myobject = new Dictionary<string, object> { { "Content", ci } };
             string queryDevice = GetQueryDevice(Myobject, ci.As<MobilePushPart>());
 
+            // it is a test so all submissions are repeatable
             if (locTipoDispositivo.HasValue == false) {// tutti
-                SendAllAndroidPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
-                SendAllApplePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
-                SendAllWindowsPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+                SendAllAndroidPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable:true);
+                SendAllApplePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable: true);
+                SendAllWindowsPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable: true);
             }
             else if (locTipoDispositivo.Value == TipoDispositivo.Android) {
-                SendAllAndroidPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+                SendAllAndroidPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable: true);
             }
             else if (locTipoDispositivo.Value == TipoDispositivo.Apple) {
-                SendAllApplePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+                SendAllApplePart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable: true);
             }
             else if (locTipoDispositivo.Value == TipoDispositivo.WindowsMobile) {
-                SendAllWindowsPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
+                SendAllWindowsPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable: true);
             }
         }
 
@@ -609,9 +616,9 @@ namespace Laser.Orchard.Mobile.Services {
             return pushMessage;
         }
 
-        private void SendAllAndroidPart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds) {
+        private void SendAllAndroidPart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds, bool repeatable=false) {
             PushMessage pushMessage = GeneratePushMessage(mpp, idcontent, idContentRelated);
-            SendAllAndroid(mpp.ContentItem.ContentType, pushMessage, produzione, language, queryDevice, queryIds);
+            SendAllAndroid(mpp.ContentItem.ContentType, pushMessage, produzione, language, queryDevice, queryIds, repeatable);
         }
 
         private string GetQueryDevice(Dictionary<string, object> contesto, MobilePushPart mpp) {
@@ -690,12 +697,12 @@ namespace Laser.Orchard.Mobile.Services {
             return lista;
         }
 
-        private void SendAllAndroid(string contenttype, PushMessage pushMessage, bool produzione, string language, string queryDevice = "", int[] queryIds = null) {
+        private void SendAllAndroid(string contenttype, PushMessage pushMessage, bool produzione, string language, string queryDevice = "", int[] queryIds = null, bool repeatable=false) {
             var allDevice = GetListMobileDevice(contenttype, queryDevice, TipoDispositivo.Android, produzione, language, queryIds);
-            PushAndroid(allDevice, produzione, pushMessage);
+            PushAndroid(allDevice, produzione, pushMessage, repeatable);
         }
 
-        private void SendAllApplePart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds) {
+        private void SendAllApplePart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds, bool repeatable = false) {
             PushMessage newpush = new PushMessage();
             newpush = GeneratePushMessage(mpp, idcontent, idContentRelated);
             if (newpush.Text.Length > MAX_PUSH_TEXT_LENGTH) {
@@ -703,28 +710,28 @@ namespace Laser.Orchard.Mobile.Services {
                 _myLog.WriteLog("Apple send: message payload exceed the limit");
                 newpush.ValidPayload = false;
             }
-            SendAllApple(mpp.ContentItem.ContentType, newpush, produzione, language, queryDevice, queryIds);
+            SendAllApple(mpp.ContentItem.ContentType, newpush, produzione, language, queryDevice, queryIds, repeatable);
         }
 
-        private void SendAllApple(string contenttype, PushMessage newpush, bool produzione, string language, string queryDevice = "", int[] queryIds = null) {
+        private void SendAllApple(string contenttype, PushMessage newpush, bool produzione, string language, string queryDevice = "", int[] queryIds = null, bool repeatable = false) {
             var allDevice = GetListMobileDevice(contenttype, queryDevice, TipoDispositivo.Apple, produzione, language, queryIds);
             if (newpush.ValidPayload) {
-                PushApple(allDevice, produzione, newpush);
+                PushApple(allDevice, produzione, newpush, repeatable);
             }
         }
 
-        private void SendAllWindowsPart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds) {
+        private void SendAllWindowsPart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds, bool repeatable = false) {
             PushMessage pushMessage = new PushMessage {
                 Text = mpp.TextPush,
                 Title = mpp.TitlePush,
                 idContent = idcontent,
                 idRelated = idContentRelated
             };
-            SendAllWindows(mpp.ContentItem.ContentType, pushMessage, produzione, language, queryDevice, queryIds);
+            SendAllWindows(mpp.ContentItem.ContentType, pushMessage, produzione, language, queryDevice, queryIds, repeatable);
         }
-        private void SendAllWindows(string contenttype, PushMessage pushMessage, bool produzione, string language, string queryDevice = "", int[] queryIds = null) {
+        private void SendAllWindows(string contenttype, PushMessage pushMessage, bool produzione, string language, string queryDevice = "", int[] queryIds = null, bool repeatable = false) {
             var allDevice = GetListMobileDevice(contenttype, queryDevice, TipoDispositivo.WindowsMobile, produzione, language, queryIds);
-            PushWindows(allDevice, produzione, pushMessage);
+            PushWindows(allDevice, produzione, pushMessage, repeatable);
         }
         private List<PushNotificationVM> RemoveSent(List<PushNotificationVM> listdispositivo, Int32 IdContent) {
             if (IdContent > 0) {
@@ -746,7 +753,11 @@ namespace Laser.Orchard.Mobile.Services {
                 setting = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidApiKeyDevelopment;
             var config = new GcmConfiguration(setting);
             var serviceUrl = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidPushServiceUrl;
-            if (string.IsNullOrWhiteSpace(serviceUrl) == false) {
+            if (string.IsNullOrWhiteSpace(serviceUrl)) {
+                // default: FCM
+                config.OverrideUrl("https://fcm.googleapis.com/fcm/send");
+            }
+            else {
                 config.OverrideUrl(serviceUrl);
             }
             var push = new GcmServiceBroker(config);
@@ -783,7 +794,7 @@ namespace Laser.Orchard.Mobile.Services {
             // compone il payload
             StringBuilder sb = new StringBuilder();
             sb.Clear();
-            sb.AppendFormat("{{ \"Text\": \"{0}\"", FormatJsonValue(pushMessage.Text), FormatJsonValue(pushMessage.Sound));
+            sb.AppendFormat("{{ \"Text\": \"{0}\"", FormatJsonValue(pushMessage.Text));
             if (!string.IsNullOrEmpty(pushMessage.Eu)) {
                 sb.AppendFormat(",\"Eu\":\"{0}\"", FormatJsonValue(pushMessage.Eu));
             }
@@ -797,6 +808,13 @@ namespace Laser.Orchard.Mobile.Services {
                 sb.AppendFormat(",\"Al\":\"{0}\"", FormatJsonValue(pushMessage.Al));
             }
             sb.Append("}");
+            // sezione notification
+            StringBuilder sbNotification = new StringBuilder();
+            sbNotification.Clear();
+            sbNotification.AppendFormat("{{ \"body\": \"{0}\"", FormatJsonValue(pushMessage.Text));
+            //sbNotification.AppendFormat(",\"title\":\"{0}\"", FormatJsonValue(pushMessage.Text));
+            //sbNotification.AppendFormat(",\"icon\":\"{0}\"", "new");
+            sbNotification.Append("}");
 
             string hostCheck = _shellSetting.RequestUrlHost ?? "";
             string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
@@ -807,7 +825,10 @@ namespace Laser.Orchard.Mobile.Services {
                 if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck) && (pnr.RegistrationMachineName == machineNameCheck)) {
                     push.QueueNotification(new GcmNotification {
                         RegistrationIds = new List<string> { pnr.Token },
-                        Data = JObject.Parse(sb.ToString())
+                        Notification = JObject.Parse(sbNotification.ToString()),
+                        Data = JObject.Parse(sb.ToString()),
+                        Priority = GcmNotificationPriority.High // necessario per bypassare il fatto che l'app non sia in whitelist
+                        //TimeToLive = 172800 //2 giorni espressi in secondi
                     });
 
                     if ((repeatable == false) && (pushMessage.idContent > 0)) {

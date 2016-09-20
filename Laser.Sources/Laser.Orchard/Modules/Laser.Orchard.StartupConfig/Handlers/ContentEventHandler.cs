@@ -16,7 +16,7 @@ namespace Laser.Orchard.StartupConfig.Handlers {
         public FieldCreatortHandler(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
             OnUpdated<CommonPart>((context, CommonPart) => {
-                if (context.ContentItem.As<CommonPart>() != null) {
+                if (context.ContentItem.As<CommonPart>() != null && _orchardServices.WorkContext!=null) {
                     var currentUser = _orchardServices.WorkContext.CurrentUser;
                     if (currentUser != null) {
                         ((dynamic)context.ContentItem.As<CommonPart>()).LastModifier.Value = currentUser.Id;
@@ -28,7 +28,7 @@ namespace Laser.Orchard.StartupConfig.Handlers {
 
             });
             OnCreated<CommonPart>((context, CommonPart) => {
-                if (context.ContentItem.As<CommonPart>() != null) {
+                if (context.ContentItem.As<CommonPart>() != null && _orchardServices.WorkContext != null) {
                     var currentUser = _orchardServices.WorkContext.CurrentUser;
                     if (currentUser != null)
                         if (((dynamic)context.ContentItem.As<CommonPart>()).Creator.Value == null)

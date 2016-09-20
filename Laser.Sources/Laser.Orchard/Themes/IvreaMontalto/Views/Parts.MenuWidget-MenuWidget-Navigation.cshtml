@@ -29,26 +29,19 @@
             case 4:
                 icon = "icon-news";
                 break;
+            case 5:
+                icon = "icon-gallery";
+                break;
         }
-        if (position == 5) {
-            <div class="col-xs-6 col-sm-2 col-md-2 text-center no-padding">
-                <a class="circle @(((bool)item.Selected)?"active":"")" href="@item.Href">
-                    <span class="circle-small circle-juve">
-                        <img src="@subthemePath/images/juve.png" class="img-responsive menu-juve">
-                    </span>
-                </a>
-            </div>
-        }
-        else{
-            <div class="col-xs-6 col-sm-2 col-md-2 text-center no-padding">
-                 <a class="circle @(((bool)item.Selected)?"active":"")" href="@item.Href">
-                     <span class="circle-small">
-                        <i class="icone-menu @icon"></i>
-                        <span class="titolo-menu">@item.Text</span>
-                    </span>
-                 </a>
-            </div>
-        }
+
+        <div class="col-xs-6 col-sm-2 col-md-2 text-center no-padding">
+            <a class="circle @(((bool)item.Selected) ? "active" : "")" href="@item.Href">
+                <span class="circle-small">
+                    <i class="icone-menu @icon"></i>
+                    <span class="titolo-menu">@item.Text</span>
+                </span>
+            </a>
+        </div>
         position = position + 1;
     }
     <div class="space-menu bg-white"></div>

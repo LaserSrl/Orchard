@@ -140,11 +140,10 @@
     <Compile Include="Handlers\WebServiceSettingsHandler.cs" />
     <Compile Include="Models\WebServiceSettingsPart.cs" />
     <Compile Include="Routes\Routes.cs" />
+    <Compile Include="Services\IWebApiService.cs" />
     <Compile Include="ViewModels\Eventi015VM.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
       <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>

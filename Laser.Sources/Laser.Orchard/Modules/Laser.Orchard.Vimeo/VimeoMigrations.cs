@@ -184,5 +184,112 @@ namespace Laser.Orchard.Vimeo {
             return 8;
         }
 
+        //Update 2019/08/31: Optimization of API calls
+        public int UpdateFrom8() {
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("AccountType")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<DateTime>("LastTimeAccountTypeWasChecked")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("UserId")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<int>("RateLimitLimit")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<int>("RateLimitRemaining")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<DateTime>("RateLimitReset")
+                );
+
+            return 9;
+        }
+
+        public int UpdateFrom9() {
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<Int64>("UploadQuotaSpaceFree")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<Int64>("UploadQuotaSpaceMax")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<Int64>("UploadQuotaSpaceUsed")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<DateTime>("LastTimeQuotaWasChecked")
+                );
+
+            return 10;
+        }
+
+        public int UpdateFrom10() {
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("ChannelId")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("GroupId")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("AlbumId")
+                );
+
+            return 11;
+        }
+
+        public int UpdateFrom11() {
+            SchemaBuilder.AlterTable("UploadsInProgressRecord",
+                table => table
+                    .AddColumn<DateTime>("LastVerificationTime")
+                );
+            SchemaBuilder.AlterTable("UploadsInProgressRecord",
+                table => table
+                    .AddColumn<DateTime>("ScheduledVerificationTime")
+                );
+
+            return 12;
+        }
+
+        public int UpdateFrom12() {
+            SchemaBuilder.AlterTable("UploadsInProgressRecord",
+                table => table
+                    .AddColumn<DateTime>("LastProgressTime")
+                );
+
+            return 13;
+        }
+
+        public int UpdateFrom13() {
+            SchemaBuilder.AlterTable("UploadsCompleteRecord",
+                table => table
+                    .AddColumn<DateTime>("ScheduledTerminationTime")
+                );
+
+            return 14;
+        }
+
+        public int UpdateFrom14() {
+            SchemaBuilder.AlterTable("UploadsCompleteRecord",
+                table => table
+                    .AddColumn<bool>("MediaPartFinished")
+                );
+
+            return 15;
+        }
     }
 }

@@ -461,8 +461,8 @@ namespace Laser.Orchard.UserReactions.Services {
             else if (reactionName.Equals(ReactionsNames.boring)) {
                 return T("Boring");
             }
-            else if (reactionName.Equals(ReactionsNames.exahausted)) {
-                return T("Exahausted");
+            else if (reactionName.Equals(ReactionsNames.exhausted)) {
+                return T("Exhausted");
             }
             else if (reactionName.Equals(ReactionsNames.happy)) {
                 return T("Happy");
