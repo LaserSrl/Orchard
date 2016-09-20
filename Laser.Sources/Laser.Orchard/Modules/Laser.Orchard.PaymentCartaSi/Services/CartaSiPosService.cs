@@ -140,7 +140,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                 return GetPaymentInfoUrl(id);
             } else {
                 //Log the error
-                LocalizedString error = T("Receved wrong information while coming back from payment: wrong Id format.");
+                LocalizedString error = T("Received wrong information while coming back from payment: wrong Id format.");
                 Logger.Error(error.Text);
                 throw new Exception(error.Text);
             }
@@ -169,6 +169,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                     sr.AppendLine(string.Format(@"{0}={1}", item.Key, item.Value));
                 }
                 sr.AppendLine("------------------------------------------");
+                sr.AppendLine(pom.ToString());
                 Logger.Error(sr.ToString());
                 pom.secret = settings.CartaSiSecretKey;
                 try {
@@ -198,6 +199,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             Logger.Error("HandleS2STransaction: MESSAGE NOT VALID");
             throw new Exception(string.Format("Transaction message not valid: codTrans: {0}, esito: {1}, alias: {2}", qs["codTrans"] ?? "null", qs["esito"] ?? "null", qs["alias"] ?? "null"));
         }
+
         /// <summary>
         /// Gets the inforation about the transaction result back from CartaSì and returns an URL showing the transaction's result
         /// </summary>
