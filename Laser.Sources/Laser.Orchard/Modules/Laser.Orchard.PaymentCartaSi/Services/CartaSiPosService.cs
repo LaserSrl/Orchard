@@ -162,6 +162,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             Logger.Error("HandleS2STransaction: " + paymentId.ToString());
             if (validMessage) {
                 PaymentOutcomeMessage pom = new PaymentOutcomeMessage(qs);
+                pom.secret = settings.CartaSiSecretKey;
                 sr.Clear();
                 sr.AppendLine("HandleS2STransaction: MESSAGE VALID");
                 sr.AppendLine(pom.AdditionalParametersDictionary.Count.ToString());
@@ -171,7 +172,6 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                 sr.AppendLine("------------------------------------------");
                 sr.AppendLine(pom.ToString());
                 Logger.Error(sr.ToString());
-                pom.secret = settings.CartaSiSecretKey;
                 try {
                     Validator.ValidateObject(pom, new ValidationContext(pom), true);
                 } catch (Exception ex) {
@@ -184,7 +184,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                     //We do not update the PaymentRecord here, because we have been unable to verify the hash that we received
                     
                 }
-                sr.AppendLine("HandleS2STransaction: VALIDATION PASSED");
+                Logger.Error("HandleS2STransaction: VALIDATION PASSED");
                 //verify the hash
                 if (pom.PaymentOutcomeMAC == qs["mac"]) {
                     //transaction valid
@@ -194,7 +194,10 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                     Logger.Error(string.Format(@"Payment {0} S2S outcome {1}", paymentId.ToString(), pom.esito));
                     //return the URL of a suitable error page (call this.GetPaymentInfoUrl after inserting the error in the PaymentRecord)
                     return pom.esito;
+                } else {
+                    Logger.Error(string.Format("HandleS2STransaction: MAC NOT VALID:\nComputed: {0}\nReceived: {1}", pom.PaymentOutcomeMAC, qs["mac"]));
                 }
+
             }
             Logger.Error("HandleS2STransaction: MESSAGE NOT VALID");
             throw new Exception(string.Format("Transaction message not valid: codTrans: {0}, esito: {1}, alias: {2}", qs["codTrans"] ?? "null", qs["esito"] ?? "null", qs["alias"] ?? "null"));
