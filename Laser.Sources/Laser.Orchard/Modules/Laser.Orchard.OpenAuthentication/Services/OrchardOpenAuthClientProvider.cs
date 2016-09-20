@@ -93,7 +93,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 return client.GetUserData(clientConfiguration, previosAuthResult, token);
             }
             else {
-                Logger.Error("provider: {0}, auth code: {1}, redirect url: {2}", providerName, token, returnUrl);
+                //Logger.Error("provider: {0}, auth code: {1}, redirect url: {2}", providerName, token, returnUrl);
                 return client.GetUserData(clientConfiguration, previosAuthResult, token, userAccessSecret, returnUrl);
             }
         }
