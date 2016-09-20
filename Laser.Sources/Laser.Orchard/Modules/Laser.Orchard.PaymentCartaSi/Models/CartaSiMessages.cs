@@ -347,7 +347,7 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
 
         private string PaymentOutcomeSignature {
             get {
-                return string.Format("codTrans={0}esito={1}importo={2}divisa{3}data{4}orario{5}codAut{6}{7}",
+                return string.Format("codTrans={0}esito={1}importo={2}divisa={3}data={4}orario={5}codAut={6}{7}",
                     codTrans, esito, importo, divisa, data, orario, codAut, secret);
             }
         }
