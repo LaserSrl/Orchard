@@ -9,6 +9,8 @@ using Orchard.UI.Navigation;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Linq;
+using System;
+using System.Globalization;
 
 namespace Laser.Orchard.Questionnaires.Controllers {
     public class QuestionnaireStatsController : Controller {
@@ -22,8 +24,13 @@ namespace Laser.Orchard.Questionnaires.Controllers {
 
         [HttpGet]
         [Admin]
-        public ActionResult QuestionDetail(int idQuestionario, int idDomanda, int? page, int? pageSize) {
-            var stats = _questionnairesServices.GetStats(idQuestionario).Where(x => x.QuestionId == idDomanda).FirstOrDefault();
+        public ActionResult QuestionDetail(int idQuestionario, int idDomanda, int? page, int? pageSize, string from = null, string to = null) {
+            DateTime fromDate, toDate;
+            CultureInfo provider = CultureInfo.InvariantCulture;
+            DateTime.TryParseExact(from, "yyyyMMdd", provider, DateTimeStyles.None, out fromDate);
+            DateTime.TryParseExact(to, "yyyyMMdd", provider, DateTimeStyles.None, out toDate);
+
+            var stats = _questionnairesServices.GetStats(idQuestionario, (DateTime?)fromDate, (DateTime?)toDate).Where(x => x.QuestionId == idDomanda).FirstOrDefault();
 
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, new PagerParameters { Page = page, PageSize = pageSize });
             var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(stats.Answers.Count());
@@ -40,8 +47,12 @@ namespace Laser.Orchard.Questionnaires.Controllers {
 
         [HttpGet]
         [Admin]
-        public ActionResult Detail(int idQuestionario) {
-            var model = _questionnairesServices.GetStats(idQuestionario);
+        public ActionResult Detail(int idQuestionario, string from = null, string to = null) {
+            DateTime fromDate, toDate;
+            CultureInfo provider = CultureInfo.GetCultureInfo(_orchardServices.WorkContext.CurrentCulture);
+            DateTime.TryParse(from, provider, DateTimeStyles.None, out fromDate);
+            DateTime.TryParse(to, provider, DateTimeStyles.None, out toDate);
+            var model = _questionnairesServices.GetStats(idQuestionario, (DateTime?)fromDate, (DateTime?)toDate);
 
             return View((object)model);
         }
