@@ -31,6 +31,10 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             public override string GetSettingsControllerName() {
                 return "";
             }
+
+            public override string GetPosUrl(int paymentId) {
+                return "";
+            }
         }
         private readonly PosServiceEmpty _posServiceEmpty;
         public Localizer T { get; set; }

@@ -22,7 +22,7 @@ namespace Laser.Orchard.PaymentGestPay.Controllers {
         }
 
         public ActionResult RedirectToGestPayPage(int Id) {
-            return Redirect(_gestPayTransactionServices.StartGestPayTransaction(Id));
+            return Redirect(_gestPayTransactionServices.StartGestPayTransactionURL(Id));
         }
 
         //GestPay calls this controller while proceeding with the transaction

@@ -18,7 +18,7 @@ namespace Laser.Orchard.PaymentCartaSi.Controllers {
         }
 
         public ActionResult RedirectToCartaSìPage(int Id) {
-            return Redirect(_cartaSiTransactionService.StartCartaSiTransaction(Id));
+            return Redirect(_cartaSiTransactionService.StartCartaSiTransactionURL(Id));
         }
 
         [HttpPost]

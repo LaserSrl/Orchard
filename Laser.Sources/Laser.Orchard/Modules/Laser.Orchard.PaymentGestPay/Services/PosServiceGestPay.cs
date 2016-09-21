@@ -68,6 +68,10 @@ namespace Laser.Orchard.PaymentGestPay.Services {
         public override string GetSettingsControllerName() {
             return "Admin";
         }
+
+        public override string GetPosUrl(int paymentId) {
+            return StartGestPayTransactionURL(paymentId);
+        }
         #endregion
 
         #region Admin Methods
@@ -96,7 +100,7 @@ namespace Laser.Orchard.PaymentGestPay.Services {
         /// </summary>
         /// <param name="paymentId">The id corresponding to a <type>PaymentRecord</type> for the transaction we want to start.</param>
         /// <returns>The url of a page to which we redirect the client's browser to complete the payment.</returns>
-        public string StartGestPayTransaction(int paymentId) {
+        public string StartGestPayTransactionURL(int paymentId) {
 
             var settings = _orchardServices
                 .WorkContext

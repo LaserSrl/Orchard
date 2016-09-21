@@ -29,6 +29,8 @@ namespace Laser.Orchard.PaymentGateway.Services {
         /// <returns></returns>
         public abstract string GetPosActionUrl(int paymentId);
 
+        public abstract string GetPosUrl(int paymentId);
+
         public PosServiceBase(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler) {
             _orchardServices = orchardServices;
             _repository = repository;

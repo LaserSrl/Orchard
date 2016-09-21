@@ -55,6 +55,10 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             return ub.Uri.ToString();
         }
 
+        public override string GetPosUrl(int paymentId) {
+            return StartCartaSiTransactionURL(paymentId);
+        }
+
         /// <summary>
         /// Compute the full url for an Action in a Controller in the current site.
         /// </summary>
@@ -85,7 +89,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
         /// </summary>
         /// <param name="paymentId">The id of the PaymentRecord for the transaction we are trying to complete.</param>
         /// <returns>The url where we should redirct the buyer.</returns>
-        public string StartCartaSiTransaction(int paymentId) {
+        public string StartCartaSiTransactionURL(int paymentId) {
             var settings = _orchardServices.WorkContext.CurrentSite.As<PaymentCartaSiSettingsPart>();
 
             string pURL = settings.UseTestEnvironment ? EndPoints.TestPaymentURL : EndPoints.PaymentURL;

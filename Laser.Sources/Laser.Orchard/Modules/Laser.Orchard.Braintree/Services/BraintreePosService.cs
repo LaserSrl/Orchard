@@ -25,6 +25,9 @@ namespace Laser.Orchard.Braintree.Services {
                 + "?pid=" + paymentId.ToString();
         }
 
+        public override string GetPosUrl(int paymentId) {
+            throw new NotImplementedException();
+        }
         public override string GetSettingsControllerName() {
             return "Admin";
         }
