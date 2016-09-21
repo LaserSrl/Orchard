@@ -48,7 +48,7 @@ namespace Laser.Orchard.PaymentGestPay.Services {
         /// </summary>
         /// <param name="paymentId">The id corresponding to a <type>PaymentRecord</type> for the transaction we want to start.</param>
         /// <returns>The url corresponding to an action that will start the GestPay transaction </returns>
-        public override string GetPosUrl(int paymentId) {
+        public override string GetPosActionUrl(int paymentId) {
             //create the url for the controller action that takes care of the redirect, passing the id as parameter
             //Controller: Transactions
             //Action: RedirectToGestPayPage

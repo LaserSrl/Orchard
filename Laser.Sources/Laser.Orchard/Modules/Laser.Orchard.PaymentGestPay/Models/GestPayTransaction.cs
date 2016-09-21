@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -129,7 +130,7 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 curCode = CodeTables.CurrencyCodes.Where(cc => cc.isoCode.ToUpperInvariant() == "EUR").SingleOrDefault();
             }
             uicCode = curCode.codeUIC.ToString();
-            amount = pr.Amount.ToString("0.##");
+            amount = pr.Amount.ToString("0.##", CultureInfo.InvariantCulture);
             shopTransactionID = pr.Id.ToString();
             //customInfo = pr.Reason;
         }

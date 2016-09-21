@@ -27,7 +27,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public abstract string GetPosUrl(int paymentId);
+        public abstract string GetPosActionUrl(int paymentId);
 
         public PosServiceBase(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler) {
             _orchardServices = orchardServices;
@@ -42,7 +42,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
             }
             values.PosName = GetPosName();
             if (string.IsNullOrWhiteSpace(values.PosUrl)) {
-                string posUrl = GetPosUrl(values.Id);
+                string posUrl = GetPosActionUrl(values.Id);
                 values.PosUrl = posUrl;
             }
             // salva l'eventuale informazione sull'utente
@@ -83,7 +83,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
             paymentToSave.Info = info;
             paymentToSave.TransactionId = transactionId;
             paymentToSave.PosName = GetPosName(); // forza la valorizzazione del PosName
-            paymentToSave.PosUrl = GetPosUrl(paymentId);
+            paymentToSave.PosUrl = GetPosActionUrl(paymentId);
             SavePaymentInfo(paymentToSave);
             // solleva l'evento di termine della transazione
             if (success) {

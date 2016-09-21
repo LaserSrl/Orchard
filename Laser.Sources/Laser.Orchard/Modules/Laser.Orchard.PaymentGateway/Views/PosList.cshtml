@@ -5,7 +5,7 @@
 @using(Html.BeginFormAntiForgeryPost()){
     <ul style="list-style-type:none">
     @foreach(var pos in Model.PosList) {
-        <li><button type="submit" style="padding: 10px 10px" formaction="@Html.Raw(pos.GetPosUrl(Model.Record.Id))">@pos.GetPosName()</button></li>
+        <li><button type="submit" style="padding: 10px 10px" formaction="@Html.Raw(pos.GetPosActionUrl(Model.Record.Id))">@pos.GetPosName()</button></li>
     }
     </ul>
 }

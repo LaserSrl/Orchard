@@ -24,7 +24,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                 return "";
             }
 
-            public override string GetPosUrl(int paymentId) {
+            public override string GetPosActionUrl(int paymentId) {
                 return "";
             }
 
