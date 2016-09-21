@@ -105,8 +105,13 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                     }
                     int paymentId = record.Id;
                     //get the redirect url for the pos
-                    data.redirectUrl = pos.GetPosUrl(paymentId);
-                    success = true;
+                    try {
+                        data.redirectUrl = pos.GetPosUrl(paymentId);
+                        success = true;
+                    } catch (Exception ex) {
+                        //TODO: some payment services may not return a redirect url (e.g. Braintree)
+                        //handle this case with an error
+                    }
                 }
             }
 
