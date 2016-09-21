@@ -72,6 +72,10 @@ namespace Laser.Orchard.PaymentGestPay.Services {
         public override string GetPosUrl(int paymentId) {
             return StartGestPayTransactionURL(paymentId);
         }
+
+        public override List<string> GetAllValidCurrencies() {
+            return CodeTables.CurrencyCodes.Select(cc => cc.isoCode).ToList();
+        }
         #endregion
 
         #region Admin Methods

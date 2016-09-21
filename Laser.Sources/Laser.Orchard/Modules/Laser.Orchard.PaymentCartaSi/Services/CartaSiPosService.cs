@@ -59,6 +59,11 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             return StartCartaSiTransactionURL(paymentId);
         }
 
+        public override List<string> GetAllValidCurrencies() {
+            //Carta sì accepts only payments in Euro
+            return new string[] { "EUR" }.ToList();
+        }
+
         /// <summary>
         /// Compute the full url for an Action in a Controller in the current site.
         /// </summary>
