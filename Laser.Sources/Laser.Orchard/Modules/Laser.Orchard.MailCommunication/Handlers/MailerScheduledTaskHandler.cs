@@ -115,12 +115,18 @@ namespace Laser.Orchard.MailCommunication.Handlers {
             }
         }
 
+        /// <summary>
+        /// [{"Id":value,"EmailAddress":"value","Title":"value"}]
+        /// </summary>
         private void SendRecipients(List<object> recipients, int communicationId, int pageNum) {
             string pathFtp = _mailerConfig.FtpPath;
             string jsonDestinatari = JsonConvert.SerializeObject(recipients);
             SendFtp(jsonDestinatari, _mailerConfig.FtpHost, _mailerConfig.FtpUser, _mailerConfig.FtpPassword, string.Format("{0}adv{1}.{2}-{3}-recipients.json", pathFtp, _shellSettings.Name, communicationId, pageNum));
         }
 
+        /// <summary>
+        /// {"Subject":"value","Body":"value","Sender":"value","Priority":"value","Url":"value","Attachments":"value"}
+        /// </summary>
         private void SendSettings(object settings, int communicationId) {
             string pathFtp = _mailerConfig.FtpPath;
             string jsonSettings = JsonConvert.SerializeObject(settings);
