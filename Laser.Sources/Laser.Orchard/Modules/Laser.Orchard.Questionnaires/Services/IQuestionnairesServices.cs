@@ -23,5 +23,6 @@ namespace Laser.Orchard.Questionnaires.Services {
         void UnscheduleEmailTask(Int32 gameID);
         List<RankingTemplateVM> QueryForRanking(
            Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false);
+        void SaveQuestionnaireUsersAnswers(int questionnaireId, DateTime? from = null, DateTime? to = null);
     }
 }

@@ -14,17 +14,21 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
+using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Messaging.Services;
 using Orchard.Security;
 using Orchard.Tasks.Scheduling;
 using Orchard.UI.Notify;
+using Orchard.Users.Models;
 using Orchard.Workflows.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web.Hosting;
 
 namespace Laser.Orchard.Questionnaires.Services {
 
@@ -43,6 +47,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         private readonly IDateLocalization _dateLocalization;
         private readonly IScheduledTaskManager _taskManager;
         private readonly IDateServices _dateServices;
+        private readonly ShellSettings _shellSettings;
 
         public Localizer T { get; set; }
 
@@ -59,7 +64,8 @@ namespace Laser.Orchard.Questionnaires.Services {
             ISessionLocator sessionLocator,
             IDateLocalization dateLocalization,
             IScheduledTaskManager taskManager,
-            IDateServices dateServices) {
+            IDateServices dateServices,
+            ShellSettings shellSettings) {
             _orchardServices = orchardServices;
             _repositoryAnswer = repositoryAnswer;
             _repositoryQuestions = repositoryQuestions;
@@ -75,6 +81,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             _dateLocalization = dateLocalization;
             _taskManager = taskManager;
             _dateServices = dateServices;
+            _shellSettings = shellSettings;
         }
 
         private string getusername(int id) {
@@ -724,6 +731,62 @@ namespace Laser.Orchard.Questionnaires.Services {
             return (_repositoryAnswer.Get(id));
         }
 
+        private List<ExportUserAnswersVM> GetUsersAnswers(int questionnaireId, DateTime? from = null, DateTime? to = null) {
+            var answersQuery = _repositoryUserAnswer.Fetch(x => x.QuestionnairePartRecord_Id == questionnaireId);
+            if (from.HasValue && from.Value > DateTime.MinValue) {
+                answersQuery = answersQuery.Where(w => w.AnswerDate >= from);
+            }
+            if (to.HasValue && to.Value > DateTime.MinValue) {
+                answersQuery = answersQuery.Where(w => w.AnswerDate <= to);
+            }
+            var users = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().List();
+            var result = answersQuery.Join(users, l => l.User_Id, r => r.Id, (l, r) => new ExportUserAnswersVM { 
+                Answer = l.AnswerText, 
+                Question = l.QuestionText, 
+                AnswerDate = l.AnswerDate, 
+                UserName = r.UserName }).ToList();
+            return result;
+        }
+        public void SaveQuestionnaireUsersAnswers(int questionnaireId, DateTime? from = null, DateTime? to = null) {
+            string separator = ";";
+            var elenco = GetUsersAnswers(questionnaireId, from, to);
+            ContentItem ci = _orchardServices.ContentManager.Get(questionnaireId);
+            string fileName = String.Format("{0}-{1:yyyyMMdd}-{2:yyyyMMdd}.csv", NormalizeFileName(ci.As<TitlePart>().Title), from, to);
+            string filePath = HostingEnvironment.MapPath("~/") + @"Media\" + _shellSettings.Name + @"\Export\Questionnaires\" + fileName;
+            // Creo la directory Export
+            FileInfo fi = new FileInfo(filePath);
+            if (fi.Directory.Parent.Exists == false) {
+                System.IO.Directory.CreateDirectory(fi.Directory.Parent.FullName);
+            }
+            // Creo la directory Questionnaires
+            if (!fi.Directory.Exists) {
+                System.IO.Directory.CreateDirectory(fi.DirectoryName);
+            }
+            using (StreamWriter sw = new StreamWriter(filePath, false, System.Text.Encoding.UTF8)) {
+                sw.WriteLine("\"Utente\"\t\"Data\"\t\"Domanda\"\t\"Risposta\"");
+                foreach (var line in elenco) {
+                    sw.WriteLine(string.Format("\"{1}\"{0}\"{2:yyyy-MM-dd}\"{0}\"{3}\"{0}\"{4}\"",
+                        separator,
+                        EscapeString(line.UserName),
+                        line.AnswerDate,
+                        EscapeString(line.Question),
+                        EscapeString(line.Answer)));
+                }
+            }
+        }
+        private string EscapeString(string text) {
+            return text.Replace('\"', '\'').Replace('\n', ' ').Replace('\r', ' ');
+        }
+        private string NormalizeFileName(string text) {
+            var invalidChars = Path.GetInvalidFileNameChars();
+            string aux = text.Clone().ToString();
+            foreach (var ch in text) {
+                if (invalidChars.Contains(ch)) {
+                    aux = aux.Replace(ch, ' ');
+                }
+            }
+            return aux;
+        }
         public List<QuestionnaireStatsViewModel> GetStats(int questionnaireId, DateTime? from = null, DateTime? to = null) {
             var questionnaireData = _orchardServices.ContentManager.Query<QuestionnairePart, QuestionnairePartRecord>(VersionOptions.Published)
                                                        .Where(q => q.Id == questionnaireId)

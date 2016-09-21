@@ -201,7 +201,9 @@ namespace Laser.Orchard.Questionnaires {
             return 19;
         }
         public int UpdateFrom19() {
-            ContentDefinitionManager.AlterTypeDefinition("QuestionnaireStatsExport", type => type.WithPart("Filters", 
+            ContentDefinitionManager.AlterTypeDefinition("QuestionnaireStatsExport", type => type.WithPart("TitlePart")
+                .Draftable(false)
+                .Creatable(false)); 
             return 20;
         }
     }

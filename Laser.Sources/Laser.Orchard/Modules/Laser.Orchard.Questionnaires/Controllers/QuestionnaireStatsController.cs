@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.Questionnaires.Services;
 using Laser.Orchard.Questionnaires.ViewModels;
+using Laser.Orchard.Questionnaires.Handlers;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
@@ -57,6 +58,11 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             DateTime.TryParse(to, provider, DateTimeStyles.None, out toDate);
             var model = _questionnairesServices.GetStats(idQuestionario, (DateTime?)fromDate, (DateTime?)toDate);
             if (export == true) {
+                ContentItem filters = _orchardServices.ContentManager.Create("QuestionnaireStatsExport");
+                filters.As<TitlePart>().Title = string.Format("id={0}&from={1:yyyyMMdd}&to={2:yyyyMMdd}", idQuestionario, fromDate, toDate);
+                _orchardServices.ContentManager.Publish(filters);
+                _taskManager.CreateTask(StasExportScheduledTaskHandler.TaskType, DateTime.UtcNow.AddSeconds(-1), filters);
+                //_questionnairesServices.SaveQuestionnaireUsersAnswers(idQuestionario, fromDate, toDate);
                 ViewBag.Msg = "Export in corso...";
             }
             return View((object)model);
