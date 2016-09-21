@@ -8,47 +8,45 @@
     IUserReactionsService _reactionService;
     WorkContext.TryResolve<IUserReactionsService>(out _reactionService);
 
-     //Setta i dati della vista collegandoli al modello settato dal controller che richiama la vista
-     List<UserReactionsVM> part = Model.UserReaction;
-     //Aggiungi il foglio di stile CSS definito nel file ResourceManifest.cs ed inserito nella cartella Styles
-    
-     var settings = WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
-     Style.Require(settings.StyleFileNameProvider.ToString());
-    }
+    //Setta i dati della vista collegandoli al modello settato dal controller che richiama la vista
+    List<UserReactionsVM> part = Model.UserReaction;
+    //Aggiungi il foglio di stile CSS definito nel file ResourceManifest.cs ed inserito nella cartella Styles
+
+    var settings = WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
+    Style.Require(settings.StyleFileNameProvider.ToString());
+}
 
 @{    
    
     //Aggiungi in testata la libreria jQuery
-    
-        Script.Require("jQuery").AtHead();
-    }
+
+    Script.Require("jQuery").AtHead();
+}
 
 @Html.AntiForgeryToken()
 
 
-
+<div class="reaction-wrapper">
 @{foreach (var item in part) {
       var quantità = "(" + @item.Quantity + ")";
       var itemName = " " + _reactionService.GetReactionEnumTranslations((ReactionsNames)Enum.Parse(typeof(ReactionsNames), item.TypeName)) + " ";
-      string attCSS = @item.CssStyleName;
+      string attCSS = string.Format("icon-{0}", item.TypeName.ToLowerInvariant());
       var id = @item.TypeId;
       
        
-      <div class="glyph"> 
-          <div class="reactiondiv" id="@item.TypeId">     
-              <span class="@attCSS"></span>
-              @{var itemNameCount = "itemName" + @id; }
-              @{var itemQtyCount = "itemQuantity" + @id; }
-          
-              <b id="@itemNameCount">@itemName</b>
-              <b id="@itemQtyCount">@quantità</b>
-          </div>
-      </div>
+    <div class="reaction-container" id="@id">
+        <div class="reaction-icon @attCSS"></div>
+        @{var itemNameCount = "itemName" + @id; }
+        @{var itemQtyCount = "itemQuantity" + @id; }
+        <div>
+            <span class="reaction-name" id="@itemNameCount">@itemName</span>
+            <span class="reaction-qty" id="@itemQtyCount">@quantità</span>
+        </div>
+    </div>
       
   }
 }
-
-
+</div>
 <script type="text/javascript">
     //Aggiungo il valore del campo nascosto AntiForgeryToken al valore data della funzione 
     //richiamata di JQuery
@@ -65,10 +63,10 @@
                 $(nameitem).html("(" + total + ")");
                 //se già cliccato
                 if (status.Reactions[i].Clicked == 1) {
-                    $(nameitem).css('color', 'red');
+                    $(nameitem).parents('.reaction-container').addClass('selected');
                 }
                 else {
-                    $(nameitem).css('color', 'black');
+                    $(nameitem).parents('.reaction-container').removeClass('selected');
                 }
             }
         }
@@ -89,36 +87,34 @@
 
         //////////////////////////////////////////////////////////////////
 
-        @if(Model.Authorized) {
+        @if (Model.Authorized) {
             <text>
 
-            $("div.reactiondiv").hover(
-                function () {
-                    $(this).css('cursor', 'pointer');
-                    $(this).css('opacity', '0.4');
-                },
-                function () {
-                    $(this).css('opacity', '1');
+        $("div.reaction-container").hover(
+            function () {
+                $(this).css('cursor', 'pointer');
+                $(this).css('opacity', '0.4');
+            },
+            function () {
+                $(this).css('opacity', '1');
             });
 
-            //Assegnazione evento click a div reactiondiv
-            $("div.reactiondiv").bind("click", function (event)
-            {           
-                //Parameters     
-                var PageId = "@Model.ContentItem.Id";
-                var ReactionTypeId = this.id;            
+        //Assegnazione evento click a div reaction-container
+        $("div.reaction-container").bind("click", function (event) {
+            //Parameters     
+            var PageId = "@Model.ContentItem.Id";
+                var ReactionTypeId = this.id;
 
                 //Chiamata ajax richiama metodo server GetReactionClicked nel controller ReactionAjax 
                 //che verifica se l'utente deve fare un click in aggiunta oppure in decremento, quale icona cliccata 
                 $.ajax(
-                {               
+                {
                     url: "@Url.Action("GetReactionClicked", "ReactionAjax", new { Area = "Laser.Orchard.UserReactions" })",
-                    success: function (result)
-                    {
+                    success: function (result) {
                         refreshSummary(result.Status);
                     },
                     type: "POST",
-                    data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId})
+                    data: addRequestVerificationToken({ reactionTypeId: ReactionTypeId, pageId: PageId })
                 });
             });
             </text>
@@ -126,21 +122,21 @@
             // utente anonimo non autorizzato: sul click chiede login
             <text>
 
-            $("div.reactiondiv").hover(
-                function () {
-                    $(this).css('cursor', 'pointer');
-                    $(this).css('opacity', '0.4');
-                },
-                function () {
-                    $(this).css('opacity', '1');
+        $("div.reaction-container").hover(
+            function () {
+                $(this).css('cursor', 'pointer');
+                $(this).css('opacity', '0.4');
+            },
+            function () {
+                $(this).css('opacity', '1');
             });
 
-            //Assegnazione evento click a div reactiondiv
-            $("div.reactiondiv").bind("click", function (event) {
-                var showReviewUri = '@Url.Action("LogOn", "Account", new { area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl })';
+        //Assegnazione evento click a div reaction-container
+        $("div.reaction-container").bind("click", function (event) {
+            var showReviewUri = '@Url.Action("LogOn", "Account", new { area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl })';
                 window.location = showReviewUri;
             });
-            </text>
+        </text>
         }
 
     });
