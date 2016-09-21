@@ -1,15 +1,17 @@
-﻿using Laser.Orchard.PaymentGateway.Services;
+﻿using Laser.Orchard.Braintree.Models;
+using Laser.Orchard.PaymentGateway;
 using Laser.Orchard.PaymentGateway.Models;
+using Laser.Orchard.PaymentGateway.Services;
+using Orchard;
+using Orchard.ContentManagement;
+using Orchard.Data;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using Orchard;
-using Orchard.Data;
-using Laser.Orchard.PaymentGateway;
-using System.Text;
-using System.Globalization;
 
 namespace Laser.Orchard.Braintree.Services {
     public class BraintreePosService : PosServiceBase {
@@ -30,6 +32,11 @@ namespace Laser.Orchard.Braintree.Services {
         }
         public override string GetSettingsControllerName() {
             return "Admin";
+        }
+
+        public override List<string> GetAllValidCurrencies() {
+            return new string[] { _orchardServices.WorkContext
+                .CurrentSite.As<BraintreeSiteSettingsPart>().CurrencyCode}.ToList();
         }
     }
 }
