@@ -23,7 +23,6 @@ namespace Laser.Orchard.UserReactions.ViewModels {
         public int Id { get; set; }
         [ValidateUserReactionsTypeVM]
         public string TypeName { get; set; }
-        public string TypeCssClass { get; set; }
         public int Priority { get; set; }
         public bool Activating { get; set; }
         public bool Delete { get; set; }
