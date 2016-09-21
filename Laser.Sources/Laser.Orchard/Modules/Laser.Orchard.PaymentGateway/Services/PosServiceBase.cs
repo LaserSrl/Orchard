@@ -139,5 +139,11 @@ namespace Laser.Orchard.PaymentGateway.Services {
             }
             return result;
         }
+
+        public virtual List<string> GetAllValidCurrencies() {
+            List<string> ret = new List<string>();
+            ret.Add("EUR");
+            return ret;
+        }
     }
 }

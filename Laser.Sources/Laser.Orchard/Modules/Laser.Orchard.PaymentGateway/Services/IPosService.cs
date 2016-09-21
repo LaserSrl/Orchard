@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.PaymentGateway.Models;
 using Orchard;
+using System.Collections.Generic;
 
 /// <summary>
 /// This interface describes the methods that will be available in the controllers. Usually, payment gateway
@@ -41,5 +42,10 @@ public interface IPosService : IDependency {
     PaymentRecord StartPayment(PaymentRecord values);
     PaymentRecord GetPaymentInfo(int paymentId);
     void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "");
+    /// <summary>
+    /// Gets a list of all available currencies for a POS, in ISO alpha-3 format
+    /// </summary>
+    /// <returns></returns>
+    List<string> GetAllValidCurrencies();
     #endregion
 }
