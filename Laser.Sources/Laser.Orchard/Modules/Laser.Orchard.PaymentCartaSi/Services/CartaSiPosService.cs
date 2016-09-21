@@ -70,6 +70,16 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             int cut = aPath.IndexOf(sName) - 1;
             return bUrl + aPath.Substring(cut);
         }
+#if DEBUG
+        private string RemoteActionUrl(string aName, string cName = "Transactions", string areaName = Constants.LocalArea) {
+            string sName = _orchardServices.WorkContext.CurrentSite.SiteName;
+            string bUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
+            var hp = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            string aPath = hp.Action(aName, cName, new { Area = areaName });
+            string outSite = "http://piovanellim.laser-group.com";
+            return outSite + aPath;
+        }
+#endif
         /// <summary>
         /// Computes the url of CartaSì's web service to which the buyer has to be redirected.
         /// </summary>
@@ -84,6 +94,9 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             spMsg.url = ActionUrl("CartaSiOutcome");
             spMsg.url_back = ActionUrl("CartaSiUndo");
             spMsg.urlpost = ActionUrl("CartaSiS2S");
+#if DEBUG
+            spMsg.urlpost=RemoteActionUrl("CartaSiS2S");
+#endif
             spMsg.mac = spMsg.TransactionStartMAC;
 
 
