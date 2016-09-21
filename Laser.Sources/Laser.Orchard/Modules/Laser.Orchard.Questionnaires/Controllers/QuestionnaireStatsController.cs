@@ -11,15 +11,18 @@ using System.Web.Mvc;
 using System.Linq;
 using System;
 using System.Globalization;
+using Orchard.Tasks.Scheduling;
 
 namespace Laser.Orchard.Questionnaires.Controllers {
     public class QuestionnaireStatsController : Controller {
         private readonly IOrchardServices _orchardServices;
         private readonly IQuestionnairesServices _questionnairesServices;
+        private readonly IScheduledTaskManager _taskManager;
 
-        public QuestionnaireStatsController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices) {
+        public QuestionnaireStatsController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, IScheduledTaskManager taskManager) {
             _orchardServices = orchardServices;
             _questionnairesServices = questionnairesServices;
+            _taskManager = taskManager;
         }
 
         [HttpGet]
@@ -47,13 +50,15 @@ namespace Laser.Orchard.Questionnaires.Controllers {
 
         [HttpGet]
         [Admin]
-        public ActionResult Detail(int idQuestionario, string from = null, string to = null) {
+        public ActionResult Detail(int idQuestionario, string from = null, string to = null, bool export = false) {
             DateTime fromDate, toDate;
             CultureInfo provider = CultureInfo.GetCultureInfo(_orchardServices.WorkContext.CurrentCulture);
             DateTime.TryParse(from, provider, DateTimeStyles.None, out fromDate);
             DateTime.TryParse(to, provider, DateTimeStyles.None, out toDate);
             var model = _questionnairesServices.GetStats(idQuestionario, (DateTime?)fromDate, (DateTime?)toDate);
-
+            if (export == true) {
+                ViewBag.Msg = "Export in corso...";
+            }
             return View((object)model);
         }
 

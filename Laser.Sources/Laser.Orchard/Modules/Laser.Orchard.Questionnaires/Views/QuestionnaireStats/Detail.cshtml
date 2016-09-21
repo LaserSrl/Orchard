@@ -39,13 +39,20 @@
 
         @Html.Hidden("idQuestionario", Request.QueryString["idQuestionario"])
         <button type="submit">@T("Filter")</button>
+        <button type="submit" name="export" value="true">@T("Export")</button>
         <a href="@Url.Action("Detail", new { idQuestionario = Request.QueryString["idQuestionario"] })">@T("Clear")</a>
+        
+        @if (string.IsNullOrWhiteSpace(ViewBag.Msg) == false) {
+            <br />
+            <label>@ViewBag.Msg</label>
+        }
     </fieldset>
 }
 
 @if (Model.Count == 1 && Model.First().Answers == null) {
     <div style="margin-top: 15px;">@T("This questionnaire contains no answers.")</div>
-} else {
+}
+else {
     <div style="margin-top: 15px;">
         @{
     foreach (var question in Model) {
@@ -57,7 +64,8 @@
 
         if (question.QuestionType == Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {
             answersList = question.Answers.OrderByDescending(x => x.Count).ThenBy(x => x.Answer).Take(answersToShow).ToList();
-        } else {
+        }
+        else {
             answersList = question.Answers.OrderByDescending(x => x.Count).ThenBy(x => x.Answer).ToList();
         }
                     }
