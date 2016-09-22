@@ -21,6 +21,7 @@
 
     Style.Require("jqPlot");
     Style.Require("QuestionnaireAdmin");
+    var urlBack = Url.Action("Detail", new { idQuestionario = Request.QueryString["idQuestionario"] });
 }
 
 <p class="breadcrumb">
@@ -41,11 +42,8 @@
         <button type="submit">@T("Filter")</button>
         <button type="submit" name="export" value="true">@T("Export")</button>
         <a href="@Url.Action("Detail", new { idQuestionario = Request.QueryString["idQuestionario"] })">@T("Clear")</a>
-        
-        @if (string.IsNullOrWhiteSpace(ViewBag.Msg) == false) {
-            <br />
-            <label>@ViewBag.Msg</label>
-        }
+        <span style="width:50px">&nbsp;</span>
+        <a href="@Url.Action("Index", "FileExport", new { area = "Laser.Orchard.StartupConfig", UrlBack = urlBack })&FolderName=QuestionnairesStatistics">@T("Show Exported Files")</a>
     </fieldset>
 }
 

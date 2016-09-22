@@ -13,17 +13,30 @@ using System.Linq;
 using System;
 using System.Globalization;
 using Orchard.Tasks.Scheduling;
+using Orchard.UI.Notify;
+using Orchard.Localization;
+using Laser.Orchard.StartupConfig.FileExport.ViewModels;
+using Orchard.Environment.Configuration;
+using System.Text;
 
 namespace Laser.Orchard.Questionnaires.Controllers {
     public class QuestionnaireStatsController : Controller {
         private readonly IOrchardServices _orchardServices;
         private readonly IQuestionnairesServices _questionnairesServices;
         private readonly IScheduledTaskManager _taskManager;
+        private readonly INotifier _notifier;
+        private readonly ShellSettings _shellSettings;
+        private readonly string _fileExportRelativePath;
+        private Localizer T { get; set; }
 
-        public QuestionnaireStatsController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, IScheduledTaskManager taskManager) {
+        public QuestionnaireStatsController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, IScheduledTaskManager taskManager, INotifier notifier, ShellSettings shellSettings) {
             _orchardServices = orchardServices;
             _questionnairesServices = questionnairesServices;
             _taskManager = taskManager;
+            _notifier = notifier;
+            _shellSettings = shellSettings;
+            T = NullLocalizer.Instance;
+            _fileExportRelativePath = string.Format("~/Media/{0}/Export/Questionnaires", _shellSettings.Name);
         }
 
         [HttpGet]
@@ -63,7 +76,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                 _orchardServices.ContentManager.Publish(filters);
                 _taskManager.CreateTask(StasExportScheduledTaskHandler.TaskType, DateTime.UtcNow.AddSeconds(-1), filters);
                 //_questionnairesServices.SaveQuestionnaireUsersAnswers(idQuestionario, fromDate, toDate);
-                ViewBag.Msg = "Export in corso...";
+                _notifier.Add(NotifyType.Information, T("Export started. Please check 'Show Exported Files' to get the result."));
             }
             return View((object)model);
         }

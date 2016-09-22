@@ -752,7 +752,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             var elenco = GetUsersAnswers(questionnaireId, from, to);
             ContentItem ci = _orchardServices.ContentManager.Get(questionnaireId);
             string fileName = String.Format("{0}-{1:yyyyMMdd}-{2:yyyyMMdd}.csv", NormalizeFileName(ci.As<TitlePart>().Title), from, to);
-            string filePath = HostingEnvironment.MapPath("~/") + @"Media\" + _shellSettings.Name + @"\Export\Questionnaires\" + fileName;
+            string filePath = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSettings.Name + @"\Export\QuestionnairesStatistics\" + fileName;
             // Creo la directory Export
             FileInfo fi = new FileInfo(filePath);
             if (fi.Directory.Parent.Exists == false) {
@@ -763,7 +763,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                 System.IO.Directory.CreateDirectory(fi.DirectoryName);
             }
             using (StreamWriter sw = new StreamWriter(filePath, false, System.Text.Encoding.UTF8)) {
-                sw.WriteLine("\"Utente\"\t\"Data\"\t\"Domanda\"\t\"Risposta\"");
+                sw.WriteLine("\"Utente\"{0}\"Data\"{0}\"Domanda\"{0}\"Risposta\"", separator);
                 foreach (var line in elenco) {
                     sw.WriteLine(string.Format("\"{1}\"{0}\"{2:yyyy-MM-dd}\"{0}\"{3}\"{0}\"{4}\"",
                         separator,

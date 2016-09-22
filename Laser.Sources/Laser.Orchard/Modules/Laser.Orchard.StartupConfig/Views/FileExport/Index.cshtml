@@ -1,0 +1,29 @@
+﻿@model Laser.Orchard.StartupConfig.FileExport.ViewModels.FilesListVM
+@{
+    Layout.Title = T("Exported File List");
+}
+<a href="@Model.UrlBack">@T("Back")</a>
+<br />
+@if (Model.FileInfos.Count == 0) {
+    <br />
+    <div class="content">@T("No data found.")</div>    
+} else{
+    <fieldset class="contentItems bulk-items">
+        <legend></legend>
+        <ul>
+        @foreach (var file in Model.FileInfos) {
+            <li>
+                <div class="summary">
+                    <div class="properties">
+                        <a href="@Url.Action("DownloadCsvFile", new { fName = @file.Name })&folderName=@Model.FolderName">@file.Name</a>
+                    </div>
+                    <div class="related">
+                        <a href="@Url.Action("RemoveExportFile", new { fName = file.Name })&folderName=@Model.FolderName&urlBack=@Url.Encode(Model.UrlBack)" onclick="return confirm('@T("Are you sure?")')">@T("Delete")</a>
+                    </div>
+                </div>
+            </li>
+        }
+        </ul>
+        @Display(Model.Pager)
+    </fieldset>
+}
