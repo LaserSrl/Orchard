@@ -74,9 +74,9 @@ namespace Laser.Orchard.PaymentGateway.Services {
         public void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "") {
             PaymentRecord paymentToSave = null;
             PaymentRecord payment = GetPaymentInfo(paymentId);
-            //if (string.IsNullOrWhiteSpace(payment.PosName)) {
-            //    paymentToSave = payment;
-            //} else {
+            if (string.IsNullOrWhiteSpace(payment.PosName)) {
+                paymentToSave = payment;
+            } else {
                 // forza la creazione di un nuovo record perché c'è già stato un tentativo di pagamento
                 paymentToSave = new PaymentRecord();
                 paymentToSave.Reason = payment.Reason;
@@ -84,7 +84,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 paymentToSave.Currency = payment.Currency;
                 paymentToSave.ContentItemId = payment.ContentItemId;
                 paymentToSave.UserId = payment.UserId;
-            //}
+            }
             paymentToSave.Success = success;
             paymentToSave.Error = error;
             paymentToSave.Info = info;
