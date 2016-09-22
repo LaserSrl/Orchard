@@ -100,7 +100,9 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                             Reason = reason,
                             Amount = amount,
                             Currency = currency,
-                            ContentItemId = itemId.Value
+                            ContentItemId = itemId.Value,
+                            CustomRedirectUrl = redirectUrl,
+                            CustomRedirectSchema = schema
                         });
                     } catch (Exception ex) {
                         success = false;
@@ -111,7 +113,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                     int paymentId = record.Id;
                     //get the redirect url for the pos
                     try {
-                        data.redirectUrl = pos.GetPosUrl(paymentId, redirectUrl, schema);
+                        data.redirectUrl = pos.GetPosUrl(paymentId);
                         success = true;
                     } catch (Exception ex) {
                         //some payment services may not return a redirect url (e.g. Braintree)

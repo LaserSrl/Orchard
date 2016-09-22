@@ -56,9 +56,6 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
         public override string GetPosUrl(int paymentId) {
             return StartCartaSiTransactionURL(paymentId);
         }
-        public override string GetPosUrl(int paymentId, string redirectUrl, string schema) {
-            throw new NotImplementedException();
-        }
 
         public override List<string> GetAllValidCurrencies() {
             //Carta sì accepts only payments in Euro

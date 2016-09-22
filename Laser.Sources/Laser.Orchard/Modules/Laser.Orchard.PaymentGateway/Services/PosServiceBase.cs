@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.PaymentGateway.Models;
+using Laser.Orchard.StartupConfig.ViewModels;
 using Orchard;
 using Orchard.Data;
 using Orchard.Localization;
@@ -33,7 +34,6 @@ namespace Laser.Orchard.PaymentGateway.Services {
         public abstract string GetPosActionUrl(int paymentId);
 
         public abstract string GetPosUrl(int paymentId);
-        public abstract string GetPosUrl(int paymentId, string redirectUrl, string schema);
 
         public PosServiceBase(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler) {
             _orchardServices = orchardServices;
@@ -76,8 +76,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
             PaymentRecord payment = GetPaymentInfo(paymentId);
             if (string.IsNullOrWhiteSpace(payment.PosName)) {
                 paymentToSave = payment;
-            }
-            else {
+            } else {
                 // forza la creazione di un nuovo record perché c'è già stato un tentativo di pagamento
                 paymentToSave = new PaymentRecord();
                 paymentToSave.Reason = payment.Reason;
@@ -96,8 +95,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
             // solleva l'evento di termine della transazione
             if (success) {
                 _paymentEventHandler.OnSuccess(paymentToSave.Id, paymentToSave.ContentItemId);
-            }
-            else {
+            } else {
                 _paymentEventHandler.OnError(paymentToSave.Id, paymentToSave.ContentItemId);
             }
         }
@@ -107,6 +105,36 @@ namespace Laser.Orchard.PaymentGateway.Services {
         /// <param name="paymentId"></param>
         /// <returns></returns>
         public string GetPaymentInfoUrl(int paymentId) {
+            //get the PaymentRecord corresponding to the id
+            var pRecord = GetPaymentInfo(paymentId);
+            if (!string.IsNullOrWhiteSpace(pRecord.CustomRedirectUrl)) {
+                //Serialize a Response object in a query string
+                string respQString = "";
+                bool success = pRecord.Success;
+                string message = (pRecord.Success) ? pRecord.Info : (string.Format("{0}: {1}", pRecord.Error, pRecord.Info));
+                //ErrorCode errorCode = (pRecord.Success) ? ErrorCode.NoError : ErrorCode.GenericError;
+                //ResolutionAction resolutionAction = ResolutionAction.NoAction;
+                dynamic data = new System.Dynamic.ExpandoObject(); //all properties will be strings
+                data.PaymentId = paymentId.ToString();
+                if (pRecord.ContentItemId > 0) {
+                    data.ContentItemId = pRecord.ContentItemId.ToString();
+                }
+                //TODO: using the ExpandoObject as IDictionary<string, object> i can add properties to data in runtime without knowing their names beforehand
+                List<string> qsFragments = new List<string>();
+                qsFragments.Add(string.Format("Success={0}", success.ToString()));
+                qsFragments.Add(string.Format("Message={0}", HttpUtility.UrlEncode(message)));
+                foreach (KeyValuePair<string, object> kvp in data) {
+                    qsFragments.Add(string.Format("Data_{0}={1}", HttpUtility.UrlEncode(kvp.Key), HttpUtility.UrlEncode((string)(kvp.Value))));
+                }
+                respQString = string.Join(@"&", qsFragments);
+                //append the querystring to the return url ad return the resulting url
+                return string.Format("{0}?{1}", pRecord.CustomRedirectUrl, respQString);
+            } else if (!string.IsNullOrWhiteSpace(pRecord.CustomRedirectSchema)) {
+                //serialize a response object as a JSON
+                string jsonResponse = "";
+                //append the JSON after the schema and return it as an URL
+                return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, jsonResponse);
+            }
             return new UrlHelper(HttpContext.Current.Request.RequestContext).Action("Info", "Payment", new { area = "Laser.Orchard.PaymentGateway", paymentId = paymentId });
         }
         /// <summary>
@@ -127,12 +155,13 @@ namespace Laser.Orchard.PaymentGateway.Services {
             // 4000 è la massima lunghezza di stringa che nhibernate riesce a gestire
             values.PosUrl = GetValidString(values.PosUrl, 4000);
             values.Info = GetValidString(values.Info, 4000);
+            values.CustomRedirectUrl = GetValidString(values.CustomRedirectUrl, 4000);
+            values.CustomRedirectSchema = GetValidString(values.CustomRedirectSchema, 4000);
             if (record == null) {
                 values.CreationDate = now;
                 values.UpdateDate = now;
                 _repository.Create(values);
-            }
-            else {
+            } else {
                 values.UpdateDate = now;
                 _repository.Update(values);
             }

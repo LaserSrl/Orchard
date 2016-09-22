@@ -35,20 +35,6 @@ public interface IPosService : IDependency {
     /// <param name="paymentId">The id of the record that contains the information about the payment.</param>
     /// <returns>The url of the virtual POS where the payment should happen.</returns>
     string GetPosUrl(int paymentId);
-    /// <summary>
-    /// This method is used to retrieve directly the URL of the virtual pos of the paymen gateway, i.e. the address 
-    /// towards which a client would be redirected to actually pay.
-    /// </summary>
-    /// <param name="paymentId">The id of the record that contains the information about the payment.</param>
-    /// <param name="redirectUrl">We may want, after the virtual POS returns to us with a call to an Action to
-    /// notify us that its job is done, to redirect the browser to a different Url. This paramater tells us that URL,
-    /// where we will place a description of the transaction results. This is validated as starting with either http://
-    /// or https://</param>
-    /// <param name="schema">Similarly to the redirectUrl, we may want to use a different schema than an http URL,
-    /// e.g. when we are redirecting inside a mobile app. This parameter tells us that schema, to which we'll append
-    /// a description of the transaction result, serialized into a JSON. If there is a redirectUrl, the schema is ignored.</param>
-    /// <returns>The url of the virtual POS where the payment should happen.</returns>
-    string GetPosUrl(int paymentId, string redirectUrl, string schema);
     #endregion
 
     #region Methods implemented in the abstract service base
