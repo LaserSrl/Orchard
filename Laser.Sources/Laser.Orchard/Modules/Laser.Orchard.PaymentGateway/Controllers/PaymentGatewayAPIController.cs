@@ -62,7 +62,8 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         /// <param name="itemId">Id of Content Item associated with payment.</param>
         /// <param name="reason">Description of reason for payment.</param>
         /// <returns></returns>
-        public PaymentGatewayResponse GetVirtualPosUrl(string posName, decimal amount, string currency, int? itemId = 0, string reason = "") {
+        public PaymentGatewayResponse GetVirtualPosUrl(
+            string posName, decimal amount, string currency, int? itemId = 0, string reason = "") {
             bool success = false;
             string msg = "";
             dynamic data = new System.Dynamic.ExpandoObject();
@@ -86,7 +87,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                     error = PaymentGatewayErrorCode.InvalidCurrency;
                     action = PaymentGatewayResolutionAction.VerifyInformation;
                     data.validCurrencies = vc;
-                    msg = T("The currency is required. You may find a list of valid currencies in this response's data object.").Text;
+                    msg = T("A valid currency is required. You may find a list of valid currencies in this response's data object.").Text;
                 } else {
                     //create PaymentRecord (using startPayment)
                     PaymentRecord record = null;
