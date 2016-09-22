@@ -29,5 +29,10 @@ namespace Laser.Orchard.PaymentGestPay {
 
             return 2;
         }
+
+        public int UpdateFrom2() {
+            SchemaBuilder.DropTable("GestPayRedirectRecord");
+            return 3;
+        }
     }
 }

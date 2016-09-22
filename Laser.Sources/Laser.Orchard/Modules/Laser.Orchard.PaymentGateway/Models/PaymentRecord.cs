@@ -19,5 +19,8 @@ namespace Laser.Orchard.PaymentGateway.Models {
         public virtual string Info { get; set; }
         public virtual int ContentItemId { get; set; }
         public virtual int UserId { get; set; }
+        //update 2016/09/22: add new properties to store custom redirect information
+        public virtual string CustomRedirectUrl { get; set; }
+        public virtual string CustomRedirectSchema { get; set; }
     }
 }

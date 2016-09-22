@@ -30,9 +30,6 @@ namespace Laser.Orchard.Braintree.Services {
         public override string GetPosUrl(int paymentId) {
             throw new NotImplementedException(T("An SDK is available for BrainTree.").Text);
         }
-        public override string GetPosUrl(int paymentId, string redirectUrl, string schema) {
-            throw new NotImplementedException(T("An SDK is available for BrainTree.").Text);
-        }
 
         public override string GetSettingsControllerName() {
             return "Admin";

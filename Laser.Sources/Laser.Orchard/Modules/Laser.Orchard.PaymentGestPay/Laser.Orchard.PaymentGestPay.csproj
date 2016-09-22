@@ -136,7 +136,6 @@
     <Compile Include="GestPayMigrations.cs" />
     <Compile Include="Handlers\PaymentGestPaySettingsPartHandler.cs" />
     <Compile Include="Models\EncryptDecryptTransactionResult.cs" />
-    <Compile Include="Models\GestPayRedirectRecord.cs" />
     <Compile Include="Models\GestPayTransaction.cs" />
     <Compile Include="Models\PaymentGestPaySettingsPart.cs" />
     <Compile Include="Models\PaymentGestPaySettingsPartRecord.cs" />
