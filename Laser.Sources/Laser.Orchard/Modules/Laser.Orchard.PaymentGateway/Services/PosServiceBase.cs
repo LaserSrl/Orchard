@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.PaymentGateway.Models;
 using Orchard;
 using Orchard.Data;
+using Orchard.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace Laser.Orchard.PaymentGateway.Services {
         protected readonly IOrchardServices _orchardServices;
         private readonly IRepository<PaymentRecord> _repository;
         private readonly IPaymentEventHandler _paymentEventHandler;
+
+        public Localizer T { get; set; }
 
         public abstract string GetPosName();
         /// <summary>
@@ -35,6 +38,8 @@ namespace Laser.Orchard.PaymentGateway.Services {
             _orchardServices = orchardServices;
             _repository = repository;
             _paymentEventHandler = paymentEventHandler;
+
+            T = NullLocalizer.Instance;
         }
         public PaymentRecord StartPayment(PaymentRecord values) {
             // verifica che siano presenti i valori necessari

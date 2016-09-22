@@ -109,8 +109,12 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                         data.redirectUrl = pos.GetPosUrl(paymentId);
                         success = true;
                     } catch (Exception ex) {
-                        //TODO: some payment services may not return a redirect url (e.g. Braintree)
+                        //some payment services may not return a redirect url (e.g. Braintree)
                         //handle this case with an error
+                        success = false;
+                        msg = ex.Message;
+                        error = PaymentGatewayErrorCode.CallNotValid;
+                        action = PaymentGatewayResolutionAction.DoSomethingElse;
                     }
                 }
             }
@@ -150,14 +154,15 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             NoError = 0, GenericError = 1,
             PosNotFound = 5001, //No POS was found with the given name
             InvalidCurrency = 5002, //the selected POS does not support this currency
-            ImpossibleToCreateRecord = 5003 //attempt to create the record failed
+            ImpossibleToCreateRecord = 5003, //attempt to create the record failed
+            CallNotValid = 5004 //this call is not valid for the selected POS
         }
         public enum PaymentGatewayResolutionAction {
             NoAction = 0,
             TryAgain = 5001, //it might have been a temporary error
             UpdatePosNames = 5002, //Update the list of available pos names
-            VerifyInformation = 5003 //some parameter was not valid. 
-
+            VerifyInformation = 5003, //some parameter was not valid. 
+            DoSomethingElse = 5004 //For the selected POS, you should be doing something else, rather than the call you made
         }
         public class PaymentGatewayResponse : Response {
             new public PaymentGatewayErrorCode ErrorCode { get; set; }

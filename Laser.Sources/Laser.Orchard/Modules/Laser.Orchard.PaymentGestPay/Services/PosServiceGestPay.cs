@@ -28,12 +28,10 @@ namespace Laser.Orchard.PaymentGestPay.Services {
     public class PosServiceGestPay : PosServiceBase, IGestPayAdminServices, IGestPayTransactionServices {
 
         public ILogger Logger { get; set; }
-        public Localizer T { get; set; }
 
         public PosServiceGestPay(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler) :
             base(orchardServices, repository, paymentEventHandler) {
 
-            T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
 
         }

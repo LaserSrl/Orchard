@@ -23,12 +23,10 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
     public class CartaSiPosService : PosServiceBase, ICartaSiTransactionService {
 
         public ILogger Logger { get; set; }
-        public Localizer T { get; set; }
 
         public CartaSiPosService(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler) :
             base(orchardServices, repository, paymentEventHandler) {
 
-            T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
 
