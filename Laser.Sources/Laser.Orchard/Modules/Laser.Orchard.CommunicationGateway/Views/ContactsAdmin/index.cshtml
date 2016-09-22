@@ -10,6 +10,7 @@
     Layout.Title = T("Contact");
 
     Script.Require("jQuery").AtHead();
+    var urlBack = Url.Action("Index", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" });
 }
 
 <div class="manage">
@@ -40,7 +41,7 @@
                     </div>
                     <div class="manage-export" id="manage-export">
                         <button class="button primaryAction" style="margin-left: 4px" type="submit" name="submit.Export" value="export">@T("Export")</button>
-                        <a href="@Url.Action("ExportedFilesList")">@T("Show Exported Files")</a>
+                        <a href="@Url.Action("Index", "FileExport", new { area = "Laser.Orchard.StartupConfig", UrlBack = urlBack })&FolderName=Contacts">@T("Show Exported Files")</a>
                     </div>
                 </div>
             </div>
