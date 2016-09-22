@@ -48,7 +48,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
 
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken) {
             var userData = (Build(clientConfiguration) as GoogleOAuth2Client).GetUserDataDictionary(userAccessToken);
-            Logger.Error("user data count: {0}", userData.Count);
+            //Logger.Error("user data count: {0}", userData.Count);
             userData["accesstoken"] = userAccessToken;
             string id = userData["id"];
             string name = userData["email"];
@@ -58,9 +58,9 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
 
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string token, string userAccessSecret, string returnUrl) {
             var client = Build(clientConfiguration) as GoogleOAuth2Client;
-            Logger.Error("Inizio chiamata Google");
+            //Logger.Error("Inizio chiamata Google");
             string userAccessToken = client.GetAccessToken(new Uri(returnUrl), token);
-            Logger.Error("access token: {0}", userAccessToken);
+            //Logger.Error("access token: {0}", userAccessToken);
             return GetUserData(clientConfiguration, previousAuthResult, userAccessToken);
         }
         
