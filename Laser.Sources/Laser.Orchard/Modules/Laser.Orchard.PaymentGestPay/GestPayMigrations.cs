@@ -17,5 +17,17 @@ namespace Laser.Orchard.PaymentGestPay {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.CreateTable("GestPayRedirectRecord",
+                 table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<int>("PaymentRecordId")
+                    .Column("RedirectUrl", System.Data.DbType.String, x => x.Unlimited())
+                    .Column("Schema", System.Data.DbType.String, x => x.Unlimited())
+                 );
+
+            return 2;
+        }
     }
 }

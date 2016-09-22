@@ -6,8 +6,8 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.PaymentGestPay.Services {
-    public interface IGestPayTransactionServices : IDependency {
-        string StartGestPayTransactionURL(int paymentId);
+    public interface IGestPayTransactionServices : IDependency, IPosService {
+        //string StartGestPayTransactionURL(int paymentId);
         TransactionOutcome ReceiveS2STransaction(string a, string b);
         string InterpretTransactionResult(string a, string b);
     }

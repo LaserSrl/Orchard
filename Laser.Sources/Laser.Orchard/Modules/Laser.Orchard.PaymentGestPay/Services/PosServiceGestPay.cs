@@ -27,11 +27,18 @@ using System.Xml;
 namespace Laser.Orchard.PaymentGestPay.Services {
     public class PosServiceGestPay : PosServiceBase, IGestPayAdminServices, IGestPayTransactionServices {
 
+        private readonly IRepository<GestPayRedirectRecord> _gestpayRedirectRepository;
+
         public ILogger Logger { get; set; }
 
-        public PosServiceGestPay(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler) :
+        public PosServiceGestPay(
+            IOrchardServices orchardServices,
+            IRepository<PaymentRecord> repository,
+            IPaymentEventHandler paymentEventHandler,
+            IRepository<GestPayRedirectRecord> gestpayRedirectRepository) :
             base(orchardServices, repository, paymentEventHandler) {
 
+            _gestpayRedirectRepository = gestpayRedirectRepository;
             Logger = NullLogger.Instance;
 
         }
@@ -70,6 +77,9 @@ namespace Laser.Orchard.PaymentGestPay.Services {
         public override string GetPosUrl(int paymentId) {
             return StartGestPayTransactionURL(paymentId);
         }
+        public override string GetPosUrl(int paymentId, string redirectUrl, string schema) {
+            return StartGestPayTransactionURL(paymentId, redirectUrl, schema);
+        }
 
         public override List<string> GetAllValidCurrencies() {
             return CodeTables.CurrencyCodes.Select(cc => cc.isoCode).ToList();
@@ -101,8 +111,11 @@ namespace Laser.Orchard.PaymentGestPay.Services {
         /// This gets called by the Action actually starting the transaction.
         /// </summary>
         /// <param name="paymentId">The id corresponding to a <type>PaymentRecord</type> for the transaction we want to start.</param>
+        /// <param name="redirectUrl">Url to which we want to redirect the browser from the Action handling the end of
+        /// the transaction.</param>
+        /// <param name="schema">Schema for the redirect from the Action handling the end of the transaction.</param>
         /// <returns>The url of a page to which we redirect the client's browser to complete the payment.</returns>
-        public string StartGestPayTransactionURL(int paymentId) {
+        private string StartGestPayTransactionURL(int paymentId, string redirectUrl = "", string schema = "") {
 
             var settings = _orchardServices
                 .WorkContext
@@ -119,6 +132,28 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                 //return the url of a suitable error page (call this.GetPaymentInfoUrl after inserting the error in the PaymentRecord)
                 return GetPaymentInfoUrl(paymentId);
             }
+            //if we have either a redirectUrl or a schema
+            //GestPay does not support us sending this information in the CustomInfo field, which they use only in responses.
+            //I will store the strings (if any) in a specific record, that I will go and fetch when finishing the payment to
+            //return/redirect correctly.
+            if (!string.IsNullOrWhiteSpace(redirectUrl) || !string.IsNullOrWhiteSpace(schema)) {
+                //create a GestPayRedirectRecord to store this information
+                var gprr = new GestPayRedirectRecord {
+                    PaymentRecordId = paymentId,
+                    RedirectUrl = redirectUrl,
+                    Schema = schema
+                };
+                _gestpayRedirectRepository.Create(new GestPayRedirectRecord {
+                    PaymentRecordId = paymentId,
+                    RedirectUrl = redirectUrl,
+                    Schema = schema
+                });
+            }
+            //if (!string.IsNullOrWhiteSpace(redirectUrl)) {
+            //    //gpt.customInfo += string.Format("redirectUrl|{0}", redirectUrl);
+            //} else if (!string.IsNullOrWhiteSpace(schema)) {
+            //    //gpt.customInfo += string.Format("schema|{0}", schema);
+            //}
             try {
                 Validator.ValidateObject(gpt, new ValidationContext(gpt), true);
             } catch (Exception ex) {

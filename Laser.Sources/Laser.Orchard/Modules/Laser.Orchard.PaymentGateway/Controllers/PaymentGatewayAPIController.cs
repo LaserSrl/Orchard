@@ -61,9 +61,13 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         /// <param name="currency">Currency of payment.</param>
         /// <param name="itemId">Id of Content Item associated with payment.</param>
         /// <param name="reason">Description of reason for payment.</param>
+        /// <param name="redirectUrl">Url to which we want to redirect the browser from the Action handling the end of
+        /// the transaction.</param>
+        /// <param name="schema">Schema for the redirect from the Action handling the end of the transaction.</param>
         /// <returns></returns>
         public PaymentGatewayResponse GetVirtualPosUrl(
-            string posName, decimal amount, string currency, int? itemId = 0, string reason = "") {
+            string posName, decimal amount, string currency, 
+            int? itemId = 0, string reason = "", string redirectUrl = "", string schema = "") {
             bool success = false;
             string msg = "";
             dynamic data = new System.Dynamic.ExpandoObject();
@@ -107,7 +111,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                     int paymentId = record.Id;
                     //get the redirect url for the pos
                     try {
-                        data.redirectUrl = pos.GetPosUrl(paymentId);
+                        data.redirectUrl = pos.GetPosUrl(paymentId, redirectUrl, schema);
                         success = true;
                     } catch (Exception ex) {
                         //some payment services may not return a redirect url (e.g. Braintree)
