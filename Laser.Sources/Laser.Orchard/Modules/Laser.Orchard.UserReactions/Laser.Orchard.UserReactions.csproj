@@ -117,11 +117,13 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\coloredflaticon.css" />
-    <Content Include="Styles\flaticon.css" />
-    <Content Include="Styles\fonts\flaticon.svg" />
+    <Content Include="Styles\fonts\reactions.eot" />
+    <Content Include="Styles\fonts\reactions.ttf" />
+    <Content Include="Styles\fonts\reactions.woff" />
     <None Include="Views\Admin\ListSummaryReactionByUsers.cshtml" />
-    <None Include="Views\Parts\UserReactionsListForm.cshtml" />
+    <Content Include="Styles\fonts\reactions.svg" />
+    <Content Include="Styles\icons-reference.html" />
+    <Content Include="Styles\styles.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -185,9 +187,6 @@
     <Content Include="Views\Parts\UserReactions_Detail.cshtml" />
     <Content Include="Views\Parts\UserReactions_Summary.cshtml" />
     <Content Include="Views\DefinitionTemplates\UserReactionsPartSettings.cshtml" />
-    <Content Include="Styles\fonts\flaticon.eot" />
-    <Content Include="Styles\fonts\flaticon.ttf" />
-    <Content Include="Styles\fonts\flaticon.woff" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
