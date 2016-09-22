@@ -17,16 +17,20 @@
 }
 
 @{    
-   
     //Aggiungi in testata la libreria jQuery
-
     Script.Require("jQuery").AtHead();
+    string cssPermissionsClass="";
+    if (Model.RequireLogin) {
+        cssPermissionsClass = "require-login";
+    } else if (!Model.Authorized){
+        cssPermissionsClass = "disabled";
+    }
 }
 
 @Html.AntiForgeryToken()
 
 
-<div class="reaction-wrapper">
+<div class="reaction-wrapper @cssPermissionsClass">
 @{foreach (var item in part) {
       var quantità = "(" + @item.Quantity + ")";
       var itemName = " " + _reactionService.GetReactionEnumTranslations((ReactionsNames)Enum.Parse(typeof(ReactionsNames), item.TypeName)) + " ";
@@ -90,14 +94,14 @@
         @if (Model.Authorized) {
             <text>
 
-        $("div.reaction-container").hover(
-            function () {
-                $(this).css('cursor', 'pointer');
-                $(this).css('opacity', '0.4');
-            },
-            function () {
-                $(this).css('opacity', '1');
-            });
+        //$("div.reaction-container").hover(
+        //    function () {
+        //        $(this).css('cursor', 'pointer');
+        //        $(this).css('opacity', '0.4');
+        //    },
+        //    function () {
+        //        $(this).css('opacity', '1');
+        //    });
 
         //Assegnazione evento click a div reaction-container
         $("div.reaction-container").bind("click", function (event) {
@@ -121,15 +125,6 @@
         } else if (Model.RequireLogin) {
             // utente anonimo non autorizzato: sul click chiede login
             <text>
-
-        $("div.reaction-container").hover(
-            function () {
-                $(this).css('cursor', 'pointer');
-                $(this).css('opacity', '0.4');
-            },
-            function () {
-                $(this).css('opacity', '1');
-            });
 
         //Assegnazione evento click a div reaction-container
         $("div.reaction-container").bind("click", function (event) {
