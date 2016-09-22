@@ -120,7 +120,6 @@ namespace Laser.Orchard.UserReactions.Controllers {
                     string styleAcronimeName = styleAcronime.StyleAcronime + item.TypeName;
                     _repoTypes.Create(new Models.UserReactionsTypesRecord {
                         Priority = item.Priority,
-                        TypeCssClass = styleAcronimeName,
                         TypeName = item.TypeName,
                         Activating = item.Activating
                     });
@@ -129,7 +128,6 @@ namespace Laser.Orchard.UserReactions.Controllers {
                 else {
                     var record = _repoTypes.Get(item.Id);
                     record.Priority = item.Priority;
-                    record.TypeCssClass = item.TypeCssClass;
                     record.TypeName = item.TypeName;
                     record.Activating = item.Activating;
                     _repoTypes.Update(record);
