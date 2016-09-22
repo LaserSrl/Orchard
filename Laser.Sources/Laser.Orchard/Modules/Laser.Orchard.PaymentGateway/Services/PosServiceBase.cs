@@ -1,10 +1,12 @@
 ﻿using Laser.Orchard.PaymentGateway.Models;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Newtonsoft.Json;
 using Orchard;
 using Orchard.Data;
 using Orchard.Localization;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -114,7 +116,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 string message = (pRecord.Success) ? pRecord.Info : (string.Format("{0}: {1}", pRecord.Error, pRecord.Info));
                 //ErrorCode errorCode = (pRecord.Success) ? ErrorCode.NoError : ErrorCode.GenericError;
                 //ResolutionAction resolutionAction = ResolutionAction.NoAction;
-                dynamic data = new System.Dynamic.ExpandoObject(); //all properties will be strings
+                dynamic data = new ExpandoObject(); //all properties will be strings
                 data.PaymentId = paymentId.ToString();
                 if (pRecord.ContentItemId > 0) {
                     data.ContentItemId = pRecord.ContentItemId.ToString();
@@ -132,8 +134,20 @@ namespace Laser.Orchard.PaymentGateway.Services {
             } else if (!string.IsNullOrWhiteSpace(pRecord.CustomRedirectSchema)) {
                 //serialize a response object as a JSON
                 string jsonResponse = "";
+                dynamic response = new ExpandoObject();
+                response.Success = pRecord.Success;
+                response.Message = (pRecord.Success) ? pRecord.Info : (string.Format("{0}: {1}", pRecord.Error, pRecord.Info));
+                dynamic data = new ExpandoObject();
+                data.PaymentId = paymentId.ToString();
+                if (pRecord.ContentItemId > 0) {
+                    data.ContentItemId = pRecord.ContentItemId.ToString();
+                }
+                //TODO: using the ExpandoObject as IDictionary<string, object> i can add properties to data in runtime without knowing their names beforehand
+                response.Data = data;
+                jsonResponse = JsonConvert.SerializeObject(response);
+                
                 //append the JSON after the schema and return it as an URL
-                return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, jsonResponse);
+                return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, HttpUtility.UrlEncode(jsonResponse));
             }
             return new UrlHelper(HttpContext.Current.Request.RequestContext).Action("Info", "Payment", new { area = "Laser.Orchard.PaymentGateway", paymentId = paymentId });
         }
