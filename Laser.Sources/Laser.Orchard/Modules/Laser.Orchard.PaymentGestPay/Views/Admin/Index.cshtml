@@ -12,9 +12,13 @@
 
 @helper GetServerIp(){
     string sIP = "";
-    HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://api.ipify.org");
-    WebResponse resp = req.GetResponse();
-    sIP = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+    try {
+        HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://api.ipify.org");
+        WebResponse resp = req.GetResponse();
+        sIP = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+    } catch (Exception) {
+        sIP = T("It was impossible to verify the server's IP.").Text;
+    }
     @sIP
 }
 

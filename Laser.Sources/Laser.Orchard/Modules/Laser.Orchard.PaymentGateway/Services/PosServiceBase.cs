@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -129,8 +130,13 @@ namespace Laser.Orchard.PaymentGateway.Services {
                     qsFragments.Add(string.Format("Data_{0}={1}", HttpUtility.UrlEncode(kvp.Key), HttpUtility.UrlEncode((string)(kvp.Value))));
                 }
                 respQString = string.Join(@"&", qsFragments);
+                //if the redirect url starts with neither http:// nor https://, assume http://
+                string rBaseUrl = pRecord.CustomRedirectUrl;
+                if (!Regex.IsMatch(rBaseUrl, @"(^https?://)")) {
+                    rBaseUrl = string.Format(@"https://{0}", rBaseUrl);
+                }
                 //append the querystring to the return url ad return the resulting url
-                return string.Format("{0}?{1}", pRecord.CustomRedirectUrl, respQString);
+                return string.Format("{0}?{1}", rBaseUrl, respQString);
             } else if (!string.IsNullOrWhiteSpace(pRecord.CustomRedirectSchema)) {
                 //serialize a response object as a JSON
                 string jsonResponse = "";
@@ -145,9 +151,19 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 //TODO: using the ExpandoObject as IDictionary<string, object> i can add properties to data in runtime without knowing their names beforehand
                 response.Data = data;
                 jsonResponse = JsonConvert.SerializeObject(response);
+
+                //List<string> qsFragments = new List<string>();
+                //qsFragments.Add(string.Format("Success={0}", response.Success.ToString()));
+                //qsFragments.Add(string.Format("Message={0}", HttpUtility.UrlEncode((string)(response.Message))));
+                //foreach (KeyValuePair<string, object> kvp in data) {
+                //    qsFragments.Add(string.Format("Data_{0}={1}", HttpUtility.UrlEncode(kvp.Key), HttpUtility.UrlEncode((string)(kvp.Value))));
+                //}
+                //var respQString = string.Join(@"&", qsFragments);
                 
                 //append the JSON after the schema and return it as an URL
-                return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, HttpUtility.UrlEncode(jsonResponse));
+                return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, jsonResponse);
+                //return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, HttpUtility.UrlEncode(jsonResponse));
+                //return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, respQString);
             }
             return new UrlHelper(HttpContext.Current.Request.RequestContext).Action("Info", "Payment", new { area = "Laser.Orchard.PaymentGateway", paymentId = paymentId });
         }

@@ -1,12 +1,15 @@
 ﻿using Laser.Orchard.PaymentGestPay.Models;
 using Laser.Orchard.PaymentGestPay.Services;
+using Orchard;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Mvc.Properties;
 
 namespace Laser.Orchard.PaymentGestPay.Controllers {
     public class TransactionsController : Controller {
@@ -15,10 +18,13 @@ namespace Laser.Orchard.PaymentGestPay.Controllers {
         private dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public TransactionsController(IShapeFactory shapeFactory, IGestPayTransactionServices gestPayTransactionServices) {
+        private IOrchardServices _orchardServices;
+
+        public TransactionsController(IShapeFactory shapeFactory, IGestPayTransactionServices gestPayTransactionServices, IOrchardServices orchardServices) {
             _gestPayTransactionServices = gestPayTransactionServices;
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
+            _orchardServices = orchardServices;
         }
 
         public ActionResult RedirectToGestPayPage(int Id) {
@@ -53,7 +59,11 @@ namespace Laser.Orchard.PaymentGestPay.Controllers {
             return RedirectToAction("GestPayOutcome", new { a = a, b = b });
         }
         public ActionResult GestPayOutcome(string a, string b) {
-            return Redirect(_gestPayTransactionServices.InterpretTransactionResult(a, b));
+            string redUrl = _gestPayTransactionServices.InterpretTransactionResult(a, b);
+
+            return Redirect(redUrl);
         }
     }
+
+
 }
