@@ -22,5 +22,6 @@ namespace Laser.Orchard.PaymentGateway.Models {
         //update 2016/09/22: add new properties to store custom redirect information
         public virtual string CustomRedirectUrl { get; set; }
         public virtual string CustomRedirectSchema { get; set; }
+        public virtual bool PaymentTransactionComplete { get; set; }
     }
 }

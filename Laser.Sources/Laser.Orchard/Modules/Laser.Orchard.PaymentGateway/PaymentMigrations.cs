@@ -58,5 +58,12 @@ namespace Laser.Orchard.PaymentGateway {
                 table => table.AddColumn("CustomRedirectSchema", System.Data.DbType.String, x => x.Unlimited()));
             return 6;
         }
+
+        public int UpdateFrom6() {
+            SchemaBuilder.AlterTable("PaymentRecord",
+                table => table.AddColumn<bool>("PaymentTransactionComplete")
+                );
+            return 7;
+        }
     }
 }

@@ -3,9 +3,16 @@
 }
 <h2>@T("Pay using:")</h2>
 @using(Html.BeginFormAntiForgeryPost()){
+    //TODO:move all the parameters to hidden fields, rather than passing them to the Actions in querystring.
+    //also, the actions should be called in post.
     <ul style="list-style-type:none">
     @foreach(var pos in Model.PosList) {
         <li><button type="submit" style="padding: 10px 10px" formaction="@Html.Raw(pos.GetPosActionUrl(Model.Record.Id))">@pos.GetPosName()</button></li>
     }
     </ul>
+}
+@using (Script.Foot()){
+    <script>
+        //TODO: write the script that connects to our server and checks things about the payment whose ID we have here.
+    </script>
 }

@@ -75,32 +75,50 @@ namespace Laser.Orchard.PaymentGateway.Services {
             return result;
         }
         public void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "") {
-            PaymentRecord paymentToSave = null;
-            PaymentRecord payment = GetPaymentInfo(paymentId);
-            //if (string.IsNullOrWhiteSpace(payment.PosName)) {
-                paymentToSave = payment;
-            //} else {
-            //    // forza la creazione di un nuovo record perché c'è già stato un tentativo di pagamento
-            //    paymentToSave = new PaymentRecord();
-            //    paymentToSave.Reason = payment.Reason;
-            //    paymentToSave.Amount = payment.Amount;
-            //    paymentToSave.Currency = payment.Currency;
-            //    paymentToSave.ContentItemId = payment.ContentItemId;
-            //    paymentToSave.UserId = payment.UserId;
-            //}
-            paymentToSave.Success = success;
-            paymentToSave.Error = error;
-            paymentToSave.Info = info;
-            paymentToSave.TransactionId = transactionId;
-            paymentToSave.PosName = GetPosName(); // forza la valorizzazione del PosName
-            paymentToSave.PosUrl = GetPosActionUrl(paymentId);
-            SavePaymentInfo(paymentToSave);
-            // solleva l'evento di termine della transazione
-            if (success) {
-                _paymentEventHandler.OnSuccess(paymentToSave.Id, paymentToSave.ContentItemId);
+            PaymentRecord paymentToSave = GetPaymentInfo(paymentId); //null;
+            //PaymentRecord payment = GetPaymentInfo(paymentId);
+            if (paymentToSave.PaymentTransactionComplete) {
+                //this payment had completed already, so we should not be here
+                //We may be here (in healthy cases) if the transactin was closed by a S2S call, and then a S2C call
+                //happened. So, we do not change the success/failure of the transaction (but verify it, to be safe).
+                //However, it may make sense to add eventual errors or other info to the PaymentRecord
+                //
+                //REALLY, THIS SHOULD NEVER HAPPEN
+                //
+                //bool newError = false;
+                //if (!string.IsNullOrWhiteSpace(error)) {
+                //    //Check that the same error has not been inserted already
+                //    if (!paymentToSave.Error.Contains(error)) {
+                //        paymentToSave.Error = string.Join(Environment.NewLine, new string[] { paymentToSave.Error, error });
+                //        newError = true;
+                //    }
+                //}
+                //if (!string.IsNullOrWhiteSpace(info)) {
+                //    if (!paymentToSave.Info.Contains(info)) {
+                //        paymentToSave.Info = string.Join(Environment.NewLine, new string[] { paymentToSave.Info, info });
+                //    }
+                //}
+                //SavePaymentInfo(paymentToSave);
+                //if (newError) {
+                //    _paymentEventHandler.OnError(paymentToSave.Id, paymentToSave.ContentItemId);
+                //}
             } else {
-                _paymentEventHandler.OnError(paymentToSave.Id, paymentToSave.ContentItemId);
+                //paymentToSave = payment;
+                paymentToSave.Success = success;
+                paymentToSave.Error = error;
+                paymentToSave.Info = info;
+                paymentToSave.TransactionId = transactionId;
+                paymentToSave.PosName = GetPosName(); // forza la valorizzazione del PosName
+                paymentToSave.PosUrl = GetPosActionUrl(paymentId);
+                SavePaymentInfo(paymentToSave);
+                // solleva l'evento di termine della transazione
+                if (success) {
+                    _paymentEventHandler.OnSuccess(paymentToSave.Id, paymentToSave.ContentItemId);
+                } else {
+                    _paymentEventHandler.OnError(paymentToSave.Id, paymentToSave.ContentItemId);
+                }
             }
+
         }
         /// <summary>
         /// Fornisce l'URL per consultare l'esito del pagamento
@@ -159,7 +177,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 //    qsFragments.Add(string.Format("Data_{0}={1}", HttpUtility.UrlEncode(kvp.Key), HttpUtility.UrlEncode((string)(kvp.Value))));
                 //}
                 //var respQString = string.Join(@"&", qsFragments);
-                
+
                 //append the JSON after the schema and return it as an URL
                 return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, jsonResponse);
                 //return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, HttpUtility.UrlEncode(jsonResponse));

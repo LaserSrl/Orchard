@@ -58,7 +58,7 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             var hp = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             var ub = new UriBuilder(_orchardServices.WorkContext.HttpContext.Request.Url.AbsoluteUri) {
                 Path = hp.Action("RedirectToGestPayPage", "Transactions", new { Area = Constants.LocalArea, Id = paymentId }),
-                //Query= "Id=" + paymentId.ToString()
+                Query= ""//"Id=" + paymentId.ToString()
             };
             //var ub = new UrlHelper().Action("RedirectToGestPayPage", "Transactions", new { Id = paymentId });
             return ub.Uri.ToString();
@@ -286,6 +286,8 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                     throw new Exception(error.Text);
                 }
 
+
+                //TODO: this is the method that should handle the end of the transaction on our end.
                 TransactionOutcome result = new TransactionOutcome();
                 try {
                     result = new TransactionOutcome(outcome);
@@ -359,6 +361,8 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                     throw new Exception(error.Text);
                 }
 
+                //TODO: the closure of the transaction should be handled in the S2S method
+                //Here, eventually, we send error messages or info strings, that wee add to the record in the endpayment
                 TransactionOutcome result = new TransactionOutcome();
                 try {
                     result = new TransactionOutcome(outcome);
