@@ -8,6 +8,9 @@ using Orchard;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Data;
 using Orchard.Security;
+using Orchard.ContentManagement.Handlers;
+using System.Reflection;
+using System;
 
 namespace Contrib.Reviews.Drivers {
     
@@ -92,5 +95,34 @@ namespace Contrib.Reviews.Drivers {
             part.Reviews.AddRange(reviews.OrderByDescending(r => r.IsCurrentUsersReview).ThenByDescending(r => r.CreatedUtc));
             part.UserHasReviewed = currentUser != null && part.Reviews.Any(r => r.UserName == currentUser.UserName);
         }
+
+
+        protected override void Importing(ReviewsPart part, ImportContentContext context) {
+            throw new NotImplementedException();
+           
+            //var root = context.Data.Element(part.PartDefinition.Name);
+            //part.ShowStars = bool.Parse(root.Attribute("ShowStars").Value);
+            //part.UserHasReviewed = bool.Parse(root.Attribute("UserHasReviewed").Value);
+            
+            ////Rating structure ResultRecord type            
+            //part.Rating.UserRating = double.Parse(root.Attribute("Rating").Parent.Element("UserRating").Value);
+            
+            ////Inside rating structure
+            //var subroot = root.Attribute("Rating").Parent.Element("CurrentVotingResult");
+            //part.Rating.CurrentVotingResult.Id = int.Parse(subroot.Attribute("Id").Value);
+            //part.Rating.CurrentVotingResult.CreatedUtc = Convert.ToDateTime(subroot.Attribute("CreatedUtc").Value);
+           
+
+        }
+
+        protected override void Exporting(ReviewsPart part,ExportContentContext context) {
+            throw new NotImplementedException();
+        }
+
+       
+
+
+
+
     }
 }

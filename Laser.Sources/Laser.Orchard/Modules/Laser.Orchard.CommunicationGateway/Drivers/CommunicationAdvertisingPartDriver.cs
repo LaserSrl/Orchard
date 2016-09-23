@@ -10,6 +10,7 @@ using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class CommunicationAdvertisingPartDriver : ContentPartDriver<CommunicationAdvertisingPart> {
@@ -59,5 +60,22 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             return Editor(part, shapeHelper);
             //  return null;
         }
+
+
+        protected override void Importing(CommunicationAdvertisingPart part, ImportContentContext context) {
+            //throw new NotImplementedException();
+           // context.ImportAttribute(part.PartDefinition.Name, "CampaignId", s => part.ContentItem = context.GetItemFromSession(s));
+
+            var root = context.Data.Element(part.PartDefinition.Name);
+            part.CampaignId = int.Parse(root.Attribute("CampaignId").Value);
+        }
+
+        protected override void Exporting(CommunicationAdvertisingPart part, ExportContentContext context) {
+            //throw new NotImplementedException();
+            var root = context.Element(part.PartDefinition.Name);
+            root.SetAttributeValue("CampaignId", part.CampaignId);
+
+        }
+
     }
 }
