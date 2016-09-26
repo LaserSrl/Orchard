@@ -21,7 +21,7 @@ namespace Laser.Orchard.PaymentCartaSi.Controllers {
             return Redirect(_cartaSiTransactionService.StartCartaSiTransactionURL(Id));
         }
 
-        [HttpPost]
+        //[HttpPost]
         public ActionResult CartaSiS2S() {
             //read the querystring that contains the transaction results (Request.QueryString)
             //this is called in POST by the CartaSì server.

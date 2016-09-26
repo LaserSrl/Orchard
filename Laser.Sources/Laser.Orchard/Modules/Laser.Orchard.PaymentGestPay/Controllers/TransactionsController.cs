@@ -3,6 +3,7 @@ using Laser.Orchard.PaymentGestPay.Services;
 using Orchard;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Themes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,13 +28,14 @@ namespace Laser.Orchard.PaymentGestPay.Controllers {
         }
 
         public ActionResult RedirectToGestPayPage(int Id) {
-            return Redirect(_gestPayTransactionServices.GetPosUrl(Id));
+            string posUrl = _gestPayTransactionServices.GetPosUrl(Id);
+            return Redirect(posUrl);
         }
 
         //GestPay calls this controller while proceeding with the transaction
         public ActionResult GestPayS2SEndpoint(string a, string b) {
             TransactionOutcome outcome = _gestPayTransactionServices.ReceiveS2STransaction(a, b);
-
+            //the mesages given in the view are for debug purposes, because GestPay does not care
             string shapeString = "S2S";
 
             if (!string.IsNullOrWhiteSpace(outcome.TransactionResult)) {

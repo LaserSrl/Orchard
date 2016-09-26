@@ -80,5 +80,11 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             }
             return View("Info", payment);
         }
+
+        //I call this method in the page showing the buttons to go to the virtual POS
+        public ActionResult PaymentIsIncomplete(int paymentId) {
+            return Json(new { Success = !_posServiceEmpty.GetPaymentInfo(paymentId).PaymentTransactionComplete });
+            //return Json(new { Success = false });
+        }
     }
 }

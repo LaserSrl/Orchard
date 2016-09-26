@@ -110,6 +110,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 paymentToSave.TransactionId = transactionId;
                 paymentToSave.PosName = GetPosName(); // forza la valorizzazione del PosName
                 paymentToSave.PosUrl = GetPosActionUrl(paymentId);
+                paymentToSave.PaymentTransactionComplete = true; //flag the transaction as complete
                 SavePaymentInfo(paymentToSave);
                 // solleva l'evento di termine della transazione
                 if (success) {

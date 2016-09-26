@@ -14,6 +14,7 @@ using Orchard.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
@@ -58,7 +59,7 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             var hp = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             var ub = new UriBuilder(_orchardServices.WorkContext.HttpContext.Request.Url.AbsoluteUri) {
                 Path = hp.Action("RedirectToGestPayPage", "Transactions", new { Area = Constants.LocalArea, Id = paymentId }),
-                Query= ""//"Id=" + paymentId.ToString()
+                Query = ""//"Id=" + paymentId.ToString()
             };
             //var ub = new UrlHelper().Action("RedirectToGestPayPage", "Transactions", new { Id = paymentId });
             return ub.Uri.ToString();
@@ -114,6 +115,10 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                 .As<PaymentGestPaySettingsPart>();
 
             var pRecord = GetPaymentInfo(paymentId);
+            if (pRecord.PaymentTransactionComplete) {
+                //this avoids repeat payments when the user is dumb and goes back in the browser to try and pay again
+                return GetPaymentInfoUrl(paymentId);
+            }
             var gpt = new GestPayTransaction(pRecord);
             //parameter validation
             if (gpt == null) {
@@ -286,8 +291,8 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                     throw new Exception(error.Text);
                 }
 
-
-                //TODO: this is the method that should handle the end of the transaction on our end.
+                string errors = "";
+                //this is the method that should handle the end of the transaction on our end.
                 TransactionOutcome result = new TransactionOutcome();
                 try {
                     result = new TransactionOutcome(outcome);
@@ -296,20 +301,41 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                     LocalizedString exception = T("Validation problems on the response received: {0}", ex.Message);
                     //Log the error
                     Logger.Error(exception.Text);
-                    //update the PaymentRecord for this transaction
-                    int pId;
-                    if (result != null && int.TryParse(result.ShopTransactionID, out pId)) {
-                        EndPayment(pId, false, null, exception.Text);
-                    } else {
-                        exception = T("Failed to identify transaction from GestPay's response. Additional error: {0}", exception.Text);
-                        Logger.Error(exception.Text);
-                    }
+                    errors += exception.Text + Environment.NewLine;
 
                     result.TransactionResult = "KO";
                     result.ErrorDescription = exception.Text;
                 }
 
+                //update the PaymentRecord for this transaction
+                int pId;
+                if (result != null && int.TryParse(result.ShopTransactionID, out pId)) {
+                    //We can process things normally
+                    try {
+                        decimal amount = decimal.Parse(result.Amount, CultureInfo.InvariantCulture);
+                        if (amount != GetPaymentInfo(pId).Amount) {
+                            EndPayment(pId, false, null, 
+                                T("The amount from the GestPay server ({0}) does not match the amount in our records ({1}).", 
+                                    amount.ToString("0.##", CultureInfo.InvariantCulture), 
+                                    GetPaymentInfo(pId).Amount.ToString("0.##", CultureInfo.InvariantCulture)).Text);
+                        } else if (result.TransactionResult == "OK" && result.ErrorCode == "0") {
+                            EndPayment(pId, true, null, null, string.Format("Bank ID: {0}\nAuth Code: {1}", result.BankTransactionID, result.AuthorizationCode));
+                        } else {
+                            result.TransactionResult = "KO";
+                            EndPayment(pId, false, result.ErrorCode, result.ErrorDescription);
+                        }
+                    } catch (Exception exin) {
+                        result.TransactionResult = "KO";
+                        errors += exin.Message + Environment.NewLine;
+                        throw new Exception(T("EndPayment caused exception: {0}.\npId: {1}\nerror:{2}", exin.Message, pId.ToString(), errors).Text);
+                    }
+                } else {
+                    result.TransactionResult = "KO";
+                    errors = T("Failed to identify transaction from GestPay's response. Additional error: {0}", errors).Text;
+                    Logger.Error(errors);
+                }
 
+                result.ErrorDescription = errors;
 
                 return result;
             }
@@ -361,7 +387,7 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                     throw new Exception(error.Text);
                 }
 
-                //TODO: the closure of the transaction should be handled in the S2S method
+                //the closure of the transaction should be handled in the S2S method
                 //Here, eventually, we send error messages or info strings, that wee add to the record in the endpayment
                 TransactionOutcome result = new TransactionOutcome();
                 try {
@@ -371,37 +397,38 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                     LocalizedString exception = T("Validation problems on the response received: {0}", ex.Message);
                     //Log the error
                     Logger.Error(exception.Text);
-                    //update the PaymentRecord for this transaction
-                    int pId;
-                    if (result != null && int.TryParse(result.ShopTransactionID, out pId)) {
-                        try {
-                            EndPayment(pId, false, null, exception.Text);
-                        } catch (Exception exin) {
-                            throw new Exception(T("EndPayment caused exception: {0}.\npId: {1}\nsuccess: false\nerror:{2}", exin.Message, pId.ToString(), exception.Text).Text);
-                        }
-                        return GetPaymentInfoUrl(pId);
-                    } else {
-                        exception = T("Failed to identify transaction from GestPay's response. Additional error: {0}", exception.Text);
-                        Logger.Error(exception.Text);
-                        throw new Exception(exception.Text);
-                    }
+                    throw new Exception(exception.Text);
+                    ////update the PaymentRecord for this transaction
+                    //int pId;
+                    //if (result != null && int.TryParse(result.ShopTransactionID, out pId)) {
+                    //    try {
+                    //        EndPayment(pId, false, null, exception.Text);
+                    //    } catch (Exception exin) {
+                    //        throw new Exception(T("EndPayment caused exception: {0}.\npId: {1}\nsuccess: false\nerror:{2}", exin.Message, pId.ToString(), exception.Text).Text);
+                    //    }
+                    //    return GetPaymentInfoUrl(pId);
+                    //} else {
+                    //    exception = T("Failed to identify transaction from GestPay's response. Additional error: {0}", exception.Text);
+                    //    Logger.Error(exception.Text);
+                    //    throw new Exception(exception.Text);
+                    //}
                 }
 
                 int paymentId;
                 if (int.TryParse(result.ShopTransactionID, out paymentId)) {
-                    if (result.TransactionResult == "OK") {
-                        try {
-                            EndPayment(paymentId, true, null, null);
-                        } catch (Exception exin) {
-                            throw new Exception(T("EndPayment caused exception: {0}.\npId: {1}\nsuccess: true", exin.Message, paymentId.ToString()).Text);
-                        }
-                    } else {
-                        try {
-                            EndPayment(paymentId, false, result.ErrorCode, result.ErrorDescription);
-                        } catch (Exception exin) {
-                            throw new Exception(T("EndPayment caused exception: {0}.\npId: {1}\nsuccess: false\nerror:{2}\ninfo:{3}", exin.Message, paymentId.ToString(), result.ErrorCode, result.ErrorDescription).Text);
-                        }
-                    }
+                    //if (result.TransactionResult == "OK") {
+                    //    try {
+                    //        EndPayment(paymentId, true, null, null);
+                    //    } catch (Exception exin) {
+                    //        throw new Exception(T("EndPayment caused exception: {0}.\npId: {1}\nsuccess: true", exin.Message, paymentId.ToString()).Text);
+                    //    }
+                    //} else {
+                    //    try {
+                    //        EndPayment(paymentId, false, result.ErrorCode, result.ErrorDescription);
+                    //    } catch (Exception exin) {
+                    //        throw new Exception(T("EndPayment caused exception: {0}.\npId: {1}\nsuccess: false\nerror:{2}\ninfo:{3}", exin.Message, paymentId.ToString(), result.ErrorCode, result.ErrorDescription).Text);
+                    //    }
+                    //}
                     return GetPaymentInfoUrl(paymentId);
                 } else {
                     if (result.TransactionResult == "KO") {
