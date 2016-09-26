@@ -7,10 +7,11 @@
     //TODO:move all the parameters to hidden fields, rather than passing them to the Actions in querystring.
     //also, the actions should be called in post.
     <div id="VirtualPosButtons">
-        @Html.Hidden("PaymentRecordId", (int)(Model.Record.Id), new { @id = "paymentRecordId" })
+        @Html.Hidden("PaymentRecordGuid", (string)(Model.Record.Guid), new { @id = "paymentRecordGuid" })
         <ul style="list-style-type:none">
             @foreach(var pos in Model.PosList) {
-                <li><button type="submit" style="padding: 10px 10px; display: none;" class="posButtonClass" formaction="@Html.Raw(pos.GetPosActionUrl(Model.Record.Id))">@pos.GetPosName()</button></li>
+                @*<li><button type="submit" style="padding: 10px 10px; display: none;" class="posButtonClass" formaction="@Html.Raw(pos.GetPosActionUrl(Model.Record.Id))">@pos.GetPosName()</button></li>*@
+                <li><button type="submit" style="padding: 10px 10px; display: none;" class="posButtonClass" formaction="@Html.Raw(pos.GetPosActionUrl(Model.Record.Guid))">@pos.GetPosName()</button></li>
             }
         </ul>
     </div>
@@ -23,14 +24,14 @@
             //get all the buttons we use to call the Actions to start payments
             var posButtons = document.querySelectorAll(".posButtonClass");
             //get the id of the payment
-            var paymentId = parseInt(document.getElementById("paymentRecordId").value);
+            var paymentGuid = document.getElementById("paymentRecordGuid").value;
             //get the area where we want to show the buttons
             var divForButtons = document.getElementById("VirtualPosButtons");
             var posTitle = document.getElementById("PaymentMethodsTitle");
 
-            function PaymentIsIncomplete(pId) {
+            function PaymentIsIncomplete() {
                 var result = false;
-                var url = '@Url.Action("PaymentIsIncomplete", "Payment", new { area = "Laser.Orchard.PaymentGateway", paymentId = "__id__"})'.replace('__id__', paymentId);
+                var url = ('@Url.Action("PaymentIsIncomplete", "Payment", new { area = "Laser.Orchard.PaymentGateway"})'+'?guid=__id__').replace('__id__', paymentGuid);
                 var formData = { __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()' };
                 $.ajax({
                     url: url,
@@ -69,7 +70,7 @@
             }
 
             posTitle.innerText = "@T("Loading valid payment methods. Please wait.").Text";
-            PaymentIsIncomplete(paymentId);
+            PaymentIsIncomplete();
 
         }());
     </script>

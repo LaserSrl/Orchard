@@ -21,6 +21,11 @@ namespace Laser.Orchard.Braintree.Services {
         public override string GetPosName() {
             return "Braintree and PayPal";
         }
+        public override string GetPosActionUrl(string paymentGuid) {
+            UrlHelper urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
+            return urlHelper.Action("Index", "Braintree", new { area = "Laser.Orchard.Braintree" })
+                + "?guid=" + paymentGuid;
+        }
         public override string GetPosActionUrl(int paymentId) {
             UrlHelper urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
             return urlHelper.Action("Index", "Braintree", new { area = "Laser.Orchard.Braintree" })

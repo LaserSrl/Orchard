@@ -64,6 +64,19 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             //var ub = new UrlHelper().Action("RedirectToGestPayPage", "Transactions", new { Id = paymentId });
             return ub.Uri.ToString();
         }
+        public override string GetPosActionUrl(string paymentGuid) {
+            //create the url for the controller action that takes care of the redirect, passing the id as parameter
+            //Controller: Transactions
+            //Action: RedirectToGestPayPage
+            //Area: Laser.Orchard.PaymentGestPay
+            var hp = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            var ub = new UriBuilder(_orchardServices.WorkContext.HttpContext.Request.Url.AbsoluteUri) {
+                Path = hp.Action("RedirectToGestPayPage", "Transactions", new { Area = Constants.LocalArea }),
+                Query = "guid=" + paymentGuid
+            };
+            //var ub = new UrlHelper().Action("RedirectToGestPayPage", "Transactions", new { Id = paymentId });
+            return ub.Uri.ToString();
+        }
         /// <summary>
         /// Gets the name of the controller where the Action for the editor of the POS settings is.
         /// </summary>

@@ -35,8 +35,12 @@ namespace Laser.Orchard.PaymentGateway.Services {
         /// <param name="values"></param>
         /// <returns></returns>
         public abstract string GetPosActionUrl(int paymentId);
+        public abstract string GetPosActionUrl(string paymentGuid);
 
         public abstract string GetPosUrl(int paymentId);
+        public string GetPosUrl(string paymentGuid) {
+            return GetPosUrl(GetPaymentInfo(paymentGuid).Id);
+        }
 
         public PosServiceBase(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler) {
             _orchardServices = orchardServices;
@@ -62,6 +66,8 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 values.UserId = user.Id;
             }
 
+            values.Guid = Guid.NewGuid().ToString(); 
+
             int paymentId = SavePaymentInfo(values);
             values.Id = paymentId;
             return values;
@@ -73,6 +79,9 @@ namespace Laser.Orchard.PaymentGateway.Services {
             }
             PaymentRecord result = _repository.Get(paymentId);
             return result;
+        }
+        public PaymentRecord GetPaymentInfo(string guid) {
+            return _repository.Table.Where(r => r.Guid == guid).SingleOrDefault();
         }
         public void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "") {
             PaymentRecord paymentToSave = GetPaymentInfo(paymentId); //null;

@@ -23,8 +23,7 @@ namespace Laser.Orchard.Braintree.Controllers {
         private readonly BraintreePosService _posService;
         private readonly IBraintreeService _braintreeService;
 
-        public BraintreeController(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler, IBraintreeService braintreeService)
-        {
+        public BraintreeController(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler, IBraintreeService braintreeService) {
             _orchardServices = orchardServices;
             _posService = new BraintreePosService(orchardServices, repository, paymentEventHandler);
             _braintreeService = braintreeService;
@@ -36,20 +35,23 @@ namespace Laser.Orchard.Braintree.Controllers {
         /// <param name="pid">Payment ID</param>
         /// <returns></returns>
         [Themed]
-        public ActionResult Index(int pid)
-        {
-            PaymentVM model = new PaymentVM();
-            PaymentRecord payment = _posService.GetPaymentInfo(pid);
-            var settings = _orchardServices.WorkContext.CurrentSite.As<BraintreeSiteSettingsPart>();
-            if (settings.CurrencyCode != payment.Currency) {
-                //throw new Exception(string.Format("Invalid currency code. Valid currency is {0}.", settings.CurrencyCode));
-                string error = string.Format("Invalid currency code. Valid currency is {0}.", settings.CurrencyCode);
-                _posService.EndPayment(payment.Id, false, error, error);
-                return Redirect(_posService.GetPaymentInfoUrl(payment.Id));
+        public ActionResult Index(int pid = 0, string guid = "") {
+            if (pid > 0) {
+                PaymentVM model = new PaymentVM();
+                PaymentRecord payment = _posService.GetPaymentInfo(pid);
+                var settings = _orchardServices.WorkContext.CurrentSite.As<BraintreeSiteSettingsPart>();
+                if (settings.CurrencyCode != payment.Currency) {
+                    //throw new Exception(string.Format("Invalid currency code. Valid currency is {0}.", settings.CurrencyCode));
+                    string error = string.Format("Invalid currency code. Valid currency is {0}.", settings.CurrencyCode);
+                    _posService.EndPayment(payment.Id, false, error, error);
+                    return Redirect(_posService.GetPaymentInfoUrl(payment.Id));
+                }
+                model.Record = payment;
+                model.TenantBaseUrl = Url.Action("Index").Replace("/Laser.Orchard.Braintree/Braintree", "");
+                return View("Index", model);
+            } else {
+                return RedirectToAction("Index", new { pid = _posService.GetPaymentInfo(guid).Id });
             }
-            model.Record = payment;
-            model.TenantBaseUrl = Url.Action("Index").Replace("/Laser.Orchard.Braintree/Braintree", "");
-            return View("Index", model);
         }
 
         [HttpGet]
@@ -70,8 +72,7 @@ namespace Laser.Orchard.Braintree.Controllers {
             string transactionId = "";
             if (payResult.Success == false) {
                 error = payResult.ResponseText;
-            }
-            else {
+            } else {
                 // pagamento ok
                 transactionId = payResult.TransactionId;
             }

@@ -27,6 +27,9 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             public override string GetPosActionUrl(int paymentId) {
                 return "";
             }
+            public override string GetPosActionUrl(string paymentGuid) {
+                return "";
+            }
 
             public override string GetSettingsControllerName() {
                 return "";
@@ -74,7 +77,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                 currentUserId = user.Id;
             }
             var payment = _repository.Get(paymentId);
-            if((_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner) == false)
+            if ((_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner) == false)
                 && (payment.UserId != currentUserId)) {
                 return new HttpUnauthorizedResult();
             }
@@ -84,9 +87,13 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         //I call this method in the page showing the buttons to go to the virtual POS
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PaymentIsIncomplete(int paymentId) {
-            return Json(new { Success = !_posServiceEmpty.GetPaymentInfo(paymentId).PaymentTransactionComplete });
-            //return Json(new { Success = false });
+        public ActionResult PaymentIsIncomplete(int paymentId = 0, string guid = "") {
+            if (paymentId > 0) {
+                return Json(new { Success = !_posServiceEmpty.GetPaymentInfo(paymentId).PaymentTransactionComplete });
+            } else {
+                return Json(new { Success = !_posServiceEmpty.GetPaymentInfo(guid).PaymentTransactionComplete });
+            }
+
         }
     }
 }

@@ -28,9 +28,18 @@ namespace Laser.Orchard.PaymentGestPay.Controllers {
         }
 
         [ValidateAntiForgeryToken]
-        public ActionResult RedirectToGestPayPage(int Id) {
-            string posUrl = _gestPayTransactionServices.GetPosUrl(Id);
-            return Redirect(posUrl);
+        public ActionResult RedirectToGestPayPage(int Id = 0, string guid = "") {
+            try {
+                if (Id > 0) {
+                    string posUrl = _gestPayTransactionServices.GetPosUrl(Id);
+                    return Redirect(posUrl);
+                } else {
+                    string posUrl = _gestPayTransactionServices.GetPosUrl(guid);
+                    return Redirect(posUrl);
+                }
+            } catch (Exception) {
+                return new HttpUnauthorizedResult();
+            }
         }
 
         //GestPay calls this controller while proceeding with the transaction
