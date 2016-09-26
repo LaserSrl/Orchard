@@ -14,6 +14,20 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.StartupConfig.FileDownloader.Controllers {
+    /// <summary>
+    /// Gestisce il download di file salvati in una struttura di cartelle sotto App_Data/Sites/NomeDelTenant.
+    /// La struttura è ParentFolder/FolderName/FileFilter.
+    /// Se non diversamente specificato ParentFolder = Export.
+    /// Se non diversamente specificato FileFilter = * (tutti i file).
+    /// E' necessario specificare l'URL di ritorno (UrlBack).
+    /// Il controllo accessi avviene tramite il check sul permesso "AccessParentFolderFolterName": ad esempio nel caso in cui 
+    /// non sia specificato ParentFolder e il FolderName sia QuestionnairesStatistics, il controllo avviene sul permesso AccessExportQuestionnairesStatistics.
+    /// Esempio di utilizzo in un hyperlink:
+    /// 
+    /// href="@Url.Action("Index", "FileDownloader", new { area = "Laser.Orchard.StartupConfig", UrlBack = urlBack })&FolderName=Contacts&ParentFolder=Import&FileFilter=*.log"
+    /// 
+    /// In questo esempio verranno mostrati i file ~/App_Data/Sites/Tenant/Import/Contacts/*.log.
+    /// </summary>
     public class FileDownloaderController : Controller {
         private readonly IOrchardServices _orchardServices;
         private readonly INotifier _notifier;
