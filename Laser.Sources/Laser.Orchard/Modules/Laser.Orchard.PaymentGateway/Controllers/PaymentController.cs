@@ -82,6 +82,8 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         }
 
         //I call this method in the page showing the buttons to go to the virtual POS
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult PaymentIsIncomplete(int paymentId) {
             return Json(new { Success = !_posServiceEmpty.GetPaymentInfo(paymentId).PaymentTransactionComplete });
             //return Json(new { Success = false });

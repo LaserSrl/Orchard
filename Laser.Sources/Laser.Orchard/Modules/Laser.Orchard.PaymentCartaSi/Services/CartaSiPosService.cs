@@ -96,8 +96,17 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             var settings = _orchardServices.WorkContext.CurrentSite.As<PaymentCartaSiSettingsPart>();
 
             string pURL = settings.UseTestEnvironment ? EndPoints.TestPaymentURL : EndPoints.PaymentURL;
-
-            StartPaymentMessage spMsg = new StartPaymentMessage(settings.CartaSiShopAlias, settings.CartaSiSecretKey, GetPaymentInfo(paymentId));
+            var pRecord = GetPaymentInfo(paymentId);
+            if (pRecord.PaymentTransactionComplete) {
+                //this avoids repeat payments when the user is dumb and goes back in the browser to try and pay again
+                return GetPaymentInfoUrl(paymentId);
+            }
+            var user = _orchardServices.WorkContext.CurrentUser;
+            if (pRecord.UserId > 0 && pRecord.UserId != user.Id) {
+                //not the same user who started the payment
+                throw new Exception();
+            }
+            StartPaymentMessage spMsg = new StartPaymentMessage(settings.CartaSiShopAlias, settings.CartaSiSecretKey, pRecord);
             spMsg.url = ActionUrl("CartaSiOutcome");
             spMsg.url_back = ActionUrl("CartaSiUndo");
             spMsg.urlpost = ActionUrl("CartaSiS2S");

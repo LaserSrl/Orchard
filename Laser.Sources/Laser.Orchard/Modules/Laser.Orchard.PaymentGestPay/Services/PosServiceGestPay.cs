@@ -119,6 +119,11 @@ namespace Laser.Orchard.PaymentGestPay.Services {
                 //this avoids repeat payments when the user is dumb and goes back in the browser to try and pay again
                 return GetPaymentInfoUrl(paymentId);
             }
+            var user = _orchardServices.WorkContext.CurrentUser;
+            if (pRecord.UserId > 0 && pRecord.UserId != user.Id) {
+                //not the same user who started the payment
+                throw new Exception();
+            }
             var gpt = new GestPayTransaction(pRecord);
             //parameter validation
             if (gpt == null) {

@@ -17,8 +17,13 @@ namespace Laser.Orchard.PaymentCartaSi.Controllers {
             Shape = shapeFactory;
         }
 
+        [ValidateAntiForgeryToken]
         public ActionResult RedirectToCartaSìPage(int Id) {
-            return Redirect(_cartaSiTransactionService.StartCartaSiTransactionURL(Id));
+            try {
+                return Redirect(_cartaSiTransactionService.StartCartaSiTransactionURL(Id));
+            } catch (Exception) {
+                return new HttpUnauthorizedResult();
+            }
         }
 
         //[HttpPost]

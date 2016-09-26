@@ -27,6 +27,7 @@ namespace Laser.Orchard.PaymentGestPay.Controllers {
             _orchardServices = orchardServices;
         }
 
+        [ValidateAntiForgeryToken]
         public ActionResult RedirectToGestPayPage(int Id) {
             string posUrl = _gestPayTransactionServices.GetPosUrl(Id);
             return Redirect(posUrl);
