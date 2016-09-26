@@ -422,6 +422,7 @@
 	
     void instagramParser(){
         XmlDocument mydoc=ToXmlDocument(Model);
+        mydoc=cambianome(mydoc,"root/items", "data");
         mydoc=aggiungipadre(mydoc,"root","lista","data");
         mydoc=RimuoviFratelli(mydoc,"root/lista");
         mydoc=cambianome(mydoc,"root/lista/data/filter", "ToRemove");

@@ -14,7 +14,6 @@
         <i class="fa fa-arrows"></i>
         @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete" })
         @Html.HiddenFor(m => m.Id)
-        @Html.HiddenFor(m => m.TypeCssClass, @styleAcronimeName + @Model.TypeName)
         @Html.HiddenFor(m => m.Priority, new { placeholder = T("Order"), @class = "text medium reaction-position-field" })
         @Html.HiddenFor(m => m.TypeName)
         @Html.DisplayFor(m => m.TypeName)
