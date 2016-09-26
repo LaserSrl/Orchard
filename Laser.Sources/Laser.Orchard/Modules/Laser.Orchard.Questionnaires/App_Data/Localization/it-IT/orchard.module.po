@@ -189,6 +189,46 @@ msgid "The Email with ranking will be sent at this address"
 msgstr "L'email con la classifica verrà inviata a questo indirizzo"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Allow admin users to manage answers conditions"
+msgstr "Permette agli amministratori di gestire le condizioni nelle risposte"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Allow admin users to manage multi choice answers"
+msgstr "Permette agli amministratori di gestire le risposte a scelta multipla"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Allow admin users to manage open answers"
+msgstr "Permette agli amministratori di gestire le risposte libere"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Allow admin users to manage questionnaire sections"
+msgstr "Permette agli amministratori di gestire le sezioni dei questionari"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Allow admin users to manage single choice answers"
+msgstr "Permette agli amministratori di gestire le risposte a scelte mutuamente esclusive"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Check if you want the user to be able to edit section text."
+msgstr "Selezionare per permettere all'utente di modificare le sezioni di testo."
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Check if you want the user to be able to manage questions visibility based on answers."
+msgstr "Selezionare per permettere all'utente di gestire la visibilità delle domande in base alle risposte."
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Check if you want the user to be able to manage questions with multi choice answers."
+msgstr "Selezionare per permettere all'utente di gestire domande con risposta a scelta multipla."
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Check if you want the user to be able to manage questions with open answers."
+msgstr "Selezionare per permettere all'utente di gestire domande con risposta libera."
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Check if you want the user to be able to manage questions with single choice answers."
+msgstr "Selezionare per permettere all'utente di gestire domande con risposta a scelta mutuamente esclusiva."
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
 msgid "Default 0 (no limit)"
 msgstr "Valore predefinito 0 (nessun limite)"
 
@@ -457,6 +497,10 @@ msgid "Remove the image?"
 msgstr "Vuoi rimuovere l\\'immagine?"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Required"
+msgstr "Richiesto"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
 msgid "Section"
 msgstr "Sezione"
 
@@ -471,6 +515,10 @@ msgstr "Digita il nome della sezione"
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
 msgid "Type the question"
 msgstr "Digita la domanda"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/QuestionEditModel.cshtml"
+msgid "Visible"
+msgstr "Visibile"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/Parts/Questionnaire_FrontEnd_Edit.cshtml"
 msgid "Continue >"
@@ -517,6 +565,26 @@ msgid "You have to be logged in, before answering a questionnaire!"
 msgstr "Devi essere autenticato per poter rispondere al nostro questionario!"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Clear"
+msgstr "Cancella"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Date From"
+msgstr "Dalla Data"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Date To"
+msgstr "Alla Data"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Export"
+msgstr "Esporta"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Filter"
+msgstr "Filtra"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
 msgid "Questionnaire Answers"
 msgstr "Risposte al questionario"
 
@@ -525,8 +593,16 @@ msgid "Questionnaire Statistics"
 msgstr "Statistiche del questionario"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Search:"
+msgstr "Cerca:"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
 msgid "Show all answers"
 msgstr "Mostra tutte le risposte"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
+msgid "Show Exported Files"
+msgstr "Mostra file esportati"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/QuestionnaireStats/Detail.cshtml"
 msgid "This questionnaire contains no answers."
@@ -603,6 +679,10 @@ msgstr "Si prega di accettare i termini e le condizioni!"
 msgctxt "Laser.Orchard.Questionnaires.Controllers.QuestionnaireController"
 msgid "Thank you for submitting your feedback."
 msgstr "Grazie per averci inviato la tua opinione."
+
+msgctxt "Laser.Orchard.Questionnaires.Controllers.QuestionnaireStatsController"
+msgid "Export started. Please check 'Show Exported Files' to get the result."
+msgstr "Esportazione in esecuzione. Per verificarne l'esito clicca su 'Mostra file esportati'"
 
 msgctxt "Laser.Orchard.Questionnaires.Drivers.QuestionnairePartDriver"
 msgid "Cannot update questionnaire"
