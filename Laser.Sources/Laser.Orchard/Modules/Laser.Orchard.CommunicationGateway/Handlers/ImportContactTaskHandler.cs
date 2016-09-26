@@ -32,7 +32,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             _communicationService = communicationService;
             _transactionManager = transactionManager;
             Logger = NullLogger.Instance;
-            _contactsImportRelativePath = string.Format("~/Media/{0}/Import/Contacts", _shellSettings.Name);
+            _contactsImportRelativePath = string.Format("~/App_Data/Sites/{0}/Import/Contacts", _shellSettings.Name);
         }
 
         public void Process(ScheduledTaskContext context) {
