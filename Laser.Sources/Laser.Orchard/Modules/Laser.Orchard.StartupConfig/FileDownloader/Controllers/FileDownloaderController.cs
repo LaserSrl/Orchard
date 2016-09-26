@@ -1,4 +1,4 @@
-﻿using Laser.Orchard.StartupConfig.FileExport.ViewModels;
+﻿using Laser.Orchard.StartupConfig.FileDownloader.ViewModels;
 using Orchard;
 using Orchard.Security.Permissions;
 using Orchard.Environment.Configuration;
@@ -13,42 +13,45 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Laser.Orchard.StartupConfig.FileExport.Controllers {
-    public class FileExportController : Controller {
+namespace Laser.Orchard.StartupConfig.FileDownloader.Controllers {
+    public class FileDownloaderController : Controller {
         private readonly IOrchardServices _orchardServices;
         private readonly INotifier _notifier;
         private readonly ShellSettings _shellSettings;
-        private readonly string _fileExportRelativePath;
         private Localizer T { get; set; }
+        private string FileRootRelativePath {
+            get {
+                return string.Format("~/App_Data/Sites/{0}", _shellSettings.Name);
+            }
+        }
 
-        public FileExportController(IOrchardServices orchardServices, INotifier notifier, ShellSettings shellSettings) {
+        public FileDownloaderController(IOrchardServices orchardServices, INotifier notifier, ShellSettings shellSettings) {
             _orchardServices = orchardServices;
             _notifier = notifier;
             _shellSettings = shellSettings;
             T = NullLocalizer.Instance;
-            _fileExportRelativePath = string.Format("~/App_Data/Sites/{0}/Export", _shellSettings.Name);
         }
-        private bool CheckPermission(string folderName) {
-            var accessPermission = Permission.Named(string.Format("AccessExport{0}", folderName));
+        private bool CheckPermission(string folderName, string parentFolder) {
+            var accessPermission = Permission.Named(string.Format("Access{0}{1}", parentFolder, folderName));
             return _orchardServices.Authorizer.Authorize(accessPermission);
         }
         [HttpGet]
         [Admin]
         public ActionResult Index(FilesListVM model, PagerParameters pagerParameters) {
             // controlla i permessi dell'utente
-            if (CheckPermission(model.FolderName) == false) {
+            if (CheckPermission(model.FolderName, model.ParentFolder) == false) {
                 return new HttpUnauthorizedResult();
             }
             // crea la struttura di cartelle se necessario
-            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Server.MapPath(_fileExportRelativePath));
+            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Server.MapPath(FileRootRelativePath + "/" + model.ParentFolder));
             if (dir.Exists == false) {
                 dir.Create();
             }
-            dir = new System.IO.DirectoryInfo(Server.MapPath(_fileExportRelativePath + "/" + model.FolderName));
+            dir = new System.IO.DirectoryInfo(Server.MapPath(FileRootRelativePath + "/" + model.ParentFolder + "/" + model.FolderName));
             if (dir.Exists == false) {
                 dir.Create();
             }
-            var files = dir.GetFiles("*", System.IO.SearchOption.TopDirectoryOnly);
+            var files = dir.GetFiles(model.FileFilter, System.IO.SearchOption.TopDirectoryOnly);
             foreach (var file in files) {
                 model.FileInfos.Add(file);
             }
@@ -60,21 +63,21 @@ namespace Laser.Orchard.StartupConfig.FileExport.Controllers {
             model.Pager = pagerShape;
             return View("Index", model);
         }
-        public ActionResult DownloadCsvFile(string fName, string folderName) {
+        public ActionResult DownloadFile(string fName, string folderName, string parentFolder = "Export") {
             // controlla i permessi dell'utente
-            if (CheckPermission(folderName) == false) {
+            if (CheckPermission(folderName, parentFolder) == false) {
                 return new HttpUnauthorizedResult();
             }
-            var fPath = Server.MapPath(_fileExportRelativePath + "/" + folderName + "/" + fName);
+            var fPath = Server.MapPath(FileRootRelativePath + "/" + parentFolder + "/" + folderName + "/" + fName);
             return File(fPath, "application/octet-stream", fName);
         }
         [Admin]
-        public ActionResult RemoveExportFile(string fName, string folderName, string urlBack) {
+        public ActionResult RemoveFile(string fName, string folderName, string urlBack, string parentFolder = "Export") {
             // controlla i permessi dell'utente
-            if (CheckPermission(folderName) == false) {
+            if (CheckPermission(folderName, parentFolder) == false) {
                 return new HttpUnauthorizedResult();
             }
-            var fPath = Server.MapPath(_fileExportRelativePath + "/" + folderName + "/" + fName);
+            var fPath = Server.MapPath(FileRootRelativePath + "/" + parentFolder + "/" + folderName + "/" + fName);
             System.IO.FileInfo file = new System.IO.FileInfo(fPath);
             if (file.Exists) {
                 file.Delete();
@@ -83,7 +86,7 @@ namespace Laser.Orchard.StartupConfig.FileExport.Controllers {
             else {
                 _notifier.Error(T("File does not exist. It should have been removed by someone else."));
             }
-            return RedirectToAction("Index", new { UrlBack = urlBack, FolderName = folderName });
+            return RedirectToAction("Index", new { UrlBack = urlBack, FolderName = folderName, ParentFolder = parentFolder });
         }
     }
 }

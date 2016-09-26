@@ -1,10 +1,10 @@
-﻿@model Laser.Orchard.StartupConfig.FileExport.ViewModels.FilesListVM
+﻿@model Laser.Orchard.StartupConfig.FileDownloader.ViewModels.FilesListVM
 @{
-    Layout.Title = T("Exported File List");
+    Layout.Title = T("File List");
 }
 <a href="@Model.UrlBack">@T("Back")</a>
 <br />
-<h2>@T("Exported files")</h2>
+<h2>@T("File List")</h2>
 @if (Model.FileInfos.Count == 0) {
     <br />
     <div class="content">@T("No data found.")</div>    
@@ -16,10 +16,10 @@
             <li>
                 <div class="summary">
                     <div class="properties">
-                        <a href="@Url.Action("DownloadCsvFile", new { fName = @file.Name })&folderName=@Model.FolderName">@file.Name</a>
+                        <a href="@Url.Action("DownloadFile", new { fName = @file.Name })&folderName=@Model.FolderName&parentFolder=@Model.ParentFolder">@file.Name</a>
                     </div>
                     <div class="related">
-                        <a href="@Url.Action("RemoveExportFile", new { fName = file.Name })&folderName=@Model.FolderName&urlBack=@Url.Encode(Model.UrlBack)" onclick="return confirm('@T("Are you sure?")')">@T("Delete")</a>
+                        <a href="@Url.Action("RemoveFile", new { fName = file.Name })&folderName=@Model.FolderName&parentFolder=@Model.ParentFolder&urlBack=@Url.Encode(Model.UrlBack)" onclick="return confirm('@T("Are you sure?")')">@T("Delete")</a>
                     </div>
                 </div>
             </li>

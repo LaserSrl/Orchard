@@ -43,7 +43,7 @@
         <button type="submit" name="export" value="true">@T("Export")</button>
         <a href="@Url.Action("Detail", new { idQuestionario = Request.QueryString["idQuestionario"] })">@T("Clear")</a>
         <span style="width:50px">&nbsp;</span>
-        <a href="@Url.Action("Index", "FileExport", new { area = "Laser.Orchard.StartupConfig", UrlBack = urlBack })&FolderName=QuestionnairesStatistics">@T("Show Exported Files")</a>
+        <a href="@Url.Action("Index", "FileDownloader", new { area = "Laser.Orchard.StartupConfig", UrlBack = urlBack })&FolderName=QuestionnairesStatistics">@T("Show Exported Files")</a>
     </fieldset>
 }
 

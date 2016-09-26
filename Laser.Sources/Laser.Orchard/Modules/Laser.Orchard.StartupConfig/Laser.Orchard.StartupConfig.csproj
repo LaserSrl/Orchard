@@ -216,8 +216,8 @@
     <Compile Include="Controllers\UsersGroupsSettingsController.cs" />
     <Compile Include="Drivers\UsersGroupsDriver.cs" />
     <Compile Include="Exceptions\ExternalFieldRemoteException.cs" />
-    <Compile Include="FileExport\Controllers\FileExportController.cs" />
-    <Compile Include="FileExport\ViewModels\FilesListVM.cs" />
+    <Compile Include="FileDownloader\Controllers\FileDownloaderController.cs" />
+    <Compile Include="FileDownloader\ViewModels\FilesListVM.cs" />
     <Compile Include="Handlers\BlogPostPartHandler.cs" />
     <Compile Include="Handlers\ContentEventHandler.cs" />
     <Compile Include="Handlers\ContentPickerConnectorHandler.cs" />
@@ -353,7 +353,7 @@
     <Content Include="Views\Activity-RazorExecute.cshtml" />
     <Content Include="Views\Parts\FavoriteCulturePart.cshtml" />
     <Content Include="RazorCodeExecution\Snippets\EsempioUserReactionsActivity.cshtml" />
-    <Content Include="Views\FileExport\Index.cshtml" />
+    <Content Include="Views\FileDownloader\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -7,7 +7,7 @@ namespace Laser.Orchard.Questionnaires {
         public static readonly Permission SubmitQuestionnaire = new Permission { Description = "Submit questionnaire", Name = "SubmitQuestionnaire" };
         public static readonly Permission AccessStatistics = new Permission { Description = "Access questionnaire statistics", Name = "AccessStatistics" };
         public static readonly Permission GameRanking = new Permission { Description = "View game rankings", Name = "GameRanking" };
-        public static readonly Permission AccessExportQuestionnairesStatistics = new Permission { Description = "Access questionnaire statistics export", Name = "AccessExportQuestionnairesStatistics" };
+        public static readonly Permission AccessExportQuestionnairesStatistics = new Permission { Description = "Access questionnaire statistics export files", Name = "AccessExportQuestionnairesStatistics" };
 
         public virtual Feature Feature { get; set; }
 

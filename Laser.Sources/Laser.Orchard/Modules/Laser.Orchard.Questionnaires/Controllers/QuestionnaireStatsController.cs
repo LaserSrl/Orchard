@@ -15,7 +15,7 @@ using System.Globalization;
 using Orchard.Tasks.Scheduling;
 using Orchard.UI.Notify;
 using Orchard.Localization;
-using Laser.Orchard.StartupConfig.FileExport.ViewModels;
+using Laser.Orchard.StartupConfig.FileDownloader.ViewModels;
 using Orchard.Environment.Configuration;
 using System.Text;
 
@@ -26,7 +26,6 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         private readonly IScheduledTaskManager _taskManager;
         private readonly INotifier _notifier;
         private readonly ShellSettings _shellSettings;
-        private readonly string _fileExportRelativePath;
         private Localizer T { get; set; }
 
         public QuestionnaireStatsController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, IScheduledTaskManager taskManager, INotifier notifier, ShellSettings shellSettings) {
@@ -36,7 +35,6 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             _notifier = notifier;
             _shellSettings = shellSettings;
             T = NullLocalizer.Instance;
-            _fileExportRelativePath = string.Format("~/Media/{0}/Export/Questionnaires", _shellSettings.Name);
         }
 
         [HttpGet]
