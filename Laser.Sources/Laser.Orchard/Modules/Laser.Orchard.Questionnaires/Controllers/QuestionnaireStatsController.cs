@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.Questionnaires.Services;
 using Laser.Orchard.Questionnaires.ViewModels;
+using Laser.Orchard.Questionnaires.Handlers;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
@@ -9,21 +10,42 @@ using Orchard.UI.Navigation;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Linq;
+using System;
+using System.Globalization;
+using Orchard.Tasks.Scheduling;
+using Orchard.UI.Notify;
+using Orchard.Localization;
+using Laser.Orchard.StartupConfig.FileDownloader.ViewModels;
+using Orchard.Environment.Configuration;
+using System.Text;
 
 namespace Laser.Orchard.Questionnaires.Controllers {
     public class QuestionnaireStatsController : Controller {
         private readonly IOrchardServices _orchardServices;
         private readonly IQuestionnairesServices _questionnairesServices;
+        private readonly IScheduledTaskManager _taskManager;
+        private readonly INotifier _notifier;
+        private readonly ShellSettings _shellSettings;
+        private Localizer T { get; set; }
 
-        public QuestionnaireStatsController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices) {
+        public QuestionnaireStatsController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, IScheduledTaskManager taskManager, INotifier notifier, ShellSettings shellSettings) {
             _orchardServices = orchardServices;
             _questionnairesServices = questionnairesServices;
+            _taskManager = taskManager;
+            _notifier = notifier;
+            _shellSettings = shellSettings;
+            T = NullLocalizer.Instance;
         }
 
         [HttpGet]
         [Admin]
-        public ActionResult QuestionDetail(int idQuestionario, int idDomanda, int? page, int? pageSize) {
-            var stats = _questionnairesServices.GetStats(idQuestionario).Where(x => x.QuestionId == idDomanda).FirstOrDefault();
+        public ActionResult QuestionDetail(int idQuestionario, int idDomanda, int? page, int? pageSize, string from = null, string to = null) {
+            DateTime fromDate, toDate;
+            CultureInfo provider = CultureInfo.GetCultureInfo(_orchardServices.WorkContext.CurrentCulture);
+            DateTime.TryParse(from, provider, DateTimeStyles.None, out fromDate);
+            DateTime.TryParse(to, provider, DateTimeStyles.None, out toDate);
+
+            var stats = _questionnairesServices.GetStats(idQuestionario, (DateTime?)fromDate, (DateTime?)toDate).Where(x => x.QuestionId == idDomanda).FirstOrDefault();
 
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, new PagerParameters { Page = page, PageSize = pageSize });
             var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(stats.Answers.Count());
@@ -40,9 +62,20 @@ namespace Laser.Orchard.Questionnaires.Controllers {
 
         [HttpGet]
         [Admin]
-        public ActionResult Detail(int idQuestionario) {
-            var model = _questionnairesServices.GetStats(idQuestionario);
-
+        public ActionResult Detail(int idQuestionario, string from = null, string to = null, bool export = false) {
+            DateTime fromDate, toDate;
+            CultureInfo provider = CultureInfo.GetCultureInfo(_orchardServices.WorkContext.CurrentCulture);
+            DateTime.TryParse(from, provider, DateTimeStyles.None, out fromDate);
+            DateTime.TryParse(to, provider, DateTimeStyles.None, out toDate);
+            var model = _questionnairesServices.GetStats(idQuestionario, (DateTime?)fromDate, (DateTime?)toDate);
+            if (export == true) {
+                ContentItem filters = _orchardServices.ContentManager.Create("QuestionnaireStatsExport");
+                filters.As<TitlePart>().Title = string.Format("id={0}&from={1:yyyyMMdd}&to={2:yyyyMMdd}", idQuestionario, fromDate, toDate);
+                _orchardServices.ContentManager.Publish(filters);
+                _taskManager.CreateTask(StasExportScheduledTaskHandler.TaskType, DateTime.UtcNow.AddSeconds(-1), filters);
+                //_questionnairesServices.SaveQuestionnaireUsersAnswers(idQuestionario, fromDate, toDate);
+                _notifier.Add(NotifyType.Information, T("Export started. Please check 'Show Exported Files' to get the result."));
+            }
             return View((object)model);
         }
 
