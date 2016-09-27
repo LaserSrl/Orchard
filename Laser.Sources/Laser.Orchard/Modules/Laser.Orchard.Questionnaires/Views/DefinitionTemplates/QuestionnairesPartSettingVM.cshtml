@@ -59,3 +59,30 @@
         <span class="hint">@T("Default 0 (no limit)")</span>
     </div>
 </fieldset>
+<fieldset>
+    <div class="checkbox-and-label">
+        @Html.EditorFor(m => m.AllowSections)
+        <label for="@Html.FieldIdFor(m => m.AllowSections)" >@T("Allow admin users to manage questionnaire sections") </label>
+        <span class="hint">@T("Check if you want the user to be able to edit section text.")</span>
+    </div>
+    <div class="checkbox-and-label">
+        @Html.EditorFor(m => m.AllowConditions)
+        <label for="@Html.FieldIdFor(m => m.AllowConditions)" >@T("Allow admin users to manage answers conditions") </label>
+        <span class="hint">@T("Check if you want the user to be able to manage questions visibility based on answers.")</span>
+    </div>
+    <div class="checkbox-and-label">
+        @Html.EditorFor(m => m.AllowSingleChoice)
+        <label for="@Html.FieldIdFor(m => m.AllowSingleChoice)" >@T("Allow admin users to manage single choice answers") </label>
+        <span class="hint">@T("Check if you want the user to be able to manage questions with single choice answers.")</span>
+    </div>
+    <div class="checkbox-and-label">
+        @Html.EditorFor(m => m.AllowMultiChoice)
+        <label for="@Html.FieldIdFor(m => m.AllowMultiChoice)" >@T("Allow admin users to manage multi choice answers") </label>
+        <span class="hint">@T("Check if you want the user to be able to manage questions with multi choice answers.")</span>
+    </div>
+    <div class="checkbox-and-label">
+        @Html.EditorFor(m => m.AllowOpenAnswers)
+        <label for="@Html.FieldIdFor(m => m.AllowOpenAnswers)" >@T("Allow admin users to manage open answers") </label>
+        <span class="hint">@T("Check if you want the user to be able to manage questions with open answers.")</span>
+    </div>
+</fieldset>

@@ -126,6 +126,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             _controllerContextAccessor.Context.Controller.TempData["EnableAnswerImage"] = part.Settings.GetModel<QuestionnairesPartSettingVM>().EnableAnswerImage;
             _controllerContextAccessor.Context.Controller.TempData["QuestionImageLimitNumber"] = part.Settings.GetModel<QuestionnairesPartSettingVM>().QuestionImageLimitNumber;
             _controllerContextAccessor.Context.Controller.TempData["AnswerImageLimitNumber"] = part.Settings.GetModel<QuestionnairesPartSettingVM>().AnswerImageLimitNumber;
+            _controllerContextAccessor.Context.Controller.ViewBag.QuestionnairesPartSettings = part.Settings.GetModel<QuestionnairesPartSettingVM>();
             QuestionnaireEditModel modelForEdit;
             if (_controllerContextAccessor.Context.Controller.TempData["ModelWithErrors"] != null) {
                 modelForEdit = (QuestionnaireEditModel)_controllerContextAccessor.Context.Controller.TempData["ModelWithErrors"];
