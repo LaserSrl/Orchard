@@ -150,7 +150,15 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 if (pRecord.ContentItemId > 0) {
                     data.ContentItemId = pRecord.ContentItemId.ToString();
                 }
-                //TODO: using the ExpandoObject as IDictionary<string, object> i can add properties to data in runtime without knowing their names beforehand
+                //using the ExpandoObject as IDictionary<string, object> i can add properties to data in runtime without knowing their names beforehand
+                if (!string.IsNullOrWhiteSpace(pRecord.APIFilters)) {
+                    IDictionary<string, object> expDic = data;
+                    string[] keys = pRecord.APIFilters.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var k in keys) {
+                        expDic[k] = pRecord.GetProperty(k);
+                    }
+                }
+                
                 List<string> qsFragments = new List<string>();
                 qsFragments.Add(string.Format("Success={0}", success.ToString()));
                 qsFragments.Add(string.Format("Message={0}", HttpUtility.UrlEncode(message)));
@@ -176,7 +184,14 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 if (pRecord.ContentItemId > 0) {
                     data.ContentItemId = pRecord.ContentItemId.ToString();
                 }
-                //TODO: using the ExpandoObject as IDictionary<string, object> i can add properties to data in runtime without knowing their names beforehand
+                //using the ExpandoObject as IDictionary<string, object> i can add properties to data in runtime without knowing their names beforehand
+                if (!string.IsNullOrWhiteSpace(pRecord.APIFilters)) {
+                    IDictionary<string, object> expDic = data;
+                    string[] keys = pRecord.APIFilters.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var k in keys) {
+                        expDic[k] = pRecord.GetProperty(k);
+                    }
+                }
                 response.Data = data;
                 jsonResponse = JsonConvert.SerializeObject(response);
 

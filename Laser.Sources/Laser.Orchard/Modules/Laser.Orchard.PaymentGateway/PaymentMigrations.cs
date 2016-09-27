@@ -71,5 +71,11 @@ namespace Laser.Orchard.PaymentGateway {
                 table => table.AddColumn("Guid", System.Data.DbType.String, x => x.Unlimited()));
             return 8;
         }
+
+        public int UpdateFrom8() {
+            SchemaBuilder.AlterTable("PaymentRecord",
+                table => table.AddColumn("APIFilters", System.Data.DbType.String, x => x.Unlimited()));
+            return 9;
+        }
     }
 }

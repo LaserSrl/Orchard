@@ -53,6 +53,16 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             };
         }
 
+        public PaymentGatewayResponse GetAPIFilterTerms() {
+            return new PaymentGatewayResponse() {
+                Success = true,
+                Message = "",
+                Data = new { validTerms = PaymentRecord.ValidAPIFilters },
+                ErrorCode = PaymentGatewayErrorCode.NoError,
+                ResolutionAction = PaymentGatewayResolutionAction.NoAction
+            };
+        }
+
         /// <summary>
         /// Get the Url of the virtual pos, based on the parameters passed in the call.
         /// </summary>
@@ -67,7 +77,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         /// <returns></returns>
         public PaymentGatewayResponse GetVirtualPosUrl(
             string posName, decimal amount, string currency, 
-            int? itemId = 0, string reason = "", string redirectUrl = "", string schema = "") {
+            int? itemId = 0, string reason = "", string redirectUrl = "", string schema = "", string filters = "") {
             bool success = false;
             string msg = "";
             dynamic data = new System.Dynamic.ExpandoObject();
@@ -96,13 +106,18 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                     //create PaymentRecord (using startPayment)
                     PaymentRecord record = null;
                     try {
+                        //create a string for the apifilters, keeping only the valid ones
+                        filters = string.Join(",",
+                            filters.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                            .Where(s => PaymentRecord.IsValidAPIFilter(s)).ToList());
                         record = pos.StartPayment(new PaymentRecord() {
                             Reason = reason,
                             Amount = amount,
                             Currency = currency,
                             ContentItemId = itemId.Value,
                             CustomRedirectUrl = redirectUrl,
-                            CustomRedirectSchema = schema
+                            CustomRedirectSchema = schema,
+                            APIFilters = filters
                         });
                     } catch (Exception ex) {
                         success = false;

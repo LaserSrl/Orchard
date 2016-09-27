@@ -124,6 +124,7 @@
     <Compile Include="Models\PaymentRecord.cs" />
     <Compile Include="Navigation.cs" />
     <Compile Include="PaymentEventHandler.cs" />
+    <Compile Include="PaymentGatewayRoutes.cs" />
     <Compile Include="PaymentMigrations.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\Permissions.cs" />
