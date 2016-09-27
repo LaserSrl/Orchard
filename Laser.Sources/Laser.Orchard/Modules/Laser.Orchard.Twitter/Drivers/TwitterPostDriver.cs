@@ -31,6 +31,7 @@ using System.Xml.Linq;
 using System.Linq.Expressions;
 using Orchard.Environment.Configuration;
 using Orchard.UI.Admin;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.Twitter.Drivers {
 
@@ -237,6 +238,65 @@ namespace Laser.Orchard.Twitter.Drivers {
             //  }
             return Editor(part, shapeHelper);
         }
+
+        protected override void Importing(TwitterPostPart part, ImportContentContext context) {
+
+            var importedTwitterMessage = context.Attribute(part.PartDefinition.Name, "TwitterMessage");
+            if (importedTwitterMessage != null) {
+                part.TwitterMessage = importedTwitterMessage;
+            }
+
+            var importedTwitterMessageSent = context.Attribute(part.PartDefinition.Name, "TwitterMessageSent");
+            if (importedTwitterMessageSent != null) {
+                part.TwitterMessageSent = bool.Parse(importedTwitterMessageSent);
+            }
+
+            var importedTwitterTitle = context.Attribute(part.PartDefinition.Name, "TwitterTitle");
+            if (importedTwitterTitle != null) {
+                part.TwitterTitle = importedTwitterTitle;
+            }
+
+            var importedTwitterDescription = context.Attribute(part.PartDefinition.Name, "TwitterDescription");
+            if (importedTwitterDescription != null) {
+                part.TwitterDescription = importedTwitterDescription;
+            }
+
+            var importedTwitterPicture = context.Attribute(part.PartDefinition.Name, "TwitterPicture");
+            if (importedTwitterPicture != null) {
+                part.TwitterPicture = importedTwitterPicture;
+            }
+
+            var importedTwitterCurrentLink = context.Attribute(part.PartDefinition.Name, "TwitterCurrentLink");
+            if (importedTwitterCurrentLink != null) {
+                part.TwitterCurrentLink = bool.Parse(importedTwitterCurrentLink);
+            }
+
+            var importedTwitterLink = context.Attribute(part.PartDefinition.Name, "TwitterLink");
+            if (importedTwitterLink != null) {
+                part.TwitterLink = importedTwitterLink;
+            }
+
+            var importedSendOnNextPublish = context.Attribute(part.PartDefinition.Name, "SendOnNextPublish");
+            if (importedSendOnNextPublish != null) {
+                part.SendOnNextPublish =  bool.Parse(importedSendOnNextPublish);
+            }
+
+           
+
+        }
+
+
+        protected override void Exporting(TwitterPostPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterMessage", part.TwitterMessage);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterMessageSent", part.TwitterMessageSent);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterTitle", part.TwitterTitle);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterDescription", part.TwitterDescription);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterPicture", part.TwitterPicture);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterCurrentLink", part.TwitterCurrentLink);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterLink", part.TwitterLink);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SendOnNextPublish", part.SendOnNextPublish);
+        }
+
        
     }
 }

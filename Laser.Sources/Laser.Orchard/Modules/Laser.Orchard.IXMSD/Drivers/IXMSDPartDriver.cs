@@ -52,13 +52,14 @@ namespace Laser.Orchard.IXMSD.Drivers {
         }
 
         protected override void Importing(IXMSDPart part, ImportContentContext context) {
-            //           context.ImportAttribute(part.PartDefinition.Name, "DefaultParserEngine", x => part.DefaultParserIdSelected = x);
+            var importedExternalMediaUrl = context.Attribute(part.PartDefinition.Name, "ExternalMediaUrl");
+            if (importedExternalMediaUrl != null) {
+                part.ExternalMediaUrl = importedExternalMediaUrl;
+            }
         }
 
         protected override void Exporting(IXMSDPart part, ExportContentContext context) {
-            //           context.Element(part.PartDefinition.Name).SetAttributeValue("DefaultParserEngine", part.DefaultParserIdSelected);
-
-
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ExternalMediaUrl", part.ExternalMediaUrl);
         }
 
 

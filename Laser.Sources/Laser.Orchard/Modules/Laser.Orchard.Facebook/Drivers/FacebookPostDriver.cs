@@ -217,12 +217,11 @@ namespace Laser.Orchard.Facebook.Drivers {
 
             if (part.AccountList.Count() > 0) 
             {
-                //context.Element(part.PartDefinition.Name).SetAttributeValue("AccountList", part.AccountList);
-                //var accountList = context.Element(part.PartDefinition.Name).Element("accountList");
-                //for(int x=0; x==part.AccountList.Count(); x++) 
-                //{
-                //    accountList.Element("accountList").SetAttributeValue("accountList", part.AccountList[x]);
-                //}
+                context.Element(part.PartDefinition.Name).SetAttributeValue("AccountList", part.AccountList);
+                var accountList = context.Element(part.PartDefinition.Name).Element("accountList");
+                for (int x = 0; x == part.AccountList.Count(); x++) {
+                    accountList.Element("accountList").SetAttributeValue("accountList", part.AccountList[x]);
+                }
             }
 
             context.Element(part.PartDefinition.Name).SetAttributeValue("FacebookMessageToPost", part.FacebookMessageToPost);
