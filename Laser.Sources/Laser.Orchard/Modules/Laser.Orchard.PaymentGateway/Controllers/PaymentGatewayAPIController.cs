@@ -56,7 +56,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         public PaymentGatewayResponse GetAPIFilterTerms() {
             return new PaymentGatewayResponse() {
                 Success = true,
-                Message = "",
+                Message = T("The Data object contains the array of valid filter parameters. These are case-insensitive.").Text,
                 Data = new { validTerms = PaymentRecord.ValidAPIFilters },
                 ErrorCode = PaymentGatewayErrorCode.NoError,
                 ResolutionAction = PaymentGatewayResolutionAction.NoAction
@@ -110,8 +110,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                         filters = string.Join(",",
                             filters.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
                             .Where(s => PaymentRecord.IsValidAPIFilter(s))
-                            .Select(s => s.ToUpperInvariant())
-                            .Distinct()
+                            .Distinct(StringComparer.InvariantCultureIgnoreCase)
                             .ToList());
                         record = pos.StartPayment(new PaymentRecord() {
                             Reason = reason,
