@@ -129,6 +129,10 @@ msgid "Select one or more reactions"
 msgstr "Seleziona una o più reazioni"
 
 msgctxt "Laser.Orchard.UserReactions.Controllers.AdminController"
+msgid "A task has been scheduled to update reaction summaries for existing contents."
+msgstr "Un attività in background si sta occupando di aggiornare i totali per i contenuti esistenti."
+
+msgctxt "Laser.Orchard.UserReactions.Controllers.AdminController"
 msgid "Settings update failed: {0}"
 msgstr "Aggiornamento impostazioni fallito: {0}"
 
