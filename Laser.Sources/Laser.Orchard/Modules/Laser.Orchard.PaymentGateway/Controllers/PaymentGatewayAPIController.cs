@@ -106,10 +106,13 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                     //create PaymentRecord (using startPayment)
                     PaymentRecord record = null;
                     try {
-                        //create a string for the apifilters, keeping only the valid ones
+                        //create a string for the apifilters, keeping only the valid ones, and removing duplicates
                         filters = string.Join(",",
                             filters.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-                            .Where(s => PaymentRecord.IsValidAPIFilter(s)).ToList());
+                            .Where(s => PaymentRecord.IsValidAPIFilter(s))
+                            .Select(s => s.ToUpperInvariant())
+                            .Distinct()
+                            .ToList());
                         record = pos.StartPayment(new PaymentRecord() {
                             Reason = reason,
                             Amount = amount,
