@@ -36,22 +36,24 @@ namespace Laser.Orchard.Braintree.Controllers {
         /// <returns></returns>
         [Themed]
         public ActionResult Index(int pid = 0, string guid = "") {
+            PaymentRecord payment;
             if (pid > 0) {
-                PaymentVM model = new PaymentVM();
-                PaymentRecord payment = _posService.GetPaymentInfo(pid);
-                var settings = _orchardServices.WorkContext.CurrentSite.As<BraintreeSiteSettingsPart>();
-                if (settings.CurrencyCode != payment.Currency) {
-                    //throw new Exception(string.Format("Invalid currency code. Valid currency is {0}.", settings.CurrencyCode));
-                    string error = string.Format("Invalid currency code. Valid currency is {0}.", settings.CurrencyCode);
-                    _posService.EndPayment(payment.Id, false, error, error);
-                    return Redirect(_posService.GetPaymentInfoUrl(payment.Id));
-                }
-                model.Record = payment;
-                model.TenantBaseUrl = Url.Action("Index").Replace("/Laser.Orchard.Braintree/Braintree", "");
-                return View("Index", model);
+                payment = _posService.GetPaymentInfo(pid);
             } else {
-                return RedirectToAction("Index", new { pid = _posService.GetPaymentInfo(guid).Id });
+                payment = _posService.GetPaymentInfo(guid);
             }
+            pid = payment.Id;
+            var settings = _orchardServices.WorkContext.CurrentSite.As<BraintreeSiteSettingsPart>();
+            if (settings.CurrencyCode != payment.Currency) {
+                //throw new Exception(string.Format("Invalid currency code. Valid currency is {0}.", settings.CurrencyCode));
+                string error = string.Format("Invalid currency code. Valid currency is {0}.", settings.CurrencyCode);
+                _posService.EndPayment(payment.Id, false, error, error);
+                return Redirect(_posService.GetPaymentInfoUrl(payment.Id));
+            }
+            PaymentVM model = new PaymentVM();
+            model.Record = payment;
+            model.TenantBaseUrl = Url.Action("Index").Replace("/Laser.Orchard.Braintree/Braintree", "");
+            return View("Index", model);
         }
 
         [HttpGet]
