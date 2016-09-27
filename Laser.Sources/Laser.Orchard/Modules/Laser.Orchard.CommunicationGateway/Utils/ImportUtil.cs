@@ -61,17 +61,16 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
             _taxonomyService = _orchardServices.WorkContext.Resolve<ITaxonomyService>();
         }
 
-        public void ImportCsv(byte[] buffer) {
+        public void ImportCsv(string fileContent) {
             Errors = new List<string>();
             string[] lines = null;
             List<string> intestazione = null;
             List<string> record = null;
 
             try {
-                // converte il buffer in un testo
+                // suddivide il contenuto del file nelle varie righe
                 string[] lineSeparator = { Environment.NewLine };
-                string file = Encoding.UTF8.GetString(buffer);
-                lines = file.Split(lineSeparator, StringSplitOptions.None);
+                lines = fileContent.Split(lineSeparator, StringSplitOptions.None);
             }
             catch (Exception ex) {
                 Errors.Add("File format not valid. " + ex.Message);
@@ -107,7 +106,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
                         }
                     }
                     else {
-                        Errors.Add("At least a main field is missing. Main fields are: ID, TitlePart.Title, ContactPart.Email, ContactPart.Sms");
+                        Errors.Add("At least a main field is missing. Main fields are: Id, TitlePart.Title, ContactPart.Email, ContactPart.Sms");
                     }
                 }
                 else {
