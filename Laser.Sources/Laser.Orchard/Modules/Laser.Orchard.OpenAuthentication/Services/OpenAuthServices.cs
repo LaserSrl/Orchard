@@ -74,22 +74,43 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
             _openAuthUserEventHandlers.Invoke(o => o.Creating(creatingContext), Logger);
 
-            var createdUser = _membershipService.CreateUser(new CreateUserParams(
-                _usernameService.Calculate(createUserParams.UserName),
-                _passwordGeneratorService.Generate(),
-                creatingContext.EmailAddress,
-                @T("Auto Registered User").Text,
-                _passwordGeneratorService.Generate() /* Noone can guess this */,
-                true
-                ));
+            // check dei parametri createUserParams
+            if (!CheckUserParams(createUserParams)) {
+                return null;
+            }
+            else {
+                var createdUser = _membershipService.CreateUser(new CreateUserParams(
+                    _usernameService.Calculate(createUserParams.UserName),
+                    _passwordGeneratorService.Generate(),
+                    creatingContext.EmailAddress,
+                    @T("Auto Registered User").Text,
+                    _passwordGeneratorService.Generate() /* Noone can guess this */,
+                    true
+                    ));
 
-            var createdContext = new CreatedOpenAuthUserContext(createdUser, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
-            _openAuthUserEventHandlers.Invoke(o => o.Created(createdContext), Logger);
+                var createdContext = new CreatedOpenAuthUserContext(createdUser, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
+                _openAuthUserEventHandlers.Invoke(o => o.Created(createdContext), Logger);
 
-            //solleva l'evento di sincronizzazione dell'utente orchard
-            _contactEventHandler.Synchronize(createdUser);
+                //solleva l'evento di sincronizzazione dell'utente orchard
+                _contactEventHandler.Synchronize(createdUser);
 
-            return createdUser;
+                return createdUser;
+            }
+        }
+
+        private bool CheckUserParams(OpenAuthCreateUserParams createUserParams) {
+            bool esito = true;
+
+            esito = (createUserParams.ProviderName != null);
+            if (esito) esito = (createUserParams.ProviderUserId != null);
+            if (esito) esito = (createUserParams.UserName != null);
+
+            if (esito) esito = (createUserParams.ExtraData["id"] != null);
+            if (esito) esito = (createUserParams.ExtraData["username"] != null);
+            if (esito) esito = (createUserParams.ExtraData["email"] != null);
+            if (esito) esito = (createUserParams.ExtraData["accesstoken"] != null);
+
+            return esito;
         }
     }
 }
