@@ -32,7 +32,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             _communicationService = communicationService;
             _transactionManager = transactionManager;
             Logger = NullLogger.Instance;
-            _contactsImportRelativePath = string.Format("~/Media/{0}/Import/Contacts", _shellSettings.Name);
+            _contactsImportRelativePath = string.Format("~/App_Data/Sites/{0}/Import/Contacts", _shellSettings.Name);
         }
 
         public void Process(ScheduledTaskContext context) {
@@ -45,7 +45,6 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                 if (dir.Exists == false) {
                     dir.Create();
                 }
-                byte[] buffer = null;
                 FileInfo logFile = null;
                 foreach (var file in dir.GetFiles("*.csv", SearchOption.TopDirectoryOnly)) {
                     try {
@@ -55,9 +54,12 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                         // importa solo i csv che non hanno già un log corrispondente
                         logFile = new FileInfo(file.FullName + ".log");
                         if (logFile.Exists == false) {
-                            buffer = File.ReadAllBytes(file.FullName);
+                            string fileContent = "";
+                            using (StreamReader reader = new StreamReader(file.FullName, Encoding.UTF8)) {
+                                fileContent = reader.ReadToEnd();
+                            }
                             ImportUtil import = new ImportUtil(_orchardServices);
-                            import.ImportCsv(buffer);
+                            import.ImportCsv(fileContent);
                             string result = string.Format("Import result: Errors: {0}, Mails: {1}, Sms: {2}.", import.Errors.Count, import.TotMail, import.TotSms);
                             string strErrors = FormatErrors(import.Errors);
                             File.WriteAllText(string.Format("{0}{1}{2}.log", dir.FullName, Path.DirectorySeparatorChar, file.Name),

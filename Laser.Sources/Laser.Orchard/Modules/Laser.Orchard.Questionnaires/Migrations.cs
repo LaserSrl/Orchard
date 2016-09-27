@@ -200,5 +200,11 @@ namespace Laser.Orchard.Questionnaires {
             _utilsServices.UpdateStereotypesPermissions(stereotypes);
             return 19;
         }
+        public int UpdateFrom19() {
+            ContentDefinitionManager.AlterTypeDefinition("QuestionnaireStatsExport", type => type.WithPart("TitlePart")
+                .Draftable(false)
+                .Creatable(false)); 
+            return 20;
+        }
     }
 }
