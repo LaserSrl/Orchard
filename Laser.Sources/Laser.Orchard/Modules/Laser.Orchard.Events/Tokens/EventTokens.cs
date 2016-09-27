@@ -46,6 +46,8 @@ namespace Laser.Orchard.Events.Tokens
         {
             if (_currentContentAccessor.CurrentContentItem == null)
                 return;
+            else if (_currentContentAccessor.CurrentContentItem.As<CalendarPart>() == null)
+                return;
 
             context.For("Content", _currentContentAccessor.CurrentContentItem)
                    .Token("CalendarStartDate", content => GetStartDate(content))
