@@ -119,7 +119,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             dynamic cf = contfield;
             Hashtable hs = new Hashtable();
             if (cf.FieldDefinition.Name != typeof(ContentPickerField).Name && cf.FieldDefinition.Name != typeof(MediaLibraryPickerField).Name) {
-                        string keyField = partname+"." + ((object)cf.DisplayName).ToString();
+                        string keyField = partname+"." + ((object)cf.Name).ToString();
                         string valueField = "";
 
                         if (cf.FieldDefinition.Name == typeof(DateTimeField).Name) {

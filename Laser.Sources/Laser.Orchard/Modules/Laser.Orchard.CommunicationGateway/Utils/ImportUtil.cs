@@ -133,7 +133,7 @@ namespace Laser.Orchard.CommunicationGateway.Utils {
             string[] smsComponents = null; // prefix and sms
             foreach (var prefixAndSms in elencoSms) {
                 smsComponents = prefixAndSms.Split(smsSeparator);
-                if (smsComponents.Count() > 1) {
+                if ((smsComponents.Count() > 1) && (string.IsNullOrWhiteSpace(smsComponents[1]) == false)) {
                     ImportSms(smsComponents[0], smsComponents[1], partialRecord);
                 }
             }

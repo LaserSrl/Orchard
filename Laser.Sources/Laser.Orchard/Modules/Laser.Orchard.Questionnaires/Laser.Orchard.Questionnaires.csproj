@@ -281,6 +281,7 @@
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ExcelTemplate\Analisi Questionario.xlsx" />
     <None Include="Properties\PublishProfiles\Orchard_Module_Release.pubxml" />
     <Content Include="Views\EditorTemplates\Parts\QuestionnaireModuleSettings.cshtml" />
     <Content Include="Views\DefinitionTemplates\QuestionnairesPartSettingVM.cshtml" />
@@ -295,6 +296,7 @@
     <Content Include="Views\QuestionnaireStats\QuestionDetail.cshtml" />
     <Content Include="Views\LocalNavRankings.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
