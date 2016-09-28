@@ -126,7 +126,9 @@
       <Name>Laser.Orchard.PaymentGateway</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Navigation\" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ParameterValidation.cs" />
     <Compile Include="Controllers\AdminController.cs" />
@@ -140,7 +142,6 @@
     <Compile Include="Models\PaymentGestPaySettingsPart.cs" />
     <Compile Include="Models\PaymentGestPaySettingsPartRecord.cs" />
     <Compile Include="Models\TransactionOutcome.cs" />
-    <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Service References\CryptDecryptProd\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

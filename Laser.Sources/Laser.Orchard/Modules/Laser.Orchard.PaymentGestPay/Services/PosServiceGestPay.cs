@@ -42,12 +42,15 @@ namespace Laser.Orchard.PaymentGestPay.Services {
         }
 
         #region Implementation of abstract class
-        //implement abstract methods from base class to avoid compilation errors while I do something else
+        /// <summary>
+        /// Gets the string used to identify this payment method
+        /// </summary>
+        /// <returns>GestPay</returns>
         public override string GetPosName() {
             return "GestPay";
         }
         /// <summary>
-        /// This gets called by the "general" payment services.
+        /// This gets called by the "general" payment services to get a link to the action that will start the payment
         /// </summary>
         /// <param name="paymentId">The id corresponding to a <type>PaymentRecord</type> for the transaction we want to start.</param>
         /// <returns>The url corresponding to an action that will start the GestPay transaction </returns>
@@ -64,6 +67,11 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             //var ub = new UrlHelper().Action("RedirectToGestPayPage", "Transactions", new { Id = paymentId });
             return ub.Uri.ToString();
         }
+        /// <summary>
+        /// This gets called by the "general" payment services to get a link to the action that will start the payment
+        /// </summary>
+        /// <param name="paymentId">The Guid corresponding to a <type>PaymentRecord</type> for the transaction we want to start.</param>
+        /// <returns>The url corresponding to an action that will start the GestPay transaction </returns>
         public override string GetPosActionUrl(string paymentGuid) {
             //create the url for the controller action that takes care of the redirect, passing the id as parameter
             //Controller: Transactions
@@ -84,11 +92,18 @@ namespace Laser.Orchard.PaymentGestPay.Services {
         public override string GetSettingsControllerName() {
             return "Admin";
         }
-
+        /// <summary>
+        /// Gets the URL of the virtual POS where we wish to redirect the user for payment
+        /// </summary>
+        /// <param name="paymentId">The id of a payment record</param>
+        /// <returns>The url to redirect the user to, as a string.</returns>
         public override string GetPosUrl(int paymentId) {
             return StartGestPayTransactionURL(paymentId);
         }
-
+        /// <summary>
+        /// Gets a list of valid currencies for GestPay
+        /// </summary>
+        /// <returns>A list of the alpha 3 iso representation of the currencies that are allowed for GestPay</returns>
         public override List<string> GetAllValidCurrencies() {
             return CodeTables.CurrencyCodes.Select(cc => cc.isoCode).ToList();
         }
@@ -362,7 +377,13 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             Logger.Error(ErrorHere.Text);
             return TransactionOutcome.InternalError(ErrorHere.Text);
         }
-
+        /// <summary>
+        /// Calls GestPay's decryption service to decode the information we received.
+        /// </summary>
+        /// <param name="shop"></param>
+        /// <param name="cryptedInfo"></param>
+        /// <param name="testEnvironmanet"></param>
+        /// <returns></returns>
         private XmlNode Decrypt(string shop, string cryptedInfo, bool testEnvironmanet) {
             XmlNode outcome;
             if (testEnvironmanet) {
@@ -386,7 +407,13 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             }
             return outcome;
         }
-
+        /// <summary>
+        /// Given the results of a transaction, get the url of the page showing them to the user. This url, depending on the call that started the
+        /// transaction, may not actually be an url.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public string InterpretTransactionResult(string a, string b) {
             var settings = _orchardServices
                 .WorkContext
