@@ -1,4 +1,5 @@
-﻿<div class="text-center font1-2">
-    @Model.Html
-</div>
-
+﻿@if (TempData["QuestSuccess"] == null) {
+    <div class="text-center font1-2">
+        @Model.Html
+    </div>
+}

@@ -7,11 +7,9 @@
     var contentItems = field.ContentItems;
 }
 <p class="content-picker-field content-picker-field-@name.HtmlClassify()">
-    <span class="name">@name:</span>
     @if(contentItems.Any()) {
         foreach(var contentItem in contentItems) {
             @Display(BuildDisplay(contentItem, "Detail"));
-            <span class="value">@Html.ItemDisplayLink(contentItem)</span>
             if(contentItem != contentItems.Last()) {
                 <span>,</span>
             }
