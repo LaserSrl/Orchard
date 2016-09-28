@@ -7,6 +7,7 @@ using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Themes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -16,6 +17,10 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         private readonly IRepository<PaymentRecord> _repository;
         private readonly IOrchardServices _orchardServices;
         private readonly IEnumerable<IPosService> _posServices;
+        /// <summary>
+        /// This class is a default implementation of the pos services, used as basically a placeholder when calling some methods, since abstract classes
+        /// cannot be directly instantiated.
+        /// </summary>
         private class PosServiceEmpty : PosServiceBase {
             public PosServiceEmpty(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler)
                 : base(orchardServices, repository, paymentEventHandler) {
@@ -50,6 +55,14 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             _posServiceEmpty = new PosServiceEmpty(orchardServices, repository, null);
             T = NullLocalizer.Instance;
         }
+        /// <summary>
+        /// This controller starts the web flow for payments, and creates the associated record
+        /// </summary>
+        /// <param name="reason">String describing the reason for the payment</param>
+        /// <param name="amount">Amount of payment</param>
+        /// <param name="currency">Currency used</param>
+        /// <param name="itemId">Optional, the Id of a ContentItem associated with the payment</param>
+        /// <returns>A page proposing the paymet options</returns>
         [Themed]
         public ActionResult Pay(string reason, decimal amount, string currency, int itemId = 0) {
             ContentItem item = null;
@@ -69,6 +82,11 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             model.Record = _posServiceEmpty.StartPayment(model.Record);
             return View("Pay", model);
         }
+        /// <summary>
+        /// This controller shows information about a specific payment
+        /// </summary>
+        /// <param name="paymentId">An Id corresponding to the record that contains the payment information</param>
+        /// <returns>A page reporting the information for the payment</returns>
         [Themed]
         public ActionResult Info(int paymentId) {
             int currentUserId = -1; // utente inesistente
@@ -84,16 +102,33 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             return View("Info", payment);
         }
 
-        //I call this method in the page showing the buttons to go to the virtual POS
+
+        /// <summary>
+        /// This method tells whether a given payment has been terminated. The payment is identified by either its Id or its Guid.
+        /// If no payment is identified by the parameters, we return false, as if the transaction had been completed.
+        /// </summary>
+        /// <param name="paymentId">The Id of the payment we are querying about</param>
+        /// <param name="guid">The guid of the payment we are querying about</param>
+        /// <returns>A Json telling whether the transaction still has to be completed (true) or has finished (false).</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult PaymentIsIncomplete(int paymentId = 0, string guid = "") {
-            if (paymentId > 0) {
-                return Json(new { Success = !_posServiceEmpty.GetPaymentInfo(paymentId).PaymentTransactionComplete });
-            } else {
-                return Json(new { Success = !_posServiceEmpty.GetPaymentInfo(guid).PaymentTransactionComplete });
+            PaymentRecord payment = null;
+            try {
+                if (paymentId > 0) {
+                    //this version of GetPaymentInfo throws an exception if the id is not valid
+                    payment = _posServiceEmpty.GetPaymentInfo(paymentId);
+                } else {
+                    //this version of GetPaymentInfo throws an exception if the guid is not valid
+                    payment = _posServiceEmpty.GetPaymentInfo(guid);
+                }
+            } catch (Exception) {
+                payment = null;
             }
-
+            if (payment == null) {
+                return Json(new { Success = false } );
+            }
+            return Json(new { Success = !payment.PaymentTransactionComplete });
         }
     }
 }

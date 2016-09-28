@@ -19,7 +19,7 @@
 }
 @using (Script.Foot()){
     <script type="text/javascript">
-        //TODO: write the script that connects to our server and checks things about the payment whose ID we have here.
+        // this script connects to our server and checks things about the payment whose ID we have here.
         $(function () {
             //get all the buttons we use to call the Actions to start payments
             var posButtons = document.querySelectorAll(".posButtonClass");
@@ -66,6 +66,7 @@
                 for (var but = 0; but < posButtons.length; but++) {
                     posButtons[but].style.display = "none";
                 }
+                //after this next call, the buttons will not be in the DOM anymore
                 divForButtons.innerText = "@T("There was an error initializing the payment. Please try again.").Text";
             }
 

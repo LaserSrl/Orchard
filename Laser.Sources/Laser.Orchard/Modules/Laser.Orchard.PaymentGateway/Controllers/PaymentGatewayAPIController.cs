@@ -23,6 +23,26 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             T = NullLocalizer.Instance;
         }
 
+        /// <summary>
+        /// endpoint: /API/Laser.Orchard.PaymentGateway/PaymentGatewayAPI/GetPosNames
+        /// A call to this endpoint, with no parameters, returns the list of the names of available payment methods.
+        /// Example response:
+        /// {
+        ///  "ErrorCode": 0,
+        ///  "ResolutionAction": 0,
+        ///  "Success": true,
+        ///  "Message": "",
+        ///  "Data": {
+        ///    "posNames": [
+        ///      "Braintree and PayPal",
+        ///      "CartaSì X-Pay",
+        ///      "GestPay"
+        ///    ]
+        ///  }
+        /// }
+        /// </summary>
+        /// <returns>A response whose Data field contains an array called posNames that contains the names to be used when referring
+        /// to the payment methods in the other API calls.</returns>
         public PaymentGatewayResponse GetPosNames() {
             PaymentGatewayResponse res = new PaymentGatewayResponse() {
                 Success = true,
@@ -33,6 +53,24 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             return res;
         }
 
+        /// <summary>
+        /// endpoint: /API/Laser.Orchard.PaymentGateway/PaymentGatewayAPI/GetValidCurrencies
+        /// A call to this endpoint returns the list of the currencies that may be used with a given payment method.
+        /// Example response:
+        /// {
+        ///  "ErrorCode": 0,
+        ///  "ResolutionAction": 0,
+        ///  "Success": true,
+        ///  "Message": "",
+        ///  "Data": {
+        ///    "validCurrencies": [
+        ///      "EUR"
+        ///    ]
+        ///  }
+        /// }
+        /// </summary>
+        /// <param name="posName">A string representing the name of the pos, as given by a call to GetPosNames. This parameter is mandatory.</param>
+        /// <returns>A response whose Data field contains an array called validCurrencies that contains the valid currency string that may be used with the pos.</returns>
         public PaymentGatewayResponse GetValidCurrencies(string posName) {
             var vc = ValidCurrencies(posName);
             if (vc == null || vc.Count == 0) {
@@ -53,6 +91,29 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             };
         }
 
+        /// <summary>
+        /// endpoint: /API/Laser.Orchard.PaymentGateway/PaymentGatewayAPI/GetAPIFilterTerms
+        /// A call to this endpoint returns the list valid values for the API json filter to be applied in the transaction responses.
+        /// Example response:
+        /// {
+        ///  "ErrorCode": 0,
+        ///  "ResolutionAction": 0,
+        ///  "Success": true,
+        ///  "Message": "The Data object contains the array of valid filter parameters. These are case-insensitive."",
+        ///  "Data": {
+        ///    "validTerms": [
+        ///      "REASON",
+        ///      "POSNAME",
+        ///      "AMOUNT",
+        ///      "CURRENCY",
+        ///      "ERROR",
+        ///      "INFO",
+        ///      "USERID"
+        ///    ]
+        ///  }
+        /// }
+        /// </summary>
+        /// <returns>A response whose Data field contains an array called validTerms that contains the valid strings that may be passed as optional json filters.</returns>
         public PaymentGatewayResponse GetAPIFilterTerms() {
             return new PaymentGatewayResponse() {
                 Success = true,
@@ -64,19 +125,33 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         }
 
         /// <summary>
+        /// endpoint: /API/Laser.Orchard.PaymentGateway/PaymentGatewayAPI/GetVirtualPosUrl
         /// Get the Url of the virtual pos, based on the parameters passed in the call.
+        /// Example response:
+        /// {
+        ///  "ErrorCode": 0,
+        ///  "ResolutionAction": 0,
+        ///  "Success": true,
+        ///  "Message": "The Data object contains the array of valid filter parameters. These are case-insensitive."",
+        ///  "Data": {
+        ///    "redirectUrl": "https://testecomm.sella.it/pagam/pagam.aspx?a=GESPAY63353&b=JEkIJQMBqbRabcJwzbGRHI1q8*dZOkTVfBzFjl0ciCaOrUZpYxTgDgDAG_SIC_Uy1uUBChnOEqs0fmXc2K9WTgsGDi*qlTQa*A_Nq*F2ylc"
+        ///  }
+        /// }
         /// </summary>
-        /// <param name="posName">Name of the payment gateway whose POS we are trying to reach.</param>
-        /// <param name="amount">Amount to be payed.</param>
-        /// <param name="currency">Currency of payment.</param>
-        /// <param name="itemId">Id of Content Item associated with payment.</param>
-        /// <param name="reason">Description of reason for payment.</param>
-        /// <param name="redirectUrl">Url to which we want to redirect the browser from the Action handling the end of
+        /// <param name="posName">Mandatory: Name of the payment gateway whose POS we are trying to reach.</param>
+        /// <param name="amount">Mandatory: Amount to be payed.</param>
+        /// <param name="currency">Mandatory: Currency of payment.</param>
+        /// <param name="itemId">Optional: Id of Content Item associated with payment.</param>
+        /// <param name="reason">Optional: Description of reason for payment.</param>
+        /// <param name="redirectUrl">Optional: Url to which we want to redirect the browser from the Action handling the end of
         /// the transaction.</param>
-        /// <param name="schema">Schema for the redirect from the Action handling the end of the transaction.</param>
-        /// <returns></returns>
+        /// <param name="schema">Optional: Schema for the redirect from the Action handling the end of the transaction.</param>
+        /// <param name="filters">Optional: Comma-separated list of parameters for the json filter of the results. The valid strings are given by a call to GetAPIFilterTerms.
+        /// The response received at the end of the transaction will contain the requested parameters in addition to the default ones.</param>
+        /// <returns>A response whose Data field contains a redirectUrl string telling where the application should redirect the user for payment,
+        /// or an error with aditional information.</returns>
         public PaymentGatewayResponse GetVirtualPosUrl(
-            string posName, decimal amount, string currency, 
+            string posName, decimal amount, string currency,
             int? itemId = 0, string reason = "", string redirectUrl = "", string schema = "", string filters = "") {
             bool success = false;
             string msg = "";

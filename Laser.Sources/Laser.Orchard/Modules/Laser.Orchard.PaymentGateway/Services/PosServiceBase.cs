@@ -81,7 +81,14 @@ namespace Laser.Orchard.PaymentGateway.Services {
             return result;
         }
         public PaymentRecord GetPaymentInfo(string guid) {
-            return _repository.Table.Where(r => r.Guid == guid).SingleOrDefault();
+            if (string.IsNullOrWhiteSpace(guid)) {
+                throw new Exception("Invalid parameter 'Guid'."); //this handles the old records, where we did not use the guid, as well as actual error cases.
+            }
+            PaymentRecord payment = _repository.Table.Where(r => r.Guid == guid).SingleOrDefault();
+            if (payment == null) {
+                throw new Exception("Invalid parameter 'Guid'.");
+            }
+            return payment;
         }
         public void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "") {
             PaymentRecord paymentToSave = GetPaymentInfo(paymentId); //null;
