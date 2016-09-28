@@ -42,7 +42,12 @@ namespace Laser.Orchard.PaymentGestPay.Controllers {
             }
         }
 
-        //GestPay calls this controller while proceeding with the transaction
+        /// <summary>
+        /// GestPay calls this controller while proceeding with the transaction
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public ActionResult GestPayS2SEndpoint(string a, string b) {
             TransactionOutcome outcome = _gestPayTransactionServices.ReceiveS2STransaction(a, b);
             //the mesages given in the view are for debug purposes, because GestPay does not care
@@ -62,10 +67,21 @@ namespace Laser.Orchard.PaymentGestPay.Controllers {
             return View(Shape); ;
         }
 
-        //GestPay redirects the buyer to these actions when it's done
+        /// <summary>
+        /// GestPay redirects the buyer to these actions when it's done
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public ActionResult GestPaySuccess(string a, string b) {
             return RedirectToAction("GestPayOutcome", new { a = a, b = b });
         }
+        /// <summary>
+        /// GestPay redirects the buyer to these actions when it's done
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public ActionResult GestPayFailure(string a, string b) {
             return RedirectToAction("GestPayOutcome", new { a = a, b = b });
         }
