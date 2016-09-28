@@ -1,0 +1,294 @@
+﻿@functions {
+    // To support the layout classifaction below. Implementing as a razor function because we can, could otherwise be a Func<string[], string, string> in the code block following.
+    string CalcuClassify(string[] zoneNames, string classNamePrefix)
+    {
+        var zoneCounter = 0;
+        var zoneNumsFilled = string.Join("", zoneNames.Select(zoneName => { ++zoneCounter; return Model[zoneName] != null ? zoneCounter.ToString() : ""; }).ToArray());
+        return HasText(zoneNumsFilled) ? classNamePrefix + zoneNumsFilled : "";
+    }
+}
+@{
+    /* Global includes for the theme moved to Document.cshtml
+    ***************************************************************/
+
+
+    /* Some useful shortcuts or settings
+    ***************************************************************/
+
+    Func<dynamic, dynamic> Zone = x => Display(x); // Zone as an alias for Display to help make it obvious when we're displaying zones
+
+    /* Layout classification based on filled zones
+    ***************************************************************/
+
+    //Add classes to the wrapper div to toggle aside widget zones on and off
+    var asideClass = CalcuClassify(new[] { "AsideFirst", "AsideSecond" }, "aside-"); // for aside-1, aside-2 or aside-12 if any of the aside zones are filled
+    if (HasText(asideClass))
+    {
+        Model.Classes.Add(asideClass);
+    }
+
+    //Add classes to the wrapper div to toggle tripel widget zones on and off
+    var tripelClass = CalcuClassify(new[] { "TripelFirst", "TripelSecond", "TripelThird" }, "tripel-"); // for tripel-1, triple-2, etc. if any of the tripel zones are filled
+    if (HasText(tripelClass))
+    {
+        Model.Classes.Add(tripelClass);
+    }
+
+    //Add classes to the wrapper div to toggle quad widget zones on and off
+    var footerQuadClass = CalcuClassify(new[] { "FooterQuadFirst", "FooterQuadSecond", "FooterQuadThird", "FooterQuadFourth" }, "split-"); // for quad-1, quad-2, etc. if any of the quad zones are filled
+    if (HasText(footerQuadClass))
+    {
+        Model.Classes.Add(footerQuadClass);
+    }
+
+    /* Inserting some ad hoc shapes
+    ***************************************************************/
+    WorkContext.Layout.Logo.Add(New.Branding(), "1");
+    //WorkContext.Layout.Footer.Add(New.BadgeOfHonor(), "5"); // Powered by Orchard
+    //WorkContext.Layout.Footer.Add(New.User(), "10"); // Login and dashboard links
+
+    /* Last bit of code to prep the layout wrapper
+    ***************************************************************/
+
+    Model.Id = "layout-wrapper";
+    Model.Classes.Add("main-bg");
+    var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model
+    var themeBasePath = Url.Content(Html.ThemePath(WorkContext.CurrentTheme, ""));
+}
+<div class="space-20"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-4 logo-header">
+            <img src="Styles/img/logoquerstionario.png" alt="logo" class="img-responsive"/>
+        </div>
+        <div class="col-xs-12 col-sm-8">
+            <div class="header-box">
+                <span class="header-testo">Cassa Nazionale di Previdenza ed Assistenza per gli Ingegneri ed Architetti Liberi Professionisti</span>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.TitleZone != null)
+{
+
+<div class="space-10"></div>
+<div class="text-center bg-pink">
+        @Zone(Model.TitleZone)
+</div>
+}
+@if (Model.Content != null)
+{
+    <div class="container">
+    <div class="space-40"></div>
+
+    @Zone(Model.Content)
+        </div>
+}
+    <form method='post' action=''>
+        <div id='sezione-rate'>
+            <div class="text-center font1-2">
+                Le chiediamo di rispondere alle seguenti quattro brevi domande relativamente alla sua richiesta 
+                di pensione / maternità:<br>
+                SELEZIONA UN UNICO BOX DI INTERESSE
+            </div>
+            <div class='space-30'></div>
+            <div class="row">
+                <input type='hidden' value='' id='rate'>
+                <div class='hidden-xs col-sm-1'>
+                </div>
+                <div class='hidden-xs col-sm-1 font1-3 text-center tag-min-max'>
+                    Min
+                </div>
+                <div class='col-xs-3 col-sm-2 text-center'>
+                    <div class='rate font1-4'>1</div>
+                </div>
+                <div class='col-xs-3 col-sm-2 text-center'>
+                    <div class='rate font1-4'>2</div>
+                </div>
+                <div class='col-xs-3 col-sm-2 text-center'>
+                    <div class='rate font1-4'>3</div>
+                </div>
+                <div class='col-xs-3 col-sm-2 text-center'>
+                    <div class='rate font1-4'>4</div>
+                </div>
+                <div class='hidden-xs col-sm-1 font1-3  text-center tag-min-max'>
+                    Max
+                </div>
+                <div class='hidden-xs col-sm-1'>
+                </div>
+            </div>
+            <div class='space-10'></div>
+            <div class='row'>
+                <div class='col-xs-1'>
+                </div>
+                <div class='col-xs-10'>
+                    <hr class='hr-section'>
+                </div>
+                <div class='col-xs-1'>
+                </div>
+            </div>
+        </div>
+        <div class='space-40'></div>
+        <div id='sezione-checkbox'>
+            <div class="text-center font1-2">
+                Le chiediamo di rispondere alle seguenti quattro brevi domande relativamente alla sua richiesta 
+                di pensione / maternità:<br>
+                SELEZIONA TUTTI I BOX DI INTERESSE
+            </div>
+            <div class='space-30'></div>
+            <div class="row">
+                <div class='hidden-xs col-sm-2'></div>
+                <div class="space-20 visible-xs"></div>
+                <div class='col-xs-12 col-sm-2 text-center'>
+                    <div class='rate-checkbox font1-4'>
+                        <input type="checkbox" value="1" class="checkbox-offset">
+                        <span class="checkbox-text">Testo 1</span>
+                        <i class="fa fa-check"></i>
+                    </div>
+                </div>
+                <div class="space-20 visible-xs"></div>
+                <div class='col-xs-12 col-sm-2 text-center'>
+                    <div class='rate-checkbox font1-4'>
+                        <input type="checkbox" value="2" class="checkbox-offset">
+                        <span class="checkbox-text">Testo 2</span>
+                        <i class="fa fa-check"></i>
+                    </div>
+                </div>
+                <div class="space-20 visible-xs"></div>
+                <div class='col-xs-12 col-sm-2 text-center'>
+                    <div class='rate-checkbox font1-4'>
+                        <input type="checkbox" value="3" class="checkbox-offset">
+                        <span class="checkbox-text">Testo di prova a capo 3</span>
+                        <i class="fa fa-check"></i>
+                    </div>
+                </div>
+                <div class="space-20 visible-xs"></div>
+                <div class='col-xs-12 col-sm-2 text-center'>
+                    <div class='rate-checkbox font1-4'>
+                        <input type="checkbox" value="4" class="checkbox-offset">
+                        <span class="checkbox-text">Testo finale</span>
+                        <i class="fa fa-check"></i>
+                    </div>
+                </div>
+                <div class='hidden-xs col-sm-2'>
+                </div>
+            </div>
+            <div class='space-10'></div>
+            <div class='row'>
+                <div class='col-xs-1'>
+                </div>
+                <div class='col-xs-10'>
+                    <hr class='hr-section'>
+                </div>
+                <div class='col-xs-1'>
+                </div>
+            </div>
+        </div>
+        <div class='space-40'></div>
+        <div id='sezione-textarea'>
+            <div class="text-center font1-2">
+                Le chiediamo di rispondere alle seguenti quattro brevi domande relativamente alla sua richiesta 
+                di pensione / maternità:<br>
+                COMPILA LA TEXTAREA
+            </div>
+            <div class='space-30'></div>
+            <div class='row'>
+                <div class='col-xs-1'>
+                </div>
+                <div class='col-xs-10'>
+                    <textarea class="textarea-box form-control text-pink"  id="textarea-field"></textarea>
+                </div>
+                <div class='col-xs-1'>
+                </div>
+            </div>
+            <div class='space-10'></div>
+            <div class='row'>
+                <div class='col-xs-1'>
+                </div>
+                <div class='col-xs-10'>
+                    <hr class='hr-section'>
+                </div>
+                <div class='col-xs-1'>
+                </div>
+            </div>
+        </div>
+        <div class='space-40'></div>
+        <div id='sezione-textarea'>
+            <div class="text-center font1-2">
+                Le chiediamo di rispondere alle seguenti quattro brevi domande relativamente alla sua richiesta 
+                di pensione / maternità:<br>
+                COMPILA L'INPUT
+            </div>
+            <div class='space-30'></div>
+            <div class='row'>
+                <div class='col-xs-1'>
+                </div>
+                <div class='col-xs-10'>
+                    <input type='text' class="text-box form-control text-pink" id="text-field"></textarea>
+                </div>
+                <div class='col-xs-1'>
+                </div>
+            </div>
+            <div class='space-10'></div>
+            <div class='row'>
+                <div class='col-xs-1'>
+                </div>
+                <div class='col-xs-10'>
+                    <hr class='hr-section'>
+                </div>
+                <div class='col-xs-1'>
+                </div>
+            </div>
+        </div>
+        <div class='space-40'></div>
+        <div id='sezione-select'>
+            <div class="text-center font1-2">
+                Le chiediamo di rispondere alle seguenti quattro brevi domande relativamente alla sua richiesta 
+                di pensione / maternità:<br>
+                SELEZIONA UNA OPZIONE
+            </div>
+            <div class='space-30'></div>
+            <div class='row'>
+                <div class='col-xs-1'>
+                </div>
+                <div class='col-xs-10'>
+                    <select class="select-box form-control text-pink" id="select-field">
+                        <option value='1'>Soddisfattissimo</option>
+                        <option value='2'>Per niente</option>
+                        <option value='3'>Più o meno</option>
+                    </select>
+                </div>
+            <div class='col-xs-1'>
+            </div>
+            </div>
+            <div class='space-10'></div>
+            <div class='row'>
+                <div class='col-xs-1'>
+                </div>
+                <div class='col-xs-10'>
+                    <hr class='hr-section'>
+                </div>
+                <div class='col-xs-1'>
+                </div>
+            </div>
+        </div>
+        <div class='space-10'></div>
+        <div id='sezione-send'>
+            <div class="text-center text-pink">
+                <h2>Grazie del tempo che ci hai dedicato!</h2>
+            </div>
+            <div class='space-30'></div>
+            <div class='row'>
+                <div class='col-xs-2'>
+                </div>
+                <div class='col-xs-8 text-center'>
+                    <input type='submit' value="INVIA" class="btn submit-soddisfazione">
+                </div>
+            </div>
+            <div class='col-xs-2'>
+            </div>
+            <div class='space-10'></div>
+        </div>
+    </form>
+</div>
+<div class="space-40"></div>

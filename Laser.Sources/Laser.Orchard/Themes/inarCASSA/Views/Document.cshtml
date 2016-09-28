@@ -1,0 +1,28 @@
+﻿@using Orchard.Environment.Configuration
+@{
+    var settings = WorkContext.Resolve<ShellSettings>();
+    var tenantName = settings.Name;
+
+    var title = String.Concat(Layout.Title," - ", WorkContext.CurrentSite.SiteName);
+    var subthemePath = "~/Themes/inarCASSA/Styles/" + tenantName + "/";
+}
+@{
+    //Styles
+    Style.Include("style.css").AtHead();
+    // #GM Gestione alto contrasto - end
+    Script.Include("code.js").AtFoot();
+}
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Form soddisfazione cliente - INARCASSA</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+         @Display(Model.Head)
+    </head>
+    <body>
+        @Display(Model.Body)
+        @Display(Model.Tail)
+    </body>
+</html>
