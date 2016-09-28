@@ -181,8 +181,16 @@ msgid "Transaction ID"
 msgstr "ID Transazione"
 
 msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PosList.cshtml"
+msgid "Loading valid payment methods. Please wait."
+msgstr "Attendere prego: caricamento dei metodi di pagamento in corso."
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PosList.cshtml"
 msgid "Pay using:"
 msgstr "Paga con"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/PosList.cshtml"
+msgid "There was an error initializing the payment. Please try again."
+msgstr "C'è stato un errore nell'inizializzazione del pagamento. È consigliato ritentare."
 
 msgctxt "Laser.Orchard.PaymentGateway.Activities.PaymentEventActivity"
 msgid "Failed"
@@ -199,6 +207,22 @@ msgstr "Pagamento"
 msgctxt "Laser.Orchard.PaymentGateway.Activities.PaymentEventActivity"
 msgid "Succeeded"
 msgstr "Riuscito"
+
+msgctxt "Laser.Orchard.PaymentGateway.Controllers.PaymentGatewayAPIController"
+msgid "A valid currency is required. You may find a list of valid currencies in this response's data object."
+msgstr "È richiesta una valuta valida. L'oggetto Data di questa risposta contiene una lista di valute valide."
+
+msgctxt "Laser.Orchard.PaymentGateway.Controllers.PaymentGatewayAPIController"
+msgid "Could not find a POS called \"{0}\": you may find a list of available POS names in this response's data object."
+msgstr "Impossibile trovare il metodo di pagamento \"{0}\": l'oggetto Data di questa risposta contiene una lista di metodi validi."
+
+msgctxt "Laser.Orchard.PaymentGateway.Controllers.PaymentGatewayAPIController"
+msgid "The Data object contains the array of valid filter parameters. These are case-insensitive."
+msgstr "L'oggetto Data di questa risposta contiene l'elenco dei parametri validi per il filtro. Questi non sono case-sensitive."
+
+msgctxt "Laser.Orchard.PaymentGateway.Controllers.PaymentGatewayAPIController"
+msgid "There are no valid currencies for the POS, or the pos is not valid. See this response's data object for a list of valid POS names"
+msgstr "Non esistono valute valide per il metodo di pagamento selezionato, oppure il metodo non è valido. L'oggetto Data di questa risposta contiene una lista di metodi di pagamento validi."
 
 msgctxt "Laser.Orchard.PaymentGateway.Controllers.PosAdminBaseController"
 msgid "Could not save settings."
