@@ -31,6 +31,10 @@ namespace Laser.Orchard.PaymentCartaSi.Controllers {
         }
 
         //[HttpPost]
+        /// <summary>
+        /// Called by the CartaSi servers, passing a transaction's outcome
+        /// </summary>
+        /// <returns></returns>
         public ActionResult CartaSiS2S() {
             //read the querystring that contains the transaction results (Request.QueryString)
             //this is called in POST by the CartaSì server.
@@ -42,12 +46,22 @@ namespace Laser.Orchard.PaymentCartaSi.Controllers {
             Shape.Outcome = shapeString;
             return View(Shape);
         }
-
+        /// <summary>
+        /// Redirect for cartasì when the transaction is finished
+        /// </summary>
+        /// <returns></returns>
         public ActionResult CartaSiOutcome() {
             //read the querystring that contains the transaction results (Request.QueryString)
             return Redirect(_cartaSiTransactionService.HandleOutcomeTransaction(Request.QueryString));
         }
-
+        /// <summary>
+        /// redirect for cartasì when the transaction has been cancelled
+        /// </summary>
+        /// <param name="importo"></param>
+        /// <param name="divisa"></param>
+        /// <param name="codTrans"></param>
+        /// <param name="esito"></param>
+        /// <returns></returns>
         public ActionResult CartaSiUndo(string importo, string divisa, string codTrans, string esito) {
             //this gets called when the transaction was canceled or if a call had errors
             return Redirect(_cartaSiTransactionService.ReceiveUndo(importo, divisa, codTrans, esito));

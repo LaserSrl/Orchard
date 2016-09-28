@@ -30,6 +30,10 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             Logger = NullLogger.Instance;
         }
 
+        /// <summary>
+        /// Get the string that we use to identify the payment method
+        /// </summary>
+        /// <returns></returns>
         public override string GetPosName() {
             return Constants.PosName;
         }
@@ -37,7 +41,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             return "Admin";
         }
         /// <summary>
-        /// This gets called by the "general" payment services.
+        /// This gets called by the "general" payment services to get the url of an action that will start the operations on the virtual POS
         /// </summary>
         /// <param name="paymentId">The id corresponding to a <type>PaymentRecord</type> for the transaction we want to start.</param>
         /// <returns>The url corresponding to an action that will start the CartaSì transaction </returns>
@@ -53,6 +57,11 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             };
             return ub.Uri.ToString();
         }
+        /// <summary>
+        /// This gets called by the "general" payment services to get the url of an action that will start the operations on the virtual POS
+        /// </summary>
+        /// <param name="paymentId">The Guid corresponding to a <type>PaymentRecord</type> for the transaction we want to start.</param>
+        /// <returns>The url corresponding to an action that will start the CartaSì transaction </returns>
         public override string GetPosActionUrl(string paymentGuid) {
             //create the url for the controller action that takes care of the redirect, passing the id as parameter
             //Controller: Transactions
@@ -65,10 +74,18 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             };
             return ub.Uri.ToString();
         }
+        /// <summary>
+        /// This gets the url of the virtual pos.
+        /// </summary>
+        /// <param name="paymentId">The id of a payment record for the current transaction</param>
+        /// <returns>the url of the virtual pos</returns>
         public override string GetPosUrl(int paymentId) {
             return StartCartaSiTransactionURL(paymentId);
         }
-
+        /// <summary>
+        /// returns a list of currencies that we are allowed to use with cartasì
+        /// </summary>
+        /// <returns></returns>
         public override List<string> GetAllValidCurrencies() {
             //Carta sì accepts only payments in Euro
             return new string[] { "EUR" }.ToList();
@@ -186,7 +203,11 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                 throw new Exception(error.Text);
             }
         }
-
+        /// <summary>
+        /// handles the server-to-server transaction happening when cartasì wants to report the end of a transaction
+        /// </summary>
+        /// <param name="qs"></param>
+        /// <returns></returns>
         public string HandleS2STransaction(NameValueCollection qs) {
             var settings = _orchardServices.WorkContext.CurrentSite.As<PaymentCartaSiSettingsPart>();
             //this is the method where the transaction information is trustworthy
@@ -238,7 +259,8 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
         }
 
         /// <summary>
-        /// Gets the inforation about the transaction result back from CartaSì and returns an URL showing the transaction's result
+        /// Gets the inforation about the transaction result back from CartaSì and returns an URL showing the transaction's result.
+        /// Depending on the way the transaction was set, this may not actually be an url.
         /// </summary>
         /// <param name="qs">The query string received in the attempt by CartaSì to redirect the browser.</param>
         /// <returns>The Url for the transaction results.</returns>
