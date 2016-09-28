@@ -74,6 +74,14 @@
     </script>
 }
 @if (TempData["QuestSuccess"] != null) {
+    var cookie = HttpContext.Current.Request.Cookies.Get("Questionnaires");
+    if (cookie == null) {
+        cookie = new HttpCookie("Questionnaires", "");
+        HttpContext.Current.Response.AppendCookie(cookie);
+    }
+    cookie.Value += "," + Questionnaire.Id + ",";
+    HttpContext.Current.Response.SetCookie(cookie);
+    
     <div id='sezione-send'>
         <div class="text-center text-pink"><h2>@T(TempData["QuestSuccess"].ToString())</h2></div>
     </div>
@@ -167,7 +175,8 @@ else {
                             <select class="select-box form-control text-pink" id="select-field" name="@Html.FieldNameFor(m => Questionnaire.QuestionsWithResults[j].SingleChoiceAnswer)">
 
                                 @for (int i = 0; i < numeroRisposte; i++) {
-                                    <option value="@(Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Id)a">@Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Answer
+                                    var valueSelected = (Questionnaire.QuestionsWithResults[j].SingleChoiceAnswer == Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Id) ? "selected" : "";
+                                    <option value="@(Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Id)" @valueSelected>@Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Answer
 
                                     @if (Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].AllFiles != null && Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].AllFiles.Split(',').Count() > 0) {
                                         foreach (int ciId in Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].AllFiles.Split(',').Select(int.Parse).ToList()) {

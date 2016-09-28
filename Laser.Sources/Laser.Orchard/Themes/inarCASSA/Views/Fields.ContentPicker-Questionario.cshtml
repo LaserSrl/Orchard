@@ -9,9 +9,22 @@
 <p class="content-picker-field content-picker-field-@name.HtmlClassify()">
     @if(contentItems.Any()) {
         foreach(var contentItem in contentItems) {
-            @Display(BuildDisplay(contentItem, "Detail"));
-            if(contentItem != contentItems.Last()) {
-                <span>,</span>
+            var skipQuestionnaire = false;
+            var cookie = HttpContext.Current.Request.Cookies.Get("Questionnaires");
+            if(cookie != null) {
+                var elenco = "," + cookie.Value + ",";
+                if(elenco.Contains("," + contentItem.Id + ",")) {
+                    skipQuestionnaire = true;
+                }    
+            }
+            
+            if(skipQuestionnaire) {
+                <h2 class="text-center text-pink">@Model.ContentItem.Campagna.TestoRispostaGiaInviata.Value</h2>
+            } else {
+                @Display(BuildDisplay(contentItem, "Detail"));
+                if(contentItem != contentItems.Last()) {
+                    <span>,</span>
+                }
             }
         }
     }
