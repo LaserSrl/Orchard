@@ -6,7 +6,7 @@ jQuery(document).ready(function(){
     jQuery('.rate').click(function(){
         jQuery('.rate').removeClass('rate-active');
         jQuery(this).addClass('rate-active');
-        jQuery('#rate').val(jQuery(this).text());
+        jQuery(this).parent().parent().find("input[type=hidden]").val(jQuery(this).find("input").val());
     })
     
      jQuery('.rate-checkbox').click(function(){

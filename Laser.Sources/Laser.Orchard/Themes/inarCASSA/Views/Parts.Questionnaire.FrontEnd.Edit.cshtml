@@ -171,26 +171,40 @@ else {
                     }
                     else if (Questionnaire.QuestionsWithResults[j].QuestionType == Laser.Orchard.Questionnaires.QuestionType.SingleChoice) {
                         var numeroRisposte = Questionnaire.QuestionsWithResults[j].AnswersWithResult.Count();
-                        <div class='col-xs-10'>
-                            <select class="select-box form-control text-pink" id="select-field" name="@Html.FieldNameFor(m => Questionnaire.QuestionsWithResults[j].SingleChoiceAnswer)">
-
-                                @for (int i = 0; i < numeroRisposte; i++) {
-                                    var valueSelected = (Questionnaire.QuestionsWithResults[j].SingleChoiceAnswer == Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Id) ? "selected" : "";
-                                    <option value="@(Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Id)" @valueSelected>@Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Answer
-
-                                    @if (Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].AllFiles != null && Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].AllFiles.Split(',').Count() > 0) {
+                        
+                        <input type='hidden' value='@Questionnaire.QuestionsWithResults[j].SingleChoiceAnswer' name="@Html.FieldNameFor(m => Questionnaire.QuestionsWithResults[j].SingleChoiceAnswer)">
+                        <div class='hidden-xs col-sm-1'>
+                        </div>
+                        <div class='hidden-xs col-sm-1 font1-3 text-center tag-min-max'>
+                            Min
+                        </div>
+                        
+                                for (int i = 0; i < numeroRisposte; i++) {
+                                    var valueSelected = (Questionnaire.QuestionsWithResults[j].SingleChoiceAnswer == Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Id) ? "rate-active" : "";
+                                    
+                                    <div class='col-xs-3 col-sm-2 text-center'>
+                                        <div class='rate font1-4 @valueSelected' title="@Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Answer">@(i+1)
+                                            <input type="hidden" value="@(Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Id)" />
+                                        </div>
+                                    </div>
+                                    
+                                    if (Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].AllFiles != null && Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].AllFiles.Split(',').Count() > 0) {
                                         foreach (int ciId in Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].AllFiles.Split(',').Select(int.Parse).ToList()) {
                                             MediaPart mediaPart = ((ContentItem)contentManager.Get(ciId)).As<MediaPart>();
                             <img width="100" height="100" alt="@mediaPart.AlternateText" src="@Display.ResizeMediaUrl(Width: 200, Height: 200, Mode: "crop", Alignment: "middlecenter", Path: mediaPart.MediaUrl)" />
                                         }
                                     }
-                                    </option>
                                 }
-                            </select>
+                        <div class='hidden-xs col-sm-1 font1-3  text-center tag-min-max'>
+                            Max
+                        </div>
+                        <div class='hidden-xs col-sm-1'>
                         </div>
                     }
                     else if (Questionnaire.QuestionsWithResults[j].QuestionType == Laser.Orchard.Questionnaires.QuestionType.MultiChoice) {
                         var numeroRisposte = Questionnaire.QuestionsWithResults[j].AnswersWithResult.Count();
+                            <div class='hidden-xs col-sm-1'>
+                            </div>
                                 for (int i = 0; i < numeroRisposte; i++) {
                                     var boxClass = (Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Answered) ? "rate-active-checkbox" : "";
                                     
@@ -211,8 +225,19 @@ else {
                                         }
                                     }
                                 }
+                            <div class='hidden-xs col-sm-1'>
+                            </div>
                     }
                     </div>
+                    <div class='row'>
+                        <div class='col-xs-1'>
+                        </div>
+                        <div class='col-xs-10'>
+                            <hr class='hr-section'>
+                        </div>
+                        <div class='col-xs-1'>
+                        </div>
+                    </div>                
                 </li>
                     if (j == Questionnaire.QuestionsWithResults.Count() - 1) {
                 @:</ul>
