@@ -36,14 +36,14 @@ public interface IPosService : IDependency {
     /// <returns>A <type>string</type> that is the name of the controller.</returns>
     string GetSettingsControllerName();
     /// <summary>
-    /// This method is used to retrieve directly the URL of the virtual pos of the paymen gateway, i.e. the address 
+    /// This method is used to retrieve directly the URL of the virtual pos of the payment gateway, i.e. the address 
     /// towards which a client would be redirected to actually pay.
     /// </summary>
     /// <param name="paymentId">The id of the record that contains the information about the payment.</param>
     /// <returns>The url of the virtual POS where the payment should happen.</returns>
     string GetPosUrl(int paymentId);
     /// <summary>
-    /// This method is used to retrieve directly the URL of the virtual pos of the paymen gateway, i.e. the address 
+    /// This method is used to retrieve directly the URL of the virtual pos of the payment gateway, i.e. the address 
     /// towards which a client would be redirected to actually pay.
     /// </summary>
     /// <param name="paymentGuid">The guid of the record that contains the information about the payment.</param>

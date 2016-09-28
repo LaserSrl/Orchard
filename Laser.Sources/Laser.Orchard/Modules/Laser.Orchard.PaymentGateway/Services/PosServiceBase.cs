@@ -30,13 +30,18 @@ namespace Laser.Orchard.PaymentGateway.Services {
         public abstract string GetSettingsControllerName();
 
         /// <summary>
-        /// Get the return URL passed to the virtual POS.
+        /// Get the url of an action used to start the payments
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
         public abstract string GetPosActionUrl(int paymentId);
         public abstract string GetPosActionUrl(string paymentGuid);
 
+        /// <summary>
+        /// Get the url of the virtual pos
+        /// </summary>
+        /// <param name="paymentId"></param>
+        /// <returns></returns>
         public abstract string GetPosUrl(int paymentId);
         public string GetPosUrl(string paymentGuid) {
             return GetPosUrl(GetPaymentInfo(paymentGuid).Id);
@@ -49,6 +54,11 @@ namespace Laser.Orchard.PaymentGateway.Services {
 
             T = NullLocalizer.Instance;
         }
+        /// <summary>
+        /// Create the db entry corresponding to the payment we are starting.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
         public PaymentRecord StartPayment(PaymentRecord values) {
             // verifica che siano presenti i valori necessari
             if ((values.Amount <= 0)
@@ -72,6 +82,11 @@ namespace Laser.Orchard.PaymentGateway.Services {
             values.Id = paymentId;
             return values;
         }
+        /// <summary>
+        /// Get from the db the information corresponsing to the payment specified.
+        /// </summary>
+        /// <param name="paymentId">The id associated with the payment transaction.</param>
+        /// <returns>An object that contains the information from the db</returns>
         public PaymentRecord GetPaymentInfo(int paymentId) {
             // verifica che siano presenti i parametri necessari
             if (paymentId <= 0) {
@@ -80,6 +95,11 @@ namespace Laser.Orchard.PaymentGateway.Services {
             PaymentRecord result = _repository.Get(paymentId);
             return result;
         }
+        /// <summary>
+        /// Get from the db the information corresponsing to the payment specified.
+        /// </summary>
+        /// <param name="paymentId">The guid associated with the payment transaction.</param>
+        /// <returns>An object that contains the information from the db</returns>
         public PaymentRecord GetPaymentInfo(string guid) {
             if (string.IsNullOrWhiteSpace(guid)) {
                 throw new Exception("Invalid parameter 'Guid'."); //this handles the old records, where we did not use the guid, as well as actual error cases.
@@ -90,6 +110,14 @@ namespace Laser.Orchard.PaymentGateway.Services {
             }
             return payment;
         }
+        /// <summary>
+        /// Close the transaction by updating the db.
+        /// </summary>
+        /// <param name="paymentId"></param>
+        /// <param name="success"></param>
+        /// <param name="error"></param>
+        /// <param name="info"></param>
+        /// <param name="transactionId"></param>
         public void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "") {
             PaymentRecord paymentToSave = GetPaymentInfo(paymentId); //null;
             //PaymentRecord payment = GetPaymentInfo(paymentId);
