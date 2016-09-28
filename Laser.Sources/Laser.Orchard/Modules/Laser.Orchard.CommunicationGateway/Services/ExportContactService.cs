@@ -119,7 +119,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             dynamic cf = contfield;
             Hashtable hs = new Hashtable();
             if (cf.FieldDefinition.Name != typeof(ContentPickerField).Name && cf.FieldDefinition.Name != typeof(MediaLibraryPickerField).Name) {
-                        string keyField = partname+"." + ((object)cf.DisplayName).ToString();
+                        string keyField = partname+"." + ((object)cf.Name).ToString();
                         string valueField = "";
 
                         if (cf.FieldDefinition.Name == typeof(DateTimeField).Name) {
@@ -237,14 +237,15 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
             // Sms
             List<string> listaSms = new List<string>();
-
+            string smsPrefix = "";
             SmsContactPart smspart = content.As<SmsContactPart>();
             foreach (CommunicationSmsRecord sms in smspart.Record.SmsRecord) {
                 // Rimuovo il carattere '+' perchè Excel lo considera come una formula
-                if (sms.Prefix.StartsWith("+"))
-                    sms.Prefix = sms.Prefix.Substring(1);
+                smsPrefix = sms.Prefix ?? "";
+                if (smsPrefix.StartsWith("+"))
+                    smsPrefix = smsPrefix.Substring(1);
 
-                listaSms.Add(sms.Prefix + "/" + sms.Sms);
+                listaSms.Add(smsPrefix + "/" + sms.Sms);
             }
             contact.Sms = listaSms;
 
