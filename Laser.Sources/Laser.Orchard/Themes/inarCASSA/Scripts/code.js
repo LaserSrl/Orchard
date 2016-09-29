@@ -4,7 +4,7 @@ d.trigger("activate.bs.scrollspy")},b.prototype.clear=function(){a(this.selector
 
 jQuery(document).ready(function(){
     jQuery('.rate').click(function(){
-        jQuery('.rate').removeClass('rate-active');
+        jQuery(this).parent().parent().find("div div.rate").removeClass('rate-active');
         jQuery(this).addClass('rate-active');
         jQuery(this).parent().parent().find("input[type=hidden]").val(jQuery(this).find("input").val());
     })

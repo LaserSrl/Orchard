@@ -7,9 +7,8 @@
     var subthemePath = "~/Themes/inarCASSA/Styles/" + tenantName + "/";
 }
 @{
-    //Styles
+    Style.Require("FontAwesome430").AtHead();
     Style.Include("style.css").AtHead();
-    // #GM Gestione alto contrasto - end
     Script.Include("code.js").AtFoot();
 }
 <!DOCTYPE html>
@@ -18,6 +17,11 @@
     <head>
         <meta charset="UTF-8">
         <title>Form soddisfazione cliente - INARCASSA</title>
+        <style type="text/css">
+            p {
+                font-size:1.2em;
+            }
+        </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
          @Display(Model.Head)
     </head>

@@ -5,6 +5,7 @@
 @{
     QuestionnaireWithResultsViewModel Questionnaire = Model.Questionnaire;
     Style.Require("Questionnaire").AtHead();
+    Script.Require("jQueryUI_Tooltip").AtHead();
     var sections = Questionnaire.QuestionsWithResults.Select(s => s.Section).Distinct();
     bool HasAcceptedTerms = Questionnaire.HasAcceptedTerms;
     var contentManager = WorkContext.Resolve<IContentManager>();
@@ -14,6 +15,7 @@
         $(document).ready(function () {
             AddClassConditionedAndOnclickToAnswer();
             VerifyConditions();
+            $("div.rate").tooltip();
         });
 
         function AddClassConditionedAndOnclickToAnswer() {
@@ -109,7 +111,7 @@ else {
     else {
 
     <div class="questionnaire-container">
-        @using (Html.BeginFormAntiForgeryPost(Url.Action("Save", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", returnUrl = Context.Request.ToUrlString() }), FormMethod.Post, new { @class = "quest-form" })) {
+        @using (Html.BeginFormAntiForgeryPost(Url.Action("Save", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", returnUrl = Context.Request.ToUrlString() }), FormMethod.Post, new { @class = "quest-form", @style = "margin-top:10px" })) {
             @Html.HiddenFor(m => Questionnaire.Id)
             @Html.HiddenFor(m => Questionnaire.MustAcceptTerms)
             @Html.HiddenFor(m => Questionnaire.HasAcceptedTerms)
@@ -138,8 +140,7 @@ else {
             @:</fieldset>
                     }
             @:<fieldset class="@(progSection > 1 ? "quest-no-show" : "")"> 
-<h2 class="fs-title">
-                @Questionnaire.QuestionsWithResults[j].Section</h2>
+            <h2 class="fs-title">@Questionnaire.QuestionsWithResults[j].Section</h2>
                 @:<ul class="j_allquest" style="list-style:none">
                 ultimaSection = Questionnaire.QuestionsWithResults[j].Section;
                 }
@@ -203,8 +204,7 @@ else {
                     }
                     else if (Questionnaire.QuestionsWithResults[j].QuestionType == Laser.Orchard.Questionnaires.QuestionType.MultiChoice) {
                         var numeroRisposte = Questionnaire.QuestionsWithResults[j].AnswersWithResult.Count();
-                            <div class='hidden-xs col-sm-1'>
-                            </div>
+                            <div class='hidden-xs col-sm-2'></div>
                                 for (int i = 0; i < numeroRisposte; i++) {
                                     var boxClass = (Questionnaire.QuestionsWithResults[j].AnswersWithResult[i].Answered) ? "rate-active-checkbox" : "";
                                     
@@ -225,8 +225,7 @@ else {
                                         }
                                     }
                                 }
-                            <div class='hidden-xs col-sm-1'>
-                            </div>
+                            <div class='hidden-xs col-sm-2'></div>
                     }
                     </div>
                     <div class='row'>
