@@ -248,7 +248,7 @@ namespace Laser.Orchard.Twitter.Drivers {
 
             var importedTwitterMessageSent = context.Attribute(part.PartDefinition.Name, "TwitterMessageSent");
             if (importedTwitterMessageSent != null) {
-                part.TwitterMessageSent = bool.Parse(importedTwitterMessageSent);
+                part.TwitterMessageSent = Convert.ToBoolean(importedTwitterMessageSent);
             }
 
             var importedTwitterTitle = context.Attribute(part.PartDefinition.Name, "TwitterTitle");
@@ -268,7 +268,7 @@ namespace Laser.Orchard.Twitter.Drivers {
 
             var importedTwitterCurrentLink = context.Attribute(part.PartDefinition.Name, "TwitterCurrentLink");
             if (importedTwitterCurrentLink != null) {
-                part.TwitterCurrentLink = bool.Parse(importedTwitterCurrentLink);
+                part.TwitterCurrentLink = Convert.ToBoolean(importedTwitterCurrentLink);
             }
 
             var importedTwitterLink = context.Attribute(part.PartDefinition.Name, "TwitterLink");
@@ -278,15 +278,22 @@ namespace Laser.Orchard.Twitter.Drivers {
 
             var importedSendOnNextPublish = context.Attribute(part.PartDefinition.Name, "SendOnNextPublish");
             if (importedSendOnNextPublish != null) {
-                part.SendOnNextPublish =  bool.Parse(importedSendOnNextPublish);
+                part.SendOnNextPublish = Convert.ToBoolean(importedSendOnNextPublish);
             }
 
-           
+            var importedAccountList = context.Attribute(part.PartDefinition.Name, "AccountList");
+
+            if (importedAccountList != null) {
+                for (int x = 0; x <= importedAccountList.Count(); x++) {
+                    part.AccountList[x] = importedAccountList[x];
+                }
+            }
 
         }
 
 
         protected override void Exporting(TwitterPostPart part, ExportContentContext context) {
+            
             context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterMessage", part.TwitterMessage);
             context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterMessageSent", part.TwitterMessageSent);
             context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterTitle", part.TwitterTitle);
@@ -295,6 +302,16 @@ namespace Laser.Orchard.Twitter.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterCurrentLink", part.TwitterCurrentLink);
             context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterLink", part.TwitterLink);
             context.Element(part.PartDefinition.Name).SetAttributeValue("SendOnNextPublish", part.SendOnNextPublish);
+           
+            if (part.AccountList.Count() > 0)
+            {
+                context.Element(part.PartDefinition.Name).SetAttributeValue("AccountList", part.AccountList);
+                var accountList = context.Element(part.PartDefinition.Name).Element("accountList");
+                for (int x = 0; x == part.AccountList.Count(); x++) {
+                    accountList.Element("accountList").SetAttributeValue("accountList", part.AccountList[x]);
+                }
+            }
+
         }
 
        

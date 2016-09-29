@@ -127,52 +127,52 @@ namespace Laser.Orchard.SEO.Drivers {
 
             var importedRobotsNoIndex = context.Attribute(part.PartDefinition.Name, "RobotsNoIndex");
             if (importedRobotsNoIndex != null) {
-                part.Description = importedRobotsNoIndex;
+                part.RobotsNoIndex = Convert.ToBoolean(importedRobotsNoIndex);
             }
 
             var importedRobotsNoFollow = context.Attribute(part.PartDefinition.Name, "RobotsNoFollow");
             if (importedRobotsNoFollow != null) {
-                part.Description = importedRobotsNoFollow;
+                part.RobotsNoFollow = Convert.ToBoolean(importedRobotsNoFollow);
             }
 
             var importedRobotsNoSnippet = context.Attribute(part.PartDefinition.Name, "RobotsNoSnippet");
             if (importedRobotsNoSnippet != null) {
-                part.Description = importedRobotsNoSnippet;
+                part.RobotsNoSnippet = Convert.ToBoolean(importedRobotsNoSnippet);
             }
 
             var importedRobotsNoOdp = context.Attribute(part.PartDefinition.Name, "RobotsNoOdp");
             if (importedRobotsNoOdp != null) {
-                part.Description = importedRobotsNoOdp;
+                part.RobotsNoOdp = Convert.ToBoolean(importedRobotsNoOdp);
             }
 
             var importedRobotsNoArchive = context.Attribute(part.PartDefinition.Name, "RobotsNoArchive");
             if (importedRobotsNoArchive != null) {
-                part.Description = importedRobotsNoArchive;
+                part.RobotsNoArchive = Convert.ToBoolean(importedRobotsNoArchive);
             }
 
             var importedRobotsUnavailableAfter = context.Attribute(part.PartDefinition.Name, "RobotsUnavailableAfter");
             if (importedRobotsUnavailableAfter != null) {
-                part.Description = importedRobotsUnavailableAfter;
+                part.RobotsUnavailableAfter = Convert.ToBoolean(importedRobotsUnavailableAfter);
             }
 
             var importedRobotsUnavailableAfterDate = context.Attribute(part.PartDefinition.Name, "RobotsUnavailableAfterDate");
             if (importedRobotsUnavailableAfterDate != null) {
-                part.Description = importedRobotsUnavailableAfterDate;
+                part.RobotsUnavailableAfterDate = DateTime.Parse(importedRobotsUnavailableAfterDate);
             }
 
             var importedRobotsNoImageIndex = context.Attribute(part.PartDefinition.Name, "RobotsNoImageIndex");
             if (importedRobotsNoImageIndex != null) {
-                part.Description = importedRobotsNoImageIndex;
+                part.RobotsNoImageIndex = Convert.ToBoolean(importedRobotsNoImageIndex);
             }
 
             var importedGoogleNoSiteLinkSearchBox = context.Attribute(part.PartDefinition.Name, "GoogleNoSiteLinkSearchBox");
             if (importedGoogleNoSiteLinkSearchBox != null) {
-                part.Description = importedGoogleNoSiteLinkSearchBox;
+                part.GoogleNoSiteLinkSearchBox = Convert.ToBoolean(importedGoogleNoSiteLinkSearchBox);
             }
 
             var importedGoogleNoTranslate = context.Attribute(part.PartDefinition.Name, "GoogleNoTranslate");
             if (importedGoogleNoTranslate != null) {
-                part.Description = importedGoogleNoTranslate;
+                part.GoogleNoTranslate = Convert.ToBoolean(importedGoogleNoTranslate);
             }
 
         }
