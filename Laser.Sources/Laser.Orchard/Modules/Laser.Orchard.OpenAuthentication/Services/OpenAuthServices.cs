@@ -10,6 +10,7 @@ using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Users.Models;
 using Laser.Orchard.StartupConfig.Handlers;
+using System;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOpenAuthMembershipServices : IDependency {
@@ -74,8 +75,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
             _openAuthUserEventHandlers.Invoke(o => o.Creating(creatingContext), Logger);
 
-            // check dei parametri createUserParams
-            if (!CheckUserParams(createUserParams)) {
+            // check UserName
+            if (String.IsNullOrEmpty(createUserParams.UserName)) {
                 return null;
             }
             else {
@@ -96,21 +97,6 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
                 return createdUser;
             }
-        }
-
-        private bool CheckUserParams(OpenAuthCreateUserParams createUserParams) {
-            bool esito = true;
-
-            esito = (createUserParams.ProviderName != null);
-            if (esito) esito = (createUserParams.ProviderUserId != null);
-            if (esito) esito = (createUserParams.UserName != null);
-
-            if (esito) esito = (createUserParams.ExtraData["id"] != null);
-            if (esito) esito = (createUserParams.ExtraData["username"] != null);
-            if (esito) esito = (createUserParams.ExtraData["email"] != null);
-            if (esito) esito = (createUserParams.ExtraData["accesstoken"] != null);
-
-            return esito;
         }
     }
 }
