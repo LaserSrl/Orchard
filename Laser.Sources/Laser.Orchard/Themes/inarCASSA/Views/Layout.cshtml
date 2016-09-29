@@ -56,15 +56,23 @@
     var themeBasePath = Url.Content(Html.ThemePath(WorkContext.CurrentTheme, ""));
 
     // verifica che la campagna sia attiva
-    bool campagnaAttiva = false;
+    bool campagnaNonAttiva = false;
     try {
         var campagna = Model.TitleZone.Items[0].ContentItem;
-        if ((DateTime.Today >= campagna.ActivityPart.DateTimeStart)
-            && (DateTime.Today <= campagna.ActivityPart.DateTimeEnd)) {
-            campagnaAttiva = true;
+        string cType = campagna.ContentType;
+        switch(cType) {
+            case "Questionnaire":
+                campagnaNonAttiva = true;
+                break;
+            case "Campagna":
+                if ((DateTime.Today < campagna.ActivityPart.DateTimeStart)
+                    || (DateTime.Today > campagna.ActivityPart.DateTimeEnd)) {
+                    campagnaNonAttiva = true;
+                }
+                break;
         }
     } catch {
-        // nasconde volutamente eventuali errori: campagnaAttiva rimane uguale a false
+        // nasconde volutamente eventuali errori: campagnaNonAttiva rimane uguale a false
     }
 }
 <div class="space-20"></div>
@@ -80,7 +88,7 @@
         </div>
     </div>
 </div>
-@if (campagnaAttiva == false) {
+@if (campagnaNonAttiva) {
         <div class="space-10"></div>
         <div class="text-center bg-pink">
                 @T("No data found.")
