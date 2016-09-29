@@ -535,7 +535,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.AnswerText = q.OpenAnswerAnswerText;
                             userAnswer.QuestionText = q.Question;
                             userAnswer.QuestionRecord_Id = q.Id;
-                            userAnswer.User_Id = currentUser.Id;
+                            userAnswer.User_Id = (currentUser == null)? 0 : currentUser.Id;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;
                             CreateUserAnswers(userAnswer);
@@ -546,7 +546,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.AnswerRecord_Id = q.SingleChoiceAnswer;
                             userAnswer.AnswerText = GetAnswer(q.SingleChoiceAnswer).Answer;
                             userAnswer.QuestionRecord_Id = q.Id;
-                            userAnswer.User_Id = currentUser.Id;
+                            userAnswer.User_Id = (currentUser == null) ? 0 : currentUser.Id;
                             userAnswer.QuestionText = q.Question;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;
@@ -559,7 +559,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.AnswerRecord_Id = a.Id;
                             userAnswer.AnswerText = GetAnswer(a.Id).Answer;
                             userAnswer.QuestionRecord_Id = q.Id;
-                            userAnswer.User_Id = currentUser.Id;
+                            userAnswer.User_Id = (currentUser == null) ? 0 : currentUser.Id;
                             userAnswer.QuestionText = q.Question;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;
