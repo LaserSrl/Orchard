@@ -22,3 +22,6 @@ in Razor Engine. In those cases, you may need to explicitly cast the dynamic obj
 
 Note that the code in the html templates does not compile in Razor Engine as it is, because it contains some @ character that needs to be escaped
 as @@.
+
+The file "ValliCanavesaneExample.html" is a cshtml example that was developed and tested for a specific tenant. It can be used as reference when
+creating cshtml templates for specific applications.
