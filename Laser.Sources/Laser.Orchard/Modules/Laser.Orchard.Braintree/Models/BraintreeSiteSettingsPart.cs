@@ -18,6 +18,10 @@ namespace Laser.Orchard.Braintree.Models
             get { return this.Retrieve(x => x.MerchantId); }
             set { this.Store(x => x.MerchantId, value); }
         }
+        public string CurrencyCode {
+            get { return this.Retrieve(x => x.CurrencyCode); }
+            set { this.Store(x => x.CurrencyCode, value); }
+        }
         public string PublicKey
         {
             get { return this.Retrieve(x => x.PublicKey); }
