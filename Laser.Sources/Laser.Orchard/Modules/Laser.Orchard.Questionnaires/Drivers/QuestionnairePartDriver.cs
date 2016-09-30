@@ -18,6 +18,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Security;
 using Laser.Orchard.Questionnaires.Settings;
+using Orchard.Core.Title.Models;
 
 namespace Laser.Orchard.Questionnaires.Drivers {
     public class QuestionnairePartDriver : ContentPartDriver<QuestionnairePart> {
@@ -25,17 +26,19 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IOrchardServices _orchardServices;
         private readonly ICaptchaService _capthcaServices;
+        private readonly ICurrentContentAccessor _currentContentAccessor;
         
         public QuestionnairePartDriver(IQuestionnairesServices questServices,
             IOrchardServices orchardServices,
             IControllerContextAccessor controllerContextAccessor,
-            ICaptchaService capthcaServices) {
+            ICaptchaService capthcaServices,
+            ICurrentContentAccessor currentContentAccessor) {
             _questServices = questServices;
             _orchardServices = orchardServices;
             _controllerContextAccessor = controllerContextAccessor;
             T = NullLocalizer.Instance;
             _capthcaServices = capthcaServices;
-
+            _currentContentAccessor = currentContentAccessor;
         }
 
         public Localizer T { get; set; }
@@ -59,9 +62,21 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                         ));
             var isAuthorized = (_orchardServices.Authorizer.Authorize(Permissions.SubmitQuestionnaire));
             if (isAuthorized) {
-
                 var viewModel = _questServices.BuildViewModelWithResultsForQuestionnairePart(part); //Modello mappato senza risposte
                 if (_controllerContextAccessor.Context != null) {
+                    // valorizza il context
+                    var currentCi = _currentContentAccessor.CurrentContentItem;
+                    if ((currentCi != null) && currentCi.Has<TitlePart>()) {
+                        viewModel.Context = currentCi.Get<TitlePart>().Title;
+                    }
+                    else {
+                        viewModel.Context = _controllerContextAccessor.Context.HttpContext.Request.RawUrl;
+                    }
+                    // limita la lunghezza del context a 255 chars
+                    if (viewModel.Context.Length > 255) {
+                        viewModel.Context = viewModel.Context.Substring(0, 255);
+                    }
+                    // valorizza le altre proprietà del viewModel
                     var fullModelWithAnswers = _controllerContextAccessor.Context.Controller.TempData["QuestUpdatedEditModel"];
                     var hasAcceptedTerms = _controllerContextAccessor.Context.Controller.TempData["HasAcceptedTerms"];
 

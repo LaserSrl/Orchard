@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Orchard;
-using Orchard.ContentManagement;
 using Orchard.Localization;
-using Orchard.Themes;
 using Orchard.Mvc.Extensions;
 using Laser.Orchard.Questionnaires.Services;
 using Laser.Orchard.Questionnaires.Models;
 using Orchard.Data;
-using Orchard.Mvc;
 using Orchard.DisplayManagement;
-using Orchard.ContentManagement.Drivers;
 using Orchard.UI.Admin;
 using Orchard.Workflows.Services;
 using Orchard.Captcha.Services;
@@ -55,7 +49,6 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             var currentUser = _orchardServices.WorkContext.CurrentUser;
             try {
                 if (TryUpdateModel(editModel, _prefix)) {
-
                     TempData["QuestUpdatedEditModel"] = editModel; // devo avere modo di fare non perdere le risposte date finora!!!
                     TempData["HasAcceptedTerms"] = editModel.HasAcceptedTerms;
                     _questionnairesServices.Save(editModel,currentUser,ControllerContext.HttpContext.Session.SessionID);
