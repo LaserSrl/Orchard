@@ -24,19 +24,17 @@ namespace Laser.Orchard.Vimeo.ViewModels {
         public bool AlwaysUploadToAlbum { get; set; }
         public bool AlwaysUploadToChannel { get; set; }
 
+        public List<VimeoAccessTokenViewModel> AccessTokens { get; set; }
+
         public VimeoSettingsPartViewModel() {
             ContentRatingsUnsafe = new Dictionary<string, bool>();
             foreach (var cr in ContentRatingDictionary) {
                 ContentRatingsUnsafe.Add(cr.Key, false);
             }
+            AccessTokens = new List<VimeoAccessTokenViewModel>();
         }
 
-        public VimeoSettingsPartViewModel(VimeoSettingsPart part) {
-            ContentRatingsUnsafe = new Dictionary<string, bool>();
-            foreach (var cr in ContentRatingDictionary) {
-                ContentRatingsUnsafe.Add(cr.Key, false);
-            }
-
+        public VimeoSettingsPartViewModel(VimeoSettingsPart part) : this() {
             AccessToken = part.AccessToken ?? "";
             ChannelName = part.ChannelName ?? "";
             GroupName = part.GroupName ?? "";
@@ -63,16 +61,16 @@ namespace Laser.Orchard.Vimeo.ViewModels {
             AlwaysUploadToChannel = part.AlwaysUploadToChannel;
         }
 
-        public string CensoredAccessToken {
-            get {
-                if (String.IsNullOrWhiteSpace(AccessToken))
-                    return "";
-                else
-                    return AccessToken
-                        .Substring(AccessToken.Length - 4)
-                        .PadLeft(AccessToken.Length, 'X');
-            }
-        }
+        //public string CensoredAccessToken {
+        //    get {
+        //        if (String.IsNullOrWhiteSpace(AccessToken))
+        //            return "";
+        //        else
+        //            return AccessToken
+        //                .Substring(AccessToken.Length - 4)
+        //                .PadLeft(AccessToken.Length, 'X');
+        //    }
+        //}
 
         public static Dictionary<string, string> CCLicenseDictionary;
         public static Dictionary<string, string> LocaleDictionary;

@@ -291,5 +291,18 @@ namespace Laser.Orchard.Vimeo {
 
             return 15;
         }
+
+        public int UpdateFrom15() {
+            SchemaBuilder.CreateTable("VimeoAccessTokenRecord",
+                table => table
+                    .Column<int>("Id", col => col.PrimaryKey().Identity())
+                    .Column<string>("AccessToken")
+                    .Column<int>("RateLimitLimit")
+                    .Column<int>("RateLimitRemaining")
+                    .Column<DateTime>("RateLimitReset")
+                );
+
+            return 16;
+        }
     }
 }

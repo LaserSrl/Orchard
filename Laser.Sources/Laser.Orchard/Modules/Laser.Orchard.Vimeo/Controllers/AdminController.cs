@@ -126,12 +126,40 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     } else
                         _orchardServices.Notifier.Error(T("Access Token not valid"));
                 }
+                //update the access tokens by removing those flagged for deletion
+
+                //test the remaining tokens
+                string atsValid = _vimeoAdminServices.TokensAreValid(vm);
+                if (atsValid == "OK") {
+                    _orchardServices.Notifier.Information(T("Access Tokens are valid"));
+                    //now test group, channel and album
+                    if (!string.IsNullOrWhiteSpace(vm.GroupName)) {
+                        if (_vimeoAdminServices.GroupIsValid(vm))
+                            _orchardServices.Notifier.Information(T("Group Name Valid"));
+                        else
+                            _orchardServices.Notifier.Error(T("Group Name not valid"));
+                    }
+                    if (!string.IsNullOrWhiteSpace(vm.ChannelName)) {
+                        if (_vimeoAdminServices.ChannelIsValid(vm))
+                            _orchardServices.Notifier.Information(T("Channel Name Valid"));
+                        else
+                            _orchardServices.Notifier.Error(T("Channel Name not valid"));
+                    }
+                    if (!string.IsNullOrWhiteSpace(vm.AlbumName)) {
+                        if (_vimeoAdminServices.AlbumIsValid(vm))
+                            _orchardServices.Notifier.Information(T("Album Name Valid"));
+                        else
+                            _orchardServices.Notifier.Error(T("Album Name not valid"));
+                    }
+                } else {
+                    _orchardServices.Notifier.Error(T("Access Tokens are not valid: {0}{1}", Environment.NewLine, atsValid));
+                }
             } catch (VimeoRateException vre) {
                 _orchardServices.Notifier.Error(T("Too many requests to Vimeo. Rate limits will reset on {0} UTC", vre.resetTime.Value.ToString()));
             } catch (Exception ex) {
                 _orchardServices.Notifier.Error(T("{0}", ex.Message));
             }
-            
+
 
 
             return View(vm);

@@ -38,6 +38,7 @@ namespace Laser.Orchard.Vimeo.Services {
         private readonly IRepository<VimeoSettingsPartRecord> _repositorySettings;
         private readonly IRepository<UploadsInProgressRecord> _repositoryUploadsInProgress;
         private readonly IRepository<UploadsCompleteRecord> _repositoryUploadsComplete;
+        private readonly IRepository<VimeoAccessTokenRecord> _repositoryAccessTokens;
         private readonly IOrchardServices _orchardServices;
         private readonly IScheduledTaskManager _taskManager;
         private readonly IContentManager _contentManager;
@@ -50,6 +51,7 @@ namespace Laser.Orchard.Vimeo.Services {
         public VimeoServices(IRepository<VimeoSettingsPartRecord> repositorySettings,
             IRepository<UploadsInProgressRecord> repositoryUploadsInProgress,
             IRepository<UploadsCompleteRecord> repositoryUploadsComplete,
+            IRepository<VimeoAccessTokenRecord> repositoryAccessTokens,
             IOrchardServices orchardServices,
             IScheduledTaskManager taskManager,
             IContentManager contentManager,
@@ -60,6 +62,7 @@ namespace Laser.Orchard.Vimeo.Services {
             _repositorySettings = repositorySettings;
             _repositoryUploadsInProgress = repositoryUploadsInProgress;
             _repositoryUploadsComplete = repositoryUploadsComplete;
+            _repositoryAccessTokens = repositoryAccessTokens;
             _orchardServices = orchardServices;
             _taskManager = taskManager;
             _contentManager = contentManager;
@@ -77,37 +80,37 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <param name="aToken">The Access Token string to associate.</param>
         /// <returns><value>true</value> if it was able to create the Settings Part. <value>false</value> if it fails.</returns>
-        public bool Create(VimeoSettingsPartViewModel settings) {
-            //check whether there already is an entry in the db
-            if (_repositorySettings.Table.Count() > 0)
-                return false;
+        //public bool Create(VimeoSettingsPartViewModel settings) {
+        //    //check whether there already is an entry in the db
+        //    if (_repositorySettings.Table.Count() > 0)
+        //        return false;
 
-            //since there was no entry, create a new one
-            _repositorySettings.Create(new VimeoSettingsPartRecord {
-                AccessToken = settings.AccessToken,
-                ChannelName = settings.ChannelName,
-                GroupName = settings.GroupName,
-                AlbumName = settings.AlbumName
-            });
-            return true;
-        }
-        /// <summary>
-        /// Gets the settings corresponding to the specified Access Token
-        /// </summary>
-        /// <param name="aToken">The Access Token</param>
-        /// <returns><value>null</value> if no entry is found with the given Access Token. The ViewModel of the settings object otherwise.</returns>
-        public VimeoSettingsPartViewModel GetByToken(string aToken) {
-            VimeoSettingsPartRecord rec = _repositorySettings.Get(r => r.AccessToken == aToken);
-            if (rec == null)
-                return null;
+        //    //since there was no entry, create a new one
+        //    _repositorySettings.Create(new VimeoSettingsPartRecord {
+        //        AccessToken = settings.AccessToken,
+        //        ChannelName = settings.ChannelName,
+        //        GroupName = settings.GroupName,
+        //        AlbumName = settings.AlbumName
+        //    });
+        //    return true;
+        //}
+        ///// <summary>
+        ///// Gets the settings corresponding to the specified Access Token
+        ///// </summary>
+        ///// <param name="aToken">The Access Token</param>
+        ///// <returns><value>null</value> if no entry is found with the given Access Token. The ViewModel of the settings object otherwise.</returns>
+        //public VimeoSettingsPartViewModel GetByToken(string aToken) {
+        //    VimeoSettingsPartRecord rec = _repositorySettings.Get(r => r.AccessToken == aToken);
+        //    if (rec == null)
+        //        return null;
 
-            return new VimeoSettingsPartViewModel {
-                AccessToken = rec.AccessToken,
-                ChannelName = rec.ChannelName,
-                GroupName = rec.GroupName,
-                AlbumName = rec.AlbumName
-            };
-        }
+        //    return new VimeoSettingsPartViewModel {
+        //        AccessToken = rec.AccessToken,
+        //        ChannelName = rec.ChannelName,
+        //        GroupName = rec.GroupName,
+        //        AlbumName = rec.AlbumName
+        //    };
+        //}
 
         /// <summary>
         /// Gets the existing Vimeo settings.
@@ -120,6 +123,14 @@ namespace Laser.Orchard.Vimeo.Services {
                 .CurrentSite
                 .As<VimeoSettingsPart>();
 
+            var vm = new VimeoSettingsPartViewModel(settings);
+            vm.AccessTokens.AddRange(
+                _repositoryAccessTokens.Table.Select(
+                    re => new VimeoAccessTokenViewModel {
+                        Id = re.Id,
+                        AccessToken = re.AccessToken
+                    }
+                ).ToList());
             return new VimeoSettingsPartViewModel(settings);
         }
 
@@ -315,12 +326,41 @@ namespace Laser.Orchard.Vimeo.Services {
             }
         }
         /// <summary>
+        /// Verifies the validity of all the tokens inserted in the settings, by attempting an API request for each.
+        /// </summary>
+        /// <param name="vm">The settings ViewModel to test.</param>
+        /// <returns>In case of success for all tokens, returns <value>"OK"</value>, otherwise a string describing the issues encountered</returns>
+        public string TokensAreValid(VimeoSettingsPartViewModel vm) {
+            if (vm != null) {
+                List<string> errorMessages = new List<string>();
+                if (vm.AccessTokens != null && vm.AccessTokens.Count > 0) {
+                    foreach (var at in vm.AccessTokens) {
+                        //attempt a request for each token
+                        try {
+                            if (!TokenIsValid(at.AccessToken, false)) {
+                                errorMessages.Add(T("Token {0} not valid.", at.AccessToken).Text);
+                            }
+                        } catch (Exception ex) {
+                            errorMessages.Add(T("Token {0} not valid. {1}", at.AccessToken, ex.Message).Text);
+                        }
+                    }
+                    return errorMessages.Count == 0
+                        ? "OK"
+                        : string.Join(Environment.NewLine, errorMessages);
+                } else {
+                    return T("You need to add at least one Access Token").Text;
+                }
+            }
+            return T("View model cannot be null.").Text;
+        }
+        /// <summary>
         /// Verifies whether the token is valid by attempting an API request
         /// </summary>
         /// <param name="aToken">The Access Token to test.</param>
+        /// <param name="shouldUpdateRateLimits">Tells whther we should be updating API rate limits.</param>
         /// <returns><value>true</value> if the access token is authenticated and valid. <value>false</value> otherwise.</returns>
         /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
-        public bool TokenIsValid(string aToken) {
+        public bool TokenIsValid(string aToken, bool shouldUpdateRateLimits = true) {
             HttpWebRequest wr = VimeoCreateRequest(
                 aToken: aToken,
                 endpoint: VimeoEndpoints.Me,
@@ -330,7 +370,8 @@ namespace Laser.Orchard.Vimeo.Services {
             bool ret = false;
             try {
                 using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
-                    UpdateAPIRateLimits(resp);
+                    if (shouldUpdateRateLimits)
+                        UpdateAPIRateLimits(resp);
                     ret = resp.StatusCode == HttpStatusCode.OK;
                 }
             } catch (VimeoRateException vre) {
@@ -338,7 +379,8 @@ namespace Laser.Orchard.Vimeo.Services {
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
-                    UpdateAPIRateLimits(resp);
+                    if (shouldUpdateRateLimits)
+                        UpdateAPIRateLimits(resp);
                 } else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
@@ -2385,7 +2427,7 @@ namespace Laser.Orchard.Vimeo.Services {
                                     // t * (l - r) / (h - t) = 2/3 * r
                                     // (l - r) * t = 2/3 * r * ( h - t)
                                     // (l - r + 2/3 * r) * t = 2/3 * r * h 
-                                    double newt = ((2.0/3.0) * (double)(r * h)) / ((double)l - (1.0/3.0)*(double)r);
+                                    double newt = ((2.0 / 3.0) * (double)(r * h)) / ((double)l - (1.0 / 3.0) * (double)r);
                                     DateTime targetTime = settings.RateLimitReset.Value.AddSeconds(-newt);
                                     ucr.ScheduledTerminationTime = newScheduleTime > targetTime ? newScheduleTime : targetTime;
                                 }
@@ -2402,7 +2444,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         //break out of the loop, because there is no point in trying to process the other records
                         break;
                     }
-                    
+
                 }
             }
             return _repositoryUploadsComplete.Table.Count();

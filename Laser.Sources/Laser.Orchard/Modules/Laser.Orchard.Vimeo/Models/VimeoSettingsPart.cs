@@ -112,8 +112,8 @@ namespace Laser.Orchard.Vimeo.Models {
             set { Record.RateLimitRemaining = value; }
         }
         //Timestamp of when the rate limit will reset next
-        public DateTime? RateLimitReset{
-            get{return Record.RateLimitReset;}
+        public DateTime? RateLimitReset {
+            get { return Record.RateLimitReset; }
             set { Record.RateLimitReset = value; }
         }
         //cache for upload quota
