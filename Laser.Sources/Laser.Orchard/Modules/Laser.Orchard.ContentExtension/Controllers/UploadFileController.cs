@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.ContentExtension.ViewModels;
+using Laser.Orchard.ContentExtension.Services;
 using Laser.Orchard.StartupConfig.Security;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
@@ -22,7 +23,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         private readonly IMediaLibraryService _mediaLibraryService;
 
         //  private readonly IContentManager _contentManager;
-        private readonly IContentExtensionsServices _contentExtensionsServices;
+        private readonly IContentExtensionService _contentExtensionsServices;
 
         private readonly INotifier _notifier;
         private readonly ICsrfTokenHelper _csrfTokenHelper;
@@ -30,7 +31,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
 
         public Localizer T { get; set; }
 
-        public UploadFileController(IOrchardServices orchardServices, ShellSettings settings, IMediaLibraryService mediaLibraryService, IContentExtensionsServices contentExtensionsServices, INotifier notifier, ICsrfTokenHelper csrfTokenHelper, IUtilsServices utilsServices) {
+        public UploadFileController(IOrchardServices orchardServices, ShellSettings settings, IMediaLibraryService mediaLibraryService, IContentExtensionService contentExtensionsServices, INotifier notifier, ICsrfTokenHelper csrfTokenHelper, IUtilsServices utilsServices) {
             _notifier = notifier;
             _contentExtensionsServices = contentExtensionsServices;
             _settings = settings;
@@ -70,9 +71,9 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         }
 
         private JsonResult PostFileFunction(HttpPostedFileBase file, string contentType = "") {
-            if (!_orchardServices.Authorizer.Authorize(MediaPermissions.InsertMedia)) {
-                return Json(_utilsServices.GetResponse(ResponseType.UnAuthorized));
-            }
+            //if (!_orchardServices.Authorizer.Authorize(MediaPermissions.InsertMedia)) {
+            //    return Json(_utilsServices.GetResponse(ResponseType.UnAuthorized));
+            //}
             Int32 output = 0;
             string LinkFile = "/Media/" + _settings.Name + "/Upload";
             string pathString = Server.MapPath("~/Media/" + _settings.Name) + @"\Upload" + (contentType != "" ? "\\" + contentType : "");
