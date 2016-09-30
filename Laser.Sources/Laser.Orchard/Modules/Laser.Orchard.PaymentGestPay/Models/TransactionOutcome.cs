@@ -6,6 +6,9 @@ using System.Web;
 using System.Xml;
 
 namespace Laser.Orchard.PaymentGestPay.Models {
+    /// <summary>
+    /// This class is used to store the information from the xml we get from GestPay.
+    /// </summary>
     public class TransactionOutcome {
         [StringLength(7)]
         public string TransactionType { get; set; } //transaction tye request ("DECRYPT" or "ENCRYPT")

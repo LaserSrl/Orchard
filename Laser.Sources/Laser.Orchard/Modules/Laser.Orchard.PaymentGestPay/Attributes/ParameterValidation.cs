@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 using System.Web;
 
 namespace Laser.Orchard.PaymentGestPay.Attributes {
-
+    /// <summary>
+    /// Verifies that the parameter string contains no invalid characters.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class ValidGestPayParameter : ValidationAttribute {
 
@@ -32,7 +34,9 @@ namespace Laser.Orchard.PaymentGestPay.Attributes {
             return string.Format("Invalid character in parameter {0}.", name);
         }
     }
-
+    /// <summary>
+    /// Validates parameters in an array 
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     sealed public class ValidGestPayArrayParameter : ValidGestPayParameter {
 
@@ -48,7 +52,9 @@ namespace Laser.Orchard.PaymentGestPay.Attributes {
             return true;
         }
     }
-
+    /// <summary>
+    /// Validates parameters in a list
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     sealed public class ValidGestPayListParameter : ValidGestPayParameter {
 
@@ -64,7 +70,9 @@ namespace Laser.Orchard.PaymentGestPay.Attributes {
             return true;
         }
     }
-
+    /// <summary>
+    /// Verifies that the parameter string contains no invalid characters. Red has additional requirements.
+    /// </summary
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class ValidRedGestPayParameter : ValidGestPayParameter {
 
@@ -90,7 +98,9 @@ namespace Laser.Orchard.PaymentGestPay.Attributes {
             return string.Format("Invalid character in parameter {0}.", name);
         }
     }
-
+    /// <summary>
+    /// Validates parameters in an array 
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     sealed public class ValidRedGestPayArrayParameter : ValidRedGestPayParameter {
 
@@ -106,7 +116,9 @@ namespace Laser.Orchard.PaymentGestPay.Attributes {
             return true;
         }
     }
-
+    /// <summary>
+    /// Validates parameters in a list
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     sealed public class ValidRedGestPayListParameter : ValidRedGestPayParameter {
 
@@ -122,7 +134,9 @@ namespace Laser.Orchard.PaymentGestPay.Attributes {
             return true;
         }
     }
-
+    /// <summary>
+    /// Verifies that the parameter string contains no invalid characters. Emailshave additional requirements.
+    /// </summary
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     sealed public class ValidRedGestPayEmailParameter : ValidRedGestPayParameter {
         public override bool IsValid(object value) {
@@ -140,7 +154,9 @@ namespace Laser.Orchard.PaymentGestPay.Attributes {
             return string.Format("Parameter {0} must contain @ character.", name);
         }
     }
-
+    /// <summary>
+    /// Verifies that the parameter string contains no invalid characters. These may not contain whitespace
+    /// </summary
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     sealed public class ValidRedGestPayNoSpaceParameter : ValidRedGestPayParameter {
         public override bool IsValid(object value) {

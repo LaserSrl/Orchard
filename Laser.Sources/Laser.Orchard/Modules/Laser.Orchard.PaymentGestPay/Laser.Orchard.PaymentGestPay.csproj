@@ -75,12 +75,24 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CurrencyCodeTable.txt" />
-    <EmbeddedResource Include="ErrorCodeTable.txt" />
-    <EmbeddedResource Include="ISOCountryCodeTable.txt" />
-    <EmbeddedResource Include="PaymentTypeCodeTable.txt" />
-    <EmbeddedResource Include="PayPalCountryCodeTable.txt" />
-    <EmbeddedResource Include="StateCodeTable.txt" />
+    <EmbeddedResource Include="CurrencyCodeTable.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErrorCodeTable.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ISOCountryCodeTable.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PaymentTypeCodeTable.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PayPalCountryCodeTable.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StateCodeTable.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="Properties\DataSources\System.Xml.XmlNode.datasource" />
     <Content Include="Service References\CryptDecryptProd\Laser.Orchard.PaymentGestPay.CryptDecryptProd.EncryptResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -114,7 +126,9 @@
       <Name>Laser.Orchard.PaymentGateway</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Navigation\" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ParameterValidation.cs" />
     <Compile Include="Controllers\AdminController.cs" />
@@ -128,7 +142,6 @@
     <Compile Include="Models\PaymentGestPaySettingsPart.cs" />
     <Compile Include="Models\PaymentGestPaySettingsPartRecord.cs" />
     <Compile Include="Models\TransactionOutcome.cs" />
-    <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Service References\CryptDecryptProd\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

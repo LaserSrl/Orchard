@@ -7,7 +7,9 @@ using System.Web;
 
 namespace Laser.Orchard.PaymentCartaSi.Attributes {
     //TODO: add validation attributes based on codetables
-
+    /// <summary>
+    /// Validates the amount for transactions
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class ValidAmount : ValidationAttribute {
 
@@ -30,7 +32,9 @@ namespace Laser.Orchard.PaymentCartaSi.Attributes {
             return string.Format(@"Invalid format in amount {0}.", name);
         }
     }
-
+    /// <summary>
+    /// Validation used when no # character may be present
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class NoOctothorpe : ValidationAttribute {
         //octothorpe is the official name of the # character
@@ -46,7 +50,9 @@ namespace Laser.Orchard.PaymentCartaSi.Attributes {
             return string.Format(@"Parameter {0} may not contain the # character", name);
         }
     }
-
+    /// <summary>
+    /// Validate an URL by checking that it starts with either http:// or https://, and that the used ports are the standard ones
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class IsValidUrl : ValidationAttribute {
 
@@ -83,7 +89,9 @@ namespace Laser.Orchard.PaymentCartaSi.Attributes {
             return string.Format(@"Parameter {0} failed to validate as a correct URL.", name);
         }
     }
-
+    /// <summary>
+    /// Validates the optional parameters by checking that they do not clash with a list of reserved ones.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class IsValidParametersDictionary : ValidationAttribute {
 

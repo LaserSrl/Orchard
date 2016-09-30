@@ -23,15 +23,17 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
     public class CartaSiPosService : PosServiceBase, ICartaSiTransactionService {
 
         public ILogger Logger { get; set; }
-        public Localizer T { get; set; }
 
         public CartaSiPosService(IOrchardServices orchardServices, IRepository<PaymentRecord> repository, IPaymentEventHandler paymentEventHandler) :
             base(orchardServices, repository, paymentEventHandler) {
 
-            T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
 
+        /// <summary>
+        /// Get the string that we use to identify the payment method
+        /// </summary>
+        /// <returns></returns>
         public override string GetPosName() {
             return Constants.PosName;
         }
@@ -39,20 +41,54 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             return "Admin";
         }
         /// <summary>
-        /// This gets called by the "general" payment services.
+        /// This gets called by the "general" payment services to get the url of an action that will start the operations on the virtual POS
         /// </summary>
         /// <param name="paymentId">The id corresponding to a <type>PaymentRecord</type> for the transaction we want to start.</param>
         /// <returns>The url corresponding to an action that will start the CartaSì transaction </returns>
-        public override string GetPosUrl(int paymentId) {
+        public override string GetPosActionUrl(int paymentId) {
             //create the url for the controller action that takes care of the redirect, passing the id as parameter
             //Controller: Transactions
             //Action; RedirectToCartaSìPage
             //Area: Laser.Orchard.PaymentCartaSi
             var hp = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             var ub = new UriBuilder(_orchardServices.WorkContext.HttpContext.Request.Url.AbsoluteUri) {
-                Path = hp.Action("RedirectToCartaSìPage", "Transactions", new { Area = Constants.LocalArea, Id = paymentId })
+                Path = hp.Action("RedirectToCartaSìPage", "Transactions", new { Area = Constants.LocalArea, Id = paymentId }),
+                Query = ""
             };
             return ub.Uri.ToString();
+        }
+        /// <summary>
+        /// This gets called by the "general" payment services to get the url of an action that will start the operations on the virtual POS
+        /// </summary>
+        /// <param name="paymentId">The Guid corresponding to a <type>PaymentRecord</type> for the transaction we want to start.</param>
+        /// <returns>The url corresponding to an action that will start the CartaSì transaction </returns>
+        public override string GetPosActionUrl(string paymentGuid) {
+            //create the url for the controller action that takes care of the redirect, passing the id as parameter
+            //Controller: Transactions
+            //Action; RedirectToCartaSìPage
+            //Area: Laser.Orchard.PaymentCartaSi
+            var hp = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            var ub = new UriBuilder(_orchardServices.WorkContext.HttpContext.Request.Url.AbsoluteUri) {
+                Path = hp.Action("RedirectToCartaSìPage", "Transactions", new { Area = Constants.LocalArea }),
+                Query = "guid=" + paymentGuid
+            };
+            return ub.Uri.ToString();
+        }
+        /// <summary>
+        /// This gets the url of the virtual pos.
+        /// </summary>
+        /// <param name="paymentId">The id of a payment record for the current transaction</param>
+        /// <returns>the url of the virtual pos</returns>
+        public override string GetPosUrl(int paymentId) {
+            return StartCartaSiTransactionURL(paymentId);
+        }
+        /// <summary>
+        /// returns a list of currencies that we are allowed to use with cartasì
+        /// </summary>
+        /// <returns></returns>
+        public override List<string> GetAllValidCurrencies() {
+            //Carta sì accepts only payments in Euro
+            return new string[] { "EUR" }.ToList();
         }
 
         /// <summary>
@@ -68,22 +104,44 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             var hp = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             string aPath = hp.Action(aName, cName, new { Area = areaName });
             int cut = aPath.IndexOf(sName) - 1;
-                return bUrl + aPath.Substring(cut);
+            return bUrl + aPath.Substring(cut);
         }
+#if DEBUG
+        private string RemoteActionUrl(string aName, string cName = "Transactions", string areaName = Constants.LocalArea) {
+            string sName = _orchardServices.WorkContext.CurrentSite.SiteName;
+            string bUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
+            var hp = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            string aPath = hp.Action(aName, cName, new { Area = areaName });
+            string outSite = "http://piovanellim.laser-group.com";
+            return outSite + aPath;
+        }
+#endif
         /// <summary>
         /// Computes the url of CartaSì's web service to which the buyer has to be redirected.
         /// </summary>
         /// <param name="paymentId">The id of the PaymentRecord for the transaction we are trying to complete.</param>
         /// <returns>The url where we should redirct the buyer.</returns>
-        public string StartCartaSiTransaction(int paymentId) {
+        public string StartCartaSiTransactionURL(int paymentId) {
             var settings = _orchardServices.WorkContext.CurrentSite.As<PaymentCartaSiSettingsPart>();
 
             string pURL = settings.UseTestEnvironment ? EndPoints.TestPaymentURL : EndPoints.PaymentURL;
-
-            StartPaymentMessage spMsg = new StartPaymentMessage(settings.CartaSiShopAlias, settings.CartaSiSecretKey, GetPaymentInfo(paymentId));
+            var pRecord = GetPaymentInfo(paymentId);
+            if (pRecord.PaymentTransactionComplete) {
+                //this avoids repeat payments when the user is dumb and goes back in the browser to try and pay again
+                return GetPaymentInfoUrl(paymentId);
+            }
+            var user = _orchardServices.WorkContext.CurrentUser;
+            if (pRecord.UserId > 0 && pRecord.UserId != user.Id) {
+                //not the same user who started the payment
+                throw new Exception();
+            }
+            StartPaymentMessage spMsg = new StartPaymentMessage(settings.CartaSiShopAlias, settings.CartaSiSecretKey, pRecord);
             spMsg.url = ActionUrl("CartaSiOutcome");
             spMsg.url_back = ActionUrl("CartaSiUndo");
             spMsg.urlpost = ActionUrl("CartaSiS2S");
+#if DEBUG
+            spMsg.urlpost=RemoteActionUrl("CartaSiS2S");
+#endif
             spMsg.mac = spMsg.TransactionStartMAC;
 
 
@@ -145,66 +203,64 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
                 throw new Exception(error.Text);
             }
         }
-
+        /// <summary>
+        /// handles the server-to-server transaction happening when cartasì wants to report the end of a transaction
+        /// </summary>
+        /// <param name="qs"></param>
+        /// <returns></returns>
         public string HandleS2STransaction(NameValueCollection qs) {
             var settings = _orchardServices.WorkContext.CurrentSite.As<PaymentCartaSiSettingsPart>();
             //this is the method where the transaction information is trustworthy
             StringBuilder sr = new StringBuilder();
-            sr.AppendLine("HandleS2STransaction: START");
-            foreach (var item in qs) {
-                sr.AppendLine(string.Format(@"{0}: {1}", item.ToString(), qs[item.ToString()]));
-            }
-            Logger.Error(sr.ToString());
             int paymentId = 0; //assign here because compiler does not understand that we won't use this without assigning it first
             bool validMessage = !string.IsNullOrWhiteSpace(qs["codTrans"]) && int.TryParse(qs["codTrans"].Replace("LASER", ""), out paymentId); //has an id
             validMessage = validMessage && !string.IsNullOrWhiteSpace(qs["esito"]); //has a result
             validMessage = validMessage && !string.IsNullOrWhiteSpace(qs["alias"]) && qs["alias"] == settings.CartaSiShopAlias; //has right shop alias
-            Logger.Error("HandleS2STransaction: " + paymentId.ToString());
+            //Logger.Error("HandleS2STransaction: " + paymentId.ToString());
             if (validMessage) {
                 PaymentOutcomeMessage pom = new PaymentOutcomeMessage(qs);
                 pom.secret = settings.CartaSiSecretKey;
-                sr.Clear();
+                //sr.Clear();
                 sr.AppendLine("HandleS2STransaction: MESSAGE VALID");
-                sr.AppendLine(pom.AdditionalParametersDictionary.Count.ToString());
-                foreach (var item in pom.AdditionalParametersDictionary) {
-                    sr.AppendLine(string.Format(@"{0}={1}", item.Key, item.Value));
-                }
-                sr.AppendLine("------------------------------------------");
                 sr.AppendLine(pom.ToString());
-                Logger.Error(sr.ToString());
+                //Logger.Error(sr.ToString());
                 try {
                     Validator.ValidateObject(pom, new ValidationContext(pom), true);
                 } catch (Exception ex) {
-                    Logger.Error(ex.Message);
-                    throw ex;
+                    //Logger.Error(ex.Message);
+                    //throw ex;
                     LocalizedString error = T(@"Transaction information not valid for transaction {0}: {1}", paymentId.ToString(), ex.Message);
                     //Log the error
-                    Logger.Error(error.Text);
-                    throw new Exception(error.Text);
+                    sr.AppendLine(string.Format("ERROR: {0}", error.Text));
+                    //Logger.Error(error.Text);
+                    //throw new Exception(error.Text);
                     //We do not update the PaymentRecord here, because we have been unable to verify the hash that we received
-                    
+
                 }
-                Logger.Error("HandleS2STransaction: VALIDATION PASSED");
+                //Logger.Error("HandleS2STransaction: VALIDATION PASSED");
                 //verify the hash
                 if (pom.PaymentOutcomeMAC == qs["mac"]) {
                     //transaction valid
                     //update the PaymentRecord for this transaction
                     //TODO: add to info the decoding of the pom.codiceEsito based off the codetables
-                    EndPayment(paymentId, pom.esito == "OK", pom.codiceEsito, pom.messaggio);
-                    Logger.Error(string.Format(@"Payment {0} S2S outcome {1}", paymentId.ToString(), pom.esito));
+                    string info = CodeTables.ErrorCodes[int.Parse(pom.codiceEsito)];
+                    EndPayment(paymentId, pom.esito == "OK", pom.codiceEsito, pom.messaggio + (string.IsNullOrWhiteSpace(info) ? "" : (" " + info)));
+                    //Logger.Error(string.Format(@"Payment {0} S2S outcome {1}", paymentId.ToString(), pom.esito));
                     //return the URL of a suitable error page (call this.GetPaymentInfoUrl after inserting the error in the PaymentRecord)
                     return pom.esito;
                 } else {
-                    Logger.Error(string.Format("HandleS2STransaction: MAC NOT VALID:\nComputed: {0}\nReceived: {1}", pom.PaymentOutcomeMAC, qs["mac"]));
+                    LocalizedString error = T("HandleS2STransaction: MAC NOT VALID:\nComputed: {0}\nReceived: {1}", pom.PaymentOutcomeMAC, qs["mac"]);
+                    sr.AppendLine(string.Format("ERROR: {0}", error.Text));
                 }
 
             }
-            Logger.Error("HandleS2STransaction: MESSAGE NOT VALID");
+            Logger.Error(sr.ToString());
             throw new Exception(string.Format("Transaction message not valid: codTrans: {0}, esito: {1}, alias: {2}", qs["codTrans"] ?? "null", qs["esito"] ?? "null", qs["alias"] ?? "null"));
         }
 
         /// <summary>
-        /// Gets the inforation about the transaction result back from CartaSì and returns an URL showing the transaction's result
+        /// Gets the inforation about the transaction result back from CartaSì and returns an URL showing the transaction's result.
+        /// Depending on the way the transaction was set, this may not actually be an url.
         /// </summary>
         /// <param name="qs">The query string received in the attempt by CartaSì to redirect the browser.</param>
         /// <returns>The Url for the transaction results.</returns>
