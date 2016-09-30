@@ -22,8 +22,11 @@ namespace Laser.Orchard.Vimeo.Services {
         //VimeoSettingsPartViewModel GetByToken(string aToken);
         VimeoSettingsPartViewModel GetSettingsVM();
         void UpdateSettings(VimeoSettingsPartViewModel vm);
-#if DEBUG
+
+        void ConsolidateTokensList(VimeoSettingsPartViewModel vm);
         void CommitTokensUpdate(VimeoSettingsPartViewModel vm);
+#if DEBUG
+        
 #endif
 
         bool TokenIsValid(VimeoSettingsPartViewModel vm);

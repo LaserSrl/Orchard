@@ -273,24 +273,24 @@ namespace Laser.Orchard.Vimeo.Services {
         }
 
         /// <summary>
-        /// Based on the view model, we update the records of access tokens.
+        /// Based on the view model, we update the contents of its lists of tokens
         /// </summary>
         /// <param name="vm">The settings ViewModel to use.</param>
-        public void CommitTokensUpdate(VimeoSettingsPartViewModel vm) {
+        public void ConsolidateTokensList(VimeoSettingsPartViewModel vm) {
             string tamperExceptionMessage = T("Do not tamper with the data in the page.").Text;
-            if (vm.AccessTokens.GroupBy(at => at.Id).Where(g => g.Count() > 1).Any()) {
+            if (vm.AccessTokens.Where(at => at.Id != 0).GroupBy(at => at.Id).Where(g => g.Count() > 1).Any()) {
                 //if we are here it means that in the view model we have tokens with the same Id
                 //that is an horrible error condition
                 throw new Exception(tamperExceptionMessage);
             }
             //the vm has 2 lists we need here: AccessTokens and DeletedAccessTokens
             var deletedATs = vm.AccessTokens.Where(at => at.Delete && at.Id != 0).ToList(); //only the ones we had records for that we marked for deletion
-            var ATs = new List<VimeoAccessTokenViewModel>(); //vm.AccessTokens; //tokens we wish to save
+            var ATs = new List<VimeoAccessTokenViewModel>(); //tokens we wish to save
 
             //check vm.AccessTokens for duplicate tokens:
             //  If we find duplicates, keep only one instance, giving priority to any that has Id!=0, and move the others to the list
             //  for deleted tokens
-            var groupedATs = vm.AccessTokens.GroupBy(at => at.AccessToken);
+            var groupedATs = vm.AccessTokens.Where(at => !at.Delete).GroupBy(at => at.AccessToken);
             foreach (var group in groupedATs) {
                 if (group.Count() == 1) {
                     //no duplicates of this
@@ -328,6 +328,18 @@ namespace Laser.Orchard.Vimeo.Services {
             //ATs here has no duplicates
             //deletedATs here may contain items whose delete flag is not set, so set it
             deletedATs = deletedATs.Select(at => { at.Delete = true; return at; }).ToList();
+
+            vm.AccessTokens = ATs;
+            vm.DeletedAccessTokens = deletedATs;
+        }
+        /// <summary>
+        /// Based on the view model, we update the records of access tokens.
+        /// </summary>
+        /// <param name="vm">The settings ViewModel to use.</param>
+        public void CommitTokensUpdate(VimeoSettingsPartViewModel vm) {
+            ConsolidateTokensList(vm);
+            string tamperExceptionMessage = T("Do not tamper with the data in the page.").Text;
+            
 
             //possible cases to handle:
             //  1- an element of ATs is an entirely new token

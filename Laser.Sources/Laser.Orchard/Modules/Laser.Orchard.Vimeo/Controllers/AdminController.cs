@@ -127,7 +127,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
                         _orchardServices.Notifier.Error(T("Access Token not valid"));
                 }
                 //update the access tokens by removing those flagged for deletion
-                _vimeoAdminServices.CommitTokensUpdate(vm);
+                _vimeoAdminServices.ConsolidateTokensList(vm);
                 //test the remaining tokens
                 string atsValid = _vimeoAdminServices.TokensAreValid(vm);
                 if (atsValid == "OK") {
