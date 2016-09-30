@@ -9,6 +9,7 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual string AccessToken { get; set; }
         public virtual int RateLimitLimit { get; set; }
         public virtual int RateLimitRemaining { get; set; }
+        public virtual double RateAvailableRatio { get; set; }
         public virtual DateTime? RateLimitReset { get; set; }
     }
 }

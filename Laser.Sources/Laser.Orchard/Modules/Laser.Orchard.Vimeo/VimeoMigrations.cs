@@ -304,5 +304,14 @@ namespace Laser.Orchard.Vimeo {
 
             return 16;
         }
+
+        public int UpdateFrom16() {
+            SchemaBuilder.AlterTable("VimeoAccessTokenRecord",
+                table => table
+                    .AddColumn<double>("RateAvailableRatio")
+                );
+
+            return 17;
+        }
     }
 }

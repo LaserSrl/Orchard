@@ -25,6 +25,7 @@ namespace Laser.Orchard.Vimeo.ViewModels {
         public bool AlwaysUploadToChannel { get; set; }
 
         public List<VimeoAccessTokenViewModel> AccessTokens { get; set; }
+        public List<VimeoAccessTokenViewModel> DeletedAccessTokens { get; set; } //use this for updates
 
         public VimeoSettingsPartViewModel() {
             ContentRatingsUnsafe = new Dictionary<string, bool>();
@@ -32,6 +33,7 @@ namespace Laser.Orchard.Vimeo.ViewModels {
                 ContentRatingsUnsafe.Add(cr.Key, false);
             }
             AccessTokens = new List<VimeoAccessTokenViewModel>();
+            DeletedAccessTokens = new List<VimeoAccessTokenViewModel>();
         }
 
         public VimeoSettingsPartViewModel(VimeoSettingsPart part) : this() {
