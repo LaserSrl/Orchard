@@ -19,14 +19,17 @@ using Orchard.Localization;
 using Orchard.Security;
 using Laser.Orchard.Questionnaires.Settings;
 using Orchard.Core.Title.Models;
+using Orchard.OutputCache.Filters;
+using Orchard.ContentPicker.Fields;
 
 namespace Laser.Orchard.Questionnaires.Drivers {
-    public class QuestionnairePartDriver : ContentPartDriver<QuestionnairePart> {
+    public class QuestionnairePartDriver : ContentPartDriver<QuestionnairePart>, ICachingEventHandler {
         private readonly IQuestionnairesServices _questServices;
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IOrchardServices _orchardServices;
         private readonly ICaptchaService _capthcaServices;
         private readonly ICurrentContentAccessor _currentContentAccessor;
+        private string _additionalCacheKey;
         
         public QuestionnairePartDriver(IQuestionnairesServices questServices,
             IOrchardServices orchardServices,
@@ -39,6 +42,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             T = NullLocalizer.Instance;
             _capthcaServices = capthcaServices;
             _currentContentAccessor = currentContentAccessor;
+            _additionalCacheKey = "";
         }
 
         public Localizer T { get; set; }
@@ -48,7 +52,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             }
         }
         protected override DriverResult Display(QuestionnairePart part, string displayType, dynamic shapeHelper) {
-
+            _additionalCacheKey = "display";
             if (displayType == "Summary")
                 return ContentShape("Parts_Questionnaire_Summary",
                     () => shapeHelper.Parts_Questionnaire_Summary(
@@ -282,5 +286,29 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                     part.ContentItem, editModel); //aggiorno
         }
         #endregion
+
+        public System.Text.StringBuilder InflatingCacheKey(System.Text.StringBuilder key) {
+            var ci = _currentContentAccessor.CurrentContentItem;
+            ContentPickerField cpf = null;
+
+            if (ci.Has<QuestionnairePart>()) {
+                key.AppendFormat("sid={0};", _controllerContextAccessor.Context.HttpContext.Session.SessionID);
+            }
+            else {
+                foreach (var part in ci.Parts) {
+                    var fields = part.Fields.Where(x => x.FieldDefinition.Name == "ContentPickerField");
+                    foreach (var ff in fields) {
+                        cpf = (ContentPickerField)ff;
+                        foreach (var cii in cpf.ContentItems) {
+                            if (cii.Has<QuestionnairePart>()) {
+                                key.AppendFormat("sid={0};", HttpContext.Current.Session.SessionID);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return key;
+        }
     }
 }
