@@ -71,9 +71,9 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         }
 
         private JsonResult PostFileFunction(HttpPostedFileBase file, string contentType = "") {
-            //if (!_orchardServices.Authorizer.Authorize(MediaPermissions.InsertMedia)) {
-            //    return Json(_utilsServices.GetResponse(ResponseType.UnAuthorized));
-            //}
+            if (!_orchardServices.Authorizer.Authorize(MediaPermissions.InsertMedia)) {
+                return Json(_utilsServices.GetResponse(ResponseType.UnAuthorized));
+            }
             Int32 output = 0;
             string LinkFile = "/Media/" + _settings.Name + "/Upload";
             string pathString = Server.MapPath("~/Media/" + _settings.Name) + @"\Upload" + (contentType != "" ? "\\" + contentType : "");
