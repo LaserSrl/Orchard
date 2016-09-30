@@ -54,17 +54,15 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                         // importa solo i csv che non hanno già un log corrispondente
                         logFile = new FileInfo(file.FullName + ".log");
                         if (logFile.Exists == false) {
-                            string fileContent = "";
-                            using (StreamReader reader = new StreamReader(file.FullName, Encoding.UTF8)) {
-                                fileContent = reader.ReadToEnd();
-                            }
+                            byte[] bufferContent = File.ReadAllBytes(file.FullName);
+                            string fileContent = Encoding.Unicode.GetString(bufferContent);
                             ImportUtil import = new ImportUtil(_orchardServices);
                             import.ImportCsv(fileContent);
                             string result = string.Format("Import result: Errors: {0}, Mails: {1}, Sms: {2}.", import.Errors.Count, import.TotMail, import.TotSms);
                             string strErrors = FormatErrors(import.Errors);
-                            File.WriteAllText(string.Format("{0}{1}{2}.log", dir.FullName, Path.DirectorySeparatorChar, file.Name),
-                                string.Format("{0}{1}{2}", result, Environment.NewLine, strErrors),
-                                Encoding.UTF8);
+                            byte[] buffer = Encoding.Unicode.GetBytes(string.Format("{0}{1}{2}", result, Environment.NewLine, strErrors));
+                            File.WriteAllBytes(string.Format("{0}{1}{2}.log", dir.FullName, Path.DirectorySeparatorChar, file.Name),
+                                buffer);
                         }
                     } finally {
                         try {
