@@ -42,7 +42,7 @@ namespace Laser.Orchard.ContentExtension.Services {
     }
 
     public class ContentExtensionService : IContentExtensionService {
-        private string[] allowedFiles = new string[] { "jpg", "png", "gif", "doc", "docx", "xls", "xlsx", "pdf", "mov", "mp4", "mpg", "mpeg", "avi", "3gp", "mp4v", "m4v", "m4a", "aac" };
+        private string[] allowedFiles = new string[] { "jpg", "png", "gif", "doc", "docx", "xls", "xlsx", "pdf", "mov", "mp4", "mpg", "mpeg", "avi", "3gp", "mp4v", "m4v", "m4a", "aac", "jpeg", "bmp", "wmv", "wav", "mp3" };
         private string[] ProtectedPart = new string[] { "commonpart", "autoroutepart", "userrolespart" };
         private readonly IContentManager _contentManager;
 
