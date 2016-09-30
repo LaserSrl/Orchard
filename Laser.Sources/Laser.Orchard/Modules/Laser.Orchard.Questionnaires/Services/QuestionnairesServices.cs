@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Hosting;
 
@@ -762,15 +763,22 @@ namespace Laser.Orchard.Questionnaires.Services {
             if (!fi.Directory.Exists) {
                 System.IO.Directory.CreateDirectory(fi.DirectoryName);
             }
-            using (StreamWriter sw = new StreamWriter(filePath, false, System.Text.Encoding.UTF8)) {
-                sw.WriteLine("\"Utente\"{0}\"Data\"{0}\"Domanda\"{0}\"Risposta\"", separator);
-                foreach (var line in elenco) {
-                    sw.WriteLine(string.Format("\"{1}\"{0}\"{2:yyyy-MM-dd}\"{0}\"{3}\"{0}\"{4}\"",
-                        separator,
-                        EscapeString(line.UserName),
-                        line.AnswerDate,
-                        EscapeString(line.Question),
-                        EscapeString(line.Answer)));
+            using (FileStream fStream = new FileStream(filePath, FileMode.Create)) {
+                using (BinaryWriter bWriter = new BinaryWriter(fStream)) {
+                    byte[] buffer = null;
+                    string row = string.Format("\"Utente\"{0}\"Data\"{0}\"Domanda\"{0}\"Risposta\"\r\n", separator);
+                    buffer = Encoding.Unicode.GetBytes(row);
+                    bWriter.Write(buffer);
+                    foreach (var line in elenco) {
+                        row = string.Format("\"{1}\"{0}\"{2:yyyy-MM-dd}\"{0}\"{3}\"{0}\"{4}\"\r\n",
+                            separator,
+                            EscapeString(line.UserName),
+                            line.AnswerDate,
+                            EscapeString(line.Question),
+                            EscapeString(line.Answer));
+                        buffer = Encoding.Unicode.GetBytes(row);
+                        bWriter.Write(buffer);
+                    }
                 }
             }
         }
