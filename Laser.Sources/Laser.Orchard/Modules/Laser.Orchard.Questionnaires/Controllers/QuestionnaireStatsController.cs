@@ -74,7 +74,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                 _orchardServices.ContentManager.Publish(filters);
                 _taskManager.CreateTask(StasExportScheduledTaskHandler.TaskType, DateTime.UtcNow.AddSeconds(-1), filters);
                 //_questionnairesServices.SaveQuestionnaireUsersAnswers(idQuestionario, fromDate, toDate);
-                _notifier.Add(NotifyType.Information, T("Export started. Please check 'Show Exported Files' to get the result."));
+                _notifier.Add(NotifyType.Information, T("Export started. Please check 'Show Exported Files' in a few minutes to get the result."));
             }
             return View((object)model);
         }

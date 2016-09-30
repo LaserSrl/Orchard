@@ -36,7 +36,7 @@ namespace Laser.Orchard.MailCommunication.Drivers {
             return ContentShape("Parts_MailCommunicationSettings_Edit", () => {
 
                 var vModel = new MailCommunicationSettingsVM {
-                    TemplatesUnsubscribeList = _templateService.GetTemplates().OrderBy(o=>((dynamic)o.ContentItem).TitlePart.Title),
+                    TemplatesUnsubscribeList = _templateService.GetTemplates().OrderBy(o=>o.Title),
                     Settings = part
                 };
 

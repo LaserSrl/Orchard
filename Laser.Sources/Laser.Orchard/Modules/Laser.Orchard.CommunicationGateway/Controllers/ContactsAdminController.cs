@@ -332,7 +332,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
             _taskManager.CreateTask("Laser.Orchard.CommunicationGateway.ExportContact.Task", DateTime.UtcNow.AddSeconds(5), (ContentItem)ContentExport);
 
-            _notifier.Add(NotifyType.Information, T("Export started. Please check 'Show Exported Files' to get the result."));
+            _notifier.Add(NotifyType.Information, T("Export started. Please check 'Show Exported Files' in a few minutes to get the result."));
             return RedirectToAction("Index", "ContactsAdmin");
         }
 
@@ -357,7 +357,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                         if(scheduledImports == 0){
                             _taskManager.CreateTask(Handlers.ImportContactTaskHandler.TaskType, DateTime.UtcNow.AddSeconds(5), null);
                         }
-                        _notifier.Add(NotifyType.Information, T("Import started. Please check 'Show Import Logs' to get the result."));
+                        _notifier.Add(NotifyType.Information, T("Import started. Please check 'Show Import Logs' in a few minutes to get the result."));
                     }
                 }
             } else {

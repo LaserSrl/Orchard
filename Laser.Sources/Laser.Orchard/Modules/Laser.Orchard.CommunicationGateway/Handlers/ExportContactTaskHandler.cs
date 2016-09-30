@@ -130,9 +130,8 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                     }
 
                     // Write File
-                    using (StreamWriter sw = new StreamWriter(filePath, false, Encoding.UTF8)) {
-                        sw.Write(strBuilder.ToString());
-                    }
+                    byte[] buffer = Encoding.Unicode.GetBytes(strBuilder.ToString());
+                    File.WriteAllBytes(filePath, buffer);
                 } else
                     Logger.Debug(T("File {0} already exist").Text, fileName);
             } 
