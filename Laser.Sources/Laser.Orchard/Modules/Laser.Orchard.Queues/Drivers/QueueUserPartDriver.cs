@@ -70,10 +70,7 @@ namespace Laser.Orchard.Queues.Drivers
                     QueueRec.Element("TicketGap").SetAttributeValue("TicketGap", receq.QueueRecord.TicketGap);
                     QueueRec.Element("MaxTicketNumber").SetAttributeValue("MaxTicketNumber", receq.QueueRecord.MaxTicketNumber);
 
-                }
-
-                
-              
+                }                            
 
             }
 

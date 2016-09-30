@@ -10,6 +10,10 @@ using System.Web.Mvc;
 using System.Linq;
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
+using Orchard.ContentManagement.Handlers;
+using Orchard.UI.Notify;
+using System;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.StartupConfig.Drivers {
 
@@ -66,7 +70,35 @@ namespace Laser.Orchard.StartupConfig.Drivers {
             return Editor(part, shapeHelper);
         }
 
+        protected override void Importing(MaintenancePart part, ImportContentContext context) {
+            var importedMaintenanceNotify = context.Attribute(part.PartDefinition.Name, "MaintenanceNotify");
+            if (importedMaintenanceNotify != null) {
+                part.MaintenanceNotify =importedMaintenanceNotify;
+            }
+
+            var importedSelected_Tenant = context.Attribute(part.PartDefinition.Name, "Selected_Tenant");
+            if (importedSelected_Tenant != null) {
+                part.Selected_Tenant = importedSelected_Tenant;
+            }
+
+            var importedMaintenanceNotifyType = context.Attribute(part.PartDefinition.Name, "MaintenanceNotifyType");
+            if (importedMaintenanceNotifyType != null) {
+                part.MaintenanceNotifyType = (NotifyType)Enum.Parse(typeof(NotifyType),importedMaintenanceNotifyType);
+            }
+        }
 
 
+        protected override void Exporting(MaintenancePart part, ExportContentContext context) {
+            
+            context.Element(part.PartDefinition.Name).SetAttributeValue("MailMessageSent", part.MaintenanceNotify);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Selected_Tenant", part.Selected_Tenant);          
+            var MaintenanceNotifyTypeRec = (NotifyType)part.MaintenanceNotifyType;
+            
+            context.Element(part.PartDefinition.Name).SetAttributeValue("MaintenanceNotifyType", MaintenanceNotifyTypeRec);
+
+        }
+
+       
+       
     }
 }

@@ -87,6 +87,50 @@ namespace Laser.Orchard.UserReactions.Drivers {
         }
 
 
+
+        protected override void Importing(UserReactionsPart part, ImportContentContext context) {
+
+            var root = context.Data.Element(part.PartDefinition.Name);
+
+            foreach (UserReactionsSummaryRecord recReaction in part.Reactions) {
+                recReaction.Id = int.Parse(root.Element("Id").Value);
+                recReaction.Quantity = int.Parse(root.Element("Quantity").Value);
+
+                recReaction.UserReactionsTypesRecord.Id = int.Parse(root.Attribute("UserReactionsTypesRecord").Parent.Element("Id").Value);
+                recReaction.UserReactionsTypesRecord.TypeName = root.Attribute("UserReactionsTypesRecord").Parent.Element("TypeName").Value;
+                recReaction.UserReactionsTypesRecord.TypeCssClass = root.Attribute("UserReactionsTypesRecord").Parent.Element("TypeCssClass").Value;
+                recReaction.UserReactionsTypesRecord.Priority = int.Parse(root.Attribute("UserReactionsTypesRecord").Parent.Element("Priority").Value);
+                recReaction.UserReactionsTypesRecord.CssName =root.Attribute("UserReactionsTypesRecord").Parent.Element("CssName").Value;
+                recReaction.UserReactionsTypesRecord.Activating = Convert.ToBoolean(root.Attribute("UserReactionsTypesRecord").Parent.Element("Activating").Value);
+            }
+        }
+
+
+        protected override void Exporting(UserReactionsPart part, ExportContentContext context) {
+
+            var root = context.Element(part.PartDefinition.Name);
+
+            if (part.Reactions.Count() > 0) {
+                foreach (UserReactionsSummaryRecord receq in part.Reactions) 
+                {
+                    root.Element("Id").SetAttributeValue("Id", receq.Id);
+                    root.Element("Quantity").SetAttributeValue("Quantity", receq.Id);
+
+                    root.Element("UserReactionsTypesRecord").SetAttributeValue("UserReactionsTypesRecord", "UserReactionsTypesRecord");
+
+                    var UserReactionsTypesRec = context.Element(part.PartDefinition.Name).Element("UserReactionsTypesRecord");
+                    UserReactionsTypesRec.Element("TypeName").SetAttributeValue("TypeName", receq.UserReactionsTypesRecord.TypeName);
+                    UserReactionsTypesRec.Element("TypeCssClass").SetAttributeValue("TypeCssClass", receq.UserReactionsTypesRecord.TypeCssClass);
+                    UserReactionsTypesRec.Element("Priority").SetAttributeValue("Priority", receq.UserReactionsTypesRecord.Priority);
+                    UserReactionsTypesRec.Element("CssName").SetAttributeValue("CssName", receq.UserReactionsTypesRecord.CssName);
+                    UserReactionsTypesRec.Element("Activating").SetAttributeValue("Activating", receq.UserReactionsTypesRecord.Activating);
+                }
+
+            }
+
+        }
+
+
         
       
 
