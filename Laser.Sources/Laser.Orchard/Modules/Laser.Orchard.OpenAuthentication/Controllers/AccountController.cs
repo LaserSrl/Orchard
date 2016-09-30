@@ -101,15 +101,18 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 createUserParams = _openAuthClientProvider.NormalizeData(result.Provider, createUserParams);
                 var newUser = _openAuthMembershipServices.CreateUser(createUserParams);
 
-                _notifier.Information(
-                    T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, newUser.UserName));
-
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider,
                                                                   result.ProviderUserId,
                                                                   newUser,
                                                                   result.ExtraData.ToJson());
 
                 _authenticationService.SignIn(newUser, false);
+
+                if (newUser != null)
+                    _notifier.Information(
+                        T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, newUser.UserName));
+                else
+                    _notifier.Error(T("Your authentication request failed."));
 
                 return this.RedirectLocal(returnUrl);
             }

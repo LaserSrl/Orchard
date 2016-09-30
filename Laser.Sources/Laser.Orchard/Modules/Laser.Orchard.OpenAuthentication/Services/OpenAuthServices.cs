@@ -10,6 +10,7 @@ using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Users.Models;
 using Laser.Orchard.StartupConfig.Handlers;
+using System;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOpenAuthMembershipServices : IDependency {
@@ -74,22 +75,28 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
             _openAuthUserEventHandlers.Invoke(o => o.Creating(creatingContext), Logger);
 
-            var createdUser = _membershipService.CreateUser(new CreateUserParams(
-                _usernameService.Calculate(createUserParams.UserName),
-                _passwordGeneratorService.Generate(),
-                creatingContext.EmailAddress,
-                @T("Auto Registered User").Text,
-                _passwordGeneratorService.Generate() /* Noone can guess this */,
-                true
-                ));
+            // check UserName
+            if (String.IsNullOrEmpty(createUserParams.UserName)) {
+                return null;
+            }
+            else {
+                var createdUser = _membershipService.CreateUser(new CreateUserParams(
+                    _usernameService.Calculate(createUserParams.UserName),
+                    _passwordGeneratorService.Generate(),
+                    creatingContext.EmailAddress,
+                    @T("Auto Registered User").Text,
+                    _passwordGeneratorService.Generate() /* Noone can guess this */,
+                    true
+                    ));
 
-            var createdContext = new CreatedOpenAuthUserContext(createdUser, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
-            _openAuthUserEventHandlers.Invoke(o => o.Created(createdContext), Logger);
+                var createdContext = new CreatedOpenAuthUserContext(createdUser, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
+                _openAuthUserEventHandlers.Invoke(o => o.Created(createdContext), Logger);
 
-            //solleva l'evento di sincronizzazione dell'utente orchard
-            _contactEventHandler.Synchronize(createdUser);
+                //solleva l'evento di sincronizzazione dell'utente orchard
+                _contactEventHandler.Synchronize(createdUser);
 
-            return createdUser;
+                return createdUser;
+            }
         }
     }
 }
