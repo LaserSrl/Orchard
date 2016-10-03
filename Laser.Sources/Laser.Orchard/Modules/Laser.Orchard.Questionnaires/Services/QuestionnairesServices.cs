@@ -524,7 +524,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             bool exit = false;
             if (currentUser != null && questionnaireModuleSettings.Disposable) {
                 if (_repositoryUserAnswer.Fetch(x => x.User_Id == currentUser.Id && x.QuestionnairePartRecord_Id == editModel.Id).Count() > 0) {
-                    _notifier.Add(NotifyType.Information, T("Operation Fail: Questionnaire already filled"));
+                    //_notifier.Add(NotifyType.Information, T("Operation Fail: Questionnaire already filled"));
                     // throw new Exception();
                     exit = true;
                 }

@@ -677,6 +677,10 @@ msgid "Please, accept our terms and conditions!"
 msgstr "Si prega di accettare i termini e le condizioni!"
 
 msgctxt "Laser.Orchard.Questionnaires.Controllers.QuestionnaireController"
+msgid "Sorry, you already submitted this questionnaire."
+msgstr "Spiacente, hai già compilato questo questionario."
+
+msgctxt "Laser.Orchard.Questionnaires.Controllers.QuestionnaireController"
 msgid "Thank you for submitting your feedback."
 msgstr "Grazie per averci inviato la tua opinione."
 
