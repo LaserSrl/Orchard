@@ -29,7 +29,6 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         private readonly IOrchardServices _orchardServices;
         private readonly ICaptchaService _capthcaServices;
         private readonly ICurrentContentAccessor _currentContentAccessor;
-        private string _additionalCacheKey;
         
         public QuestionnairePartDriver(IQuestionnairesServices questServices,
             IOrchardServices orchardServices,
@@ -42,7 +41,6 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             T = NullLocalizer.Instance;
             _capthcaServices = capthcaServices;
             _currentContentAccessor = currentContentAccessor;
-            _additionalCacheKey = "";
         }
 
         public Localizer T { get; set; }
@@ -52,7 +50,6 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             }
         }
         protected override DriverResult Display(QuestionnairePart part, string displayType, dynamic shapeHelper) {
-            _additionalCacheKey = "display";
             if (displayType == "Summary")
                 return ContentShape("Parts_Questionnaire_Summary",
                     () => shapeHelper.Parts_Questionnaire_Summary(
@@ -287,6 +284,11 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         }
         #endregion
 
+        /// <summary>
+        /// Se il ContentItem corrente contiene una QuestionnairePart, invalida di fatto la cache.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public System.Text.StringBuilder InflatingCacheKey(System.Text.StringBuilder key) {
             var part = _currentContentAccessor.CurrentContentItem.As<QuestionnairePart>();
             if (part != null) {
