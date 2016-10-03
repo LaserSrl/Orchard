@@ -126,7 +126,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
                     } else
                         _orchardServices.Notifier.Error(T("Access Token not valid"));
                 }
-                //update the access tokens by removing those flagged for deletion
+                //update the access tokens by removing those flagged for deletion (as well as duplicates)
                 _vimeoAdminServices.ConsolidateTokensList(vm);
                 //test the remaining tokens
                 string atsValid = _vimeoAdminServices.TokensAreValid(vm);
@@ -170,6 +170,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
         public ActionResult IndexSaveSettings(VimeoSettingsPartViewModel vm) {
             try {
                 _vimeoAdminServices.UpdateSettings(vm);
+                _vimeoAdminServices.CommitTokensUpdate(vm);
             } catch (VimeoRateException vre) {
                 _orchardServices.Notifier.Error(T("Too many requests to Vimeo. Rate limits will reset on {0} UTC", vre.resetTime.Value.ToString()));
             } catch (Exception ex) {

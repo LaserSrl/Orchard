@@ -131,7 +131,7 @@ namespace Laser.Orchard.Vimeo.Services {
                         AccessToken = re.AccessToken
                     }
                 ).ToList());
-            return new VimeoSettingsPartViewModel(settings);
+            return vm;
         }
 
         /// <summary>
@@ -284,8 +284,9 @@ namespace Laser.Orchard.Vimeo.Services {
                 throw new Exception(tamperExceptionMessage);
             }
             //the vm has 2 lists we need here: AccessTokens and DeletedAccessTokens
-            var deletedATs = vm.AccessTokens.Where(at => at.Delete && at.Id != 0).ToList(); //only the ones we had records for that we marked for deletion
-            var ATs = new List<VimeoAccessTokenViewModel>(); //tokens we wish to save
+            List<VimeoAccessTokenViewModel> deletedATs = vm.AccessTokens.Where(at => at.Delete && at.Id != 0).ToList(); //only the ones we had records for that we marked for deletion
+            deletedATs.AddRange(vm.DeletedAccessTokens); //in case we go through this one more than once before committing changes
+            List<VimeoAccessTokenViewModel> ATs = new List<VimeoAccessTokenViewModel>(); //tokens we wish to save
 
             //check vm.AccessTokens for duplicate tokens:
             //  If we find duplicates, keep only one instance, giving priority to any that has Id!=0, and move the others to the list
@@ -319,7 +320,7 @@ namespace Laser.Orchard.Vimeo.Services {
                     }
                     ATs.Add(existing);
                     deletedATs.AddRange( //add the others to the list of the ones we need to delete
-                        group.Except(
+                        group.Where(m => m.Id != 0).Except(
                             new VimeoAccessTokenViewModel[] { existing }
                         )
                     );
@@ -328,7 +329,8 @@ namespace Laser.Orchard.Vimeo.Services {
             //ATs here has no duplicates
             //deletedATs here may contain items whose delete flag is not set, so set it
             deletedATs = deletedATs.Select(at => { at.Delete = true; return at; }).ToList();
-
+            //The list of deleted tokens may contain duplicates, and that is fine, because the user may have changed several entries to a same
+            //string (for some reason) before flagging them for deletion.
             vm.AccessTokens = ATs;
             vm.DeletedAccessTokens = deletedATs;
         }
@@ -340,26 +342,95 @@ namespace Laser.Orchard.Vimeo.Services {
             ConsolidateTokensList(vm);
             string tamperExceptionMessage = T("Do not tamper with the data in the page.").Text;
             
+            //bad errors:
+            // - not all ids from the db are in the lists from the vm, and viceversa
+            // - tokens with the same id (handled in the consolidate step
+            // - tokens from the vm with ids corresponding to no record
+            List<int> dbIds = _repositoryAccessTokens.Table.Select(at => at.Id).ToList();
+            List<int> vmIds = vm.AccessTokens.Select(at => at.Id).Where(i => i != 0).ToList();
+            vmIds.AddRange(vm.DeletedAccessTokens.Select(at => at.Id));
+            if (dbIds.Count != vmIds.Count) {
+                throw new Exception(tamperExceptionMessage);
+            }
+            if (!new HashSet<int>(dbIds).SetEquals(vmIds)) {
+                throw new Exception(tamperExceptionMessage);
+            }
 
             //possible cases to handle:
             //  1- an element of ATs is an entirely new token
-            //      => create a new record 
             //  2- an element of ATs is new (Id==0) but corresponds to an existing access token (same string)
-            //      => use the existing record
             //  3- an element of ATs exactly matches an existing access token (same Id and string)
-            //      => healthy case, nothing to do
             //  4- an element of ATs has same token as an existing record, but different Id!=0
-            //      => use the existing record
             //  5- an element of ATs has same Id as an existing record, but different access token
-            //      => update the existing record
             //  6- an element of ATs has Id!=0 but does not correspond to any existing record
-            //      => throw an exception telling the user to not mess with the page
             //  7- an element of deletedATs has Id!=0 but does not correspond to an existing record
-            //      => throw an exception telling the user to not mess with the page
             //  8- an element of deletedATs has Id!=0 corresponding to a record, but the access token for that record is in an element of ATs
-            //      => see 2 and 4, and do not delete the record
             //  9- an element of deletedATs has Id!=0 corresponding to a record, and the access token for that record is not in any element of ATs
-            //      => healthy case, delete the record
+
+            List<VimeoAccessTokenViewModel> alltokens = new List<VimeoAccessTokenViewModel>();
+            alltokens.AddRange(vm.AccessTokens);
+            alltokens.AddRange(vm.DeletedAccessTokens); 
+            //access tokens to add/keep are processed before the ones to delete
+            foreach (var token in alltokens) {
+                VimeoAccessTokenRecord vatr = null;
+                if (token.Id == 0) {
+                    //if we are here, the consolidate step ensures that the token does not come from the list of deleted tokens
+                    //the way we build our records ensures that there are no repeated tokens (unless someone went ahead and tampered
+                    //with the database).
+                    vatr = _repositoryAccessTokens.Get(at => at.AccessToken == token.AccessToken);
+                    if (vatr == null) {
+                        //this is an entirely new access token (case 1). 
+                        //We create the new record.
+                        vatr = new VimeoAccessTokenRecord() {
+                            AccessToken = token.AccessToken,
+                            RateAvailableRatio = 1.0 //maximum for the ratio (actual value will be computed on first use)
+                        };
+                        _repositoryAccessTokens.Create(vatr);
+                    } else {
+                        //we already have this token (case 2).
+                        //since the id from the vm is 0, on the front-end the token has either been deleted and then inserted again, 
+                        //or changed and then inserted again. Either way, we want to keep it.
+                        //If it's been deleted, the access token is in the lists of deleted ones with its Id, so the record will be deleted.
+                        //If it's been changed, the record will be updated accordingly.
+                        //In both cases, creating a new record with this string will not be a problem.
+                        var newRecord = new VimeoAccessTokenRecord() {
+                            AccessToken = token.AccessToken,
+                            RateLimitLimit = vatr.RateLimitLimit, //take the rate limit info from the existing record
+                            RateLimitRemaining = vatr.RateLimitRemaining,
+                            RateLimitReset = vatr.RateLimitReset,
+                            RateAvailableRatio = vatr.RateAvailableRatio
+                        };
+                        _repositoryAccessTokens.Create(newRecord);
+                    }
+                } else {
+                    vatr = _repositoryAccessTokens.Get(token.Id);
+                    if (vatr == null) {
+                        //this handles cases 6 and 7
+                        throw new Exception(tamperExceptionMessage);
+                    }
+                    if (token.Delete) {
+                        //we want to delete vatr. The way the allTokens collection is built, this happens after all other updates.
+                        //(cases 8 and 9)
+                        _repositoryAccessTokens.Delete(vatr);
+                    } else {
+                        //get the record that has the same access token string as the token we are processing
+                        var otherRecord = _repositoryAccessTokens.Get(at => at.AccessToken == token.AccessToken);
+                        if (otherRecord.Id == vatr.Id) {
+                            //we changed nothing for this access token, so do nothing. (case 3)
+                        } else {
+                            //from the vm we got the Id of vatr and the string of otherRecord (cases 4 and 5)
+                            //we should update vatr with the new information
+                            vatr.AccessToken = token.AccessToken;
+                            vatr.RateLimitLimit = otherRecord.RateLimitLimit;
+                            vatr.RateLimitRemaining = otherRecord.RateLimitRemaining;
+                            vatr.RateLimitReset = otherRecord.RateLimitReset;
+                            vatr.RateAvailableRatio = otherRecord.RateAvailableRatio;
+                            //we should do nothing with otherRecord: that Id is somewhere else and the record will be handled
+                        }
+                    }
+                }
+            }
+
         }
         /// <summary>
         /// This method is used to select the access token to use based on the state of the corresponding rate limits
@@ -422,6 +493,37 @@ namespace Laser.Orchard.Vimeo.Services {
             }
             return settings.RateLimitRemaining;
         }
+        private int UpdateAPIRateLimits(VimeoAccessTokenRecord atRecord, HttpWebResponse resp) {
+            var heads = resp.Headers;
+            int tmp;
+            if (int.TryParse(heads["X-RateLimit-Limit"], out tmp)) {
+                atRecord.RateLimitLimit = tmp;
+            }
+            if (int.TryParse(heads["X-RateLimit-Remaining"], out tmp)) {
+                atRecord.RateLimitRemaining = tmp;
+            }
+            DateTime temp;
+            if (DateTime.TryParse(heads["X-RateLimit-Reset"], out temp)) {
+                atRecord.RateLimitReset = temp.ToUniversalTime();
+            }
+            if (atRecord.RateLimitRemaining == 0) {
+                throw new VimeoRateException(atRecord.RateLimitReset);
+            }
+            return atRecord.RateLimitRemaining;
+        }
+        private int UpdateAPIRateLimits(string aToken, HttpWebResponse resp) {
+            var vatr = _repositoryAccessTokens.Get(at => at.AccessToken == aToken);
+            if (vatr == null) {
+                //we don't have this token in the db, so we cannot update anything
+                int tmp = int.Parse(resp.Headers["X-RateLimit-Remaining"]);
+                if (tmp == 0) {
+                    throw new VimeoRateException(T("Rate error on token {0}", aToken).Text);
+                }
+                return tmp;
+            }
+            //vatr != null
+            return UpdateAPIRateLimits(vatr, resp);
+        }
 
         /// <summary>
         /// Verifies whether the token in the ViewModel is valid by attempting an API request
@@ -482,7 +584,7 @@ namespace Laser.Orchard.Vimeo.Services {
             try {
                 using (HttpWebResponse resp = (HttpWebResponse)wr.GetResponse()) {
                     if (shouldUpdateRateLimits)
-                        UpdateAPIRateLimits(resp);
+                        UpdateAPIRateLimits(aToken, resp);
                     ret = resp.StatusCode == HttpStatusCode.OK;
                 }
             } catch (VimeoRateException vre) {
@@ -491,7 +593,7 @@ namespace Laser.Orchard.Vimeo.Services {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     if (shouldUpdateRateLimits)
-                        UpdateAPIRateLimits(resp);
+                        UpdateAPIRateLimits(aToken, resp);
                 } else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
@@ -2611,6 +2713,21 @@ namespace Laser.Orchard.Vimeo.Services {
         public VimeoRateException(DateTime? resetTime, string message, Exception inner)
             : base(message, inner) {
             this.resetTime = resetTime;
+        }
+
+        public VimeoRateException(VimeoAccessTokenRecord atRecord) 
+            : base (string.Format("Token: {0}", atRecord.AccessToken)){
+            this.resetTime = atRecord.RateLimitReset;
+        }
+
+        public VimeoRateException(VimeoAccessTokenRecord atRecord, string message)
+            : base(string.Format("{0}{1}Token: {2}", message, Environment.NewLine, atRecord.AccessToken)) {
+            this.resetTime = atRecord.RateLimitReset;
+        }
+
+        public VimeoRateException(VimeoAccessTokenRecord atRecord, string message, Exception inner)
+            : base(string.Format("{0}{1}Token: {2}", message, Environment.NewLine, atRecord.AccessToken), inner) {
+            this.resetTime = atRecord.RateLimitReset;
         }
     }
 }

@@ -21,6 +21,9 @@ controller if the files have not been processed.*@
         <div id="allAccessTokens">
             @Html.EditorFor(m => m.AccessTokens)
         </div>
+        <div id="deletedTokens" class="display: none;">
+            @Html.EditorFor(m=> m.DeletedAccessTokens)
+        </div>
         <div id="addTokenButton">
             @Html.LinkToAddNestedForm(m => m.AccessTokens, "<i class=\"fa fa-plus\" style=\"color: green\"></i> " + T(" Add new token").Text, "#allAccessTokens", ".j_VimeoATVM")
         </div>
