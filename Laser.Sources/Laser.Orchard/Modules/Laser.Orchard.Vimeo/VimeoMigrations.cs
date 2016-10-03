@@ -313,5 +313,26 @@ namespace Laser.Orchard.Vimeo {
 
             return 17;
         }
+
+        public int UpdateFrom17() {
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .DropColumn("AccessToken")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .DropColumn("RateLimitLimit")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .DropColumn("RateLimitRemaining")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .DropColumn("RateLimitReset")
+                );
+
+            return 18;
+        }
     }
 }

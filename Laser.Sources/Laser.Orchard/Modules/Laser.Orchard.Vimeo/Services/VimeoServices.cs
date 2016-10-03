@@ -144,7 +144,9 @@ namespace Laser.Orchard.Vimeo.Services {
                 .WorkContext
                 .CurrentSite
                 .As<VimeoSettingsPart>();
-            settings.AccessToken = vm.AccessToken ?? "";
+
+            CommitTokensUpdate(vm);
+            //settings.AccessToken = vm.AccessToken ?? "";
             settings.AlbumName = vm.AlbumName ?? "";
             settings.GroupName = vm.GroupName ?? "";
             settings.ChannelName = vm.ChannelName ?? "";
@@ -155,7 +157,7 @@ namespace Laser.Orchard.Vimeo.Services {
             try {
                 //verify group, channel and album.
                 //if they do not exist, try to create them.
-                if (TokenIsValid(settings.AccessToken)) {
+                if (TokensAreValid(vm) == "OK") { //(TokenIsValid(settings.AccessToken)) {
                     //group
                     if (!string.IsNullOrWhiteSpace(settings.GroupName)) {
                         if (GroupIsValid(settings.GroupName)) {
@@ -238,15 +240,17 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         private void RetrieveAccountType(VimeoSettingsPart settings) {
             //make the API call to check the account
+            VimeoAccessTokenRecord vatr = SelectAccessToken();
             HttpWebRequest userCall = VimeoCreateRequest(
-                aToken: settings.AccessToken,
+                aToken: vatr.AccessToken,
                 endpoint: VimeoEndpoints.Me,
                 method: "GET",
                 qString: "?fields=account,uri"
                 );
+
             try {
                 using (HttpWebResponse resp = userCall.GetResponse() as HttpWebResponse) {
-                    UpdateAPIRateLimits(settings, resp);
+                    UpdateAPIRateLimits(vatr, resp);
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         string json = new StreamReader(resp.GetResponseStream()).ReadToEnd();
                         var parsed = JObject.Parse(json);
@@ -264,7 +268,7 @@ namespace Laser.Orchard.Vimeo.Services {
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
-                    UpdateAPIRateLimits(settings, resp);
+                    UpdateAPIRateLimits(vatr, resp);
                 } else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
@@ -415,17 +419,27 @@ namespace Laser.Orchard.Vimeo.Services {
                     } else {
                         //get the record that has the same access token string as the token we are processing
                         var otherRecord = _repositoryAccessTokens.Get(at => at.AccessToken == token.AccessToken);
-                        if (otherRecord.Id == vatr.Id) {
-                            //we changed nothing for this access token, so do nothing. (case 3)
+                        if (otherRecord != null) {
+                            if (otherRecord.Id == vatr.Id) {
+                                //we changed nothing for this access token, so do nothing. (case 3)
+                            } else {
+                                //from the vm we got the Id of vatr and the string of otherRecord (cases 4 and 5)
+                                //we should update vatr with the new information
+                                vatr.AccessToken = token.AccessToken;
+                                vatr.RateLimitLimit = otherRecord.RateLimitLimit;
+                                vatr.RateLimitRemaining = otherRecord.RateLimitRemaining;
+                                vatr.RateLimitReset = otherRecord.RateLimitReset;
+                                vatr.RateAvailableRatio = otherRecord.RateAvailableRatio;
+                                //we should do nothing with otherRecord: that Id is somewhere else and the record will be handled
+                            }
                         } else {
-                            //from the vm we got the Id of vatr and the string of otherRecord (cases 4 and 5)
+                            //we just changed things on the old record, putting in a new token
                             //we should update vatr with the new information
                             vatr.AccessToken = token.AccessToken;
-                            vatr.RateLimitLimit = otherRecord.RateLimitLimit;
-                            vatr.RateLimitRemaining = otherRecord.RateLimitRemaining;
-                            vatr.RateLimitReset = otherRecord.RateLimitReset;
-                            vatr.RateAvailableRatio = otherRecord.RateAvailableRatio;
-                            //we should do nothing with otherRecord: that Id is somewhere else and the record will be handled
+                            vatr.RateLimitLimit = 0;
+                            vatr.RateLimitRemaining = 0;
+                            vatr.RateLimitReset = DateTime.UtcNow;
+                            vatr.RateAvailableRatio = 1.0;
                         }
                     }
                 }
@@ -452,8 +466,9 @@ namespace Laser.Orchard.Vimeo.Services {
             if (vatr == null) {
                 //implement a sort of scheduling system to get the proper access token
                 //as a simple case, I'll return the token where the ratio RateLimitRemaining / RateLimitLimit is the largest
-                vatr = _repositoryAccessTokens.Table
+                vatr = _repositoryAccessTokens.Table.ToList()
                     .Aggregate((maxRatio, rec) => (maxRatio == null || rec.RateAvailableRatio > maxRatio.RateAvailableRatio) ? rec : maxRatio);
+
             }
             return vatr;
         }
@@ -465,37 +480,37 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <param name="resp">The response we received from the API.</param>
         /// <returns>The number of remaining requests.</returns>
         /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
-        private int UpdateAPIRateLimits(VimeoSettingsPart settings, HttpWebResponse resp) {
-            var heads = resp.Headers;
-            int tmp;
-            if (int.TryParse(heads["X-RateLimit-Limit"], out tmp)) {
-                settings.RateLimitLimit = tmp;
-            }
-            if (int.TryParse(heads["X-RateLimit-Remaining"], out tmp)) {
-                settings.RateLimitRemaining = tmp;
-            }
-            DateTime temp;
-            if (DateTime.TryParse(heads["X-RateLimit-Reset"], out temp)) {
-                settings.RateLimitReset = temp.ToUniversalTime();
-            }
-            if (settings.RateLimitRemaining == 0) {
-                throw new VimeoRateException(settings.RateLimitReset);
-            }
-            return settings.RateLimitRemaining;
-        }
-        private int UpdateAPIRateLimits(HttpWebResponse resp) {
-            var settings = _orchardServices
-               .WorkContext
-               .CurrentSite
-               .As<VimeoSettingsPart>();
-            try {
-                UpdateAPIRateLimits(settings, resp);
-            } catch (Exception ex) {
+        //private int UpdateAPIRateLimits(VimeoSettingsPart settings, HttpWebResponse resp) {
+        //    var heads = resp.Headers;
+        //    int tmp;
+        //    if (int.TryParse(heads["X-RateLimit-Limit"], out tmp)) {
+        //        settings.RateLimitLimit = tmp;
+        //    }
+        //    if (int.TryParse(heads["X-RateLimit-Remaining"], out tmp)) {
+        //        settings.RateLimitRemaining = tmp;
+        //    }
+        //    DateTime temp;
+        //    if (DateTime.TryParse(heads["X-RateLimit-Reset"], out temp)) {
+        //        settings.RateLimitReset = temp.ToUniversalTime();
+        //    }
+        //    if (settings.RateLimitRemaining == 0) {
+        //        throw new VimeoRateException(settings.RateLimitReset);
+        //    }
+        //    return settings.RateLimitRemaining;
+        //}
+        //private int UpdateAPIRateLimits(HttpWebResponse resp) {
+        //    var settings = _orchardServices
+        //       .WorkContext
+        //       .CurrentSite
+        //       .As<VimeoSettingsPart>();
+        //    try {
+        //        UpdateAPIRateLimits(settings, resp);
+        //    } catch (Exception ex) {
 
-                throw ex;
-            }
-            return settings.RateLimitRemaining;
-        }
+        //        throw ex;
+        //    }
+        //    return settings.RateLimitRemaining;
+        //}
         private int UpdateAPIRateLimits(VimeoAccessTokenRecord atRecord, HttpWebResponse resp) {
             var heads = resp.Headers;
             int tmp;
@@ -1099,10 +1114,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <returns>The Url where the client may upload the file.</returns>
         /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GenerateUploadTicket(int uploadId) {
-            var settings = _orchardServices
-                .WorkContext
-                .CurrentSite
-                .As<VimeoSettingsPart>();
+            
             VimeoAccessTokenRecord vatr = SelectAccessToken();
             HttpWebRequest wr = VimeoCreateRequest(
                     vatr.AccessToken,
@@ -1376,10 +1388,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <returns>The Id of the UploadCompleted, which we'll need to patch and publish the video.<value>-1</value> in case of errors.</returns>
         /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public int TerminateUpload(UploadsInProgressRecord entity) {
-            var settings = _orchardServices
-                .WorkContext
-                .CurrentSite
-                .As<VimeoSettingsPart>();
+            
             VimeoAccessTokenRecord vatr = SelectAccessToken();
             //Make the DELETE call to terminate the upload: this gives us the video URI
             HttpWebRequest del = VimeoCreateRequest(
@@ -2142,12 +2151,9 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <returns>A string describing the video'sprocessing status in Vimeo's servers.</returns>
         /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GetVideoStatus(UploadsCompleteRecord ucr) {
-            if (ucr == null) return "Record is null";
+            if (ucr == null) return T("Record is null").Text;
 
-            var settings = _orchardServices
-                .WorkContext
-                .CurrentSite
-                .As<VimeoSettingsPart>();
+            
             VimeoAccessTokenRecord vatr = SelectAccessToken();
             HttpWebRequest wr = VimeoCreateRequest(
                     aToken: vatr.AccessToken,
@@ -2173,14 +2179,14 @@ namespace Laser.Orchard.Vimeo.Services {
                     UpdateAPIRateLimits(vatr, resp);
                     if (resp.StatusCode == HttpStatusCode.NotFound) {
                         //this is for non existing videos, or videos that are private to someone else
-                        return "Video not found";
+                        return T("Video not found").Text;
                     }
                 } else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
                 return ex.Message;
             }
-            return "Unknown error";
+            return T("Unknown error").Text;
         }
 
         /// <summary>
@@ -2261,10 +2267,6 @@ namespace Laser.Orchard.Vimeo.Services {
                     oembedPart["video_id"] = vId;
                     oembedPart["version"] = "1.0";
                     //call the API to get info on this video
-                    var settings = _orchardServices
-                        .WorkContext
-                        .CurrentSite
-                        .As<VimeoSettingsPart>();
                     VimeoAccessTokenRecord vatr = SelectAccessToken();
                     HttpWebRequest wr = VimeoCreateRequest(
                         aToken: vatr.AccessToken,
@@ -2425,10 +2427,6 @@ namespace Laser.Orchard.Vimeo.Services {
             UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(u => u.MediaPartId == mediaPartId);
             if (ucr != null) {
                 //destroy the video on Vimeo
-                var settings = _orchardServices
-                .WorkContext
-                .CurrentSite
-                .As<VimeoSettingsPart>();
                 VimeoAccessTokenRecord vatr = SelectAccessToken();
                 HttpWebRequest wr = VimeoCreateRequest(
                     aToken: vatr.AccessToken,
@@ -2507,10 +2505,6 @@ namespace Laser.Orchard.Vimeo.Services {
         /// </summary>
         /// <returns>The number of uploads in progress.</returns>
         public int VerifyAllUploads() {
-            var settings = _orchardServices
-                .WorkContext
-                .CurrentSite
-                .As<VimeoSettingsPart>();
             VimeoAccessTokenRecord vatr = SelectAccessToken();
             DateTime dNow = DateTime.UtcNow;
             if (vatr.RateLimitRemaining == 0 && dNow <= vatr.RateLimitReset.Value) {
@@ -2633,7 +2627,7 @@ namespace Laser.Orchard.Vimeo.Services {
                                 _repositoryUploadsComplete.Delete(ucr);
                             } else {
                                 //reschedule these less important finishing touches
-                                int timeToRateReset = (settings.RateLimitReset.Value - dNow).Seconds;
+                                int timeToRateReset = (vatr.RateLimitReset.Value - dNow).Seconds;
                                 //consider the frequency at which we have been making API calls since the last reset.
                                 //If continuing at that pace would not have us hit the limit, it's fine. We keep a 2/3
                                 //margin just in case.

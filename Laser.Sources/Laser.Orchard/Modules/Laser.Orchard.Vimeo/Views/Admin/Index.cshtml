@@ -27,9 +27,6 @@ controller if the files have not been processed.*@
         <div id="addTokenButton">
             @Html.LinkToAddNestedForm(m => m.AccessTokens, "<i class=\"fa fa-plus\" style=\"color: green\"></i> " + T(" Add new token").Text, "#allAccessTokens", ".j_VimeoATVM")
         </div>
-
-        @Html.TextBoxFor(m => m.AccessToken, new { placeholder = T("Authorized Access Token"), @class = "text medium" })
-        <span class="hint">@T("Insert your authorized Access Token. You can find it in your Vimeo App settings.")</span>
     </fieldset>
     <fieldset id="VimeoCategories">
         <legend>@T("Categorization for the uploads")</legend>

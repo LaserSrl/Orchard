@@ -37,7 +37,7 @@ namespace Laser.Orchard.Vimeo.ViewModels {
         }
 
         public VimeoSettingsPartViewModel(VimeoSettingsPart part) : this() {
-            AccessToken = part.AccessToken ?? "";
+            //AccessToken = part.AccessToken ?? "";
             ChannelName = part.ChannelName ?? "";
             GroupName = part.GroupName ?? "";
             AlbumName = part.AlbumName ?? "";

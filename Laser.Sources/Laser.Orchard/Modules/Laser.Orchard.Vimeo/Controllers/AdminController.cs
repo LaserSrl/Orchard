@@ -108,25 +108,26 @@ namespace Laser.Orchard.Vimeo.Controllers {
                 string atsValid = _vimeoAdminServices.TokensAreValid(vm);
                 if (atsValid == "OK") {
                     _orchardServices.Notifier.Information(T("Access Tokens are valid"));
-                    //now test group, channel and album
-                    if (!string.IsNullOrWhiteSpace(vm.GroupName)) {
-                        if (_vimeoAdminServices.GroupIsValid(vm))
-                            _orchardServices.Notifier.Information(T("Group Name Valid"));
-                        else
-                            _orchardServices.Notifier.Error(T("Group Name not valid"));
-                    }
-                    if (!string.IsNullOrWhiteSpace(vm.ChannelName)) {
-                        if (_vimeoAdminServices.ChannelIsValid(vm))
-                            _orchardServices.Notifier.Information(T("Channel Name Valid"));
-                        else
-                            _orchardServices.Notifier.Error(T("Channel Name not valid"));
-                    }
-                    if (!string.IsNullOrWhiteSpace(vm.AlbumName)) {
-                        if (_vimeoAdminServices.AlbumIsValid(vm))
-                            _orchardServices.Notifier.Information(T("Album Name Valid"));
-                        else
-                            _orchardServices.Notifier.Error(T("Album Name not valid"));
-                    }
+                    //now test group, channel and album. We do not test this here, because access tokens are not committed to the db
+                    //so the ones in the vm may not match.
+                    //if (!string.IsNullOrWhiteSpace(vm.GroupName)) {
+                    //    if (_vimeoAdminServices.GroupIsValid(vm))
+                    //        _orchardServices.Notifier.Information(T("Group Name Valid"));
+                    //    else
+                    //        _orchardServices.Notifier.Error(T("Group Name not valid"));
+                    //}
+                    //if (!string.IsNullOrWhiteSpace(vm.ChannelName)) {
+                    //    if (_vimeoAdminServices.ChannelIsValid(vm))
+                    //        _orchardServices.Notifier.Information(T("Channel Name Valid"));
+                    //    else
+                    //        _orchardServices.Notifier.Error(T("Channel Name not valid"));
+                    //}
+                    //if (!string.IsNullOrWhiteSpace(vm.AlbumName)) {
+                    //    if (_vimeoAdminServices.AlbumIsValid(vm))
+                    //        _orchardServices.Notifier.Information(T("Album Name Valid"));
+                    //    else
+                    //        _orchardServices.Notifier.Error(T("Album Name not valid"));
+                    //}
                 } else {
                     _orchardServices.Notifier.Error(T("Access Tokens are not valid: {0}{1}", Environment.NewLine, atsValid));
                 }
@@ -146,7 +147,6 @@ namespace Laser.Orchard.Vimeo.Controllers {
         public ActionResult IndexSaveSettings(VimeoSettingsPartViewModel vm) {
             try {
                 _vimeoAdminServices.UpdateSettings(vm);
-                _vimeoAdminServices.CommitTokensUpdate(vm);
             } catch (VimeoRateException vre) {
                 _orchardServices.Notifier.Error(T("Too many requests to Vimeo. Rate limits will reset on {0} UTC", vre.resetTime.Value.ToString()));
             } catch (Exception ex) {

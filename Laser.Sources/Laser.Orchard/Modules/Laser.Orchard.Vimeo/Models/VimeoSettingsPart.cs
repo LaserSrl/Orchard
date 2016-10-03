@@ -7,10 +7,10 @@ using Newtonsoft.Json;
 
 namespace Laser.Orchard.Vimeo.Models {
     public class VimeoSettingsPart : ContentPart<VimeoSettingsPartRecord> {
-        public string AccessToken {
-            get { return Record.AccessToken; }
-            set { Record.AccessToken = value; }
-        }
+        //public string AccessToken {
+        //    get { return Record.AccessToken; }
+        //    set { Record.AccessToken = value; }
+        //}
         public string ChannelName {
             get { return Record.ChannelName; }
             set { Record.ChannelName = value; }
@@ -101,21 +101,21 @@ namespace Laser.Orchard.Vimeo.Models {
             get { return Record.UserId; }
             set { Record.UserId = value; }
         }
-        //Total number of API requests we are allowed to make in an hour
-        public int RateLimitLimit {
-            get { return Record.RateLimitLimit; }
-            set { Record.RateLimitLimit = value; }
-        }
-        //Number of API requests we can still make before the next reset
-        public int RateLimitRemaining {
-            get { return Record.RateLimitRemaining; }
-            set { Record.RateLimitRemaining = value; }
-        }
-        //Timestamp of when the rate limit will reset next
-        public DateTime? RateLimitReset {
-            get { return Record.RateLimitReset; }
-            set { Record.RateLimitReset = value; }
-        }
+        ////Total number of API requests we are allowed to make in an hour
+        //public int RateLimitLimit {
+        //    get { return Record.RateLimitLimit; }
+        //    set { Record.RateLimitLimit = value; }
+        //}
+        ////Number of API requests we can still make before the next reset
+        //public int RateLimitRemaining {
+        //    get { return Record.RateLimitRemaining; }
+        //    set { Record.RateLimitRemaining = value; }
+        //}
+        ////Timestamp of when the rate limit will reset next
+        //public DateTime? RateLimitReset {
+        //    get { return Record.RateLimitReset; }
+        //    set { Record.RateLimitReset = value; }
+        //}
         //cache for upload quota
         public Int64 UploadQuotaSpaceFree {
             get { return Record.UploadQuotaSpaceFree; }
