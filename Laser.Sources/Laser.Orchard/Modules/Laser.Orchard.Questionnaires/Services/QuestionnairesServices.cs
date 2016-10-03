@@ -518,7 +518,8 @@ namespace Laser.Orchard.Questionnaires.Services {
         }
 
 
-        public void Save(QuestionnaireWithResultsViewModel editModel, IUser currentUser, string SessionID) {
+        public bool Save(QuestionnaireWithResultsViewModel editModel, IUser currentUser, string SessionID) {
+            bool result = false;
             var questionnaireModuleSettings = _orchardServices.WorkContext.CurrentSite.As<QuestionnaireModuleSettingsPart>();
             bool exit = false;
             if (currentUser != null && questionnaireModuleSettings.Disposable) {
@@ -574,7 +575,9 @@ namespace Laser.Orchard.Questionnaires.Services {
 
                 var content = _orchardServices.ContentManager.Get(editModel.Id);
                 _workflowManager.TriggerEvent("QuestionnaireSubmitted", content, () => new Dictionary<string, object> { { "Content", content } });
+                result = true;
             }
+            return result;
         }
 
         public void UpdateForContentItem(ContentItem item, QuestionnaireEditModel partEditModel) {

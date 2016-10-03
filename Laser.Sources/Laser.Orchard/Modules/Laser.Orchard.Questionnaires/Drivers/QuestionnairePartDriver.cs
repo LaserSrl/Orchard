@@ -288,25 +288,9 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         #endregion
 
         public System.Text.StringBuilder InflatingCacheKey(System.Text.StringBuilder key) {
-            var ci = _currentContentAccessor.CurrentContentItem;
-            ContentPickerField cpf = null;
-
-            if (ci.Has<QuestionnairePart>()) {
-                key.AppendFormat("sid={0};", _controllerContextAccessor.Context.HttpContext.Session.SessionID);
-            }
-            else {
-                foreach (var part in ci.Parts) {
-                    var fields = part.Fields.Where(x => x.FieldDefinition.Name == "ContentPickerField");
-                    foreach (var ff in fields) {
-                        cpf = (ContentPickerField)ff;
-                        foreach (var cii in cpf.ContentItems) {
-                            if (cii.Has<QuestionnairePart>()) {
-                                key.AppendFormat("sid={0};", HttpContext.Current.Session.SessionID);
-                                break;
-                            }
-                        }
-                    }
-                }
+            var part = _currentContentAccessor.CurrentContentItem.As<QuestionnairePart>();
+            if (part != null) {
+                key.AppendFormat("sid={0};rnd={1};", HttpContext.Current.Session.SessionID, new Random().Next(1000000));
             }
             return key;
         }

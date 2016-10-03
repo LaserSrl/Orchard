@@ -1,7 +1,9 @@
 ﻿@using Laser.Orchard.Questionnaires.ViewModels
+@using Laser.Orchard.Questionnaires.Models
 @using Orchard.Utility.Extensions;
 @using Orchard.MediaLibrary.Models;
 @using Orchard.ContentManagement;
+@using Orchard.Data
 @{
     QuestionnaireWithResultsViewModel Questionnaire = Model.Questionnaire;
     Style.Require("Questionnaire").AtHead();
@@ -9,6 +11,9 @@
     var sections = Questionnaire.QuestionsWithResults.Select(s => s.Section).Distinct();
     bool HasAcceptedTerms = Questionnaire.HasAcceptedTerms;
     var contentManager = WorkContext.Resolve<IContentManager>();
+    var ciQuestionnaire = contentManager.Get(Questionnaire.Id);
+    IRepository<UserAnswersRecord> _repositoryUserAnswer = null;
+    WorkContext.TryResolve<IRepository<UserAnswersRecord>>(out _repositoryUserAnswer);
 }
 @using (Script.Head()) { 
     <script type="text/javascript">
@@ -90,7 +95,7 @@
 }
 else {
     if (TempData["QuestError"] != null) {
-    <div class="quest-message quest-error">@Html.Raw(T(TempData["QuestError"].ToString()).Text.Replace("\r\n", "<br/>"))</div>
+        <div class="quest-message quest-error">@Html.Raw(T(TempData["QuestError"].ToString()).Text.Replace("\r\n", "<br/>"))</div>
     }
     if (Questionnaire.MustAcceptTerms && !Questionnaire.HasAcceptedTerms) {
         using (Html.BeginFormAntiForgeryPost(Url.Action("AcceptTerms", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", returnUrl = Context.Request.ToUrlString() }), FormMethod.Post)) {
@@ -111,7 +116,7 @@ else {
     else {
 
     <div class="questionnaire-container">
-        @using (Html.BeginFormAntiForgeryPost(Url.Action("Save", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", returnUrl = Context.Request.ToUrlString() }), FormMethod.Post, new { @class = "quest-form", @style = "margin-top:10px" })) {
+        @using (Html.BeginFormAntiForgeryPost(Url.Action("Save", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", returnUrl = Url.ItemDisplayUrl(ciQuestionnaire) }), FormMethod.Post, new { @class = "quest-form", @style = "margin-top:10px" })) {
             @Html.HiddenFor(m => Questionnaire.Id)
             @Html.HiddenFor(m => Questionnaire.MustAcceptTerms)
             @Html.HiddenFor(m => Questionnaire.HasAcceptedTerms)
