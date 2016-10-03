@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -14,29 +15,33 @@ using System.Web;
 //objects to the GestPay representations.
 
 namespace Laser.Orchard.PaymentGestPay.Models {
+    //this class' functionality has been replaced by the validation attributes
+    //public abstract class TransactionBase {
+    //    /// <summary>
+    //    /// Verifies that the parameter string contains no invalid characters. If invalid parameters are found, an exception is raised.
+    //    /// </summary>
+    //    /// <param name="parameter"></param>
+    //    public void ValidateGestPayParameter(string parameter, string paramName = "") {
+    //        if (Regex.IsMatch(parameter, "[& §()*<>,;:\\[ \\]/%?=]")) {
+    //            throw new FormatException(string.Format("Invalid character in parameter{0}.", string.IsNullOrWhiteSpace(paramName) ? string.Empty : paramName));
+    //        }
+    //    }
+    //    /// <summary>
+    //    /// Verifies that the parameter string contains no invalid characters. If invalid parameters are found, an exception is raised.
+    //    /// </summary>
+    //    /// <param name="parameter"></param>
+    //    public void ValidateRedParameter(string parameter, string paramName = "") {
+    //        ValidateGestPayParameter(parameter, paramName);
+    //        if (Regex.IsMatch(parameter, "[$!^~#]")) {
+    //            throw new FormatException(string.Format("Invalid character in parameter{0}.", string.IsNullOrWhiteSpace(paramName) ? string.Empty : paramName));
+    //        }
+    //    }
+    //}
 
-    public abstract class TransactionBase {
-        /// <summary>
-        /// Verifies that the parameter string contains no invalid characters. If invalid parameters are found, an exception is raised.
-        /// </summary>
-        /// <param name="parameter"></param>
-        public void ValidateGestPayParameter(string parameter, string paramName = "") {
-            if (Regex.IsMatch(parameter, "[& §()*<>,;:\\[ \\]/%?=]")) {
-                throw new FormatException(string.Format("Invalid character in parameter{0}.", string.IsNullOrWhiteSpace(paramName) ? string.Empty : paramName));
-            }
-        }
-        /// <summary>
-        /// Verifies that the parameter string contains no invalid characters. If invalid parameters are found, an exception is raised.
-        /// </summary>
-        /// <param name="parameter"></param>
-        public void ValidateRedParameter(string parameter, string paramName = "") {
-            ValidateGestPayParameter(parameter, paramName);
-            if (Regex.IsMatch(parameter, "[$!^~#]")) {
-                throw new FormatException(string.Format("Invalid character in parameter{0}.", string.IsNullOrWhiteSpace(paramName) ? string.Empty : paramName));
-            }
-        }
-    }
-
+    /// <summary>
+    /// this class keeps all the information we send to gestpay in a single object. A lot of the information in it is not currently used, but it's included
+    /// in case we decide to implement the rest of gestpay's functionalities
+    /// </summary>
     public class GestPayTransaction {
         #region Mandatory properties
         [Required]
@@ -129,7 +134,7 @@ namespace Laser.Orchard.PaymentGestPay.Models {
                 curCode = CodeTables.CurrencyCodes.Where(cc => cc.isoCode.ToUpperInvariant() == "EUR").SingleOrDefault();
             }
             uicCode = curCode.codeUIC.ToString();
-            amount = pr.Amount.ToString("0.##");
+            amount = pr.Amount.ToString("0.##", CultureInfo.InvariantCulture);
             shopTransactionID = pr.Id.ToString();
             //customInfo = pr.Reason;
         }

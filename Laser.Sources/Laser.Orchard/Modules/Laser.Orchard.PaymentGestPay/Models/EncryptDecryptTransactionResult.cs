@@ -6,6 +6,9 @@ using System.Web;
 using System.Xml;
 
 namespace Laser.Orchard.PaymentGestPay.Models {
+    /// <summary>
+    /// This class is used to store the information from the xml returned by the calls to the encryption servers
+    /// </summary>
     public class EncryptDecryptTransactionResult {
         [StringLength(7)]
         public string TransactionType { get; set; } //"DECRYPT" or "ENCRYPT"

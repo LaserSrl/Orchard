@@ -42,7 +42,9 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
             return sr.ToString();
         }
     }
-
+    /// <summary>
+    /// Message sent to start a payment
+    /// </summary>
     public class StartPaymentMessage : CartaSiMessageBase {
         [StringLength(7)]
         [ValidAmount]
@@ -233,7 +235,9 @@ namespace Laser.Orchard.PaymentCartaSi.Models {
             return string.Join(@"&", parameters);
         }
     }
-
+    /// <summary>
+    /// message received from cartasì
+    /// </summary>
     public class PaymentOutcomeMessage : CartaSiMessageBase {
         [Required]
         [StringLength(7)]

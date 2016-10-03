@@ -51,7 +51,10 @@ namespace Laser.Orchard.PaymentGestPay.Controllers {
 
             _gestPayAdminServices = gestPayAdminServices;
         }
-
+        /// <summary>
+        /// Implements th abstract method by returning the settings for GestPay
+        /// </summary>
+        /// <returns>The settings part to be used in displaying and updating configuration information.</returns>
         protected override dynamic GetSettingsPart() {
             return _orchardServices
                 .WorkContext

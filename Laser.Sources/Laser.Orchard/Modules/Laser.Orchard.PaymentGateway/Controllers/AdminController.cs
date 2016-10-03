@@ -13,6 +13,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         public AdminController(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
         }
+        //this loads a generic tab in the payment gateway settings section of hte admin menu
         public ActionResult Index() {
             if (_orchardServices.Authorizer.Authorize(Permissions.ConfigurePayment) == false) {
                 return new HttpUnauthorizedResult();

@@ -11,6 +11,11 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.PaymentGateway.Controllers {
+    /// <summary>
+    /// This class gets implemented in each payment gateway module. They will only need to implement GetSettingsPart. Everything else is handled here
+    /// and used to display a page where the back-office user may configure the payment gateway. The corresponding view should be implemented in the
+    /// specific module, of course.
+    /// </summary>
     [Admin]
     public abstract class PosAdminBaseController : Controller {
         protected readonly IOrchardServices _orchardServices;
