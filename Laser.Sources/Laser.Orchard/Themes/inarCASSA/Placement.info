@@ -19,9 +19,10 @@
     <Place Parts_Questionnaire_FrontEnd_Edit="-"/>
   </Match>
 -->
+  <Match ContentType="Questionnaire">
+    <Place Parts_Common_Body="-" />
+  </Match>
   <Place Parts_Title="/TitleZone:1" />
   <Place Parts_Common_Metadata="-" />
-  <Place Fields_Common_Text__TestoRispostaGiaInviata="-"/>
-  
 
 </Placement>

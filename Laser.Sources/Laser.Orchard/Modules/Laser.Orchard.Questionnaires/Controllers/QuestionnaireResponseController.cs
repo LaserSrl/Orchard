@@ -118,6 +118,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     return (_utilsServices.GetResponse(ResponseType.Validation, "Validation:" + messaggio));
                 }
                 else {
+                    qVM.Context = "external";
                     _questionnairesServices.Save(qVM, currentUser, HttpContext.Current.Session.SessionID);
                     return (_utilsServices.GetResponse(ResponseType.Success));
                 }

@@ -553,6 +553,10 @@ msgid "Contact saved"
 msgstr "Contatto salvato"
 
 msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
+msgid "Export started. Please check 'Show Exported Files' in a few minutes to get the result."
+msgstr "Esportazione in esecuzione. Per verificarne l'esito attendi qualche minuto e poi clicca su 'Mostra file esportati'"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
 msgid "Export started. Please check 'Show Exported Files' to get the result."
 msgstr "Esportazione in esecuzione. Per verificarne l'esito clicca su 'Mostra file esportati'"
 
@@ -571,6 +575,10 @@ msgstr "File rimosso."
 msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
 msgid "Import Contacts: Please select a file to import."
 msgstr "Importazione contatti: Selezionare un file da importare."
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
+msgid "Import started. Please check 'Show Import Logs' in a few minutes to get the result."
+msgstr "Importazione in esecuzione. Per verificarne l'esito attendi qualche minuto e poi clicca su 'Mostra log importazione'"
 
 msgctxt "Laser.Orchard.CommunicationGateway.Controllers.ContactsAdminController"
 msgid "Import started. Please check 'Show Import Logs' to get the result."
