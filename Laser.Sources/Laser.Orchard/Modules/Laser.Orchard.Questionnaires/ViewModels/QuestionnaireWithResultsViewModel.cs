@@ -9,6 +9,7 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
     public class QuestionnaireWithResultsViewModel {
         public QuestionnaireWithResultsViewModel() {
             QuestionsWithResults = new List<QuestionWithResultsViewModel>();
+            Context = "";
         }
         public int Id { get; set; }
         public bool MustAcceptTerms { get; set; }
@@ -17,5 +18,6 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
         public bool HasAcceptedTerms { get; set; }
         public string CaptchaHtmlWidget { get; set; }
         public IList<QuestionWithResultsViewModel> QuestionsWithResults { get; set; }
+        public string Context { get; set; }
     }
 }

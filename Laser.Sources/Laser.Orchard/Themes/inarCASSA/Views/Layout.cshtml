@@ -62,7 +62,9 @@
         string cType = campagna.ContentType;
         switch(cType) {
             case "Questionnaire":
-                campagnaNonAttiva = true;
+                if((TempData["QuestSuccess"] == null) && (TempData["QuestError"] == null)) {
+                    campagnaNonAttiva = true;
+                }
                 break;
             case "Campagna":
                 if ((DateTime.Today < campagna.ActivityPart.DateTimeStart)

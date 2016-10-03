@@ -518,12 +518,13 @@ namespace Laser.Orchard.Questionnaires.Services {
         }
 
 
-        public void Save(QuestionnaireWithResultsViewModel editModel, IUser currentUser, string SessionID) {
+        public bool Save(QuestionnaireWithResultsViewModel editModel, IUser currentUser, string SessionID) {
+            bool result = false;
             var questionnaireModuleSettings = _orchardServices.WorkContext.CurrentSite.As<QuestionnaireModuleSettingsPart>();
             bool exit = false;
             if (currentUser != null && questionnaireModuleSettings.Disposable) {
                 if (_repositoryUserAnswer.Fetch(x => x.User_Id == currentUser.Id && x.QuestionnairePartRecord_Id == editModel.Id).Count() > 0) {
-                    _notifier.Add(NotifyType.Information, T("Operation Fail: Questionnaire already filled"));
+                    //_notifier.Add(NotifyType.Information, T("Operation Fail: Questionnaire already filled"));
                     // throw new Exception();
                     exit = true;
                 }
@@ -539,6 +540,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.User_Id = (currentUser == null)? 0 : currentUser.Id;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;
+                            userAnswer.Context = editModel.Context;
                             CreateUserAnswers(userAnswer);
                         }
                     } else if (q.QuestionType == QuestionType.SingleChoice) {
@@ -551,6 +553,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.QuestionText = q.Question;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;
+                            userAnswer.Context = editModel.Context;
                             CreateUserAnswers(userAnswer);
                         }
                     } else if (q.QuestionType == QuestionType.MultiChoice) {
@@ -564,6 +567,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.QuestionText = q.Question;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;
+                            userAnswer.Context = editModel.Context;
                             CreateUserAnswers(userAnswer);
                         }
                     }
@@ -571,7 +575,9 @@ namespace Laser.Orchard.Questionnaires.Services {
 
                 var content = _orchardServices.ContentManager.Get(editModel.Id);
                 _workflowManager.TriggerEvent("QuestionnaireSubmitted", content, () => new Dictionary<string, object> { { "Content", content } });
+                result = true;
             }
+            return result;
         }
 
         public void UpdateForContentItem(ContentItem item, QuestionnaireEditModel partEditModel) {
@@ -745,7 +751,8 @@ namespace Laser.Orchard.Questionnaires.Services {
                 Answer = l.AnswerText, 
                 Question = l.QuestionText, 
                 AnswerDate = l.AnswerDate, 
-                UserName = r.UserName }).ToList();
+                UserName = r.UserName,
+                Contesto = l.Context}).ToList();
             return result;
         }
         public void SaveQuestionnaireUsersAnswers(int questionnaireId, DateTime? from = null, DateTime? to = null) {
@@ -766,16 +773,17 @@ namespace Laser.Orchard.Questionnaires.Services {
             using (FileStream fStream = new FileStream(filePath, FileMode.Create)) {
                 using (BinaryWriter bWriter = new BinaryWriter(fStream)) {
                     byte[] buffer = null;
-                    string row = string.Format("\"Utente\"{0}\"Data\"{0}\"Domanda\"{0}\"Risposta\"\r\n", separator);
+                    string row = string.Format("\"Utente\"{0}\"Data\"{0}\"Domanda\"{0}\"Risposta\"{0}\"Contesto\"\r\n", separator);
                     buffer = Encoding.Unicode.GetBytes(row);
                     bWriter.Write(buffer);
                     foreach (var line in elenco) {
-                        row = string.Format("\"{1}\"{0}\"{2:yyyy-MM-dd}\"{0}\"{3}\"{0}\"{4}\"\r\n",
+                        row = string.Format("\"{1}\"{0}\"{2:yyyy-MM-dd}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"\r\n",
                             separator,
                             EscapeString(line.UserName),
                             line.AnswerDate,
                             EscapeString(line.Question),
-                            EscapeString(line.Answer));
+                            EscapeString(line.Answer),
+                            EscapeString(line.Contesto));
                         buffer = Encoding.Unicode.GetBytes(row);
                         bWriter.Write(buffer);
                     }
