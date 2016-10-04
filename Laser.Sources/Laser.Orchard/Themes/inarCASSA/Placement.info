@@ -20,9 +20,10 @@
   </Match>
 -->
   <Match ContentType="Questionnaire">
-    <Place Parts_Common_Body="-" />
+    <Place Parts_Title="-" />
   </Match>
   <Place Parts_Title="/TitleZone:1" />
   <Place Parts_Common_Metadata="-" />
+  <Place Fields_Common_Text__TestoRispostaGiaInviata="-"/>
 
 </Placement>

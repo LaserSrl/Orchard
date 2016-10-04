@@ -1,4 +1,7 @@
-﻿@functions {
+﻿@using Orchard.Utility.Extensions
+@using Orchard.ContentManagement
+@using Laser.Orchard.StartupConfig.Services
+@functions {
     // To support the layout classifaction below. Implementing as a razor function because we can, could otherwise be a Func<string[], string, string> in the code block following.
     string CalcuClassify(string[] zoneNames, string classNamePrefix)
     {
@@ -57,24 +60,43 @@
 
     // verifica che la campagna sia attiva
     bool campagnaNonAttiva = false;
+    bool skipCache = false;
     try {
-        var campagna = Model.TitleZone.Items[0].ContentItem;
-        string cType = campagna.ContentType;
-        switch(cType) {
-            case "Questionnaire":
-                if((TempData["QuestSuccess"] == null) && (TempData["QuestError"] == null)) {
-                    campagnaNonAttiva = true;
+        ICurrentContentAccessor _contentAccessor = null;
+        if(WorkContext.TryResolve<ICurrentContentAccessor>(out _contentAccessor)) {
+            dynamic ci = _contentAccessor.CurrentContentItem;
+            if(ci != null) {
+                string cType = ci.ContentType;
+                switch (cType) {
+                    case "Questionnaire":
+                        campagnaNonAttiva = true;
+                        break;
+                    case "Campagna":
+                        skipCache = true;
+                        if ((DateTime.Today < ci.ActivityPart.DateTimeStart)
+                            || (DateTime.Today > ci.ActivityPart.DateTimeEnd)) {
+                            campagnaNonAttiva = true;
+                        }
+                        break;
                 }
-                break;
-            case "Campagna":
-                if ((DateTime.Today < campagna.ActivityPart.DateTimeStart)
-                    || (DateTime.Today > campagna.ActivityPart.DateTimeEnd)) {
-                    campagnaNonAttiva = true;
-                }
-                break;
+            }
         }
     } catch {
         // nasconde volutamente eventuali errori: campagnaNonAttiva rimane uguale a false
+    }
+
+    if(skipCache) {
+        // by-passa la cache
+        if (Request.QueryString.AllKeys.Contains("__r") == false) {
+            string auxUrl = Request.ToUrlString();
+            if (auxUrl.Contains('?')) {
+                auxUrl += "&__r=";
+            }
+            else {
+                auxUrl += "?__r=";
+            }
+            Response.Redirect(auxUrl, true);
+        }
     }
 }
 <div class="space-20"></div>
