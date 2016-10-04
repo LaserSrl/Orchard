@@ -90,6 +90,84 @@ namespace Laser.Orchard.Cookies.Drivers {
             return Editor(editModel.CookieLaw, shapeHelper);
         }
 
+
+        //protected override void Importing(CookieLawPart part, ImportContentContext context) {
+           
+        //    var importedcookieDiscreetLinkText = context.Attribute(part.PartDefinition.Name, "cookieDiscreetLinkText");
+        //    if (importedcookieDiscreetLinkText != null) {
+        //        part.cookieDiscreetLinkText = importedcookieDiscreetLinkText;
+        //    }
+
+        //    var importedcookiePolicyPageMessage = context.Attribute(part.PartDefinition.Name, "cookiePolicyPageMessage");
+        //    if (importedcookiePolicyPageMessage != null) {
+        //        part.cookiePolicyPageMessage = importedcookiePolicyPageMessage;
+        //    }
+
+        //    var importedcookieErrorMessage = context.Attribute(part.PartDefinition.Name, "cookieErrorMessage");
+        //    if (importedcookieErrorMessage != null) {
+        //        part.cookieErrorMessage = importedcookieErrorMessage;
+        //    }
+
+        //    var importedcookieAcceptButtonText = context.Attribute(part.PartDefinition.Name, "cookieAcceptButtonText");
+        //    if (importedcookieAcceptButtonText != null) {
+        //        part.cookieAcceptButtonText = importedcookieAcceptButtonText;
+        //    }
+
+        //    var importedcookieDeclineButtonText = context.Attribute(part.PartDefinition.Name, "cookieDeclineButtonText");
+        //    if (importedcookieDeclineButtonText != null) {
+        //        part.cookieDeclineButtonText = importedcookieDeclineButtonText;
+        //    }
+
+        //    var importedcookieResetButtonText = context.Attribute(part.PartDefinition.Name, "cookieResetButtonText");
+        //    if (importedcookieResetButtonText != null) {
+        //        part.cookieResetButtonText = importedcookieResetButtonText;
+        //    }
+
+        //    var importedcookieWhatAreLinkText = context.Attribute(part.PartDefinition.Name, "cookieWhatAreLinkText");
+        //    if (importedcookieWhatAreLinkText != null) {
+        //        part.cookieWhatAreLinkText = importedcookieWhatAreLinkText;
+        //    }
+
+        //    var importedcookieAnalyticsMessage = context.Attribute(part.PartDefinition.Name, "cookieAnalyticsMessage");
+        //    if (importedcookieAnalyticsMessage != null) {
+        //        part.cookieAnalyticsMessage = importedcookieAnalyticsMessage;
+        //    }
+
+        //    var importedcookiePolicyLink = context.Attribute(part.PartDefinition.Name, "cookiePolicyLink");
+        //    if (importedcookiePolicyLink != null) {
+        //        part.cookiePolicyLink = importedcookiePolicyLink;
+        //    }
+
+        //    var importedcookieMessage = context.Attribute(part.PartDefinition.Name, "cookieMessage");
+        //    if (importedcookieMessage != null) {
+        //        part.cookieMessage = importedcookieMessage;
+        //    }
+
+        //    var importedcookieWhatAreTheyLink = context.Attribute(part.PartDefinition.Name, "cookieWhatAreTheyLink");
+        //    if (importedcookieWhatAreTheyLink != null) {
+        //        part.cookieWhatAreTheyLink = importedcookieWhatAreTheyLink;
+        //    }
+
+        //}
+
+
+        //protected override void Exporting(CookieLawPart part, ExportContentContext context) {
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieDiscreetLinkText", part.cookieDiscreetLinkText);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookiePolicyPageMessage", part.cookieDiscreetLinkText);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieErrorMessage", part.cookieErrorMessage);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieAcceptButtonText", part.cookieAcceptButtonText);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieDeclineButtonText", part.cookieDeclineButtonText);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieResetButtonText", part.cookieResetButtonText);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieWhatAreLinkText", part.cookieWhatAreLinkText);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieAnalyticsMessage", part.cookieAnalyticsMessage);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookiePolicyLink", part.cookiePolicyLink);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieMessage", part.cookieMessage);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieWhatAreTheyLink", part.cookieWhatAreTheyLink);
+        //}
+
+
+
+
         private TV GetAttribute<TV>(ImportContentContext context, string partName, string elementName) {
             string value = context.Attribute(partName, elementName);
             if (value != null) {

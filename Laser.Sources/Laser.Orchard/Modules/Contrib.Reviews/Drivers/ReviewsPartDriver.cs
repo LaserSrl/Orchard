@@ -99,19 +99,24 @@ namespace Contrib.Reviews.Drivers {
 
         protected override void Importing(ReviewsPart part, ImportContentContext context) {
             throw new NotImplementedException();
-           
+
             //var root = context.Data.Element(part.PartDefinition.Name);
             //part.ShowStars = bool.Parse(root.Attribute("ShowStars").Value);
             //part.UserHasReviewed = bool.Parse(root.Attribute("UserHasReviewed").Value);
-            
+
             ////Rating structure ResultRecord type            
             //part.Rating.UserRating = double.Parse(root.Attribute("Rating").Parent.Element("UserRating").Value);
-            
+
             ////Inside rating structure
             //var subroot = root.Attribute("Rating").Parent.Element("CurrentVotingResult");
+
             //part.Rating.CurrentVotingResult.Id = int.Parse(subroot.Attribute("Id").Value);
             //part.Rating.CurrentVotingResult.CreatedUtc = Convert.ToDateTime(subroot.Attribute("CreatedUtc").Value);
-           
+            //part.Rating.CurrentVotingResult.ContentType = subroot.Attribute("ContentType").Value;
+            //part.Rating.CurrentVotingResult.Dimension = subroot.Attribute("Dimension").Value;
+            //part.Rating.CurrentVotingResult.Value = Convert.ToDouble(subroot.Attribute("Value").Value);
+            //part.Rating.CurrentVotingResult.Count = Convert.ToInt32(subroot.Attribute("Count").Value);
+            //part.Rating.CurrentVotingResult.FunctionName = subroot.Attribute("FunctionName").Value;
 
         }
 

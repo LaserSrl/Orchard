@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using System.Collections;
 using Orchard.ContentManagement.Handlers;
+using System.Xml.Linq;
 
 
 namespace Laser.Orchard.UserReactions.Drivers {
@@ -91,39 +92,57 @@ namespace Laser.Orchard.UserReactions.Drivers {
         protected override void Importing(UserReactionsPart part, ImportContentContext context) {
 
             var root = context.Data.Element(part.PartDefinition.Name);
+            var reactions = context.Data.Element(part.PartDefinition.Name).Elements("Reactions");
 
-            foreach (UserReactionsSummaryRecord recReaction in part.Reactions) {
-                recReaction.Id = int.Parse(root.Element("Id").Value);
-                recReaction.Quantity = int.Parse(root.Element("Quantity").Value);
+            foreach (var reacts in reactions) {
 
-                recReaction.UserReactionsTypesRecord.Id = int.Parse(root.Attribute("UserReactionsTypesRecord").Parent.Element("Id").Value);
-                recReaction.UserReactionsTypesRecord.TypeName = root.Attribute("UserReactionsTypesRecord").Parent.Element("TypeName").Value;
-                recReaction.UserReactionsTypesRecord.TypeCssClass = root.Attribute("UserReactionsTypesRecord").Parent.Element("TypeCssClass").Value;
-                recReaction.UserReactionsTypesRecord.Priority = int.Parse(root.Attribute("UserReactionsTypesRecord").Parent.Element("Priority").Value);
-                recReaction.UserReactionsTypesRecord.CssName =root.Attribute("UserReactionsTypesRecord").Parent.Element("CssName").Value;
-                recReaction.UserReactionsTypesRecord.Activating = Convert.ToBoolean(root.Attribute("UserReactionsTypesRecord").Parent.Element("Activating").Value);
-            }
+                var singleReact = new UserReactionsSummaryRecord();
+                singleReact.Id = int.Parse(reacts.Attribute("Id").Value);
+                singleReact.Quantity = int.Parse(reacts.Attribute("Quantity").Value);         
+                        
+                var recType = reacts.Element("UserReactionsTypesRecord");
+                if (recType != null) 
+                {
+                    
+                    singleReact.UserReactionsTypesRecord = new UserReactionsTypesRecord {
+                                                            Id = Convert.ToInt32(recType.Attribute("Id").Value),
+                                                            TypeName = recType.Attribute("TypeName").Value,
+                                                            TypeCssClass = recType.Attribute("TypeCssClass").Value,
+                                                            Priority = Convert.ToInt32(recType.Attribute("Priority").Value),
+                                                            CssName = recType.Attribute("CssName").Value,
+                                                            Activating = Convert.ToBoolean(recType.Attribute("Activating").Value)
+
+                    };
+                    //}
+                 }
+                 part.Reactions.Add(singleReact);    
+           }            
         }
 
 
         protected override void Exporting(UserReactionsPart part, ExportContentContext context) {
 
             var root = context.Element(part.PartDefinition.Name);
+            root.SetAttributeValue("Id", part.Id);
 
             if (part.Reactions.Count() > 0) {
                 foreach (UserReactionsSummaryRecord receq in part.Reactions) 
                 {
-                    root.Element("Id").SetAttributeValue("Id", receq.Id);
-                    root.Element("Quantity").SetAttributeValue("Quantity", receq.Id);
+                    XElement reactions = new XElement("Reactions");
+                    reactions.SetAttributeValue("Id", receq.Id);
+                    reactions.SetAttributeValue("Quantity", receq.Quantity);
+                    root.Add(reactions);
 
-                    root.Element("UserReactionsTypesRecord").SetAttributeValue("UserReactionsTypesRecord", "UserReactionsTypesRecord");
-
-                    var UserReactionsTypesRec = context.Element(part.PartDefinition.Name).Element("UserReactionsTypesRecord");
-                    UserReactionsTypesRec.Element("TypeName").SetAttributeValue("TypeName", receq.UserReactionsTypesRecord.TypeName);
-                    UserReactionsTypesRec.Element("TypeCssClass").SetAttributeValue("TypeCssClass", receq.UserReactionsTypesRecord.TypeCssClass);
-                    UserReactionsTypesRec.Element("Priority").SetAttributeValue("Priority", receq.UserReactionsTypesRecord.Priority);
-                    UserReactionsTypesRec.Element("CssName").SetAttributeValue("CssName", receq.UserReactionsTypesRecord.CssName);
-                    UserReactionsTypesRec.Element("Activating").SetAttributeValue("Activating", receq.UserReactionsTypesRecord.Activating);
+                    XElement userReactionsTypesRecord = new XElement("UserReactionsTypesRecord");
+                    userReactionsTypesRecord.SetAttributeValue("Id", receq.UserReactionsTypesRecord.Id);
+                    userReactionsTypesRecord.SetAttributeValue("TypeName", receq.UserReactionsTypesRecord.TypeName);
+                    userReactionsTypesRecord.SetAttributeValue("TypeCssClass", receq.UserReactionsTypesRecord.TypeCssClass);
+                    userReactionsTypesRecord.SetAttributeValue("Priority", receq.UserReactionsTypesRecord.Priority);
+                    userReactionsTypesRecord.SetAttributeValue("CssName", ((receq.UserReactionsTypesRecord.CssName != null) ? receq.UserReactionsTypesRecord.CssName : ""));
+                    userReactionsTypesRecord.SetAttributeValue("Activating", receq.UserReactionsTypesRecord.Activating);
+                    
+                    reactions.Add(userReactionsTypesRecord);
+                   
                 }
 
             }

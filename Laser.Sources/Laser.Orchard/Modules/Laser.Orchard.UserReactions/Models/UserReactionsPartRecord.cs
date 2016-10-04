@@ -14,7 +14,7 @@ namespace Laser.Orchard.UserReactions.Models {
     public class UserReactionsPart : ContentPart<UserReactionsPartRecord> {
 
         //per ogni content posso inserire una lista di reactions (vedi oggetto sotto)
-        public IEnumerable<UserReactionsSummaryRecord> Reactions {
+        public IList<UserReactionsSummaryRecord> Reactions {
             get {
                 return Record.Reactions;
             }
@@ -28,8 +28,9 @@ namespace Laser.Orchard.UserReactions.Models {
     public class UserReactionsPartRecord : ContentPartRecord {
 
         public UserReactionsPartRecord() {
-            List<UserReactionsSummaryRecord> Reactions = new List<UserReactionsSummaryRecord>();
+           Reactions = new List<UserReactionsSummaryRecord>();
         }
+
        public virtual IList<UserReactionsSummaryRecord> Reactions { get; set; }
     }
 

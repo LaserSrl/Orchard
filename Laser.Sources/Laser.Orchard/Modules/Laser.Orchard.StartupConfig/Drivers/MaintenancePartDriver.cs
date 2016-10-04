@@ -71,6 +71,7 @@ namespace Laser.Orchard.StartupConfig.Drivers {
         }
 
         protected override void Importing(MaintenancePart part, ImportContentContext context) {
+           
             var importedMaintenanceNotify = context.Attribute(part.PartDefinition.Name, "MaintenanceNotify");
             if (importedMaintenanceNotify != null) {
                 part.MaintenanceNotify =importedMaintenanceNotify;
@@ -92,6 +93,7 @@ namespace Laser.Orchard.StartupConfig.Drivers {
             
             context.Element(part.PartDefinition.Name).SetAttributeValue("MailMessageSent", part.MaintenanceNotify);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Selected_Tenant", part.Selected_Tenant);          
+            
             var MaintenanceNotifyTypeRec = (NotifyType)part.MaintenanceNotifyType;
             
             context.Element(part.PartDefinition.Name).SetAttributeValue("MaintenanceNotifyType", MaintenanceNotifyTypeRec);
