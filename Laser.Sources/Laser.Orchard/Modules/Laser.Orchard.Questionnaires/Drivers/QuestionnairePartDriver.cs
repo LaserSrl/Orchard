@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using System.Xml.Linq;
-using AutoMapper;
-using Laser.Orchard.Commons.Services;
 using Laser.Orchard.Questionnaires.Models;
 using Laser.Orchard.Questionnaires.Services;
 using Laser.Orchard.Questionnaires.ViewModels;
@@ -20,10 +16,9 @@ using Orchard.Security;
 using Laser.Orchard.Questionnaires.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.OutputCache.Filters;
-using Orchard.ContentPicker.Fields;
 
 namespace Laser.Orchard.Questionnaires.Drivers {
-    public class QuestionnairePartDriver : ContentPartDriver<QuestionnairePart>, ICachingEventHandler {
+    public class QuestionnairePartDriver : ContentPartDriver<QuestionnairePart> {
         private readonly IQuestionnairesServices _questServices;
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IOrchardServices _orchardServices;
@@ -284,17 +279,17 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         }
         #endregion
 
-        /// <summary>
-        /// Se il ContentItem corrente contiene una QuestionnairePart, invalida di fatto la cache.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public System.Text.StringBuilder InflatingCacheKey(System.Text.StringBuilder key) {
-            var part = _currentContentAccessor.CurrentContentItem.As<QuestionnairePart>();
-            if (part != null) {
-                key.AppendFormat("sid={0};rnd={1};", HttpContext.Current.Session.SessionID, new Random().Next(1000000));
-            }
-            return key;
-        }
+        ///// <summary>
+        ///// Se il ContentItem corrente contiene una QuestionnairePart, invalida di fatto la cache.
+        ///// </summary>
+        ///// <param name="key"></param>
+        ///// <returns></returns>
+        //public System.Text.StringBuilder InflatingCacheKey(System.Text.StringBuilder key) {
+        //    var part = _currentContentAccessor.CurrentContentItem.As<QuestionnairePart>();
+        //    if (part != null) {
+        //        key.AppendFormat("sid={0};rnd={1};", HttpContext.Current.Session.SessionID, new Random().Next(1000000));
+        //    }
+        //    return key;
+        //}
     }
 }
