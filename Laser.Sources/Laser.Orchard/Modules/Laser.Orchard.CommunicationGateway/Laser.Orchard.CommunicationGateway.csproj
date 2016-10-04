@@ -207,6 +207,7 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
     <None Include="Views\CampaignAdmin\index.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\QueryFilter.cshtml" />
     <Content Include="Views\ContactsAdmin\index.cshtml" />
