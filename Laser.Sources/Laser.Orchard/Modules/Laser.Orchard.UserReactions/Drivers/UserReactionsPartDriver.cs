@@ -132,7 +132,6 @@ namespace Laser.Orchard.UserReactions.Drivers {
                     XElement userReactionsTypesRecord = new XElement("UserReactionsTypesRecord");
                     userReactionsTypesRecord.SetAttributeValue("Id", receq.UserReactionsTypesRecord.Id);
                     userReactionsTypesRecord.SetAttributeValue("TypeName", receq.UserReactionsTypesRecord.TypeName);
-                    userReactionsTypesRecord.SetAttributeValue("TypeCssClass", receq.UserReactionsTypesRecord.TypeCssClass);
                     userReactionsTypesRecord.SetAttributeValue("Priority", receq.UserReactionsTypesRecord.Priority);
                     userReactionsTypesRecord.SetAttributeValue("CssName", ((receq.UserReactionsTypesRecord.CssName != null) ? receq.UserReactionsTypesRecord.CssName : ""));
                     userReactionsTypesRecord.SetAttributeValue("Activating", receq.UserReactionsTypesRecord.Activating);
