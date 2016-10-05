@@ -26,9 +26,15 @@ namespace Laser.Orchard.StartupConfig.Drivers {
         }
 
         protected override void Exporting(TaxonomyExtensionPart part, ExportContentContext context) {
+            var OrderBy = (OrderType)part.OrderBy;
+            context.Element(part.PartDefinition.Name).SetAttributeValue("OrderBy", OrderBy);
         }
 
         protected override void Importing(TaxonomyExtensionPart part, ImportContentContext context) {
+            var importedOrderBy = context.Attribute(part.PartDefinition.Name, "OrderBy");
+            if (importedOrderBy != null) {
+                part.OrderBy = (OrderType)Enum.Parse(typeof(OrderType), importedOrderBy);
+            }
         }
     }
 }

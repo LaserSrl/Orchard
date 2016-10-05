@@ -28,6 +28,7 @@ using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.UI.Admin;
@@ -152,6 +153,66 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                 _repoSms.Flush();
             return Editor(part, shapeHelper);
         }
+
+
+        protected override void Importing(SmsContactPart part, ImportContentContext context) {
+            //throw new NotImplementedException();
+
+            var root = context.Data.Element(part.PartDefinition.Name);
+
+            var importedSmsRecord = context.Attribute("SmsRecord", "SmsRecord");
+
+            if (importedSmsRecord != null) {
+
+                foreach (CommunicationSmsRecord rec in part.SmsRecord) {
+                    rec.Id = int.Parse(root.Attribute("SmsRecord").Parent.Element("Id").Value);
+                    rec.Language = root.Attribute("SmsRecord").Parent.Element("Language").Value;
+                    rec.Validated = bool.Parse(root.Attribute("SmsRecord").Parent.Element("Validated").Value);
+                    rec.DataInserimento = DateTime.Parse(root.Attribute("SmsRecord").Parent.Element("DataInserimento").Value);
+                    rec.DataModifica = DateTime.Parse(root.Attribute("SmsRecord").Parent.Element("DataModifica").Value);
+                    rec.Sms = root.Attribute("SmsRecord").Parent.Element("Sms").Value;
+                    rec.Prefix = root.Attribute("SmsRecord").Parent.Element("Prefix").Value;
+                    rec.Produzione = bool.Parse(root.Attribute("SmsRecord").Parent.Element("Produzione").Value);
+                    rec.AccettatoUsoCommerciale = bool.Parse(root.Attribute("SmsRecord").Parent.Element("AccettatoUsoCommerciale").Value);
+                    rec.AutorizzatoTerzeParti = bool.Parse(root.Attribute("SmsRecord").Parent.Element("AutorizzatoTerzeParti").Value);
+
+                }
+
+            }
+
+        }
+
+        protected override void Exporting(SmsContactPart part, ExportContentContext context) {
+            //throw new NotImplementedException();
+            
+            if (part.SmsRecord != null) {
+
+                context.Element(part.PartDefinition.Name).SetAttributeValue("SmsRecord", part.SmsRecord);
+                var smsRecord = context.Element(part.PartDefinition.Name).Element("SmsRecord");
+
+                foreach (CommunicationSmsRecord rec in part.SmsRecord) {
+
+                    smsRecord.Element("Id").SetAttributeValue("Id", rec.Id);
+                    smsRecord.Element("Language").SetAttributeValue("Language", rec.Language);
+                    smsRecord.Element("Validated").SetAttributeValue("Validated", rec.Validated);
+                    smsRecord.Element("DataInserimento").SetAttributeValue("DataInserimento", rec.DataInserimento);
+                    smsRecord.Element("DataModifica").SetAttributeValue("DataModifica", rec.DataModifica);
+                    smsRecord.Element("Sms").SetAttributeValue("Sms", rec.Sms);
+                    smsRecord.Element("Prefix").SetAttributeValue("Sms", rec.Prefix);
+                    smsRecord.Element("Produzione").SetAttributeValue("Produzione", rec.Produzione);
+                    smsRecord.Element("AccettatoUsoCommerciale").SetAttributeValue("AccettatoUsoCommerciale", rec.AccettatoUsoCommerciale);
+                    smsRecord.Element("AutorizzatoTerzeParti").SetAttributeValue("AutorizzatoTerzeParti", rec.AutorizzatoTerzeParti);
+
+                }
+            }
+
+
+        }
+
+
+
+
+
     }
 
 }

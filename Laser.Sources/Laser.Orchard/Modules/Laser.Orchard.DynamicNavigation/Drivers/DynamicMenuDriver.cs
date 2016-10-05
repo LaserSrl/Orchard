@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using Orchard.Utility.Extensions;
 using System;
 using System.Linq;
+using Orchard.ContentManagement.Handlers;
 
 
 namespace Laser.Orchard.DynamicNavigation.Drivers {
@@ -152,6 +153,33 @@ namespace Laser.Orchard.DynamicNavigation.Drivers {
             }
             return Editor(part, shapeHelper);
         }
+
+        protected override void Importing(DynamicMenuPart part, ImportContentContext context) {
+            
+            var importedMenuId = context.Attribute(part.PartDefinition.Name, "MenuId");
+            if (importedMenuId != null) {
+                part.MenuId = int.Parse(importedMenuId);
+            }
+
+            var importedLevelsToShow = context.Attribute(part.PartDefinition.Name, "LevelsToShow");
+            if (importedLevelsToShow != null) {
+                part.LevelsToShow = int.Parse(importedLevelsToShow);
+            }
+
+            var importedShowFirstLevelBrothers = context.Attribute(part.PartDefinition.Name, "ShowFirstLevelBrothers");
+            if (importedShowFirstLevelBrothers != null) {
+                part.ShowFirstLevelBrothers = bool.Parse(importedShowFirstLevelBrothers);
+            }
+
+        }
+
+        protected override void Exporting(DynamicMenuPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("MenuId", part.MenuId);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("LevelsToShow", part.LevelsToShow);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ShowFirstLevelBrothers", part.ShowFirstLevelBrothers);
+        }
+
+
 
 
     }

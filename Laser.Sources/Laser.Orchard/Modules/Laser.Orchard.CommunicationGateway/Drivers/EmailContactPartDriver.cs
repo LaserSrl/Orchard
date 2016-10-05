@@ -4,6 +4,7 @@ using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.UI.Admin;
@@ -129,6 +130,69 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         //    _transaction.RequireNew();
             return Editor(part, shapeHelper);
         }
+
+
+
+        protected override void Importing(EmailContactPart part, ImportContentContext context) {
+            //throw new NotImplementedException();
+
+            var root = context.Data.Element(part.PartDefinition.Name);
+            var emailRecord = context.Attribute("EmailRecord", "EmailRecord");
+
+            if (emailRecord != null) {
+                foreach (CommunicationEmailRecord rec in part.EmailRecord) {
+                    rec.Id = int.Parse(root.Attribute("EmailRecord").Parent.Element("Id").Value);
+                    rec.Language = root.Attribute("EmailRecord").Parent.Element("Language").Value;
+                    rec.EmailContactPartRecord_Id = int.Parse(root.Attribute("EmailRecord").Parent.Element("EmailContactPartRecord_Id").Value);
+                    rec.Validated = bool.Parse(root.Attribute("EmailRecord").Parent.Element("Validated").Value);
+                    rec.DataInserimento = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataInserimento").Value);
+                    rec.DataModifica = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataModifica").Value);
+                    rec.Email = root.Attribute("EmailRecord").Parent.Element("Email").Value;
+                    rec.Produzione = bool.Parse(root.Attribute("EmailRecord").Parent.Element("Produzione").Value);
+                    rec.AccettatoUsoCommerciale = bool.Parse(root.Attribute("EmailRecord").Parent.Element("AccettatoUsoCommerciale").Value);
+                    rec.AutorizzatoTerzeParti = bool.Parse(root.Attribute("EmailRecord").Parent.Element("AutorizzatoTerzeParti").Value);
+                    rec.KeyUnsubscribe = root.Attribute("EmailRecord").Parent.Element("KeyUnsubscribe").Value;
+                    rec.DataUnsubscribe = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataUnsubscribe").Value);
+                }
+
+            }
+
+        }
+
+        protected override void Exporting(EmailContactPart part, ExportContentContext context) {
+            //throw new NotImplementedException();
+            var root = context.Element(part.PartDefinition.Name);
+
+            if (part.EmailRecord != null) {
+
+                context.Element(part.PartDefinition.Name).SetAttributeValue("EmailRecord", part.EmailRecord);
+                var email = context.Element(part.PartDefinition.Name).Element("EmailRecord");
+
+                foreach (CommunicationEmailRecord rec in part.EmailRecord) {
+
+                    email.Element("Id").SetAttributeValue("Id", rec.Id);
+                    email.Element("Language").SetAttributeValue("Language", rec.Language);
+                    email.Element("EmailContactPartRecord_Id").SetAttributeValue("EmailContactPartRecord_Id", rec.EmailContactPartRecord_Id);
+                    email.Element("Validated").SetAttributeValue("Validated", rec.Validated);
+                    email.Element("DataInserimento").SetAttributeValue("DataInserimento", rec.DataInserimento);
+                    email.Element("DataModifica").SetAttributeValue("DataModifica", rec.DataModifica);
+                    email.Element("Email").SetAttributeValue("Email", rec.Email);
+                    email.Element("Produzione").SetAttributeValue("Produzione", rec.Produzione);
+                    email.Element("AccettatoUsoCommerciale").SetAttributeValue("AccettatoUsoCommerciale", rec.AccettatoUsoCommerciale);
+                    email.Element("AutorizzatoTerzeParti").SetAttributeValue("AutorizzatoTerzeParti", rec.AutorizzatoTerzeParti);
+                    email.Element("KeyUnsubscribe").SetAttributeValue("KeyUnsubscribe", rec.KeyUnsubscribe);
+                    email.Element("DataUnsubscribe").SetAttributeValue("DataUnsubscribe", rec.DataUnsubscribe);
+                }
+            }
+           
+
+        }
+
+
+
+
+
+
     }
 
 }

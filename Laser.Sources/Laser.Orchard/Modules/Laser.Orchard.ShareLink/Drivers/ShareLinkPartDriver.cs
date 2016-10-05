@@ -5,6 +5,7 @@ using Laser.Orchard.ShareLink.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.MediaLibrary.Models;
@@ -138,5 +139,39 @@ namespace Laser.Orchard.ShareLink.Drivers {
             else
                 return idimg; // non ho passato un id e quindi sarà un link
         }
+
+        protected override void Importing(ShareLinkPart part, ImportContentContext context) 
+        {
+            var importedSharedLink = context.Attribute(part.PartDefinition.Name, "SharedLink");
+            if (importedSharedLink != null) {
+                part.SharedLink = importedSharedLink;
+            }
+
+            var importedSharedText = context.Attribute(part.PartDefinition.Name, "SharedText");
+            if (importedSharedText != null) {
+                part.SharedText = importedSharedText;
+            }
+
+            var importedSharedImage = context.Attribute(part.PartDefinition.Name, "SharedImage");
+            if (importedSharedImage != null) {
+                part.SharedImage = importedSharedImage;
+            }
+
+            var importedSharedIdImage = context.Attribute(part.PartDefinition.Name, "SharedIdImage");
+            if (importedSharedIdImage != null) {
+                part.SharedIdImage = importedSharedIdImage;
+            }
+
+        }
+
+        protected override void Exporting(ShareLinkPart part, ExportContentContext context) 
+        {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SharedLink", part.SharedLink);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SharedText", part.SharedText);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SharedImage", part.SharedImage);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SharedIdImage", part.SharedIdImage);
+        }
+
+
     }
 }

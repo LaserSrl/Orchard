@@ -58,11 +58,16 @@ namespace Laser.Orchard.StartupConfig.Drivers {
                                     );
 
         }
+
         protected override void Importing(FavoriteCulturePart part, ImportContentContext context) {
-            base.Importing(part, context);
+            var importedCulture_Id = context.Attribute(part.PartDefinition.Name, "Culture_Id");
+            if (importedCulture_Id != null) {
+                part.Culture_Id = int.Parse(importedCulture_Id);
+            }
         }
+
         protected override void Exporting(FavoriteCulturePart part, ExportContentContext context) {
-            base.Exporting(part, context);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Culture_Id", part.Culture_Id);
         }
     }
 }

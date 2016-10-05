@@ -77,9 +77,45 @@ namespace Laser.Orchard.MailCommunication.Drivers {
 
         //TODO: Importing/Exporting 
         protected override void Importing(MailCommunicationPart part, ImportContentContext context) {
+            var importedMailMessageSent = context.Attribute(part.PartDefinition.Name, "MailMessageSent");
+            if (importedMailMessageSent != null) {
+                part.MailMessageSent = bool.Parse(importedMailMessageSent);
+            }
+
+            var importedSendOnNextPublish = context.Attribute(part.PartDefinition.Name, "SendOnNextPublish");
+            if (importedSendOnNextPublish != null) {
+                part.SendOnNextPublish = bool.Parse(importedSendOnNextPublish);
+            }
+
+            var importedSendToTestEmail = context.Attribute(part.PartDefinition.Name, "SendToTestEmail");
+            if (importedSendToTestEmail != null) {
+                part.SendToTestEmail = bool.Parse(importedSendToTestEmail);
+            }
+
+            var importedEmailForTest = context.Attribute(part.PartDefinition.Name, "EmailForTest");
+            if (importedEmailForTest != null) {
+                part.EmailForTest =importedEmailForTest;
+            }
+
+            var importedRecipientsNumber = context.Attribute(part.PartDefinition.Name, "RecipientsNumber");
+            if (importedRecipientsNumber != null) {
+                part.RecipientsNumber = int.Parse(importedRecipientsNumber);
+            }
+
+            var importedSentMailsNumber = context.Attribute(part.PartDefinition.Name, "SentMailsNumber");
+            if (importedSentMailsNumber != null) {
+                part.SentMailsNumber = int.Parse(importedSentMailsNumber);
+            }
+
         }
 
         protected override void Exporting(MailCommunicationPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("MailMessageSent", part.MailMessageSent);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SendOnNextPublish", part.SendOnNextPublish);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SendToTestEmail", part.SendToTestEmail);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("EmailForTest", part.EmailForTest);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RecipientsNumber", part.RecipientsNumber);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SentMailsNumber", part.SentMailsNumber);
         }
     }
 }

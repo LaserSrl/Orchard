@@ -5,6 +5,7 @@ using Laser.Orchard.Twitter.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
 
@@ -46,5 +47,56 @@ namespace Laser.Orchard.Twitter.Drivers {
             Mapper.Map(vm, part);
             return Editor(part, shapeHelper);
         }
+
+
+        protected override void Importing(TwitterAccountPart part, ImportContentContext context) {
+            
+            var importedSocialName = context.Attribute(part.PartDefinition.Name, "SocialName");
+            if (importedSocialName != null) {
+                part.SocialName = importedSocialName;
+            }
+
+            var importedAccountType = context.Attribute(part.PartDefinition.Name, "AccountType");
+            if (importedAccountType != null) {
+                part.AccountType = importedAccountType;
+            }
+
+            var importedUserTokenSecret = context.Attribute(part.PartDefinition.Name, "UserTokenSecret");
+            if (importedUserTokenSecret != null) {
+                part.UserTokenSecret = importedUserTokenSecret;
+            }
+
+            var importedIdUser = context.Attribute(part.PartDefinition.Name, "IdUser");
+            if (importedIdUser != null) {
+                part.IdUser = int.Parse(importedIdUser);
+            }
+
+            var importedShared = context.Attribute(part.PartDefinition.Name, "Shared");
+            if (importedShared != null) {
+                part.Shared = bool.Parse(importedShared);
+            }
+
+            var importedValid = context.Attribute(part.PartDefinition.Name, "Valid");
+            if (importedValid != null) {
+                part.Valid = bool.Parse(importedValid);
+            }
+
+            var importedDisplayAs = context.Attribute(part.PartDefinition.Name, "DisplayAs");
+            if (importedDisplayAs != null) {
+                part.DisplayAs = importedDisplayAs;
+            }
+        }
+
+        protected override void Exporting(TwitterAccountPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SocialName", part.SocialName);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("AccountType", part.AccountType);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("UserTokenSecret", part.UserTokenSecret);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("IdUser", part.IdUser);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Shared", part.Shared);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Valid", part.Valid);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayAs", part.DisplayAs);
+        }
+
+
     }
 }

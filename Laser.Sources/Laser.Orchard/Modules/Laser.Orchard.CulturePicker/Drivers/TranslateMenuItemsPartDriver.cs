@@ -12,6 +12,7 @@ using Orchard.ContentManagement;
 using Orchard.Localization.Models;
 using NHibernate.Criterion;
 using Orchard.Data;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.CulturePicker.Drivers {
     [OrchardFeature("Laser.Orchard.CulturePicker.TranslateMenuItems")]
@@ -84,6 +85,33 @@ namespace Laser.Orchard.CulturePicker.Drivers {
                     Model: part
                     )
                 );
+        }
+
+
+        protected override void Exporting(TranslateMenuItemsPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ToBeTranslated", part.ToBeTranslated);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Translated", part.Translated);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("FromLocale", part.FromLocale);
+
+        }
+
+
+        protected override void Importing(TranslateMenuItemsPart part, ImportContentContext context) {
+            var importedToBeTranslated = context.Attribute(part.PartDefinition.Name, "ToBeTranslated");
+            if (importedToBeTranslated != null) {
+                part.ToBeTranslated = bool.Parse(importedToBeTranslated);
+            }
+
+            var importedTranslated = context.Attribute(part.PartDefinition.Name, "Translated");
+            if (importedTranslated != null) {
+                part.Translated = bool.Parse(importedTranslated);
+            }
+
+            var importedFromLocale = context.Attribute(part.PartDefinition.Name, "FromLocale");
+            if (importedFromLocale != null) {
+                part.FromLocale =importedFromLocale;
+            }
+
         }
     }
 }
