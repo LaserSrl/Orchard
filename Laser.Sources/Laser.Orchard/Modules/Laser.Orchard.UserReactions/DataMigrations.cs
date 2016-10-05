@@ -6,9 +6,21 @@ using System.Linq;
 using System.Web;
 using Orchard.Core.Contents.Extensions;
 using Orchard.ContentManagement.MetaData;
+using Orchard.Data;
+using Laser.Orchard.UserReactions.Services;
 
 namespace Laser.Orchard.UserReactions {
+    
+    
     public class DataMigrations : DataMigrationImpl {
+
+        //private readonly IRepository<UserReactionsService> 
+        private readonly IRepository<UserReactionsTypesRecord> _repositoryTypesRecord;
+        
+        public DataMigrations(IRepository<UserReactionsTypesRecord> repositoryTypesRecord) 
+        {
+            _repositoryTypesRecord = repositoryTypesRecord;
+        }
 
         public int Create() {
             SchemaBuilder.CreateTable("UserReactionsTypesRecord", table => table
@@ -89,6 +101,22 @@ namespace Laser.Orchard.UserReactions {
 
             return 6;
         }
+
+
+        public int UpdateFrom6() {
+            
+            foreach (var usReacType in UserReactionsTypesRecord.GetDefaultTypes()) {
+                UserReactionsTypesRecord reactType = usReacType;
+                string typeName = reactType.TypeName;
+
+                if (_repositoryTypesRecord.Get(z=>z.TypeName==typeName)==null)
+                
+                    _repositoryTypesRecord.Create(reactType);
+            }
+                        
+            return 7;
+        }
+
 
     }
 }

@@ -12,6 +12,7 @@ using System.Web.Script.Serialization;
 using System.Collections;
 using Orchard.ContentManagement.Handlers;
 using System.Xml.Linq;
+using Orchard.Data;
 
 
 namespace Laser.Orchard.UserReactions.Drivers {
@@ -22,10 +23,16 @@ namespace Laser.Orchard.UserReactions.Drivers {
         private readonly IOrchardServices _orchardServices;
         private readonly IUserReactionsService _userReactionService;
 
+        private readonly IRepository<UserReactionsTypesRecord> _repositoryTypesRecord;
+        private readonly IRepository<UserReactionsSummaryRecord> _repositorySummaryRecord;
+
         //Crea nel costruttore il settaggio alla var che esegue una select (quando si istanzia la classe si settano i dati nel costruttore) 
-        public UserReactionsPartDriver(IUserReactionsService userReactionService, IOrchardServices orchardServices) {
+        public UserReactionsPartDriver(IUserReactionsService userReactionService, IOrchardServices orchardServices,
+            IRepository<UserReactionsTypesRecord> repositoryTypesRecord, IRepository<UserReactionsSummaryRecord> repositorySummaryRecord) {
             _userReactionService = userReactionService;
             _orchardServices = orchardServices;
+            _repositoryTypesRecord = repositoryTypesRecord;
+            _repositorySummaryRecord = repositorySummaryRecord;
         }
 
         public Localizer T { get; set; }
@@ -94,36 +101,25 @@ namespace Laser.Orchard.UserReactions.Drivers {
             var root = context.Data.Element(part.PartDefinition.Name);
             var reactions = context.Data.Element(part.PartDefinition.Name).Elements("Reactions");
 
-            foreach (var reacts in reactions) {
-
+            foreach (var reacts in reactions) 
+            {
                 var singleReact = new UserReactionsSummaryRecord();
-                singleReact.Id = int.Parse(reacts.Attribute("Id").Value);
                 singleReact.Quantity = int.Parse(reacts.Attribute("Quantity").Value);         
                         
                 var recType = reacts.Element("UserReactionsTypesRecord");
                 if (recType != null) 
                 {
-                    
-                    singleReact.UserReactionsTypesRecord = new UserReactionsTypesRecord {
-                                                            Id = Convert.ToInt32(recType.Attribute("Id").Value),
-                                                            TypeName = recType.Attribute("TypeName").Value,
-                                                            TypeCssClass = recType.Attribute("TypeCssClass").Value,
-                                                            Priority = Convert.ToInt32(recType.Attribute("Priority").Value),
-                                                            CssName = recType.Attribute("CssName").Value,
-                                                            Activating = Convert.ToBoolean(recType.Attribute("Activating").Value)
-
-                    };
-                    //}
+                    singleReact.UserReactionsTypesRecord = _repositoryTypesRecord.Get(tr => tr.TypeName == recType.Attribute("TypeName").Value);
                  }
+                _repositorySummaryRecord.Create(singleReact);
                  part.Reactions.Add(singleReact);    
            }            
         }
 
 
         protected override void Exporting(UserReactionsPart part, ExportContentContext context) {
-
+            
             var root = context.Element(part.PartDefinition.Name);
-            root.SetAttributeValue("Id", part.Id);
 
             if (part.Reactions.Count() > 0) {
                 foreach (UserReactionsSummaryRecord receq in part.Reactions) 
