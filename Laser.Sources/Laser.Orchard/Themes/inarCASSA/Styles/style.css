@@ -56,3 +56,7 @@ html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:1
 
 .submit-soddisfazione{background-color: #EE3360 ; border:0; color:#fff; font-size:30px; padding:6px 20%; border-radius: 0}
 .submit-soddisfazione:hover{background-color:#fff; color: #EE3360; border: 1px solid #EE3360;}
+
+/* Marker per i campi hidden di SingleChooice */
+.singleChoice {
+}
