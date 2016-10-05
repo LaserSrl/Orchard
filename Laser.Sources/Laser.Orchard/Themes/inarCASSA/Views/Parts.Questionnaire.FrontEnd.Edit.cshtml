@@ -174,7 +174,7 @@ else {
                     else if (Questionnaire.QuestionsWithResults[j].QuestionType == Laser.Orchard.Questionnaires.QuestionType.SingleChoice) {
                         var numeroRisposte = Questionnaire.QuestionsWithResults[j].AnswersWithResult.Count();
                         
-                        <input type='hidden' value='@Questionnaire.QuestionsWithResults[j].SingleChoiceAnswer' name="@Html.FieldNameFor(m => Questionnaire.QuestionsWithResults[j].SingleChoiceAnswer)">
+                        <input type='hidden' class="singleChoice" value='@Questionnaire.QuestionsWithResults[j].SingleChoiceAnswer' name="@Html.FieldNameFor(m => Questionnaire.QuestionsWithResults[j].SingleChoiceAnswer)">
                         <div class='hidden-xs col-sm-1'>
                         </div>
                         <div class='hidden-xs col-sm-1 font1-3 text-center tag-min-max'>
@@ -305,6 +305,15 @@ else {
                     if (!atLeastOneIsAnswered) {
                         $(this).find('textarea').each(function () {
                             if ($(this).val() != "") {
+                                atLeastOneIsAnswered = true;
+                                // Stop .each from processing any more items
+                                return false;
+                            }
+                        });
+                    }
+                    if (!atLeastOneIsAnswered) {
+                        $(this).find('input:hidden.singleChoice').each(function () {
+                            if ($(this).val() != "0") {
                                 atLeastOneIsAnswered = true;
                                 // Stop .each from processing any more items
                                 return false;
