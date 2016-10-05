@@ -22,6 +22,14 @@ namespace Laser.Orchard.Questionnaires.Settings {
 
         public bool RandomResponse { get; set; }
 
+        public bool AllowSections { get; set; }
+        
+        public bool AllowConditions { get; set; }
+
+        public bool AllowSingleChoice { get; set; }
+        public bool AllowMultiChoice { get; set; }
+        public bool AllowOpenAnswers { get; set; }
+
         public QuestionnairesPartSettingVM() {
             this.QuestionsLimitsNumber = 0;
             this.QuestionsSortedRandomlyNumber = 0;
@@ -32,6 +40,12 @@ namespace Laser.Orchard.Questionnaires.Settings {
             this.EnableAnswerImage = false;
             this.QuestionsResponseLimitsNumber = 0;
             this.AnswerImageLimitNumber = 0;
+            this.AllowSections = true;
+            this.AllowConditions = true;
+            this.AllowSingleChoice = true;
+            this.AllowMultiChoice  = true;
+            this.AllowOpenAnswers = true;
+
         }
     }
 }

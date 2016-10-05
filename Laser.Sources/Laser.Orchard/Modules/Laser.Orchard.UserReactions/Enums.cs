@@ -51,7 +51,7 @@ namespace Laser.Orchard.UserReactions {
         NotBetween
     }
     public class StyleAcroName {
-        public string StyleAcronime = "glyph-icon flaticon-";
+        public string StyleAcronime = "glyph-icon icon-";
 
     }
 
