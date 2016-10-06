@@ -29,15 +29,13 @@
                             skipQuestionnaire = true;
                         }
                     }
-                    else { // utente anonimo
-                        // verifica in base ai cookie
-                        var cookie = HttpContext.Current.Request.Cookies.Get("Questionnaires");
-                        if(cookie != null) {
-                            var elenco = "," + cookie.Value + ",";
-                            if(elenco.Contains("," + contentItem.Id + ",")) {
-                                skipQuestionnaire = true;
-                            }    
-                        }
+                    // verifica in base ai cookie
+                    var cookie = HttpContext.Current.Request.Cookies.Get("Questionnaires");
+                    if(cookie != null) {
+                        var elenco = "," + cookie.Value + ",";
+                        if(elenco.Contains("," + contentItem.Id + ",")) {
+                            skipQuestionnaire = true;
+                        }    
                     }
                 }
             }
