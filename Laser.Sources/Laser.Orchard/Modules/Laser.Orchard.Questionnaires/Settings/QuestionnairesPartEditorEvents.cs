@@ -53,6 +53,12 @@ namespace Laser.Orchard.Questionnaires.Settings {
             ((Int32)model.QuestionImageLimitNumber).ToString());
             builder.WithSetting("QuestionnairesPartSettingVM.AnswerImageLimitNumber",
             ((Int32)model.AnswerImageLimitNumber).ToString());
+            builder.WithSetting("QuestionnairesPartSettingVM.AllowSections", model.AllowSections.ToString());
+            builder.WithSetting("QuestionnairesPartSettingVM.AllowConditions", model.AllowConditions.ToString());
+            builder.WithSetting("QuestionnairesPartSettingVM.AllowSingleChoice", model.AllowSingleChoice.ToString());
+            builder.WithSetting("QuestionnairesPartSettingVM.AllowMultiChoice", model.AllowMultiChoice.ToString());
+            builder.WithSetting("QuestionnairesPartSettingVM.AllowOpenAnswers", model.AllowOpenAnswers.ToString());
+
 
             yield return DefinitionTemplate(model);
         }

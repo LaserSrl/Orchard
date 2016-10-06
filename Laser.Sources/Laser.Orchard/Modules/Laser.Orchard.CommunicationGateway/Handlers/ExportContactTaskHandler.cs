@@ -119,7 +119,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
 
                 // Save File
                 string fileName = String.Format("contacts_{0}_{1:yyyyMMddHHmmss}.csv", _shellSettings.Name, DateTime.Now);
-                string filePath = HostingEnvironment.MapPath("~/") + @"Media\" + _shellSettings.Name + @"\Export\Contacts\" + fileName;
+                string filePath = HostingEnvironment.MapPath(string.Format("~/App_Data/Sites/{0}/Export/Contacts/{1}", _shellSettings.Name, fileName));
 
                 if (!File.Exists(filePath)) {
 

@@ -83,7 +83,7 @@ namespace Laser.Orchard.NewsLetters.Handlers {
                     fullyItems = null;
                 }
                 var subscribers = _newslServices.GetSubscribers(part.NewsletterDefinitionPartRecord_Id).Where(w => w.Confirmed);
-                var subscribersEmails = subscribers.Select(s => new { s.Id, s.Name, s.Email });
+                var subscribersEmails = subscribers.Select(s => new { s.Id, s.Name, EmailAddress = s.Email });
                 List<object> listaSubscribers = new List<object>(subscribersEmails);
 
                 // ricava i settings e li invia tramite FTP
@@ -150,12 +150,18 @@ namespace Laser.Orchard.NewsLetters.Handlers {
             return list.ToList();
         }
 
+        /// <summary>
+        /// [{"Id":value,"EmailAddress":"value","Title":"value"}]
+        /// </summary>
         private void SendRecipients(List<object> recipients, int communicationId, int pageNum) {
             string pathFtp = _mailerConfig.FtpPath;
             string jsonDestinatari = JsonConvert.SerializeObject(recipients);
             SendFtp(jsonDestinatari, _mailerConfig.FtpHost, _mailerConfig.FtpUser, _mailerConfig.FtpPassword, string.Format("{0}nws{1}.{2}-{3}-recipients.json", pathFtp, _shellSettings.Name, communicationId, pageNum));
         }
 
+        /// <summary>
+        /// {"Subject":"value","Body":"value","Sender":"value","Priority":"value"}
+        /// </summary>
         private void SendSettings(object settings, int communicationId) {
             string pathFtp = _mailerConfig.FtpPath;
             string jsonSettings = JsonConvert.SerializeObject(settings);

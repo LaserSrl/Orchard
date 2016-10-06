@@ -9,7 +9,6 @@ namespace Laser.Orchard.UserReactions.Models {
 
         public virtual int Id { get; set; }
         public virtual string TypeName { get; set; }
-        public virtual string TypeCssClass { get; set; }
         public virtual int Priority { get; set; }
         public virtual string CssName { get; set; }
         public virtual bool Activating { get; set; }
@@ -24,7 +23,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "angry",
                     Priority = 1,
-                    TypeCssClass = "glyph-icon flaticon-angry",
                     Activating = false
                 };
             }
@@ -35,7 +33,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "boring",
                     Priority = 2,
-                    TypeCssClass = "glyph-icon flaticon-boring",
                     Activating = false
                 };
             }
@@ -46,7 +43,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "exhausted",
                     Priority = 3,
-                    TypeCssClass = "glyph-icon flaticon-exhausted",
                     Activating = false
                 };
             }
@@ -57,7 +53,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "happy",
                     Priority = 4,
-                    TypeCssClass = "glyph-icon flaticon-happy",
                     Activating = false
                 };
             }
@@ -68,7 +63,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "joke",
                     Priority = 5,
-                    TypeCssClass = "glyph-icon flaticon-joke",
                     Activating = false
                 };
             }
@@ -79,7 +73,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "kiss",
                     Priority = 6,
-                    TypeCssClass = "glyph-icon flaticon-kiss",
                     Activating = false
                 };
             }
@@ -91,7 +84,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "love",
                     Priority = 7,
-                    TypeCssClass = "glyph-icon flaticon-love",
                     Activating = false
                 };
             }
@@ -103,7 +95,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "pain",
                     Priority = 8,
-                    TypeCssClass = "glyph-icon flaticon-pain",
                     Activating = false
                 };
             }
@@ -115,7 +106,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "sad",
                     Priority = 9,
-                    TypeCssClass = "glyph-icon flaticon-sad",
                     Activating = false
                 };
             }
@@ -127,7 +117,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "shocked",
                     Priority = 10,
-                    TypeCssClass = "glyph-icon flaticon-shocked",
                     Activating = false
                 };
             }
@@ -139,7 +128,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "silent",
                     Priority = 11,
-                    TypeCssClass = "glyph-icon flaticon-silent",
                     Activating = false
                 };
             }
@@ -151,7 +139,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "like",
                     Priority = 12,
-                    TypeCssClass = "glyph-icon flaticon-like",
                     Activating = false
                 };
             }
@@ -162,7 +149,6 @@ namespace Laser.Orchard.UserReactions.Models {
                 return new UserReactionsTypesRecord {
                     TypeName = "iwasthere",
                     Priority = 13,
-                    TypeCssClass = "glyph-icon flaticon-iwasthere",
                     Activating = false
                 };
             }

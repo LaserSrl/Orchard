@@ -45,7 +45,6 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly ShellSettings _shellSettings;
         private readonly IUserService _userService;
         private Localizer T { get; set; }
-        private readonly string _contactsExportRelativePath;
         private readonly string _contactsImportRelativePath;
 
         public ContactsAdminController(
@@ -67,8 +66,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             _session = session;
             _shellSettings = shellSettings;
             _userService = userService;
-            _contactsExportRelativePath = string.Format("~/Media/{0}/Export/Contacts", _shellSettings.Name);
-            _contactsImportRelativePath = string.Format("~/Media/{0}/Import/Contacts", _shellSettings.Name);
+            _contactsImportRelativePath = string.Format("~/App_Data/Sites/{0}/Import/Contacts", _shellSettings.Name);
         }
 
         [Admin]
@@ -366,89 +364,6 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _notifier.Warning(T("Import Contacts: Please select a file to import."));
             }
             return IndexSearch(null, null, new SearchVM());
-        }
-
-        [Admin]
-        public ActionResult ExportedFilesList(FilesListVM model) {
-            model.FilePath = _contactsExportRelativePath.Replace("~", Request.ApplicationPath);
-            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Server.MapPath(_contactsExportRelativePath));
-            if (dir.Exists == false) {
-                dir.Create();
-            }  
-            var files = dir.GetFiles("*.csv", System.IO.SearchOption.TopDirectoryOnly);
-            foreach (var file in files) {
-                model.FileInfos.Add(file);
-            }
-            model.FileInfos = model.FileInfos.OrderByDescending(x => x.LastWriteTimeUtc).ToList();
-            return View("ExportedFilesList", model);
-        }
-
-        [Admin]
-        public ActionResult ImportedFilesLogs(FilesListVM model) {
-            model.FilePath = _contactsImportRelativePath.Replace("~", Request.ApplicationPath);
-            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Server.MapPath(_contactsImportRelativePath));
-            if (dir.Exists == false) {
-                dir.Create();
-            }
-            var files = dir.GetFiles("*.log", System.IO.SearchOption.TopDirectoryOnly);
-            foreach (var file in files) {
-                model.FileInfos.Add(file);
-            }
-            model.FileInfos = model.FileInfos.OrderByDescending(x => x.LastWriteTimeUtc).ToList();
-            return View("ImportedFilesLogs", model);
-        }
-
-        //[Admin]
-        public ActionResult DownloadCsvFile(string fName) {
-            //return new DownloadFileContentResult(Server.MapPath(_contactsExportRelativePath + "/" + fName), fName, "text/csv");
-            //return File(Server.MapPath(_contactsExportRelativePath + "/" + fName), "application/octet-stream", fName);
-
-            // il metodo seguente, contrariamente a quelli nelle righe precedenti, preserva la corretta codifica dei caratteri accentati
-            Response.AppendHeader("content-disposition", "attachment; filename=" + fName);
-            var result = new ContentResult();
-            result.Content = System.IO.File.ReadAllText(Server.MapPath(_contactsExportRelativePath + "/" + fName));
-            result.ContentEncoding = Encoding.UTF8;
-            result.ContentType = "text/csv";
-            return result;
-        }
-
-        [Admin]
-        public ActionResult DownloadLogFile(string fName) {
-            // il tipo MIME "application/octet-stream" serve a forzare il download del file
-            //return new DownloadFileContentResult(Server.MapPath(_contactsImportRelativePath + "/" + fName), fName, "application/octet-stream");
-            //return File(System.IO.File.ReadAllBytes(Server.MapPath(_contactsImportRelativePath + "/" + fName)), "application/octet-stream", fName);
-
-            // il metodo seguente, contrariamente a quelli nelle righe precedenti, preserva la corretta codifica dei caratteri accentati
-            Response.AppendHeader("content-disposition", "attachment; filename=" + fName);
-            var result = new ContentResult();
-            result.Content = System.IO.File.ReadAllText(Server.MapPath(_contactsImportRelativePath + "/" + fName));
-            result.ContentEncoding = Encoding.UTF8;
-            result.ContentType = "text/plain";
-            return result;
-        }
-
-        [Admin]
-        public ActionResult RemoveExportFile(string fName) {
-            System.IO.FileInfo file = new System.IO.FileInfo(Server.MapPath(_contactsExportRelativePath + "/" + fName));
-            if (file.Exists) {
-                file.Delete();
-                _notifier.Information(T("File removed."));
-            } else {
-                _notifier.Error(T("File does not exist. It should have been removed by someone else."));
-            }
-            return RedirectToAction("ExportedFilesList");
-        }
-
-        [Admin]
-        public ActionResult RemoveImportLog(string fName) {
-            System.IO.FileInfo file = new System.IO.FileInfo(Server.MapPath(_contactsImportRelativePath + "/" + fName));
-            if (file.Exists) {
-                file.Delete();
-                _notifier.Information(T("File removed."));
-            } else {
-                _notifier.Error(T("File does not exist. It should have been removed by someone else."));
-            }
-            return RedirectToAction("ImportedFilesLogs");
         }
 
         [Admin]

@@ -26,7 +26,6 @@ namespace Laser.Orchard.UserReactions {
             SchemaBuilder.CreateTable("UserReactionsTypesRecord", table => table
                 .Column<int>("Id", col => col.PrimaryKey().Identity())
                 .Column<string>("TypeName", col => col.WithLength(50))
-                .Column<string>("TypeCssClass", col => col.WithLength(50))
                 .Column<int>("Priority")
                 );
 

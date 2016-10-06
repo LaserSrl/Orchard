@@ -14,17 +14,21 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
+using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Messaging.Services;
 using Orchard.Security;
 using Orchard.Tasks.Scheduling;
 using Orchard.UI.Notify;
+using Orchard.Users.Models;
 using Orchard.Workflows.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web.Hosting;
 
 namespace Laser.Orchard.Questionnaires.Services {
 
@@ -43,6 +47,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         private readonly IDateLocalization _dateLocalization;
         private readonly IScheduledTaskManager _taskManager;
         private readonly IDateServices _dateServices;
+        private readonly ShellSettings _shellSettings;
 
         public Localizer T { get; set; }
 
@@ -59,7 +64,8 @@ namespace Laser.Orchard.Questionnaires.Services {
             ISessionLocator sessionLocator,
             IDateLocalization dateLocalization,
             IScheduledTaskManager taskManager,
-            IDateServices dateServices) {
+            IDateServices dateServices,
+            ShellSettings shellSettings) {
             _orchardServices = orchardServices;
             _repositoryAnswer = repositoryAnswer;
             _repositoryQuestions = repositoryQuestions;
@@ -75,6 +81,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             _dateLocalization = dateLocalization;
             _taskManager = taskManager;
             _dateServices = dateServices;
+            _shellSettings = shellSettings;
         }
 
         private string getusername(int id) {
@@ -87,10 +94,10 @@ namespace Laser.Orchard.Questionnaires.Services {
             } else
                 return "No User";
         }
-        
+
         public bool SendTemplatedEmailRanking() {
             var query = _orchardServices.ContentManager.Query();
-            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x=>x.workflowfired==false).List();
+            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.workflowfired == false).List();
             var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().List();
             foreach (GamePart gp in list) {
                 ContentItem Ci = gp.ContentItem;
@@ -289,7 +296,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         /// <returns>A <type>QueryOver</type> object built from the parameters and that can be used to execute queries on the DB.</returns>
         private QueryOver<RankingPartRecord> GenerateRankingQuery(
             Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false) {
-            
+
             RankingPartRecord rprAlias = null; //used as alias in correlated subqueries
             QueryOver<RankingPartRecord, RankingPartRecord> qoRpr = QueryOver.Of<RankingPartRecord>(() => rprAlias)
                 .Where(t => t.ContentIdentifier == gameId);
@@ -724,15 +731,79 @@ namespace Laser.Orchard.Questionnaires.Services {
             return (_repositoryAnswer.Get(id));
         }
 
-        public List<QuestionnaireStatsViewModel> GetStats(int questionnaireId) {
+        private List<ExportUserAnswersVM> GetUsersAnswers(int questionnaireId, DateTime? from = null, DateTime? to = null) {
+            var answersQuery = _repositoryUserAnswer.Fetch(x => x.QuestionnairePartRecord_Id == questionnaireId);
+            if (from.HasValue && from.Value > DateTime.MinValue) {
+                answersQuery = answersQuery.Where(w => w.AnswerDate >= from);
+            }
+            if (to.HasValue && to.Value > DateTime.MinValue) {
+                answersQuery = answersQuery.Where(w => w.AnswerDate <= to);
+            }
+            var users = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().List();
+            var result = answersQuery.Join(users, l => l.User_Id, r => r.Id, (l, r) => new ExportUserAnswersVM { 
+                Answer = l.AnswerText, 
+                Question = l.QuestionText, 
+                AnswerDate = l.AnswerDate, 
+                UserName = r.UserName }).ToList();
+            return result;
+        }
+        public void SaveQuestionnaireUsersAnswers(int questionnaireId, DateTime? from = null, DateTime? to = null) {
+            string separator = ";";
+            var elenco = GetUsersAnswers(questionnaireId, from, to);
+            ContentItem ci = _orchardServices.ContentManager.Get(questionnaireId);
+            string fileName = String.Format("{0}-{1:yyyyMMdd}-{2:yyyyMMdd}.csv", NormalizeFileName(ci.As<TitlePart>().Title), from, to);
+            string filePath = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSettings.Name + @"\Export\QuestionnairesStatistics\" + fileName;
+            // Creo la directory Export
+            FileInfo fi = new FileInfo(filePath);
+            if (fi.Directory.Parent.Exists == false) {
+                System.IO.Directory.CreateDirectory(fi.Directory.Parent.FullName);
+            }
+            // Creo la directory Questionnaires
+            if (!fi.Directory.Exists) {
+                System.IO.Directory.CreateDirectory(fi.DirectoryName);
+            }
+            using (StreamWriter sw = new StreamWriter(filePath, false, System.Text.Encoding.UTF8)) {
+                sw.WriteLine("\"Utente\"{0}\"Data\"{0}\"Domanda\"{0}\"Risposta\"", separator);
+                foreach (var line in elenco) {
+                    sw.WriteLine(string.Format("\"{1}\"{0}\"{2:yyyy-MM-dd}\"{0}\"{3}\"{0}\"{4}\"",
+                        separator,
+                        EscapeString(line.UserName),
+                        line.AnswerDate,
+                        EscapeString(line.Question),
+                        EscapeString(line.Answer)));
+                }
+            }
+        }
+        private string EscapeString(string text) {
+            return text.Replace('\"', '\'').Replace('\n', ' ').Replace('\r', ' ');
+        }
+        private string NormalizeFileName(string text) {
+            var invalidChars = Path.GetInvalidFileNameChars();
+            string aux = text.Clone().ToString();
+            foreach (var ch in text) {
+                if (invalidChars.Contains(ch)) {
+                    aux = aux.Replace(ch, ' ');
+                }
+            }
+            return aux;
+        }
+        public List<QuestionnaireStatsViewModel> GetStats(int questionnaireId, DateTime? from = null, DateTime? to = null) {
             var questionnaireData = _orchardServices.ContentManager.Query<QuestionnairePart, QuestionnairePartRecord>(VersionOptions.Published)
                                                        .Where(q => q.Id == questionnaireId)
                                                        .List().FirstOrDefault();
 
-            var questionnaireStats = _repositoryUserAnswer.Table.Join(_repositoryQuestions.Table,
+            var questionnaireStatsQuery = _repositoryUserAnswer.Table.Join(_repositoryQuestions.Table,
                         l => l.QuestionRecord_Id, r => r.Id, (l, r) => new { UserAnswers = l, Questions = r })
-                        .Where(w => w.Questions.QuestionnairePartRecord_Id == questionnaireId)
-                        .ToList();
+                        .Where(w => w.Questions.QuestionnairePartRecord_Id == questionnaireId);
+
+            if (from.HasValue && from.Value > DateTime.MinValue) {
+                questionnaireStatsQuery = questionnaireStatsQuery.Where(w => w.UserAnswers.AnswerDate >= from);
+            }
+            if (to.HasValue && to.Value > DateTime.MinValue) {
+                questionnaireStatsQuery = questionnaireStatsQuery.Where(w => w.UserAnswers.AnswerDate <= to);
+            }
+
+            var questionnaireStats = questionnaireStatsQuery.ToList();
 
             if (questionnaireStats.Count == 0) {
                 QuestionnaireStatsViewModel empty = new QuestionnaireStatsViewModel();
@@ -741,23 +812,22 @@ namespace Laser.Orchard.Questionnaires.Services {
                 empty.Answers = null;
 
                 return new List<QuestionnaireStatsViewModel>() { empty };
-            }
-            else {
+            } else {
                 var aggregatedStats = questionnaireStats.Select(s => new QuestionnaireStatsViewModel {
-                                                                    QuestionnairePart_Id = s.Questions.QuestionnairePartRecord_Id,
-                                                                    QuestionnaireTitle = questionnaireData.As<TitlePart>().Title,
-                                                                    QuestionId = s.Questions.Id,
-                                                                    Question = s.Questions.Question,
-                                                                    QuestionType = s.Questions.QuestionType,
-                                                                    Answers = new List<AnswerStatsViewModel>()
-                                                                })
+                    QuestionnairePart_Id = s.Questions.QuestionnairePartRecord_Id,
+                    QuestionnaireTitle = questionnaireData.As<TitlePart>().Title,
+                    QuestionId = s.Questions.Id,
+                    Question = s.Questions.Question,
+                    QuestionType = s.Questions.QuestionType,
+                    Answers = new List<AnswerStatsViewModel>()
+                })
                                                          .GroupBy(g => g.QuestionId)
                                                          .Select(s => s.First()).ToList();
 
                 for (int i = 0; i < aggregatedStats.Count(); i++) {
                     var question = aggregatedStats.ElementAt(i);
-                    var answers = questionnaireStats.Where(w => w.Questions.Id == question.QuestionId)
-                                                    .GroupBy(g => g.UserAnswers.AnswerText, StringComparer.InvariantCultureIgnoreCase)
+                    var queryAnswer = questionnaireStats.Where(w => w.Questions.Id == question.QuestionId);
+                    var answers = queryAnswer.GroupBy(g => g.UserAnswers.AnswerText, StringComparer.InvariantCultureIgnoreCase)
                                                     .Select(s => new AnswerStatsViewModel {
                                                         Answer = s.Key,
                                                         Count = s.Count()
