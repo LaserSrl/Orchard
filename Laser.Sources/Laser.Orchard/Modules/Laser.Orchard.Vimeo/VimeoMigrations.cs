@@ -8,16 +8,90 @@ namespace Laser.Orchard.Vimeo {
     public class VimeoMigrations : DataMigrationImpl {
 
         public int Create() {
+            //update 20160310: I am going to do the complete migration here, so that when the module is enabled for the first time 
+            //it doesn't have to go through all the updates.
             SchemaBuilder.CreateTable("VimeoSettingsPartRecord",
                 table => table
                     .ContentPartRecord()
-                    .Column<string>("AccessToken")
                     .Column<string>("ChannelName")
                     .Column<string>("GroupName")
                     .Column<string>("AlbumName")
+                    .Column<string>("License")
+                    .Column<string>("Privacy")
+                    .Column<string>("Password")
+                    .Column<bool>("ReviewLink", col => col.WithDefault(false))
+                    .Column<string>("Locale")
+                    .Column<string>("ContentRatings")
+                    .Column<string>("Whitelist")
+                    .Column<bool>("AlwaysUploadToGroup")
+                    .Column<bool>("AlwaysUploadToAlbum")
+                    .Column<bool>("AlwaysUploadToChannel")
+                    .Column<string>("AccountType")
+                    .Column<DateTime>("LastTimeAccountTypeWasChecked")
+                    .Column<string>("UserId")
+                    .Column<Int64>("UploadQuotaSpaceFree")
+                    .Column<Int64>("UploadQuotaSpaceMax")
+                    .Column<Int64>("UploadQuotaSpaceUsed")
+                    .Column<DateTime>("LastTimeQuotaWasChecked")
+                    .Column<string>("ChannelId")
+                    .Column<string>("GroupId")
+                    .Column<string>("AlbumId")
                 );
 
-            return 1;
+            SchemaBuilder.CreateTable("UploadsInProgressRecord",
+                table => table
+                    .Column<int>("Id", col => col.Identity().PrimaryKey())
+                    .Column<Int64>("UploadSize")
+                    .Column<Int64>("UploadedSize")
+                    .Column<string>("Uri")
+                    .Column<string>("CompleteUri")
+                    .Column<string>("TicketId")
+                    .Column<string>("UploadLinkSecure")
+                    .Column<DateTime>("CreatedTime")
+                    .Column<int>("MediaPartId")
+                    .Column<DateTime>("LastVerificationTime")
+                    .Column<DateTime>("ScheduledVerificationTime")
+                    .Column<DateTime>("LastProgressTime")
+                );
+
+            SchemaBuilder.CreateTable("UploadsCompleteRecord",
+                table => table
+                    .Column<int>("Id", col => col.Identity().PrimaryKey())
+                    .Column<string>("Uri")
+                    .Column<int>("ProgressId")
+                    .Column<DateTime>("CreatedTime")
+                    .Column<bool>("Patched")
+                    .Column<bool>("UploadedToGroup")
+                    .Column<bool>("UploadedToChannel")
+                    .Column<bool>("UploadedToAlbum")
+                    .Column<bool>("IsAvailable")
+                    .Column<int>("MediaPartId")
+                    .Column<DateTime>("ScheduledTerminationTime")
+                    .Column<bool>("MediaPartFinished")
+                );
+
+            SchemaBuilder.CreateTable("VimeoAccessTokenRecord",
+                table => table
+                    .Column<int>("Id", col => col.PrimaryKey().Identity())
+                    .Column<string>("AccessToken")
+                    .Column<int>("RateLimitLimit")
+                    .Column<int>("RateLimitRemaining")
+                    .Column<DateTime>("RateLimitReset")
+                    .Column<double>("RateAvailableRatio")
+                );
+
+            return 18;
+
+            //SchemaBuilder.CreateTable("VimeoSettingsPartRecord",
+            //    table => table
+            //        .ContentPartRecord()
+            //        .Column<string>("AccessToken")
+            //        .Column<string>("ChannelName")
+            //        .Column<string>("GroupName")
+            //        .Column<string>("AlbumName")
+            //    );
+
+            //return 1;
         }
 
         public int UpdateFrom1() {
@@ -290,6 +364,49 @@ namespace Laser.Orchard.Vimeo {
                 );
 
             return 15;
+        }
+
+        public int UpdateFrom15() {
+            SchemaBuilder.CreateTable("VimeoAccessTokenRecord",
+                table => table
+                    .Column<int>("Id", col => col.PrimaryKey().Identity())
+                    .Column<string>("AccessToken")
+                    .Column<int>("RateLimitLimit")
+                    .Column<int>("RateLimitRemaining")
+                    .Column<DateTime>("RateLimitReset")
+                );
+
+            return 16;
+        }
+
+        public int UpdateFrom16() {
+            SchemaBuilder.AlterTable("VimeoAccessTokenRecord",
+                table => table
+                    .AddColumn<double>("RateAvailableRatio")
+                );
+
+            return 17;
+        }
+
+        public int UpdateFrom17() {
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .DropColumn("AccessToken")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .DropColumn("RateLimitLimit")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .DropColumn("RateLimitRemaining")
+                );
+            SchemaBuilder.AlterTable("VimeoSettingsPartRecord",
+                table => table
+                    .DropColumn("RateLimitReset")
+                );
+
+            return 18;
         }
     }
 }
