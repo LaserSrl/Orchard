@@ -120,6 +120,26 @@ msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/EditorTemplates/Parts/Users
 msgid "Select User Group"
 msgstr "Selezionare Gruppo Utente"
 
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/FileDownloader/Index.cshtml"
+msgid "Are you sure?"
+msgstr "Confermi?"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/FileDownloader/Index.cshtml"
+msgid "Back"
+msgstr "Indietro"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/FileDownloader/Index.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/FileDownloader/Index.cshtml"
+msgid "File List"
+msgstr "Elenco File"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/FileDownloader/Index.cshtml"
+msgid "No data found."
+msgstr "Nessun dato trovato."
+
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/MaintenanceAdmin/index.cshtml"
 msgid "Action"
 msgstr "Azione"
@@ -440,6 +460,14 @@ msgctxt "Laser.Orchard.StartupConfig.Drivers.UsersGroupsDriver"
 msgid "Select a Group please"
 msgstr "Selezionare un Gruppo"
 
+msgctxt "Laser.Orchard.StartupConfig.FileDownloader.Controllers.FileDownloaderController"
+msgid "File does not exist. It should have been removed by someone else."
+msgstr "Il file non esiste. Potrebbe essere stato rimosso da un altro operatore."
+
+msgctxt "Laser.Orchard.StartupConfig.FileDownloader.Controllers.FileDownloaderController"
+msgid "File removed."
+msgstr "File rimosso."
+
 msgctxt "Laser.Orchard.StartupConfig.Handlers.ContentPickerFieldExtensionHandler"
 msgid "Linked {0} has been published"
 msgstr "Il contenuto collegato {0} è stato pubblicato"
@@ -635,6 +663,10 @@ msgstr "Token/csrfToken non valido"
 msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
 msgid "Invalid User"
 msgstr "Utente non valido"
+
+msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
+msgid "Missing Policies"
+msgstr "Policy Mnacanti"
 
 msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
 msgid "Successfully Executed"

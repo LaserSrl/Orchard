@@ -161,20 +161,19 @@ namespace Laser.Orchard.UserReactions.Services {
         public UserReactionsTypes GetTypesTableWithStyles() {
             var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
             var userRT = new UserReactionsTypes();
+            var styleAcronime = new Laser.Orchard.UserReactions.StyleAcroName();
             userRT.CssName = reactionSettings.StyleFileNameProvider;
             userRT.AllowMultipleChoices = reactionSettings.AllowMultipleChoices;
 
             userRT.UserReactionsType = GetTypesTable().Select(r => new UserReactionsTypeVM {
                 Id = r.Id,
                 Priority = r.Priority,
-                TypeCssClass = r.TypeCssClass,
                 TypeName = r.TypeName,
                 Activating = r.Activating,
                 Delete = false
             }).ToList();
 
             int newPriority = userRT.UserReactionsType.Count + 1;
-            var styleAcronime = new Laser.Orchard.UserReactions.StyleAcroName();
             foreach (var type in Enum.GetNames(typeof(ReactionsNames))) {
                 if(userRT.UserReactionsType.FirstOrDefault(x => x.TypeName == type) == null) {
                     userRT.UserReactionsType.Add(new UserReactionsTypeVM {
@@ -182,7 +181,6 @@ namespace Laser.Orchard.UserReactions.Services {
                          Activating = false,
                          Delete = false,
                          Priority = newPriority,
-                         TypeCssClass = styleAcronime.StyleAcronime + type,
                          TypeName = type
                     });
                     newPriority++;
@@ -269,7 +267,6 @@ namespace Laser.Orchard.UserReactions.Services {
                     Quantity = 0,
                     TypeName = x.TypeName,
                     TypeId = x.Id,
-                    CssStyleName = x.TypeCssClass,
                     OrderPriority = x.Priority,
                     Activating = x.Activating,
                 }).ToList();
@@ -282,7 +279,6 @@ namespace Laser.Orchard.UserReactions.Services {
                                     Quantity = 0,
                                     TypeName = x.TypeName,
                                     TypeId = x.Id,
-                                    CssStyleName = x.TypeCssClass,
                                     OrderPriority = x.Priority,
                                     Activating = x.Activating
                                 }).ToList();
@@ -296,7 +292,6 @@ namespace Laser.Orchard.UserReactions.Services {
                 Quantity = s.Quantity,
                 TypeName = s.UserReactionsTypesRecord.TypeName,
                 TypeId = s.UserReactionsTypesRecord.Id,
-                CssStyleName = s.UserReactionsTypesRecord.TypeCssClass,
                 OrderPriority = s.UserReactionsTypesRecord.Priority,
                 Activating = s.UserReactionsTypesRecord.Activating,
             }).ToList();
