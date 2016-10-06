@@ -1,0 +1,24 @@
+﻿@model Laser.Orchard.PaymentGateway.Models.PaymentRecord
+
+<h2>@T("Payment details")</h2>
+@T("POS"): @Model.PosName<br />
+@T("Reason"): @Model.Reason<br />
+@T("Amount"): @Model.Amount.ToString("0.00") @Model.Currency<br />
+@T("Date"): @Model.UpdateDate.ToString("yyyy-MM-dd HH:mm")<br />
+
+@if(Model.Success) {
+    <text>@T("Outcome"): @T("Succeeded")<br />
+    @T("Transacion ID"): @Model.TransactionId<br /></text>
+} else {
+    <text>@T("Outcome"): <span style="color:red;font-weight:700">@T("Failed")</span><br />
+    @T("Error"): @Model.Error<br />
+    @T("Additional informations"): @Model.Info<br />
+    @{
+        var query = string.Format("reason={0}&amount={1}&currency={2}&itemId={3}", Url.Encode(Model.Reason), Convert.ToString(Model.Amount, System.Globalization.CultureInfo.InvariantCulture), Url.Encode(Model.Currency), Model.ContentItemId);
+        var payUrl = Url.Action("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway" }) + "?" + query;    
+    }
+    <br />
+    @Html.Link(T("Back to payment page"), payUrl)<br />
+    </text>
+}
+<br />

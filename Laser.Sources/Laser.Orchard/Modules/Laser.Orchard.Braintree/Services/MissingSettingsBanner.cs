@@ -30,7 +30,7 @@ namespace Laser.Orchard.Braintree.Services
             if (settings == null || string.IsNullOrWhiteSpace(settings.MerchantId))
             {
                 var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-                var url = urlHelper.Action("Braintree PayPal", "Admin", new { Area = "Settings" });
+                var url = urlHelper.Action("Index", "Admin", new { Area = "Laser.Orchard.Braintree" });
                 yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Braintree PayPal</a> settings need to be configured.", url), Type = NotifyType.Warning };
             }
         }
