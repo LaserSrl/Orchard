@@ -115,8 +115,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     //        }
                     //    }
                     if (canBeFilled == false) {
-                        // usa "QuestSuccess" perché non devono essere visualizzate le domande ma solo il messaggio
-                        TempData["QuestSuccess"] = T("Sorry, you already submitted this questionnaire.");
+                        TempData["QuestError"] = T("Sorry, you already submitted this questionnaire.");
                     }
                     else {
                         TempData["QuestSuccess"] = T("Thank you for submitting your feedback.");
