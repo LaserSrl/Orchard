@@ -21,6 +21,6 @@ namespace Laser.Orchard.Questionnaires.Models {
         public virtual int QuestionnairePartRecord_Id { get; set; }
         [Required]
         public virtual string SessionID { get; set; }
-
+        public virtual string Context { get; set; }
     }
 }

@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Localization;
-using Orchard.Themes;
 using Orchard.Mvc.Extensions;
 using Laser.Orchard.Questionnaires.Services;
 using Laser.Orchard.Questionnaires.Models;
 using Orchard.Data;
-using Orchard.Mvc;
 using Orchard.DisplayManagement;
-using Orchard.ContentManagement.Drivers;
 using Orchard.UI.Admin;
 using Orchard.Workflows.Services;
 using Orchard.Captcha.Services;
@@ -55,10 +50,24 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             var currentUser = _orchardServices.WorkContext.CurrentUser;
             try {
                 if (TryUpdateModel(editModel, _prefix)) {
-
                     TempData["QuestUpdatedEditModel"] = editModel; // devo avere modo di fare non perdere le risposte date finora!!!
                     TempData["HasAcceptedTerms"] = editModel.HasAcceptedTerms;
-                    _questionnairesServices.Save(editModel,currentUser,ControllerContext.HttpContext.Session.SessionID);
+
+                    // verifica se il questionario può essere compilato una volta sola ed è già stato compilato
+                    bool canBeFilled = true;
+                    var questionnaireModuleSettings = _orchardServices.WorkContext.CurrentSite.As<QuestionnaireModuleSettingsPart>();
+                    if (questionnaireModuleSettings.Disposable) {
+                        var cookie = Request.Cookies["Questionnaires"];
+                        if (cookie != null) {
+                            var ids = cookie.Value;
+                            if (ids.Contains("," + editModel.Id + ",")) {
+                                canBeFilled = false;
+                            }
+                        }
+                    }
+                    if (canBeFilled) {
+                        canBeFilled = _questionnairesServices.Save(editModel, currentUser, ControllerContext.HttpContext.Session.SessionID);
+                    }
                     //if (editModel.UseRecaptcha && !_captchaServices.IsCaptchaValid(_orchardServices.WorkContext.HttpContext.Request.Form, _orchardServices.WorkContext.HttpContext.Request.UserHostAddress)) {
                     //    throw new Exception("Invalid captcha!");
                     //}
@@ -105,7 +114,12 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     //            }
                     //        }
                     //    }
+                    if (canBeFilled == false) {
+                        TempData["QuestError"] = T("Sorry, you already submitted this questionnaire.");
+                    }
+                    else {
                         TempData["QuestSuccess"] = T("Thank you for submitting your feedback.");
+                    }
                         //var content = _orchardServices.ContentManager.Get(editModel.Id);
                         //_workflowManager.TriggerEvent("QuestionnaireSubmitted", content, () => new Dictionary<string, object> { { "Content", content } });
 

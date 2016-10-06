@@ -83,7 +83,8 @@ namespace Laser.Orchard.StartupConfig.FileDownloader.Controllers {
                 return new HttpUnauthorizedResult();
             }
             var fPath = Server.MapPath(FileRootRelativePath + "/" + parentFolder + "/" + folderName + "/" + fName);
-            return File(fPath, "application/octet-stream", fName);
+            byte[] buffer = System.IO.File.ReadAllBytes(fPath);
+            return File(buffer, "application/octet-stream", fName);
         }
         [Admin]
         public ActionResult RemoveFile(string fName, string folderName, string urlBack, string parentFolder = "Export") {
