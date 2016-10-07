@@ -141,18 +141,74 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
 
             if (emailRecord != null) {
                 foreach (CommunicationEmailRecord rec in part.EmailRecord) {
+                    
                     rec.Id = int.Parse(root.Attribute("EmailRecord").Parent.Element("Id").Value);
-                    rec.Language = root.Attribute("EmailRecord").Parent.Element("Language").Value;
-                    rec.EmailContactPartRecord_Id = int.Parse(root.Attribute("EmailRecord").Parent.Element("EmailContactPartRecord_Id").Value);
-                    rec.Validated = bool.Parse(root.Attribute("EmailRecord").Parent.Element("Validated").Value);
-                    rec.DataInserimento = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataInserimento").Value);
-                    rec.DataModifica = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataModifica").Value);
-                    rec.Email = root.Attribute("EmailRecord").Parent.Element("Email").Value;
-                    rec.Produzione = bool.Parse(root.Attribute("EmailRecord").Parent.Element("Produzione").Value);
-                    rec.AccettatoUsoCommerciale = bool.Parse(root.Attribute("EmailRecord").Parent.Element("AccettatoUsoCommerciale").Value);
-                    rec.AutorizzatoTerzeParti = bool.Parse(root.Attribute("EmailRecord").Parent.Element("AutorizzatoTerzeParti").Value);
-                    rec.KeyUnsubscribe = root.Attribute("EmailRecord").Parent.Element("KeyUnsubscribe").Value;
-                    rec.DataUnsubscribe = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataUnsubscribe").Value);
+
+                    //rec.Language = root.Attribute("EmailRecord").Parent.Element("Language").Value;
+                    var importedLanguage = root.Attribute("EmailRecord").Parent.Element("Language").Value;
+                    if (importedLanguage != null) {
+                        rec.Language = importedLanguage;
+                    }
+
+                    //rec.EmailContactPartRecord_Id = int.Parse(root.Attribute("EmailRecord").Parent.Element("EmailContactPartRecord_Id").Value);
+                    var importedEmailContactPartRecord_Id = int.Parse(root.Attribute("EmailRecord").Parent.Element("EmailContactPartRecord_Id").Value);
+                    if (importedEmailContactPartRecord_Id != null) {
+                        rec.EmailContactPartRecord_Id = importedEmailContactPartRecord_Id;
+                    }
+
+                    //rec.Validated = bool.Parse(root.Attribute("EmailRecord").Parent.Element("Validated").Value);
+                    var importedValidated = bool.Parse(root.Attribute("EmailRecord").Parent.Element("Validated").Value);
+                    if (importedValidated != null) {
+                        rec.Validated = importedValidated;
+                    }
+
+                    //rec.DataInserimento = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataInserimento").Value);
+                    var importedDataInserimento = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataInserimento").Value);
+                    if (importedDataInserimento != null) {
+                        rec.DataInserimento = importedDataInserimento;
+                    }
+
+                    //rec.DataModifica = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataModifica").Value);
+                    var importedDataModifica = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataModifica").Value);
+                    if (importedDataModifica != null) {
+                        rec.DataModifica = importedDataModifica;
+                    }
+                    
+                    //rec.Email = root.Attribute("EmailRecord").Parent.Element("Email").Value;
+                    var importedEmail = root.Attribute("EmailRecord").Parent.Element("Email").Value;
+                    if (importedEmail != null) {
+                        rec.Email = importedEmail;
+                    }
+
+                    //rec.Produzione = bool.Parse(root.Attribute("EmailRecord").Parent.Element("Produzione").Value);
+                    var importedProduzione = root.Attribute("EmailRecord").Parent.Element("Produzione").Value;
+                    if (importedProduzione != null) {
+                        rec.Produzione = bool.Parse(importedProduzione);
+                    }
+
+                    //rec.AccettatoUsoCommerciale = bool.Parse(root.Attribute("EmailRecord").Parent.Element("AccettatoUsoCommerciale").Value);
+                    var importedAccettatoUsoCommerciale = root.Attribute("EmailRecord").Parent.Element("AccettatoUsoCommerciale").Value;
+                    if (importedAccettatoUsoCommerciale != null) {
+                        rec.AccettatoUsoCommerciale = bool.Parse(importedAccettatoUsoCommerciale);
+                    }                    
+                    
+                   // rec.AutorizzatoTerzeParti = bool.Parse(root.Attribute("EmailRecord").Parent.Element("AutorizzatoTerzeParti").Value);
+                    var importedAutorizzatoTerzeParti = root.Attribute("EmailRecord").Parent.Element("AutorizzatoTerzeParti").Value;
+                    if (importedAutorizzatoTerzeParti != null) {
+                        rec.AutorizzatoTerzeParti = bool.Parse(importedAutorizzatoTerzeParti);
+                    }
+
+                    //rec.KeyUnsubscribe = root.Attribute("EmailRecord").Parent.Element("KeyUnsubscribe").Value;
+                    var importedKeyUnsubscribe = root.Attribute("EmailRecord").Parent.Element("KeyUnsubscribe").Value;
+                    if (importedKeyUnsubscribe != null) {
+                        rec.KeyUnsubscribe = importedKeyUnsubscribe;
+                    }
+
+                    //rec.DataUnsubscribe = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataUnsubscribe").Value);
+                    var importedDataUnsubscribe = root.Attribute("EmailRecord").Parent.Element("DataUnsubscribe").Value;
+                    if (importedDataUnsubscribe != null) {
+                        rec.DataUnsubscribe =  DateTime.Parse(importedDataUnsubscribe);
+                    }
                 }
 
             }

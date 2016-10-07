@@ -62,19 +62,36 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         }
 
         protected override void Importing(CommunicationContactPart part, ImportContentContext context) {
-            var root = context.Data.Element(part.PartDefinition.Name);
-            part.UserIdentifier = int.Parse(root.Attribute("UserIdentifier").Value);
-            part.Master = bool.Parse(root.Attribute("Master").Value);
-            part.Logs = root.Attribute("Logs").Value;
+            //var root = context.Data.Element(part.PartDefinition.Name);
+            //part.UserIdentifier = int.Parse(root.Attribute("UserIdentifier").Value);
+            //part.Master = bool.Parse(root.Attribute("Master").Value);
+            //part.Logs = root.Attribute("Logs").Value;
+
+            var importedUserIdentifier = context.Attribute(part.PartDefinition.Name, "UserIdentifier");
+            if (importedUserIdentifier != null) {
+                part.UserIdentifier = Convert.ToInt32(importedUserIdentifier);
+            }
+
+            var importedMaster = context.Attribute(part.PartDefinition.Name, "Master");
+            if (importedMaster != null) {
+                part.Master = Convert.ToBoolean(importedMaster);
+            }
+
+            var importedLogs = context.Attribute(part.PartDefinition.Name, "Logs");
+            if (importedLogs != null) {
+                part.Logs = importedLogs;
+            }
+
         }
 
         protected override void Exporting(CommunicationContactPart part, ExportContentContext context) {
-            var root = context.Element(part.PartDefinition.Name);
-            root.SetAttributeValue("UserIdentifier", part.UserIdentifier);
-            root.SetAttributeValue("Master", part.Master);
-            root.SetAttributeValue("Logs", part.Logs);
-
-
+            //var root = context.Element(part.PartDefinition.Name);
+            //root.SetAttributeValue("UserIdentifier", part.UserIdentifier);
+            //root.SetAttributeValue("Master", part.Master);
+            //root.SetAttributeValue("Logs", part.Logs);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("UserIdentifier", part.UserIdentifier);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Master", part.Master);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Logs", part.Logs);
         
         }
     }

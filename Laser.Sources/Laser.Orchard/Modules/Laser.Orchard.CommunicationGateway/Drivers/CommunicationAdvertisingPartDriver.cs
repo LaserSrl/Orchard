@@ -66,14 +66,19 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             //throw new NotImplementedException();
            // context.ImportAttribute(part.PartDefinition.Name, "CampaignId", s => part.ContentItem = context.GetItemFromSession(s));
 
-            var root = context.Data.Element(part.PartDefinition.Name);
-            part.CampaignId = int.Parse(root.Attribute("CampaignId").Value);
+            var importedCampaignId = context.Attribute(part.PartDefinition.Name, "CampaignId");
+            if (importedCampaignId != null) {
+                part.CampaignId = Convert.ToInt32(importedCampaignId);
+            }
+
+           
         }
 
         protected override void Exporting(CommunicationAdvertisingPart part, ExportContentContext context) {
             //throw new NotImplementedException();
-            var root = context.Element(part.PartDefinition.Name);
-            root.SetAttributeValue("CampaignId", part.CampaignId);
+            //var root = context.Element(part.PartDefinition.Name);
+            //root.SetAttributeValue("CampaignId", part.CampaignId);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("CampaignId", part.CampaignId);
 
         }
 

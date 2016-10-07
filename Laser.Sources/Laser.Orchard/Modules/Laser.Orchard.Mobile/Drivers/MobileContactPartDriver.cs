@@ -42,5 +42,9 @@ namespace Laser.Orchard.Mobile.Drivers {
                 viewModel = part.MobileEntries.Value.ToList();
             return ContentShape("Parts_MobileContact_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/MobileContact_Edit", Model: viewModel, Prefix: Prefix));
         }
+
+
+
+
     }
 }

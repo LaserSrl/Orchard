@@ -115,17 +115,62 @@ namespace Laser.Orchard.ContactForm.Drivers {
             root.SetAttributeValue("UseStaticSubject", part.UseStaticSubject);
         }
 
+
         protected override void Importing(ContactFormPart part, ImportContentContext context) {
             var root = context.Data.Element(part.PartDefinition.Name);
-            part.AttachFiles = bool.Parse(root.Attribute("AttachFiles").Value);
-            part.DisplayNameField = bool.Parse(root.Attribute("DisplayNameField").Value);
-            part.EnableUpload = bool.Parse(root.Attribute("EnableUpload").Value);
-            part.PathUpload = root.Attribute("PathUpload").Value;
-            part.RecipientEmailAddress = root.Attribute("RecipientEmailAddress").Value;
-            part.RequireNameField = bool.Parse(root.Attribute("RequireNameField").Value);
-            part.StaticSubjectMessage = root.Attribute("StaticSubjectMessage").Value;
-            part.TemplateRecord_Id = int.Parse(root.Attribute("TemplateRecord_Id").Value);
-            part.UseStaticSubject = bool.Parse(root.Attribute("UseStaticSubject").Value);
+
+            var importedAttachFiles = root.Attribute("AttachFiles").Value;
+            if (importedAttachFiles != null) {
+                part.AttachFiles =  bool.Parse(importedAttachFiles);
+            }
+
+           
+            var importedDisplayNameField = bool.Parse(root.Attribute("DisplayNameField").Value);
+            if (importedDisplayNameField != null) {
+                part.DisplayNameField =importedDisplayNameField;
+            }
+
+           
+            var importedEnableUpload = bool.Parse(root.Attribute("EnableUpload").Value);
+            if (importedEnableUpload != null) {
+                part.EnableUpload =importedEnableUpload;
+            }
+
+         
+            var importedPathUpload = root.Attribute("PathUpload").Value;
+            if (importedPathUpload != null) {
+                part.PathUpload = importedPathUpload;
+            }
+
+         
+            var importedRecipientEmailAddress = root.Attribute("RecipientEmailAddress").Value;
+            if (importedRecipientEmailAddress != null) {
+                part.RecipientEmailAddress = importedRecipientEmailAddress;
+            }
+
+          
+            var importedRequireNameField = bool.Parse(root.Attribute("RequireNameField").Value);
+            if (importedRequireNameField != null) {
+                part.RequireNameField = importedRequireNameField;
+            }
+
+         
+            var importedStaticSubjectMessage = root.Attribute("StaticSubjectMessage").Value;
+            if (importedStaticSubjectMessage != null) {
+                part.StaticSubjectMessage = importedStaticSubjectMessage;
+            }
+            
+         
+            var importedTemplateRecord_Id = int.Parse(root.Attribute("TemplateRecord_Id").Value);
+            if (importedTemplateRecord_Id != null) {
+                part.TemplateRecord_Id = importedTemplateRecord_Id;
+            }
+
+            var importedUseStaticSubject = bool.Parse(root.Attribute("UseStaticSubject").Value);
+            if (importedUseStaticSubject != null) {
+                part.UseStaticSubject = importedUseStaticSubject;
+            }
+
         }
         #endregion
     }
