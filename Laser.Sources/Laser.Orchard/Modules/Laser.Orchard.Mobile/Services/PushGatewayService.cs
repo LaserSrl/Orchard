@@ -993,14 +993,22 @@ namespace Laser.Orchard.Mobile.Services {
             };
 
             // genera il payload
-            string message = string.Format(@"
-            <toast>
-                <visual>
-                    <binding template=""ToastGeneric"">
-                        <text>{0}</text>
-                    </binding>  
-                </visual>
-            </toast>", pushMessage.Text);
+            StringBuilder sb = new StringBuilder();
+            sb.Clear();
+            sb.AppendFormat("<toast><visual><binding template=\"ToastGeneric\"><text>{0}</text>", FormatJsonValue(pushMessage.Text));
+            if (!string.IsNullOrEmpty(pushMessage.Eu)) {
+                sb.AppendFormat("<Eu>{0}</Eu>", FormatJsonValue(pushMessage.Eu));
+            }
+            else if (!string.IsNullOrEmpty(pushMessage.Iu)) {
+                sb.AppendFormat("<Iu>{0}</Iu>", FormatJsonValue(pushMessage.Iu));
+            }
+            else {
+                sb.AppendFormat("<Id>{0}</Id>", pushMessage.idContent);
+                sb.AppendFormat("<Rid>{0}</Rid>", pushMessage.idRelated);
+                sb.AppendFormat("<Ct>{0}</Ct>", FormatJsonValue(pushMessage.Ct));
+                sb.AppendFormat("<Al>{0}</Al>", FormatJsonValue(pushMessage.Al));
+            }
+            sb.Append("</binding></visual></toast>");
 
             string hostCheck = _shellSetting.RequestUrlHost ?? "";
             string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
@@ -1011,7 +1019,7 @@ namespace Laser.Orchard.Mobile.Services {
                 if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck) && (pnr.RegistrationMachineName == machineNameCheck)) {
                     push.QueueNotification(new WnsToastNotification {
                         ChannelUri = pnr.Token,
-                        Payload = XElement.Parse(message)
+                        Payload = XElement.Parse(sb.ToString())
                     });
 
                     if ((repeatable == false) && (pushMessage.idContent > 0)) {
