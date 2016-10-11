@@ -1,3 +1,6 @@
 [submodule "Orchard.Sources"]
 	path = Orchard.Sources
 	url = https://github.com/LaserSrl/Orchard.git
+[submodule "Nwazet.Commerce"]
+	path = Nwazet.Commerce
+	url = https://github.com/MatteoPiovanelli-Laser/Nwazet.Commerce.git

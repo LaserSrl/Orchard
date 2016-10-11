@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -119,12 +120,6 @@
     <Content Include="Module.txt" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\GestPayS2SEndpoint.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Laser.Orchard.PaymentGateway\Laser.Orchard.PaymentGateway.csproj">
-      <Project>{e6900a95-3d80-497d-ad29-998adc8ad3d7}</Project>
-      <Name>Laser.Orchard.PaymentGateway</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Navigation\" />

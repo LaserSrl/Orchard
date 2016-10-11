@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -164,14 +165,6 @@
     <Content Include="Views\EditorTemplates\Parts\MailCommunicationActions_Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
-      <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
-      <Name>Laser.Orchard.Commons</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Laser.Orchard.CommunicationGateway\Laser.Orchard.CommunicationGateway.csproj">
-      <Project>{bb12e69f-0976-407d-a716-542b7d22ee5f}</Project>
-      <Name>Laser.Orchard.CommunicationGateway</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.Queries\Laser.Orchard.Queries.csproj">
       <Project>{d494b57f-2ae6-460f-9785-565376409afc}</Project>
       <Name>Laser.Orchard.Queries</Name>

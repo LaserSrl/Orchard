@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -120,10 +121,6 @@
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Modules\Laser.Orchard.OpenAuthentication\Laser.Orchard.OpenAuthentication.csproj">
-      <Project>{9ce00190-3abe-41e2-966f-76a9b017eb65}</Project>
-      <Name>Laser.Orchard.OpenAuthentication</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
