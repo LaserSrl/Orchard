@@ -833,7 +833,7 @@ namespace Laser.Orchard.Mobile.Services {
 
                     if ((repeatable == false) && (pushMessage.idContent > 0)) {
                         SentRecord sr = new SentRecord();
-                        sr.DeviceType = "Android";
+                        sr.DeviceType = TipoDispositivo.Android.ToString();
                         sr.PushNotificationRecord_Id = pnr.Id;
                         sr.PushedItem = pushMessage.idContent;
                         sr.SentDate = DateTime.UtcNow;
@@ -938,7 +938,7 @@ namespace Laser.Orchard.Mobile.Services {
 
                             if ((repeatable == false) && (pushMessage.idContent > 0)) {
                                 SentRecord sr = new SentRecord();
-                                sr.DeviceType = "Apple";
+                                sr.DeviceType = TipoDispositivo.Apple.ToString();
                                 sr.PushNotificationRecord_Id = dispositivo.Id;
                                 sr.PushedItem = pushMessage.idContent;
                                 sr.SentDate = DateTime.UtcNow;
@@ -993,14 +993,22 @@ namespace Laser.Orchard.Mobile.Services {
             };
 
             // genera il payload
-            string message = string.Format(@"
-            <toast>
-                <visual>
-                    <binding template=""ToastGeneric"">
-                        <text>{0}</text>
-                    </binding>  
-                </visual>
-            </toast>", pushMessage.Text);
+            StringBuilder sb = new StringBuilder();
+            sb.Clear();
+            sb.AppendFormat("<toast><visual><binding template=\"ToastGeneric\"><text>{0}</text>", FormatJsonValue(pushMessage.Text));
+            if (!string.IsNullOrEmpty(pushMessage.Eu)) {
+                sb.AppendFormat("<Eu>{0}</Eu>", FormatJsonValue(pushMessage.Eu));
+            }
+            else if (!string.IsNullOrEmpty(pushMessage.Iu)) {
+                sb.AppendFormat("<Iu>{0}</Iu>", FormatJsonValue(pushMessage.Iu));
+            }
+            else {
+                sb.AppendFormat("<Id>{0}</Id>", pushMessage.idContent);
+                sb.AppendFormat("<Rid>{0}</Rid>", pushMessage.idRelated);
+                sb.AppendFormat("<Ct>{0}</Ct>", FormatJsonValue(pushMessage.Ct));
+                sb.AppendFormat("<Al>{0}</Al>", FormatJsonValue(pushMessage.Al));
+            }
+            sb.Append("</binding></visual></toast>");
 
             string hostCheck = _shellSetting.RequestUrlHost ?? "";
             string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
@@ -1011,12 +1019,12 @@ namespace Laser.Orchard.Mobile.Services {
                 if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck) && (pnr.RegistrationMachineName == machineNameCheck)) {
                     push.QueueNotification(new WnsToastNotification {
                         ChannelUri = pnr.Token,
-                        Payload = XElement.Parse(message)
+                        Payload = XElement.Parse(sb.ToString())
                     });
 
                     if ((repeatable == false) && (pushMessage.idContent > 0)) {
                         SentRecord sr = new SentRecord();
-                        sr.DeviceType = "Windows";
+                        sr.DeviceType = TipoDispositivo.WindowsMobile.ToString();
                         sr.PushNotificationRecord_Id = pnr.Id;
                         sr.PushedItem = pushMessage.idContent;
                         sr.SentDate = DateTime.UtcNow;
@@ -1060,6 +1068,9 @@ namespace Laser.Orchard.Mobile.Services {
         private void NotificationSent(INotification notification) {
             if (notification is ApnsNotification) {
                 _myLog.WriteLog(T("Sent: " + notification.GetType().Name + " -> " + (notification as ApnsNotification).DeviceToken + " -> " + notification).ToString());
+            }
+            else if (notification is WnsNotification) {
+                _myLog.WriteLog(T("Sent: " + notification.GetType().Name + " -> " + (notification as WnsNotification).ChannelUri + " -> " + notification).ToString());
             }
             else {
                 _myLog.WriteLog(T("Sent: " + notification.GetType().Name + " -> " + notification).ToString());

@@ -156,9 +156,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.ChartaWS", "Modules\Laser.Orchard.ChartaWS\Laser.Orchard.ChartaWS.csproj", "{5279F7EA-8309-4B1C-A089-68ACF917C519}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Braintree", "Modules\Laser.Orchard.Braintree\Laser.Orchard.Braintree.csproj", "{DDF6FDC9-29A3-43E6-8724-3CE9E26289B6}"
-	ProjectSection(ProjectDependencies) = postProject
-		{E6900A95-3D80-497D-AD29-998ADC8AD3D7} = {E6900A95-3D80-497D-AD29-998ADC8AD3D7}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvreaMontalto", "Themes\IvreaMontalto\IvreaMontalto.csproj", "{9DF0A376-D4BE-494A-8F3B-291E65C41684}"
 EndProject
@@ -168,19 +165,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KrakeDefaultTheme", "Themes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.AdminToolbarExtensions", "Modules\Laser.Orchard.AdminToolbarExtensions\Laser.Orchard.AdminToolbarExtensions.csproj", "{38090550-EAD0-420F-B45B-D76261E7044D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.HiddenFields", "Modules\Laser.Orchard.HiddenFields\Laser.Orchard.HiddenFields.csproj", "{57FB1498-3C95-4C13-A8EA-2505FA13E7B3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Vimeo", "Modules\Laser.Orchard.Vimeo\Laser.Orchard.Vimeo.csproj", "{97CB9F52-4116-4909-98CA-A5CA6EF3B034}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.TaskScheduler", "Modules\Laser.Orchard.TaskScheduler\Laser.Orchard.TaskScheduler.csproj", "{5A721556-43D7-497D-9E4F-7A83AB9EBE1F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.HiddenFields", "Modules\Laser.Orchard.HiddenFields\Laser.Orchard.HiddenFields.csproj", "{57FB1498-3C95-4C13-A8EA-2505FA13E7B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "inarCASSA", "Themes\inarCASSA\inarCASSA.csproj", "{3F8B2005-72C2-4495-91AC-92EFB35C9669}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.TaskScheduler", "Modules\Laser.Orchard.TaskScheduler\Laser.Orchard.TaskScheduler.csproj", "{5A721556-43D7-497D-9E4F-7A83AB9EBE1F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.PaymentGateway", "Modules\Laser.Orchard.PaymentGateway\Laser.Orchard.PaymentGateway.csproj", "{E6900A95-3D80-497D-AD29-998ADC8AD3D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.PaymentGestPay", "Modules\Laser.Orchard.PaymentGestPay\Laser.Orchard.PaymentGestPay.csproj", "{778D102C-6FA6-423E-87BE-1C31051AF3E7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.PaymentCartaSi", "Modules\Laser.Orchard.PaymentCartaSi\Laser.Orchard.PaymentCartaSi.csproj", "{B99FC6B2-1E08-4DE3-A6CC-AF42C9D48B81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "inarCASSA", "Themes\inarCASSA\inarCASSA.csproj", "{3F8B2005-72C2-4495-91AC-92EFB35C9669}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -490,22 +487,18 @@ Global
 		{38090550-EAD0-420F-B45B-D76261E7044D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38090550-EAD0-420F-B45B-D76261E7044D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38090550-EAD0-420F-B45B-D76261E7044D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57FB1498-3C95-4C13-A8EA-2505FA13E7B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57FB1498-3C95-4C13-A8EA-2505FA13E7B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57FB1498-3C95-4C13-A8EA-2505FA13E7B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57FB1498-3C95-4C13-A8EA-2505FA13E7B3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{97CB9F52-4116-4909-98CA-A5CA6EF3B034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{97CB9F52-4116-4909-98CA-A5CA6EF3B034}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97CB9F52-4116-4909-98CA-A5CA6EF3B034}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97CB9F52-4116-4909-98CA-A5CA6EF3B034}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57FB1498-3C95-4C13-A8EA-2505FA13E7B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57FB1498-3C95-4C13-A8EA-2505FA13E7B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57FB1498-3C95-4C13-A8EA-2505FA13E7B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57FB1498-3C95-4C13-A8EA-2505FA13E7B3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5A721556-43D7-497D-9E4F-7A83AB9EBE1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5A721556-43D7-497D-9E4F-7A83AB9EBE1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A721556-43D7-497D-9E4F-7A83AB9EBE1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A721556-43D7-497D-9E4F-7A83AB9EBE1F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3F8B2005-72C2-4495-91AC-92EFB35C9669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F8B2005-72C2-4495-91AC-92EFB35C9669}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F8B2005-72C2-4495-91AC-92EFB35C9669}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F8B2005-72C2-4495-91AC-92EFB35C9669}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6900A95-3D80-497D-AD29-998ADC8AD3D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6900A95-3D80-497D-AD29-998ADC8AD3D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6900A95-3D80-497D-AD29-998ADC8AD3D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -518,6 +511,10 @@ Global
 		{B99FC6B2-1E08-4DE3-A6CC-AF42C9D48B81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B99FC6B2-1E08-4DE3-A6CC-AF42C9D48B81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B99FC6B2-1E08-4DE3-A6CC-AF42C9D48B81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F8B2005-72C2-4495-91AC-92EFB35C9669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F8B2005-72C2-4495-91AC-92EFB35C9669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F8B2005-72C2-4495-91AC-92EFB35C9669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F8B2005-72C2-4495-91AC-92EFB35C9669}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -583,8 +580,8 @@ Global
 		{DDF6FDC9-29A3-43E6-8724-3CE9E26289B6} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{6F7B43E7-25B0-4CE4-B0FE-5087437540CA} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{38090550-EAD0-420F-B45B-D76261E7044D} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
-		{57FB1498-3C95-4C13-A8EA-2505FA13E7B3} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{97CB9F52-4116-4909-98CA-A5CA6EF3B034} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{57FB1498-3C95-4C13-A8EA-2505FA13E7B3} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{5A721556-43D7-497D-9E4F-7A83AB9EBE1F} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{E6900A95-3D80-497D-AD29-998ADC8AD3D7} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{778D102C-6FA6-423E-87BE-1C31051AF3E7} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}

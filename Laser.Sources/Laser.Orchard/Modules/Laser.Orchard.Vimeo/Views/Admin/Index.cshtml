@@ -1,9 +1,14 @@
-﻿@using Laser.Orchard.Vimeo;
+﻿@using Laser.Orchard.Commons.Helpers;
+@using Laser.Orchard.Vimeo;
 @using Laser.Orchard.Vimeo.ViewModels;
 
 @model Laser.Orchard.Vimeo.ViewModels.VimeoSettingsPartViewModel
 
-@*After restarting an instance, the files with the lists of countries and stuff have not been readyet. People may try to directly
+@{
+    Script.Require("jQUery_NestedModels").AtHead();
+}
+
+@*After restarting an instance, the files with the lists of countries and stuff have not been read yet. People may try to directly
 access the URL of this view, without going through the controller, and that would cause errors. So here we force going through the
 controller if the files have not been processed.*@
 @if (VimeoSettingsPartViewModel.CCLicenseDictionary == null || VimeoSettingsPartViewModel.CCLicenseDictionary.Count == 0 || VimeoSettingsPartViewModel.LocaleDictionary == null || VimeoSettingsPartViewModel.LocaleDictionary.Count == 0 || VimeoSettingsPartViewModel.ContentRatingDictionary == null || VimeoSettingsPartViewModel.ContentRatingDictionary.Count == 0) {
@@ -12,8 +17,16 @@ controller if the files have not been processed.*@
 
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset id="TokenArea">
-        @Html.TextBoxFor(m => m.AccessToken, new { placeholder = T("Authorized Access Token"), @class = "text medium" })
-        <span class="hint">@T("Insert your authorized Access Token. You can find it in your Vimeo App settings.")</span>
+        <p>@T("Get your tokens on ")<a href="https://developer.vimeo.com/apps" target="_blank">Vimeo.com</a></p>
+        <div id="allAccessTokens">
+            @Html.EditorFor(m => m.AccessTokens)
+        </div>
+        <div id="deletedTokens" class="display: none;">
+            @Html.EditorFor(m=> m.DeletedAccessTokens)
+        </div>
+        <div id="addTokenButton">
+            @Html.LinkToAddNestedForm(m => m.AccessTokens, "<i class=\"fa fa-plus\" style=\"color: green\"></i> " + T(" Add new token").Text, "#allAccessTokens", ".j_VimeoATVM")
+        </div>
     </fieldset>
     <fieldset id="VimeoCategories">
         <legend>@T("Categorization for the uploads")</legend>
