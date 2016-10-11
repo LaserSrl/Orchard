@@ -753,6 +753,7 @@ namespace Laser.Orchard.Mobile.Services {
                 setting = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidApiKeyDevelopment;
             var config = new GcmConfiguration(setting);
             var serviceUrl = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidPushServiceUrl;
+            var notificationIcon = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidPushNotificationIcon;
             if (string.IsNullOrWhiteSpace(serviceUrl)) {
                 // default: FCM
                 config.OverrideUrl("https://fcm.googleapis.com/fcm/send");
@@ -811,26 +812,30 @@ namespace Laser.Orchard.Mobile.Services {
             // sezione notification
             StringBuilder sbNotification = new StringBuilder();
             sbNotification.Clear();
-            sbNotification.AppendFormat("{{ \"body\": \"{0}\"", FormatJsonValue(pushMessage.Text));
-            //sbNotification.AppendFormat(",\"title\":\"{0}\"", FormatJsonValue(pushMessage.Text));
-            //sbNotification.AppendFormat(",\"icon\":\"{0}\"", "new");
-            sbNotification.Append("}");
-
+            if (string.IsNullOrWhiteSpace(notificationIcon) == false) {
+                sbNotification.AppendFormat("{{ \"body\": \"{0}\"", FormatJsonValue(pushMessage.Text));
+                //sbNotification.AppendFormat(",\"title\":\"{0}\"", FormatJsonValue(pushMessage.Text));
+                sbNotification.AppendFormat(",\"icon\":\"{0}\"", notificationIcon);
+                sbNotification.Append("}");
+            }
             string hostCheck = _shellSetting.RequestUrlHost ?? "";
             string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
             string machineNameCheck = System.Environment.MachineName ?? "";
             push.Start();
+            GcmNotification objNotification = null;
             foreach (PushNotificationVM pnr in listdispositivo) {
                 // verifica che il device sia stato registrato nell'ambiente corrente
                 if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck) && (pnr.RegistrationMachineName == machineNameCheck)) {
-                    push.QueueNotification(new GcmNotification {
+                    objNotification = new GcmNotification {
                         RegistrationIds = new List<string> { pnr.Token },
-                        Notification = JObject.Parse(sbNotification.ToString()),
                         Data = JObject.Parse(sb.ToString()),
                         Priority = GcmNotificationPriority.High // necessario per bypassare il fatto che l'app non sia in whitelist
                         //TimeToLive = 172800 //2 giorni espressi in secondi
-                    });
-
+                    };
+                    if (sbNotification.Length > 0) {
+                        objNotification.Notification = JObject.Parse(sbNotification.ToString());
+                    }
+                    push.QueueNotification(objNotification);
                     if ((repeatable == false) && (pushMessage.idContent > 0)) {
                         SentRecord sr = new SentRecord();
                         sr.DeviceType = TipoDispositivo.Android.ToString();
@@ -1079,7 +1084,11 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         private void NotificationFailed(INotification notification, AggregateException notificationFailureException) {
-            _myLog.WriteLog((T("Failure: " + notification.GetType().Name + " -> " + notificationFailureException.Message + " -> " + notification.ToString())).ToString());
+            string innerEx = "";
+            if (notificationFailureException.InnerException != null) {
+                innerEx = notificationFailureException.InnerException.Message;
+            }
+            _myLog.WriteLog((T("Failure: " + notification.GetType().Name + " -> " + notificationFailureException.Message + " " + innerEx + " -> " + notification.ToString())).ToString());
         }
 
         private void DeviceSubscriptionExpiredAppleProduzione(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, INotification notification) {
