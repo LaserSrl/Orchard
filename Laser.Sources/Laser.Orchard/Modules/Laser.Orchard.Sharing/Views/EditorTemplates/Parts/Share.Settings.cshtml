@@ -1,9 +1,0 @@
-﻿@model Laser.Orchard.Sharing.Models.ShareBarSettingsPart
-<fieldset>
-    <legend>@T("Content sharing settings")</legend>
-    <div>
-        @Html.LabelFor(m => m.AddThisAccount, @T("AddThis service account"))
-        @Html.EditorFor(m => m.AddThisAccount)
-        @Html.ValidationMessageFor(m => m.AddThisAccount, "*")
-    </div>
-</fieldset>

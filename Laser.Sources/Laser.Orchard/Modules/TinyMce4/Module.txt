@@ -1,9 +1,0 @@
-﻿Name: TinyMce 4
-Author: Nikita Belyaev
-Website: -
-Version: 1.7.2
-OrchardVersion: 1.8
-Description: The TinyMCE 4 with all plugins + russian language
-FeatureDescription: TinyMCE HTML WYSIWYG editor.
-FeatureDependencies: Orchard.jQuery
-Category: Input Editor

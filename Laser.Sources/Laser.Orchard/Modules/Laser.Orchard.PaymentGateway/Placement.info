@@ -1,6 +1,0 @@
-﻿<Placement>
-  <Match DisplayType="Detail">
-    <Place Parts_PayButton="Content:after"/>
-  </Match>
-  <Place Parts_PayButton_Edit="Content:after" />
-</Placement>

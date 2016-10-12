@@ -1,9 +1,0 @@
-﻿ITA,Italiano
-ENG,Inglese
-SPA,Spagnolo
-FRA,Francese
-GER,Tedesco
-JPG,Giapponese
-CHI,Cinese
-ARA,Arabo
-RUS,Russo

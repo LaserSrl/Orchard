@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.LinkCreator",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.TranslationChecker", "Utilities\Laser.Orchard.TranslationChecker\Laser.Orchard.TranslationChecker.csproj", "{5CCFEF5A-D043-4F3B-A198-650736EFA8AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nwazet.Commerce", "..\..\Nwazet.Commerce\Nwazet.Commerce.csproj", "{909ACC2C-D672-4752-B75B-6822E05FE0E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{5CCFEF5A-D043-4F3B-A198-650736EFA8AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CCFEF5A-D043-4F3B-A198-650736EFA8AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CCFEF5A-D043-4F3B-A198-650736EFA8AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{909ACC2C-D672-4752-B75B-6822E05FE0E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{909ACC2C-D672-4752-B75B-6822E05FE0E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{909ACC2C-D672-4752-B75B-6822E05FE0E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{909ACC2C-D672-4752-B75B-6822E05FE0E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,5 +51,6 @@ Global
 		{54548A99-0B95-4143-A4DF-2E92EEA5752A} = {4641B8B9-62AD-45A5-B0C0-9F31BBC8B425}
 		{D903D279-3F10-45CF-B6B4-6D4E48666B62} = {67FA933C-12AB-44BC-BF7A-6A5F4FD919DD}
 		{5CCFEF5A-D043-4F3B-A198-650736EFA8AE} = {67FA933C-12AB-44BC-BF7A-6A5F4FD919DD}
+		{909ACC2C-D672-4752-B75B-6822E05FE0E3} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal

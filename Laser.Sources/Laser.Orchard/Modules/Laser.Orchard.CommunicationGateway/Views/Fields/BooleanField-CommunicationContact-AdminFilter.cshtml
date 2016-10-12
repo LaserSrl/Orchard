@@ -1,9 +1,0 @@
-﻿@{
-    var boolField = (Orchard.Fields.Fields.BooleanField)Model.Field;
-}
-<fieldset>
-    <legend>@boolField.DisplayName</legend>
-    @if (boolField.Value.HasValue) {
-        @boolField.Value.Value
-    }
-</fieldset>
