@@ -3,6 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using System;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.Queues.Drivers
 {
@@ -35,7 +36,10 @@ namespace Laser.Orchard.Queues.Drivers
 
             foreach (QueueUserRecord recQueueUser in part.UserQueues) 
             {
-                recQueueUser.Id=int.Parse(root.Element("Id").Value);
+                if(int.Parse(root.Element("Id").Value)!=null)
+                    recQueueUser.Id=int.Parse(root.Element("Id").Value);
+                
+                
                 recQueueUser.QueueNumber = int.Parse(root.Element("QueueNumber").Value);
                 recQueueUser.NumNotifications = int.Parse(root.Element("NumNotifications").Value);
                 recQueueUser.RegistrationDate = DateTime.Parse(root.Element("RegistrationDate").Value);
@@ -53,22 +57,21 @@ namespace Laser.Orchard.Queues.Drivers
 
             var root = context.Element(part.PartDefinition.Name);
 
-            if(part.UserQueues.Count>0)
+            if(part.UserQueues!=null)
             {
                 foreach (QueueUserRecord receq in part.UserQueues) 
                 {
-                    root.Element("Id").SetAttributeValue("Id", receq.Id);
-                    root.Element("CultureCode").SetAttributeValue("QueueNumber", receq.QueueNumber);
-                    root.Element("NumNotifications").SetAttributeValue("NumNotifications", receq.NumNotifications);
-                    root.Element("RegistrationDate").SetAttributeValue("RegistrationDate", receq.RegistrationDate);
+                    root.SetAttributeValue("Id", receq.Id);
+                    root.SetAttributeValue("QueueNumber", receq.QueueNumber);
+                    root.SetAttributeValue("NumNotifications", receq.NumNotifications);
+                    root.SetAttributeValue("RegistrationDate", receq.RegistrationDate);
 
-                    root.Element("QueueRecord").SetAttributeValue("QueueRecord", "QueueRecord");
-
-                    var QueueRec = context.Element(part.PartDefinition.Name).Element("QueueRecord");
-                    QueueRec.Element("Id").SetAttributeValue("Id", receq.QueueRecord.Id);
-                    QueueRec.Element("QueueName").SetAttributeValue("QueueName", receq.QueueRecord.Id);
-                    QueueRec.Element("TicketGap").SetAttributeValue("TicketGap", receq.QueueRecord.TicketGap);
-                    QueueRec.Element("MaxTicketNumber").SetAttributeValue("MaxTicketNumber", receq.QueueRecord.MaxTicketNumber);
+                    XElement QueueRec = new XElement("QueueRecord");
+                    
+                    QueueRec.SetAttributeValue("Id", receq.QueueRecord.Id);
+                    QueueRec.SetAttributeValue("QueueName", receq.QueueRecord.Id);
+                    QueueRec.SetAttributeValue("TicketGap", receq.QueueRecord.TicketGap);
+                    QueueRec.SetAttributeValue("MaxTicketNumber", receq.QueueRecord.MaxTicketNumber);
 
                 }                            
 

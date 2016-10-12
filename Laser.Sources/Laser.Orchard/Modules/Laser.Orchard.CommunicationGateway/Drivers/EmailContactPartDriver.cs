@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class EmailContactPartDriver : ContentPartDriver<EmailContactPart> {
@@ -133,111 +134,96 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
 
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part"></param>
+        /// <param name="context"></param>
         protected override void Importing(EmailContactPart part, ImportContentContext context) {
+
             //throw new NotImplementedException();
 
             var root = context.Data.Element(part.PartDefinition.Name);
-            var emailRecord = context.Attribute("EmailRecord", "EmailRecord");
+            var emailRecord = context.Data.Element(part.PartDefinition.Name).Elements("EmailRecord");
 
             if (emailRecord != null) {
-                foreach (CommunicationEmailRecord rec in part.EmailRecord) {
-                    
-                    rec.Id = int.Parse(root.Attribute("EmailRecord").Parent.Element("Id").Value);
+                List<CommunicationEmailRecord> listcomemail = new List<CommunicationEmailRecord>();
 
-                    //rec.Language = root.Attribute("EmailRecord").Parent.Element("Language").Value;
-                    var importedLanguage = root.Attribute("EmailRecord").Parent.Element("Language").Value;
-                    if (importedLanguage != null) {
-                        rec.Language = importedLanguage;
-                    }
+                //foreach (CommunicationEmailRecord rec in part.EmailRecord) {
+                foreach (var rec in emailRecord) {
+                    CommunicationEmailRecord recMail = new CommunicationEmailRecord();
 
-                    //rec.EmailContactPartRecord_Id = int.Parse(root.Attribute("EmailRecord").Parent.Element("EmailContactPartRecord_Id").Value);
-                    var importedEmailContactPartRecord_Id = int.Parse(root.Attribute("EmailRecord").Parent.Element("EmailContactPartRecord_Id").Value);
-                    if (importedEmailContactPartRecord_Id != null) {
-                        rec.EmailContactPartRecord_Id = importedEmailContactPartRecord_Id;
-                    }
+                    var Id = rec.Attribute("Id").Value;
+                    if (Id != null)
+                        recMail.Id = Convert.ToInt32(Id);
 
-                    //rec.Validated = bool.Parse(root.Attribute("EmailRecord").Parent.Element("Validated").Value);
-                    var importedValidated = bool.Parse(root.Attribute("EmailRecord").Parent.Element("Validated").Value);
-                    if (importedValidated != null) {
-                        rec.Validated = importedValidated;
-                    }
+                    var EmailContactPartRecord_Id = rec.Attribute("EmailContactPartRecord_Id").Value;
+                    if (EmailContactPartRecord_Id != null)
+                        recMail.EmailContactPartRecord_Id = Convert.ToInt32(EmailContactPartRecord_Id);
 
-                    //rec.DataInserimento = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataInserimento").Value);
-                    var importedDataInserimento = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataInserimento").Value);
-                    if (importedDataInserimento != null) {
-                        rec.DataInserimento = importedDataInserimento;
-                    }
+                    var Validated = rec.Attribute("Validated").Value;
+                    if (Validated != null)
+                        recMail.Validated = Convert.ToBoolean(Validated);
 
-                    //rec.DataModifica = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataModifica").Value);
-                    var importedDataModifica = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataModifica").Value);
-                    if (importedDataModifica != null) {
-                        rec.DataModifica = importedDataModifica;
-                    }
-                    
-                    //rec.Email = root.Attribute("EmailRecord").Parent.Element("Email").Value;
-                    var importedEmail = root.Attribute("EmailRecord").Parent.Element("Email").Value;
-                    if (importedEmail != null) {
-                        rec.Email = importedEmail;
-                    }
+                    var DataInserimento = rec.Attribute("DataInserimento").Value;
+                    if (DataInserimento != null)
+                        recMail.DataInserimento = Convert.ToDateTime(DataInserimento);
 
-                    //rec.Produzione = bool.Parse(root.Attribute("EmailRecord").Parent.Element("Produzione").Value);
-                    var importedProduzione = root.Attribute("EmailRecord").Parent.Element("Produzione").Value;
-                    if (importedProduzione != null) {
-                        rec.Produzione = bool.Parse(importedProduzione);
-                    }
+                    var DataModifica = rec.Attribute("DataModifica").Value;
+                    if (DataModifica != null)
+                        recMail.DataModifica = Convert.ToDateTime(DataModifica);
 
-                    //rec.AccettatoUsoCommerciale = bool.Parse(root.Attribute("EmailRecord").Parent.Element("AccettatoUsoCommerciale").Value);
-                    var importedAccettatoUsoCommerciale = root.Attribute("EmailRecord").Parent.Element("AccettatoUsoCommerciale").Value;
-                    if (importedAccettatoUsoCommerciale != null) {
-                        rec.AccettatoUsoCommerciale = bool.Parse(importedAccettatoUsoCommerciale);
-                    }                    
-                    
-                   // rec.AutorizzatoTerzeParti = bool.Parse(root.Attribute("EmailRecord").Parent.Element("AutorizzatoTerzeParti").Value);
-                    var importedAutorizzatoTerzeParti = root.Attribute("EmailRecord").Parent.Element("AutorizzatoTerzeParti").Value;
-                    if (importedAutorizzatoTerzeParti != null) {
-                        rec.AutorizzatoTerzeParti = bool.Parse(importedAutorizzatoTerzeParti);
-                    }
+                    var Email = rec.Attribute("Email").Value;
+                    if (Email != null)
+                        recMail.Email = Email;
 
-                    //rec.KeyUnsubscribe = root.Attribute("EmailRecord").Parent.Element("KeyUnsubscribe").Value;
-                    var importedKeyUnsubscribe = root.Attribute("EmailRecord").Parent.Element("KeyUnsubscribe").Value;
-                    if (importedKeyUnsubscribe != null) {
-                        rec.KeyUnsubscribe = importedKeyUnsubscribe;
-                    }
+                    var Produzione = rec.Attribute("Produzione").Value;
+                    if (Produzione != null)
+                        recMail.Produzione = Convert.ToBoolean(Produzione);
 
-                    //rec.DataUnsubscribe = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataUnsubscribe").Value);
-                    var importedDataUnsubscribe = root.Attribute("EmailRecord").Parent.Element("DataUnsubscribe").Value;
-                    if (importedDataUnsubscribe != null) {
-                        rec.DataUnsubscribe =  DateTime.Parse(importedDataUnsubscribe);
-                    }
+                    var AccettatoUsoCommerciale = rec.Attribute("AccettatoUsoCommerciale").Value;
+                    if (AccettatoUsoCommerciale != null)
+                        recMail.AccettatoUsoCommerciale = Convert.ToBoolean(AccettatoUsoCommerciale);
+
+                    var AutorizzatoTerzeParti = rec.Attribute("AutorizzatoTerzeParti").Value;
+                    if (AutorizzatoTerzeParti != null)
+                        recMail.AutorizzatoTerzeParti = Convert.ToBoolean(AutorizzatoTerzeParti);
+
+                    listcomemail.Add(recMail);
+                    part.EmailEntries.Value = listcomemail;
+                    part.EmailRecord = part.EmailEntries.Value;
+
                 }
 
             }
 
         }
 
+
+
+
         protected override void Exporting(EmailContactPart part, ExportContentContext context) {
-            //throw new NotImplementedException();
-            var root = context.Element(part.PartDefinition.Name);
-
+            
+           // var root = context.Element(part.PartDefinition.Name);
+            
             if (part.EmailRecord != null) {
-
-                context.Element(part.PartDefinition.Name).SetAttributeValue("EmailRecord", part.EmailRecord);
-                var email = context.Element(part.PartDefinition.Name).Element("EmailRecord");
-
+                var root = context.Element(part.PartDefinition.Name);
                 foreach (CommunicationEmailRecord rec in part.EmailRecord) {
+                    XElement emailText = new XElement("EmailRecord");
 
-                    email.Element("Id").SetAttributeValue("Id", rec.Id);
-                    email.Element("Language").SetAttributeValue("Language", rec.Language);
-                    email.Element("EmailContactPartRecord_Id").SetAttributeValue("EmailContactPartRecord_Id", rec.EmailContactPartRecord_Id);
-                    email.Element("Validated").SetAttributeValue("Validated", rec.Validated);
-                    email.Element("DataInserimento").SetAttributeValue("DataInserimento", rec.DataInserimento);
-                    email.Element("DataModifica").SetAttributeValue("DataModifica", rec.DataModifica);
-                    email.Element("Email").SetAttributeValue("Email", rec.Email);
-                    email.Element("Produzione").SetAttributeValue("Produzione", rec.Produzione);
-                    email.Element("AccettatoUsoCommerciale").SetAttributeValue("AccettatoUsoCommerciale", rec.AccettatoUsoCommerciale);
-                    email.Element("AutorizzatoTerzeParti").SetAttributeValue("AutorizzatoTerzeParti", rec.AutorizzatoTerzeParti);
-                    email.Element("KeyUnsubscribe").SetAttributeValue("KeyUnsubscribe", rec.KeyUnsubscribe);
-                    email.Element("DataUnsubscribe").SetAttributeValue("DataUnsubscribe", rec.DataUnsubscribe);
+                    emailText.SetAttributeValue("Id", rec.Id);
+                    emailText.SetAttributeValue("Language", rec.Language);
+                    emailText.SetAttributeValue("EmailContactPartRecord_Id", rec.EmailContactPartRecord_Id);
+                    emailText.SetAttributeValue("Validated", rec.Validated);
+                    emailText.SetAttributeValue("DataInserimento", rec.DataInserimento);
+                    emailText.SetAttributeValue("DataModifica", rec.DataModifica);
+                    emailText.SetAttributeValue("Email", rec.Email);
+                    emailText.SetAttributeValue("Produzione", rec.Produzione);
+                    emailText.SetAttributeValue("AccettatoUsoCommerciale", rec.AccettatoUsoCommerciale);
+                    emailText.SetAttributeValue("AutorizzatoTerzeParti", rec.AutorizzatoTerzeParti);
+                    emailText.SetAttributeValue("KeyUnsubscribe", rec.KeyUnsubscribe);
+                    emailText.SetAttributeValue("DataUnsubscribe", rec.DataUnsubscribe);
+                    root.Add(emailText);
                 }
             }
            

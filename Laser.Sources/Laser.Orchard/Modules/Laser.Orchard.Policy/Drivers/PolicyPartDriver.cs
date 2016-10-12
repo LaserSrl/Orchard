@@ -85,8 +85,17 @@ namespace Laser.Orchard.Policy.Drivers {
             }
             return Editor(part, shapeHelper);
         }
+
+
+
         #region [ Import/Export ]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part"></param>
+        /// <param name="context"></param>
         protected override void Exporting(PolicyPart part, ExportContentContext context) {
+
             var root = context.Element(part.PartDefinition.Name);
             root.SetAttributeValue("IncludePendingPolicy", part.IncludePendingPolicy);
 
@@ -111,9 +120,17 @@ namespace Laser.Orchard.Policy.Drivers {
             root.SetAttributeValue("PolicyTextReferencesCsv", String.Join(",", PolicyTextReferencesIdentities.ToArray()));
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part"></param>
+        /// <param name="context"></param>
         protected override void Importing(PolicyPart part, ImportContentContext context) {
+            
             var root = context.Data.Element(part.PartDefinition.Name);
             var includePendingPolicy = IncludePendingPolicyOptions.Yes;
+           
             List<string> policyTextReferencesList = new List<string>();
             var policyTextReferencesIdentities = root.Attribute("PolicyTextReferencesCsv").Value;
 

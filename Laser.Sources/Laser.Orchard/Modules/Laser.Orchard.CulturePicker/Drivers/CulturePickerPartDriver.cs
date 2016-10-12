@@ -9,6 +9,7 @@ using System;
 using System.Web;
 using Orchard;
 using Orchard.ContentManagement.Handlers;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.CulturePicker.Drivers {
     
@@ -58,45 +59,47 @@ namespace Laser.Orchard.CulturePicker.Drivers {
 
         protected override void Exporting(CulturePickerPart part, ExportContentContext context) {
 
+           var root = context.Element(part.PartDefinition.Name);
            if (part.AvailableCultures != null) 
             {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("AvailableCultures", part.AvailableCultures);
-                var avCult = context.Element(part.PartDefinition.Name).Element("AvailableCultures");
+                                
                 foreach (ExtendedCultureRecord recAvCulture in part.AvailableCultures) 
                 {
-                    avCult.Element("Id").SetAttributeValue("Id", recAvCulture.Id);
-                    avCult.Element("CultureCode").SetAttributeValue("CultureCode", recAvCulture.CultureCode);
-                    avCult.Element("DisplayName").SetAttributeValue("DisplayName", recAvCulture.DisplayName);
-                    avCult.Element("Priority").SetAttributeValue("Priority", recAvCulture.Priority);               
+                    XElement avCult = new XElement("AvailableCultures");
+                    avCult.SetAttributeValue("Id", recAvCulture.Id);
+                    avCult.SetAttributeValue("CultureCode", recAvCulture.CultureCode);
+                    avCult.SetAttributeValue("DisplayName", recAvCulture.DisplayName);
+                    avCult.SetAttributeValue("Priority", recAvCulture.Priority);
+                    root.Add(avCult);
                 }
             }
 
             if (part.TranslatedCultures != null) 
             {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("TranslatedCultures", part.TranslatedCultures);
-                var transCult =context.Element(part.PartDefinition.Name).Element("TranslatedCultures");
-
+                
                 foreach (ExtendedCultureRecord recTranslCulture in part.TranslatedCultures) 
                 {
-                    transCult.Element("Id").SetAttributeValue("Id", recTranslCulture.Id);
-                    transCult.Element("CultureCode").SetAttributeValue("CultureCode", recTranslCulture.CultureCode);
-                    transCult.Element("DisplayName").SetAttributeValue("DisplayName", recTranslCulture.DisplayName);
-                    transCult.Element("Priority").SetAttributeValue("Priority", recTranslCulture.Priority);
+                    XElement transCult = new XElement("TranslatedCultures");
+                    transCult.SetAttributeValue("Id", recTranslCulture.Id);
+                    transCult.SetAttributeValue("CultureCode", recTranslCulture.CultureCode);
+                    transCult.SetAttributeValue("DisplayName", recTranslCulture.DisplayName);
+                    transCult.SetAttributeValue("Priority", recTranslCulture.Priority);
+                    root.Add(transCult);
                 }
             }
 
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ShowOnlyPertinentCultures", part.ShowOnlyPertinentCultures);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ShowLabel", part.ShowLabel);
-                          
+                                     
             if (part.UserCulture !=null)
             {
                 ExtendedCultureRecord userCulture= part.UserCulture;
                 context.Element(part.PartDefinition.Name).SetAttributeValue("UserCulture", part.UserCulture);
                 var userCult = context.Element(part.PartDefinition.Name).Element("UserCulture");
-                userCult.Element("Id").SetAttributeValue("Id", userCulture.Id);
-                userCult.Element("CultureCode").SetAttributeValue("CultureCode", userCulture.CultureCode);
-                userCult.Element("DisplayName").SetAttributeValue("DisplayName", userCulture.DisplayName);
-                userCult.Element("Priority").SetAttributeValue("Priority", userCulture.Priority);
+                
+                userCult.SetAttributeValue("Id", userCulture.Id);
+                userCult.SetAttributeValue("CultureCode", userCulture.CultureCode);
+                userCult.SetAttributeValue("DisplayName", userCulture.DisplayName);
+                userCult.SetAttributeValue("Priority", userCulture.Priority);
+                root.Add(userCult);
             }
 
        }

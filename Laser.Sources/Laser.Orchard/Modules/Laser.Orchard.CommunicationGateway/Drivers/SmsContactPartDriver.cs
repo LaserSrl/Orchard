@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class SmsContactPartDriver : ContentPartDriver<SmsContactPart> {
@@ -155,103 +156,84 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part"></param>
+        /// <param name="context"></param>
         protected override void Importing(SmsContactPart part, ImportContentContext context) {
+
             //throw new NotImplementedException();
 
-            var root = context.Data.Element(part.PartDefinition.Name);
-
-            var importedSmsRecord = context.Attribute("SmsRecord", "SmsRecord");
-
+            var importedSmsRecord = context.Data.Element(part.PartDefinition.Name).Elements("SmsRecord");
+          
             if (importedSmsRecord != null) {
 
-                foreach (CommunicationSmsRecord rec in part.SmsRecord) {
-                    rec.Id = int.Parse(root.Attribute("SmsRecord").Parent.Element("Id").Value);
+                List<CommunicationSmsRecord> listCom = new List<CommunicationSmsRecord>();
+                foreach (var sms in importedSmsRecord) 
+                {
+                    CommunicationSmsRecord comsms = new CommunicationSmsRecord();
 
-                    //rec.Language = root.Attribute("SmsRecord").Parent.Element("Language").Value;
-                    //rec.Validated = bool.Parse(root.Attribute("SmsRecord").Parent.Element("Validated").Value);
-                    //rec.DataInserimento = DateTime.Parse(root.Attribute("SmsRecord").Parent.Element("DataInserimento").Value);
-                    //rec.DataModifica = DateTime.Parse(root.Attribute("SmsRecord").Parent.Element("DataModifica").Value);
-                    //rec.Sms = root.Attribute("SmsRecord").Parent.Element("Sms").Value;
-                    //rec.Prefix = root.Attribute("SmsRecord").Parent.Element("Prefix").Value;
-                    //rec.Produzione = bool.Parse(root.Attribute("SmsRecord").Parent.Element("Produzione").Value);
-                    //rec.AccettatoUsoCommerciale = bool.Parse(root.Attribute("SmsRecord").Parent.Element("AccettatoUsoCommerciale").Value);
-                    //rec.AutorizzatoTerzeParti = bool.Parse(root.Attribute("SmsRecord").Parent.Element("AutorizzatoTerzeParti").Value);
+                    var DataModifica = sms.Attribute("DataModifica").Value;
+                    if (DataModifica !=null)
+                        comsms.DataModifica = Convert.ToDateTime(DataModifica);
 
+                    var DataInserimento = sms.Attribute("DataInserimento").Value;
+                    if (DataInserimento != null)
+                        comsms.DataInserimento = Convert.ToDateTime(DataInserimento);
 
-                    var importedLanguage = root.Attribute("EmailRecord").Parent.Element("Language").Value;
-                    if (importedLanguage != null) {
-                        rec.Language = importedLanguage;
-                    }
+                    var Prefix = sms.Attribute("Prefix").Value;
+                    if (Prefix != null)
+                        comsms.Prefix = Prefix;
 
-                   
-                    var importedValidated = bool.Parse(root.Attribute("EmailRecord").Parent.Element("Validated").Value);
-                    if (importedValidated != null) {
-                        rec.Validated = importedValidated;
-                    }
+                    var Sms = sms.Attribute("Sms").Value;
+                    if (Sms != null)
+                        comsms.Sms = Sms;
 
-                    var importedDataInserimento = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataInserimento").Value);
-                    if (importedDataInserimento != null) {
-                        rec.DataInserimento = importedDataInserimento;
-                    }
+                    var Produzione = sms.Attribute("Produzione").Value;
+                    if (Produzione != null)
+                        comsms.Produzione =Convert.ToBoolean(Produzione);
 
-                    var importedDataModifica = DateTime.Parse(root.Attribute("EmailRecord").Parent.Element("DataModifica").Value);
-                    if (importedDataModifica != null) {
-                        rec.DataModifica = importedDataModifica;
-                    }
+                    var AccettatoUsoCommerciale = sms.Attribute("AccettatoUsoCommerciale").Value;
+                    if (AccettatoUsoCommerciale != null)
+                        comsms.AccettatoUsoCommerciale = Convert.ToBoolean(AccettatoUsoCommerciale);
 
-                    var importedSms = root.Attribute("EmailRecord").Parent.Element("Sms").Value;
-                    if (importedSms != null) {
-                        rec.Sms = importedSms;
-                    }
-
-                    var importedPrefix = root.Attribute("EmailRecord").Parent.Element("Prefix").Value;
-                    if (importedPrefix != null) {
-                        rec.Prefix = importedPrefix;
-                    }
-
-                    var importedProduzione = root.Attribute("EmailRecord").Parent.Element("Produzione").Value;
-                    if (importedProduzione != null) {
-                        rec.Produzione = bool.Parse(importedProduzione);
-                    }
-
-                    var importedAccettatoUsoCommerciale = root.Attribute("EmailRecord").Parent.Element("AccettatoUsoCommerciale").Value;
-                    if (importedAccettatoUsoCommerciale != null) {
-                        rec.AccettatoUsoCommerciale = bool.Parse(importedAccettatoUsoCommerciale);
-                    }
+                    var AutorizzatoTerzeParti = sms.Attribute("AutorizzatoTerzeParti").Value;
+                    if (AutorizzatoTerzeParti != null)
+                        comsms.AutorizzatoTerzeParti = Convert.ToBoolean(AutorizzatoTerzeParti);
                     
-                    var importedAutorizzatoTerzeParti = root.Attribute("EmailRecord").Parent.Element("AutorizzatoTerzeParti").Value;
-                    if (importedAutorizzatoTerzeParti != null) {
-                        rec.AutorizzatoTerzeParti = bool.Parse(importedAutorizzatoTerzeParti);
-                    }
+                    listCom.Add(comsms);
 
-
+                    part.SmsEntries.Value = listCom;
+                    part.SmsRecord = part.SmsEntries.Value;
+                   
                 }
+
 
             }
 
-        }
+       }
+
 
         protected override void Exporting(SmsContactPart part, ExportContentContext context) {
-            //throw new NotImplementedException();
+
             
             if (part.SmsRecord != null) {
-
-                context.Element(part.PartDefinition.Name).SetAttributeValue("SmsRecord", part.SmsRecord);
-                var smsRecord = context.Element(part.PartDefinition.Name).Element("SmsRecord");
-
+                var root = context.Element(part.PartDefinition.Name);
                 foreach (CommunicationSmsRecord rec in part.SmsRecord) {
+                    XElement smsText = new XElement("SmsRecord");
 
-                    smsRecord.Element("Id").SetAttributeValue("Id", rec.Id);
-                    smsRecord.Element("Language").SetAttributeValue("Language", rec.Language);
-                    smsRecord.Element("Validated").SetAttributeValue("Validated", rec.Validated);
-                    smsRecord.Element("DataInserimento").SetAttributeValue("DataInserimento", rec.DataInserimento);
-                    smsRecord.Element("DataModifica").SetAttributeValue("DataModifica", rec.DataModifica);
-                    smsRecord.Element("Sms").SetAttributeValue("Sms", rec.Sms);
-                    smsRecord.Element("Prefix").SetAttributeValue("Sms", rec.Prefix);
-                    smsRecord.Element("Produzione").SetAttributeValue("Produzione", rec.Produzione);
-                    smsRecord.Element("AccettatoUsoCommerciale").SetAttributeValue("AccettatoUsoCommerciale", rec.AccettatoUsoCommerciale);
-                    smsRecord.Element("AutorizzatoTerzeParti").SetAttributeValue("AutorizzatoTerzeParti", rec.AutorizzatoTerzeParti);
-
+                    smsText.SetAttributeValue("Id", rec.Id);
+                    smsText.SetAttributeValue("Language", rec.Language);
+                    smsText.SetAttributeValue("Validated", rec.Validated);
+                    smsText.SetAttributeValue("DataInserimento", rec.DataInserimento);
+                    smsText.SetAttributeValue("DataModifica", rec.DataModifica);
+                    smsText.SetAttributeValue("Sms", rec.Sms);
+                    smsText.SetAttributeValue("Prefix", rec.Prefix);
+                    smsText.SetAttributeValue("Produzione", rec.Produzione);
+                    smsText.SetAttributeValue("AccettatoUsoCommerciale", rec.AccettatoUsoCommerciale);
+                    smsText.SetAttributeValue("AutorizzatoTerzeParti", rec.AutorizzatoTerzeParti);
+                    root.Add(smsText);
                 }
             }
 
