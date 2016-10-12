@@ -5,14 +5,14 @@ namespace Laser.Orchard.FidelityGateway.Services
 {
     public interface IFidelityServices
     {
-        APIResult<FidelityCustumer> CreateFidelityAccountFromCookie();
-        APIResult<FidelityCustumer> CreateFidelityAccount(FidelityUserPart fidelityPart, string username, string email);
-        APIResult<FidelityCustumer> GetCustomerDetails();
+        APIResult<FidelityCustomer> CreateFidelityAccountFromCookie();
+        APIResult<FidelityCustomer> CreateFidelityAccount(FidelityUserPart fidelityPart, string username, string email);
+        APIResult<FidelityCustomer> GetCustomerDetails();
         APIResult<FidelityCampaign> GetCampaignData(string id);
-        APIResult<FidelityCustumer> AddPoints(double numPoints, string campaignId);
-        APIResult<FidelityCustumer> AddPointsFromAction(string actionId, string completionPercent); //TODO
+        APIResult<FidelityCustomer> AddPoints(double numPoints, string campaignId);
+        APIResult<FidelityCustomer> AddPointsFromAction(string actionId, string completionPercent); //TODO
         APIResult<FidelityReward> GiveReward(string rewardId, string campaignId);
-        APIResult<FidelityCustumer> UpdateSocial(string token, string tokenType); //TODO
+        APIResult<FidelityCustomer> UpdateSocial(string token, string tokenType); //TODO
         APIResult<List<FidelityCampaign>> GetCampaignList();
     }
 

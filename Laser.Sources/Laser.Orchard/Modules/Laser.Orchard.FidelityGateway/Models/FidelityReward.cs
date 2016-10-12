@@ -7,11 +7,11 @@ namespace Laser.Orchard.FidelityGateway.Models
 {
     public class FidelityReward
     {
-        public string id { set; get; }
-        public string description { set; get; }
+        public string Id { set; get; }
+        public string Description { set; get; }
         public Dictionary<string, string> data { set; get; }
 
-        public bool addData(string k, string v)
+        public bool AddData(string k, string v)
         {
             try
             {

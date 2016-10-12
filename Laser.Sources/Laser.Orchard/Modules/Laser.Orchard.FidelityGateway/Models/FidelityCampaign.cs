@@ -7,16 +7,16 @@ namespace Laser.Orchard.FidelityGateway.Models
 {
     public class FidelityCampaign
     {
-        public string name { set; get; }
-        public string id { set; get; }
-        public Dictionary<FidelityReward, double> catalog {set; get;}
-        public Dictionary<string, string> data { set; get; }
+        public string Name { set; get; }
+        public string Id { set; get; }
+        public Dictionary<FidelityReward, double> Catalog {set; get;}
+        public Dictionary<string, string> Data { set; get; }
 
-        public bool addReward(FidelityReward reward, double points)
+        public bool AddReward(FidelityReward reward, double points)
         {
             try
             {
-                catalog.Add(reward, points);
+                Catalog.Add(reward, points);
             }
             catch (ArgumentException ex)
             {
@@ -25,11 +25,11 @@ namespace Laser.Orchard.FidelityGateway.Models
             return true;
         }
 
-        public bool addData(string k, string v)
+        public bool AddData(string k, string v)
         {
             try
             {
-                data.Add(k, v);
+                Data.Add(k, v);
             }
             catch (ArgumentException ex)
             {
