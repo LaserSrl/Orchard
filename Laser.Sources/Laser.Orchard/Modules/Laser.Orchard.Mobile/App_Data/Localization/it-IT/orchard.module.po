@@ -245,8 +245,16 @@ msgid "Leave blank to use Gcm default URL or set to the Firebase Service URL: ht
 msgstr "Lasciare vuoto per usare l'URL di default di Gcm oppure impostare l'URL del Servizio Firebase https://fcm.googleapis.com/fcm/send"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Optional icon in push notification section of the payload. Leave blank to suppress notification section."
+msgstr "Icona opzionale nella sezione notification del payload. Lasciare vuoto per inibire la sezione notification."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Push Mobile Settings"
 msgstr "Impostazioni Push Mobile"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Push notification icon"
+msgstr "Icona per la notifica push"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Push service URL"
