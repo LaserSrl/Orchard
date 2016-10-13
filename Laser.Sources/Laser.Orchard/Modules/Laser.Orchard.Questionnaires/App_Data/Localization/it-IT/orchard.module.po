@@ -677,8 +677,16 @@ msgid "Please, accept our terms and conditions!"
 msgstr "Si prega di accettare i termini e le condizioni!"
 
 msgctxt "Laser.Orchard.Questionnaires.Controllers.QuestionnaireController"
+msgid "Sorry, you already submitted this questionnaire."
+msgstr "Spiacente, hai già compilato questo questionario."
+
+msgctxt "Laser.Orchard.Questionnaires.Controllers.QuestionnaireController"
 msgid "Thank you for submitting your feedback."
 msgstr "Grazie per averci inviato la tua opinione."
+
+msgctxt "Laser.Orchard.Questionnaires.Controllers.QuestionnaireStatsController"
+msgid "Export started. Please check 'Show Exported Files' in a few minutes to get the result."
+msgstr "Esportazione in esecuzione. Per verificarne l'esito attendi qualche minuto e poi clicca su 'Mostra file esportati'"
 
 msgctxt "Laser.Orchard.Questionnaires.Controllers.QuestionnaireStatsController"
 msgid "Export started. Please check 'Show Exported Files' to get the result."

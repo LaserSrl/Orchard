@@ -9,5 +9,6 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
         public DateTime AnswerDate { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
+        public string Contesto { get; set; }
     }
 }

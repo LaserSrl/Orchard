@@ -294,6 +294,19 @@
     <Content Include="Styles\MessageTemplateEditor.min.css">
       <DependentUpon>MessageTemplateEditor.less</DependentUpon>
     </Content>
+    <None Include="Templates\BaseEmails\basic.html" />
+    <None Include="Templates\BaseEmails\drip.html" />
+    <None Include="Templates\BaseEmails\hero.html" />
+    <None Include="Templates\BaseEmails\marketing.html" />
+    <None Include="Templates\BaseEmails\newsletter-2.html" />
+    <None Include="Templates\BaseEmails\newsletter.html" />
+    <None Include="Templates\BaseEmails\order.html" />
+    <None Include="Templates\BaseEmails\password.html" />
+    <None Include="Templates\BaseEmails\sidebar-hero.html" />
+    <None Include="Templates\BaseEmails\sidebar.html" />
+    <None Include="Templates\BaseEmails\Usage notes.txt" />
+    <None Include="Templates\BaseEmails\ValliCanavesaneExample.html" />
+    <None Include="Templates\BaseEmails\welcome.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

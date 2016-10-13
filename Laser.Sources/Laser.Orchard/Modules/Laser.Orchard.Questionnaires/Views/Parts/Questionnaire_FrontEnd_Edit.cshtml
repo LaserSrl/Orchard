@@ -103,6 +103,7 @@ else {
             @Html.HiddenFor(m => Questionnaire.Id)
             @Html.HiddenFor(m => Questionnaire.MustAcceptTerms)
             @Html.HiddenFor(m => Questionnaire.HasAcceptedTerms)
+            @Html.HiddenFor(m => Questionnaire.Context)
             var progSection = 0;
             if (sections.Count() > 1) {
             <ul id="progressbar">

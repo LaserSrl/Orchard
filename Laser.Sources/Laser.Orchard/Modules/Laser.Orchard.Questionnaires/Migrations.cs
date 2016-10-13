@@ -206,5 +206,9 @@ namespace Laser.Orchard.Questionnaires {
                 .Creatable(false)); 
             return 20;
         }
+        public int UpdateFrom20() {
+            SchemaBuilder.AlterTable("UserAnswersRecord", t => t.AddColumn<string>("Context", col => col.WithLength(255)));
+            return 21;
+        }
     }
 }
