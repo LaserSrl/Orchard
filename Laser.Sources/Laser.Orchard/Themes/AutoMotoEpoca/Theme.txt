@@ -1,6 +1,0 @@
-Name: Auto & Moto d'epoca
-Author: Hermes Sbicego
-Website: http://www.laser-group.com
-Description: Auto & moto d'epoca theme
-Version: 1.0
-Zones: Header, Navigation, Featured, BeforeMain, Messages, BeforeContent, Content, AfterContent, AfterMain, TripelFirst, TripelSecond, FooterQuadFirst, FooterQuadSecond, FooterQuadThird, Footer

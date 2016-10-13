@@ -1,8 +1,0 @@
-﻿@model dynamic
-
-@{
-    var siteName = WorkContext.CurrentSite.SiteName;
-    var siteLinkText = !string.IsNullOrWhiteSpace(siteName) ? siteName : T("Your site").Text;
-    var appLinkText = !string.IsNullOrWhiteSpace(siteName) ? siteName : T("Project Krake").Text;
-}
-

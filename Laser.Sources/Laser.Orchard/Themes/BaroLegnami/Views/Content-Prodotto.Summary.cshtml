@@ -1,9 +1,0 @@
-﻿@using Orchard.Utility.Extensions;
-<div class="wrapper hline2">
-    
-    <img src="@Display.ResizeMediaUrl(Width: 140, Height: 140, Mode: "crop", Alignment: "middlecenter", Path: Model.ContentItem.Prodotto.ProductPicture.MediaParts[0].MediaUrl)" alt="" class="img4 no_resize"/>
-    <div class="box2">
-        <h2><a href="#">@Model.ContentItem.TitlePart.Title</a></h2>
-        @Model.ContentItem.BodyPart.Text
-    </div>
-</div>

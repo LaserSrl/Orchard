@@ -1,7 +1,0 @@
-Name: Baro Legnami
-Author: Laser s.r.l.
-Website: http://www.laser-group.com
-Description: Theme For Baro Legnami
-Version: 1.0
-OrchardVersion: 1.8
-Zones: Navigation, Featured, BeforeContent, Content, AsideFirst, AfterContent, BeforeBoxedContent, BoxedContent, BoxedAsideFirst, BoxedAfterContent, TripelFirst, TripelSecond, TripelThird, Footer
