@@ -721,12 +721,7 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         private void SendAllWindowsPart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds, bool repeatable = false) {
-            PushMessage pushMessage = new PushMessage {
-                Text = mpp.TextPush,
-                Title = mpp.TitlePush,
-                idContent = idcontent,
-                idRelated = idContentRelated
-            };
+            PushMessage pushMessage = GeneratePushMessage(mpp, idcontent, idContentRelated);
             SendAllWindows(mpp.ContentItem.ContentType, pushMessage, produzione, language, queryDevice, queryIds, repeatable);
         }
         private void SendAllWindows(string contenttype, PushMessage pushMessage, bool produzione, string language, string queryDevice = "", int[] queryIds = null, bool repeatable = false) {
