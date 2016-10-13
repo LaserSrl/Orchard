@@ -34,8 +34,24 @@ namespace Laser.Orchard.FidelityGateway.Services
             settingsPart = _orchardServices.WorkContext.CurrentSite.As<FidelitySettingsPart>();
             if (String.IsNullOrWhiteSpace(settingsPart.AccountID))
             {
-                settingsPart.AccountID = _sendService.SendGetMerchantId(settingsPart).data;
+                SetMerchantd();
+                //TODO in loyalzoo questo è un session_id, se scade che succede??? da gestire il caso di fallimento del collegamento con tale id e da rifare la login
+                //se fallisce il login??
             }
+        }
+
+        private bool SetMerchantd()
+        {
+            APIResult<string> response = _sendService.SendGetMerchantId(settingsPart);
+            if (response.success)
+            {
+                settingsPart.AccountID = response.data;
+                return true;
+            }
+            else
+            {
+                return false;
+            }           
         }
 
         public APIResult<FidelityCustomer> CreateFidelityAccountFromCookie()
@@ -105,7 +121,7 @@ namespace Laser.Orchard.FidelityGateway.Services
             return _sendService.SendCampaignData(settingsPart, campaign);
         }
 
-        public APIResult<FidelityCustomer> AddPoints(double numPoints, string campaignId)
+        public APIResult<bool> AddPoints(string numPoints, string campaignId)
         {
             FidelityCustomer customer = GetCustomerFromAuthenticatedUser();
             FidelityCampaign campaign = new FidelityCampaign();
@@ -118,7 +134,7 @@ namespace Laser.Orchard.FidelityGateway.Services
             throw new NotImplementedException();
         }
 
-        public APIResult<FidelityReward> GiveReward(string rewardId, string campaignId)
+        public APIResult<bool> GiveReward(string rewardId, string campaignId)
         {
             FidelityCustomer customer = GetCustomerFromAuthenticatedUser();
             if (customer != null)
@@ -131,7 +147,7 @@ namespace Laser.Orchard.FidelityGateway.Services
             }
             else
             {
-                return new APIResult<FidelityReward> { success = false, data = null, message = "The user is not configured to use " + GetProviderName() };
+                return new APIResult<bool> { success = false, data = false, message = "The user is not configured to use " + GetProviderName() };
             }
 
         }
@@ -141,37 +157,9 @@ namespace Laser.Orchard.FidelityGateway.Services
             throw new NotImplementedException();
         }
 
-        public APIResult<List<FidelityCampaign>> GetCampaignList()
+        public APIResult<List<string>> GetCampaignIdList()
         {
-            return _sendService.SendCampaignList(settingsPart);
-        }
-
-
-        // se è gia stato registrato sul provider, richiede
-        // al provider l'id della sessione del cliente (logga quindi l'utente sul server remoto).
-        // Se fallisce uno dei due controlli  restituisce null*/
-        public virtual string LoginCustomerToRemoteProvider(FidelityCustomer customer)
-        {
-            string id = _sendService.SendGetCustomerSessionId(settingsPart, customer);
-
-            if (!string.IsNullOrWhiteSpace(id))
-            {
-                return id;
-            }
-            return null;
-        }
-
-        public virtual FidelityCampaign GetCampaignId(string name)
-        {
-            FidelityCampaign camp = new FidelityCampaign();
-            camp.Name = name;
-            APIResult<FidelityCampaign> respCampaignId = _sendService.SendGetCampaignId(settingsPart, camp);
-            if (respCampaignId.success)
-            {
-                return camp;
-            }
-
-            return null;
+            return _sendService.SendCampaignIdList(settingsPart);
         }
 
         //Controlla se l'utente è loggato ad Orchard, e ne restituisce l'oggetto FidelityCustomer relativo

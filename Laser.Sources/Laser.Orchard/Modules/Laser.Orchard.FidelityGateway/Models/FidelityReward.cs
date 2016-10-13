@@ -9,13 +9,14 @@ namespace Laser.Orchard.FidelityGateway.Models
     {
         public string Id { set; get; }
         public string Description { set; get; }
-        public Dictionary<string, string> data { set; get; }
+        public string Name { set; get; }
+        public Dictionary<string, string> Data { set; get; }
 
         public bool AddData(string k, string v)
         {
             try
             {
-                data.Add(k, v);
+                Data.Add(k, v);
             }
             catch (ArgumentException ex)
             {

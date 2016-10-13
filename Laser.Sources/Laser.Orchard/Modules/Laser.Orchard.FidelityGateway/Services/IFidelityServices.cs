@@ -9,11 +9,11 @@ namespace Laser.Orchard.FidelityGateway.Services
         APIResult<FidelityCustomer> CreateFidelityAccount(FidelityUserPart fidelityPart, string username, string email);
         APIResult<FidelityCustomer> GetCustomerDetails();
         APIResult<FidelityCampaign> GetCampaignData(string id);
-        APIResult<FidelityCustomer> AddPoints(double numPoints, string campaignId);
+        APIResult<bool> AddPoints(string numPoints, string campaignId);
         APIResult<FidelityCustomer> AddPointsFromAction(string actionId, string completionPercent); //TODO
-        APIResult<FidelityReward> GiveReward(string rewardId, string campaignId);
+        APIResult<bool> GiveReward(string rewardId, string campaignId);
         APIResult<FidelityCustomer> UpdateSocial(string token, string tokenType); //TODO
-        APIResult<List<FidelityCampaign>> GetCampaignList();
+        APIResult<List<string>> GetCampaignIdList();
     }
 
 }

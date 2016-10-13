@@ -59,7 +59,7 @@ namespace Laser.Orchard.FidelityGateway.Models
         {
             try
             {
-                return Json(_fidelityService.GetCampaignList(), JsonRequestBehavior.AllowGet);
+                return Json(_fidelityService.GetCampaignIdList(), JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
             {
@@ -74,7 +74,7 @@ namespace Laser.Orchard.FidelityGateway.Models
             {
                 double points;
                 if (Double.TryParse(amount, out points))
-                    return Json(_fidelityService.AddPoints(points, campaignId), JsonRequestBehavior.AllowGet);
+                    return Json(_fidelityService.AddPoints(amount, campaignId), JsonRequestBehavior.AllowGet);
                 else
                     return Json(new APIResult<string> { success = false, data = null, message = "The input parameters is not in the correct format." }, JsonRequestBehavior.AllowGet);
             }
