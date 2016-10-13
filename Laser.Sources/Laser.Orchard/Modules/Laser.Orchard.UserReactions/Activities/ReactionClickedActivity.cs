@@ -20,7 +20,7 @@ namespace Laser.Orchard.UserReactions.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("A user reaction is clicked."); }
+            get { return T("A user reaction is clicked. Sets the following values in workflow state: ReactionId, Action, ReactionUserEmail, ReactionUserId."); }
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(global::Orchard.Workflows.Models.WorkflowContext workflowContext, global::Orchard.Workflows.Models.ActivityContext activityContext) {
@@ -38,8 +38,11 @@ namespace Laser.Orchard.UserReactions.Activities {
             var elencoTypeId = ((string)activityContext.GetState<string>("ReactionClickedActivity_reactionList")).Split(',').Select(Int32.Parse).ToList();
             int reactionId = Convert.ToInt32(workflowContext.Tokens["ReactionId"]);
             int action = Convert.ToInt32(workflowContext.Tokens["Action"]);
+            int userId = Convert.ToInt32(workflowContext.Tokens["UserId"]);
             workflowContext.SetState<int>("ReactionId", reactionId);
             workflowContext.SetState<int>("Action", action);
+            workflowContext.SetState<string>("ReactionUserEmail", workflowContext.Tokens["UserEmail"].ToString());
+            workflowContext.SetState<int>("ReactionUserId", userId);
             if (elencoTypeId.Contains(reactionId)) {
                 if (action == 1) {
                     messageout = T("Clicked");
