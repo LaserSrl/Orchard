@@ -589,16 +589,18 @@ namespace Laser.Orchard.Mobile.Services {
             pushMessage.Text = mpp.TextPush;
             pushMessage.Title = mpp.TitlePush;
             pushMessage.ValidPayload = true;
+            bool done = false;
             if (mpp.ContentItem.ContentType == "CommunicationAdvertising") {
-                if (idContentRelated > 0) {
-                    pushMessage.Iu = idContentRelated.ToString();
-                }
-                else if (!string.IsNullOrEmpty(((dynamic)(mpp.ContentItem.As<CommunicationAdvertisingPart>())).UrlLinked.Value)) {
+                //if (idContentRelated > 0) {
+                //    pushMessage.Iu = idContentRelated.ToString();
+                //}
+                if (!string.IsNullOrEmpty(((dynamic)(mpp.ContentItem.As<CommunicationAdvertisingPart>())).UrlLinked.Value)) {
                     string shortlink = _communicationService.GetCampaignLink("Push", mpp);
                     pushMessage.Eu = shortlink;
+                    done = true;
                 }
             }
-            else {
+            if(done == false) {
                 string ctype = "";
                 string displayalias = "";
                 var extra = getextrainfo(idContentRelated > 0 ? idContentRelated : idcontent);
@@ -999,9 +1001,9 @@ namespace Laser.Orchard.Mobile.Services {
             if (!string.IsNullOrEmpty(pushMessage.Eu)) {
                 sb.AppendFormat("<Eu>{0}</Eu>", FormatJsonValue(pushMessage.Eu));
             }
-            else if (!string.IsNullOrEmpty(pushMessage.Iu)) {
-                sb.AppendFormat("<Iu>{0}</Iu>", FormatJsonValue(pushMessage.Iu));
-            }
+            //else if (!string.IsNullOrEmpty(pushMessage.Iu)) {
+            //    sb.AppendFormat("<Iu>{0}</Iu>", FormatJsonValue(pushMessage.Iu));
+            //}
             else {
                 sb.AppendFormat("<Id>{0}</Id>", pushMessage.idContent);
                 sb.AppendFormat("<Rid>{0}</Rid>", pushMessage.idRelated);
