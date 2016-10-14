@@ -1,0 +1,22 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2016 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Contrib.Profile/Views/Home/Edit.cshtml"
+msgid "Edit Profile"
+msgstr "Modifica Profilo"
+
+msgctxt "~/Modules/Contrib.Profile/Views/Profile.Head.cshtml"
+msgid "Edit your profile"
+msgstr "Modifica il tuo profilo"
+
+msgctxt "Contrib.Profile.Controllers.HomeController"
+msgid "Your profile has been saved."
+msgstr "Il tuo profilo è stato salvato."
+
