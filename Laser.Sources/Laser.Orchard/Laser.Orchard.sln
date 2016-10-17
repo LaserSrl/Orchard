@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Accessibility
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.BikeSharing", "Modules\Laser.Orchard.BikeSharing\Laser.Orchard.BikeSharing.csproj", "{9D2AA3C6-A642-4F0D-9FB8-3F009C778E0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.ButtonToWorkflows", "Modules\Laser.Orchard.ButtonToWorkflows\Laser.Orchard.ButtonToWorkflows.csproj", "{71BC32D3-96C6-4AA1-AED8-CF1546AB4C21}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{9D2AA3C6-A642-4F0D-9FB8-3F009C778E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D2AA3C6-A642-4F0D-9FB8-3F009C778E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D2AA3C6-A642-4F0D-9FB8-3F009C778E0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71BC32D3-96C6-4AA1-AED8-CF1546AB4C21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71BC32D3-96C6-4AA1-AED8-CF1546AB4C21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71BC32D3-96C6-4AA1-AED8-CF1546AB4C21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71BC32D3-96C6-4AA1-AED8-CF1546AB4C21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,5 +93,6 @@ Global
 		{AF502A24-07C4-46D4-A4FA-E49D35BA34A4} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{75C5D13F-7558-4B7C-9206-1D08E87A7E79} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{9D2AA3C6-A642-4F0D-9FB8-3F009C778E0B} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{71BC32D3-96C6-4AA1-AED8-CF1546AB4C21} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal

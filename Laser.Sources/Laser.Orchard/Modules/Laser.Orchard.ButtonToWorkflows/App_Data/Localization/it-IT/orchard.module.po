@@ -1,0 +1,86 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2016 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/DefinitionTemplates/ButtonsSetting.cshtml"
+msgid "Go on Setting -> Buttons to configure module"
+msgstr "Vai su Impstazioni -> Pulsanti per configurare il modulo"
+
+msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/DefinitionTemplates/ButtonsSetting.cshtml"
+msgid "Select Button Type"
+msgstr "Selezionare il tipo di pulsante"
+
+msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflows.cshtml"
+msgid "Custom actions:"
+msgstr "Azioni personalizzate:"
+
+msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflowsSettings_Edit.cshtml"
+msgid "Activity Name"
+msgstr "Nome Attività"
+
+msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflowsSettings_Edit.cshtml"
+msgid "Button"
+msgstr "Pulsante"
+
+msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflowsSettings_Edit.cshtml"
+msgid "Button Label"
+msgstr "Etichetta del Pulsante"
+
+msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflowsSettings_Edit.cshtml"
+msgid "Button to WorkFlows Settings"
+msgstr "Pulsante per le Impostazioni Flussi di Lavoro"
+
+msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflowsSettings_Edit.cshtml"
+msgid "Custom Button "
+msgstr "Pulsante Personalizzato"
+
+msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflowsSettings_Edit.cshtml"
+msgid "Description"
+msgstr "Descrizione"
+
+msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflowsSettings_Edit.cshtml"
+msgid "Message on button click"
+msgstr "Messaggio alla pressione del pulsante"
+
+msgctxt "Laser.Orchard.ButtonToWorkflows.Activity.ButtonToWorkflowsEvent"
+msgid "Content Event"
+msgstr "Evento del Contenuto"
+
+msgctxt "Laser.Orchard.ButtonToWorkflows.Activity.ButtonToWorkflowsEvent"
+msgid "Custom Button"
+msgstr "Pulsante Personalizzato"
+
+msgctxt "Laser.Orchard.ButtonToWorkflows.Activity.ButtonToWorkflowsEvent"
+msgid "Done"
+msgstr "Fatto"
+
+msgctxt "Laser.Orchard.ButtonToWorkflows.Activity.ButtonToWorkflowsForm"
+msgid "Any"
+msgstr "Qualsiasi"
+
+msgctxt "Laser.Orchard.ButtonToWorkflows.Activity.ButtonToWorkflowsForm"
+msgid "Content types"
+msgstr "Tipi di Contenuto"
+
+msgctxt "Laser.Orchard.ButtonToWorkflows.Activity.ButtonToWorkflowsForm"
+msgid "Select some content types."
+msgstr "Selezionare i tipi di contenuto"
+
+msgctxt "Laser.Orchard.ButtonToWorkflows.Drivers.ButtonToWorkflowsDriver"
+msgid "Error Saving Content Item"
+msgstr "Errore durante il salvataggio del contenuto"
+
+msgctxt "Laser.Orchard.ButtonToWorkflows.Handlers.SiteSettingsPartHandler"
+msgid "Buttons"
+msgstr "Pulsanti"
+
+msgctxt "Laser.Orchard.ButtonToWorkflows.Settings.ButtonsEvents"
+msgid "Setting -> Buttons : must be configured"
+msgstr "E' necessario configurare Impostazioni -> Pulsanti"
+
