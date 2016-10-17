@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contrib.Profile", "Modules\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itWORKS.ExtendedRegistration", "Modules\itWORKS.ExtendedRegistration\itWORKS.ExtendedRegistration.csproj", "{AF502A24-07C4-46D4-A4FA-E49D35BA34A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Accessibility", "Modules\Laser.Orchard.Accessibility\Laser.Orchard.Accessibility.csproj", "{75C5D13F-7558-4B7C-9206-1D08E87A7E79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{AF502A24-07C4-46D4-A4FA-E49D35BA34A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF502A24-07C4-46D4-A4FA-E49D35BA34A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF502A24-07C4-46D4-A4FA-E49D35BA34A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75C5D13F-7558-4B7C-9206-1D08E87A7E79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75C5D13F-7558-4B7C-9206-1D08E87A7E79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75C5D13F-7558-4B7C-9206-1D08E87A7E79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75C5D13F-7558-4B7C-9206-1D08E87A7E79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,5 +79,6 @@ Global
 		{9D49DF40-AE74-4CCE-B628-A1B26E99B2D4} = {821AC088-E913-428E-883E-CB67A3EFB65D}
 		{BB5C57F4-D9CB-4440-89A6-D9FF9F41E4E3} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{AF502A24-07C4-46D4-A4FA-E49D35BA34A4} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{75C5D13F-7558-4B7C-9206-1D08E87A7E79} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
