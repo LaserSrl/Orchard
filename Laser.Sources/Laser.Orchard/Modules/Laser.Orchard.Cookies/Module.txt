@@ -1,6 +1,6 @@
 ﻿Name: Laser.Orchard.Cookies
 AntiForgery: enabled
-Author: Laser srl
+Author: Laser srl - Marco Viglione
 Website: https://www.laser-group.com
 Version: 1.0
 OrchardVersion: 1.8

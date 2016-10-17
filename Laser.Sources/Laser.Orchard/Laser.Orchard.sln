@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.ButtonToWorkf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Cookies", "Modules\Laser.Orchard.Cookies\Laser.Orchard.Cookies.csproj", "{BDB0CD8D-7C6C-46F0-A041-6B2E1E0F9C9E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.DynamicNavigation", "Modules\Laser.Orchard.DynamicNavigation\Laser.Orchard.DynamicNavigation.csproj", "{97CF07E6-8C4A-448D-BAB5-23357C9D0216}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{BDB0CD8D-7C6C-46F0-A041-6B2E1E0F9C9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDB0CD8D-7C6C-46F0-A041-6B2E1E0F9C9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDB0CD8D-7C6C-46F0-A041-6B2E1E0F9C9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97CF07E6-8C4A-448D-BAB5-23357C9D0216}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97CF07E6-8C4A-448D-BAB5-23357C9D0216}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97CF07E6-8C4A-448D-BAB5-23357C9D0216}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97CF07E6-8C4A-448D-BAB5-23357C9D0216}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,5 +107,6 @@ Global
 		{9D2AA3C6-A642-4F0D-9FB8-3F009C778E0B} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{71BC32D3-96C6-4AA1-AED8-CF1546AB4C21} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{BDB0CD8D-7C6C-46F0-A041-6B2E1E0F9C9E} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{97CF07E6-8C4A-448D-BAB5-23357C9D0216} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
