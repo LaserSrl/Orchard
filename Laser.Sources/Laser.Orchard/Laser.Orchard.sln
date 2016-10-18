@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.DynamicNaviga
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.FAQ", "Modules\Laser.Orchard.Faq\Laser.Orchard.FAQ.csproj", "{9F48A045-C143-4719-B723-B3567C7DE3D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.GoogleAnalytics", "Modules\Laser.Orchard.GoogleAnalytics\Laser.Orchard.GoogleAnalytics.csproj", "{8DF6ED57-53F6-44E8-9BCD-40C2150A5A43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{9F48A045-C143-4719-B723-B3567C7DE3D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F48A045-C143-4719-B723-B3567C7DE3D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F48A045-C143-4719-B723-B3567C7DE3D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DF6ED57-53F6-44E8-9BCD-40C2150A5A43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DF6ED57-53F6-44E8-9BCD-40C2150A5A43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DF6ED57-53F6-44E8-9BCD-40C2150A5A43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DF6ED57-53F6-44E8-9BCD-40C2150A5A43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,5 +121,6 @@ Global
 		{BDB0CD8D-7C6C-46F0-A041-6B2E1E0F9C9E} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{97CF07E6-8C4A-448D-BAB5-23357C9D0216} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{9F48A045-C143-4719-B723-B3567C7DE3D8} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{8DF6ED57-53F6-44E8-9BCD-40C2150A5A43} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
