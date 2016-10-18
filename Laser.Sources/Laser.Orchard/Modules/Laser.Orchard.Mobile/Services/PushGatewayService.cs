@@ -322,7 +322,7 @@ namespace Laser.Orchard.Mobile.Services {
                     PushMessage pushwindows = new PushMessage();
                     pushwindows.idContent = 0;
                     pushwindows.idRelated = idContentRelated;
-                    pushwindows.Text = messageAndroid;
+                    pushwindows.Text = messageWindows;
                     pushwindows.Ct = ctype;
                     pushwindows.Al = displayalias;
                     pushwindows.Eu = externalUrl;
@@ -355,7 +355,7 @@ namespace Laser.Orchard.Mobile.Services {
                     PushMessage pushwindows = new PushMessage();
                     pushwindows.idContent = 0;
                     pushwindows.idRelated = idContentRelated;
-                    pushwindows.Text = messageAndroid;
+                    pushwindows.Text = messageWindows;
                     pushwindows.Ct = ctype;
                     pushwindows.Al = displayalias;
                     pushwindows.Eu = externalUrl;
@@ -591,9 +591,6 @@ namespace Laser.Orchard.Mobile.Services {
             pushMessage.ValidPayload = true;
             bool done = false;
             if (mpp.ContentItem.ContentType == "CommunicationAdvertising") {
-                //if (idContentRelated > 0) {
-                //    pushMessage.Iu = idContentRelated.ToString();
-                //}
                 if (!string.IsNullOrEmpty(((dynamic)(mpp.ContentItem.As<CommunicationAdvertisingPart>())).UrlLinked.Value)) {
                     string shortlink = _communicationService.GetCampaignLink("Push", mpp);
                     pushMessage.Eu = shortlink;
@@ -705,8 +702,7 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         private void SendAllApplePart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds, bool repeatable = false) {
-            PushMessage newpush = new PushMessage();
-            newpush = GeneratePushMessage(mpp, idcontent, idContentRelated);
+            PushMessage newpush = GeneratePushMessage(mpp, idcontent, idContentRelated);
             if (newpush.Text.Length > MAX_PUSH_TEXT_LENGTH) {
                 _notifier.Information(T("Apple send: message payload exceed the limit"));
                 _myLog.WriteLog("Apple send: message payload exceed the limit");
@@ -795,9 +791,6 @@ namespace Laser.Orchard.Mobile.Services {
             sb.AppendFormat("{{ \"Text\": \"{0}\"", FormatJsonValue(pushMessage.Text));
             if (!string.IsNullOrEmpty(pushMessage.Eu)) {
                 sb.AppendFormat(",\"Eu\":\"{0}\"", FormatJsonValue(pushMessage.Eu));
-            }
-            else if (!string.IsNullOrEmpty(pushMessage.Iu)) {
-                sb.AppendFormat(",\"Iu\":\"{0}\"", FormatJsonValue(pushMessage.Iu));
             }
             else {
                 sb.AppendFormat(",\"Id\":{0}", pushMessage.idContent);
@@ -915,9 +908,6 @@ namespace Laser.Orchard.Mobile.Services {
                     if (!string.IsNullOrEmpty(pushMessage.Eu)) {
                         sb.AppendFormat(",\"Eu\":\"{0}\"", FormatJsonValue(pushMessage.Eu));
                     }
-                    else if (!string.IsNullOrEmpty(pushMessage.Iu)) {
-                        sb.AppendFormat(",\"Iu\":\"{0}\"", FormatJsonValue(pushMessage.Iu));
-                    }
                     else {
                         sb.AppendFormat(",\"Id\":{0}", pushMessage.idContent);
                         sb.AppendFormat(",\"Rid\":{0}", pushMessage.idRelated);
@@ -1001,9 +991,6 @@ namespace Laser.Orchard.Mobile.Services {
             if (!string.IsNullOrEmpty(pushMessage.Eu)) {
                 sb.AppendFormat("<Eu>{0}</Eu>", FormatJsonValue(pushMessage.Eu));
             }
-            //else if (!string.IsNullOrEmpty(pushMessage.Iu)) {
-            //    sb.AppendFormat("<Iu>{0}</Iu>", FormatJsonValue(pushMessage.Iu));
-            //}
             else {
                 sb.AppendFormat("<Id>{0}</Id>", pushMessage.idContent);
                 sb.AppendFormat("<Rid>{0}</Rid>", pushMessage.idRelated);
