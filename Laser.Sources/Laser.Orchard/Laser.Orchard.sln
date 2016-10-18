@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.ShortLinks", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Sharing", "Modules\Laser.Orchard.Sharing\Laser.Orchard.Sharing.csproj", "{975D6F8C-1AA5-4E4C-9712-74D6A3D966B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Meteo", "Modules\Laser.Orchard.Meteo\Laser.Orchard.Meteo.csproj", "{9D8BFBD0-3F33-45C4-B680-6500D76FDFA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,10 @@ Global
 		{975D6F8C-1AA5-4E4C-9712-74D6A3D966B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{975D6F8C-1AA5-4E4C-9712-74D6A3D966B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{975D6F8C-1AA5-4E4C-9712-74D6A3D966B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D8BFBD0-3F33-45C4-B680-6500D76FDFA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D8BFBD0-3F33-45C4-B680-6500D76FDFA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D8BFBD0-3F33-45C4-B680-6500D76FDFA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D8BFBD0-3F33-45C4-B680-6500D76FDFA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -157,5 +163,6 @@ Global
 		{02355F1C-3256-40C6-92B4-8ACE9E39A6AF} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{EC3AC4A2-7368-4609-999B-29965418372C} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{975D6F8C-1AA5-4E4C-9712-74D6A3D966B6} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{9D8BFBD0-3F33-45C4-B680-6500D76FDFA3} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
