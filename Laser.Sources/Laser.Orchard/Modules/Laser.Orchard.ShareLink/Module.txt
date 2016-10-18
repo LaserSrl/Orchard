@@ -1,0 +1,12 @@
+﻿Name: Laser.Orchard.ShareLink
+AntiForgery: enabled
+Author: Laser srl - Lorenzo Frediani
+Website: http://orchardproject.net
+Version: 1.10
+OrchardVersion: 1.10
+Description: Description for the module
+Features:
+    Laser.Orchard.ShareLink:
+        Description: Add Share Link -- Used by Mobile 
+		Dependencies: Orchard.Tokens,Orchard.MediaLibrary,Laser.Orchard.jQueryPlugins
+		Category: Social
