@@ -6,12 +6,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F72680EB-12EE-482F-93C8-2F1279E2B710}</ProjectGuid>
+    <ProjectGuid>{9F6F1121-7570-4031-B775-CCB888038B6A}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Contrib.Reviews</RootNamespace>
-    <AssemblyName>Contrib.Reviews</AssemblyName>
+    <RootNamespace>Proligence.QrCodes</RootNamespace>
+    <AssemblyName>Proligence.QrCodes</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
@@ -49,18 +49,22 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Gma.QrCodeNet.Encoding">
+      <HintPath>lib\gma-qrcodes\Gma.QrCodeNet.Encoding.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Orchard.Core, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Framework, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Tokens">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -68,6 +72,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -104,81 +109,36 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Recipes\Reviews.recipe.xml" />
-    <Content Include="Scripts\Contrib.Stars.js" />
-    <Content Include="Styles\Contrib.Stars.css" />
-    <Content Include="Styles\images\stars.png" />
+    <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
-    <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\RateController.cs" />
-    <Compile Include="Controllers\ReviewController.cs" />
-    <Compile Include="Drivers\ReviewsPartDriver.cs" />
-    <Compile Include="Handlers\ReviewsPartHandler.cs" />
+    <Compile Include="Controllers\ImageController.cs" />
+    <Compile Include="Drivers\QrCodePartDriver.cs" />
+    <Compile Include="Handlers\QrCodePartHandler.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\Rating.cs" />
-    <Compile Include="Models\Review.cs" />
-    <Compile Include="Models\ReviewsPart.cs" />
-    <Compile Include="Models\ReviewRecord.cs" />
-    <Compile Include="ResourceManifest.cs" />
-    <Compile Include="Settings\ContainerSettingsHooks.cs" />
-    <Compile Include="Settings\ReviewTypePartSettings.cs" />
+    <Compile Include="Models\QrCodePart.cs" />
+    <Compile Include="Models\QrCodePartRecord.cs" />
+    <Compile Include="Routes.cs" />
+    <Compile Include="Settings\QrCodeTypePartSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Placement.info">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Stars.SummaryAdmin.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\QrCode.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Stars.cshtml" />
+    <Content Include="Views\Parts\QrCode.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DefinitionTemplates\ReviewTypePartSettings.cshtml" />
+    <Content Include="Views\DefinitionTemplates\QrCodeTypePartSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Stars.Details.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts.Stars.AverageOnly.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts_Reviews.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts.Stars.NoAverage.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\ConfirmRatingDelete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts.Stars.Details.ReadOnly.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
     <Content Include="packages.config" />
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Contrib.Voting\Contrib.Voting.csproj">
-      <Project>{4da5f35f-e62c-4b49-b5a8-379503257b3a}</Project>
-      <Name>Contrib.Voting</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
