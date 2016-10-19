@@ -32,8 +32,6 @@ namespace Laser.Orchard.UserReactions.Projections {
         public void ApplyFilter(FilterContext context) {
             string reaction = context.State.Reaction;
             int contentId = ((context.State.ContentId != string.Empty) ? Convert.ToInt32(context.State.ContentId) : 0);
-            //context.Query.Join(a => a.ContentPartRecord<UserPartRecord>());
-            context.Query.ForType("CommunicationContact");
             string subquery = string.Format(@"select contact.Id as contactId
                 from Laser.Orchard.CommunicationGateway.Models.CommunicationContactPartRecord as contact, 
                 Laser.Orchard.UserReactions.Models.UserReactionsClickRecord as click

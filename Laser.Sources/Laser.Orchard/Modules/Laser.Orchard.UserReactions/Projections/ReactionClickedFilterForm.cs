@@ -59,7 +59,7 @@ namespace Laser.Orchard.UserReactions.Projections {
 
                 var reactionTypes = _reactionsService.GetTypesTableFiltered();
                 foreach (var item in reactionTypes) {
-                    f._ReactionsList.Add(item.TypeName); //, item.Id.ToString());
+                    f._ReactionsList.Add(item.TypeName);
                 }
                 return f;
             });
