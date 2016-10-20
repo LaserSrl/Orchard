@@ -115,12 +115,6 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Contrib.Voting\Contrib.Voting.csproj">
-      <Project>{4DA5F35F-E62C-4B49-B5A8-379503257B3A}</Project>
-      <Name>Contrib.Voting</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Controllers\RateController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="Drivers\ReviewsPartDriver.cs" />
@@ -178,6 +172,13 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Contrib.Voting\Contrib.Voting.csproj">
+      <Project>{4da5f35f-e62c-4b49-b5a8-379503257b3a}</Project>
+      <Name>Contrib.Voting</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
