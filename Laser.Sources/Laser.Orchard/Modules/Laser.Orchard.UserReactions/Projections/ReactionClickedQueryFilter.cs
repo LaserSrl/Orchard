@@ -27,20 +27,25 @@ namespace Laser.Orchard.UserReactions.Projections {
                 );
         }
         public LocalizedString DisplayFilter(FilterContext context) {
-            return T("Users who clicked on a specific reaction.");
+            return T("Contacts who clicked on a specific reaction.");
         }
         public void ApplyFilter(FilterContext context) {
             char[] separator = { ',' };
             string reaction = context.State.Reaction;
             // recupera il contentId da un content picker field
-            int contentId = 0;
+            int contentPickerValue = 0;
             string aux = (string)(context.State.ContentId);
             if (string.IsNullOrWhiteSpace(aux) == false) {
                 var arr = aux.Split(separator, StringSplitOptions.RemoveEmptyEntries);
                 if (arr.Length > 0) {
-                    contentId = Convert.ToInt32(arr[0]);
+                    contentPickerValue = Convert.ToInt32(arr[0]);
                 }
             }
+            // recupera il contentId da un campo tokenized
+            aux = (string)(context.State.ContentIdTokenized);
+            int tokenizedValue = (string.IsNullOrWhiteSpace(aux))? 0 : Convert.ToInt32(aux);
+            // il content picker field ha la precedenza
+            int contentId = (contentPickerValue > 0)? contentPickerValue :  tokenizedValue;
             string subquery = string.Format(@"select contact.Id as contactId
                 from Laser.Orchard.CommunicationGateway.Models.CommunicationContactPartRecord as contact, 
                 Laser.Orchard.UserReactions.Models.UserReactionsClickRecord as click

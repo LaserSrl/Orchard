@@ -85,11 +85,6 @@ namespace Laser.Orchard.UserReactions.Projections {
 
                     _FieldSetSingle: _shapeFactory.FieldSet(
                         Id: "fieldset-content-item",
-                        //_Value: _shapeFactory.TextBox(
-                        //    Id: "contentId", Name: "ContentId",
-                        //    Title: T("Content ID"),
-                        //    Classes: new[] { "tokenized" }
-                        //    )
                         _Value: _shapeFactory.ContentPicker_Edit(
                             Required: false,
                             Multiple: false,
@@ -97,10 +92,15 @@ namespace Laser.Orchard.UserReactions.Projections {
                             IdsFieldId: "contentId",
                             SelectedItemsFieldName: "ContentId",
                             ContentItems: contentItem,
-                            Hint: "Select a content",
+                            Hint: "Select a content or populate the following field.",
                             PartName: "",
                             FieldName: ""
-                        )
+                        ),
+                        _ValueTokenized: _shapeFactory.TextBox(
+                            Id: "contentIdTokenized", Name: "ContentIdTokenized",
+                            Title: T("Tokenized Content ID"),
+                            Classes: new[] { "tokenized" }
+                            )
                     )
                 );
 
