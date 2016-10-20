@@ -38,14 +38,16 @@ namespace Laser.Orchard.UserReactions.Projections {
                         ),
 
                     _ReactionTitle: _shapeFactory.Markup(
-                        Value: "<fieldset><legend>Reactions list available:</legend>"),
+                        Value: "<fieldset><legend>" + T("List of available reactions") + ":</legend>"
+                    ),
 
                     _ReactionsList: _shapeFactory.List(
                         Id: "reactionslist"
                     ),
 
-                     _ReactionPanel: _shapeFactory.Markup(
-                        Value: " </fieldset>"),
+                    _ReactionPanel: _shapeFactory.Markup(
+                        Value: " </fieldset>"
+                    ),
 
                     _FieldSetSingle: _shapeFactory.FieldSet(
                         Id: "fieldset-content-item",
