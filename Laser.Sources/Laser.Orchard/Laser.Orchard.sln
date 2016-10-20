@@ -65,6 +65,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Queries", "Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proligence.QrCodes", "Modules\Proligence.QrCodes\Proligence.QrCodes.csproj", "{9F6F1121-7570-4031-B775-CCB888038B6A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.StartupConfig", "Modules\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj", "{17DB396A-E8CE-4317-B558-8A5C17206518}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -169,6 +171,10 @@ Global
 		{9F6F1121-7570-4031-B775-CCB888038B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F6F1121-7570-4031-B775-CCB888038B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F6F1121-7570-4031-B775-CCB888038B6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17DB396A-E8CE-4317-B558-8A5C17206518}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17DB396A-E8CE-4317-B558-8A5C17206518}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17DB396A-E8CE-4317-B558-8A5C17206518}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17DB396A-E8CE-4317-B558-8A5C17206518}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -199,5 +205,6 @@ Global
 		{D0E4C97C-7504-464F-881C-9804C1991AB0} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{D494B57F-2AE6-460F-9785-565376409AFC} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{9F6F1121-7570-4031-B775-CCB888038B6A} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{17DB396A-E8CE-4317-B558-8A5C17206518} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
