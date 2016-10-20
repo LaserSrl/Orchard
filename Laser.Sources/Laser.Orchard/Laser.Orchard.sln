@@ -63,6 +63,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.ShareLink", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Queries", "Modules\Laser.Orchard.Queries\Laser.Orchard.Queries.csproj", "{D494B57F-2AE6-460F-9785-565376409AFC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Captcha", "Modules\Orchard.Captcha\Orchard.Captcha.csproj", "{33CB7425-D01A-41DD-B389-0772101BAF05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -163,6 +165,10 @@ Global
 		{D494B57F-2AE6-460F-9785-565376409AFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D494B57F-2AE6-460F-9785-565376409AFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D494B57F-2AE6-460F-9785-565376409AFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33CB7425-D01A-41DD-B389-0772101BAF05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33CB7425-D01A-41DD-B389-0772101BAF05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33CB7425-D01A-41DD-B389-0772101BAF05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33CB7425-D01A-41DD-B389-0772101BAF05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,5 +198,6 @@ Global
 		{4DA5F35F-E62C-4B49-B5A8-379503257B3A} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{D0E4C97C-7504-464F-881C-9804C1991AB0} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{D494B57F-2AE6-460F-9785-565376409AFC} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{33CB7425-D01A-41DD-B389-0772101BAF05} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
