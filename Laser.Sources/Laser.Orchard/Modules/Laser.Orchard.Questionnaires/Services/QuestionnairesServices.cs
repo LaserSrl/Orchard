@@ -747,12 +747,12 @@ namespace Laser.Orchard.Questionnaires.Services {
                 answersQuery = answersQuery.Where(w => w.AnswerDate <= to);
             }
             var users = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().List();
-            var result = answersQuery.Join(users, l => l.User_Id, r => r.Id, (l, r) => new ExportUserAnswersVM { 
-                Answer = l.AnswerText, 
-                Question = l.QuestionText, 
-                AnswerDate = l.AnswerDate, 
-                UserName = r.UserName,
-                Contesto = l.Context}).ToList();
+            var result = answersQuery.Select(x => new ExportUserAnswersVM { 
+                Answer = x.AnswerText, 
+                Question = x.QuestionText, 
+                AnswerDate = x.AnswerDate, 
+                UserName = x.SessionID,
+                Contesto = x.Context}).ToList();
             return result;
         }
         public void SaveQuestionnaireUsersAnswers(int questionnaireId, DateTime? from = null, DateTime? to = null) {

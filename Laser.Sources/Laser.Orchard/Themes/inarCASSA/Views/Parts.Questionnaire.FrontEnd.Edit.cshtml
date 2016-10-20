@@ -159,7 +159,7 @@ else {
 <li data-condition="@Questionnaire.QuestionsWithResults[j].Condition" data-conditiontype="@Questionnaire.QuestionsWithResults[j].ConditionType" data-required="@(Questionnaire.QuestionsWithResults[j].IsRequired ? "true" : "false")" >
 
     <div class='space-40'></div>
-    <h3 class="text-center font1-2">@Questionnaire.QuestionsWithResults[j].Question</h3>
+    <h3 class="text-center font1-2" style="padding-bottom:2em">@Questionnaire.QuestionsWithResults[j].Question</h3>
        @if (Questionnaire.QuestionsWithResults[j].AllFiles != null && Questionnaire.QuestionsWithResults[j].AllFiles.Split(',').Count() > 0) {
            foreach (int ciId in Questionnaire.QuestionsWithResults[j].AllFiles.Split(',').Select(int.Parse).ToList()) {
                MediaPart mediaPart = ((ContentItem)contentManager.Get(ciId)).As<MediaPart>();
