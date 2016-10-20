@@ -30,8 +30,17 @@ namespace Laser.Orchard.UserReactions.Projections {
             return T("Users who clicked on a specific reaction.");
         }
         public void ApplyFilter(FilterContext context) {
+            char[] separator = { ',' };
             string reaction = context.State.Reaction;
-            int contentId = ((context.State.ContentId != string.Empty) ? Convert.ToInt32(context.State.ContentId) : 0);
+            // recupera il contentId da un content picker field
+            int contentId = 0;
+            string aux = (string)(context.State.ContentId);
+            if (string.IsNullOrWhiteSpace(aux) == false) {
+                var arr = aux.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                if (arr.Length > 0) {
+                    contentId = Convert.ToInt32(arr[0]);
+                }
+            }
             string subquery = string.Format(@"select contact.Id as contactId
                 from Laser.Orchard.CommunicationGateway.Models.CommunicationContactPartRecord as contact, 
                 Laser.Orchard.UserReactions.Models.UserReactionsClickRecord as click
