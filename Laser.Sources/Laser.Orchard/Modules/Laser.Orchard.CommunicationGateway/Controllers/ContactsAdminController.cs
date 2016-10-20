@@ -44,7 +44,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly INotifier _notifier;
         private readonly ShellSettings _shellSettings;
         private readonly IUserService _userService;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
         private readonly string _contactsImportRelativePath;
 
         public ContactsAdminController(

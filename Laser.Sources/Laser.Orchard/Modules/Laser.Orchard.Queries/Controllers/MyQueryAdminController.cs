@@ -23,7 +23,7 @@ namespace Laser.Orchard.Queries.Controllers {
         private readonly string contentType = "MyCustomQuery";
         private readonly dynamic TestPermission = Permissions.UserQuery;
         private readonly INotifier _notifier;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public MyQueryAdminController(
             IOrchardServices orchardServices,

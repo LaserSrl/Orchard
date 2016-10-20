@@ -30,7 +30,7 @@ namespace Laser.Orchard.DevTools.Controllers {
         private readonly ShellSettings _shellSetting;
         public IOrchardServices _orchardServices { get; set; }
         private readonly INotifier _notifier;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public AdminController(ICsrfTokenHelper csrfTokenHelper,
             IScheduledTaskManager scheduledTaskManager,
