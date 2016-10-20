@@ -7,7 +7,9 @@ using System.Net;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using System.Linq;
+//occhio tolto referenza a webhttp, non testato
+//TODO spostare alcuni metodi ausialiri in un altra classe per tenere questa piu pulita?
 namespace Laser.Orchard.FidelityLoyalzoo.Services
 {
     public class LoyalzooSendService : ISendService
@@ -15,6 +17,7 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
 
         public APIResult<FidelityCustomer> SendCustomerRegistration(FidelitySettingsPart setPart, FidelityCustomer customer)
         {
+            
             APIResult<FidelityCustomer> result = new APIResult<FidelityCustomer>();
             result.data = null;
             try
@@ -23,20 +26,18 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
                 {
                     new KeyValuePair<string, string>("username", customer.Username),
                     new KeyValuePair<string, string>("password",customer.Password),
-                    new KeyValuePair<string, string>("email",customer.Email), //TODO vedeere se è oggnligatorio inserire il first-name
+                    new KeyValuePair<string, string>("email",customer.Email), 
+                     new KeyValuePair<string, string>("first_name", customer.Username)//TODO vedeere se è oggnligatorio inserire il first-name
                 };
-                foreach (var otherData in customer.Data)
-                {
-                    kvpList.Add(new KeyValuePair<string, string>(otherData.Key, otherData.Value));
-                }
                 string responseString = SendRequest(setPart, APIType.customer, "create", kvpList);
+
                 if (!string.IsNullOrWhiteSpace(responseString))
                 {
                     JObject data = JObject.Parse(responseString);
                     result.success = data.Value<bool>("success");
                     if (result.success)
                     {
-                        customer.Data = this.DictionaryFromResponseToken(data.SelectToken("response"));
+                        customer.Data = this.DictionaryFromResponseToken(data.SelectToken("response"));                
                         RemoveCustomerPropertyFromDataDictionary(customer);
                         result.data = customer;
                         result.message = "Loyalzoo registration success.";
@@ -55,7 +56,7 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
             catch (Exception ex)
             {
                 result.success = false;
-                result.message = "exception: " + ex.Message + "; in method send service of LoyalzooFidelityModule.";
+                result.message = "exception: " + ex.Message + ".";
             }
             return result;
         }
@@ -102,18 +103,18 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
             catch (Exception ex)
             {
                 result.success = false;
-                result.message = "exception: " + ex.Message + "; in method send service of LoyalzooFidelityModule.";
+                result.message = "exception: " + ex.Message + ";";
             }
             return result;
         }
 
-        public APIResult<List<string>> SendCampaignIdList(FidelitySettingsPart setPart)
+        public APIResult<IEnumerable<FidelityCampaign>> SendCampaignList(FidelitySettingsPart setPart)
         {
-            APIResult<List<string>> result = new APIResult<List<string>>();
-            List<string> listCamp = new List<string>();
+            APIResult<IEnumerable<FidelityCampaign>> result = new APIResult<IEnumerable<FidelityCampaign>>();
+            List<FidelityCampaign> listCamp = new List<FidelityCampaign>();
             APIResult<string> loginResp = merchantLogin(setPart, true);
             result.success = loginResp.success;
-            listCamp.Add(loginResp.data);
+            listCamp.Add(new FidelityCampaign { Id = loginResp.data });//TODO da fare il recupero delle info del place per avere una campaign un po migliore?
             result.data = listCamp;
             result.message = loginResp.message;
             return result;           
@@ -155,7 +156,7 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
             }
             catch (Exception ex)
             {
-                result.message = "exception: " + ex.Message + "; in method send service of LoyalzooFidelityModule.";
+                result.message = "exception: " + ex.Message + ".";
             }
             return result;
         }
@@ -173,6 +174,12 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
                     new KeyValuePair<string, string>("customer_id", customer.Id),
                     new KeyValuePair<string, string>("reward_id", reward.Id),
                 };
+                if (!checkCustomerPoints(setPart, customer, reward, campaign))
+                {
+                    result.data = false;
+                    result.message = "Il cliente " + customer.Username + " non ha abbastanza punti per il reward: " + reward.Id + " nella campagna: " + campaign.Id + ".";
+                    return result;
+                }
                 string responseString = SendRequest(setPart, APIType.merchant, "giveReward", kvpList);
                 if (!string.IsNullOrWhiteSpace(responseString))
                 {
@@ -195,7 +202,7 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
             }
             catch (Exception ex)
             {
-                result.message = "exception: " + ex.Message + "; in method send service of LoyalzooFidelityModule.";
+                result.message = "exception: " + ex.Message + ".";
             }
             return result;
         }
@@ -215,8 +222,8 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
             {
                 List<KeyValuePair<string, string>> kvpList = new List<KeyValuePair<string, string>>()
                 {
-                    new KeyValuePair<string, string>("username",setPart.UserID),
-                    new KeyValuePair<string, string>("password",setPart.Password),
+                    new KeyValuePair<string, string>("username", setPart.UserID),
+                    new KeyValuePair<string, string>("password", setPart.Password),
                 };
                 responseString = SendRequest(setPart, APIType.merchant, "login", kvpList);
                 if (!string.IsNullOrWhiteSpace(responseString))
@@ -297,11 +304,50 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
         }
 
         /// <summary>
+        /// Controlla se l'utente ha abbastanza punti per ricervere un regalo
+        /// </summary>
+        /// <param name="kvpList">Elenco dei parametri per fare le chiamate</param>
+        /// <returns>Restituisce una stringa in formato json</returns>
+        protected bool checkCustomerPoints(FidelitySettingsPart setPart, FidelityCustomer customer, FidelityReward reward, FidelityCampaign campaign)
+        {
+            APIResult<FidelityCustomer> resCustomer = this.SendCustomerDetails(setPart, customer);
+            if(!resCustomer.success)
+            {
+                throw new Exception("customer not fuond");
+            }
+                
+            APIResult<FidelityCampaign> resCampaign = this.SendCampaignData(setPart, campaign);
+
+            if(!resCampaign.success){
+                throw new Exception("campaign " + campaign.Id + " not found");
+            }
+            customer = resCustomer.data;
+            campaign = resCampaign.data;
+
+            if (!campaign.Catalog.ContainsKey(reward.Id))
+            {
+                throw new Exception("campaign: " + campaign.Id + " not contaign reward: " + reward.Id);
+            }
+
+            if(!customer.PointsInCampaign.ContainsKey(campaign.Id))
+            {
+                throw new Exception("customer: " + customer.Username + " not have points in campaign: " + campaign.Id);
+            }
+
+
+            if (customer.PointsInCampaign[campaign.Id] < campaign.Catalog[reward.Id])
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Invia la richiesta all'URL API
         /// </summary>
         /// <param name="APIType">Tipologia di API da richiamare <see cref="APIType"/></param>
         /// <param name="APIMetodo">Metodo da richiamare</param>
-        /// <param name="kvpList">Elenco dei parametri da passare all'API List&lt;KeyValuePair&lt;string, string&gt;&gt;</param>
+        /// <param name="kvpList">Elenco dei parametri da passare al provider come parametri;</param>
         /// <returns>Restituisce una stringa in formato json</returns>
         private static string SendRequest(FidelitySettingsPart setPart, APIType APIType, string APIMetodo, List<KeyValuePair<string, string>> kvpList)
         {
@@ -310,11 +356,10 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
             {
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri(setPart.ApiURL + APIType.ToString() + "/" + setPart.DeveloperKey + "/" + APIMetodo);
-
+                   // client.BaseAddress = new Uri(setPart.ApiURL + APIType.ToString() + "/" + setPart.DeveloperKey + "/" + APIMetodo);
+                    Uri address = new Uri(setPart.ApiURL + APIType.ToString() + "/" + setPart.DeveloperKey + "/" + APIMetodo);
                     var content = new FormUrlEncodedContent(kvpList);
-
-                    HttpResponseMessage result = client.PostAsync(GetAPIMetodo(APIMetodo), content).Result;
+                    HttpResponseMessage result = client.PostAsync(address, content).Result;
                     if (result.StatusCode == HttpStatusCode.OK)
                     {
                         responseString = result.Content.ReadAsStringAsync().Result;
@@ -341,7 +386,7 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
         /// GetAPIMetodo
         /// </summary>
         /// <param name="APIMetodo">Metodo</param>
-        /// <returns>string</returns> TODOT ???????????????
+        /// <returns>string</returns> TODO ???????????????
         private static string GetAPIMetodo(string APIMetodo)
         {
             string sRetAPI = APIMetodo;
@@ -370,6 +415,7 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
             user
         }
 
+        //crea un dizionario strig string partendo da un JToken
         private Dictionary<string, string> DictionaryFromResponseToken(JToken token)
         {
             Dictionary<string, string> data = new Dictionary<string, string>();
@@ -381,6 +427,8 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
             return data;
         }
 
+        //elimina dal dizionario data tutti i campi che sono gia presenti nelle propietà dal customer
+        //inoltre aggiunge la lista dei punti acquisiti
         private void RemoveCustomerPropertyFromDataDictionary(FidelityCustomer customer)
         {
             Dictionary<string, string> data = customer.Data;
@@ -390,6 +438,7 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
             }
             if (data.ContainsKey("id"))
             {
+                customer.Id = data["id"];
                 data.Remove("id");
             }
             if (data.ContainsKey("username"))
@@ -425,6 +474,8 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
             }
         }
 
+        //rimuove dal dizionario data della campaign tutti i dati presenti anche nelle propità
+        //inoltre aggiunge il catalogo
         private void RemoveCampaignPropertyFromDataDictionary(FidelityCampaign campaign)
         {
             Dictionary<string, string> data = campaign.Data;
@@ -437,21 +488,33 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
             {
                 string jsonList = data["loyalty_scheme"];
                 JObject loyalty_scheme = JObject.Parse(data["loyalty_scheme"]);
-                AddRewardsInCampaign(loyalty_scheme.SelectToken("rewards"), campaign);
-               //TODO data.Remove("rewards");
+                if (loyalty_scheme.SelectToken("rewards") != null)
+                {
+                    AddRewardsInCampaignFromToken(loyalty_scheme.SelectToken("rewards"), campaign);                   
+                }
+                campaign.Data.Remove("loyalty_scheme");
             }
+            if (data.ContainsKey("opening_hours"))
+            {
+                data.Remove("opening_hours");
+            }//TODO vedere se è interessante includerle nelle data
         }
 
-        private void AddRewardsInCampaign(JToken tokenRewards, FidelityCampaign campaign)
+        //partendo dal JToken che rappresenta il catalogo setta la propietà catalogo dalla campaign
+        private void AddRewardsInCampaignFromToken(JToken tokenRewards, FidelityCampaign campaign)
         {
-            foreach (JToken tokenRew in tokenRewards.Children())
+            if (tokenRewards.Children().Count() > 0)
             {
-                FidelityReward reward = new FidelityReward();
-                reward.Id = tokenRew.Value<string>("id");
-                reward.Description = tokenRew.Value<string>("description");
-                reward.Name = tokenRew.Value<string>("name");
-                reward.Data.Add("target",tokenRew.Value<string>("target"));
-                reward.Data.Add("icon", tokenRew.Value<string>("icon"));
+                foreach (JToken tokenRew in tokenRewards.Children())
+                {
+                    FidelityReward reward = new FidelityReward();
+                    reward.Id = tokenRew.Value<string>("id");
+                    reward.Description = tokenRew.Value<string>("description");
+                    reward.Name = tokenRew.Value<string>("name");
+                    reward.AddData("icon", tokenRew.Value<string>("icon"));                 
+                    campaign.AddReward(reward.Id, tokenRew.Value<string>("target"));
+                    campaign.Rewards.Add(reward);
+                }
             }
         }
     }

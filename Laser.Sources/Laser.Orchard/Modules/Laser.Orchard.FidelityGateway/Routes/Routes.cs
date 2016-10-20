@@ -88,6 +88,28 @@ namespace Laser.Orchard.FidelityGateway.Routes
                 }
             },
 
+            new HttpRouteDescriptor {
+                Name = "GetActions",
+                Priority = -10,
+                RouteTemplate = "api/FidelityAPI/GetActions",
+                Defaults = new {
+                    area = "Laser.Orchard.FidelityGateway",
+                    controller = "FidelityBaseApi",
+                    action = "GetActions"
+                }
+            },
+
+             new HttpRouteDescriptor {
+                Name = "AddPointsFromAction",
+                Priority = -10,
+                RouteTemplate = "api/FidelityAPI/AddPointsFromAction/{actionId}",
+                Defaults = new {
+                    area = "Laser.Orchard.FidelityGateway",
+                    controller = "FidelityBaseApi",
+                    action = "AddPointsFromAction"
+                }
+            },
+
              new HttpRouteDescriptor {
                 Name = "testroute",
                 Priority = -10,

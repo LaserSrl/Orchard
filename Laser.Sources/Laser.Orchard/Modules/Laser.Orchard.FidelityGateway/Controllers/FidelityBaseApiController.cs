@@ -1,11 +1,15 @@
-﻿using Laser.Orchard.FidelityGateway.Services;
+﻿using Laser.Orchard.FidelityGateway.Models;
+using Laser.Orchard.FidelityGateway.Services;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
-using System.Web.Mvc;
+using System.Web.Http;
+//Susing System.Web.Mvc;
 
-namespace Laser.Orchard.FidelityGateway.Models
+
+namespace Laser.Orchard.FidelityGateway.Controllers
 {
-    public class FidelityBaseApiController : Controller
+    public class FidelityBaseApiController : ApiController
     {
 
         private readonly IFidelityServices _fidelityService;
@@ -15,76 +19,129 @@ namespace Laser.Orchard.FidelityGateway.Models
             _fidelityService = service;
         }
 
-        [System.Web.Mvc.HttpGet]
-        public virtual JsonResult CustomerRegistration()
+
+        [HttpGet]
+        public virtual string Test(string s)
+        {
+            return "test" + s;
+        }
+
+        [HttpGet]
+        public virtual APIResult<FidelityCustomer> CustomerRegistration()
         {
             try
             {
-                return Json(_fidelityService.CreateFidelityAccountFromCookie(), JsonRequestBehavior.AllowGet);
+                return _fidelityService.CreateFidelityAccountFromCookie();
             }
             catch (Exception e)
             {
-                return Json(new APIResult<string> { success = false, data = null, message = e.Message }, JsonRequestBehavior.AllowGet);
+                return new APIResult<FidelityCustomer> { success = false, data = null, message = e.Message };
             }
         }
-
-        [System.Web.Mvc.HttpGet]
-        public virtual JsonResult CustomerDetails()
+        
+        [HttpGet]
+        public virtual APIResult<FidelityCustomer> CustomerDetails()
         {
             try
             {
-                return Json(_fidelityService.GetCustomerDetails(), JsonRequestBehavior.AllowGet);
+                return _fidelityService.GetCustomerDetails();
             }
             catch (Exception e)
             {
-                return Json(new APIResult<string> { success = false, data = null, message = e.Message }, JsonRequestBehavior.AllowGet);
+                return new APIResult<FidelityCustomer> { success = false, data = null, message = e.Message };
             }
         }
 
-        [System.Web.Mvc.HttpGet]
-        public virtual JsonResult CampaignData(string campaign_id)
+        
+        [HttpGet]
+        public virtual APIResult<FidelityCampaign> GetCampaignData(string campaignId)
         {
             try
             {
-                return Json(_fidelityService.GetCampaignData(campaign_id), JsonRequestBehavior.AllowGet);
+                return _fidelityService.GetCampaignData(campaignId);
             }
             catch (Exception e)
             {
-                return Json(new APIResult<string> { success = false, data = null, message = e.Message }, JsonRequestBehavior.AllowGet);
+                return new APIResult<FidelityCampaign> { success = false, data = null, message = e.Message };
             }
         }
 
-        [System.Web.Mvc.HttpGet]
-        public virtual JsonResult CampaignList()
+        
+        [HttpGet]
+        public virtual APIResult<IEnumerable<FidelityCampaign>> CampaignList()
         {
             try
             {
-                return Json(_fidelityService.GetCampaignIdList(), JsonRequestBehavior.AllowGet);
+                return _fidelityService.GetCampaignList();
             }
             catch (Exception e)
             {
-                return Json(new APIResult<string> { success = false, data = null, message = e.Message }, JsonRequestBehavior.AllowGet);
+                return new APIResult<IEnumerable<FidelityCampaign>> { success = false, data = null, message = e.Message };
             }
         }
 
-        [System.Web.Mvc.HttpGet]
-        public virtual JsonResult AddPoints(string amount, string campaignId)
+        
+        [HttpGet]
+        public virtual APIResult<bool> AddPoints(string amount, string campaignId)
         {
             try
             {
                 double points;
                 if (Double.TryParse(amount, out points))
-                    return Json(_fidelityService.AddPoints(amount, campaignId), JsonRequestBehavior.AllowGet);
+                    return _fidelityService.AddPoints(amount, campaignId);
                 else
-                    return Json(new APIResult<string> { success = false, data = null, message = "The input parameters is not in the correct format." }, JsonRequestBehavior.AllowGet);
+                    return new APIResult<bool> { success = false, data = false, message = "The input parameters is not in the correct format." };
             }
             catch (Exception e)
             {
-                return Json(new APIResult<string> { success = false, data = null, message = e.Message }, JsonRequestBehavior.AllowGet);
+                return new APIResult<bool> { success = false, data = false, message = e.Message };
             }
         }
 
-        [System.Web.Mvc.HttpGet]
+        [HttpGet]
+        public virtual APIResult<bool> GiveReward(string rewardId, string campaignId)
+        {
+            try
+            {
+                if (rewardId != null)
+                    return _fidelityService.GiveReward(rewardId, campaignId);
+                else
+                    return new APIResult<bool> { success = false, data = false, message = "The input parameters is not in the correct format." };
+            }
+            catch (Exception e)
+            {
+                return new APIResult<bool> { success = false, data = false, message = e.Message };
+            }    
+        }
+
+        [HttpGet]
+        public virtual APIResult<IEnumerable<ActionInCampaignRecord>> GetActions()
+        {
+            try
+            {
+                return _fidelityService.GetActions();
+            }
+            catch (Exception e)
+            {
+                return new APIResult<IEnumerable<ActionInCampaignRecord>> { success = false, data = null, message = e.Message };
+            }
+        }
+
+        [HttpGet]
+        public virtual APIResult<bool> AddPointsFromAction(string actionId)
+        {
+            try
+            {
+                return _fidelityService.AddPointsFromAction(actionId);
+            }
+            catch (Exception e)
+            {
+                return new APIResult<bool> { success = false, data = false, message = e.Message };
+            }
+        }
+
+        /*
+         [System.Web.Mvc.HttpGet]
         public virtual JsonResult AddPointsFromAction(string actionId, string completionPercent)
         {
             try
@@ -96,23 +153,7 @@ namespace Laser.Orchard.FidelityGateway.Models
                 return Json(new APIResult<string> { success = false, data = null, message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
-
-        [System.Web.Mvc.HttpGet]
-        public virtual JsonResult GiveReward(string rewardId, string campaignId)
-        {
-            try
-            {
-                if (rewardId != null)
-                    return Json(_fidelityService.GiveReward(rewardId, campaignId), JsonRequestBehavior.AllowGet);
-                else
-                    return Json(new APIResult<string> { success = false, data = null, message = "The input parameters is not in the correct format." }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception e)
-            {
-                return Json(new APIResult<string> { success = false, data = null, message = e.Message }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
+        
         [System.Web.Mvc.HttpGet]
         public virtual JsonResult UpdateSocial(string socialToken, string tokenType)
         {
@@ -128,5 +169,6 @@ namespace Laser.Orchard.FidelityGateway.Models
                 return Json(new APIResult<string> { success = false, data = null, message = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+         */
     }
 }

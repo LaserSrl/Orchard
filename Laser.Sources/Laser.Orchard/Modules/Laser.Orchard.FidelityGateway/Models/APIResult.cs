@@ -10,5 +10,6 @@ namespace Laser.Orchard.FidelityGateway.Models
         public bool success { get; set; }
         public string message { get; set; }
         public T data { get; set; }
+
     }
 }

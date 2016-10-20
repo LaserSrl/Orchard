@@ -69,6 +69,10 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
@@ -88,14 +92,18 @@
   <ItemGroup>
     <Compile Include="Controllers\FidelityBaseApiController.cs" />
     <Compile Include="Drivers\FidelitySettingsPartDriver.cs" />
+    <Compile Include="Drivers\FidelityUserPartDriver.cs" />
     <Compile Include="Handlers\FidelitySettingsHandler.cs" />
+    <Compile Include="Handlers\FidelityUserHandler.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\ActionInCampaignRecord.cs" />
     <Compile Include="Models\APIResult.cs" />
     <Compile Include="Models\FidelityCampaign.cs" />
     <Compile Include="Models\FidelityReward.cs" />
     <Compile Include="Models\FidelitySettingsPart.cs" />
     <Compile Include="Models\FidelityUserPart.cs" />
     <Compile Include="Models\FidelityCustomer.cs" />
+    <Compile Include="Routes\Routes.cs" />
     <Compile Include="Services\FidelityBaseServices.cs" />
     <Compile Include="Services\IFidelityServices.cs" />
     <Compile Include="Services\ISendService.cs" />

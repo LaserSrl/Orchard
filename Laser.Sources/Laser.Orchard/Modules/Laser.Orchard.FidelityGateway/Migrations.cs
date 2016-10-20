@@ -36,5 +36,46 @@ namespace Laser.Orchard.FidelityGateway
 
             return 2;
         }
+
+        public int UpdateFrom2()
+        {
+            SchemaBuilder.CreateTable("ActionInCampaign",
+            table =>
+                    table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Action", column => column.WithLength(30))
+                    .Column<string>("CampaignId", column => column.WithLength(30))
+                    .Column<double>("Points")
+                    );
+            return 3;
+        }
+
+        public int UpdateFrom3()
+        {
+            SchemaBuilder.DropTable("ActionInCampaign");
+            SchemaBuilder.CreateTable("ActionInCampaign",
+            table =>
+                    table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Action", column => column.WithLength(30))
+                    .Column<string>("CampaignId", column => column.WithLength(30))
+                    .Column<double>("Points")
+                    );
+            return 4;
+        }
+
+        public int UpdateFrom4()
+        {
+            SchemaBuilder.DropTable("ActionInCampaign");
+            SchemaBuilder.CreateTable("ActionInCampaignRecord",
+            table =>
+                    table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Action", column => column.WithLength(30))
+                    .Column<string>("CampaignId", column => column.WithLength(30))
+                    .Column<double>("Points")
+                    );
+            return 5;
+        }
     }
 }
