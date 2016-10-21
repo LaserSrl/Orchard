@@ -1,5 +1,4 @@
-﻿using Laser.Orchard.UserReactions.Models;
-using Laser.Orchard.UserReactions.Services;
+﻿using Laser.Orchard.UserReactions.Services;
 using Orchard;
 using Orchard.Data;
 using Orchard.ContentManagement;
@@ -10,10 +9,8 @@ using Orchard.Localization;
 using Orchard.UI.Resources;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using Orchard.Projections.Models;
-using Orchard.Projections.Services;
 using System.Xml;
 
 namespace Laser.Orchard.UserReactions.Projections {
@@ -21,23 +18,21 @@ namespace Laser.Orchard.UserReactions.Projections {
         private readonly IUserReactionsService _reactionsService;
         private readonly Work<IResourceManager> _resourceManager;
         private readonly IRepository<FilterRecord> _repositoryFilters;
-        private readonly IProjectionManager _projectionManager;
         private readonly IOrchardServices _orchardServices;
         protected dynamic _shapeFactory { get; set; }
         public Localizer T { get; set; }
         public const string FormName = "ReactionClickedFilterForm";
 
-        public ReactionClickedFilterForm(IUserReactionsService reactionsService, IShapeFactory shapeFactory, Work<IResourceManager> resourceManager, IRepository<FilterRecord> repositoryFilters, IProjectionManager projectionManager, IOrchardServices orchardServices) {
+        public ReactionClickedFilterForm(IUserReactionsService reactionsService, IShapeFactory shapeFactory, Work<IResourceManager> resourceManager, IRepository<FilterRecord> repositoryFilters, IOrchardServices orchardServices) {
             _reactionsService = reactionsService;
             _resourceManager = resourceManager;
             _repositoryFilters = repositoryFilters;
-            _projectionManager = projectionManager;
             _orchardServices = orchardServices;
             _shapeFactory = shapeFactory;
             T = NullLocalizer.Instance;
         }
-
         public void Describe(DescribeContext context) {
+            // recupera il valore salvato per il content picker field
             char[] separator = { ',' };
             List<ContentItem> contentItem = new List<ContentItem>();
             var httpContext = HttpContext.Current;
@@ -58,6 +53,7 @@ namespace Laser.Orchard.UserReactions.Projections {
                     }
                 }
             }
+            // compone il form
             context.Form("ReactionClickedFilterForm", shape => {
                 var f = _shapeFactory.Form(
                     Id: "ReactionClickedFilterForm",
@@ -114,9 +110,6 @@ namespace Laser.Orchard.UserReactions.Projections {
                 }
                 return f;
             });
-        }
-        private class StateMapper {
-            public string ContentId { get; set; }
         }
     }
 }
