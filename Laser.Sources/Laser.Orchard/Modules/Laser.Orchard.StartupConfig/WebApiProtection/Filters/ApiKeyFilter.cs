@@ -84,10 +84,9 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
         /// </summary>
         /// <param name="key">default cache key such as defined in Orchard.OutpuCache</param>
         /// <returns>The new cache key</returns>
-        public StringBuilder ParticipateInCacheKey(StringBuilder key) {
+        public void KeyGenerated(StringBuilder key) {
             _additionalCacheKey = _apiKeyService.ValidateRequestByApiKey(_additionalCacheKey);
             key.Append(_additionalCacheKey);
-            return key;
         }
     }
 }
