@@ -60,6 +60,16 @@ namespace Laser.Orchard.Queries.Controllers {
             var model = new prebuilder();
             model.Id = 0;
             model.Title = "";
+            return View("Create", (object)model);
+        }
+
+        [Admin]
+        public ActionResult CreateOneShot() {
+            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+                return new HttpUnauthorizedResult();
+            var model = new prebuilder();
+            model.Id = 0;
+            model.Title = "";
             return View((object)model);
         }
 
@@ -84,6 +94,25 @@ namespace Laser.Orchard.Queries.Controllers {
             }
             else
                 return RedirectToAction("Index", "MyQueryAdmin");
+        }
+
+        [HttpPost, Admin]
+        public ActionResult CreateOneShot(prebuilder model) {
+            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+                return new HttpUnauthorizedResult();
+            if (!string.IsNullOrEmpty(model.Title)) {
+                var newContent = _orchardServices.ContentManager.New(contentType);
+                _orchardServices.ContentManager.Create(newContent);
+                newContent.As<TitlePart>().Title = model.Title;
+                newContent.As<QueryPart>().Name = model.Title;
+                ((dynamic)newContent).QueryUserFilterExtensionPart.UserQuery.Value = true;
+                ((dynamic)newContent).QueryUserFilterExtensionPart.OneShotQuery.Value = true;
+                newContent.As<TitlePart>().Title = model.Title;
+                return RedirectToAction("Index", "MyQueryAdmin");
+            }
+            else {
+                return RedirectToAction("Index", "MyQueryAdmin");
+            }
         }
 
         public ActionResult Delete(int id) {

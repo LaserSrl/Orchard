@@ -127,7 +127,8 @@ namespace Laser.Orchard.Queries.Controllers {
                 Title = p.As<TitlePart>().Title,
                 ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
                 UserName = p.As<CommonPart>().Owner.UserName,
-                ContentType = p.ContentType
+                ContentType = p.ContentType,
+                OneShotQuery = ( p.Parts.FirstOrDefault(x => x.PartDefinition.Name == "QueryUserFilterExtensionPart") != null) ? ((dynamic)p).QueryUserFilterExtensionPart.OneShotQuery.Value ?? false : false
             });
 
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
