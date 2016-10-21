@@ -18,7 +18,7 @@ msgstr "Link breve"
 
 msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
 msgid "Test Short Link"
-msgstr "L'Url breve"
+msgstr "Prova il link breve"
 
 msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinks.cshtml"
 msgid "Valid for:"
@@ -38,7 +38,7 @@ msgstr "Controlla la <a target=\"_blank\" href=\"{0}\">apikey</a>: sul sito goog
 
 msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/EditorTemplates/Parts/ShortLinksSettings.cshtml"
 msgid "Short Link Settings"
-msgstr "Impostazioni Sort Link"
+msgstr "Impostazioni modulo Short Link"
 
 msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/Parts/ShortLinks.cshtml"
 msgid "Short Link"
@@ -46,7 +46,7 @@ msgstr "Link breve"
 
 msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/Parts/ShortLinks.SummaryAdmin.cshtml"
 msgid "no Short link"
-msgstr "Nessun short link"
+msgstr "Nessun link breve"
 
 msgctxt "~/Modules/Laser.Orchard.ShortLinks/Views/Parts/ShortLinks.SummaryAdmin.cshtml"
 msgid "Short Link"
@@ -54,7 +54,7 @@ msgstr "Link breve"
 
 msgctxt "Laser.Orchard.ShortLinks.Handlers.ShortLinksHandler"
 msgid "The short link is not associated to this page!"
-msgstr "Questo shortlink non è attualmente associato alla presente pagina!"
+msgstr "Questo link breve (short link) non è attualmente associato alla presente pagina!"
 
 msgctxt "Laser.Orchard.ShortLinks.Services.MissingSettingsBanner"
 msgid "The <a href=\"{0}#shortlinksetting\">ShortLinks settings</a> need to be configured."
@@ -62,5 +62,5 @@ msgstr "Le impostazioni del <a href=\"{0}#shortlinksetting\">modulo ShortLink</a
 
 msgctxt "Laser.Orchard.ShortLinks.Services.ShortLinksService"
 msgid "No Shorturl Setting Found"
-msgstr "Nessuna impostazione per lo ShortUrl trovata"
+msgstr "Nessuna impostazione trovata per il modulo Short Link"
 
