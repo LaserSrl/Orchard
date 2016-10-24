@@ -13,6 +13,14 @@ msgid "No data found."
 msgstr "Nessun dato trovato."
 
 msgctxt "~/Themes/inarCASSA/Views/Layout.cshtml"
+msgid "Change Password"
+msgstr "Cambia password"
+
+msgctxt "~/Themes/inarCASSA/Views/Layout.cshtml"
+msgid "Dashboard"
+msgstr "Pannello di controllo"
+
+msgctxt "~/Themes/inarCASSA/Views/Layout.cshtml"
 msgid "No data found."
 msgstr "Nessun dato trovato."
 
