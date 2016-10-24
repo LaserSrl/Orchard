@@ -1,0 +1,21 @@
+﻿Name: Laser SEO
+AntiForgery: enabled
+Author: Laser srl
+Website: http://www.laser-group.com
+Version: 1.8
+OrchardVersion: 1.10
+Features:
+    Laser.Orchard.SEO:
+        Name: Laser SEO
+        Description: Search Engine Optimization.
+        Dependencies: Orchard.ContentTypes, Laser.Orchard.StartupConfig, Orchard.Resources
+        Category: SEO
+    Laser.Orchard.Favicon:
+        Name: Laser Favicon
+        Description: Aggiunge la gestione della favicon alle impostazioni del sito.
+        Dependencies: Orchard.Media, Settings
+        Category: SEO
+	Laser.Orchard.KeywordHelper:
+		Name: Laser Keyword Helper
+		Description: This module is used by content creators to generate recommended keywords to use.
+		Category: SEO
