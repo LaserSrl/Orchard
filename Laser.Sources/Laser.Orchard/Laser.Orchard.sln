@@ -69,6 +69,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.StartupConfig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Captcha", "Modules\Orchard.Captcha\Orchard.Captcha.csproj", "{33CB7425-D01A-41DD-B389-0772101BAF05}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.AdminToolbarExtensions", "Modules\Laser.Orchard.AdminToolbarExtensions\Laser.Orchard.AdminToolbarExtensions.csproj", "{38090550-EAD0-420F-B45B-D76261E7044D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -181,6 +183,10 @@ Global
 		{33CB7425-D01A-41DD-B389-0772101BAF05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33CB7425-D01A-41DD-B389-0772101BAF05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33CB7425-D01A-41DD-B389-0772101BAF05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38090550-EAD0-420F-B45B-D76261E7044D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38090550-EAD0-420F-B45B-D76261E7044D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38090550-EAD0-420F-B45B-D76261E7044D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38090550-EAD0-420F-B45B-D76261E7044D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -213,5 +219,6 @@ Global
 		{9F6F1121-7570-4031-B775-CCB888038B6A} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{17DB396A-E8CE-4317-B558-8A5C17206518} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{33CB7425-D01A-41DD-B389-0772101BAF05} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{38090550-EAD0-420F-B45B-D76261E7044D} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
