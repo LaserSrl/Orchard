@@ -16,15 +16,24 @@ namespace Laser.Orchard.SEO.ViewModels {
         public bool RobotsNoOdp { get; set; }
         public bool RobotsNoArchive { get; set; }
         public bool RobotsUnavailableAfter { get; set; }
-        public string RobotsUnavailableAfterDate { get; set; }
+        private DateTime? _robotsUnavailableAfterDate;
+        public string RobotsUnavailableAfterDate
+        {
+            get { return _robotsUnavailableAfterDate == null ? _seoServices.DateToString(DateTime.MinValue) : _seoServices.DateToString(_robotsUnavailableAfterDate.Value); }
+            set { _robotsUnavailableAfterDate = _seoServices.LocalDateFromString(value); }
+        }
         public bool RobotsNoImageIndex { get; set; }
         public bool GoogleNoSiteLinkSearchBox { get; set; }
         public bool GoogleNoTranslate { get; set; }
 
+        //injected services
+        private readonly ISEOServices _seoServices;
+
         /// <summary>
         /// default empty constructor
         /// </summary>
-        public SeoPartViewModel() {
+        public SeoPartViewModel(ISEOServices seoServices) {
+            _seoServices = seoServices;
         }
 
         /// <summary>
@@ -32,7 +41,7 @@ namespace Laser.Orchard.SEO.ViewModels {
         /// </summary>
         /// <param name="part">The SeoPart we start from.</param>
         /// <param name="seoServices">Dependency injection for services.</param>
-        public SeoPartViewModel(SeoPart part, ISEOServices seoServices) {
+        public SeoPartViewModel(SeoPart part, ISEOServices seoServices) : this(seoServices) {
 
             this.TitleOverride = part.TitleOverride;
             this.Keywords = part.Keywords;
@@ -43,7 +52,8 @@ namespace Laser.Orchard.SEO.ViewModels {
             this.RobotsNoOdp = part.RobotsNoOdp;
             this.RobotsNoArchive = part.RobotsNoArchive;
             this.RobotsUnavailableAfter = part.RobotsUnavailableAfter;
-            this.RobotsUnavailableAfterDate = seoServices.DateToLocal(part.RobotsUnavailableAfterDate).ToShortDateString();
+            this._robotsUnavailableAfterDate = _seoServices.DateToLocal(part.RobotsUnavailableAfterDate);
+            //this.RobotsUnavailableAfterDate = seoServices.DateToLocal(part.RobotsUnavailableAfterDate).ToShortDateString();
             this.RobotsNoImageIndex = part.RobotsNoImageIndex;
             this.GoogleNoSiteLinkSearchBox = part.GoogleNoSiteLinkSearchBox;
             this.GoogleNoTranslate = part.GoogleNoTranslate;
@@ -54,7 +64,7 @@ namespace Laser.Orchard.SEO.ViewModels {
         /// </summary>
         /// <param name="part">The SeoPart we are going to update.</param>
         /// <param name="seoServices">Dependency injection for services.</param>
-        public void UpdatePart(SeoPart part, ISEOServices seoServices) {
+        public void UpdatePart(SeoPart part) {
             part.TitleOverride = this.TitleOverride;
             part.Keywords = this.Keywords;
             part.Description = this.Description;
@@ -64,10 +74,11 @@ namespace Laser.Orchard.SEO.ViewModels {
             part.RobotsNoOdp = this.RobotsNoOdp;
             part.RobotsNoArchive = this.RobotsNoArchive;
             part.RobotsUnavailableAfter = this.RobotsUnavailableAfter;
-            part.RobotsUnavailableAfterDate = seoServices.DateToUTC(this.RobotsUnavailableAfterDate);
+            part.RobotsUnavailableAfterDate = _seoServices.DateToUTC(this._robotsUnavailableAfterDate);
+            //part.RobotsUnavailableAfterDate = seoServices.DateToUTC(this.RobotsUnavailableAfterDate);
             part.RobotsNoImageIndex = this.RobotsNoImageIndex;
             part.GoogleNoSiteLinkSearchBox = this.GoogleNoSiteLinkSearchBox;
-            part.GoogleNoTranslate = this.GoogleNoTranslate; 
+            part.GoogleNoTranslate = this.GoogleNoTranslate;
         }
     }
 }
