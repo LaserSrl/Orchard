@@ -12,7 +12,7 @@ namespace Laser.Orchard.StartupConfig.Tokens {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IClock _clock;
 
-        private DateTime _resultDate;
+        //private DateTime _resultDate;
         private string _fullTokenName;
         public AdditionalDateTokens(IWorkContextAccessor workContextAccessor, IClock clock) {
             _workContextAccessor = workContextAccessor;
