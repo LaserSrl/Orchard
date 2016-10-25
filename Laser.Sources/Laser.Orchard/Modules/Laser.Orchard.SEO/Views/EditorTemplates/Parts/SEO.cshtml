@@ -32,7 +32,6 @@
     @* generates the localization script *@
     @Display.CalendarsPickerLocalization()
     @Display.TimeEntryLocalization()
-    string dtfa = System.Threading.Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern;
     string dtfi = (new System.Globalization.CultureInfo(WorkContext.CurrentCulture)).DateTimeFormat.ShortDatePattern.ToLowerInvariant();
     <script type="text/javascript">
         @*$(function () {
