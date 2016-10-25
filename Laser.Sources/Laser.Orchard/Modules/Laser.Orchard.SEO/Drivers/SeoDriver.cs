@@ -61,7 +61,7 @@ namespace Laser.Orchard.SEO.Drivers {
             if (!string.IsNullOrWhiteSpace(metaRobots)) {
                 resourceManager.SetMeta(new MetaEntry {
                     Name = "robots",
-                    Content = metaRobots.Substring(0, metaRobots.Length-1) //remove trailing comma
+                    Content = metaRobots.Substring(0, metaRobots.Length - 1) //remove trailing comma
                 });
             }
 
@@ -101,9 +101,9 @@ namespace Laser.Orchard.SEO.Drivers {
         /// POST Editor.
         /// </summary>
         protected override DriverResult Editor(SeoPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var vm = new SeoPartViewModel();
+            var vm = new SeoPartViewModel(_seoServices);
             updater.TryUpdateModel(vm, Prefix, null, null);
-            vm.UpdatePart(part, _seoServices);
+            vm.UpdatePart(part);
             return Editor(part, shapeHelper);
         }
 

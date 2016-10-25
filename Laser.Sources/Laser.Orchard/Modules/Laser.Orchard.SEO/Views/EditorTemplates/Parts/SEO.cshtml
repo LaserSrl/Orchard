@@ -28,15 +28,16 @@
 }
 @using (Script.Foot()) {
     @*@Display.DatePickerLocalization()
-    @Display.TimePickerLocalization()*@
+        @Display.TimePickerLocalization()*@
     @* generates the localization script *@
     @Display.CalendarsPickerLocalization()
     @Display.TimeEntryLocalization()
+    string dtfi = (new System.Globalization.CultureInfo(WorkContext.CurrentCulture)).DateTimeFormat.ShortDatePattern.ToLowerInvariant();
     <script type="text/javascript">
         @*$(function () {
             $('#unavailableAfterDate').datetimepicker({ 'showTimepicker': true, showAnim: "", changeYear: true, changeMonth: true });
         })*@
-        $(function() {
+        $(function () {
             var dateRenderer = $.extend(
                 {},
                 $.calendarsPicker.themeRollerRenderer,
@@ -46,6 +47,7 @@
                 }
             );
             $('#unavailableAfterDate').calendarsPicker({
+                dateFormat: '@dtfi',
                 showAnim: "",
                 renderer: dateRenderer
             });
@@ -53,7 +55,7 @@
     </script>
 }
 
-@helper CbAndLabelFor(System.Linq.Expressions.Expression<Func<Laser.Orchard.SEO.ViewModels.SeoPartViewModel, bool>> expression, string titleTag = ""){
+@helper CbAndLabelFor(System.Linq.Expressions.Expression<Func<Laser.Orchard.SEO.ViewModels.SeoPartViewModel, bool>> expression, string titleTag = "") {
     @Html.CheckBoxFor(expression, new { @title = titleTag })
     <label for="@Html.FieldIdFor(expression)" class="forcheckbox" style="font-weight: normal;" title="@titleTag">@Html.DisplayNameFor(expression)</label>
     <text>&nbsp;&nbsp;</text>
@@ -61,8 +63,8 @@
 
 <fieldset class="editor">
     <legend id="seo-label"><a href="#seo-label"><i class="fa fa-chevron-right"></i></a> @T("SEO attributes")</legend>
-    @if (emptySeo){
-    <span class="hint">@T("SEO attributes are empty!")</span>
+    @if (emptySeo) {
+        <span class="hint">@T("SEO attributes are empty!")</span>
     }
     <div id="seo-data-container" style="display:none">
         <div class="editor-label">
@@ -89,13 +91,13 @@
             @Html.TextBoxFor(m => m.Keywords, new { @class = "large text", @title = T("This is a list of keywords for the page. Note that this metadata tag is not used by search engines anymore.") })
             @Html.ValidationMessageFor(m => m.Keywords)
         </div>
-        
+
         <div class="editor-label">
             @Html.LabelFor(m => m.RobotsNoIndex, @T("Robots settings"))
         </div>
         <div class="editor-field">
             @CbAndLabelFor(m => m.RobotsNoIndex, @T("Prevents the page from being indexed in search engines.").ToString())
-            
+
             @CbAndLabelFor(m => m.RobotsNoFollow, @T("Prevents crawlers from following page links").ToString())
 
             @CbAndLabelFor(m => m.RobotsNoSnippet, @T("Prevents page snippets from being shown in search results").ToString())
