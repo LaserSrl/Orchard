@@ -86,7 +86,6 @@
     box-shadow: none !important;
 }
 
-.jstree-grid-cell {
-    padding-left: 0px !important;
-    width: 92% !important;
+.jstree-grid-column {
+    width: 100% !important;
 }
