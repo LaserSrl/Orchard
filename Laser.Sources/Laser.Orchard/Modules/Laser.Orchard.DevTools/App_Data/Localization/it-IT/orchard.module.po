@@ -1,0 +1,78 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2016 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "DeviceList"
+msgstr "Lista Device"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Get my ApiKey"
+msgstr "Ottieni la tua ApiKey"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Get my CsrfToken"
+msgstr "Ottieni il tuo CsrfToken"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Ranking List"
+msgstr "Classifiche"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "RankingList"
+msgstr "Classifiche"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Show Cached Data"
+msgstr "Mostra dati in cache"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Show Log"
+msgstr "Mostra Log"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Show scheduled task"
+msgstr "Mostra task pianificati"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowCachedData.cshtml"
+msgid "Clear All Cache"
+msgstr "Elimina tutte le Cache"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowCachedData.cshtml"
+msgid "Clear All Data Cached to filesystem"
+msgstr "Elimina tutte le cache dal filesystem"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowCachedData.cshtml"
+msgid "Edit"
+msgstr "Modifica"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowCachedData.cshtml"
+msgid "Remove"
+msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowCachedData.cshtml"
+msgid "Remove Cache"
+msgstr "Elimina Cache"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowCachedData.cshtml"
+msgid "Remove FileSystem"
+msgstr "Elimina da filesystem"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowScheduledTask.cshtml"
+msgid "Remove"
+msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowScheduledTask.cshtml"
+msgid "Remove Task"
+msgstr "Elimina Task"
+
+msgctxt "Laser.Orchard.DevTools.Navigation"
+msgid "DevTools"
+msgstr "Strumenti per sviluppatori"
+
