@@ -121,7 +121,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             }
             else
                 return _utilsServices.GetResponse(ResponseType.None, T("No content with this Id").ToString());
-            return (_utilsServices.GetResponse(ResponseType.Success));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
+            //return (_utilsServices.GetResponse(ResponseType.Success));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
 
 
         }

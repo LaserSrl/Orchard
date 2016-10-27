@@ -48,7 +48,7 @@
         @moreDetails
     </a>
 
-    <div id="collapse_@appId" class="collapse">
+    <div id="collapse_@appId" class="collapse" style="display:none">
         <label for="@Html.FieldIdFor(m => m.ScheduledStartUTC)">@T("Start Date")</label>
         @Html.TextBoxFor(m => m.ScheduledStartUTCDate, new { @class = "text", @title = @T("Invalid dates will be ignored") })
         @Html.TextBoxFor(m => m.ScheduledStartUTCTime, new { @class = "text", @title = @T("Invalid times will be ignored") })
@@ -128,7 +128,7 @@
     </script>
 
     <script type="text/javascript">
-        $(function () {
+        @*$(function () {
             $('#collapseButton_@appId').click(function () {
                 if ($('#collapse_@appId').attr("aria-expanded") === "true") {
                     this.innerHTML = "@moreDetails";
@@ -136,6 +136,23 @@
                     this.innerHTML = "@fewDetails";
                 }
             });
-        }());
+        }());*@
+
+        $(function () {
+            $('#collapseButton_@appId').click(function () {
+                if ($('#collapse_@appId').is(":visible")) {
+                    this.innerHTML = "@moreDetails";
+                    $('#collapse_@appId').hide(400);
+                }
+                else {
+                    this.innerHTML = "@fewDetails";
+                    $('#collapse_@appId').show(400);
+                }
+                $('html, body').animate({
+                    scrollTop: $($(this).attr('href')).offset().top
+                }, 500);
+                return false;
+            });
+        });
     </script>
 }

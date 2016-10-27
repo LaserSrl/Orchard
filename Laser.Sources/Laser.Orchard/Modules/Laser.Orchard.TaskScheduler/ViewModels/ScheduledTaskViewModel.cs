@@ -16,7 +16,12 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
         private DateTime? _scheduledStartUTC;
         public string ScheduledStartUTCDate
         {
-            get { return _scheduledStartUTC == null ? DateTime.MinValue.ToString("d", CultureInfo.InvariantCulture) : _scheduledStartUTC.Value.ToString("d", CultureInfo.InvariantCulture); }
+            get
+            {
+                return _scheduledStartUTC == null
+                  ? DateTime.MinValue.ToString("d", CultureInfo.InvariantCulture)
+                  : _scheduledStartUTC.Value.ToString("d", CultureInfo.InvariantCulture);
+            }
             set
             {
                 DateTime? dateFromString = _dateServices.ConvertFromLocalizedDateString(value);
@@ -43,7 +48,12 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
         }
         public string ScheduledStartUTCTime
         {
-            get { return _scheduledStartUTC == null ? DateTime.MinValue.ToString("HH:mm") : _scheduledStartUTC.Value.ToString("HH:mm"); }
+            get
+            {
+                return _scheduledStartUTC == null
+                  ? DateTime.MinValue.TimeOfDay.ToString(@"hh\:mm") //(CultureInfo.InvariantCulture.DateTimeFormat.ShortTimePattern.ToLowerInvariant())
+                  : _scheduledStartUTC.Value.TimeOfDay.ToString(@"hh\:mm");//(CultureInfo.InvariantCulture.DateTimeFormat.ShortTimePattern.ToLowerInvariant());
+            }
             set
             {
                 TimeSpan timeFromString;
@@ -85,7 +95,7 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
         public ScheduledTaskViewModel() {
             //this empty constructor is used for reflection when creating nested forms
             //there we have to pass the cultureInffo and the date service as well
-            _scheduledStartUTC = DateTime.UtcNow;
+            _scheduledStartUTC = DateTime.UtcNow.ToLocalTime();
             PeriodicityUnit = TimeUnits.Minutes;
             Running = 0;
             Delete = false;

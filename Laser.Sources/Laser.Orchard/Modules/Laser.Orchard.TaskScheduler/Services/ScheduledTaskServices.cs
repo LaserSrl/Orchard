@@ -11,6 +11,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using Orchard.Localization.Services;
+using System.Globalization;
 
 namespace Laser.Orchard.TaskScheduler.Services {
     public class ScheduledTaskService : IScheduledTaskService {
@@ -60,7 +61,7 @@ namespace Laser.Orchard.TaskScheduler.Services {
 
             List<ScheduledTaskViewModel> vmsForTasks = new List<ScheduledTaskViewModel>();
             int nVms = keys.Length / 9; //this is the number of fields we get from the views, and should be the number of fields in the ScheduledTaskViewModel
-
+            
             //note: here we are using the name of the properties and fields in the strings:
             //if those are changed for any reason, the strings in this method should reflect that
             for (int i = 0; i < nVms; i++) {
@@ -75,11 +76,12 @@ namespace Laser.Orchard.TaskScheduler.Services {
                     //    Convert.ToDateTime(formData[thisObject + "ScheduledStartUTC"]);
                     string formDate = formData[thisObject + "ScheduledStartUTCDate"];
                     string formTime = formData[thisObject + "ScheduledStartUTCTime"];
-                    inputDate = _dateServices.ConvertFromLocalizedDateString(formDate);
-                    TimeSpan ts = TimeSpan.Parse(formTime);
+                    //inputDate = _dateServices.ConvertFromLocalizedDateString(formDate);
+                    inputDate = DateTime.Parse(formDate, CultureInfo.InvariantCulture);
+                    TimeSpan ts = TimeSpan.Parse(formTime, CultureInfo.InvariantCulture);
                     inputDate = inputDate.Value.Add(ts);
                 }
-                catch (Exception ex) {
+                catch (Exception) {
                     inputDate = null;
                 }
                 vmsForTasks.Add(new ScheduledTaskViewModel(_orchardServices, _dateServices) {
