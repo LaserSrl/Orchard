@@ -1,14 +1,49 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Laser.Orchard.Events.Models;
+using Orchard.Core.Common.ViewModels;
 
-namespace Laser.Orchard.Events.ViewModels
-{
-    public class ActivityViewModel
-    {
+namespace Laser.Orchard.Events.ViewModels {
+    public class ActivityViewModel {
         public string DateStart { get; set; }
 
         public string DateEnd { get; set; }
+
+        public DateTimeEditor DateStartEditor
+        {
+            get
+            {
+                return new DateTimeEditor {
+                    Date = DateStart,
+                    Time = TimeStart,
+                    ShowDate = true,
+                    ShowTime = !AllDay
+                };
+            }
+            set
+            {
+                DateStart = value.Date;
+                TimeStart = value.Time;
+            }
+        }
+
+        public DateTimeEditor DateEndEditor
+        {
+            get
+            {
+                return new DateTimeEditor {
+                    Date = DateEnd,
+                    Time = TimeEnd,
+                    ShowDate = true,
+                    ShowTime = !AllDay
+                };
+            }
+            set
+            {
+                DateEnd = value.Date;
+                TimeEnd = value.Time;
+            }
+        }
 
         public string TimeStart { get; set; }
 
@@ -21,7 +56,7 @@ namespace Laser.Orchard.Events.ViewModels
         public string RepeatType { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage="The periodicity value must be greater than 0.")]
+        [Range(1, int.MaxValue, ErrorMessage = "The periodicity value must be greater than 0.")]
         public int RepeatValue { get; set; }
 
         public string RepeatDetails { get; set; }

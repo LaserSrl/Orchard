@@ -41,6 +41,8 @@ namespace Laser.Orchard.AdminToolbarExtensions.Drivers {
                 //parse information to generate the advanced search 
                 //NOTE: this is super custom for the case where we need to egnerate an advanced search by appending the 
                 //CustomUrl as new query parameters
+                //e.g. for a CPF query:
+                //CustomURL = AdvancedOptions.CPFName=PickerName&AdvancedOptions.CPFIdToSearch={Content.Id}
                 if (!String.IsNullOrWhiteSpace(lbl.CustomUrl)) {
                     //change the content of the CustomUrl string so that it has the whole url to call
                     string hString = _orchardServices.WorkContext.HttpContext.Request.Path;

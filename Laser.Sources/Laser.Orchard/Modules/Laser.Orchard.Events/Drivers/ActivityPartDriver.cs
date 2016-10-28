@@ -145,7 +145,8 @@ namespace Laser.Orchard.Events.Drivers {
                     .ForMember(dest => dest.DateTimeStart, opt => opt.Ignore())
                     .ForMember(dest => dest.DateTimeEnd, opt => opt.Ignore())
                     .ForMember(dest => dest.RepeatEndDate, opt => opt.Ignore())
-                    .ForMember(dest => dest.RepeatDetails, opt => opt.Ignore());
+                    .ForMember(dest => dest.RepeatDetails, opt => opt.Ignore())
+                    .ForMember(dest => dest.Settings, opt => opt.Ignore()); //ContentPart has a Settings property
                 });
 
                 Mapper.Map(activityVM, part);
