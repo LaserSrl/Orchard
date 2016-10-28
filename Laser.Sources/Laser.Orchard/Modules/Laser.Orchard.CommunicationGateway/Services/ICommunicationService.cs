@@ -383,12 +383,16 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 // non crea il contatto se lo user non è ancora stato salvato
                 return;
             }
-            bool asProfilePart = true;
+            bool asProfilePart = false;
             try {
                 var profpart = ((dynamic)UserContent).ProfilePart;
-                asProfilePart = true;
+                if(profpart != null) {
+                    asProfilePart = true;
+                }
             }
-            catch { asProfilePart = false; }
+            catch {
+                // ignora volutamente eventuali errori: significa che non è presente la ProfilePart
+            }
 
             // identifica il Contact relativo a UserContent
             var contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == UserContent.Id).List().FirstOrDefault();

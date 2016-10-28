@@ -3,7 +3,7 @@ AntiForgery: enabled
 Author: Laser srl - Giuseppe Musso
 Website: http://www.laser-group.com
 Version: 1.0
-OrchardVersion: 1.8
+OrchardVersion: 1.10
 Features:
 	Laser.Orchard.ChartaWS:
 		Name: Charta Web Services

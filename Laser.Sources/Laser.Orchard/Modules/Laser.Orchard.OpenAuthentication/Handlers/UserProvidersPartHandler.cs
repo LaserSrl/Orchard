@@ -19,7 +19,7 @@ namespace Laser.Orchard.OpenAuthentication.Handlers {
 
         protected void LazyLoadHandlers(LoadContentContext context, UserProvidersPart part) {
             // Add handlers that will load content for id's just-in-time
-            part.ProviderEntriesField.Loader(x => OnLoader(context));
+            part.ProviderEntriesField.Loader(() => OnLoader(context));
         }
 
         private IList<UserProviderEntry> OnLoader(LoadContentContext context) {
