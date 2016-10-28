@@ -1,0 +1,12 @@
+﻿Name: Laser.Orchard.ChartaWS
+AntiForgery: enabled
+Author: Laser srl - Giuseppe Musso
+Website: http://www.laser-group.com
+Version: 1.0
+OrchardVersion: 1.8
+Features:
+	Laser.Orchard.ChartaWS:
+		Name: Charta Web Services
+		Description: Web Services for Charta Project.
+		Dependencies: Laser.Orchard.StartupConfig.MailExtensions, Laser.Orchard.Braintree
+		Category:Services
