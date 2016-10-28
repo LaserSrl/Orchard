@@ -83,6 +83,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.PaymentGatewa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.DevTools", "Modules\Laser.Orchard.DevTools\Laser.Orchard.DevTools.csproj", "{35D04F8A-131E-4AF5-845A-075D897CCD38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Policy", "Modules\Laser.Orchard.Policy\Laser.Orchard.Policy.csproj", "{09A8FBDA-B443-4F01-BC64-8115AC31ABB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -223,6 +225,10 @@ Global
 		{35D04F8A-131E-4AF5-845A-075D897CCD38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35D04F8A-131E-4AF5-845A-075D897CCD38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35D04F8A-131E-4AF5-845A-075D897CCD38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09A8FBDA-B443-4F01-BC64-8115AC31ABB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09A8FBDA-B443-4F01-BC64-8115AC31ABB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09A8FBDA-B443-4F01-BC64-8115AC31ABB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09A8FBDA-B443-4F01-BC64-8115AC31ABB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -262,5 +268,6 @@ Global
 		{97CB9F52-4116-4909-98CA-A5CA6EF3B034} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{E6900A95-3D80-497D-AD29-998ADC8AD3D7} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{35D04F8A-131E-4AF5-845A-075D897CCD38} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{09A8FBDA-B443-4F01-BC64-8115AC31ABB3} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
