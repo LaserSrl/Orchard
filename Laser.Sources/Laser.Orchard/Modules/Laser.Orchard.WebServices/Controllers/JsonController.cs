@@ -337,7 +337,7 @@ namespace Laser.Orchard.WebServices.Controllers {
             XElement projectionDump = null;
             // il dump dell'oggetto principale non filtra per field
             ObjectDumper dumper = new ObjectDumper(deeplevel, null, false, tinyResponse, complexBehaviour);
-            dynamic shape, specificShape;
+            dynamic shape; //, specificShape;
             var sb = new StringBuilder();
             List<XElement> listContent = new List<XElement>();
 

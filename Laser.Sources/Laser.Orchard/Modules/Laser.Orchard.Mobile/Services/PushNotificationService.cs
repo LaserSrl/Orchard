@@ -1,39 +1,18 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.Mobile.Models;
-using Laser.Orchard.Mobile.Settings;
-using Laser.Orchard.Mobile.ViewModels;
-using Laser.Orchard.Queries.Models;
 using Laser.Orchard.Queries.Services;
-using Newtonsoft.Json;
-using NHibernate.Transform;
 using Orchard;
-using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
-using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
-using Orchard.Security;
 using Orchard.Tokens;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
-using PushSharp;
-using PushSharp.Google;
-using PushSharp.Apple;
-using PushSharp.Core;
-using PushSharp.Windows;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Web.Hosting;
-using Newtonsoft.Json.Linq;
-using System.Text;
-using System.Xml.Linq;
 
 namespace Laser.Orchard.Mobile.Services {
 
@@ -60,9 +39,7 @@ namespace Laser.Orchard.Mobile.Services {
         public ICommunicationService _communicationService;
         private readonly ITokenizer _tokenizer;
         private readonly ITransactionManager _transactionManager;
-        private Int32 messageSent;
         private const int MAX_PUSH_TEXT_LENGTH = 160;
-        private object lockMonitor;
 
         public PushNotificationService(
             IRepository<SentRecord> sentRepository,

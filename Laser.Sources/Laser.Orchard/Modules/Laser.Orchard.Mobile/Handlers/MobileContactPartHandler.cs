@@ -30,7 +30,7 @@ namespace Laser.Orchard.Mobile.Handlers {
 
         protected void LazyLoadHandlers(LoadContentContext context, MobileContactPart part) {
             // Add handlers that will load content for id's just-in-time
-            part.MobileEntries.Loader(x => OnLoader(context));
+            part.MobileEntries.Loader(() => OnLoader(context));
         }
 
         private IList<PushNotificationRecord> OnLoader(LoadContentContext context) {

@@ -49,7 +49,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
 
         protected void LazyLoadEmailHandlers(LoadContentContext context, EmailContactPart part) {
             // Add handlers that will load content for id's just-in-time
-            part.EmailEntries.Loader(x => OnEmailLoader(context));
+            part.EmailEntries.Loader(() => OnEmailLoader(context));
         }
 
         private IList<CommunicationEmailRecord> OnEmailLoader(LoadContentContext context) {
@@ -73,7 +73,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
 
         protected void LazyLoadSmsHandlers(LoadContentContext context, SmsContactPart part) {
             // Add handlers that will load content for id's just-in-time
-            part.SmsEntries.Loader(x => OnSmsLoader(context));
+            part.SmsEntries.Loader(() => OnSmsLoader(context));
         }
 
         private IList<CommunicationSmsRecord> OnSmsLoader(LoadContentContext context) {

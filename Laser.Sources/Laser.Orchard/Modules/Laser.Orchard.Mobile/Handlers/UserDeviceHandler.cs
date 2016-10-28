@@ -101,5 +101,13 @@ namespace Laser.Orchard.Mobile.Handlers {
         public void SentChallengeEmail(IUser user) {
             //   throw new NotImplementedException();
         }
+
+        public void LoggingIn(string userNameOrEmail, string password) {
+            //throw new NotImplementedException();
+        }
+
+        public void LogInFailed(string userNameOrEmail, string password) {
+            //throw new NotImplementedException();
+        }
     }
 }

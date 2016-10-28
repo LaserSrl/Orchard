@@ -58,14 +58,13 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             if (isAdmin) {
                 if (displayType == "Detail") {
-                    Mapper.CreateMap<CommunicationSmsRecord, View_SmsVM_element>();
                     View_SmsVM viewModel = new View_SmsVM();
                     View_SmsVM_element vm = new View_SmsVM_element();
                     if (part.SmsEntries.Value != null) {
                         List<CommunicationSmsRecord> oldviewModel = part.SmsEntries.Value.ToList();
                         foreach (CommunicationSmsRecord cm in oldviewModel) {
                             vm = new View_SmsVM_element();
-                            Mapper.Map(cm, vm);
+                            Mapper.Map<CommunicationSmsRecord, View_SmsVM_element>(cm, vm);
                             viewModel.Elenco.Add(vm);
                         }
                     }
@@ -80,7 +79,6 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         }
 
         protected override DriverResult Editor(SmsContactPart part, dynamic shapeHelper) {
-            Mapper.CreateMap<CommunicationSmsRecord, View_SmsVM_element>();
             View_SmsVM viewModel = new View_SmsVM();
             View_SmsVM_element vm = new View_SmsVM_element();
             // viewModel.Elenco.Add(vm);
@@ -88,7 +86,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                 List<CommunicationSmsRecord> oldviewModel = part.SmsEntries.Value.ToList();
                 foreach (CommunicationSmsRecord cm in oldviewModel) {
                     vm = new View_SmsVM_element();
-                    Mapper.Map(cm, vm);
+                    Mapper.Map<CommunicationSmsRecord, View_SmsVM_element>(cm, vm);
                     viewModel.Elenco.Add(vm);
                 }
             }
@@ -133,8 +131,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                         else {
                             View_SmsVM_element vm = new View_SmsVM_element();
                             CommunicationSmsRecord cmr = new CommunicationSmsRecord();
-                            Mapper.CreateMap<View_SmsVM_element, CommunicationSmsRecord>();
-                            Mapper.Map(vm, cmr);
+                            Mapper.Map<View_SmsVM_element, CommunicationSmsRecord>(vm, cmr);
                             cmr.Sms = vmel.Sms;
                             cmr.Validated = vmel.Validated;
                             cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;

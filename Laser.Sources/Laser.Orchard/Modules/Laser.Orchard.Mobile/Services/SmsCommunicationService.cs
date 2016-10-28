@@ -31,14 +31,14 @@ namespace Laser.Orchard.Mobile.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly ICultureManager _cultureManager;
         private readonly IQueryPickerService _queryPickerServices;
-        private readonly ISessionLocator _session;
+        private readonly ITransactionManager _transactionManager;
 
-        public SmsCommunicationService(IOrchardServices orchardServices, IQueryPickerService queryPickerServices, ICultureManager cultureManager, ISessionLocator session)
+        public SmsCommunicationService(IOrchardServices orchardServices, IQueryPickerService queryPickerServices, ICultureManager cultureManager, ITransactionManager transactionManager)
         {
             _orchardServices = orchardServices;
             _cultureManager = cultureManager;
             _queryPickerServices = queryPickerServices;
-            _session = session;
+            _transactionManager = transactionManager;
         }
 
         //public List<string> GetSmsNumbersQueryResult(Int32[] ids, Int32? idlingua)
@@ -110,7 +110,7 @@ namespace Laser.Orchard.Mobile.Services {
                 "WHERE civr.Published=1 AND SmsRecord.Validated AND SmsRecord.AccettatoUsoCommerciale AND civr.Id in (" + stringHQL + ")";
 
             // Creo query ottimizzata per le performance
-            var fullStatement = _session.For(null)
+            var fullStatement = _transactionManager.GetSession()
                 .CreateQuery(queryForSms)
                 .SetCacheable(false);
 

@@ -72,7 +72,6 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly IContentExtensionsServices _contentExtensionsServices;
         private readonly IModuleService _moduleService;
         private readonly INotifier _notifier;
-        private readonly ISessionLocator _session;
         private readonly ITaxonomyService _taxonomyService;
         private readonly ICultureManager _cultureManager;
         private readonly IContactRelatedEventHandler _contactRelatedEventHandler;
@@ -83,7 +82,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
 
-        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, IContactRelatedEventHandler contactRelatedEventHandler, ITransactionManager transactionManager) {
+        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, IContactRelatedEventHandler contactRelatedEventHandler, ITransactionManager transactionManager) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
@@ -91,7 +90,6 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _notifier = notifier;
             _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
             _repositoryCommunicationSmsRecord = repositoryCommunicationSmsRecord;
-            _session = session;
             _taxonomyService = taxonomyService;
             _cultureManager = cultureManager;
             _contactRelatedEventHandler = contactRelatedEventHandler;
@@ -220,7 +218,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 join EmailPart.EmailRecord as EmailRecord 
                 WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.Email = :mail";
 
-            var elencoId = _session.For(null)
+            var elencoId = _transactionManager.GetSession()
                 .CreateQuery(hql)
                 .SetParameter("mail", mail)
                 .List();
@@ -237,7 +235,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 join cir.SmsContactPartRecord as SmsPart
                 join SmsPart.SmsRecord as SmsRecord 
                 WHERE civr.Published=1 AND SmsRecord.Prefix = :prefix AND SmsRecord.Sms = :sms";
-            var elencoId = _session.For(null)
+            var elencoId = _transactionManager.GetSession()
                 .CreateQuery(hql)
                 .SetParameter("prefix", prefix)
                 .SetParameter("sms", sms)

@@ -34,14 +34,13 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             if (isAdmin) {
                 if (displayType == "Detail") {
-                    Mapper.CreateMap<CommunicationEmailRecord, View_EmailVM_element>();
                     View_EmailVM viewModel = new View_EmailVM();
                     View_EmailVM_element vm = new View_EmailVM_element();
                     if (part.EmailEntries.Value != null) {
                         List<CommunicationEmailRecord> oldviewModel = part.EmailEntries.Value.ToList();
                         foreach (CommunicationEmailRecord cm in oldviewModel) {
                             vm = new View_EmailVM_element();
-                            Mapper.Map(cm, vm);
+                            Mapper.Map<CommunicationEmailRecord, View_EmailVM_element>(cm, vm);
                             viewModel.Elenco.Add(vm);
                         }
                     }
@@ -56,7 +55,6 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         }
 
         protected override DriverResult Editor(EmailContactPart part, dynamic shapeHelper) {
-            Mapper.CreateMap<CommunicationEmailRecord, View_EmailVM_element>();
             View_EmailVM viewModel = new View_EmailVM();
             View_EmailVM_element vm = new View_EmailVM_element();
             // viewModel.Elenco.Add(vm);
@@ -64,7 +62,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                 List<CommunicationEmailRecord> oldviewModel = part.EmailEntries.Value.ToList();
                 foreach (CommunicationEmailRecord cm in oldviewModel) {
                     vm = new View_EmailVM_element();
-                    Mapper.Map(cm, vm);
+                    Mapper.Map<CommunicationEmailRecord, View_EmailVM_element>(cm, vm);
                     viewModel.Elenco.Add(vm);
                 }
             }  
@@ -110,8 +108,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                         else {
                             View_EmailVM_element vm = new View_EmailVM_element();
                             CommunicationEmailRecord cmr = new CommunicationEmailRecord();
-                            Mapper.CreateMap<View_EmailVM_element, CommunicationEmailRecord>();
-                            Mapper.Map(vm, cmr);
+                            Mapper.Map<View_EmailVM_element, CommunicationEmailRecord>(vm, cmr);
                             cmr.Email = vmel.Email;
                             cmr.Validated = vmel.Validated;
                             cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;

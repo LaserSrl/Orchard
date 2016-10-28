@@ -77,8 +77,7 @@ namespace Laser.Orchard.Mobile.Drivers {
                     {
                         viewModel.ToPush = true;
                     }
-                    Mapper.CreateMap<MobilePushVM, MobilePushPart>();
-                    Mapper.Map(viewModel, part);
+                    Mapper.Map<MobilePushVM, MobilePushPart>(viewModel, part);
 
                 } else
                     updater.AddModelError("Cannotupdate", T("Cannot Update!"));

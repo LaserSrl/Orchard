@@ -5,7 +5,6 @@ using Laser.Orchard.Mobile.Settings;
 using Laser.Orchard.Mobile.ViewModels;
 using Laser.Orchard.Queries.Models;
 using Laser.Orchard.Queries.Services;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NHibernate.Transform;
 using Orchard;
@@ -47,7 +46,7 @@ namespace Laser.Orchard.Mobile.Services {
         private readonly IPushNotificationService _pushNotificationService;
         private readonly IQueryPickerService _queryPickerServices;
         private readonly IOrchardServices _orchardServices;
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITransactionManager _transactionManager;
         private readonly IMylogService _myLog;
         private readonly IRepository<SentRecord> _sentRepository;
         private readonly IRepository<PushNotificationRecord> _pushNotificationRepository;
@@ -61,11 +60,11 @@ namespace Laser.Orchard.Mobile.Services {
         private object lockMonitor;
         private const int MAX_PUSH_TEXT_LENGTH = 160;
 
-        public PushGatewayService(IPushNotificationService pushNotificationService, IQueryPickerService queryPickerServices, IOrchardServices orchardServices, ISessionLocator sessionLocator, IMylogService myLog, IRepository<SentRecord> sentRepository, IRepository<PushNotificationRecord> pushNotificationRepository, INotifier notifier, ICommunicationService communicationService, ITokenizer tokenizer, ShellSettings shellSetting) {
+        public PushGatewayService(IPushNotificationService pushNotificationService, IQueryPickerService queryPickerServices, IOrchardServices orchardServices, ITransactionManager transactionManager, IMylogService myLog, IRepository<SentRecord> sentRepository, IRepository<PushNotificationRecord> pushNotificationRepository, INotifier notifier, ICommunicationService communicationService, ITokenizer tokenizer, ShellSettings shellSetting) {
             _pushNotificationService = pushNotificationService;
             _queryPickerServices = queryPickerServices;
             _orchardServices = orchardServices;
-            _sessionLocator = sessionLocator;
+            _transactionManager = transactionManager;
             _myLog = myLog;
             _sentRepository = sentRepository;
             _pushNotificationRepository = pushNotificationRepository;
@@ -96,7 +95,7 @@ namespace Laser.Orchard.Mobile.Services {
             string machineNameCheck = System.Environment.MachineName ?? "";
             query += string.Format(" AND MobileRecord.RegistrationUrlHost='{0}' AND MobileRecord.RegistrationUrlPrefix='{1}' AND MobileRecord.RegistrationMachineName='{2}'", hostCheck.Replace("'", "''"), prefixCheck.Replace("'", "''"), machineNameCheck.Replace("'", "''"));
             query += " GROUP BY tp.Title";
-            var fullStatement = _sessionLocator.For(null)
+            var fullStatement = _transactionManager.GetSession()
                 .CreateQuery(query)
                 .SetCacheable(false);
             var lista = fullStatement
@@ -152,7 +151,7 @@ namespace Laser.Orchard.Mobile.Services {
             }
 
             // Creo query ottimizzata per le performance
-            var fullStatement = _sessionLocator.For(null)
+            var fullStatement = _transactionManager.GetSession()
                 .CreateQuery(queryForPush)
                 .SetCacheable(false);
             var lista = fullStatement
@@ -176,7 +175,7 @@ namespace Laser.Orchard.Mobile.Services {
             string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
             string machineNameCheck = System.Environment.MachineName ?? "";
             query += string.Format(" AND MobileRecord.RegistrationUrlHost='{0}' AND MobileRecord.RegistrationUrlPrefix='{1}' AND MobileRecord.RegistrationMachineName='{2}'", hostCheck.Replace("'", "''"), prefixCheck.Replace("'", "''"), machineNameCheck.Replace("'", "''"));
-            var fullStatement = _sessionLocator.For(null)
+            var fullStatement = _transactionManager.GetSession()
                 .CreateQuery(query)
                 .SetCacheable(false);
             var elenco = fullStatement
@@ -538,9 +537,9 @@ namespace Laser.Orchard.Mobile.Services {
                                 counter = _pushNotificationRepository.Fetch(x => (x.Device == locTipoDispositivo || locTipoDispositivo == null) && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")).Count();
                             }
                             else {
-                                var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
+                                var estrazione = _transactionManager.GetSession()
                                     .CreateSQLQuery(string.Format("select count(1) from ( {0} ) x where (x.Device = '{1}' or '{1}' = 'All') and x.Produzione = {2} and x.Validated = 1 and (x.Language = '{3}' or '{3}' = 'All') ", queryDevice, (locTipoDispositivo == null) ? "All" : locTipoDispositivo.ToString(), (produzione) ? 1 : 0, language))
-                                 .UniqueResult();
+                                    .UniqueResult();
                                 counter = Convert.ToInt32(estrazione);
                             }
                         }
@@ -669,9 +668,9 @@ namespace Laser.Orchard.Mobile.Services {
                         }
                     }
                     else {
-                        var estrazione = _sessionLocator.For(typeof(PushNotificationRecord))
+                        var estrazione = _transactionManager.GetSession()
                             .CreateSQLQuery(string.Format("select Id, Device, Produzione, Validated, Language, UUIdentifier, Token, RegistrationUrlHost, RegistrationUrlPrefix, RegistrationMachineName from ( {0} ) x where x.Device = '{1}' and x.Produzione = {2} and x.Validated = 1 and (x.Language = '{3}' or '{3}' = 'All') ", queryDevice, tipodisp, (produzione) ? 1 : 0, language))
-                         .List();
+                            .List();
                         object[] ht = null;
                         foreach (var arr in estrazione) {
                             ht = (object[])arr;
