@@ -77,6 +77,9 @@ namespace Laser.Orchard.Mobile.Drivers {
                     {
                         viewModel.ToPush = true;
                     }
+                    Mapper.Initialize(cfg => {
+                        cfg.CreateMap<MobilePushVM, MobilePushPart>();
+                    });
                     Mapper.Map<MobilePushVM, MobilePushPart>(viewModel, part);
 
                 } else
