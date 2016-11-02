@@ -48,7 +48,7 @@ namespace Laser.Orchard.ContactForm.Controllers
 
                     _contactFormService.SendContactEmail(name, confirmEmail, email, subject, message, mediaid, contactForm, _orchardServices.WorkContext.HttpContext.Request.Form);
                 }
-            } catch (Exception e)
+            } catch 
             {
                 // L'eccezione serve solo per la chiamata via APIController, mentre per la chiamata via form è già stata loggata e salvata nel Notifier
                 TempData["form"] = Request.Form;
