@@ -10,7 +10,7 @@
 @if (!customView)
 {
     
-    @(T("FaqType") + ": ")
+    @(T("Faq Type") + ": ")
     <b>@Model.FaqType</b>
     <br />
     @(T("Question") + ": ")
@@ -20,14 +20,14 @@
 else
 {
     <div class="list_docs">
-        <li class="list_docs_item">
+        <div class="list_docs_item">
             <ul class="list_docs_item_info">
-                <li>Раздел: <a href="@baseUrl@Model.UrlToType">@Model.FaqType</a></li>
+                <li>@T("Faq Type"): <a href="@baseUrl@Model.UrlToType">@Model.FaqType</a></li>
             </ul>
             <div class="faq-question">
                 <a class="list_docs_item_title faq-title">@Model.Question</a>
             </div>
-        </li>
+        </div>
     </div>
 }
 
