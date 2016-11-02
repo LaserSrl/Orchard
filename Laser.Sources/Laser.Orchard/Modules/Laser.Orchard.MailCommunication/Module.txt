@@ -7,7 +7,7 @@ OrchardVersion: 1.8
 Features:
     Laser.Orchard.MailCommunication:
         Description: Make your content ready to be sent via e-mail.
-		Dependencies: Laser.Orchard.CommunicationGateway, Laser.Orchard.TemplateManagement, Orchard.ContentPicker, Orchard.Fields, Orchard.JQuery, Laser.Orchard.jQueryPlugins, Laser.Orchard.Queries, Orchard.Localization, Laser.Orchard.StartupConfig, Laser.Orchard.MailerUtility
+		Dependencies: Laser.Orchard.CommunicationGateway, Laser.Orchard.TemplateManagement, Orchard.ContentPicker, Orchard.Fields, Orchard.JQuery, Laser.Orchard.jQueryPlugins, Laser.Orchard.Queries, Orchard.Localization, Laser.Orchard.StartupConfig, Laser.Orchard.MailerUtility,Laser.Orchard.UsersExtensions
 		Category: Messaging
 	Laser.Orchard.MailerUtility:
 		Name: Mailer Utility
