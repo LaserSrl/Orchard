@@ -26,17 +26,13 @@
         </script>
     }
 }
+@*
 @using (Script.Foot()) {
-    @*@Display.DatePickerLocalization()
-        @Display.TimePickerLocalization()*@
-    @* generates the localization script *@
+    //generates the localization script
     @Display.CalendarsPickerLocalization()
     @Display.TimeEntryLocalization()
     string dtfi = (new System.Globalization.CultureInfo(WorkContext.CurrentCulture)).DateTimeFormat.ShortDatePattern.ToLowerInvariant();
     <script type="text/javascript">
-        @*$(function () {
-            $('#unavailableAfterDate').datetimepicker({ 'showTimepicker': true, showAnim: "", changeYear: true, changeMonth: true });
-        })*@
         $(function () {
             var dateRenderer = $.extend(
                 {},
@@ -53,7 +49,7 @@
             });
         })
     </script>
-}
+}*@
 
 @helper CbAndLabelFor(System.Linq.Expressions.Expression<Func<Laser.Orchard.SEO.ViewModels.SeoPartViewModel, bool>> expression, string titleTag = "") {
     @Html.CheckBoxFor(expression, new { @title = titleTag })
@@ -108,7 +104,8 @@
 
             @CbAndLabelFor(m => m.RobotsUnavailableAfter, @T("Specify the exact date to stop crawling and indexing the page").ToString())
 
-            @Html.TextBoxFor(m => m.RobotsUnavailableAfterDate, new { id = "unavailableAfterDate" })
+            @Html.EditorFor(m => m.RobotsUnavailableAfterDateEditor)
+            @*@Html.TextBoxFor(m => m.RobotsUnavailableAfterDate, new { id = "unavailableAfterDate" })*@
 
             @CbAndLabelFor(m => m.RobotsNoImageIndex, @T("Prevents the page to appear as referring page for an image that appears in search results").ToString())
 
