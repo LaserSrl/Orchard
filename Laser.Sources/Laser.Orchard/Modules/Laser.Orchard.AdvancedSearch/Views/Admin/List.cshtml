@@ -87,18 +87,11 @@
 }
 
 
+@{
+    AdvancedContentOptions AdvancedOptions = Model.AdvancedOptions;
+}
+
 @using (Script.Foot()) {
-    @*
-    @Display.DatePickerLocalization()
-    <script type="text/javascript">
-        //<![CDATA[
-        $(function () {
-            $('#dateFromResults').datepicker({ showAnim: "", changeYear: true, changeMonth: true });
-            $('#dateToResults').datepicker({ showAnim: "", changeYear: true, changeMonth: true });
-        });
-        //]]>
-    </script>
-        *@
     
     <script type="text/javascript">
         function removeFilterAndReload(index) {
@@ -130,10 +123,10 @@
                     document.getElementById("isOwnedByMe").value = 0;
                     break;
                 case 8:
-                    document.getElementById("dateFromResults").value = "";
+                    document.getElementById("@Html.FieldIdFor(m => AdvancedOptions.SelectedFromDateEditor.Date)").value = "";
                     break;
                 case 9:
-                    document.getElementById("dateToResults").value = "";
+                    document.getElementById("@Html.FieldIdFor(m => AdvancedOptions.SelectedToDateEditor.Date)").value = "";
                     break;
                 case 10:
                     document.getElementById("hasMediaResults").value = 0;
@@ -402,9 +395,6 @@
                         </div>
                         <div class="col-xs-12 col-md-4">
                             <label for="dateFromResults" class="bulk-filter">@T("Date From")</label>
-                            @{ 
-                                AdvancedContentOptions AdvancedOptions = Model.AdvancedOptions;
-                            }
                             @Html.EditorFor(m => AdvancedOptions.SelectedFromDateEditor, new { id = "dateFromResults"})
                             @*@Html.TextBox("AdvancedOptions.SelectedFromDate", (string)(Model.AdvancedOptions.SelectedFromDate != null ? Model.AdvancedOptions.SelectedFromDate.ToString() : ""), new { id = "dateFromResults" })*@
                         </div>
