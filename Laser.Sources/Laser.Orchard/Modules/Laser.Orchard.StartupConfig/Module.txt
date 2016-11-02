@@ -18,11 +18,6 @@ Features:
 		Description: Funzione implementata lista utenti collegata ad un ruolo
 		Category: Role
 		Dependencies: 
-	Laser.Orchard.StartupConfig.MailExtensions:
-		Name: Laser Mail Extension
-		Description: Extension to CC, BCC and Attachements
-		Category: Messaging
-		Dependencies: Orchard.Email
 	Laser.Orchard.StartupConfig.MediaExtensions:
 		Name: Laser Media Extension
 		Description: Expose a route to transform images
