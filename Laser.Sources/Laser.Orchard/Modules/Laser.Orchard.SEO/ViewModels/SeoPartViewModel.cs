@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Orchard.Core.Common.ViewModels;
 
 namespace Laser.Orchard.SEO.ViewModels {
     public class SeoPartViewModel {
@@ -17,10 +18,23 @@ namespace Laser.Orchard.SEO.ViewModels {
         public bool RobotsNoArchive { get; set; }
         public bool RobotsUnavailableAfter { get; set; }
         private DateTime? _robotsUnavailableAfterDate;
-        public string RobotsUnavailableAfterDate
+        public DateTimeEditor RobotsUnavailableAfterDateEditor
         {
-            get { return _robotsUnavailableAfterDate == null ? _seoServices.DateToString(DateTime.MinValue) : _seoServices.DateToString(_robotsUnavailableAfterDate.Value); }
-            set { _robotsUnavailableAfterDate = _seoServices.LocalDateFromString(value); }
+            get
+            {
+                return new DateTimeEditor {
+                    Date = _robotsUnavailableAfterDate == null
+                        ? _seoServices.DateToString(DateTime.MinValue)
+                        : _seoServices.DateToString(_robotsUnavailableAfterDate.Value),
+                    Time = "",
+                    ShowDate = true,
+                    ShowTime = false
+                };
+            }
+            set
+            {
+                _robotsUnavailableAfterDate = _seoServices.LocalDateFromString(value.Date);
+            }
         }
         public bool RobotsNoImageIndex { get; set; }
         public bool GoogleNoSiteLinkSearchBox { get; set; }

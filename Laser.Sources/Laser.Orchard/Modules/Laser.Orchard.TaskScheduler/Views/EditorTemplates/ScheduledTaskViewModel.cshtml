@@ -50,8 +50,7 @@
 
     <div id="collapse_@appId" class="collapse" style="display:none">
         <label for="@Html.FieldIdFor(m => m.ScheduledStartUTC)">@T("Start Date")</label>
-        @Html.TextBoxFor(m => m.ScheduledStartUTCDate, new { @class = "text", @title = @T("Invalid dates will be ignored") })
-        @Html.TextBoxFor(m => m.ScheduledStartUTCTime, new { @class = "text", @title = @T("Invalid times will be ignored") })
+        @Html.EditorFor(m => m.ScheduledStartUTCEditor)
 
         <label>@T("Periodicity")</label>
             @Html.TextBoxFor(m => m.PeriodicityTime, new {
@@ -89,54 +88,8 @@
 </div>
 
 @using (Script.Foot()) {
-    string dtfDate = CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern.ToLowerInvariant();
-    //string dtfTime = CultureInfo.InvariantCulture.DateTimeFormat.ShortTimePattern.ToLowerInvariant();
-    <script type="text/javascript">
-        @*$(function () {
-            $('#@Html.FieldIdFor(m => m.ScheduledStartUTC)').datetimepicker({ 'showTimepicker': true, showAnim: "", changeYear: true, changeMonth: true });
-        })*@
-        $(function () {
-            var dateRenderer = $.extend(
-                {},
-                $.calendarsPicker.themeRollerRenderer,
-                {
-                    picker: "<div {popup:start} id='ui-datepicker-div'{popup:end} class='ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all{inline:start} ui-datepicker-inline{inline:end}'><div class='ui-datepicker-header ui-widget-header ui-helper-clearfix ui-corner-all'>{link:prev}{link:today}{link:next}</div>{months}{popup:start}{popup:end}<div class='ui-helper-clearfix'></div></div>",
-                    month: "<div class='ui-datepicker-group'><div class='ui-datepicker-month ui-helper-clearfix'>{monthHeader:MM yyyy}</div><table class='ui-datepicker-calendar'><thead>{weekHeader}</thead><tbody>{weeks}</tbody></table></div>"
-                }
-            );
-            $('#@Html.FieldIdFor(m => m.ScheduledStartUTCDate)').calendarsPicker({
-                dateFormat: '@dtfDate',
-                showAnim: "",
-                renderer: dateRenderer
-            });
-            $.timeEntry.regionalOptions['@HttpUtility.JavaScriptStringEncode(CultureInfo.GetCultureInfo(WorkContext.CurrentCulture).Name)'] = {
-                show24Hours: true,
-                separator: ':',
-				ampmPrefix: '',
-				ampmNames: ['AM', 'PM'],
-                spinnerTexts: [
-                    '@HttpUtility.JavaScriptStringEncode(T("Now").Text)',
-                    '@HttpUtility.JavaScriptStringEncode(T("Previous field").Text)',
-                    '@HttpUtility.JavaScriptStringEncode(T("Next field").Text)',
-                    '@HttpUtility.JavaScriptStringEncode(T("Increment").Text)',
-                    '@HttpUtility.JavaScriptStringEncode(T("Decrement").Text)'
-                ]
-            };
-            $.timeEntry.setDefaults($.timeEntry.regionalOptions['@HttpUtility.JavaScriptStringEncode(CultureInfo.GetCultureInfo(WorkContext.CurrentCulture).Name)']);
-            $('#@Html.IdFor(m => m.ScheduledStartUTCTime)').timeEntry()
-        })
-    </script>
 
     <script type="text/javascript">
-        @*$(function () {
-            $('#collapseButton_@appId').click(function () {
-                if ($('#collapse_@appId').attr("aria-expanded") === "true") {
-                    this.innerHTML = "@moreDetails";
-                } else {
-                    this.innerHTML = "@fewDetails";
-                }
-            });
-        }());*@
 
         $(function () {
             $('#collapseButton_@appId').click(function () {

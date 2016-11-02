@@ -146,7 +146,8 @@ namespace Laser.Orchard.Events.Drivers {
                     .ForMember(dest => dest.DateTimeEnd, opt => opt.Ignore())
                     .ForMember(dest => dest.RepeatEndDate, opt => opt.Ignore())
                     .ForMember(dest => dest.RepeatDetails, opt => opt.Ignore())
-                    .ForMember(dest => dest.Settings, opt => opt.Ignore()); //ContentPart has a Settings property
+                    //ContentPart has a Settings property, that would clash with the Settings property from ActivityViewModel
+                    .ForMember(dest => dest.Settings, opt => opt.Ignore()); 
                 });
 
                 Mapper.Map(activityVM, part);
