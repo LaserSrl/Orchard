@@ -113,6 +113,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.ChartaWS", "M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.ContactForm", "Modules\Laser.Orchard.ContactForm\Laser.Orchard.ContactForm.csproj", "{BC2AD33D-BA86-4BEF-B5F4-32CD47E026A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.NewsLetters", "Modules\Laser.Orchard.NewsLetters\Laser.Orchard.NewsLetters.csproj", "{51DA5B67-CE19-4629-B15E-EAEF85DE5666}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Highlights", "Modules\Laser.Orchard.Highlights\Laser.Orchard.Highlights.csproj", "{290ACBC9-F4DE-48EB-BDE1-C62C637DF33F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -313,6 +317,14 @@ Global
 		{BC2AD33D-BA86-4BEF-B5F4-32CD47E026A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC2AD33D-BA86-4BEF-B5F4-32CD47E026A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC2AD33D-BA86-4BEF-B5F4-32CD47E026A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51DA5B67-CE19-4629-B15E-EAEF85DE5666}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51DA5B67-CE19-4629-B15E-EAEF85DE5666}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51DA5B67-CE19-4629-B15E-EAEF85DE5666}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51DA5B67-CE19-4629-B15E-EAEF85DE5666}.Release|Any CPU.Build.0 = Release|Any CPU
+		{290ACBC9-F4DE-48EB-BDE1-C62C637DF33F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{290ACBC9-F4DE-48EB-BDE1-C62C637DF33F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{290ACBC9-F4DE-48EB-BDE1-C62C637DF33F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{290ACBC9-F4DE-48EB-BDE1-C62C637DF33F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -367,5 +379,7 @@ Global
 		{B262E9D8-A4DA-4F70-9ABE-9CEB2D8D6171} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{5279F7EA-8309-4B1C-A089-68ACF917C519} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{BC2AD33D-BA86-4BEF-B5F4-32CD47E026A1} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{51DA5B67-CE19-4629-B15E-EAEF85DE5666} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{290ACBC9-F4DE-48EB-BDE1-C62C637DF33F} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
