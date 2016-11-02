@@ -18,11 +18,6 @@ namespace Laser.Orchard.SEO.ViewModels {
         public bool RobotsNoArchive { get; set; }
         public bool RobotsUnavailableAfter { get; set; }
         private DateTime? _robotsUnavailableAfterDate;
-        public string RobotsUnavailableAfterDate
-        {
-            get { return _robotsUnavailableAfterDate == null ? _seoServices.DateToString(DateTime.MinValue) : _seoServices.DateToString(_robotsUnavailableAfterDate.Value); }
-            set { _robotsUnavailableAfterDate = _seoServices.LocalDateFromString(value); }
-        }
         public DateTimeEditor RobotsUnavailableAfterDateEditor
         {
             get

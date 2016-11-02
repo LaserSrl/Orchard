@@ -72,14 +72,9 @@ namespace Laser.Orchard.TaskScheduler.Services {
                 string thisObject = String.Format("allTasks[{0}].", index);
                 DateTime? inputDate;
                 try {
-                    //inputDate = String.IsNullOrWhiteSpace(formData[thisObject + "ScheduledStartUTC"]) ? (DateTime?)null :
-                    //    Convert.ToDateTime(formData[thisObject + "ScheduledStartUTC"]);
-                    string formDate = formData[thisObject + "ScheduledStartUTCDate"];
-                    string formTime = formData[thisObject + "ScheduledStartUTCTime"];
-                    //inputDate = _dateServices.ConvertFromLocalizedDateString(formDate);
-                    inputDate = DateTime.Parse(formDate, CultureInfo.InvariantCulture);
-                    TimeSpan ts = TimeSpan.Parse(formTime, CultureInfo.InvariantCulture);
-                    inputDate = inputDate.Value.Add(ts);
+                    string formDate = formData[thisObject + "ScheduledStartUTCEditor.Date"];
+                    string formTime = formData[thisObject + "ScheduledStartUTCEditor.Time"];
+                    inputDate = _dateServices.ConvertFromLocalizedString(formDate, formTime);
                 }
                 catch (Exception) {
                     inputDate = null;

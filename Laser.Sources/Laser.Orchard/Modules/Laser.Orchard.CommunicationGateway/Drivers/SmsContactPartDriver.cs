@@ -51,6 +51,10 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             T = NullLocalizer.Instance;
             _transaction = transaction;
             _orchardServices = orchardServices;
+            Mapper.Initialize(cfg => {
+                cfg.CreateMap<CommunicationSmsRecord, View_SmsVM_element>();
+                cfg.CreateMap<View_SmsVM_element, CommunicationSmsRecord>();
+            });
         }
 
         protected override DriverResult Display(SmsContactPart part, string displayType, dynamic shapeHelper) {

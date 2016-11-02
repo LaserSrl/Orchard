@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using Laser.Orchard.TaskScheduler.Models;
 using Orchard;
+using Orchard.Core.Common.ViewModels;
 using Orchard.Localization.Services;
 
 namespace Laser.Orchard.TaskScheduler.ViewModels {
@@ -14,17 +15,24 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
         public int Id;
         public string SignalName { get; set; }
         private DateTime? _scheduledStartUTC;
-        public string ScheduledStartUTCDate
+        public DateTimeEditor ScheduledStartUTCEditor
         {
             get
             {
-                return _scheduledStartUTC == null
-                  ? DateTime.MinValue.ToString("d", CultureInfo.InvariantCulture)
-                  : _scheduledStartUTC.Value.ToString("d", CultureInfo.InvariantCulture);
+                return new DateTimeEditor {
+                    Date = _scheduledStartUTC == null
+                      ? DateTime.MinValue.ToString("d", culture) //CultureInfo.InvariantCulture)
+                      : _scheduledStartUTC.Value.ToString("d", culture), //CultureInfo.InvariantCulture),
+                    Time = _scheduledStartUTC == null
+                      ? DateTime.MinValue.TimeOfDay.ToString(@"hh\:mm")
+                      : _scheduledStartUTC.Value.TimeOfDay.ToString(@"hh\:mm"),
+                    ShowDate = true,
+                    ShowTime = true
+                };
             }
             set
             {
-                DateTime? dateFromString = _dateServices.ConvertFromLocalizedDateString(value);
+                DateTime? dateFromString = _dateServices.ConvertFromLocalizedDateString(value.Date);
                 if (dateFromString != null) {
                     //we want to keep the Time part of _scheduledStartUTC, and only update the Date part of it
                     if (_scheduledStartUTC != null) {
@@ -44,20 +52,8 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
                             day: dateFromString.Value.Day);
                     }
                 }
-            }
-        }
-        public string ScheduledStartUTCTime
-        {
-            get
-            {
-                return _scheduledStartUTC == null
-                  ? DateTime.MinValue.TimeOfDay.ToString(@"hh\:mm") //(CultureInfo.InvariantCulture.DateTimeFormat.ShortTimePattern.ToLowerInvariant())
-                  : _scheduledStartUTC.Value.TimeOfDay.ToString(@"hh\:mm");//(CultureInfo.InvariantCulture.DateTimeFormat.ShortTimePattern.ToLowerInvariant());
-            }
-            set
-            {
                 TimeSpan timeFromString;
-                if (TimeSpan.TryParse(value, out timeFromString)) {
+                if (TimeSpan.TryParse(value.Time, out timeFromString)) {
                     //we want to keep the Date part of _scheduledStartUTC, and only update the Time part of it
                     if (_scheduledStartUTC != null) {
                         _scheduledStartUTC = new DateTime(
