@@ -73,11 +73,9 @@ namespace Laser.Orchard.OpenAuthentication.Events {
         }
 
         public void LoggingIn(string userNameOrEmail, string password) {
-            throw new NotImplementedException();
         }
 
         public void LogInFailed(string userNameOrEmail, string password) {
-            throw new NotImplementedException();
         }
     }
 }
