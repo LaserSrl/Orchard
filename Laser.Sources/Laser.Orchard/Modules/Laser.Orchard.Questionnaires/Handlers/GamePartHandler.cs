@@ -142,20 +142,20 @@ namespace Laser.Orchard.Questionnaires.Handlers {
             return list;
         }
 
-        protected void Published(PublishContentContext context) {
+        protected override void Published(PublishContentContext context) {
             Int32 gId = ((dynamic)context.ContentItem).Id;
             DateTime timeGameEnd = ((dynamic)context.ContentItem).ActivityPart.DateTimeEnd;
             _questionnairesServices.ScheduleEmailTask(gId, timeGameEnd);
             //base.Published(context);
         }
 
-        protected void Unpublished(PublishContentContext context) {
+        protected override void Unpublished(PublishContentContext context) {
             Int32 gId = ((dynamic)context.ContentItem).Id;
             _questionnairesServices.UnscheduleEmailTask(gId);
             //base.Unpublished(context);
         }
 
-        protected void Removed(RemoveContentContext context) {
+        protected override void Removed(RemoveContentContext context) {
             Int32 gId = ((dynamic)context.ContentItem).Id;
             _questionnairesServices.UnscheduleEmailTask(gId);
             //base.Removed(context);

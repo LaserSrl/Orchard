@@ -24,13 +24,13 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         //un bottone per mandarmi una mail
         private readonly IQuestionnairesServices _questionnairesServices;
         private readonly IRepository<RankingPartRecord> _repoRanking;
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITransactionManager _transactionManager;
         public AdminRankingController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, 
-            IRepository<RankingPartRecord> repoRanking, ISessionLocator sessionLocator) {
+            IRepository<RankingPartRecord> repoRanking, ITransactionManager transactionManager) {
             _orchardServices = orchardServices;
             _questionnairesServices = questionnairesServices;
             _repoRanking = repoRanking;
-            _sessionLocator = sessionLocator;
+            _transactionManager = transactionManager;
         }
 
         [Admin]
@@ -179,7 +179,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             }
             List<RankingTemplateVM> lRanka = _questionnairesServices.QueryForRanking(ID, devString, pagerParameters.Page.Value, pagerParameters.PageSize.Value, Ascending);
 
-            var session = _sessionLocator.For(typeof(RankingPartRecord));
+            var session = _transactionManager.GetSession();//_sessionLocator.For(typeof(RankingPartRecord));
             string queryString = "SELECT COUNT(DISTINCT Identifier) "
                 + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
                 + "WHERE rpr.ContentIdentifier=" + ID + " ";

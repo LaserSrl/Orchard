@@ -18,12 +18,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         }
 
         protected override DriverResult Editor(QuestionnaireModuleSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
-            if (updater.TryUpdateModel(part, Prefix, null, null)) {
-                string A = "Activities";
-            }
-            else {
-                string B = "Activities";
-            }
+            updater.TryUpdateModel(part, Prefix, null, null);
             return Editor(part, shapeHelper);
         }
     }
