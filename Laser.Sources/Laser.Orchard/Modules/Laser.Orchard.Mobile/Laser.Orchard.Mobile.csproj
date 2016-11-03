@@ -345,7 +345,6 @@
     <Compile Include="WorkFlows\PushTask.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Lib\" />
     <Folder Include="Views\EditorTemplates\Fields\" />
   </ItemGroup>
   <ItemGroup>
