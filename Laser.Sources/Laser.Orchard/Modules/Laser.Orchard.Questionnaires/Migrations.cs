@@ -213,6 +213,7 @@ namespace Laser.Orchard.Questionnaires {
         public int UpdateFrom21() {
              ContentDefinitionManager.AlterTypeDefinition("Questionnaire", cfg => cfg
             .Listable());
+            _utilsServices.EnableFeature("Orchard.Email");
             return 22;
         }
     }

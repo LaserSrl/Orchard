@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Laser.Orchard.Events.Models;
 using Laser.Orchard.Questionnaires.Models;
 using Laser.Orchard.Questionnaires.Settings;
 using Laser.Orchard.Questionnaires.ViewModels;
@@ -8,8 +7,6 @@ using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.TemplateManagement.Models;
 using Laser.Orchard.TemplateManagement.Services;
 using NHibernate.Criterion;
-using NHibernate.Persister.Entity;
-using NHibernate.Transform;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
@@ -17,7 +14,6 @@ using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Localization.Services;
-using Orchard.Messaging.Services;
 using Orchard.Security;
 using Orchard.Tasks.Scheduling;
 using Orchard.UI.Notify;
@@ -30,22 +26,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Hosting;
+using Orchard.Email.Services;
 
 namespace Laser.Orchard.Questionnaires.Services {
-    public class QuestionnaireProfile : Profile {
-        protected override void Configure() {
-            CreateMap<QuestionnaireEditModel, QuestionnairePart>().ForMember(dest => dest.Questions, opt => opt.Ignore());
-            CreateMap<QuestionEditModel, QuestionRecord>().ForMember(dest => dest.Answers, opt => opt.Ignore());
-         }
-    }
-    public class QuestionnaireProfileInverse : Profile {
-        protected override void Configure() {
-            CreateMap<QuestionRecord, QuestionEditModel>().ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers.OrderBy(o => o.Position)));
-            CreateMap<QuestionnairePart, QuestionnaireEditModel>().ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions));
-            CreateMap<AnswerRecord,AnswerEditModel>();
-        }
-    }
-        public class QuestionnairesServices : IQuestionnairesServices {
+
+    public class QuestionnairesServices : IQuestionnairesServices {
         private readonly IRepository<QuestionRecord> _repositoryQuestions;
         private readonly IRepository<AnswerRecord> _repositoryAnswer;
         private readonly IRepository<UserAnswersRecord> _repositoryUserAnswer;
@@ -54,13 +39,13 @@ namespace Laser.Orchard.Questionnaires.Services {
         private readonly IWorkflowManager _workflowManager;
         private readonly INotifier _notifier;
         private readonly IControllerContextAccessor _controllerContextAccessor;
-        private readonly ITemplateService _templateService;
-        private readonly IMessageManager _messageManager;
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITemplateService _templateService;       
+        private readonly ITransactionManager _transactionManager;
         private readonly IDateLocalization _dateLocalization;
         private readonly IScheduledTaskManager _taskManager;
         private readonly IDateLocalizationServices _dateServices;
         private readonly ShellSettings _shellSettings;
+        private ISmtpChannel _messageManager;
 
         public Localizer T { get; set; }
 
@@ -73,8 +58,8 @@ namespace Laser.Orchard.Questionnaires.Services {
             INotifier notifier,
             IControllerContextAccessor controllerContextAccessor,
             ITemplateService templateService,
-           IMessageManager messageManager,
-            ISessionLocator sessionLocator,
+           // ISmtpChannel messageManager,
+            ITransactionManager transactionManager,
             IDateLocalization dateLocalization,
             IScheduledTaskManager taskManager,
             IDateLocalizationServices dateServices,
@@ -89,14 +74,18 @@ namespace Laser.Orchard.Questionnaires.Services {
             T = NullLocalizer.Instance;
             _controllerContextAccessor = controllerContextAccessor;
             _templateService = templateService;
-            _messageManager = messageManager;
-            _sessionLocator = sessionLocator;
+            // _messageManager = messageManager;
+            // ISmtpChannel _messageManager = null;
+
+         
+
+                _transactionManager = transactionManager;
             _dateLocalization = dateLocalization;
             _taskManager = taskManager;
             _dateServices = dateServices;
             _shellSettings = shellSettings;
         }
-
+     
         private string getusername(int id) {
             if (id > 0) {
                 try {
@@ -155,7 +144,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             //we do not do checks on whether this email was scheduled, because this method is also used to send it out of synch with the tasks
             ContentItem Ci = gp.ContentItem;
 
-            var session = _sessionLocator.For(typeof(RankingPartRecord));
+            var session = _transactionManager.GetSession();// _sessionLocator.For(typeof(RankingPartRecord));
             var generalRankQuery = GenerateRankingQuery(gameId: gameID, page: 1, pageSize: 10)
                 .GetExecutableQueryOver(session)
                 .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData)) //TODO: use transformers. Start from the IResultTransformer in RankingTemplateVM.cs. Also http://blog.andrewawhitaker.com/queryover-series
@@ -204,6 +193,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         }
 
         private bool SendEmail(ContentItem Ci, List<RankingTemplateVM> rkt) {
+            _orchardServices.WorkContext.TryResolve<ISmtpChannel>(out _messageManager);
             string emailRecipe = Ci.As<GamePart>().Settings.GetModel<GamePartSettingVM>().EmailRecipe;
             if (emailRecipe != "") {
                 var editModel = new Dictionary<string, object>();
@@ -217,10 +207,12 @@ namespace Laser.Orchard.Questionnaires.Services {
                 if (TemplateToUse != null) {
                     testohtml = _templateService.ParseTemplate(TemplateToUse, ptc);
                     var datiCI = Ci.Record;
-                    var data = new Dictionary<string, string>();
+                    var data = new Dictionary<string, object>();
                     data.Add("Subject", "Game Ranking");
                     data.Add("Body", testohtml);
-                    _messageManager.Send(new string[] { emailRecipe }, "ModuleRankingEmail", "email", data);
+                    //_messageManager.Send(new string[] { emailRecipe }, "ModuleRankingEmail", "email", data);
+                    data.Add("Recipients", emailRecipe);
+              _messageManager.Process(data);
                     return true;
                 } else { // Nessun template selezionato non mando una mail e ritorno false, mail non inviata
                     return false;
@@ -232,6 +224,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         //method to send a single email with separate rankings for the different platforms
         private bool SendEmail(ContentItem Ci, List<RankingTemplateVM> generalRank, List<RankingTemplateVM> appleRank,
             List<RankingTemplateVM> androidRank, List<RankingTemplateVM> windowsRank) {
+            _orchardServices.WorkContext.TryResolve<ISmtpChannel>(out _messageManager);
             string emailRecipe = Ci.As<GamePart>().Settings.GetModel<GamePartSettingVM>().EmailRecipe;
             if (emailRecipe != "") {
                 var editModel = new Dictionary<string, object>();
@@ -248,10 +241,12 @@ namespace Laser.Orchard.Questionnaires.Services {
                 if (TemplateToUse != null) {
                     testohtml = _templateService.ParseTemplate(TemplateToUse, ptc);
                     var datiCI = Ci.Record;
-                    var data = new Dictionary<string, string>();
+                    var data = new Dictionary<string, object>();
                     data.Add("Subject", "Game Ranking");
                     data.Add("Body", testohtml);
-                    _messageManager.Send(new string[] { emailRecipe }, "ModuleRankingEmail", "email", data);
+                    //_messageManager.Send(new string[] { emailRecipe }, "ModuleRankingEmail", "email", data);
+                    data.Add("Recipients", emailRecipe);
+                    _messageManager.Process(data);
                     return true;
                 } else { // Nessun template selezionato non mando una mail e ritorno false, mail non inviata
                     return false;
@@ -359,7 +354,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         public List<RankingTemplateVM> QueryForRanking(
             Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false) {
             //TODO: the query string should be tested on different instances.
-            var session = _sessionLocator.For(typeof(RankingPartRecord));
+            var session = _transactionManager.GetSession();// _sessionLocator.For(typeof(RankingPartRecord));
             //TODO: test the query on both MySql and Postgre 
             //List<RankingTemplateVM> lRank = new List<RankingTemplateVM>(); //list we will return
             //string queryDeviceCondition = "";
@@ -594,26 +589,24 @@ namespace Laser.Orchard.Questionnaires.Services {
 
         public void UpdateForContentItem(ContentItem item, QuestionnaireEditModel partEditModel) {
             try {
- 
-
-                var mapperConfig = new MapperConfiguration(config => config.AddProfile<QuestionnaireProfile>());
-                var mapper = mapperConfig.CreateMapper();
-
-
-                //Mapper.CreateMap<AnswerEditModel, AnswerRecord>();
-                //Mapper.CreateMap<QuestionEditModel, QuestionRecord>()
-                //    .ForMember(dest => dest.Answers, opt => opt.Ignore());
                 var partRecord = item.As<QuestionnairePart>().Record;
                 var part = item.As<QuestionnairePart>();
                 var PartID = partRecord.Id;
-                mapper.Map<QuestionnaireEditModel, QuestionnairePart>(partEditModel, part);
+                Mapper.Initialize(cfg => {
+                    cfg.CreateMap<QuestionnaireEditModel, QuestionnairePart>().ForMember(dest => dest.Questions, opt => opt.Ignore());
+                    cfg.CreateMap<QuestionEditModel, QuestionRecord>().ForMember(dest => dest.Answers, opt => opt.Ignore());
+                });
+                Mapper.Map<QuestionnaireEditModel, QuestionnairePart>(partEditModel, part);
                 var mappingA = new Dictionary<string, string>();
 
                 // Update and Delete
                 foreach (var quest in partEditModel.Questions.Where(w => w.Id > 0)) {
                     QuestionRecord questionRecord = _repositoryQuestions.Get(quest.Id);
-
-                    mapper.Map<QuestionEditModel, QuestionRecord>(quest, questionRecord);
+                    Mapper.Initialize(cfg => {
+                        cfg.CreateMap<QuestionnaireEditModel, QuestionnairePart>().ForMember(dest => dest.Questions, opt => opt.Ignore());
+                        cfg.CreateMap<QuestionEditModel, QuestionRecord>().ForMember(dest => dest.Answers, opt => opt.Ignore());
+                    });
+                    Mapper.Map<QuestionEditModel, QuestionRecord>(quest, questionRecord);
                     var recordQuestionID = questionRecord.Id;
                     questionRecord.QuestionnairePartRecord_Id = PartID;
                     if (quest.Delete) {
@@ -660,7 +653,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                                     _repositoryAnswer.Create(answerRecord);
                                 }
                             }
-                        } catch (Exception ex)   {
+                        } catch (Exception )   {
                             throw new Exception("answer.Insert");
                         }
                     }
@@ -722,28 +715,22 @@ namespace Laser.Orchard.Questionnaires.Services {
         }
 
         public QuestionnaireEditModel BuildEditModelForQuestionnairePart(QuestionnairePart part) {
-           // Mapper.CreateMap<AnswerRecord, AnswerEditModel>();
-            //Mapper.Initialize(cfg => {
-            //    cfg.CreateMap<QuestionRecord, QuestionEditModel>().ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers.OrderBy(o => o.Position)));
-            //    cfg.CreateMap<QuestionnairePart, QuestionnaireEditModel>().ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions));
-            //});
-            //Mapper.CreateMap<QuestionnairePart, QuestionnaireEditModel>()
-            //.ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions));
-            var mapperConfig = new MapperConfiguration(config => config.AddProfile<QuestionnaireProfileInverse>());
-            var mapper = mapperConfig.CreateMapper();
-            var editModel = mapper.Map<QuestionnaireEditModel>(part);
+            Mapper.Initialize(cfg => {
+                cfg.CreateMap<QuestionRecord, QuestionEditModel>().ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers.OrderBy(o => o.Position)));
+                cfg.CreateMap<QuestionnairePart, QuestionnaireEditModel>().ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions));
+                cfg.CreateMap<AnswerRecord, AnswerEditModel>();
+            });
+            var editModel = Mapper.Map<QuestionnaireEditModel>(part);
             return (editModel);
         }
 
         public QuestionnaireViewModel BuildViewModelForQuestionnairePart(QuestionnairePart part) {
-            //Mapper.CreateMap<AnswerRecord, AnswerViewModel>();
-            //Mapper.Initialize(cfg => {
-            //    cfg.CreateMap<QuestionRecord, QuestionViewModel>().ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers.OrderBy(o => o.Position)));
-            //    cfg.CreateMap<QuestionnairePart, QuestionnaireViewModel>().ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions.OrderBy(o => o.Position)));
-            //});
-            var mapperConfig = new MapperConfiguration(config => config.AddProfile<QuestionnaireProfileInverse>());
-            var mapper = mapperConfig.CreateMapper();
-            var viewModel = mapper.Map<QuestionnaireViewModel>(part);
+            Mapper.Initialize(cfg => {
+                cfg.CreateMap<QuestionRecord, QuestionEditModel>().ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers.OrderBy(o => o.Position)));
+                cfg.CreateMap<QuestionnairePart, QuestionnaireEditModel>().ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions));
+                cfg.CreateMap<AnswerRecord, AnswerEditModel>();
+            });
+            var viewModel = Mapper.Map<QuestionnaireViewModel>(part);
             return (viewModel);
         }
 

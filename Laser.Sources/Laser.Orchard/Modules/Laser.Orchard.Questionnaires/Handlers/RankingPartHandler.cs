@@ -14,22 +14,22 @@ namespace Laser.Orchard.Questionnaires.Handlers {
         }
     }
 
-    public class MyMessageHandler : IMessageEventHandler {
-        public void Sending(MessageContext context) {
+    //public class MyMessageHandler : IMessageEventHandler {
+    //    public void Sending(MessageContext context) {
 
-            if (context.MessagePrepared)
-                return;
-            switch (context.Type) {
-                case "ModuleRankingEmail":
-                    context.MailMessage.Subject = context.Properties["Subject"];
-                    context.MailMessage.Body = context.Properties["Body"];
-                    context.MessagePrepared = true;
-                    break;
-            }
-        }
+    //        if (context.MessagePrepared)
+    //            return;
+    //        switch (context.Type) {
+    //            case "ModuleRankingEmail":
+    //                context.MailMessage.Subject = context.Properties["Subject"];
+    //                context.MailMessage.Body = context.Properties["Body"];
+    //                context.MessagePrepared = true;
+    //                break;
+    //        }
+    //    }
 
-        //we don't care about this right now 
-        public void Sent(MessageContext context) { }
-    } 
+    //    //we don't care about this right now 
+    //    public void Sent(MessageContext context) { }
+    //} 
 
 }
