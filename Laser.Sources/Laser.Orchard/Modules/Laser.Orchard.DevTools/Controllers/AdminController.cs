@@ -99,9 +99,7 @@ namespace Laser.Orchard.DevTools.Controllers {
         public ActionResult ShowScheduledTask() {
             if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
                 return new HttpUnauthorizedResult();
-            IEnumerable<ScheduledTaskRecord> st = _repositoryScheduledTask.Fetch(t => t.ScheduledUtc > DateTime.UtcNow).OrderBy(x => x.ScheduledUtc);
-
-
+            IEnumerable<ScheduledTaskRecord> st = _repositoryScheduledTask.Fetch(t => true).OrderBy(x => x.ScheduledUtc);
             return View("ShowScheduledTask", (object)st);
         }
 
