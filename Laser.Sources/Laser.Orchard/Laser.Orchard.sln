@@ -120,6 +120,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Highlights", "Modules\Laser.Orchard.Highlights\Laser.Orchard.Highlights.csproj", "{290ACBC9-F4DE-48EB-BDE1-C62C637DF33F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.NewsLetters", "Modules\Laser.Orchard.NewsLetters\Laser.Orchard.NewsLetters.csproj", "{51DA5B67-CE19-4629-B15E-EAEF85DE5666}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EA281F43-9F89-4D66-A403-1BFE799D4761} = {EA281F43-9F89-4D66-A403-1BFE799D4761}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.AdvancedSearch", "Modules\Laser.Orchard.AdvancedSearch\Laser.Orchard.AdvancedSearch.csproj", "{CA315CA5-BB14-443D-AE97-508A08C32214}"
 EndProject
