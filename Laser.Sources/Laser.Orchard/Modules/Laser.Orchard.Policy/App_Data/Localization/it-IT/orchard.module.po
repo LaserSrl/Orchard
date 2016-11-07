@@ -84,8 +84,6 @@ msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/PolicyTextIn
 msgid "Priority"
 msgstr "Priorità
 
-msgctxt "
-
 msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/PolicyTextInfo_Edit.cshtml"
 msgid "Set a priority. This information is used to order policy textes."
 msgstr "Impostare una priorità. Questa informazione viene utilizzata per ordinare i testi dell'informativa."
