@@ -132,6 +132,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Facebook", "M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Twitter", "Modules\Laser.Orchard.Twitter\Laser.Orchard.Twitter.csproj", "{43351E5D-9065-4400-ACF2-211785E186F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Fidelity", "Modules\Laser.Orchard.Fidelity\Laser.Orchard.Fidelity.csproj", "{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -364,6 +366,10 @@ Global
 		{43351E5D-9065-4400-ACF2-211785E186F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43351E5D-9065-4400-ACF2-211785E186F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43351E5D-9065-4400-ACF2-211785E186F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -426,5 +432,6 @@ Global
 		{EA281F43-9F89-4D66-A403-1BFE799D4761} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{37367EEA-83F1-4116-B15E-57284E0AA74B} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{43351E5D-9065-4400-ACF2-211785E186F4} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
