@@ -2,7 +2,7 @@
 @using System.Linq
 
 @model List<QuestionnaireStatsViewModel>
-@using (Script.Foot()) {
+@*@using (Script.Foot()) {
     @Display.DatePickerLocalization()
     <script type="text/javascript">
         //<![CDATA[
@@ -12,16 +12,20 @@
         });
         //]]>
     </script>
-}
+}*@
 @{
-    const int answersToShow = 3;
-    Layout.Title = T("Questionnaire Answers");
+   
+        Style.Require("DateTimeEditor");
+   
 
-    Script.Require("jqPlotPieChart");
+        const int answersToShow = 3;
+        Layout.Title = T("Questionnaire Answers");
 
-    Style.Require("jqPlot");
-    Style.Require("QuestionnaireAdmin");
-    var urlBack = Url.Action("Detail", new { idQuestionario = Request.QueryString["idQuestionario"] });
+        Script.Require("jqPlotPieChart");
+
+        Style.Require("jqPlot");
+        Style.Require("QuestionnaireAdmin");
+        var urlBack = Url.Action("Detail", new { idQuestionario = Request.QueryString["idQuestionario"] });
 }
 
 <p class="breadcrumb">
@@ -34,17 +38,20 @@
         <label for="search">@T("Search:")</label>
         @*        @Html.TextBoxFor(m => m.SearchExpression)*@
         <label for="dateFromResults" class="bulk-filter">@T("Date From")</label>
-        @Html.TextBox("from", Request.QueryString["from"], new { id = "dateFromResults" })
-        <label for="dateToResults" class="bulk-filter">@T("Date To")</label>
-        @Html.TextBox("to", Request.QueryString["to"], new { id = "dateToResults" })
-
-        @Html.Hidden("idQuestionario", Request.QueryString["idQuestionario"])
-        <button type="submit">@T("Filter")</button>
-        <button type="submit" name="export" value="true">@T("Export")</button>
-        <a href="@Url.Action("Detail", new { idQuestionario = Request.QueryString["idQuestionario"] })">@T("Clear")</a>
-        <span style="width:50px">&nbsp;</span>
-        <a href="@Url.Action("Index", "FileDownloader", new { area = "Laser.Orchard.StartupConfig", UrlBack = urlBack })&FolderName=QuestionnairesStatistics">@T("Show Exported Files")</a>
-    </fieldset>
+        <span class="date">
+              @Html.Editor("from", Request.QueryString["from"], new { id = "dateFromResults", placeholder = T("Date").Text })
+        </span>
+            <label for="dateToResults" class="bulk-filter">@T("Date To")</label>
+        <span class="date">
+            @Html.Editor("to", Request.QueryString["to"], new { id = "dateToResults" })
+        </span>
+                @Html.Hidden("idQuestionario", Request.QueryString["idQuestionario"])
+                <button type="submit">@T("Filter")</button>
+                <button type="submit" name="export" value="true">@T("Export")</button>
+                <a href="@Url.Action("Detail", new { idQuestionario = Request.QueryString["idQuestionario"] })">@T("Clear")</a>
+                <span style="width:50px">&nbsp;</span>
+                <a href="@Url.Action("Index", "FileDownloader", new { area = "Laser.Orchard.StartupConfig", UrlBack = urlBack })&FolderName=QuestionnairesStatistics">@T("Show Exported Files")</a>
+</fieldset>
 }
 
 @if (Model.Count == 1 && Model.First().Answers == null) {

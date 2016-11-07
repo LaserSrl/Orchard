@@ -39,16 +39,16 @@ namespace Laser.Orchard.Questionnaires.Services {
         private readonly IWorkflowManager _workflowManager;
         private readonly INotifier _notifier;
         private readonly IControllerContextAccessor _controllerContextAccessor;
-        private readonly ITemplateService _templateService;       
+        private readonly ITemplateService _templateService;
         private readonly ITransactionManager _transactionManager;
         private readonly IDateLocalization _dateLocalization;
         private readonly IScheduledTaskManager _taskManager;
         private readonly IDateLocalizationServices _dateServices;
         private readonly ShellSettings _shellSettings;
-        private ISmtpChannel _messageManager;
+        private readonly Lazy<ISmtpChannel> _messageManager;
 
         public Localizer T { get; set; }
-
+  
         public QuestionnairesServices(IOrchardServices orchardServices,
             IRepository<QuestionRecord> repositoryQuestions,
             IRepository<AnswerRecord> repositoryAnswer,
@@ -57,8 +57,9 @@ namespace Laser.Orchard.Questionnaires.Services {
             IWorkflowManager workflowManager,
             INotifier notifier,
             IControllerContextAccessor controllerContextAccessor,
+            Lazy<ISmtpChannel> messageManager,
             ITemplateService templateService,
-           // ISmtpChannel messageManager,
+        
             ITransactionManager transactionManager,
             IDateLocalization dateLocalization,
             IScheduledTaskManager taskManager,
@@ -74,26 +75,28 @@ namespace Laser.Orchard.Questionnaires.Services {
             T = NullLocalizer.Instance;
             _controllerContextAccessor = controllerContextAccessor;
             _templateService = templateService;
-            // _messageManager = messageManager;
+            _messageManager = messageManager;
             // ISmtpChannel _messageManager = null;
 
-         
 
-                _transactionManager = transactionManager;
+
+            _transactionManager = transactionManager;
             _dateLocalization = dateLocalization;
             _taskManager = taskManager;
             _dateServices = dateServices;
             _shellSettings = shellSettings;
         }
-     
+
         private string getusername(int id) {
             if (id > 0) {
                 try {
                     return ((dynamic)_orchardServices.ContentManager.Get(id)).UserPart.UserName;
-                } catch (Exception) {
+                }
+                catch (Exception) {
                     return "No User";
                 }
-            } else
+            }
+            else
                 return "No User";
         }
 
@@ -148,7 +151,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             var generalRankQuery = GenerateRankingQuery(gameId: gameID, page: 1, pageSize: 10)
                 .GetExecutableQueryOver(session)
                 .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData)) //TODO: use transformers. Start from the IResultTransformer in RankingTemplateVM.cs. Also http://blog.andrewawhitaker.com/queryover-series
-                //.Future();
+                                                                                //.Future();
                 .Future<RankingTemplateVM>();
             var appleRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.Apple.ToString(), page: 1, pageSize: 10)
                 .GetExecutableQueryOver(session)
@@ -193,7 +196,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         }
 
         private bool SendEmail(ContentItem Ci, List<RankingTemplateVM> rkt) {
-            _orchardServices.WorkContext.TryResolve<ISmtpChannel>(out _messageManager);
+            //_orchardServices.WorkContext.TryResolve<ISmtpChannel>(out _messageManager);
             string emailRecipe = Ci.As<GamePart>().Settings.GetModel<GamePartSettingVM>().EmailRecipe;
             if (emailRecipe != "") {
                 var editModel = new Dictionary<string, object>();
@@ -212,19 +215,21 @@ namespace Laser.Orchard.Questionnaires.Services {
                     data.Add("Body", testohtml);
                     //_messageManager.Send(new string[] { emailRecipe }, "ModuleRankingEmail", "email", data);
                     data.Add("Recipients", emailRecipe);
-              _messageManager.Process(data);
+                    _messageManager.Value.Process(data);
                     return true;
-                } else { // Nessun template selezionato non mando una mail e ritorno false, mail non inviata
+                }
+                else { // Nessun template selezionato non mando una mail e ritorno false, mail non inviata
                     return false;
                 }
-            } else
+            }
+            else
                 return false;
         }
 
         //method to send a single email with separate rankings for the different platforms
         private bool SendEmail(ContentItem Ci, List<RankingTemplateVM> generalRank, List<RankingTemplateVM> appleRank,
             List<RankingTemplateVM> androidRank, List<RankingTemplateVM> windowsRank) {
-            _orchardServices.WorkContext.TryResolve<ISmtpChannel>(out _messageManager);
+            //_orchardServices.WorkContext.TryResolve<ISmtpChannel>(out _messageManager);
             string emailRecipe = Ci.As<GamePart>().Settings.GetModel<GamePartSettingVM>().EmailRecipe;
             if (emailRecipe != "") {
                 var editModel = new Dictionary<string, object>();
@@ -246,12 +251,14 @@ namespace Laser.Orchard.Questionnaires.Services {
                     data.Add("Body", testohtml);
                     //_messageManager.Send(new string[] { emailRecipe }, "ModuleRankingEmail", "email", data);
                     data.Add("Recipients", emailRecipe);
-                    _messageManager.Process(data);
+                    _messageManager.Value.Process(data);
                     return true;
-                } else { // Nessun template selezionato non mando una mail e ritorno false, mail non inviata
+                }
+                else { // Nessun template selezionato non mando una mail e ritorno false, mail non inviata
                     return false;
                 }
-            } else
+            }
+            else
                 return false;
         }
 
@@ -544,13 +551,14 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.AnswerText = q.OpenAnswerAnswerText;
                             userAnswer.QuestionText = q.Question;
                             userAnswer.QuestionRecord_Id = q.Id;
-                            userAnswer.User_Id = (currentUser == null)? 0 : currentUser.Id;
+                            userAnswer.User_Id = (currentUser == null) ? 0 : currentUser.Id;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;
                             userAnswer.Context = editModel.Context;
                             CreateUserAnswers(userAnswer);
                         }
-                    } else if (q.QuestionType == QuestionType.SingleChoice) {
+                    }
+                    else if (q.QuestionType == QuestionType.SingleChoice) {
                         if (q.SingleChoiceAnswer > 0) {
                             var userAnswer = new UserAnswersRecord();
                             userAnswer.AnswerRecord_Id = q.SingleChoiceAnswer;
@@ -563,7 +571,8 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.Context = editModel.Context;
                             CreateUserAnswers(userAnswer);
                         }
-                    } else if (q.QuestionType == QuestionType.MultiChoice) {
+                    }
+                    else if (q.QuestionType == QuestionType.MultiChoice) {
                         var answerList = q.AnswersWithResult.Where(w => w.Answered);
                         foreach (var a in answerList) {
                             var userAnswer = new UserAnswersRecord();
@@ -615,10 +624,12 @@ namespace Laser.Orchard.Questionnaires.Services {
                                 _repositoryAnswer.Delete(_repositoryAnswer.Get(answer.Id));
                             }
                             _repositoryQuestions.Delete(_repositoryQuestions.Get(quest.Id));
-                        } catch (Exception) {
+                        }
+                        catch (Exception) {
                             throw new Exception("quest.Delete");
                         }
-                    } else {
+                    }
+                    else {
                         try {
                             foreach (var answer in quest.Answers.Where(w => w.Id != 0)) { ///Update and delete Answer
                                 AnswerRecord answerRecord = new AnswerRecord();
@@ -630,12 +641,14 @@ namespace Laser.Orchard.Questionnaires.Services {
                                 Mapper.Map<AnswerEditModel, AnswerRecord>(answer, answerRecord);
                                 if (answer.Delete) {
                                     _repositoryAnswer.Delete(_repositoryAnswer.Get(answer.Id));
-                                } else if (answer.Id > 0) {
+                                }
+                                else if (answer.Id > 0) {
                                     _repositoryAnswer.Update(answerRecord);
                                 }
                             }
                             _repositoryQuestions.Update(questionRecord);
-                        } catch (Exception) {
+                        }
+                        catch (Exception) {
                             throw new Exception("quest.Update");
                         }
                         try {
@@ -647,13 +660,14 @@ namespace Laser.Orchard.Questionnaires.Services {
                                     //    cfg.CreateMap<QuestionEditModel, QuestionRecord>().ForMember(dest => dest.Answers, opt => opt.Ignore());
                                     cfg.CreateMap<AnswerEditModel, AnswerRecord>();
                                 });
-                                Mapper.Map<AnswerEditModel,AnswerRecord>(answer, answerRecord);
+                                Mapper.Map<AnswerEditModel, AnswerRecord>(answer, answerRecord);
                                 if (answer.Id == 0 && !answer.Delete) {
                                     answerRecord.QuestionRecord_Id = recordQuestionID;
                                     _repositoryAnswer.Create(answerRecord);
                                 }
                             }
-                        } catch (Exception )   {
+                        }
+                        catch (Exception) {
                             throw new Exception("answer.Insert");
                         }
                     }
@@ -693,7 +707,8 @@ namespace Laser.Orchard.Questionnaires.Services {
                                 _repositoryAnswer.Flush();
                             }
                         }
-                    } catch (Exception) {
+                    }
+                    catch (Exception) {
                         throw new Exception("quest.Create");
                     }
 
@@ -705,11 +720,13 @@ namespace Laser.Orchard.Questionnaires.Services {
                             _repositoryQuestions.Update(questionRecord);
                             re = null;
                         }
-                    } catch (Exception) {
+                    }
+                    catch (Exception) {
                         throw new Exception("quest.CorrezzioneCondizioni");
                     }
                 }
-            } catch (Exception) {
+            }
+            catch (Exception) {
                 throw new Exception("quest.UpdateTotale");
             }
         }
@@ -777,12 +794,13 @@ namespace Laser.Orchard.Questionnaires.Services {
                 answersQuery = answersQuery.Where(w => w.AnswerDate <= to);
             }
             var users = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().List();
-            var result = answersQuery.Join(users, l => l.User_Id, r => r.Id, (l, r) => new ExportUserAnswersVM { 
-                Answer = l.AnswerText, 
-                Question = l.QuestionText, 
-                AnswerDate = l.AnswerDate, 
+            var result = answersQuery.Join(users, l => l.User_Id, r => r.Id, (l, r) => new ExportUserAnswersVM {
+                Answer = l.AnswerText,
+                Question = l.QuestionText,
+                AnswerDate = l.AnswerDate,
                 UserName = r.UserName,
-                Contesto = l.Context}).ToList();
+                Contesto = l.Context
+            }).ToList();
             return result;
         }
         public void SaveQuestionnaireUsersAnswers(int questionnaireId, DateTime? from = null, DateTime? to = null) {
@@ -858,7 +876,8 @@ namespace Laser.Orchard.Questionnaires.Services {
                 empty.Answers = null;
 
                 return new List<QuestionnaireStatsViewModel>() { empty };
-            } else {
+            }
+            else {
                 var aggregatedStats = questionnaireStats.Select(s => new QuestionnaireStatsViewModel {
                     QuestionnairePart_Id = s.Questions.QuestionnairePartRecord_Id,
                     QuestionnaireTitle = questionnaireData.As<TitlePart>().Title,
