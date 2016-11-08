@@ -120,6 +120,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Highlights", "Modules\Laser.Orchard.Highlights\Laser.Orchard.Highlights.csproj", "{290ACBC9-F4DE-48EB-BDE1-C62C637DF33F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.NewsLetters", "Modules\Laser.Orchard.NewsLetters\Laser.Orchard.NewsLetters.csproj", "{51DA5B67-CE19-4629-B15E-EAEF85DE5666}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EA281F43-9F89-4D66-A403-1BFE799D4761} = {EA281F43-9F89-4D66-A403-1BFE799D4761}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.AdvancedSearch", "Modules\Laser.Orchard.AdvancedSearch\Laser.Orchard.AdvancedSearch.csproj", "{CA315CA5-BB14-443D-AE97-508A08C32214}"
 EndProject
@@ -128,6 +131,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Facebook", "Modules\Laser.Orchard.Facebook\Laser.Orchard.Facebook.csproj", "{37367EEA-83F1-4116-B15E-57284E0AA74B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Twitter", "Modules\Laser.Orchard.Twitter\Laser.Orchard.Twitter.csproj", "{43351E5D-9065-4400-ACF2-211785E186F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Generator", "Modules\Laser.Orchard.Generator\Laser.Orchard.Generator.csproj", "{3157094A-7138-45A1-B8EE-AF2E63A2EE70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.PaymentCartaSi", "Modules\Laser.Orchard.PaymentCartaSi\Laser.Orchard.PaymentCartaSi.csproj", "{B99FC6B2-1E08-4DE3-A6CC-AF42C9D48B81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Fidelity", "Modules\Laser.Orchard.Fidelity\Laser.Orchard.Fidelity.csproj", "{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.PaymentGestPay", "Modules\Laser.Orchard.PaymentGestPay\Laser.Orchard.PaymentGestPay.csproj", "{778D102C-6FA6-423E-87BE-1C31051AF3E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -361,6 +372,22 @@ Global
 		{43351E5D-9065-4400-ACF2-211785E186F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43351E5D-9065-4400-ACF2-211785E186F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43351E5D-9065-4400-ACF2-211785E186F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3157094A-7138-45A1-B8EE-AF2E63A2EE70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3157094A-7138-45A1-B8EE-AF2E63A2EE70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3157094A-7138-45A1-B8EE-AF2E63A2EE70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3157094A-7138-45A1-B8EE-AF2E63A2EE70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B99FC6B2-1E08-4DE3-A6CC-AF42C9D48B81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B99FC6B2-1E08-4DE3-A6CC-AF42C9D48B81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B99FC6B2-1E08-4DE3-A6CC-AF42C9D48B81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B99FC6B2-1E08-4DE3-A6CC-AF42C9D48B81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{778D102C-6FA6-423E-87BE-1C31051AF3E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{778D102C-6FA6-423E-87BE-1C31051AF3E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{778D102C-6FA6-423E-87BE-1C31051AF3E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{778D102C-6FA6-423E-87BE-1C31051AF3E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -423,5 +450,9 @@ Global
 		{EA281F43-9F89-4D66-A403-1BFE799D4761} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{37367EEA-83F1-4116-B15E-57284E0AA74B} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{43351E5D-9065-4400-ACF2-211785E186F4} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{3157094A-7138-45A1-B8EE-AF2E63A2EE70} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{B99FC6B2-1E08-4DE3-A6CC-AF42C9D48B81} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{778D102C-6FA6-423E-87BE-1C31051AF3E7} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal

@@ -244,8 +244,6 @@ msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
 msgid "Properties"
 msgstr "Proprietà
 
-msgctxt "
-
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
 msgid "Subscribers"
 msgstr "Iscritti"

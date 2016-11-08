@@ -39,7 +39,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             Mapper.Initialize(cfg => {
                 cfg.CreateMap<GamePart, GamePartVM>().ForMember(dest => dest.GameDate, opt => opt.Ignore());
             });
-            viewModel.GameDate = _dateLocalization.WriteDateLocalized(tmpGameDate);
+            viewModel.GameDate = _dateLocalization.WriteDateLocalized(tmpGameDate,true);
             return ContentShape("Parts_GamePart_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/GamePart_Edit", Model: viewModel, Prefix: Prefix));
         }
 

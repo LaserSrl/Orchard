@@ -1,19 +1,18 @@
 ﻿@using Laser.Orchard.Questionnaires.ViewModels
 @using System.Linq
-
 @model List<QuestionnaireStatsViewModel>
-@using (Script.Foot()) {
-    @Display.DatePickerLocalization()
-    <script type="text/javascript">
-        //<![CDATA[
-        $(function () {
-            $('#dateFromResults').datepicker({ showAnim: "", changeYear: true, changeMonth: true });
-            $('#dateToResults').datepicker({ showAnim: "", changeYear: true, changeMonth: true });
-        });
-        //]]>
-    </script>
-}
 @{
+
+    Style.Require("DateTimeEditor");
+
+    Style.Require("jQueryCalendars_Picker");
+    //Style.Require("jQueryTimeEntry");
+    //Style.Require("jQueryDateTimeEditor");
+
+    Script.Require("jQueryCalendars_Picker").AtFoot();
+    //Script.Require("jQueryTimeEntry").AtFoot();
+
+
     const int answersToShow = 3;
     Layout.Title = T("Questionnaire Answers");
 
@@ -34,17 +33,20 @@
         <label for="search">@T("Search:")</label>
         @*        @Html.TextBoxFor(m => m.SearchExpression)*@
         <label for="dateFromResults" class="bulk-filter">@T("Date From")</label>
-        @Html.TextBox("from", Request.QueryString["from"], new { id = "dateFromResults" })
-        <label for="dateToResults" class="bulk-filter">@T("Date To")</label>
-        @Html.TextBox("to", Request.QueryString["to"], new { id = "dateToResults" })
-
-        @Html.Hidden("idQuestionario", Request.QueryString["idQuestionario"])
-        <button type="submit">@T("Filter")</button>
-        <button type="submit" name="export" value="true">@T("Export")</button>
-        <a href="@Url.Action("Detail", new { idQuestionario = Request.QueryString["idQuestionario"] })">@T("Clear")</a>
-        <span style="width:50px">&nbsp;</span>
-        <a href="@Url.Action("Index", "FileDownloader", new { area = "Laser.Orchard.StartupConfig", UrlBack = urlBack })&FolderName=QuestionnairesStatistics">@T("Show Exported Files")</a>
-    </fieldset>
+        <span class="date">
+              @Html.TextBox("from", Request.QueryString["from"], new { id = "dateFromResults", @class = "text" })
+        </span>
+            <label for="dateToResults" class="bulk-filter">@T("Date To")</label>
+        <span class="date">
+            @Html.TextBox("to", Request.QueryString["to"], new { id = "dateToResults", @class = "text" })
+        </span>
+                @Html.Hidden("idQuestionario", Request.QueryString["idQuestionario"])
+                <button type="submit">@T("Filter")</button>
+                <button type="submit" name="export" value="true">@T("Export")</button>
+                <a href="@Url.Action("Detail", new { idQuestionario = Request.QueryString["idQuestionario"] })">@T("Clear")</a>
+                <span style="width:50px">&nbsp;</span>
+                <a href="@Url.Action("Index", "FileDownloader", new { area = "Laser.Orchard.StartupConfig", UrlBack = urlBack })&FolderName=QuestionnairesStatistics">@T("Show Exported Files")</a>
+</fieldset>
 }
 
 @if (Model.Count == 1 && Model.First().Answers == null) {
@@ -105,11 +107,23 @@ else {
     using (Script.Foot()) {
     <script type="text/javascript">
         $(document).ready(function () {
-                @foreach (var question in Model) {
-                    if (question.QuestionType != Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {                        
+            @{ <Text>
+           
+            $("#dateFromResults,#dateToResults").calendarsPicker({
+                showAnim: "",
+                dateFormat:"dd/mm/YYYY",
+                renderer: $.extend({}, $.calendarsPicker.themeRollerRenderer, {
+                    picker: "<div {popup:start} id='ui-datepicker-div'{popup:end} class='ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all{inline:start} ui-datepicker-inline{inline:end}'><div class='ui-datepicker-header ui-widget-header ui-helper-clearfix ui-corner-all'>{link:prev}{link:today}{link:next}</div>{months}{popup:start}{popup:end}<div class='ui-helper-clearfix'></div></div>",
+                    month: "<div class='ui-datepicker-group'><div class='ui-datepicker-month ui-helper-clearfix'>{monthHeader:dd MM yyyy}</div><table class='ui-datepicker-calendar'><thead>{weekHeader}</thead><tbody>{weeks}</tbody></table></div>"
+                })
+            });
+            </Text>
+                }
+            @foreach (var question in Model) {
+                    if (question.QuestionType != Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {
                         <Text>
             var data = [];
-                        @if (question.Answers != null) {
+            @if (question.Answers != null) {
                             foreach (var answer in question.Answers) {
                                 <Text>data.push(['@answer.Answer', @answer.Count]);</Text>
                             }
@@ -126,6 +140,7 @@ else {
                 legend: { show: true, location: 'e' }
             });
             </Text>
+
                     }
                 }
         });
