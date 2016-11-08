@@ -5,7 +5,7 @@ Website: http://www.laser-group.com
 Version: 1.8
 OrchardVersion: 1.10.1
 Description: Integrate your site with newsletters funzionalities
-Dependencies: Common, Orchard.Fields, Orchard.Widgets, Orchard.MediaLibrary, Orchard.jQuery, Orchard.Email, Laser.Orchard.StartupConfig, Laser.Orchard.TemplateManagement, Laser.Orchard.TemplateManagement.Parsers.Razor, Orchard.JobsQueue, Laser.Orchard.MailerUtility, Laser.Orchard.MailCommunication
+Dependencies: Common, Orchard.Fields, Orchard.Widgets, Orchard.MediaLibrary, Orchard.Resources, Orchard.Email, Laser.Orchard.StartupConfig, Laser.Orchard.TemplateManagement, Laser.Orchard.TemplateManagement.Parsers.Razor, Orchard.JobsQueue, Laser.Orchard.MailerUtility, Laser.Orchard.MailCommunication
 Category: Messaging
 
 
