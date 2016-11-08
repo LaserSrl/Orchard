@@ -231,10 +231,10 @@
   </wsdl:binding>
   <wsdl:service name="SmsWebService">
     <wsdl:port name="SmsWebServiceSoap" binding="tns:SmsWebServiceSoap">
-      <soap:address location="http://lcit.laser-group.com/wsOrchardSMS/SmsWebService.asmx" />
+      <soap:address location="https://lcit.laser-group.com/wsOrchardSMS/SmsWebService.asmx" />
     </wsdl:port>
     <wsdl:port name="SmsWebServiceSoap12" binding="tns:SmsWebServiceSoap12">
-      <soap12:address location="http://lcit.laser-group.com/wsOrchardSMS/SmsWebService.asmx" />
+      <soap12:address location="https://lcit.laser-group.com/wsOrchardSMS/SmsWebService.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

@@ -177,17 +177,26 @@ namespace Laser.Orchard.Mobile.Services {
                     SmsNumber = numbers,
                 };
 
+                //EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
+                //SmsServiceReference.SmsWebServiceSoapClient _service;
+                //if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
+                //    WSHttpBinding binding = new WSHttpBinding();
+                //    binding.Security.Mode = SecurityMode.Transport;
+                //    _service = new SmsWebServiceSoapClient(binding, address);
+                //} else {
+                //    BasicHttpBinding binding = new BasicHttpBinding();
+                //    _service = new SmsWebServiceSoapClient(binding, address);
+                //}
+
                 //Specify the binding to be used for the client.
                 EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
-                SmsServiceReference.SmsWebServiceSoapClient _service;
+                BasicHttpBinding binding = new BasicHttpBinding();
+
                 if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-                    WSHttpBinding binding = new WSHttpBinding();
-                    binding.Security.Mode = SecurityMode.Transport;
-                    _service = new SmsWebServiceSoapClient(binding, address);
-                } else {
-                    BasicHttpBinding binding = new BasicHttpBinding();
-                    _service = new SmsWebServiceSoapClient(binding, address);
+                    binding.Security.Mode = BasicHttpSecurityMode.Transport;
                 }
+                SmsServiceReference.SmsWebServiceSoapClient _service = new SmsWebServiceSoapClient(binding, address);
+                
 
                 // Place Holder
                 List<SmsServiceReference.PlaceHolderMessaggio> listPH = GetPlaceHolder(telDestArr, testoSMS);
