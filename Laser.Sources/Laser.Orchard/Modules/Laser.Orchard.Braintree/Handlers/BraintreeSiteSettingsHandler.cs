@@ -26,7 +26,6 @@ namespace Laser.Orchard.Braintree.Handlers
                 return;
             }
             base.GetItemMetadata(context);
-            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Braintree PayPal")));
         }
     }
 }
