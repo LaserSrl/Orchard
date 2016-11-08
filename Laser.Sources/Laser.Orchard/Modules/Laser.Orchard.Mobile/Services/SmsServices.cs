@@ -181,8 +181,8 @@ namespace Laser.Orchard.Mobile.Services {
                 EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
                 SmsServiceReference.SmsWebServiceSoapClient _service;
                 if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-                    WSHttpBinding binding = new WSHttpBinding();
-                    binding.Security.Mode = SecurityMode.Transport;
+                    BasicHttpBinding binding = new BasicHttpBinding();
+                    binding.Security.Mode = BasicHttpSecurityMode.Transport;
                     _service = new SmsWebServiceSoapClient(binding, address);
                 } else {
                     BasicHttpBinding binding = new BasicHttpBinding();
@@ -327,8 +327,8 @@ namespace Laser.Orchard.Mobile.Services {
             SmsServiceReference.SmsWebServiceSoapClient _service;
 
             if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-                WSHttpBinding binding = new WSHttpBinding();
-                binding.Security.Mode = SecurityMode.Transport;
+                BasicHttpBinding binding = new BasicHttpBinding();
+                binding.Security.Mode = BasicHttpSecurityMode.Transport;
                 _service = new SmsWebServiceSoapClient(binding, address);
             } else {
                 BasicHttpBinding binding = new BasicHttpBinding();
@@ -355,8 +355,8 @@ namespace Laser.Orchard.Mobile.Services {
             SmsServiceReference.SmsWebServiceSoapClient _service;
 
             if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-                WSHttpBinding binding = new WSHttpBinding();
-                binding.Security.Mode = SecurityMode.Transport;
+                BasicHttpBinding binding = new BasicHttpBinding();
+                binding.Security.Mode = BasicHttpSecurityMode.Transport;
                 _service = new SmsWebServiceSoapClient(binding, address);
             } else {
                 BasicHttpBinding binding = new BasicHttpBinding();
