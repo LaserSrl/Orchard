@@ -177,17 +177,7 @@ namespace Laser.Orchard.Mobile.Services {
                     SmsNumber = numbers,
                 };
 
-                //Specify the binding to be used for the client.
-                EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
-                SmsServiceReference.SmsWebServiceSoapClient _service;
-                if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-                    BasicHttpBinding binding = new BasicHttpBinding();
-                    binding.Security.Mode = BasicHttpSecurityMode.Transport;
-                    _service = new SmsWebServiceSoapClient(binding, address);
-                } else {
-                    BasicHttpBinding binding = new BasicHttpBinding();
-                    _service = new SmsWebServiceSoapClient(binding, address);
-                }
+                SmsServiceReference.SmsWebServiceSoapClient _service = CreateSmsService(smsSettings);
 
                 // Place Holder
                 List<SmsServiceReference.PlaceHolderMessaggio> listPH = GetPlaceHolder(telDestArr, testoSMS);
@@ -322,18 +312,7 @@ namespace Laser.Orchard.Mobile.Services {
         public Config GetConfig() {
             //Specify the binding to be used for the client.
             var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
-
-            EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
-            SmsServiceReference.SmsWebServiceSoapClient _service;
-
-            if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-                BasicHttpBinding binding = new BasicHttpBinding();
-                binding.Security.Mode = BasicHttpSecurityMode.Transport;
-                _service = new SmsWebServiceSoapClient(binding, address);
-            } else {
-                BasicHttpBinding binding = new BasicHttpBinding();
-                _service = new SmsWebServiceSoapClient(binding, address);
-            }
+            SmsServiceReference.SmsWebServiceSoapClient _service = CreateSmsService(smsSettings);
 
             SmsServiceReference.Login login = new SmsServiceReference.Login();
             login.User = smsSettings.WsUsername;
@@ -347,21 +326,8 @@ namespace Laser.Orchard.Mobile.Services {
 
         public string GetReportSmsStatus(string IdSMS) {
             string reportStatus = null;
-
-            //Specify the binding to be used for the client.
             var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
-
-            EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
-            SmsServiceReference.SmsWebServiceSoapClient _service;
-
-            if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-                BasicHttpBinding binding = new BasicHttpBinding();
-                binding.Security.Mode = BasicHttpSecurityMode.Transport;
-                _service = new SmsWebServiceSoapClient(binding, address);
-            } else {
-                BasicHttpBinding binding = new BasicHttpBinding();
-                _service = new SmsWebServiceSoapClient(binding, address);
-            }
+            SmsServiceReference.SmsWebServiceSoapClient _service = CreateSmsService(smsSettings);
 
             SmsServiceReference.Login login = new SmsServiceReference.Login();
             login.User = smsSettings.WsUsername;
@@ -388,6 +354,14 @@ namespace Laser.Orchard.Mobile.Services {
 
             return reportStatus;
         }
-
+        private SmsServiceReference.SmsWebServiceSoapClient CreateSmsService(SmsSettingsPart smsSettings) {
+            //Specify the binding to be used for the client.
+            EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
+            BasicHttpBinding binding = new BasicHttpBinding();
+            if (address.Uri.Scheme.ToLower().StartsWith("https")) {
+                binding.Security.Mode = BasicHttpSecurityMode.Transport;
+            }
+            return new SmsWebServiceSoapClient(binding, address);
+        }
     }
 }
