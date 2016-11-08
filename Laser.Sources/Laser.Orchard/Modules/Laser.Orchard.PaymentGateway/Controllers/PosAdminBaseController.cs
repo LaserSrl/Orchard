@@ -25,7 +25,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         /// Get POS settings part to be used in Index view.
         /// </summary>
         /// <returns></returns>
-        protected abstract dynamic GetSettingsPart();
+        protected abstract ContentPart GetSettingsPart();
 
         public PosAdminBaseController(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
@@ -44,7 +44,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                 return new HttpUnauthorizedResult();
             }
             var settings = GetSettingsPart();
-            if (TryUpdateModel(settings)) {
+            if (TryUpdateModel((dynamic)settings)) {
                 _orchardServices.Notifier.Information(T("Settings saved successfully."));
             }
             else {

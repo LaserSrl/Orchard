@@ -15,7 +15,7 @@ namespace Laser.Orchard.Braintree.Controllers {
     public class AdminController : PosAdminBaseController {
         public AdminController(IOrchardServices orchardServices) : base(orchardServices) {
         }
-        protected override dynamic GetSettingsPart() {
+        protected override ContentPart GetSettingsPart() {
             return _orchardServices.WorkContext.CurrentSite.As<BraintreeSiteSettingsPart>();
         }
     }
