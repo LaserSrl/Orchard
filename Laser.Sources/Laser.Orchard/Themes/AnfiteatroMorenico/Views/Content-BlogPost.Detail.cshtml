@@ -1,0 +1,39 @@
+﻿@using Orchard.Utility.Extensions;
+@{
+    if (Model.ContentItem.TitlePart != null && Model.ContentItem.TitlePart.Title != null) {
+        Layout.Title = Model.ContentItem.TitlePart.Title;
+    }
+
+    Model.Classes.Add("content-item");
+
+    var contentTypeClassName = ((string)Model.ContentItem.ContentType).HtmlClassify();
+    Model.Classes.Add(contentTypeClassName);
+
+    var tag = Tag(Model, "article");
+    var medias = Model.ContentItem.BlogPost.Gallery.MediaParts;
+}
+<div class="row">
+    <div class="col-xs-12 col-sm-8">
+        <h1 class="item-title prodotti">@Model.ContentItem.TitlePart.Title</h1>
+        @Html.Raw(@Model.ContentItem.BodyPart.Text)
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        @if (medias.Count > 0) {
+
+            <img class="img-responsive img-thumbnail" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[0].MediaUrl)" alt="@medias[0].AlternateText" />
+        }
+    </div>
+</div>
+@if (medias.Count > 1) {
+<div class="space-20"></div>
+    <div class="row">
+        <h4 class="item-subtitle prodotti">@T("Gallery")</h4>
+        @for (int i = 1; i < medias.Count; i++) {
+            <div class="col-xs-12 col-sm-4 col-md-2">
+                <a data-lightbox="gallery" href="@medias[i].MediaUrl" title="@T("Click to zoom")">
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[i].MediaUrl)" alt="@medias[i].AlternateText" /></a>
+            </div>
+        }
+    </div>
+
+}

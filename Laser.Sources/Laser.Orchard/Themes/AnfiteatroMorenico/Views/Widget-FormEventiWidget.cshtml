@@ -1,0 +1,46 @@
+﻿@using Orchard.DisplayManagement.Descriptors;
+@using Orchard.Environment.Extensions;
+@{
+    Model.Metadata.Wrappers.Remove("Widget_Wrapper");
+    //Model.Metadata.Wrappers.Add("Widget_SideBarWrapper");
+    //Model.Metadata.Wrappers.Add("Widget_ControlWrapper");
+}
+@{
+    var termids = Request.QueryString["termids"];
+    var datainizio = Request.QueryString["datainizio"];
+    var datafine = Request.QueryString["datafine"];
+       
+} 
+<div id="cat-nav">
+    <h3 class="subtitle eventi">@Model.ContentItem.WidgetPart.Title</h3>
+    <hr/>
+    <form action="" method="get">
+            <input type="hidden" name="termids" value="@termids">
+        <div class="form-group">
+            <label>@T("Insert date")</label>
+        </div>
+        <div class="col-xs-12 col-lg-6 form-group">
+            <label for="da_data">@T("from")</label>
+            <input type="text" id="da_data" class="form-control datepicker" placeholder="@T("Date")" name="datainizio" value="@datainizio">
+        </div>
+        <div class="col-xs-12 col-lg-6 form-group">
+            <label for="a_data">@T("to")</label>
+            <input type="text" id="a_data" class="form-control datepicker" placeholder="@T("Date")" name="datafine" value="@datafine">
+        </div>
+@*        <div class="form-group">
+            <label>@T("Search for the event")</label>
+            <input type="text" class="form-control" placeholder="@T("Search for the event...")" name="cerca">
+        </div>*@
+        <div class="clear"></div>
+        <input type="submit" class="btn btn-danger btn-eventi pull-right" value="@T("Search")" />
+        @*@Html.AntiForgeryTokenOrchard()*@
+    </form>
+    <script>
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                language: 'it'
+            });
+        });
+    </script>
+</div>

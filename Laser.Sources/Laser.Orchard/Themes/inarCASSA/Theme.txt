@@ -1,0 +1,5 @@
+Name: inarCASSA
+Author: The Orchard Team
+Website: http://www.orchardproject.net
+Description: Description for the theme
+Version: 1.0

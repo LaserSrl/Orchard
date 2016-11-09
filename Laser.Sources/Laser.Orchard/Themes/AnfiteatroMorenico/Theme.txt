@@ -1,0 +1,7 @@
+Name: AnfiteatroMorenico
+Author: Laser s.r.l.
+Website: http://www.laser-group.com
+Description: Anfiteatro Morenico Ivrea theme
+Version: 1.0
+OrchardVersion: 1.10
+Zones: WideContent, Accessibility, Navigation, HomeBox, Breadcrumb, BeforeContent, AsideFirst, Content, AsideSecond, AfterContent, FooterNavigation

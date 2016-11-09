@@ -1,0 +1,38 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2016 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Themes/inarCASSA/Views/Fields.ContentPicker-Questionario.cshtml"
+msgid "No data found."
+msgstr "Nessun dato trovato."
+
+msgctxt "~/Themes/inarCASSA/Views/Layout.cshtml"
+msgid "No data found."
+msgstr "Nessun dato trovato."
+
+msgctxt "~/Themes/inarCASSA/Views/Parts.Questionnaire.FrontEnd.Edit.cshtml"
+msgid "Continue >"
+msgstr "Avanti >"
+
+msgctxt "~/Themes/inarCASSA/Views/Parts.Questionnaire.FrontEnd.Edit.cshtml"
+msgid "I accept your terms and conditions. I want to answer to your survey."
+msgstr "Accetto i termini e lecondizioni del servizio. Desidero partecipare al vostro questionario."
+
+msgctxt "~/Themes/inarCASSA/Views/Parts.Questionnaire.FrontEnd.Edit.cshtml"
+msgid "Next"
+msgstr "Successivo"
+
+msgctxt "~/Themes/inarCASSA/Views/Parts.Questionnaire.FrontEnd.Edit.cshtml"
+msgid "Previous"
+msgstr "Precedente"
+
+msgctxt "~/Themes/inarCASSA/Views/Parts.Questionnaire.FrontEnd.Edit.cshtml"
+msgid "Send your questionnaire"
+msgstr "Inoltra questionario"
+
