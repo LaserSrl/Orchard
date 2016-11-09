@@ -1,0 +1,54 @@
+﻿@using Orchard.Environment.Configuration
+@using Laser.Orchard.Maps.Models
+@using Orchard.UI.Resources
+@using Orchard.ContentManagement
+
+@{
+    var settings = WorkContext.Resolve<ShellSettings>();
+    var tenantName = settings.Name;
+
+    var title = String.Concat(Layout.Title, " - ", WorkContext.CurrentSite.SiteName);
+	 if (string.IsNullOrEmpty(Layout.Title.ToString())){
+    	title =WorkContext.CurrentSite.SiteName;
+    }
+    var subthemePath = "~/Themes/IvreaMontalto/Styles/";
+    var apiKey = "AIzaSyBFtkJDbWgDxEDJDfYvVu93L1W9z_IHHOg";
+    var mapsSettings = WorkContext.CurrentSite.As<MapsSiteSettingsPart>();
+    if (!string.IsNullOrWhiteSpace(mapsSettings.GoogleApiKey)) {
+        apiKey = mapsSettings.GoogleApiKey;
+    }
+
+}
+@{
+      
+
+    //Styles    
+    Style.Include("https://fonts.googleapis.com/css?family=Istok+Web").AtHead();
+    Style.Include("https://fonts.googleapis.com/css?family=Roboto:400,700").AtHead();
+    Style.Include("style.css").AtHead();
+    Style.Include("prettyPhoto.css").AtHead();
+
+    //Scripts
+    Script.Include("main.js").AtFoot();
+    Script.Require("jQuery");
+    Script.Include("jquery.prettyPhoto.js").AtFoot();   
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@title</title>
+
+    @Display(Model.Head)
+    <script src="http://maps.googleapis.com/maps/api/js?key=@(apiKey)"></script>
+
+</head>
+<body>
+    @Display(Model.Body)
+    @Display(Model.Tail)
+
+</body>
+</html>
+
