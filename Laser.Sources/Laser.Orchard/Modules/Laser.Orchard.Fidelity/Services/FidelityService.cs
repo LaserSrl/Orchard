@@ -109,6 +109,7 @@ namespace Laser.Orchard.Fidelity.Services
                         ConfigEnv configData = GetConfigData();
 
                         CDataCustomer customerData = new CDataCustomer();
+                        customerData.first_name = username;
                         customerData.email = email;
                         customerData.username = username;
                         customerData.password = Membership.GeneratePassword(12,4);
