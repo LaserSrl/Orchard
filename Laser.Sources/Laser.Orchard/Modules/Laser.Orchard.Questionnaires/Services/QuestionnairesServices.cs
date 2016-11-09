@@ -48,7 +48,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         private readonly Lazy<ISmtpChannel> _messageManager;
 
         public Localizer T { get; set; }
-  
+
         public QuestionnairesServices(IOrchardServices orchardServices,
             IRepository<QuestionRecord> repositoryQuestions,
             IRepository<AnswerRecord> repositoryAnswer,
@@ -59,7 +59,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             IControllerContextAccessor controllerContextAccessor,
             Lazy<ISmtpChannel> messageManager,
             ITemplateService templateService,
-        
+
             ITransactionManager transactionManager,
             IDateLocalization dateLocalization,
             IScheduledTaskManager taskManager,
@@ -755,22 +755,35 @@ namespace Laser.Orchard.Questionnaires.Services {
 
         public QuestionnaireWithResultsViewModel BuildViewModelWithResultsForQuestionnairePart(QuestionnairePart part) {
             // Mapper.CreateMap<AnswerRecord, AnswerWithResultViewModel>();
-            if (part.Settings.GetModel<QuestionnairesPartSettingVM>().QuestionsSortedRandomlyNumber > 0)
-                Mapper.Initialize(cfg => {
-                    cfg.CreateMap<QuestionRecord, QuestionWithResultsViewModel>().ForMember(dest => dest.AnswersWithResult, opt => opt.MapFrom(src => src.Answers.Where(w => w.Published)));
-                });
-            else
-                Mapper.Initialize(cfg => {
-                    cfg.CreateMap<QuestionRecord, QuestionWithResultsViewModel>().ForMember(dest => dest.AnswersWithResult, opt => opt.MapFrom(src => src.Answers.Where(w => w.Published).OrderBy(o => o.Position)));
-                });
-            if (part.Settings.GetModel<QuestionnairesPartSettingVM>().RandomResponse)
-                Mapper.Initialize(cfg => {
-                    cfg.CreateMap<QuestionnairePart, QuestionnaireWithResultsViewModel>().ForMember(dest => dest.QuestionsWithResults, opt => opt.MapFrom(src => src.Questions.Where(w => w.Published)));
-                });
-            else
-                Mapper.Initialize(cfg => {
-                    cfg.CreateMap<QuestionnairePart, QuestionnaireWithResultsViewModel>().ForMember(dest => dest.QuestionsWithResults, opt => opt.MapFrom(src => src.Questions.Where(w => w.Published).OrderBy(o => o.Position)));
-                });
+           
+            if (part.Settings.GetModel<QuestionnairesPartSettingVM>().QuestionsSortedRandomlyNumber > 0) {
+                if (part.Settings.GetModel<QuestionnairesPartSettingVM>().RandomResponse)
+                    Mapper.Initialize(cfg => {
+                        cfg.CreateMap<AnswerRecord, AnswerWithResultViewModel>();
+                        cfg.CreateMap<QuestionRecord, QuestionWithResultsViewModel>().ForMember(dest => dest.AnswersWithResult, opt => opt.MapFrom(src => src.Answers.Where(w => w.Published)));
+                        cfg.CreateMap<QuestionnairePart, QuestionnaireWithResultsViewModel>().ForMember(dest => dest.QuestionsWithResults, opt => opt.MapFrom(src => src.Questions.Where(w => w.Published)));
+                    });
+                else
+                    Mapper.Initialize(cfg => {
+                        cfg.CreateMap<AnswerRecord, AnswerWithResultViewModel>();
+                        cfg.CreateMap<QuestionRecord, QuestionWithResultsViewModel>().ForMember(dest => dest.AnswersWithResult, opt => opt.MapFrom(src => src.Answers.Where(w => w.Published)));
+                        cfg.CreateMap<QuestionnairePart, QuestionnaireWithResultsViewModel>().ForMember(dest => dest.QuestionsWithResults, opt => opt.MapFrom(src => src.Questions.Where(w => w.Published).OrderBy(o => o.Position)));
+                    });
+            }
+            else {
+                if (part.Settings.GetModel<QuestionnairesPartSettingVM>().RandomResponse)
+                    Mapper.Initialize(cfg => {
+                        cfg.CreateMap<AnswerRecord, AnswerWithResultViewModel>();
+                        cfg.CreateMap<QuestionRecord, QuestionWithResultsViewModel>().ForMember(dest => dest.AnswersWithResult, opt => opt.MapFrom(src => src.Answers.Where(w => w.Published).OrderBy(o => o.Position)));
+                        cfg.CreateMap<QuestionnairePart, QuestionnaireWithResultsViewModel>().ForMember(dest => dest.QuestionsWithResults, opt => opt.MapFrom(src => src.Questions.Where(w => w.Published)));
+                    });
+                else
+                    Mapper.Initialize(cfg => {
+                        cfg.CreateMap<AnswerRecord, AnswerWithResultViewModel>();
+                        cfg.CreateMap<QuestionRecord, QuestionWithResultsViewModel>().ForMember(dest => dest.AnswersWithResult, opt => opt.MapFrom(src => src.Answers.Where(w => w.Published).OrderBy(o => o.Position)));
+                        cfg.CreateMap<QuestionnairePart, QuestionnaireWithResultsViewModel>().ForMember(dest => dest.QuestionsWithResults, opt => opt.MapFrom<IOrderedEnumerable<QuestionRecord>>(src => src.Questions.Where(w => w.Published).OrderBy(o => o.Position)));
+                    });
+            }
             var viewModel = Mapper.Map<QuestionnaireWithResultsViewModel>(part);
             return (viewModel);
         }
