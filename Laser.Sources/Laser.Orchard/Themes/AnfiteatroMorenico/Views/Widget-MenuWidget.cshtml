@@ -1,0 +1,9 @@
+﻿@using Orchard.DisplayManagement.Descriptors;
+@using Orchard.Environment.Extensions;
+@{
+    Model.Metadata.Wrappers.Remove("Widget_Wrapper");
+        //Suppressing Widget.Wrapper without suppressing Widget.ControlWrapper
+        //Model.Metadata.Wrappers.Add("Widget_SideBarWrapper");
+        //Model.Metadata.Wrappers.Add("Widget_ControlWrapper");
+}
+@Display(Model.Content)

@@ -1,0 +1,69 @@
+﻿@using Orchard.DisplayManagement.Descriptors;
+@using Orchard.Environment.Extensions;
+@using Orchard.Environment.Configuration
+
+@{
+    var settings = WorkContext.Resolve<ShellSettings>();
+    var prefix = settings.RequestUrlPrefix;
+}
+@functions {
+    // To support the layout classifaction below. Implementing as a razor function because we can, could otherwise be a Func<string[], string, string> in the code block following.
+    string NormalizeUrl(string url, string prefix) {
+        return url.StartsWith("~") ? Url.Content(url.StartsWith("~/" + prefix) ? url : url.Replace("~", "~/" + prefix)) : url;
+    }
+}
+
+@{
+    var Menu = Model.Menu;
+
+    var items = (IList<dynamic>)Enumerable.Cast<dynamic>(Menu.Items);
+
+    if (items.Any()) {
+    }
+    var cssClass = Model.Menu.MenuName.Replace("tassonomie-","");
+    
+}
+<div id="cat-nav">
+    <h3 class="subtitle @cssClass">@Model.ContentItem.WidgetPart.Title</h3><h4></h4>
+    <hr />
+
+    <ul>
+        @foreach (var item in items) {
+            if (!HasText(item.Text)) {
+            @DisplayChildren(item)
+            } else {
+                if ((bool)item.Selected) {
+                    item.Classes.Add("active");
+                }
+
+@* morphing the shape to keep Model untouched*@
+                item.Metadata.Alternates.Clear();
+                item.Metadata.Type = "MenuItemLink";
+            
+@* render the menu item only if it has some content *@
+                var tagLI = Tag(item, "li");
+            @tagLI.StartElement
+            
+            //Gestisco casi particolari (Eventi filtro anche per data e News ordinamento da projection)
+            var url = item.Href;
+            if (item.Content.ContentItem.ContentType == "CategorieEventiTerm") {
+                var urlPattern = "~/eventi?datainizio={0}&datafine={1}&termids={2}";
+                url = String.Format(urlPattern,
+                    Request.QueryString["datainizio"] ?? DateTime.Today.ToString("dd/MM/yyyy"),
+                    Request.QueryString["datafine"] ?? DateTime.Today.ToString("dd/MM/yyyy"),
+                    Model.Content.ContentItem.Id.ToString());
+                url = NormalizeUrl(url, prefix);
+            } else if (item.Content.ContentItem.ContentType == "CategorieNewsTerm") {
+                var urlPattern = "~/novita-dal-territorio?termids={0}";
+                url = String.Format(urlPattern,
+                    item.Content.ContentItem.Id.ToString());
+                url = NormalizeUrl(url, prefix);
+            }
+
+
+            <a href="@url" class="@cssClass" title="@T("Go to page {0}", @item.Text)"><em class="glyphicon glyphicon-chevron-right @cssClass"></em> @item.Text</a>
+            @tagLI.EndElement
+            }
+        }
+    </ul>
+</div>

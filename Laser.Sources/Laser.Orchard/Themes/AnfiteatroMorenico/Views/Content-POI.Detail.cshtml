@@ -1,0 +1,101 @@
+﻿@using Orchard.Utility.Extensions;
+@{
+    var themeBasePath = Url.Content(Html.ThemePath(WorkContext.CurrentTheme, ""));
+
+    if (Model.ContentItem.TitlePart != null && Model.ContentItem.TitlePart.Title != null) {
+        Layout.Title = Model.ContentItem.TitlePart.Title;
+    }
+
+    Model.Classes.Add("content-item");
+
+    var contentTypeClassName = ((string)Model.ContentItem.ContentType).HtmlClassify();
+    Model.Classes.Add(contentTypeClassName);
+
+    var tag = Tag(Model, "article");
+    var medias = Model.ContentItem.POI.Gallery.MediaParts;
+    var parents = Model.ContentItem.ContentPickerConnectorPart.ParentContentItems;
+    var contatti = Model.ContentItem.POI.Contatti.ContentItems;
+    if (Model.ContentItem.MapPart.Latitude > 0 && Model.ContentItem.MapPart.Longitude > 0) {
+        WorkContext.Layout.Zones["WideContent"].Items.Clear();
+        WorkContext.Layout.Zones["WideContent"].Add(New.WideContentMap(ContentItem: Model.ContentItem), "0");
+    }
+    var cssClass = Model.ContentItem.POI.Categoria.Terms[0].TipoUnivoco.Value.ToLower().StartsWith("poi_outdoor") ? "poi-outdoor" : "poi-siti";
+    
+    ////Breadcrumb
+    //var menuServices = WorkContext.Resolve<Orchard.Core.Navigation.Services.IMenuService>();
+    //var breadcrumbMenu = menuServices.GetMenu("Tassonomie Poi Outdoor");
+    //WorkContext.Layout.Zones["Breadcrumb"].Items.Clear();
+    //WorkContext.Layout.Zones["Breadcrumb"].Add(New.WideContentMap(Menu: breadcrumbMenu), "0");
+}
+<div class="row">
+    <div class="col-xs-12 col-sm-8">
+        <h1 class="item-title @cssClass">@Model.ContentItem.TitlePart.Title</h1>
+        @Html.Raw(@Model.ContentItem.BodyPart.Text)
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        @if (medias.Count > 0) {
+            <img class="img-responsive img-thumbnail" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[0].MediaUrl)" alt="@medias[0].AlternateText" />
+        }
+    </div>
+</div>
+@if (medias.Count > 1) {
+<div class="space-20"></div>
+    <div class="row">
+        <h4 class="item-subtitle @cssClass">@T("Gallery")</h4>
+        @for (int i = 1; i < medias.Count; i++) {
+            <div class="col-xs-12 col-sm-4 col-md-2">
+                <a data-lightbox="gallery" href="@medias[i].MediaUrl">
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: medias[i].MediaUrl)" alt="@medias[i].AlternateText" /></a>
+            </div>
+        }
+    </div>
+
+}
+@if (contatti.Length > 0) {
+<div class="space-20"></div>
+<div class="row">
+    <h4 class="item-subtitle @cssClass">@T("Contacts")</h4>
+    <ul>
+        @foreach (var contatto in contatti) {
+            <li class="col-xs-12 col-sm-4">
+                <strong>@contatto.TitlePart.Title</strong><br />
+                @if (((Orchard.ContentManagement.ContentItem)contatto).ContentType == "Contatto" && !String.IsNullOrWhiteSpace(contatto.Contatto.Indirizzo.Value)) {
+                @contatto.Contatto.Indirizzo.Value<br />
+                }
+                                @if (!String.IsNullOrWhiteSpace(contatto.Contatto.Email.Value)) {
+                <a  title="@T("Email to {0}",contatto.Contatto.Email.Value)" href="mailto:@contatto.Contatto.Email.Value">@contatto.Contatto.Email.Value</a><br />
+
+                                }
+                                @if (!String.IsNullOrWhiteSpace(contatto.Contatto.SitoWeb.Value)) {
+
+                <a target="_blank" title="@T("Open {0} to a new window",contatto.Contatto.SitoWeb.Value)" href="@contatto.Contatto.SitoWeb.Value">@contatto.Contatto.SitoWeb.Value</a><br />
+
+                                }
+                                @if (!String.IsNullOrWhiteSpace(contatto.Contatto.Note.Value)) {
+                @contatto.Contatto.Note.Value<br/>
+                                }
+            </li>
+        }
+        </ul>
+</div>
+}
+@if (parents.Length > 0) {
+<div class="space-20"></div>
+<div class="row">
+    <h4 class="item-subtitle @cssClass">@T("Itinerary")</h4>
+        @foreach (var itinerario in parents) {
+            if (itinerario.ParentContentItem != null) {
+            <div class="col-xs-12 col-sm-4 col-md-2">
+                 <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)itinerario.ParentContentItem)">               
+                     @if (itinerario.ParentContentItem.Itinerario.Gallery.MediaParts.Count > 0) {
+                    <img class="img-responsive" src="@Display.ResizeMediaUrl(Width: 720, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: itinerario.ParentContentItem.Itinerario.Gallery.MediaParts[0].MediaUrl)" alt="@itinerario.ParentContentItem.Itinerario.Gallery.MediaParts[0].AlternateText" />
+                     } else {
+                    <img class="img-responsive" src="@(themeBasePath + "/styles/images/trekking.png")" alt="">
+                     }
+                <br />
+                <span>@itinerario.ParentContentItem.TitlePart.Title</span>
+            </a></div>
+            }
+        }
+</div>
+}

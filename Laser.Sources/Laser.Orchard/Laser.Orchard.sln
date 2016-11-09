@@ -146,6 +146,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KrakeAdmin", "Themes\KrakeA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KrakeDefaultTheme", "Themes\KrakeDefaultTheme\KrakeDefaultTheme.csproj", "{CABDCB59-8E15-4B37-9D6B-41BF1425F36A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnfiteatroMorenico", "Themes\AnfiteatroMorenico\AnfiteatroMorenico.csproj", "{D0596B27-5309-40D2-9AE3-4CF87EA0E7B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -406,6 +408,10 @@ Global
 		{CABDCB59-8E15-4B37-9D6B-41BF1425F36A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CABDCB59-8E15-4B37-9D6B-41BF1425F36A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CABDCB59-8E15-4B37-9D6B-41BF1425F36A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0596B27-5309-40D2-9AE3-4CF87EA0E7B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0596B27-5309-40D2-9AE3-4CF87EA0E7B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0596B27-5309-40D2-9AE3-4CF87EA0E7B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0596B27-5309-40D2-9AE3-4CF87EA0E7B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -475,5 +481,6 @@ Global
 		{E6178615-67BA-4AA5-812B-20CA7BF1DD86} = {ED0344A4-3780-4081-A910-54114DBFC2D9}
 		{46D64AD0-B443-4E74-8B84-0B319301EA78} = {ED0344A4-3780-4081-A910-54114DBFC2D9}
 		{CABDCB59-8E15-4B37-9D6B-41BF1425F36A} = {142C1A4D-CD11-419D-88CE-ED97548901AA}
+		{D0596B27-5309-40D2-9AE3-4CF87EA0E7B7} = {142C1A4D-CD11-419D-88CE-ED97548901AA}
 	EndGlobalSection
 EndGlobal

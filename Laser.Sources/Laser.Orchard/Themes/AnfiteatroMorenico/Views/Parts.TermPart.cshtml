@@ -1,0 +1,16 @@
+﻿@using Orchard.Utility.Extensions;
+@{
+
+    Model.Classes.Add("content-item");
+
+    var contentTypeClassName = ((string)Model.ContentItem.ContentType).HtmlClassify();
+    Model.Classes.Add(contentTypeClassName);
+
+    var tag = Tag(Model, "article");
+    var i = 0;
+}
+@foreach (var item in @Model.ContentItems.Items) {
+    @Display(BuildDisplay(item.ContentItem, "Summary").ListIndex(i))
+    i++;
+}
+@Display(Model.Pager)

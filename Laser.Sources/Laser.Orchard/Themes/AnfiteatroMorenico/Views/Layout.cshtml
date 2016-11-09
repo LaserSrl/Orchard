@@ -1,0 +1,238 @@
+﻿@functions {
+    // To support the layout classifaction below. Implementing as a razor function because we can, could otherwise be a Func<string[], string, string> in the code block following.
+    string CalcuClassify(string[] zoneNames, string classNamePrefix)
+    {
+        var zoneCounter = 0;
+        var zoneNumsFilled = string.Join("", zoneNames.Select(zoneName => { ++zoneCounter; return Model[zoneName] != null ? zoneCounter.ToString() : ""; }).ToArray());
+        return HasText(zoneNumsFilled) ? classNamePrefix + zoneNumsFilled : "";
+    }
+}
+@{
+    /* Global includes for the theme moved to Document.cshtml
+    ***************************************************************/
+
+
+    /* Some useful shortcuts or settings
+    ***************************************************************/
+
+    Func<dynamic, dynamic> Zone = x => Display(x); // Zone as an alias for Display to help make it obvious when we're displaying zones
+
+    /* Layout classification based on filled zones
+    ***************************************************************/
+
+    //Add classes to the wrapper div to toggle aside widget zones on and off
+    var asideClass = CalcuClassify(new[] { "AsideFirst", "AsideSecond" }, "aside-"); // for aside-1, aside-2 or aside-12 if any of the aside zones are filled
+    if (HasText(asideClass))
+    {
+        Model.Classes.Add(asideClass);
+    }
+
+    //Add classes to the wrapper div to toggle tripel widget zones on and off
+    var tripelClass = CalcuClassify(new[] { "TripelFirst", "TripelSecond", "TripelThird" }, "tripel-"); // for tripel-1, triple-2, etc. if any of the tripel zones are filled
+    if (HasText(tripelClass))
+    {
+        Model.Classes.Add(tripelClass);
+    }
+
+    //Add classes to the wrapper div to toggle quad widget zones on and off
+    var footerQuadClass = CalcuClassify(new[] { "FooterQuadFirst", "FooterQuadSecond", "FooterQuadThird", "FooterQuadFourth" }, "split-"); // for quad-1, quad-2, etc. if any of the quad zones are filled
+    if (HasText(footerQuadClass))
+    {
+        Model.Classes.Add(footerQuadClass);
+    }
+
+    /* Inserting some ad hoc shapes
+    ***************************************************************/
+    WorkContext.Layout.Logo.Add(New.Branding(), "1");
+    //WorkContext.Layout.Footer.Add(New.BadgeOfHonor(), "5"); // Powered by Orchard
+    //WorkContext.Layout.Footer.Add(New.User(), "10"); // Login and dashboard links
+
+    /* Last bit of code to prep the layout wrapper
+    ***************************************************************/
+
+    Model.Id = "layout-wrapper";
+    Model.Classes.Add("main-bg");
+    var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model
+    var themeBasePath = Url.Content(Html.ThemePath(WorkContext.CurrentTheme, ""));   
+}
+@if (Model.WideContent != null)
+{
+    @Zone(Model.WideContent)
+}
+<nav role="navigation" class="navbar navbar-default navbar-fixed-top">
+    @if (Model.Accessibility != null)
+    {
+        <div class="menu-regolazioni">
+            @Zone(Model.Accessibility)
+        </div>
+    }
+
+@*  <!-- inizio modifiche dsweb -->
+            <div class="menu-regolazioni">
+                <div class="container">
+                    <ul>
+                        <li>
+                            <a class='tasto-font' href='#'>A+</a>
+                            <a class='tasto-font' href='#'>A-</a>
+                        </li>
+                        <li>
+                            <a href='index-contrasto.html'>CONTRASTO</a>
+                        </li>
+                        <li>
+                            <a href='index-solotesto.html'>SOLO TESTO</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- fine modifiche dsweb -->*@
+    <div class="container">
+        <div class="navbar-header">
+            <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+            @if (WorkContext.CurrentCulture == "it-IT"){
+                <a class="navbar-brand" rel="home" title="Anfiteatro Morenico Ivrea" href="~/">
+                    <img class="logo img-responsive" alt="Anfiteatro Morenico Ivrea" src="@(themeBasePath + "/styles/images/logo.png")" />
+                    <img class="logo-mobile img-responsive" alt="Anfiteatro Morenico Ivrea" src="@(themeBasePath + "/styles/images/logo-mobile.png")" />
+                </a>
+            }
+            else{
+                <a class="navbar-brand" rel="home" title="Anfiteatro Morenico Ivrea" href="@Href("~/" + WorkContext.CurrentCulture)"> @*"@(WorkContext.CurrentCulture)">*@
+                    <img class="logo img-responsive" alt="Anfiteatro Morenico Ivrea" src="@(themeBasePath + "/styles/images/logo.png")" />
+                    <img class="logo-mobile img-responsive" alt="Anfiteatro Morenico Ivrea" src="@(themeBasePath + "/styles/images/logo-mobile.png")" />
+                </a>
+            }
+                
+        </div>
+        <div class="navbar-collapse collapse">
+            @if (Model.Navigation != null)
+            {
+                @Zone(Model.Navigation)
+            }
+        </div>
+    </div>
+</nav>
+
+@if (Model.HomeBox != null)
+{
+    <div id="home-box">
+        <div class="container">
+            <div class="row">
+                @Zone(Model.HomeBox)
+            </div>
+        </div>
+    </div>
+}
+@if (Model.Breadcrumb != null)
+{
+    <div class="space-20"></div>
+    <div class="container">
+        @Zone(Model.Breadcrumb)
+    </div>
+}
+
+@if (Model.Messages != null)
+{
+    <div class="space-20"></div>
+    <div class="container">
+        @Zone(Model.Messages)
+    </div>
+}
+@if (Model.BeforeContent != null)
+{
+    <div class="space-20"></div>
+    <div class="container">
+        @Zone(Model.BeforeContent)
+    </div>
+}
+@if (Model.Breadcrumb == null)
+{
+    <div class="space-20"></div>
+}
+<div class="container">
+
+    @*Contenuto*@
+
+    @{
+        var spanDim = 12;
+        if (Model.AsideFirst != null)
+        {
+            spanDim = spanDim - 3;
+        }
+        if (Model.AsideSecond != null)
+        {
+            spanDim = spanDim - 3;
+        }
+    }
+    <div class="row">
+        @if (Model.Content != null)
+        {
+            <div class="col-xs-12 col-sm-@(spanDim)">
+                @Zone(Model.Content)
+            </div>
+        }
+        @if (Model.AsideFirst != null)
+        {
+            <div class="col-xs-12 col-sm-3">
+                @Zone(Model.AsideFirst)
+            </div>
+
+        }
+        @if (Model.AsideSecond != null)
+        {
+            <div class="col-xs-12 col-sm-3">
+                @Zone(Model.AsideSecond)
+            </div>
+        }
+    </div>
+</div>
+
+@if (Model.AfterContent != null)
+{
+    <div class="space-20"></div>
+    <div class="zone zone-aftercontent">
+        @Zone(Model.AfterContent)
+    </div>
+}
+
+<div id="footer">
+    <div class="container">
+        <div class="row">
+            @if (Model.FooterNavigation != null)
+            {
+                @Zone(Model.FooterNavigation)
+
+            }
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                <img src="@(themeBasePath + "/styles/images/ivrea.png")" class="img-responsive" alt="@T("Logo Comune di Ivrea")" />
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                <img src="@(themeBasePath + "/styles/images/regione-piemonte.png")" class="img-responsive" alt="@T("Logo Regione Piemonte")" />
+                <img src="@(themeBasePath + "/styles/images/ami.png")" class="img-responsive" alt="@T("Logo AMI")" />
+                <img src="@(themeBasePath + "/styles/images/logoTTP.png")" class="img-responsive" alt="@T("Logo Turismo Torino")" />
+                <br />
+                @{
+                    string e015Ref = "~/";
+                    if (WorkContext.CurrentCulture != "it-IT"){
+                        e015Ref += WorkContext.CurrentCulture + "/";
+                    }
+                    e015Ref += "infos/e015-digital-ecosystem";
+                    <a href="@Href(e015Ref)" title="@T("E015")">
+                        <img  src="@(themeBasePath + "/styles/images/E015-Logo.png")"  class="img-responsive" alt="@T("Logo E015")"/>
+                    </a>
+                }
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                <h5 class="footer-title">@T("App Download")</h5>
+                <a href="https://itunes.apple.com/us/app/visitami/id667357331?l=it&amp;ls=1&amp;mt=8i" target="_blank" title="@T("Download from iTunes")">
+                    <img src="@(themeBasePath + "/styles/images/app-apple.png")" alt="@T("Download from iTunes")"/></a><br />
+                <a href="https://play.google.com/store/apps/details?id=com.lasergroup.ami" target="_blank"  title="@T("Download from Google Play")">
+                    <img src="@(themeBasePath + "/styles/images/app-google-play.png")" alt="@T("Download from Google Play")"/></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="credits">
+    <div class="container text-right">
+        Citt&agrave; di Ivrea - <a title="@T("Email to info.ivrea@turismotorino.org")" href="mailto:info.ivrea@turismotorino.org">info.ivrea@turismotorino.org</a> - Partita IVA 00519320014
+    </div>
+</div>
