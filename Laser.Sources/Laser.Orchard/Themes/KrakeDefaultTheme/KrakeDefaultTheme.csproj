@@ -6,12 +6,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E6178615-67BA-4AA5-812B-20CA7BF1DD86}</ProjectGuid>
+    <ProjectGuid>{CABDCB59-8E15-4B37-9D6B-41BF1425F36A}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TheLaserAdmin</RootNamespace>
-    <AssemblyName>TheLaserAdmin</AssemblyName>
+    <RootNamespace>KrakeDefaultTheme</RootNamespace>
+    <AssemblyName>KrakeDefaultTheme</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
@@ -49,16 +49,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Orchard.Core, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Framework, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Media">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Media\bin\Orchard.Media.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -70,6 +65,10 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
@@ -78,12 +77,18 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\images\icon-mail.png" />
-    <Content Include="Styles\images\icon-phone.png" />
-    <Content Include="Styles\images\icon-skype.png" />
-    <Content Include="Styles\images\logoLaser.png" />
-    <Content Include="Styles\images\vinesBackgroundBottom.png" />
-    <Content Include="Styles\site.css" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Styles\bootstrap.min.css" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\css\font-awesome.css" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\css\font-awesome.min.css" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.svg" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\HELP-US-OUT.txt" />
+    <Content Include="Styles\fonts\krake.svg" />
+    <Content Include="Styles\images\bg.png" />
+    <Content Include="Styles\images\logo.png" />
+    <Content Include="Styles\images\milano.png" />
+    <Content Include="Styles\style.css" />
+    <Content Include="Styles\toggle.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -93,29 +98,74 @@
     <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminThemeOverride.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\___Header.cshtml" />
-    <Content Include="Views\OrchardVersion.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Dashboard\Admin\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Orchard.MediaLibrary\Admin\index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Orchard.MediaLibrary\Parts\Media.Actions.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\Fields\MediaLibraryPicker.Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Orchard.Roles\Admin\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Document.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.eot" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.woff" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\FontAwesome.otf" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\animated.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\bordered-pulled.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\core.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\fixed-width.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\font-awesome.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\icons.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\larger.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\list.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\mixins.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\path.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\rotated-flipped.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\screen-reader.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\stacked.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\variables.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\font-awesome.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_animated.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_bordered-pulled.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_core.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_fixed-width.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_icons.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_larger.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_list.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_mixins.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_path.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_rotated-flipped.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_screen-reader.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_stacked.scss" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\scss\_variables.scss" />
+    <Content Include="Styles\fonts\HandelGotD-Bold.otf" />
+    <Content Include="Styles\fonts\krake.eot" />
+    <Content Include="Styles\fonts\krake.ttf" />
+    <Content Include="Styles\fonts\krake.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Users\Account\RequestLostPassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\OpenAuthLogOn.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\OpenAuthRegister.cshtml" />
+    <Content Include="Views\Parts.Common.Body-Page.cshtml" />
+    <Content Include="Views\Parts.Common.Metadata.cshtml" />
+    <Content Include="Views\Parts.MenuWidget-Navigation.cshtml" />
+    <Content Include="Views\Parts.Title.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Users\Account\ChangePassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+    <Content Include="Views\EditorTemplates\Parts\UserRegistrationPolicy_Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\FavoriteCulturePart_Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
