@@ -1,0 +1,43 @@
+﻿@*
+    This shape displays a term and all content items associated to it.
+    - ContentItems is a List shape
+    - Pager is a Pager shape
+    - Taxonomy is the parent taxonomy
+    - ContentPart is the TermPart displayed
+*@
+@{
+    Script.Require("jQueryColorBox").AtHead();
+    Style.Require("jQueryColorBox").AtHead();
+
+    Model.ContentItems.Classes.Add("content-items");
+
+    var nItems = Model.ContentItems.Items.Count;
+    int splitAt = (nItems - 1) / 2;
+    var i = 0;
+}
+@foreach (var contentItem in Model.ContentItems.Items) {
+    var separatorClass = "";
+    if (i > 0) { 
+        separatorClass = "marTop1";
+    } 
+    <div class="wrapper @separatorClass">
+        <a rel="product-colorbox" href="@contentItem.ContentItem.Prodotto.ProductPicture.MediaParts[0].MediaUrl" title="@contentItem.ContentItem.TitlePart.Title">
+            <img src="@Display.ResizeMediaUrl(Width: 220, Height: 157, Mode: "crop", Alignment: "middlecenter", Path: contentItem.ContentItem.Prodotto.ProductPicture.MediaParts[0].MediaUrl)" alt="" class="img1"/>
+            <div class="box">
+                <h2 class="v2">@contentItem.ContentItem.TitlePart.Title</h2>
+                @Html.Raw(contentItem.ContentItem.BodyPart.Text)
+            </div>
+        </a>
+    </div>
+    i++;
+}
+@if (nItems > 0) {
+    using (Script.Foot()) { 
+    <script type="text/javascript">
+        $("a[rel='product-colorbox']").colorbox({
+            innerWidth: '80%',
+            innerHeight: '60%',
+        });
+    </script>
+    }
+}

@@ -1,0 +1,24 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Widgets.Models;
+@using Orchard.Core.Navigation.Models;
+@{
+    var widgetPart = ((IContent)Model.ContentItem).As<WidgetPart>();
+}
+@if ((widgetPart.RenderTitle && HasText(widgetPart.Title)) || Model.Header != null) {
+    if ((widgetPart.RenderTitle && HasText(widgetPart.Title))) {
+        if (widgetPart.Zone == "AsideFirst") {
+            if (widgetPart.ContentItem.As<MenuWidgetPart>() != null) {
+    <h4>@widgetPart.Title</h4> } else {
+    <h3>@widgetPart.Title</h3>
+            }
+
+        } else {
+    <h3>@widgetPart.Title</h3>
+        }
+    }
+    @Display(Model.Header)
+}
+@Display(Model.Child)
+@if (Model.Footer != null) {
+    @Display(Model.Footer)
+}

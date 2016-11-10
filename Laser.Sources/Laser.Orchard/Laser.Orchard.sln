@@ -164,6 +164,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvreaMontalto", "Themes\Ivr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Bootstrap", "Themes\Laser.Bootstrap\Laser.Bootstrap.csproj", "{19099D7B-78B6-43E6-94F0-33D22971D027}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaroLegnami", "Themes\BaroLegnami\BaroLegnami.csproj", "{0142AFEA-6798-4AB0-83BB-2E30453B3FE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -460,6 +462,10 @@ Global
 		{19099D7B-78B6-43E6-94F0-33D22971D027}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19099D7B-78B6-43E6-94F0-33D22971D027}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19099D7B-78B6-43E6-94F0-33D22971D027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0142AFEA-6798-4AB0-83BB-2E30453B3FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0142AFEA-6798-4AB0-83BB-2E30453B3FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0142AFEA-6798-4AB0-83BB-2E30453B3FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0142AFEA-6798-4AB0-83BB-2E30453B3FE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -538,5 +544,6 @@ Global
 		{697368E9-6DCA-4C39-98FA-54C15C038B5A} = {142C1A4D-CD11-419D-88CE-ED97548901AA}
 		{9DF0A376-D4BE-494A-8F3B-291E65C41684} = {142C1A4D-CD11-419D-88CE-ED97548901AA}
 		{19099D7B-78B6-43E6-94F0-33D22971D027} = {142C1A4D-CD11-419D-88CE-ED97548901AA}
+		{0142AFEA-6798-4AB0-83BB-2E30453B3FE8} = {142C1A4D-CD11-419D-88CE-ED97548901AA}
 	EndGlobalSection
 EndGlobal

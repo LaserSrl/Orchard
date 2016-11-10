@@ -1,0 +1,98 @@
+﻿@using Laser.Orchard.Highlights.Models
+@{
+    var item = Model.HighlightsItem;
+    var titleTag = Tag(Model, "h3");
+    var subtitleTag = Tag(Model, "h4");
+    if (item.TitleSize == "Principale") {
+        titleTag = Tag(Model, "h1");
+        subtitleTag = Tag(Model, "h2");
+    } else if (item.TitleSize == "MediaPriorità") {
+        titleTag = Tag(Model, "h3");
+        subtitleTag = Tag(Model, "h4");
+    } else if (item.TitleSize == "BassaPriorità") {
+        titleTag = Tag(Model, "h5");
+        subtitleTag = Tag(Model, "h6");
+    } else if (item.TitleSize == "Titoletto") {
+        titleTag = Tag(Model, "h6");
+        subtitleTag = Tag(Model, "h7");
+    } else if (item.TitleSize == "NessunTitolo") {
+        titleTag = Tag(Model, "notitle");
+        subtitleTag = Tag(Model, "notitle");
+    }
+}
+
+@if (!String.IsNullOrEmpty(item.LinkUrl)) {
+    if (titleTag.TagName != "notitle") {
+        if (item.Title != "") {
+    @titleTag.StartElement
+    <a @(item.LinkTarget == Laser.Orchard.Highlights.Enums.LinkTargets._modal ? "class=media-cbox" : "") 
+    title="@item.Title" 
+    href="@(item.LinkUrl != null ? Url.Content(item.LinkUrl) : "")" 
+	@(item.LinkTarget != Laser.Orchard.Highlights.Enums.LinkTargets._modal ? "target=" + item.LinkTarget : "") >
+        @item.Title
+    </a>
+    @titleTag.EndElement
+        }
+        if (!String.IsNullOrWhiteSpace(item.SubTitle)) {
+    @subtitleTag.StartElement
+    @item.SubTitle
+    @subtitleTag.EndElement
+        }
+    }
+
+    <div class="wrapper">
+        <a @(item.LinkTarget == Laser.Orchard.Highlights.Enums.LinkTargets._modal ? "class=media-cbox" : "") 
+            title="@item.Title" 
+            href="@(item.LinkUrl != null ? Url.Content(item.LinkUrl) : "")" 
+		    @(item.LinkTarget != Laser.Orchard.Highlights.Enums.LinkTargets._modal ? "target=" + item.LinkTarget : "") >
+            @if (item.Video) {<span class="video_icon"></span>}
+
+            <img src="@Display.ResizeMediaUrl(Width: 299, Height: 142, Mode: "crop", Alignment: "middlecenter", Path: item.MediaUrl)" class="img1"
+                 alt="@item.Title" 
+                @if (item.Video) {<text>class="img_video_icon"</text>} 
+            />
+        </a>
+
+        <div class="box">
+            @{
+                if (!String.IsNullOrEmpty(item.Body)) {
+                @Html.Raw(item.Body);
+                }
+                if (!String.IsNullOrEmpty(item.LinkText)) {
+                <a @(item.LinkTarget == Laser.Orchard.Highlights.Enums.LinkTargets._modal ? "class=media-cbox" : "") 
+            title="@item.Title" 
+            href="@(item.LinkUrl != null ? Url.Content(item.LinkUrl) : "")" 
+		    @(item.LinkTarget != Laser.Orchard.Highlights.Enums.LinkTargets._modal ? "target=" + item.LinkTarget : "") >
+                    @item.LinkText
+                </a>
+                }
+            }
+        </div>
+    </div>
+} else {
+    if (titleTag.TagName != "notitle") {
+        if (item.Title != "") {
+    @titleTag.StartElement
+    @item.Title
+    @titleTag.EndElement
+        }
+        if (!String.IsNullOrWhiteSpace(item.SubTitle)) {
+    @subtitleTag.StartElement
+    @item.SubTitle
+    @subtitleTag.EndElement
+        }
+    }
+    <div class="wrapper">
+        <img src="@Display.ResizeMediaUrl(Width: 299, Height: 142, Mode: "crop", Alignment: "middlecenter", Path: item.MediaUrl)" class="img1"
+                 alt="@item.Title" 
+                @if (item.Video) {<text>class="img_video_icon"</text>} 
+            />
+        <div class="box">
+            @{
+                if (!String.IsNullOrEmpty(item.Body)) {
+                @Html.Raw(item.Body);
+                }
+            }
+        </div>
+    </div>
+}

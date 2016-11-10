@@ -1,0 +1,27 @@
+﻿@using Orchard.Utility.Extensions
+@using Laser.Orchard.NewsLetters.Services
+@{
+    Layout.Title = T("Newsletter unsubscription");
+}
+@if (Model != null && Model.ContentItem != null) {
+    <h3>@String.Format(T("Newsletter {0} unsubscription").Text, Model.ContentItem.TitlePart.Title)</h3>
+    using (Html.BeginForm("Unsubscribe", "Subscription", new { area = "Laser.Orchard.NewsLetters" }, FormMethod.Post, new { @class = "newsletter-form" })) {
+    <div class="grid_6 alpha">
+        <div class="wrapper">
+            <label class="fortext">
+                <input id="Email" class="text" name="Email" type="text" placeholder="@T("Email Address")" />
+            </label>
+            <label class="fortext">
+                <input id="ConfirmEmail" class="text" name="ConfirmEmail" type="text" placeholder="@T("Email Confirmation")" />
+            </label>
+            @Html.Hidden("Subscription_Newsletters_Ids", (object)Model.ContentItem.Id.ToString())
+        </div>
+        <input id="ReturnUrl" name="ReturnUrl" type="hidden" value="@Context.Request.ToUrlString()" />
+        <input id="Id" name="Id" type="hidden" value="@Model.ContentItem.Id" />
+        @Html.AntiForgeryTokenOrchard()
+        <input type="submit" name="Newsletter_Subscriber_Unsubscribe" value="@T("Unsubscribe")" class="newsletter-btns"/>
+    </div>
+    <div class="grid_6 omega">
+    </div>
+    }
+}

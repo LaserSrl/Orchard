@@ -1,0 +1,51 @@
+﻿@using Orchard.Mvc.Html;
+@{
+    // Styles
+    Style.Include("style.css").AtHead();
+    Style.Include("../fonts/font-awesome.css").AtHead();
+    Style.Include("ie.css").UseCondition("lt IE 9").AtHead();
+
+
+    //Scripts
+    Script.Require("JQuery").AtHead();
+    Script.Require("jQuery_Tools").AtHead();
+
+    
+    Script.Include("jquery-migrate-1.1.1.js");
+    Script.Include("jquery.easing.1.3.js").AtHead();
+    Script.Include("scroll_to_top.js").AtHead();
+    Script.Include("script.js").AtHead();
+    Script.Include("jquery.equalheights.js").AtHead();
+    Script.Include("superfish.js").AtHead();
+
+
+    Script.Include("jquery.mobilemenu.js").AtHead();
+
+    Script.Include("touchTouch.jquery.js").AtHead();
+    Script.Include("camera.js").AtHead();
+    Script.Include("jquery.mobile.customized.min.js").UseCondition("(gt IE 9)|!(IE)").AtHead();
+    Script.Include("html5shiv.js").UseCondition("lt IE 9").AtHead();
+}
+<!DOCTYPE html>
+<html dir="ltr">
+<head>
+	<meta charset="utf-8">
+	<meta name = "format-detection" content = "telephone=no" />
+	<link rel="icon" href="@Url.Content(Html.ThemePath(WorkContext.CurrentTheme, "/images/favicon.ico"))" type="image/x-icon">
+	<link rel="shortcut icon" href="@Url.Content(Html.ThemePath(WorkContext.CurrentTheme, "/images/favicon.ico"))" type="image/x-icon" />
+    <title>@Layout.Title - Baro Legnami</title>
+	<!--[if lt IE 8]>
+		<div style=' clear: both; text-align:center; position: relative;'>
+		<a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+			<img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+		</a>
+	</div>
+	<![endif]-->
+    @Display(Model.Head)
+
+</head>
+<body class="@Html.ClassForPage()">
+    @Display(Model.Body)
+    @Display(Model.Tail)
+</body>
+</html>

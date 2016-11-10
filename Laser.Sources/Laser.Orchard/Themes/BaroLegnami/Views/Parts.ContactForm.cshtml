@@ -1,0 +1,50 @@
+﻿@using Orchard.Utility.Extensions
+@using Laser.Orchard.ContactForm.ViewModels
+@{
+    Script.Require("jQuery");
+    Script.Include("TMForm.js").AtHead();
+    const string displayNone = "style=\"display:none\"";
+    var contactForm = (ContactFormViewModel)Model.ContactForm;
+    var displaySubject = contactForm.ShowSubjectField ? string.Empty : displayNone;
+    var displayName = contactForm.ShowNameField ? string.Empty : displayNone;
+}
+@{using (Html.BeginForm("sendcontactemail", "contactform", new { area = "Laser.Orchard.ContactForm" }, FormMethod.Post, new { @id = "contact-form", @class = "contact-form" })) {
+    <div class="success-message">Messaggio inviato correttamente!</div>
+    <div class="wrapper">
+        <label class="name">
+            <input type="text" placeholder="Nome:" data-constraints="@@Required @@JustLetters" />
+            <span class="empty-message">*Obbligatorio.</span>
+            <span class="error-message">*Nome non valido (solo lettere).</span>
+        </label>
+        <label class="email">
+            <input type="text" placeholder="Email:" data-constraints="@@Required @@Email" />
+            <span class="empty-message">*Obbligatorio.</span>
+            <span class="error-message">*Email non valida.</span>
+        </label>
+        <label class="emailconfirm">
+            <input type="text" placeholder="Conferma Email:" data-constraints="@@Required @@Email" />
+            <span class="empty-message">*Obbligatorio.</span>
+            <span class="error-message">*Email non valida.</span>
+        </label>
+        <label class="subject">
+            <input type="text" placeholder="Oggetto:" data-constraints="@@Required @@Length(min = 4, max = 100)" />
+            <span class="empty-message">*Obbligatorio.</span>
+            <span class="error-message">*L'oggetto è troppo corto.</span>
+        </label>
+    </div>
+    <label class="message">
+        <textarea placeholder="Messaggio:" name="Message" data-constraints='@@Required @@Length(min = 20, max = 999999)'></textarea>
+        <span class="empty-message">*Obbligatorio.</span>
+        <span class="error-message">*Il messaggio è troppo corto.</span>
+    </label>
+    <div class="form_btns">
+        <a href="#" data-type="reset" class="more_btn">Cancella campi</a>
+        <a href="#" data-type="submit" class="more_btn">Invia messaggio</a>
+    </div>  
+    <input id="ReturnUrl" name="ReturnUrl" type="hidden" value="@Context.Request.ToUrlString()" />
+    <input id="Id" name="Id" type="hidden" value="@contactForm.ContentRecordId" />
+    <span class="AntiForgeryTokenOrchard">
+        @Html.AntiForgeryTokenOrchard()
+    </span>
+  }
+}
