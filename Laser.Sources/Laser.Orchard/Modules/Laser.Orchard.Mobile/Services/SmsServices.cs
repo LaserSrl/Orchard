@@ -332,17 +332,25 @@ namespace Laser.Orchard.Mobile.Services {
             //Specify the binding to be used for the client.
             var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
 
+            //EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
+            //SmsServiceReference.SmsWebServiceSoapClient _service;
+
+            //if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
+            //    WSHttpBinding binding = new WSHttpBinding();
+            //    binding.Security.Mode = SecurityMode.Transport;
+            //    _service = new SmsWebServiceSoapClient(binding, address);
+            //} else {
+            //    BasicHttpBinding binding = new BasicHttpBinding();
+            //    _service = new SmsWebServiceSoapClient(binding, address);
+            //}
+
             EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
-            SmsServiceReference.SmsWebServiceSoapClient _service;
+            BasicHttpBinding binding = new BasicHttpBinding();
 
             if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-                WSHttpBinding binding = new WSHttpBinding();
-                binding.Security.Mode = SecurityMode.Transport;
-                _service = new SmsWebServiceSoapClient(binding, address);
-            } else {
-                BasicHttpBinding binding = new BasicHttpBinding();
-                _service = new SmsWebServiceSoapClient(binding, address);
+                binding.Security.Mode = BasicHttpSecurityMode.Transport;
             }
+            SmsServiceReference.SmsWebServiceSoapClient _service = new SmsWebServiceSoapClient(binding, address);
 
             SmsServiceReference.Login login = new SmsServiceReference.Login();
             login.User = smsSettings.WsUsername;
