@@ -1,18 +1,17 @@
 @{
     XmlDocument mydoc = ToXmlDocument(Model);
 	foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/_data/lasernumeric")) {
+		foreach (XmlNode book in bookToModify.SelectNodes("film")) {
+			if (book.SelectSingleNode("id") == null){
+				bookToModify.RemoveChild(book);
+			}
+		}
+		while (bookToModify.SelectNodes("film").Count > 1)
+		{
+			bookToModify.RemoveChild(bookToModify.SelectNodes("film")[1]);
+		}
 		if (bookToModify.SelectNodes("film").Count==0){
 			bookToModify.ParentNode.RemoveChild(bookToModify);
-		}else{
-			foreach (XmlNode book in bookToModify.SelectNodes("film")) {
-				if (book.SelectSingleNode("id") == null){
-					bookToModify.RemoveChild(book);
-				}
-			}
-			while (bookToModify.SelectNodes("film").Count > 1)
-			{
-				bookToModify.RemoveChild(bookToModify.SelectNodes("film")[1]);
-			}
 		}
 	}
 	foreach (XmlNode bookToModify in mydoc.SelectNodes(".//compra_url")) {
