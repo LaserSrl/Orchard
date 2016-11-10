@@ -3,6 +3,11 @@
 	foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/_data/lasernumeric")) {
 		if (bookToModify.SelectNodes("film").Count==0){
 			bookToModify.ParentNode.RemoveChild(bookToModify);
+		}else{
+			while (bookToModify.SelectNodes("film").Count > 1)
+			{
+				bookToModify.RemoveChild(bookToModify.SelectNodes("film")[1]);
+			}
 		}
 	}
 	foreach (XmlNode bookToModify in mydoc.SelectNodes(".//compra_url")) {
@@ -28,6 +33,7 @@
 
     mydoc = generaOriginalId(mydoc, "root/_dataList/_data/lasernumeric/id");
 
+	
     // generaid
     //	Int32 contatore=0;
     foreach (System.Xml.XmlNode node in mydoc.SelectNodes("/root/_dataList/_data/lasernumeric/id")) {
@@ -95,9 +101,10 @@
     mydoc = rendinumeric(mydoc, "root/_dataList/_data/lasernumeric/giornoID");
     mydoc = rendinumeric(mydoc, "root/_dataList/_data/lasernumeric/proiezioneID");
 
-
     // Film
 
+	
+	
     mydoc = generaOriginalId(mydoc, "root/_dataList/_data/lasernumeric/film/id");
     mydoc = generaid(mydoc, "root/_dataList/_data/lasernumeric/film/id", 60000000);
 	mydoc=textreplace(mydoc,"root/_dataList/_data/lasernumeric/film_titolo_orig","\u2028","");
@@ -116,7 +123,6 @@
     mydoc = rendinumeric(mydoc, "root/_dataList/_data/lasernumeric/film/proiezioneID");
     mydoc = generaOriginalId(mydoc, "root/_dataList/_data/lasernumeric/film/media/image/ID_media");
     mydoc = generaid(mydoc, "root/_dataList/_data/lasernumeric/film/media/image/ID_media", 10000000);
-	
 	
 	// Aggiunta del 09/11/2016
     foreach (System.Xml.XmlNode nodoFilms in mydoc.SelectNodes("root/_dataList/_data/lasernumeric/film")) {
