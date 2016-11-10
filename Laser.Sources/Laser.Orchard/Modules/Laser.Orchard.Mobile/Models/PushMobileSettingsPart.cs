@@ -59,6 +59,10 @@ namespace Laser.Orchard.Mobile.Models {
             get { return Record.AndroidPushServiceUrl; }
             set { Record.AndroidPushServiceUrl = value; }
         }
+        public string AndroidPushNotificationIcon {
+            get { return Record.AndroidPushNotificationIcon; }
+            set { Record.AndroidPushNotificationIcon = value; }
+        }
     }
 
     [OrchardFeature("Laser.Orchard.PushGateway")]
@@ -75,6 +79,7 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual bool ShowTestOptions { get; set; }
         public virtual string AndroidApiKeyDevelopment { get; set; }
         public virtual string AndroidPushServiceUrl { get; set; }
+        public virtual string AndroidPushNotificationIcon { get; set; }
         public virtual string TaxonomyName { get; set; }
     }
 }

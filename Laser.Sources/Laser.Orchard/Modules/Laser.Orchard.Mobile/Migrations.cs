@@ -277,5 +277,11 @@ namespace Laser.Orchard.Mobile {
             }
             return 26;
         }
+        public int UpdateFrom26() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                        .AddColumn<string>("AndroidPushNotificationIcon")
+                        );
+            return 27;
+        }
     }
 }
