@@ -26,7 +26,7 @@ namespace Laser.Orchard.BikeSharing.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://www.mobility-parc.com/ws/stationOpWS")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.mobility-parc.com/ws/stationOpWS")]
         public string Laser_Orchard_BikeSharing_com_mobilityparc_www_StationOpWSService {
             get {
                 return ((string)(this["Laser_Orchard_BikeSharing_com_mobilityparc_www_StationOpWSService"]));

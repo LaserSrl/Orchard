@@ -35,6 +35,8 @@ namespace Laser.Orchard.BikeSharing.Services {
             // get the page to retrieve the Session Cookie!
             try {
                 request = (HttpWebRequest)WebRequest.Create(s.Url + "?wsdl");
+                request.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => { return true; };
+
                 request.CookieContainer = cookieJar;
                 request.Credentials = CredentialCache.DefaultCredentials;
                 response = request.GetResponse();
