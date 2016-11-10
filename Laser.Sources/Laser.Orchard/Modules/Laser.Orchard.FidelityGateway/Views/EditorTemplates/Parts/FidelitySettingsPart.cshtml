@@ -27,6 +27,11 @@
         @Html.TextBoxFor(m => m.AccountID, new { @class = "text-medium" })
         <span class="hint">@T("AccountID.")</span>
     </div>
+     <div>
+        <label for="@Html.FieldIdFor(m => m.DefaultCampaign)">@T("DefaultCampaign")</label>
+        @Html.TextBoxFor(m => m.DefaultCampaign, new { @class = "text-medium" })
+        <span class="hint">@T("DefaultCampaign.")</span>
+    </div>
 </fieldset>
 
 @* TODO aggiungere nome del modulo sottostante attivo (e un warning se ce ne sono due) *@

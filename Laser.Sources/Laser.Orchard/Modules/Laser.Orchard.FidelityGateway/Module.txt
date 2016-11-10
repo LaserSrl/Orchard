@@ -7,4 +7,5 @@ OrchardVersion: 1.0
 Description: Modulo Base Fidelity
 Features:
     Laser.Orchard.FidelityGateway:
+		Category: FidelityBase
         Description:  Modulo Base Fidelity

@@ -33,5 +33,11 @@ namespace Laser.Orchard.FidelityGateway.Models
             get { return this.Retrieve(x => x.AccountID); }
             set { this.Store(x => x.AccountID, value); }
         }
+
+        public string DefaultCampaign
+        {
+            get { return this.Retrieve(x => x.DefaultCampaign); }
+            set { this.Store(x => x.DefaultCampaign, value); }
+        }
     }
 }

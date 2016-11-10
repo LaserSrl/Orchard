@@ -6,15 +6,13 @@ namespace Laser.Orchard.FidelityGateway.Services
 {
     public interface ISendService :IDependency
     {
-
-
         /// <summary>
         /// Invia la richiesta di registrazione di un cliente al provider di fidelity.
         /// </summary>
         /// <param name="setPart">Parte con i settings per la comunicazione e i dati del merchant</param>
         /// <param name="custumer">FidelityCustomer con dati settati per la registrazione</param>
         /// <returns>APIResult con incapsulato un FidelityCustomer con almeno l'Id settato e tutti i dati già presenti nel customer param</returns>
-        APIResult<FidelityCustomer> SendCustomerRegistration(FidelitySettingsPart setPart, FidelityCustomer custumer);
+        APIResult<FidelityCustomer> SendCustomerRegistration(FidelitySettingsPart setPart, FidelityCustomer custumer, string campaignId);
 
         /// <summary>
         /// Invia la richiesta per i avere i dati di un cliente.
@@ -61,13 +59,12 @@ namespace Laser.Orchard.FidelityGateway.Services
         /// <returns>APIResult con incapsulato il successo/insuccesso dell'operazione</returns>
         APIResult<bool> SendGiveReward(FidelitySettingsPart setPart, FidelityCustomer custoer, FidelityReward reward, FidelityCampaign campaign);
 
-        //APIResult SendUpdateSocial(FidelitySettingsPart setPart, List<KeyValuePair<string, string>> kvpList);     
-
         /// <summary>
-        /// Invia la richiesta per il recupero dell'id del negoziante.
+        /// Invia la richiesta per il di settings aggiuntive relative ad ogni provider, utilizzato da i servizzi dei moduli specifici dei provider
         /// </summary>
         /// <param name="setPart">Parte con i settings per la comunicazione e i dati del merchant</param>
-        /// <returns>APIResult con incapsulato l'id del merchant</returns>
-        APIResult<string> SendGetMerchantId(FidelitySettingsPart setPart);
+        /// <returns>APIResult con incapsulato un dizionario di settings</returns>
+        APIResult<IDictionary<string, string>> GetOtherSettings(FidelitySettingsPart setPart);
+
     }
 }

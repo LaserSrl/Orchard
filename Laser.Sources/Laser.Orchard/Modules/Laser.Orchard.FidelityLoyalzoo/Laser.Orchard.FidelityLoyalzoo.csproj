@@ -54,6 +54,10 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Laser.Orchard.FidelityGateway, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Laser.Orchard.FidelityGateway\bin\Laser.Orchard.FidelityGateway.dll</HintPath>
+    </Reference>
     <Reference Include="Laser.Orchard.StartupConfig">
       <HintPath>..\Laser.Orchard.StartupConfig\bin\Laser.Orchard.StartupConfig.dll</HintPath>
     </Reference>
@@ -67,14 +71,23 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Modules, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Modules\bin\Orchard.Modules.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Users">
       <HintPath>..\..\..\..\..\Orchard-1.8.1\Orchard.Source\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Workflows, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Workflows\bin\Orchard.Workflows.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -93,12 +106,7 @@
   <ItemGroup>
     <Compile Include="Services\FidelityLoyalzooService.cs" />
     <Compile Include="Services\LoyalzooSendService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Laser.Orchard.FidelityGateway\Laser.Orchard.FidelityGateway.csproj">
-      <Project>{e3ab6536-13d7-495d-9683-50c197b0f09f}</Project>
-      <Name>Laser.Orchard.FidelityGateway</Name>
-    </ProjectReference>
+    <Compile Include="Services\NotificatorService.cs" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

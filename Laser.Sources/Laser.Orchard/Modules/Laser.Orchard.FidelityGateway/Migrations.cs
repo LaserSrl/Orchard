@@ -77,5 +77,20 @@ namespace Laser.Orchard.FidelityGateway
                     );
             return 5;
         }
+
+        public int UpdateFrom5()
+        {
+            SchemaBuilder.DropTable("ActionInCampaignRecord");
+            SchemaBuilder.CreateTable("ActionInCampaignRecord",
+            table =>
+                    table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Action", column => column.WithLength(30))
+                    .Column<string>("CampaignId", column => column.WithLength(30))
+                    .Column<string>("Provider", column => column.WithLength(30))
+                    .Column<double>("Points")
+                    );
+            return 6;
+        }
     }
 }

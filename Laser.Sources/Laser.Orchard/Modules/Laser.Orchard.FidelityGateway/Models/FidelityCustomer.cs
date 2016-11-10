@@ -13,19 +13,23 @@ namespace Laser.Orchard.FidelityGateway.Models
         public string Password { get; set; }
         public string Id { get; set; }
         public Dictionary<string, double> PointsInCampaign { get; set; }
-        
+
         /// <summary>
         /// Dati aggiuntivi
         /// </summary>
         public Dictionary<string, string> Data { get; set; }
 
+        public FidelityCustomer()
+        {
+            PointsInCampaign = new Dictionary<string, double>();
+            Data = new Dictionary<string, string>();
+        }
 
-        public FidelityCustomer(string email, string username, string password)
+        public FidelityCustomer(string email, string username, string password) : this()
         {
             this.Email = email;
             this.Username = username;
             this.Password = password;
-            PointsInCampaign = new Dictionary<string, double>();
         }
 
         public void SetPointsCampaign(string campaign_id, double points)

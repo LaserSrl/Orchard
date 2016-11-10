@@ -15,7 +15,7 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
     public class LoyalzooSendService : ISendService
     {
 
-        public APIResult<FidelityCustomer> SendCustomerRegistration(FidelitySettingsPart setPart, FidelityCustomer customer)
+        public APIResult<FidelityCustomer> SendCustomerRegistration(FidelitySettingsPart setPart, FidelityCustomer customer, string campaignId) //TODO campaignId non viene usato
         {
             
             APIResult<FidelityCustomer> result = new APIResult<FidelityCustomer>();
@@ -111,12 +111,10 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
         public APIResult<IEnumerable<FidelityCampaign>> SendCampaignList(FidelitySettingsPart setPart)
         {
             APIResult<IEnumerable<FidelityCampaign>> result = new APIResult<IEnumerable<FidelityCampaign>>();
-            List<FidelityCampaign> listCamp = new List<FidelityCampaign>();
-            APIResult<string> loginResp = merchantLogin(setPart, true);
-            result.success = loginResp.success;
-            listCamp.Add(new FidelityCampaign { Id = loginResp.data });//TODO da fare il recupero delle info del place per avere una campaign un po migliore?
+            List<FidelityCampaign> listCamp = new List<FidelityCampaign>{SendCampaignData(setPart, new FidelityCampaign { Id = setPart.DefaultCampaign }).data};        
             result.data = listCamp;
-            result.message = loginResp.message;
+            result.success = true;
+            result.message = "Loyalzoo place id returned (no multiple campaign)";
             return result;           
         }
 
@@ -142,7 +140,7 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
                     if (result.success)
                     {
                         result.data = true;
-                        result.message = "Loyalzoo points added whit success.";
+                        result.message = "Loyalzoo points added with success.";
                     }
                     else
                     {
@@ -188,7 +186,7 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
                     if (result.success)
                     {       
                         result.data = true;
-                        result.message = "Loyalzoo reward gived whit success.";
+                        result.message = "Loyalzoo reward gived with success.";
                     }
                     else
                     {
@@ -203,60 +201,6 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
             catch (Exception ex)
             {
                 result.message = "exception: " + ex.Message + ".";
-            }
-            return result;
-        }
-
-        public APIResult<string> SendGetMerchantId(FidelitySettingsPart setPart)
-        {
-            return merchantLogin(setPart, false);
-        }
-
-        private APIResult<string> merchantLogin(FidelitySettingsPart setPart, bool isForPlace)
-        {
-            string responseString = string.Empty;
-            APIResult<string> result = new APIResult<string>();
-            result.success = false;
-            result.data = null;
-            try
-            {
-                List<KeyValuePair<string, string>> kvpList = new List<KeyValuePair<string, string>>()
-                {
-                    new KeyValuePair<string, string>("username", setPart.UserID),
-                    new KeyValuePair<string, string>("password", setPart.Password),
-                };
-                responseString = SendRequest(setPart, APIType.merchant, "login", kvpList);
-                if (!string.IsNullOrWhiteSpace(responseString))
-                {
-                    JObject data = JObject.Parse(responseString);
-                    result.success = data.Value<bool>("success");
-                    if (result.success)
-                    {
-                        JToken response = data.SelectToken("response");
-                        if (!isForPlace)
-                        {
-                            result.data = response.Value<string>("session_id");
-                        }
-                        else
-                        {
-                            result.data = response.Value<string>("place_id");
-                        }
-                        
-                        result.message = "Loyalzoo merchant login success.";
-                    }
-                    else
-                    {
-                        result.message = data.SelectToken("response").ToString();
-                    }
-                }
-                else
-                {
-                    result.message = "no response from Loyalzoo server.";
-                }
-            }
-            catch (Exception ex)
-            {
-                result.message = "Exception: " + ex.Message + " in Loyalzoo Login.";
             }
             return result;
         }
@@ -516,6 +460,53 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
                     campaign.Rewards.Add(reward);
                 }
             }
+        }
+
+
+        public APIResult<IDictionary<string, string>> GetOtherSettings(FidelitySettingsPart setPart)
+        {
+            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+            APIResult<IDictionary<string, string>> result = new APIResult<IDictionary<string, string>>();
+            result.data = dictionary;
+            string responseString = string.Empty;
+            result.success = false;
+            try
+            {
+                List<KeyValuePair<string, string>> kvpList = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("username", setPart.UserID),
+                    new KeyValuePair<string, string>("password", setPart.Password),
+                };
+                responseString = SendRequest(setPart, APIType.merchant, "login", kvpList);
+                if (!string.IsNullOrWhiteSpace(responseString))
+                {
+                    JObject data = JObject.Parse(responseString);
+                    result.success = data.Value<bool>("success");
+                    if (result.success)
+                    {
+                        JToken response = data.SelectToken("response");
+                  
+                            result.data.Add("merchantId", response.Value<string>("session_id"));
+                       
+                            result.data.Add("placeId", response.Value<string>("place_id"));
+
+                        result.message = "Loyalzoo merchant login success.";
+                    }
+                    else
+                    {
+                        result.message = data.SelectToken("response").ToString();
+                    }
+                }
+                else
+                {
+                    result.message = "no response from Loyalzoo server.";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.message = "Exception: " + ex.Message + " in Loyalzoo Login.";
+            }
+            return result;
         }
     }
 }

@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Web.Http;
-//Susing System.Web.Mvc;
-
+using System.Linq;
+using Laser.Orchard.FidelityGateway.Activities;
 
 namespace Laser.Orchard.FidelityGateway.Controllers
 {
@@ -14,20 +14,31 @@ namespace Laser.Orchard.FidelityGateway.Controllers
 
         private readonly IFidelityServices _fidelityService;
 
-        public FidelityBaseApiController(IFidelityServices service)
+        public FidelityBaseApiController(IEnumerable<IFidelityServices> services)
         {
-            _fidelityService = service;
-        }
+            if (services.Count() > 0)
+            {
+                _fidelityService = services.OrderBy(a => a.GetProviderName()).ToList()[0];
+            }
 
-
-        [HttpGet]
-        public virtual string Test(string s)
-        {
-            return "test" + s;
         }
 
         [HttpGet]
-        public virtual APIResult<FidelityCustomer> CustomerRegistration()
+        public virtual string Test(string optional = "")
+        {
+            if (optional == "")
+            {
+                return "testnooptional";
+            }
+            else
+            {
+                return "test" + optional;
+            }
+
+        }
+
+        [HttpGet]
+        public virtual APIResult<FidelityCustomer> CustomerRegistrationInDefaultCampaign()
         {
             try
             {
@@ -38,13 +49,13 @@ namespace Laser.Orchard.FidelityGateway.Controllers
                 return new APIResult<FidelityCustomer> { success = false, data = null, message = e.Message };
             }
         }
-        
+
         [HttpGet]
         public virtual APIResult<FidelityCustomer> CustomerDetails()
         {
             try
             {
-                return _fidelityService.GetCustomerDetails();
+                return _fidelityService.GetCustomerDetails(null);
             }
             catch (Exception e)
             {
@@ -52,9 +63,21 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
-        
         [HttpGet]
-        public virtual APIResult<FidelityCampaign> GetCampaignData(string campaignId)
+        public virtual APIResult<FidelityCustomer> CustomerDetailsFromId(string customerId)
+        {
+            try
+            {
+                return _fidelityService.GetCustomerDetails(customerId);
+            }
+            catch (Exception e)
+            {
+                return new APIResult<FidelityCustomer> { success = false, data = null, message = e.Message };
+            }
+        }
+
+        [HttpGet]
+        public virtual APIResult<FidelityCampaign> GetCampaignData(string campaignId = null)
         {
             try
             {
@@ -66,7 +89,19 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
-        
+        [HttpGet]
+        public virtual APIResult<FidelityCampaign> GetDefaultCampaignData()
+        {
+            try
+            {
+                return _fidelityService.GetCampaignData();
+            }
+            catch (Exception e)
+            {
+                return new APIResult<FidelityCampaign> { success = false, data = null, message = e.Message };
+            }
+        }
+
         [HttpGet]
         public virtual APIResult<IEnumerable<FidelityCampaign>> CampaignList()
         {
@@ -80,38 +115,38 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
-        
+
         [HttpGet]
-        public virtual APIResult<bool> AddPoints(string amount, string campaignId)
+        public virtual APIResult<CardPointsCampaign> AddPoints(string amount, string campaignId)
         {
             try
             {
                 double points;
                 if (Double.TryParse(amount, out points))
-                    return _fidelityService.AddPoints(amount, campaignId);
+                    return _fidelityService.AddPoints(amount, campaignId, null);
                 else
-                    return new APIResult<bool> { success = false, data = false, message = "The input parameters is not in the correct format." };
+                    return new APIResult<CardPointsCampaign> { success = false, data = null, message = "The input parameters is not in the correct format." };
             }
             catch (Exception e)
             {
-                return new APIResult<bool> { success = false, data = false, message = e.Message };
+                return new APIResult<CardPointsCampaign> { success = false, data = null, message = e.Message };
             }
         }
 
         [HttpGet]
-        public virtual APIResult<bool> GiveReward(string rewardId, string campaignId)
+        public virtual APIResult<FidelityReward> GiveReward(string rewardId, string campaignId)
         {
             try
             {
                 if (rewardId != null)
-                    return _fidelityService.GiveReward(rewardId, campaignId);
+                    return _fidelityService.GiveReward(rewardId, campaignId, null);
                 else
-                    return new APIResult<bool> { success = false, data = false, message = "The input parameters is not in the correct format." };
+                    return new APIResult<FidelityReward> { success = false, data = null, message = "The input parameters is not in the correct format." };
             }
             catch (Exception e)
             {
-                return new APIResult<bool> { success = false, data = false, message = e.Message };
-            }    
+                return new APIResult<FidelityReward> { success = false, data = null, message = e.Message };
+            }
         }
 
         [HttpGet]
@@ -128,47 +163,143 @@ namespace Laser.Orchard.FidelityGateway.Controllers
         }
 
         [HttpGet]
-        public virtual APIResult<bool> AddPointsFromAction(string actionId)
+        public virtual APIResult<CardPointsCampaign> AddPointsFromAction(string actionId)
         {
             try
             {
-                return _fidelityService.AddPointsFromAction(actionId);
+                return _fidelityService.AddPointsFromAction(actionId, null);
             }
             catch (Exception e)
             {
-                return new APIResult<bool> { success = false, data = false, message = e.Message };
+                return new APIResult<CardPointsCampaign> { success = false, data = null, message = e.Message };
             }
         }
 
-        /*
-         [System.Web.Mvc.HttpGet]
-        public virtual JsonResult AddPointsFromAction(string actionId, string completionPercent)
+        [HttpGet]
+        public virtual APIResult<FidelityReward> GiveRewardInDefaultCampaign(string rewardId)
         {
             try
             {
-                return Json(_fidelityService.AddPointsFromAction(actionId, completionPercent), JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception e)
-            {
-                return Json(new APIResult<string> { success = false, data = null, message = e.Message }, JsonRequestBehavior.AllowGet);
-            }
-        }
-        
-        [System.Web.Mvc.HttpGet]
-        public virtual JsonResult UpdateSocial(string socialToken, string tokenType)
-        {
-            try
-            {
-                if (socialToken != null && tokenType != null)
-                    return Json(_fidelityService.UpdateSocial(socialToken, tokenType), JsonRequestBehavior.AllowGet);
+                if (rewardId != null)
+                    return _fidelityService.GiveReward(rewardId, null);
                 else
-                    return Json(new APIResult<string> { success = false, data = null, message = "The input parameters is not in the correct format." }, JsonRequestBehavior.AllowGet);
+                    return new APIResult<FidelityReward> { success = false, data = null, message = "The input parameters is not in the correct format." };
             }
             catch (Exception e)
             {
-                return Json(new APIResult<string> { success = false, data = null, message = e.Message }, JsonRequestBehavior.AllowGet);
+                return new APIResult<FidelityReward> { success = false, data = null, message = e.Message };
             }
         }
-         */
+
+        [HttpGet]
+        public virtual APIResult<CardPointsCampaign> AddPointsInDefaultCampaign(string amount)
+        {
+            try
+            {
+                double points;
+                if (Double.TryParse(amount, out points))
+                    return _fidelityService.AddPoints(amount, null);
+                else
+                    return new APIResult<CardPointsCampaign> { success = false, data = null, message = "The input parameters is not in the correct format." };
+            }
+            catch (Exception e)
+            {
+                return new APIResult<CardPointsCampaign> { success = false, data = null, message = e.Message };
+            }
+        }
+
+        [HttpGet]
+        public virtual APIResult<FidelityCustomer> CustomerRegistration(string campaignId)
+        {
+            try
+            {
+                return _fidelityService.CreateFidelityAccountFromCookie(campaignId);
+            }
+            catch (Exception e)
+            {
+                return new APIResult<FidelityCustomer> { success = false, data = null, message = e.Message };
+            }
+        }
+
+        [HttpGet]
+        public virtual APIResult<CardPointsCampaign> AddPointsToCustomerInDefaultCampaign(string amount, string customerId)
+        {
+            try
+            {
+                double points;
+                if (Double.TryParse(amount, out points))
+                {
+                    return _fidelityService.AddPoints(amount, customerId);
+                }
+                else
+                {
+                    return new APIResult<CardPointsCampaign> { success = false, data = null, message = "The input parameters is not in the correct format." };
+                }                               
+            }
+            catch (Exception e)
+            {
+                return new APIResult<CardPointsCampaign> { success = false, data = null, message = e.Message };
+            }
+        }
+
+        [HttpGet]
+        public virtual APIResult<CardPointsCampaign> AddPointsToCustomer(string amount, string campaignId, string customerId)
+        {
+            try
+            {
+                double points;
+                if (Double.TryParse(amount, out points))
+                {
+                    return _fidelityService.AddPoints(amount, campaignId, customerId);
+                }
+                else
+                {
+                    return new APIResult<CardPointsCampaign> { success = false, data = null, message = "The input parameters is not in the correct format." };
+                }    
+            }
+            catch (Exception e)
+            {
+                return new APIResult<CardPointsCampaign> { success = false, data = null, message = e.Message };
+            }
+        }
+
+        [HttpGet]
+        public virtual APIResult<FidelityReward> GiveRewardToCustomerInDefaultCampaign(string rewardId, string customerId)
+        {
+            try
+            {
+                return _fidelityService.GiveReward(rewardId, customerId);
+            }
+            catch (Exception e)
+            {
+                return new APIResult<FidelityReward> { success = false, data = null, message = e.Message };
+            }
+        }
+
+        [HttpGet]
+        public virtual APIResult<FidelityReward> GiveRewardToCustomer(string rewardId, string campaignId, string customerId)
+        {
+            try
+            {
+                return _fidelityService.GiveReward(rewardId, campaignId, customerId);
+            }
+            catch (Exception e)
+            {
+                return new APIResult<FidelityReward> { success = false, data = null, message = e.Message };
+            }
+        }
+
+        [HttpGet]
+        public virtual APIResult<CardPointsCampaign> AddPointsFromActionToCustomer(string actionId, string customerId)
+        {
+            try
+            {
+                return _fidelityService.AddPointsFromAction(actionId, customerId);
+            }
+            catch (Exception e)
+            {
+                return new APIResult<CardPointsCampaign> { success = false, data = null, message = e.Message };
+            }
+        }
     }
 }

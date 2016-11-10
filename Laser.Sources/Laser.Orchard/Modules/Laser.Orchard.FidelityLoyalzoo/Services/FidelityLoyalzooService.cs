@@ -7,6 +7,7 @@ using Orchard;
 using Orchard.Security;
 using Orchard.Data;
 using Laser.Orchard.FidelityGateway.Models;
+using Orchard.Workflows.Services;
 
 namespace Laser.Orchard.FidelityLoyalzoo.Services
 {
@@ -14,30 +15,38 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
     {
         public FidelityLoyalzooService(IOrchardServices orchardServices, IEncryptionService encryptionService,
                                IAuthenticationService authenticationService, IMembershipService membershipService,
-                               ISendService sendService, IRepository<ActionInCampaignRecord> repository)
+                               ISendService sendService, IRepository<ActionInCampaignRecord> repository, IWorkflowManager workfloManager)
             : base(orchardServices, encryptionService,
                 authenticationService, membershipService,
-                sendService, repository)
+                sendService, repository, workfloManager)
         {
-                    if (settingsPart.AccountID == null)
+                    if (settingsPart.AccountID == null || settingsPart.DefaultCampaign == null)
                     {
-                        settingsPart.AccountID = _sendService.SendGetMerchantId(settingsPart).data;
+                        try
+                        {
+                            otherSettings();
+                        }
+                        catch (Exception ex)
+                        {
+                            //TODO ??
+                        }           
                     }
        }
 
         public override string GetProviderName()
         {
-            return "Loyalzoo";
+            return "loyalzoo";
         }
 
-        public override APIResult<IEnumerable<ActionInCampaignRecord>> GetActions()
+        private void otherSettings()//TODO come fare per non metterlo nel costruttore??
         {
-            throw new NotImplementedException();
-        }
+            APIResult<IDictionary<string, string>> res = _sendService.GetOtherSettings(settingsPart);
+            if (res.success)
+            {
+                settingsPart.AccountID = res.data["merchantId"];
+                settingsPart.DefaultCampaign = res.data["placeId"];
+            }
 
-        public override APIResult<bool> AddPointsFromAction(string action)
-        {
-            throw new NotImplementedException();
         }
     }
 }

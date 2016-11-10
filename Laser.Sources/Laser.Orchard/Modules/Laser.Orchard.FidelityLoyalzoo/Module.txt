@@ -7,4 +7,5 @@ OrchardVersion: 1.0
 Description: Modulo di estenzione del fidelity gateway che serve per la comunicazione con il provider Loyalzoo.
 Features:
     Laser.Orchard.FidelityLoyalzoo:
+		Category: FidelityProvider
         Description: Modulo di estenzione del fidelity gateway che serve per la comunicazione con il provider Loyalzoo.

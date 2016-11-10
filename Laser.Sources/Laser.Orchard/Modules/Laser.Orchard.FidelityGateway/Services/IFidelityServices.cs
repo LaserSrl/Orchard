@@ -7,7 +7,8 @@ namespace Laser.Orchard.FidelityGateway.Services
     public interface IFidelityServices : IDependency
     {
         /// <summary>
-        /// Crea un account sul provider remoto basandosi sui dati dell'utente orchard autenticato
+        /// Crea un account sul provider remoto basandosi sui dati dell'utente orchard autenticato, 
+        /// associando l'utente alla campagna di default
         /// </summary>
         /// <returns>Id del merchant</returns>
         APIResult<FidelityCustomer> CreateFidelityAccountFromCookie();
@@ -16,13 +17,13 @@ namespace Laser.Orchard.FidelityGateway.Services
         /// Crea un account sul provider remoto con i dati passati per parametro
         /// </summary>
         /// <returns>Id del merchant</returns>
-        APIResult<FidelityCustomer> CreateFidelityAccount(FidelityUserPart fidelityPart, string username, string email);
+        APIResult<FidelityCustomer> CreateFidelityAccount(FidelityUserPart fidelityPart, string username, string email, string camapaignId);
 
         /// <summary>
         /// Richiede tutti i dettagli della fidelity di un utente autenticato in orchard
         /// </summary>
         /// <returns>APIResult con incapsulato il FidelityCustomer con tutti i dati reperiti dal provider</returns>
-        APIResult<FidelityCustomer> GetCustomerDetails();
+        APIResult<FidelityCustomer> GetCustomerDetails(string customerId);
 
         /// <summary>
         /// Richiede tutti i dettagli di una certa campagna di fidelizzazione
@@ -36,21 +37,25 @@ namespace Laser.Orchard.FidelityGateway.Services
         /// </summary>
         /// <param name="numPoints">numero di punti da aumentare </param>
         /// <param name="campaignId">identificativo della campagna su cui aumentare i punti </param>
-        /// <returns>APIResult con incapsulato il successo/insuccesso dell'operazione</returns>  
-        APIResult<bool> AddPoints(string numPoints, string campaignId);
-
-        APIResult<bool> AddPointsFromAction(string action);
+        /// <returns>APIResult con incapsulato id campagna, id cliente e il numero di punti aggiornato</returns>  
+        APIResult<CardPointsCampaign> AddPoints(string numPoints, string campaignId, string customerId);
 
         /// <summary>
-        /// Richiede la donazione di un premio di una certa categoria all'utente autenticato in Orchard
+        /// Richiede l'aggiunta di punti del cliente associato ad un'azione salvata in precedenza su Krake
+        /// </summary>
+        /// <param name="numPoints">numero di punti da aumentare </param>
+        /// <param name="campaignId">identificativo della campagna su cui aumentare i punti </param>
+        /// <returns>APIResult con incapsulato id campagna, id cliente e il numero di punti aggiornato</returns>  
+        APIResult<CardPointsCampaign> AddPointsFromAction(string action, string customerId);
+
+        /// <summary>
+        /// Richiede la donazione di un premio di una certa campagna all'utente autenticato in Orchard
         /// con conseguente decremento dei punti.
         /// </summary>
         /// <param name="rewardId">identificativo del premio da donare</param>
         /// <param name="campaignId">identificativo della campagna su cui è presente il premio da ritirare </param>
-        /// <returns>APIResult con incapsulato il successo/insuccesso dell'operazione</returns>
-        APIResult<bool> GiveReward(string rewardId, string campaignId);
-
-        APIResult<FidelityCustomer> UpdateSocial(string token, string tokenType); //TODO
+        /// <returns>APIResult con incapsulato il premio donato</returns>
+        APIResult<FidelityReward> GiveReward(string rewardId, string campaignId, string customerId);
 
         /// <summary>
         /// Richiede la lista di tutte le campagne associate al merchant.
@@ -63,6 +68,35 @@ namespace Laser.Orchard.FidelityGateway.Services
         /// </summary>
         /// <returns>APIResult con incapsulato la lista di tutte le azioniincampagna</returns>
         APIResult<IEnumerable<ActionInCampaignRecord>> GetActions();
+
+        /// <summary>
+        /// Richiede tutti i dettagli della campagna impostata come default
+        /// </summary>
+        /// <returns>APIResult con incapsulato il FidelityCampaign con tutti i dati reperiti dal provider</returns>
+        APIResult<FidelityCampaign> GetCampaignData();
+
+        /// <summary>
+        /// Richiede la donazione di un premio della campagna di default all'utente autenticato in Orchard
+        /// con conseguente decremento dei punti.
+        /// </summary>
+        /// <param name="rewardId">identificativo del premio da donare</param>
+        /// <returns>APIResult con incapsulato il premio donato</returns>
+        APIResult<FidelityReward> GiveReward(string rewardId, string custormerId);
+
+        /// <summary>
+        /// Richiede l'aggiunta di punti del cliente autenticato in Orchard sulla campagna di defauls.
+        /// </summary>
+        /// <param name="numPoints">numero di punti da aumentare </param>
+        /// <returns>APIResult con incapsulato id campagna, id cliente e il numero di punti aggiornato</returns>  
+        APIResult<CardPointsCampaign> AddPoints(string amount, string customerId);
+
+        /// <summary>
+        /// Richiede di registrare dell'utente loggato in Orchard sul provider di fidelity, aggiungedolo ad una determinata campagna
+        /// </summary>
+        /// <returns>APIResult con incapsulato la lista di tutte le azioniincampagna</returns>
+        APIResult<FidelityCustomer> CreateFidelityAccountFromCookie(string campagnId);
+
+        string GetProviderName();
     }
 
 }

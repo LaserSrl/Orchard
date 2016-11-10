@@ -57,8 +57,16 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Modules, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Modules\bin\Orchard.Modules.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Users">
       <HintPath>..\..\..\..\..\Orchard-1.8.1\Orchard.Source\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Workflows, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Workflows\bin\Orchard.Workflows.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -90,14 +98,19 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\AddPointsActivity.cs" />
+    <Compile Include="Activities\RedeemRewardActivity.cs" />
+    <Compile Include="Controllers\ActionCampaignController.cs" />
     <Compile Include="Controllers\FidelityBaseApiController.cs" />
     <Compile Include="Drivers\FidelitySettingsPartDriver.cs" />
     <Compile Include="Drivers\FidelityUserPartDriver.cs" />
     <Compile Include="Handlers\FidelitySettingsHandler.cs" />
     <Compile Include="Handlers\FidelityUserHandler.cs" />
+    <Compile Include="Menus\AdminMenu.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ActionInCampaignRecord.cs" />
     <Compile Include="Models\APIResult.cs" />
+    <Compile Include="Models\CardPointsCampaign.cs" />
     <Compile Include="Models\FidelityCampaign.cs" />
     <Compile Include="Models\FidelityReward.cs" />
     <Compile Include="Models\FidelitySettingsPart.cs" />
@@ -107,6 +120,9 @@
     <Compile Include="Services\FidelityBaseServices.cs" />
     <Compile Include="Services\IFidelityServices.cs" />
     <Compile Include="Services\ISendService.cs" />
+    <Compile Include="Services\NotificatorService.cs" />
+    <Compile Include="ViewModels\ActionCampaign.cs" />
+    <Compile Include="ViewModels\EditAction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">
@@ -115,6 +131,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\FidelitySettingsPart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ActionCampaign\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ActionCampaign\Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
