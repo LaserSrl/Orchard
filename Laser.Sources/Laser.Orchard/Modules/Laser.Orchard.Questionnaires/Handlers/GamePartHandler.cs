@@ -32,9 +32,9 @@ namespace Laser.Orchard.Questionnaires.Handlers {
                 AdjustContentItem(context.ContentItem);
             });
 
-            OnPublished<GamePart>((context, part) => Published(context));
-            OnUnpublished<GamePart>((context, part) => Unpublished(context));
-            OnRemoved<GamePart>((context, part) => Removed(context));
+            OnPublished<GamePart>((context, part) => GamePartPublished(context));
+            OnUnpublished<GamePart>((context, part) => GamePartUnpublished(context));
+            OnRemoved<GamePart>((context, part) => GamePartRemoved(context));
         }
 
         private void AdjustContentItem(ContentItem ci) {
@@ -142,20 +142,20 @@ namespace Laser.Orchard.Questionnaires.Handlers {
             return list;
         }
 
-        protected override void Published(PublishContentContext context) {
+        protected void GamePartPublished(PublishContentContext context) {
             Int32 gId = ((dynamic)context.ContentItem).Id;
             DateTime timeGameEnd = ((dynamic)context.ContentItem).ActivityPart.DateTimeEnd;
             _questionnairesServices.ScheduleEmailTask(gId, timeGameEnd);
             //base.Published(context);
         }
 
-        protected override void Unpublished(PublishContentContext context) {
+        protected void GamePartUnpublished(PublishContentContext context) {
             Int32 gId = ((dynamic)context.ContentItem).Id;
             _questionnairesServices.UnscheduleEmailTask(gId);
             //base.Unpublished(context);
         }
 
-        protected override void Removed(RemoveContentContext context) {
+        protected void GamePartRemoved(RemoveContentContext context) {
             Int32 gId = ((dynamic)context.ContentItem).Id;
             _questionnairesServices.UnscheduleEmailTask(gId);
             //base.Removed(context);
