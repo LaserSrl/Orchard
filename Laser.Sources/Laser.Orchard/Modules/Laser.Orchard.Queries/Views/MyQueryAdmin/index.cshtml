@@ -5,7 +5,8 @@
     var ContentsIndexVM = Model.ContentsIndexVM;
 }
 <div class="manage">
-    <a class="button primaryAction" href="@Url.Action("Create", "UserQueryAdmin", new { area = "Laser.Orchard.Queries", id = 0 })" title="@T("Create New Query")">@T("Create New UserQuery")</a>
+    <a class="button primaryAction" href="@Url.Action("CreateOneShot", "UserQueryAdmin", new { area = "Laser.Orchard.Queries", id = 0 })" title="@T("Create New One Shot Query")">@T("Create New One Shot Query")</a>
+    <a class="button primaryAction" href="@Url.Action("Create", "UserQueryAdmin", new { area = "Laser.Orchard.Queries", id = 0 })" title="@T("Create New UserQuery")">@T("Create New UserQuery")</a>
     <a class="button primaryAction" href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = 0 })" title="@T("Create New Query")">@T("Create New Query")</a>
 </div>
 @using (Html.BeginForm("Index", "MyQueryAdmin", FormMethod.Post)) {
@@ -26,7 +27,7 @@
         @{
             IQueryService queryService;
             WorkContext.TryResolve<IQueryService>(out queryService);
-
+            
             foreach (var contentIndexVM in ContentsIndexVM) {
                 int queryid = 0;
             <li>
@@ -35,7 +36,7 @@
                         <h3>
                             @if (contentIndexVM.ContentType.ToLower() == "query") {
                                 queryid = queryService.GetQuery(contentIndexVM.Id).FilterGroups.FirstOrDefault().Id;
-                                <a href="@Url.Action("Edit", "UserQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })">@contentIndexVM.Title</a>
+                                <a href="@Url.Action("Edit", "UserQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })">@contentIndexVM.Title</a> <span style="font-weight:normal">@((contentIndexVM.OneShotQuery)? "(one shot)" : "")</span>
                             }
                             else {
                                 <a href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = contentIndexVM.Id })">@contentIndexVM.Title</a>

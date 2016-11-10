@@ -16,7 +16,7 @@ using System.Web;
 
 namespace Laser.Orchard.PaymentGateway.Drivers {
     public class PayButtonPartDriver : ContentPartDriver<PayButtonPart> {
-        private Localizer L;
+        public Localizer L;
         private readonly ITokenizer _tokenizer;
 
         public PayButtonPartDriver(ITokenizer tokenizer) {

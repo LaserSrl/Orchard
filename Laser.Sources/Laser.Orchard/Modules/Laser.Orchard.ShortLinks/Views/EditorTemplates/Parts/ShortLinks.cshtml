@@ -7,13 +7,20 @@
     var apiKey = WorkContext.CurrentSite.As<Laser.Orchard.ShortLinks.Models.ShortLinksSettingsPart>().GoogleApiKey;
     //var apiKey = "AIzaSyA8yaRn83trUJcr4cFKRiorhfI7WtUpm2s";
     var settings = WorkContext.Resolve<ShellSettings>();
-    var tenantName = settings.Name;
+    var tenantPrefix = settings.RequestUrlPrefix;
+    var appBasePath = HttpRuntime.AppDomainAppVirtualPath;
     var alias = ((dynamic)Model.ContentItem).AutoroutePart.DisplayAlias;
-    var fullUrl = String.Format("{0}/{1}/{2}", HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority), tenantName, alias);
-    var fullAbsoluteUrl = "";
-    if (String.IsNullOrWhiteSpace(tenantName) || tenantName == "Default") {
-        fullUrl = String.Format("{0}/{1}", HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority), alias);
+    var fullUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
+    if(string.IsNullOrWhiteSpace(appBasePath) == false){
+        fullUrl += appBasePath;   
     }
+    if(string.IsNullOrWhiteSpace(tenantPrefix) == false){
+        fullUrl += "/" + tenantPrefix;
+    }
+    if (string.IsNullOrWhiteSpace(alias) == false) {
+        fullUrl += "/" + alias;
+    }
+    var fullAbsoluteUrl = "";
     fullAbsoluteUrl = Url.Content(fullUrl);   
 }
 

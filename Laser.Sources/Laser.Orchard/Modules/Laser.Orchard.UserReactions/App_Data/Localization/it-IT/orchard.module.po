@@ -101,6 +101,10 @@ msgid "A user reaction is clicked."
 msgstr "Una reazione utente è stata cliccata"
 
 msgctxt "Laser.Orchard.UserReactions.Activities.ReactionClickedActivity"
+msgid "A user reaction is clicked. Sets the following values in workflow state: ReactionId, Action, ReactionUserEmail, ReactionUserId."
+msgstr "Una reazione utente è stata cliccata. Imposta i seguenti valori nel workflow state: ReactionId, Action, ReactionUserEmail, ReactionUserId."
+
+msgctxt "Laser.Orchard.UserReactions.Activities.ReactionClickedActivity"
 msgid "Clicked"
 msgstr "Cliccato"
 
@@ -152,6 +156,38 @@ msgctxt "Laser.Orchard.UserReactions.Navigation.AdminMenu"
 msgid "User Reactions Types"
 msgstr "Tipi di reazione"
 
+msgctxt "Laser.Orchard.UserReactions.Projections.ReactionClickedFilterForm"
+msgid "List of available reactions"
+msgstr "Elenco delle reazioni disponibili"
+
+msgctxt "Laser.Orchard.UserReactions.Projections.ReactionClickedFilterForm"
+msgid "Reaction type"
+msgstr "Tipo di reazione"
+
+msgctxt "Laser.Orchard.UserReactions.Projections.ReactionClickedFilterForm"
+msgid "Tokenized Content ID"
+msgstr "ID Contenuto con token"
+
+msgctxt "Laser.Orchard.UserReactions.Projections.ReactionClickedQueryFilter"
+msgid "Contacts who clicked on a specific reaction."
+msgstr "Contatti che hanno selezionato una particolare reazione."
+
+msgctxt "Laser.Orchard.UserReactions.Projections.ReactionClickedQueryFilter"
+msgid "Filter for a specific reaction."
+msgstr "Filtro per una specifica reazione."
+
+msgctxt "Laser.Orchard.UserReactions.Projections.ReactionClickedQueryFilter"
+msgid "Reaction clicked filter"
+msgstr "Filtro sulla reazione clickata"
+
+msgctxt "Laser.Orchard.UserReactions.Projections.ReactionClickedQueryFilter"
+msgid "Search reactions"
+msgstr "Ricerca reazioni"
+
+msgctxt "Laser.Orchard.UserReactions.Projections.ReactionClickedQueryFilter"
+msgid "Users who clicked on a specific reaction."
+msgstr "Utenti che hanno selezionato una particolare reazione."
+
 msgctxt "Laser.Orchard.UserReactions.Projections.UserReactionsQueryFilter"
 msgid "Content items having the specified reactions."
 msgstr "Elementi di contenuto che hanno la reazioni specificate"
@@ -195,6 +231,10 @@ msgstr "È minore o uguale a"
 msgctxt "Laser.Orchard.UserReactions.Projections.UserReactionsQueryFilterForm"
 msgid "Is not equal to"
 msgstr "NON è uguale"
+
+msgctxt "Laser.Orchard.UserReactions.Projections.UserReactionsQueryFilterForm"
+msgid "List of available reactions"
+msgstr "Elenco delle reazioni disponibili"
 
 msgctxt "Laser.Orchard.UserReactions.Projections.UserReactionsQueryFilterForm"
 msgid "Max"

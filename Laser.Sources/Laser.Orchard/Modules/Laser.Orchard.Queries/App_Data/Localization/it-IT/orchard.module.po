@@ -77,6 +77,14 @@ msgid "Clear"
 msgstr "Cancella"
 
 msgctxt "~/Modules/Laser.Orchard.Queries/Views/MyQueryAdmin/index.cshtml"
+msgid "Create New One Shot Query"
+msgstr "Crea nuova Ricerca One Shot"
+
+msgctxt "~/Modules/Laser.Orchard.Queries/Views/MyQueryAdmin/index.cshtml"
+msgid "Create New One Shot UserQuery"
+msgstr "Crea nuova Ricerca One Shot"
+
+msgctxt "~/Modules/Laser.Orchard.Queries/Views/MyQueryAdmin/index.cshtml"
 msgid "Create New Query"
 msgstr "Crea nuova Ricerca"
 
@@ -125,6 +133,14 @@ msgid "Save"
 msgstr "Salva"
 
 msgctxt "~/Modules/Laser.Orchard.Queries/Views/UserQueryAdmin/Create.cshtml"
+msgid "Title:"
+msgstr "Titolo:"
+
+msgctxt "~/Modules/Laser.Orchard.Queries/Views/UserQueryAdmin/CreateOneShot.cshtml"
+msgid "Save"
+msgstr "Salva"
+
+msgctxt "~/Modules/Laser.Orchard.Queries/Views/UserQueryAdmin/CreateOneShot.cshtml"
 msgid "Title:"
 msgstr "Titolo:"
 
