@@ -15,8 +15,8 @@
         $(document).ready(function () {
             AddClassConditionedAndOnclickToAnswer();
             VerifyConditions();
-            if (/Mobi/i.test(navigator.userAgent) == false) {
-                // se non è un device mobile, gestisco il tooltip
+            if ((('ontouchstart' in window) || ('msmaxtouchpoints' in window.navigator)) == false) {
+                // se non è attivo il touch, gestisco il tooltip
                 $("div.rate").tooltip();
             }
         });
