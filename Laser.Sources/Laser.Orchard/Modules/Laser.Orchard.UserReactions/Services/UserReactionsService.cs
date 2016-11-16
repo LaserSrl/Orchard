@@ -433,7 +433,9 @@ namespace Laser.Orchard.UserReactions.Services {
                     _workflowManager.TriggerEvent("ReactionClicked", contentItem, () => new Dictionary<string, object> { 
                         { "Content", contentItem },
                         { "ReactionId", iconTypeId },
-                        { "Action", actionType }
+                        { "Action", actionType },
+                        { "UserEmail", currentUser.Email },
+                        { "UserId", currentUser.Id }
                     });
                 }
                 catch (Exception) {

@@ -145,10 +145,10 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="https://www.mobility-parc.com/ws/stationOpWS%3fwsdl">
+    <WebReferenceUrl Include="http://www.mobility-parc.com/ws/stationOpWS%3fwsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\com.mobilityparc.www\</RelPath>
-      <UpdateFromURL>https://www.mobility-parc.com/ws/stationOpWS%3fwsdl</UpdateFromURL>
+      <UpdateFromURL>http://www.mobility-parc.com/ws/stationOpWS%3fwsdl</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>

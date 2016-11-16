@@ -44,7 +44,7 @@
   </wsdl:binding>
   <wsdl:service name="StationOpWSService">
     <wsdl:port name="StationOpWSPort" binding="tns:StationOpWSServiceSoapBinding">
-      <soap:address location="https://www.mobility-parc.com/ws/stationOpWS" />
+      <soap:address location="http://www.mobility-parc.com/ws/stationOpWS" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

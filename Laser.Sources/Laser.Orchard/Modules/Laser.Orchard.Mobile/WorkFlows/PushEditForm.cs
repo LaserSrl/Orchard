@@ -69,11 +69,19 @@ namespace Laser.Orchard.Mobile.WorkFlows {
                               Name: "allDevice",
                               Title: T("Device"),
                         //     Description: T("select Device"),
-                              Size: 7,
+                              Size: 8,
                               Multiple: false
                               ),
 
-                             _ddlLanguage: Shape.SelectList(
+                    _UserId: Shape.Textbox(
+                                Id: "userId",
+                                Name: "userId",
+                                Title: T("User ID"),
+                                Description: T("User ID Tokenized."),
+                                Classes: new[] { "large", "text", "tokenized" }
+                            ),
+
+                    _ddlLanguage: Shape.SelectList(
                               Id: "allLanguage",
                               Name: "allLanguage",
                               Title: T("Language"),
@@ -126,6 +134,7 @@ namespace Laser.Orchard.Mobile.WorkFlows {
                     f._Type._ddlDevice.Add(new SelectListItem { Value = "ContentOwner", Text = "Content's Owner" });
                     f._Type._ddlDevice.Add(new SelectListItem { Value = "ContentCreator", Text = "Content's Creator" });
                     f._Type._ddlDevice.Add(new SelectListItem { Value = "ContentLastModifier", Text = "Content's LastModifier" });
+                    f._Type._ddlDevice.Add(new SelectListItem { Value = "UserId", Text = "User specified by ID" });
                     
 
                     f._Type._ddlLanguage.Add(new SelectListItem { Value = "All", Text = "All Languages" });

@@ -13,6 +13,14 @@ msgid "No data found."
 msgstr "Nessun dato trovato."
 
 msgctxt "~/Themes/inarCASSA/Views/Layout.cshtml"
+msgid "Change Password"
+msgstr "Cambia password"
+
+msgctxt "~/Themes/inarCASSA/Views/Layout.cshtml"
+msgid "Dashboard"
+msgstr "Pannello di controllo"
+
+msgctxt "~/Themes/inarCASSA/Views/Layout.cshtml"
 msgid "No data found."
 msgstr "Nessun dato trovato."
 
@@ -35,4 +43,12 @@ msgstr "Precedente"
 msgctxt "~/Themes/inarCASSA/Views/Parts.Questionnaire.FrontEnd.Edit.cshtml"
 msgid "Send your questionnaire"
 msgstr "Inoltra questionario"
+
+msgctxt "~/Themes/inarCASSA/Views/Parts.Questionnaire.FrontEnd.Edit.cshtml"
+msgid "Sorry, you already submitted this questionnaire."
+msgstr "Spiacente, ha già compilato questo questionario."
+
+msgctxt "~/Themes/inarCASSA/Views/Parts.Questionnaire.FrontEnd.Edit.cshtml"
+msgid "Thank you for submitting your feedback."
+msgstr "Grazie per averci inviato la Sua opinione."
 

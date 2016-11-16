@@ -1,28 +1,4 @@
-﻿//using Laser.Orchard.CommunicationGateway.Models;
-//using Orchard.ContentManagement.Drivers;
-//using Orchard.Data;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Web;
-
-//namespace Laser.Orchard.CommunicationGateway.Drivers {
-//    public class SmsContactPartDriver : ContentPartDriver<SmsContactPart> {
-
-//        protected override string Prefix {
-//            get { return "Laser.Mobile.SmsContact"; }
-//        }
-
-//        protected override DriverResult Editor(SmsContactPart part, dynamic shapeHelper) {
-//            List<CommunicationSmsRecord> viewModel = part.SmsEntries.Value.ToList();
-//            return ContentShape("Parts_SmsContact_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/SmsContact_Edit", Model: viewModel, Prefix: Prefix));
-//        }
-//    }
-
-//}
-
-
-using AutoMapper;
+﻿using AutoMapper;
 using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
@@ -45,16 +21,19 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         private readonly IRepository<CommunicationSmsRecord> _repoSms;
         private readonly ITransactionManager _transaction;
         private readonly IOrchardServices _orchardServices;
+        private IMapper _mapper;
 
         public SmsContactPartDriver(IRepository<CommunicationSmsRecord> repoSms, ITransactionManager transaction, IOrchardServices orchardServices) {
             _repoSms = repoSms;
             T = NullLocalizer.Instance;
             _transaction = transaction;
             _orchardServices = orchardServices;
-            Mapper.Initialize(cfg => {
+            
+            var mapperConfiguration = new MapperConfiguration(cfg => {
                 cfg.CreateMap<CommunicationSmsRecord, View_SmsVM_element>();
                 cfg.CreateMap<View_SmsVM_element, CommunicationSmsRecord>();
             });
+            _mapper = mapperConfiguration.CreateMapper();
         }
 
         protected override DriverResult Display(SmsContactPart part, string displayType, dynamic shapeHelper) {
@@ -68,7 +47,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                         List<CommunicationSmsRecord> oldviewModel = part.SmsEntries.Value.ToList();
                         foreach (CommunicationSmsRecord cm in oldviewModel) {
                             vm = new View_SmsVM_element();
-                            Mapper.Map<CommunicationSmsRecord, View_SmsVM_element>(cm, vm);
+                            _mapper.Map<CommunicationSmsRecord, View_SmsVM_element>(cm, vm);
                             viewModel.Elenco.Add(vm);
                         }
                     }
@@ -84,13 +63,12 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
 
         protected override DriverResult Editor(SmsContactPart part, dynamic shapeHelper) {
             View_SmsVM viewModel = new View_SmsVM();
-            View_SmsVM_element vm = new View_SmsVM_element();
-            // viewModel.Elenco.Add(vm);
+            View_SmsVM_element vm = null;
             if (part.SmsEntries.Value != null) {
                 List<CommunicationSmsRecord> oldviewModel = part.SmsEntries.Value.ToList();
                 foreach (CommunicationSmsRecord cm in oldviewModel) {
                     vm = new View_SmsVM_element();
-                    Mapper.Map<CommunicationSmsRecord, View_SmsVM_element>(cm, vm);
+                    _mapper.Map<CommunicationSmsRecord, View_SmsVM_element>(cm, vm);
                     viewModel.Elenco.Add(vm);
                 }
             }
@@ -135,7 +113,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                         else {
                             View_SmsVM_element vm = new View_SmsVM_element();
                             CommunicationSmsRecord cmr = new CommunicationSmsRecord();
-                            Mapper.Map<View_SmsVM_element, CommunicationSmsRecord>(vm, cmr);
+                            _mapper.Map<View_SmsVM_element, CommunicationSmsRecord>(vm, cmr);
                             cmr.Sms = vmel.Sms;
                             cmr.Validated = vmel.Validated;
                             cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;

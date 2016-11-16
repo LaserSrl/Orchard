@@ -32,7 +32,7 @@ namespace Laser.Orchard.StartupConfig.FileDownloader.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly INotifier _notifier;
         private readonly ShellSettings _shellSettings;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
         private string FileRootRelativePath {
             get {
                 return string.Format("~/App_Data/Sites/{0}", _shellSettings.Name);
