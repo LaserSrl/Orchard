@@ -15,7 +15,10 @@
         $(document).ready(function () {
             AddClassConditionedAndOnclickToAnswer();
             VerifyConditions();
-            $("div.rate").tooltip();
+            if (/Mobi/i.test(navigator.userAgent) == false) {
+                // se non è un device mobile, gestisco il tooltip
+                $("div.rate").tooltip();
+            }
         });
 
         function AddClassConditionedAndOnclickToAnswer() {
