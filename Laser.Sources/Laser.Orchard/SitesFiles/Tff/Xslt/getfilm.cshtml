@@ -43,7 +43,7 @@ foreach (XmlNode nodoSala in mydoc.SelectNodes("root/_dataList/_data/_data")){
         int.TryParse(nodoSala.SelectSingleNode("proiezioneID").InnerText, out proiezioneid);
 
         author.InnerText = ":lasernumeric" + (100000000 + proiezioneid * 1000000 + filmid).ToString() + "lasernumeric:";
-        sid.InnerText = proiezioneid.ToString() + "|" + filmid.ToString();
+        sid.InnerText = "Datasale:" + proiezioneid.ToString() + "|" + filmid.ToString();
 
         nodoSala.AppendChild(author);
         nodoSala.AppendChild(sid);
@@ -68,8 +68,27 @@ foreach (XmlNode nodoSala in mydoc.SelectNodes("root/_dataList/_data/_data")){
 
     mydoc = rendinumeric(mydoc, "root/_dataList/_data/sezioneID");
 
+	
+	// Aggiunta del 09/11/2016
+    foreach (System.Xml.XmlNode nodoFilms in mydoc.SelectNodes("root/_dataList/_data")) {
 
+        string Titolo = string.Empty;
+        if (nodoFilms.SelectSingleNode("film_titolo_orig") != null){
+			Titolo = nodoFilms.SelectSingleNode("film_titolo_orig").InnerText;
+		}
+        string linkURL = "http://www.torinofilmfest.org/";
 
+        string immagine = string.Empty;
+		var Images = nodoFilms.SelectNodes("media/image");
+		if (Images != null && Images.Count > 0){
+			immagine = Images[0].SelectSingleNode("url_resource") != null ? (Images[0].SelectSingleNode("url_resource").InnerText ?? string.Empty) : string.Empty;
+		}
+
+        mydoc = AggiungiShareLink(mydoc, nodoFilms, Titolo, linkURL, immagine);
+    }
+    ///////////////////////////////////////////////////
+	
+	
     mydoc = generaOriginalId(mydoc, "root/_dataList/_data/media/allegati/id");
     mydoc = generaid(mydoc, "root/_dataList/_data/media/allegati/id", 30000000);
     mydoc = rendinumeric(mydoc, "root/_dataList/_data/media/allegati/id_join");
