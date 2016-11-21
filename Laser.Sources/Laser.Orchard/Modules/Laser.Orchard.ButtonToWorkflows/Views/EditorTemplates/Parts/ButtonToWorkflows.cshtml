@@ -2,7 +2,6 @@
 @using Laser.Orchard.ButtonToWorkflows.ViewModels
 @using Orchard.ContentManagement;
 @using Laser.Orchard.ButtonToWorkflows.Security;
-<div class="custom-button pull-right"><strong>@T("Custom actions:")</strong>
 @{
     var permissionToTest = ButtonPermissions.ButtonToWorkFlow1;
     for (Int32 i = 0; i < Model.ElencoButtons.Count; i++) {
@@ -21,8 +20,8 @@
         }
         var isAuthorized = (Authorizer.Authorize(permissionToTest));
         if (isAuthorized) {
-    @Html.Raw("&nbsp;")<button   type="submit" name="submit.Save" value="@Html.Raw("submit.CustomButton" + Model.ElencoButtons[i].ButtonText)">@T(Model.ElencoButtons[i].ButtonText)</button>
-            
+            <text><div class="custom-button pull-right"><strong>@T("Custom actions:")</strong></text>
+            @Html.Raw("&nbsp;")<button   type="submit" name="submit.Save" value="@Html.Raw("submit.CustomButton" + Model.ElencoButtons[i].ButtonText)">@T(Model.ElencoButtons[i].ButtonText)</button>
         }
       @Html.HiddenFor(m => m.ElencoButtons[i].ButtonNumber)  
    @Html.HiddenFor(m => m.ElencoButtons[i].ButtonText)

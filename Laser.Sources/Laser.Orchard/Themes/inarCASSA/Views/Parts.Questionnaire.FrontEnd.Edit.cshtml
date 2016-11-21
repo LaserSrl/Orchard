@@ -15,7 +15,10 @@
         $(document).ready(function () {
             AddClassConditionedAndOnclickToAnswer();
             VerifyConditions();
-            $("div.rate").tooltip();
+            if ((('ontouchstart' in window) || ('msmaxtouchpoints' in window.navigator)) == false) {
+                // se non è attivo il touch, gestisco il tooltip
+                $("div.rate").tooltip();
+            }
         });
 
         function AddClassConditionedAndOnclickToAnswer() {
