@@ -1,0 +1,51 @@
+@using System.IO;
+@using System.Collections.Generic;
+@using System.Linq;
+@using Orchard;
+@using Orchard.Data;
+@using Orchard.Security;
+@using Orchard.ContentManagement;
+@using Orchard.Users.Models;
+@using Orchard.Utility.Extensions;
+@{
+    string result = "Done";
+    //File.AppendAllText(Path.GetTempPath()+"wf.log", "Inizio\r\n"); // log per debuggare il razor
+//    try {
+        dynamic ci = Model.ContentItem;
+        int idOwner = ci.CommonPart.Owner.Id;
+        dynamic oldOwner = (dynamic)(Model.OrchardServices.ContentManager.Get(idOwner));
+
+        //Func<ContentPart, bool> IsFieldsPart = x => x.PartDefinition.Name == ci.ContentType;
+        ContentPart part = null; // = Model.ContentItem.Parts.Where(IsFieldsPart).SingleOrDefault();
+        foreach(var p in Model.ContentItem.Parts) {
+            if(p.PartDefinition.Name == ci.ContentType) {
+                part = p;
+                break;
+            }
+        }
+        if(part != null) {
+            string newOwnerName = ((dynamic)part).NewOwner.Value;
+            if(string.IsNullOrWhiteSpace(newOwnerName)==false) {
+                IMembershipService _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();    
+                UserPart newOwner = (UserPart)_membershipService.GetUser(newOwnerName);
+                if(newOwner != null) {
+                    if(newOwner.Id != oldOwner.Id) {
+                        ci.CommonPart.Owner = newOwner;
+                    }
+                }
+                else {
+                    result = "Error";
+                    ((dynamic)part).NewOwner.Value = oldOwner.UserPart.UserName;
+                }
+            }
+            else {
+                ((dynamic)part).NewOwner.Value = oldOwner.UserPart.UserName;
+            }
+        }
+        else {
+            result = "Error";
+        }
+//    } catch (Exception ex) {
+//        result = "Error";
+//    }
+}@result
