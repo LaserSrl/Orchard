@@ -37,12 +37,6 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             else
                 registrationPoliciesIds = orchardUsersSettings.PolicyTextReferences.Select(x => Convert.ToInt32(x.Replace("{", "").Replace("}", ""))).ToArray();
 
-            var registrationPoliciesIds = new Int32[0];
-            if (orchardUsersSettings.PolicyTextReferences.Contains("{All}"))
-                registrationPoliciesIds = policies.Select(x => x.Id).ToArray();
-            else
-                registrationPoliciesIds = orchardUsersSettings.PolicyTextReferences.Select(x => Convert.ToInt32(x.Replace("{", "").Replace("}", ""))).ToArray();
-
             if (type == PoliciesRequestType.ForRegistration)
                 policies = policies.Where(x => registrationPoliciesIds.Contains(x.Id));
             else if (type == PoliciesRequestType.NotForRegistration)
