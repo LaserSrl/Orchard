@@ -116,6 +116,7 @@
     <Compile Include="Models\FidelitySettingsPart.cs" />
     <Compile Include="Models\FidelityUserPart.cs" />
     <Compile Include="Models\FidelityCustomer.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Routes\Routes.cs" />
     <Compile Include="Services\FidelityBaseServices.cs" />
     <Compile Include="Services\IFidelityServices.cs" />

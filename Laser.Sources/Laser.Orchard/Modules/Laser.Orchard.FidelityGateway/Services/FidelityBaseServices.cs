@@ -87,7 +87,7 @@ namespace Laser.Orchard.FidelityGateway.Services
                     return CreateFidelityAccount(fideliyPart, authenticatedUser.UserName, authenticatedUser.Email, campaignId);
                 }
                 else
-                    return new APIResult<FidelityCustomer> { success = false, data = null, message = "The user is not configured to use " + GetProviderName() };
+                    return new APIResult<FidelityCustomer> { success = false, data = null, message = "The user is already register in " + GetProviderName() };
             }
             else
                 return new APIResult<FidelityCustomer> { success = false, data = null, message = "Cookie not provided or not valid." };
@@ -338,25 +338,12 @@ namespace Laser.Orchard.FidelityGateway.Services
             FidelityUserPart fidelityPart = null;
             if (IsValidEmail(custId))
             {
-            //TODO filtrare prima
-            List<ContentItem> enumCI = _orchardServices.ContentManager.Query().ForType("User").List().ToList();
-            foreach(var e in enumCI){
-                foreach (var j in e.Parts)
+                var userPart = _orchardServices.ContentManager.HqlQuery().ForPart<UserPart>().Where(a => a.ContentPartRecord<UserPartRecord>(), x => x.Eq("Email", custId)).List().FirstOrDefault();
+                if (userPart == null)
                 {
-                    if(j.GetType().Name.Equals("UserPart")){
-                        UserPart userPart = (UserPart) j;
-                        if (userPart.Email.Equals(custId))
-                        {
-                            fidelityPart = (FidelityUserPart)e.Parts.Where(x => x.GetType().Name.Equals("FidelityUserPart")).First();
-                            break;
-                        }
-                    }                  
+                    return null;
                 }
-            }
-            if (fidelityPart == null)
-            {
-                return null;
-            }
+                fidelityPart = userPart.ContentItem.As<FidelityUserPart>();                    
             }
             else
             {

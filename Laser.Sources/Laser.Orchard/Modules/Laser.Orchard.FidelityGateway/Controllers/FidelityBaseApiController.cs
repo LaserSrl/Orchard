@@ -6,23 +6,28 @@ using System.Globalization;
 using System.Web.Http;
 using System.Linq;
 using Laser.Orchard.FidelityGateway.Activities;
+using Orchard.Localization;
+using Orchard.Security.Permissions;
+using Orchard;
 
 namespace Laser.Orchard.FidelityGateway.Controllers
 {
     public class FidelityBaseApiController : ApiController
     {
-
+        private readonly IOrchardServices _orchardServices;
         private readonly IFidelityServices _fidelityService;
 
-        public FidelityBaseApiController(IEnumerable<IFidelityServices> services)
+        public FidelityBaseApiController(IEnumerable<IFidelityServices> services, IOrchardServices orchardServices)
         {
             if (services.Count() > 0)
             {
+                _orchardServices = orchardServices;
                 _fidelityService = services.OrderBy(a => a.GetProviderName()).ToList()[0];
             }
 
         }
 
+        [Authorize]
         [HttpGet]
         public virtual string Test(string optional = "")
         {
@@ -37,6 +42,7 @@ namespace Laser.Orchard.FidelityGateway.Controllers
 
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<FidelityCustomer> CustomerRegistrationInDefaultCampaign()
         {
@@ -50,6 +56,7 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<FidelityCustomer> CustomerDetails()
         {
@@ -63,6 +70,10 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        /// <summary>
+        /// Dettagli del cliente con l'id o la mail passati per argomento
+        /// </summary>
+        [Authorize]
         [HttpGet]
         public virtual APIResult<FidelityCustomer> CustomerDetailsFromId(string customerId)
         {
@@ -76,6 +87,7 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<FidelityCampaign> GetCampaignData(string campaignId = null)
         {
@@ -89,6 +101,7 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<FidelityCampaign> GetDefaultCampaignData()
         {
@@ -102,6 +115,7 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<IEnumerable<FidelityCampaign>> CampaignList()
         {
@@ -115,10 +129,15 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpGet]
         public virtual APIResult<CardPointsCampaign> AddPoints(string amount, string campaignId)
         {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.AddPointsToHimself))
+            {
+                return new APIResult<CardPointsCampaign> { success = false, data = null, message = "Not permission for this action." };
+            }
+
             try
             {
                 double points;
@@ -133,9 +152,16 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<FidelityReward> GiveReward(string rewardId, string campaignId)
         {
+
+            if (!_orchardServices.Authorizer.Authorize(Permissions.GiveRewardToHimself))
+            {
+                return new APIResult<FidelityReward> { success = false, data = null, message = "Not permission for this action." };
+            }
+
             try
             {
                 if (rewardId != null)
@@ -149,6 +175,7 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<IEnumerable<ActionInCampaignRecord>> GetActions()
         {
@@ -162,9 +189,14 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<CardPointsCampaign> AddPointsFromAction(string actionId)
         {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.AddPointsToHimself))
+            {
+                return new APIResult<CardPointsCampaign> { success = false, data = null, message = "Not permission for this action." };
+            }
             try
             {
                 return _fidelityService.AddPointsFromAction(actionId, null);
@@ -175,9 +207,16 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<FidelityReward> GiveRewardInDefaultCampaign(string rewardId)
         {
+
+            if (!_orchardServices.Authorizer.Authorize(Permissions.GiveRewardToHimself))
+            {
+                return new APIResult<FidelityReward> { success = false, data = null, message = "Not permission for this action." };
+            }
+
             try
             {
                 if (rewardId != null)
@@ -191,9 +230,15 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<CardPointsCampaign> AddPointsInDefaultCampaign(string amount)
         {
+
+            if (!_orchardServices.Authorizer.Authorize(Permissions.AddPointsToHimself))
+            {
+                return new APIResult<CardPointsCampaign> { success = false, data = null, message = "Not permission for this action." };
+            }
             try
             {
                 double points;
@@ -208,6 +253,7 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<FidelityCustomer> CustomerRegistration(string campaignId)
         {
@@ -221,9 +267,15 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<CardPointsCampaign> AddPointsToCustomerInDefaultCampaign(string amount, string customerId)
         {
+
+            if (!_orchardServices.Authorizer.Authorize(Permissions.AddPointsToOtherUsers))
+            {
+                return new APIResult<CardPointsCampaign> { success = false, data = null, message = "Not permission for this action." };
+            }
             try
             {
                 double points;
@@ -242,9 +294,15 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<CardPointsCampaign> AddPointsToCustomer(string amount, string campaignId, string customerId)
         {
+
+            if (!_orchardServices.Authorizer.Authorize(Permissions.AddPointsToOtherUsers))
+            {
+                return new APIResult<CardPointsCampaign> { success = false, data = null, message = "Not permission for this action." };
+            }
             try
             {
                 double points;
@@ -263,9 +321,16 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<FidelityReward> GiveRewardToCustomerInDefaultCampaign(string rewardId, string customerId)
         {
+
+            if (!_orchardServices.Authorizer.Authorize(Permissions.GiveRewardToOtherUsers))
+            {
+                return new APIResult<FidelityReward> { success = false, data = null, message = "Not permission for this action." };
+            }
+
             try
             {
                 return _fidelityService.GiveReward(rewardId, customerId);
@@ -276,9 +341,16 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<FidelityReward> GiveRewardToCustomer(string rewardId, string campaignId, string customerId)
         {
+
+            if (!_orchardServices.Authorizer.Authorize(Permissions.GiveRewardToOtherUsers))
+            {
+                return new APIResult<FidelityReward> { success = false, data = null, message = "Not permission for this action." };
+            }
+
             try
             {
                 return _fidelityService.GiveReward(rewardId, campaignId, customerId);
@@ -289,9 +361,14 @@ namespace Laser.Orchard.FidelityGateway.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public virtual APIResult<CardPointsCampaign> AddPointsFromActionToCustomer(string actionId, string customerId)
         {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.AddPointsToOtherUsers))
+            {
+                return new APIResult<CardPointsCampaign> { success = false, data = null, message = "Not permission for this action." };
+            }
             try
             {
                 return _fidelityService.AddPointsFromAction(actionId, customerId);
