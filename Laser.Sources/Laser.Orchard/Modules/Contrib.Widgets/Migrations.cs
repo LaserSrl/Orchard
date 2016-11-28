@@ -52,5 +52,10 @@ namespace Contrib.Widgets {
 
             return 2;
         }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("WidgetsPage", type => type.Listable());
+            return 3;
+        }
     }
 }
