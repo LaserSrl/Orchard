@@ -124,5 +124,10 @@ namespace Laser.Orchard.Events
 
             return 2;
         }
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("Calendar", type => type.Listable());
+            ContentDefinitionManager.AlterTypeDefinition("CalendarEvent", type => type.Listable());
+            return 3;
+        }
     }
 }
