@@ -151,7 +151,6 @@ namespace Laser.Orchard.FidelityGateway.Services
             }
         }
 
-        //simsol override
         public virtual APIResult<FidelityCampaign> GetCampaignData(string id)
         {
             FidelityCampaign campaign = new FidelityCampaign();
@@ -322,8 +321,7 @@ namespace Laser.Orchard.FidelityGateway.Services
                 {
                     string pass = Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(fidelityPart.FidelityPassword)));
                     FidelityCustomer customer = new FidelityCustomer(authenticatedUser.Email, fidelityPart.FidelityUsername, pass);
-                    if (String.IsNullOrWhiteSpace(fidelityPart.CustomerId)) //TODO vedere se funziona anche su simsol, se non spostarlo in Loayalzoo Service (fatto per il primo utente al quale non era stato salvato in fase di registrazione
-                    {
+                    if (String.IsNullOrWhiteSpace(fidelityPart.CustomerId)) {
                         fidelityPart.CustomerId = _sendService.SendCustomerDetails(settingsPart, customer).data.Id;
                     }
                     customer.Id = fidelityPart.CustomerId;

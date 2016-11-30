@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Orchard.Modules;
-//using Orchard.Modules.Services;
-//using Orchard.Modules.Models;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 
@@ -20,7 +18,6 @@ namespace Laser.Orchard.FidelityGateway.Services
 
         public Localizer T { get; set; }
 
-        //IModuleService modules
         public NotificatorService(IFeatureManager fmanager)
         {
             this.features = fmanager.GetEnabledFeatures();

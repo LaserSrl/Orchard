@@ -10,13 +10,13 @@ namespace Laser.Orchard.FidelityGateway.Services
         /// Crea un account sul provider remoto basandosi sui dati dell'utente orchard autenticato, 
         /// associando l'utente alla campagna di default
         /// </summary>
-        /// <returns>Id del merchant</returns>
+        /// <returns>APIResult con incapsulato il FidelityCustomer con tutti i dati reperiti dal provider</returns>
         APIResult<FidelityCustomer> CreateFidelityAccountFromCookie();
 
         /// <summary>
         /// Crea un account sul provider remoto con i dati passati per parametro
         /// </summary>
-        /// <returns>Id del merchant</returns>
+        /// <returns>APIResult con incapsulato il FidelityCustomer con tutti i dati reperiti dal provider</returns>
         APIResult<FidelityCustomer> CreateFidelityAccount(FidelityUserPart fidelityPart, string username, string email, string camapaignId);
 
         /// <summary>
@@ -33,18 +33,19 @@ namespace Laser.Orchard.FidelityGateway.Services
         APIResult<FidelityCampaign> GetCampaignData(string id);
 
         /// <summary>
-        /// Richiede l'aggiunta di punti del cliente autenticato in Orchard su una determinata campagna.
+        /// Richiede l'aggiunta di punti del cliente autenticato in Orchard su una determinata campagna ad un determinato utunte.
         /// </summary>
         /// <param name="numPoints">numero di punti da aumentare </param>
         /// <param name="campaignId">identificativo della campagna su cui aumentare i punti </param>
+        /// <param name="customerId">identificativo (id o email) del cliente a cui aumentare i punti </param>
         /// <returns>APIResult con incapsulato id campagna, id cliente e il numero di punti aggiornato</returns>  
         APIResult<CardPointsCampaign> AddPoints(string numPoints, string campaignId, string customerId);
 
         /// <summary>
         /// Richiede l'aggiunta di punti del cliente associato ad un'azione salvata in precedenza su Krake
         /// </summary>
-        /// <param name="numPoints">numero di punti da aumentare </param>
-        /// <param name="campaignId">identificativo della campagna su cui aumentare i punti </param>
+        /// <param name="action">codice dell'azione </param>
+        /// <param name="customerId">identificativo della cliente a cui aggiungere i punti </param>
         /// <returns>APIResult con incapsulato id campagna, id cliente e il numero di punti aggiornato</returns>  
         APIResult<CardPointsCampaign> AddPointsFromAction(string action, string customerId);
 
@@ -54,11 +55,12 @@ namespace Laser.Orchard.FidelityGateway.Services
         /// </summary>
         /// <param name="rewardId">identificativo del premio da donare</param>
         /// <param name="campaignId">identificativo della campagna su cui è presente il premio da ritirare </param>
+        /// <param name="customerId">identificativo della cliente a cui donare il premio </param>
         /// <returns>APIResult con incapsulato il premio donato</returns>
         APIResult<FidelityReward> GiveReward(string rewardId, string campaignId, string customerId);
 
         /// <summary>
-        /// Richiede la lista di tutte le campagne associate al merchant.
+        /// Richiede la lista di tutte le campagne.
         /// </summary>
         /// <returns>APIResult con incapsulato la lista di tutte le campagne, associate al merchant, in cui almeno l'Id è settato</returns>
         APIResult<IEnumerable<FidelityCampaign>> GetCampaignList();
@@ -80,13 +82,15 @@ namespace Laser.Orchard.FidelityGateway.Services
         /// con conseguente decremento dei punti.
         /// </summary>
         /// <param name="rewardId">identificativo del premio da donare</param>
+        /// <param name="customerId">identificativo della cliente a cui donare il premio </param>
         /// <returns>APIResult con incapsulato il premio donato</returns>
         APIResult<FidelityReward> GiveReward(string rewardId, string custormerId);
 
         /// <summary>
         /// Richiede l'aggiunta di punti del cliente autenticato in Orchard sulla campagna di defauls.
         /// </summary>
-        /// <param name="numPoints">numero di punti da aumentare </param>
+        /// <param name="amount">numero di punti da aumentare </param>
+        /// <param name="customerId">identificativo della cliente a cui aggiungere i punti </param>
         /// <returns>APIResult con incapsulato id campagna, id cliente e il numero di punti aggiornato</returns>  
         APIResult<CardPointsCampaign> AddPoints(string amount, string customerId);
 

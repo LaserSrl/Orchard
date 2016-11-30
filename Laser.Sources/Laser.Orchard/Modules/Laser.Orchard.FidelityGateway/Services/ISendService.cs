@@ -7,10 +7,11 @@ namespace Laser.Orchard.FidelityGateway.Services
     public interface ISendService :IDependency
     {
         /// <summary>
-        /// Invia la richiesta di registrazione di un cliente al provider di fidelity.
+        /// Invia la richiesta di registrazione di un cliente al provider di fidelity associandogli, se presente, la campagna passata.
         /// </summary>
         /// <param name="setPart">Parte con i settings per la comunicazione e i dati del merchant</param>
         /// <param name="custumer">FidelityCustomer con dati settati per la registrazione</param>
+        /// <param name="campaignId"> identificativo della campagna da associare al cliente</param>
         /// <returns>APIResult con incapsulato un FidelityCustomer con almeno l'Id settato e tutti i dati già presenti nel customer param</returns>
         APIResult<FidelityCustomer> SendCustomerRegistration(FidelitySettingsPart setPart, FidelityCustomer custumer, string campaignId);
 
@@ -31,7 +32,7 @@ namespace Laser.Orchard.FidelityGateway.Services
         APIResult<FidelityCampaign> SendCampaignData(FidelitySettingsPart setPart, FidelityCampaign campaign);
 
         /// <summary>
-        /// Invia la richiesta per i avere una lista di tutte le campagne associate al merchant.
+        /// Invia la richiesta per i avere una lista di tutte le campagne associate.
         /// </summary>
         /// <param name="setPart">Parte con i settings per la comunicazione e i dati del merchant</param>
         /// <returns>APIResult con incapsulato un elenco di FidelityCampaign con almeno l'Id settato</returns>
@@ -59,12 +60,7 @@ namespace Laser.Orchard.FidelityGateway.Services
         /// <returns>APIResult con incapsulato il successo/insuccesso dell'operazione</returns>
         APIResult<bool> SendGiveReward(FidelitySettingsPart setPart, FidelityCustomer custoer, FidelityReward reward, FidelityCampaign campaign);
 
-        /// <summary>
-        /// Invia la richiesta per il di settings aggiuntive relative ad ogni provider, utilizzato da i servizzi dei moduli specifici dei provider
-        /// </summary>
-        /// <param name="setPart">Parte con i settings per la comunicazione e i dati del merchant</param>
-        /// <returns>APIResult con incapsulato un dizionario di settings</returns>
-        APIResult<IDictionary<string, string>> GetOtherSettings(FidelitySettingsPart setPart);
+
 
     }
 }
