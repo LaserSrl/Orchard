@@ -9585,3 +9585,14 @@ li.L8 {
     box-sizing: border-box;
     
 }
+
+div.zone-header > #culture-selection {
+    width:100%;
+    height:0px;
+}
+
+div.zone-header > #culture-selection select {
+    position:absolute;
+    right:250px;
+    top: 20px;
+}

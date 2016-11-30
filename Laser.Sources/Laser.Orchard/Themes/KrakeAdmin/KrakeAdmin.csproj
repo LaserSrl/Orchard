@@ -83,26 +83,27 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Site.css" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="packages.config" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\admin.js" />
+    <Content Include="Scripts\App.js" />
+    <Content Include="Scripts\App.min.js" />
+    <Content Include="Scripts\AppCard.js" />
+    <Content Include="Scripts\AppForm.js" />
+    <Content Include="Scripts\AppNavigation.js" />
+    <Content Include="Scripts\AppNavSearch.js" />
+    <Content Include="Scripts\AppOffcanvas.js" />
+    <Content Include="Scripts\AppVendor.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery.autosize.min.js" />
+    <Content Include="Scripts\jquery.min.js" />
+    <Content Include="Scripts\jquery.nanoscroller.min.js" />
     <Content Include="Scripts\krake.js" />
     <Content Include="Scripts\main.js" />
-    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\overthrow.min.js" />
+    <Content Include="Styles\fonts\fontawesome-webfont.svg" />
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Styles\fonts\HANDGOTB.svg" />
+    <Content Include="Styles\fonts\Material-Design-Iconic-Font.svg" />
     <Content Include="Styles\Images\adminNavBackground.gif" />
     <Content Include="Styles\Images\arrow-number.png" />
     <Content Include="Styles\Images\bg-app.png" />
@@ -178,7 +179,6 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Media-Video.Thumbnail.cshtml" />
@@ -211,6 +211,28 @@
     <Content Include="Styles\fonts\HANDGOTB.otf" />
     <Content Include="Styles\fonts\HANDGOTB.ttf" />
     <Content Include="Styles\fonts\HANDGOTB.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Localization\it-IT\orchard.theme.po" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery.nanoscroller.min.js.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\fonts\fontawesome-webfont.eot" />
+    <Content Include="Styles\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Styles\fonts\fontawesome-webfont.woff" />
+    <Content Include="Styles\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Styles\fonts\FontAwesome.otf" />
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\fonts\Material-Design-Iconic-Font.eot" />
+    <Content Include="Styles\fonts\Material-Design-Iconic-Font.ttf" />
+    <Content Include="Styles\fonts\Material-Design-Iconic-Font.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
