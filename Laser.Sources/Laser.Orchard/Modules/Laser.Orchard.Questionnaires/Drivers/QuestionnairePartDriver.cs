@@ -260,7 +260,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                     Position = int.Parse(q.Attribute("Position").Value),
                     Published = bool.Parse(q.Attribute("Published").Value),
                     Question = q.Attribute("Question").Value,
-                    Section = q.Attribute("Section").Value,
+                    Section = q.Attribute("Section") != null ? q.Attribute("Section").Value : null,
                     QuestionType = (QuestionType)Enum.Parse(typeof(QuestionType), q.Attribute("QuestionType").Value),
                     AnswerType = (AnswerType)Enum.Parse(typeof(AnswerType), q.Attribute("AnswerType").Value),
                     IsRequired = bool.Parse(q.Attribute("IsRequired").Value),
