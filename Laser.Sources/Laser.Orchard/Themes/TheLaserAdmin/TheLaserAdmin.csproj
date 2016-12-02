@@ -60,6 +60,9 @@
     <Reference Include="Orchard.Media">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Media\bin\Orchard.Media.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.MediaLibrary">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.MediaLibrary\bin\Orchard.MediaLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">

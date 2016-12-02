@@ -695,7 +695,7 @@ hr.ruler-xxl {
 
 .fuelphp-dump {
     position: fixed;
-    z-index: 999;
+    z-index: 99;
     right: 0;
     bottom: 0;
 }
@@ -1343,7 +1343,7 @@ a.text-success:hover {
 
 #base > .backdrop {
     position: fixed;
-    z-index: 1031;
+    z-index: 131;
     left: 0;
     right: 0;
     top: 0;
@@ -1438,7 +1438,7 @@ a.text-success:hover {
     left: 0;
     right: 0;
     height: 64px;
-    z-index: 1005;
+    z-index: 105;
     background: #ffffff;
     color: rgba(49, 53, 52, 0.6);
     -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
@@ -1718,7 +1718,7 @@ a.text-success:hover {
     }
 
     .headerbar-left {
-        z-index: 1011;
+        z-index: 111;
         left: 0;
         right: 0;
         height: 64px;
@@ -1754,7 +1754,7 @@ a.text-success:hover {
 
     .headerbar-right .header-nav-toggle {
         position: absolute;
-        z-index: 1012;
+        z-index: 112;
         top: -64px;
         right: 0;
     }
@@ -1811,7 +1811,7 @@ a.text-success:hover {
 
 #menubar {
     position: fixed;
-    z-index: 1004;
+    z-index: 104;
     left: 0;
     top: 64px;
     bottom: 0;
@@ -1820,7 +1820,7 @@ a.text-success:hover {
 }
 
 .menubar-first #menubar {
-    z-index: 1006;
+    z-index: 106;
 }
 
 #menubar:before {
@@ -1957,7 +1957,7 @@ body:not(.menubar-first) .menubar-fixed-panel {
 @media (max-width: 768px) {
     #menubar {
         width: 240px;
-        z-index: 1013;
+        z-index: 113;
         -webkit-transform: translate(-250px, 0);
         -ms-transform: translate(-250px, 0);
         -o-transform: translate(-250px, 0);
@@ -2768,7 +2768,7 @@ section.full-bleed {
 
 .full-content .section-action {
     position: fixed;
-    z-index: 1001;
+    z-index: 101;
     bottom: 0;
     left: 64px;
     right: 0;
@@ -7021,7 +7021,7 @@ section.style-info .btn-flat:hover,
     bottom: 0;
     background-color: #ffffff;
     background-color: rgba(255, 255, 255, 0.6);
-    z-index: 999;
+    z-index: 99;
 }
 
 .card .btn-collapse {
@@ -7147,7 +7147,7 @@ section.style-info .btn-flat:hover,
     top: 0;
     bottom: 0;
     right: 0;
-    z-index: 1032;
+    z-index: 132;
 }
 
 body.offcanvas-expanded {
