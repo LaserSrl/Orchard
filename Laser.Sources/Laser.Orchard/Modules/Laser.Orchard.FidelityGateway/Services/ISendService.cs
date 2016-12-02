@@ -60,7 +60,7 @@ namespace Laser.Orchard.FidelityGateway.Services
         /// <returns>APIResult con incapsulato il successo/insuccesso dell'operazione</returns>
         APIResult<bool> SendGiveReward(FidelitySettingsPart setPart, FidelityCustomer custoer, FidelityReward reward, FidelityCampaign campaign);
 
-
+        APIResult<IDictionary<string, string>> GetOtherSettings(FidelitySettingsPart setPart);
 
     }
 }

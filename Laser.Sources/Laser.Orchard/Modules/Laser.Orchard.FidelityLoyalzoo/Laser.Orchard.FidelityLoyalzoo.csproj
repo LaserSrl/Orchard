@@ -58,9 +58,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Laser.Orchard.FidelityGateway\bin\Laser.Orchard.FidelityGateway.dll</HintPath>
     </Reference>
-    <Reference Include="Laser.Orchard.StartupConfig">
-      <HintPath>..\Laser.Orchard.StartupConfig\bin\Laser.Orchard.StartupConfig.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
