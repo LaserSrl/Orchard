@@ -209,6 +209,7 @@
         }
         //Autoroute
         newCalEvent.As<AutoroutePart>().DisplayAlias = _autorouteService.GenerateAlias(newCalEvent.As<AutoroutePart>());
+		_autorouteService.ProcessPath(newCalEvent.As<AutoroutePart>());
         _autorouteService.PublishAlias(newCalEvent.As<AutoroutePart>());
         //Activity Part
         newCalEvent.As<ActivityPart>().DateTimeEnd = translatableEvents[""].endTime;
