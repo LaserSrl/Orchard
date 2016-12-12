@@ -13,6 +13,8 @@ using Orchard.Utility.Extensions;
 using System;
 using System.Linq;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Navigation.Models;
+
 
 
 namespace Laser.Orchard.DynamicNavigation.Drivers {
@@ -154,12 +156,20 @@ namespace Laser.Orchard.DynamicNavigation.Drivers {
             return Editor(part, shapeHelper);
         }
 
+
+
         protected override void Importing(DynamicMenuPart part, ImportContentContext context) {
             
-            var importedMenuId = context.Attribute(part.PartDefinition.Name, "MenuId");
-            if (importedMenuId != null) {
-                part.MenuId = int.Parse(importedMenuId);
-            }
+            //mod 05-12-2016
+            context.ImportAttribute(part.PartDefinition.Name, "MenuId", x => {
+                var tempPartFromid = context.GetItemFromSession(x);
+
+                if (tempPartFromid != null && tempPartFromid.Is<MenuPart>()) {
+                    //associa id menu
+                    part.MenuId = tempPartFromid.As<MenuPart>().Id;
+                }
+            });
+
 
             var importedLevelsToShow = context.Attribute(part.PartDefinition.Name, "LevelsToShow");
             if (importedLevelsToShow != null) {
@@ -174,9 +184,20 @@ namespace Laser.Orchard.DynamicNavigation.Drivers {
         }
 
         protected override void Exporting(DynamicMenuPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("MenuId", part.MenuId);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("LevelsToShow", part.LevelsToShow);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ShowFirstLevelBrothers", part.ShowFirstLevelBrothers);
+            
+            //mod. 05-12-2016
+            var root = context.Element(part.PartDefinition.Name);
+            
+            if (part.MenuId > 0) {
+                //cerco il corrispondente valore dell' identity dalla parts del menu e lo associo al campo menuid 
+                var contItemMenu = _contentManager.Get(part.MenuId);
+                if (contItemMenu != null) {
+                    root.SetAttributeValue("MenuId", _contentManager.GetItemMetadata(contItemMenu).Identity.ToString());
+                }
+              
+            }
+            root.SetAttributeValue("LevelsToShow", part.LevelsToShow);
+            root.SetAttributeValue("ShowFirstLevelBrothers", part.ShowFirstLevelBrothers);
         }
 
 

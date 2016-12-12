@@ -16,18 +16,21 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class CommunicationAdvertisingPartDriver : ContentPartDriver<CommunicationAdvertisingPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly ICultureManager _cultureManager;
+        private readonly IContentManager _contentManager;
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+
 
         protected override string Prefix {
             get { return "Laser.Orchard.CommunicationAdvertisingPartDriver"; }
         }
 
-        public CommunicationAdvertisingPartDriver(IOrchardServices orchardServices, ICultureManager cultureManager) {
+        public CommunicationAdvertisingPartDriver(IOrchardServices orchardServices, ICultureManager cultureManager, IContentManager contentManager) {
             _orchardServices = orchardServices;
             //    Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             _cultureManager = cultureManager;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Editor(CommunicationAdvertisingPart part, dynamic shapeHelper) {
@@ -66,10 +69,15 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             //throw new NotImplementedException();
            // context.ImportAttribute(part.PartDefinition.Name, "CampaignId", s => part.ContentItem = context.GetItemFromSession(s));
 
-            var importedCampaignId = context.Attribute(part.PartDefinition.Name, "CampaignId");
-            if (importedCampaignId != null) {
-                part.CampaignId = Convert.ToInt32(importedCampaignId);
-            }
+            //Mod 30-11-2016
+            context.ImportAttribute(part.PartDefinition.Name, "CampaignId", x => {
+                var campPartFromid = context.GetItemFromSession(x);
+
+                if (campPartFromid != null && campPartFromid.Is<CommunicationCampaignPart>()) {
+                    //associa id template
+                    part.CampaignId = campPartFromid.As<CommunicationCampaignPart>().Id;
+                }
+            });
 
            
         }
@@ -78,8 +86,19 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             //throw new NotImplementedException();
             //var root = context.Element(part.PartDefinition.Name);
             //root.SetAttributeValue("CampaignId", part.CampaignId);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("CampaignId", part.CampaignId);
 
+            // mod 30-11-2016
+            var root = context.Element(part.PartDefinition.Name);
+
+            if (part.CampaignId > 0) {
+                //cerco il corrispondente valore dell' identity dalla parts del template e lo associo al campo Layout 
+                var contItemCamp = _contentManager.Get(part.CampaignId);
+                if (contItemCamp != null) {
+                    root.SetAttributeValue("CampaignId", _contentManager.GetItemMetadata(contItemCamp).Identity.ToString());
+                }
+
+            }
+            ////////////////////////////////////////////////////////   
         }
 
     }

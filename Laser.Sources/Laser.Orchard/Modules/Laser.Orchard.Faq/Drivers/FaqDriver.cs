@@ -5,6 +5,7 @@ using Laser.Orchard.Faq.ViewModels;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Localization;
 
@@ -75,17 +76,44 @@ namespace Laser.Orchard.Faq.Drivers
             return Editor(part, shapeHelper);
         }
 
-        protected override void Exporting(FaqPart part, global::Orchard.ContentManagement.Handlers.ExportContentContext context)
+
+        protected override void Exporting(FaqPart part, ExportContentContext context)
         {
-            context.Element(part.PartDefinition.Name)
-                       .SetAttributeValue("FaqTypeId", part.FaqTypeId);
+           
+            //12-12-2016
+            var root = context.Element(part.PartDefinition.Name);
+           
+            if (part.FaqTypeId > 0) {
+                
+                ////cerco il corrispondente valore dell' identity dalla parts del template e lo associo al campo 
+                var contItemTempl = _contentManager.Get(part.FaqTypeId);
+                if (contItemTempl != null) {
+                    root.SetAttributeValue("FaqTypeId", _contentManager.GetItemMetadata(contItemTempl).Identity.ToString());
+                }
+             
+            }
+            ////////////////////////////////////////////////////////   
+            
             context.Element(part.PartDefinition.Name).SetAttributeValue("Question", part.Question);
         }
 
-        protected override void Importing(FaqPart part, global::Orchard.ContentManagement.Handlers.ImportContentContext context)
+
+
+        protected override void Importing(FaqPart part, ImportContentContext context)
         {
             part.Question = context.Attribute(part.PartDefinition.Name, "Question") ?? string.Empty;
-            part.FaqTypeId = context.Attribute(part.PartDefinition.Name, "FaqTypeId") == string.Empty ? 0 : int.Parse(context.Attribute(part.PartDefinition.Name, "FaqTypeId"));
+
+            //////12-12-2016
+            context.ImportAttribute(part.PartDefinition.Name, "FaqTypeId", x => {
+                var tempPartFromid = context.GetItemFromSession(x);
+
+                if (tempPartFromid != null && tempPartFromid.Is<FaqTypePart>()) {
+                    //associa id faq
+                    part.FaqTypeId = tempPartFromid.As<FaqTypePart>().Id;
+                }
+            });
+
+           
         }
 
 

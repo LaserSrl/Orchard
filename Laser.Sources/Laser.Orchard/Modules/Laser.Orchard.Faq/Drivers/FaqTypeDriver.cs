@@ -2,6 +2,7 @@
 using Laser.Orchard.Faq.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Mvc;
 
@@ -56,15 +57,14 @@ namespace Laser.Orchard.Faq.Drivers
             return Editor(part, shapeHelper);
         }
 
-        protected override void Exporting(FaqTypePart part, global::Orchard.ContentManagement.Handlers.ExportContentContext context)
+        protected override void Exporting(FaqTypePart part, ExportContentContext context)
         {
-            context.Element(part.PartDefinition.Name)
-                   .SetAttributeValue("FaqTypeTitle", part.Title);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Title", part.Title);
         }
 
-        protected override void Importing(FaqTypePart part, global::Orchard.ContentManagement.Handlers.ImportContentContext context)
+        protected override void Importing(FaqTypePart part, ImportContentContext context)
         {
-            part.Title = context.Attribute(part.PartDefinition.Name, "FaqTypeTitle") ?? string.Empty;
+            part.Title = context.Attribute(part.PartDefinition.Name, "Title") ?? string.Empty;
         }
 
     }

@@ -10,10 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Orchard.ContentManagement;
+using Orchard.Users.Models;
 
 namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class CommunicationContactDriver : ContentPartDriver<CommunicationContactPart> {
         private readonly IOrchardServices _orchardServices;
+        private readonly IContentManager _contentManager;
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
@@ -22,10 +25,11 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             get { return "Laser.Orchard.CommunicationGateway"; }
         }
 
-        public CommunicationContactDriver(IOrchardServices orchardServices) {
+        public CommunicationContactDriver(IOrchardServices orchardServices, IContentManager contentManager) {
             _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Display(CommunicationContactPart part, string displayType, dynamic shapeHelper) {
@@ -62,15 +66,17 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         }
 
         protected override void Importing(CommunicationContactPart part, ImportContentContext context) {
-            //var root = context.Data.Element(part.PartDefinition.Name);
-            //part.UserIdentifier = int.Parse(root.Attribute("UserIdentifier").Value);
-            //part.Master = bool.Parse(root.Attribute("Master").Value);
-            //part.Logs = root.Attribute("Logs").Value;
+            
+            //mod 12-12-2016
+            context.ImportAttribute(part.PartDefinition.Name, "UserIdentifier", x => {
+                var tempPartFromid = context.GetItemFromSession(x);
 
-            var importedUserIdentifier = context.Attribute(part.PartDefinition.Name, "UserIdentifier");
-            if (importedUserIdentifier != null) {
-                part.UserIdentifier = Convert.ToInt32(importedUserIdentifier);
-            }
+                if (tempPartFromid != null && tempPartFromid.Is<UserPart>()) {
+                    //associa id user
+                    part.UserIdentifier = tempPartFromid.As<UserPart>().Id;
+                }
+            });
+
 
             var importedMaster = context.Attribute(part.PartDefinition.Name, "Master");
             if (importedMaster != null) {
@@ -85,11 +91,17 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         }
 
         protected override void Exporting(CommunicationContactPart part, ExportContentContext context) {
-            //var root = context.Element(part.PartDefinition.Name);
-            //root.SetAttributeValue("UserIdentifier", part.UserIdentifier);
-            //root.SetAttributeValue("Master", part.Master);
-            //root.SetAttributeValue("Logs", part.Logs);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("UserIdentifier", part.UserIdentifier);
+            var root = context.Element(part.PartDefinition.Name);
+            
+            //mod. 12-12-2016
+            if (part.UserIdentifier > 0) {
+                //cerco il corrispondente valore dell' identity dalla partse lo associo al campo iduser 
+                var contItemUser = _contentManager.Get(part.UserIdentifier);
+                if (contItemUser != null) {
+                    root.SetAttributeValue("IdUser", _contentManager.GetItemMetadata(contItemUser).Identity.ToString());
+                }
+            }
+
             context.Element(part.PartDefinition.Name).SetAttributeValue("Master", part.Master);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Logs", part.Logs);
         

@@ -47,12 +47,14 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         private readonly IRepository<CommunicationSmsRecord> _repoSms;
         private readonly ITransactionManager _transaction;
         private readonly IOrchardServices _orchardServices;
+        private readonly IContentManager _contentManager;
 
-        public SmsContactPartDriver(IRepository<CommunicationSmsRecord> repoSms, ITransactionManager transaction, IOrchardServices orchardServices) {
+        public SmsContactPartDriver(IRepository<CommunicationSmsRecord> repoSms, ITransactionManager transaction, IOrchardServices orchardServices, IContentManager contentManager) {
             _repoSms = repoSms;
             T = NullLocalizer.Instance;
             _transaction = transaction;
             _orchardServices = orchardServices;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Display(SmsContactPart part, string displayType, dynamic shapeHelper) {
@@ -163,67 +165,95 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         /// <param name="context"></param>
         protected override void Importing(SmsContactPart part, ImportContentContext context) {
 
-            //throw new NotImplementedException();
-
             var importedSmsRecord = context.Data.Element(part.PartDefinition.Name).Elements("SmsRecord");
-          
+
             if (importedSmsRecord != null) {
 
-                List<CommunicationSmsRecord> listCom = new List<CommunicationSmsRecord>();
-                foreach (var sms in importedSmsRecord) 
-                {
-                    CommunicationSmsRecord comsms = new CommunicationSmsRecord();
+                try {
 
-                    var DataModifica = sms.Attribute("DataModifica").Value;
-                    if (DataModifica !=null)
-                        comsms.DataModifica = Convert.ToDateTime(DataModifica);
+                    _transaction.Demand();
 
-                    var DataInserimento = sms.Attribute("DataInserimento").Value;
-                    if (DataInserimento != null)
-                        comsms.DataInserimento = Convert.ToDateTime(DataInserimento);
 
-                    var Prefix = sms.Attribute("Prefix").Value;
-                    if (Prefix != null)
-                        comsms.Prefix = Prefix;
-
-                    var Sms = sms.Attribute("Sms").Value;
-                    if (Sms != null)
-                        comsms.Sms = Sms;
-
-                    var Produzione = sms.Attribute("Produzione").Value;
-                    if (Produzione != null)
-                        comsms.Produzione =Convert.ToBoolean(Produzione);
-
-                    var AccettatoUsoCommerciale = sms.Attribute("AccettatoUsoCommerciale").Value;
-                    if (AccettatoUsoCommerciale != null)
-                        comsms.AccettatoUsoCommerciale = Convert.ToBoolean(AccettatoUsoCommerciale);
-
-                    var AutorizzatoTerzeParti = sms.Attribute("AutorizzatoTerzeParti").Value;
-                    if (AutorizzatoTerzeParti != null)
-                        comsms.AutorizzatoTerzeParti = Convert.ToBoolean(AutorizzatoTerzeParti);
+                    List<CommunicationSmsRecord> listCom = new List<CommunicationSmsRecord>();
                     
-                    listCom.Add(comsms);
+                    foreach (var sms in importedSmsRecord) {
+                        
+                        CommunicationSmsRecord comsms = new CommunicationSmsRecord();
 
-                    part.SmsEntries.Value = listCom;
-                    part.SmsRecord = part.SmsEntries.Value;
-                   
+                        ////////////////////////////////////////////////////////////////
+                        //mod 30-11-2016
+                        var tempPartFromid = context.GetItemFromSession(sms.Attribute("SmsContactPartRecord_Id").Value);
+
+                        if (tempPartFromid != null && tempPartFromid.Is<CommunicationContactPart>()) {
+                            //associa id contact
+                            comsms.SmsContactPartRecord_Id = tempPartFromid.As<CommunicationContactPart>().Id;
+                        }
+                        //////////////////////
+
+
+                        var DataModifica = sms.Attribute("DataModifica").Value;
+                        if (DataModifica != null)
+                            comsms.DataModifica = Convert.ToDateTime(DataModifica);
+
+                        var DataInserimento = sms.Attribute("DataInserimento").Value;
+                        if (DataInserimento != null)
+                            comsms.DataInserimento = Convert.ToDateTime(DataInserimento);
+
+                        var Prefix = sms.Attribute("Prefix").Value;
+                        if (Prefix != null)
+                            comsms.Prefix = Prefix;
+
+                        var Sms = sms.Attribute("Sms").Value;
+                        if (Sms != null)
+                            comsms.Sms = Sms;
+
+                        var Produzione = sms.Attribute("Produzione").Value;
+                        if (Produzione != null)
+                            comsms.Produzione = Convert.ToBoolean(Produzione);
+
+                        var AccettatoUsoCommerciale = sms.Attribute("AccettatoUsoCommerciale").Value;
+                        if (AccettatoUsoCommerciale != null)
+                            comsms.AccettatoUsoCommerciale = Convert.ToBoolean(AccettatoUsoCommerciale);
+
+                        var AutorizzatoTerzeParti = sms.Attribute("AutorizzatoTerzeParti").Value;
+                        if (AutorizzatoTerzeParti != null)
+                            comsms.AutorizzatoTerzeParti = Convert.ToBoolean(AutorizzatoTerzeParti);
+
+                        _repoSms.Create(comsms);
+
+                        listCom.Add(comsms);
+
+
+                    }
+
+                    part.SmsRecord = listCom;
+                    _repoSms.Flush();
                 }
+                catch (Exception ex) {
+                    _transaction.Cancel();
 
-
+                }
             }
-
        }
 
 
         protected override void Exporting(SmsContactPart part, ExportContentContext context) {
-
             
             if (part.SmsRecord != null) {
                 var root = context.Element(part.PartDefinition.Name);
                 foreach (CommunicationSmsRecord rec in part.SmsRecord) {
                     XElement smsText = new XElement("SmsRecord");
 
-                    smsText.SetAttributeValue("Id", rec.Id);
+                    //mod 31-11-2016      
+                    if (rec.SmsContactPartRecord_Id > 0) {
+                        //cerco il corrispondente valore dell' identity dalla parts del contact e lo associo al campo SmsContactPartRecord_Id 
+                        var contItemContact = _contentManager.Get(rec.SmsContactPartRecord_Id);
+                        if (contItemContact != null) {
+                            smsText.SetAttributeValue("SmsContactPartRecord_Id", _contentManager.GetItemMetadata(contItemContact).Identity.ToString());
+                        }
+                    }
+                    //////
+
                     smsText.SetAttributeValue("Language", rec.Language);
                     smsText.SetAttributeValue("Validated", rec.Validated);
                     smsText.SetAttributeValue("DataInserimento", rec.DataInserimento);

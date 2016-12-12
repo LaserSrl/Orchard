@@ -8,12 +8,14 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Users.Models;
 
 namespace Laser.Orchard.Twitter.Drivers {
 
     public class TwitterAccountDriver : ContentPartDriver<TwitterAccountPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly ITwitterService _TwitterService;
+        IContentManager _contentManager;
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
@@ -22,11 +24,13 @@ namespace Laser.Orchard.Twitter.Drivers {
             get { return "Laser.Orchard.Twitter"; }
         }
 
-        public TwitterAccountDriver(IOrchardServices orchardServices, ITwitterService TwitterService) {
+        public TwitterAccountDriver(IOrchardServices orchardServices, ITwitterService TwitterService,
+                                    IContentManager contentManager) {
             _orchardServices = orchardServices;
             _TwitterService = TwitterService;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Editor(TwitterAccountPart part, dynamic shapeHelper) {
@@ -50,7 +54,16 @@ namespace Laser.Orchard.Twitter.Drivers {
 
 
         protected override void Importing(TwitterAccountPart part, ImportContentContext context) {
-            
+
+
+            context.ImportAttribute(part.PartDefinition.Name, "IdUser", x => {
+                var tempPartFromid = context.GetItemFromSession(x);
+                if (tempPartFromid != null && tempPartFromid.Is<UserPart>()) {
+                    //associa id user
+                    part.IdUser = tempPartFromid.As<UserPart>().Id;
+                }
+            });
+
             var importedSocialName = context.Attribute(part.PartDefinition.Name, "SocialName");
             if (importedSocialName != null) {
                 part.SocialName = importedSocialName;
@@ -64,11 +77,6 @@ namespace Laser.Orchard.Twitter.Drivers {
             var importedUserTokenSecret = context.Attribute(part.PartDefinition.Name, "UserTokenSecret");
             if (importedUserTokenSecret != null) {
                 part.UserTokenSecret = importedUserTokenSecret;
-            }
-
-            var importedIdUser = context.Attribute(part.PartDefinition.Name, "IdUser");
-            if (importedIdUser != null) {
-                part.IdUser = int.Parse(importedIdUser);
             }
 
             var importedShared = context.Attribute(part.PartDefinition.Name, "Shared");
@@ -87,14 +95,28 @@ namespace Laser.Orchard.Twitter.Drivers {
             }
         }
 
+
+
         protected override void Exporting(TwitterAccountPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("SocialName", part.SocialName);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("AccountType", part.AccountType);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("UserTokenSecret", part.UserTokenSecret);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("IdUser", part.IdUser);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Shared", part.Shared);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Valid", part.Valid);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayAs", part.DisplayAs);
+
+            //06-12-2016
+            var root = context.Element(part.PartDefinition.Name);
+
+            if (part.IdUser > 0) {
+                //cerco il corrispondente valore dell' identity dalla partse lo associo al campo iduser 
+                var contItemUser = _contentManager.Get(part.IdUser);
+                if (contItemUser != null) {
+                    root.SetAttributeValue("IdUser", _contentManager.GetItemMetadata(contItemUser).Identity.ToString());
+                }
+            }
+
+
+            root.SetAttributeValue("SocialName", part.SocialName);
+            root.SetAttributeValue("AccountType", part.AccountType);
+            root.SetAttributeValue("UserTokenSecret", part.UserTokenSecret);
+            root.SetAttributeValue("Shared", part.Shared);
+            root.SetAttributeValue("Valid", part.Valid);
+            root.SetAttributeValue("DisplayAs", part.DisplayAs);
         }
 
 

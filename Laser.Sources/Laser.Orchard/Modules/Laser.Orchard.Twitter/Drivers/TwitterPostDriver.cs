@@ -45,14 +45,19 @@ namespace Laser.Orchard.Twitter.Drivers {
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IStorageProvider _storageProvider;
         private readonly ShellSettings _shellSettings;
+       
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+        private readonly IContentManager _contentManager;
 
         protected override string Prefix {
             get { return "Laser.Orchard.Twitter"; }
         }
 
-        public TwitterPostDriver(IImageProfileManager imageProfileManager, IStorageProvider storageProvider, IOrchardServices orchardServices, ITwitterService TwitterService, IProviderConfigurationService providerConfigurationService, ITokenizer tokenizer, IHttpContextAccessor httpContextAccessor, IControllerContextAccessor controllerContextAccessor, ShellSettings shellSettings) {
+        public TwitterPostDriver(IImageProfileManager imageProfileManager, IStorageProvider storageProvider, IOrchardServices orchardServices, ITwitterService TwitterService, 
+                                 IProviderConfigurationService providerConfigurationService, ITokenizer tokenizer, 
+                                 IHttpContextAccessor httpContextAccessor, IControllerContextAccessor controllerContextAccessor,
+                                 ShellSettings shellSettings, IContentManager contentManager) {
             _storageProvider = storageProvider;
             _imageProfileManager = imageProfileManager;
             _httpContextAccessor = httpContextAccessor;
@@ -64,6 +69,7 @@ namespace Laser.Orchard.Twitter.Drivers {
             _shellSettings = shellSettings;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Display(TwitterPostPart part, string displayType, dynamic shapeHelper) {
@@ -239,6 +245,7 @@ namespace Laser.Orchard.Twitter.Drivers {
             return Editor(part, shapeHelper);
         }
 
+
         protected override void Importing(TwitterPostPart part, ImportContentContext context) {
 
             var importedTwitterMessage = context.Attribute(part.PartDefinition.Name, "TwitterMessage");
@@ -281,36 +288,54 @@ namespace Laser.Orchard.Twitter.Drivers {
                 part.SendOnNextPublish = Convert.ToBoolean(importedSendOnNextPublish);
             }
 
-            var importedAccountList = context.Attribute(part.PartDefinition.Name, "AccountList");
+            var importedAccountSelected = context.Data.Element(part.PartDefinition.Name).Elements("AccountList");
 
-            if (importedAccountList != null) {
-                for (int x = 0; x <= importedAccountList.Count(); x++) {
-                    part.AccountList[x] = importedAccountList[x];
+            if (importedAccountSelected != null && importedAccountSelected.Count() > 0) {
+
+                var listaccount = _TwitterService.GetValidTwitterAccount();
+                int countAcc = 0;
+                int[] accSel = new int[importedAccountSelected.Count()];
+
+                foreach (var selectedAcc in importedAccountSelected) {
+                    var tempPartFromid = selectedAcc.Attribute("AccountListSelected").Value;
+                    var addltsin = listaccount.Where(x => _contentManager.GetItemMetadata(_contentManager.Get(x.Id)).Identity.ToString() == tempPartFromid.ToString()).Select(x => x.Id).ToArray();
+                    accSel[countAcc] = addltsin[0];
+                    countAcc = countAcc + 1;
+
                 }
+                part.AccountList = accSel;
             }
 
         }
 
 
         protected override void Exporting(TwitterPostPart part, ExportContentContext context) {
-            
-            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterMessage", part.TwitterMessage);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterMessageSent", part.TwitterMessageSent);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterTitle", part.TwitterTitle);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterDescription", part.TwitterDescription);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterPicture", part.TwitterPicture);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterCurrentLink", part.TwitterCurrentLink);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("TwitterLink", part.TwitterLink);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("SendOnNextPublish", part.SendOnNextPublish);
+
+            var root = context.Element(part.PartDefinition.Name);
+
+            root.SetAttributeValue("TwitterMessage", part.TwitterMessage);
+            root.SetAttributeValue("TwitterMessageSent", part.TwitterMessageSent);
+            root.SetAttributeValue("TwitterTitle", part.TwitterTitle);
+            root.SetAttributeValue("TwitterDescription", part.TwitterDescription);
+            root.SetAttributeValue("TwitterPicture", part.TwitterPicture);
+            root.SetAttributeValue("TwitterCurrentLink", part.TwitterCurrentLink);
+            root.SetAttributeValue("TwitterLink", part.TwitterLink);
+            root.SetAttributeValue("SendOnNextPublish", part.SendOnNextPublish);
            
-            if (part.AccountList.Count() > 0)
-            {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("AccountList", part.AccountList);
-                var accountList = context.Element(part.PartDefinition.Name).Element("accountList");
-                for (int x = 0; x == part.AccountList.Count(); x++) {
-                    accountList.Element("accountList").SetAttributeValue("accountList", part.AccountList[x]);
+            if (part.AccountList.Count() > 0) {
+
+                string identityList = string.Empty;
+
+                for (int x = 0; x < part.AccountList.Count(); x++) {
+                    XElement accText = new XElement("AccountList");
+                    var contItemContact = _contentManager.Get(part.AccountList[x]);
+                    if (contItemContact != null) {
+                        accText.SetAttributeValue("AccountListSelected", _contentManager.GetItemMetadata(contItemContact).Identity.ToString());
+                        root.Add(accText);
+                    }
                 }
-            }
+            }  
+
 
         }
 

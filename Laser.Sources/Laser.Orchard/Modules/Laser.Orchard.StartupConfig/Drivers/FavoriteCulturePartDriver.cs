@@ -11,17 +11,22 @@ using Orchard;
 using OrchardData = Orchard.Data;
 using OrchardLocalization = Orchard.Localization;
 using Orchard.UI.Admin;
+using Orchard.Localization.Records;
+using Orchard.Localization.Models;
 
 namespace Laser.Orchard.StartupConfig.Drivers {
     public class FavoriteCulturePartDriver : ContentPartDriver<FavoriteCulturePart> {
         private readonly IOrchardServices _orchardServices;
+        private readonly IContentManager _contentManager;
+
         protected override string Prefix {
             get {
                 return "FavoriteCulturePart";
             }
         }
-        public FavoriteCulturePartDriver(IOrchardServices orchardServices) {
+        public FavoriteCulturePartDriver(IOrchardServices orchardServices, IContentManager contentManager) {
             _orchardServices = orchardServices;
+            _contentManager = contentManager;
         }
         protected override DriverResult Display(FavoriteCulturePart part, string displayType, dynamic shapeHelper) {
             bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
@@ -59,15 +64,32 @@ namespace Laser.Orchard.StartupConfig.Drivers {
 
         }
 
+
         protected override void Importing(FavoriteCulturePart part, ImportContentContext context) {
-            var importedCulture_Id = context.Attribute(part.PartDefinition.Name, "Culture_Id");
-            if (importedCulture_Id != null) {
-                part.Culture_Id = int.Parse(importedCulture_Id);
-            }
+            // mod 30-11-2016
+            context.ImportAttribute(part.PartDefinition.Name, "Culture_Id", x => {
+                var tempPartFromid = context.GetItemFromSession(x);
+
+                if (tempPartFromid != null && tempPartFromid.Is<LocalizationPart>()) {
+                    //associa id culture
+                    part.Culture_Id = tempPartFromid.As<LocalizationPart>().Culture.Id;
+                }
+            });
         }
 
         protected override void Exporting(FavoriteCulturePart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Culture_Id", part.Culture_Id);
+            // mod 30-11-2016
+            var root = context.Element(part.PartDefinition.Name);
+
+            if (part.Culture_Id > 0) {
+                //cerco il corrispondente valore dell' identity dalla parts del menu e lo associo al campo menuid 
+                var contItemMenu = _contentManager.Get(part.Culture_Id);
+                if (contItemMenu != null) {
+                    root.SetAttributeValue("Culture_Id", _contentManager.GetItemMetadata(contItemMenu).Identity.ToString());
+                }
+
+            }
+
         }
     }
 }

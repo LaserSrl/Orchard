@@ -23,17 +23,22 @@ namespace Laser.Orchard.ShareLink.Drivers {
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+        private readonly IContentManager _contentManager;
 
         protected override string Prefix {
             get { return "Laser.Orchard.ShareLink"; }
         }
 
-        public ShareLinkPartDriver(IOrchardServices orchardServices, ITokenizer tokenizer) {
+
+        public ShareLinkPartDriver(IOrchardServices orchardServices, ITokenizer tokenizer, IContentManager contentManager) {
             _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             _tokenizer = tokenizer;
+            _contentManager = contentManager;
         }
+
+
 
         protected override DriverResult Editor(ShareLinkPart part, dynamic shapeHelper) {
             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
@@ -114,6 +119,9 @@ namespace Laser.Orchard.ShareLink.Drivers {
                                     Prefix: Prefix));
         }
 
+
+
+
         protected override DriverResult Editor(ShareLinkPart part, IUpdateModel updater, dynamic shapeHelper) {
             ShareLinkVM vm = new ShareLinkVM();
             updater.TryUpdateModel(vm, Prefix, null, null);
@@ -140,6 +148,7 @@ namespace Laser.Orchard.ShareLink.Drivers {
                 return idimg; // non ho passato un id e quindi sarà un link
         }
 
+
         protected override void Importing(ShareLinkPart part, ImportContentContext context) 
         {
             var importedSharedLink = context.Attribute(part.PartDefinition.Name, "SharedLink");
@@ -157,19 +166,28 @@ namespace Laser.Orchard.ShareLink.Drivers {
                 part.SharedImage = importedSharedImage;
             }
 
+            //mod. 05-12-2016 ....il campo SharedImage rappresenta sempre l'url dell' immagine
             var importedSharedIdImage = context.Attribute(part.PartDefinition.Name, "SharedIdImage");
             if (importedSharedIdImage != null) {
                 part.SharedIdImage = importedSharedIdImage;
             }
 
+
         }
+
 
         protected override void Exporting(ShareLinkPart part, ExportContentContext context) 
         {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("SharedLink", part.SharedLink);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("SharedText", part.SharedText);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("SharedImage", part.SharedImage);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("SharedIdImage", part.SharedIdImage);
+            //mod. 05-12-2016 ....il campo SharedImage rappresenta sempre l'url dell' immagine
+            var root = context.Element(part.PartDefinition.Name);
+           
+            if (part.SharedImage != string.Empty && part.SharedImage != null)
+                root.SetAttributeValue("SharedIdImage", part.SharedIdImage);
+            
+            root.SetAttributeValue("SharedLink", part.SharedLink);
+            root.SetAttributeValue("SharedText", part.SharedText);
+            root.SetAttributeValue("SharedImage", part.SharedImage);
+
         }
 
 

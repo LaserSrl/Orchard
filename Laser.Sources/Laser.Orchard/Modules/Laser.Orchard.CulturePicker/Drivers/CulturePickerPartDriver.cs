@@ -56,7 +56,7 @@ namespace Laser.Orchard.CulturePicker.Drivers {
         }
 
 
-
+        //mod 30-11-2016
         protected override void Exporting(CulturePickerPart part, ExportContentContext context) {
 
            var root = context.Element(part.PartDefinition.Name);
@@ -66,7 +66,6 @@ namespace Laser.Orchard.CulturePicker.Drivers {
                 foreach (ExtendedCultureRecord recAvCulture in part.AvailableCultures) 
                 {
                     XElement avCult = new XElement("AvailableCultures");
-                    avCult.SetAttributeValue("Id", recAvCulture.Id);
                     avCult.SetAttributeValue("CultureCode", recAvCulture.CultureCode);
                     avCult.SetAttributeValue("DisplayName", recAvCulture.DisplayName);
                     avCult.SetAttributeValue("Priority", recAvCulture.Priority);
@@ -80,7 +79,6 @@ namespace Laser.Orchard.CulturePicker.Drivers {
                 foreach (ExtendedCultureRecord recTranslCulture in part.TranslatedCultures) 
                 {
                     XElement transCult = new XElement("TranslatedCultures");
-                    transCult.SetAttributeValue("Id", recTranslCulture.Id);
                     transCult.SetAttributeValue("CultureCode", recTranslCulture.CultureCode);
                     transCult.SetAttributeValue("DisplayName", recTranslCulture.DisplayName);
                     transCult.SetAttributeValue("Priority", recTranslCulture.Priority);
@@ -93,9 +91,9 @@ namespace Laser.Orchard.CulturePicker.Drivers {
             {
                 ExtendedCultureRecord userCulture= part.UserCulture;
                 context.Element(part.PartDefinition.Name).SetAttributeValue("UserCulture", part.UserCulture);
+                
                 var userCult = context.Element(part.PartDefinition.Name).Element("UserCulture");
                 
-                userCult.SetAttributeValue("Id", userCulture.Id);
                 userCult.SetAttributeValue("CultureCode", userCulture.CultureCode);
                 userCult.SetAttributeValue("DisplayName", userCulture.DisplayName);
                 userCult.SetAttributeValue("Priority", userCulture.Priority);
@@ -116,7 +114,6 @@ namespace Laser.Orchard.CulturePicker.Drivers {
             {
                 foreach (ExtendedCultureRecord rec in part.AvailableCultures) 
                 {
-                    rec.Id = int.Parse(root.Attribute("AvailableCultures").Parent.Element("Id").Value);
                     rec.CultureCode =root.Attribute("AvailableCultures").Parent.Element("CultureCode").Value;
                     rec.DisplayName = root.Attribute("AvailableCultures").Parent.Element("DisplayName").Value;
                     rec.Priority = int.Parse(root.Attribute("AvailableCultures").Parent.Element("Priority").Value);
@@ -127,7 +124,7 @@ namespace Laser.Orchard.CulturePicker.Drivers {
             var importedTranslatedCultures = context.Attribute("TranslatedCultures", "TranslatedCultures");
             if (importedTranslatedCultures != null) {
                 foreach (ExtendedCultureRecord rec in part.TranslatedCultures) {
-                    rec.Id = int.Parse(root.Attribute("TranslatedCultures").Parent.Element("Id").Value);
+                  
                     rec.CultureCode = root.Attribute("TranslatedCultures").Parent.Element("CultureCode").Value;
                     rec.DisplayName = root.Attribute("TranslatedCultures").Parent.Element("DisplayName").Value;
                     rec.Priority = int.Parse(root.Attribute("TranslatedCultures").Parent.Element("Priority").Value);
@@ -149,7 +146,6 @@ namespace Laser.Orchard.CulturePicker.Drivers {
             var importedUserCulture = context.Attribute("UserCulture", "UserCulture");            
             if (importedUserCulture != null) 
             {
-                    part.UserCulture.Id= int.Parse(root.Attribute("UserCulture").Parent.Element("Id").Value);
                     part.UserCulture.CultureCode = root.Attribute("UserCulture").Parent.Element("CultureCode").Value;
                     part.UserCulture.DisplayName = root.Attribute("UserCulture").Parent.Element("DisplayName").Value;
                     part.UserCulture.Priority = int.Parse(root.Attribute("UserCulture").Parent.Element("Priority").Value);  

@@ -36,15 +36,16 @@ namespace Laser.Orchard.Queues.Drivers
 
             foreach (QueueUserRecord recQueueUser in part.UserQueues) 
             {
-                if(int.Parse(root.Element("Id").Value)!=null)
-                    recQueueUser.Id=int.Parse(root.Element("Id").Value);
+                //mod 30-11-2016
+                //if(int.Parse(root.Element("Id").Value)!=null)
+                //    recQueueUser.Id=int.Parse(root.Element("Id").Value);
                 
                 
                 recQueueUser.QueueNumber = int.Parse(root.Element("QueueNumber").Value);
                 recQueueUser.NumNotifications = int.Parse(root.Element("NumNotifications").Value);
                 recQueueUser.RegistrationDate = DateTime.Parse(root.Element("RegistrationDate").Value);
 
-                recQueueUser.QueueRecord.Id = int.Parse(root.Attribute("QueueRecord").Parent.Element("Id").Value);
+               // recQueueUser.QueueRecord.Id = int.Parse(root.Attribute("QueueRecord").Parent.Element("Id").Value);
                 recQueueUser.QueueRecord.QueueName = root.Attribute("QueueRecord").Parent.Element("QueueName").Value;
                 recQueueUser.QueueRecord.TicketGap = int.Parse(root.Attribute("QueueRecord").Parent.Element("TicketGap").Value);
                 recQueueUser.QueueRecord.MaxTicketNumber = int.Parse(root.Attribute("QueueRecord").Parent.Element("MaxTicketNumber").Value);
@@ -61,14 +62,15 @@ namespace Laser.Orchard.Queues.Drivers
             {
                 foreach (QueueUserRecord receq in part.UserQueues) 
                 {
-                    root.SetAttributeValue("Id", receq.Id);
+                    //mod 30-11-2016
+                    //root.SetAttributeValue("Id", receq.Id);
                     root.SetAttributeValue("QueueNumber", receq.QueueNumber);
                     root.SetAttributeValue("NumNotifications", receq.NumNotifications);
                     root.SetAttributeValue("RegistrationDate", receq.RegistrationDate);
 
                     XElement QueueRec = new XElement("QueueRecord");
                     
-                    QueueRec.SetAttributeValue("Id", receq.QueueRecord.Id);
+                    //QueueRec.SetAttributeValue("Id", receq.QueueRecord.Id);
                     QueueRec.SetAttributeValue("QueueName", receq.QueueRecord.Id);
                     QueueRec.SetAttributeValue("TicketGap", receq.QueueRecord.TicketGap);
                     QueueRec.SetAttributeValue("MaxTicketNumber", receq.QueueRecord.MaxTicketNumber);

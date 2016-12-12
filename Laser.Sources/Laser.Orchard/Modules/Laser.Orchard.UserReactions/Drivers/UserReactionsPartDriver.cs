@@ -101,6 +101,7 @@ namespace Laser.Orchard.UserReactions.Drivers {
             var root = context.Data.Element(part.PartDefinition.Name);
             var reactions = context.Data.Element(part.PartDefinition.Name).Elements("Reactions");
 
+            //aggiorna il numero delle reactions sulla tabella di summary. Le reaction type sono aggiornate con import dei settings
             foreach (var reacts in reactions) 
             {
                 var singleReact = new UserReactionsSummaryRecord();

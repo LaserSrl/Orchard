@@ -90,8 +90,10 @@ namespace Laser.Orchard.StartupConfig.Drivers {
 
 
         protected override void Exporting(MaintenancePart part, ExportContentContext context) {
-            
-            context.Element(part.PartDefinition.Name).SetAttributeValue("MailMessageSent", part.MaintenanceNotify);
+            //mod 30-11-2016
+            context.Element(part.PartDefinition.Name).SetAttributeValue("MaintenanceNotify", part.MaintenanceNotify);
+            ////////////////////////////////////////
+
             context.Element(part.PartDefinition.Name).SetAttributeValue("Selected_Tenant", part.Selected_Tenant);          
             
             var MaintenanceNotifyTypeRec = (NotifyType)part.MaintenanceNotifyType;

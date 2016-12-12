@@ -194,19 +194,27 @@ namespace Laser.Orchard.Highlights.Drivers {
             return Editor(part, shapeHelper);
         }
 
+
+
+
         protected override void Exporting(HighlightsGroupPart part, ExportContentContext context) {
 
             var container = _contentManager.Get(part.Record.Id);
+
+           
             if (container != null) {
+
                 var containerIdentity = _contentManager.GetItemMetadata(container).Identity;
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Id", part.Record.Id.ToString());
-            }
+                context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayPlugin", part.DisplayPlugin);
+                context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayTemplate", part.DisplayTemplate);
+                context.Element(part.PartDefinition.Name).SetAttributeValue("Query_Id", part.Query_Id);
+                context.Element(part.PartDefinition.Name).SetAttributeValue("ItemsSourceType", part.ItemsSourceType);
 
-            context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayPlugin", part.DisplayPlugin);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayTemplate", part.DisplayTemplate);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Query_Id", part.Query_Id);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ItemsSourceType", part.ItemsSourceType);
+            }
         }
+
+
 
         protected override void Importing(HighlightsGroupPart part, ImportContentContext context) {
 
