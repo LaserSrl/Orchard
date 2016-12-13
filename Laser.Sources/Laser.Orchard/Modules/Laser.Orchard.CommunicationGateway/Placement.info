@@ -29,7 +29,6 @@
       <Place Fields_Boolean="-"/>
       <Place Fields_Enumeration="-"/>
       <Place Fields_TaxonomyField="-"/>
-      <Place Fields_TaxonomyField_Localized="-"/>
       <Place Fields_Common_Text="-"/>
       <Place Fields_Input="-"/>
       <Place Fields_DateTime="-"/>

@@ -18,25 +18,23 @@
   <Place Parts_ContentPickerConnector="Content:1"/>
 
   <!-- Taxonomies: Start -->
-  <!--<Place Fields_TaxonomyField_Edit="-" Fields_TaxonomyField_Localized_Edit="Content:9" Parts_TaxonomyExtension_Edit="Content:6"/>-->
   <Place Parts_TaxonomyExtension_Edit="Content:6"/>
-  <!--<Place Parts_TermPart="-" Parts_TermPart_Localized="Content:5" />-->
   <Place Parts_TaxonomyExtensionsSiteSettings_Edit="Content:10" />
 
 
   <!-- Display terms in front-end summaries -->
   <Match DisplayType="Summary">
-    <Place Fields_TaxonomyField="Content:after" Fields_TaxonomyField_Localized="Content:after"/>
+    <Place Fields_TaxonomyField="Content:after"/>
   </Match>
 
   <!-- Display terms in content item details -->
   <Match DisplayType="Detail">
-    <Place Fields_TaxonomyField="Content:5" Fields_TaxonomyField_Localized="Content:5"/>
+    <Place Fields_TaxonomyField="Content:5"/>
   </Match>
 
   <!-- Display terms in admin summaries -->
   <Match DisplayType="SummaryAdmin">
-    <Place Fields_TaxonomyField="Content:5" Fields_TaxonomyField_Localized="Content:5"/>
+    <Place Fields_TaxonomyField="Content:5"/>
   </Match>
 
   <!-- Display in admin -->
