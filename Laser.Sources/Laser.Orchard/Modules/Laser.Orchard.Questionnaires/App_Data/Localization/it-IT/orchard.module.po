@@ -745,6 +745,10 @@ msgid "Questionnaire without response for current User"
 msgstr "Questionari senza risposta per l'Utente corrente"
 
 msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilter"
+msgid "Filter for specific questionnaire and context without response for current User."
+msgstr "Filtro per questionario e contesto specifico senza risposta per l'Utente corrente"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilter"
 msgid "Filter for specific questionnaire without response for current User."
 msgstr "Filtro per un questionario indicato senza risposta per l'Utente corrente"
 
@@ -757,8 +761,16 @@ msgid "Questionnaire"
 msgstr "Questionario"
 
 msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilter"
+msgid "Specific questionnaire and context without response for current User"
+msgstr "Questionario e contesto specifico senza risposta per l'Utente corrente"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilter"
 msgid "Specific questionnaire without response for current User"
 msgstr "Questionario specifico senza risposta per l'Utente corrente"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilterForm"
+msgid "Questionnaire Context"
+msgstr "Contesto del Questionario"
 
 msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilterForm"
 msgid "Questionnaire Id"

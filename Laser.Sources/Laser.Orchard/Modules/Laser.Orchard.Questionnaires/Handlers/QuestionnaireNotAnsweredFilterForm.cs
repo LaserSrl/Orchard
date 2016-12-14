@@ -21,13 +21,20 @@ namespace Laser.Orchard.Questionnaires.Handlers {
             context.Form(FormName, shape => {
                 var f = _shapeFactory.Form(
                     Id: FormName,
-
                      _QuestionnaireId: _shapeFactory.FieldSet(
                             Id: "questionnaireId",
-                            _Reaction: _shapeFactory.TextBox(
-                            Name: "QuestionnaireId",
-                            Title: T("Questionnaire Id"),
-                            Classes: new[] { "tokenized" }
+                            _Value: _shapeFactory.TextBox(
+                                Name: "QuestionnaireId",
+                                Title: T("Questionnaire Id"),
+                                Classes: new[] { "tokenized" }
+                            )
+                     ),
+                     _QuestionnaireContext: _shapeFactory.FieldSet(
+                            Id: "questionnaireContext",
+                            _Value: _shapeFactory.TextBox(
+                                Name: "Context",
+                                Title: T("Questionnaire Context"),
+                                Classes: new[] { "tokenized" }
                             )
                      )
                 );
