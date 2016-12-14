@@ -55,26 +55,27 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         /// </param>
         /// <returns></returns>
         public Response Post([FromBody] List<AnswerWithResultViewModel> Risps) {
-            //       try {
+            return ExecPost(Risps);
+        }
+        public Response Put([FromBody] ExternalAnswerWithResultViewModel data) {
+            if (data != null) {
+                return ExecPost(data.Answers, data.QuestionnaireContext);
+            }
+            else {
+                return (_utilsServices.GetResponse(ResponseType.Validation, "Validation: invalid input data structure."));
+            }
+        }
+        private Response ExecPost(List<AnswerWithResultViewModel> Risps, string QuestionnaireContext = "external") {
 #if DEBUG
             Logger.Error(Request.Headers.ToString());
 #endif
 
-            //  var csrfToken = Request.Headers.GetValues("X-XSRF-TOKEN").FirstOrDefault();
-            //if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
-            //    throw new UnauthorizedAccessException("Unauthorized Method");
-            //}
-
-            //if (currentUser == null) {
-            //    throw new UnauthorizedAccessException("Unauthorized User");
-            //}
             if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
                 var currentUser = _orchardServices.WorkContext.CurrentUser;
                 if (currentUser == null) {
                     return (_utilsServices.GetResponse(ResponseType.InvalidUser));
                 }
                 Int32 QuestionId = 0;
-                //    Int32 id = _repositoryQuestions.Fetch(x => x.Id == Risps[0].QuestionRecord_Id).FirstOrDefault().QuestionnairePartRecord_Id;
                 if (Risps[0].Id > 0)
                     QuestionId = _repositoryAnswer.Fetch(x => x.Id == Risps[0].Id).FirstOrDefault().QuestionRecord_Id;
                 else
@@ -105,8 +106,6 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                         }
                     }
                 }
-
-                // var currentUser = _orchardServices.WorkContext.CurrentUser;
                 var context = new ValidationContext(qVM, serviceProvider: null, items: null);
                 var results = new List<ValidationResult>();
                 var isValid = Validator.TryValidateObject(qVM, context, results);
@@ -118,7 +117,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     return (_utilsServices.GetResponse(ResponseType.Validation, "Validation:" + messaggio));
                 }
                 else {
-                    qVM.Context = "external";
+                    qVM.Context = QuestionnaireContext;
                     _questionnairesServices.Save(qVM, currentUser, HttpContext.Current.Session.SessionID);
                     return (_utilsServices.GetResponse(ResponseType.Success));
                 }
