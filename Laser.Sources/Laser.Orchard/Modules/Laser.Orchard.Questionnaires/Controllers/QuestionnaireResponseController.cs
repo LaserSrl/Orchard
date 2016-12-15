@@ -57,6 +57,13 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         public Response Post([FromBody] List<AnswerWithResultViewModel> Risps) {
             return ExecPost(Risps);
         }
+        /// <summary>
+        /// esempio {"Answers":[{"Answered":1,"AnswerText":"cioa","Id":5,"QuestionRecord_Id":5}], "QuestionnaireContext":"Campagna Dicembre 2016"}
+        /// </summary>
+        /// <param name="Risps">elenco con valorizzati solo id della risposta scelta  nel caso di risposta semplice
+        /// QuestionRecord_Id e e AnswerText nel caso di risposta con testo libero
+        /// </param>
+        /// <returns></returns>
         public Response Put([FromBody] ExternalAnswerWithResultViewModel data) {
             if (data != null) {
                 return ExecPost(data.Answers, data.QuestionnaireContext);
