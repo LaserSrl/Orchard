@@ -393,6 +393,9 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                 }
             }
             catch {
+                // Fix per Username nullo
+                if (tipoContent == "User")
+                    return _utilsServices.GetResponse(ResponseType.Validation, "Missing user Id");
             }
             ContentItem NewOrModifiedContent;
             Response rsp = new Response();

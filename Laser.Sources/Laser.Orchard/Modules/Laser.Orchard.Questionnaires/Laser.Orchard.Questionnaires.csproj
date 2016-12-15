@@ -73,9 +73,13 @@
     <Compile Include="Drivers\RankingPartDriver.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Handlers\GamePartHandler.cs" />
+    <Compile Include="Handlers\QuestionnaireContextFilter.cs" />
+    <Compile Include="Handlers\QuestionnaireContextFilterForm.cs" />
     <Compile Include="Handlers\QuestionnaireFilter.cs" />
     <Compile Include="Handlers\QuestionnaireHandler.cs" />
     <Compile Include="Handlers\QuestionnaireModuleSettingsHandler.cs" />
+    <Compile Include="Handlers\QuestionnaireNotAnsweredFilter.cs" />
+    <Compile Include="Handlers\QuestionnaireNotAnsweredFilterForm.cs" />
     <Compile Include="Handlers\RankingPartHandler.cs" />
     <Compile Include="Handlers\ScheduledTaskHandler.cs" />
     <Compile Include="Handlers\StasExportScheduledTaskHandler.cs" />
@@ -98,6 +102,7 @@
     <Compile Include="Settings\QuestionnairesPartEditorEvents.cs" />
     <Compile Include="Settings\QuestionnairesPartSettingVM.cs" />
     <Compile Include="ViewModels\ExportUserAnswersVM.cs" />
+    <Compile Include="ViewModels\ExternalAnswerWithResultViewModel.cs" />
     <Compile Include="ViewModels\GamePartVM.cs" />
     <Compile Include="ViewModels\RankingTemplateVM.cs" />
     <Compile Include="ViewModels\ValidationProvider.cs" />
@@ -211,6 +216,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Fields\bin\Orchard.Fields.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Forms, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Forms\bin\Orchard.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Framework, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
@@ -226,6 +235,10 @@
     <Reference Include="Orchard.OutputCache, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.OutputCache\bin\Orchard.OutputCache.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Projections, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Roles, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
