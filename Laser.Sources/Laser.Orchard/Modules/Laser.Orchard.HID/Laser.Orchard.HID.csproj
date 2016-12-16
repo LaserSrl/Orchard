@@ -48,6 +48,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Caching">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Caching\bin\Orchard.Caching.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
@@ -81,12 +88,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Handlers\HIDSettingsPartHandler.cs" />
+    <Compile Include="Models\HIDAuthToken.cs" />
     <Compile Include="Models\HIDSiteSettingsPart.cs" />
+    <Compile Include="Models\HIDUser.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Services\HIDService.cs" />
     <Compile Include="Services\IHIDAdminService.cs" />
+    <Compile Include="Services\IHIDAPIService.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

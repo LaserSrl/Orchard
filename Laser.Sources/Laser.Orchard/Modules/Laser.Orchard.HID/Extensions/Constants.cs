@@ -2,16 +2,19 @@
 namespace Laser.Orchard.HID.Extensions {
     public static class Constants {
         public const string LocalArea = "Laser.Orchard.HID";
-
+        public const string CacheTokenTypeKeyFormat = @"{0}_HID_TokenType";
+        public const string CacheAccessTokenKeyFormat = @"{0}_HID_AccessToken";
     }
 
     public static class HIDAPIEndpoints {
+
+        public const string DefaultContentType = @"application/vnd.assaabloy.ma.credential-management-1.0+json";
 
         public const string BaseURIProd = @"https://ma.api.assaabloy.com";
         public const string BaseURITest = @"https://test-ma.api.assaabloy.com";
         public const string BaseURIFormat = @"{0}/credential-management";
         //BaseURI = String.Format(BaseURIFormat, [BaseURIProd|BaseURITest]);
-        public const string CustomerURIFormat = @"/customer/{0}";
+        public const string CustomerURIFormat = @"{0}/customer/{1}";
         //BaseEndpoint = String.Format(CustomerURIFormat, BaseURI);
 
         // Calls we need to the HID API:
