@@ -26,6 +26,8 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public bool ToPush { get; set; }
         public bool TestPush { get; set; }
         public string DevicePush { get; set; }
+        public string RecipeList { get; set; }
+
 
         // proprietà aggiuntive
         public bool PushSent { get; set; }
@@ -40,7 +42,7 @@ namespace Laser.Orchard.Mobile.ViewModels {
                 }).ToList(), "Value", "Text");
                 List<SelectListItem> _list = enumToList.ToList();
                 _list.Insert(0, new SelectListItem() { Value = "All", Text = "All" });
-                return new SelectList((IEnumerable<SelectListItem>)_list, "Value", "Text");    
+                return new SelectList((IEnumerable<SelectListItem>)_list, "Value", "Text");
             }
         }
         public bool ShowTestOptions { get; set; }

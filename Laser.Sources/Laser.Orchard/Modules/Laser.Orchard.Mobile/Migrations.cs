@@ -283,5 +283,13 @@ namespace Laser.Orchard.Mobile {
                         );
             return 27;
         }
+        public int UpdateFrom27() {
+            SchemaBuilder.AlterTable("MobilePushPartRecord", table => table
+                        .AddColumn<string>("RecipeList", col=> col.Unlimited())
+                        );
+            
+            return 28;
+        }
+
     }
 }

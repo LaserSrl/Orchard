@@ -67,7 +67,7 @@
                                 response(result);
                             }
                             else {*@
-                                response(data);
+                            response(data);
                             //}
                         }
                     });
@@ -121,6 +121,11 @@
             </div>
         </fieldset>
     }
+    <fieldset>
+        <div class="editor-label">@Html.LabelFor(m => m.RecipeList, T("Manual recipes:"))</div>
+        <div class="editor-field">@Html.TextAreaFor(m => m.RecipeList, new { @class = "text large" })</div>
+        <span class="hint">@T("Insert username, e-mail or UUID to which you want to send this PUSH. One recipe for each line.")</span>
+    </fieldset>
     <fieldset>
         <legend>@T("Test with user devices")</legend>
         <label for="contact-to-push">@T("Contact"): </label>

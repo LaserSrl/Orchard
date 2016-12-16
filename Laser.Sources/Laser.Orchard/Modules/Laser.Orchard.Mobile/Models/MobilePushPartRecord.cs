@@ -29,6 +29,11 @@ namespace Laser.Orchard.Mobile.Models {
             get { return Record.DevicePush; }
             set { Record.DevicePush = value; }
         }
+
+        public string RecipeList {
+            get { return Record.RecipeList; }
+            set { Record.RecipeList = value; }
+        }
         // proprietà aggiuntive
         public bool PushSent
         {
@@ -54,6 +59,7 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual bool ToPush { get; set; }
         public virtual bool TestPush { get; set; }
         public virtual string DevicePush { get; set; }
+        public virtual string RecipeList { get; set; }
         // proprietà aggiuntive
         public virtual bool PushSent { get; set; }
         public virtual int TargetDeviceNumber { get; set; }
