@@ -29,7 +29,7 @@ namespace Laser.Orchard.HID.Models {
         }
         public string SerializedPartNumbers {
             get { return (PartNumbers != null && PartNumbers.Length > 0) ? String.Join(Environment.NewLine, PartNumbers) : ""; }
-            set { PartNumbers = value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries); }
+            set { PartNumbers = value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(pn => pn.Trim()).ToArray(); }
         }
 
 

@@ -1,10 +1,14 @@
-﻿using Laser.Orchard.HID.Services;
+﻿using Laser.Orchard.HID.Extensions;
+using Laser.Orchard.HID.Services;
 using Newtonsoft.Json.Linq;
+using Orchard.Security;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace Laser.Orchard.HID.Models {
@@ -29,10 +33,62 @@ namespace Laser.Orchard.HID.Models {
             CredentialContainerIds = new List<int>();
         }
 
+        public static string GenerateExternalId(int id) {
+            return Constants.LocalArea + id.ToString();
+        }
+
+        private void PopulateFromJson(JObject json) {
+            Id = int.Parse(json["id"].ToString());
+            ExternalId = json["externalId"].ToString();
+            FamilyName = json["name"]["familyName"].ToString();
+            GivenName = json["name"]["givenName"].ToString();
+            Emails.AddRange(json["emails"].Children().Select(jt => jt["value"].ToString()));
+            Emails = Emails.Distinct().ToList();
+            Status = json["status"].ToString();
+            Location = json["meta"]["location"].ToString();
+            if (json["urn:hid:scim:api:ma:1.0:UserInvitation"] != null) {
+                InvitationIds.AddRange(json["urn:hid:scim:api:ma:1.0:UserInvitation"].Children().Select(jt => int.Parse(jt["id"].ToString())));
+                InvitationIds = InvitationIds.Distinct().ToList();
+            }
+            if (json["urn:hid:scim:api:ma:1.0:CredentialContainer"] != null) {
+                CredentialContainerIds.AddRange(json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().Select(jt => int.Parse(jt["id"].ToString())));
+                CredentialContainerIds = CredentialContainerIds.Distinct().ToList();
+            }
+            Error = UserErrors.NoError;
+        }
+        private void ErrorFromStatusCode(HttpStatusCode sc) {
+            switch (sc) {
+                case HttpStatusCode.BadRequest:
+                    Error = UserErrors.InvalidParameters;
+                    break;
+                case HttpStatusCode.Conflict:
+                    Error = UserErrors.EmailNotUnique;
+                    break;
+                case HttpStatusCode.InternalServerError:
+                    Error = UserErrors.InternalServerError;
+                    break;
+                case HttpStatusCode.PreconditionFailed:
+                    Error = UserErrors.PreconditionFailed;
+                    break;
+                case HttpStatusCode.NotFound:
+                    Error = UserErrors.DoesNotExist;
+                    break;
+                default:
+                    Error = UserErrors.UnknownError;
+                    break;
+            }
+        }
+
         public static HIDUser GetUser(IHIDAPIService hidService, string location) {
             return new HIDUser(hidService) { Location = location }.GetUser();
         }
         public HIDUser GetUser() {
+            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
+                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
+                    Error = UserErrors.AuthorizationFailed;
+                    return this;
+                }
+            }
             HttpWebRequest wr = HttpWebRequest.CreateHttp(Location);
             wr.Method = WebRequestMethods.Http.Get;
             wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
@@ -43,15 +99,123 @@ namespace Laser.Orchard.HID.Models {
                         //read the json response
                         using (var reader = new StreamReader(resp.GetResponseStream())) {
                             string respJson = reader.ReadToEnd();
-                            var json = JObject.Parse(respJson);
-                            Id = int.Parse(json["id"].ToString());
-                            ExternalId = json["externalId"].ToString();
-                            FamilyName = json["name"]["familyName"].ToString();
-                            GivenName = json["name"]["givenName"].ToString();
-                            Emails.AddRange(json["emails"].Children().Select(jt => jt["value"].ToString()));
-                            Status = json["status"].ToString();
-                            InvitationIds.AddRange(json["urn:hid:scim:api:ma:1.0:UserInvitation"].Children().Select(jt => int.Parse(jt["id"].ToString())));
-                            CredentialContainerIds.AddRange(json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().Select(jt => int.Parse(jt["id"].ToString())));
+                            PopulateFromJson(JObject.Parse(respJson));
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                        if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
+                            return GetUser();
+                        }
+                        Error = UserErrors.AuthorizationFailed;
+                    } else {
+                        ErrorFromStatusCode(resp.StatusCode);
+                    }
+                } else {
+                    Error = UserErrors.UnknownError;
+                }
+            }
+            return this;
+        }
+
+        private const string UserNameFormat = @"'name':{{ 'familyName': '{0}', 'givenName': '{1}'}}";
+        private string UserNameBlock {
+            get { return string.Format(UserNameFormat, string.IsNullOrWhiteSpace(FamilyName) ? "FamilyName" : FamilyName, string.IsNullOrWhiteSpace(GivenName) ? "GivenName" : GivenName); }
+        }
+        private const string UserCreateFormat = @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction', 'urn:ietf:params:scim:schemas:core:2.0:User' ], 'externalId': '{0}', {1}, 'emails':[ {{ {2} }} ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'createInvitationCode':'N', 'sendInvitationEmail':'N', 'assignCredential':'N', 'partNumber':'', 'credential':'' }}, 'meta':{{ 'resourceType':'PACSUser' }} }}";
+        private string CreateUserBody {
+            get { return JObject.Parse(string.Format(UserCreateFormat, ExternalId, UserNameBlock, string.Join(", ", Emails.Select(em => string.Format(@"'value':'{0}'", em))))).ToString(); }
+        }
+
+        public static HIDUser CreateUser(IHIDAPIService hidService, IUser oUser, string familyName, string givenName) {
+            return CreateUser(hidService, oUser.Id, familyName, givenName, oUser.Email);
+        }
+        public static HIDUser CreateUser(IHIDAPIService hidService, IUser oUser, string familyName, string givenName, string email) {
+            return CreateUser(hidService, oUser.Id, familyName, givenName, email);
+        }
+        public static HIDUser CreateUser(IHIDAPIService hidService, int id, string familyName, string givenName, string email) {
+            return CreateUser(hidService, GenerateExternalId(id), familyName, givenName, email);
+        }
+        public static HIDUser CreateUser(IHIDAPIService hidService, string extId, string familyName, string givenName, string email) {
+            HIDUser user = new HIDUser(hidService) { ExternalId = extId, FamilyName = familyName, GivenName = givenName };
+            user.Emails.Add(email);
+            return user.CreateUser();
+        }
+        public HIDUser CreateUser() {
+            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
+                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
+                    Error = UserErrors.AuthorizationFailed;
+                    return this;
+                }
+            }
+            HttpWebRequest wr = HttpWebRequest.CreateHttp(_HIDService.UsersEndpoint);
+            wr.Method = WebRequestMethods.Http.Post;
+            wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
+            byte[] bodyData = Encoding.UTF8.GetBytes(CreateUserBody);
+            using (Stream reqStream = wr.GetRequestStream()) {
+                reqStream.Write(bodyData, 0, bodyData.Length);
+            }
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.Created) {
+                        using (var reader = new StreamReader(resp.GetResponseStream())) {
+                            string respJson = reader.ReadToEnd();
+                            PopulateFromJson(JObject.Parse(respJson));
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                        if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
+                            return CreateUser();
+                        }
+                        Error = UserErrors.AuthorizationFailed;
+                    } else {
+                        ErrorFromStatusCode(resp.StatusCode);
+                    }
+                } else {
+                    Error = UserErrors.UnknownError;
+                }
+            }
+            return this;
+        }
+
+        private const string InvitationCreateFormat = @"{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction' ], 'urn:hid:scim:api:ma:1.0:UserAction':{ 'createInvitationCode':'Y', 'sendInvitationEmail':'N', 'assignCredential':'N', 'partNumber':'', 'credential':'' }, 'meta':{ 'resourceType':'PACSUser' } }";
+        private string CreateInvitationBody {
+            get { return JObject.Parse(InvitationCreateFormat).ToString(); }
+        }
+
+        public string CreateInvitation() {
+            string invitationCode = "";
+            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
+                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
+                    Error = UserErrors.AuthorizationFailed;
+                    return "";
+                }
+            }
+            HttpWebRequest wr = HttpWebRequest.CreateHttp(Location + "/invitation");
+            wr.Method = WebRequestMethods.Http.Post;
+            wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
+            byte[] bodyData = Encoding.UTF8.GetBytes(CreateInvitationBody);
+            using (Stream reqStream = wr.GetRequestStream()) {
+                reqStream.Write(bodyData, 0, bodyData.Length);
+            }
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.Created) {
+                        using (var reader = new StreamReader(resp.GetResponseStream())) {
+                            string respJson = reader.ReadToEnd();
+                            JObject json = JObject.Parse(respJson);
+                            var invitation = json["urn:hid:scim:api:ma:1.0:UserInvitation"].Children().First();
+                            InvitationIds.Add(int.Parse(invitation["id"].ToString()));
+                            invitationCode = invitation["invitationCode"].ToString();
                             Error = UserErrors.NoError;
                         }
                     }
@@ -59,24 +223,117 @@ namespace Laser.Orchard.HID.Models {
             } catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
-                    switch (resp.StatusCode) {
-                        case HttpStatusCode.Unauthorized:
-                            //TODO: do login and try again
-                            Error = UserErrors.NotAuthorized;
-                            break;
-                        case HttpStatusCode.NotFound:
-                            Error = UserErrors.DoesNotExist;
-                            break;
-                        default:
-                            if (resp.StatusDescription.ToUpperInvariant() == "SERVER ERROR") {
-                                Error = UserErrors.InternalServerError;
-                            } else {
-                                Error = UserErrors.UnknownError;
-                            }
-                            break;
+                    if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                        if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
+                            return CreateInvitation();
+                        }
+                        Error = UserErrors.AuthorizationFailed;
+                    } else {
+                        ErrorFromStatusCode(resp.StatusCode);
                     }
                 } else {
                     Error = UserErrors.UnknownError;
+                }
+            }
+            //a valid invitation code is in the form ABCD-EFGH-ILMN-OPQR
+            //16 useful characters with an hyphen separator
+            string pattern = @"(\w){4}-(\w){4}-(\w){4}-(\w){4}";
+            if (new Regex(pattern).Match(invitationCode).Success) {
+                return invitationCode;
+            }
+            Error = UserErrors.UnknownError;
+            return "";
+        }
+
+        private string IssueCredentialEndpointFormat {
+            get { return string.Format(HIDAPIEndpoints.IssueCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
+        }
+        private const string IssueCredentialBodyFormat = @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction' ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'assignCredential':'Y', 'partNumber':'{{{0}}}', 'credential':'' }} }}";
+        private string IssueCredentialBody(string pn) {
+            return JObject.Parse(string.Format(IssueCredentialBodyFormat, pn)).ToString();
+        }
+
+        public HIDUser IssueCredential(string partNumber) {
+            foreach (var credentialContainerId in CredentialContainerIds) {
+                HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(IssueCredentialEndpointFormat, credentialContainerId));
+                wr.Method = WebRequestMethods.Http.Post;
+                wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+                wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
+                byte[] bodyData = Encoding.UTF8.GetBytes(IssueCredentialBody(partNumber));
+                using (Stream reqStream = wr.GetRequestStream()) {
+                    reqStream.Write(bodyData, 0, bodyData.Length);
+                }
+                try {
+                    using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                        if (resp.StatusCode == HttpStatusCode.OK) {
+                            Error = UserErrors.NoError;
+                        }
+                    }
+                } catch (Exception ex) {
+                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                    if (resp != null) {
+                        if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                            if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
+                                return IssueCredential(partNumber);
+                            }
+                            Error = UserErrors.AuthorizationFailed;
+                        } else {
+                            ErrorFromStatusCode(resp.StatusCode);
+                        }
+                    } else {
+                        Error = UserErrors.UnknownError;
+                    }
+                }
+                if (Error != UserErrors.NoError) {
+                    break; //break early on error
+                }
+            }
+
+            return this;
+        }
+
+        private string RevokeCredentialEndpointFormat {
+            get { return string.Format(HIDAPIEndpoints.RevokeCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
+        }
+        public HIDUser RevokeCredential(string partNumber = "") {
+            foreach (var credentialContainerId in CredentialContainerIds) {
+                HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(IssueCredentialEndpointFormat, credentialContainerId));
+                wr.Method = WebRequestMethods.Http.Get;
+                wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+                wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
+                //get this container
+                try {
+                    using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                        if (resp.StatusCode == HttpStatusCode.OK) {
+                            using (var reader = new StreamReader(resp.GetResponseStream())) {
+                                string respJson = reader.ReadToEnd();
+                                JObject json = JObject.Parse(respJson);
+                                var jCredentials = json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().First()["urn:hid:scim:api:ma:1.0:Credential"].Children();
+                                if (!string.IsNullOrWhiteSpace(partNumber)) {
+                                    jCredentials = (JEnumerable<JToken>)(jCredentials.Where(jc => jc["partNumber"].ToString() == partNumber).AsJEnumerable());
+                                }
+                                ////////////////////
+                                Error = UserErrors.NoError;
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                    if (resp != null) {
+                        if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                            if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
+                                return RevokeCredential(partNumber);
+                            }
+                            Error = UserErrors.AuthorizationFailed;
+                        } else {
+                            ErrorFromStatusCode(resp.StatusCode);
+                        }
+                    } else {
+                        Error = UserErrors.UnknownError;
+                    }
+                }
+                if (Error != UserErrors.NoError) {
+                    break; //break early on error
                 }
             }
             return this;

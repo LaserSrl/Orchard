@@ -10,8 +10,11 @@ using System.Threading.Tasks;
 namespace Laser.Orchard.HID.Services {
     public interface IHIDAPIService : IDependency {
         AuthenticationErrors Authenticate();
-        HIDUser SearchHIDUser(IUser user);
+        HIDUserSearchResult SearchHIDUser(IUser user);
+        HIDUser CreateHIDUser(IUser user, string familyName, string givenName, string email = null);
 
         string AuthorizationToken { get; }
+        string BaseEndpoint { get; }
+        string UsersEndpoint { get; }
     }
 }

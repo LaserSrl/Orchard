@@ -32,10 +32,10 @@ namespace Laser.Orchard.HID.Services {
         private string BaseURI {
             get { return String.Format(HIDAPIEndpoints.BaseURIFormat, GetSiteSettings().UseTestEnvironment ? HIDAPIEndpoints.BaseURITest : HIDAPIEndpoints.BaseURIProd); }
         }
-        private string BaseEndpoint {
+        public string BaseEndpoint {
             get { return String.Format(HIDAPIEndpoints.CustomerURIFormat, BaseURI, GetSiteSettings().CustomerID.ToString()); }
         }
-        private string UsersEndpoint {
+        public string UsersEndpoint {
             get { return String.Format(HIDAPIEndpoints.UsersEndpointFormat, BaseEndpoint); }
         }
         private string UsersSearchEndpoint {
@@ -43,12 +43,6 @@ namespace Laser.Orchard.HID.Services {
         }
         private string CreateInvitationEndpointFormat {
             get { return string.Format(HIDAPIEndpoints.CreateInvitationEndpointFormat, UsersEndpoint, @"{0}"); }
-        }
-        private string IssueCredentialEndpointFormat {
-            get { return string.Format(HIDAPIEndpoints.IssueCredentialEndpointFormat, BaseEndpoint, @"{0}"); }
-        }
-        private string RevokeCredentialEndpointFormat {
-            get { return string.Format(HIDAPIEndpoints.RevokeCredentialEndpointFormat, BaseEndpoint, @"{0}"); }
         }
         #region Token is in the cache
         private string CacheTokenTypeKey {
@@ -102,13 +96,15 @@ namespace Laser.Orchard.HID.Services {
             return format.ToString();
         }
 
-        public HIDUser SearchHIDUser(IUser user) {
-            return SearchHIDUserByExternalID(user.Id.ToString());
+        public HIDUserSearchResult SearchHIDUser(IUser user) {
+            return SearchHIDUserByExternalID(HIDUser.GenerateExternalId(user.Id));
         }
-        public HIDUser SearchHIDUserByExternalID(string externalId) {
+        public HIDUserSearchResult SearchHIDUserByExternalID(string externalId) {
+            HIDUserSearchResult result = new HIDUserSearchResult();
             if (string.IsNullOrWhiteSpace(AuthorizationToken)) {
                 if (Authenticate() != AuthenticationErrors.NoError) {
-                    return null;
+                    result.Error = SearchErrors.AuthorizationFailed;
+                    return result;
                 }
             }
             HttpWebRequest wr = HttpWebRequest.CreateHttp(UsersSearchEndpoint);
@@ -127,13 +123,13 @@ namespace Laser.Orchard.HID.Services {
                         using (var reader = new StreamReader(resp.GetResponseStream())) {
                             string respJson = reader.ReadToEnd();
                             var jo = JObject.Parse(respJson);
-                            int nResults = int.Parse(jo["totalResults"].ToString());
-                            if (nResults == 1) {
-                                return HIDUser.GetUser(this, jo["Resources"].Children().First()["meta"]["location"].ToString());
-                            } else if (nResults == 0) { //TODO: handle error cases
-                                return null;
+                            result = new HIDUserSearchResult(jo);
+                            if (result.TotalResults == 1) {
+                                result.User = HIDUser.GetUser(this, jo["Resources"].Children().First()["meta"]["location"].ToString());
+                            } else if (result.TotalResults == 0) {
+                                result.Error = SearchErrors.NoResults;
                             } else {
-                                return null;
+                                result.Error = SearchErrors.TooManyResults;
                             }
                         }
                     }
@@ -143,27 +139,36 @@ namespace Laser.Orchard.HID.Services {
                 if (resp != null) {
                     switch (resp.StatusCode) {
                         case HttpStatusCode.BadRequest:
-
+                            result.Error = SearchErrors.InvalidParameters;
                             break;
                         case HttpStatusCode.Unauthorized:
-                            //TODO: do login and try again
+                            if (Authenticate() == AuthenticationErrors.NoError) {
+                                result = SearchHIDUserByExternalID(externalId);
+                            } else {
+                                result.Error = SearchErrors.AuthorizationFailed;
+                            }
+                            break;
+                        case HttpStatusCode.InternalServerError:
+                            result.Error = SearchErrors.InternalServerError;
                             break;
                         default:
-                            if (resp.StatusDescription.ToUpperInvariant() == "SERVER ERROR") {
-
-                            } else {
-
-                            }
+                            result.Error = SearchErrors.UnknownError;
                             break;
                     }
                 } else {
-
+                    result.Error = SearchErrors.UnknownError;
                 }
             }
 
-            return null;
+            return result;
         }
 
+        public HIDUser CreateHIDUser(IUser user, string familyName, string givenName, string email = null) {
+            if (string.IsNullOrWhiteSpace(email)) {
+                email = user.Email;
+            }
+            return HIDUser.CreateUser(this, user, familyName, givenName, email);
+        }
 
 
 

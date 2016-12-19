@@ -59,7 +59,8 @@ namespace Laser.Orchard.HID.Controllers {
                     default:
                         break;
                 }
-                _HIDAPISerivce.SearchHIDUser(_orchardServices.WorkContext.CurrentUser);
+                var u = _HIDAPISerivce.SearchHIDUser(_orchardServices.WorkContext.CurrentUser);
+                var inv = u.User.CreateInvitation();
             } else {
                 _orchardServices.Notifier.Error(T("Could not save settings."));
             }

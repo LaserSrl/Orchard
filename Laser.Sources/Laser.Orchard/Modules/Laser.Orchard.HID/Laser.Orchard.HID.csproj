@@ -92,6 +92,7 @@
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Handlers\HIDSettingsPartHandler.cs" />
     <Compile Include="Models\HIDAuthToken.cs" />
+    <Compile Include="Models\HIDSearchResult.cs" />
     <Compile Include="Models\HIDSiteSettingsPart.cs" />
     <Compile Include="Models\HIDUser.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
