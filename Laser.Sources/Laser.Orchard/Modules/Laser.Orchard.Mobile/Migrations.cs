@@ -285,7 +285,7 @@ namespace Laser.Orchard.Mobile {
         }
         public int UpdateFrom27() {
             SchemaBuilder.AlterTable("MobilePushPartRecord", table => table
-                        .AddColumn<string>("RecipeList", col=> col.Unlimited())
+                        .AddColumn<string>("RecipientList", col=> col.Unlimited())
                         );
             
             return 28;

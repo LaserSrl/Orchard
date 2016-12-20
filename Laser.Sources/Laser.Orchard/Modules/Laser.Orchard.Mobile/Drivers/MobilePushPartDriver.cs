@@ -96,7 +96,7 @@ namespace Laser.Orchard.Mobile.Drivers {
                 viewModel.PushSent = part.PushSent;
                 viewModel.TargetDeviceNumber = part.TargetDeviceNumber;
                 viewModel.PushSentNumber = part.PushSentNumber;
-                viewModel.RecipeList = part.RecipeList;
+                viewModel.RecipientList = part.RecipientList;
             }
 
             viewModel.SiteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix;

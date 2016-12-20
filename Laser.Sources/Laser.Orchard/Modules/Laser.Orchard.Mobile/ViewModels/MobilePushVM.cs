@@ -26,7 +26,7 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public bool ToPush { get; set; }
         public bool TestPush { get; set; }
         public string DevicePush { get; set; }
-        public string RecipeList { get; set; }
+        public string RecipientList { get; set; }
 
 
         // proprietà aggiuntive
