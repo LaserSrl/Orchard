@@ -4,6 +4,8 @@ namespace Laser.Orchard.HID.Extensions {
         public const string LocalArea = "Laser.Orchard.HID";
         public const string CacheTokenTypeKeyFormat = @"{0}_HID_TokenType";
         public const string CacheAccessTokenKeyFormat = @"{0}_HID_AccessToken";
+
+        public const string ActivityCreateHIDUserFormName = "ActivityCreateHIDUser";
     }
 
     public static class HIDAPIEndpoints {

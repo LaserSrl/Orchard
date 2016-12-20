@@ -3,10 +3,8 @@ using Laser.Orchard.HID.Extensions;
 using Orchard;
 using Orchard.ContentManagement;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json.Linq;
@@ -126,6 +124,7 @@ namespace Laser.Orchard.HID.Services {
                             result = new HIDUserSearchResult(jo);
                             if (result.TotalResults == 1) {
                                 result.User = HIDUser.GetUser(this, jo["Resources"].Children().First()["meta"]["location"].ToString());
+                                result.Error = SearchErrors.NoError;
                             } else if (result.TotalResults == 0) {
                                 result.Error = SearchErrors.NoResults;
                             } else {
@@ -170,8 +169,47 @@ namespace Laser.Orchard.HID.Services {
             return HIDUser.CreateUser(this, user, familyName, givenName, email);
         }
 
+        public HIDUser IssueCredentials(IUser user) {
+            return IssueCredentials(user, GetSiteSettings().PartNumbers);
+        }
+        public HIDUser IssueCredentials(IUser user, string[] partNumbers) {
+            var searchResult = SearchHIDUser(user);
+            if (searchResult.Error == SearchErrors.NoError) {
+                HIDUser hidUser = searchResult.User;
+                foreach (var pn in partNumbers) {
+                    hidUser = hidUser.IssueCredential(pn);
+                    if (hidUser.Error != UserErrors.NoError) {
+                        break; //break on error
+                    }
+                }
+                return hidUser;
+            } else {
+                return new HIDUser();
+            }
+        }
 
-
+        public HIDUser RevokeCredentials(IUser user) {
+            return RevokeCredentials(user, GetSiteSettings().PartNumbers);
+        }
+        public HIDUser RevokeCredentials(IUser user, string[] partNumbers) {
+            var searchResult = SearchHIDUser(user);
+            if (searchResult.Error == SearchErrors.NoError) {
+                HIDUser hidUser = searchResult.User;
+                if (partNumbers.Length == 0) {
+                    hidUser = hidUser.RevokeCredential();
+                } else {
+                    foreach (var pn in partNumbers) {
+                        hidUser = hidUser.RevokeCredential(pn);
+                        if (hidUser.Error != UserErrors.NoError) {
+                            break; //break on error
+                        }
+                    }
+                }
+                return hidUser;
+            } else {
+                return new HIDUser();
+            }
+        }
     }
 
 

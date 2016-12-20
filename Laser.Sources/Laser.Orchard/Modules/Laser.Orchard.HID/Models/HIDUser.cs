@@ -26,11 +26,15 @@ namespace Laser.Orchard.HID.Models {
 
         private readonly IHIDAPIService _HIDService;
 
-        private HIDUser(IHIDAPIService hidService) {
-            _HIDService = hidService;
+        public HIDUser() {
             Emails = new List<string>();
             InvitationIds = new List<int>();
             CredentialContainerIds = new List<int>();
+            Error = UserErrors.UnknownError;
+        }
+
+        private HIDUser(IHIDAPIService hidService) : this(){
+            _HIDService = hidService;
         }
 
         public static string GenerateExternalId(int id) {
@@ -237,7 +241,7 @@ namespace Laser.Orchard.HID.Models {
             }
             //a valid invitation code is in the form ABCD-EFGH-ILMN-OPQR
             //16 useful characters with an hyphen separator
-            string pattern = @"(\w){4}-(\w){4}-(\w){4}-(\w){4}";
+            const string pattern = @"(\w){4}-(\w){4}-(\w){4}-(\w){4}";
             if (new Regex(pattern).Match(invitationCode).Success) {
                 return invitationCode;
             }
@@ -254,6 +258,12 @@ namespace Laser.Orchard.HID.Models {
         }
 
         public HIDUser IssueCredential(string partNumber) {
+            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
+                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
+                    Error = UserErrors.AuthorizationFailed;
+                    return this;
+                }
+            }
             foreach (var credentialContainerId in CredentialContainerIds) {
                 HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(IssueCredentialEndpointFormat, credentialContainerId));
                 wr.Method = WebRequestMethods.Http.Post;
@@ -296,6 +306,12 @@ namespace Laser.Orchard.HID.Models {
             get { return string.Format(HIDAPIEndpoints.RevokeCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
         }
         public HIDUser RevokeCredential(string partNumber = "") {
+            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
+                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
+                    Error = UserErrors.AuthorizationFailed;
+                    return this;
+                }
+            }
             foreach (var credentialContainerId in CredentialContainerIds) {
                 HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(IssueCredentialEndpointFormat, credentialContainerId));
                 wr.Method = WebRequestMethods.Http.Get;
@@ -312,8 +328,34 @@ namespace Laser.Orchard.HID.Models {
                                 if (!string.IsNullOrWhiteSpace(partNumber)) {
                                     jCredentials = (JEnumerable<JToken>)(jCredentials.Where(jc => jc["partNumber"].ToString() == partNumber).AsJEnumerable());
                                 }
-                                ////////////////////
-                                Error = UserErrors.NoError;
+                                foreach (var jCred in jCredentials) {
+                                    HttpWebRequest wrRevoke = HttpWebRequest.CreateHttp(string.Format(RevokeCredentialEndpointFormat, jCred["id"]));
+                                    wrRevoke.Method = "DELETE";
+                                    wrRevoke.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
+                                    try {
+                                        using (HttpWebResponse respRevoke = wrRevoke.GetResponse() as HttpWebResponse) {
+                                            if (resp.StatusCode == HttpStatusCode.NoContent) {
+                                                Error = UserErrors.NoError;
+                                            } else {
+                                                Error = UserErrors.UnknownError;
+                                            }
+                                        }
+                                    } catch (Exception ex) {
+                                        HttpWebResponse respRevoke = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                                        if (respRevoke != null) {
+                                            if (respRevoke.StatusCode == HttpStatusCode.Unauthorized) {
+                                                if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
+                                                    return RevokeCredential(partNumber);
+                                                }
+                                                Error = UserErrors.AuthorizationFailed;
+                                            } else {
+                                                ErrorFromStatusCode(resp.StatusCode);
+                                            }
+                                        } else {
+                                            Error = UserErrors.UnknownError;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

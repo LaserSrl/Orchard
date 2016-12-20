@@ -8,3 +8,4 @@ Description: Description for the module
 Features:
     Laser.Orchard.HID:
         Description: Enables handling most functionalities of HID Mobile Access automatically.
+		Dependencies: Laser.Orchard.StartupConfig, Orchard.Workflows
