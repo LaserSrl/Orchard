@@ -11,6 +11,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
+using Orchard.Workflows.Models;
 
 namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
     public class RazorModelContext {
@@ -18,10 +19,11 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
         public IContent ContentItem { get; set; }
         public IDictionary<string, object> Tokens { get; set; }
         public Localizer T { get; set; }
+        public WorkflowContext WorkflowContext { get; set; }
     }
 
     public interface IRazorExecuteService : IDependency {
-        string Execute(string codeFileWithExtension, IContent contentItem, IDictionary<string, object> tokens = null);
+        string Execute(string codeFileWithExtension, IContent contentItem, IDictionary<string, object> tokens = null, WorkflowContext workflowContext = null);
     }
 
     public class RazorExecuteService : IRazorExecuteService {
@@ -34,7 +36,7 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
         }
         public Localizer T { get; set; }
 
-        public string Execute(string codeFileWithExtension, IContent content, IDictionary<string, object> tokens = null) {
+        public string Execute(string codeFileWithExtension, IContent content, IDictionary<string, object> tokens = null, WorkflowContext workflowContext = null) {
             var uriDir = String.Format("~/App_Data/Sites/{0}/Code/", _shellSettings.Name);
             var uriFile = String.Format("{0}/{1}", uriDir, codeFileWithExtension);
             var localDir = HostingEnvironment.MapPath(uriDir);
@@ -56,6 +58,7 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
                             OrchardServices = _orchardServices,
                             ContentItem = content,
                             Tokens = tokens ?? new Dictionary<string, object>(),
+                            WorkflowContext = workflowContext,
                             T = T
                         };
                         result = service.RunCompile(codeTemplate, "htmlRawTemplatea", null, (Object)model);
