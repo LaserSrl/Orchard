@@ -11,6 +11,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
+using Orchard.Workflows.Models;
 
 namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
     public class RazorModelContext {
@@ -58,7 +59,7 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
                             Tokens = tokens ?? new Dictionary<string, object>(),
                             T = T
                         };
-                        result = service.RunCompile(codeTemplate, "htmlRawTemplatea", null, (Object)model);
+                        result = service.RunCompile(new LoadedTemplateSource(codeTemplate,localFile), "htmlRawTemplatea", null, (Object)model);
                     }
                     string resultnobr = result.Replace("\r\n", "").Replace(" ", "");
                     if (!string.IsNullOrEmpty(resultnobr)) {
