@@ -10,6 +10,7 @@ using Laser.Orchard.Mobile.Services;
 using Laser.Orchard.Mobile.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Logging;
+using System.Collections;
 
 namespace Laser.Orchard.Mobile.Handlers {
 
@@ -49,8 +50,23 @@ namespace Laser.Orchard.Mobile.Handlers {
                     idLocalization = localizedPart.Culture.Id;
                 }
 
-                //var listaNumeri = _smsCommunicationService.GetSmsNumbersQueryResult(ids, idLocalization);
-                var listaDestinatari = _smsCommunicationService.GetSmsQueryResult(ids, idLocalization);
+                IList listaDestinatari = new List<Hashtable>();
+
+                if (part.RecipientList != null && part.RecipientList != "") {
+
+                    string[] lstDest = part.RecipientList.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (string tel in lstDest) {
+                        Hashtable hs = new Hashtable();
+                        hs.Add("SmsContactNumber", tel);
+
+                        listaDestinatari.Add(hs);
+                    }
+                } 
+                else {
+                    //var listaNumeri = _smsCommunicationService.GetSmsNumbersQueryResult(ids, idLocalization);
+                    listaDestinatari = _smsCommunicationService.GetSmsQueryResult(ids, idLocalization);
+                }
 
                 if (listaDestinatari.Count > 0) {
                     string linktosend = "";
@@ -64,10 +80,18 @@ namespace Laser.Orchard.Mobile.Handlers {
                     }
                     string messageToSms = part.Message + " " + linktosend;
 
+                    string IdSms = "";
+                    if (part.ExternalId != null && part.ExternalId > 0) {
+                        IdSms = "WsOrchard_" + part.ExternalId.ToString();
+                    } 
+                    else {
+                        IdSms = "Orchard_" + part.Id.ToString();
+                    }
+
                     // Invio SMS
                     //_smsServices.SendSms(listaDestinatari.Select(x => Convert.ToInt64(x.SmsPrefix + x.SmsNumber)).ToArray(),
                     //                     messageToSms, part.Alias, "Orchard_" + part.Id.ToString(), part.HaveAlias);
-                    _smsServices.SendSms(listaDestinatari, messageToSms, part.Alias, "Orchard_" + part.Id.ToString(), part.HaveAlias);
+                    _smsServices.SendSms(listaDestinatari, messageToSms, part.Alias, IdSms, part.HaveAlias);
 
                     part.SmsRecipientsNumber = listaDestinatari.Count;
                     part.SmsMessageSent = true;

@@ -21,7 +21,6 @@ namespace Laser.Orchard.Mobile.Services {
     public interface ISmsCommunicationService : IDependency {
         //IHqlQuery IntegrateAdditionalConditions(IHqlQuery query = null, IContent content = null);
         //IHqlQuery IntegrateAdditionalConditions(IHqlQuery query, Int32? idlocalization);
-        //IList<SmsHQL> GetSmsQueryResult(Int32[] ids, Int32? idlingua);
         IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false);
         //List<string> GetSmsNumbersQueryResult(Int32[] ids, Int32? idlingua);
     }
@@ -58,7 +57,6 @@ namespace Laser.Orchard.Mobile.Services {
         //    return listaNumeri;
         //}
         
-        //public IList<SmsHQL> GetSmsQueryResult(Int32[] ids, Int32? idlingua)
         public IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false)
         {
             IHqlQuery query;

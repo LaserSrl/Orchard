@@ -16,19 +16,6 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.Mobile.Handlers {
-
-    #region Support Classes
-
-    // Classe queryForSms
-    public class SmsHQL {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string SmsPrefix { get; set; }
-        public string SmsNumber { get; set; }
-    }
-
-    #endregion
-
     [OrchardFeature("Laser.Orchard.SmsGateway")]
     public class SmsGatewayPartHandler : ContentHandler {
 
@@ -79,7 +66,7 @@ namespace Laser.Orchard.Mobile.Handlers {
                                 string numberTestSms = part.PrefixForTest.Trim() + part.NumberForTest.Trim();
                                 
                                 Hashtable hs = new Hashtable();
-                                hs.Add("SmsTestNumber", numberTestSms);
+                                hs.Add("SmsContactNumber", numberTestSms);
 
                                 List<Hashtable> listaDestinatari = new List<Hashtable>();
                                 listaDestinatari.Add(hs);

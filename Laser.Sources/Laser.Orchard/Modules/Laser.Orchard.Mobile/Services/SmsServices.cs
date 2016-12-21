@@ -104,6 +104,7 @@ namespace Laser.Orchard.Mobile.Services {
             SmsContactPartRecord contactRecord = null;
             CommunicationSmsRecord smsRecord = null;
 
+            // Send for Contact Part
             if (content.ContainsKey("SmsContactPartRecord"))
             {
                 contactRecord = (content["SmsContactPartRecord"] as SmsContactPartRecord);
@@ -113,9 +114,9 @@ namespace Laser.Orchard.Mobile.Services {
                     risultato = smsRecord.Prefix + smsRecord.Sms;
                 }
             } 
-            // Send for test
-            else if (content.ContainsKey("SmsTestNumber")) {
-                risultato = content["SmsTestNumber"].ToString();
+            // Send for Lista Destinatari
+            else if (content.ContainsKey("SmsContactNumber")) {
+                risultato = content["SmsContactNumber"].ToString();
             }
 
             ////versione senza l'uso degli alias nella query HQL

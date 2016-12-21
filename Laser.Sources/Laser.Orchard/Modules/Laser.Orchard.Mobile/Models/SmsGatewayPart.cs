@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.Mobile.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
+using Orchard.Data.Conventions;
 using Orchard.Environment.Extensions;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,9 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual int SmsRejectedOrExpiredNumber { get; set; }
         public virtual int SmsRecipientsNumber { get; set; }
         public virtual string PrefixForTest { get; set; }
+        public virtual string RecipientList { get; set; }
+        public virtual int? ExternalId { get; set; }
+        public virtual bool SendToRecipientList { get; set; }
     }
 
     [OrchardFeature("Laser.Orchard.SmsGateway")]
@@ -82,6 +86,22 @@ namespace Laser.Orchard.Mobile.Models {
         public string PrefixForTest {
             get { return this.Retrieve(x => x.PrefixForTest); }
             set { this.Store(x => x.PrefixForTest, value); }
+        }
+
+        [StringLengthMax]
+        public string RecipientList {
+            get { return this.Retrieve(x => x.RecipientList); }
+            set { this.Store(x => x.RecipientList, value); }
+        }
+
+        public int? ExternalId {
+            get { return this.Retrieve(x => x.ExternalId); }
+            set { this.Store(x => x.ExternalId, value); }
+        }
+
+        public bool SendToRecipientList {
+            get { return this.Retrieve(x => x.SendToRecipientList); }
+            set { this.Store(x => x.SendToRecipientList, value); }
         }
 
     }
