@@ -52,6 +52,10 @@
     <None Include="IvreaTerritorio\WebServices\POI.cshtml" />
     <None Include="IvreaTerritorio\WebServices\POI1.cshtml" />
     <None Include="Montevarchi\XSLT\eventi.cshtml" />
+    <None Include="MyVEC\Code\CreaInviti.cshtml" />
+    <None Include="MyVEC\Code\SyncDataVisitaToInvito.cshtml" />
+    <None Include="MyVEC\Mobile\devVec.p12" />
+    <None Include="MyVEC\Mobile\prodVec.p12" />
     <None Include="RomaMunicipioII\Code\ImportOsp.cshtml" />
     <None Include="TerritorioMorgex\Mobile\pushProdMorgex.p12" />
     <None Include="TerritorioMorgex\Mobile\pushSvilMorgex.p12" />
