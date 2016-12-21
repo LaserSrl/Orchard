@@ -20,12 +20,16 @@ namespace Laser.Orchard.Mobile.ViewModels {
             PushSentNumber = 0;
             PushAdvertising = true;
             PushTestNumber = 0;
+            UseRecipientList = false;
+            TestPushToDevice = false;
         }
         public string TitlePush { get; set; }
         public string TextPush { get; set; }
         public bool ToPush { get; set; }
         public bool TestPush { get; set; }
+        public bool TestPushToDevice { get; set; }
         public string DevicePush { get; set; }
+        public bool UseRecipientList { get; set; }
         public string RecipientList { get; set; }
 
 

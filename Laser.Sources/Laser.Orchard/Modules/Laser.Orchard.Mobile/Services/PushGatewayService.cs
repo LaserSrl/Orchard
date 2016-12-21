@@ -36,7 +36,7 @@ namespace Laser.Orchard.Mobile.Services {
     public interface IPushGatewayService : IDependency {
         IList GetPushQueryResult(Int32[] ids, bool countOnly = false);
         IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false);
-        IList GetPushQueryResultByUserNames(string[] userNames, bool countOnly);
+        IList GetPushQueryResultByUserNames(string[] userNames, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly);
         void PublishedPushEventTest(ContentItem ci);
         void PublishedPushEvent(ContentItem ci);
         void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "", string externalUrl = "");
@@ -167,7 +167,7 @@ namespace Laser.Orchard.Mobile.Services {
         /// <param name="userNames">string array containing User names or email of the contacts to push</param>
         /// <param name="countOnly">if true a single line list will be returned having device count by DeviceType</param>
         /// <returns></returns>
-        public IList GetPushQueryResultByUserNames(string[] userNames, bool countOnly) {
+        public IList GetPushQueryResultByUserNames(string[] userNames, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly) {
             if (userNames.Length <= 0) return null;
             var userNamesCSV = String.Join(",", userNames.Select(x => "'" + x.ToLower().Replace("'", "''") + "'"));
             string query;
@@ -186,6 +186,14 @@ namespace Laser.Orchard.Mobile.Services {
             string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
             string machineNameCheck = System.Environment.MachineName ?? "";
             query += string.Format(" AND pnr.RegistrationUrlHost='{0}' AND pnr.RegistrationUrlPrefix='{1}' AND pnr.RegistrationMachineName='{2}'", hostCheck.Replace("'", "''"), prefixCheck.Replace("'", "''"), machineNameCheck.Replace("'", "''"));
+            if (tipodisp.HasValue) {
+                query += " AND pnr.Device='" + tipodisp.Value + "'";
+            }
+            if (language != "All") {
+                query += " AND pnr.Language='" + language.Replace("'", "''") + "'"; // sostituzione anti sql-injection
+            }
+            query += " AND pnr.Produzione=" + ((produzione) ? "1" : "0");
+
             var fullStatement = _sessionLocator.For(null)
                 .CreateQuery(query)
                 .SetCacheable(false);
@@ -235,7 +243,7 @@ namespace Laser.Orchard.Mobile.Services {
 
         private List<PushNotificationVM> GetListMobileDeviceByUserNames(string[] userNames, bool countOnly = false) {
             var lista = new List<PushNotificationVM>();
-            var elenco = GetPushQueryResultByUserNames(userNames, countOnly);
+            var elenco = GetPushQueryResultByUserNames(userNames, null, true, "All", countOnly);
             foreach (Hashtable ht in elenco) {
                 lista.Add(new PushNotificationVM {
                     Id = Convert.ToInt32(ht["Id"]),
@@ -492,7 +500,7 @@ namespace Laser.Orchard.Mobile.Services {
                 _myLog.WriteLog("Iniziato invio Push del content " + ci.Id);
                 ContentItem savedCi = _orchardServices.ContentManager.Get(ci.Id);
                 MobilePushPart mpp = ci.As<MobilePushPart>();
-                SendPushToSpecificDevices = !String.IsNullOrWhiteSpace(mpp.RecipientList);
+                SendPushToSpecificDevices = mpp.UseRecipientList;
                 if (mpp.ToPush) {
                     bool stopPush = false;
                     Int32 idContent = mpp.Id;
@@ -569,18 +577,31 @@ namespace Laser.Orchard.Mobile.Services {
                                 SendAllWindowsPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids);
                             }
                         } else {
-                            PushAndroid(GetListMobileDeviceByUserNames(
-                                mpp.RecipientList.Split(new string[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)),
+                            var listDevices = GetListMobileDeviceByUserNames(mpp.RecipientList.Split(new string[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries));
+                            var pushMessage = GeneratePushMessage(mpp, idContent, idContentRelated);
+                            PushAndroid(listDevices.Where(x=>x.Device== TipoDispositivo.Android).ToList(),
                                 produzione,
-                                GeneratePushMessage(mpp, idContent, idContentRelated));
+                                pushMessage);
+                            PushApple(listDevices.Where(x => x.Device == TipoDispositivo.Apple).ToList(),
+                                produzione,
+                                pushMessage);
+                            PushWindows(listDevices.Where(x => x.Device == TipoDispositivo.WindowsMobile).ToList(),
+                                produzione,
+                                pushMessage);
                         }
                         // aggiorna la MobilePushPart
                         mpp.PushSent = true;
                         mpp.PushSentNumber = messageSent;
                         int counter = 0;
                         if (ci.ContentType == "CommunicationAdvertising") {
-                            var counterAux = GetPushQueryResult(ids, locTipoDispositivo, produzione, language, true);
-                            counter = Convert.ToInt32(((Hashtable)(counterAux[0]))["Tot"]);
+                            IList counterAux;
+                            if (!SendPushToSpecificDevices) {
+                                counterAux = GetPushQueryResult(ids, locTipoDispositivo, produzione, language, true);
+                                counter = Convert.ToInt32(((Hashtable)(counterAux[0]))["Tot"]);
+                            } else {
+                                counterAux = GetPushQueryResultByUserNames(mpp.RecipientList.Split(new string[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries), null, true, "All", true);
+                                counter = Convert.ToInt32(((Hashtable)(counterAux[0]))["Tot"]);
+                            }
                         } else {
                             if (queryDevice.Trim() == "") {
                                 counter = _pushNotificationRepository.Fetch(x => (x.Device == locTipoDispositivo || locTipoDispositivo == null) && x.Produzione == produzione && x.Validated == true && (x.Language == language || language == "All")).Count();

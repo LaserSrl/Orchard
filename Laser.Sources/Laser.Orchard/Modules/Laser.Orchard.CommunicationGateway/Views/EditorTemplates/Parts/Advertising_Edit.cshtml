@@ -111,6 +111,7 @@
     var antiForgeryToken, locCtrl, locSummary, locUrls;
     var idRun = 0;
     var arrUrl = [];
+    var arrFieldForUseManualRecipientList= [];
     var arrFieldForManualRecipientList = [];
     var arrOutput = [];
     var arrFunc = [];
@@ -138,16 +139,22 @@
     }
 
     function updateCounter(pIdRun, elencoIds, idx) {
-        var manualCsvRecipients = "";
-        if ($('#'+arrFieldForManualRecipientList[idx]).length) {
-            manualCsvRecipients = $('#'+arrFieldForManualRecipientList[idx]).val().replace(/(?:\r\n|\r|\n)/g, ',');
+        var manualValidRecipients = [];
+        if ($('#'+arrFieldForUseManualRecipientList[idx]).length) {
+            if ($('#'+arrFieldForUseManualRecipientList[idx]).is(":checked")){// check if the recipient list should be used
+                manualValidRecipients = $('#'+arrFieldForManualRecipientList[idx]).val().split(/(?:\r\n|\r|\n)/g);
+                if (manualValidRecipients.length==0) { // if the recipient list should be used but no user name is available force one element in the array
+                    manualValidRecipients[0] = "[none]";
+                }
+            }
         }
+
         $.ajax({
             myIdx: idx, // parametro custom per la function success
             type: "POST",
             url: arrUrl[idx],
             traditional: true,
-            data:{__RequestVerificationToken:antiForgeryToken, ids:elencoIds, manualRecipients: manualCsvRecipients, idlocalization:@Model["LocalizationId"] },
+            data:{__RequestVerificationToken:antiForgeryToken, ids:elencoIds, manualRecipients: manualValidRecipients, idlocalization:@Model["LocalizationId"] },
             dataType: "json",
             success: function (data, status, jqXHR) {
                 if(pIdRun == idRun) {
@@ -183,7 +190,8 @@
     }
 
     $(document).ready(function () {
-        antiForgeryToken = $("input[name=__RequestVerificationToken]:first").val();        locCtrl = $("#QueryPickerPart_SelectedIds");
+        antiForgeryToken = $("input[name=__RequestVerificationToken]:first").val();
+        locCtrl = $("#QueryPickerPart_SelectedIds");
         locCtrl.parent().after("<div id='summary-totals' style='border: solid 1px rgb(189, 188, 188)'></div>");
         locSummary = $("#summary-totals");
         locUrls = $("input[name=CountUrl]");
@@ -192,9 +200,11 @@
 
         for (var i = 0; i < locUrls.length; i++) {
             arrUrl[i] = locUrls.eq(i).val().split('|')[0];
-            if (locUrls.eq(i).val().split('|').length>1){
-                arrFieldForManualRecipientList[i] = locUrls.eq(i).val().split('|')[1];
+            if (locUrls.eq(i).val().split('|').length>2){
+                arrFieldForUseManualRecipientList[i] = locUrls.eq(i).val().split('|')[1];
+                arrFieldForManualRecipientList[i] = locUrls.eq(i).val().split('|')[2];
             } else {
+                arrFieldForUseManualRecipientList[i] = "";
                 arrFieldForManualRecipientList[i] = "";
             }
             arrOutput[i] = "";

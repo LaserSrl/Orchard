@@ -9,7 +9,6 @@
   </Match>
   <Match ContentType="CommunicationAdvertising">
     <Place Fields_ContentPicker_Edit-Campaign="-"/>
-    <Place Parts_Title="Content:1" />
     <Place switchurl="Content:2" />
     <Place Fields_MediaLibraryPicker_Edit__CommunicationAdvertisingPart-Gallery="Content:3"/>
     <Place Parts_AdvertisingSwitcher="Content:4.1.1"/>
