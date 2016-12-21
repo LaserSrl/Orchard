@@ -24,7 +24,7 @@ namespace Laser.Orchard.HID.Activities {
                             Id: "HIDUser-IUser",
                             Name: "IUser",
                             Title: T("Krake User"),
-                            Description: T("Specify the ID or the UserName of the Krake User to be used as origin. Leave blank to use the owner of the Content Item that triggered the workflow."),
+                            Description: T("Specify the ID or the UserName of the Krake User to be used as origin. Leave blank to use the Creator of the Content Item that triggered the workflow."),
                             Classes: new[] { "large", "text", "tokenized" }
                         ),
                         _Email: Shape.Textbox(

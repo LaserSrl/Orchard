@@ -53,7 +53,8 @@ namespace Laser.Orchard.HID.Activities {
             IUser user = null;
             if (string.IsNullOrWhiteSpace(userString)) {
                 if (workflowContext.Content.Has<CommonPart>()) {
-                    user = workflowContext.Content.As<CommonPart>().Owner;
+                    int uId = (int)(((dynamic)workflowContext.Content.As<CommonPart>()).Creator.Value);
+                    user = _contentManager.Get<UserPart>(uId);
                 }
             } else {
                 //use the string to get the user
