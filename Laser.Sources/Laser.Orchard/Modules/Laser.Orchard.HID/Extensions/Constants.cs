@@ -32,6 +32,9 @@ namespace Laser.Orchard.HID.Extensions {
         //CreateInvitationEndpoint = String.Format(CreateInvitationEndpointFormat, UsersEndpoint, userId);
         //  - Get Specific User: {UsersEndpoint}/{userID}
         //However, the search returns directly the correct "path" for a user
+        //  - Get Credential Container: GET to {BaseEndpoint}/credential-container/{credContainerID}
+        public const string GetCredentialContainerEndpointFormat = @"{0}/credential-container/{1}";
+        //GetCredentialContainerEndpoint = String.Format(GetCredentialContainerEndpointFormat, BaseEndpoint, credContainerId);
         //  - Issue Credentials: POST to {BaseEndpoint}/credential-container/{credContainerID}/credential
         public const string IssueCredentialEndpointFormat = @"{0}/credential-container/{1}/credential";
         //IssueCredentialEndpoint = String.Format(IssueCredentialEndpointFormat, BaseEndpoint, credContainerId);

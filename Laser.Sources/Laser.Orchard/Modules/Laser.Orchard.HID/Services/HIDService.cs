@@ -109,7 +109,7 @@ namespace Laser.Orchard.HID.Services {
             wr.Method = WebRequestMethods.Http.Post;
             wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
             wr.Headers.Add(HttpRequestHeader.Authorization, AuthorizationToken);
-            string bodyText = CreateSearchFormat(externalId); //("j.gerbore"); // 
+            string bodyText = CreateSearchFormat(externalId); // ("m.piovanelli"); // ("j.gerbore"); // 
             byte[] bodyData = Encoding.UTF8.GetBytes(bodyText);
             using (Stream reqStream = wr.GetRequestStream()) {
                 reqStream.Write(bodyData, 0, bodyData.Length);
@@ -176,10 +176,15 @@ namespace Laser.Orchard.HID.Services {
             var searchResult = SearchHIDUser(user);
             if (searchResult.Error == SearchErrors.NoError) {
                 HIDUser hidUser = searchResult.User;
-                foreach (var pn in partNumbers) {
-                    hidUser = hidUser.IssueCredential(pn);
-                    if (hidUser.Error != UserErrors.NoError) {
-                        break; //break on error
+                if (partNumbers.Length == 0) {
+                    hidUser = hidUser.IssueCredential(""); //this assigns the default part number for the customer
+                } else {
+                    foreach (var pn in partNumbers) {
+                        hidUser = hidUser.IssueCredential(pn);
+                        if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
+                            break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential having been
+                                    //assigned already, which is fine
+                        }
                     }
                 }
                 return hidUser;
@@ -200,8 +205,9 @@ namespace Laser.Orchard.HID.Services {
                 } else {
                     foreach (var pn in partNumbers) {
                         hidUser = hidUser.RevokeCredential(pn);
-                        if (hidUser.Error != UserErrors.NoError) {
-                            break; //break on error
+                        if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
+                            break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential being
+                                    //revoked right now
                         }
                     }
                 }

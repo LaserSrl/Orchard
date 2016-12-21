@@ -12,7 +12,7 @@ namespace Laser.Orchard.HID.Controllers {
 
         private readonly IOrchardServices _orchardServices;
         private readonly IHIDAdminService _HIDAdminService;
-        private readonly IHIDAPIService _HIDAPISerivce;
+        private readonly IHIDAPIService _HIDAPIService;
 
         public Localizer T { get; set; }
 
@@ -21,7 +21,7 @@ namespace Laser.Orchard.HID.Controllers {
             IHIDAPIService hIDAPISerivce) {
             _orchardServices = orchardServices;
             _HIDAdminService = HIDAdminService;
-            _HIDAPISerivce = hIDAPISerivce;
+            _HIDAPIService = hIDAPISerivce;
 
             T = NullLocalizer.Instance;
         }
@@ -39,7 +39,7 @@ namespace Laser.Orchard.HID.Controllers {
             if (TryUpdateModel(settings)) {
                 _orchardServices.Notifier.Information(T("Settings saved successfully."));
                 //attempt authentication
-                switch (_HIDAPISerivce.Authenticate()) {
+                switch (_HIDAPIService.Authenticate()) {
                     case AuthenticationErrors.NoError:
                         _orchardServices.Notifier.Information(T("Authentication OK."));
                         break;
@@ -55,8 +55,10 @@ namespace Laser.Orchard.HID.Controllers {
                     default:
                         break;
                 }
-                var u = _HIDAPISerivce.SearchHIDUser(_orchardServices.WorkContext.CurrentUser);
-                var inv = u.User.CreateInvitation();
+                //var u = _HIDAPIService.SearchHIDUser(_orchardServices.WorkContext.CurrentUser);
+                //var inv = u.User.CreateInvitation();
+                _HIDAPIService.IssueCredentials(_orchardServices.WorkContext.CurrentUser);
+                //_HIDAPIService.RevokeCredentials(_orchardServices.WorkContext.CurrentUser);
             } else {
                 _orchardServices.Notifier.Error(T("Could not save settings."));
             }

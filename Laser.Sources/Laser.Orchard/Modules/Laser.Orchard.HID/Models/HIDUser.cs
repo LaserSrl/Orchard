@@ -252,7 +252,7 @@ namespace Laser.Orchard.HID.Models {
         private string IssueCredentialEndpointFormat {
             get { return string.Format(HIDAPIEndpoints.IssueCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
         }
-        private const string IssueCredentialBodyFormat = @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction' ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'assignCredential':'Y', 'partNumber':'{{{0}}}', 'credential':'' }} }}";
+        private const string IssueCredentialBodyFormat = @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction' ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'assignCredential':'Y', 'partNumber':'{0}', 'credential':'' }} }}";
         private string IssueCredentialBody(string pn) {
             return JObject.Parse(string.Format(IssueCredentialBodyFormat, pn)).ToString();
         }
@@ -263,6 +263,9 @@ namespace Laser.Orchard.HID.Models {
                     Error = UserErrors.AuthorizationFailed;
                     return this;
                 }
+            }
+            if (CredentialContainerIds.Count == 0) {
+                Error = UserErrors.DoesNotHaveDevices;
             }
             foreach (var credentialContainerId in CredentialContainerIds) {
                 HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(IssueCredentialEndpointFormat, credentialContainerId));
@@ -290,11 +293,17 @@ namespace Laser.Orchard.HID.Models {
                         } else {
                             ErrorFromStatusCode(resp.StatusCode);
                         }
+                        if (Error == UserErrors.PreconditionFailed) {
+                            var rBody = (new StreamReader(resp.GetResponseStream())).ReadToEnd();
+                            if (JObject.Parse(rBody)["detail"].ToString().Trim().ToUpperInvariant() == "THIS CREDENTIAL IS ALREADY DELIVERED TO THIS CREDENTIALCONTAINER.") {
+                                Error = UserErrors.NoError;
+                            }
+                        }
                     } else {
                         Error = UserErrors.UnknownError;
                     }
                 }
-                if (Error != UserErrors.NoError) {
+                if (Error != UserErrors.NoError && Error != UserErrors.PreconditionFailed) {
                     break; //break early on error
                 }
             }
@@ -302,6 +311,9 @@ namespace Laser.Orchard.HID.Models {
             return this;
         }
 
+        private string GetCredentialContainerEndpointFormat {
+            get { return String.Format(HIDAPIEndpoints.GetCredentialContainerEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
+        }
         private string RevokeCredentialEndpointFormat {
             get { return string.Format(HIDAPIEndpoints.RevokeCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
         }
@@ -313,7 +325,7 @@ namespace Laser.Orchard.HID.Models {
                 }
             }
             foreach (var credentialContainerId in CredentialContainerIds) {
-                HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(IssueCredentialEndpointFormat, credentialContainerId));
+                HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(GetCredentialContainerEndpointFormat, credentialContainerId));
                 wr.Method = WebRequestMethods.Http.Get;
                 wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
                 wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
@@ -328,13 +340,15 @@ namespace Laser.Orchard.HID.Models {
                                 if (!string.IsNullOrWhiteSpace(partNumber)) {
                                     jCredentials = (JEnumerable<JToken>)(jCredentials.Where(jc => jc["partNumber"].ToString() == partNumber).AsJEnumerable());
                                 }
+                                //don't revoke credentials that are already marked for revoking
+                                jCredentials = (JEnumerable<JToken>)(jCredentials.Where(jc => jc["status"].ToString().ToUpperInvariant() != "REVOKING")).AsJEnumerable();
                                 foreach (var jCred in jCredentials) {
                                     HttpWebRequest wrRevoke = HttpWebRequest.CreateHttp(string.Format(RevokeCredentialEndpointFormat, jCred["id"]));
                                     wrRevoke.Method = "DELETE";
                                     wrRevoke.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
                                     try {
                                         using (HttpWebResponse respRevoke = wrRevoke.GetResponse() as HttpWebResponse) {
-                                            if (resp.StatusCode == HttpStatusCode.NoContent) {
+                                            if (resp.StatusCode == HttpStatusCode.NoContent || resp.StatusCode == HttpStatusCode.OK) {
                                                 Error = UserErrors.NoError;
                                             } else {
                                                 Error = UserErrors.UnknownError;
@@ -349,7 +363,7 @@ namespace Laser.Orchard.HID.Models {
                                                 }
                                                 Error = UserErrors.AuthorizationFailed;
                                             } else {
-                                                ErrorFromStatusCode(resp.StatusCode);
+                                                ErrorFromStatusCode(respRevoke.StatusCode);
                                             }
                                         } else {
                                             Error = UserErrors.UnknownError;
@@ -374,7 +388,7 @@ namespace Laser.Orchard.HID.Models {
                         Error = UserErrors.UnknownError;
                     }
                 }
-                if (Error != UserErrors.NoError) {
+                if (Error != UserErrors.NoError && Error != UserErrors.PreconditionFailed) {
                     break; //break early on error
                 }
             }
