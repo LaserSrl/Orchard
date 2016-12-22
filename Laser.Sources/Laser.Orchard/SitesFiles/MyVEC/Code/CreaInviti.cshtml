@@ -1,8 +1,12 @@
 @using Orchard;
-@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
 @using Orchard.Data;
 @using System.Linq;
 @functions{
+    Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
+    IFieldIndexService _fieldIndexService;
     string retString = "Error"; //possible outcomes: "Error","Ok"
     dynamic visita = null;
     string csv = "";
@@ -11,6 +15,8 @@
     dynamic invito = null;
 }
 @{
+    _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+    _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
     visita = Model.ContentItem;
     string visitaId = string.Format("{{{0}}}", visita.Id);
     // legge il csv con gli invivati
@@ -20,33 +26,80 @@
         string[] fields = row.Split(fieldSeparator, StringSplitOptions.None);
         invito = null;
         if(fields.Length > 0) {
-            // email
-            invito = Model.OrchardServices.ContentManager.New("SchedaInvito");
-            Model.OrchardServices.ContentManager.Create(invito);
-            invito = Model.OrchardServices.ContentManager.Get(invito.Id);
-            invito.SchedaInvito.Visita.Ids = new int[] { visita.Id };
-            invito.SchedaInvito.Email.Value = fields[0];
-            invito.TitlePart.Title = "";
-            invito.ActivityPart.DateTimeStart = visita.ActivityPart.DateTimeStart;
-            invito.ActivityPart.DateTimeEnd = visita.ActivityPart.DateTimeEnd;
-            invito.ActivityPart.AllDay = visita.ActivityPart.AllDay;
-        }
-        if (fields.Length > 1) {
-            // cognome
-            invito.SchedaInvito.Cognome.Value = fields[1];
-            invito.TitlePart.Title += fields[1];
-        }
-        if (fields.Length > 2) {
-            // nome
-            invito.SchedaInvito.Nome.Value = fields[2];
-            invito.TitlePart.Title += " " + fields[2];
-        }
-        if (fields.Length > 3) {
-            // azienda
-            invito.SchedaInvito.Azienda.Value = fields[3];
-        }
-        if(invito != null) {
-            invito.TitlePart.Title += " - " + visita.TitlePart.Title;
+            // verifica che l'invito non esista già
+            // qry sui field di SchedaInvito per quella visita e per quella mail
+            var fieldsQuery = _fieldIndexPartRecord.Table
+                .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Visita." && r.Value == visitaId))
+                .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Email." && r.Value == fields[0]))
+                .Select(x => x.ContentItemRecord.Id);
+            var ids = fieldsQuery.ToList();
+            if(ids.Count == 0) {
+                // email
+                invito = Model.OrchardServices.ContentManager.New("SchedaInvito");
+                Model.OrchardServices.ContentManager.Create(invito);
+                invito = Model.OrchardServices.ContentManager.Get(invito.Id);
+                invito.SchedaInvito.Visita.Ids = new int[] { visita.Id };
+                invito.SchedaInvito.Email.Value = fields[0];
+                invito.TitlePart.Title = "";
+                invito.ActivityPart.DateTimeStart = visita.ActivityPart.DateTimeStart;
+                invito.ActivityPart.DateTimeEnd = visita.ActivityPart.DateTimeEnd;
+                invito.ActivityPart.AllDay = visita.ActivityPart.AllDay;
+                _fieldIndexService.Set(
+                    invito.FieldIndexPart,
+                    "SchedaInvito",
+                    "Email",
+                    "",
+                    fields[0],
+                    typeof(string)
+                );
+                _fieldIndexService.Set(
+                    invito.FieldIndexPart,
+                    "SchedaInvito",
+                    "Visita",
+                    "",
+                    visitaId,
+                    typeof(string)
+                );
+                if (fields.Length > 1) {
+                    // cognome
+                    invito.SchedaInvito.Cognome.Value = fields[1];
+                    invito.TitlePart.Title += fields[1];
+                    _fieldIndexService.Set(
+                        invito.FieldIndexPart,
+                        "SchedaInvito",
+                        "Cognome",
+                        "",
+                        fields[1],
+                        typeof(string)
+                    );
+                }
+                if (fields.Length > 2) {
+                    // nome
+                    invito.SchedaInvito.Nome.Value = fields[2];
+                    invito.TitlePart.Title += " " + fields[2];
+                    _fieldIndexService.Set(
+                        invito.FieldIndexPart,
+                        "SchedaInvito",
+                        "Nome",
+                        "",
+                        fields[2],
+                        typeof(string)
+                    );
+                }
+                if (fields.Length > 3) {
+                    // azienda
+                    invito.SchedaInvito.Azienda.Value = fields[3];
+                    _fieldIndexService.Set(
+                        invito.FieldIndexPart,
+                        "SchedaInvito",
+                        "Azienda",
+                        "",
+                        fields[3],
+                        typeof(string)
+                    );
+                }
+                invito.TitlePart.Title += " - " + visita.TitlePart.Title;
+            }
         }
     }
     retString = "Ok";

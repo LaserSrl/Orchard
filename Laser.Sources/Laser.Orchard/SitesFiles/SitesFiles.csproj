@@ -54,6 +54,7 @@
     <None Include="Montevarchi\XSLT\eventi.cshtml" />
     <None Include="MyVEC\Code\CreaInviti.cshtml" />
     <None Include="MyVEC\Code\SyncDataVisitaToInvito.cshtml" />
+    <None Include="MyVEC\Code\UpdateQuestionnaireContext.cshtml" />
     <None Include="MyVEC\Mobile\devVec.p12" />
     <None Include="MyVEC\Mobile\prodVec.p12" />
     <None Include="RomaMunicipioII\Code\ImportOsp.cshtml" />

@@ -1,0 +1,49 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
+@using Orchard.Data;
+@using System.Linq;
+@functions{
+    Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
+    IRepository<Laser.Orchard.Questionnaires.Models.UserAnswersRecord> _repoAswers;
+    string retString = "Error"; //possible outcomes: "Error","Ok"
+    dynamic visita = null;
+    dynamic invito = null;
+    dynamic usr = null;
+    DateTime dtUltimaVisita = DateTime.MinValue;
+    string questionnaireContext = "";
+}
+@{
+    usr = Model.OrchardServices.WorkContext.CurrentUser;
+    int usrId = usr.Id;
+    int questionnaireId = Model.ContentItem.Id;
+    string mail = usr.Email;
+    _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+    _repoAswers = Model.OrchardServices.WorkContext.Resolve<IRepository<Laser.Orchard.Questionnaires.Models.UserAnswersRecord>>();
+    var qryInviti = _fieldIndexPartRecord.Table
+        .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Email." && r.Value == mail))
+        .Select(x => x.ContentItemRecord.Id);
+    var ids = qryInviti.ToList();
+    foreach(var idInvito in ids){
+        invito = ((dynamic)Model.OrchardServices.ContentManager.Get(idInvito));
+        visita = ((dynamic)Model.OrchardServices.ContentManager.Get(invito.SchedaInvito.Visita.Ids[0]));
+        if(visita.ActivityPart.DateTimeStart > dtUltimaVisita) {
+            dtUltimaVisita = visita.ActivityPart.DateTimeStart;
+            questionnaireContext = visita.TitlePart.Title;
+        }
+    }
+    if(string.IsNullOrWhiteSpace(questionnaireContext) == false) {
+        string sessionId = System.Web.HttpContext.Current.Session.SessionID;
+        var answers = _repoAswers.Table.Where(x => x.User_Id == usrId
+            && x.QuestionnairePartRecord_Id == questionnaireId
+            && x.SessionID == sessionId);
+        foreach(var rec in answers) {
+            rec.Context = questionnaireContext;
+            _repoAswers.Update(rec);
+        }
+    }
+    retString = "Ok";
+}
+@retString
