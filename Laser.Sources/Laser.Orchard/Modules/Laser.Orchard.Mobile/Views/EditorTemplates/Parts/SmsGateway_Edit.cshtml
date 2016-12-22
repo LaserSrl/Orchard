@@ -113,7 +113,7 @@
     </div>
 
     <div>
-        @Html.LabelFor(model => model.SmsGateway.Message)
+        @Html.LabelFor(model => model.SmsGateway.Message, T("Text"))
         <div>
             @Html.TextAreaFor(model => model.SmsGateway.Message, new { @id = "txtTesto", @class = "text large" })
             @Html.ValidationMessageFor(model => model.SmsGateway.Message)
@@ -125,7 +125,7 @@
     }
 
     <div>
-        @Html.LabelFor(m => m.SmsGateway.HaveAlias, T("Have Alias").Text, new { @class = "forcheckbox" })
+        @Html.LabelFor(m => m.SmsGateway.HaveAlias, T("MAM have alias").Text, new { @class = "forcheckbox" })
         @if (!disableHaveAlias) { 
             @Html.CheckBoxFor(model => model.SmsGateway.HaveAlias, new { @class = "rcswitcher-checkbox-havealias" })
         } else {
@@ -143,7 +143,7 @@
     </div>
 
     <div>
-        @Html.LabelFor(m => m.SmsGateway.SendToTestNumber, T("Send for test").Text, new { @class = "forcheckbox" })
+        @Html.LabelFor(m => m.SmsGateway.SendToTestNumber, T("Test over single phone number").Text, new { @class = "forcheckbox" })
         @Html.CheckBoxFor(model => model.SmsGateway.SendToTestNumber, new { @class = "rcswitcher-checkbox-sms" })
     </div>
 
@@ -162,15 +162,15 @@
     </div>
 
     <div>
-        @Html.LabelFor(m => m.SmsGateway.SendToRecipientList, T("Send to recipient list").Text, new { @class = "forcheckbox" })
+        @Html.LabelFor(m => m.SmsGateway.SendToRecipientList, T("Enter recipients manually").Text, new { @class = "forcheckbox" })
         @Html.CheckBoxFor(model => model.SmsGateway.SendToRecipientList, new { @class = "rcswitcher-checkbox-recipientlistsms" })
     </div>
 
     <div id="recipientlist-sms-container" style="@((!Model.SmsGateway.SendToRecipientList) ? "display:none;" : "")">
         <div class="form-group">
-            @Html.LabelFor(model => model.SmsGateway.RecipientList)
+            @Html.LabelFor(model => model.SmsGateway.RecipientList, T("Manual recipients:"))
             @Html.TextAreaFor(model => model.SmsGateway.RecipientList, new { @id = "txtRecipientList", @class = "text large" })
-            @Html.ValidationMessageFor(model => model.SmsGateway.RecipientList)
+            <span class="hint">@T("Enter phone number (prefix + number) of the contacts to which to deliver this Sms. One recipient for each line.")</span>
         </div>
     </div>
 
