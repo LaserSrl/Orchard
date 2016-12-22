@@ -1,0 +1,18 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Data;
+@using System.Linq;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","Ok"
+}
+@{
+    int idInvito = Model.ContentItem.Id;
+    string targa = System.Web.HttpContext.Current.Request.Form["Targa"];
+    var wfContext = Model.Tokens["Workflow"];
+    wfContext.SetState("IdInvito", idInvito);
+    wfContext.SetState("Targa", targa);
+    wfContext.SetState("Invito", Model.ContentItem);
+    retString = "Ok";
+}
+@retString

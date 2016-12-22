@@ -53,6 +53,7 @@
     <None Include="IvreaTerritorio\WebServices\POI1.cshtml" />
     <None Include="Montevarchi\XSLT\eventi.cshtml" />
     <None Include="MyVEC\Code\CreaInviti.cshtml" />
+    <None Include="MyVEC\Code\ReadInvitoAndTarga.cshtml" />
     <None Include="MyVEC\Code\SyncDataVisitaToInvito.cshtml" />
     <None Include="MyVEC\Code\UpdateQuestionnaireContext.cshtml" />
     <None Include="MyVEC\Mobile\devVec.p12" />
