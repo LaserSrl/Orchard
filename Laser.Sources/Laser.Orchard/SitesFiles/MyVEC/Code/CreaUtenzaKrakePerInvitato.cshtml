@@ -1,0 +1,136 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Projections.Services;
+@using Orchard.Security;
+@using Orchard.Users.Models;
+@using Orchard.Users.Services;
+@using System.Text.RegularExpressions;
+@using System.Web.Security;
+
+@functions{
+    string retString = "Error"; //possile outcomes: OK, Error
+
+    //services
+    IUserService _userService;
+    IMembershipService _membershipService;
+    IContentManager _contentManager;
+    IFieldIndexService _fieldIndexService;
+
+    int MinPasswordLength {
+        get {
+            return _membershipService.GetSettings().MinRequiredPasswordLength;
+        }
+    }
+    //this does the same validation that Orchard does in Orchard.Users/Controllers/AccountController
+    private bool ValidateRegistration(string userName, string email, string password) {
+        bool validate = true;
+
+        if (String.IsNullOrEmpty(userName)) {
+            validate = false;
+        } else {
+            if (userName.Length >= 255) {
+                validate = false;
+            }
+        }
+
+        if (String.IsNullOrEmpty(email)) {
+            validate = false;
+        } else if (email.Length >= 255) {
+            validate = false;
+        } else if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
+            // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx
+            validate = false;
+        }
+
+        if (validate) {
+            if (!_userService.VerifyUserUnicity(userName, email)) {
+                //ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
+                validate = false;
+            }
+            if (password == null || password.Length < MinPasswordLength) {
+                //ModelState.AddModelError("password", T("You must specify a password of {0} or more characters.", MinPasswordLength));
+                validate = false;
+            }
+        }
+
+        return validate;
+    }
+
+    //TODO: this needs more validation and checks
+    private string GenerateUsername(string familyName, string givenName) {
+        string fName = familyName.Split(null)[0].Trim().ToLowerInvariant();
+        string gName = givenName.Split(null)[0].Trim().ToLowerInvariant();
+        string uName = fName + "." + gName;
+        if (uName.Length >= 255) {
+            uName = fName + "." + gName.First();
+        }
+
+        int post = 1;
+        while (_membershipService.GetUser(uName) != null) {
+            uName = uName + post.ToString();
+            post++;
+        }
+
+        return uName;
+    }
+
+    private string GeneratePassword() {
+        return Membership.GeneratePassword(MinPasswordLength, MinPasswordLength / 2);
+    }
+}
+@{
+    try {
+        //Resolve services.
+        _userService = Model.OrchardServices.WorkContext.Resolve<IUserService>();
+        _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        //Get the value of the email field out of the SchedaInvito.
+        dynamic item = Model.ContentItem;
+        string email = item.SchedaInvito.Email.Value;
+        string familyName = item.SchedaInvito.Cognome.Value;
+        string givenName = item.SchedaInvito.Nome.Value;
+        //Check whether there is already a Krake user with that email. If not, create it and store the password we used.
+        IUser kUser = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == email).List().FirstOrDefault();
+        if (kUser == null) {
+            //Generate valid Username
+            string uName = GenerateUsername(familyName, givenName);            
+            //Generate valid password
+            string password = GeneratePassword(); //We are going to use the password in the email we send to the guest.
+            //Create user
+            if (ValidateRegistration(uName, email, password)) {
+                kUser = _membershipService.CreateUser(new CreateUserParams(uName, password, email, null, null, false));
+            } else {
+                string eMsg = String.Empty;
+                if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+                    eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+                }
+                eMsg += string.Format("Non è stato possibile creare l'utente Krake {0} con indirizzo email {1} legato all'invito {2} (id: {3}).", uName, email, item.DisplayText, item.Id.ToString());
+                Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+                throw new Exception();
+            }
+            Model.Tokens["Workflow"].SetState("Password", password);
+        }
+        //Set the creator of the SchedaInvito to the Krake user for the guest.
+        item.CommonPart.Creator.Value = kUser.Id;
+        _fieldIndexService.Set(
+            item.FieldIndexPart,
+            "CommonPart",
+            "Creator",
+            "",
+            (decimal)kUser.Id,
+            typeof(decimal)
+        );
+        //Synchronize the ActivityPart in the SchedaInvito with the one from the visita in its CPF.
+        if (item.SchedaInvito.Visita.Ids.Length > 0) {
+            var idVisita = item.SchedaInvito.Visita.Ids[0];
+            var relatedVisita = _contentManager.Get(idVisita);
+            item.ActivityPart.DateTimeStart = relatedVisita.ActivityPart.DateTimeStart;
+            item.ActivityPart.DateTimeEnd = relatedVisita.ActivityPart.DateTimeEnd;
+            item.ActivityPart.AllDay = relatedVisita.ActivityPart.AllDay;
+        }
+        retString = "OK";
+    } catch (Exception) {
+        retString = "Error";
+    }
+}@retString
