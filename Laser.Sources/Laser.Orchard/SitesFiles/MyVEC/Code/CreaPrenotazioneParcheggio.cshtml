@@ -1,0 +1,68 @@
+@using Orchard;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
+@using Orchard.Data;
+@using System.Linq;
+@functions{
+    //Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
+    IFieldIndexService _fieldIndexService;
+    string retString = "Error"; //possible outcomes: "Error","Ok"
+    dynamic invito = null;
+    dynamic prenotazione = null;
+    dynamic wfCtx = null;
+}
+@{
+    //_fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+    _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+    wfCtx = Model.Tokens["Workflow"];
+    invito = Model.ContentItem;
+    if(invito.SchedaInvito.Prenotazioneparcheggio.Ids.Length == 0) {
+        // crea nuova prenotazione
+        prenotazione = Model.OrchardServices.ContentManager.New("Prenotazioneparcheggio");
+        Model.OrchardServices.ContentManager.Create(prenotazione);
+        prenotazione = Model.OrchardServices.ContentManager.Get(prenotazione.Id);
+        string codPrenotazione = string.Format("PARK00{0}", invito.Id);
+        prenotazione.Prenotazioneparcheggio.IDPrenotazione.Value = codPrenotazione;
+        _fieldIndexService.Set(
+            prenotazione.FieldIndexPart,
+            "Prenotazioneparcheggio",
+            "IDPrenotazione",
+            "",
+            codPrenotazione,
+            typeof(string)
+        );
+        invito.SchedaInvito.Prenotazioneparcheggio.Ids = new int[] { prenotazione.Id };
+        _fieldIndexService.Set(
+            invito.FieldIndexPart,
+            "SchedaInvito",
+            "Prenotazioneparcheggio",
+            "",
+            string.Format("{{{0}}}", prenotazione.Id),
+            typeof(string)
+        );
+    }
+    else {
+        // recupera prenotazione esistente
+        prenotazione = Model.OrchardServices.ContentManager.Get(invito.SchedaInvito.Prenotazioneparcheggio.Ids[0]);
+    }
+    string targa = wfCtx.GetState("Targa");
+    // aggiorna la targa
+    prenotazione.Prenotazioneparcheggio.Targa.Value = targa;
+    _fieldIndexService.Set(
+        prenotazione.FieldIndexPart,
+        "Prenotazioneparcheggio",
+        "Targa",
+        "",
+        targa,
+        typeof(string)
+    );
+    // aggiorna le date
+    prenotazione.ActivityPart.DateTimeStart = invito.ActivityPart.DateTimeStart;
+    prenotazione.ActivityPart.DateTimeEnd = invito.ActivityPart.DateTimeEnd;
+    prenotazione.ActivityPart.AllDay = invito.ActivityPart.AllDay;
+    // aggiunge il codice prenotazione allo state del workflow
+    wfCtx.SetState("CodPrenotazioneParcheggio", prenotazione.Prenotazioneparcheggio.IDPrenotazione.Value);
+    retString = "Ok";
+}
+@retString
