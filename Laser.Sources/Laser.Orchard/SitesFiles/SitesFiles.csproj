@@ -58,6 +58,7 @@
       <SubType>Code</SubType>
     </None>
     <None Include="MyVEC\Code\CreaUtenzaKrakePerInvitato.cshtml" />
+    <None Include="MyVEC\Code\DailyUpdatesTask.cshtml" />
     <None Include="MyVEC\Code\ReadInvitoAndTarga.cshtml" />
     <None Include="MyVEC\Code\SyncDataVisitaToInvito.cshtml" />
     <None Include="MyVEC\Code\UpdateQuestionnaireContext.cshtml" />
