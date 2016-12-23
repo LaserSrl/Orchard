@@ -1,4 +1,5 @@
 @using Orchard;
+@using Orchard.ContentManagement;
 @using Orchard.ContentManagement.Records;
 @using Orchard.Projections.Models;
 @using Orchard.Projections.Services;
@@ -13,6 +14,7 @@
     string[] rowSeparator = new string[] { "\r\n", "\r", "\n" };
     string[] fieldSeparator = new string[] { ",", ";" };
     dynamic invito = null;
+    ContentItem ci = null;
 }
 @{
     _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
@@ -24,7 +26,6 @@
     var rows = csv.Split(rowSeparator, StringSplitOptions.RemoveEmptyEntries);
     foreach(var row in rows) {
         string[] fields = row.Split(fieldSeparator, StringSplitOptions.None);
-        invito = null;
         if(fields.Length > 0) {
             // verifica che l'invito non esista già
             // qry sui field di SchedaInvito per quella visita e per quella mail
@@ -33,7 +34,18 @@
                 .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Email." && r.Value == fields[0]))
                 .Select(x => x.ContentItemRecord.Id);
             var ids = fieldsQuery.ToList();
-            if(ids.Count == 0) {
+            bool creaInvito = true;
+            if(ids.Count > 0) {
+                // sto lavorando con i field, quindi devo verificare se l'invito non è stato eliminato
+                foreach(var id in ids) {
+                    ci = Model.OrchardServices.ContentManager.Get(id);
+                    if(ci != null) {
+                        creaInvito = false;
+                        break;
+                    }
+                }
+            }
+            if(creaInvito) {
                 // email
                 invito = Model.OrchardServices.ContentManager.New("SchedaInvito");
                 Model.OrchardServices.ContentManager.Create(invito);

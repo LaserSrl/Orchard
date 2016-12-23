@@ -28,10 +28,13 @@
     var ids = qryInviti.ToList();
     foreach(var idInvito in ids){
         invito = ((dynamic)Model.OrchardServices.ContentManager.Get(idInvito));
-        visita = ((dynamic)Model.OrchardServices.ContentManager.Get(invito.SchedaInvito.Visita.Ids[0]));
-        if(visita.ActivityPart.DateTimeStart > dtUltimaVisita) {
-            dtUltimaVisita = visita.ActivityPart.DateTimeStart;
-            questionnaireContext = visita.TitlePart.Title;
+        // se l'invito non è stato eliminato esamino la relativa visita
+        if(invito != null) {
+            visita = ((dynamic)Model.OrchardServices.ContentManager.Get(invito.SchedaInvito.Visita.Ids[0]));
+            if(visita.ActivityPart.DateTimeStart > dtUltimaVisita) {
+                dtUltimaVisita = visita.ActivityPart.DateTimeStart;
+                questionnaireContext = visita.TitlePart.Title;
+            }
         }
     }
     if(string.IsNullOrWhiteSpace(questionnaireContext) == false) {

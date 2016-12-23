@@ -54,6 +54,9 @@
     <None Include="Montevarchi\XSLT\eventi.cshtml" />
     <None Include="MyVEC\Code\AssociazioneVisitaContatto.cshtml" />
     <None Include="MyVEC\Code\CreaInviti.cshtml" />
+    <None Include="MyVEC\Code\CreaPrenotazioneParcheggio.cshtml">
+      <SubType>Code</SubType>
+    </None>
     <None Include="MyVEC\Code\CreaUtenzaKrakePerInvitato.cshtml" />
     <None Include="MyVEC\Code\ReadInvitoAndTarga.cshtml" />
     <None Include="MyVEC\Code\SyncDataVisitaToInvito.cshtml" />

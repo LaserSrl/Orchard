@@ -22,9 +22,12 @@
     var calEventsIds = fieldsQuery.ToList();
     foreach(var idInvito in calEventsIds) {
         ci = ((dynamic)Model.OrchardServices.ContentManager.Get(idInvito));
-        ci.ActivityPart.DateTimeStart = visita.ActivityPart.DateTimeStart;
-        ci.ActivityPart.DateTimeEnd = visita.ActivityPart.DateTimeEnd;
-        ci.ActivityPart.AllDay = visita.ActivityPart.AllDay;
+        // verifico che l'item noon sia stato eliminato
+        if(ci != null) {
+            ci.ActivityPart.DateTimeStart = visita.ActivityPart.DateTimeStart;
+            ci.ActivityPart.DateTimeEnd = visita.ActivityPart.DateTimeEnd;
+            ci.ActivityPart.AllDay = visita.ActivityPart.AllDay;
+        }
     }
     retString = "Ok";
 }

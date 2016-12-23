@@ -5,7 +5,6 @@
 @using Orchard.Data;
 @using System.Linq;
 @functions{
-    //Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
     IFieldIndexService _fieldIndexService;
     string retString = "Error"; //possible outcomes: "Error","Ok"
     dynamic invito = null;
@@ -13,7 +12,6 @@
     dynamic wfCtx = null;
 }
 @{
-    //_fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
     _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
     wfCtx = Model.Tokens["Workflow"];
     invito = Model.ContentItem;
