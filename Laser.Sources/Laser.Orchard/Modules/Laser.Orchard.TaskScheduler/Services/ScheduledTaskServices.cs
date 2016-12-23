@@ -179,7 +179,7 @@ namespace Laser.Orchard.TaskScheduler.Services {
         /// <param name="part">The part containing the scheduling information</param>
         /// <returns>A <type>DateTime</type> object containing the moment when the task whoudl be scheduled next.</returns>
         public DateTime ComputeNextScheduledTime(ScheduledTaskPart part) {
-            DateTime result = DateTime.UtcNow;
+            DateTime result = part.ScheduledStartUTC == null ? DateTime.UtcNow : part.ScheduledStartUTC.Value;
             switch (part.PeriodicityUnit) {
                 case TimeUnits.Seconds:
                     result = result.AddSeconds(part.PeriodicityTime);
@@ -205,6 +205,7 @@ namespace Laser.Orchard.TaskScheduler.Services {
                 default:
                     break;
             }
+            part.ScheduledStartUTC = result;
             return result;
         }
     }
