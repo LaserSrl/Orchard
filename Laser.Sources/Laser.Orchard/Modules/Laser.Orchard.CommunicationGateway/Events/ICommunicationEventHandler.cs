@@ -9,6 +9,6 @@ using System.Web;
 namespace Laser.Orchard.CommunicationGateway.Events {
 
     public interface ICommunicationEventHandler : IEventHandler {
-        void PopulateChannel(ContentItem ci, AdvertisingVM.Advertising adv);
+        void PopulateChannel(ContentItem ci, Advertising adv);
     }
 }

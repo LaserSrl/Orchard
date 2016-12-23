@@ -19,7 +19,7 @@ namespace Laser.Orchard.Mobile.Handlers {
             _orchardServices = orchardServices;
         }
 
-        public void PopulateChannel(ContentItem ci, AdvertisingVM.Advertising adv) {
+        public void PopulateChannel(ContentItem ci, Advertising adv) {
 
             if (adv.SmsGateway != null) {
 
@@ -30,7 +30,7 @@ namespace Laser.Orchard.Mobile.Handlers {
 
                 // Aggiungo +39
                 string listaDestinatari = "";
-                foreach (string tel in adv.SmsGateway.Contacts.PhoneNumbers) {
+                foreach (string tel in adv.SmsGateway.PhoneNumbers) {
                     string number = "+39" + tel;
                     listaDestinatari += number + Environment.NewLine;
                 }

@@ -82,7 +82,7 @@ namespace Laser.Orchard.Mobile.Handlers {
 
                     string IdSms = "";
                     if (part.ExternalId != null && part.ExternalId > 0) {
-                        IdSms = "WsOrchard_" + part.ExternalId.ToString();
+                        IdSms = "WSKrakeAdvertisingSms_" + part.ExternalId.ToString();
                     } 
                     else {
                         IdSms = "Orchard_" + part.Id.ToString();
