@@ -22,6 +22,19 @@ namespace Laser.Orchard.WebServices.Controllers {
             _utilsServices = utilsServices;
         }
 
+        /// <summary>
+        /// Trigger the Workflow Signal defined by its Name over the specified ContentItem
+        /// </summary>
+        /// <param name="signal">an object representing a Signal.
+        /// Example: 
+        /// Request Header
+        ///     Content-Type:application/x-www-form-urlencoded
+        /// Request Body
+        ///     Name:BookParkingPlace
+        ///     ContentId:1118
+        ///     ... other custom properties can be added here
+        /// </param>
+        /// <returns>returns a Response Object</returns>
         [OutputCache(NoStore = true, Duration = 0)]
         public Response Post([FromBody] Signal signal) {
             var currentUser = _orchardServices.WorkContext.CurrentUser;
