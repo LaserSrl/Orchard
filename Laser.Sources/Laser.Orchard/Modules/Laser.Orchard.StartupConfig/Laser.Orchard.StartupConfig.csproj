@@ -199,6 +199,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\WebApiResponseActivity.cs" />
+    <Compile Include="Activities\WebApiResponseEditForm.cs" />
     <Compile Include="Activities\RequestInspectorActivity.cs" />
     <Compile Include="Activities\RequestInspectorEditForm.cs" />
     <Compile Include="Activities\TaxonomySetValuesActivity.cs" />
