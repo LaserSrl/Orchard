@@ -128,6 +128,7 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\SignalApiController.cs" />
     <Compile Include="Controllers\GiroParchiController.cs" />
     <Compile Include="Controllers\JsonController.cs" />
     <Compile Include="Controllers\MobileController.cs" />
