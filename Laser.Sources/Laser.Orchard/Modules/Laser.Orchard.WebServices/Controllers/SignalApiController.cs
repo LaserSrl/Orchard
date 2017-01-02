@@ -46,8 +46,8 @@ namespace Laser.Orchard.WebServices.Controllers {
             }
 
             try {
-                _activityServices.TriggerSignal(signal.Name, signal.ContentId);
-                return _utilsServices.GetResponse(ResponseType.Success);
+                var response = _activityServices.TriggerSignal(signal.Name, signal.ContentId);
+                return response;
             } catch (Exception ex) {
                 return new Response { Success = false, Message = ex.Message, ErrorCode = ErrorCode.GenericError };
             }
