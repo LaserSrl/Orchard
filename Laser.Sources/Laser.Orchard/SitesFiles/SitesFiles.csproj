@@ -57,6 +57,7 @@
     <None Include="MyVEC\Code\CreaPrenotazioneParcheggio.cshtml">
       <SubType>Code</SubType>
     </None>
+    <None Include="MyVEC\Code\CreaUtenteHID.cshtml" />
     <None Include="MyVEC\Code\CreaUtenzaKrakePerInvitato.cshtml" />
     <None Include="MyVEC\Code\CsvValidation.cshtml">
       <SubType>Code</SubType>
