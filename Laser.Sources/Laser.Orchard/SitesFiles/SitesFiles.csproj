@@ -58,8 +58,15 @@
       <SubType>Code</SubType>
     </None>
     <None Include="MyVEC\Code\CreaUtenzaKrakePerInvitato.cshtml" />
+    <None Include="MyVEC\Code\CsvValidation.cshtml">
+      <SubType>Code</SubType>
+    </None>
     <None Include="MyVEC\Code\DailyUpdatesTask.cshtml" />
+    <None Include="MyVEC\Code\InvitoFixUserIdToCreatorid.cshtml" />
     <None Include="MyVEC\Code\ReadInvitoAndTarga.cshtml" />
+    <None Include="MyVEC\Code\SyncDataInvitoByVisita.cshtml">
+      <SubType>Code</SubType>
+    </None>
     <None Include="MyVEC\Code\SyncDataVisitaToInvito.cshtml" />
     <None Include="MyVEC\Code\UpdateQuestionnaireContext.cshtml" />
     <None Include="MyVEC\Mobile\devVec.p12" />
