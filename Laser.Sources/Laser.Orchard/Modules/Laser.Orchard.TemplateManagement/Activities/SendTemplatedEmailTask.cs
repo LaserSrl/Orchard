@@ -85,7 +85,8 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             dynamic contentModel = new {
                 ContentItem = _orchardServices.ContentManager.GetAllVersions(workflowContext.Content.Id).Single(w => w.Version == contentVersion), // devo ricalcolare il content altrimenti MediaParts (e forse tutti i lazy fields!) è null!
                 FormCollection = _orchardServices.WorkContext.HttpContext.Request.Form,
-                QueryStringCollection = _orchardServices.WorkContext.HttpContext.Request.QueryString
+                QueryStringCollection = _orchardServices.WorkContext.HttpContext.Request.QueryString,
+                WorkflowContext = workflowContext
             };
             if (recipient == "owner") {
                 var content = workflowContext.Content;

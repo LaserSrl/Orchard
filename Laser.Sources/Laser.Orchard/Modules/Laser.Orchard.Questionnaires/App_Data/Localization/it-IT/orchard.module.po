@@ -277,6 +277,10 @@ msgid "Number of questions sorted Randomly"
 msgstr "Numero di domande ordinate in modo casuale"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Questionnaire Context"
+msgstr "Contesto del Questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
 msgid "Random Response"
 msgstr "Risposta Casuale"
 
@@ -303,6 +307,10 @@ msgstr "Impostazioni - Parte Questionario - Immagini"
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
 msgid "Show Correct Response Option"
 msgstr "Visualizza Opzione Risposta Corretta"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "The Context this questionnaire refers to (eg. a commercial campaign name). It is usually usefull '{Content.DisplayText}'."
+msgstr "Il Contesto a cui il questionario si riferisce (es. il titolo di una campagna commerciale). Normalmente è utile utilizzare '{Content.DisplayText}'."
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/AnswerEditModel.cshtml"
 msgid "Add Picture"

@@ -1,0 +1,138 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Data;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
+@using Orchard.Security;
+@using Orchard.Users.Models;
+@using Laser.Orchard.Events.Models;
+@using Laser.Orchard.HID;
+@using Laser.Orchard.HID.Models;
+@using Laser.Orchard.HID.Services;
+@using System;
+@functions{
+    string retString = "Error"; //outcomes: Error,OK
+    IHIDAPIService _hidAPIService;
+    IContentManager _contentManager;
+    IFieldIndexService _fieldIndexService;
+    IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
+
+    string eMsg = String.Empty;
+
+    private void CheckErrors(HIDUser hidResult, dynamic item, IUser guest, bool issuing) {
+        //item is the SchedaInvito
+        //guest is the guest
+        //issuing == true for issuecredential, false for revoke
+        string errorBase = string.Format("Errore {0} per invito {1} (id: {2}) all'ospite con email: {3}: {4}",
+            issuing ? "nel rilascio credenziali" : "nel rimuovere credenziali",
+            _contentManager.GetItemMetadata(item).DisplayText,
+            item.Id.ToString(),
+            guest.Email,
+            @"{0}");
+        switch (hidResult.Error) {
+            case UserErrors.UnknownError:
+                eMsg += string.Format(errorBase, "Errore sconosciuto.") + Environment.NewLine;
+                break;
+            case UserErrors.AuthorizationFailed:
+                eMsg += string.Format(errorBase, "Login fallito sui servizi HID: verifica le impostazioni del modulo.") + Environment.NewLine;
+                break;
+            case UserErrors.DoesNotHaveDevices:
+                eMsg += string.Format(errorBase, "L'utente non ha registrato nessun dispositivo.") + Environment.NewLine;
+                break;
+            case UserErrors.DoesNotExist:
+                eMsg += string.Format(errorBase, "Il sistema HID non ha riconosciuto il dispositivo.") + Environment.NewLine;
+                break;
+            case UserErrors.PreconditionFailed:
+                eMsg += string.Format(errorBase, "Il sistem HID non riconosce i PartNumber.") + Environment.NewLine;
+                break;
+            case UserErrors.InternalServerError:
+                eMsg += string.Format(errorBase, "Errore interno ai sistemi HID") + Environment.NewLine;
+                break;
+            case UserErrors.NoError:
+                break;
+        }
+    }
+}
+@{
+    if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+        eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+    }
+    try {
+        //resolve service
+        _hidAPIService = Model.OrchardServices.WorkContext.Resolve<IHIDAPIService>();
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+        //Based on DateTime.Now,
+        var query = _contentManager.Query(VersionOptions.Latest).ForType("Visita");
+        query = query.Join<ActivityPartRecord>().Where(apr =>
+            apr.DateTimeStart == (DateTime?)DateTime.Now.Date || apr.DateTimeEnd == (DateTime?)DateTime.Now.AddDays(-1).Date
+            //(apr.DateTimeStart != null && ((DateTime?)(apr.DateTimeStart)).GetValueOrDefault().Date == DateTime.Now.Date) //visits beginning today
+            //|| (apr.DateTimeEnd != null && ((DateTime?)(apr.DateTimeEnd)).GetValueOrDefault().Date == DateTime.Now.AddDays(-1).Date) //visits ended yesterday
+            );
+        var visits = query.List();
+        foreach (var visit in visits) {
+            dynamic item = visit;
+            int credentialAction = 0; //0: do nothing; 1: issue credentials; 2: revoke credentials
+            if (item.ActivityPart.DateTimeStart.Date == DateTime.Now.Date) {
+                //this visit starts today
+                // Set its state to "In corso"
+                item.Visita.Statovisita.Value = "In corso";
+                _fieldIndexService.Set(
+                    item.FieldIndexPart,
+                    "Visita",
+                    "Statovisita",
+                    "",
+                    "In corso",
+                    typeof(string)
+                );
+                // Issue credentials for all guests
+                credentialAction = 1;
+            }
+            if (item.ActivityPart.DateTimeEnd.Date == DateTime.Now.AddDays(-1).Date) {
+                //this visit ended yesterday
+                // Set its state to "Terminata"
+                item.Visita.Statovisita.Value = "Terminata";
+                _fieldIndexService.Set(
+                    item.FieldIndexPart,
+                    "Visita",
+                    "Statovisita",
+                    "",
+                    "Terminata",
+                    typeof(string)
+                );
+                // Revoke credentials for all guests
+                credentialAction = 2;
+            }
+            if (credentialAction > 0) {
+                var fieldsQuery = _fieldIndexPartRecord.Table
+                    .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Visita." && r.Value == "{"+visit.Id.ToString()+"}"))
+                    .Select(x => x.ContentItemRecord.Id);
+                var idsInviti = fieldsQuery.ToList();
+                if (idsInviti.Count() == 0) {
+                    eMsg += string.Format("Non ci sono inviti correlati a questa visita: {0}", _contentManager.GetItemMetadata(item).DisplayText) + Environment.NewLine;
+                }
+                foreach (var siId in idsInviti) {
+                    dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(siId));
+                    IUser user = ((IUser)_contentManager.Get<UserPart>((int)(scheda.CommonPart.Creator.Value)));
+                    if (credentialAction == 1) {
+                        HIDUser result = _hidAPIService.IssueCredentials(user);
+                        CheckErrors(result, scheda, user, true);
+                    } else if (credentialAction == 2) {
+                        HIDUser result = _hidAPIService.RevokeCredentials(user);
+                        CheckErrors(result, scheda, user, true);
+                    }
+                }
+            }
+        }
+        //  Update the status of ContentItems of Type Visita.
+        //  Issue credentials for upcoming visits.
+        //  Revoke credentials for past visits.
+    } catch (Exception ex) {
+        eMsg += ex.Message + Environment.NewLine;
+    }
+    Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    if (string.IsNullOrWhiteSpace(eMsg)) {
+        retString = "OK";
+    }
+}@retString

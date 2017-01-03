@@ -118,6 +118,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Roles\bin\Orchard.Roles.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Tokens, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Users, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>

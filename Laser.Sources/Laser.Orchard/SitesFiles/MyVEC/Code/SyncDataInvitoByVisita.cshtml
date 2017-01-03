@@ -1,0 +1,22 @@
+@using Orchard.ContentManagement;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@{
+  try{  
+     dynamic item = Model.ContentItem;
+     if (item.SchedaInvito.Visita.Ids.Length > 0){
+         var idVisita = item.SchedaInvito.Visita.Ids[0];
+         var _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+         var relatedVisita=_contentManager.Get(idVisita);
+         item.ActivityPart.DateTimeStart = relatedVisita.ActivityPart.DateTimeStart;
+         item.ActivityPart.DateTimeEnd = relatedVisita.ActivityPart.DateTimeEnd;
+         item.ActivityPart.AllDay = relatedVisita.ActivityPart.AllDay;
+     }
+     WriteLiteral("OK");
+  }
+  catch(Exception ex){
+       WriteLiteral("Error");
+  }
+}
+

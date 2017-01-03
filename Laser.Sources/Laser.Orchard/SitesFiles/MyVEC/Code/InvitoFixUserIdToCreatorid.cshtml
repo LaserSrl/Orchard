@@ -1,0 +1,31 @@
+@using Orchard.ContentManagement;
+@using System.ComponentModel.DataAnnotations;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Linq.Expressions;
+@using Orchard.Users.Models;
+@{ 
+    // possible outcomes: Error,OK
+    try {
+        var testerEmail = new EmailAddressAttribute();
+        dynamic item = Model.ContentItem;
+        string email = item.SchedaInvito.Email.Value.ToString();
+        IContentManager _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == email).List().FirstOrDefault();
+        if (user==null){
+            Orchard.Security.IMembershipService membershipService = Model.OrchardServices.WorkContext.Resolve<Orchard.Security.IMembershipService>();
+            string pwd = System.Web.Security.Membership.GeneratePassword(8, 6);
+            Orchard.Security.CreateUserParams userParams = new Orchard.Security.CreateUserParams(email, pwd, email, "", "", true);
+            var newUser = membershipService.CreateUser(userParams);
+            user = (UserPart)newUser;
+        }
+            
+        item.CommonPart.Creator.Value = user.Id;
+        WriteLiteral("OK");
+    }
+    catch (Exception ex) {
+        WriteLiteral("Error");
+    }
+   
+}
