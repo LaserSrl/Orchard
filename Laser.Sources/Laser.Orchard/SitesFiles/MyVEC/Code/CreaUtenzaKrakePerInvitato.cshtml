@@ -15,6 +15,7 @@
     IMembershipService _membershipService;
     IContentManager _contentManager;
     IFieldIndexService _fieldIndexService;
+    IEncryptionService _encryptionService;
 
     int MinPasswordLength {
         get {
@@ -77,6 +78,9 @@
     private string GeneratePassword() {
         return Membership.GeneratePassword(MinPasswordLength, MinPasswordLength / 2);
     }
+    private string Encrypt(string text) {
+        return Convert.ToBase64String(_encryptionService.Encode(System.Text.Encoding.Unicode.GetBytes(text)));
+    }
 }
 @{
     try {
@@ -85,6 +89,7 @@
         _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        _encryptionService = Model.OrchardServices.WorkContext.Resolve<IEncryptionService>();
         //Get the value of the email field out of the SchedaInvito.
         dynamic item = Model.ContentItem;
         string email = item.SchedaInvito.Email.Value;
@@ -100,7 +105,20 @@
             //Create user
             if (ValidateRegistration(uName, email, password)) {
                 kUser = _membershipService.CreateUser(new CreateUserParams(uName, password, email, null, null, false));
-            } else {
+                // save encrypted password in a hidden field
+                string encryptedPwd = Encrypt(password);
+                dynamic dUser = kUser;
+                dUser.User.OriginalPassword.Value = encryptedPwd;
+                _fieldIndexService.Set(
+                    dUser.ContentItem.FieldIndexPart,
+                    "User",
+                    "OriginalPassword",
+                    "",
+                    encryptedPwd,
+                    typeof(string)
+                );
+            }
+            else {
                 string eMsg = String.Empty;
                 if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
                     eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
