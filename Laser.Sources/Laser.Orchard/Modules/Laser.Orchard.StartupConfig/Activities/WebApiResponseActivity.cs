@@ -33,7 +33,7 @@ namespace Laser.Orchard.StartupConfig.Activities {
         }
 
         public override string Name {
-            get { return "Web Api Response"; }
+            get { return "WebApiResponse"; }
         }
 
         public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
