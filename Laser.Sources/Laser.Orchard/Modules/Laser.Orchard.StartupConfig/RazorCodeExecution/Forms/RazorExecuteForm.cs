@@ -27,7 +27,7 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Forms {
                 _RazorExecuteActivity_RazorView: Shape.Textbox(
                   Id: "RazorExecuteActivity_RazorView", Name: "RazorExecuteActivity_RazorView",
                   Title: T("Razor View"),
-                  Description: T("The razor view to run every time the Decision Activity is invoked. You can use Model.ContentItem, Model.T, Model.OrchardServices. The razor output (e.g. 'Success', 'Error' or 'Empty') should be used to define the 'texthint' outcome of the activity."),
+                  Description: T("The razor view to run every time the Decision Activity is invoked. You can use Model.ContentItem, Model.T, Model.OrchardServices, Model.Tokens, Model.Tokens[\"Workflow\"] (to get WorkflowContext and call HasState, GetState, SetState). The razor output (e.g. 'Success', 'Error' or 'Empty') should be used to define the 'texthint' outcome of the activity."),
                   Classes: new[] { "text large tokenized" }
                   )
                 );

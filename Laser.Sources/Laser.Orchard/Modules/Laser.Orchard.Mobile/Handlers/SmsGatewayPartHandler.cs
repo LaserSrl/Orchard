@@ -40,7 +40,6 @@ namespace Laser.Orchard.Mobile.Handlers {
         private readonly IScheduledTaskManager _taskManager;
 
         public Localizer T { get; set; }
-        public ILogger Logger { get; set; }
 
         public SmsGatewayPartHandler(IRepository<SmsGatewayPartRecord> repository, INotifier notifier, IOrchardServices orchardServices, ISmsServices smsServices,
                                      ISmsCommunicationService smsCommunicationService, IScheduledTaskManager taskManager) {
@@ -50,7 +49,6 @@ namespace Laser.Orchard.Mobile.Handlers {
             _notifier = notifier;
             _taskManager = taskManager;
             T = NullLocalizer.Instance;
-            Logger = NullLogger.Instance;
             Filters.Add(StorageFilter.For(repository));
 
             OnUpdated<SmsGatewayPart>((context, part) => {
