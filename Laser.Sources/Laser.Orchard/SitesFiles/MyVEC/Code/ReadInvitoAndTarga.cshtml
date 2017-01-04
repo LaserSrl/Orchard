@@ -8,11 +8,12 @@
 }
 @{
     int idInvito = Model.ContentItem.Id;
+    dynamic invito = Model.ContentItem;
     string targa = System.Web.HttpContext.Current.Request.Form["Targa"];
     var wfContext = Model.Tokens["Workflow"];
     wfContext.SetState("IdInvito", idInvito);
     wfContext.SetState("Targa", targa);
-    wfContext.SetState("Invito", Model.ContentItem);
+    wfContext.SetState("Invito", invito);
     retString = "Ok";
 }
 @retString
