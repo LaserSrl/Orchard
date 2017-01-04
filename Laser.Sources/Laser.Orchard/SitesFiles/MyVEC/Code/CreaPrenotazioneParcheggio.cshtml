@@ -59,6 +59,7 @@
     prenotazione.ActivityPart.DateTimeStart = invito.ActivityPart.DateTimeStart;
     prenotazione.ActivityPart.DateTimeEnd = invito.ActivityPart.DateTimeEnd;
     prenotazione.ActivityPart.AllDay = invito.ActivityPart.AllDay;
+    Model.OrchardServices.ContentManager.Publish(prenotazione);
     // aggiunge il codice prenotazione allo state del workflow
     wfCtx.SetState("CodPrenotazioneParcheggio", prenotazione.Prenotazioneparcheggio.IDPrenotazione.Value);
     retString = "Ok";
