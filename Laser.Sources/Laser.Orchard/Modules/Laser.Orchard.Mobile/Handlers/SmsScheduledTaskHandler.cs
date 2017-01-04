@@ -80,18 +80,10 @@ namespace Laser.Orchard.Mobile.Handlers {
                     }
                     string messageToSms = part.Message + " " + linktosend;
 
-                    string IdSms = "";
-                    if (part.ExternalId != null && part.ExternalId > 0) {
-                        IdSms = "WSKrakeAdvertisingSms_" + part.ExternalId.ToString();
-                    } 
-                    else {
-                        IdSms = "Orchard_" + part.Id.ToString();
-                    }
-
                     // Invio SMS
                     //_smsServices.SendSms(listaDestinatari.Select(x => Convert.ToInt64(x.SmsPrefix + x.SmsNumber)).ToArray(),
                     //                     messageToSms, part.Alias, "Orchard_" + part.Id.ToString(), part.HaveAlias);
-                    _smsServices.SendSms(listaDestinatari, messageToSms, part.Alias, IdSms, part.HaveAlias);
+                    _smsServices.SendSms(listaDestinatari, messageToSms, part.Alias, "Orchard_" + part.Id.ToString(), part.HaveAlias);
 
                     part.SmsRecipientsNumber = listaDestinatari.Count;
                     part.SmsMessageSent = true;

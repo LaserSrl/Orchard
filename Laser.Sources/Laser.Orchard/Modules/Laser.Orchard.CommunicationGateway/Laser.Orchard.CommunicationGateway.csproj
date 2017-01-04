@@ -159,6 +159,7 @@
     <Compile Include="Controllers\AdvertisingAdminController.cs" />
     <Compile Include="Controllers\AdvertisingExternalController.cs" />
     <Compile Include="Controllers\ContactsAdminController.cs" />
+    <Compile Include="Controllers\DeliveryReportController.cs" />
     <Compile Include="Drivers\CommunicationAdvertisingPartDriver.cs" />
     <Compile Include="Drivers\CommunicationCampaignPartDriver.cs" />
     <Compile Include="Drivers\CommunicationContactDriver.cs" />
@@ -181,12 +182,14 @@
     <Compile Include="Models\CommunicationAdvertisingPart.cs" />
     <Compile Include="Models\CommunicationCampaignPart.cs" />
     <Compile Include="Models\CommunicationContactPart.cs" />
+    <Compile Include="Models\CommunicationDeliveryReportRecord.cs" />
     <Compile Include="Models\CommunicationEmailRecord.cs" />
     <Compile Include="Models\CommunicationSmsRecord.cs" />
     <Compile Include="Models\EmailContactPart.cs" />
     <Compile Include="Models\QueryFilterPart.cs" />
     <Compile Include="Models\SmsContactPart.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Routes.cs" />
     <Compile Include="Security\AdvertisingEventHandler.cs" />
     <Compile Include="Services\ExportContactService.cs" />
     <Compile Include="Services\ICommunicationService.cs" />

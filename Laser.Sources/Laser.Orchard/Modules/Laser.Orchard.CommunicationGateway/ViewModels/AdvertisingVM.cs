@@ -52,6 +52,7 @@ namespace Laser.Orchard.CommunicationGateway.ViewModels {
     }
 
     public class AdvertisingCommunicationAPIResult {
+        public int Id { get; set; }
         public string Error { get; set; }
         public string Information { get; set; }
     }

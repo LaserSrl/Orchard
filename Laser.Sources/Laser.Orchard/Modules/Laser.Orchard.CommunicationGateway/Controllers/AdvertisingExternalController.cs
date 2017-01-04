@@ -47,6 +47,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         ///}
         public AdvertisingCommunicationAPIResult Post(AdvertisingCommunication adv) {
 
+            int communicationAdvertising_Id = -1;
             string errorString = "";
             string infoAdvertising = "";
 
@@ -76,6 +77,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                         _contentManager.Publish(content);
                     }
 
+                    communicationAdvertising_Id = content.Id;
                     infoAdvertising = "Create Advertising Id: " + content.Id + " - Title: " + adv.Advertising.Title;
                 }
             } 
@@ -83,7 +85,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 errorString = ex.Message;
             }
 
-            return new AdvertisingCommunicationAPIResult { Error = errorString, Information = infoAdvertising };
+            return new AdvertisingCommunicationAPIResult { Id = communicationAdvertising_Id, Error = errorString, Information = infoAdvertising };
         }
 
         public void Put() { }
