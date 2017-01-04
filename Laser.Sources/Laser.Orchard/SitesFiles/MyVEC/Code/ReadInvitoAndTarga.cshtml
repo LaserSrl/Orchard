@@ -5,14 +5,21 @@
 @using System.Linq;
 @functions{
     string retString = "Error"; //possible outcomes: "Error","Ok"
+    Orchard.Workflows.Models.WorkflowContext wfContext = null;
 }
 @{
-    int idInvito = Model.ContentItem.Id;
-    string targa = System.Web.HttpContext.Current.Request.Form["Targa"];
-    var wfContext = Model.Tokens["Workflow"];
-    wfContext.SetState("IdInvito", idInvito);
-    wfContext.SetState("Targa", targa);
-    wfContext.SetState("Invito", Model.ContentItem);
-    retString = "Ok";
+    try {
+        wfContext = Model.Tokens["Workflow"];
+        int idInvito = Model.ContentItem.Id;
+        dynamic invito = Model.ContentItem;
+        string targa = System.Web.HttpContext.Current.Request.Form["Targa"];
+        wfContext.SetState("IdInvito", idInvito);
+        wfContext.SetState("Targa", targa);
+        wfContext.SetState("Invito", invito);
+        retString = "Ok";
+    }
+    catch(Exception ex) {
+        wfContext.SetState("ErrorMessage", ex.Message); 
+    }
 }
 @retString

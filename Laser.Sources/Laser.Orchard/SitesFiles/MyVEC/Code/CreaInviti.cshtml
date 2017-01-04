@@ -15,109 +15,117 @@
     string[] fieldSeparator = new string[] { ",", ";" };
     dynamic invito = null;
     ContentItem ci = null;
+    Orchard.Workflows.Models.WorkflowContext wfCtx = null;
 }
 @{
-    Orchard.Workflows.Services.IWorkflowManager wfManager = Model.OrchardServices.WorkContext.Resolve<Orchard.Workflows.Services.IWorkflowManager>();
-    _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
-    _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
-    visita = Model.ContentItem;
-    string visitaId = string.Format("{{{0}}}", visita.Id);
-    // legge il csv con gli invivati
-    csv = visita.Visita.CSVlistaInvitati.Value;
-    var rows = csv.Split(rowSeparator, StringSplitOptions.RemoveEmptyEntries);
-    foreach(var row in rows) {
-        string[] fields = row.Split(fieldSeparator, StringSplitOptions.None);
-        if(fields.Length > 0) {
-            // verifica che l'invito non esista già
-            // qry sui field di SchedaInvito per quella visita e per quella mail
-            var fieldsQuery = _fieldIndexPartRecord.Table
-                .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Visita." && r.Value == visitaId))
-                .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Email." && r.Value == fields[0]))
-                .Select(x => x.ContentItemRecord.Id);
-            var ids = fieldsQuery.ToList();
-            bool creaInvito = true;
-            if(ids.Count > 0) {
-                // sto lavorando con i field, quindi devo verificare se l'invito non è stato eliminato
-                foreach(var id in ids) {
-                    ci = Model.OrchardServices.ContentManager.Get(id);
-                    if(ci != null) {
-                        creaInvito = false;
-                        break;
+    try {
+        wfCtx = Model.Tokens["Workflow"];
+        Orchard.Workflows.Services.IWorkflowManager wfManager = Model.OrchardServices.WorkContext.Resolve<Orchard.Workflows.Services.IWorkflowManager>();
+        _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        visita = Model.ContentItem;
+        string visitaId = string.Format("{{{0}}}", visita.Id);
+        // legge il csv con gli invivati
+        csv = visita.Visita.CSVlistaInvitati.Value;
+        var rows = csv.Split(rowSeparator, StringSplitOptions.RemoveEmptyEntries);
+        foreach(var row in rows) {
+            string[] fields = row.Split(fieldSeparator, StringSplitOptions.None);
+            if(fields.Length > 0) {
+                // verifica che l'invito non esista già
+                // qry sui field di SchedaInvito per quella visita e per quella mail
+                var fieldsQuery = _fieldIndexPartRecord.Table
+                    .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Visita." && r.Value == visitaId))
+                    .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Email." && r.Value == fields[0]))
+                    .Select(x => x.ContentItemRecord.Id);
+                var ids = fieldsQuery.ToList();
+                bool creaInvito = true;
+                if(ids.Count > 0) {
+                    // sto lavorando con i field, quindi devo verificare se l'invito non è stato eliminato
+                    foreach(var id in ids) {
+                        ci = Model.OrchardServices.ContentManager.Get(id);
+                        if(ci != null) {
+                            creaInvito = false;
+                            break;
+                        }
                     }
                 }
-            }
-            if(creaInvito) {
-                // email
-                invito = Model.OrchardServices.ContentManager.New("SchedaInvito");
-                Model.OrchardServices.ContentManager.Create(invito);
-                invito = Model.OrchardServices.ContentManager.Get(invito.Id);
-                invito.SchedaInvito.Visita.Ids = new int[] { visita.Id };
-                invito.SchedaInvito.Email.Value = fields[0];
-                invito.TitlePart.Title = "";
-                invito.ActivityPart.DateTimeStart = visita.ActivityPart.DateTimeStart;
-                invito.ActivityPart.DateTimeEnd = visita.ActivityPart.DateTimeEnd;
-                invito.ActivityPart.AllDay = visita.ActivityPart.AllDay;
-                _fieldIndexService.Set(
-                    invito.FieldIndexPart,
-                    "SchedaInvito",
-                    "Email",
-                    "",
-                    fields[0],
-                    typeof(string)
-                );
-                _fieldIndexService.Set(
-                    invito.FieldIndexPart,
-                    "SchedaInvito",
-                    "Visita",
-                    "",
-                    visitaId,
-                    typeof(string)
-                );
-                if (fields.Length > 1) {
-                    // cognome
-                    invito.SchedaInvito.Cognome.Value = fields[1];
-                    invito.TitlePart.Title += fields[1];
+                if(creaInvito) {
+                    // email
+                    invito = Model.OrchardServices.ContentManager.New("SchedaInvito");
+                    Model.OrchardServices.ContentManager.Create(invito);
+                    invito = Model.OrchardServices.ContentManager.Get(invito.Id);
+                    invito.SchedaInvito.Visita.Ids = new int[] { visita.Id };
+                    invito.SchedaInvito.Email.Value = fields[0];
+                    invito.TitlePart.Title = "";
+                    invito.ActivityPart.DateTimeStart = visita.ActivityPart.DateTimeStart;
+                    invito.ActivityPart.DateTimeEnd = visita.ActivityPart.DateTimeEnd;
+                    invito.ActivityPart.AllDay = visita.ActivityPart.AllDay;
                     _fieldIndexService.Set(
                         invito.FieldIndexPart,
                         "SchedaInvito",
-                        "Cognome",
+                        "Email",
                         "",
-                        fields[1],
+                        fields[0],
                         typeof(string)
                     );
-                }
-                if (fields.Length > 2) {
-                    // nome
-                    invito.SchedaInvito.Nome.Value = fields[2];
-                    invito.TitlePart.Title += " " + fields[2];
                     _fieldIndexService.Set(
                         invito.FieldIndexPart,
                         "SchedaInvito",
-                        "Nome",
+                        "Visita",
                         "",
-                        fields[2],
+                        visitaId,
                         typeof(string)
                     );
+                    if (fields.Length > 1) {
+                        // cognome
+                        invito.SchedaInvito.Cognome.Value = fields[1];
+                        invito.TitlePart.Title += fields[1];
+                        _fieldIndexService.Set(
+                            invito.FieldIndexPart,
+                            "SchedaInvito",
+                            "Cognome",
+                            "",
+                            fields[1],
+                            typeof(string)
+                        );
+                    }
+                    if (fields.Length > 2) {
+                        // nome
+                        invito.SchedaInvito.Nome.Value = fields[2];
+                        invito.TitlePart.Title += " " + fields[2];
+                        _fieldIndexService.Set(
+                            invito.FieldIndexPart,
+                            "SchedaInvito",
+                            "Nome",
+                            "",
+                            fields[2],
+                            typeof(string)
+                        );
+                    }
+                    if (fields.Length > 3) {
+                        // azienda
+                        invito.SchedaInvito.Azienda.Value = fields[3];
+                        _fieldIndexService.Set(
+                            invito.FieldIndexPart,
+                            "SchedaInvito",
+                            "Azienda",
+                            "",
+                            fields[3],
+                            typeof(string)
+                        );
+                    }
+                    invito.TitlePart.Title += " - " + visita.TitlePart.Title;
+                    Model.OrchardServices.ContentManager.Publish(invito);
+                    // attiva il workflow di notfica invito
+                    Func<Dictionary<string, object>> tokens = () => new Dictionary<string, object> { { "Content", invito }, { Orchard.Workflows.Activities.SignalActivity.SignalEventName, "NotificaInvito" } };
+                    wfManager.TriggerEvent(Orchard.Workflows.Activities.SignalActivity.SignalEventName, invito, tokens);
                 }
-                if (fields.Length > 3) {
-                    // azienda
-                    invito.SchedaInvito.Azienda.Value = fields[3];
-                    _fieldIndexService.Set(
-                        invito.FieldIndexPart,
-                        "SchedaInvito",
-                        "Azienda",
-                        "",
-                        fields[3],
-                        typeof(string)
-                    );
-                }
-                invito.TitlePart.Title += " - " + visita.TitlePart.Title;
-                // attiva il workflow di notfica invito
-                Func<Dictionary<string, object>> tokens = () => new Dictionary<string, object> { { "Content", invito }, { Orchard.Workflows.Activities.SignalActivity.SignalEventName, "NotificaInvito" } };
-                wfManager.TriggerEvent(Orchard.Workflows.Activities.SignalActivity.SignalEventName, invito, tokens);
             }
         }
+        retString = "Ok";
     }
-    retString = "Ok";
+    catch(Exception ex) {
+        wfCtx.SetState("ErrorMessage", ex.Message);
+    }
 }
 @retString
