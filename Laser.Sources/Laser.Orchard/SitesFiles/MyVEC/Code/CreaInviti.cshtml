@@ -112,6 +112,7 @@
                     );
                 }
                 invito.TitlePart.Title += " - " + visita.TitlePart.Title;
+                Model.OrchardServices.ContentManager.Publish(invito);
                 // attiva il workflow di notfica invito
                 Func<Dictionary<string, object>> tokens = () => new Dictionary<string, object> { { "Content", invito }, { Orchard.Workflows.Activities.SignalActivity.SignalEventName, "NotificaInvito" } };
                 wfManager.TriggerEvent(Orchard.Workflows.Activities.SignalActivity.SignalEventName, invito, tokens);
