@@ -46,7 +46,7 @@
             //update field record for the ContentPickerField
             string allIds = String.Join(",", ((int[])cpf.Ids).Select<int, string>(id => "{" + id.ToString() + "}"));
             _fieldIndexService.Set(
-                item.FieldIndexPart,
+                contact.FieldIndexPart,
                 "CommunicationContact",
                 "VisiteEffettuate",
                 "",
