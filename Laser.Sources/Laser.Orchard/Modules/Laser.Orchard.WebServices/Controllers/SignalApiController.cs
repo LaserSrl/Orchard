@@ -37,6 +37,9 @@ namespace Laser.Orchard.WebServices.Controllers {
         /// <returns>returns a Response Object</returns>
         [OutputCache(NoStore = true, Duration = 0)]
         public Response Post([FromBody] Signal signal) {
+            if (String.IsNullOrWhiteSpace(signal.Name) || signal.ContentId <= 0) {
+                throw new Exception("Invalid Signal parameters");
+            }
             var currentUser = _orchardServices.WorkContext.CurrentUser;
             if (currentUser != null) {
                 if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
