@@ -1,4 +1,5 @@
 ﻿using Orchard.Mvc.Routes;
+using Orchard.WebApi.Routes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,8 @@ using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace Laser.Orchard.CommunicationGateway {
-    public class Routes : IRouteProvider {
+    public class Routes : IHttpRouteProvider {
+
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
             foreach (var routeDescriptor in GetRoutes()) {
                 routes.Add(routeDescriptor);
@@ -16,28 +18,23 @@ namespace Laser.Orchard.CommunicationGateway {
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
             return new[] {
-                AddRoute("CommunicationGatewayAPI/Get/{id}", "DeliveryReport", "Default"),
-                AddRoute("CommunicationGatewayAPI/GetByExternalId/{id}", "DeliveryReport", "ExternalId")
+                AddRoute("Api/CommunicationGateway/Get/{Id}", "DeliveryReport", "Get"),
+                AddRoute("Api/CommunicationGateway/GetByExternalId/{ExternalId}", "DeliveryReport", "GetByExternalId")
             };
         }
 
         private RouteDescriptor AddRoute(string routePattern, string controllerName, string action) {
-            return new RouteDescriptor {
-                Priority = 15,
-                Route = new Route(
-                    routePattern,
-                    new RouteValueDictionary {
-                            {"area", "Laser.Orchard.CommunicationGateway"},
-                            {"controller", controllerName},
-                            {"action", action}
-                        },
-                    new RouteValueDictionary(),
-                    new RouteValueDictionary {
-                            {"area", "Laser.Orchard.CommunicationGateway"}
-                        },
-                    new MvcRouteHandler())
-            };
+            return new HttpRouteDescriptor {
 
+                Priority = 15,
+                RouteTemplate = routePattern,
+                Defaults = new {
+                    area = "Laser.Orchard.CommunicationGateway",
+                    controller = controllerName,
+                    action = action
+                }
+            };
         }
+
     }
 }

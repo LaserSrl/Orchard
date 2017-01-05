@@ -168,13 +168,16 @@
     <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.StatusByExtId.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
-    <Content Include="Service References\SmsServiceReference\SmsWebService.disco" />
-    <Content Include="Service References\SmsServiceReference\configuration91.svcinfo" />
-    <Content Include="Service References\SmsServiceReference\configuration.svcinfo" />
-    <Content Include="Service References\SmsServiceReference\Reference.svcmap">
+    <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.GetStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\SmsServiceReference\SmsWebService.disco" />
+    <None Include="Service References\SmsServiceReference\configuration91.svcinfo" />
+    <None Include="Service References\SmsServiceReference\configuration.svcinfo" />
+    <None Include="Service References\SmsServiceReference\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
-    </Content>
+    </None>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -203,9 +206,10 @@
     <Content Include="Views\Parts\SmsGateway_SummaryAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\MobilePushApproved_Edit.cshtml" />
     <Content Include="Views\Parts\MobileContact.cshtml" />
-    <Content Include="Service References\SmsServiceReference\SmsWebService.wsdl" />
+    <None Include="Service References\SmsServiceReference\SmsWebService.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CheckMAMController.cs" />
     <Compile Include="Controllers\ContactListController.cs" />
     <Compile Include="Controllers\CountPanelController.cs" />
     <Compile Include="Controllers\ExternalPushController.cs" />

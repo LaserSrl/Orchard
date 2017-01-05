@@ -17,24 +17,31 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
         /// <summary>
         /// Metodo per ritornare le informazioni sul dettaglio
-        /// http://localhost/Laser.Orchard/Sviluppo/CommunicationGatewayAPI/Get/{id}
+        /// http://localhost/Laser.Orchard/Sviluppo/Api/CommunicationGateway/Get/{id}
         /// </summary>
         /// <param name="Language"></param>
         /// <returns></returns>
-        [HttpGet, ActionName("Default")]
+        [HttpGet]
         public List<CommunicationDeliveryReportRecord> Get(int Id) {
             return _deliveryReportRepository.Fetch(x => x.CommunicationAdvertisingPartRecord_Id == Id).ToList();
         }
 
         /// <summary>
         /// Metodo per ritornare le informazioni sul dettaglio tramite Id Esterno
-        /// http://localhost/Laser.Orchard/Sviluppo/CommunicationGatewayAPI/GetByExternalId/{id}
+        /// http://localhost/Laser.Orchard/Sviluppo/Api/CommunicationGateway/GetByExternalId/{id}
         /// </summary>
         /// <param name="Language"></param>
         /// <returns></returns>
-        [HttpGet, ActionName("ExternalId")]
+        [HttpGet]
         public List<CommunicationDeliveryReportRecord> GetByExternalId(string ExternalId) {
             return _deliveryReportRepository.Fetch(x => x.ExternalId == ExternalId).ToList();
         }
+
+        public void Post() { }
+
+        public void Put() { }
+
+        public void Delete() { }
+
     }
 }

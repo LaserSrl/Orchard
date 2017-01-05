@@ -25,6 +25,7 @@ namespace Laser.Orchard.Mobile.Services {
         //string SendSms(IList<SmsHQL> TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
         string SendSms(IList TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
         Config GetConfig();
+        int GetStatus();
         string GetReportSmsStatus(string IdSMS);
         void Synchronize();
     }
@@ -333,18 +334,6 @@ namespace Laser.Orchard.Mobile.Services {
             //Specify the binding to be used for the client.
             var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
 
-            //EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
-            //SmsServiceReference.SmsWebServiceSoapClient _service;
-
-            //if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-            //    WSHttpBinding binding = new WSHttpBinding();
-            //    binding.Security.Mode = SecurityMode.Transport;
-            //    _service = new SmsWebServiceSoapClient(binding, address);
-            //} else {
-            //    BasicHttpBinding binding = new BasicHttpBinding();
-            //    _service = new SmsWebServiceSoapClient(binding, address);
-            //}
-
             EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
             BasicHttpBinding binding = new BasicHttpBinding();
 
@@ -368,18 +357,6 @@ namespace Laser.Orchard.Mobile.Services {
 
             //Specify the binding to be used for the client.
             var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
-
-            //EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
-            //SmsServiceReference.SmsWebServiceSoapClient _service;
-
-            //if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-            //    WSHttpBinding binding = new WSHttpBinding();
-            //    binding.Security.Mode = SecurityMode.Transport;
-            //    _service = new SmsWebServiceSoapClient(binding, address);
-            //} else {
-            //    BasicHttpBinding binding = new BasicHttpBinding();
-            //    _service = new SmsWebServiceSoapClient(binding, address);
-            //}
 
             EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
             BasicHttpBinding binding = new BasicHttpBinding();
@@ -413,6 +390,28 @@ namespace Laser.Orchard.Mobile.Services {
             reportStatus += " (Rejected: " + contREJECTED.ToString() + " - Expired: " + contEXPIRED.ToString() + ")";
 
             return reportStatus;
+        }
+
+        public int GetStatus() {
+            //Specify the binding to be used for the client.
+            var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
+
+            EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
+            BasicHttpBinding binding = new BasicHttpBinding();
+
+            if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
+                binding.Security.Mode = BasicHttpSecurityMode.Transport;
+            }
+            SmsServiceReference.SmsWebServiceSoapClient _service = new SmsWebServiceSoapClient(binding, address);
+
+            SmsServiceReference.Login login = new SmsServiceReference.Login();
+            login.User = smsSettings.WsUsername;
+            login.Password = smsSettings.WsPassword;
+            login.DriverId = smsSettings.MamDriverIdentifier;
+
+            var result = _service.GetStatus(login);
+
+            return result;
         }
 
     }
