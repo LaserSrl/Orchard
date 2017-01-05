@@ -10,12 +10,12 @@
     string retString = "Error"; //possible outcomes: "Error","OK","NothingToDo"
 
     //Services we will need
-    ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
     IFieldIndexService _fieldIndexService;
-    IContentManager _contentManager;
 }
 @{
     try {
+        //resolve services
+        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         //resolve content item of type SchedaInvito
         dynamic item = Model.ContentItem;
         if (!item.SchedaInvito.Hapartecipato.Value) {
@@ -26,8 +26,8 @@
                 "SchedaInvito",
                 "Hapartecipato",
                 "",
-                1,
-                typeof(int)
+                true,
+                typeof(bool)
             );
             retString = "OK";
         } else {
