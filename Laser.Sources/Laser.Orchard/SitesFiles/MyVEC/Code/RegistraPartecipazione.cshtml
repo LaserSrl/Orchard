@@ -18,7 +18,8 @@
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         //resolve content item of type SchedaInvito
         dynamic item = Model.ContentItem;
-        if (!item.SchedaInvito.Hapartecipato.Value) {
+        var haPartecipato = (item.SchedaInvito.Hapartecipato.Value == null ? false:item.SchedaInvito.Hapartecipato.Value);
+        if (!haPartecipato) {
             item.SchedaInvito.Hapartecipato.Value = true;
             //update field record for the ContentPickerField
             _fieldIndexService.Set(
@@ -34,6 +35,8 @@
             retString = "NothingToDo";
         }
     } catch (Exception ex) {
+        var eMsg = ex.Message;
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
         retString = "Error";
     }
 }@retString
