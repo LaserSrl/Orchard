@@ -2,6 +2,7 @@
 @using Laser.Orchard.ButtonToWorkflows.ViewModels
 @using Orchard.ContentManagement;
 @using Laser.Orchard.ButtonToWorkflows.Security;
+<div style="float:right">
 @{
     var permissionToTest = ButtonPermissions.ButtonToWorkFlow1;
     for (Int32 i = 0; i < Model.ElencoButtons.Count; i++) {
@@ -28,4 +29,5 @@
     }
 }
 </div>
+
 
