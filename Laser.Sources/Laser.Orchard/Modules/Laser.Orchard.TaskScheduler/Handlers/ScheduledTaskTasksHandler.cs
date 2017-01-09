@@ -4,6 +4,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Data;
+using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 using Orchard.Workflows.Activities;
 using Orchard.Workflows.Services;
@@ -21,6 +22,8 @@ namespace Laser.Orchard.TaskScheduler.Handlers {
         private readonly IRepository<ScheduledTaskRecord> _repoTasks;
         private readonly IWorkflowManager _workflowManager;
 
+        public ILogger Logger { get; set; }
+
         public ScheduledTaskTasksHandler(IOrchardServices orchardServices,
             IScheduledTaskManager taskManager,
             IScheduledTaskService scheduledTaskService,
@@ -31,6 +34,8 @@ namespace Laser.Orchard.TaskScheduler.Handlers {
             _scheduledTaskService = scheduledTaskService;
             _repoTasks = repoTasks;
             _workflowManager = workflowManager;
+
+            Logger = NullLogger.Instance;
         }
 
         public void Process(ScheduledTaskContext context) {
@@ -40,29 +45,34 @@ namespace Laser.Orchard.TaskScheduler.Handlers {
                 //Hence, we placed the part id in the TaskType.
                 int pid = int.Parse(taskTypeStr.Split(new string[] {"_"}, StringSplitOptions.RemoveEmptyEntries).Last());
                 ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.Get<ScheduledTaskPart>(pid);
-                //Trigger the event
-                //get the signal name for from the part to track edits that may have been done.
-                _workflowManager.TriggerEvent(
-                    SignalActivity.SignalEventName, 
-                    context.Task.ContentItem, 
-                    () => new Dictionary<string, object> {
+                if (part == null) {
+                    Logger.Error("Laser.TaskScheduler was unable to identify and process the task of type " + taskTypeStr);
+                } else {
+                    //Trigger the event
+                    //get the signal name for from the part to track edits that may have been done.
+                    _workflowManager.TriggerEvent(
+                        SignalActivity.SignalEventName,
+                        context.Task.ContentItem,
+                        () => new Dictionary<string, object> {
                         { "Content", context.Task.ContentItem },
                         { SignalActivity.SignalEventName, part.SignalName }}
-                    );
-                //if the part has periodicity and it was not unscheduled, we may reschedule the task
-                if (part.PeriodicityTime > 0 && part.RunningTaskId > 0) {
-                    //define tasktype
-                    string newTaskTypeStr = Constants.TaskTypeBase + "_" + part.SignalName + "_" + part.Id;
-                    ContentItem ci = null;
-                    if (part.ContentItemId > 0) {
-                        ci = _orchardServices.ContentManager.Get(part.ContentItemId);
+                        );
+                    //if the part has periodicity and it was not unscheduled, we may reschedule the task
+                    if (part.PeriodicityTime > 0 && part.RunningTaskId > 0) {
+                        //define tasktype
+                        string newTaskTypeStr = Constants.TaskTypeBase + "_" + part.SignalName + "_" + part.Id;
+                        ContentItem ci = null;
+                        if (part.ContentItemId > 0) {
+                            ci = _orchardServices.ContentManager.Get(part.ContentItemId);
+                        }
+                        DateTime scheduleTime = _scheduledTaskService.ComputeNextScheduledTime(part);
+                        _taskManager.CreateTask(newTaskTypeStr, scheduleTime, ci);
+                        part.RunningTaskId = _repoTasks.Get(str => str.TaskType.Equals(newTaskTypeStr)).Id;
+                    } else {
+                        part.RunningTaskId = 0;
                     }
-                    DateTime scheduleTime = _scheduledTaskService.ComputeNextScheduledTime(part);
-                    _taskManager.CreateTask(newTaskTypeStr, scheduleTime, ci);
-                    part.RunningTaskId = _repoTasks.Get(str => str.TaskType.Equals(newTaskTypeStr)).Id;
-                } else {
-                    part.RunningTaskId = 0;
                 }
+                
             }
         }
     }
