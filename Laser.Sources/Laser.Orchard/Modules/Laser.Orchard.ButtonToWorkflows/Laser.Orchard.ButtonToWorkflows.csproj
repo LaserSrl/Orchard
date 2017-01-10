@@ -92,6 +92,7 @@
     <Compile Include="Activity\ButtonToWorkflowsEvent.cs" />
     <Compile Include="Drivers\ButtonToWorkflowsDriver.cs" />
     <Compile Include="Drivers\ButtonToWorkflowsSettingsPartDriver.cs" />
+    <Compile Include="Handlers\ButtonToWorflowsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\ButtonToWorkflowsHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ButtonToWorkflowsPart.cs" />
