@@ -94,6 +94,9 @@
             if (item.ActivityPart.DateTimeEnd.Date < today) {
                 //this visit ended yesterday
                 // Set its state to "Terminata"
+                if(item.Visita.Questionario.Ids.Length > 0) {
+                    item.Visita.PushInviata.Value = "True";
+                }
                 item.Visita.Statovisita.Value = "Terminata";
                 _fieldIndexService.Set(
                     item.FieldIndexPart,

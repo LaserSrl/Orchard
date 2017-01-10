@@ -10,7 +10,7 @@
     IRepository<Laser.Orchard.Questionnaires.Models.UserAnswersRecord> _repoAswers;
     string retString = "Error"; //possible outcomes: "Error","Ok"
     dynamic visita = null;
-    dynamic invito = null;
+    dynamic invitoDiRiferimento = null;
     dynamic usr = null;
     DateTime dtUltimaVisita = DateTime.MinValue;
     string questionnaireContext = "";
@@ -30,16 +30,18 @@
             .Select(x => x.ContentItemRecord.Id);
         var ids = qryInviti.ToList();
         foreach(var idInvito in ids){
-            invito = ((dynamic)Model.OrchardServices.ContentManager.Get(idInvito));
+            dynamic invito = ((dynamic)Model.OrchardServices.ContentManager.Get(idInvito));
             // se l'invito non è stato eliminato esamino la relativa visita
             if(invito != null) {
                 visita = ((dynamic)Model.OrchardServices.ContentManager.Get(invito.SchedaInvito.Visita.Ids[0]));
                 if(visita.ActivityPart.DateTimeStart > dtUltimaVisita) {
                     dtUltimaVisita = visita.ActivityPart.DateTimeStart;
                     questionnaireContext = visita.TitlePart.Title;
+                    invitoDiRiferimento = invito;
                 }
             }
         }
+        invitoDiRiferimento.QuestionarioCompilato.Value = "True";
         if(string.IsNullOrWhiteSpace(questionnaireContext) == false) {
             string sessionId = System.Web.HttpContext.Current.Session.SessionID;
             var answers = _repoAswers.Table.Where(x => x.User_Id == usrId
