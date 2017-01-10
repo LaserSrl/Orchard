@@ -64,17 +64,19 @@
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         //Based on DateTime.Now,
+        DateTime today = DateTime.Today;
+        DateTime tomorrow = today.AddDays(1);
+        DateTime yesterday = today.AddDays(-1);
         var query = _contentManager.Query(VersionOptions.Latest).ForType("Visita");
         query = query.Join<ActivityPartRecord>().Where(apr =>
-            apr.DateTimeStart == (DateTime?)DateTime.Now.Date || apr.DateTimeEnd == (DateTime?)DateTime.Now.AddDays(-1).Date
-            //(apr.DateTimeStart != null && ((DateTime?)(apr.DateTimeStart)).GetValueOrDefault().Date == DateTime.Now.Date) //visits beginning today
-            //|| (apr.DateTimeEnd != null && ((DateTime?)(apr.DateTimeEnd)).GetValueOrDefault().Date == DateTime.Now.AddDays(-1).Date) //visits ended yesterday
-            );
+            (apr.DateTimeStart >= today && apr.DateTimeStart < tomorrow) //visits beginning today
+            || (apr.DateTimeEnd >= yesterday && apr.DateTimeEnd < today) //visits ended yesterday
+        );
         var visits = query.List();
         foreach (var visit in visits) {
             dynamic item = visit;
             int credentialAction = 0; //0: do nothing; 1: issue credentials; 2: revoke credentials
-            if (item.ActivityPart.DateTimeStart.Date == DateTime.Now.Date) {
+            if (item.ActivityPart.DateTimeStart.Date == today) {
                 //this visit starts today
                 // Set its state to "In corso"
                 item.Visita.Statovisita.Value = "In corso";
@@ -89,7 +91,7 @@
                 // Issue credentials for all guests
                 credentialAction = 1;
             }
-            if (item.ActivityPart.DateTimeEnd.Date == DateTime.Now.AddDays(-1).Date) {
+            if (item.ActivityPart.DateTimeEnd.Date < today) {
                 //this visit ended yesterday
                 // Set its state to "Terminata"
                 item.Visita.Statovisita.Value = "Terminata";

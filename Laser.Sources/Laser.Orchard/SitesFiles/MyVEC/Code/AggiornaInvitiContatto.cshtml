@@ -8,6 +8,7 @@
 @using Orchard.Projections.Services;
 @functions{
     string retString = "Error"; //possible outcomes: "Error","OK"
+    string eMsg = String.Empty;
 
     //Services we will need
     ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
@@ -16,6 +17,9 @@
 }
 @{
     try {
+        if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+            eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+        }
         //resolve services
         _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
@@ -29,26 +33,20 @@
             //var guest = _contentManager.Get((int)(item.CommonPart.Creator.Value));
             //find the contact
             dynamic contact = _communicationService.GetContactFromUser((int)(item.CommonPart.Creator.Value)).ContentItem;
-            var cpf = contact.CommunicationContact.VisiteEffettuate;
-            if (item.SchedaInvito.Hapartecipato.Value) {
-                //add the Visita to the ContentPickerField in the CommunicationContact
-                if (!((int [])cpf.Ids).Any(id => id == idVisita)) {
-                    //only add if the Visita is not there already
-                    var idList = ((int [])cpf.Ids).ToList();
-                    idList.Add(idVisita);
-                    cpf.Ids = idList.ToArray();
-                }
-            }
-            else {
-                //remove the Visita from the ContentPickerField in the CommunicationContact
-                cpf.Ids = ((int [])cpf.Ids).Where(id => id != idVisita).ToArray();
+            var cpf = contact.CommunicationContact.InvitiVisita;
+            //add the Visita to the ContentPickerField in the CommunicationContact
+            if (!((int [])cpf.Ids).Any(id => id == idVisita)) {
+                //only add if the Visita is not there already
+                var idList = ((int [])cpf.Ids).ToList();
+                idList.Add(idVisita);
+                cpf.Ids = idList.ToArray();
             }
             //update field record for the ContentPickerField
             string allIds = String.Join(",", ((int[])cpf.Ids).Select<int, string>(id => "{" + id.ToString() + "}"));
             _fieldIndexService.Set(
                 contact.FieldIndexPart,
                 "CommunicationContact",
-                "VisiteEffettuate",
+                "InvitiVisita",
                 "",
                 allIds,
                 typeof(string)
@@ -56,6 +54,6 @@
             retString = "OK";
         }
     } catch (Exception ex) {
-        retString += ex.Message;
+        eMsg += ex.Message + Environment.NewLine;
     }
 }@retString

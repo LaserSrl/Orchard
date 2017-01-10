@@ -61,8 +61,7 @@
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         dynamic scheda = (dynamic)Model.ContentItem;
         IUser user = ((IUser)_contentManager.Get<UserPart>((int)(scheda.CommonPart.Creator.Value)));
-        HIDUser result = _hidAPIService.IssueCredentials(user);
-        CheckErrors(result, scheda, user, true);
+        _hidAPIService.CreateHIDUser(user, scheda.SchedaInvito.Cognome.Value, scheda.SchedaInvito.Nome.Value, scheda.SchedaInvito.Email.Value);
     } catch (Exception ex) {
         eMsg += ex.Message + Environment.NewLine;
     }
