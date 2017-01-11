@@ -26,10 +26,12 @@ namespace Laser.Orchard.ButtonToWorkflows.Models {
         public string ButtonsAsync
         {
             get { string val = this.Retrieve(r => r.ButtonsAsync);
-                if (string.IsNullOrEmpty(val))
-                    return "false";
-                else
-                      return val; }
+            if (string.IsNullOrEmpty(val)) {
+                return "false£false£false£false";
+            }
+            else
+                return val;
+            }
             set { this.Store(r => r.ButtonsAsync, value); }
         }
     }
