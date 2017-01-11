@@ -13,9 +13,11 @@
     ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
     IFieldIndexService _fieldIndexService;
     IContentManager _contentManager;
+    Orchard.Workflows.Models.WorkflowContext wfCtx = null;
 }
 @{
     try {
+        wfCtx = Model.Tokens["Workflow"];
         //resolve services
         _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
@@ -80,6 +82,6 @@
             retString = "OK";
         }
     } catch (Exception ex) {
-        retString += ex.Message;
+        wfCtx.SetState("ErrorMessage", ex.Message);
     }
 }@retString

@@ -6,6 +6,7 @@
 @using Orchard.Data;
 @using System.Linq;
 @functions{
+    IFieldIndexService _fieldIndexService;
     Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
     IRepository<Laser.Orchard.Questionnaires.Models.UserAnswersRecord> _repoAswers;
     string retString = "Error"; //possible outcomes: "Error","Ok"
@@ -23,6 +24,7 @@
         int usrId = usr.Id;
         int questionnaireId = Model.ContentItem.Id;
         string mail = usr.Email;
+        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         _repoAswers = Model.OrchardServices.WorkContext.Resolve<IRepository<Laser.Orchard.Questionnaires.Models.UserAnswersRecord>>();
         var qryInviti = _fieldIndexPartRecord.Table
@@ -41,8 +43,16 @@
                 }
             }
         }
-        invitoDiRiferimento.QuestionarioCompilato.Value = "True";
-        if(string.IsNullOrWhiteSpace(questionnaireContext) == false) {
+        invitoDiRiferimento.SchedaInvito.QuestionarioCompilato.Value = "Done";
+        _fieldIndexService.Set(
+            invitoDiRiferimento,
+            "SchedaInvito",
+            "QuestionarioCompilato",
+            "",
+            "Done",
+            typeof(string)
+        );
+        if (string.IsNullOrWhiteSpace(questionnaireContext) == false) {
             string sessionId = System.Web.HttpContext.Current.Session.SessionID;
             var answers = _repoAswers.Table.Where(x => x.User_Id == usrId
                 && x.QuestionnairePartRecord_Id == questionnaireId

@@ -6,6 +6,8 @@
 @using Orchard.Users.Services;
 @using System.Text.RegularExpressions;
 @using System.Web.Security;
+@using System.Text;
+@using System.Globalization;
 
 @functions{
     string retString = "Error"; //possile outcomes: OK, Error
@@ -59,8 +61,8 @@
 
     //TODO: this needs more validation and checks
     private string GenerateUsername(string familyName, string givenName) {
-        string fName = familyName.Split(null)[0].Trim().ToLowerInvariant();
-        string gName = givenName.Split(null)[0].Trim().ToLowerInvariant();
+        string fName = RemoveDiacritics(familyName.Split(null)[0].Trim().ToLowerInvariant());
+        string gName = RemoveDiacritics(givenName.Split(null)[0].Trim().ToLowerInvariant());
         string uName = fName + "." + gName;
         if (uName.Length >= 255) {
             uName = fName + "." + gName.First();
@@ -76,10 +78,21 @@
     }
 
     private string GeneratePassword() {
-        return Membership.GeneratePassword(MinPasswordLength, MinPasswordLength / 2);
+        return Membership.GeneratePassword(MinPasswordLength, 0);
     }
     private string Encrypt(string text) {
         return Convert.ToBase64String(_encryptionService.Encode(System.Text.Encoding.Unicode.GetBytes(text)));
+    }
+    private string RemoveDiacritics(string text) {
+        var normalizedString = text.Normalize(NormalizationForm.FormD);
+        var stringBuilder = new StringBuilder();
+        foreach (var c in normalizedString) {
+            var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCategory != UnicodeCategory.NonSpacingMark) {
+                stringBuilder.Append(c);
+            }
+        }
+        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
     }
 }
 @{
