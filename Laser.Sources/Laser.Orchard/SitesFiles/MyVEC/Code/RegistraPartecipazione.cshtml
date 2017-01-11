@@ -1,0 +1,42 @@
+@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.CommunicationGateway.Services;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Projections.Services;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","OK","NothingToDo"
+
+    //Services we will need
+    IFieldIndexService _fieldIndexService;
+}
+@{
+    try {
+        //resolve services
+        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        //resolve content item of type SchedaInvito
+        dynamic item = Model.ContentItem;
+        var haPartecipato = (item.SchedaInvito.Hapartecipato.Value == null ? false:item.SchedaInvito.Hapartecipato.Value);
+        if (!haPartecipato) {
+            item.SchedaInvito.Hapartecipato.Value = true;
+            //update field record for the ContentPickerField
+            _fieldIndexService.Set(
+                item.FieldIndexPart,
+                "SchedaInvito",
+                "Hapartecipato",
+                "",
+                true,
+                typeof(bool)
+            );
+            retString = "OK";
+        } else {
+            retString = "NothingToDo";
+        }
+    } catch (Exception ex) {
+        var eMsg = ex.Message;
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+        retString = "Error";
+    }
+}@retString
