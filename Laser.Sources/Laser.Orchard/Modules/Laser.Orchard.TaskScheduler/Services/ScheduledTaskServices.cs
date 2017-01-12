@@ -118,6 +118,7 @@ namespace Laser.Orchard.TaskScheduler.Services {
                         ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.New<ScheduledTaskPart>("ScheduledTaskPart");
                         vm.UpdatePart(part);
                         _orchardServices.ContentManager.Create(part);
+                        vm.Id = part.Id;
                     }
                 }
             }
