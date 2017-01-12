@@ -12,6 +12,10 @@
 @using System;
 @functions{
     string retString = "Error"; //outcomes: Error,OK
+    // parametri di configurazione
+    int daysBeforeStart = 5; // 0 => visits starting today only, 1 => visits starting today or tomorrow
+    int daysAfterEnd = 2; // 0 => visits ended yesterday only, 1 => visits ended yesterday or the day before yesterday
+    // servizi
     IHIDAPIService _hidAPIService;
     IContentManager _contentManager;
     IFieldIndexService _fieldIndexService;
@@ -65,18 +69,20 @@
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         //Based on DateTime.Now,
         DateTime today = DateTime.Today;
-        DateTime tomorrow = today.AddDays(1);
         DateTime yesterday = today.AddDays(-1);
+        DateTime tomorrow = today.AddDays(1);
+        DateTime dtMaxEnable = tomorrow.AddDays(daysBeforeStart);
+        DateTime dtMinDisable = yesterday.AddDays(-daysAfterEnd);
         var query = _contentManager.Query(VersionOptions.Latest).ForType("Visita");
         query = query.Join<ActivityPartRecord>().Where(apr =>
-            (apr.DateTimeStart >= today && apr.DateTimeStart < tomorrow) //visits beginning today
-            || (apr.DateTimeEnd >= yesterday && apr.DateTimeEnd < today) //visits ended yesterday
+            (apr.DateTimeStart >= today && apr.DateTimeStart < dtMaxEnable) // taday between visit-n and visit
+            || (apr.DateTimeEnd < today && apr.DateTimeEnd >= dtMinDisable) // today between visit and visit+n
         );
         var visits = query.List();
         foreach (var visit in visits) {
             dynamic item = visit;
             int credentialAction = 0; //0: do nothing; 1: issue credentials; 2: revoke credentials
-            if (item.ActivityPart.DateTimeStart.Date == today) {
+            if (item.ActivityPart.DateTimeStart.Date >= today) {
                 //this visit starts today
                 // Set its state to "In corso"
                 item.Visita.Statovisita.Value = "In corso";
