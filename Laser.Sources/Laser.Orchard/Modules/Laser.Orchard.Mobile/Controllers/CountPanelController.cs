@@ -48,7 +48,9 @@ namespace Laser.Orchard.Mobile.Controllers {
         [HttpPost]
         [AdminService]
         public JsonResult GetTotalSms(Int32[] ids, string[] manualRecipients, Int32? idlocalization, Int32? tot) {
-            manualRecipients = manualRecipients.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            if (manualRecipients != null) {
+                manualRecipients = manualRecipients.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            }
             Dictionary<string, string> Total = new Dictionary<string, string>();
             Total.Add("Key", "<i class=\"fa fa-phone\"></i>");
             if (tot.HasValue) {
