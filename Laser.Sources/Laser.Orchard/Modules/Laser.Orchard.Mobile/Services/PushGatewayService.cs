@@ -34,8 +34,8 @@ using System.Xml.Linq;
 
 namespace Laser.Orchard.Mobile.Services {
     public interface IPushGatewayService : IDependency {
-        IList GetPushQueryResult(Int32[] ids, bool countOnly = false);
-        IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false);
+        IList GetPushQueryResult(Int32[] ids, bool countOnly = false, int contentId = 0); 
+        IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false, ContentItem advItem = null);
         IList GetPushQueryResultByUserNames(string[] userNames, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly);
         void PublishedPushEventTest(ContentItem ci);
         void PublishedPushEvent(ContentItem ci);
@@ -79,8 +79,12 @@ namespace Laser.Orchard.Mobile.Services {
             lockMonitor = new object();
         }
 
-        public IList GetPushQueryResult(Int32[] ids, bool countOnly = false) {
-            return GetPushQueryResult(ids, null, true, "All", countOnly);
+        public IList GetPushQueryResult(Int32[] ids, bool countOnly = false, int contentId = 0) {
+            ContentItem contentItem = null;
+            if (contentId > 0) {
+                contentItem = _orchardServices.ContentManager.Get(contentId, VersionOptions.Latest);
+        }
+            return GetPushQueryResult(ids, null, true, "All", countOnly, contentItem);
         }
 
         public IList<IDictionary> GetContactsWithDevice(string nameFilter) {
@@ -107,11 +111,16 @@ namespace Laser.Orchard.Mobile.Services {
             return lista;
         }
 
-        public IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false) {
+        public IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false, ContentItem advItem = null) {
             IHqlQuery query;
             if (ids != null && ids.Count() > 0) {
-                query = IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(ids, null, new string[] { "CommunicationContact" }));
-            } else {
+                Dictionary<string, object> tokens = new Dictionary<string, object>();
+                if (advItem != null) {
+                    tokens.Add("Content", advItem);
+                }
+                query = IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(ids, tokens, new string[] { "CommunicationContact" }));
+            }
+            else {
                 query = IntegrateAdditionalConditions(null);
             }
 
@@ -596,7 +605,7 @@ namespace Laser.Orchard.Mobile.Services {
                         if (ci.ContentType == "CommunicationAdvertising") {
                             IList counterAux;
                             if (!SendPushToSpecificDevices) {
-                                counterAux = GetPushQueryResult(ids, locTipoDispositivo, produzione, language, true);
+                                counterAux = GetPushQueryResult(ids, locTipoDispositivo, produzione, language, true, ci);
                                 counter = Convert.ToInt32(((Hashtable)(counterAux[0]))["Tot"]);
                             } else {
                                 counterAux = GetPushQueryResultByUserNames(mpp.RecipientList.Split(new string[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries), null, true, "All", true);

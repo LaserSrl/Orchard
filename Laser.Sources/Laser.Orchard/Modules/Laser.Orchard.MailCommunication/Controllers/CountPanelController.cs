@@ -17,7 +17,7 @@ namespace Laser.Orchard.MailCommunication.Controllers {
 
         [HttpPost]
         [AdminService]
-        public JsonResult GetTotal(Int32[] ids, string[] manualRecipients, Int32? idlocalization, Int32? tot) {
+        public JsonResult GetTotal(Int32[] ids, string[] manualRecipients, int? contentId, Int32? idlocalization, Int32? tot) {
          //   Int32[] Ids = ids.Split(',').Where(tag => !string.IsNullOrEmpty(tag)).Select(x => int.Parse(x)).ToArray();
             Dictionary<string,string> Total=new Dictionary<string,string>();
             Total.Add("Key","<i class=\"fa fa-envelope\"></i>");
@@ -27,7 +27,7 @@ namespace Laser.Orchard.MailCommunication.Controllers {
             }
             else
             {
-                var elenco = _mailCommunicationService.GetMailQueryResult(ids, idlocalization, true);
+                var elenco = _mailCommunicationService.GetMailQueryResult(ids, idlocalization, true, contentId.HasValue ? contentId.Value : 0);
                 Total.Add("Value", ((long)(((Hashtable)(elenco[0]))["Tot"])).ToString("#,##0"));
             }
             return Json(Total, JsonRequestBehavior.AllowGet);

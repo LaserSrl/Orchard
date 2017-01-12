@@ -16,8 +16,8 @@ namespace Laser.Orchard.MailCommunication.Services {
 
     public interface IMailCommunicationService : IDependency {
 
-        // IHqlQuery IntegrateAdditionalConditions(IHqlQuery query = null, IContent content = null);
-        IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false);
+        IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, int contentId = 0);
+        IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, ContentItem advItem = null);
     }
 
     [OrchardFeature("Laser.Orchard.MailCommunication")]
@@ -33,16 +33,26 @@ namespace Laser.Orchard.MailCommunication.Services {
             _queryPickerServices = queryPickerServices;
             _session = session;
         }
+        public IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, int contentId = 0) {
+            ContentItem contentItem = null;
+            if (contentId > 0) {
+                contentItem = _orchardServices.ContentManager.Get(contentId, VersionOptions.Latest);
+            }
+            return GetMailQueryResult(ids, idlingua, countOnly, contentItem);
+        }
 
-        public IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false) {// idcontent) {
+        public IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, ContentItem advItem = null) {// idcontent) {
             // dynamic content = _orchardServices.ContentManager.Get(idcontent);
             //  content = _orchardServices.ContentManager.Get(idcontent, VersionOptions.DraftRequired);
             IHqlQuery query;
             if (ids != null && ids.Count() > 0) {
                 //if (content.QueryPickerPart != null && content.QueryPickerPart.Ids.Length > 0) {
-                query = IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(ids, null, new string[] { "CommunicationContact" }), idlingua);
-            }
-            else {
+                Dictionary<string, object> tokens = new Dictionary<string, object>();
+                if (advItem != null) {
+                    tokens.Add("Content", advItem);
+                }
+                query = IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(ids, tokens, new string[] { "CommunicationContact" }), idlingua);
+            } else {
                 query = IntegrateAdditionalConditions(null, idlingua);
             }
 
@@ -56,8 +66,7 @@ namespace Laser.Orchard.MailCommunication.Services {
             string queryForEmail = "";
             if (countOnly) {
                 queryForEmail = "SELECT count(EmailRecord) as Tot";
-            }
-            else {
+            } else {
                 queryForEmail = "SELECT cir.Id as Id, TitlePart.Title as Title, EmailRecord.Email as EmailAddress";
             }
             queryForEmail += " FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
@@ -91,8 +100,7 @@ namespace Laser.Orchard.MailCommunication.Services {
                     // la lingua è quella di default del sito, quindi prendo tutti quelli che hanno espresso la preferenza sulla lingua e quelli che non l'hanno espressa
                     query = query
                         .Where(x => x.ContentPartRecord<FavoriteCulturePartRecord>(), x => x.Disjunction(a => a.Eq("Culture_Id", idlocalization), b => b.Eq("Culture_Id", 0))); // lingua prescelta uguale a lingua contenuto oppure nessuna lingua prescelta e allora
-                }
-                else {
+                } else {
                     // la lingua NON è quella di default del sito, quindi prendo SOLO quelli che hanno espresso la preferenza sulla lingua
                     query = query
                         .Where(x => x.ContentPartRecord<FavoriteCulturePartRecord>(), x => x.Eq("Culture_Id", idlocalization));
