@@ -5,7 +5,7 @@
     using (Script.Foot()) {
     <script type="text/javascript">
         $(function () {
-            var queryCombo = $("#QueryPickerPart_SelectedIds optgroup:first-child");
+@*            var queryCombo = $("#QueryPickerPart_SelectedIds optgroup:first-child");
             @foreach (var item in Model.AvailableQueries) {
                 <text>
                 queryCombo.append("<option value=\"@item.Key\" @((Model.SelectedIds.Contains(item.Key))? "selected" : "")>@item.Value</option>");
@@ -16,7 +16,7 @@
                 <text>
                 queryCombo.append("<option value=\"@item.Key\" @((Model.SelectedIds.Contains(item.Key))? "selected" : "")>@item.Value</option>");
                 </text>
-            }
+            }*@
             $("#QueryPickerPart_SelectedIds").multiselect();
         });
     </script>
@@ -28,10 +28,16 @@
 
     <select id="QueryPickerPart_SelectedIds" multiple="multiple" name="QueryPickerPart.SelectedIds">
         <optgroup label="General purpouse queries">
+            @foreach (var item in Model.AvailableQueries) {
+                <option value="@item.Key" @((Model.SelectedIds.Contains(item.Key)) ? "selected" : "")>@item.Value</option>
+            }
         </optgroup>
         <optgroup label="One shot queries">
+            @foreach (var item in Model.OneShotQueries) {
+                <option value="@item.Key" @((Model.SelectedIds.Contains(item.Key)) ? "selected" : "")>@item.Value</option>
+            }
         </optgroup>
     </select>
     <span id="QueriesTotal">
-    @T("found {0:N0} content items", Model.TotalItemsCount.Value)</span>
+        @T("found {0:N0} content items", Model.TotalItemsCount.Value)</span>
 </fieldset>
