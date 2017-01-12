@@ -43,8 +43,6 @@ namespace Laser.Orchard.HID.Controllers {
                     if (hidUser.Error == UserErrors.NoError) {
                         InvitationCode = hidUser.CreateInvitation();
                         if (hidUser.Error == UserErrors.NoError) {
-                            //remove hyphens
-                            InvitationCode = string.Join("", InvitationCode.Split(new string[] { "-" }, StringSplitOptions.RemoveEmptyEntries));
                             success = true;
                             eCode = HIDErrorCode.NoError;
                             message = T("The Data field contains the new InvitationCode.").Text;

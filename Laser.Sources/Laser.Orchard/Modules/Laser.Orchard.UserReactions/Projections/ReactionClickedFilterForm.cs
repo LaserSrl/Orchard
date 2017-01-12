@@ -101,7 +101,7 @@ namespace Laser.Orchard.UserReactions.Projections {
                 );
 
                 _resourceManager.Value.Require("script", "ContentPicker");
-                _resourceManager.Value.Require("script", "jQueryUI_Sortable");
+                _resourceManager.Value.Require("script", "jQueryUI");
                 _resourceManager.Value.Require("style", "content-picker-admin.css");
 
                 var reactionTypes = _reactionsService.GetTypesTableFiltered();
