@@ -22,7 +22,7 @@ namespace Laser.Orchard.Mobile.Services {
         //IHqlQuery IntegrateAdditionalConditions(IHqlQuery query = null, IContent content = null);
         //IHqlQuery IntegrateAdditionalConditions(IHqlQuery query, Int32? idlocalization);
         //IList<SmsHQL> GetSmsQueryResult(Int32[] ids, Int32? idlingua);
-        IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false);
+        IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, ContentItem advItem = null);
         //List<string> GetSmsNumbersQueryResult(Int32[] ids, Int32? idlingua);
     }
 
@@ -59,12 +59,16 @@ namespace Laser.Orchard.Mobile.Services {
         //}
         
         //public IList<SmsHQL> GetSmsQueryResult(Int32[] ids, Int32? idlingua)
-        public IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false)
+        public IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, ContentItem advItem = null)
         {
             IHqlQuery query;
             if (ids != null && ids.Length > 0)
             {
-                query = IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(ids, null, new string[] { "CommunicationContact" }), idlingua);
+                Dictionary<string, object> tokens = new Dictionary<string, object>();
+                if (advItem != null) {
+                    tokens.Add("Content", advItem);
+                }
+                query = IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(ids, tokens, new string[] { "CommunicationContact" }), idlingua);
             }
             else
             {

@@ -75,7 +75,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 if (localizedPart != null && localizedPart.Culture != null)
                     idLocalization = localizedPart.Culture.Id;
 
-                IList lista = _mailCommunicationService.GetMailQueryResult(ids, idLocalization);
+                IList lista = _mailCommunicationService.GetMailQueryResult(ids, idLocalization, false, context.Task.ContentItem);
 
                 // ricava i settings e li invia tramite FTP
                 var templateId = ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id;

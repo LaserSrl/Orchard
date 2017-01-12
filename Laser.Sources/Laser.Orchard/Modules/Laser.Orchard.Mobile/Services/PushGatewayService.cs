@@ -34,7 +34,7 @@ using System.Xml.Linq;
 namespace Laser.Orchard.Mobile.Services {
     public interface IPushGatewayService : IDependency {
         IList GetPushQueryResult(Int32[] ids, bool countOnly = false);
-        IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false);
+        IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false, ContentItem advItem = null);
         void PublishedPushEventTest(ContentItem ci);
         void PublishedPushEvent(ContentItem ci);
         void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "", string externalUrl = "");
@@ -105,10 +105,14 @@ namespace Laser.Orchard.Mobile.Services {
             return lista;
         }
 
-        public IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false) {
+        public IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false, ContentItem advItem = null) {
             IHqlQuery query;
             if (ids != null && ids.Count() > 0) {
-                query = IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(ids, null, new string[] { "CommunicationContact" }));
+                Dictionary<string, object> tokens = new Dictionary<string, object>();
+                if (advItem != null) {
+                    tokens.Add("Content", advItem);
+                }
+                query = IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(ids, tokens, new string[] { "CommunicationContact" }));
             }
             else {
                 query = IntegrateAdditionalConditions(null);
@@ -530,7 +534,7 @@ namespace Laser.Orchard.Mobile.Services {
                         mpp.PushSentNumber = messageSent;
                         int counter = 0;
                         if (ci.ContentType == "CommunicationAdvertising") {
-                            var counterAux = GetPushQueryResult(ids, locTipoDispositivo, produzione, language, true);
+                            var counterAux = GetPushQueryResult(ids, locTipoDispositivo, produzione, language, true, ci);
                             counter = Convert.ToInt32(((Hashtable)(counterAux[0]))["Tot"]);
                         }
                         else {

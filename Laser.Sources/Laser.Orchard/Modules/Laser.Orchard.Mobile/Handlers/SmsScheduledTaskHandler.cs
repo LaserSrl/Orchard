@@ -50,7 +50,7 @@ namespace Laser.Orchard.Mobile.Handlers {
                 }
 
                 //var listaNumeri = _smsCommunicationService.GetSmsNumbersQueryResult(ids, idLocalization);
-                var listaDestinatari = _smsCommunicationService.GetSmsQueryResult(ids, idLocalization);
+                var listaDestinatari = _smsCommunicationService.GetSmsQueryResult(ids, idLocalization, false, context.Task.ContentItem);
 
                 if (listaDestinatari.Count > 0) {
                     string linktosend = "";
