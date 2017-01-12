@@ -22,7 +22,7 @@ namespace Laser.Orchard.Mobile.Controllers {
 
         [HttpPost]
         [AdminService]
-        public JsonResult GetTotalPush(Int32[] ids, string[] manualRecipients, Int32? idlocalization, Int32? tot) {
+        public JsonResult GetTotalPush(Int32[] ids, string[] manualRecipients, int? contentId, Int32? idlocalization, Int32? tot) {
             if (manualRecipients != null) {
                 manualRecipients = manualRecipients.Where(x => !string.IsNullOrEmpty(x)).ToArray();
             }
@@ -33,7 +33,7 @@ namespace Laser.Orchard.Mobile.Controllers {
             } else {
                 IList elenco;
                 if (manualRecipients == null || manualRecipients.Length == 0) {
-                    elenco = _pushGatewayService.GetPushQueryResult(ids, true);
+                    elenco = _pushGatewayService.GetPushQueryResult(ids, true, contentId.HasValue ? contentId.Value : 0);
                 } else {
                     elenco = _pushGatewayService.GetPushQueryResultByUserNames(manualRecipients, null, true, "All", true);
                 }
@@ -47,7 +47,7 @@ namespace Laser.Orchard.Mobile.Controllers {
 
         [HttpPost]
         [AdminService]
-        public JsonResult GetTotalSms(Int32[] ids, string[] manualRecipients, Int32? idlocalization, Int32? tot) {
+        public JsonResult GetTotalSms(Int32[] ids, string[] manualRecipients, int? contentId, Int32? idlocalization, Int32? tot) {
             if (manualRecipients != null) {
                 manualRecipients = manualRecipients.Where(x => !string.IsNullOrEmpty(x)).ToArray();
             }
@@ -56,7 +56,7 @@ namespace Laser.Orchard.Mobile.Controllers {
             if (tot.HasValue) {
                 Total.Add("Value", tot.ToString());
             } else {
-                var elenco = _smsCommunicationService.GetSmsQueryResult(ids, idlocalization, true);
+                var elenco = _smsCommunicationService.GetSmsQueryResult(ids, idlocalization, true, contentId.HasValue ? contentId.Value : 0);
                 Total.Add("Value", ((long)(((Hashtable)(elenco[0]))["Tot"])).ToString("#,##0"));
             }
             return Json(Total, JsonRequestBehavior.AllowGet);
