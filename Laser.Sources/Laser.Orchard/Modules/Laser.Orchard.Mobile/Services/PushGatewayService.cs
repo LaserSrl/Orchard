@@ -33,7 +33,7 @@ using System.Xml.Linq;
 
 namespace Laser.Orchard.Mobile.Services {
     public interface IPushGatewayService : IDependency {
-        IList GetPushQueryResult(Int32[] ids, bool countOnly = false);
+        IList GetPushQueryResult(Int32[] ids, bool countOnly = false, int contentId = 0); 
         IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false, ContentItem advItem = null);
         void PublishedPushEventTest(ContentItem ci);
         void PublishedPushEvent(ContentItem ci);
@@ -77,8 +77,12 @@ namespace Laser.Orchard.Mobile.Services {
             lockMonitor = new object();
         }
 
-        public IList GetPushQueryResult(Int32[] ids, bool countOnly = false) {
-            return GetPushQueryResult(ids, null, true, "All", countOnly);
+        public IList GetPushQueryResult(Int32[] ids, bool countOnly = false, int contentId = 0) {
+            ContentItem contentItem = null;
+            if (contentId > 0) {
+                contentItem = _orchardServices.ContentManager.Get(contentId, VersionOptions.Latest);
+            }
+            return GetPushQueryResult(ids, null, true, "All", countOnly, contentItem);
         }
 
         public IList<IDictionary> GetContactsWithDevice(string nameFilter) {
