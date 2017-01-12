@@ -213,6 +213,7 @@
     <Compile Include="Controllers\ContactListController.cs" />
     <Compile Include="Controllers\CountPanelController.cs" />
     <Compile Include="Controllers\ExternalPushController.cs" />
+    <Compile Include="Controllers\SmsDeliveryReportController.cs" />
     <Compile Include="Controllers\TaxonomiePushController.cs" />
     <Compile Include="Controllers\TransferDeliveryReportController.cs" />
     <Compile Include="Drivers\MobileContactPartDriver.cs" />
@@ -257,6 +258,7 @@
     <Compile Include="ViewModels\PhoneNumberViewModel.cs" />
     <Compile Include="ViewModels\PushMessage.cs" />
     <Compile Include="ViewModels\PushNotificationVM.cs" />
+    <Compile Include="ViewModels\SmsDeliveryReportResultVM.cs" />
     <Compile Include="ViewModels\SmsGatewayVM.cs" />
     <Compile Include="WorkFlows\PushEditForm.cs" />
     <Compile Include="Controllers\DeviceController.cs" />

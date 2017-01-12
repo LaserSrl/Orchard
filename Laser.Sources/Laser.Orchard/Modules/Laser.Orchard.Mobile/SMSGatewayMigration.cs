@@ -65,7 +65,7 @@ namespace Laser.Orchard.Mobile {
                 .AddColumn("RecipientList", System.Data.DbType.String, col => col.Unlimited()));
 
             SchemaBuilder.AlterTable("SmsGatewayPartRecord", table => table
-                .AddColumn("ExternalId", System.Data.DbType.Int32, col => col.Nullable()));
+                .AddColumn("ExternalId", System.Data.DbType.String, col => col.WithLength(50)));
 
             return 5;
         }

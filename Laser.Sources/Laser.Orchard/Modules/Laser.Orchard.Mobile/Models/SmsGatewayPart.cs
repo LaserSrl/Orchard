@@ -24,7 +24,7 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual int SmsRecipientsNumber { get; set; }
         public virtual string PrefixForTest { get; set; }
         public virtual string RecipientList { get; set; }
-        public virtual int? ExternalId { get; set; }
+        public virtual string ExternalId { get; set; }
         public virtual bool SendToRecipientList { get; set; }
     }
 
@@ -94,7 +94,7 @@ namespace Laser.Orchard.Mobile.Models {
             set { this.Store(x => x.RecipientList, value); }
         }
 
-        public int? ExternalId {
+        public string ExternalId {
             get { return this.Retrieve(x => x.ExternalId); }
             set { this.Store(x => x.ExternalId, value); }
         }

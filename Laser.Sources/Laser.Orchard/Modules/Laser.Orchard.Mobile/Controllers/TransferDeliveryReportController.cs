@@ -89,7 +89,7 @@ namespace Laser.Orchard.Mobile.Controllers {
 
                             CommunicationDeliveryReportRecord deliveryReport = new CommunicationDeliveryReportRecord();
                             deliveryReport.CommunicationAdvertisingPartRecord_Id = messageId;
-                            deliveryReport.ExternalId = smsPart.ExternalId.ToString();
+                            deliveryReport.ExternalId = smsPart.ExternalId;
                             deliveryReport.RequestDate = Convert.ToDateTime(report.RequestDate, _cultureInfo.Value);
                             deliveryReport.SubmittedDate = Convert.ToDateTime(report.SubMittedDate, _cultureInfo.Value);
                             deliveryReport.Status = report.Stato;

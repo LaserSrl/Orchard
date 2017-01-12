@@ -25,13 +25,12 @@ namespace Laser.Orchard.Mobile.Handlers {
 
                 var smsSettingsPart = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
 
-                ((dynamic)ci).SmsGatewayPart.ExternalId = adv.SmsGateway.Id;
+                ((dynamic)ci).SmsGatewayPart.ExternalId = adv.SmsGateway.Id.ToString();
                 ((dynamic)ci).SmsGatewayPart.Message = adv.SmsGateway.Text;
 
-                // Aggiungo +39
+                // Il numero deve arrivare compreso di prefisso (es +39)
                 string listaDestinatari = "";
-                foreach (string tel in adv.SmsGateway.PhoneNumbers) {
-                    string number = "+39" + tel;
+                foreach (string number in adv.SmsGateway.PhoneNumbers) {
                     listaDestinatari += number + Environment.NewLine;
                 }
 
