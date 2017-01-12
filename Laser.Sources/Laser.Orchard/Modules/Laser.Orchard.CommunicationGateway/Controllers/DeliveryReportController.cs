@@ -22,6 +22,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         /// <param name="Language"></param>
         /// <returns></returns>
         [HttpGet]
+        [Authorize]
         public List<CommunicationDeliveryReportRecord> Get(int Id) {
             return _deliveryReportRepository.Fetch(x => x.CommunicationAdvertisingPartRecord_Id == Id).ToList();
         }
@@ -33,6 +34,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         /// <param name="Language"></param>
         /// <returns></returns>
         [HttpGet]
+        [Authorize]
         public List<CommunicationDeliveryReportRecord> GetByExternalId(string ExternalId) {
             return _deliveryReportRepository.Fetch(x => x.ExternalId == ExternalId).ToList();
         }

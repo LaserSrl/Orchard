@@ -20,6 +20,7 @@ namespace Laser.Orchard.Mobile.Controllers {
         /// </summary>
         /// <param name="Language"></param>
         /// <returns></returns>
+        [Authorize]
         public int Get() {
             return _smsServices.GetStatus();
         }

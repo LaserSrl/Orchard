@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
-using System.Web.Mvc;
 
 namespace Laser.Orchard.Mobile.Controllers {
     public class SmsDeliveryReportController : ApiController {
@@ -26,6 +25,7 @@ namespace Laser.Orchard.Mobile.Controllers {
         /// </summary>
         /// <param name="Language"></param>
         /// <returns></returns>
+        [Authorize]
         public SmsDeliveryReportResultVM Get(string ExternalId) {
             // Recupero Id spedizione tramite ExternalId
             int id = _smsGatewayRepository.Fetch(x => x.ExternalId == ExternalId).FirstOrDefault().Id;
