@@ -38,13 +38,13 @@ namespace Laser.Orchard.Mobile.Controllers {
 
         [HttpGet]
         [AdminService]
-        public JsonResult GetTotalSms(Int32[] ids, Int32? idlocalization, Int32? tot) {
+        public JsonResult GetTotalSms(Int32[] ids, int? contentId, Int32? idlocalization, Int32? tot) {
             Dictionary<string, string> Total = new Dictionary<string, string>();
             Total.Add("Key", "<i class=\"fa fa-phone\"></i>");
             if (tot.HasValue) {
                 Total.Add("Value", tot.ToString());
             } else {
-                var elenco = _smsCommunicationService.GetSmsQueryResult(ids, idlocalization, true);
+                var elenco = _smsCommunicationService.GetSmsQueryResult(ids, idlocalization, true, contentId.HasValue ? contentId.Value : 0);
                 Total.Add("Value", ((long)(((Hashtable)(elenco[0]))["Tot"])).ToString("#,##0"));
             }
             return Json(Total, JsonRequestBehavior.AllowGet);

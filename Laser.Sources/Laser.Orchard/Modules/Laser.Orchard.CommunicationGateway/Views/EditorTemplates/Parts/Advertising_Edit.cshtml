@@ -154,7 +154,7 @@
                 type: "GET",
                 url: arrUrl[idx],
                 traditional: true,
-                data:{__RequestVerificationToken:antiForgeryToken, ids:elencoIds, manualRecipients: manualValidRecipients, contentId: @Model["ContentItemId"], idlocalization:@Model["LocalizationId"] },
+                data:{ids:elencoIds, contentId: @Model["ContentItemId"], idlocalization:@Model["LocalizationId"] },
                 dataType: "json",
                 success: function (data, status, jqXHR) {
                     if(pIdRun == idRun) {
