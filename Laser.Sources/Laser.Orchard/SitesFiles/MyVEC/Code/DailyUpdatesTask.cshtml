@@ -83,17 +83,19 @@
             dynamic item = visit;
             int credentialAction = 0; //0: do nothing; 1: issue credentials; 2: revoke credentials
             if (item.ActivityPart.DateTimeStart.Date >= today) {
-                //this visit starts today
-                // Set its state to "In corso"
-                item.Visita.Statovisita.Value = "In corso";
-                _fieldIndexService.Set(
-                    item.FieldIndexPart,
-                    "Visita",
-                    "Statovisita",
-                    "",
-                    "In corso",
-                    typeof(string)
-                );
+                if (item.ActivityPart.DateTimeStart.Date == today) {
+                    //this visit starts today
+                    // Set its state to "In corso"
+                    item.Visita.Statovisita.Value = "In corso";
+                    _fieldIndexService.Set(
+                        item.FieldIndexPart,
+                        "Visita",
+                        "Statovisita",
+                        "",
+                        "In corso",
+                        typeof(string)
+                    );
+                }
                 // Issue credentials for all guests
                 credentialAction = 1;
             }
@@ -125,13 +127,16 @@
                 }
                 foreach (var siId in idsInviti) {
                     dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(siId));
-                    IUser user = ((IUser)_contentManager.Get<UserPart>((int)(scheda.CommonPart.Creator.Value)));
-                    if (credentialAction == 1) {
-                        HIDUser result = _hidAPIService.IssueCredentials(user);
-                        CheckErrors(result, scheda, user, true);
-                    } else if (credentialAction == 2) {
-                        HIDUser result = _hidAPIService.RevokeCredentials(user);
-                        CheckErrors(result, scheda, user, true);
+                    // test if the item is not a deleted one
+                    if(scheda != null) {
+                        IUser user = ((IUser)_contentManager.Get<UserPart>((int)(scheda.CommonPart.Creator.Value)));
+                        if (credentialAction == 1) {
+                            HIDUser result = _hidAPIService.IssueCredentials(user);
+                            CheckErrors(result, scheda, user, true);
+                        } else if (credentialAction == 2) {
+                            HIDUser result = _hidAPIService.RevokeCredentials(user);
+                            CheckErrors(result, scheda, user, true);
+                        }
                     }
                 }
             }
@@ -141,6 +146,7 @@
         //  Revoke credentials for past visits.
     } catch (Exception ex) {
         eMsg += ex.Message + Environment.NewLine;
+        eMsg += ex.StackTrace + Environment.NewLine;
     }
     Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
     if (string.IsNullOrWhiteSpace(eMsg)) {
