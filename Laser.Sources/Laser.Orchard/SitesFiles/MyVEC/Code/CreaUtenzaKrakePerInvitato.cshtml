@@ -69,12 +69,13 @@
         }
 
         int post = 1;
-        while (_membershipService.GetUser(uName) != null) {
-            uName = uName + post.ToString();
+        string tmpName = uName;
+        while (_membershipService.GetUser(tmpName) != null) {
+            tmpName = uName + post.ToString();
             post++;
         }
 
-        return uName;
+        return tmpName;
     }
 
     private string GeneratePassword() {
