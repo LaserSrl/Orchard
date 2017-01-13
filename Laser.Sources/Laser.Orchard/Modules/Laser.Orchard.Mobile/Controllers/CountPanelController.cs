@@ -56,8 +56,12 @@ namespace Laser.Orchard.Mobile.Controllers {
             if (tot.HasValue) {
                 Total.Add("Value", tot.ToString());
             } else {
-                var elenco = _smsCommunicationService.GetSmsQueryResult(ids, idlocalization, true, contentId.HasValue ? contentId.Value : 0);
-                Total.Add("Value", ((long)(((Hashtable)(elenco[0]))["Tot"])).ToString("#,##0"));
+                if (manualRecipients == null || manualRecipients.Length == 0) {
+                    var elenco = _smsCommunicationService.GetSmsQueryResult(ids, idlocalization, true, contentId.HasValue ? contentId.Value : 0);
+                    Total.Add("Value", ((long)(((Hashtable)(elenco[0]))["Tot"])).ToString("#,##0"));
+                } else {
+                    Total.Add("Value", manualRecipients.Length.ToString("#,##0"));
+                }
             }
             return Json(Total, JsonRequestBehavior.AllowGet);
         }

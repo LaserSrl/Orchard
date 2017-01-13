@@ -135,6 +135,20 @@
           <s:element minOccurs="0" maxOccurs="1" name="SmsLastUpdate" type="s:string" />
         </s:sequence>
       </s:complexType>
+      <s:element name="GetStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="login" type="tns:Login" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetStatusResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="SendSMSSoapIn">
@@ -155,6 +169,12 @@
   <wsdl:message name="GetSmsStateByExternalIdSoapOut">
     <wsdl:part name="parameters" element="tns:GetSmsStateByExternalIdResponse" />
   </wsdl:message>
+  <wsdl:message name="GetStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatus" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatusResponse" />
+  </wsdl:message>
   <wsdl:portType name="SmsWebServiceSoap">
     <wsdl:operation name="SendSMS">
       <wsdl:input message="tns:SendSMSSoapIn" />
@@ -167,6 +187,10 @@
     <wsdl:operation name="GetSmsStateByExternalId">
       <wsdl:input message="tns:GetSmsStateByExternalIdSoapIn" />
       <wsdl:output message="tns:GetSmsStateByExternalIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatus">
+      <wsdl:input message="tns:GetStatusSoapIn" />
+      <wsdl:output message="tns:GetStatusSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="SmsWebServiceSoap" type="tns:SmsWebServiceSoap">
@@ -198,6 +222,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetStatus">
+      <soap:operation soapAction="http://tempuri.org/GetStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="SmsWebServiceSoap12" type="tns:SmsWebServiceSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -221,6 +254,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetSmsStateByExternalId">
       <soap12:operation soapAction="http://tempuri.org/GetSmsStateByExternalId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatus">
+      <soap12:operation soapAction="http://tempuri.org/GetStatus" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

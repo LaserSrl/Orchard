@@ -59,5 +59,22 @@ namespace Laser.Orchard.Mobile {
 
             return 4;
         }
+
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("SmsGatewayPartRecord", table => table
+                .AddColumn("RecipientList", System.Data.DbType.String, col => col.Unlimited()));
+
+            SchemaBuilder.AlterTable("SmsGatewayPartRecord", table => table
+                .AddColumn("ExternalId", System.Data.DbType.String, col => col.WithLength(50)));
+
+            return 5;
+        }
+
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("SmsGatewayPartRecord", table => table
+                .AddColumn("SendToRecipientList", System.Data.DbType.Boolean, col => col.WithDefault(false)));
+
+            return 6;
+        }
     }
 }

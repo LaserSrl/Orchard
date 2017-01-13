@@ -309,5 +309,21 @@ namespace Laser.Orchard.CommunicationGateway {
             return 22;
         }
 
+        public int UpdateFrom22() {
+            SchemaBuilder.CreateTable("CommunicationDeliveryReportRecord",
+            table => table
+                .Column<int>("CommunicationAdvertisingPartRecord_Id", column => column.WithDefault(0))
+                .Column<string>("ExternalId", column => column.WithLength(50))
+                .Column<DateTime>("RequestDate", column => column.Nullable())
+                .Column<DateTime>("SubmittedDate", column => column.Nullable())
+                .Column<string>("Status", col => col.WithLength(50))
+                .Column<string>("Recipient", column => column.Unlimited())
+                .Column<string>("Context", column => column.WithLength(100))
+                .Column<string>("Medium", column => column.WithLength(50))
+             );
+
+            return 23;
+        }
+
     }
 }
