@@ -11,6 +11,7 @@
 
 @functions{
     string retString = "Error"; //possile outcomes: OK, Error
+    string eMsg = String.Empty;
 
     //services
     IUserService _userService;
@@ -133,7 +134,6 @@
                 );
             }
             else {
-                string eMsg = String.Empty;
                 if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
                     eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
                 }
@@ -157,12 +157,16 @@
         if (item.SchedaInvito.Visita.Ids.Length > 0) {
             var idVisita = item.SchedaInvito.Visita.Ids[0];
             var relatedVisita = _contentManager.Get(idVisita);
-            item.ActivityPart.DateTimeStart = relatedVisita.ActivityPart.DateTimeStart;
-            item.ActivityPart.DateTimeEnd = relatedVisita.ActivityPart.DateTimeEnd;
-            item.ActivityPart.AllDay = relatedVisita.ActivityPart.AllDay;
+            // check necessario il fase di creazione contestuale della visita e degli inviti
+            if (relatedVisita != null) {
+                item.ActivityPart.DateTimeStart = relatedVisita.ActivityPart.DateTimeStart;
+                item.ActivityPart.DateTimeEnd = relatedVisita.ActivityPart.DateTimeEnd;
+                item.ActivityPart.AllDay = relatedVisita.ActivityPart.AllDay;
+            }
         }
         retString = "OK";
-    } catch (Exception) {
-        retString = "Error";
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
     }
 }@retString
