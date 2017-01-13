@@ -32,7 +32,7 @@ namespace Laser.Orchard.HID.Activities {
         }
 
         public override string Name {
-            get { return "Create HID User"; }
+            get { return "CreateHIDUser"; }
         }
 
         public override LocalizedString Description {
