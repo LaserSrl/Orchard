@@ -36,7 +36,7 @@
             //************************
             //update VisiteEffettuate
             var cpf = contact.CommunicationContact.VisiteEffettuate;
-            if (item.SchedaInvito.Hapartecipato.Value) {
+            if (item.SchedaInvito.Hapartecipato.Value ?? false) {
                 //add the Visita to the ContentPickerField in the CommunicationContact
                 if (!((int [])cpf.Ids).Any(id => id == idVisita)) {
                     //only add if the Visita is not there already
