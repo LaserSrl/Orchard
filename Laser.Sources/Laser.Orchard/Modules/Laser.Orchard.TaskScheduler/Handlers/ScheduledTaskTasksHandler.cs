@@ -15,7 +15,7 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.TaskScheduler.Handlers {
-     [UsedImplicitly]
+    [UsedImplicitly]
     public class ScheduledTaskTasksHandler : IScheduledTaskHandler {
 
         private readonly IOrchardServices _orchardServices;
@@ -39,7 +39,7 @@ namespace Laser.Orchard.TaskScheduler.Handlers {
         }
 
         public void Process(ScheduledTaskContext context) {
-            
+
             string taskTypeStr = context.Task.TaskType;
             if (taskTypeStr.IndexOf(Constants.TaskTypeBase) == 0) {
                 try {
@@ -49,7 +49,8 @@ namespace Laser.Orchard.TaskScheduler.Handlers {
                     ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.Get<ScheduledTaskPart>(pid);
                     if (part == null) {
                         Logger.Error("Laser.TaskScheduler was unable to identify and process the task of type " + taskTypeStr);
-                    } else {
+                    }
+                    else {
                         //Trigger the event
                         //get the signal name for from the part to track edits that may have been done.
                         _workflowManager.TriggerEvent(
@@ -70,19 +71,16 @@ namespace Laser.Orchard.TaskScheduler.Handlers {
                             DateTime scheduleTime = _scheduledTaskService.ComputeNextScheduledTime(part);
                             _taskManager.CreateTask(newTaskTypeStr, scheduleTime, ci);
                             part.RunningTaskId = _repoTasks.Get(str => str.TaskType.Equals(newTaskTypeStr)).Id;
-                        } else {
+                        }
+                        else {
                             part.RunningTaskId = 0;
                         }
                     }
-     else {
-                        part.RunningTaskId = 0;
-                    }                
-} catch (Exception ex) {
-                    Logger.Error(ex, "ScheduledTaskTasksHandler -> Error on " + taskTypeStr + " id= " + context.Task.ContentItem + ex.Message);
-               
+
                 }
                 catch (Exception ex) {
                     Logger.Error(ex, "ScheduledTaskTasksHandler -> Error on " + taskTypeStr + " id= " + context.Task.ContentItem + ex.Message);
+
                 }
             }
         }
