@@ -65,7 +65,7 @@ namespace Laser.Orchard.Mobile.Handlers {
                 } 
                 else {
                     //var listaNumeri = _smsCommunicationService.GetSmsNumbersQueryResult(ids, idLocalization);
-                    listaDestinatari = _smsCommunicationService.GetSmsQueryResult(ids, idLocalization);
+                    listaDestinatari = _smsCommunicationService.GetSmsQueryResult(ids, idLocalization, false, context.Task.ContentItem);
                 }
 
                 if (listaDestinatari.Count > 0) {
