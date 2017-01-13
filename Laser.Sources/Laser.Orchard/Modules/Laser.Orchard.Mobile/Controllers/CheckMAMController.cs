@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.Mobile.Services;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,9 @@ using System.Web;
 using System.Web.Http;
 
 namespace Laser.Orchard.Mobile.Controllers {
+
+    [Authorize]
+    [WebApiKeyFilter(true)]
     public class CheckMAMController : ApiController {
 
         private readonly ISmsServices _smsServices;
@@ -20,7 +24,6 @@ namespace Laser.Orchard.Mobile.Controllers {
         /// </summary>
         /// <param name="Language"></param>
         /// <returns></returns>
-        [Authorize]
         public int Get() {
             return _smsServices.GetStatus();
         }

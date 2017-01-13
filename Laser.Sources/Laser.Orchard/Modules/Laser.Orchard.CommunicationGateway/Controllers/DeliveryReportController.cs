@@ -1,5 +1,8 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard.Data;
+using Orchard.Localization;
+using Orchard.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +10,9 @@ using System.Web;
 using System.Web.Http;
 
 namespace Laser.Orchard.CommunicationGateway.Controllers {
+
+    [Authorize]
+    [WebApiKeyFilter(true)]
     public class DeliveryReportController : ApiController {
 
         private readonly IRepository<CommunicationDeliveryReportRecord> _deliveryReportRepository;
@@ -22,7 +28,6 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         /// <param name="Language"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
         public List<CommunicationDeliveryReportRecord> Get(int Id) {
             return _deliveryReportRepository.Fetch(x => x.CommunicationAdvertisingPartRecord_Id == Id).ToList();
         }
@@ -34,7 +39,6 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         /// <param name="Language"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
         public List<CommunicationDeliveryReportRecord> GetByExternalId(string ExternalId) {
             return _deliveryReportRepository.Fetch(x => x.ExternalId == ExternalId).ToList();
         }

@@ -1,9 +1,11 @@
 ﻿using Laser.Orchard.CommunicationGateway.Events;
 using Laser.Orchard.CommunicationGateway.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Events;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.PublishLater.Models;
 using Orchard.PublishLater.Services;
 using System;
@@ -14,13 +16,17 @@ using System.Web.Http;
 
 namespace Laser.Orchard.CommunicationGateway.Controllers {
 
+    [Authorize]
+    [WebApiKeyFilter(true)]
     public class AdvertisingExternalController : ApiController {
 
         private readonly IContentManager _contentManager;
         private readonly ICommunicationEventHandler _communicationEventHandlers;
         private readonly IPublishLaterService _publishLaterService;
         private readonly IOrchardServices _orchardServices;
+
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public AdvertisingExternalController(IContentManager contentManager, 
                                               ICommunicationEventHandler communicationEventHandlers,
@@ -29,7 +35,9 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             _communicationEventHandlers = communicationEventHandlers;
             _publishLaterService = publishLaterService;
             _orchardServices = orchardServices;
+
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public void Get() { }
@@ -48,7 +56,6 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         ///    "DatePublish": "2016-12-23T13:00:00Z"
         ///  }
         ///}
-        [Authorize]
         public AdvertisingCommunicationAPIResult Post(AdvertisingCommunication adv) {
 
             int communicationAdvertising_Id = -1;
@@ -85,15 +92,16 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                         }
 
                         communicationAdvertising_Id = content.Id;
-                        infoAdvertising = "Create Advertising Id: " + content.Id + " - Title: " + adv.Advertising.Title;
+                        infoAdvertising =T("Create Advertising Id: {0} - Title: {1}",content.Id,adv.Advertising.Title).ToString();
                     } 
                     else {
-                        infoAdvertising = "User couldn't create Advertising";
+                        infoAdvertising = T("User couldn't create Advertising").ToString();
                     }
                 }
             } 
             catch (Exception ex) {
                 errorString = ex.Message;
+                Logger.Error(T("Creating CommunicationAdvertising failed: {0}", ex.Message).Text);
             }
 
             return new AdvertisingCommunicationAPIResult { Id = communicationAdvertising_Id, Error = errorString, Information = infoAdvertising };

@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.Mobile.Services;
 using Laser.Orchard.Mobile.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard.Data;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,9 @@ using System.Web;
 using System.Web.Http;
 
 namespace Laser.Orchard.Mobile.Controllers {
+
+    [Authorize]
+    [WebApiKeyFilter(true)]
     public class SmsDeliveryReportController : ApiController {
 
         private readonly ISmsServices _smsServices;
@@ -25,7 +29,6 @@ namespace Laser.Orchard.Mobile.Controllers {
         /// </summary>
         /// <param name="Language"></param>
         /// <returns></returns>
-        [Authorize]
         public SmsDeliveryReportResultVM Get(string ExternalId) {
             // Recupero Id spedizione tramite ExternalId
             int id = _smsGatewayRepository.Fetch(x => x.ExternalId == ExternalId).FirstOrDefault().Id;
