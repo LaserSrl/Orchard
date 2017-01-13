@@ -13,9 +13,11 @@
     ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
     IFieldIndexService _fieldIndexService;
     IContentManager _contentManager;
+    Orchard.Workflows.Models.WorkflowContext wfCtx = null;
 }
 @{
     try {
+        wfCtx = Model.Tokens["Workflow"];
         //resolve services
         _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
@@ -29,6 +31,10 @@
             //var guest = _contentManager.Get((int)(item.CommonPart.Creator.Value));
             //find the contact
             dynamic contact = _communicationService.GetContactFromUser((int)(item.CommonPart.Creator.Value)).ContentItem;
+            // Get contact by his email because ShedaInvito can be created by a back-end user, so its creator isn't the guest it refers to
+            //dynamic contact = _communicationService.GetContactsFromMail(item.SchedaInvito.Email.Value)[0];
+            //************************
+            //update VisiteEffettuate
             var cpf = contact.CommunicationContact.VisiteEffettuate;
             if (item.SchedaInvito.Hapartecipato.Value) {
                 //add the Visita to the ContentPickerField in the CommunicationContact
@@ -53,9 +59,29 @@
                 allIds,
                 typeof(string)
             );
+            //************************
+            //update InvitiVisita
+            var cpfInviti = contact.CommunicationContact.InvitiVisita;
+            //add the Visita to the ContentPickerField in the CommunicationContact
+            if (!((int[])cpfInviti.Ids).Any(id => id == idVisita)) {
+                //only add if the Visita is not there already
+                var idList = ((int[])cpfInviti.Ids).ToList();
+                idList.Add(idVisita);
+                cpfInviti.Ids = idList.ToArray();
+            }
+            //update field record for the ContentPickerField
+            string allIdsInviti = String.Join(",", ((int[])cpfInviti.Ids).Select<int, string>(id => "{" + id.ToString() + "}"));
+            _fieldIndexService.Set(
+                contact.FieldIndexPart,
+                "CommunicationContact",
+                "InvitiVisita",
+                "",
+                allIdsInviti,
+                typeof(string)
+            );
             retString = "OK";
         }
     } catch (Exception ex) {
-        retString += ex.Message;
+        wfCtx.SetState("ErrorMessage", ex.Message);
     }
 }@retString

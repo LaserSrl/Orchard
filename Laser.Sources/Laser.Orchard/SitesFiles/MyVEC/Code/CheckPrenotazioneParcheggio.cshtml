@@ -1,0 +1,27 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Data;
+@using System.Linq;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","H48","H24","OutOfDate"
+}
+@{
+    try {
+        dynamic invito = Model.ContentItem;
+        DateTime dtVisita = invito.SchedaInvito.Visita.ContentItems[0].ActivityPart.DateTimeStart.Date;
+        DateTime today = DateTime.Today;
+        if (today < dtVisita.AddDays(-2)) {
+            retString = "H48";
+        }
+        else if (today < dtVisita.AddDays(-1)) {
+            retString = "H24";
+        }
+        else {
+            retString = "OutOfDate";
+        }
+    }
+    catch { //nasconde all'utente eventuali errori e restituisce Error
+    }
+}
+@retString

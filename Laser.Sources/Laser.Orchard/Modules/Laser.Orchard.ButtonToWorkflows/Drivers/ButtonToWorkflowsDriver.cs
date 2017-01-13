@@ -68,9 +68,12 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                             //   settings.ButtonNumber = settings.ButtonNumber[0].Split(',');
                             ButtonToWorkflowsSettingsPart settingmodulo = _orchardServices.WorkContext.CurrentSite.As<ButtonToWorkflowsSettingsPart>();
                             string[] elencoButtonsMessage = settingmodulo.ButtonsMessage.Split('£');
+                            string[] elencoButtonsActionAsync = settingmodulo.ButtonsAsync.Split('£');
                             part.ActionToExecute = model.ButtonAction + "_btn" + (model.ButtonNumber + 1).ToString();
                             //   _workflowManager.TriggerEvent(model.ButtonAction+"_btn"+(model.ButtonNumber+1).ToString(), content, () => new Dictionary<string, object> { { "Content", content } });
                             part.MessageToWrite = elencoButtonsMessage[model.ButtonNumber].ToString();
+                           string valAsync= string.IsNullOrEmpty(elencoButtonsActionAsync[model.ButtonNumber]) ? "" : elencoButtonsActionAsync[model.ButtonNumber].ToLower();
+                            part.ActionAsync = valAsync.Equals("true");
                             //try {
                             //      _notifier.Add(NotifyType.Information, T(elencoButtonsMessage[Convert.ToInt16(settings.ButtonNumber)]));
                             //  }

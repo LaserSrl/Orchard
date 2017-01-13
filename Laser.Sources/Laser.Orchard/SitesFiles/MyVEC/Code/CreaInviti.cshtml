@@ -116,6 +116,9 @@
                     }
                     invito.TitlePart.Title += " - " + visita.TitlePart.Title;
                     Model.OrchardServices.ContentManager.Publish(invito);
+                    // attiva il workflow di update dell'invito per creare le utenze necessarie
+                    Func<Dictionary<string, object>> tokensUpd = () => new Dictionary<string, object> { { "Content", invito }, { Orchard.Workflows.Activities.SignalActivity.SignalEventName, "UpdateInvito" } };
+                    wfManager.TriggerEvent(Orchard.Workflows.Activities.SignalActivity.SignalEventName, invito, tokensUpd);
                     // attiva il workflow di notfica invito
                     Func<Dictionary<string, object>> tokens = () => new Dictionary<string, object> { { "Content", invito }, { Orchard.Workflows.Activities.SignalActivity.SignalEventName, "NotificaInvito" } };
                     wfManager.TriggerEvent(Orchard.Workflows.Activities.SignalActivity.SignalEventName, invito, tokens);

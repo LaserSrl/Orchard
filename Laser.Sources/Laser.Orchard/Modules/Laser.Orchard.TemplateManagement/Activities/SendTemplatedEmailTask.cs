@@ -71,14 +71,17 @@ namespace Laser.Orchard.TemplateManagement.Activities {
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
             string recipient = activityContext.GetState<string>("Recipient");
+            string recipientCC = activityContext.GetState<string>("RecipientCC");
 
             var properties = new Dictionary<string, string> {
                 {"Body", activityContext.GetState<string>("Body")}, 
                 {"Subject", activityContext.GetState<string>("Subject")},
                 {"RecipientOther",activityContext.GetState<string>("RecipientOther")},
+                {"RecipientCC",activityContext.GetState<string>("RecipientCC")},
                 {"EmailTemplate",activityContext.GetState<string>("EmailTemplate")}
             };
             List<string> sendTo = new List<string>();
+            List<string> sendCC = new List<string>();
             var templateId = 0;
             int.TryParse(properties["EmailTemplate"], out templateId);
             var contentVersion = workflowContext.Content.ContentItem.Version;
@@ -98,16 +101,14 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                     }
                     sendTo.AddRange(SplitEmail(owner.As<IUser>().Email));
                 }
-            }
-            else if (recipient == "author") {
+            } else if (recipient == "author") {
                 var user = _orchardServices.WorkContext.CurrentUser;
 
                 // can be null if user is anonymous
                 if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
                     sendTo.AddRange(SplitEmail(user.Email));
                 }
-            }
-            else if (recipient == "admin") {
+            } else if (recipient == "admin") {
                 var username = _orchardServices.WorkContext.CurrentSite.SuperUser;
                 var user = _membershipService.GetUser(username);
 
@@ -115,11 +116,14 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                 if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
                     sendTo.AddRange(SplitEmail(user.As<IUser>().Email));
                 }
-            }
-            else if (recipient == "other") {
+            } else if (recipient == "other") {
                 sendTo.AddRange(SplitEmail(activityContext.GetState<string>("RecipientOther")));
             }
-            if (SendEmail(contentModel, templateId, sendTo, null))
+            if (!String.IsNullOrWhiteSpace(recipientCC)) {
+                sendCC.AddRange(SplitEmail(recipientCC));
+            }
+            if (SendEmail(contentModel, templateId, sendTo, sendCC, null))
+
                 yield return T("Sent");
             else
                 yield return T("Not Sent");
@@ -130,7 +134,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             return commaSeparated.Split(new[] { ',', ';' });
         }
 
-        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc) {
+        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> cc, IEnumerable<string> bcc) {
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = _templateServices.GetTemplate(templateId);
             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
@@ -165,6 +169,9 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             data.Add("Subject", template.Subject);
             data.Add("Body", body);
             data.Add("Recipients", String.Join(",", recipient));
+            if (cc != null) {
+                data.Add("CC", String.Join(",", cc));
+            }
             if (bcc != null) {
                 data.Add("Bcc", String.Join(",", bcc));
             }

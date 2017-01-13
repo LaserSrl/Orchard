@@ -6,11 +6,12 @@
 @using Orchard.Data;
 @using System.Linq;
 @functions{
+    IFieldIndexService _fieldIndexService;
     Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
     IRepository<Laser.Orchard.Questionnaires.Models.UserAnswersRecord> _repoAswers;
     string retString = "Error"; //possible outcomes: "Error","Ok"
     dynamic visita = null;
-    dynamic invito = null;
+    dynamic invitoDiRiferimento = null;
     dynamic usr = null;
     DateTime dtUltimaVisita = DateTime.MinValue;
     string questionnaireContext = "";
@@ -23,6 +24,7 @@
         int usrId = usr.Id;
         int questionnaireId = Model.ContentItem.Id;
         string mail = usr.Email;
+        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         _repoAswers = Model.OrchardServices.WorkContext.Resolve<IRepository<Laser.Orchard.Questionnaires.Models.UserAnswersRecord>>();
         var qryInviti = _fieldIndexPartRecord.Table
@@ -30,17 +32,27 @@
             .Select(x => x.ContentItemRecord.Id);
         var ids = qryInviti.ToList();
         foreach(var idInvito in ids){
-            invito = ((dynamic)Model.OrchardServices.ContentManager.Get(idInvito));
+            dynamic invito = ((dynamic)Model.OrchardServices.ContentManager.Get(idInvito));
             // se l'invito non è stato eliminato esamino la relativa visita
             if(invito != null) {
                 visita = ((dynamic)Model.OrchardServices.ContentManager.Get(invito.SchedaInvito.Visita.Ids[0]));
                 if(visita.ActivityPart.DateTimeStart > dtUltimaVisita) {
                     dtUltimaVisita = visita.ActivityPart.DateTimeStart;
                     questionnaireContext = visita.TitlePart.Title;
+                    invitoDiRiferimento = invito;
                 }
             }
         }
-        if(string.IsNullOrWhiteSpace(questionnaireContext) == false) {
+        invitoDiRiferimento.SchedaInvito.QuestionarioCompilato.Value = "Done";
+        _fieldIndexService.Set(
+            invitoDiRiferimento,
+            "SchedaInvito",
+            "QuestionarioCompilato",
+            "",
+            "Done",
+            typeof(string)
+        );
+        if (string.IsNullOrWhiteSpace(questionnaireContext) == false) {
             string sessionId = System.Web.HttpContext.Current.Session.SessionID;
             var answers = _repoAswers.Table.Where(x => x.User_Id == usrId
                 && x.QuestionnairePartRecord_Id == questionnaireId

@@ -1,14 +1,52 @@
 ﻿@model Laser.Orchard.Mobile.ViewModels.MobilePushVM
 @{
     Script.Require("jQuery");
-    Script.Require("jQueryUI_Autocomplete");
-    Style.Require("jQuery_Autocomplete");
+    Script.Require("jQueryUI");
+    //Script.Require("jQueryUI_Autocomplete");
+    //Style.Require("jQuery_Autocomplete");
     Script.Require("rcswitcher").AtHead();
     Style.Require("rcswitcher").AtHead();
     bool disabledElements = Model.PushSent;
 }
 @using (Script.Foot()) {
     <script type="text/javascript">
+        $(document).ready(function () {
+            var aft = $("input[name=__RequestVerificationToken]:first").val();
+            $("#contact-to-push").change(function () {
+                var a = 2;
+            });
+            $("#contact-to-push").autocomplete({
+                open: function(event, ui) { disable=true },
+                close: function(event, ui) {
+                    disable=false; $(this).focus();
+                },
+                messages: {
+                    noResults: "@T("No search results.")",
+                    results: function (amount) {
+                        return amount + " @T("result(s)")";
+                }
+                },
+                source: function (request, response) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Model.SiteUrl/Laser.Orchard.Mobile/ContactList/Search",
+                    data: { term: request.term, __RequestVerificationToken: aft },
+                    success: function (dataAutocomplete) {
+                        response(dataAutocomplete);
+                    }
+                });
+            },
+                select: function (event, ui) {
+                    this.value = ui.item.value;
+                },
+                minLength: 3
+            });
+
+            $('#@Html.FieldIdFor(m => m.RecipientList)').focusout(function () {
+                updateSummary();
+            });
+        });
+
         $(function () {
             $('.rcswitcher-checkbox-push').rcSwitcher({
                 theme: 'flat',
@@ -82,37 +120,7 @@
             });
         });
     </script>
-}
-@using (Script.Foot()) {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var aft = $("input[name=__RequestVerificationToken]:first").val();
-            $("#contact-to-push").autocomplete({
-                messages: {
-                    noResults: "@T("No search results.")",
-                    results: function (amount) {
-                        return amount + " @T("result(s)")";
-                    }
-                },
-                source: function (request, response) {
-                    $.ajax({
-                        type: 'POST',
-                        url: "@Model.SiteUrl/Laser.Orchard.Mobile/ContactList/Search",
-                        data: { term: request.term, __RequestVerificationToken: aft },
-                        success: function (data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function (event, ui) {
-                    this.value = ui.item.value;
-                },
-                minLength: 3
-            });
 
-
-        });
-    </script>
 }
 <div id="mobile-comm-container" class="comm-tabbed">
 
@@ -190,13 +198,4 @@
     <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalPush", "CountPanel", new { area = "Laser.Orchard.Mobile", tot = Model.TargetDeviceNumber })|@Html.FieldIdFor(m => m.UseRecipientList)|@Html.FieldIdFor(m => m.RecipientList)"/>
 } else {
     <input type="text" style="display:none" name="CountUrl" value="@Url.Action("GetTotalPush", "CountPanel", new { area = "Laser.Orchard.Mobile" })|@Html.FieldIdFor(m => m.UseRecipientList)|@Html.FieldIdFor(m => m.RecipientList)"/>
-}
-@using (Script.Foot()) {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#@Html.FieldIdFor(m => m.RecipientList)').focusout(function () {
-                updateSummary();
-            });
-        });
-    </script>
 }
