@@ -46,7 +46,7 @@ namespace Laser.Orchard.Queries.Drivers {
                 OneShotQueries = oneShotList
             };
             if (updater != null && updater.TryUpdateModel(model, Prefix, null, null)) {
-                if (HttpContext.Current.Request.Form[Prefix + "_SelectedIds"] == null) {
+                if (HttpContext.Current.Request.Form[Prefix + ".SelectedIds"] == null) {
                     part.Ids = new int[] {};
                 } else {
                     part.Ids = model.SelectedIds;
