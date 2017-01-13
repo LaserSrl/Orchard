@@ -34,7 +34,7 @@ using System.Xml.Linq;
 
 namespace Laser.Orchard.Mobile.Services {
     public interface IPushGatewayService : IDependency {
-        IList GetPushQueryResult(Int32[] ids, bool countOnly = false, int contentId = 0); 
+        IList GetPushQueryResult(Int32[] ids, bool countOnly = false, int contentId = 0);
         IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false, ContentItem advItem = null);
         IList GetPushQueryResultByUserNames(string[] userNames, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly);
         void PublishedPushEventTest(ContentItem ci);
@@ -63,6 +63,8 @@ namespace Laser.Orchard.Mobile.Services {
         private object lockMonitor;
         private const int MAX_PUSH_TEXT_LENGTH = 160;
 
+        private ContentItem senderContentItemContainer;
+
         public PushGatewayService(IPushNotificationService pushNotificationService, IQueryPickerService queryPickerServices, IOrchardServices orchardServices, ISessionLocator sessionLocator, IMylogService myLog, IRepository<SentRecord> sentRepository, IRepository<PushNotificationRecord> pushNotificationRepository, INotifier notifier, ICommunicationService communicationService, ITokenizer tokenizer, ShellSettings shellSetting) {
             _pushNotificationService = pushNotificationService;
             _queryPickerServices = queryPickerServices;
@@ -83,7 +85,7 @@ namespace Laser.Orchard.Mobile.Services {
             ContentItem contentItem = null;
             if (contentId > 0) {
                 contentItem = _orchardServices.ContentManager.Get(contentId, VersionOptions.Latest);
-        }
+            }
             return GetPushQueryResult(ids, null, true, "All", countOnly, contentItem);
         }
 
@@ -117,10 +119,11 @@ namespace Laser.Orchard.Mobile.Services {
                 Dictionary<string, object> tokens = new Dictionary<string, object>();
                 if (advItem != null) {
                     tokens.Add("Content", advItem);
+                } else if (senderContentItemContainer != null) {
+                    tokens.Add("Content", senderContentItemContainer);
                 }
                 query = IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(ids, tokens, new string[] { "CommunicationContact" }));
-            }
-            else {
+            } else {
                 query = IntegrateAdditionalConditions(null);
             }
 
@@ -504,6 +507,7 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         public void PublishedPushEvent(ContentItem ci) {
+            senderContentItemContainer = ci;
             bool SendPushToSpecificDevices;
             try {
                 _myLog.WriteLog("Iniziato invio Push del content " + ci.Id);
@@ -588,7 +592,7 @@ namespace Laser.Orchard.Mobile.Services {
                         } else {
                             var listDevices = GetListMobileDeviceByUserNames(mpp.RecipientList.Split(new string[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries));
                             var pushMessage = GeneratePushMessage(mpp, idContent, idContentRelated);
-                            PushAndroid(listDevices.Where(x=>x.Device== TipoDispositivo.Android).ToList(),
+                            PushAndroid(listDevices.Where(x => x.Device == TipoDispositivo.Android).ToList(),
                                 produzione,
                                 pushMessage);
                             PushApple(listDevices.Where(x => x.Device == TipoDispositivo.Apple).ToList(),
