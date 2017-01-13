@@ -102,6 +102,10 @@ namespace Laser.Orchard.Mobile.Drivers {
             if (!part.HaveAlias)
                 part.Alias = null;
 
+            // reset Recipient List
+            if (!part.SendToRecipientList)
+                part.RecipientList = null;
+
             return Editor(part, shapeHelper);
         }
     }

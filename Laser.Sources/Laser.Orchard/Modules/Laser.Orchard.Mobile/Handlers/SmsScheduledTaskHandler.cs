@@ -10,6 +10,7 @@ using Laser.Orchard.Mobile.Services;
 using Laser.Orchard.Mobile.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Logging;
+using System.Collections;
 
 namespace Laser.Orchard.Mobile.Handlers {
 
@@ -49,8 +50,23 @@ namespace Laser.Orchard.Mobile.Handlers {
                     idLocalization = localizedPart.Culture.Id;
                 }
 
-                //var listaNumeri = _smsCommunicationService.GetSmsNumbersQueryResult(ids, idLocalization);
-                var listaDestinatari = _smsCommunicationService.GetSmsQueryResult(ids, idLocalization, false, context.Task.ContentItem);
+                IList listaDestinatari = new List<Hashtable>();
+
+                if (part.RecipientList != null && part.RecipientList != "") {
+
+                    string[] lstDest = part.RecipientList.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (string tel in lstDest) {
+                        Hashtable hs = new Hashtable();
+                        hs.Add("SmsContactNumber", tel);
+
+                        listaDestinatari.Add(hs);
+                    }
+                } 
+                else {
+                    //var listaNumeri = _smsCommunicationService.GetSmsNumbersQueryResult(ids, idLocalization);
+                    listaDestinatari = _smsCommunicationService.GetSmsQueryResult(ids, idLocalization, false, context.Task.ContentItem);
+                }
 
                 if (listaDestinatari.Count > 0) {
                     string linktosend = "";
