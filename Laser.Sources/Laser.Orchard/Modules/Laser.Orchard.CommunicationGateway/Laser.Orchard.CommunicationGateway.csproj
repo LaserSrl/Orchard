@@ -249,6 +249,10 @@
     <Content Include="Views\Parts\FavoriteCulturePart-CommunicationContact-AdminFilter.cshtml" />
     <Content Include="Views\Fields\InputField-CommunicationContact-AdminFilter.cshtml" />
     <Content Include="Views\MessageCommunicationWrapper.cshtml" />
+    <Content Include="Views\Fields\Link-CommunicationAdvertising-CommunicationAdvertisingPart-UrlLinked.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Fields\ContentPicker-CommunicationAdvertising-CommunicationAdvertisingPart-ContentLinked.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
