@@ -31,17 +31,20 @@
     <div class="col-xs-12 col-sm-8 col-index">
 	        <h3>@T("Account Information")</h3>
         <b>@T("Enter username and password")</b><br>
-        @if (userCanRegister) {@Html.ActionLink(T("Register").Text, "Register", new { ReturnUrl = Request.QueryString["ReturnUrl"] }) @T(" if you don't have an account.")<br>}
-        @if (enableLostPassword) { @Html.ActionLink(T("Lost your Password?").Text, "RequestLostPassword", null, null, new { @class = "links" }) }
-        @using (Html.BeginFormAntiForgeryPost(
+           @using (Html.BeginFormAntiForgeryPost(
 		Url.Action("LogOn", new { ReturnUrl = Request.QueryString["ReturnUrl"], @class = "login-form" }))) {
             @Html.TextBox("userNameOrEmail", "", new { id = "form-username", autofocus = "autofocus", placeholder = "Username...", @class = "input-text form-control" })
             <div class="space-20"></div>
             @Html.Password("password", "", new { id = "form-password", autofocus = "autofocus", placeholder = "Password...", @class = "input-text form-control" })
-            <div class="space-20"></div>
+           if (enableLostPassword) { @Html.ActionLink(T("Lost your Password?").Text, "RequestLostPassword", null, null, new { @class = "links" }) }
+
+                 <div class="space-20"></div>
             @T("Remember Me")<div class="padding-right-5"></div> @Html.CheckBox("rememberMe", new { id = "remember-me" })
             <div class="space-20"></div>
+          
             <input type="submit" class="submit" value="@T("Sign In")">
-        }
+        }<br />
+             @if (userCanRegister) {@Html.ActionLink(T("Register").Text, "Register", new { ReturnUrl = Request.QueryString["ReturnUrl"] }) @T(" if you don't have an account.")<br>}
+            
     </div>
 </div>
