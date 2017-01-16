@@ -19,15 +19,11 @@ namespace Laser.Orchard.Mobile.Controllers {
     public class TransferDeliveryReportController : Controller {
         private readonly IContentManager _contentManager;
         private readonly IRepository<CommunicationDeliveryReportRecord> _deliveryReportRepository;
-        private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly Lazy<CultureInfo> _cultureInfo;
 
-        public TransferDeliveryReportController(IContentManager contentManager, IRepository<CommunicationDeliveryReportRecord> deliveryReportRepository, IWorkContextAccessor workContextAccessor) {
+        public TransferDeliveryReportController(IContentManager contentManager, IRepository<CommunicationDeliveryReportRecord> deliveryReportRepository) {
             Log = NullLogger.Instance;
             _contentManager = contentManager;
             _deliveryReportRepository = deliveryReportRepository;
-            _workContextAccessor = workContextAccessor;
-            _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(_workContextAccessor.GetContext().CurrentSite.SiteCulture));
         }
 
 
@@ -90,8 +86,8 @@ namespace Laser.Orchard.Mobile.Controllers {
                             CommunicationDeliveryReportRecord deliveryReport = new CommunicationDeliveryReportRecord();
                             deliveryReport.CommunicationAdvertisingPartRecord_Id = messageId;
                             deliveryReport.ExternalId = smsPart.ExternalId;
-                            deliveryReport.RequestDate = Convert.ToDateTime(report.RequestDate, _cultureInfo.Value);
-                            deliveryReport.SubmittedDate = Convert.ToDateTime(report.SubMittedDate, _cultureInfo.Value);
+                            deliveryReport.RequestDate = Convert.ToDateTime(report.RequestDate, new CultureInfo("it-IT"));
+                            deliveryReport.SubmittedDate = Convert.ToDateTime(report.SubMittedDate, new CultureInfo("it-IT"));
                             deliveryReport.Status = report.Stato;
                             deliveryReport.Recipient = report.To;
                             deliveryReport.Context = report.DriverId;

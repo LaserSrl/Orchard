@@ -36,22 +36,18 @@ namespace Laser.Orchard.Mobile.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
         private readonly ITokenizer _tokenizer;
-        private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly Lazy<CultureInfo> _cultureInfo;
 
         public const int MSG_MAX_CHAR_NUMBER_SINGOLO = 160;
         public const int MSG_MAX_CHAR_NUMBER_CONCATENATI = 1530;
 
         private const string PREFISSO_PLACE_HOLDER = "[PH_";
 
-        public SmsServices(IOrchardServices orchardServices, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, ITokenizer tokenizer, IWorkContextAccessor workContextAccessor)
+        public SmsServices(IOrchardServices orchardServices, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, ITokenizer tokenizer)
         {
             _repositoryCommunicationSmsRecord = repositoryCommunicationSmsRecord;
             _orchardServices = orchardServices;
             _tokenizer = tokenizer;
             Logger = NullLogger.Instance;
-            _workContextAccessor = workContextAccessor;
-            _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(_workContextAccessor.GetContext().CurrentSite.SiteCulture));
         }
 
         public ILogger Logger { get; set; }
@@ -400,8 +396,8 @@ namespace Laser.Orchard.Mobile.Services {
                     SmsDeliveryReportDetails detail = new SmsDeliveryReportDetails();
 
                     detail.Recipient = report.SmsNumber.ToString();
-                    detail.SubmittedDate = Convert.ToDateTime(report.SmsLastUpdate, _cultureInfo.Value);
-                    detail.RequestDate = Convert.ToDateTime(report.SmsSentDate, _cultureInfo.Value);
+                    detail.SubmittedDate = Convert.ToDateTime(report.SmsLastUpdate, new CultureInfo("it-IT"));
+                    detail.RequestDate = Convert.ToDateTime(report.SmsSentDate, new CultureInfo("it-IT"));
                     detail.Status = report.SmsState;
 
                     listDetails.Add(detail);
