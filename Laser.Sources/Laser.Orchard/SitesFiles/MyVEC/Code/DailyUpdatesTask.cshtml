@@ -80,6 +80,7 @@
         );
         var visits = query.List();
         foreach (var visit in visits) {
+            //  Update the status of ContentItems of Type Visita.
             dynamic item = visit;
             int credentialAction = 0; //0: do nothing; 1: issue credentials; 2: revoke credentials
             if (item.ActivityPart.DateTimeStart.Date >= today) {
@@ -141,9 +142,6 @@
                 }
             }
         }
-        //  Update the status of ContentItems of Type Visita.
-        //  Issue credentials for upcoming visits.
-        //  Revoke credentials for past visits.
     } catch (Exception ex) {
         eMsg += ex.Message + Environment.NewLine;
         eMsg += ex.StackTrace + Environment.NewLine;
