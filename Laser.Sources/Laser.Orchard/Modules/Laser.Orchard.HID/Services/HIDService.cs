@@ -109,7 +109,7 @@ namespace Laser.Orchard.HID.Services {
             wr.Method = WebRequestMethods.Http.Post;
             wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
             wr.Headers.Add(HttpRequestHeader.Authorization, AuthorizationToken);
-            string bodyText = CreateSearchFormat(externalId); // ("m.piovanelli"); // ("j.gerbore"); // 
+            string bodyText = CreateSearchFormat(externalId); // ("Laser.Orchard.HID1331"); //("m.piovanelli"); //
             byte[] bodyData = Encoding.UTF8.GetBytes(bodyText);
             using (Stream reqStream = wr.GetRequestStream()) {
                 reqStream.Write(bodyData, 0, bodyData.Length);
