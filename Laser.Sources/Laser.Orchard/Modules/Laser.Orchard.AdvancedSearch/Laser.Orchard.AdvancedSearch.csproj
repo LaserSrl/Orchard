@@ -120,6 +120,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Enumerators.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Navigation\ContentAdminMenu.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="ViewModels\ListContentsViewModelExtension.cs" />
   </ItemGroup>
