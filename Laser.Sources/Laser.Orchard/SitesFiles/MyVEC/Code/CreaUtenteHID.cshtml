@@ -64,8 +64,11 @@
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         dynamic scheda = (dynamic)Model.ContentItem;
         IUser user = ((IUser)_contentManager.Get<UserPart>((int)(scheda.CommonPart.Creator.Value)));
-        var hidUser = _hidAPIService.CreateHIDUser(user, scheda.SchedaInvito.Cognome.Value, scheda.SchedaInvito.Nome.Value, scheda.SchedaInvito.Email.Value);
-        CheckErrors(hidUser, scheda, user);
+        var searchResult = _hidAPIService.SearchHIDUser(user.Email);
+        if (searchResult.Error == SearchErrors.NoResults) { //user does not exist yet
+            var hidUser = _hidAPIService.CreateHIDUser(user, scheda.SchedaInvito.Cognome.Value, scheda.SchedaInvito.Nome.Value);
+            CheckErrors(hidUser, scheda, user);
+        }
     } catch (Exception ex) {
         eMsg += ex.Message + Environment.NewLine;
     }

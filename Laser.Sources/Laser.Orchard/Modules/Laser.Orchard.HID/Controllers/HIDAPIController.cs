@@ -36,7 +36,7 @@ namespace Laser.Orchard.HID.Controllers {
             bool success = false;
             string InvitationCode = "";
             IUser caller = _orchardServices.WorkContext.CurrentUser;
-            var searchResult = _HIDAPIService.SearchHIDUser(caller);
+            var searchResult = _HIDAPIService.SearchHIDUser("patrick.negretto@laser-group.com"); // (caller.Email); //
 
             /*****************TEST CODE********************/
             //searchResult.User.IssueCredential("CRD633ZZ-TST0053");

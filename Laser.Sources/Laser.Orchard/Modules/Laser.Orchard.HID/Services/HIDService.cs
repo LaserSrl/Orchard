@@ -88,9 +88,14 @@ namespace Laser.Orchard.HID.Services {
             return token.Error;
         }
 
-        private const string BaseSearchFormat = @"{{ 'schemas':[ 'urn:ietf:params:scim:api:messages:2.0:SearchRequest' ], 'filter':'externalId eq ""{0}""', 'sortBy':'name.familyName', 'sortOrder':'descending', 'startIndex':1, 'count':{1} }}";
-        private string CreateSearchFormat(string eId, int count = 1) {
+        private const string BaseSearchFormat = @"{{ 'schemas':[ 'urn:ietf:params:scim:api:messages:2.0:SearchRequest' ], 'filter':'externalId eq ""{0}"" and status eq ""ACTIVE""', 'sortBy':'name.familyName', 'sortOrder':'descending', 'startIndex':1, 'count':{1} }}";
+        private string CreateSearchFormat(string eId, int count = 20) {
             JObject format = JObject.Parse(string.Format(BaseSearchFormat, eId, count.ToString()));
+            return format.ToString();
+        }
+        private const string BaseSearchByMailFormat = @"{{ 'schemas':[ 'urn:ietf:params:scim:api:messages:2.0:SearchRequest' ], 'filter':'emails eq ""{0}"" and status eq ""ACTIVE""', 'sortBy':'name.familyName', 'sortOrder':'descending', 'startIndex':1, 'count':{1} }}";
+        private string CreateSearchFormatByMail(string email, int count = 20) {
+            JObject format = JObject.Parse(string.Format(BaseSearchByMailFormat, email, count.ToString()));
             return format.ToString();
         }
 
@@ -161,6 +166,70 @@ namespace Laser.Orchard.HID.Services {
 
             return result;
         }
+        public HIDUserSearchResult SearchHIDUser(string email) {
+            HIDUserSearchResult result = new HIDUserSearchResult();
+            if (string.IsNullOrWhiteSpace(AuthorizationToken)) {
+                if (Authenticate() != AuthenticationErrors.NoError) {
+                    result.Error = SearchErrors.AuthorizationFailed;
+                    return result;
+                }
+            }
+            HttpWebRequest wr = HttpWebRequest.CreateHttp(UsersSearchEndpoint);
+            wr.Method = WebRequestMethods.Http.Post;
+            wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.Headers.Add(HttpRequestHeader.Authorization, AuthorizationToken);
+            string bodyText = CreateSearchFormatByMail(email);
+            byte[] bodyData = Encoding.UTF8.GetBytes(bodyText);
+            using (Stream reqStream = wr.GetRequestStream()) {
+                reqStream.Write(bodyData, 0, bodyData.Length);
+            }
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        //read the json response
+                        using (var reader = new StreamReader(resp.GetResponseStream())) {
+                            string respJson = reader.ReadToEnd();
+                            var jo = JObject.Parse(respJson);
+                            result = new HIDUserSearchResult(jo);
+                            if (result.TotalResults == 1) {
+                                result.User = HIDUser.GetUser(this, jo["Resources"].Children().First()["meta"]["location"].ToString());
+                                result.Error = SearchErrors.NoError;
+                            } else if (result.TotalResults == 0) {
+                                result.Error = SearchErrors.NoResults;
+                            } else {
+                                result.Error = SearchErrors.TooManyResults;
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                if (resp != null) {
+                    switch (resp.StatusCode) {
+                        case HttpStatusCode.BadRequest:
+                            result.Error = SearchErrors.InvalidParameters;
+                            break;
+                        case HttpStatusCode.Unauthorized:
+                            if (Authenticate() == AuthenticationErrors.NoError) {
+                                result = SearchHIDUser(email);
+                            } else {
+                                result.Error = SearchErrors.AuthorizationFailed;
+                            }
+                            break;
+                        case HttpStatusCode.InternalServerError:
+                            result.Error = SearchErrors.InternalServerError;
+                            break;
+                        default:
+                            result.Error = SearchErrors.UnknownError;
+                            break;
+                    }
+                } else {
+                    result.Error = SearchErrors.UnknownError;
+                }
+            }
+
+            return result;
+        }
 
         public HIDUser CreateHIDUser(IUser user, string familyName, string givenName, string email = null) {
             if (string.IsNullOrWhiteSpace(email)) {
@@ -183,7 +252,7 @@ namespace Laser.Orchard.HID.Services {
                         hidUser = hidUser.IssueCredential(pn);
                         if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
                             break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential having been
-                                    //assigned already, which is fine
+                            //assigned already, which is fine
                         }
                     }
                 }
@@ -207,7 +276,7 @@ namespace Laser.Orchard.HID.Services {
                         hidUser = hidUser.RevokeCredential(pn);
                         if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
                             break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential being
-                                    //revoked right now
+                            //revoked right now
                         }
                     }
                 }
