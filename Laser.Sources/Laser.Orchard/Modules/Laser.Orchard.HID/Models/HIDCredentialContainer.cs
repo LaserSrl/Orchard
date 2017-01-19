@@ -6,18 +6,18 @@ using System.Web;
 
 namespace Laser.Orchard.HID.Models {
     public class HIDCredentialContainer {
-        public int Id { get; private set; } //id of container in HID systems
-        public string Status { get; private set; }
-        public string OsVersion { get; private set; }
-        public string Manufacturer { get; private set; }
-        public string Model { get; private set; }
-        public string ApplicationVersion { get; private set; }
-        public string SimOperator { get; private set; }
-        public string BluetoothCapability { get; private set; }
-        public string NfcCapability { get; private set; }
-        public List<HIDCredential> Credentials { get; private set; }
+        public int Id { get; set; } //id of container in HID systems
+        public string Status { get; set; }
+        public string OsVersion { get; set; }
+        public string Manufacturer { get; set; }
+        public string Model { get; set; }
+        public string ApplicationVersion { get; set; }
+        public string SimOperator { get; set; }
+        public string BluetoothCapability { get; set; }
+        public string NfcCapability { get; set; }
+        public List<HIDCredential> Credentials { get; set; }
 
-        private HIDCredentialContainer() {
+        public HIDCredentialContainer() {
             Credentials = new List<HIDCredential>();
         }
 

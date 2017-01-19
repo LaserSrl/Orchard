@@ -95,7 +95,7 @@ namespace Laser.Orchard.HID.Services {
         }
         private const string BaseSearchByMailFormat = @"{{ 'schemas':[ 'urn:ietf:params:scim:api:messages:2.0:SearchRequest' ], 'filter':'emails eq ""{0}"" and status eq ""ACTIVE""', 'sortBy':'name.familyName', 'sortOrder':'descending', 'startIndex':1, 'count':{1} }}";
         private string CreateSearchFormatByMail(string email, int count = 20) {
-            JObject format = JObject.Parse(string.Format(BaseSearchByMailFormat, email, count.ToString()));
+            JObject format = JObject.Parse(string.Format(BaseSearchByMailFormat, email.ToLowerInvariant(), count.ToString()));
             return format.ToString();
         }
 

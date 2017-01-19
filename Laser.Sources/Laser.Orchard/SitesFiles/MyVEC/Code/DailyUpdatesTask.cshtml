@@ -25,8 +25,12 @@
     string eMsg = String.Empty;
 
     //this is what I will pass forward in the state to allow feedback on the credentials that have been issued/revoked
-    // <visit.Id, user.Id, HIDUser, errorText>
-    List<Tuple<int, int, HIDUser, string>> credentialsFeedbackData = null;
+    // <visit.Id, contact.Id, HIDUser, errorText>
+    //List<Tuple<int, int, HIDUser, string>> credentialsFeedbackData = null;
+    List<int> credentialsFeedbackDataVisitIds = null;
+    List<int> credentialsFeedbackDataInviteIds = null;
+    List<HIDUser> credentialsFeedbackDataHIDUsers = null;
+    List<string> credentialsFeedbackDataErrors = null;
 
     private string CheckErrors(HIDUser hidResult, dynamic item, IUser guest, bool issuing) {
         //item is the SchedaInvito
@@ -69,7 +73,11 @@
     if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
         eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
     }
-    credentialsFeedbackData = new List<Tuple<int, int, HIDUser, string>>();
+    //credentialsFeedbackData = new List<Tuple<int, int, HIDUser, string>>();
+    credentialsFeedbackDataVisitIds = new List<int>();
+    credentialsFeedbackDataInviteIds = new List<int>();
+    credentialsFeedbackDataHIDUsers = new List<HIDUser>();
+    credentialsFeedbackDataErrors = new List<string>();
     try {
         //resolve service
         _hidAPIService = Model.OrchardServices.WorkContext.Resolve<IHIDAPIService>();
@@ -140,15 +148,19 @@
                     // test if the item is not a deleted one
                     if (scheda != null) {
                         IUser user = ((IUser)_contentManager.Get<UserPart>((int)(scheda.CommonPart.Creator.Value)));
+                        HIDUser result = null;
+                        string errors = "";
                         if (credentialAction == 1) {
-                            HIDUser result = _hidAPIService.IssueCredentials(user);
-                            string errors = CheckErrors(result, scheda, user, true);
-                            credentialsFeedbackData.Add(new Tuple<int, int, HIDUser, string>(visit.Id, user.Id, result, errors));
+                            result = _hidAPIService.IssueCredentials(user);
+                            errors = CheckErrors(result, scheda, user, true);
                         } else if (credentialAction == 2) {
-                            HIDUser result = _hidAPIService.RevokeCredentials(user);
-                            string errors = CheckErrors(result, scheda, user, true);
-                            credentialsFeedbackData.Add(new Tuple<int, int, HIDUser, string>(visit.Id, user.Id, result, errors));
+                            result = _hidAPIService.RevokeCredentials(user);
+                            errors = CheckErrors(result, scheda, user, true);
                         }
+                        credentialsFeedbackDataVisitIds.Add(visit.Id);
+                        credentialsFeedbackDataInviteIds.Add(siId);
+                        credentialsFeedbackDataHIDUsers.Add(result);
+                        credentialsFeedbackDataErrors.Add(errors);
                     }
                 }
             }
@@ -158,8 +170,11 @@
         eMsg += ex.StackTrace + Environment.NewLine;
     }
     Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
-    if (credentialsFeedbackData.Count() != 0) {
-        Model.Tokens["Workflow"].SetState("CredentialsFeedbackData", credentialsFeedbackData);
+    if (credentialsFeedbackDataVisitIds.Count() != 0) {
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataVisitIds", credentialsFeedbackDataVisitIds);
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataInviteIds", credentialsFeedbackDataInviteIds);
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDUsers", credentialsFeedbackDataHIDUsers);
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataErrors", credentialsFeedbackDataErrors);
         retString = "ProcessedCredentials";
     }else if (string.IsNullOrWhiteSpace(eMsg)) {
         retString = "OK";

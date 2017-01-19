@@ -14,16 +14,16 @@ using System.Web;
 namespace Laser.Orchard.HID.Models {
     public class HIDUser {
         public string Location { get; set; }
-        public int Id { get; private set; } //id of user in HID systems
-        public string ExternalId { get; private set; }
-        public string FamilyName { get; private set; }
-        public string GivenName { get; private set; }
-        public List<string> Emails { get; private set; }
-        public string Status { get; private set; }
-        public List<int> InvitationIds { get; private set; }
+        public int Id { get; set; } //id of user in HID systems
+        public string ExternalId { get; set; }
+        public string FamilyName { get; set; }
+        public string GivenName { get; set; }
+        public List<string> Emails { get; set; }
+        public string Status { get; set; }
+        public List<int> InvitationIds { get; set; }
         //public List<int> CredentialContainerIds { get; set; }
-        public List<HIDCredentialContainer> CredentialContainers { get; private set; }
-        public UserErrors Error { get; private set; }
+        public List<HIDCredentialContainer> CredentialContainers { get; set; }
+        public UserErrors Error { get; set; }
 
         private readonly IHIDAPIService _HIDService;
 

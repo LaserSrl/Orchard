@@ -2,13 +2,13 @@
 
 namespace Laser.Orchard.HID.Models {
     public class HIDCredential {
-        public int Id { get; private set; } //id of credential in HID systems
-        public string PartNumber { get; private set; }
-        public string PartNumberFriendlyName { get; private set; }
-        public string CardNumber { get; private set; } //Access Control Number
+        public int Id { get; set; } //id of credential in HID systems
+        public string PartNumber { get; set; }
+        public string PartNumberFriendlyName { get; set; }
+        public string CardNumber { get; set; } //Access Control Number
         public string Status { get; set; }
 
-        private HIDCredential() { }
+        public HIDCredential() { }
 
         public HIDCredential(JToken credential)
             : this() {
