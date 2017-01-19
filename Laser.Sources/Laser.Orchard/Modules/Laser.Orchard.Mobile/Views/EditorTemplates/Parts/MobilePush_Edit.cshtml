@@ -1,9 +1,9 @@
 ﻿@model Laser.Orchard.Mobile.ViewModels.MobilePushVM
 @{
     Script.Require("jQuery");
-    Script.Require("jQueryUI");
-    //Script.Require("jQueryUI_Autocomplete");
-    //Style.Require("jQuery_Autocomplete");
+    Script.Require("jQueryUI_Core");
+    Script.Require("jQueryUI_Autocomplete");
+    Style.Require("jQuery_Autocomplete");
     Script.Require("rcswitcher").AtHead();
     Style.Require("rcswitcher").AtHead();
     bool disabledElements = Model.PushSent;
@@ -16,26 +16,28 @@
                 var a = 2;
             });
             $("#contact-to-push").autocomplete({
-                open: function(event, ui) { disable=true },
-                close: function(event, ui) {
-                    disable=false; $(this).focus();
+                open: function (event, ui) {
+                    disable = true;
+                },
+                close: function (event, ui) {
+                    disable = false; $(this).focus();
                 },
                 messages: {
                     noResults: "@T("No search results.")",
                     results: function (amount) {
                         return amount + " @T("result(s)")";
-                }
+                    }
                 },
                 source: function (request, response) {
                     $.ajax({
                         type: 'POST',
                         url: "@Model.SiteUrl/Laser.Orchard.Mobile/ContactList/Search",
-                    data: { term: request.term, __RequestVerificationToken: aft },
-                    success: function (dataAutocomplete) {
-                        response(dataAutocomplete);
-                    }
-                });
-            },
+                        data: { term: request.term, __RequestVerificationToken: aft },
+                        success: function (dataAutocomplete) {
+                            response(dataAutocomplete);
+                        }
+                    });
+                },
                 select: function (event, ui) {
                     this.value = ui.item.value;
                 },
