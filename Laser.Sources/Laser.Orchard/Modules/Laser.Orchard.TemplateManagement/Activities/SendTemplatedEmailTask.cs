@@ -90,8 +90,8 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             var contentVersion = workflowContext.Content.ContentItem.Version;
             dynamic contentModel = new {
                 ContentItem = _orchardServices.ContentManager.GetAllVersions(workflowContext.Content.Id).Single(w => w.Version == contentVersion), // devo ricalcolare il content altrimenti MediaParts (e forse tutti i lazy fields!) è null!
-                FormCollection = _orchardServices.WorkContext.HttpContext.Request.Form,
-                QueryStringCollection = _orchardServices.WorkContext.HttpContext.Request.QueryString,
+                FormCollection = _orchardServices.WorkContext.HttpContext == null ? null : _orchardServices.WorkContext.HttpContext.Request.Form,
+                QueryStringCollection = _orchardServices.WorkContext.HttpContext == null ? null : _orchardServices.WorkContext.HttpContext.Request.QueryString,
                 WorkflowContext = workflowContext
             };
             if (recipient == "owner") {
@@ -141,11 +141,13 @@ namespace Laser.Orchard.TemplateManagement.Activities {
         private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> cc, IEnumerable<string> bcc,bool NotifyReadEmail, string fromEmail = null) {
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = _templateServices.GetTemplate(templateId);
-            var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            var urlHelper = _orchardServices.WorkContext.HttpContext == null
+                ? (UrlHelper)null : new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
 
             // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
             // Nel template pertanto Model, diventa Model.Content
-            var host = string.Format("{0}://{1}{2}",
+            var host = _orchardServices.WorkContext.HttpContext == null
+                ? (string)null : string.Format("{0}://{1}{2}",
                                     _orchardServices.WorkContext.HttpContext.Request.Url.Scheme,
                                     _orchardServices.WorkContext.HttpContext.Request.Url.Host,
                                     _orchardServices.WorkContext.HttpContext.Request.Url.Port == 80
@@ -155,7 +157,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                 WorkContext = _orchardServices.WorkContext,
                 Content = contentModel,
                 Urls = new {
-                    MediaUrl = urlHelper.MediaExtensionsImageUrl(),
+                    MediaUrl = urlHelper == null ? (string)null : urlHelper.MediaExtensionsImageUrl(),
                     Domain = host,
 
                 }.ToExpando()

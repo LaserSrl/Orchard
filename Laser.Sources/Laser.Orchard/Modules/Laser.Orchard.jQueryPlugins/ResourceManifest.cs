@@ -16,7 +16,7 @@ namespace Laser.Orchard.jQueryPlugins {
             manifest.DefineScript("jQuery_Cycle").SetUrl("jquery.cycle.all.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_Cycle2").SetUrl("jquery.cycle2.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_MultiSelect").SetUrl("jquery.multiSelect.js").SetDependencies("jQuery");
-            manifest.DefineScript("jQuery_Tools").SetUrl("jquery.tools.min.js").SetDependencies("jQuery", "jQueryUI", "jQueryMigrate");
+            manifest.DefineScript("jQuery_Tools").SetUrl("jquery.tools.min.js").SetDependencies("jQuery", "jQueryUI_Core", "jQueryMigrate");
          //   manifest.DefineScript("jQuery_MultiSelect").SetUrl("jquery.multiSelect.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_CarouFredSel").SetUrl("jquery.carouFredSel.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jQuery_Carousel").SetUrl("jquery.carousel.js").SetDependencies("jQuery");

@@ -114,6 +114,24 @@
                             typeof(string)
                         );
                     }
+                    if (fields.Length > 4) {
+                        // parcheggio prenotabile
+                        if (fields[4].ToUpper() == "SI") {
+                            invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value = true;
+                        } else if (fields[4].ToUpper() == "NO") {
+                            invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value = false;
+                        } else { // se non specificato il default è true
+                            invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value = true;
+                        }
+                        _fieldIndexService.Set(
+                            invito.FieldIndexPart,
+                            "SchedaInvito",
+                            "AbilitaPrenotazioneParcheggio",
+                            "",
+                            invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value,
+                            typeof(bool)
+                        );
+                    }
                     invito.TitlePart.Title += " - " + visita.TitlePart.Title;
                     Model.OrchardServices.ContentManager.Publish(invito);
                     // attiva il workflow di update dell'invito per creare le utenze necessarie
