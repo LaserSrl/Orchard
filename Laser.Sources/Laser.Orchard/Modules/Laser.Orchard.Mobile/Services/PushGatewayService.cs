@@ -202,7 +202,7 @@ namespace Laser.Orchard.Mobile.Services {
             query += " FROM Laser.Orchard.Mobile.Models.PushNotificationRecord as pnr, " +
             " Laser.Orchard.Mobile.Models.UserDeviceRecord as udr " +
             " join udr.UserPartRecord upr " +
-            " WHERE upr.RegistrationStatus = 'Approved' " +
+            " WHERE pnr.Validated AND upr.RegistrationStatus = 'Approved' " +
             " AND pnr.UUIdentifier=udr.UUIdentifier " +
             " AND (upr.UserName IN (" + userNamesCSV + ") OR upr.Email IN (" + userNamesCSV + ") )";
             string hostCheck = _shellSetting.RequestUrlHost ?? "";
