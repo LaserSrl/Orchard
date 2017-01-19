@@ -10,8 +10,9 @@
 @using Laser.Orchard.HID.Models;
 @using Laser.Orchard.HID.Services;
 @using System;
+@using System.Collections.Generic;
 @functions{
-    string retString = "Error"; //outcomes: Error,OK
+    string retString = "Error"; //outcomes: Error,OK,ProcessedCredentials
     // parametri di configurazione
     int daysBeforeStart = 5; // 0 => visits starting today only, 1 => visits starting today or tomorrow
     int daysAfterEnd = 2; // 0 => visits ended yesterday only, 1 => visits ended yesterday or the day before yesterday
@@ -23,7 +24,15 @@
 
     string eMsg = String.Empty;
 
-    private void CheckErrors(HIDUser hidResult, dynamic item, IUser guest, bool issuing) {
+    //this is what I will pass forward in the state to allow feedback on the credentials that have been issued/revoked
+    // <visit.Id, contact.Id, HIDUser, errorText>
+    //List<Tuple<int, int, HIDUser, string>> credentialsFeedbackData = null;
+    List<int> credentialsFeedbackDataVisitIds = null;
+    List<int> credentialsFeedbackDataInviteIds = null;
+    List<HIDUser> credentialsFeedbackDataHIDUsers = null;
+    List<string> credentialsFeedbackDataErrors = null;
+
+    private string CheckErrors(HIDUser hidResult, dynamic item, IUser guest, bool issuing) {
         //item is the SchedaInvito
         //guest is the guest
         //issuing == true for issuecredential, false for revoke
@@ -33,34 +42,42 @@
             item.Id.ToString(),
             guest.Email,
             @"{0}");
+        string errorText = "";
         switch (hidResult.Error) {
             case UserErrors.UnknownError:
-                eMsg += string.Format(errorBase, "Errore sconosciuto.") + Environment.NewLine;
+                errorText = string.Format(errorBase, "Errore sconosciuto.") + Environment.NewLine;
                 break;
             case UserErrors.AuthorizationFailed:
-                eMsg += string.Format(errorBase, "Login fallito sui servizi HID: verifica le impostazioni del modulo.") + Environment.NewLine;
+                errorText = string.Format(errorBase, "Login fallito sui servizi HID: verifica le impostazioni del modulo.") + Environment.NewLine;
                 break;
             case UserErrors.DoesNotHaveDevices:
-                eMsg += string.Format(errorBase, "L'utente non ha registrato nessun dispositivo.") + Environment.NewLine;
+                errorText = string.Format(errorBase, "L'utente non ha registrato nessun dispositivo.") + Environment.NewLine;
                 break;
             case UserErrors.DoesNotExist:
-                eMsg += string.Format(errorBase, "Il sistema HID non ha riconosciuto il dispositivo.") + Environment.NewLine;
+                errorText = string.Format(errorBase, "Il sistema HID non ha riconosciuto il dispositivo.") + Environment.NewLine;
                 break;
             case UserErrors.PreconditionFailed:
-                eMsg += string.Format(errorBase, "Il sistem HID non riconosce i PartNumber.") + Environment.NewLine;
+                errorText = string.Format(errorBase, "Il sistem HID non riconosce i PartNumber.") + Environment.NewLine;
                 break;
             case UserErrors.InternalServerError:
-                eMsg += string.Format(errorBase, "Errore interno ai sistemi HID") + Environment.NewLine;
+                errorText = string.Format(errorBase, "Errore interno ai sistemi HID") + Environment.NewLine;
                 break;
             case UserErrors.NoError:
                 break;
         }
+        eMsg += errorText;
+        return errorText;
     }
 }
 @{
     if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
         eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
     }
+    //credentialsFeedbackData = new List<Tuple<int, int, HIDUser, string>>();
+    credentialsFeedbackDataVisitIds = new List<int>();
+    credentialsFeedbackDataInviteIds = new List<int>();
+    credentialsFeedbackDataHIDUsers = new List<HIDUser>();
+    credentialsFeedbackDataErrors = new List<string>();
     try {
         //resolve service
         _hidAPIService = Model.OrchardServices.WorkContext.Resolve<IHIDAPIService>();
@@ -80,6 +97,7 @@
         );
         var visits = query.List();
         foreach (var visit in visits) {
+            //  Update the status of ContentItems of Type Visita.
             dynamic item = visit;
             int credentialAction = 0; //0: do nothing; 1: issue credentials; 2: revoke credentials
             if (item.ActivityPart.DateTimeStart.Date >= today) {
@@ -102,7 +120,7 @@
             if (item.ActivityPart.DateTimeEnd.Date < today) {
                 //this visit ended yesterday
                 // Set its state to "Terminata"
-                if(item.Visita.Questionario.Ids.Length > 0) {
+                if (item.Visita.Questionario.Ids.Length > 0) {
                     item.Visita.PushInviata.Value = "Done";
                 }
                 item.Visita.Statovisita.Value = "Terminata";
@@ -119,7 +137,7 @@
             }
             if (credentialAction > 0) {
                 var fieldsQuery = _fieldIndexPartRecord.Table
-                    .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Visita." && r.Value == "{"+visit.Id.ToString()+"}"))
+                    .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Visita." && r.Value == "{" + visit.Id.ToString() + "}"))
                     .Select(x => x.ContentItemRecord.Id);
                 var idsInviti = fieldsQuery.ToList();
                 if (idsInviti.Count() == 0) {
@@ -128,28 +146,37 @@
                 foreach (var siId in idsInviti) {
                     dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(siId));
                     // test if the item is not a deleted one
-                    if(scheda != null) {
+                    if (scheda != null) {
                         IUser user = ((IUser)_contentManager.Get<UserPart>((int)(scheda.CommonPart.Creator.Value)));
+                        HIDUser result = null;
+                        string errors = "";
                         if (credentialAction == 1) {
-                            HIDUser result = _hidAPIService.IssueCredentials(user);
-                            CheckErrors(result, scheda, user, true);
+                            result = _hidAPIService.IssueCredentials(user);
+                            errors = CheckErrors(result, scheda, user, true);
                         } else if (credentialAction == 2) {
-                            HIDUser result = _hidAPIService.RevokeCredentials(user);
-                            CheckErrors(result, scheda, user, true);
+                            result = _hidAPIService.RevokeCredentials(user);
+                            errors = CheckErrors(result, scheda, user, true);
                         }
+                        credentialsFeedbackDataVisitIds.Add(visit.Id);
+                        credentialsFeedbackDataInviteIds.Add(siId);
+                        credentialsFeedbackDataHIDUsers.Add(result);
+                        credentialsFeedbackDataErrors.Add(errors);
                     }
                 }
             }
         }
-        //  Update the status of ContentItems of Type Visita.
-        //  Issue credentials for upcoming visits.
-        //  Revoke credentials for past visits.
     } catch (Exception ex) {
         eMsg += ex.Message + Environment.NewLine;
         eMsg += ex.StackTrace + Environment.NewLine;
     }
     Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
-    if (string.IsNullOrWhiteSpace(eMsg)) {
+    if (credentialsFeedbackDataVisitIds.Count() != 0) {
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataVisitIds", credentialsFeedbackDataVisitIds);
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataInviteIds", credentialsFeedbackDataInviteIds);
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDUsers", credentialsFeedbackDataHIDUsers);
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataErrors", credentialsFeedbackDataErrors);
+        retString = "ProcessedCredentials";
+    }else if (string.IsNullOrWhiteSpace(eMsg)) {
         retString = "OK";
     }
 }@retString
