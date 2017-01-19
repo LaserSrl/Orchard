@@ -1,11 +1,19 @@
 @using Orchard;
+@using Orchard.Users.Models;
 @using Orchard.ContentManagement.Records;
 @using Orchard.Projections.Models;
 @using Orchard.Projections.Services;
 @using Orchard.Data;
 @using System.Linq;
+@using Orchard.Security;
+@using Orchard.ContentManagement;
+@using Laser.Orchard.StartupConfig.Handlers;
+
 @functions{
     IFieldIndexService _fieldIndexService;
+    IContentManager _contentManager;
+    IMembershipService _membershipService;
+    IContactRelatedEventHandler _contactEventHandler;
     string retString = "Error"; //possible outcomes: "Error","Ok"
     dynamic invito = null;
     dynamic prenotazione = null;
@@ -13,15 +21,41 @@
 }
 @{
     try {
+   
         wfCtx = Model.Tokens["Workflow"];
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         invito = Model.ContentItem;
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _contactEventHandler = Model.OrchardServices.WorkContext.Resolve<IContactRelatedEventHandler>();
+        _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
+        int iduser = (int)invito.CommonPart.Creator.Value;
+        dynamic RelatedUser = _contentManager.Get(iduser);
+        IUser kUser = _membershipService.GetUser((string)RelatedUser.UserPart.UserName);
+        dynamic dUser = kUser;
+        string targa = Convert.ToString(wfCtx.GetState("Targa"));
+        if (targa==""){
+             if ((((int[])(dUser.User.ProfilePart.ReservedParking.Ids)).Contains((int)invito.Id)) ){
+                 int[] val = ((int[])(dUser.ProfilePart.ReservedParking.Ids)).Where(xz=>xz != (int)invito.Id).ToArray();
+                 dUser.ProfilePart.ReservedParking.Ids = val;
+                 _contactEventHandler.Synchronize(dUser);
+             }
+        }
+        else{
+            if (!(((int[])(dUser.User.ProfilePart.ReservedParking.Ids)).Contains((int)invito.Id)) ){
+                int[] val = ((int[])(dUser.ProfilePart.ReservedParking.Ids)).Concat(new int[] { (int)invito.Id }).ToArray();
+                dUser.ProfilePart.ReservedParking.Ids = val;
+                _contactEventHandler.Synchronize(dUser);
+            }
+       }
+        
+       
         if(invito.SchedaInvito.Prenotazioneparcheggio.Ids.Length == 0) {
             // crea nuova prenotazione
             prenotazione = Model.OrchardServices.ContentManager.New("Prenotazioneparcheggio");
             Model.OrchardServices.ContentManager.Create(prenotazione);
             prenotazione = Model.OrchardServices.ContentManager.Get(prenotazione.Id);
             string codPrenotazione = string.Format("PARK00{0}", invito.Id);
+            
             prenotazione.Prenotazioneparcheggio.IDPrenotazione.Value = codPrenotazione;
             _fieldIndexService.Set(
                 prenotazione.FieldIndexPart,
@@ -45,7 +79,7 @@
             // recupera prenotazione esistente
             prenotazione = Model.OrchardServices.ContentManager.Get(invito.SchedaInvito.Prenotazioneparcheggio.Ids[0]);
         }
-        string targa = Convert.ToString(wfCtx.GetState("Targa"));
+       
         // aggiorna la targa
         prenotazione.Prenotazioneparcheggio.Targa.Value = targa;
         _fieldIndexService.Set(

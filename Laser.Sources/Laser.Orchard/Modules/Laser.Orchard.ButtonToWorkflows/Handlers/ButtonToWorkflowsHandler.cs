@@ -40,18 +40,21 @@ namespace Laser.Orchard.ButtonToWorkflows.Handlers {
                 if (!string.IsNullOrEmpty(part.ActionToExecute)) {
                     var content = context.ContentItem;
                     if (part.ActionAsync) {
+                        part.ButtonsDenied = true;
                         _scheduledTaskManager.CreateTask("Laser.Orchard.ButtonToWorkflows.Task", DateTime.UtcNow.AddMinutes(1), part.ContentItem);
                     }
-                    else
+                    else {
                         _workflowManager.TriggerEvent(part.ActionToExecute, content, () => new Dictionary<string, object> { { "Content", content } });
+                        part.MessageToWrite = "";
+                        part.ActionToExecute = "";
+                        part.ActionAsync = false;
+                    }
                     try {
                         if (!string.IsNullOrEmpty(part.MessageToWrite))
                             _notifier.Add(NotifyType.Information, T(part.MessageToWrite));
                     }
                     catch { }
-                    part.MessageToWrite = "";
-                    part.ActionToExecute = "";
-                    part.ActionAsync = false;
+            
                 }
 
                 //  if (context.ContentItem.As<CommonPart>() != null) {

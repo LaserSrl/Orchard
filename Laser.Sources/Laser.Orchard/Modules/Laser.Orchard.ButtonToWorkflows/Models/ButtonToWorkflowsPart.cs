@@ -36,6 +36,10 @@ namespace Laser.Orchard.ButtonToWorkflows.Models {
             get { return this.Retrieve(r => r.ActionAsync); }
             set { this.Store(r => r.ActionAsync, value); }
         }
+        public bool ButtonsDenied {
+            get { return this.Retrieve(r => r.ButtonsDenied); }
+            set { this.Store(r => r.ButtonsDenied, value); }
+        }
         
     }
     //public class ButtonToWorkflowsPartRecord: ContentPartRecord{
