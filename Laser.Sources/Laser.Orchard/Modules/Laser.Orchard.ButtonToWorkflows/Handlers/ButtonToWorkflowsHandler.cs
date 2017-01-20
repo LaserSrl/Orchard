@@ -40,7 +40,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Handlers {
                 if (!string.IsNullOrEmpty(part.ActionToExecute)) {
                     var content = context.ContentItem;
                     if (part.ActionAsync) {
-                        part.ButtonsDenied = true;
+                      //  part.ButtonsDenied = true;
                         _scheduledTaskManager.CreateTask("Laser.Orchard.ButtonToWorkflows.Task", DateTime.UtcNow.AddMinutes(1), part.ContentItem);
                     }
                     else {
