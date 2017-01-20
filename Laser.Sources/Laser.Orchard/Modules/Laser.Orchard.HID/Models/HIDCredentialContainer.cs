@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Laser.Orchard.HID.Services;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +17,17 @@ namespace Laser.Orchard.HID.Models {
         public string BluetoothCapability { get; set; }
         public string NfcCapability { get; set; }
         public List<HIDCredential> Credentials { get; set; }
+        public CredentialErrors Error { get; set; }
 
         public HIDCredentialContainer() {
             Credentials = new List<HIDCredential>();
+            Error = CredentialErrors.NoError;
         }
 
-        public HIDCredentialContainer(JToken container)
+        public HIDCredentialContainer(JToken container, IHIDAPIService _HIDService)
             : this() {
             Id = int.Parse(container["id"].ToString());
-            Status = container["status"].ToString();
+            Status = container["status"].ToString().ToUpperInvariant();
             OsVersion = container["osVersion"].ToString();
             Manufacturer = container["manufacturer"].ToString();
             Model = container["model"].ToString();
@@ -33,11 +36,17 @@ namespace Laser.Orchard.HID.Models {
             BluetoothCapability = container["bluetoothCapability"].ToString();
             NfcCapability = container["nfcCapability"].ToString();
             if (container["urn:hid:scim:api:ma:1.0:Credential"] != null) {
-                Credentials.AddRange(container["urn:hid:scim:api:ma:1.0:Credential"].Children().Select(jt => new HIDCredential(jt)));
+                var pNums = _HIDService.GetSiteSettings().PartNumbers;
+                Credentials.AddRange(
+                    container["urn:hid:scim:api:ma:1.0:Credential"]
+                    .Children()
+                    .Select(jt => new HIDCredential(jt))
+                    .Where(cred => pNums.Any(pn => pn == cred.PartNumber)) //only the credentials that we may be responsible for
+                    );
             }
         }
 
-        public void UpdateContainer(JToken container){
+        public void UpdateContainer(JToken container, IHIDAPIService _HIDService) {
             Id = int.Parse(container["id"].ToString());
             Status = container["status"].ToString();
             OsVersion = container["osVersion"].ToString();
