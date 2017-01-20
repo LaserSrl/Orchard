@@ -64,7 +64,7 @@ namespace Laser.Orchard.HID.Models {
                 CredentialContainers.AddRange(
                     json["urn:hid:scim:api:ma:1.0:CredentialContainer"]
                     .Children()
-                    .Select(jt => new HIDCredentialContainer(jt))
+                    .Select(jt => new HIDCredentialContainer(jt, _HIDService))
                     .Where(cc => onlyActiveContainers ? cc.Status=="ACTIVE" : true)
                     .Where(cc => avStrings.Any(avs => cc.ApplicationVersion.Contains(avs)))
                     );
@@ -313,6 +313,7 @@ namespace Laser.Orchard.HID.Models {
                         if (Error == UserErrors.PreconditionFailed) {
                             var rBody = (new StreamReader(resp.GetResponseStream())).ReadToEnd();
                             if (JObject.Parse(rBody)["detail"].ToString().Trim().ToUpperInvariant() == "THIS CREDENTIAL IS ALREADY DELIVERED TO THIS CREDENTIALCONTAINER.") {
+                                credentialContainer.Error = CredentialErrors.CredentialDeliveredAlready;
                                 Error = UserErrors.NoError;
                             }
                         }
@@ -321,7 +322,8 @@ namespace Laser.Orchard.HID.Models {
                     }
                 }
                 if (Error != UserErrors.NoError && Error != UserErrors.PreconditionFailed) {
-                    break; //break early on error
+                    credentialContainer.Error = CredentialErrors.UnknownError;
+                    //break; //break early on error
                 }
             }
 
@@ -354,7 +356,7 @@ namespace Laser.Orchard.HID.Models {
                             using (var reader = new StreamReader(resp.GetResponseStream())) {
                                 string respJson = reader.ReadToEnd();
                                 JObject json = JObject.Parse(respJson);
-                                credentialContainer.UpdateContainer(json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().First());
+                                credentialContainer.UpdateContainer(json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().First(), _HIDService);
                                 var credentialsToRevoke = credentialContainer.Credentials.Where(cred => cred.Status.ToUpperInvariant() != "REVOKING" && cred.Status.ToUpperInvariant() != "REVOKE_INITIATED");
                                 if (!string.IsNullOrWhiteSpace(partNumber)) {
                                     credentialsToRevoke = credentialContainer.Credentials.Where(cred => cred.PartNumber == partNumber);
@@ -411,7 +413,8 @@ namespace Laser.Orchard.HID.Models {
                     }
                 }
                 if (Error != UserErrors.NoError && Error != UserErrors.PreconditionFailed) {
-                    break; //break early on error
+                    credentialContainer.Error = CredentialErrors.UnknownError;
+                    //break; //break early on error
                 }
             }
             return this;
