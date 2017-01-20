@@ -29,6 +29,9 @@ namespace Laser.Orchard.HID.Controllers {
         public ActionResult Index() {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage HID settings")))
                 return new HttpUnauthorizedResult();
+
+            _HIDAPIService.SearchHIDUser("joel.gerbore@laser-group.com");
+
             return View(_HIDAdminService.GetSiteSettings());
         }
         [HttpPost, ActionName("Index")]

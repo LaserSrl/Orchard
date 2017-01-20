@@ -43,7 +43,7 @@ namespace Laser.Orchard.HID.Models {
             return Constants.LocalArea + id.ToString();
         }
 
-        private void PopulateFromJson(JObject json) {
+        private void PopulateFromJson(JObject json, bool onlyActiveContainers = true) {
             Id = int.Parse(json["id"].ToString());
             ExternalId = json["externalId"].ToString();
             FamilyName = json["name"]["familyName"].ToString();
@@ -60,7 +60,14 @@ namespace Laser.Orchard.HID.Models {
                 //CredentialContainerIds.AddRange(json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().Select(jt => int.Parse(jt["id"].ToString())));
                 //CredentialContainerIds = CredentialContainerIds.Distinct().ToList();
                 CredentialContainers.Clear();
-                CredentialContainers.AddRange(json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().Select(jt => new HIDCredentialContainer(jt)));
+                var avStrings = _HIDService.GetSiteSettings().AppVersionStrings;
+                CredentialContainers.AddRange(
+                    json["urn:hid:scim:api:ma:1.0:CredentialContainer"]
+                    .Children()
+                    .Select(jt => new HIDCredentialContainer(jt))
+                    .Where(cc => onlyActiveContainers ? cc.Status=="ACTIVE" : true)
+                    .Where(cc => avStrings.Any(avs => cc.ApplicationVersion.Contains(avs)))
+                    );
             }
             Error = UserErrors.NoError;
         }

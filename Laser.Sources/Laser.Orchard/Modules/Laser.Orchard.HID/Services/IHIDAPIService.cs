@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Laser.Orchard.HID.Services {
-    public interface IHIDAPIService : IDependency {
+    public interface IHIDAPIService : IHIDAdminService, IDependency {
         /// <summary>
         /// Attempts authentication to the HID services, using the login information from the settings.
         /// </summary>
