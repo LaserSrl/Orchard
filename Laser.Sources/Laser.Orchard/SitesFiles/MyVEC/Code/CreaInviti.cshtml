@@ -18,6 +18,7 @@
     Orchard.Workflows.Models.WorkflowContext wfCtx = null;
 }
 @{
+    string LogVisita = "";
     try {
         wfCtx = Model.Tokens["Workflow"];
         Orchard.Workflows.Services.IWorkflowManager wfManager = Model.OrchardServices.WorkContext.Resolve<Orchard.Workflows.Services.IWorkflowManager>();
@@ -28,9 +29,9 @@
         // legge il csv con gli invivati
         csv = visita.Visita.CSVlistaInvitati.Value;
         var rows = csv.Split(rowSeparator, StringSplitOptions.RemoveEmptyEntries);
-        foreach(var row in rows) {
+        foreach (var row in rows) {
             string[] fields = row.Split(fieldSeparator, StringSplitOptions.None);
-            if(fields.Length > 0) {
+            if (fields.Length > 0) {
                 // verifica che l'invito non esista già
                 // qry sui field di SchedaInvito per quella visita e per quella mail
                 var fieldsQuery = _fieldIndexPartRecord.Table
@@ -39,17 +40,17 @@
                     .Select(x => x.ContentItemRecord.Id);
                 var ids = fieldsQuery.ToList();
                 bool creaInvito = true;
-                if(ids.Count > 0) {
+                if (ids.Count > 0) {
                     // sto lavorando con i field, quindi devo verificare se l'invito non è stato eliminato
-                    foreach(var id in ids) {
+                    foreach (var id in ids) {
                         ci = Model.OrchardServices.ContentManager.Get(id);
-                        if(ci != null) {
+                        if (ci != null) {
                             creaInvito = false;
                             break;
                         }
                     }
                 }
-                if(creaInvito) {
+                if (creaInvito) {
                     // email
                     invito = Model.OrchardServices.ContentManager.New("SchedaInvito");
                     Model.OrchardServices.ContentManager.Create(invito);
@@ -118,11 +119,15 @@
                         // parcheggio prenotabile
                         if (fields[4].ToUpper() == "SI") {
                             invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value = true;
-                        } else if (fields[4].ToUpper() == "NO") {
+                        }
+                        else if (fields[4].ToUpper() == "NO") {
                             invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value = false;
-                        } else { // se non specificato il default è true
+                        }
+                        else { // se non specificato il default è true
                             invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value = true;
                         }
+
+
                         _fieldIndexService.Set(
                             invito.FieldIndexPart,
                             "SchedaInvito",
@@ -132,21 +137,32 @@
                             typeof(bool)
                         );
                     }
+                    if (invito.CommonPart.Owner == null) {
+                        invito.CommonPart.Owner = visita.CommonPart.Owner;
+                    }
+                    if (invito.CommonPart.Creator.Value == null) {
+                        invito.CommonPart.Creator.Value = visita.CommonPart.Owner.Id;
+                    }
                     invito.TitlePart.Title += " - " + visita.TitlePart.Title;
                     Model.OrchardServices.ContentManager.Publish(invito);
+                    LogVisita += DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " Creato scheda invito -> " + invito.SchedaInvito.Email.Value + Environment.NewLine;
                     // attiva il workflow di update dell'invito per creare le utenze necessarie
                     Func<Dictionary<string, object>> tokensUpd = () => new Dictionary<string, object> { { "Content", invito }, { Orchard.Workflows.Activities.SignalActivity.SignalEventName, "UpdateInvito" } };
                     wfManager.TriggerEvent(Orchard.Workflows.Activities.SignalActivity.SignalEventName, invito, tokensUpd);
                     // attiva il workflow di notfica invito
                     Func<Dictionary<string, object>> tokens = () => new Dictionary<string, object> { { "Content", invito }, { Orchard.Workflows.Activities.SignalActivity.SignalEventName, "NotificaInvito" } };
                     wfManager.TriggerEvent(Orchard.Workflows.Activities.SignalActivity.SignalEventName, invito, tokens);
+              //      LogVisita += DateTime.Now.ToString("ddMMyyyyHHmmss") + " Notificato invito -> " + invito.SchedaInvito.Email.Value + Environment.NewLine;
                 }
             }
         }
         retString = "Ok";
     }
-    catch(Exception ex) {
+    catch (Exception ex) {
         wfCtx.SetState("ErrorMessage", ex.Message);
+    }
+    finally {
+        Model.ContentItem.Visita.Log.Value += LogVisita;
     }
 }
 @retString

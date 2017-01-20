@@ -1,0 +1,26 @@
+@using Orchard;
+@using Orchard.Security;
+@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Data;
+@using System.Linq;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","OK"
+    IContentManager _contentManager = null;
+    Orchard.Workflows.Models.WorkflowContext wfContext = null;
+}
+@{
+    try {
+        string a = "a";
+        wfContext = Model.Tokens["Workflow"];
+        string adesso = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " Notificato invito";
+        Model.ContentItem.SchedaInvito.Log.Value += adesso +  Environment.NewLine; 
+        dynamic visita=Model.OrchardServices.ContentManager.Get((int)(((int[])Model.ContentItem.SchedaInvito.Visita.Ids)[0]));
+        visita.Visita.Log.Value += adesso + " " + Model.ContentItem.SchedaInvito.Email.Value+Environment.NewLine;
+        retString = "OK";
+    }
+    catch (Exception ex) {
+        wfContext.SetState("ErrorMessage", ex.Message);
+    }
+}
+@retString
