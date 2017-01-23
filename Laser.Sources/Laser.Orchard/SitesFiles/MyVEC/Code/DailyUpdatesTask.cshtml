@@ -357,7 +357,8 @@
                 } else {
                     //This HIDUser does not have any associated CredentialContainer
                     AddToLogString("User had no credential container.");
-                    AddToFeedbackDataLists(0, 0, hidUser.Id, new HIDCredentialContainer(), "Errore: L'utente non ha dispositivi attivi associati.");
+                    AddToFeedbackDataLists(0, 0, hidUser.Id, new HIDCredentialContainer(), 
+                        string.Format("Errore: L'utente ({0}) non ha dispositivi attivi associati.", user.Email));
                 }
             } else {
                 //we could not find the HIDUser
