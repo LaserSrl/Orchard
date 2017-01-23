@@ -21,7 +21,7 @@
     IContentManager _contentManager;
     IFieldIndexService _fieldIndexService;
     IEncryptionService _encryptionService;
-IContactRelatedEventHandler _contactEventHandler;
+    IContactRelatedEventHandler _contactEventHandler;
 
     int MinPasswordLength {
         get {
@@ -150,6 +150,15 @@ IContactRelatedEventHandler _contactEventHandler;
                 throw new Exception();
             }
             Model.Tokens["Workflow"].SetState("Password", password);
+        }
+        else
+        {
+            dynamic dUser = kUser;
+            //dUser.User.OriginalPassword.Value = encryptedPwd;
+            dUser.User.ProfilePart.Name.Value = givenName;
+            dUser.User.ProfilePart.Surname.Value = familyName;
+            dUser.User.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
+            _contactEventHandler.Synchronize(dUser);
         }
         //Set the creator of the SchedaInvito to the Krake user for the guest.
         item.CommonPart.Creator.Value = kUser.Id;

@@ -78,10 +78,11 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                                 Classes: new[] { "large", "text", "tokenized" }
                             ),
                             _NotifyReadEmail: Shape.Checkbox(
-                                Id: "_NotifyReadEmail",
-                                Name: "_NotifyReadEmail",
+                                Id: "NotifyReadEmail",
+                                Name: "NotifyReadEmail",
                                 Title: T("Notify at Read Email"),
-                                Description: T("Notify Read Email.")
+                                Description: T("Notify Read Email."),
+                                Value: "NotifyReadEmail"
                             )
                         ),
                         _Parts: Shape.SelectList(
