@@ -25,86 +25,96 @@ using System.Xml.Linq;
 using System.Web.Http.Controllers;
 
 namespace Laser.Orchard.UsersExtensions.Services {
-    public interface IUserActionMethods  : IDependency {
-         Response RegisterLogic(UserRegistration userRegistrationParams);
-        
-         Response SignInLogic(UserLogin login) ;
+    public interface IUserActionMethods : IDependency {
+        Response RegisterLogic(UserRegistration userRegistrationParams);
 
-         Response SignOutLogic() ;
+        Response SignInLogic(UserLogin login);
 
-         string GetCleanRegistrationPoliciesLogic(string lang = null) ;
+        Response SignOutLogic();
 
-         string GetRegistrationPoliciesLogic(string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string lang = null, string complexBehaviour = "") ;
+        string GetCleanRegistrationPoliciesLogic(string lang = null);
 
-         UserRegistration GetUserRegistrationModelLogic();
+        string GetRegistrationPoliciesLogic(string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string lang = null, string complexBehaviour = "");
 
-         Response RequestLostPasswordLogic(string username, LostPasswordUserOptions userOptions, string internationalPrefix = null);
+        UserRegistration GetUserRegistrationModelLogic();
+
+        Response RequestLostPasswordLogic(string username, LostPasswordUserOptions userOptions, string internationalPrefix = null);
 
     }
     public class UserActionMethods : IUserActionMethods {
-                private readonly ICsrfTokenHelper _csrfTokenHelper;
-            private readonly IUsersExtensionsServices _usersExtensionsServices;
-            private readonly IControllerContextAccessor _controllerContextAccessor;
-             private readonly IOrchardServices _orchardServices;
-            private readonly IUserService _userService;
-            private readonly IUtilsServices _utilsServices;
-            public Localizer T { get; set; }
-            public ILogger Log { get; set; }
+        private readonly ICsrfTokenHelper _csrfTokenHelper;
+        private readonly IUsersExtensionsServices _usersExtensionsServices;
+        private readonly IControllerContextAccessor _controllerContextAccessor;
+        private readonly IOrchardServices _orchardServices;
+        private readonly IUserService _userService;
+        private readonly IUtilsServices _utilsServices;
+        public Localizer T { get; set; }
+        public ILogger Log { get; set; }
 
-            public UserActionMethods(IOrchardServices orchardServices, ICsrfTokenHelper csrfTokenHelper, IUsersExtensionsServices usersExtensionsServices, IUserService userService,
-                IControllerContextAccessor controllerContextAccessor,
-             
-                IUtilsServices utilsServices) {
-                _csrfTokenHelper = csrfTokenHelper;
-                _usersExtensionsServices = usersExtensionsServices;
-                _controllerContextAccessor = controllerContextAccessor;
-                _orchardServices = orchardServices;
-                _userService = userService;
-                T = NullLocalizer.Instance;
-                Log = NullLogger.Instance;
-                _utilsServices = utilsServices;
-               }
+        public UserActionMethods(IOrchardServices orchardServices, ICsrfTokenHelper csrfTokenHelper, IUsersExtensionsServices usersExtensionsServices, IUserService userService,
+            IControllerContextAccessor controllerContextAccessor,
+
+            IUtilsServices utilsServices) {
+            _csrfTokenHelper = csrfTokenHelper;
+            _usersExtensionsServices = usersExtensionsServices;
+            _controllerContextAccessor = controllerContextAccessor;
+            _orchardServices = orchardServices;
+            _userService = userService;
+            T = NullLocalizer.Instance;
+            Log = NullLogger.Instance;
+            _utilsServices = utilsServices;
+        }
 
 
-            public Response RegisterLogic(UserRegistration userRegistrationParams) {
-                Response result;
-                // ensure users can request lost password
-                var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
-                if (!registrationSettings.UsersCanRegister) {
-                    result = _utilsServices.GetResponse(ResponseType.None, T("Users cannot register due to site settings.").Text);
-                    return (result);
-                }
-                try {
-                    _usersExtensionsServices.Register(userRegistrationParams);
-                
-
-                      var  registeredServicesData = new {
-                            RegisteredServices = _controllerContextAccessor.Context.Controller.TempData
-                        };
-                 
-          
-
-                    result = _utilsServices.GetResponse(ResponseType.Success, data: registeredServicesData);
-                }
-                catch (Exception ex) {
-                    result = _utilsServices.GetResponse(ResponseType.None, ex.Message);
-                }
-
-                return result;
+        public Response RegisterLogic(UserRegistration userRegistrationParams) {
+            Response result;
+            // ensure users can request lost password
+            var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
+            if (!registrationSettings.UsersCanRegister) {
+                result = _utilsServices.GetResponse(ResponseType.None, T("Users cannot register due to site settings.").Text);
+                return (result);
             }
+            try {
+                _usersExtensionsServices.Register(userRegistrationParams);
+
+                List<string> roles = new List<string>();
+                if (_orchardServices.WorkContext.CurrentUser != null) {
+                    roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+                }
+
+                var registeredServicesData = new {
+                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
+                    Roles = roles
+
+                };
+
+
+
+                result = _utilsServices.GetResponse(ResponseType.Success, data: registeredServicesData);
+            } catch (Exception ex) {
+                result = _utilsServices.GetResponse(ResponseType.None, ex.Message);
+            }
+
+            return result;
+        }
 
         public Response SignInLogic(UserLogin login) {
             Response result;
             try {
                 _usersExtensionsServices.SignIn(login);
+                List<string> roles = new List<string>();
+                if (_orchardServices.WorkContext.CurrentUser != null) {
+                    roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+                }
 
                 //var registeredServicesData = new {
                 //    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData
                 //};
-                dynamic registeredServicesData = null;
+                dynamic registeredServicesData = new {
+                    Roles = roles
+                };
                 result = _utilsServices.GetResponse(ResponseType.Success, "", registeredServicesData);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 result = _utilsServices.GetResponse(ResponseType.InvalidUser, ex.Message);
             }
             return (result);
@@ -115,8 +125,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
             try {
                 _usersExtensionsServices.SignOut();
                 result = _utilsServices.GetResponse(ResponseType.Success);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 result = _utilsServices.GetResponse(ResponseType.InvalidUser, ex.Message);
             }
             return (result);
@@ -192,7 +201,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
 
             sb.Append("]"); // l : [
             sb.Append("}");
-            return  sb.ToString();
+            return sb.ToString();
         }
 
         public UserRegistration GetUserRegistrationModelLogic() {
@@ -232,25 +241,22 @@ namespace Laser.Orchard.UsersExtensions.Services {
             if (String.IsNullOrWhiteSpace(siteUrl)) {
                 //siteUrl = HttpContext.Request.ToRootUrlString();
                 siteUrl = string.Format("{0}://{1}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Headers["Host"]);
-           
+
             }
             UrlHelper urlHelper = new UrlHelper();
             // test if user is user/email or phone number
             if (userOptions == LostPasswordUserOptions.Account) {
                 if (_userService.SendLostPasswordEmail(username, nonce => urlHelper.MakeAbsolute(urlHelper.Action("LostPassword", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl))) {
                     result = _utilsServices.GetResponse(ResponseType.Success);
-                }
-                else {
+                } else {
                     result = _utilsServices.GetResponse(ResponseType.None, T("Send email failed.").Text);
                 }
-            }
-            else {
+            } else {
                 var sendSmsResult = _usersExtensionsServices.SendLostPasswordSms(internationalPrefix, username, nonce => urlHelper.MakeAbsolute(urlHelper.Action("LostPassword", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
 
                 if (sendSmsResult == "TRUE") {
                     result = _utilsServices.GetResponse(ResponseType.Success);
-                }
-                else {
+                } else {
                     Dictionary<string, string> errors = new Dictionary<string, string>();
                     errors.Add("BODYEXCEEDED", T("Message rejected: too many characters. (160 max)").ToString()); //"messaggio rigettato per superamento lunghezza max di testo (160 caratteri)");
                     errors.Add("MISSINGPARAMETER_1", T("Missing recipient").ToString()); //"Destinatario mancante");
