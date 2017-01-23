@@ -35,6 +35,8 @@ using Orchard.Taxonomies.Services;
 using Orchard.Core.Common.Models;
 using Orchard.Localization.Services;
 using Laser.Orchard.StartupConfig.Handlers;
+using Orchard.Projections.Services;
+using Orchard.Core.Common.Fields;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
 
@@ -77,13 +79,14 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly ICultureManager _cultureManager;
         private readonly IContactRelatedEventHandler _contactRelatedEventHandler;
         private readonly ITransactionManager _transactionManager;
+        private readonly IFieldIndexService _fieldIndexService;
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
 
-        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, IContactRelatedEventHandler contactRelatedEventHandler, ITransactionManager transactionManager) {
+        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, IContactRelatedEventHandler contactRelatedEventHandler, ITransactionManager transactionManager, IFieldIndexService fieldIndexService) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
@@ -96,6 +99,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _cultureManager = cultureManager;
             _contactRelatedEventHandler = contactRelatedEventHandler;
             _transactionManager = transactionManager;
+            _fieldIndexService = fieldIndexService;
 
             T = NullLocalizer.Instance;
         }
@@ -556,6 +560,42 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         myval = ((object)(((dynamic)cf).Value));
                     }
                     _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, contact);
+
+                    // determina il type e aggiorna il field index
+                    string fieldTypeName = ((ContentField)cf).PartFieldDefinition.FieldDefinition.Name;
+                    if (fieldTypeName == typeof(BooleanField).Name) {
+                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(int));
+                    }
+                    else if(fieldTypeName == typeof(DateTimeField).Name) {
+                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", ((DateTime)myval).Ticks, typeof(int));
+                    }
+                    else if (fieldTypeName == typeof(NumericField).Name) {
+                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(decimal));
+                    }
+                    else if (fieldTypeName == typeof(ContentPickerField).Name
+                        || fieldTypeName == typeof(MediaLibraryPickerField).Name) {
+                        string fieldValue = "";
+                        foreach (int relatedId in cf.Ids) {
+                            if (string.IsNullOrWhiteSpace(fieldValue.ToString()) == false) {
+                                fieldValue += ",";
+                            }
+                            fieldValue += string.Format("{{{0}}}", relatedId);
+                        }
+                        if (string.IsNullOrWhiteSpace(fieldValue.ToString())) {
+                            fieldValue = null;
+                        }
+                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", fieldValue, typeof(string));
+                    }
+                    else if (fieldTypeName == typeof(LinkField).Name) {
+                        LinkField linkField = (LinkField)cf;
+                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", linkField.Value, typeof(string));
+                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name + "Text", "", linkField.Text, typeof(string));
+                    }
+                    else if (fieldTypeName == typeof(InputField).Name
+                        || fieldTypeName == typeof(TextField).Name
+                        || fieldTypeName == typeof(EnumerationField).Name) {
+                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(string));
+                    }
                 }
             }
         }
