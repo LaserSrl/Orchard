@@ -28,6 +28,13 @@
     IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
 
     string eMsg = String.Empty;
+    //we can use these strings to log information on the proess without it necessariky being an error
+    List<string> taskLog = new List<string>();
+    private void AddToLogString(string text) {
+        taskLog.Add(String.Format("{0}: {1}", DateTime.Now.ToString(), text));
+    }
+    
+    Func<string, string> fTrim = st => st.Trim();
 
     //this is what I will pass forward in the state to allow feedback on the credentials that have been issued/revoked
     //ID Visita -> DisplayText, DateTimeStart, DateTimeEnd
@@ -63,170 +70,205 @@
     }
 
     private void IssueCredentialOK(KeyValuePair<int, int> action, HIDCredentialContainer cContainer, HIDUser hidUser) {
-        int schedaId = action.Value;
-        //the Key is the action 1=>ISSUE, 2=>REVOKE
-        //first, get the status of the credentials for the invito
-        dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
-        Func<string, string> fTrim = st => st.Trim();
-        string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
-        List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-        if (credStatuses.Count == 0) {
-            //we never processed this SchedaInvito
-            AssignHiddenFieldValue(schedaId, string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
-            //we changed a field, so we add to the feedbackData lists
-            AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
-        } else {
-            //find the state for this CredentialContainer in the statuses
-            Func<string, bool> myStatus = st => st.Contains(string.Format(@" {0} ", cContainer.Id));
-            string status = credStatuses.FirstOrDefault(myStatus);
-            if (string.IsNullOrWhiteSpace(status)) {
-                //we never used this CredentialContainer for this SchedaInvito
-                credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
-                AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
+        try {
+            int schedaId = action.Value;
+            //the Key is the action 1=>ISSUE, 2=>REVOKE
+            //first, get the status of the credentials for the invito
+            dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
+            //Func<string, string> fTrim = st => st.Trim();
+            string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
+            List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
+            AddToLogString(string.Format("IssueCredentialOK for invite id {0}, with previous status: {1}", schedaId.ToString(), serialized));
+            if (credStatuses.Count == 0) {
+                //we never processed this SchedaInvito
+                AssignHiddenFieldValue(schedaId, string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
                 //we changed a field, so we add to the feedbackData lists
                 AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
             } else {
-                if (status.StartsWith("ISSUED")) {
-                    //we previously issued a MobileID to the user associated with the SchedaInvito
-                    //do nothing
-                } else if (status.StartsWith("REVOKED")) {
-                    //we previously called for a revoke of the MobileID for this user and SchedaInvito
-                    credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
-                    credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
-                    AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
-                    //we changed a field, so we add to the feedbackData lists
-                    AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                        "In precedenza il MobileID era stato revocato.");
-                } else if (status.StartsWith("TRIED")) {
-                    //we previously attempted to issue credentials, but failed
-                    credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
+                //find the state for this CredentialContainer in the statuses
+                Func<string, bool> myStatus = st => st.Contains(string.Format(@" {0} ", cContainer.Id));
+                string status = credStatuses.FirstOrDefault(myStatus);
+                if (string.IsNullOrWhiteSpace(status)) {
+                    //we never used this CredentialContainer for this SchedaInvito
                     credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                     //we changed a field, so we add to the feedbackData lists
                     AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
-                }
-            }
-        }
-    }
-
-    private void RevokeCredentialOK(KeyValuePair<int, int> action, HIDCredentialContainer cContainer, HIDUser hidUser) {
-        int schedaId = action.Value;
-        dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
-        Func<string, string> fTrim = st => st.Trim();
-        string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
-        List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-        if (credStatuses.Count == 0) {
-            //we never processed this SchedaInvito
-            AssignHiddenFieldValue(schedaId, string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
-            //we changed a field, so we add to the feedbackData lists
-            AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
-        } else {
-            //find the state for this CredentialContainer in the statuses
-            Func<string,bool> myStatus = st =>st.Contains(string.Format(@" {0} ", cContainer.Id));
-            string status = credStatuses.FirstOrDefault(myStatus);
-            if (string.IsNullOrWhiteSpace(status)) {
-                //we never used this CredentialContainer for this SchedaInvito
-                credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
-                AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
-                //we changed a field, so we add to the feedbackData lists
-                AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                    "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
-            } else if (status.StartsWith("REVOKED")) { 
-                //do nothing
-            } else {
-                credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
-                credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
-                AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
-                //we changed a field, so we add to the feedbackData lists
-                AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
-            }
-        }
-    }
-
-    private void TryIssue(IUser user, List<KeyValuePair<int, int>> actions) {
-        HIDUser hidUser = _hidAPIService.IssueCredentials(user);
-        foreach (HIDCredentialContainer cContainer in hidUser.CredentialContainers) {
-            if (cContainer.Error == CredentialErrors.NoError) {
-                //update the SchedaInvito for which we had to issue a MobileID, and pack data for the feedback step
-                foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 1)) {
-                    IssueCredentialOK(action, cContainer, hidUser);
-                }
-            } else if (cContainer.Error == CredentialErrors.CredentialDeliveredAlready) {
-                //update the SchedaInvito for which we had to issue a MobileID, and pack data for the feedback step
-                foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 1)) {
-                    HIDCredential credential = cContainer.Credentials.First();
-                    if (credential.Status.StartsWith("ISSUE") || credential.Status == "ISSUING") {
-                        //things are fine
-                        IssueCredentialOK(action, cContainer, hidUser);
-                    } else {
-                        int schedaId = action.Value;
-                        //the Key is the action 1=>ISSUE, 2=>REVOKE
-                        //first, get the status of the credentials for the invito
-                        dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
-                        Func<string, string> fTrim = st => st.Trim();
-                        string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
-                        List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                        string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First());
+                } else {
+                    if (status.StartsWith("ISSUED")) {
+                        //we previously issued a MobileID to the user associated with the SchedaInvito
+                        //do nothing
+                    } else if (status.StartsWith("REVOKED")) {
+                        //we previously called for a revoke of the MobileID for this user and SchedaInvito
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                         credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                         //we changed a field, so we add to the feedbackData lists
                         AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                            "ERRORE: Non è stato possibile assegnare un MobileID, perchè ce ne è già un'altro in uno stato non valido.");
+                            "In precedenza il MobileID era stato revocato.");
+                    } else if (status.StartsWith("TRIED")) {
+                        //we previously attempted to issue credentials, but failed
+                        credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
+                        credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
+                        AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
+                        //we changed a field, so we add to the feedbackData lists
+                        AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
                     }
                 }
-            } else { //UnknownError
-                //update the SchedaInvito for which we had to issue a MobileID, and pack data for the feedback step
-                foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 1)) {
-                    int schedaId = action.Value;
-                    //the Key is the action 1=>ISSUE, 2=>REVOKE
-                    //first, get the status of the credentials for the invito
-                    dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
-                    Func<string, string> fTrim = st => st.Trim();
-                    List<string> credStatuses = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value))
-                        .Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                    string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id);
-                    credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
-                    credStatuses.Add(status);
+            }
+            AddToLogString(string.Format("IssueCredentialOK for invite id {0}, with final status: {1}", schedaId.ToString(), string.Join(",", credStatuses)));
+        } catch (Exception ex) {
+            AddToLogString("Exception in IssueCredentialOK: " + ex.Message);
+            throw new Exception("Exception in IssueCredentialOK: " + ex.Message);
+        }
+    }
+
+    private void RevokeCredentialOK(KeyValuePair<int, int> action, HIDCredentialContainer cContainer, HIDUser hidUser) {
+        try {
+            int schedaId = action.Value;
+            dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
+            string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
+            List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
+            AddToLogString(string.Format("RevokeCredentialOK for invite id {0}, with previous status: {1}", schedaId.ToString(), serialized));
+            if (credStatuses.Count == 0) {
+                //we never processed this SchedaInvito
+                AssignHiddenFieldValue(schedaId, string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
+                //we changed a field, so we add to the feedbackData lists
+                AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
+                    "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
+            } else {
+                //find the state for this CredentialContainer in the statuses
+                Func<string, bool> myStatus = st => st.Contains(string.Format(@" {0} ", cContainer.Id));
+                string status = credStatuses.FirstOrDefault(myStatus);
+                if (string.IsNullOrWhiteSpace(status)) {
+                    //we never used this CredentialContainer for this SchedaInvito
+                    credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                     //we changed a field, so we add to the feedbackData lists
                     AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                        string.Format("ERRORE: Non è stato possibile assegnare un MobileID. Errore interno: {0}", UserErrorString(hidUser)));
+                        "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
+                } else if (status.StartsWith("REVOKED")) {
+                    //do nothing
+                } else {
+                    credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
+                    credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
+                    AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
+                    //we changed a field, so we add to the feedbackData lists
+                    AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
                 }
             }
+            AddToLogString(string.Format("RevokeCredentialOK for invite id {0}, with final status: {1}", schedaId.ToString(), string.Join(",", credStatuses)));
+        } catch (Exception ex) {
+            AddToLogString("Exception in RevokeCredentialOK: " + ex.Message);
+            throw new Exception("Exception in RevokeCredentialOK: " + ex.Message);
+        }
+    }
+
+    private void TryIssue(IUser user, List<KeyValuePair<int, int>> actions) {
+        AddToLogString(string.Format("Starting TryIssue for user {0}. They have {1} actions.", user.Email, actions.Count.ToString()));
+        try {
+            AddToLogString("About to call IssueCredentials for the user.");
+            HIDUser hidUser = _hidAPIService.IssueCredentials(user);
+            foreach (HIDCredentialContainer cContainer in hidUser.CredentialContainers) {
+                AddToLogString(string.Format("About to do things for Credential Container {0} ({1} {2}). Error state: {3}",
+                cContainer.Id.ToString(), cContainer.Manufacturer, cContainer.Model, cContainer.Error.ToString()));
+                if (cContainer.Error == CredentialErrors.NoError) {
+                    //update the SchedaInvito for which we had to issue a MobileID, and pack data for the feedback step
+                    foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 1)) {
+                        try {
+                            IssueCredentialOK(action, cContainer, hidUser);
+                        } catch (Exception) { }
+                    }
+                } else if (cContainer.Error == CredentialErrors.CredentialDeliveredAlready) {
+                    //update the SchedaInvito for which we had to issue a MobileID, and pack data for the feedback step
+                    HIDCredential credential = cContainer.Credentials.First();
+                    if (credential.Status.StartsWith("ISSUE") || credential.Status == "ISSUING") {
+                        //things are fine
+                        foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 1)) {
+                            IssueCredentialOK(action, cContainer, hidUser);
+                        }
+                    } else {
+                        foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 1)) {
+                            int schedaId = action.Value;
+                            //the Key is the action 1=>ISSUE, 2=>REVOKE
+                            //first, get the status of the credentials for the invito
+                            dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
+                            string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
+                            List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
+                            string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First());
+                            credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
+                            credStatuses.Add(string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
+                            AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
+                            //we changed a field, so we add to the feedbackData lists
+                            AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
+                                "ERRORE: Non è stato possibile assegnare un MobileID, perchè ce ne è già un'altro in uno stato non valido.");
+                        }
+                    }
+                } else { //UnknownError
+                    //update the SchedaInvito for which we had to issue a MobileID, and pack data for the feedback step
+                    foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 1)) {
+                        int schedaId = action.Value;
+                        //the Key is the action 1=>ISSUE, 2=>REVOKE
+                        //first, get the status of the credentials for the invito
+                        dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
+                        List<string> credStatuses = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value))
+                            .Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
+                        string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id);
+                        credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
+                        credStatuses.Add(status);
+                        AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
+                        //we changed a field, so we add to the feedbackData lists
+                        AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
+                            string.Format("ERRORE: Non è stato possibile assegnare un MobileID. Errore interno: {0}", UserErrorString(hidUser)));
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            AddToLogString("Exception in TryIssue: " + ex.Message);
+            throw new Exception("Exception in TryIssue: " + ex.Message);
         }
     }
 
     private void TryRevoke(IUser user, List<KeyValuePair<int, int>> actions) {
-        HIDUser hidUser = _hidAPIService.RevokeCredentials(user);
-        foreach (HIDCredentialContainer cContainer in hidUser.CredentialContainers) {
-            if (cContainer.Error == CredentialErrors.NoError) {
-                //update the SchedaInvito for which we had to revoke a MobileID, and pack data for the feedback step
-                foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 2)) {
-                    RevokeCredentialOK(action, cContainer, hidUser);
-                }
-            } else if (cContainer.Error == CredentialErrors.CredentialDeliveredAlready) {
-                //never happens during Revoke
-            } else { //UnknownError
-                //update the SchedaInvito for which we had to issue a MobileID, and pack data for the feedback step
-                foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 1)) {
-                    int schedaId = action.Value;
-                    //the Key is the action 1=>ISSUE, 2=>REVOKE
-                    //first, get the status of the credentials for the invito
-                    dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
-                    Func<string, string> fTrim = st => st.Trim();
-                    string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
-                    List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                    string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id);
-                    credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
-                    credStatuses.Add(status);
-                    AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
-                    //we changed a field, so we add to the feedbackData lists
-                    AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                        string.Format("ERRORE: Non è stato possibile revocare un MobileID. Errore interno: {0}", UserErrorString(hidUser)));
+        AddToLogString(string.Format("Starting TryRevoke for user {0}. They have {1} actions.", user.Email, actions.Count.ToString()));
+        try {
+            AddToLogString("About to call RevokeCredentials for the user.");
+            HIDUser hidUser = _hidAPIService.RevokeCredentials(user);
+            foreach (HIDCredentialContainer cContainer in hidUser.CredentialContainers) {
+                AddToLogString(string.Format("About to do things for Credential Container {0} ({1} {2}). Error state: {3}",
+                    cContainer.Id.ToString(), cContainer.Manufacturer, cContainer.Model, cContainer.Error.ToString()));
+                if (cContainer.Error == CredentialErrors.NoError) {
+                    //update the SchedaInvito for which we had to revoke a MobileID, and pack data for the feedback step
+                    foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 2)) {
+                        try {
+                            RevokeCredentialOK(action, cContainer, hidUser);
+                        } catch (Exception) { }
+                    }
+                } else if (cContainer.Error == CredentialErrors.CredentialDeliveredAlready) {
+                    //never happens during Revoke
+                    AddToLogString("We find ourselves in the CredentialDeliveredAlready branch during revoke. This should never happen.");
+                } else { //UnknownError
+                    //update the SchedaInvito for which we had to issue a MobileID, and pack data for the feedback step
+                    foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 2)) {
+                        int schedaId = action.Value;
+                        //the Key is the action 1=>ISSUE, 2=>REVOKE
+                        //first, get the status of the credentials for the invito
+                        dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
+                        string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
+                        List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
+                        string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id);
+                        credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
+                        credStatuses.Add(status);
+                        AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
+                        //we changed a field, so we add to the feedbackData lists
+                        AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
+                            string.Format("ERRORE: Non è stato possibile revocare un MobileID. Errore interno: {0}", UserErrorString(hidUser)));
+                    }
                 }
             }
+        } catch (Exception ex) {
+            AddToLogString("Exception in TryRevoke: " + ex.Message);
+            throw new Exception("Exception in TryRevoke: " + ex.Message);
         }
     }
 
@@ -287,45 +329,66 @@
     }
 
     private void ProcessUserAction(KeyValuePair<int, List<KeyValuePair<int, int>>> userAction) {
-        bool tryIssue = false; //true: IssueCredentials;
-        bool tryRevoke = false; //true: RevokeCredendials, unless tryIssue is true
-        int userId = userAction.Key;
-        List<KeyValuePair<int, int>> actions = userAction.Value;
-        //analyze each of the actions to see what we have to do
-        tryIssue = actions.Any(a => a.Key == 1);
-        tryRevoke = actions.Any(a => a.Key == 2);
-        //Get the HIDUser, so we know about her CredentialContainers and MobileIDs
-        IUser user = ((IUser)_contentManager.Get<UserPart>(userId));
-        var sr = _hidAPIService.SearchHIDUser(user.Email);
-        if (sr.Error == SearchErrors.NoError) {
-            HIDUser hidUser = sr.User;
-            if (hidUser.CredentialContainers.Any()) {
-                if (tryIssue) {
-                    TryIssue(user, actions);
-                } else if (tryRevoke) {
-                    TryRevoke(user, actions);
+        AddToLogString(string.Format("Processing Actions for user number {0}", userAction.Key.ToString()));
+        try {
+            bool tryIssue = false; //true: IssueCredentials;
+            bool tryRevoke = false; //true: RevokeCredendials, unless tryIssue is true
+            int userId = userAction.Key;
+            List<KeyValuePair<int, int>> actions = userAction.Value;
+            //analyze each of the actions to see what we have to do
+            tryIssue = actions.Any(a => a.Key == 1);
+            tryRevoke = actions.Any(a => a.Key == 2);
+            //Get the HIDUser, so we know about her CredentialContainers and MobileIDs
+            IUser user = ((IUser)_contentManager.Get<UserPart>(userId));
+            AddToLogString(string.Format("User has email {0}. Should issue credentials: {1}. Should revoke credentials: {2}", user.Email, tryIssue.ToString(), tryRevoke.ToString()));
+            var sr = _hidAPIService.SearchHIDUser(user.Email);
+            if (sr.Error == SearchErrors.NoError) {
+                HIDUser hidUser = sr.User;
+                if (hidUser.CredentialContainers.Any()) {
+                    if (tryIssue) {
+                        AddToLogString("Going to try issueing credentials.");
+                        TryIssue(user, actions);
+                        AddToLogString("Done issueing credentials.");
+                    } else if (tryRevoke) {
+                        AddToLogString("Going to try revoking credentials.");
+                        TryRevoke(user, actions);
+                        AddToLogString("Done revoking credentials.");
+                    }
+                } else {
+                    //This HIDUser does not have any associated CredentialContainer
+                    AddToLogString("User had no credential container.");
+                    AddToFeedbackDataLists(0, 0, hidUser.Id, new HIDCredentialContainer(), "Errore: L'utente non ha dispositivi attivi associati.");
                 }
             } else {
-                //This HIDUser does not have any associated CredentialContainer
-                AddToFeedbackDataLists(0, 0, hidUser.Id, new HIDCredentialContainer(), "Errore: L'utente non ha dispositivi attivi associati.");
+                //we could not find the HIDUser
+                AddToFeedbackDataLists(0, 0, 0, new HIDCredentialContainer(),
+                    string.Format(@"Errore: Non è stato possibile individuare un'utenza HID corrispondente alla email: {0}. Errore interno: {1}",
+                        user.Email,
+                        SearchErrorString(sr, user)
+                    ));
+                AddToLogString(string.Format("Impossible to find HID user: {0}", SearchErrorString(sr, user)));
             }
-        } else {
-            //we could not find the HIDUser
-            AddToFeedbackDataLists(0, 0, 0, new HIDCredentialContainer(),
-                string.Format(@"Errore: Non è stato possibile individuare un'utenza HID corrispondente alla email: {0}. Errore interno: {1}",
-                    user.Email,
-                    SearchErrorString(sr, user)
-                ));
+        } catch (Exception ex) {
+            AddToLogString("Exception in ProcessUserAction: " + ex.Message);
+            throw new Exception("Exception in ProcessUserAction: " + ex.Message);
         }
     }
 
     private void ProcessDictionary(Dictionary<int, List<KeyValuePair<int, int>>> userActions) {
-        foreach (KeyValuePair<int, List<KeyValuePair<int, int>>> userAction in userActions) {
-            ProcessUserAction(userAction);
+        try {
+            foreach (KeyValuePair<int, List<KeyValuePair<int, int>>> userAction in userActions) {
+                try {
+                    ProcessUserAction(userAction);
+                } catch (Exception) { }
+            }
+        } catch (Exception ex) {
+            AddToLogString("Exception in ProcessDictionary: " + ex.Message);
+            throw new Exception("Exception in ProcessDictionary: " + ex.Message);
         }
     }
 }
 @{
+    taskLog = new List<string>();
     if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
         eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
     }
@@ -347,6 +410,9 @@
         DateTime latestIssueTime = rightNow.Add(maxIssueTimeSpan);
         DateTime startRevokeTimeRange = rightNow.Subtract(maxRevokeDelay);
         DateTime endRevokeTimeRange = rightNow.Subtract(minRevokeDelay);
+        AddToLogString(string.Format("The time right now: {0}", rightNow.ToString()));
+        AddToLogString(string.Format("We will issue credentials for visits starting up until: {0}", latestIssueTime.ToString()));
+        AddToLogString(string.Format("We will revoke credentials for visits ended between {0} and {1}", startRevokeTimeRange.ToString(), endRevokeTimeRange.ToString()));
         var query = _contentManager.Query(VersionOptions.Latest).ForType("Visita");
         query = query.Join<ActivityPartRecord>()
             .Where(apr =>
@@ -354,6 +420,7 @@
                 || (apr.DateTimeEnd > startRevokeTimeRange && apr.DateTimeEnd <= endRevokeTimeRange) //visit finished by at least the given span (minRevokeDelay)
             );
         var visits = query.List();
+        AddToLogString(string.Format("We found {0} visits in the prescribed intervals.", visits.Count().ToString()));
         //Dictionary to story what we have to do for each user
         //the user.id is the key
         //the value is a List of KayValuePairs<int ACTION, int id>, where ACTION may be either 1 for "ISSUE" or 2 for "REVOKE" and the id is
@@ -363,24 +430,7 @@
             int credentialAction = 0; //0: do nothing; 1: issue credentials; 2: revoke credentials
             //  Update the status of ContentItems of Type Visita.
             dynamic item = visit;
-            if (item.ActivityPart.DateTimeStart.Date >= today) {
-                if (item.ActivityPart.DateTimeStart.Date == today) {
-                    //this visit starts today
-                    // Set its state to "In corso"
-                    item.Visita.Statovisita.Value = "In corso";
-                    _fieldIndexService.Set(
-                        item.FieldIndexPart,
-                        "Visita",
-                        "Statovisita",
-                        "",
-                        "In corso",
-                        typeof(string)
-                    );
-                }
-                // Issue credentials for all guests
-                credentialAction = 1;
-            }
-            if (item.ActivityPart.DateTimeEnd.Date < today) {
+            if (item.ActivityPart.DateTimeEnd < endRevokeTimeRange) {
                 //this visit ended yesterday
                 // Set its state to "Terminata"
                 if (item.Visita.Questionario.Ids.Length > 0) {
@@ -397,6 +447,25 @@
                 );
                 // Revoke credentials for all guests
                 credentialAction = 2;
+                AddToLogString(string.Format("Should revoke credentials for visit: {0}.", _contentManager.GetItemMetadata(visit).DisplayText));
+            }
+            if (item.ActivityPart.DateTimeStart.Date >= today) {
+                if (item.ActivityPart.DateTimeStart.Date == today) {
+                    //this visit starts today
+                    // Set its state to "In corso"
+                    item.Visita.Statovisita.Value = "In corso";
+                    _fieldIndexService.Set(
+                        item.FieldIndexPart,
+                        "Visita",
+                        "Statovisita",
+                        "",
+                        "In corso",
+                        typeof(string)
+                    );
+                }
+                // Issue credentials for all guests
+                credentialAction = 1;
+                AddToLogString(string.Format("Should issue credentials for visit: {0}.", _contentManager.GetItemMetadata(visit).DisplayText));
             }
             if (credentialAction > 0) {
                 var fieldsQuery = _fieldIndexPartRecord.Table
@@ -406,6 +475,7 @@
                     )
                     .Select(x => x.ContentItemRecord.Id);
                 var idsInviti = fieldsQuery.ToList();
+                AddToLogString(string.Format("This visit has {0} invited guests (some may be null).", idsInviti.Count().ToString()));
                 foreach (var siId in idsInviti) {
                     dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(siId));
                     if (scheda != null) { //item may have been deleted
@@ -423,17 +493,25 @@
                 }
             }
         }
+        AddToLogString(string.Format("About to process {0} entries in Users/Actions dictionary.", userActions.Count.ToString()));
         //Here the userActions Dictionary has been populated with what we have to do
         ProcessDictionary(userActions);
-
+        AddToLogString("Done processing Users/Actions dictionary.");
     } catch (Exception ex) {
+        AddToLogString(ex.Message);
         eMsg += ex.Message + Environment.NewLine;
         eMsg += ex.StackTrace + Environment.NewLine;
     }
     Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    Model.Tokens["Workflow"].SetState("LoggingInformation", string.Join(Environment.NewLine, taskLog));
     if (credentialsFeedbackDataVisitIds.Count() != 0) {
-        //TODO
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataVisitIds", credentialsFeedbackDataVisitIds);
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataInviteIds", credentialsFeedbackDataInviteIds);
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDUserIds", credentialsFeedbackDataHIDUserIds);
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDcc", credentialsFeedbackDataHIDcc);
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataErrors", credentialsFeedbackDataErrors);
+        retString = "ProcessedCredentials";
     } else if (string.IsNullOrWhiteSpace(eMsg)) {
         retString = "OK";
     }
-}
+}@retString
