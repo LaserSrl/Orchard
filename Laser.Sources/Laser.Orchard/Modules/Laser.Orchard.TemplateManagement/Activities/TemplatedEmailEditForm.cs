@@ -69,6 +69,19 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                                 Title: T("CC"),
                                 Description: T("Specify a comma-separated list of e-mail CC recipients."),
                                 Classes: new[] { "large", "text", "tokenized" }
+                            ),
+                               _FromEmails: Shape.Textbox(
+                                Id: "from-email",
+                                Name: "FromEmail",
+                                Title: T("From"),
+                                Description: T("Specify email sender."),
+                                Classes: new[] { "large", "text", "tokenized" }
+                            ),
+                            _NotifyReadEmail: Shape.Checkbox(
+                                Id: "_NotifyReadEmail",
+                                Name: "_NotifyReadEmail",
+                                Title: T("Notify at Read Email"),
+                                Description: T("Notify Read Email.")
                             )
                         ),
                         _Parts: Shape.SelectList(

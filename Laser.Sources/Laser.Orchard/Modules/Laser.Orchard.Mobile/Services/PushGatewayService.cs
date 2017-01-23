@@ -112,7 +112,16 @@ namespace Laser.Orchard.Mobile.Services {
                  .List<IDictionary>();
             return lista;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ids">Query Ids array</param>
+        /// <param name="tipodisp">DeviceType Android|Apple|WindowsMobile</param>
+        /// <param name="produzione">Device registration context</param>
+        /// <param name="language"></param>
+        /// <param name="countOnly"></param>
+        /// <param name="advItem">ContentItem representing the Container object</param>
+        /// <returns></returns>
         public IList GetPushQueryResult(Int32[] ids, TipoDispositivo? tipodisp, bool produzione, string language, bool countOnly = false, ContentItem advItem = null) {
             IHqlQuery query;
             if (ids != null && ids.Count() > 0) {
@@ -160,7 +169,9 @@ namespace Laser.Orchard.Mobile.Services {
             queryForPush += " AND MobileRecord.Produzione=" + ((produzione) ? "1" : "0");
             if ((ids != null) && (ids.Count() > 0)) {
                 // tiene conto degli id selezionati ma aggiunge comunque i device del master contact
-                queryForPush += " AND (civr.Id in (" + stringHQL + ") OR CommunicationContact.Master)";
+                queryForPush += " AND (civr.Id in (" + stringHQL + ") "
+                    // + "OR CommunicationContact.Master"
+                    + ")";
             }
 
             // Creo query ottimizzata per le performance
@@ -191,7 +202,7 @@ namespace Laser.Orchard.Mobile.Services {
             query += " FROM Laser.Orchard.Mobile.Models.PushNotificationRecord as pnr, " +
             " Laser.Orchard.Mobile.Models.UserDeviceRecord as udr " +
             " join udr.UserPartRecord upr " +
-            " WHERE upr.RegistrationStatus = 'Approved' " +
+            " WHERE pnr.Validated AND upr.RegistrationStatus = 'Approved' " +
             " AND pnr.UUIdentifier=udr.UUIdentifier " +
             " AND (upr.UserName IN (" + userNamesCSV + ") OR upr.Email IN (" + userNamesCSV + ") )";
             string hostCheck = _shellSetting.RequestUrlHost ?? "";

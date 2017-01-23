@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.Mobile.Services;
 using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
+using Orchard.Environment.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace Laser.Orchard.Mobile.Controllers {
 
     [Authorize]
     [WebApiKeyFilter(true)]
+    [OrchardFeature("Laser.Orchard.SmsGateway")]
     public class CheckMAMController : ApiController {
 
         private readonly ISmsServices _smsServices;

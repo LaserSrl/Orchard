@@ -25,7 +25,12 @@
     <fieldset id="PartNumbers">
         <legend>@T("Input your HID Part Numbers")</legend>
         @Html.TextAreaFor(m => m.SerializedPartNumbers, new {@cols = "80"})
-        <span class="hint">@T("Input the Part Numbers you want to be able to manage automatically.")</span>
+        <span class="hint">@T("Input the Part Numbers you want to be able to manage automatically, one per line.")</span>
+    </fieldset>
+    <fieldset id="AppVersionStrings">
+        <legend>@T("Input your HID App Version Strings")</legend>
+        @Html.TextAreaFor(m => m.SerializedAppVersionStrings, new {@cols = "80"})
+        <span class="hint">@T("Input the App Version Strings used for the application, one per line. These strings are used in the mobile apps to configure the HID SDK. The system will use them to identify registered device. Only insert the immutable part of these strings (e.g.: no version numbers).")</span>
     </fieldset>
     
     <div class="box-footer align-right padding-right-35">

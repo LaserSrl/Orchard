@@ -8,6 +8,8 @@
 @using System.Web.Security;
 @using System.Text;
 @using System.Globalization;
+@using System.Collections.Generic;
+@using Laser.Orchard.StartupConfig.Handlers;
 
 @functions{
     string retString = "Error"; //possile outcomes: OK, Error
@@ -19,6 +21,7 @@
     IContentManager _contentManager;
     IFieldIndexService _fieldIndexService;
     IEncryptionService _encryptionService;
+IContactRelatedEventHandler _contactEventHandler;
 
     int MinPasswordLength {
         get {
@@ -105,6 +108,7 @@
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         _encryptionService = Model.OrchardServices.WorkContext.Resolve<IEncryptionService>();
+        _contactEventHandler = Model.OrchardServices.WorkContext.Resolve<IContactRelatedEventHandler>(); 
         //Get the value of the email field out of the SchedaInvito.
         dynamic item = Model.ContentItem;
         string email = item.SchedaInvito.Email.Value;
@@ -124,6 +128,10 @@
                 string encryptedPwd = Encrypt(password);
                 dynamic dUser = kUser;
                 dUser.User.OriginalPassword.Value = encryptedPwd;
+				dUser.User.ProfilePart.Name.Value = givenName;
+				dUser.User.ProfilePart.Surname.Value = familyName;
+				dUser.User.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
+				_contactEventHandler.Synchronize(dUser);
                 _fieldIndexService.Set(
                     dUser.ContentItem.FieldIndexPart,
                     "User",

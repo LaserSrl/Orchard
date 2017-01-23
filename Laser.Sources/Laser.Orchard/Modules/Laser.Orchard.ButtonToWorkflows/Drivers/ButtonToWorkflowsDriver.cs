@@ -12,6 +12,8 @@ using Laser.Orchard.ButtonToWorkflows.ViewModels;
 using Orchard.Workflows.Services;
 using Laser.Orchard.ButtonToWorkflows.Settings;
 using Orchard.UI.Notify;
+using Orchard.Data;
+using Orchard.Core.Scheduling.Models;
 
 namespace Laser.Orchard.ButtonToWorkflows.Drivers {
     public class ButtonToWorkflowsDriver : ContentPartDriver<ButtonToWorkflowsPart> {
@@ -19,14 +21,16 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
         public Localizer T { get; set; }
         private readonly IWorkflowManager _workflowManager;
         private readonly INotifier _notifier;
+        private readonly IRepository<ScheduledTaskRecord> _repositoryScheduledTask;
         protected override string Prefix {
             get { return "Laser.Mobile.ButtonToWorkflows"; }
         }
 
-        public ButtonToWorkflowsDriver(IOrchardServices orchardServices, IWorkflowManager workflowManager, INotifier notifier) {
+        public ButtonToWorkflowsDriver(IOrchardServices orchardServices, IWorkflowManager workflowManager, INotifier notifier, IRepository<ScheduledTaskRecord> repositoryScheduledTask) {
             _orchardServices = orchardServices;
             _workflowManager = workflowManager;
             _notifier = notifier;
+            _repositoryScheduledTask = repositoryScheduledTask;
             T = NullLocalizer.Instance;
         }
 
@@ -49,6 +53,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                 //        model.ButtonText = settings.ButtonText;
                 //    }
                 //}
+       
             } catch { }
             return ContentShape("Parts_ButtonToWorkflows", () => shapeHelper.EditorTemplate(TemplateName: "Parts/ButtonToWorkflows", Model: model, Prefix: Prefix));
 
@@ -74,11 +79,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                             part.MessageToWrite = elencoButtonsMessage[model.ButtonNumber].ToString();
                            string valAsync= string.IsNullOrEmpty(elencoButtonsActionAsync[model.ButtonNumber]) ? "" : elencoButtonsActionAsync[model.ButtonNumber].ToLower();
                             part.ActionAsync = valAsync.Equals("true");
-                            //try {
-                            //      _notifier.Add(NotifyType.Information, T(elencoButtonsMessage[Convert.ToInt16(settings.ButtonNumber)]));
-                            //  }
-                            //  catch { }
-
+    
                         }
                 } else {
                     updater.AddModelError("Error Saving Content Item", T("Error Saving Content Item"));

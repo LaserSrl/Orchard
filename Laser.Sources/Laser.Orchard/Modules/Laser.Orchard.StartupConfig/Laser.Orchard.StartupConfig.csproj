@@ -253,6 +253,7 @@
     <Compile Include="Models\FavoriteCulturePart.cs" />
     <Compile Include="Models\MaintenancePart.cs" />
     <Compile Include="Models\PublishExtensionPart.cs" />
+    <Compile Include="Navigation\ContentAdminMenu.cs" />
     <Compile Include="Navigation\MaintenanceMenu.cs" />
     <Compile Include="Permission\MaintenancePermission.cs" />
     <Compile Include="Projections\FavoriteCultureFilter.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="Services\MaintenanceBanner.cs" />
     <Compile Include="Services\MaintenanceService.cs" />
     <Compile Include="Tokens\AdditionalDateTokens.cs" />
+    <Compile Include="Tokens\OwnerEmailToken.cs" />
     <Compile Include="Tokens\RazorCodeExecutionToken.cs" />
     <Compile Include="ViewModels\MaintenanceIndexVM.cs" />
     <Compile Include="ViewModels\MaintenanceVM.cs" />

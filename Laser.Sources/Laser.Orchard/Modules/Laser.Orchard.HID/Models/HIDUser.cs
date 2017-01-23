@@ -21,15 +21,17 @@ namespace Laser.Orchard.HID.Models {
         public List<string> Emails { get; set; }
         public string Status { get; set; }
         public List<int> InvitationIds { get; set; }
-        public List<int> CredentialContainerIds { get; set; }
-        public UserErrors Error { get; private set; }
+        //public List<int> CredentialContainerIds { get; set; }
+        public List<HIDCredentialContainer> CredentialContainers { get; set; }
+        public UserErrors Error { get; set; }
 
         private readonly IHIDAPIService _HIDService;
 
         public HIDUser() {
             Emails = new List<string>();
             InvitationIds = new List<int>();
-            CredentialContainerIds = new List<int>();
+            //CredentialContainerIds = new List<int>();
+            CredentialContainers = new List<HIDCredentialContainer>();
             Error = UserErrors.UnknownError;
         }
 
@@ -41,7 +43,7 @@ namespace Laser.Orchard.HID.Models {
             return Constants.LocalArea + id.ToString();
         }
 
-        private void PopulateFromJson(JObject json) {
+        private void PopulateFromJson(JObject json, bool onlyActiveContainers = true) {
             Id = int.Parse(json["id"].ToString());
             ExternalId = json["externalId"].ToString();
             FamilyName = json["name"]["familyName"].ToString();
@@ -55,8 +57,17 @@ namespace Laser.Orchard.HID.Models {
                 InvitationIds = InvitationIds.Distinct().ToList();
             }
             if (json["urn:hid:scim:api:ma:1.0:CredentialContainer"] != null) {
-                CredentialContainerIds.AddRange(json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().Select(jt => int.Parse(jt["id"].ToString())));
-                CredentialContainerIds = CredentialContainerIds.Distinct().ToList();
+                //CredentialContainerIds.AddRange(json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().Select(jt => int.Parse(jt["id"].ToString())));
+                //CredentialContainerIds = CredentialContainerIds.Distinct().ToList();
+                CredentialContainers.Clear();
+                var avStrings = _HIDService.GetSiteSettings().AppVersionStrings;
+                CredentialContainers.AddRange(
+                    json["urn:hid:scim:api:ma:1.0:CredentialContainer"]
+                    .Children()
+                    .Select(jt => new HIDCredentialContainer(jt, _HIDService))
+                    .Where(cc => onlyActiveContainers ? cc.Status=="ACTIVE" : true)
+                    .Where(cc => avStrings.Any(avs => cc.ApplicationVersion.Contains(avs)))
+                    );
             }
             Error = UserErrors.NoError;
         }
@@ -131,7 +142,7 @@ namespace Laser.Orchard.HID.Models {
         }
         private const string UserCreateFormat = @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction', 'urn:ietf:params:scim:schemas:core:2.0:User' ], 'externalId': '{0}', {1}, 'emails':[ {{ {2} }} ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'createInvitationCode':'N', 'sendInvitationEmail':'N', 'assignCredential':'N', 'partNumber':'', 'credential':'' }}, 'meta':{{ 'resourceType':'PACSUser' }} }}";
         private string CreateUserBody {
-            get { return JObject.Parse(string.Format(UserCreateFormat, ExternalId, UserNameBlock, string.Join(", ", Emails.Select(em => string.Format(@"'value':'{0}'", em))))).ToString(); }
+            get { return JObject.Parse(string.Format(UserCreateFormat, ExternalId, UserNameBlock, string.Join(", ", Emails.Select(em => string.Format(@"'value':'{0}'", em.ToLowerInvariant()))))).ToString(); }
         }
 
         public static HIDUser CreateUser(IHIDAPIService hidService, IUser oUser, string familyName, string givenName) {
@@ -264,11 +275,12 @@ namespace Laser.Orchard.HID.Models {
                     return this;
                 }
             }
-            if (CredentialContainerIds.Count == 0) {
+            if (CredentialContainers.Count == 0) {
                 Error = UserErrors.DoesNotHaveDevices;
             }
-            foreach (var credentialContainerId in CredentialContainerIds) {
-                HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(IssueCredentialEndpointFormat, credentialContainerId));
+            foreach (var credentialContainer in CredentialContainers) {
+                //TODO: Move this functionality to a method of HIDCredentialContainer, like credentialContainer.IssueCredential(partNumber)
+                HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(IssueCredentialEndpointFormat, credentialContainer.Id));
                 wr.Method = WebRequestMethods.Http.Post;
                 wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
                 wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
@@ -279,6 +291,11 @@ namespace Laser.Orchard.HID.Models {
                 try {
                     using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                         if (resp.StatusCode == HttpStatusCode.OK) {
+                            using (var reader = new StreamReader(resp.GetResponseStream())) {
+                                string respJson = reader.ReadToEnd();
+                                JObject json = JObject.Parse(respJson);
+                                credentialContainer.Add(json);
+                            }
                             Error = UserErrors.NoError;
                         }
                     }
@@ -296,6 +313,7 @@ namespace Laser.Orchard.HID.Models {
                         if (Error == UserErrors.PreconditionFailed) {
                             var rBody = (new StreamReader(resp.GetResponseStream())).ReadToEnd();
                             if (JObject.Parse(rBody)["detail"].ToString().Trim().ToUpperInvariant() == "THIS CREDENTIAL IS ALREADY DELIVERED TO THIS CREDENTIALCONTAINER.") {
+                                credentialContainer.Error = CredentialErrors.CredentialDeliveredAlready;
                                 Error = UserErrors.NoError;
                             }
                         }
@@ -304,7 +322,8 @@ namespace Laser.Orchard.HID.Models {
                     }
                 }
                 if (Error != UserErrors.NoError && Error != UserErrors.PreconditionFailed) {
-                    break; //break early on error
+                    credentialContainer.Error = CredentialErrors.UnknownError;
+                    //break; //break early on error
                 }
             }
 
@@ -324,8 +343,9 @@ namespace Laser.Orchard.HID.Models {
                     return this;
                 }
             }
-            foreach (var credentialContainerId in CredentialContainerIds) {
-                HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(GetCredentialContainerEndpointFormat, credentialContainerId));
+            foreach (var credentialContainer in CredentialContainers) {
+                //TODO: move this functionality to a method of HIDCredentialContainer, like credentialContainer.RevokeCredential(partNumber)
+                HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(GetCredentialContainerEndpointFormat, credentialContainer.Id));
                 wr.Method = WebRequestMethods.Http.Get;
                 wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
                 wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
@@ -336,20 +356,21 @@ namespace Laser.Orchard.HID.Models {
                             using (var reader = new StreamReader(resp.GetResponseStream())) {
                                 string respJson = reader.ReadToEnd();
                                 JObject json = JObject.Parse(respJson);
-                                var jCredentials = json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().First()["urn:hid:scim:api:ma:1.0:Credential"].Children();
+                                credentialContainer.UpdateContainer(json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().First(), _HIDService);
+                                var credentialsToRevoke = credentialContainer.Credentials.Where(cred => cred.Status.ToUpperInvariant() != "REVOKING" && cred.Status.ToUpperInvariant() != "REVOKE_INITIATED");
                                 if (!string.IsNullOrWhiteSpace(partNumber)) {
-                                    jCredentials = (JEnumerable<JToken>)(jCredentials.Where(jc => jc["partNumber"].ToString() == partNumber).AsJEnumerable());
+                                    credentialsToRevoke = credentialContainer.Credentials.Where(cred => cred.PartNumber == partNumber);
                                 }
-                                //don't revoke credentials that are already marked for revoking
-                                jCredentials = (JEnumerable<JToken>)(jCredentials.Where(jc => jc["status"].ToString().ToUpperInvariant() != "REVOKING")).AsJEnumerable();
-                                foreach (var jCred in jCredentials) {
-                                    HttpWebRequest wrRevoke = HttpWebRequest.CreateHttp(string.Format(RevokeCredentialEndpointFormat, jCred["id"]));
+                                foreach (var credential in credentialsToRevoke) {
+                                    //TODO: move this functionality to a method of the HIDCredential class, so we do it like credential.Revoke()
+                                    HttpWebRequest wrRevoke = HttpWebRequest.CreateHttp(string.Format(RevokeCredentialEndpointFormat, credential.Id));
                                     wrRevoke.Method = "DELETE";
                                     wrRevoke.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
                                     try {
                                         using (HttpWebResponse respRevoke = wrRevoke.GetResponse() as HttpWebResponse) {
                                             if (resp.StatusCode == HttpStatusCode.NoContent || resp.StatusCode == HttpStatusCode.OK) {
                                                 Error = UserErrors.NoError;
+                                                credential.Status = "REVOKING";
                                             } else {
                                                 Error = UserErrors.UnknownError;
                                             }
@@ -364,6 +385,9 @@ namespace Laser.Orchard.HID.Models {
                                                 Error = UserErrors.AuthorizationFailed;
                                             } else {
                                                 ErrorFromStatusCode(respRevoke.StatusCode);
+                                            }
+                                            if (Error == UserErrors.PreconditionFailed) {
+                                                Error = UserErrors.NoError; //we are already revoking credentials
                                             }
                                         } else {
                                             Error = UserErrors.UnknownError;
@@ -389,7 +413,8 @@ namespace Laser.Orchard.HID.Models {
                     }
                 }
                 if (Error != UserErrors.NoError && Error != UserErrors.PreconditionFailed) {
-                    break; //break early on error
+                    credentialContainer.Error = CredentialErrors.UnknownError;
+                    //break; //break early on error
                 }
             }
             return this;

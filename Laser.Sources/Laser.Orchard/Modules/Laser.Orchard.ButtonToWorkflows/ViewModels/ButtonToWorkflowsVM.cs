@@ -26,6 +26,7 @@ namespace Laser.Orchard.ButtonToWorkflows.ViewModels {
                 btw.ButtonNumber = Convert.ToInt32(bw);
                 ElencoButtons.Add(btw);
             }
+            this.ButtonDenied = ButtonToWorkflowsPart.ButtonsDenied;
             //this.ButtonNumber = settings.ButtonNumber.Split(',').Select(x => Convert.ToInt32(x)).ToList<Int32>();//(Convert.ToInt32(settings.ButtonNumber));
 
             //  IEnumerable<Permission> listPermission = ButtonPermissions.GetPermissions();
@@ -34,7 +35,7 @@ namespace Laser.Orchard.ButtonToWorkflows.ViewModels {
 
         }
         public List<ButtonToWorkflowsVMItem> ElencoButtons { get; set; }
-        
+        public bool ButtonDenied { get; set; }
     }
     public class ButtonToWorkflowsVMItem {
         public string ButtonText { get; set; }

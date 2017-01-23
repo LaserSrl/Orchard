@@ -72,13 +72,16 @@ namespace Laser.Orchard.TemplateManagement.Activities {
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
             string recipient = activityContext.GetState<string>("Recipient");
             string recipientCC = activityContext.GetState<string>("RecipientCC");
-
+            string fromEmail = activityContext.GetState<string>("FromEmail");
+            bool NotifyReadEmail = activityContext.GetState<bool?>("_NotifyReadEmail")??false;
+            
             var properties = new Dictionary<string, string> {
                 {"Body", activityContext.GetState<string>("Body")}, 
                 {"Subject", activityContext.GetState<string>("Subject")},
                 {"RecipientOther",activityContext.GetState<string>("RecipientOther")},
                 {"RecipientCC",activityContext.GetState<string>("RecipientCC")},
-                {"EmailTemplate",activityContext.GetState<string>("EmailTemplate")}
+                {"EmailTemplate",activityContext.GetState<string>("EmailTemplate")},
+                {"FromEmail",activityContext.GetState<string>("FromEmail")}
             };
             List<string> sendTo = new List<string>();
             List<string> sendCC = new List<string>();
@@ -87,8 +90,8 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             var contentVersion = workflowContext.Content.ContentItem.Version;
             dynamic contentModel = new {
                 ContentItem = _orchardServices.ContentManager.GetAllVersions(workflowContext.Content.Id).Single(w => w.Version == contentVersion), // devo ricalcolare il content altrimenti MediaParts (e forse tutti i lazy fields!) è null!
-                FormCollection = _orchardServices.WorkContext.HttpContext.Request.Form,
-                QueryStringCollection = _orchardServices.WorkContext.HttpContext.Request.QueryString,
+                FormCollection = _orchardServices.WorkContext.HttpContext == null ? null : _orchardServices.WorkContext.HttpContext.Request.Form,
+                QueryStringCollection = _orchardServices.WorkContext.HttpContext == null ? null : _orchardServices.WorkContext.HttpContext.Request.QueryString,
                 WorkflowContext = workflowContext
             };
             if (recipient == "owner") {
@@ -122,7 +125,8 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             if (!String.IsNullOrWhiteSpace(recipientCC)) {
                 sendCC.AddRange(SplitEmail(recipientCC));
             }
-            if (SendEmail(contentModel, templateId, sendTo, sendCC, null))
+
+            if (SendEmail(contentModel, templateId, sendTo, sendCC, null,NotifyReadEmail, fromEmail))
 
                 yield return T("Sent");
             else
@@ -134,14 +138,16 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             return commaSeparated.Split(new[] { ',', ';' });
         }
 
-        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> cc, IEnumerable<string> bcc) {
+        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> cc, IEnumerable<string> bcc,bool NotifyReadEmail, string fromEmail = null) {
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = _templateServices.GetTemplate(templateId);
-            var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            var urlHelper = _orchardServices.WorkContext.HttpContext == null
+                ? (UrlHelper)null : new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
 
             // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
             // Nel template pertanto Model, diventa Model.Content
-            var host = string.Format("{0}://{1}{2}",
+            var host = _orchardServices.WorkContext.HttpContext == null
+                ? (string)null : string.Format("{0}://{1}{2}",
                                     _orchardServices.WorkContext.HttpContext.Request.Url.Scheme,
                                     _orchardServices.WorkContext.HttpContext.Request.Url.Host,
                                     _orchardServices.WorkContext.HttpContext.Request.Url.Port == 80
@@ -151,7 +157,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                 WorkContext = _orchardServices.WorkContext,
                 Content = contentModel,
                 Urls = new {
-                    MediaUrl = urlHelper.MediaExtensionsImageUrl(),
+                    MediaUrl = urlHelper == null ? (string)null : urlHelper.MediaExtensionsImageUrl(),
                     Domain = host,
 
                 }.ToExpando()
@@ -175,6 +181,10 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             if (bcc != null) {
                 data.Add("Bcc", String.Join(",", bcc));
             }
+            if (fromEmail != null) {
+                data.Add("FromEmail", fromEmail);
+            }
+            data.Add("NotifyReadEmail", NotifyReadEmail);
             _messageService.Send(SmtpMessageChannel.MessageType, data);
             return true;
         }

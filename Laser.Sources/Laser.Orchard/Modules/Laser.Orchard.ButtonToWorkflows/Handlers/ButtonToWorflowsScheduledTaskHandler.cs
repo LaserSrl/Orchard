@@ -24,6 +24,10 @@ namespace Laser.Orchard.ButtonToWorkflows.Handlers {
                     return;
                 }
                  _workflowManager.TriggerEvent(context.Task.ContentItem.As<ButtonToWorkflowsPart>().ActionToExecute, context.Task.ContentItem, () => new Dictionary<string, object> { { "Content", context.Task.ContentItem } });
+                 context.Task.ContentItem.As<ButtonToWorkflowsPart>().MessageToWrite = "";
+                 context.Task.ContentItem.As<ButtonToWorkflowsPart>().ActionToExecute = "";
+                 context.Task.ContentItem.As<ButtonToWorkflowsPart>().ActionAsync = false;
+                 context.Task.ContentItem.As<ButtonToWorkflowsPart>().ButtonsDenied = false;
             }
             catch (Exception ex) {
                 Logger.Error(ex, "Error in ButtonToWorflowsScheduledTaskHandler. ContentItem: {0}, ScheduledUtc: {1:yyyy-MM-dd HH.mm.ss}", context.Task.ContentItem, context.Task.ScheduledUtc);

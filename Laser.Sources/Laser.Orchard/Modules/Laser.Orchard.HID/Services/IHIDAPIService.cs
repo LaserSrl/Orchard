@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Laser.Orchard.HID.Services {
-    public interface IHIDAPIService : IDependency {
+    public interface IHIDAPIService : IHIDAdminService, IDependency {
         /// <summary>
         /// Attempts authentication to the HID services, using the login information from the settings.
         /// </summary>
@@ -20,6 +20,12 @@ namespace Laser.Orchard.HID.Services {
         /// <param name="user"></param>
         /// <returns>An object describing the results of the search, that contains the HIDUser if found.</returns>
         HIDUserSearchResult SearchHIDUser(IUser user);
+        /// <summary>
+        /// Searches the HIDUser corresponding to the email passed as parameter.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>An object describing the results of the search, that contains the HIDUser if found.</returns>
+        HIDUserSearchResult SearchHIDUser(string email);
         /// <summary>
         /// Creates a new HIDUser on the HID servers using the information provided as parameters.
         /// </summary>
