@@ -127,8 +127,12 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                 }
                 else {
                     qVM.Context = QuestionnaireContext;
-                    _questionnairesServices.Save(qVM, currentUser, HttpContext.Current.Session.SessionID);
-                    return (_utilsServices.GetResponse(ResponseType.Success));
+                    if (_questionnairesServices.Save(qVM, currentUser, HttpContext.Current.Session.SessionID)) {
+                        return (_utilsServices.GetResponse(ResponseType.Success));
+                    }
+                    else {
+                        return (_utilsServices.GetResponse(ResponseType.Validation, "Questionnaire already submitted."));
+                    }
                 }
             }
             else

@@ -523,7 +523,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             var questionnaireModuleSettings = _orchardServices.WorkContext.CurrentSite.As<QuestionnaireModuleSettingsPart>();
             bool exit = false;
             if (currentUser != null && questionnaireModuleSettings.Disposable) {
-                if (_repositoryUserAnswer.Fetch(x => x.User_Id == currentUser.Id && x.QuestionnairePartRecord_Id == editModel.Id).Count() > 0) {
+                if (_repositoryUserAnswer.Fetch(x => x.User_Id == currentUser.Id && x.QuestionnairePartRecord_Id == editModel.Id && x.Context == editModel.Context).Count() > 0) {
                     //_notifier.Add(NotifyType.Information, T("Operation Fail: Questionnaire already filled"));
                     // throw new Exception();
                     exit = true;
