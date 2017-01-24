@@ -52,9 +52,11 @@
     <None Include="IvreaTerritorio\WebServices\POI.cshtml" />
     <None Include="IvreaTerritorio\WebServices\POI1.cshtml" />
     <None Include="Montevarchi\XSLT\eventi.cshtml" />
+    <None Include="MyVEC\Code\AppDownloaded.cshtml" />
     <None Include="MyVEC\Code\AssociazioneVisitaContatto.cshtml" />
     <None Include="MyVEC\Code\CheckPrenotazioneParcheggio.cshtml" />
     <None Include="MyVEC\Code\CheckTarga.cshtml" />
+    <None Include="MyVEC\Code\NotificaInviata.cshtml" />
     <None Include="MyVEC\Code\ReadCredenzialiUtente.cshtml" />
     <None Include="MyVEC\Code\RegistraPartecipazione.cshtml" />
     <None Include="MyVEC\Code\CreaInviti.cshtml" />

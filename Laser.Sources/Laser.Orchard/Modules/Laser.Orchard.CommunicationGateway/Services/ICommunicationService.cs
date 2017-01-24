@@ -589,7 +589,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     else if (fieldTypeName == typeof(LinkField).Name) {
                         LinkField linkField = (LinkField)cf;
                         _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", linkField.Value, typeof(string));
-                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name + "Text", "", linkField.Text, typeof(string));
+                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "Text", linkField.Text, typeof(string));
                     }
                     else if (fieldTypeName == typeof(InputField).Name
                         || fieldTypeName == typeof(TextField).Name

@@ -43,15 +43,17 @@
                 }
             }
         }
-        invitoDiRiferimento.SchedaInvito.QuestionarioCompilato.Value = "Done";
-        _fieldIndexService.Set(
-            invitoDiRiferimento,
-            "SchedaInvito",
-            "QuestionarioCompilato",
-            "",
-            "Done",
-            typeof(string)
-        );
+        if(invitoDiRiferimento != null) {
+            invitoDiRiferimento.SchedaInvito.QuestionarioCompilato.Value = "Done";
+            _fieldIndexService.Set(
+                invitoDiRiferimento,
+                "SchedaInvito",
+                "QuestionarioCompilato",
+                "",
+                "Done",
+                typeof(string)
+            );
+        }
         if (string.IsNullOrWhiteSpace(questionnaireContext) == false) {
             string sessionId = System.Web.HttpContext.Current.Session.SessionID;
             var answers = _repoAswers.Table.Where(x => x.User_Id == usrId
