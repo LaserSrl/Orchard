@@ -91,7 +91,7 @@
             }
             if (credStatuses.Count == 0) {
                 //we never processed this SchedaInvito
-                AssignHiddenFieldValue(schedaId, string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
+                AssignHiddenFieldValue(schedaId, string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
                 //we changed a field, so we add to the feedbackData lists
                 AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
             } else {
@@ -100,7 +100,7 @@
                 string status = credStatuses.FirstOrDefault(myStatus);
                 if (string.IsNullOrWhiteSpace(status)) {
                     //we never used this CredentialContainer for this SchedaInvito
-                    credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
+                    credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                     //we changed a field, so we add to the feedbackData lists
                     AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
@@ -111,7 +111,7 @@
                     } else if (status.StartsWith("REVOKED")) {
                         //we previously called for a revoke of the MobileID for this user and SchedaInvito
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
-                        credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
+                        credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                         //we changed a field, so we add to the feedbackData lists
                         AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
@@ -119,7 +119,7 @@
                     } else if (status.StartsWith("TRIED")) {
                         //we previously attempted to issue credentials, but failed
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
-                        credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
+                        credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                         //we changed a field, so we add to the feedbackData lists
                         AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
@@ -152,7 +152,7 @@
             }
             if (credStatuses.Count == 0) {
                 //we never processed this SchedaInvito
-                AssignHiddenFieldValue(schedaId, string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
+                AssignHiddenFieldValue(schedaId, string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
                 //we changed a field, so we add to the feedbackData lists
                 AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
                     "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
@@ -162,7 +162,7 @@
                 string status = credStatuses.FirstOrDefault(myStatus);
                 if (string.IsNullOrWhiteSpace(status)) {
                     //we never used this CredentialContainer for this SchedaInvito
-                    credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
+                    credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                     //we changed a field, so we add to the feedbackData lists
                     AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
@@ -171,7 +171,7 @@
                     //do nothing
                 } else {
                     credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
-                    credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
+                    credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                     //we changed a field, so we add to the feedbackData lists
                     AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
@@ -214,7 +214,7 @@
                     }
                 } else if (cContainer.Error == CredentialErrors.CredentialDeliveredAlready) {
                     //update the SchedaInvito for which we had to issue a MobileID, and pack data for the feedback step
-                    HIDCredential credential = cContainer.Credentials.First();
+                    HIDCredential credential = cContainer.Credentials.First(cred => cred.Status != "REVOKED");
                     if (credential.Status.StartsWith("ISSUE") || credential.Status == "ISSUING") {
                         //things are fine
                         foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 1)) {
@@ -228,9 +228,9 @@
                             dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
                             string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
                             List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                            string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First());
+                            string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED"));
                             credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
-                            credStatuses.Add(string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id));
+                            credStatuses.Add(status);
                             AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                             //we changed a field, so we add to the feedbackData lists
                             AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
@@ -253,7 +253,7 @@
                         dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
                         List<string> credStatuses = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value))
                             .Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                        string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id);
+                        string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id);
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                         credStatuses.Add(status);
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
@@ -319,7 +319,7 @@
                         dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
                         string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
                         List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                        string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First().Id);
+                        string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id);
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                         credStatuses.Add(status);
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
