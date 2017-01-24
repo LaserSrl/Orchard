@@ -100,7 +100,7 @@ namespace Laser.Orchard.DevTools.Controllers {
         public ActionResult ShowScheduledTask() {
             if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
                 return new HttpUnauthorizedResult();
-            IEnumerable<ScheduledTaskRecord> st = _repositoryScheduledTask.Fetch(t => t.ScheduledUtc > DateTime.UtcNow).OrderBy(x => x.ScheduledUtc);
+            IEnumerable<ScheduledTaskRecord> st = _repositoryScheduledTask.Fetch(t => true).OrderBy(x => x.ScheduledUtc);
 
 
             return View("ShowScheduledTask", (object)st);
@@ -111,7 +111,7 @@ namespace Laser.Orchard.DevTools.Controllers {
         public ActionResult DeleteScheduledTask(Int32 key) {
             if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
                 return new HttpUnauthorizedResult();
-            ScheduledTaskRecord st = _repositoryScheduledTask.Fetch(t => t.ScheduledUtc > DateTime.UtcNow).Where(x => x.Id == key).FirstOrDefault();
+            ScheduledTaskRecord st = _repositoryScheduledTask.Fetch(t => true).Where(x => x.Id == key).FirstOrDefault();
             _repositoryScheduledTask.Delete(st);
             //  st.ContentItemVersionRecord.ContentItemRecord.Id;
             return RedirectToAction("ShowScheduledTask", "Admin");

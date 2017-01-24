@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Laser.Orchard.TaskScheduler.Models;
 using Laser.Orchard.TaskScheduler.Services;
+using Laser.Orchard.TaskScheduler.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Scheduling.Models;
@@ -60,20 +61,29 @@ namespace Laser.Orchard.TaskScheduler.Handlers {
                         { "Content", context.Task.ContentItem },
                         { SignalActivity.SignalEventName, part.SignalName }}
                             );
-                        //if the part has periodicity and it was not unscheduled, we may reschedule the task
-                        if (part.PeriodicityTime > 0 && part.RunningTaskId > 0) {
-                            //define tasktype
-                            string newTaskTypeStr = Constants.TaskTypeBase + "_" + part.SignalName + "_" + part.Id;
-                            ContentItem ci = null;
-                            if (part.ContentItemId > 0) {
-                                ci = _orchardServices.ContentManager.Get(part.ContentItemId);
-                            }
-                            DateTime scheduleTime = _scheduledTaskService.ComputeNextScheduledTime(part);
-                            _taskManager.CreateTask(newTaskTypeStr, scheduleTime, ci);
-                            part.RunningTaskId = _repoTasks.Get(str => str.TaskType.Equals(newTaskTypeStr)).Id;
+                        if (part.Autodestroy) {
+                            var sc = new ScheduledTaskViewModel(part);
+                            sc.Delete = true;
+                            var list = new List<ScheduledTaskViewModel>();
+                            list.Add(sc);
+                            _scheduledTaskService.UpdateRecords(list);
                         }
                         else {
-                            part.RunningTaskId = 0;
+                            //if the part has periodicity and it was not unscheduled, we may reschedule the task
+                            if (part.PeriodicityTime > 0 && part.RunningTaskId > 0) {
+                                //define tasktype
+                                string newTaskTypeStr = Constants.TaskTypeBase + "_" + part.SignalName + "_" + part.Id;
+                                ContentItem ci = null;
+                                if (part.ContentItemId > 0) {
+                                    ci = _orchardServices.ContentManager.Get(part.ContentItemId);
+                                }
+                                DateTime scheduleTime = _scheduledTaskService.ComputeNextScheduledTime(part);
+                                _taskManager.CreateTask(newTaskTypeStr, scheduleTime, ci);
+                                part.RunningTaskId = _repoTasks.Get(str => str.TaskType.Equals(newTaskTypeStr)).Id;
+                            }
+                            else {
+                                part.RunningTaskId = 0;
+                            }
                         }
                     }
 

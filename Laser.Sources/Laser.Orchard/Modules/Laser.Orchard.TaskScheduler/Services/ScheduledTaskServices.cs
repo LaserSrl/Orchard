@@ -139,7 +139,7 @@ namespace Laser.Orchard.TaskScheduler.Services {
             }
             _taskManager.CreateTask(taskTypeStr, part.ScheduledStartUTC ?? DateTime.UtcNow, ci);
             part.RunningTaskId = _repoTasks.Get(str => str.TaskType.Equals(taskTypeStr)).Id;
-            
+    
         }
         /// <summary>
         /// Unschedule an existing task based on the view model
