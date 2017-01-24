@@ -574,7 +574,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                 }
 
                 var content = _orchardServices.ContentManager.Get(editModel.Id);
-                _workflowManager.TriggerEvent("QuestionnaireSubmitted", content, () => new Dictionary<string, object> { { "Content", content } });
+                _workflowManager.TriggerEvent("QuestionnaireSubmitted", content, () => new Dictionary<string, object> { { "Content", content }, { "QuestionnaireContext", editModel.Context } });
                 result = true;
             }
             return result;

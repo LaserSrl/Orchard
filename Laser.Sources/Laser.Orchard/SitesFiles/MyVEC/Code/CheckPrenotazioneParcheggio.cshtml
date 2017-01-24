@@ -5,19 +5,23 @@
 @using System.Linq;
 @functions{
     string retString = "Error"; //possible outcomes: "Error","H48","H24","OutOfDate"
+    
+    //Configs: new TimeSpan( days, hours, minutes, seconds ) All parameters are int. Use positive values.
+    //First range: -Infinity < now.Date <= visit.StartDate.Date - 2 days
+    TimeSpan endFirstRange = new TimeSpan(2, 0, 0, 0);
+    //Second range: visit.StartDate.Date - 2 days < now < visit.startTime - 1 hour
+    TimeSpan endSecondRange = new TimeSpan(0, 1, 0, 0);
 }
 @{
     try {
         dynamic invito = Model.ContentItem;
-        DateTime dtVisita = invito.SchedaInvito.Visita.ContentItems[0].ActivityPart.DateTimeStart.Date;
-        DateTime today = DateTime.Today;
-        if (today < dtVisita.AddDays(-2)) {
+        DateTime visitStart = ((dynamic)(Model.OrchardServices.ContentManager.Get(invito.SchedaInvito.Visita.Ids[0]))).Visita.ActivityPart.DateTimeStart; // invito.SchedaInvito.Visita.ContentItems[0].Visita.ActivityPart.DateTimeStart;
+        DateTime now = DateTime.Now;
+        if (now.Date <= visitStart.Date.Subtract(endFirstRange)) {
             retString = "H48";
-        }
-        else if (today < dtVisita.AddDays(-1)) {
+        } else if (now <= visitStart.Subtract(endSecondRange)) {
             retString = "H24";
-        }
-        else {
+        } else {
             retString = "OutOfDate";
         }
     }
