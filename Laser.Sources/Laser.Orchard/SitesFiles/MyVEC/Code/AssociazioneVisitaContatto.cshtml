@@ -35,7 +35,7 @@
             //dynamic contact = _communicationService.GetContactsFromMail(item.SchedaInvito.Email.Value)[0];
             //************************
             //update VisiteEffettuate
-            var cpf = contact.CommunicationContact.VisiteEffettuate;
+            var cpf = contact.ProfilePart.VisiteEffettuate;
             if (item.SchedaInvito.Hapartecipato.Value ?? false) {
                 //add the Visita to the ContentPickerField in the CommunicationContact
                 if (!((int [])cpf.Ids).Any(id => id == idVisita)) {
@@ -53,7 +53,7 @@
             string allIds = String.Join(",", ((int[])cpf.Ids).Select<int, string>(id => "{" + id.ToString() + "}"));
             _fieldIndexService.Set(
                 contact.FieldIndexPart,
-                "CommunicationContact",
+                "ProfilePart",
                 "VisiteEffettuate",
                 "",
                 allIds,
@@ -61,7 +61,7 @@
             );
             //************************
             //update InvitiVisita
-            var cpfInviti = contact.CommunicationContact.InvitiVisita;
+            var cpfInviti = contact.ProfilePart.InvitiVisita;
             //add the Visita to the ContentPickerField in the CommunicationContact
             if (!((int[])cpfInviti.Ids).Any(id => id == idVisita)) {
                 //only add if the Visita is not there already
@@ -73,7 +73,7 @@
             string allIdsInviti = String.Join(",", ((int[])cpfInviti.Ids).Select<int, string>(id => "{" + id.ToString() + "}"));
             _fieldIndexService.Set(
                 contact.FieldIndexPart,
-                "CommunicationContact",
+                "ProfilePart",
                 "InvitiVisita",
                 "",
                 allIdsInviti,
