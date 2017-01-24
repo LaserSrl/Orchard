@@ -8,63 +8,46 @@
 @functions{
     IFieldIndexService _fieldIndexService;
     Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
-    IRepository<Laser.Orchard.Questionnaires.Models.UserAnswersRecord> _repoAswers;
     string retString = "Error"; //possible outcomes: "Error","Ok"
-    dynamic visita = null;
-    dynamic invitoDiRiferimento = null;
     dynamic usr = null;
-    DateTime dtUltimaVisita = DateTime.MinValue;
     string questionnaireContext = "";
     Orchard.Workflows.Models.WorkflowContext wfCtx = null;
 }
 @{
     try {
         wfCtx = Model.Tokens["Workflow"];
+        questionnaireContext = Model.Tokens["QuestionnaireContext"];
+        int visitaId = Convert.ToInt32(questionnaireContext);
+        string cpfVisitaValue = string.Format("{{{0}}}", visitaId);
         usr = Model.OrchardServices.WorkContext.CurrentUser;
-        int usrId = usr.Id;
         int questionnaireId = Model.ContentItem.Id;
         string mail = usr.Email;
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
-        _repoAswers = Model.OrchardServices.WorkContext.Resolve<IRepository<Laser.Orchard.Questionnaires.Models.UserAnswersRecord>>();
         var qryInviti = _fieldIndexPartRecord.Table
             .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Email." && r.Value == mail))
+            .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Visita." && r.Value == cpfVisitaValue))
             .Select(x => x.ContentItemRecord.Id);
         var ids = qryInviti.ToList();
-        foreach(var idInvito in ids){
-            dynamic invito = ((dynamic)Model.OrchardServices.ContentManager.Get(idInvito));
+        if(ids.Count > 0) {
+            dynamic invito = ((dynamic)Model.OrchardServices.ContentManager.Get((int)(ids[0])));
             // se l'invito non è stato eliminato esamino la relativa visita
             if(invito != null) {
-                visita = ((dynamic)Model.OrchardServices.ContentManager.Get(invito.SchedaInvito.Visita.Ids[0]));
-                if(visita.ActivityPart.DateTimeStart > dtUltimaVisita) {
-                    dtUltimaVisita = visita.ActivityPart.DateTimeStart;
-                    questionnaireContext = visita.TitlePart.Title;
-                    invitoDiRiferimento = invito;
-                }
-            }
+                invito.SchedaInvito.QuestionarioCompilato.Value = "Done";
+                _fieldIndexService.Set(
+                    invito.FieldIndexPart,
+                    "SchedaInvito",
+                    "QuestionarioCompilato",
+                    "",
+                    "Done",
+                    typeof(string)
+                );
+                retString = "Ok";
+            }                
         }
-        if(invitoDiRiferimento != null) {
-            invitoDiRiferimento.SchedaInvito.QuestionarioCompilato.Value = "Done";
-            _fieldIndexService.Set(
-                invitoDiRiferimento,
-                "SchedaInvito",
-                "QuestionarioCompilato",
-                "",
-                "Done",
-                typeof(string)
-            );
+        if(retString != "Ok") {
+            wfCtx.SetState("ErrorMessage", "Aggiornamento flag 'QuestionarioCompilato' non riuscito: invito non trovato.");
         }
-        if (string.IsNullOrWhiteSpace(questionnaireContext) == false) {
-            string sessionId = System.Web.HttpContext.Current.Session.SessionID;
-            var answers = _repoAswers.Table.Where(x => x.User_Id == usrId
-                && x.QuestionnairePartRecord_Id == questionnaireId
-                && x.SessionID == sessionId);
-            foreach(var rec in answers) {
-                rec.Context = questionnaireContext;
-                _repoAswers.Update(rec);
-            }
-        }
-        retString = "Ok";
     }
     catch(Exception ex) {
         wfCtx.SetState("ErrorMessage", ex.Message);
