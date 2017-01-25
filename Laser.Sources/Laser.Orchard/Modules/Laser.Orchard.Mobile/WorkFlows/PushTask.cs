@@ -60,7 +60,16 @@ namespace Laser.Orchard.Mobile.WorkFlows {
             bool produzione = activityContext.GetState<string>("Produzione") == "Produzione";
             var userId = activityContext.GetState<string>("userId");
             int iUser = 0;
+            List<int> iUserList = new List<int>();
+            string users = ""; 
             int.TryParse(userId, out iUser);
+            string[] userList = userId.Split(',', ' ');
+            foreach (string uId in userList) {
+                if (int.TryParse(uId, out iUser)) {
+                    iUserList.Add(iUser);
+                }
+            }
+            users = string.Join(",", iUserList);
 
             Int32 idRelated = 0;
             if (activityContext.GetState<string>("idRelated") == "idRelated") {
@@ -99,7 +108,7 @@ namespace Laser.Orchard.Mobile.WorkFlows {
                 querydevice = " SELECT  distinct P.* " +
                                     " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
                                     " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
-                                    " Where U.UserPartRecord_Id=" + iUser.ToString();
+                                    " Where U.UserPartRecord_Id in (" + users + ")";
 
                 device = "All";
             }

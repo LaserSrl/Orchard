@@ -76,8 +76,8 @@ namespace Laser.Orchard.Mobile.WorkFlows {
                     _UserId: Shape.Textbox(
                                 Id: "userId",
                                 Name: "userId",
-                                Title: T("User ID"),
-                                Description: T("User ID Tokenized."),
+                                Title: T("User ID list"),
+                                Description: T("Comma separated list of User ID (eg. 12,45,239). Tokenized."),
                                 Classes: new[] { "large", "text", "tokenized" }
                             ),
 
