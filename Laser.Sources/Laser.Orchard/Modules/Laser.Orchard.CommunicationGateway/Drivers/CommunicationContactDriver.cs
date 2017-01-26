@@ -1,10 +1,12 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.ViewModels;
+using Laser.Orchard.StartupConfig.Services;
 using Orchard;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Security;
 using Orchard.UI.Admin;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,7 @@ using System.Web;
 namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class CommunicationContactDriver : ContentPartDriver<CommunicationContactPart> {
         private readonly IOrchardServices _orchardServices;
+        private readonly IControllerContextAccessor _controllerContextAccessor;
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
@@ -22,13 +25,20 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             get { return "Laser.Orchard.CommunicationGateway"; }
         }
 
-        public CommunicationContactDriver(IOrchardServices orchardServices) {
+        public CommunicationContactDriver(IOrchardServices orchardServices, IControllerContextAccessor controllerContextAccessor) {
             _orchardServices = orchardServices;
+            _controllerContextAccessor = controllerContextAccessor;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
         protected override DriverResult Display(CommunicationContactPart part, string displayType, dynamic shapeHelper) {
+            // check sulle permission (esclude il modulo Generator)
+            if (_controllerContextAccessor.Context.Controller.GetType().Namespace != "Laser.Orchard.Generator.Controllers") {
+                if (_orchardServices.Authorizer.Authorize(Permissions.ShowContacts) == false) {
+                    throw new OrchardSecurityException(T("You do not have permission to access this content."));
+                }
+            }
             //Determine if we're on an admin page
             bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             if (isAdmin) {
