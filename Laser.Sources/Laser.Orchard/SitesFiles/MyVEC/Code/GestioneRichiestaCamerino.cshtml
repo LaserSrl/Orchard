@@ -1,0 +1,65 @@
+﻿@using Orchard;
+@using Orchard.ContentManagement;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","DoNothing","Push" 
+
+    string eMsg = String.Empty; //used to track errors and put them in the WF state
+}
+@{
+    if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+        eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+    }
+    try {
+        //Model.ContentItem is a RichiestaInvito
+        dynamic richiesta = Model.ContentItem;
+        if ((bool)(richiesta.RichiestaCamerino.Evasa.Value)) {
+            //Handled already.
+            retString = "DoNothing";
+        } else {
+            //Identify the store
+            var store = ((dynamic)Model.OrchardServices.ContentManager.Get(richiesta.RichiestaCamerino.Negozio.Ids[0]));
+            if (store == null) {
+                throw new Exception("Impossibile identificare il negozio dalla Richiesta Camerino.");
+            }
+            //Identify the Sales assistants
+            string csvIds = store.PuntoVendita.IdsSalesAssistants.Value;
+            if (string.IsNullOrWhiteSpace(csvIds)) {
+                throw new Exception("Il negozio per questa richiesta non ha nessun Sales Assistant.");
+            }
+            //Identify the customer
+            var caller = Model.OrchardServices.WorkContext.CurrentUser;
+            if (caller == null) {
+                throw new Exception("Impossibile identificare l'utente che ha effettuato la Richiesta Camerino.");
+            }
+            dynamic dCaller = caller;
+            //Extract product information
+            var product = ((dynamic)Model.OrchardServices.ContentManager.Get(richiesta.RichiestaCamerino.Prodotto.Ids[0]));
+            if (product == null) {
+                throw new Exception("Impossibile identificare il prodotto dalla Richiesta Camerino.");
+            } else {
+                Model.Tokens["Workflow"].SetState("Product", product.TitlePart.Title);
+            }
+            var colour = ((dynamic)Model.OrchardServices.ContentManager.Get(richiesta.RichiestaCamerino.Colore.Ids[0]));
+            if (colour == null) {
+                throw new Exception("Impossibile identificare il colore dalla Richiesta Camerino.");
+            } else {
+                Model.Tokens["Workflow"].SetState("ProductColour", colour.TitlePart.Title);
+            }
+            //Set workflow states used by the Push Activity
+            Model.Tokens["Workflow"].SetState("RecipientsList", csvIds);
+            Model.Tokens["Workflow"].SetState("CustomerName", dCaller.User.ProfilePart.Name.Value ?? "");
+            Model.Tokens["Workflow"].SetState("CustomerSurname", dCaller.User.ProfilePart.Surname.Value ?? "");
+            Model.Tokens["Workflow"].SetState("ProductSize", richiesta.RichiestaCamerino.Taglia.Value ?? "");
+            Model.Tokens["Workflow"].SetState("DressingRoom", richiesta.RichiestaCamerino.Camerino.Value ?? "");
+            retString = "Push";
+        }
+    } catch (Exception ex) {
+        eMsg += ex.Message + Environment.NewLine;
+        //eMsg += ex.StackTrace + Environment.NewLine;
+        retString = "Error";
+    }
+    Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+}@retString
