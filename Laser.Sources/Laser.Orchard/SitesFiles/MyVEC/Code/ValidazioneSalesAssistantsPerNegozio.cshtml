@@ -1,0 +1,59 @@
+﻿@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Security;
+@using Orchard.Users.Models;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","OK"
+
+    string eMsg = String.Empty; //used to track errors and put them in the WF state
+
+    //additional services
+    IMembershipService _membershipService;
+    IContentManager _contentManager;
+}
+@{
+    if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+        eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+    }
+    try {
+        _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        //Model.ContentItem is a PuntoVendita
+        dynamic store = Model.ContentItem;
+        string serialized = (string)(store.PuntoVendita.EmailsSalesAssistants.Value);
+        if (string.IsNullOrWhiteSpace(serialized)) {
+            throw new Exception("Non sono stati inseriti indirizzi email per i Sales Assistants");
+        }
+        Func<string, string> fTrim = st => st.Trim();
+        string[] emails = serialized
+            .Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(fTrim)
+            .ToArray();
+        List<int> ids = new List<int>();
+        List<string> problemEmails = new List<string>();
+        foreach (string email in emails) {
+            //Func<UserPartRecord, bool> thisEmail = u => u.Email == email;
+            IUser kUser = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == email).List().FirstOrDefault();
+            if (kUser == null) {
+                problemEmails.Add(email);
+            } else {
+                ids.Add(kUser.Id);
+            }
+        }
+        store.PuntoVendita.IdsSalesAssistants.Value = string.Join(",", ids.Select(id => id.ToString()));
+        if (problemEmails.Count > 0) {
+            eMsg += "Non è stato possibile identificare le utenze corrispondenti ad alcune emails: " + string.Join(", ", problemEmails) + Environment.NewLine;
+            retString = "Error";
+        } else {
+            retString = "OK";
+        }
+    } catch (Exception ex) {
+        eMsg += ex.Message + Environment.NewLine;
+        //eMsg += ex.StackTrace + Environment.NewLine;
+        retString = "Error";
+    }
+    Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+}@retString

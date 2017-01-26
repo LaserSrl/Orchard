@@ -56,6 +56,7 @@
     <None Include="MyVEC\Code\AssociazioneVisitaContatto.cshtml" />
     <None Include="MyVEC\Code\CheckPrenotazioneParcheggio.cshtml" />
     <None Include="MyVEC\Code\CheckTarga.cshtml" />
+    <None Include="MyVEC\Code\GestioneRichiestaCamerino.cshtml" />
     <None Include="MyVEC\Code\NotificaInviata.cshtml" />
     <None Include="MyVEC\Code\ReadCredenzialiUtente.cshtml" />
     <None Include="MyVEC\Code\RegistraPartecipazione.cshtml" />
@@ -76,6 +77,7 @@
     </None>
     <None Include="MyVEC\Code\SyncDataVisitaToInvito.cshtml" />
     <None Include="MyVEC\Code\UpdateQuestionnaireContext.cshtml" />
+    <None Include="MyVEC\Code\ValidazioneSalesAssistantsPerNegozio.cshtml" />
     <None Include="MyVEC\Mobile\devVec.p12" />
     <None Include="MyVEC\Mobile\prodVec.p12" />
     <None Include="RomaMunicipioII\Code\ImportOsp.cshtml" />
