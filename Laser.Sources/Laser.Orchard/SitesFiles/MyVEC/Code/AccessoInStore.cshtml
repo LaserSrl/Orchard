@@ -1,5 +1,9 @@
-﻿@using Orchard;
+﻿@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.CommunicationGateway.Services;
+@using Orchard;
 @using Orchard.ContentManagement;
+@using Orchard.Projections.Services;
+@using Orchard.Security;
 @using Orchard.Users.Models;
 @using System;
 @using System.Collections.Generic;
@@ -8,12 +12,18 @@
     string retString = "Error"; //possible outcomes: "Error","OK"
 
     string eMsg = String.Empty; //used to track errors and put them in the WF state
+
+    //additional services
+    ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
+    IFieldIndexService _fieldIndexService;
 }
 @{
     if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
         eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
     }
     try {
+        _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
+        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         //Identify the store
         dynamic store = Model.ContentItem;
         if (store == null) {
@@ -35,8 +45,34 @@
         Model.Tokens["Workflow"].SetState("CustomerSurname", dCaller.User.ProfilePart.Surname.Value ?? "");
         decimal storeVisits = (dCaller.User.ProfilePart.VisiteaNegozio.Value ?? (decimal)0) + 1;
         dCaller.User.ProfilePart.VisiteaNegozio.Value = storeVisits;
-        dCaller.User.ProfilePart.AccessoNegozio.DateTime = DateTime.UtcNow; //the DateTimeField is always stored as UTC
+        _fieldIndexService.Set(
+                dCaller.FieldIndexPart,
+                "ProfilePart",
+                "VisiteaNegozio",
+                "",
+                storeVisits,
+                typeof(decimal)
+            );
+        DateTime now = DateTime.UtcNow;
+        dCaller.User.ProfilePart.AccessoNegozio.DateTime = now; //the DateTimeField is always stored as UTC
+        _fieldIndexService.Set(
+                dCaller.FieldIndexPart,
+                "ProfilePart",
+                "AccessoNegozio",
+                "",
+                now,
+                typeof(DateTime)
+            );
         dCaller.User.ProfilePart.InStore.Value = store.Id.ToString();
+        _fieldIndexService.Set(
+                dCaller.FieldIndexPart,
+                "ProfilePart",
+                "InStore",
+                "",
+                store.Id.ToString(),
+                typeof(string)
+            );
+        _communicationService.UserToContact((IUser)(dCaller.UserPart));
         retString = "OK";
     } catch (Exception ex) {
         eMsg += ex.Message + Environment.NewLine;
