@@ -36,11 +36,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             // check sulle permission (esclude il modulo Generator)
             if (_controllerContextAccessor.Context.Controller.GetType().Namespace != "Laser.Orchard.Generator.Controllers") {
                 if (_orchardServices.Authorizer.Authorize(Permissions.ShowContacts) == false) {
-                    //throw new OrchardSecurityException(T("You do not have permission to access this content."));
-                    HttpContext.Current.Response.Clear();
-                    HttpContext.Current.Response.SuppressContent = true;
-                    HttpContext.Current.Response.StatusCode = 401; //Unauthorized
-                    HttpContext.Current.Response.End();
+                    throw new OrchardSecurityException(T("You do not have permission to access this content."));
                 }
             }
             //Determine if we're on an admin page
