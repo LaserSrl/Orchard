@@ -11,10 +11,10 @@ namespace Laser.Orchard.UserProfiler.Models {
     }
 
     public class UserProfilingPartRecord : ContentPartRecord {
-        public UserProfilingPartRecord() {
-            Summary = new List<UserProfilingSummaryRecord>();
-        }
+        //public UserProfilingPartRecord() {
+        //    Summary = new List<UserProfilingSummaryRecord>();
+        //}
 
-        public virtual IList<UserProfilingSummaryRecord> Summary { get; set; }
+        //public virtual IList<UserProfilingSummaryRecord> Summary { get; set; }
     }
 }
