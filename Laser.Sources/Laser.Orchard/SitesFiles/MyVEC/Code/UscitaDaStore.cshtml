@@ -1,0 +1,54 @@
+﻿@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Security;
+@using Orchard.Users.Models;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","OK"
+
+    string eMsg = String.Empty; //used to track errors and put them in the WF state
+
+    //additional services
+    IMembershipService _membershipService;
+    IContentManager _contentManager;
+}
+@{
+    if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+        eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+    }
+    try {
+        _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        //Identify the store
+        dynamic store = Model.ContentItem;
+        if (store == null) {
+            throw new Exception("Impossibile identificare il negozio.");
+        }
+        //Identify customer
+        var caller = Model.OrchardServices.WorkContext.CurrentUser;
+        if (caller == null) {
+            throw new Exception("Impossibile identificare l'utente che ha effettuato l'accesso al Punto Vendita.");
+        }
+        dynamic dCaller = caller;
+        //update the info
+        decimal totalTime = dCaller.User.ProfilePart.TotaleTempoNegozio.Value ?? (decimal)0;
+        DateTime accessTime = dCaller.User.ProfilePart.AccessoNegozio.DateTime;
+        decimal nVisits = dCaller.User.ProfilePart.VisiteaNegozio.Value ?? 0;
+        if (dCaller.User.ProfilePart.InStore.Value != store.Id.ToString() || accessTime == null || nVisits == 0) {
+            throw new Exception("Ci sono stati dei problemi: l'utente non risulta mai entrato nel negozio.");
+        }
+        TimeSpan thisTime = DateTime.UtcNow.Subtract(accessTime); //the DateTimeField is always stored as UTC
+        totalTime += (decimal)thisTime.TotalMinutes;
+        decimal meanTime = totalTime / nVisits;
+        dCaller.User.ProfilePart.InStore.Value = "";
+        dCaller.User.ProfilePart.TotaleTempoNegozio.Value = totalTime;
+        dCaller.User.ProfilePart.PermanenzaMediaNegozio.Value = meanTime;
+        retString = "OK";
+    } catch (Exception ex) {
+        eMsg += ex.Message + Environment.NewLine;
+        retString = "Error";
+    }
+    Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+}@retString
