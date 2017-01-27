@@ -4,6 +4,7 @@ using Orchard;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,11 +25,7 @@ namespace Laser.Orchard.StartupConfig.Drivers {
             // check sulle permission (esclude il modulo Generator)
             if (_controllerContextAccessor.Context.Controller.GetType().Namespace != "Laser.Orchard.Generator.Controllers") {
                 if (_orchardServices.WorkContext.CurrentUser == null) {
-                    //throw new OrchardSecurityException(T("You do not have permission to access this content."));
-                    HttpContext.Current.Response.Clear();
-                    HttpContext.Current.Response.SuppressContent = true;
-                    HttpContext.Current.Response.StatusCode = 401; //Unauthorized
-                    HttpContext.Current.Response.End();
+                    throw new OrchardSecurityException(T("You do not have permission to access this content."));
                 }
             }
             return null;
