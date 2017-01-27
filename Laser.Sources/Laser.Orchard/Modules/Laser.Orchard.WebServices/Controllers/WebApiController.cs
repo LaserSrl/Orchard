@@ -109,7 +109,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                 //return GetJson(content, page, pageSize);
             }
             catch (OrchardSecurityException) {
-                return Json(_utilsServices.GetResponse(ResponseType.UnAuthorized), JsonRequestBehavior.AllowGet);
+                return Json(_utilsServices.GetResponse(ResponseType.InvalidUser), JsonRequestBehavior.AllowGet);
             }
         }
 

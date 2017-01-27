@@ -309,7 +309,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                 return cr;
             }
             catch (OrchardSecurityException) {
-                return Json(_utilsServices.GetResponse(ResponseType.UnAuthorized), JsonRequestBehavior.AllowGet);
+                return Json(_utilsServices.GetResponse(ResponseType.InvalidUser), JsonRequestBehavior.AllowGet);
             }
             catch {
                 return new HttpStatusCodeResult(500);
