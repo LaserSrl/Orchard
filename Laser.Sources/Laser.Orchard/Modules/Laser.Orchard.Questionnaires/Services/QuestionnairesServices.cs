@@ -751,13 +751,34 @@ namespace Laser.Orchard.Questionnaires.Services {
             if (to.HasValue && to.Value > DateTime.MinValue) {
                 answersQuery = answersQuery.Where(w => w.AnswerDate <= to);
             }
-            var users = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().List();
             var result = answersQuery.Select(x => new ExportUserAnswersVM { 
                 Answer = x.AnswerText, 
                 Question = x.QuestionText, 
                 AnswerDate = x.AnswerDate, 
-                UserName = (x.User_Id > 0)? _orchardServices.ContentManager.Get<UserPart>(x.User_Id).UserName : x.SessionID,
-                Contesto = x.Context}).ToList();
+                UserName = x.SessionID,
+                UserId = x.User_Id,
+                Contesto = x.Context
+            }).ToList();
+            int contentId = 0;
+            TitlePart titlePart = null;
+            UserPart usrPart = null;
+            foreach (var answ in result) {
+                // cerca di rendere più leggibili l'utente sostituendolo con lo username, dove è possibile
+                // altrimenti lo lascia valorizzato con il SessionID
+                if (answ.UserId > 0) {
+                    usrPart = _orchardServices.ContentManager.Get<UserPart>(answ.UserId);
+                    if (usrPart != null) {
+                        answ.UserName = usrPart.UserName;
+                    }
+                }
+                // cerca di rendere più leggibile il contesto accodando il titolo relativo, dove è possibile
+                if (int.TryParse(answ.Contesto, out contentId)) {
+                    titlePart = _orchardServices.ContentManager.Get<TitlePart>(contentId);
+                    if (titlePart != null) {
+                        answ.Contesto = string.Format("{0} {1}", contentId, titlePart.Title);
+                    }
+                }
+            }
             return result;
         }
         public void SaveQuestionnaireUsersAnswers(int questionnaireId, DateTime? from = null, DateTime? to = null) {
