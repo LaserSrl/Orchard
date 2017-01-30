@@ -522,11 +522,16 @@ namespace Laser.Orchard.Questionnaires.Services {
             bool result = false;
             var questionnaireModuleSettings = _orchardServices.WorkContext.CurrentSite.As<QuestionnaireModuleSettingsPart>();
             bool exit = false;
-            if (currentUser != null && questionnaireModuleSettings.Disposable) {
-                if (_repositoryUserAnswer.Fetch(x => x.User_Id == currentUser.Id && x.QuestionnairePartRecord_Id == editModel.Id && x.Context == editModel.Context).Count() > 0) {
-                    //_notifier.Add(NotifyType.Information, T("Operation Fail: Questionnaire already filled"));
-                    // throw new Exception();
-                    exit = true;
+            if (questionnaireModuleSettings.Disposable) {
+                if (currentUser != null) {
+                    if (_repositoryUserAnswer.Fetch(x => x.User_Id == currentUser.Id && x.QuestionnairePartRecord_Id == editModel.Id && x.Context == editModel.Context).Count() > 0) {
+                        exit = true;
+                    }
+                }
+                else { // anonymous user => check SesionID
+                    if (_repositoryUserAnswer.Fetch(x => x.SessionID == SessionID && x.QuestionnairePartRecord_Id == editModel.Id && x.Context == editModel.Context).Count() > 0) {
+                        exit = true;
+                    }
                 }
             }
             if (!exit) {
@@ -751,7 +756,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                 Answer = x.AnswerText, 
                 Question = x.QuestionText, 
                 AnswerDate = x.AnswerDate, 
-                UserName = x.SessionID,
+                UserName = (x.User_Id > 0)? _orchardServices.ContentManager.Get<UserPart>(x.User_Id).UserName : x.SessionID,
                 Contesto = x.Context}).ToList();
             return result;
         }
