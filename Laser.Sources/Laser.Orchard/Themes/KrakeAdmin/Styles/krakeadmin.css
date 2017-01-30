@@ -3215,6 +3215,11 @@ legend:after {
     border-bottom: 1px solid rgba(12, 12, 12, 0.25);
 }
 
+legend.required:before, legend.required:after {
+     display: inline; 
+     border-bottom: 0; 
+}
+
 legend:before {
     width: 0%;
 }
