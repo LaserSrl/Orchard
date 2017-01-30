@@ -8,6 +8,7 @@ using System.Web;
 namespace Laser.Orchard.UserProfiler.Service {
     public interface IUserProfilingService : IDependency {
         Dictionary<string, int> UpdateProfile(int UserId, string text, TextSourceTypeOptions sourceType, int count);
-        Dictionary<string, int> UpdateProfile(int UserId, UpdateVM update);
+        Dictionary<string, int> UpdateProfile(int UserId, List<ProfileVM> update);
+        Dictionary<string, int> UpdateProfile(int UserId, int id);
     }
 }

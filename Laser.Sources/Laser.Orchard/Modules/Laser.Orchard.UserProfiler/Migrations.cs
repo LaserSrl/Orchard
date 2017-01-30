@@ -20,12 +20,27 @@ namespace Laser.Orchard.UserProfiler {
                  .Column<int>("Count")
              );
             ContentDefinitionManager.AlterPartDefinition("UserProfilingPart", builder => builder
-                .Attachable()
-                .WithDescription("Allows tracking User preference"));
+                .Attachable(false)
+                );
             ContentDefinitionManager.AlterTypeDefinition("User", builder => builder
                 .WithPart("UserProfilingPart")
                 );
             return 1;
+        }
+        public int UpdateFrom1() {
+            SchemaBuilder.CreateTable("TrackingPartRecord",
+              table => table
+                  .ContentPartRecord()
+              );
+     
+            return 2;
+        }
+        public int UpdateFrom2() {
+
+            ContentDefinitionManager.AlterPartDefinition("TrackingPart", builder => builder
+               .Attachable()
+               .WithDescription("Allows tracking User preference"));
+            return 3;
         }
     }
 }

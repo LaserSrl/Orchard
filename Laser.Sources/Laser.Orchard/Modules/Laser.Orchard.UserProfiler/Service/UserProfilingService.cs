@@ -21,23 +21,50 @@ namespace Laser.Orchard.UserProfiler.Service {
         }
 
 
-        public Dictionary<string, int> UpdateProfile(int UserId, UpdateVM update) {
-            var dicSUM=new Dictionary<string, int>();
-            foreach(var el in update.Profile) {
-               var dicout= UpdateProfile(UserId, el.Text, el.Type, el.Count);
-               dicSUM.Union(dicout).ToDictionary(k => k.Key, v => v.Value);
+        public Dictionary<string, int> UpdateProfile(int UserId, List<ProfileVM> update) {
+            var dicSUM = new Dictionary<string, int>();
+            foreach (var el in update) {
+                TextSourceTypeOptions sourcetype = (TextSourceTypeOptions)Enum.Parse(typeof(TextSourceTypeOptions), el.Type);
+                var dicout = UpdateProfile(UserId, el.Text, sourcetype, el.Count);
+                if (dicSUM.ContainsKey(dicout.Keys.First()))
+                    dicSUM[dicout.Keys.First()] =  dicout[dicout.Keys.First()];
+                else
+                    dicSUM.Add(dicout.Keys.First(), dicout[dicout.Keys.First()]);
             }
             return dicSUM;
         }
 
+        public Dictionary<string, int> UpdateProfile(int UserId, int id) {
+            return UpdateProfile(UserId, id.ToString(), TextSourceTypeOptions.ContentItem, 1);
+            //var item = _userProfilingSummaryRecord.Fetch(x => x.UserProfilingPartRecord.Id.Equals(UserId) && x.SourceType == TextSourceTypeOptions.ContentItem && x.Text.Equals(id.ToString())).FirstOrDefault();
+            //if (item == null) {
+            //    var userProfilingPartRecord = ((dynamic)_contentManager.Get(UserId)).UserProfilingPart.Record;
+            //    item = new UserProfilingSummaryRecord() {
+            //        SourceType = TextSourceTypeOptions.ContentItem,
+            //        Text = id.ToString(),
+            //        Count = 1,
+            //        UserProfilingPartRecord = userProfilingPartRecord
+            //    };
+            //    _userProfilingSummaryRecord.Create(item);
+            //}
+            //else {
+            //    item.Count += 1;
+            //    _userProfilingSummaryRecord.Update(item);
+            //}
+            //var data = new Dictionary<string, int>();
+            //data.Add(text, item.Count);
+            //return data;
+        }
+
+
         public Dictionary<string, int> UpdateProfile(int UserId, string text, TextSourceTypeOptions sourceType, int count) {
-            var item = _userProfilingSummaryRecord.Fetch(x => x.UserProfilingPartRecord.Id.Equals(UserId) && x.Text.Equals(text) && x.SourceType==sourceType).FirstOrDefault();
+            var item = _userProfilingSummaryRecord.Fetch(x => x.UserProfilingPartRecord.Id.Equals(UserId) && x.Text.Equals(text) && x.SourceType == sourceType).FirstOrDefault();
             if (item == null) {
                 var userProfilingPartRecord = ((dynamic)_contentManager.Get(UserId)).UserProfilingPart.Record;
                 item = new UserProfilingSummaryRecord() {
                     SourceType = sourceType,
                     Text = text,
-                    Count=count,
+                    Count = count,
                     UserProfilingPartRecord = userProfilingPartRecord
                 };
                 _userProfilingSummaryRecord.Create(item);
@@ -47,7 +74,7 @@ namespace Laser.Orchard.UserProfiler.Service {
                 _userProfilingSummaryRecord.Update(item);
             }
             var data = new Dictionary<string, int>();
-            data.Add(text,  item.Count);
+            data.Add(text, item.Count);
             return data;
         }
 

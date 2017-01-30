@@ -1,0 +1,25 @@
+﻿@Script.Require("JQuery");
+@using (Script.Foot()) {
+<script type="text/javascript">
+    $(document).ready(function () {
+        var parameter = new Object();
+        parameter.id = @Model.PageID;
+        $.ajax({
+            url: 'http://localhost/Laser.Orchard/API/Tracking/PostID',
+            type: "POST",
+            dataType: 'json',
+            data: parameter,
+            success: function (response) {
+                if (response.Success) {
+                    alert("ok");
+                }
+            },
+            error: function (response) {
+                  alert('error)');
+                        }
+        });
+    });
+</script>
+}
+
+    
