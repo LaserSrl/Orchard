@@ -154,7 +154,6 @@
     <Compile Include="Drivers\UserReactionsPartDriver.cs" />
     <Compile Include="Handlers\SettingsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\UserReactionsPartHandler.cs" />
-    <Compile Include="Projections\DefaultHqlExpressionFactoryExtensions.cs" />
     <Compile Include="Projections\ReactionClickedFilterForm.cs" />
     <Compile Include="Projections\ReactionClickedQueryFilter.cs" />
     <Compile Include="Projections\UserReactionsQueryFilter.cs" />

@@ -15,8 +15,8 @@ namespace Laser.Orchard.UserProfiler {
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
             string[] Methods = new string[]{
-            "PostID",
-            "Post"
+            "PostId",
+            "PostIds"
         };
 
             foreach (string method in Methods) {

@@ -7,4 +7,4 @@ Features:
     Laser.Orchard.UserProfiler:
 		Name: Laser UserProfiler
 		Description: Tracks navigation beahaviour of the logged in user based on ContentItem's informations (Tags)
-		Dependencies: Orchard.Users, Orchard.Tags, Laser.Orchard.StartupConfig
+		Dependencies: Orchard.Users, Orchard.Tags,Orchard.Projections,Orchard.Forms, Laser.Orchard.StartupConfig

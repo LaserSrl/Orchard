@@ -256,6 +256,7 @@
     <Compile Include="Navigation\ContentAdminMenu.cs" />
     <Compile Include="Navigation\MaintenanceMenu.cs" />
     <Compile Include="Permission\MaintenancePermission.cs" />
+    <Compile Include="Projections\DefaultHqlExpressionFactoryExtensions.cs" />
     <Compile Include="Projections\FavoriteCultureFilter.cs" />
     <Compile Include="Projections\FavoriteCultureForm.cs" />
     <Compile Include="Projections\IProviderForProections.cs" />
