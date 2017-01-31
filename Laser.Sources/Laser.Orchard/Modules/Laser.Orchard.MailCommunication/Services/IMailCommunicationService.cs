@@ -7,6 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
+using Orchard.Users.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace Laser.Orchard.MailCommunication.Services {
 
         IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, int contentId = 0);
         IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, ContentItem advItem = null);
+        IList GetMailQueryResult(string[] userNames, Int32? idlingua, bool countOnly = false, ContentItem advItem = null);
     }
 
     [OrchardFeature("Laser.Orchard.MailCommunication")]
@@ -75,6 +77,45 @@ namespace Laser.Orchard.MailCommunication.Services {
                 "cir.EmailContactPartRecord as EmailPart join " +
                     "EmailPart.EmailRecord as EmailRecord " +
                 "WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.AccettatoUsoCommerciale AND civr.Id in (" + stringHQL + ")";
+
+            var fullStatement = _session.For(null)
+                .CreateQuery(queryForEmail)
+                .SetCacheable(false);
+            IList lista = fullStatement
+                    .SetResultTransformer(Transformers.AliasToEntityMap)
+                    .List();
+            return lista;
+        }
+
+        public IList GetMailQueryResult(string[] userNames, Int32? idlingua, bool countOnly = false, ContentItem advItem = null) {
+            if (userNames.Length <= 0) return null;
+
+            var query = IntegrateAdditionalConditions(null, idlingua);
+            query = query
+                .Where(
+                    x => x.ContentPartRecord<EmailContactPartRecord>(), 
+                    x => x.In("EmailRecord", userNames) //this does not work
+                    ); 
+            // Trasformo in stringa HQL
+            var stringHQL = ((DefaultHqlQuery)query).ToHql(false);
+            // Rimuovo la Order by per poter fare la query annidata
+            // TODO: trovare un modo migliore per rimuovere la order by
+            stringHQL = stringHQL.ToString().Replace("order by civ.Id", "");
+            //stringHQL += "WHERE ";
+
+            string queryForEmail = "";
+            if (countOnly) {
+                queryForEmail = "SELECT count(EmailRecord) as Tot";
+            } else {
+                queryForEmail = "SELECT cir.Id as Id, TitlePart.Title as Title, EmailRecord.Email as EmailAddress";
+            }
+            queryForEmail += " FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
+                "civr.ContentItemRecord as cir join " +
+                "civr.TitlePartRecord as TitlePart join " +
+                "cir.EmailContactPartRecord as EmailPart join " +
+                "EmailPart.EmailRecord as EmailRecord " +
+                //"WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.AccettatoUsoCommerciale AND civr.Id in (" + stringHQL + ")";
+                "WHERE civr.Published=1 AND EmailRecord.Validated AND civr.Id in (" + stringHQL + ")";
 
             var fullStatement = _session.For(null)
                 .CreateQuery(queryForEmail)
