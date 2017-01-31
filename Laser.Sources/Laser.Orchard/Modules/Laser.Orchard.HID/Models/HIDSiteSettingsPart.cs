@@ -1,4 +1,5 @@
 ﻿using Orchard.ContentManagement;
+using Orchard.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,6 @@ namespace Laser.Orchard.HID.Models {
             get { return (AppVersionStrings != null && AppVersionStrings.Length > 0) ? String.Join(Environment.NewLine, AppVersionStrings) : ""; }
             set { AppVersionStrings = value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(avs => avs.Trim()).ToArray(); }
         }
-
 
 
         private static string NumbersArrayToString(string[] partNumbers) {
