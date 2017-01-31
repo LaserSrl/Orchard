@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Web;
 using Laser.Orchard.StartupConfig.Projections;
 
-namespace Laser.Orchard.UserProfiler.Projection {
+namespace Laser.Orchard.UserProfiler.Projections {
     public class UserTrackingQueryFilter : OrchardProjections.Services.IFilterProvider {
         public Localizer T { get; set; }
 

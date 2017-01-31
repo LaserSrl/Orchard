@@ -15,7 +15,7 @@ using System.Xml;
 using Orchard.Tags.Services;
 using System.Web.Mvc;
 
-namespace Laser.Orchard.UserProfiler.Projection {
+namespace Laser.Orchard.UserProfiler.Projections {
     public class UserTrackingFilterForm : IFormProvider {
         private readonly Work<IResourceManager> _resourceManager;
         private readonly ITagService _tagService;

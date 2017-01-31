@@ -10,16 +10,21 @@ using Orchard.Users.Models;
 using Laser.Orchard.UserProfiler.ViewModels;
 using Orchard.Tags.Models;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Orchard.Workflows.Services;
+using Laser.Orchard.CommunicationGateway.Models;
 
 namespace Laser.Orchard.UserProfiler.Service {
     public class UserProfilingService : IUserProfilingService {
         private readonly IRepository<UserProfilingSummaryRecord> _userProfilingSummaryRecord;
         private readonly IContentManager _contentManager;
+        private readonly IWorkflowManager _workflowManager;
         public UserProfilingService(
             IRepository<UserProfilingSummaryRecord> userProfilingSummaryRecord,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IWorkflowManager workflowManager) {
             _userProfilingSummaryRecord = userProfilingSummaryRecord;
             _contentManager = contentManager;
+            _workflowManager = workflowManager;
         }
 
 
@@ -81,11 +86,24 @@ namespace Laser.Orchard.UserProfiler.Service {
                 item.Count += count;
                 _userProfilingSummaryRecord.Update(item);
             }
+            StartWorkflow(UserId, text, sourceType, item.Count);
             var data = new Dictionary<string, int>();
             data.Add(text, item.Count);
             return data;
         }
 
+
+        private void StartWorkflow(int UserId,string text, TextSourceTypeOptions sourceType, int count) {
+            var contentItem = _contentManager.Get(UserId);
+            var contact = _contentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == UserId).List().FirstOrDefault();
+            _workflowManager.TriggerEvent("UserTracking", contact.ContentItem, () => new Dictionary<string, object> { 
+                        { "contact", contact.ContentItem },
+                        { "text", text },
+                        { "sourceType", sourceType },
+                        { "count", count},
+                         { "UserId", UserId}
+                    });
+         }
     }
 
 }
