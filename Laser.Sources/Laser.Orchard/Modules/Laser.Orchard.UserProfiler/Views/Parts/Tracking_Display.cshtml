@@ -8,19 +8,20 @@
             url: '@Model.CallUrl/API/Tracking/PostID',
             type: "POST",
             dataType: 'json',
-            data: parameter,
-            success: function (response) {
-                if (response.Success) {
-                    var x="";
-                    for(key in response.Data){
-                        x+=key +"->"+response.Data[key]+"\r\n";
-                    }
-                    alert(x);
-                }
-            },
-            error: function (response) {
-                  alert('error)');
-                        }
+            data: parameter
+            //,
+            //success: function (response) {
+            //    if (response.Success) {
+            //        var x="";
+            //        for(key in response.Data){
+            //            x+=key +"->"+response.Data[key]+"\r\n";
+            //        }
+            //        alert(x);
+            //    }
+            //},
+            //error: function (response) {
+            //      alert('error)');
+            //            }
         });
     });
 </script>
