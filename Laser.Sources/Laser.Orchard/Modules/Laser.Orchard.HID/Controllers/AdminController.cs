@@ -36,7 +36,11 @@ namespace Laser.Orchard.HID.Controllers {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage HID settings")))
                 return new HttpUnauthorizedResult();
             var settings = _HIDAdminService.GetSiteSettings();
+            string oldpw = settings.ClientSecret;
             if (TryUpdateModel(settings)) {
+                if (string.IsNullOrWhiteSpace(settings.ClientSecret)) {
+                    settings.ClientSecret = oldpw;
+                }
                 _orchardServices.Notifier.Information(T("Settings saved successfully."));
                 //attempt authentication
                 switch (_HIDAPIService.Authenticate()) {
