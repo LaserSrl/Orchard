@@ -89,20 +89,7 @@ namespace Laser.Orchard.MailCommunication.Services {
 
         public IList GetMailQueryResult(string[] userNames, Int32? idlingua, bool countOnly = false, ContentItem advItem = null) {
             if (userNames.Length <= 0) return null;
-
-            var query = IntegrateAdditionalConditions(null, idlingua);
-            query = query
-                .Where(
-                    x => x.ContentPartRecord<EmailContactPartRecord>(), 
-                    x => x.In("EmailRecord", userNames) //this does not work
-                    ); 
-            // Trasformo in stringa HQL
-            var stringHQL = ((DefaultHqlQuery)query).ToHql(false);
-            // Rimuovo la Order by per poter fare la query annidata
-            // TODO: trovare un modo migliore per rimuovere la order by
-            stringHQL = stringHQL.ToString().Replace("order by civ.Id", "");
-            //stringHQL += "WHERE ";
-
+            var userNamesCSV = String.Join(",", userNames.Select(x => "'" + x.ToLower().Replace("'", "''") + "'"));
             string queryForEmail = "";
             if (countOnly) {
                 queryForEmail = "SELECT count(EmailRecord) as Tot";
@@ -111,12 +98,16 @@ namespace Laser.Orchard.MailCommunication.Services {
             }
             queryForEmail += " FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
                 "civr.ContentItemRecord as cir join " +
-                "civr.TitlePartRecord as TitlePart join " +
                 "cir.EmailContactPartRecord as EmailPart join " +
-                "EmailPart.EmailRecord as EmailRecord " +
-                //"WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.AccettatoUsoCommerciale AND civr.Id in (" + stringHQL + ")";
-                "WHERE civr.Published=1 AND EmailRecord.Validated AND civr.Id in (" + stringHQL + ")";
-
+                "EmailPart.EmailRecord as EmailRecord join " +
+                "civr.TitlePartRecord as TitlePart " + 
+                ", Laser.Orchard.CommunicationGateway.Models.CommunicationContactPartRecord contact " + 
+                ", Orchard.Users.Models.UserPartRecord upr " +
+                "WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.AccettatoUsoCommerciale " +
+                "AND EmailRecord.EmailContactPartRecord_Id=contact.Id " + // join condition per il contact
+                "AND contact.UserPartRecord_Id=upr.Id " + // join condition per lo user
+                "AND (upr.UserName IN (" + userNamesCSV + ") OR upr.Email IN (" + userNamesCSV + ") )";
+            
             var fullStatement = _session.For(null)
                 .CreateQuery(queryForEmail)
                 .SetCacheable(false);
