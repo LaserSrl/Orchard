@@ -49,6 +49,13 @@ namespace Laser.Orchard.HID.Services {
         /// <returns>This always returns an HIDUser object, but we should check its Error field before using it.</returns>
         HIDUser IssueCredentials(IUser user, string[] partNumbers);
         /// <summary>
+        /// Issue credentials to the HIDUser for all the PartNumbers that are passed as parameter.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="partNumbers"></param>
+        /// <returns>This always returns an HIDUser object, but we should check its Error field before using it.</returns>
+        HIDUser IssueCredentials(HIDUser hidUser, string[] partNumbers);
+        /// <summary>
         /// Revoke credentials from the IUser for all the PartNumbers that are in the settings.
         /// </summary>
         /// <param name="user"></param>
@@ -61,6 +68,13 @@ namespace Laser.Orchard.HID.Services {
         /// <param name="partNumbers"></param>
         /// <returns>This always returns an HIDUser object, but we should check its Error field before using it.</returns>
         HIDUser RevokeCredentials(IUser user, string[] partNumbers);
+        /// <summary>
+        /// Revoke credentials from the HIDUser for all the PartNumbers that are passed as parameter.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="partNumbers"></param>
+        /// <returns>This always returns an HIDUser object, but we should check its Error field before using it.</returns>
+        HIDUser RevokeCredentials(HIDUser hidUser, string[] partNumbers);
 
         string AuthorizationToken { get; }
         string BaseEndpoint { get; }

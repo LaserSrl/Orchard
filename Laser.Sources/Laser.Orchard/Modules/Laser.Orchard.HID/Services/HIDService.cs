@@ -244,22 +244,24 @@ namespace Laser.Orchard.HID.Services {
         public HIDUser IssueCredentials(IUser user, string[] partNumbers) {
             var searchResult = SearchHIDUser(user.Email);
             if (searchResult.Error == SearchErrors.NoError) {
-                HIDUser hidUser = searchResult.User;
-                if (partNumbers.Length == 0) {
-                    hidUser = hidUser.IssueCredential(""); //this assigns the default part number for the customer
-                } else {
-                    foreach (var pn in partNumbers) {
-                        hidUser = hidUser.IssueCredential(pn);
-                        if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
-                            break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential having been
-                            //assigned already, which is fine
-                        }
-                    }
-                }
-                return hidUser;
+                return IssueCredentials(searchResult.User, partNumbers);
             } else {
                 return new HIDUser();
             }
+        }
+        public HIDUser IssueCredentials(HIDUser hidUser, string[] partNumbers) {
+            if (partNumbers.Length == 0) {
+                hidUser = hidUser.IssueCredential(""); //this assigns the default part number for the customer
+            } else {
+                foreach (var pn in partNumbers) {
+                    hidUser = hidUser.IssueCredential(pn);
+                    if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
+                        break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential having been
+                        //assigned already, which is fine
+                    }
+                }
+            }
+            return hidUser;
         }
 
         public HIDUser RevokeCredentials(IUser user) {
@@ -268,22 +270,24 @@ namespace Laser.Orchard.HID.Services {
         public HIDUser RevokeCredentials(IUser user, string[] partNumbers) {
             var searchResult = SearchHIDUser(user.Email);
             if (searchResult.Error == SearchErrors.NoError) {
-                HIDUser hidUser = searchResult.User;
-                if (partNumbers.Length == 0) {
-                    hidUser = hidUser.RevokeCredential();
-                } else {
-                    foreach (var pn in partNumbers) {
-                        hidUser = hidUser.RevokeCredential(pn);
-                        if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
-                            break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential being
-                            //revoked right now
-                        }
-                    }
-                }
-                return hidUser;
+                return RevokeCredentials(searchResult.User, partNumbers);
             } else {
                 return new HIDUser();
             }
+        }
+        public HIDUser RevokeCredentials(HIDUser hidUser, string[] partNumbers) {
+            if (partNumbers.Length == 0) {
+                hidUser = hidUser.RevokeCredential();
+            } else {
+                foreach (var pn in partNumbers) {
+                    hidUser = hidUser.RevokeCredential(pn);
+                    if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
+                        break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential being
+                        //revoked right now
+                    }
+                }
+            }
+            return hidUser;
         }
     }
 
