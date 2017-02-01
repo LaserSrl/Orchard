@@ -241,6 +241,9 @@ namespace Laser.Orchard.HID.Services {
         public HIDUser IssueCredentials(IUser user) {
             return IssueCredentials(user, GetSiteSettings().PartNumbers);
         }
+        public HIDUser IssueCredentials(HIDUser hidUser) {
+            return IssueCredentials(hidUser, GetSiteSettings().PartNumbers);
+        }
         public HIDUser IssueCredentials(IUser user, string[] partNumbers) {
             var searchResult = SearchHIDUser(user.Email);
             if (searchResult.Error == SearchErrors.NoError) {
@@ -266,6 +269,9 @@ namespace Laser.Orchard.HID.Services {
 
         public HIDUser RevokeCredentials(IUser user) {
             return RevokeCredentials(user, GetSiteSettings().PartNumbers);
+        }
+        public HIDUser RevokeCredentials(HIDUser hidUser) {
+            return RevokeCredentials(hidUser, GetSiteSettings().PartNumbers);
         }
         public HIDUser RevokeCredentials(IUser user, string[] partNumbers) {
             var searchResult = SearchHIDUser(user.Email);
