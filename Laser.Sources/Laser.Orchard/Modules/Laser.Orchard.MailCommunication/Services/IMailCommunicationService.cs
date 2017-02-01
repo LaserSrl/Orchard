@@ -102,11 +102,11 @@ namespace Laser.Orchard.MailCommunication.Services {
                 "EmailPart.EmailRecord as EmailRecord join " +
                 "civr.TitlePartRecord as TitlePart " + 
                 ", Laser.Orchard.CommunicationGateway.Models.CommunicationContactPartRecord contact " + 
-                ", Orchard.Users.Models.UserPartRecord upr " +
                 "WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.AccettatoUsoCommerciale " +
                 "AND EmailRecord.EmailContactPartRecord_Id=contact.Id " + // join condition per il contact
-                "AND contact.UserPartRecord_Id=upr.Id " + // join condition per lo user
-                "AND (upr.UserName IN (" + userNamesCSV + ") OR upr.Email IN (" + userNamesCSV + ") )";
+                "AND (EmailRecord.Email IN (" + userNamesCSV + ") " +
+                "    OR exists (select upr.Id from Orchard.Users.Models.UserPartRecord upr " + 
+                "        WHERE upr.Id=contact.UserPartRecord_Id AND upr.UserName IN (" + userNamesCSV + ") ))";
             
             var fullStatement = _session.For(null)
                 .CreateQuery(queryForEmail)
