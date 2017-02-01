@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Laser.Orchard.UserReactions.Projections {
+namespace Laser.Orchard.StartupConfig.Projections {
     public static class DefaultHqlExpressionFactoryExtensions {
         public static void InSubquery(this IHqlExpressionFactory hqlExpressionFactory, string propertyName, string subquery) {
             var aux = (hqlExpressionFactory as DefaultHqlExpressionFactory);

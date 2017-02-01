@@ -6,12 +6,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6F7B43E7-25B0-4CE4-B0FE-5087437540CA}</ProjectGuid>
+    <ProjectGuid>{22DD309C-74F3-4E57-843C-ED46A7122758}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laser.Orchard.UserReactions</RootNamespace>
-    <AssemblyName>Laser.Orchard.UserReactions</AssemblyName>
+    <RootNamespace>Laser.Orchard.UserProfiler</RootNamespace>
+    <AssemblyName>Laser.Orchard.UserProfiler</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
@@ -66,11 +66,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Roles, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Roles\bin\Orchard.Roles.dll</HintPath>
+    <Reference Include="Orchard.Tags">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tags\bin\Orchard.Tags.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Users">
+    <Reference Include="Orchard.Users, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Workflows, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -82,63 +82,59 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.Helpers.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.Razor.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\fonts\reactions.eot" />
-    <Content Include="Styles\fonts\reactions.ttf" />
-    <Content Include="Styles\fonts\reactions.woff" />
-    <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
-    <None Include="Views\Admin\ListSummaryReactionByUsers.cshtml" />
-    <Content Include="Styles\fonts\reactions.svg" />
-    <Content Include="Styles\icons-reference.html" />
-    <Content Include="Styles\styles.css" />
-    <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
-      <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
-      <Name>Laser.Orchard.Commons</Name>
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\ProfileApiController.cs" />
+    <Compile Include="Drivers\TrackingPartDriver.cs" />
+    <Compile Include="Drivers\UserProfilingPartDriver.cs" />
+    <Compile Include="Enumerators.cs" />
+    <Compile Include="Handlers\TrackingPartHandler.cs" />
+    <Compile Include="Handlers\UserProfilingHandler.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\TrackingPart.cs" />
+    <Compile Include="Models\UserProfilingPart.cs" />
+    <Compile Include="Models\UserProfilingSummaryRecord.cs" />
+    <Compile Include="Projections\UserTrackingFilterForm.cs" />
+    <Compile Include="Projections\UserTrackingQueryFilter.cs" />
+    <Compile Include="Routes.cs" />
+    <Compile Include="Service\IUserProfilingService.cs" />
+    <Compile Include="Service\UserProfilingService.cs" />
+    <Compile Include="ViewModels\ProfileTagging.cs" />
+    <Compile Include="ViewModels\ProfileVM.cs" />
+    <Compile Include="Workflows\UserTrackingWorkflow.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Laser.Orchard.CommunicationGateway\Laser.Orchard.CommunicationGateway.csproj">
+      <Project>{bb12e69f-0976-407d-a716-542b7d22ee5f}</Project>
+      <Name>Laser.Orchard.CommunicationGateway</Name>
     </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
       <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
@@ -146,62 +142,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\ReactionClickedForm.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\ReactionAjaxController..cs" />
-    <Compile Include="Controllers\ReactionApiController.cs" />
-    <Compile Include="DataMigrations.cs" />
-    <Compile Include="Drivers\UserReactionsPartDriver.cs" />
-    <Compile Include="Handlers\SettingsScheduledTaskHandler.cs" />
-    <Compile Include="Handlers\UserReactionsPartHandler.cs" />
-    <Compile Include="Projections\ReactionClickedFilterForm.cs" />
-    <Compile Include="Projections\ReactionClickedQueryFilter.cs" />
-    <Compile Include="Projections\UserReactionsQueryFilter.cs" />
-    <Compile Include="Handlers\UserReactionsSettingsPartHandler.cs" />
-    <Compile Include="Models\UserReactionsClickRecord.cs" />
-    <Compile Include="Models\UserReactionsPartRecord.cs" />
-    <Compile Include="Models\UserReactionsPartSettings.cs" />
-    <Compile Include="Models\UserReactionsSettings.cs" />
-    <Compile Include="Models\UserReactionsSettingTypesSel.cs" />
-    <Compile Include="Models\UserReactionsSummaryRecord.cs" />
-    <Compile Include="Models\UserReactionsTypesRecord.cs" />
-    <Compile Include="Models\UserReactionsUser.cs" />
-    <Compile Include="Navigation\AdminMenu.cs" />
-    <Compile Include="Projections\UserReactionsQueryFilterForm.cs" />
-    <Compile Include="Projections\UserReactionsQuerySort.cs" />
-    <Compile Include="Projections\UserReactionsQueryFilterFormValidation.cs" />
-    <Compile Include="Projections\UserReactionsQuerySortForm.cs" />
-    <Compile Include="ResourceManifest.cs" />
-    <Compile Include="Security\UserReactionsPermission.cs" />
-    <Compile Include="Services\UserReactionsService.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="Settings\UserReactionsPartSettingsHooks.cs" />
-    <Compile Include="Settings\UserReactionsSettingsHooks.cs" />
-    <Compile Include="ViewModels\ReactionsClickVM.cs" />
-    <Compile Include="ViewModels\ReactionsSummaryVM.cs" />
-    <Compile Include="ViewModels\UserReactionsTypesVM.cs" />
-    <Compile Include="ViewModels\UserReactionsVM.cs" />
-    <Compile Include="Activities\ReactionClickedActivity.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Admin\Settings.cshtml" />
-    <Content Include="Views\EditorTemplates\UserReactionsTypeVM.cshtml" />
-    <Content Include="Views\Parts\UserReactions_SummaryAdmin.cshtml" />
-    <Content Include="Placement.info">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Views\EditorTemplates\Parts\UserReactionsEdit.cshtml" />
-    <Content Include="Views\Parts\UserReactions_Detail.cshtml" />
-    <Content Include="Views\Parts\UserReactions_Summary.cshtml" />
-    <Content Include="Views\DefinitionTemplates\UserReactionsPartSettings.cshtml" />
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
+    <Content Include="Views\Parts\Tracking_Display.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
