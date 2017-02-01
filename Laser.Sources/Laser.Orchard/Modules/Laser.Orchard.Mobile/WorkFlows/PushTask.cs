@@ -58,7 +58,7 @@ namespace Laser.Orchard.Mobile.WorkFlows {
             var device = activityContext.GetState<string>("allDevice");
             var PushMessage = activityContext.GetState<string>("PushMessage");
             bool produzione = activityContext.GetState<string>("Produzione") == "Produzione";
-            var userId = activityContext.GetState<string>("userId");
+            var userId = activityContext.GetState<string>("userId") ?? "";
             int iUser = 0;
             List<int> iUserList = new List<int>();
             string users = ""; 
@@ -72,8 +72,12 @@ namespace Laser.Orchard.Mobile.WorkFlows {
             users = string.Join(",", iUserList);
 
             Int32 idRelated = 0;
-            if (activityContext.GetState<string>("idRelated") == "idRelated") {
+            string stateIdRelated = activityContext.GetState<string>("idRelated");
+            if (stateIdRelated == "idRelated") { //caso necessario per il pregresso
                 idRelated = contentItem.Id;
+            }
+            else {
+                int.TryParse(stateIdRelated, out idRelated);
             }
             string language = activityContext.GetState<string>("allLanguage");
             string messageApple = PushMessage;

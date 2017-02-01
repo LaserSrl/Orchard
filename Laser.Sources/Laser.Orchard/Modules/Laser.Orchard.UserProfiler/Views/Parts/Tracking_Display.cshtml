@@ -1,0 +1,30 @@
+﻿@Script.Require("JQuery");
+@using (Script.Foot()) {
+<script type="text/javascript">
+    $(document).ready(function () {
+        var parameter = new Object();
+        parameter.id = @Model.PageID;
+        $.ajax({
+            url: '@Model.CallUrl/API/Tracking/PostID',
+            type: "POST",
+            dataType: 'json',
+            data: parameter
+            //,
+            //success: function (response) {
+            //    if (response.Success) {
+            //        var x="";
+            //        for(key in response.Data){
+            //            x+=key +"->"+response.Data[key]+"\r\n";
+            //        }
+            //        alert(x);
+            //    }
+            //},
+            //error: function (response) {
+            //      alert('error)');
+            //            }
+        });
+    });
+</script>
+}
+
+    

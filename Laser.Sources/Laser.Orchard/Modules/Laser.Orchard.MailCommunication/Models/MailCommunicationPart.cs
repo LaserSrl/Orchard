@@ -45,5 +45,15 @@ namespace Laser.Orchard.MailCommunication.Models {
             get { return this.Retrieve(r => r.SentMailsNumber); }
             set { this.Store(r => r.SentMailsNumber, value); }
         }
+
+        //Properties added on 2017/01/30 to manage manual input of a list of recipientts
+        public bool UseRecipientList {
+            get { return this.Retrieve(r => r.UseRecipientList); }
+            set { this.Store(r => r.UseRecipientList, value); }
+        }
+        public string RecipientList {
+            get { return this.Retrieve(r => r.RecipientList); }
+            set { this.Store(r => r.RecipientList, value); }
+        }
     }
 }
