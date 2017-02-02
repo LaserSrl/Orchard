@@ -781,6 +781,10 @@ msgid "Comma separated list of User ID (eg. 12,45,239). Tokenized."
 msgstr "Elenco separato da virgola degli ID degli utenti (es. 12,45,239). Tokenizzato."
 
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "Content ID. Tokenized. Example: the current content item is {Content.Id}."
+msgstr "ID del contenuto. Si possono usare i Tokens. e.g.: il Content Item attuale è {Content.Id}."
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "Content Owner"
 msgstr "Proprietario del Contenuto"
 

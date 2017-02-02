@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -19,6 +19,10 @@ msgstr "Ottieni la tua ApiKey"
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
 msgid "Get my CsrfToken"
 msgstr "Ottieni il tuo CsrfToken"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Payment list"
+msgstr "Lista pagamenti"
 
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
 msgid "Ranking List"
