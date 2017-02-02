@@ -556,6 +556,17 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         }
                         myval = ((object)(second.Select(x => (dynamic)x).ToList()));
                     }
+                    else if (cf.FieldDefinition.Name == typeof(LinkField).Name) {
+                        // gestisce in modo particolare il text 
+                        LinkField linkField = (LinkField)cf;
+                        var profilePart = contact.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ProfilePart");
+                        if (profilePart != null) {
+                            LinkField contactField = (LinkField)(profilePart.Fields.FirstOrDefault(x => x.Name == linkField.Name));
+                            contactField.Text = linkField.Text;
+                        }
+                        // gestisce in modo standard il value
+                        myval = linkField.Value;
+                    }
                     else {
                         myval = ((object)(((dynamic)cf).Value));
                     }
