@@ -1,36 +1,50 @@
 ﻿using Orchard.Mvc.Routes;
-using Orchard.WebApi.Routes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Laser.Orchard.UserProfiler {
-    public class Routes : IHttpRouteProvider {
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var routeDescriptor in GetRoutes()) {
-                routes.Add(routeDescriptor);
-            }
+    public class Routes : IRouteProvider {
+        public IEnumerable<RouteDescriptor> GetRoutes() {
+            string area = "Laser.Orchard.UserProfiler";
+            return new[]{
+                new RouteDescriptor{
+                    Route=new Route(
+                        "Tracking/PostId",
+                        new RouteValueDictionary {
+                            {"area",area},
+                            {"controller", "Profile"},
+                            {"action", "PostId"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary{
+                            {"area",area}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor{
+                    Route=new Route(
+                        "Tracking/PostIds",
+                        new RouteValueDictionary {
+                            {"area",area},
+                            {"controller", "Profile"},
+                            {"action", "PostIds"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary{
+                            {"area",area}
+                        },
+                        new MvcRouteHandler())
+                }
+            };
         }
 
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            string[] Methods = new string[]{
-            "PostId",
-            "PostIds"
-        };
-
-            foreach (string method in Methods) {
-                yield return (
-                     new HttpRouteDescriptor {
-                         Priority = 5,
-                         RouteTemplate = "API/Tracking/" + method,
-                         Defaults = new {
-                             area = "Laser.Orchard.UserProfiler",
-                             controller = "ProfileAPI",
-                             action = method
-                         }
-                     }
-                );
+        public void GetRoutes(ICollection<RouteDescriptor> routes) {
+            foreach (var route in GetRoutes()) {
+                routes.Add(route);
             }
         }
     }

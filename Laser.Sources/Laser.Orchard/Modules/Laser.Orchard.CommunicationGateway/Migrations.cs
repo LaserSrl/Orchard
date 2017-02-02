@@ -10,8 +10,7 @@ namespace Laser.Orchard.CommunicationGateway {
     public class CoomunicationMigrations : DataMigrationImpl {
         private readonly IUtilsServices _utilsServices;
 
-        public CoomunicationMigrations(IUtilsServices utilsServices)
-        {
+        public CoomunicationMigrations(IUtilsServices utilsServices) {
             _utilsServices = utilsServices;
         }
 
@@ -219,6 +218,7 @@ namespace Laser.Orchard.CommunicationGateway {
            );
             return 11;
         }
+
         public int UpdateFrom11() {
             SchemaBuilder.CreateTable("SmsContactPartRecord",
                table => table
@@ -245,6 +245,7 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 14;
         }
+
         public int UpdateFrom14() {
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
@@ -253,6 +254,7 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 15;
         }
+
         public int UpdateFrom15() {
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
@@ -261,8 +263,8 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 16;
         }
-        public int UpdateFrom16() {
 
+        public int UpdateFrom16() {
             SchemaBuilder.AlterTable("CommunicationSmsRecord", table => table.AddColumn<bool>("AccettatoUsoCommerciale", c => c.WithDefault(false)));
             SchemaBuilder.AlterTable("CommunicationSmsRecord", table => table.AddColumn<bool>("AutorizzatoTerzeParti", c => c.WithDefault(false)));
             SchemaBuilder.AlterTable("CommunicationEmailRecord", table => table.AddColumn<bool>("AccettatoUsoCommerciale", c => c.WithDefault(false)));
@@ -270,6 +272,7 @@ namespace Laser.Orchard.CommunicationGateway {
 
             return 17;
         }
+
         public int UpdateFrom17() {
             ContentDefinitionManager.AlterPartDefinition("ExportTaskParametersPart", part => part
                 .WithField("Parameters", cfg => cfg.OfType("TextField"))
@@ -281,6 +284,7 @@ namespace Laser.Orchard.CommunicationGateway {
 
             return 18;
         }
+
         public int UpdateFrom18() {
             SchemaBuilder.AlterTable("CommunicationContactPartRecord",
                table => table
@@ -288,16 +292,19 @@ namespace Laser.Orchard.CommunicationGateway {
              );
             return 19;
         }
+
         public int UpdateFrom19() {
             _utilsServices.EnableFeature("Laser.Orchard.ZoneAlternates");
             return 20;
         }
+
         public int UpdateFrom20() {
             SchemaBuilder.AlterTable("CommunicationContactPartRecord",
                table => table
                    .AlterColumn("Logs", x => x.WithType(DbType.String).Unlimited()));
             return 21;
         }
+
         public int UpdateFrom21() {
             SchemaBuilder.AlterTable("CommunicationEmailRecord",
                 table => table.AddColumn<string>("KeyUnsubscribe", column => column.WithLength(500))
@@ -325,5 +332,16 @@ namespace Laser.Orchard.CommunicationGateway {
             return 23;
         }
 
+        public int UpdateFrom23() {
+            ContentDefinitionManager.AlterTypeDefinition(
+                  "CommunicationContact", type => type
+                   .WithPart("AutoroutePart", part => part
+                   .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
+                   .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
+                   .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-page'}]")
+                   .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                   );
+            return 24;
+        }
     }
 }

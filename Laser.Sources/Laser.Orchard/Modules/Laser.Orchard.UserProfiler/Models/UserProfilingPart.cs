@@ -6,15 +6,16 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.UserProfiler.Models {
+
     public class UserProfilingPart : ContentPart<UserProfilingPartRecord> {
 
+        public string ListJson {
+            get { return this.Retrieve(r => r.ListJson); }
+            set { this.Store(r => r.ListJson, value); }
+        }
     }
 
     public class UserProfilingPartRecord : ContentPartRecord {
-        //public UserProfilingPartRecord() {
-        //    Summary = new List<UserProfilingSummaryRecord>();
-        //}
-
-        //public virtual IList<UserProfilingSummaryRecord> Summary { get; set; }
+        public virtual string ListJson { get; set; }
     }
 }

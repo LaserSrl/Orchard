@@ -1,5 +1,7 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.ViewModels;
+using Laser.Orchard.StartupConfig.Services;
+using Laser.Orchard.UserProfiler.Service;
 using Orchard;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -12,23 +14,33 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.CommunicationGateway.Drivers {
+
     public class CommunicationContactDriver : ContentPartDriver<CommunicationContactPart> {
         private readonly IOrchardServices _orchardServices;
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+        private readonly IUtilsServices _utilsService;
 
         protected override string Prefix {
             get { return "Laser.Orchard.CommunicationGateway"; }
         }
 
-        public CommunicationContactDriver(IOrchardServices orchardServices) {
+        public CommunicationContactDriver(IOrchardServices orchardServices, IUtilsServices utilsService) {
             _orchardServices = orchardServices;
+            _utilsService = utilsService;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
         protected override DriverResult Display(CommunicationContactPart part, string displayType, dynamic shapeHelper) {
+            if (_utilsService.FeatureIsEnabled("Laser.Orchard.UserProfiler")) {
+                IUserProfilingService _userProfilingService;
+                if (_orchardServices.WorkContext.TryResolve<IUserProfilingService>(out _userProfilingService)) {
+                    var profiling = _userProfilingService.GetList(_orchardServices.WorkContext.CurrentUser.Id);
+                    ((dynamic)(part.ContentItem)).ContactProfilingPart.Profiling = profiling;
+                }
+            }
             //Determine if we're on an admin page
             bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             if (isAdmin) {
@@ -43,10 +55,12 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                         ContentShape("Parts_ProfilePart",
                         () => shapeHelper.Parts_ProfilePart(ContentPart: profile))
                             );
-                } else {
+                }
+                else {
                     return null;
                 }
-            } else {
+            }
+            else {
                 return null;
             }
         }
@@ -55,7 +69,8 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             CommunicationContactPartVM model = new CommunicationContactPartVM();
             if (string.IsNullOrWhiteSpace(part.Logs)) {
                 model.Logs = T("No log.").Text;
-            } else {
+            }
+            else {
                 model.Logs = part.Logs;
             }
             return ContentShape("Parts_CommunicationContact_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/CommunicationContact_Edit", Model: model, Prefix: Prefix));
