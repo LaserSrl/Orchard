@@ -219,6 +219,8 @@
     <Compile Include="Controllers\UsersGroupsSettingsController.cs" />
     <Compile Include="Drivers\UsersGroupsDriver.cs" />
     <Compile Include="Exceptions\ExternalFieldRemoteException.cs" />
+    <Compile Include="Fields\CustomFieldValue.cs" />
+    <Compile Include="Fields\ICustomField.cs" />
     <Compile Include="FileDownloader\Controllers\FileDownloaderController.cs" />
     <Compile Include="FileDownloader\ViewModels\FilesListVM.cs" />
     <Compile Include="Handlers\BlogPostPartHandler.cs" />

@@ -37,6 +37,7 @@ using Orchard.Localization.Services;
 using Laser.Orchard.StartupConfig.Handlers;
 using Orchard.Projections.Services;
 using Orchard.Core.Common.Fields;
+using Laser.Orchard.StartupConfig.Fields;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
 
@@ -539,73 +540,87 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             if (asProfilePart) {
                 List<ContentPart> Lcp = new List<ContentPart>();
                 Lcp.Add(((ContentPart)((dynamic)contact).ProfilePart));
+                ContentPart contactProfile = (ContentPart)((dynamic)contact).ProfilePart;
                 foreach (dynamic cf in ((dynamic)UserContent).ProfilePart.Fields) {
-                    object myval;
-                    if (cf.FieldDefinition.Name == typeof(DateTimeField).Name)
-                        myval = ((object)(((dynamic)cf).DateTime));
-                    else if (cf.FieldDefinition.Name == typeof(MediaLibraryPickerField).Name || cf.FieldDefinition.Name == typeof(ContentPickerField).Name)
-                        myval = ((Int32[])cf.Ids).ToList().Select(x => (object)x).ToList();
-                    else if (cf.FieldDefinition.Name == typeof(TaxonomyField).Name) {
-                        List<TaxoVM> second = new List<TaxoVM>();
-                        var selectedTerms = _taxonomyService.GetTermsForContentItem(UserContent.Id, ((ContentField)cf).Name);
-                        foreach (TermPart tp in selectedTerms) {
-                            TaxoVM tv = new TaxoVM();
-                            tv.Id = tp.Id;
-                            tv.flag = true;
-                            second.Add(tv);
-                        }
-                        myval = ((object)(second.Select(x => (dynamic)x).ToList()));
-                    }
-                    else if (cf.FieldDefinition.Name == typeof(LinkField).Name) {
-                        // gestisce in modo particolare il text 
-                        LinkField linkField = (LinkField)cf;
-                        var profilePart = contact.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ProfilePart");
-                        if (profilePart != null) {
-                            LinkField contactField = (LinkField)(profilePart.Fields.FirstOrDefault(x => x.Name == linkField.Name));
-                            contactField.Text = linkField.Text;
-                        }
-                        // gestisce in modo standard il value
-                        myval = linkField.Value;
-                    }
-                    else {
-                        myval = ((object)(((dynamic)cf).Value));
-                    }
-                    _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, contact);
-
-                    // determina il type e aggiorna il field index
-                    string fieldTypeName = ((ContentField)cf).PartFieldDefinition.FieldDefinition.Name;
-                    if (fieldTypeName == typeof(BooleanField).Name) {
-                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(int));
-                    }
-                    else if(fieldTypeName == typeof(DateTimeField).Name) {
-                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", ((DateTime)myval).Ticks, typeof(int));
-                    }
-                    else if (fieldTypeName == typeof(NumericField).Name) {
-                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(decimal));
-                    }
-                    else if (fieldTypeName == typeof(ContentPickerField).Name
-                        || fieldTypeName == typeof(MediaLibraryPickerField).Name) {
-                        string fieldValue = "";
-                        foreach (int relatedId in cf.Ids) {
-                            if (string.IsNullOrWhiteSpace(fieldValue.ToString()) == false) {
-                                fieldValue += ",";
+                    if (cf is ICustomField) {
+                        // laser custom field type
+                        var valueList = ((ICustomField)cf).FieldValueList;
+                        if (valueList != null) {
+                            var contactField = (ICustomField)(contactProfile.Fields.FirstOrDefault(x => x.Name == cf.Name));
+                            foreach (var val in valueList) {
+                                contactField.SetFieldValue(val.ValueName, val.Value);
+                                _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, val.ValueName, val.Value, val.ValueType);
                             }
-                            fieldValue += string.Format("{{{0}}}", relatedId);
                         }
-                        if (string.IsNullOrWhiteSpace(fieldValue.ToString())) {
-                            fieldValue = null;
+                    }
+                    else { // orchard base field type
+                        object myval;
+                        if (cf.FieldDefinition.Name == typeof(DateTimeField).Name)
+                            myval = ((object)(((dynamic)cf).DateTime));
+                        else if (cf.FieldDefinition.Name == typeof(MediaLibraryPickerField).Name || cf.FieldDefinition.Name == typeof(ContentPickerField).Name)
+                            myval = ((Int32[])cf.Ids).ToList().Select(x => (object)x).ToList();
+                        else if (cf.FieldDefinition.Name == typeof(TaxonomyField).Name) {
+                            List<TaxoVM> second = new List<TaxoVM>();
+                            var selectedTerms = _taxonomyService.GetTermsForContentItem(UserContent.Id, ((ContentField)cf).Name);
+                            foreach (TermPart tp in selectedTerms) {
+                                TaxoVM tv = new TaxoVM();
+                                tv.Id = tp.Id;
+                                tv.flag = true;
+                                second.Add(tv);
+                            }
+                            myval = ((object)(second.Select(x => (dynamic)x).ToList()));
                         }
-                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", fieldValue, typeof(string));
-                    }
-                    else if (fieldTypeName == typeof(LinkField).Name) {
-                        LinkField linkField = (LinkField)cf;
-                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", linkField.Value, typeof(string));
-                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "Text", linkField.Text, typeof(string));
-                    }
-                    else if (fieldTypeName == typeof(InputField).Name
-                        || fieldTypeName == typeof(TextField).Name
-                        || fieldTypeName == typeof(EnumerationField).Name) {
-                        _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(string));
+                        else if (cf.FieldDefinition.Name == typeof(LinkField).Name) {
+                            // gestisce in modo particolare il text 
+                            LinkField linkField = (LinkField)cf;
+                            var profilePart = contact.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ProfilePart");
+                            if (profilePart != null) {
+                                LinkField contactField = (LinkField)(profilePart.Fields.FirstOrDefault(x => x.Name == linkField.Name));
+                                contactField.Text = linkField.Text;
+                            }
+                            // gestisce in modo standard il value
+                            myval = linkField.Value;
+                        }
+                        else {
+                            myval = ((object)(((dynamic)cf).Value));
+                        }
+                        _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, contact);
+
+                        // determina il type e aggiorna il field index
+                        string fieldTypeName = ((ContentField)cf).PartFieldDefinition.FieldDefinition.Name;
+                        if (fieldTypeName == typeof(BooleanField).Name) {
+                            _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(int));
+                        }
+                        else if (fieldTypeName == typeof(DateTimeField).Name) {
+                            _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", ((DateTime)myval).Ticks, typeof(int));
+                        }
+                        else if (fieldTypeName == typeof(NumericField).Name) {
+                            _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(decimal));
+                        }
+                        else if (fieldTypeName == typeof(ContentPickerField).Name
+                            || fieldTypeName == typeof(MediaLibraryPickerField).Name) {
+                            string fieldValue = "";
+                            foreach (int relatedId in cf.Ids) {
+                                if (string.IsNullOrWhiteSpace(fieldValue.ToString()) == false) {
+                                    fieldValue += ",";
+                                }
+                                fieldValue += string.Format("{{{0}}}", relatedId);
+                            }
+                            if (string.IsNullOrWhiteSpace(fieldValue.ToString())) {
+                                fieldValue = null;
+                            }
+                            _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", fieldValue, typeof(string));
+                        }
+                        else if (fieldTypeName == typeof(LinkField).Name) {
+                            LinkField linkField = (LinkField)cf;
+                            _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", linkField.Value, typeof(string));
+                            _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "Text", linkField.Text, typeof(string));
+                        }
+                        else if (fieldTypeName == typeof(InputField).Name
+                            || fieldTypeName == typeof(TextField).Name
+                            || fieldTypeName == typeof(EnumerationField).Name) {
+                            _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(string));
+                        }
                     }
                 }
             }
