@@ -1,3 +1,4 @@
 ﻿<Placement>
   <Place Parts_Tracking_Display="Content:after" />
-</Placement> 
+  <Place Parts_UserProfilingSetting_Edit="Content:11" />
+</Placement>
