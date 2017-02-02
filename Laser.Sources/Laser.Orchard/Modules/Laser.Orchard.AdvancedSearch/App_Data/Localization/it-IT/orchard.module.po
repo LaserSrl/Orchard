@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -339,4 +339,8 @@ msgstr "Il contenuto è stato creato."
 msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
 msgid "Your content has been saved."
 msgstr "Il contenuto è stato salvato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Navigation.ContentAdminMenu"
+msgid "Content"
+msgstr "Contenuto"
 
