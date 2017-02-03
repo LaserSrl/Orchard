@@ -180,6 +180,8 @@ namespace Laser.Orchard.UserProfiler.Service {
         public object GetList(int UserId) {
             var contentItem = _contentManager.Get(UserId);
             // return Json.Decode(GetJson(UserId));
+            if (contentItem == null)
+                return null;
             var output = contentItem.As<UserProfilingPart>().ListJson;
             if (string.IsNullOrEmpty(output))
                 return null;

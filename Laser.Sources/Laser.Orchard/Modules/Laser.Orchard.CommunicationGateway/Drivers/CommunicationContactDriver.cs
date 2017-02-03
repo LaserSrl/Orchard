@@ -46,7 +46,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             if (_utilsService.FeatureIsEnabled("Laser.Orchard.UserProfiler")) {
                 IUserProfilingService _userProfilingService;
                 if (_orchardServices.WorkContext.TryResolve<IUserProfilingService>(out _userProfilingService)) {
-                    var profiling = _userProfilingService.GetList(_orchardServices.WorkContext.CurrentUser.Id);
+                    var profiling = _userProfilingService.GetList(part.UserIdentifier);
                     ((dynamic)(part.ContentItem)).ContactProfilingPart.Profiling = profiling;
                 }
             }
