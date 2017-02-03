@@ -234,9 +234,13 @@
     <Compile Include="Activities\UserEventActivity.cs" />
     <Compile Include="Controllers\MaintenanceAdminController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Drivers\AuthenticationRequiredPartDriver.cs" />
     <Compile Include="Drivers\FavoriteCulturePartDriver.cs" />
     <Compile Include="Drivers\MaintenancePartDriver.cs" />
     <Compile Include="Drivers\PublishExtensionPartDriver.cs" />
+    <Compile Include="Models\AuthenticationRequiredPart.cs" />
+    <Compile Include="Navigation\ContentAdminMenu.cs" />
+    <Compile Include="Projections\DefaultHqlExpressionFactoryExtensions.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionPartDriver.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionsSiteSettingsDriver.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TermPartExtensionDriver.cs" />
@@ -299,6 +303,7 @@
     <Compile Include="TaxonomiesExtensions\Models\ISynchronizingDataToLocalizedVersionsContext.cs" />
     <Compile Include="TaxonomiesExtensions\Models\SynchronizingDataToLocalizedVersionsContext.cs" />
     <Compile Include="Tokens\AdditionalDateTokens.cs" />
+    <Compile Include="Tokens\OwnerEmailToken.cs" />
     <Compile Include="Tokens\RazorCodeExecutionToken.cs" />
     <Compile Include="ViewModels\MaintenanceIndexVM.cs" />
     <Compile Include="ViewModels\MaintenanceVM.cs" />

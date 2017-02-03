@@ -1,5 +1,6 @@
 ﻿using Orchard.Data.Migration;
 using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -50,5 +51,12 @@ namespace Laser.Orchard.TaskScheduler {
                 );
             return 3;
         }
+         public int UpdateFrom3() {
+             SchemaBuilder.AlterTable("LaserTaskSchedulerRecord", table => table
+          .AddColumn("Autodestroy",DbType.Boolean)
+                        );
+             return 4;
+         }
+        
     }
 }

@@ -112,6 +112,8 @@
     <Compile Include="Handlers\HIDSettingsPartHandler.cs" />
     <Compile Include="HIDRoutes.cs" />
     <Compile Include="Models\HIDAuthToken.cs" />
+    <Compile Include="Models\HIDCredential.cs" />
+    <Compile Include="Models\HIDCredentialContainer.cs" />
     <Compile Include="Models\HIDSearchResult.cs" />
     <Compile Include="Models\HIDSiteSettingsPart.cs" />
     <Compile Include="Models\HIDUser.cs" />

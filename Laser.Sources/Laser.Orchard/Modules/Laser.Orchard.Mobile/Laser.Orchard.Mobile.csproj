@@ -228,6 +228,7 @@
     <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.StatusByExtId.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
+    <Content Include="Service References\SmsServiceReference\Laser.Orchard.Mobile.SmsServiceReference.GetStatusResponse.datasource" />
     <None Include="Service References\SmsServiceReference\SmsWebService.disco" />
     <None Include="Service References\SmsServiceReference\configuration91.svcinfo" />
     <None Include="Service References\SmsServiceReference\configuration.svcinfo" />
@@ -266,9 +267,11 @@
     <None Include="Service References\SmsServiceReference\SmsWebService.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CheckMAMController.cs" />
     <Compile Include="Controllers\ContactListController.cs" />
     <Compile Include="Controllers\CountPanelController.cs" />
     <Compile Include="Controllers\ExternalPushController.cs" />
+    <Compile Include="Controllers\SmsDeliveryReportController.cs" />
     <Compile Include="Controllers\TaxonomiePushController.cs" />
     <Compile Include="Controllers\TransferDeliveryReportController.cs" />
     <Compile Include="Drivers\MobileContactPartDriver.cs" />
@@ -280,6 +283,7 @@
     <Compile Include="Handlers\ContactRelatedEventHandler.cs" />
     <Compile Include="Handlers\MobileContactPartHandler.cs" />
     <Compile Include="Handlers\PushScheduledTaskHandler.cs" />
+    <Compile Include="Handlers\SmsGatewayEventHandler.cs" />
     <Compile Include="Handlers\SmsGatewayPartHandler.cs" />
     <Compile Include="Handlers\SmsPlaceholdersSettingsHandler.cs" />
     <Compile Include="Handlers\SmsScheduledTaskHandler.cs" />
@@ -312,6 +316,7 @@
     <Compile Include="ViewModels\PhoneNumberViewModel.cs" />
     <Compile Include="ViewModels\PushMessage.cs" />
     <Compile Include="ViewModels\PushNotificationVM.cs" />
+    <Compile Include="ViewModels\SmsDeliveryReportResultVM.cs" />
     <Compile Include="ViewModels\SmsGatewayVM.cs" />
     <Compile Include="WorkFlows\PushEditForm.cs" />
     <Compile Include="Controllers\DeviceController.cs" />

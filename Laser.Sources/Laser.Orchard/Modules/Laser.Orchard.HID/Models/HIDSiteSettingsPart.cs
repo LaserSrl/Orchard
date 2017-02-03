@@ -1,4 +1,5 @@
 ﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,16 @@ namespace Laser.Orchard.HID.Models {
             get { return this.Retrieve(x => x.ClientID); }
             set { this.Store(x => x.ClientID, value); }
         }
-        public string ClientSecret {
-            get { return this.Retrieve(x => x.ClientSecret); }
-            set { this.Store(x => x.ClientSecret, value); }
+
+        private readonly ComputedField<string> _clientSecret = new ComputedField<string>();
+        public ComputedField<string> ClientSecretField {
+            get { return _clientSecret; }
         }
+        public string ClientSecret {
+            get { return _clientSecret.Value; }
+            set { _clientSecret.Value = value; }
+        }
+
         public string _partNumbers { get; set; }
         public string[] PartNumbers {
             get { return NumbersStringToArray(this.Retrieve(x => x._partNumbers)); }
@@ -32,11 +39,21 @@ namespace Laser.Orchard.HID.Models {
             set { PartNumbers = value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(pn => pn.Trim()).ToArray(); }
         }
 
+        public string _appVersionStrings { get; set; }
+        public string[] AppVersionStrings {
+            get { return NumbersStringToArray(this.Retrieve(x => x._appVersionStrings)); }
+            set { this.Store(x => x._appVersionStrings, NumbersArrayToString(value)); }
+        }
+        public string SerializedAppVersionStrings {
+            get { return (AppVersionStrings != null && AppVersionStrings.Length > 0) ? String.Join(Environment.NewLine, AppVersionStrings) : ""; }
+            set { AppVersionStrings = value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(avs => avs.Trim()).ToArray(); }
+        }
+
 
         private static string NumbersArrayToString(string[] partNumbers) {
             //I am putting the Length of the strings in the format, because I don't know if there are invalid characters for the Part Numbers.
             //Having the Length of each Part Number helps when parsing the string back into an array.
-            return String.Join(",", partNumbers.Select(pn => String.Format(@"{{{0}}}{1}", pn.Length.ToString(), pn)));
+            return String.Join(",", partNumbers.Distinct().Select(pn => String.Format(@"{{{0}}}{1}", pn.Length.ToString(), pn)));
         }
         private static string[] NumbersStringToArray(string partNumbers) {
             if (string.IsNullOrWhiteSpace(partNumbers)) {
@@ -55,7 +72,9 @@ namespace Laser.Orchard.HID.Models {
                     }
                 }
             }
-            return numbers.ToArray();
+            return numbers.Distinct().ToArray();
         }
+
+
     }
 }

@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -83,6 +83,10 @@ msgstr "minuti fa"
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/AdvertisingAdmin/index.cshtml"
 msgid "Published"
 msgstr "Pubblicato"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/AdvertisingAdmin/index.cshtml"
+msgid "Scheduled"
+msgstr "Pianificato"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/AdvertisingAdmin/index.cshtml"
 msgid "Search"
@@ -539,6 +543,22 @@ msgstr "Comunicato salvato"
 msgctxt "Laser.Orchard.CommunicationGateway.Controllers.AdvertisingAdminController"
 msgid "Campaign validity has expired. No changes allowed."
 msgstr "La validità della campagna è terminata. Nessuna modifica possibile."
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.AdvertisingExternalController"
+msgid "Couldn't create content"
+msgstr "Non è stato possibile creare il contenuto"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.AdvertisingExternalController"
+msgid "Creating CommunicationAdvertising failed: {0}"
+msgstr "Creazione del Comunicato non riuscita: {0}"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.AdvertisingExternalController"
+msgid "The provided data does not correspond to the required format."
+msgstr "I dati forniti non corrispondono al formato richiesto."
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.AdvertisingExternalController"
+msgid "User couldn't create Advertising"
+msgstr "L'utente non è autorizzato a creare Comunicati"
 
 msgctxt "Laser.Orchard.CommunicationGateway.Controllers.CampaignAdminController"
 msgid "Campaign saved"

@@ -52,7 +52,15 @@
     <None Include="IvreaTerritorio\WebServices\POI.cshtml" />
     <None Include="IvreaTerritorio\WebServices\POI1.cshtml" />
     <None Include="Montevarchi\XSLT\eventi.cshtml" />
+    <None Include="MyVEC\Code\AccessoInStore.cshtml" />
+    <None Include="MyVEC\Code\AppDownloaded.cshtml" />
     <None Include="MyVEC\Code\AssociazioneVisitaContatto.cshtml" />
+    <None Include="MyVEC\Code\CheckPrenotazioneParcheggio.cshtml" />
+    <None Include="MyVEC\Code\CheckTarga.cshtml" />
+    <None Include="MyVEC\Code\GestioneRichiestaCamerino.cshtml" />
+    <None Include="MyVEC\Code\NotificaInviata.cshtml" />
+    <None Include="MyVEC\Code\ReadCredenzialiUtente.cshtml" />
+    <None Include="MyVEC\Code\RegistraPartecipazione.cshtml" />
     <None Include="MyVEC\Code\CreaInviti.cshtml" />
     <None Include="MyVEC\Code\CreaPrenotazioneParcheggio.cshtml">
       <SubType>Code</SubType>
@@ -70,6 +78,8 @@
     </None>
     <None Include="MyVEC\Code\SyncDataVisitaToInvito.cshtml" />
     <None Include="MyVEC\Code\UpdateQuestionnaireContext.cshtml" />
+    <None Include="MyVEC\Code\UscitaDaStore.cshtml" />
+    <None Include="MyVEC\Code\ValidazioneSalesAssistantsPerNegozio.cshtml" />
     <None Include="MyVEC\Mobile\devVec.p12" />
     <None Include="MyVEC\Mobile\prodVec.p12" />
     <None Include="RomaMunicipioII\Code\ImportOsp.cshtml" />
@@ -84,6 +94,7 @@
     <None Include="Tff\Xslt\LuoghiFestival - Copia.cshtml" />
     <None Include="Tff\Xslt\LuoghiFestival.cshtml" />
     <None Include="TorinoCampidoglio\Code\ElaboraSchedaPartecipazione.cshtml" />
+    <None Include="TorinoCampidoglio\Xslt\torinolivinglabnews.cshtml" />
     <None Include="TurismoTorino\Mobile\ttdev.p12" />
     <None Include="TurismoTorino\Mobile\ttprod.p12" />
     <None Include="Vialfre\Mobile\pushDevVialfre.p12" />

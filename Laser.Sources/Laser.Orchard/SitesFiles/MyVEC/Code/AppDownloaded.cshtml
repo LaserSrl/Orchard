@@ -1,0 +1,34 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Projections.Services;
+@using Orchard.Security;
+@using Orchard.Users.Models;
+@using Orchard.Users.Services;
+@using System.Text.RegularExpressions;
+@using System.Web.Security;
+@using System.Text;
+@using System.Globalization;
+@using System.Collections.Generic;
+@using Laser.Orchard.StartupConfig.Handlers;
+
+@functions{
+    IMembershipService _membershipService;
+    IContactRelatedEventHandler _contactEventHandler;
+}
+@{
+    _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
+    _contactEventHandler = Model.OrchardServices.WorkContext.Resolve<IContactRelatedEventHandler>(); 
+    string retString = "OK";
+    try {
+        dynamic item = Model.ContentItem;
+        if ((!(bool)(item.ProfilePart.AppDownloaded.Value ?? false)) && (!string.IsNullOrEmpty( Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["UUID"]))) {
+            item.ProfilePart.AppDownloaded.Value = true;
+            _contactEventHandler.Synchronize(_membershipService.GetUser(item.User.UserPart.UserName));
+        }
+        retString = "OK";
+    } catch (Exception ex) {
+        retString = "Error";
+        string eMsg = string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString

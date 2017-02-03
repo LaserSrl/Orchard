@@ -23,7 +23,7 @@ namespace Laser.Orchard.AdminToolbarExtensions.Drivers {
 
 
         protected override DriverResult Display(SummaryAdminToolbarPart part, string displayType, dynamic shapeHelper) {
-
+            if (displayType == "SummaryAdmin") {
             var barSettings = part.Settings.GetModel<SummaryAdminToolbarPartSettings>();
             string toParse = "";
             if (part.Settings.TryGetValue("SummaryAdminToolbarPartSettings.Labels", out toParse)) {
@@ -39,13 +39,17 @@ namespace Laser.Orchard.AdminToolbarExtensions.Drivers {
                 lbl.Parameters = _tokenizer.Replace(lbl.Parameters, tokens);
                 lbl.CustomUrl = _tokenizer.Replace(lbl.CustomUrl, tokens);
                 //parse information to generate the advanced search 
-                //NOTE: this is super custom for the case where we need to egnerate an advanced search by appending the 
+                    //NOTE: this is super custom for the case where we need to generate an advanced search by appending the 
                 //CustomUrl as new query parameters
+                    //There are three cases where this is called: 
+                    // - From the AdvancedSearch List view
+                    // - From the Contents List view
+                    // - From Results of a FullText Search
                 //e.g. for a CPF query:
                 //CustomURL = AdvancedOptions.CPFName=PickerName&AdvancedOptions.CPFIdToSearch={Content.Id}
                 if (!String.IsNullOrWhiteSpace(lbl.CustomUrl)) {
                     //change the content of the CustomUrl string so that it has the whole url to call
-                    string hString = _orchardServices.WorkContext.HttpContext.Request.Path;
+                        //we clear off previously exsting querystrings to avoid conflicts of conditions
                     var qs = new NameValueCollection();  //new NameValueCollection(_orchardServices.WorkContext.HttpContext.Request.QueryString);
                     string[] myQsKeys = ((string)(lbl.CustomUrl)).Split(new char[] { '&' });
                     var myQsValues = new string[myQsKeys.Length];
@@ -71,20 +75,12 @@ namespace Laser.Orchard.AdminToolbarExtensions.Drivers {
                     }
                     string myPath = _orchardServices.WorkContext.HttpContext.Request.Path;
                     //the following condition is needed becacuse the search functionality depends on the advanced search module, but we could
-                    //have a list of content items containing the SummaryAdminToolbar by going through the content type creation pages.
-                    if (!myPath.Contains("Laser.Orchard.AdvancedSearch")) {
-                        myPath = myPath.Replace("Contents", "Laser.Orchard.AdvancedSearch");
-                        //in this case we should also remove the content type from the end of the path, otherwise it would carry over as a filter
-                        //to the advanced search module, possibly preventing any result to be displayed.
-                        //myPath = myPath.Substring(0, myPath.IndexOf("/List") + 5);
+                        //have a list of content items containing the SummaryAdminToolbar by going through the content type creation pages, the 
+                        //contents' lists, or the fulltext search.
+                        lbl.CustomUrl = myPath.Substring(0, myPath.IndexOf("/Admin/") + 7) + "Laser.Orchard.AdvancedSearch/List?" + qsString;
                     }
-                    //we want to also reset the filter for content-type. That filter, rather than being in the querystring, is in the path
-                    myPath = myPath.Substring(0, myPath.IndexOf("/List") + 5);
-                    lbl.CustomUrl = myPath + "?" + qsString;
                 }
-            }
             
-            if (displayType == "SummaryAdmin") {
                 return ContentShape("Parts_SummaryAdminToolbarPart_SummaryAdmin",
                     () => shapeHelper.Parts_SummaryAdminToolbarPart_SummaryAdmin(Toolbar: barSettings, cIId: part.ContentItem.Id));
             }

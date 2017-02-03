@@ -36,15 +36,18 @@ namespace Laser.Orchard.HID.Controllers {
             bool success = false;
             string InvitationCode = "";
             IUser caller = _orchardServices.WorkContext.CurrentUser;
-            var searchResult = _HIDAPIService.SearchHIDUser(caller);
+            var searchResult = _HIDAPIService.SearchHIDUser(caller.Email); //("patrick.negretto@laser-group.com"); // 
+
+            /*****************TEST CODE********************/
+            //searchResult.User.IssueCredential("CRD633ZZ-TST0053");
+            //searchResult.User.RevokeCredential();
+            /**************************************/
             switch (searchResult.Error) {
                 case SearchErrors.NoError:
                     var hidUser = searchResult.User;
                     if (hidUser.Error == UserErrors.NoError) {
                         InvitationCode = hidUser.CreateInvitation();
                         if (hidUser.Error == UserErrors.NoError) {
-                            //remove hyphens
-                            InvitationCode = string.Join("", InvitationCode.Split(new string[] { "-" }, StringSplitOptions.RemoveEmptyEntries));
                             success = true;
                             eCode = HIDErrorCode.NoError;
                             message = T("The Data field contains the new InvitationCode.").Text;

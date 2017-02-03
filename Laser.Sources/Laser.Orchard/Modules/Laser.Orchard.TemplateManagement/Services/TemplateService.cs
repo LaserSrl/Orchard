@@ -153,13 +153,14 @@ namespace Laser.Orchard.TemplateManagement.Services {
         }
 
         public string RitornaParsingTemplate(dynamic contentModel, int templateId, object viewBag = null) {
-
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = GetTemplate(templateId);
 
             var baseUri = new Uri(_services.WorkContext.CurrentSite.BaseUrl);
+            var basePath = GetBasePath(baseUri);
             string host = "";
             string mediaUrl = "";
+            var tenantPrefix = GetTenantUrlPrexix(_shellSettings);
 
             if (_services.WorkContext.HttpContext != null) {
                 var urlHelper = new UrlHelper(_services.WorkContext.HttpContext.Request.RequestContext);
@@ -172,23 +173,21 @@ namespace Laser.Orchard.TemplateManagement.Services {
                                      _services.WorkContext.HttpContext.Request.Url.Port == 80
                                      ? string.Empty
                                      : ":" + _services.WorkContext.HttpContext.Request.Url.Port);
-
                 mediaUrl = urlHelper.MediaExtensionsImageUrl();
-            } else {
+            } 
+            else {
                 host = string.Format("{0}://{1}{2}",
                                      baseUri.Scheme,
                                      baseUri.Host,
                                      baseUri.Port == 80 ? string.Empty : ":" + baseUri.Port);
-
-                var tenantPrefix = GetTenantUrlPrexix(_shellSettings);
-                mediaUrl = string.Format("/{0}/{1}{2}", baseUri.GetComponents(UriComponents.Path, UriFormat.Unescaped), tenantPrefix, @"Laser.Orchard.StartupConfig/MediaTransform/Image");
+                mediaUrl = string.Format("{0}{1}{2}", basePath, tenantPrefix, @"Laser.Orchard.StartupConfig/MediaTransform/Image");
             }
-
+            string baseUrl = string.Format("{0}{1}{2}", host, basePath, tenantPrefix);
             var dynamicModel = new {
                 WorkContext = _services.WorkContext,
                 Content = contentModel,
                 Urls = new {
-                    BaseUrl = baseUri,
+                    BaseUrl = baseUrl,
                     MediaUrl = mediaUrl,
                     Domain = host,
 
@@ -217,7 +216,24 @@ namespace Laser.Orchard.TemplateManagement.Services {
             }
             return tenantPath;
         }
-
-
+        /// <summary>
+        /// Normalize the path so it has always starting and endinf slashes (eg. "/" or "/aaa/").
+        /// </summary>
+        /// <param name="baseUri"></param>
+        /// <returns></returns>
+        private string GetBasePath(Uri baseUri) {
+            var basePath = baseUri.GetComponents(UriComponents.Path, UriFormat.Unescaped); // può essere dei seguenti tipi: vuoto (""), pieno con slash finale("aaa/"), pieno senza slash finale ("aaa"); non ha mai lo slash iniziale.
+            // normalizza basePath in modo che abbia sempre lo slash iniziale e finale
+            if (string.IsNullOrWhiteSpace(basePath)) {
+                basePath = "/";
+            }
+            else if (basePath.EndsWith("/")) {
+                basePath = string.Format("/{0}", basePath);
+            }
+            else {
+                basePath = string.Format("/{0}/", basePath);
+            }
+            return basePath;
+        }
     }
 }

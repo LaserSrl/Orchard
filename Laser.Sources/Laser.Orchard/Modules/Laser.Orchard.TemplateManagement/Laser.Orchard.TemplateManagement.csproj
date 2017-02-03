@@ -310,6 +310,8 @@
       <DependentUpon>MessageTemplateEditor.less</DependentUpon>
     </Content>
     <Content Include="packages.config" />
+    <Content Include="Styles\TemplateEditor.less" />
+    <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
     <None Include="Templates\BaseEmails\basic.html" />
     <None Include="Templates\BaseEmails\drip.html" />
     <None Include="Templates\BaseEmails\hero.html" />
@@ -323,6 +325,8 @@
     <None Include="Templates\BaseEmails\Usage notes.txt" />
     <None Include="Templates\BaseEmails\ValliCanavesaneExample.html" />
     <None Include="Templates\BaseEmails\welcome.html" />
+    <Content Include="Styles\TemplateEditor.css" />
+    <Content Include="Styles\TemplateEditor.min.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

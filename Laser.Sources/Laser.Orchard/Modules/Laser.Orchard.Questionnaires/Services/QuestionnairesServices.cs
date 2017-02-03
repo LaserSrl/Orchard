@@ -536,11 +536,16 @@ namespace Laser.Orchard.Questionnaires.Services {
             bool result = false;
             var questionnaireModuleSettings = _orchardServices.WorkContext.CurrentSite.As<QuestionnaireModuleSettingsPart>();
             bool exit = false;
-            if (currentUser != null && questionnaireModuleSettings.Disposable) {
-                if (_repositoryUserAnswer.Fetch(x => x.User_Id == currentUser.Id && x.QuestionnairePartRecord_Id == editModel.Id).Count() > 0) {
-                    //_notifier.Add(NotifyType.Information, T("Operation Fail: Questionnaire already filled"));
-                    // throw new Exception();
-                    exit = true;
+            if (questionnaireModuleSettings.Disposable) {
+                if (currentUser != null) {
+                    if (_repositoryUserAnswer.Fetch(x => x.User_Id == currentUser.Id && x.QuestionnairePartRecord_Id == editModel.Id && x.Context == editModel.Context).Count() > 0) {
+                        exit = true;
+                    }
+                }
+                else { // anonymous user => check SesionID
+                    if (_repositoryUserAnswer.Fetch(x => x.SessionID == SessionID && x.QuestionnairePartRecord_Id == editModel.Id && x.Context == editModel.Context).Count() > 0) {
+                        exit = true;
+                    }
                 }
             }
             if (!exit) {
@@ -590,7 +595,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                 }
 
                 var content = _orchardServices.ContentManager.Get(editModel.Id);
-                _workflowManager.TriggerEvent("QuestionnaireSubmitted", content, () => new Dictionary<string, object> { { "Content", content } });
+                _workflowManager.TriggerEvent("QuestionnaireSubmitted", content, () => new Dictionary<string, object> { { "Content", content }, { "QuestionnaireContext", editModel.Context } });
                 result = true;
             }
             return result;
@@ -806,13 +811,34 @@ namespace Laser.Orchard.Questionnaires.Services {
             if (to.HasValue && to.Value > DateTime.MinValue) {
                 answersQuery = answersQuery.Where(w => w.AnswerDate <= to);
             }
-            var users = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().List();
             var result = answersQuery.Select(x => new ExportUserAnswersVM { 
                 Answer = x.AnswerText, 
                 Question = x.QuestionText, 
                 AnswerDate = x.AnswerDate, 
                 UserName = x.SessionID,
-                Contesto = x.Context}).ToList();
+                UserId = x.User_Id,
+                Contesto = x.Context
+            }).ToList();
+            int contentId = 0;
+            TitlePart titlePart = null;
+            UserPart usrPart = null;
+            foreach (var answ in result) {
+                // cerca di rendere più leggibili l'utente sostituendolo con lo username, dove è possibile
+                // altrimenti lo lascia valorizzato con il SessionID
+                if (answ.UserId > 0) {
+                    usrPart = _orchardServices.ContentManager.Get<UserPart>(answ.UserId);
+                    if (usrPart != null) {
+                        answ.UserName = usrPart.UserName;
+                    }
+                }
+                // cerca di rendere più leggibile il contesto accodando il titolo relativo, dove è possibile
+                if (int.TryParse(answ.Contesto, out contentId)) {
+                    titlePart = _orchardServices.ContentManager.Get<TitlePart>(contentId);
+                    if (titlePart != null) {
+                        answ.Contesto = string.Format("{0} {1}", contentId, titlePart.Title);
+                    }
+                }
+            }
             return result;
         }
         public void SaveQuestionnaireUsersAnswers(int questionnaireId, DateTime? from = null, DateTime? to = null) {

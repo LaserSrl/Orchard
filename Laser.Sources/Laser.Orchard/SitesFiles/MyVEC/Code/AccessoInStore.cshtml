@@ -1,0 +1,82 @@
+﻿@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.CommunicationGateway.Services;
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Projections.Services;
+@using Orchard.Security;
+@using Orchard.Users.Models;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","OK"
+
+    string eMsg = String.Empty; //used to track errors and put them in the WF state
+
+    //additional services
+    ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
+    IFieldIndexService _fieldIndexService;
+}
+@{
+    if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+        eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+    }
+    try {
+        _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
+        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        //Identify the store
+        dynamic store = Model.ContentItem;
+        if (store == null) {
+            throw new Exception("Impossibile identificare il negozio.");
+        }
+        //Identify the Sales assistants
+        string csvIds = store.PuntoVendita.IdsSalesAssistants.Value;
+        if (string.IsNullOrWhiteSpace(csvIds)) {
+            throw new Exception("Il negozio per questa richiesta non ha nessun Sales Assistant.");
+        }
+        Model.Tokens["Workflow"].SetState("RecipientsList", csvIds);
+        //Identify customer
+        var caller = Model.OrchardServices.WorkContext.CurrentUser;
+        if (caller == null) {
+            throw new Exception("Impossibile identificare l'utente che ha effettuato l'accesso al Punto Vendita.");
+        }
+        dynamic dCaller = caller;
+        Model.Tokens["Workflow"].SetState("CustomerName", dCaller.User.ProfilePart.Name.Value ?? "");
+        Model.Tokens["Workflow"].SetState("CustomerSurname", dCaller.User.ProfilePart.Surname.Value ?? "");
+        decimal storeVisits = (dCaller.User.ProfilePart.VisiteaNegozio.Value ?? (decimal)0) + 1;
+        dCaller.User.ProfilePart.VisiteaNegozio.Value = storeVisits;
+        _fieldIndexService.Set(
+                dCaller.FieldIndexPart,
+                "ProfilePart",
+                "VisiteaNegozio",
+                "",
+                storeVisits,
+                typeof(decimal)
+            );
+        DateTime now = DateTime.UtcNow;
+        dCaller.User.ProfilePart.AccessoNegozio.DateTime = now; //the DateTimeField is always stored as UTC
+        _fieldIndexService.Set(
+                dCaller.FieldIndexPart,
+                "ProfilePart",
+                "AccessoNegozio",
+                "",
+                now,
+                typeof(DateTime)
+            );
+        dCaller.User.ProfilePart.InStore.Value = store.Id.ToString();
+        _fieldIndexService.Set(
+                dCaller.FieldIndexPart,
+                "ProfilePart",
+                "InStore",
+                "",
+                store.Id.ToString(),
+                typeof(string)
+            );
+        _communicationService.UserToContact((IUser)(dCaller.UserPart));
+        retString = "OK";
+    } catch (Exception ex) {
+        eMsg += ex.Message + Environment.NewLine;
+        retString = "Error";
+    }
+    Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+}@retString

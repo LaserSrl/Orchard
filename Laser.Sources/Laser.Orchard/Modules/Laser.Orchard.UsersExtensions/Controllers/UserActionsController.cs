@@ -174,8 +174,14 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             }
             try {
                 _usersExtensionsServices.Register(userRegistrationParams);
+                List<string> roles = new List<string>();
+                if (_orchardServices.WorkContext.CurrentUser != null) {
+                    roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+                }
+
                 var registeredServicesData = new {
-                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData
+                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
+                    Roles = roles
                 };
                 result = _utilsServices.GetResponse(ResponseType.Success, data: registeredServicesData);
             } catch (Exception ex) {
@@ -189,8 +195,13 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             Response result;
             try {
                 _usersExtensionsServices.SignIn(login);
+                List<string> roles = new List<string>();
+                if (_orchardServices.WorkContext.CurrentUser != null) {
+                    roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+                }
                 var registeredServicesData = new {
-                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData
+                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
+                    Roles = roles
                 };
                 result = _utilsServices.GetResponse(ResponseType.Success, "", registeredServicesData);
             } catch (Exception ex) {

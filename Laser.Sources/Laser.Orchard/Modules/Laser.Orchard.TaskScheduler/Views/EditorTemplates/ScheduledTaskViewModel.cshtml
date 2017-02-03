@@ -81,6 +81,11 @@
         <br />
         @Html.LinkToRemoveNestedForm("<i class=\"fa fa-times\" style=\"color: red\"></i> " + T(" Remove this task").ToString(), ".j_scheduledtasks", "input.ph-mark-for-delete")
         </text>
+    } else {
+        <text>
+        <br />
+        @T("The task is scheduled for execution. Unschedule it before removing it.")
+        </text>
     }
 
     <hr style="margin-top:0.5em; margin-bottom:0.5em;"/>

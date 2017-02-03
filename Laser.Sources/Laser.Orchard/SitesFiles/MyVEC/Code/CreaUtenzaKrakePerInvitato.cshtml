@@ -6,15 +6,22 @@
 @using Orchard.Users.Services;
 @using System.Text.RegularExpressions;
 @using System.Web.Security;
+@using System.Text;
+@using System.Globalization;
+@using System.Collections.Generic;
+@using Laser.Orchard.StartupConfig.Handlers;
 
 @functions{
     string retString = "Error"; //possile outcomes: OK, Error
+    string eMsg = String.Empty;
 
     //services
     IUserService _userService;
     IMembershipService _membershipService;
     IContentManager _contentManager;
     IFieldIndexService _fieldIndexService;
+    IEncryptionService _encryptionService;
+    IContactRelatedEventHandler _contactEventHandler;
 
     int MinPasswordLength {
         get {
@@ -58,24 +65,39 @@
 
     //TODO: this needs more validation and checks
     private string GenerateUsername(string familyName, string givenName) {
-        string fName = familyName.Split(null)[0].Trim().ToLowerInvariant();
-        string gName = givenName.Split(null)[0].Trim().ToLowerInvariant();
+        string fName = RemoveDiacritics(familyName.Split(null)[0].Trim().ToLowerInvariant());
+        string gName = RemoveDiacritics(givenName.Split(null)[0].Trim().ToLowerInvariant());
         string uName = fName + "." + gName;
         if (uName.Length >= 255) {
             uName = fName + "." + gName.First();
         }
 
         int post = 1;
-        while (_membershipService.GetUser(uName) != null) {
-            uName = uName + post.ToString();
+        string tmpName = uName;
+        while (_membershipService.GetUser(tmpName) != null) {
+            tmpName = uName + post.ToString();
             post++;
         }
 
-        return uName;
+        return tmpName;
     }
 
     private string GeneratePassword() {
-        return Membership.GeneratePassword(MinPasswordLength, MinPasswordLength / 2);
+        return Membership.GeneratePassword(MinPasswordLength, 0);
+    }
+    private string Encrypt(string text) {
+        return Convert.ToBase64String(_encryptionService.Encode(System.Text.Encoding.Unicode.GetBytes(text)));
+    }
+    private string RemoveDiacritics(string text) {
+        var normalizedString = text.Normalize(NormalizationForm.FormD);
+        var stringBuilder = new StringBuilder();
+        foreach (var c in normalizedString) {
+            var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCategory != UnicodeCategory.NonSpacingMark) {
+                stringBuilder.Append(c);
+            }
+        }
+        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
     }
 }
 @{
@@ -85,6 +107,8 @@
         _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        _encryptionService = Model.OrchardServices.WorkContext.Resolve<IEncryptionService>();
+        _contactEventHandler = Model.OrchardServices.WorkContext.Resolve<IContactRelatedEventHandler>(); 
         //Get the value of the email field out of the SchedaInvito.
         dynamic item = Model.ContentItem;
         string email = item.SchedaInvito.Email.Value;
@@ -100,8 +124,24 @@
             //Create user
             if (ValidateRegistration(uName, email, password)) {
                 kUser = _membershipService.CreateUser(new CreateUserParams(uName, password, email, null, null, false));
-            } else {
-                string eMsg = String.Empty;
+                // save encrypted password in a hidden field
+                string encryptedPwd = Encrypt(password);
+                dynamic dUser = kUser;
+                dUser.User.OriginalPassword.Value = encryptedPwd;
+				dUser.User.ProfilePart.Name.Value = givenName;
+				dUser.User.ProfilePart.Surname.Value = familyName;
+				dUser.User.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
+				_contactEventHandler.Synchronize(dUser);
+                _fieldIndexService.Set(
+                    dUser.ContentItem.FieldIndexPart,
+                    "User",
+                    "OriginalPassword",
+                    "",
+                    encryptedPwd,
+                    typeof(string)
+                );
+            }
+            else {
                 if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
                     eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
                 }
@@ -110,6 +150,15 @@
                 throw new Exception();
             }
             Model.Tokens["Workflow"].SetState("Password", password);
+        }
+        else
+        {
+            dynamic dUser = kUser;
+            //dUser.User.OriginalPassword.Value = encryptedPwd;
+            dUser.User.ProfilePart.Name.Value = givenName;
+            dUser.User.ProfilePart.Surname.Value = familyName;
+            dUser.User.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
+            _contactEventHandler.Synchronize(dUser);
         }
         //Set the creator of the SchedaInvito to the Krake user for the guest.
         item.CommonPart.Creator.Value = kUser.Id;
@@ -125,12 +174,16 @@
         if (item.SchedaInvito.Visita.Ids.Length > 0) {
             var idVisita = item.SchedaInvito.Visita.Ids[0];
             var relatedVisita = _contentManager.Get(idVisita);
-            item.ActivityPart.DateTimeStart = relatedVisita.ActivityPart.DateTimeStart;
-            item.ActivityPart.DateTimeEnd = relatedVisita.ActivityPart.DateTimeEnd;
-            item.ActivityPart.AllDay = relatedVisita.ActivityPart.AllDay;
+            // check necessario il fase di creazione contestuale della visita e degli inviti
+            if (relatedVisita != null) {
+                item.ActivityPart.DateTimeStart = relatedVisita.ActivityPart.DateTimeStart;
+                item.ActivityPart.DateTimeEnd = relatedVisita.ActivityPart.DateTimeEnd;
+                item.ActivityPart.AllDay = relatedVisita.ActivityPart.AllDay;
+            }
         }
         retString = "OK";
-    } catch (Exception) {
-        retString = "Error";
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
     }
 }@retString

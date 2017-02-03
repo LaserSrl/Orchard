@@ -83,6 +83,7 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
         public bool Delete { get; set; }
         //boolean to mark task for scheduling/unscheduling
         public bool Scheduling;
+        public bool Autodestroy{get;set;}
 
         //these properties are public so that reflection can get at them when generating nested forms
         public readonly IDateLocalizationServices _dateServices;
@@ -95,6 +96,18 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
             PeriodicityUnit = TimeUnits.Minutes;
             Running = 0;
             Delete = false;
+        }
+        public ScheduledTaskViewModel(ScheduledTaskPart part) {
+            Id = part.Id;
+            SignalName = part.SignalName;
+            ScheduledStartUTC = part.ScheduledStartUTC == null ? (DateTime?)null :
+                part.ScheduledStartUTC.Value.ToLocalTime();
+            PeriodicityTime = part.PeriodicityTime;
+            PeriodicityUnit = part.PeriodicityUnit;
+            ContentItemId = part.ContentItemId;
+            Running = part.RunningTaskId;
+            Delete = false;
+            Autodestroy = part.Autodestroy;
         }
 
         public ScheduledTaskViewModel(IOrchardServices orchardServices, IDateLocalizationServices dateServices) {
@@ -117,6 +130,7 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
             ContentItemId = part.ContentItemId;
             Running = part.RunningTaskId;
             Delete = false;
+            Autodestroy = part.Autodestroy;
         }
 
         //public ScheduledTaskPart CreatePartFromVM() {
@@ -163,6 +177,7 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
             part.PeriodicityUnit = this.PeriodicityUnit;
             part.ContentItemId = this.ContentItemId;
             part.RunningTaskId = this.Running;
+            part.Autodestroy = this.Autodestroy;
         }
     }
 }

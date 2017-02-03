@@ -25,23 +25,35 @@ namespace Laser.Orchard.Mobile.Models {
             get { return Record.TestPush; }
             set { Record.TestPush = value; }
         }
+
+        public bool TestPushToDevice {
+            get { return Record.TestPushToDevice; }
+            set { Record.TestPushToDevice = value; }
+        }
+
         public string DevicePush {
             get { return Record.DevicePush; }
             set { Record.DevicePush = value; }
         }
+
+        public bool UseRecipientList {
+            get { return Record.UseRecipientList; }
+            set { Record.UseRecipientList = value; }
+        }
+        public string RecipientList {
+            get { return Record.RecipientList; }
+            set { Record.RecipientList = value; }
+        }
         // proprietà aggiuntive
-        public bool PushSent
-        {
+        public bool PushSent {
             get { return Record.PushSent; }
             set { Record.PushSent = value; }
         }
-        public int TargetDeviceNumber
-        {
+        public int TargetDeviceNumber {
             get { return Record.TargetDeviceNumber; }
             set { Record.TargetDeviceNumber = value; }
         }
-        public int PushSentNumber
-        {
+        public int PushSentNumber {
             get { return Record.PushSentNumber; }
             set { Record.PushSentNumber = value; }
         }
@@ -53,10 +65,14 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual string TextPush { get; set; }
         public virtual bool ToPush { get; set; }
         public virtual bool TestPush { get; set; }
+        public virtual bool TestPushToDevice { get; set; }
         public virtual string DevicePush { get; set; }
+        public virtual bool UseRecipientList { get; set; }
+        public virtual string RecipientList { get; set; }
         // proprietà aggiuntive
         public virtual bool PushSent { get; set; }
         public virtual int TargetDeviceNumber { get; set; }
         public virtual int PushSentNumber { get; set; }
+
     }
 }

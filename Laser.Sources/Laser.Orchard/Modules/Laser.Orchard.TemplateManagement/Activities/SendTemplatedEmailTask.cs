@@ -17,6 +17,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.UI.Notify;
+using System.Collections.Specialized;
 
 namespace Laser.Orchard.TemplateManagement.Activities {
     [OrchardFeature("Laser.Orchard.TemplateEmailActivities")]
@@ -71,43 +72,50 @@ namespace Laser.Orchard.TemplateManagement.Activities {
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
             string recipient = activityContext.GetState<string>("Recipient");
-
+            string recipientCC = activityContext.GetState<string>("RecipientCC");
+            string fromEmail = activityContext.GetState<string>("FromEmail");
+            bool NotifyReadEmail = activityContext.GetState<bool?>("_NotifyReadEmail")??false;
+            
             var properties = new Dictionary<string, string> {
                 {"Body", activityContext.GetState<string>("Body")}, 
                 {"Subject", activityContext.GetState<string>("Subject")},
                 {"RecipientOther",activityContext.GetState<string>("RecipientOther")},
-                {"EmailTemplate",activityContext.GetState<string>("EmailTemplate")}
+                {"RecipientCC",activityContext.GetState<string>("RecipientCC")},
+                {"EmailTemplate",activityContext.GetState<string>("EmailTemplate")},
+                {"FromEmail",activityContext.GetState<string>("FromEmail")}
             };
             List<string> sendTo = new List<string>();
+            List<string> sendCC = new List<string>();
             var templateId = 0;
             int.TryParse(properties["EmailTemplate"], out templateId);
-            var contentVersion = workflowContext.Content.ContentItem.Version;
+            int contentVersion = 0;
+            ContentItem content = null;
+            if (workflowContext.Content != null) {
+                contentVersion = workflowContext.Content.ContentItem.Version;
+                content = _orchardServices.ContentManager.GetAllVersions(workflowContext.Content.Id).Single(w => w.Version == contentVersion); // devo ricalcolare il content altrimenti MediaParts (e forse tutti i lazy fields!) è null!
+            }
             dynamic contentModel = new {
-                ContentItem = _orchardServices.ContentManager.GetAllVersions(workflowContext.Content.Id).Single(w => w.Version == contentVersion), // devo ricalcolare il content altrimenti MediaParts (e forse tutti i lazy fields!) è null!
-                FormCollection = _orchardServices.WorkContext.HttpContext.Request.Form,
-                QueryStringCollection = _orchardServices.WorkContext.HttpContext.Request.QueryString,
+                ContentItem = content,
+                FormCollection = _orchardServices.WorkContext.HttpContext == null ? new NameValueCollection() : _orchardServices.WorkContext.HttpContext.Request.Form,
+                QueryStringCollection = _orchardServices.WorkContext.HttpContext == null ? new NameValueCollection() : _orchardServices.WorkContext.HttpContext.Request.QueryString,
                 WorkflowContext = workflowContext
             };
             if (recipient == "owner") {
-                var content = workflowContext.Content;
                 if (content.Has<CommonPart>()) {
                     var owner = content.As<CommonPart>().Owner;
                     if (owner != null && owner.ContentItem != null && owner.ContentItem.Record != null) {
                         sendTo.AddRange(SplitEmail(owner.As<IUser>().Email));
-                        // _messageManager.Send(owner.ContentItem.Record, MessageType, "email", properties);
                     }
                     sendTo.AddRange(SplitEmail(owner.As<IUser>().Email));
                 }
-            }
-            else if (recipient == "author") {
+            } else if (recipient == "author") {
                 var user = _orchardServices.WorkContext.CurrentUser;
 
                 // can be null if user is anonymous
                 if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
                     sendTo.AddRange(SplitEmail(user.Email));
                 }
-            }
-            else if (recipient == "admin") {
+            } else if (recipient == "admin") {
                 var username = _orchardServices.WorkContext.CurrentSite.SuperUser;
                 var user = _membershipService.GetUser(username);
 
@@ -115,11 +123,15 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                 if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
                     sendTo.AddRange(SplitEmail(user.As<IUser>().Email));
                 }
-            }
-            else if (recipient == "other") {
+            } else if (recipient == "other") {
                 sendTo.AddRange(SplitEmail(activityContext.GetState<string>("RecipientOther")));
             }
-            if (SendEmail(contentModel, templateId, sendTo, null))
+            if (!String.IsNullOrWhiteSpace(recipientCC)) {
+                sendCC.AddRange(SplitEmail(recipientCC));
+            }
+
+            if (SendEmail(contentModel, templateId, sendTo, sendCC, null,NotifyReadEmail, fromEmail))
+
                 yield return T("Sent");
             else
                 yield return T("Not Sent");
@@ -130,30 +142,9 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             return commaSeparated.Split(new[] { ',', ';' });
         }
 
-        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc) {
-            ParseTemplateContext templatectx = new ParseTemplateContext();
+        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> cc, IEnumerable<string> bcc,bool NotifyReadEmail, string fromEmail = null) {
             var template = _templateServices.GetTemplate(templateId);
-            var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-
-            // Creo un model che ha Content (il contentModel), Urls con alcuni oggetti utili per il template
-            // Nel template pertanto Model, diventa Model.Content
-            var host = string.Format("{0}://{1}{2}",
-                                    _orchardServices.WorkContext.HttpContext.Request.Url.Scheme,
-                                    _orchardServices.WorkContext.HttpContext.Request.Url.Host,
-                                    _orchardServices.WorkContext.HttpContext.Request.Url.Port == 80
-                                        ? string.Empty
-                                        : ":" + _orchardServices.WorkContext.HttpContext.Request.Url.Port);
-            var dynamicModel = new {
-                WorkContext = _orchardServices.WorkContext,
-                Content = contentModel,
-                Urls = new {
-                    MediaUrl = urlHelper.MediaExtensionsImageUrl(),
-                    Domain = host,
-
-                }.ToExpando()
-            };
-            templatectx.Model = dynamicModel;
-            var body = _templateServices.ParseTemplate(template, templatectx);
+            var body = _templateServices.RitornaParsingTemplate(contentModel, templateId);
             if (body.StartsWith("Error On Template")) {
                 _notifier.Add(NotifyType.Error, T("Error on template, mail not sent"));
                 return false;
@@ -165,9 +156,16 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             data.Add("Subject", template.Subject);
             data.Add("Body", body);
             data.Add("Recipients", String.Join(",", recipient));
+            if (cc != null) {
+                data.Add("CC", String.Join(",", cc));
+            }
             if (bcc != null) {
                 data.Add("Bcc", String.Join(",", bcc));
             }
+            if (fromEmail != null) {
+                data.Add("FromEmail", fromEmail);
+            }
+            data.Add("NotifyReadEmail", NotifyReadEmail);
             _messageService.Send(SmtpMessageChannel.MessageType, data);
             return true;
         }

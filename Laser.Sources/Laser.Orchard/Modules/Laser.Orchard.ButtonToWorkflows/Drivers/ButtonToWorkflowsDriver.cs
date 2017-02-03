@@ -12,6 +12,8 @@ using Laser.Orchard.ButtonToWorkflows.ViewModels;
 using Orchard.Workflows.Services;
 using Laser.Orchard.ButtonToWorkflows.Settings;
 using Orchard.UI.Notify;
+using Orchard.Data;
+using Orchard.Core.Scheduling.Models;
 
 namespace Laser.Orchard.ButtonToWorkflows.Drivers {
     public class ButtonToWorkflowsDriver : ContentPartDriver<ButtonToWorkflowsPart> {
@@ -19,14 +21,16 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
         public Localizer T { get; set; }
         private readonly IWorkflowManager _workflowManager;
         private readonly INotifier _notifier;
+        private readonly IRepository<ScheduledTaskRecord> _repositoryScheduledTask;
         protected override string Prefix {
             get { return "Laser.Mobile.ButtonToWorkflows"; }
         }
 
-        public ButtonToWorkflowsDriver(IOrchardServices orchardServices, IWorkflowManager workflowManager, INotifier notifier) {
+        public ButtonToWorkflowsDriver(IOrchardServices orchardServices, IWorkflowManager workflowManager, INotifier notifier, IRepository<ScheduledTaskRecord> repositoryScheduledTask) {
             _orchardServices = orchardServices;
             _workflowManager = workflowManager;
             _notifier = notifier;
+            _repositoryScheduledTask = repositoryScheduledTask;
             T = NullLocalizer.Instance;
         }
 
@@ -49,6 +53,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                 //        model.ButtonText = settings.ButtonText;
                 //    }
                 //}
+       
             } catch { }
             return ContentShape("Parts_ButtonToWorkflows", () => shapeHelper.EditorTemplate(TemplateName: "Parts/ButtonToWorkflows", Model: model, Prefix: Prefix));
 
@@ -68,14 +73,13 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                             //   settings.ButtonNumber = settings.ButtonNumber[0].Split(',');
                             ButtonToWorkflowsSettingsPart settingmodulo = _orchardServices.WorkContext.CurrentSite.As<ButtonToWorkflowsSettingsPart>();
                             string[] elencoButtonsMessage = settingmodulo.ButtonsMessage.Split('£');
+                            string[] elencoButtonsActionAsync = settingmodulo.ButtonsAsync.Split('£');
                             part.ActionToExecute = model.ButtonAction + "_btn" + (model.ButtonNumber + 1).ToString();
                             //   _workflowManager.TriggerEvent(model.ButtonAction+"_btn"+(model.ButtonNumber+1).ToString(), content, () => new Dictionary<string, object> { { "Content", content } });
                             part.MessageToWrite = elencoButtonsMessage[model.ButtonNumber].ToString();
-                            //try {
-                            //      _notifier.Add(NotifyType.Information, T(elencoButtonsMessage[Convert.ToInt16(settings.ButtonNumber)]));
-                            //  }
-                            //  catch { }
-
+                           string valAsync= string.IsNullOrEmpty(elencoButtonsActionAsync[model.ButtonNumber]) ? "" : elencoButtonsActionAsync[model.ButtonNumber].ToLower();
+                            part.ActionAsync = valAsync.Equals("true");
+    
                         }
                 } else {
                     updater.AddModelError("Error Saving Content Item", T("Error Saving Content Item"));
