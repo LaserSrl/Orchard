@@ -3,6 +3,8 @@
 @using Orchard.ContentManagement.Records;
 @using Orchard.Projections.Models;
 @using Orchard.Projections.Services;
+@using Orchard.Autoroute.Models;
+@using Orchard.Autoroute.Services;
 @using Orchard.Data;
 @using System.Linq;
 @using System.Data;
@@ -13,6 +15,7 @@
     IFieldIndexService _fieldIndexService;
     ITransactionManager _transactionManager;
     IScheduledTaskService _scheduledTaskService;
+	IAutorouteService _autorouteService;
     string retString = "Error"; //possible outcomes: "Error","Ok"
     dynamic visita = null;
     string csv = "";
@@ -31,6 +34,7 @@
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         _transactionManager = Model.OrchardServices.WorkContext.Resolve<ITransactionManager>();
+		_autorouteService= Model.OrchardServices.WorkContext.Resolve<IAutorouteService>();
         _scheduledTaskService = Model.OrchardServices.WorkContext.Resolve<IScheduledTaskService>();
         visita = Model.ContentItem;
         string visitaId = string.Format("{{{0}}}", visita.Id);
@@ -153,6 +157,9 @@
                         invito.CommonPart.Creator.Value = visita.CommonPart.Owner.Id;
                     }
                     invito.TitlePart.Title += " - " + visita.TitlePart.Title;
+				invito.AutoroutePart.DisplayAlias = _autorouteService.GenerateAlias( (AutoroutePart)invito.AutoroutePart);
+                _autorouteService.ProcessPath((AutoroutePart)invito.AutoroutePart);
+                _autorouteService.PublishAlias((AutoroutePart)invito.AutoroutePart);
                     Model.OrchardServices.ContentManager.Publish(invito);
                     
                     LogVisita += DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " Creato scheda invito -> " + invito.SchedaInvito.Email.Value + Environment.NewLine;
@@ -161,7 +168,8 @@
                  //   Func<Dictionary<string, object>> tokensUpd = () => new Dictionary<string, object> { { "Content", invito }, { Orchard.Workflows.Activities.SignalActivity.SignalEventName, "UpdateInvito" } };
                    // wfManager.TriggerEvent(Orchard.Workflows.Activities.SignalActivity.SignalEventName, invito, tokensUpd);
                     dynamic ScheduledTaskViewModel = new ScheduledTaskViewModel();
-                    ScheduledTaskViewModel.SignalName = "UpdateInvito";
+                    ScheduledTaskViewModel.SignalName = "mandainviti";
+                 //   ScheduledTaskViewModel.SignalName = "UpdateInvito";
                     ScheduledTaskViewModel.ContentItemId = invito.Id;
                     ScheduledTaskViewModel.Autodestroy = true;
                     ScheduledTaskViewModel.ScheduledStartUTC = DateTime.UtcNow;
@@ -174,15 +182,15 @@
               //      Func<Dictionary<string, object>> tokens = () => new Dictionary<string, object> { { "Content", invito }, { Orchard.Workflows.Activities.SignalActivity.SignalEventName, "NotificaInvito" } };
              //       wfManager.TriggerEvent(Orchard.Workflows.Activities.SignalActivity.SignalEventName, invito, tokens);
 
-                    dynamic ScheduledTaskViewModel2 = new ScheduledTaskViewModel();
-                    ScheduledTaskViewModel2.SignalName = "NotificaInvito";
-                    ScheduledTaskViewModel2.ContentItemId = invito.Id;
-                    ScheduledTaskViewModel2.Autodestroy = true;
-                    ScheduledTaskViewModel2.ScheduledStartUTC = DateTime.UtcNow.AddMinutes(1);
-                    var listScheduledTaskViewModel2 = new List<ScheduledTaskViewModel>();
-                    listScheduledTaskViewModel2.Add(ScheduledTaskViewModel2);
-                    _scheduledTaskService.UpdateRecords(listScheduledTaskViewModel2);
-                    _scheduledTaskService.ScheduleTask(listScheduledTaskViewModel2[0]);
+                    //dynamic ScheduledTaskViewModel2 = new ScheduledTaskViewModel();
+                    //ScheduledTaskViewModel2.SignalName = "NotificaInvito";
+                    //ScheduledTaskViewModel2.ContentItemId = invito.Id;
+                    //ScheduledTaskViewModel2.Autodestroy = true;
+                    //ScheduledTaskViewModel2.ScheduledStartUTC = DateTime.UtcNow.AddMinutes(1);
+                    //var listScheduledTaskViewModel2 = new List<ScheduledTaskViewModel>();
+                    //listScheduledTaskViewModel2.Add(ScheduledTaskViewModel2);
+                    //_scheduledTaskService.UpdateRecords(listScheduledTaskViewModel2);
+                    //_scheduledTaskService.ScheduleTask(listScheduledTaskViewModel2[0]);
 
                 }
             }
