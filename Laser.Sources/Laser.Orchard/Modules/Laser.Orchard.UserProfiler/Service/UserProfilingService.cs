@@ -165,7 +165,7 @@ namespace Laser.Orchard.UserProfiler.Service {
                         jsonvalue += "},";
                 }
                 if (jsonvalue != "")
-                    builder.Append("'Profil_" + type.ToString() + "':{ Det_Profil_" + type.ToString() + ":[" + jsonvalue.Substring(0, jsonvalue.Length - 1) + "]},");
+                    builder.Append("'Profil" + type.ToString() + "':{ DetProfil" + type.ToString() + ":[" + jsonvalue.Substring(0, jsonvalue.Length - 1) + "]},");
                 //jsonTotale += "'Profil_" + type.ToString() + "':{ Det_Profil_" + type.ToString() + ":[" + jsonvalue.Substring(0, jsonvalue.Length - 1) + "]},";
             }
 
