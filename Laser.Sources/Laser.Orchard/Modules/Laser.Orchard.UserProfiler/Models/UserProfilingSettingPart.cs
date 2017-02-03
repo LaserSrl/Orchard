@@ -12,5 +12,10 @@ namespace Laser.Orchard.UserProfiler.Models {
             get { return this.Retrieve(x => x.Range, 5); }
             set { this.Store(x => x.Range, value); }
         }
+
+        public int RangeContentItem {
+            get { return this.Retrieve(x => x.RangeContentItem, 0); }
+            set { this.Store(x => x.RangeContentItem, value); }
+        }
     }
 }

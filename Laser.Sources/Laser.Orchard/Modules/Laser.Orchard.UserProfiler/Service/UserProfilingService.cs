@@ -143,12 +143,18 @@ namespace Laser.Orchard.UserProfiler.Service {
         private string GetJson(int UserId) {
             var ModuleSettings = _orchardServices.WorkContext.CurrentSite.As<UserProfilingSettingPart>();
             int count = ModuleSettings.Range;
+            int countContentItem = ModuleSettings.RangeContentItem;
             StringBuilder builder = new StringBuilder();
             var types = Enum.GetValues(typeof(TextSourceTypeOptions)).Cast<TextSourceTypeOptions>();
             var tot = _userProfilingSummaryRecord.Fetch(x => x.UserProfilingPartRecord.Id == -1);
+            int usedcount = 0;
             foreach (var type in types) {
-                var pp = _userProfilingSummaryRecord.Fetch(x => x.UserProfilingPartRecord.Id.Equals(UserId) && x.SourceType == type).OrderByDescending(y => y.Count).Take(count).ToList();
-                tot = tot.Union(_userProfilingSummaryRecord.Fetch(x => x.UserProfilingPartRecord.Id.Equals(UserId) && x.SourceType == type).OrderByDescending(y => y.Count).Take(count));
+                if (type == TextSourceTypeOptions.ContentItem)
+                    usedcount = countContentItem;
+                else
+                    usedcount = count;
+                var pp = _userProfilingSummaryRecord.Fetch(x => x.UserProfilingPartRecord.Id.Equals(UserId) && x.SourceType == type).OrderByDescending(y => y.Count).Take(usedcount).ToList();
+                tot = tot.Union(_userProfilingSummaryRecord.Fetch(x => x.UserProfilingPartRecord.Id.Equals(UserId) && x.SourceType == type).OrderByDescending(y => y.Count).Take(usedcount));
             }
             var list = tot.ToList();
             builder.Append("{");

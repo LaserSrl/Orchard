@@ -4,4 +4,8 @@
     @Html.EditorFor(m => m.Range)
 
     <span class="hint">@T("Number of tracking elements to show (Default:5). If changed all users profile will be recalculated")</span>
+
+    @Html.EditorFor(m => m.RangeContentItem)
+
+    <span class="hint">@T("Number of tracking elements of type ContentItem to show (Default:0). If changed all users profile will be recalculated")</span>
 </fieldset>
