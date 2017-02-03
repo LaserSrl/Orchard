@@ -14,17 +14,15 @@ namespace Laser.Orchard.HiddenFields.Fields {
             set { Storage.Set(value); }
         }
 
-        public List<CustomFieldValue> FieldValueList {
-            get {
-                List<CustomFieldValue> result = new List<CustomFieldValue>();
-                CustomFieldValue field = new CustomFieldValue {
-                    ValueName = "",
-                    Value = this.Value,
-                    ValueType = typeof(string)
-                };
-                result.Add(field);
-                return result;
-            }
+        public List<CustomFieldValue> GetFieldValueList() {
+            List<CustomFieldValue> result = new List<CustomFieldValue>();
+            CustomFieldValue field = new CustomFieldValue {
+                ValueName = "",
+                Value = this.Value,
+                ValueType = typeof(string)
+            };
+            result.Add(field);
+            return result;
         }
         public void SetFieldValue(string valueName, object value) {
             if (valueName == "") {
