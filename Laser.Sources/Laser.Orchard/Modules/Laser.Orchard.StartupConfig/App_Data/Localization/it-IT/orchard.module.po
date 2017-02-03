@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -7,6 +7,10 @@
 # > msgctxt  "{ contesto del messaggio }"
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
+
+msgctxt "!=.AuthenticationRequiredPartDriver"
+msgid "You do not have permission to access this content."
+msgstr "Mancano i permessi per accedere a questo contenuto."
 
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/DefinitionTemplates/ContentPickerFieldExtensionSettings.cshtml"
 msgid "Cascade Publish Action"
@@ -328,6 +332,38 @@ msgctxt "Laser.Orchard.StartupConfig.Activities.UserEventActivity"
 msgid "Users"
 msgstr "Utenti"
 
+msgctxt "Laser.Orchard.StartupConfig.Activities.WebApiResponseActivity"
+msgid "When called from a WebApi Signal Trigger, it returns a Response object."
+msgstr "Quando viene chiamato con un WebApi Signal Trigger, restituisce un oggetto di tipo Response."
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.WebApiResponseEditForm"
+msgid "Check if the the activity should return a success response."
+msgstr "Spuntare nel caso in cui l'attività debba restituire una risposta di successo."
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.WebApiResponseEditForm"
+msgid "Error Code"
+msgstr "Codice dell'errore"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.WebApiResponseEditForm"
+msgid "Message"
+msgstr "Messaggio"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.WebApiResponseEditForm"
+msgid "Resolution Action"
+msgstr "Azione per risoluzione"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.WebApiResponseEditForm"
+msgid "Response"
+msgstr "Risposta"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.WebApiResponseEditForm"
+msgid "Success"
+msgstr "Successo"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.WebApiResponseEditForm"
+msgid "The text message of the response."
+msgstr "Il messaggio di testo della risposta."
+
 msgctxt "Laser.Orchard.StartupConfig.Activities.WorkflowChangeOwnerActivity"
 msgid "Change User Owner of content item"
 msgstr "Cambia il proprietario del contenuto"
@@ -500,6 +536,10 @@ msgctxt "Laser.Orchard.StartupConfig.Localization.DateLocalization"
 msgid "Date not Valid"
 msgstr "Data non valida"
 
+msgctxt "Laser.Orchard.StartupConfig.Navigation.ContentAdminMenu"
+msgid "Content"
+msgstr "Contenuto"
+
 msgctxt "Laser.Orchard.StartupConfig.Navigation.MaintenanceMenu"
 msgid "Maintenance"
 msgstr "Manutenzione"
@@ -637,6 +677,10 @@ msgid "Razor View"
 msgstr "Vista Razor"
 
 msgctxt "Laser.Orchard.StartupConfig.RazorCodeExecution.Forms.RazorExecuteForm"
+msgid "The razor view to run every time the Decision Activity is invoked. You can use Model.ContentItem, Model.T, Model.OrchardServices, Model.Tokens, Model.Tokens[\"Workflow\"] (to get WorkflowContext and call HasState, GetState, SetState). The razor output (e.g. 'Success', 'Error' or 'Empty') should be used to define the 'texthint' outcome of the activity."
+msgstr "La vista Razor da eseguire quando la Decision Activity viene invocata. Si può usare: Model.ContentItem, Model.T, Model.OrchardServices, Model.Tokens, Model.Tokens[\"Workflow\"] (per accedere al WorkflowContext e chiamare HasState, GetState, SetState). L'output del Razor (e.g. 'Success', 'Error' or 'Empty') deve essere usato per definire il risultato 'texthint' dell'attività."
+
+msgctxt "Laser.Orchard.StartupConfig.RazorCodeExecution.Forms.RazorExecuteForm"
 msgid "The razor view to run every time the Decision Activity is invoked. You can use Model.ContentItem, Model.T, Model.OrchardServices. The razor output (e.g. 'Success', 'Error' or 'Empty') should be used to define the 'texthint' outcome of the activity."
 msgstr "La Vista Razor da eseguire ogni volta che la Decision Activity viene invocata. E' possibile usare Model.ContentItem, Model.T, Model.OrchardServices. L'output Razor (es. "Successo", "Errore" o "Vuoto") dev'essere usato per definire il risultato 'texthint' dell'attività."
 
@@ -709,6 +753,18 @@ msgid "CreatorEmail"
 msgstr "EmailCreatore"
 
 msgctxt "Laser.Orchard.StartupConfig.Tokens.CreatorEmailTokens"
+msgid "The email of user creator."
+msgstr "L'email dell'utente creatore."
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.OwnerEmailToken"
+msgid "Owner email"
+msgstr "Email del proprietario"
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.OwnerEmailToken"
+msgid "Owner email of content item "
+msgstr "Email del proprietario del contenuto."
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.OwnerEmailToken"
 msgid "The email of user creator."
 msgstr "L'email dell'utente creatore."
 

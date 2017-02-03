@@ -37,6 +37,7 @@ using Orchard.Localization.Services;
 using Laser.Orchard.StartupConfig.Handlers;
 using Orchard.Projections.Services;
 using Orchard.Core.Common.Fields;
+using Laser.Orchard.StartupConfig.Fields;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
 
@@ -542,7 +543,20 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             if (asProfilePart) {
                 List<ContentPart> Lcp = new List<ContentPart>();
                 Lcp.Add(((ContentPart)((dynamic)contact).ProfilePart));
+                ContentPart contactProfile = (ContentPart)((dynamic)contact).ProfilePart;
                 foreach (dynamic cf in ((dynamic)UserContent).ProfilePart.Fields) {
+                    if (cf is ICustomField) {
+                        // laser custom field type
+                        var valueList = ((ICustomField)cf).GetFieldValueList();
+                        if (valueList != null) {
+                            var contactField = (ICustomField)(contactProfile.Fields.FirstOrDefault(x => x.Name == cf.Name));
+                            foreach (var val in valueList) {
+                                contactField.SetFieldValue(val.ValueName, val.Value);
+                                _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, val.ValueName, val.Value, val.ValueType);
+                            }
+                        }
+                    }
+                    else { // orchard base field type
                     object myval;
                     if (cf.FieldDefinition.Name == typeof(DateTimeField).Name)
                         myval = ((object)(((dynamic)cf).DateTime));
@@ -559,6 +573,17 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         }
                         myval = ((object)(second.Select(x => (dynamic)x).ToList()));
                     }
+                        else if (cf.FieldDefinition.Name == typeof(LinkField).Name) {
+                            // gestisce in modo particolare il text 
+                            LinkField linkField = (LinkField)cf;
+                            var profilePart = contact.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ProfilePart");
+                            if (profilePart != null) {
+                                LinkField contactField = (LinkField)(profilePart.Fields.FirstOrDefault(x => x.Name == linkField.Name));
+                                contactField.Text = linkField.Text;
+                            }
+                            // gestisce in modo standard il value
+                            myval = linkField.Value;
+                        }
                     else {
                         myval = ((object)(((dynamic)cf).Value));
                     }
@@ -568,20 +593,20 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     string fieldTypeName = ((ContentField)cf).PartFieldDefinition.FieldDefinition.Name;
                     if (fieldTypeName == typeof(BooleanField).Name) {
                         _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(int));
-                }
+                        }
                     else if(fieldTypeName == typeof(DateTimeField).Name) {
                         _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", ((DateTime)myval).Ticks, typeof(int));
-            }
+                        }
                     else if (fieldTypeName == typeof(NumericField).Name) {
                         _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(decimal));
-        }
+                        }
                     else if (fieldTypeName == typeof(ContentPickerField).Name
                         || fieldTypeName == typeof(MediaLibraryPickerField).Name) {
                         string fieldValue = "";
                         foreach (int relatedId in cf.Ids) {
                             if (string.IsNullOrWhiteSpace(fieldValue.ToString()) == false) {
                                 fieldValue += ",";
-    }
+                                }
                             fieldValue += string.Format("{{{0}}}", relatedId);
                         }
                         if (string.IsNullOrWhiteSpace(fieldValue.ToString())) {
@@ -602,5 +627,6 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 }
             }
         }
+    }
     }
 }

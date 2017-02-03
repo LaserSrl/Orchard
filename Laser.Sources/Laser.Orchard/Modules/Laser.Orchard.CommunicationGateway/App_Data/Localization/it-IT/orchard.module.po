@@ -8,6 +8,14 @@
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
 
+msgctxt "!=.CommunicationContactDriver"
+msgid "No log."
+msgstr "Nessun log."
+
+msgctxt "!=.CommunicationContactDriver"
+msgid "You do not have permission to access this content."
+msgstr "Mancano i permessi per accedere a questo contenuto."
+
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/AdvertisingAdmin/Edit.cshtml"
 msgid "Edit Advertising"
 msgstr "Modifica Comunicato"
