@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Laser.Orchard.StartupConfig.Fields {
     public interface ICustomField {
-        List<CustomFieldValue> FieldValueList { get; }
+        List<CustomFieldValue> GetFieldValueList();
         void SetFieldValue(string valueName, object value);
     }
 }

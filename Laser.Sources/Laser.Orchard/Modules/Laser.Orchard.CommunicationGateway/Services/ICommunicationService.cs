@@ -544,7 +544,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 foreach (dynamic cf in ((dynamic)UserContent).ProfilePart.Fields) {
                     if (cf is ICustomField) {
                         // laser custom field type
-                        var valueList = ((ICustomField)cf).FieldValueList;
+                        var valueList = ((ICustomField)cf).GetFieldValueList();
                         if (valueList != null) {
                             var contactField = (ICustomField)(contactProfile.Fields.FirstOrDefault(x => x.Name == cf.Name));
                             foreach (var val in valueList) {
