@@ -89,9 +89,10 @@
                 AddToLogString(string.Format("IssueCredentialOK for invite {2} (id {0}), with previous status: {1}",
                     schedaId.ToString(), serialized, _contentManager.GetItemMetadata(scheda).DisplayText));
             }
+            var credential = cContainer.Credentials.First(cred => !cred.Status.Contains("REVOK"));
             if (credStatuses.Count == 0) {
                 //we never processed this SchedaInvito
-                AssignHiddenFieldValue(schedaId, string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
+                AssignHiddenFieldValue(schedaId, string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                 //we changed a field, so we add to the feedbackData lists
                 AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
             } else {
@@ -100,7 +101,7 @@
                 string status = credStatuses.FirstOrDefault(myStatus);
                 if (string.IsNullOrWhiteSpace(status)) {
                     //we never used this CredentialContainer for this SchedaInvito
-                    credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
+                    credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                     //we changed a field, so we add to the feedbackData lists
                     AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
@@ -111,7 +112,7 @@
                     } else if (status.StartsWith("REVOKED")) {
                         //we previously called for a revoke of the MobileID for this user and SchedaInvito
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
-                        credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
+                        credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                         //we changed a field, so we add to the feedbackData lists
                         AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
@@ -119,7 +120,7 @@
                     } else if (status.StartsWith("TRIED")) {
                         //we previously attempted to issue credentials, but failed
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
-                        credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
+                        credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                         //we changed a field, so we add to the feedbackData lists
                         AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
@@ -136,7 +137,8 @@
             if (LogErrors) {
                 AddToErrorString("Exception in IssueCredentialOK: " + ex.Message);
             }
-            throw new Exception("Exception in IssueCredentialOK: " + ex.Message);
+            eMsg += "Exception in IssueCredentialOK: " + ex.Message + Environment.NewLine;
+            //throw new Exception("Exception in IssueCredentialOK: " + ex.Message);
         }
     }
 
@@ -150,9 +152,10 @@
                 AddToLogString(string.Format("RevokeCredentialOK for invite {2} (id {0}), with previous status: {1}",
                     schedaId.ToString(), serialized, _contentManager.GetItemMetadata(scheda).DisplayText));
             }
+            var credential = cContainer.Credentials.First(cred => cred.Status.Contains("REVOK"));
             if (credStatuses.Count == 0) {
                 //we never processed this SchedaInvito
-                AssignHiddenFieldValue(schedaId, string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
+                AssignHiddenFieldValue(schedaId, string.Format("REVOKED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                 //we changed a field, so we add to the feedbackData lists
                 AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
                     "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
@@ -162,7 +165,7 @@
                 string status = credStatuses.FirstOrDefault(myStatus);
                 if (string.IsNullOrWhiteSpace(status)) {
                     //we never used this CredentialContainer for this SchedaInvito
-                    credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
+                    credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                     //we changed a field, so we add to the feedbackData lists
                     AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
@@ -171,7 +174,7 @@
                     //do nothing
                 } else {
                     credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
-                    credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id));
+                    credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                     //we changed a field, so we add to the feedbackData lists
                     AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
@@ -187,7 +190,8 @@
             if (LogErrors) {
                 AddToErrorString("Exception in RevokeCredentialOK: " + ex.Message);
             }
-            throw new Exception("Exception in RevokeCredentialOK: " + ex.Message);
+            eMsg += "Exception in RevokeCredentialOK: " + ex.Message + Environment.NewLine;
+            //throw new Exception("Exception in RevokeCredentialOK: " + ex.Message);
         }
     }
 
@@ -277,7 +281,8 @@
             if (LogErrors) {
                 AddToErrorString("Exception in TryIssue: " + ex.Message);
             }
-            throw new Exception("Exception in TryIssue: " + ex.Message);
+            eMsg += "Exception in TryIssue: " + ex.Message + Environment.NewLine;
+            //throw new Exception("Exception in TryIssue: " + ex.Message);
         }
     }
 
@@ -343,7 +348,8 @@
             if (LogErrors) {
                 AddToErrorString("Exception in TryRevoke: " + ex.Message);
             }
-            throw new Exception("Exception in TryRevoke: " + ex.Message);
+            eMsg += "Exception in TryRevoke: " + ex.Message + Environment.NewLine;
+            //throw new Exception("Exception in TryRevoke: " + ex.Message);
         }
     }
 
@@ -474,7 +480,8 @@
             if (LogErrors) {
                 AddToErrorString("Exception in ProcessUserAction: " + ex.Message);
             }
-            throw new Exception("Exception in ProcessUserAction: " + ex.Message);
+            eMsg += "Exception in ProcessUserAction: " + ex.Message + Environment.NewLine;
+            //throw new Exception("Exception in ProcessUserAction: " + ex.Message);
         }
     }
 
@@ -492,7 +499,8 @@
             if (LogErrors) {
                 AddToErrorString("Exception in ProcessDictionary: " + ex.Message);
             }
-            throw new Exception("Exception in ProcessDictionary: " + ex.Message);
+            eMsg += "Exception in ProcessDictionary: " + ex.Message + Environment.NewLine;
+            //throw new Exception("Exception in ProcessDictionary: " + ex.Message);
         }
     }
 }

@@ -58,7 +58,13 @@ namespace Laser.Orchard.HID.Models {
             NfcCapability = container["nfcCapability"].ToString();
             Credentials.Clear();
             if (container["urn:hid:scim:api:ma:1.0:Credential"] != null) {
-                Credentials.AddRange(container["urn:hid:scim:api:ma:1.0:Credential"].Children().Select(jt => new HIDCredential(jt)));
+                var pNums = _HIDService.GetSiteSettings().PartNumbers;
+                Credentials.AddRange(
+                    container["urn:hid:scim:api:ma:1.0:Credential"]
+                    .Children()
+                    .Select(jt => new HIDCredential(jt))
+                    .Where(cred => pNums.Any(pn => pn == cred.PartNumber)) //only the credentials that we may be responsible for
+                    );
             }
         }
 
