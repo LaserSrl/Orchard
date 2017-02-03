@@ -817,7 +817,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             }
         }
         private string EscapeString(string text) {
-            return text.Replace('\"', '\'').Replace('\n', ' ').Replace('\r', ' ');
+            return (text ?? "").Replace('\"', '\'').Replace('\n', ' ').Replace('\r', ' ');
         }
         private string NormalizeFileName(string text) {
             var invalidChars = Path.GetInvalidFileNameChars();
