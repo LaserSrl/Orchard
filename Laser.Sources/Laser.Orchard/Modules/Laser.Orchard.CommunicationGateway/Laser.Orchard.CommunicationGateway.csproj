@@ -100,6 +100,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Taxonomies\bin\Orchard.Taxonomies.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Tokens, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Users">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
     </Reference>
@@ -202,6 +206,7 @@
     <Compile Include="Security\AdvertisingEventHandler.cs" />
     <Compile Include="Services\ExportContactService.cs" />
     <Compile Include="Services\ICommunicationService.cs" />
+    <Compile Include="Tokens\UserContactToken.cs" />
     <Compile Include="Utils\DownloadFileContentResult.cs">
       <SubType>Code</SubType>
     </Compile>
