@@ -206,6 +206,7 @@
     <Compile Include="Activities\TaxonomySetValuesActivity.cs" />
     <Compile Include="Activities\TaxonomySetValuesForm.cs" />
     <Compile Include="Activities\UserEventActivity.cs" />
+    <Compile Include="Controllers\CommandsController.cs" />
     <Compile Include="Controllers\MaintenanceAdminController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Drivers\AuthenticationRequiredPartDriver.cs" />
@@ -276,6 +277,7 @@
     <Compile Include="Tokens\AdditionalDateTokens.cs" />
     <Compile Include="Tokens\OwnerEmailToken.cs" />
     <Compile Include="Tokens\RazorCodeExecutionToken.cs" />
+    <Compile Include="ViewModels\CommandsExecuteViewModel.cs" />
     <Compile Include="ViewModels\MaintenanceIndexVM.cs" />
     <Compile Include="ViewModels\MaintenanceVM.cs" />
     <Compile Include="ViewModels\Response.cs" />
