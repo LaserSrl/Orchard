@@ -2,6 +2,8 @@
 @using Laser.Orchard.CommunicationGateway.Services;
 @using Orchard;
 @using Orchard.ContentManagement;
+@using Orchard.Data;
+@using Orchard.Projections.Models;
 @using Orchard.Projections.Services;
 @using Orchard.Security;
 @using Orchard.Users.Models;
@@ -16,16 +18,26 @@
     //additional services
     ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
     IFieldIndexService _fieldIndexService;
+    IContentManager _contentManager;
+    IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
 }
 @{
     if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
         eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
     }
     try {
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         //Identify the store
-        dynamic store = Model.ContentItem;
+        int storeId = _fieldIndexPartRecord.Table
+            .Where(f =>
+                f.StringFieldIndexRecords.Any(r =>
+                    r.PropertyName == "PuntoVendita.DefaultStore." && r.Value != null && r.Value != "")
+            )
+            .Select(x => x.ContentItemRecord.Id).FirstOrDefault();
+        dynamic store = (dynamic)(_contentManager.Get(storeId));
         if (store == null) {
             throw new Exception("Impossibile identificare il negozio.");
         }

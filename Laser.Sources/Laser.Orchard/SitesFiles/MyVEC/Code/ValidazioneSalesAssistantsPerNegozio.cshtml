@@ -1,5 +1,6 @@
 ﻿@using Orchard;
 @using Orchard.ContentManagement;
+@using Orchard.Projections.Services;
 @using Orchard.Security;
 @using Orchard.Users.Models;
 @using System;
@@ -13,6 +14,7 @@
     //additional services
     IMembershipService _membershipService;
     IContentManager _contentManager;
+    IFieldIndexService _fieldIndexService;
 }
 @{
     if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
@@ -21,6 +23,7 @@
     try {
         _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         //Model.ContentItem is a PuntoVendita
         dynamic store = Model.ContentItem;
         string serialized = (string)(store.PuntoVendita.EmailsSalesAssistants.Value);
@@ -43,7 +46,16 @@
                 ids.Add(kUser.Id);
             }
         }
-        store.PuntoVendita.IdsSalesAssistants.Value = string.Join(",", ids.Select(id => id.ToString()));
+        string sIds = string.Join(",", ids.Select(id => id.ToString()));
+        store.PuntoVendita.IdsSalesAssistants.Value = sIds;
+        _fieldIndexService.Set(
+                store.FieldIndexPart,
+                "PuntoVendita",
+                "IdsSalesAssistants",
+                "",
+                sIds,
+                typeof(string)
+            );
         if (problemEmails.Count > 0) {
             eMsg += "Non è stato possibile identificare le utenze corrispondenti ad alcune emails: " + string.Join(", ", problemEmails) + Environment.NewLine;
             retString = "Error";
