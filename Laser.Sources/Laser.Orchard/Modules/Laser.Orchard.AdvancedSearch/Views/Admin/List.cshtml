@@ -87,8 +87,8 @@
 
             $.widget("custom.myautocomplete", $.ui.autocomplete, {
                 _renderItem: function (ul, item) {
-                    var row = $("<li'>");
-                    var aux = "<div style='width:250px;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.UserName + "</div><div style='margin-left:10px;width:240px;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.Email + "</div>";
+                    var row = $("<li style='width:500px'>");
+                    var aux = "<div style='width:230px;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.UserName + "</div><div style='margin-left:10px;width:240px;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.Email + "</div>";
                     row = row.append($("<a>").html(aux));
                     row = row.appendTo(ul);
                     return row;
