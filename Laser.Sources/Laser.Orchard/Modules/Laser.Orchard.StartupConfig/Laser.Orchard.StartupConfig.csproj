@@ -365,6 +365,7 @@
     <Content Include="Views\Parts\FavoriteCulturePart.cshtml" />
     <Content Include="RazorCodeExecution\Snippets\EsempioUserReactionsActivity.cshtml" />
     <Content Include="Views\FileDownloader\Index.cshtml" />
+    <Content Include="Views\Commands\Execute.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
