@@ -85,7 +85,17 @@
                 e.preventDefault();
             });
 
-            $("#ownerResults").autocomplete({
+            $.widget("custom.myautocomplete", $.ui.autocomplete, {
+                _renderItem: function (ul, item) {
+                    var row = $("<li'>");
+                    var aux = "<div><div style='width:250px;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.UserName + "</div><div style='margin-left:10px;width:230px;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.Email + "</div></div>";
+                    row = row.append($("<a>").html(aux));
+                    row = row.appendTo(ul);
+                    return row;
+                }
+            });
+
+            $("#ownerResults").myautocomplete({
                 source: function (request, response) {
                     $.ajax({
                         type: 'POST',
@@ -98,7 +108,7 @@
                 },
                 response: function (event, ui) {
                     for (var x in ui.content) {
-                        ui.content[x].label = ui.content[x].UserName + " - " + ui.content[x].Email;
+                        //ui.content[x].label = ui.content[x].UserName + " - " + ui.content[x].Email;
                         ui.content[x].value = ui.content[x].UserName;
                     }
                 },
