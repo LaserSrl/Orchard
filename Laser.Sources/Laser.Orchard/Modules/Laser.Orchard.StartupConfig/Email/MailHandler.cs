@@ -14,6 +14,7 @@ using Orchard;
 using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.StartupConfig.Email {
+
     [OrchardFeature("Laser.Orchard.StartupConfig.MailExtensions")]
     public class MailHandler : Component, ISmtpChannel, IDisposable {
         private readonly SmtpSettingsPart _smtpSettings;
@@ -42,8 +43,6 @@ namespace Laser.Orchard.StartupConfig.Email {
         }
 
         public void Process(IDictionary<string, object> parameters) {
-
-
             if (!_smtpSettings.IsValid()) {
                 return;
             }
@@ -87,9 +86,6 @@ namespace Laser.Orchard.StartupConfig.Email {
                 IsBodyHtml = true
             };
 
-
-
-
             var section = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
             string mailfrom = !String.IsNullOrWhiteSpace(_smtpSettings.Address) ? _smtpSettings.Address : section.From;
             if (parameters.ContainsKey("FromEmail")) {
@@ -122,7 +118,9 @@ namespace Laser.Orchard.StartupConfig.Email {
                 //mailMessage.Headers.Add("Read-Receipt-To",  mailMessage.From);
                 if (parameters.ContainsKey("NotifyReadEmail")) {
                     if (parameters["NotifyReadEmail"] is bool) {
-                        mailMessage.Headers.Add("Disposition-Notification-To", mailfrom);
+                        if ((bool)(parameters["NotifyReadEmail"])) {
+                            mailMessage.Headers.Add("Disposition-Notification-To", mailfrom);
+                        }
                     }
                 }
                 _smtpClientField.Value.Send(mailMessage);
@@ -132,7 +130,6 @@ namespace Laser.Orchard.StartupConfig.Email {
                 //    mailMessage.Dispose();
                 //};
                 // mysmtp.SendAsync(mailMessage, null);
-
             }
             catch (Exception e) {
                 Logger.Error(e, "Could not send email");
@@ -162,6 +159,7 @@ namespace Laser.Orchard.StartupConfig.Email {
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             return smtpClient;
         }
+
         private bool EmailVerify(string email) {
             try {
                 var mail = new MailAddress(email);
@@ -172,6 +170,4 @@ namespace Laser.Orchard.StartupConfig.Email {
             }
         }
     }
-
-
 }

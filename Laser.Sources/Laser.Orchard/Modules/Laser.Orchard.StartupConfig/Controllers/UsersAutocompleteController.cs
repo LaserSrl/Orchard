@@ -9,11 +9,14 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.StartupConfig.Controllers {
+
     public class UsersAutocompleteController : Controller {
         private readonly IUserSearchService _userSearchService;
+
         public UsersAutocompleteController(IUserSearchService userSearchService) {
             _userSearchService = userSearchService;
         }
+
         public ActionResult Search(string searchText) {
             List<SearchResult> elenco = new List<SearchResult>();
             foreach (var usr in _userSearchService.SearchByNameOrEmail(searchText)) {
@@ -24,6 +27,14 @@ namespace Laser.Orchard.StartupConfig.Controllers {
             }
             return Json(elenco);
         }
+
+        public ActionResult SearchRole(string searchText, string UserRole) {
+            return Json(_userSearchService.SearchByNameOrEmail(searchText, UserRole).Select(usr => new SearchResult {
+                UserName = usr.UserName,
+                Email = usr.Email
+            }).ToList());
+        }
+
         //**********************************************
         // classe di utility per la creazione del risultato in formato json
         public class SearchResult {

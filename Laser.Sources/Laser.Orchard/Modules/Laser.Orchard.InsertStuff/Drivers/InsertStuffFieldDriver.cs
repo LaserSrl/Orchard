@@ -43,7 +43,7 @@ namespace Laser.Orchard.InsertStuff.Drivers {
             };
 
             return ContentShape("Fields_Laser_Orchard_InsertStuff", GetDifferentiator(field, part),
-                () => shapeHelper.Fields_GOC_InsertStuff(ContentPart: part, ContentField: field, Model: viewModel));
+                () => shapeHelper.Fields_Laser_Orchard_InsertStuff(ContentPart: part, ContentField: field, Model: viewModel));
         }
 
         /// <summary>
