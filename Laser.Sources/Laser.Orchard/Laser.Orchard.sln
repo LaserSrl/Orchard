@@ -170,6 +170,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.CulturePicker
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.UserProfiler", "Modules\Laser.Orchard.UserProfiler\Laser.Orchard.UserProfiler.csproj", "{22DD309C-74F3-4E57-843C-ED46A7122758}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.InsertStuff", "Modules\Laser.Orchard.InsertStuff\Laser.Orchard.InsertStuff.csproj", "{6805C2AB-EA57-41C3-96A5-030567BAF5A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -478,6 +480,10 @@ Global
 		{22DD309C-74F3-4E57-843C-ED46A7122758}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22DD309C-74F3-4E57-843C-ED46A7122758}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22DD309C-74F3-4E57-843C-ED46A7122758}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6805C2AB-EA57-41C3-96A5-030567BAF5A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6805C2AB-EA57-41C3-96A5-030567BAF5A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6805C2AB-EA57-41C3-96A5-030567BAF5A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6805C2AB-EA57-41C3-96A5-030567BAF5A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -559,5 +565,6 @@ Global
 		{0142AFEA-6798-4AB0-83BB-2E30453B3FE8} = {142C1A4D-CD11-419D-88CE-ED97548901AA}
 		{2896DD3E-A55B-493F-9483-A107AA54C930} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{22DD309C-74F3-4E57-843C-ED46A7122758} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{6805C2AB-EA57-41C3-96A5-030567BAF5A6} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal

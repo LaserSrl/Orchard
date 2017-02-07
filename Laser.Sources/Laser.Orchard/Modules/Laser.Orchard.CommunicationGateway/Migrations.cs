@@ -343,5 +343,17 @@ namespace Laser.Orchard.CommunicationGateway {
                    );
             return 24;
         }
+
+        public int UpdateFrom24() {
+            ContentDefinitionManager.AlterTypeDefinition(
+                  "CommunicationContact", type => type
+                   .WithPart("AutoroutePart", part => part
+                   .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
+                   .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
+                   .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: 'contact_{Content.Slug}', Description: 'Autoroute Contact'}]")
+                   .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                   );
+            return 25;
+        }
     }
 }

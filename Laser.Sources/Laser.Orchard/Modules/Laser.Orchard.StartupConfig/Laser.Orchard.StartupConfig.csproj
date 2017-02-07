@@ -232,8 +232,10 @@
     <Compile Include="Activities\TaxonomySetValuesActivity.cs" />
     <Compile Include="Activities\TaxonomySetValuesForm.cs" />
     <Compile Include="Activities\UserEventActivity.cs" />
+    <Compile Include="Controllers\CommandsController.cs" />
     <Compile Include="Controllers\MaintenanceAdminController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\UsersAutocompleteController.cs" />
     <Compile Include="Drivers\AuthenticationRequiredPartDriver.cs" />
     <Compile Include="Drivers\FavoriteCulturePartDriver.cs" />
     <Compile Include="Drivers\MaintenancePartDriver.cs" />
@@ -293,6 +295,7 @@
     <Compile Include="Services\IApiKeyService.cs" />
     <Compile Include="RazorCodeExecution\Services\IRazorExecuteService.cs" />
     <Compile Include="Services\IMaintenanceService.cs" />
+    <Compile Include="Services\IUserSearchService.cs" />
     <Compile Include="Services\MaintenanceBanner.cs" />
     <Compile Include="Services\MaintenanceService.cs" />
     <Compile Include="TaxonomiesExtensions\EventHandlers\TaxonomyPickerFieldLocalizationShapeTableEventHandler.cs" />
@@ -307,6 +310,7 @@
     <Compile Include="Tokens\AdditionalDateTokens.cs" />
     <Compile Include="Tokens\OwnerEmailToken.cs" />
     <Compile Include="Tokens\RazorCodeExecutionToken.cs" />
+    <Compile Include="ViewModels\CommandsExecuteViewModel.cs" />
     <Compile Include="ViewModels\MaintenanceIndexVM.cs" />
     <Compile Include="ViewModels\MaintenanceVM.cs" />
     <Compile Include="ViewModels\Response.cs" />
@@ -394,6 +398,7 @@
     <Content Include="Views\Parts\FavoriteCulturePart.cshtml" />
     <Content Include="RazorCodeExecution\Snippets\EsempioUserReactionsActivity.cshtml" />
     <Content Include="Views\FileDownloader\Index.cshtml" />
+    <Content Include="Views\Commands\Execute.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

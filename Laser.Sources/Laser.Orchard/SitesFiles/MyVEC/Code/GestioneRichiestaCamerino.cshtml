@@ -1,5 +1,8 @@
 ﻿@using Orchard;
 @using Orchard.ContentManagement;
+@using Orchard.Data;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
 @using System;
 @using System.Collections.Generic;
 @using System.Linq;
@@ -7,6 +10,10 @@
     string retString = "Error"; //possible outcomes: "Error","DoNothing","Push" 
 
     string eMsg = String.Empty; //used to track errors and put them in the WF state
+
+    IContentManager _contentManager;
+    IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
+    IFieldIndexService _fieldIndexService;
 }
 @{
     if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
@@ -19,11 +26,31 @@
             //Handled already.
             retString = "DoNothing";
         } else {
+            _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+            _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+            _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
             //Identify the store
-            var store = ((dynamic)Model.OrchardServices.ContentManager.Get(richiesta.RichiestaCamerino.Negozio.Ids[0]));
+            int storeId = _fieldIndexPartRecord.Table
+                .Where(f =>
+                    f.StringFieldIndexRecords.Any(r =>
+                        r.PropertyName == "PuntoVendita.DefaultStore." && r.Value != null && r.Value != "")
+                )
+                .Select(x => x.ContentItemRecord.Id).FirstOrDefault();
+            dynamic store = (dynamic)(_contentManager.Get(storeId));
+            //var store = ((dynamic)Model.OrchardServices.ContentManager.Get(richiesta.RichiestaCamerino.Negozio.Ids[0]));
             if (store == null) {
                 throw new Exception("Impossibile identificare il negozio dalla Richiesta Camerino.");
             }
+            int[] sIds = new int[] { storeId };
+            richiesta.RichiestaCamerino.Negozio.Ids = sIds;
+            _fieldIndexService.Set(
+                richiesta.FieldIndexPart,
+                "RichiestaCamerino",
+                "Negozio",
+                "",
+                String.Join(",",sIds.Select<int, string>(id => "{" + id.ToString() + "}")),
+                typeof(string)
+            );
             //Identify the Sales assistants
             string csvIds = store.PuntoVendita.IdsSalesAssistants.Value;
             if (string.IsNullOrWhiteSpace(csvIds)) {

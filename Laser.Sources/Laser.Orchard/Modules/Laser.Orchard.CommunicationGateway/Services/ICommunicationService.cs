@@ -1,53 +1,54 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
-using Laser.Orchard.CommunicationGateway.ViewModels;
-using Laser.Orchard.CommunicationGateway.Utils;
 using Laser.Orchard.ShortLinks.Services;
+using Laser.Orchard.StartupConfig.Fields;
+using Laser.Orchard.StartupConfig.Handlers;
 using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
-using NHibernate.Transform;
 using Orchard;
+using Orchard.Autoroute.Models;
+using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Records;
 using Orchard.ContentPicker.Fields;
+using Orchard.Core.Common.Fields;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Fields.Fields;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Logging;
 using Orchard.MediaLibrary.Fields;
 using Orchard.Modules.Services;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
+using Orchard.Projections.Services;
 using Orchard.Security;
 using Orchard.Tags.Models;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Models;
+using Orchard.Taxonomies.Services;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Text;
-using Orchard.Taxonomies.Services;
-using Orchard.Core.Common.Models;
-using Orchard.Localization.Services;
-using Laser.Orchard.StartupConfig.Handlers;
-using Orchard.Projections.Services;
-using Orchard.Core.Common.Fields;
-using Laser.Orchard.StartupConfig.Fields;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
 
     public interface ICommunicationService : IDependency {
 
         bool AdvertisingIsAvailable(Int32 id);
+
         string GetCampaignLink(string CampaignSource, ContentPart part);
+
         bool CampaignLinkExist(ContentPart part);
+
         void UserToContact(IUser UserContent);
+
         CommunicationContactPart GetContactFromUser(int iduser);
+
         List<ContentItem> GetContactsFromMail(string mail);
 
         List<ContentItem> GetContactsFromSms(string prefix, string sms);
@@ -57,6 +58,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         ContentItem GetContactFromId(int id);
 
         void Synchronize();
+
         void UnboundFromUser(UserPart userPart);
 
         /// <summary>
@@ -66,6 +68,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         void RemoveMailsAndSms(int contactId);
 
         CommunicationContactPart EnsureMasterContact();
+
         CommunicationContactPart TryEnsureContact(int userId);
     }
 
@@ -80,13 +83,15 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly IContactRelatedEventHandler _contactRelatedEventHandler;
         private readonly ITransactionManager _transactionManager;
         private readonly IFieldIndexService _fieldIndexService;
+        private readonly IAutorouteService _autorouteService;
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
 
-        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, IContactRelatedEventHandler contactRelatedEventHandler, ITransactionManager transactionManager, IFieldIndexService fieldIndexService) {
+        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, IContactRelatedEventHandler contactRelatedEventHandler, ITransactionManager transactionManager, IFieldIndexService fieldIndexService, IAutorouteService autorouteService) {
+
 
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
@@ -100,6 +105,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _contactRelatedEventHandler = contactRelatedEventHandler;
             _transactionManager = transactionManager;
             _fieldIndexService = fieldIndexService;
+            _autorouteService = autorouteService;
 
             T = NullLocalizer.Instance;
         }
@@ -627,6 +633,11 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 }
             }
         }
+            if (string.IsNullOrEmpty(contact.As<AutoroutePart>().DisplayAlias)) {
+                contact.As<AutoroutePart>().DisplayAlias = _autorouteService.GenerateAlias(contact.As<AutoroutePart>());
+                _autorouteService.ProcessPath(contact.As<AutoroutePart>());
+                _autorouteService.PublishAlias(contact.As<AutoroutePart>());
+            }
     }
     }
 }
