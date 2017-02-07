@@ -7,6 +7,8 @@
 @{
     Script.Require("jQuery");
     Script.Require("jQueryUI_Core").AtHead();
+    Script.Require("jQueryUI_Autocomplete").AtHead();
+    Style.Require("jQuery_Autocomplete").AtHead();
     Style.Require("AdvancedSearch").AtHead();
     Style.Require("FontAwesome430").AtHead();
     Style.Require("Accordion").AtHead();
@@ -23,6 +25,7 @@
 @using (Script.Head()) {
     <script type="text/javascript">
         $(document).ready(function () {
+            var aft = $("input[name=__RequestVerificationToken]:first").val();
             inputvalueignorelist = new Array('AdvancedOptions.SelectedLanguageId0', 'AdvancedOptions.SelectedOwner', 'AdvancedOptions.SelectedFromDate', 'AdvancedOptions.SelectedToDate', 'AdvancedOptions.DateFilterType0', 'AdvancedOptions.SelectedTermId0', 'AdvancedOptions.HasMediafalse');
             $('.accordion-section-content :input').each(function () {
                 if (!(inputvalueignorelist.indexOf((this.name + $(this).val())) >= 0)) {
@@ -80,6 +83,26 @@
                 }
 
                 e.preventDefault();
+            });
+
+            $("#ownerResults").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Action("Search", "UsersAutocomplete", new { area = "Laser.Orchard.StartupConfig" })",
+                        data: { searchText: $("#ownerResults").val(), __RequestVerificationToken: aft },
+                        success: function (dataAutocomplete) {
+                            response(dataAutocomplete);
+                        }
+                    });
+                },
+                response: function (event, ui) {
+                    for (var x in ui.content) {
+                        ui.content[x].label = ui.content[x].UserName + " - " + ui.content[x].Email;
+                        ui.content[x].value = ui.content[x].UserName;
+                    }
+                },
+                minLength: 3
             });
         });
     </script>
