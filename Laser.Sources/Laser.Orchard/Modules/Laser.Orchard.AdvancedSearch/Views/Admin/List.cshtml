@@ -87,8 +87,8 @@
 
             $.widget("custom.myautocomplete", $.ui.autocomplete, {
                 _renderItem: function (ul, item) {
-                    var row = $("<li style='width:500px'>");
-                    var aux = "<div style='width:230px;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.UserName + "</div><div style='margin-left:10px;width:240px;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.Email + "</div>";
+                    var row = $("<li style='width:30em'>");
+                    var aux = "<div style='width:14em;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.UserName + "</div><div style='margin-left:0.4em;width:14em;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.Email + "</div>";
                     row = row.append($("<a>").html(aux));
                     row = row.appendTo(ul);
                     return row;
@@ -398,7 +398,7 @@
                                         (string)Model.AdvancedOptions.SelectedOwner :
                                         (string)WorkContext.CurrentUser.UserName,
                                     (!onlyMine) ?
-                                        (object)new { id = "ownerResults" } :
+                                        (object)new { id = "ownerResults", @placeholder = @T("User name or e-mail") } :
                                         (object)new { id = "ownerResults", @disabled = "disabled" }
                                 )
                                 &nbsp;

@@ -220,6 +220,10 @@ msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Untranslated in {0}"
 msgstr "Non tradotto in {0}"
 
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "User name or e-mail"
+msgstr "Nome utente o e-mail"
+
 msgctxt "Laser.Orchard.AdvancedSearch.ContentAdminMenu"
 msgid "Advanced Search"
 msgstr "Ricerca Avanzata"
