@@ -181,30 +181,34 @@ namespace Laser.Orchard.TaskScheduler.Services {
         /// <returns>A <type>DateTime</type> object containing the moment when the task whoudl be scheduled next.</returns>
         public DateTime ComputeNextScheduledTime(ScheduledTaskPart part) {
             DateTime result = part.ScheduledStartUTC == null ? DateTime.UtcNow : part.ScheduledStartUTC.Value;
-            switch (part.PeriodicityUnit) {
-                case TimeUnits.Seconds:
-                    result = result.AddSeconds(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Minutes:
-                    result = result.AddMinutes(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Hours:
-                    result = result.AddHours(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Days:
-                    result = result.AddDays(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Weeks:
-                    result = result.AddDays(7 * part.PeriodicityTime);
-                    break;
-                case TimeUnits.Months:
-                    result = result.AddMonths(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Years:
-                    result = result.AddYears(part.PeriodicityTime);
-                    break;
-                default:
-                    break;
+            // incrementa la start date in base alla periodicità fino a raggiungere una start date futura
+            // la periodicità è sicuramente > 0 come verificato nell'handler, quindi il ciclo seguente non è infinito
+            while (result <= DateTime.UtcNow) {
+                switch (part.PeriodicityUnit) {
+                    case TimeUnits.Seconds:
+                        result = result.AddSeconds(part.PeriodicityTime);
+                        break;
+                    case TimeUnits.Minutes:
+                        result = result.AddMinutes(part.PeriodicityTime);
+                        break;
+                    case TimeUnits.Hours:
+                        result = result.AddHours(part.PeriodicityTime);
+                        break;
+                    case TimeUnits.Days:
+                        result = result.AddDays(part.PeriodicityTime);
+                        break;
+                    case TimeUnits.Weeks:
+                        result = result.AddDays(7 * part.PeriodicityTime);
+                        break;
+                    case TimeUnits.Months:
+                        result = result.AddMonths(part.PeriodicityTime);
+                        break;
+                    case TimeUnits.Years:
+                        result = result.AddYears(part.PeriodicityTime);
+                        break;
+                    default:
+                        break;
+                }
             }
             part.ScheduledStartUTC = result;
             return result;
