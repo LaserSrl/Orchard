@@ -55,6 +55,42 @@
     List<HIDCredentialContainer> credentialsFeedbackDataHIDcc = null;
     List<string> credentialsFeedbackDataErrors = null;
 
+    //Custom serializer for a List<String>
+    public string MyStringSerializer(IEnumerable<string> ss) {
+        return String.Join(",", ss.Select(s => String.Format(@"{{{0}}}{1}", s.Length.ToString(), s)));
+    }
+    //Custom serializer for List<int>
+    public string MyIntSerializer(IEnumerable<int> ii) {
+        return String.Join(",", ii.Select(i => string.Format(@"{{{0}}}", i.ToString())));
+    }
+    //Custom serializer for HIDCredentialContainer
+    //in the feedback emails we use the following properties:
+    // - Id
+    // - Manufacturer
+    // - Model
+    // - Credentials
+    public string MyCredentialContainerSerializer(HIDCredentialContainer cc) {
+        string sID = String.Format(@"{{{0}}}{1}", cc.Id.ToString().Length.ToString(), cc.Id.ToString());
+        string sManufacturer = String.Format(@"{{{0}}}{1}", (cc.Manufacturer??"").Length.ToString(), cc.Manufacturer??"");
+        string sModel = String.Format(@"{{{0}}}{1}", (cc.Model??"").Length.ToString(), cc.Model??"");
+        string sCreds = MyStringSerializer(cc.Credentials.Select(c => MyCredentialSerializer(c)));
+        string sCredentials = String.Format(@"{{{0}}}{1}", sCreds.Length.ToString(), sCreds);
+        return string.Format(@"{0},{1},{2},{3}",
+            sID,
+            sManufacturer,
+            sModel,
+            sCredentials
+            );
+    }
+    //Custom serializer for HIDCredential
+    //In the feedback email we use the following properties:
+    // - Status,
+    // - CardNumber
+    public string MyCredentialSerializer(HIDCredential cred) {
+        return string.Format(@"{0},{1}", cred.CardNumber, cred.Status);
+    }
+
+
     private void AssignHiddenFieldValue(int schedaId, string value) {
         dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
         scheda.SchedaInvito.HIDCredentialStatus.Value = value;
@@ -235,7 +271,7 @@
                             dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
                             string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
                             List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                            string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED"));
+                            string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id);
                             credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                             credStatuses.Add(status);
                             AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
@@ -640,11 +676,26 @@
     Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
     Model.Tokens["Workflow"].SetState("LoggingInformation", string.Join(Environment.NewLine, taskLog));
     if (credentialsFeedbackDataVisitIds.Count() != 0) {
-        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataVisitIds", credentialsFeedbackDataVisitIds);
-        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataInviteIds", credentialsFeedbackDataInviteIds);
-        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDUserIds", credentialsFeedbackDataHIDUserIds);
-        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDcc", credentialsFeedbackDataHIDcc);
-        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataErrors", credentialsFeedbackDataErrors);
+        //Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataVisitIds", credentialsFeedbackDataVisitIds);
+        //Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataInviteIds", credentialsFeedbackDataInviteIds);
+        //Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDUserIds", credentialsFeedbackDataHIDUserIds);
+        //Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDcc", credentialsFeedbackDataHIDcc);
+        //Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataErrors", credentialsFeedbackDataErrors);
+        //Use custome serialization of everything, because importing Newtonsoft.Json in email templates causes dll conflicts
+        //Because of that, it's only safe to pass strings
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataVisitIds",
+            MyIntSerializer(credentialsFeedbackDataVisitIds));
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataInviteIds",
+            MyIntSerializer(credentialsFeedbackDataInviteIds));
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDUserIds",
+            MyIntSerializer(credentialsFeedbackDataHIDUserIds));
+        string ccString = MyStringSerializer(
+                credentialsFeedbackDataHIDcc.Select<HIDCredentialContainer, string>(cc => MyCredentialContainerSerializer(cc))
+            );
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDcc",
+            ccString);
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataErrors",
+            MyStringSerializer(credentialsFeedbackDataErrors));
         retString = "ProcessedCredentials";
     } else if (string.IsNullOrWhiteSpace(eMsg)) {
         retString = "OK";
