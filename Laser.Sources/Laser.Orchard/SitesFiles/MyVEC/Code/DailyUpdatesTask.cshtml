@@ -116,7 +116,7 @@
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                         //we changed a field, so we add to the feedbackData lists
                         AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                            "In precedenza il MobileID era stato revocato.");
+                            ""); //"In precedenza il MobileID era stato revocato."); //since it's a successful issue, we don't write error strings
                     } else if (status.StartsWith("TRIED")) {
                         //we previously attempted to issue credentials, but failed
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
@@ -157,8 +157,9 @@
                 //we never processed this SchedaInvito
                 AssignHiddenFieldValue(schedaId, string.Format("REVOKED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                 //we changed a field, so we add to the feedbackData lists
-                AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                    "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
+                //Never notify about revokes
+                //AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
+                //    "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
             } else {
                 //find the state for this CredentialContainer in the statuses
                 Func<string, bool> myStatus = st => st.Contains(string.Format(@" {0} ", cContainer.Id));
@@ -168,8 +169,9 @@
                     credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                     //we changed a field, so we add to the feedbackData lists
-                    AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                        "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
+                    //Never notify about revokes
+                    //AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
+                    //    "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
                 } else if (status.StartsWith("REVOKED")) {
                     //do nothing
                 } else {
@@ -177,7 +179,8 @@
                     credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                     //we changed a field, so we add to the feedbackData lists
-                    AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
+                    //Never notify about revokes
+                    //AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
                 }
             }
             if (LogEverything) {
@@ -329,8 +332,9 @@
                         credStatuses.Add(status);
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                         //we changed a field, so we add to the feedbackData lists
-                        AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                            string.Format("ERRORE: Non è stato possibile revocare un MobileID. Errore interno: {0}", UserErrorString(hidUser)));
+                        //Never notify about revokes
+                        //AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
+                        //    string.Format("ERRORE: Non è stato possibile revocare un MobileID. Errore interno: {0}", UserErrorString(hidUser)));
                         if (LogEverything) {
                             AddToLogString(string.Format("ERROR: It was impossible to revoke a MobileID. Internal error: {0}", UserErrorString(hidUser)));
                         }
@@ -571,8 +575,7 @@
                 if (LogEverything) {
                     AddToLogString(string.Format("Should revoke credentials for visit: {0}.", _contentManager.GetItemMetadata(visit).DisplayText));
                 }
-            }
-            if (item.ActivityPart.DateTimeStart.Date >= today) {
+            } else if (item.ActivityPart.DateTimeStart.Date >= today) {
                 if (item.ActivityPart.DateTimeStart.Date == today) {
                     //this visit starts today
                     // Set its state to "In corso"
