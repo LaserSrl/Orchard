@@ -75,6 +75,9 @@
             } else {
                 Model.Tokens["Workflow"].SetState("ProductColour", colour.TitlePart.Title);
             }
+            
+            // imposto la title con Nome Cognome dell'utente che ha richiesto 
+            richiesta.TitlePart.Title = dCaller.User.ProfilePart.Name.Value + " " + dCaller.User.ProfilePart.Surname.Value;
             //Set workflow states used by the Push Activity
             Model.Tokens["Workflow"].SetState("RecipientsList", csvIds);
             Model.Tokens["Workflow"].SetState("CustomerName", dCaller.User.ProfilePart.Name.Value ?? "");
