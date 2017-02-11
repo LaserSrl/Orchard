@@ -3,27 +3,26 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Title.Models;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Services;
-using JetBrains.Annotations;
 using Orchard.Taxonomies.Models;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Taxonomies.Settings;
 using System;
+using System.Web.Routing;
 
 namespace Orchard.Taxonomies.Handlers {
-    [UsedImplicitly]
     public class TaxonomyPartHandler : ContentHandler {
         public TaxonomyPartHandler(
-            IRepository<TaxonomyPartRecord> repository, 
+            IRepository<TaxonomyPartRecord> repository,
             ITaxonomyService taxonomyService,
             IContentDefinitionManager contentDefinitionManager) {
-            
+
             string previousName = null;
 
             Filters.Add(StorageFilter.For(repository));
             OnPublished<TaxonomyPart>((context, part) => {
-                
-                 if (part.TermTypeName == null) {
+
+                if (part.TermTypeName == null) {
                     // is it a new taxonomy ?
                     taxonomyService.CreateTermContentType(part);
                 }
@@ -31,11 +30,11 @@ namespace Orchard.Taxonomies.Handlers {
                     // update existing fields
                     foreach (var partDefinition in contentDefinitionManager.ListPartDefinitions()) {
                         foreach (var field in partDefinition.Fields) {
-                            if (field.FieldDefinition.Name == typeof (TaxonomyField).Name) {
+                            if (field.FieldDefinition.Name == typeof(TaxonomyField).Name) {
 
                                 if (field.Settings.GetModel<TaxonomyFieldSettings>().Taxonomy == previousName) {
-                                    contentDefinitionManager.AlterPartDefinition(partDefinition.Name, 
-                                        cfg => cfg.WithField(field.Name, 
+                                    contentDefinitionManager.AlterPartDefinition(partDefinition.Name,
+                                        cfg => cfg.WithField(field.Name,
                                             builder => builder.WithSetting("TaxonomyFieldSettings.Taxonomy", part.Name)));
                                 }
                             }
@@ -44,7 +43,7 @@ namespace Orchard.Taxonomies.Handlers {
                 }
             });
 
-            OnLoading<TaxonomyPart>( (context, part) => part.TermsField.Loader(x => taxonomyService.GetTerms(part.Id)));
+            OnLoading<TaxonomyPart>((context, part) => part.TermsField.Loader(x => taxonomyService.GetTerms(part.Id)));
 
             OnUpdating<TitlePart>((context, part) => {
                 // if altering the title of a taxonomy, save the name
@@ -52,6 +51,20 @@ namespace Orchard.Taxonomies.Handlers {
                     previousName = part.Title;
                 }
             });
+        }
+        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+            var taxonomy = context.ContentItem.As<TaxonomyPart>();
+
+            if (taxonomy == null)
+                return;
+
+            context.Metadata.EditorRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Taxonomies"},
+                {"Controller", "Admin"},
+                {"Action", "Edit"},
+                {"Id", taxonomy.Id}
+            };
+
         }
     }
 }

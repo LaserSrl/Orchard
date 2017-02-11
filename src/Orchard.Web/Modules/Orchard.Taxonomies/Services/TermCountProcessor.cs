@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,32 +7,35 @@ using Orchard.Taxonomies.Models;
 
 namespace Orchard.Taxonomies.Services {
     public class TermCountProcessor : ITermCountProcessor {
-        private readonly IContentManager _contentManager;
         private readonly ITaxonomyService _taxonomyService;
 
-        public TermCountProcessor(IContentManager contentManager, ITaxonomyService taxonomyService) {
-            _contentManager = contentManager;
+        public TermCountProcessor(ITaxonomyService taxonomyService) {
             _taxonomyService = taxonomyService;
         }
-        
-        public void Process(int termsPartId) {
-            var termsPart = _contentManager.Get<TermsPart>(termsPartId);
 
-            if (termsPart == null) {
-                return;
-            }
-
-            // Retrieve the number of associated content items, for the whole hierarchy
-            foreach (var term in termsPart.Terms) {
-                var termPart = _taxonomyService.GetTerm(term.TermRecord.Id);
-                while (termPart != null) {
-                    termPart.Count = (int)_taxonomyService.GetContentItemsCount(termPart);
-
-                    // compute count for the hierarchy too
-                    if (termPart.Container != null) {
-                        var parentTerm = termPart.Container.As<TermPart>();
-                        termPart = parentTerm;
+        public void Process(IEnumerable<int> termPartRecordIds)
+        {
+            var processedTermPartRecordIds = new List<int>();
+            foreach (var id in termPartRecordIds) {
+                if (!processedTermPartRecordIds.Contains(id)) {
+                    var termPart = _taxonomyService.GetTerm(id);
+                    if (termPart != null) {
+                        ProcessTerm(termPart, processedTermPartRecordIds);
                     }
+                }
+            }
+        }
+
+        private void ProcessTerm(TermPart termPart, ICollection<int> processedTermPartRecordIds)
+        {
+            termPart.Count = (int)_taxonomyService.GetContentItemsCount(termPart);
+            processedTermPartRecordIds.Add(termPart.Id);
+
+            // Look for a parent term that has not yet been processed
+            if (termPart.Container != null) {
+                var parentTerm = termPart.Container.As<TermPart>();
+                if (parentTerm != null && !processedTermPartRecordIds.Contains(parentTerm.Id)) {
+                    ProcessTerm(parentTerm, processedTermPartRecordIds);
                 }
             }
         }
