@@ -1,0 +1,29 @@
+@{
+    Layout.Title = Model.Title;
+    dynamic item = Model.ContentItem;
+}
+
+<div id="intro" class="showcase-intro">
+    <canvas id="intro-canvas"></canvas>
+    <div class="container container-desc clearfix">
+        <div class="col-xs-12 col-sm-6 col-intro-desc">
+            <h1 class="handel-got-d title">@Model.Title</h1>
+            <h2 class="page-claim">@item.Prodotto.Sottotitolo.Value</h2>
+            <div class="page-desc">@Html.Raw(item.BodyPart.Text)</div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <div class="showcase-perspective">
+                <img src="@item.Prodotto.Gallery.FirstMediaUrl" class="img-responsive perspective-layer">
+
+                    @foreach (var tipo in item.Prodotto.Tipologia.Terms) {
+                            
+                            <div class="perspective-layer category-layer" style="background:@tipo.ContentItem.TipologiaProdottiTerm.Colore.Value">
+                                <img src="@tipo.ContentItem.TipologiaProdottiTerm.Image.FirstMediaUrl" class="img-responsive category-layer-icon">
+                                <h5 class="category-layer-title">@tipo.Name</h5>
+                            </div>
+                            
+                        }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+﻿@using Orchard.Projections.Services;
+
+@{
+    int page = 1;
+    int pageSize = Model.ContentItem.ProjectionPart.Record.Items;
+    
+    var services = WorkContext.Resolve<IProjectionManager>();
+    var queryId = Model.ContentItem.ProjectionPart.Record.QueryPartRecord.Id;
+    var queryItems = services.GetContentItems(queryId, (page - 1) * pageSize, pageSize);
+}
+
+<div class="overflow-hidden">
+    <div class="space-40"></div>
+
+    <div class="container-fluid" id="showcase-container">
+        <div class="row">
+
+            @foreach (var resulted in queryItems) {
+
+                string styleContainer = "";
+                foreach (var term in resulted.Prodotto.Tipologia.Terms) {
+                    styleContainer += " " + term.ContentItem.TipologiaProdottiTerm.ClasseContenitore.Value;
+                }
+                
+                <div class="col-xs-12 col-sm-6 col-md-4 showcase-item-img filterable-item bg-showcase @styleContainer">
+                    <div class="row no-margin">
+                        <div class="col-xs-9 no-padding">
+                            <div class="space-40 hidden-xs"></div>
+                            <h1 class="showcase-title text-right"><a href="@resulted.Prodotto.Link.Value">@resulted.Prodotto.TitlePart.Title</a></h1>
+                        </div>
+                        <div class="col-xs-3 no-padding">
+                            <div class="showcase-item-logo">
+                                <a href="@resulted.Prodotto.Link.Value"><img src="@resulted.Prodotto.Logo.FirstMediaUrl" class="img-responsive wp-post-image" alt="@resulted.Prodotto.TitlePart.Title.ToLower()"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-20 visible-xs"></div>
+                    <a href="@resulted.Prodotto.Link.Value" class="showcase-perspective">
+                        <img src="@resulted.Prodotto.Gallery.FirstMediaUrl" class="img-responsive perspective-layer" />
+
+                        @foreach (var tipo in resulted.Prodotto.Tipologia.Terms) {
+                            
+                            <div class="perspective-layer category-layer" style="background:@tipo.ContentItem.TipologiaProdottiTerm.Colore.Value">
+                                <img src="@tipo.ContentItem.TipologiaProdottiTerm.Image.FirstMediaUrl" class="img-responsive category-layer-icon">
+                                <h5 class="category-layer-title">@tipo.Name</h5>
+                            </div>
+                            
+                        }
+                    </a>
+                </div>
+                
+            }
+
+        </div>
+        <div class="showcase-container-bottom"></div>
+    </div>
+</div>

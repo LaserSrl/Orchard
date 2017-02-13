@@ -1,0 +1,10 @@
+﻿@{
+    dynamic item = Model.ContentItem;
+}
+
+@if (item.WidgetPart.Title == "Link Krake") {
+    @Display(New.LinkKrake(ContentItem: item));
+}
+else {
+    @Display(Model.Content)
+}

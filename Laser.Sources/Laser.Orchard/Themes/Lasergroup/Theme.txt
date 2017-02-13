@@ -1,0 +1,8 @@
+Name: Lasergroup
+Author: Davide Lettieri - Laser srl
+Website: http://www.laser-group.com
+Description: Laser group web site theme
+Version: 1.0
+Zones: Header, Navigation, Content, AfterContentContattiPage, AfterContent, QuadFirst, QuadSecond, QuadThird, QuadFourth, Footer
+# todo: provide tags
+# Tags: Classic, Serif

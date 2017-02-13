@@ -1,0 +1,69 @@
+﻿@{
+    var services = WorkContext.Resolve<Orchard.IOrchardServices>();
+    var contentManager = services.ContentManager;
+    IEnumerable<object> items = Model.ContentItems;
+    var idContent = Model.ContentItem.ContainerWidgetPart.Record.ContainerId;
+    var containerItem = contentManager.Get(idContent, Orchard.ContentManagement.VersionOptions.Published);
+    string fasciaType = ((dynamic)containerItem).Fascia.Specializzazione.Value;
+
+
+    switch(fasciaType) {
+        case "Foto Sfondo":
+            <div class="space-40"></div>
+    
+            foreach (var item in items) {
+                @Display(New.FotoSfondo(ContentItem: item));
+            }
+            break;
+
+        case "Immagine - Testo":
+            <div class="space-40"></div>
+
+            <div id="business-servizi">
+                <div class="container">
+                    @foreach (var item in items) {
+                        @Display(New.ImmagineTesto(ContentItem: item));
+                    }
+                </div>
+            </div>
+            break;
+
+        case "Dettaglio Girevole":
+            <div id="krake-info">
+                <div class="krake-info-top"></div>
+                <div class="krake-info-bottom"></div>
+                <div class="container-fluid">
+                    <div class="row">
+                        @foreach (var item in items) {
+                            @Display(New.DettagliKrake(ContentItem: item));
+                        }
+                    </div>
+                </div>
+            </div>
+            break;
+            
+        case "Fascia Business":
+            <div id="focus" class="container-fluid">
+	            <div class="focus-top"></div>
+	            <div class="row">
+                    @foreach (var item in items) {
+                            @Display(New.DettagliBusiness(ContentItem: item));
+                        }
+	            </div>
+                <div class="focus-bottom"></div>
+            </div>
+            break;
+
+        case "Fascia Krake":
+            foreach (var item in items) {
+                @Display(New.FasciaKrake(ContentItem: item));
+            }
+            break;
+                    
+        default:
+            <div></div>
+            break;
+         
+    }
+    
+}

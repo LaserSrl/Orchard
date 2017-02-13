@@ -1,0 +1,26 @@
+﻿@{
+    dynamic item = Model.ContentItem.ContentItem;
+    var imgurl = item.ElementoFascia.Gallery.FirstMediaUrl;
+    var title = item.TitlePart.Title;
+    var testoBody = item.BodyPart.Text;
+    var nomeContenitore = item.ElementoFascia.NomeContenitore.Value;
+}
+<div id="@nomeContenitore" style="background-image:url('@imgurl');">
+    <div class="@(nomeContenitore + "-top")"></div>
+    
+    @if (testoBody != "") {
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-8">
+                    <div class="space-40"></div>
+                    <h3 class="business-showcase-title">@title</h3>
+                    <div class="space-40"></div>
+                </div>
+                <div class="col-sm-12 col-md-4 hidden-xs hidden-sm">
+                    @Html.Raw(testoBody)
+                </div>
+            </div>
+        </div>
+    }
+    <div class="@(nomeContenitore + "-bottom")"></div>
+</div>

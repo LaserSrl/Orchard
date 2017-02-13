@@ -1,0 +1,58 @@
+@{
+    Layout.Title = Model.Title;
+    dynamic item = Model.ContentItem;
+
+    var medias = item.BlogPost.Gallery.MediaParts;
+}
+
+
+<div class="container single-news-title">
+	<div class="col-xs-12 col-sm-12 col-intro-desc news-block">
+		<div class="space-40"></div>
+		<div class="space-20"></div>
+		<h1 class="handel-got-d title">News</h1>
+		<h2 class="page-claim">@Model.Title</h2>
+		<div class="single-news-item-date">@item.CommonPart.CreatedUtc.Date.ToString("dd/MM/yyyy")</div>
+	</div>
+</div>
+
+<div id="news">
+	<div class="container">
+		<div class="text-center news-block">
+			<div class="single-news-top"></div>
+			<img src="@item.BlogPost.Image.FirstMediaUrl" class="img-responsive wp-post-image" alt="@item.BlogPost.Image.MediaParts[0].Title">
+		</div>
+	</div>
+
+	<div class="space-20"></div>
+	<div class="container">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 news-block news-text">
+			@Html.Raw(item.BlogPostPart.Text)
+		</div>
+	</div>
+
+	<div class="space-20"></div>
+	<div class="container">
+		<div class="news-block">
+			<div class="lightgallery" id="gallery">
+				<div class="row">
+
+                    @for (int i = 0; i < medias.Count; i++) {
+                        <div class="col-xs-6 col-sm-4 col-md-2 text-center">
+						    <a href="@medias[i].MediaUrl" class="thumbnail" data-sub-html="">
+							    <img src="@Display.ResizeMediaUrl(Width: 350, Height: 350, Mode: "crop", Alignment: "middlecenter", Path: medias[i].MediaUrl)" class="img-responsive">
+						    </a>
+					    </div>
+                    }
+
+				</div>
+			</div>
+		</div>
+        <div class="space-20"></div>
+		<div class="news-block">
+			<div class="single-news-item-date pull-right">
+                <a href="@item.BlogPost.Link.Value" class="link-back-news">@item.BlogPost.Link.Text</a>
+			</div>
+		</div>
+	</div>
+</div>

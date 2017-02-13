@@ -13,15 +13,27 @@ namespace Contrib.Widgets.Models {
         }
 
         public string Zone {
-            get { return this.As<WidgetPart>().Zone; }
+            get {
+                if (this.As<WidgetPart>() != null) {
+                    return this.As<WidgetPart>().Zone;
+                } else { 
+                    return ""; 
+                }
+            }
         }
 
         public string Position {
-            get { return this.As<WidgetPart>().Position; }
+            get {
+                if (this.As<WidgetPart>() != null) {
+                    return this.As<WidgetPart>().Position;
+                } else {
+                    return "";
+                }
+            }
         }
     }
 
     public class WidgetExPartRecord : ContentPartRecord {
-        public virtual int? HostId { get;set; }
+        public virtual int? HostId { get; set; }
     }
 }

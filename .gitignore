@@ -189,3 +189,5 @@ src/Orchard.Web/Modules/Orchard.DynamicForms/node_modules
 #enable all /lib artifacts
 !lib/*/*.*
 */.vs/*
+/Laser.Sources/Laser.Orchard/Themes/Lasergroup/Styles/images
+/Laser.Sources/Laser.Orchard/Themes/Lasergroup/Styles/fonts
