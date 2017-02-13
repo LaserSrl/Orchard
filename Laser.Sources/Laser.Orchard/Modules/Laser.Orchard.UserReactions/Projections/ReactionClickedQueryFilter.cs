@@ -3,6 +3,7 @@ using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Projections.Services;
+using OrchardProjections=Orchard.Projections;
 using Orchard.Users.Models;
 using NHibernate.Transform;
 using System;
@@ -10,9 +11,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using Laser.Orchard.StartupConfig.Projections;
 
 namespace Laser.Orchard.UserReactions.Projections {
-    public class ReactionClickedQueryFilter : IFilterProvider {
+    public class ReactionClickedQueryFilter : OrchardProjections.Services.IFilterProvider {
         public Localizer T { get; set; }
 
         public ReactionClickedQueryFilter() {

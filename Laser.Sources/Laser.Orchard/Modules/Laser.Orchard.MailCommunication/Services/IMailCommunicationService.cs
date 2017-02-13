@@ -7,6 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
+using Orchard.Users.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace Laser.Orchard.MailCommunication.Services {
 
         IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, int contentId = 0);
         IList GetMailQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, ContentItem advItem = null);
+        IList GetMailQueryResult(string[] userNames, Int32? idlingua, bool countOnly = false, ContentItem advItem = null);
     }
 
     [OrchardFeature("Laser.Orchard.MailCommunication")]
@@ -76,6 +78,36 @@ namespace Laser.Orchard.MailCommunication.Services {
                     "EmailPart.EmailRecord as EmailRecord " +
                 "WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.AccettatoUsoCommerciale AND civr.Id in (" + stringHQL + ")";
 
+            var fullStatement = _session.For(null)
+                .CreateQuery(queryForEmail)
+                .SetCacheable(false);
+            IList lista = fullStatement
+                    .SetResultTransformer(Transformers.AliasToEntityMap)
+                    .List();
+            return lista;
+        }
+
+        public IList GetMailQueryResult(string[] userNames, Int32? idlingua, bool countOnly = false, ContentItem advItem = null) {
+            if (userNames.Length <= 0) return null;
+            var userNamesCSV = String.Join(",", userNames.Select(x => "'" + x.ToLower().Replace("'", "''") + "'"));
+            string queryForEmail = "";
+            if (countOnly) {
+                queryForEmail = "SELECT count(EmailRecord) as Tot";
+            } else {
+                queryForEmail = "SELECT cir.Id as Id, TitlePart.Title as Title, EmailRecord.Email as EmailAddress";
+            }
+            queryForEmail += " FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr join " +
+                "civr.ContentItemRecord as cir join " +
+                "cir.EmailContactPartRecord as EmailPart join " +
+                "EmailPart.EmailRecord as EmailRecord join " +
+                "civr.TitlePartRecord as TitlePart " + 
+                ", Laser.Orchard.CommunicationGateway.Models.CommunicationContactPartRecord contact " + 
+                "WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.AccettatoUsoCommerciale " +
+                "AND EmailRecord.EmailContactPartRecord_Id=contact.Id " + // join condition per il contact
+                "AND (EmailRecord.Email IN (" + userNamesCSV + ") " +
+                "    OR exists (select upr.Id from Orchard.Users.Models.UserPartRecord upr " + 
+                "        WHERE upr.Id=contact.UserPartRecord_Id AND upr.UserName IN (" + userNamesCSV + ") ))";
+            
             var fullStatement = _session.For(null)
                 .CreateQuery(queryForEmail)
                 .SetCacheable(false);

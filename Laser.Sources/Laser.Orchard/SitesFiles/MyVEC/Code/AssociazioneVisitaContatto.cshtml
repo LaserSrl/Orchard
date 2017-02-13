@@ -4,6 +4,7 @@
 @using System.Collections.Generic;
 @using System.Linq;
 @using Orchard;
+@using Orchard.Security;
 @using Orchard.ContentManagement;
 @using Orchard.Projections.Services;
 @functions{
@@ -30,12 +31,12 @@
             // The Creator of the SchedaInvito is the User that corresponds to the guest we have invited
             //var guest = _contentManager.Get((int)(item.CommonPart.Creator.Value));
             //find the contact
-            dynamic contact = _communicationService.GetContactFromUser((int)(item.CommonPart.Creator.Value)).ContentItem;
+            dynamic user = _contentManager.Get((int)(item.CommonPart.Creator.Value));
             // Get contact by his email because ShedaInvito can be created by a back-end user, so its creator isn't the guest it refers to
             //dynamic contact = _communicationService.GetContactsFromMail(item.SchedaInvito.Email.Value)[0];
             //************************
             //update VisiteEffettuate
-            var cpf = contact.ProfilePart.VisiteEffettuate;
+            var cpf = user.ProfilePart.VisiteEffettuate;
             if (item.SchedaInvito.Hapartecipato.Value ?? false) {
                 //add the Visita to the ContentPickerField in the CommunicationContact
                 if (!((int [])cpf.Ids).Any(id => id == idVisita)) {
@@ -52,7 +53,7 @@
             //update field record for the ContentPickerField
             string allIds = String.Join(",", ((int[])cpf.Ids).Select<int, string>(id => "{" + id.ToString() + "}"));
             _fieldIndexService.Set(
-                contact.FieldIndexPart,
+                user.FieldIndexPart,
                 "ProfilePart",
                 "VisiteEffettuate",
                 "",
@@ -61,7 +62,7 @@
             );
             //************************
             //update InvitiVisita
-            var cpfInviti = contact.ProfilePart.InvitiVisita;
+            var cpfInviti = user.ProfilePart.InvitiVisita;
             //add the Visita to the ContentPickerField in the CommunicationContact
             if (!((int[])cpfInviti.Ids).Any(id => id == idVisita)) {
                 //only add if the Visita is not there already
@@ -72,13 +73,14 @@
             //update field record for the ContentPickerField
             string allIdsInviti = String.Join(",", ((int[])cpfInviti.Ids).Select<int, string>(id => "{" + id.ToString() + "}"));
             _fieldIndexService.Set(
-                contact.FieldIndexPart,
+                user.FieldIndexPart,
                 "ProfilePart",
                 "InvitiVisita",
                 "",
                 allIdsInviti,
                 typeof(string)
             );
+            _communicationService.UserToContact((IUser)(user.UserPart));
             retString = "OK";
         }
     } catch (Exception ex) {

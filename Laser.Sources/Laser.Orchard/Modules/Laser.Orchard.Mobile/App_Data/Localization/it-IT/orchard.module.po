@@ -74,7 +74,7 @@ msgstr "Inserire username o e-mail dei contatti a cui consegnare questa notifica
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Manual recipients:"
-msgstr "Lista destinatari inseriti manualmente:"
+msgstr "Lista destinatari manuale:"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Mask to make test for Push... this option is set by settings of module"
@@ -342,7 +342,7 @@ msgstr "MAM con alias"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid "Manual recipients:"
-msgstr "Lista destinatari inseriti manualmente:"
+msgstr "Lista destinatari manuale:"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid "NO"
@@ -777,6 +777,10 @@ msgid "Apple"
 msgstr "Apple"
 
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "Comma separated list of User ID (eg. 12,45,239). Tokenized."
+msgstr "Elenco separato da virgola degli ID degli utenti (es. 12,45,239). Tokenizzato."
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "Content Owner"
 msgstr "Proprietario del Contenuto"
 
@@ -843,6 +847,10 @@ msgstr "Template"
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "User ID"
 msgstr "ID User"
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "User ID list"
+msgstr "Lista di ID degli utenti"
 
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "User ID Tokenized."

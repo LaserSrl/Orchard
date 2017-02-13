@@ -75,13 +75,30 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 if (localizedPart != null && localizedPart.Culture != null)
                     idLocalization = localizedPart.Culture.Id;
 
-                IList lista = _mailCommunicationService.GetMailQueryResult(ids, idLocalization, false, context.Task.ContentItem);
+                IList lista;
+                if (part.UseRecipientList) {
+                    if (string.IsNullOrWhiteSpace(part.RecipientList)) {
+                        lista = new List<object>();
+                    } else {
+                        lista = _mailCommunicationService
+                            .GetMailQueryResult(
+                                part.RecipientList.Split(new string[]{Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries),
+                                idLocalization, 
+                                false, 
+                                context.Task.ContentItem);
+                    }
+                    
+                } else {
+                    lista = _mailCommunicationService.GetMailQueryResult(ids, idLocalization, false, context.Task.ContentItem);
+                }
 
                 // ricava i settings e li invia tramite FTP
                 var templateId = ((Laser.Orchard.TemplateManagement.Models.CustomTemplatePickerPart)content.CustomTemplatePickerPart).SelectedTemplate.Id;
                 Dictionary<string, object> settings = GetSettings(content, templateId, part);
-
-                if ((settings.Count > 0) && (lista.Count > 0)) {
+                
+                if (lista == null || lista.Count == 0) {
+                    Logger.Error(T("No recipients selected.").ToString());
+                } else if ((settings.Count > 0) && (lista.Count > 0)) {
                     SendSettings(settings, part.Id);
 
                     // impagina e invia i recipiens tramite FTP
@@ -106,6 +123,7 @@ namespace Laser.Orchard.MailCommunication.Handlers {
                 } else {
                     Logger.Error(T("Error parsing mail template.").ToString());
                 }
+                
             } catch (Exception ex) {
                 string idcontenuto = "nessun id ";
                 try {

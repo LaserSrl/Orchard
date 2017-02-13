@@ -15,7 +15,7 @@
         dynamic item = Model.ContentItem;
         string csv = item.Visita.CSVlistaInvitati.Value;
 		string[] rowSeparator = new string[] { "\r\n", "\r", "\n" };
-        var allLines = csv.Split(rowSeparator, StringSplitOptions.None);
+        var allLines = csv.Split(rowSeparator, StringSplitOptions.RemoveEmptyEntries);
         var numline = 0;
         int messagenotified = 0;
         foreach (string line in allLines) {

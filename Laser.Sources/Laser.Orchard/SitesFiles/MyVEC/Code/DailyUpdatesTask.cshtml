@@ -191,15 +191,15 @@
         }
     }
 
-    private void TryIssue(IUser user, List<KeyValuePair<int, int>> actions) {
+    private void TryIssue(HIDUser hidUser, List<KeyValuePair<int, int>> actions) {
         if (LogEverything) {
-            AddToLogString(string.Format("Starting TryIssue for user {0}. They have {1} actions.", user.Email, actions.Count.ToString()));
+            AddToLogString(string.Format("Starting TryIssue for user {0}. They have {1} actions.", hidUser.Emails.First(), actions.Count.ToString()));
         }
         try {
             if (LogEverything) {
                 AddToLogString("About to call IssueCredentials for the user.");
             }
-            HIDUser hidUser = _hidAPIService.IssueCredentials(user);
+            hidUser = _hidAPIService.IssueCredentials(hidUser);
             foreach (HIDCredentialContainer cContainer in hidUser.CredentialContainers) {
                 if (LogEverything) {
                     AddToLogString(string.Format("About to do things for Credential Container {0} ({1} {2}). Error state: {3}",
@@ -240,7 +240,7 @@
                             }
                             if (LogErrors) {
                                 AddToErrorString(string.Format("ERROR: It was impossible to issue a MobileID: there is another one in an invalid state. User: {0} Invite: {1} (Id {2})",
-                                    user.Email, _contentManager.GetItemMetadata(scheda).DisplayText, schedaId.ToString()));
+                                    hidUser.Emails.First(), _contentManager.GetItemMetadata(scheda).DisplayText, schedaId.ToString()));
                             }
                         }
                     }
@@ -265,7 +265,7 @@
                         }
                         if (LogErrors) {
                             AddToErrorString(string.Format("ERROR: It was impossible to issue a MobileID: there is another one in an invalid state. User: {0} Invite: {1} (Id {2}) Internal error: {3}",
-                                user.Email, _contentManager.GetItemMetadata(scheda).DisplayText, schedaId.ToString(), UserErrorString(hidUser)));
+                                hidUser.Emails.First(), _contentManager.GetItemMetadata(scheda).DisplayText, schedaId.ToString(), UserErrorString(hidUser)));
                         }
                     }
                 }
@@ -281,15 +281,15 @@
         }
     }
 
-    private void TryRevoke(IUser user, List<KeyValuePair<int, int>> actions) {
+    private void TryRevoke(HIDUser hidUser, List<KeyValuePair<int, int>> actions) {
         if (LogEverything) {
-            AddToLogString(string.Format("Starting TryRevoke for user {0}. They have {1} actions.", user.Email, actions.Count.ToString()));
+            AddToLogString(string.Format("Starting TryRevoke for user {0}. They have {1} actions.", hidUser.Emails.First(), actions.Count.ToString()));
         }
         try {
             if (LogEverything) {
                 AddToLogString("About to call RevokeCredentials for the user.");
             }
-            HIDUser hidUser = _hidAPIService.RevokeCredentials(user);
+            hidUser = _hidAPIService.RevokeCredentials(hidUser);
             foreach (HIDCredentialContainer cContainer in hidUser.CredentialContainers) {
                 if (LogEverything) {
                     AddToLogString(string.Format("About to do things for Credential Container {0} ({1} {2}). Error state: {3}",
@@ -331,7 +331,7 @@
                         }
                         if (LogErrors) {
                             AddToErrorString(string.Format("ERROR: It was impossible to revoke a MobileID. User: {0} Invite: {1} (Id {2}) Internal error: {3}",
-                                user.Email, _contentManager.GetItemMetadata(scheda).DisplayText, schedaId.ToString(), UserErrorString(hidUser)));
+                                hidUser.Emails.First(), _contentManager.GetItemMetadata(scheda).DisplayText, schedaId.ToString(), UserErrorString(hidUser)));
                         }
                     }
                 }
@@ -429,7 +429,7 @@
                         if (LogEverything) {
                             AddToLogString("Going to try issueing credentials.");
                         }
-                        TryIssue(user, actions);
+                        TryIssue(hidUser, actions);
                         if (LogEverything) {
                             AddToLogString("Done issueing credentials.");
                         }
@@ -437,7 +437,7 @@
                         if (LogEverything) {
                             AddToLogString("Going to try revoking credentials.");
                         }
-                        TryRevoke(user, actions);
+                        TryRevoke(hidUser, actions);
                         if (LogEverything) {
                             AddToLogString("Done revoking credentials.");
                         }

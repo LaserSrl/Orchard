@@ -31,7 +31,7 @@
                 source: function (request, response) {
                     $.ajax({
                         type: 'POST',
-                        url: "@Model.SiteUrl/Laser.Orchard.Mobile/ContactList/Search",
+                        url: "@Url.Action("Search", "ContactList", new { area = "Laser.Orchard.Mobile" })",
                         data: { term: request.term, __RequestVerificationToken: aft },
                         success: function (dataAutocomplete) {
                             response(dataAutocomplete);

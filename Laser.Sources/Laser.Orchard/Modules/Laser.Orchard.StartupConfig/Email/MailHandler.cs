@@ -98,7 +98,7 @@ namespace Laser.Orchard.StartupConfig.Email {
                     mailfrom = tmp;
             }
             mailMessage.From = new MailAddress(mailfrom);
-            mailMessage.ReplyToList.Add( new MailAddress(mailfrom));
+            mailMessage.ReplyToList.Add(new MailAddress(mailfrom));
             //mailMessage.From = !String.IsNullOrWhiteSpace(_smtpSettings.Address)
             //    ? new MailAddress(_smtpSettings.Address)
             //    : new MailAddress(section.From);
@@ -120,8 +120,10 @@ namespace Laser.Orchard.StartupConfig.Email {
                 }
                 mailMessage.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
                 //mailMessage.Headers.Add("Read-Receipt-To",  mailMessage.From);
-                if (parameters["NotifyReadEmail"] is bool) {
-                    mailMessage.Headers.Add("Disposition-Notification-To", mailfrom);
+                if (parameters.ContainsKey("NotifyReadEmail")) {
+                    if (parameters["NotifyReadEmail"] is bool) {
+                        mailMessage.Headers.Add("Disposition-Notification-To", mailfrom);
+                    }
                 }
                 _smtpClientField.Value.Send(mailMessage);
                 //SmtpClient mysmtp = _smtpClientField.Value;
@@ -129,8 +131,8 @@ namespace Laser.Orchard.StartupConfig.Email {
                 //    mysmtp.Dispose();
                 //    mailMessage.Dispose();
                 //};
-               // mysmtp.SendAsync(mailMessage, null);
-   
+                // mysmtp.SendAsync(mailMessage, null);
+
             }
             catch (Exception e) {
                 Logger.Error(e, "Could not send email");

@@ -10,5 +10,6 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
         public string Question { get; set; }
         public string Answer { get; set; }
         public string Contesto { get; set; }
+        public int UserId { get; set; }
     }
 }
