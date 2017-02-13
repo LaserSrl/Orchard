@@ -12,6 +12,7 @@
 @using System.Collections.Generic;
 @functions{
     IFieldIndexService _fieldIndexService;
+    Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
     IContentManager _contentManager;
     string retString = "Error"; //possible outcomes: "Error","Ok"
     dynamic visita = null;
@@ -27,6 +28,7 @@
         wfCtx = Model.Tokens["Workflow"];
         // inizializza i services
         _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         // legge i dati in input
         string product = System.Web.HttpContext.Current.Request["productId"];
@@ -41,7 +43,7 @@
         qry2 = qry2.Where<AutoroutePartRecord>(x => (x.DisplayAlias == color));
         ciColor = qry2.List().FirstOrDefault();
         if (ciProduct != null) {
-            string strColor = (ciColor != null) ? ciColor.TitlePart.Title : "";
+            string strColor = (ciColor != null) ? ciColor.TitlePart.Title : color ?? "";
             // costruisce la richiesta camerino
             richiestaCamerino = Model.OrchardServices.ContentManager.New("RichiestaCamerino");
             Model.OrchardServices.ContentManager.Create(richiestaCamerino);
@@ -91,9 +93,14 @@
                 richiestaCamerino.CommonPart.Owner = ciProduct.CommonPart.Owner;
             }
             // negozio
-            var qry3 = _contentManager.Query().ForType("PuntoVendita");
-            var aux = qry3.List().Where(y => string.IsNullOrWhiteSpace(((dynamic)y).PuntoVendita.DefaultStore.Value) == false);
-            var ciNegozio = aux.FirstOrDefault();
+            int storeId = _fieldIndexPartRecord.Table.Where(f =>
+                f.StringFieldIndexRecords.Any(r =>
+                    r.PropertyName == "PuntoVendita.DefaultStore." && r.Value != null && r.Value != "")
+            ).Select(x => x.ContentItemRecord.Id).FirstOrDefault();
+            var ciNegozio = _contentManager.Get(storeId);
+            //var qry3 = _contentManager.Query().ForType("PuntoVendita");
+            //var aux = qry3.List().Where(y => string.IsNullOrWhiteSpace(((dynamic)y).PuntoVendita.DefaultStore.Value) == false);
+            //var ciNegozio = aux.FirstOrDefault();
             if(ciNegozio != null) {
                 richiestaCamerino.RichiestaCamerino.Negozio.Ids = new int[] { ciNegozio.Id };
                 _fieldIndexService.Set(
@@ -105,8 +112,26 @@
                     typeof(string)
                 );
             }
+            // camerino
+            richiestaCamerino.RichiestaCamerino.Camerino.Value = "1";
+            _fieldIndexService.Set(
+                richiestaCamerino.FieldIndexPart,
+                "RichiestaCamerino",
+                "Camerino",
+                "",
+                richiestaCamerino.RichiestaCamerino.Camerino.Value,
+                typeof(string)
+            );
+            // sales assistants
+            string salesAssistantsIds = ((dynamic)ciNegozio).PuntoVendita.IdsSalesAssistants.Value;
             // pubblica le modifiche
             Model.OrchardServices.ContentManager.Publish(richiestaCamerino);
+            // salva nello state del workflow le info utili per la push ai Sales Assistant
+            wfCtx.SetState("RecipientsList", salesAssistantsIds);
+            wfCtx.SetState("Product", ciProduct.TitlePart.Title);
+            wfCtx.SetState("ProductSize", size);
+            wfCtx.SetState("ProductColour", strColor);
+            wfCtx.SetState("DressingRoom", richiestaCamerino.RichiestaCamerino.Camerino.Value);
             retString = "Ok";
         }
         else{
