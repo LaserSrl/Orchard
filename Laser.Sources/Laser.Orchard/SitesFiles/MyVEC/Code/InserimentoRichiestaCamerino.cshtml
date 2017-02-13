@@ -1,4 +1,6 @@
 @using Orchard;
+@using Orchard.Security;
+@using Orchard.Users.Models;
 @using Orchard.ContentManagement;
 @using Orchard.ContentManagement.Records;
 @using Orchard.Projections.Models;
@@ -79,10 +81,19 @@
                 );
             }
             // owner
-            richiestaCamerino.CommonPart.Owner = ciProduct.CommonPart.Owner;
+            var qry4 = _contentManager.Query().ForType("User");
+            qry4 = qry4.Where<UserPartRecord>(x => x.UserName == "camerino.virtuale");
+            var ciOwner = qry4.List().FirstOrDefault();
+            if (ciOwner != null) {
+                richiestaCamerino.CommonPart.Owner = ciOwner.As<IUser>();
+            }
+            else {
+                richiestaCamerino.CommonPart.Owner = ciProduct.CommonPart.Owner;
+            }
             // negozio
             var qry3 = _contentManager.Query().ForType("PuntoVendita");
-            var ciNegozio = qry3.List().FirstOrDefault();
+            var aux = qry3.List().Where(y => string.IsNullOrWhiteSpace(((dynamic)y).PuntoVendita.DefaultStore.Value) == false);
+            var ciNegozio = aux.FirstOrDefault();
             if(ciNegozio != null) {
                 richiestaCamerino.RichiestaCamerino.Negozio.Ids = new int[] { ciNegozio.Id };
                 _fieldIndexService.Set(
