@@ -184,7 +184,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.UserProfiler", "Modules\Laser.Orchard.UserProfiler\Laser.Orchard.UserProfiler.csproj", "{22DD309C-74F3-4E57-843C-ED46A7122758}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lasergroup", "Themes\Lasergroup\Lasergroup.csproj", "{F6AC05CA-152F-4835-9830-A69363330B78}"
-EndProjectGlobal
+EndProject
+Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -527,10 +528,9 @@ EndProjectGlobal
 		{22DD309C-74F3-4E57-843C-ED46A7122758}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{22DD309C-74F3-4E57-843C-ED46A7122758}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22DD309C-74F3-4E57-843C-ED46A7122758}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22DD309C-74F3-4E57-843C-ED46A7122758}.Release|Any CPU.Build.0 = Release|Any CPU		{F6AC05CA-152F-4835-9830-A69363330B78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F6AC05CA-152F-4835-9830-A69363330B78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6AC05CA-152F-4835-9830-A69363330B78}.Debug|Any CPU.ActiveCfg = Release|Any CPU
 		{F6AC05CA-152F-4835-9830-A69363330B78}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F6AC05CA-152F-4835-9830-A69363330B78}.Release|Any CPU.Build.0 = Release|Any CPU	EndGlobalSection
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
