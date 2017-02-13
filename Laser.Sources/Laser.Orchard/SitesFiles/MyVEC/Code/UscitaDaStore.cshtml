@@ -55,8 +55,8 @@
             throw new Exception("Ci sono stati dei problemi: l'utente non risulta mai entrato nel negozio.");
         }
         TimeSpan thisTime = DateTime.UtcNow.Subtract(accessTime); //the DateTimeField is always stored as UTC
-        totalTime += (decimal)thisTime.TotalMinutes;
-        decimal meanTime = totalTime / nVisits;
+        totalTime = Math.Round(totalTime + (decimal)thisTime.TotalMinutes, 2);
+        decimal meanTime = Math.Round(totalTime / nVisits, 2);
         dCaller.User.ProfilePart.InStore.Value = "";
         _fieldIndexService.Set(
                 dCaller.FieldIndexPart,
