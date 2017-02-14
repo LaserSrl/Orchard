@@ -5,31 +5,24 @@
 @using System.Linq;
 @using Orchard;
 @using Orchard.ContentManagement;
-@using Orchard.Projections.Services;
 @functions{
     string retString = "Error"; //possible outcomes: "Error","OK","NothingToDo"
 
     //Services we will need
-    IFieldIndexService _fieldIndexService;
+    IContentManager _contentManager;
 }
 @{
     try {
         //resolve services
-        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         //resolve content item of type SchedaInvito
         dynamic item = Model.ContentItem;
         var haPartecipato = (item.SchedaInvito.Hapartecipato.Value == null ? false:item.SchedaInvito.Hapartecipato.Value);
         if (!haPartecipato) {
             item.SchedaInvito.Hapartecipato.Value = true;
-            //update field record for the ContentPickerField
-            _fieldIndexService.Set(
-                item.FieldIndexPart,
-                "SchedaInvito",
-                "Hapartecipato",
-                "",
-                true,
-                typeof(bool)
-            );
+            // force publish to update fieldIndexes
+            _contentManager.Create(item, VersionOptions.DraftRequired);
+            _contentManager.Publish(item);
             retString = "OK";
         } else {
             retString = "NothingToDo";

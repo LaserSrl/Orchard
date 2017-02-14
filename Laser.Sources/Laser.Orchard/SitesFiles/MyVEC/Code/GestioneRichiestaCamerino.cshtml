@@ -14,7 +14,6 @@
 
     IContentManager _contentManager;
     IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
-    IFieldIndexService _fieldIndexService;
 }
 @{
     if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
@@ -29,7 +28,6 @@
         } else {
             _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
             _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
-            _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
             //Identify the store
             int storeId = _fieldIndexPartRecord.Table
                 .Where(f =>
@@ -44,14 +42,6 @@
             }
             int[] sIds = new int[] { storeId };
             richiesta.RichiestaCamerino.Negozio.Ids = sIds;
-            _fieldIndexService.Set(
-                richiesta.FieldIndexPart,
-                "RichiestaCamerino",
-                "Negozio",
-                "",
-                String.Join(",",sIds.Select<int, string>(id => "{" + id.ToString() + "}")),
-                typeof(string)
-            );
             //Identify the Sales assistants
             string csvIds = store.PuntoVendita.IdsSalesAssistants.Value;
             if (string.IsNullOrWhiteSpace(csvIds)) {
