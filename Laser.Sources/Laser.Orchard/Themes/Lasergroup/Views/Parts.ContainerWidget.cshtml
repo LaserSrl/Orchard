@@ -3,7 +3,7 @@
     var contentManager = services.ContentManager;
     IEnumerable<object> items = Model.ContentItems;
     var idContent = Model.ContentItem.ContainerWidgetPart.Record.ContainerId;
-    var containerItem = contentManager.Get(idContent, Orchard.ContentManagement.VersionOptions.Published);
+    var containerItem = contentManager.Get(idContent);
     string fasciaType = ((dynamic)containerItem).Fascia.Specializzazione.Value;
 
 
