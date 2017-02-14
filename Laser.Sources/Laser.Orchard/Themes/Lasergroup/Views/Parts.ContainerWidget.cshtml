@@ -43,11 +43,13 @@
             break;
             
         case "Fascia Business":
+            <div class="space-40"></div>
+
             <div id="focus" class="container-fluid">
 	            <div class="focus-top"></div>
 	            <div class="row">
                     @foreach (var item in items) {
-                            @Display(New.DettagliBusiness(ContentItem: item));
+                            @Display(New.FasciaBusiness(ContentItem: item));
                         }
 	            </div>
                 <div class="focus-bottom"></div>
@@ -59,9 +61,39 @@
                 @Display(New.FasciaKrake(ContentItem: item));
             }
             break;
+            
+        case "Fascia Societa":
+            <div id="nav-societa">
+                <div class="nav-societa-top"></div>
+                <div id="focus" class="container">
+                    <div class="row">
+                        @foreach (var item in items) {
+                            @Display(New.FasciaSocieta(ContentItem: item));
+                        }
+                    </div>
+                </div>
+                <div class="nav-societa-bottom"></div>
+            </div>
+            break;
+            
+        case "Fascia Contatti":
+            <div class="space-40"></div>
+
+            <div id="societa-footer">
+                <div class="societa-footer-top"></div>
+                <div id="focus" class="container">
+                    <div class="row">
+                        @foreach (var item in items) {
+                            @Display(New.FasciaContatti(ContentItem: item));
+                        }
+                    </div>
+                </div>
+                <div class="societa-footer-bottom"></div>
+            </div>
+            break;
                     
         default:
-            <div></div>
+            <div class="space-40"></div>
             break;
          
     }

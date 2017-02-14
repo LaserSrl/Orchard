@@ -617,7 +617,7 @@
     <Content Include="Views\Widget-AfterContent.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DettagliBusiness.cshtml" />
+    <Content Include="Views\FasciaBusiness.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ElencoProdottiHome.cshtml" />
@@ -632,6 +632,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.Blogs.RecentBlogPosts-AfterContent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\FasciaSocieta.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DettaglioSocieta.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\FasciaContatti.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ElencoPartners.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DettaglioBusiness.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
