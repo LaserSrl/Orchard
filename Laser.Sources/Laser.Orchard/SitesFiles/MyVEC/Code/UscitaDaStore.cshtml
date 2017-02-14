@@ -17,7 +17,6 @@
 
     //additional services
     ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
-    IFieldIndexService _fieldIndexService;
     IContentManager _contentManager;
     IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
 }
@@ -27,7 +26,6 @@
     }
     try {
         _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
-        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         //Identify the store
@@ -58,33 +56,12 @@
         totalTime = Math.Round(totalTime + (decimal)thisTime.TotalMinutes, 2);
         decimal meanTime = Math.Round(totalTime / nVisits, 2);
         dCaller.User.ProfilePart.InStore.Value = "";
-        _fieldIndexService.Set(
-                dCaller.FieldIndexPart,
-                "ProfilePart",
-                "InStore",
-                "",
-                "",
-                typeof(string)
-            );
         dCaller.User.ProfilePart.TotaleTempoNegozio.Value = totalTime;
-        _fieldIndexService.Set(
-                dCaller.FieldIndexPart,
-                "ProfilePart",
-                "TotaleTempoNegozio",
-                "",
-                totalTime,
-                typeof(decimal)
-            );
         dCaller.User.ProfilePart.PermanenzaMediaNegozio.Value = meanTime;
-        _fieldIndexService.Set(
-                dCaller.FieldIndexPart,
-                "ProfilePart",
-                "PermanenzaMediaNegozio",
-                "",
-                meanTime,
-                typeof(decimal)
-            );
-        _communicationService.UserToContact((IUser)(dCaller.UserPart));
+        // forza la pubblicazione per aggiornare i fieldIndex
+        _contentManager.Create(dCaller.ContentItem, VersionOptions.DraftRequired);
+        _contentManager.Publish(dCaller.ContentItem);
+        _communicationService.UserToContact((IUser)dCaller);
         retString = "OK";
     } catch (Exception ex) {
         eMsg += ex.Message + Environment.NewLine;

@@ -6,7 +6,6 @@
 @using Orchard.Data;
 @using System.Linq;
 @functions{
-    IFieldIndexService _fieldIndexService;
     Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
     string retString = "Error"; //possible outcomes: "Error","Ok"
     dynamic usr = null;
@@ -22,7 +21,6 @@
         usr = Model.OrchardServices.WorkContext.CurrentUser;
         int questionnaireId = Model.ContentItem.Id;
         string mail = usr.Email;
-        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         var qryInviti = _fieldIndexPartRecord.Table
             .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Email." && r.Value == mail))
@@ -30,18 +28,12 @@
             .Select(x => x.ContentItemRecord.Id);
         var ids = qryInviti.ToList();
         if(ids.Count > 0) {
-            dynamic invito = ((dynamic)Model.OrchardServices.ContentManager.Get((int)(ids[0])));
+            dynamic invito = ((dynamic)Model.OrchardServices.ContentManager.Get((int)(ids[0]), VersionOptions.DraftRequired));
             // se l'invito non è stato eliminato esamino la relativa visita
             if(invito != null) {
                 invito.SchedaInvito.QuestionarioCompilato.Value = "Done";
-                _fieldIndexService.Set(
-                    invito.FieldIndexPart,
-                    "SchedaInvito",
-                    "QuestionarioCompilato",
-                    "",
-                    "Done",
-                    typeof(string)
-                );
+                // pubblica per aggiornare i fieldIndex
+                Model.OrchardServices.ContentManager.Publish(invito);
                 retString = "Ok";
             }                
         }
