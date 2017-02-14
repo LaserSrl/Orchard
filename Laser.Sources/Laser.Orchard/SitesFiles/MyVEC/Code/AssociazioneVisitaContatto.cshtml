@@ -31,7 +31,14 @@
             // The Creator of the SchedaInvito is the User that corresponds to the guest we have invited
             //var guest = _contentManager.Get((int)(item.CommonPart.Creator.Value));
             //find the contact
-            dynamic user = _contentManager.Get((int)(item.CommonPart.Creator.Value));
+            int idute;
+            if (wfCtx.GetState("UseridCreator") != null) {
+                idute = Convert.ToInt32(((wfCtx.GetState("UseridCreator")).ToString()));
+            }
+            else{
+                idute = (int)(item.CommonPart.Creator.Value);
+            }
+            dynamic user = _contentManager.Get(idute);
             // Get contact by his email because ShedaInvito can be created by a back-end user, so its creator isn't the guest it refers to
             //dynamic contact = _communicationService.GetContactsFromMail(item.SchedaInvito.Email.Value)[0];
             //************************

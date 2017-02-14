@@ -10,6 +10,7 @@
 @using System.Globalization;
 @using System.Collections.Generic;
 @using Laser.Orchard.StartupConfig.Handlers;
+@using Laser.Orchard.CommunicationGateway.Services;
 
 @functions{
     string retString = "Error"; //possile outcomes: OK, Error
@@ -19,9 +20,10 @@
     IUserService _userService;
     IMembershipService _membershipService;
     IContentManager _contentManager;
-    IFieldIndexService _fieldIndexService;
+//    IFieldIndexService _fieldIndexService;
     IEncryptionService _encryptionService;
-    IContactRelatedEventHandler _contactEventHandler;
+ //   IContactRelatedEventHandler _contactEventHandler;
+    ICommunicationService _communicationService;
 
     int MinPasswordLength {
         get {
@@ -105,12 +107,14 @@
         //Resolve services.
         _userService = Model.OrchardServices.WorkContext.Resolve<IUserService>();
         _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
+        _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
-        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+//        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         _encryptionService = Model.OrchardServices.WorkContext.Resolve<IEncryptionService>();
-        _contactEventHandler = Model.OrchardServices.WorkContext.Resolve<IContactRelatedEventHandler>(); 
+//        _contactEventHandler = Model.OrchardServices.WorkContext.Resolve<IContactRelatedEventHandler>(); 
         //Get the value of the email field out of the SchedaInvito.
-        dynamic item = Model.ContentItem;
+        dynamic item = _contentManager.Get(Model.ContentItem.Id, VersionOptions.DraftRequired);
+        //Model.ContentItem;
         string email = item.SchedaInvito.Email.Value;
         string familyName = item.SchedaInvito.Cognome.Value;
         string givenName = item.SchedaInvito.Nome.Value;
@@ -126,20 +130,25 @@
                 kUser = _membershipService.CreateUser(new CreateUserParams(uName, password, email, null, null, false));
                 // save encrypted password in a hidden field
                 string encryptedPwd = Encrypt(password);
-                dynamic dUser = kUser;
-                dUser.User.OriginalPassword.Value = encryptedPwd;
-				dUser.User.ProfilePart.Name.Value = givenName;
-				dUser.User.ProfilePart.Surname.Value = familyName;
-				dUser.User.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
-				_contactEventHandler.Synchronize(dUser);
-                _fieldIndexService.Set(
-                    dUser.ContentItem.FieldIndexPart,
-                    "User",
-                    "OriginalPassword",
-                    "",
-                    encryptedPwd,
-                    typeof(string)
-                );
+            //    dynamic dUser = kUser;
+
+
+                dynamic user = _contentManager.Get(kUser.Id, VersionOptions.DraftRequired);
+                user.User.OriginalPassword.Value = encryptedPwd;
+                user.ProfilePart.Name.Value = givenName;
+                user.ProfilePart.Surname.Value = familyName;
+                user.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
+                _contentManager.Publish(user);
+                _communicationService.UserToContact((IUser)user.UserPart);
+             //   _contactEventHandler.Synchronize(user);
+                //_fieldIndexService.Set(
+                //    dUser.ContentItem.FieldIndexPart,
+                //    "User",
+                //    "OriginalPassword",
+                //    "",
+                //    encryptedPwd,
+                //    typeof(string)
+                //);
             }
             else {
                 if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
@@ -153,23 +162,28 @@
         }
         else
         {
-            dynamic dUser = kUser;
+            dynamic user = _contentManager.Get(kUser.Id, VersionOptions.DraftRequired);
+             
+         //   dynamic dUser = kUser;
             //dUser.User.OriginalPassword.Value = encryptedPwd;
-            dUser.User.ProfilePart.Name.Value = givenName;
-            dUser.User.ProfilePart.Surname.Value = familyName;
-            dUser.User.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
-            _contactEventHandler.Synchronize(dUser);
+            user.ProfilePart.Name.Value = givenName;
+            user.ProfilePart.Surname.Value = familyName;
+            user.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
+            _contentManager.Publish(user);
+           // _contactEventHandler.Synchronize(user);
+            _communicationService.UserToContact((IUser)user.UserPart);
         }
         //Set the creator of the SchedaInvito to the Krake user for the guest.
         item.CommonPart.Creator.Value = kUser.Id;
-        _fieldIndexService.Set(
-            item.FieldIndexPart,
-            "CommonPart",
-            "Creator",
-            "",
-            (decimal)kUser.Id,
-            typeof(decimal)
-        );
+        Model.Tokens["Workflow"].SetState("UseridCreator", kUser.Id.ToString());
+        //_fieldIndexService.Set(
+        //    item.FieldIndexPart,
+        //    "CommonPart",
+        //    "Creator",
+        //    "",
+        //    (decimal)kUser.Id,
+        //    typeof(decimal)
+        //);
         //Synchronize the ActivityPart in the SchedaInvito with the one from the visita in its CPF.
         if (item.SchedaInvito.Visita.Ids.Length > 0) {
             var idVisita = item.SchedaInvito.Visita.Ids[0];
@@ -181,6 +195,8 @@
                 item.ActivityPart.AllDay = relatedVisita.ActivityPart.AllDay;
             }
         }
+        _contentManager.Publish(item);
+       
         retString = "OK";
     } catch (Exception ex) {
         eMsg += string.Format("\r\n{0}", ex.Message);
