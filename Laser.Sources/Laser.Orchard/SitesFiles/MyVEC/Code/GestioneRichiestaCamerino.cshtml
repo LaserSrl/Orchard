@@ -1,4 +1,5 @@
 ﻿@using Orchard;
+@using Orchard.Security;
 @using Orchard.ContentManagement;
 @using Orchard.Data;
 @using Orchard.Projections.Models;
@@ -22,7 +23,7 @@
     try {
         //Model.ContentItem is a RichiestaInvito
         dynamic richiesta = Model.ContentItem;
-        if ((bool)(richiesta.RichiestaCamerino.Evasa.Value)) {
+        if ((bool)(richiesta.RichiestaCamerino.Evasa.Value ?? false)) {
             //Handled already.
             retString = "DoNothing";
         } else {
@@ -59,7 +60,7 @@
             //Identify the customer
             var caller = Model.OrchardServices.WorkContext.CurrentUser;
             if (caller == null) {
-                throw new Exception("Impossibile identificare l'utente che ha effettuato la Richiesta Camerino.");
+                caller = (IUser)(richiesta.CommonPart.Owner);
             }
             dynamic dCaller = caller;
             //Extract product information
