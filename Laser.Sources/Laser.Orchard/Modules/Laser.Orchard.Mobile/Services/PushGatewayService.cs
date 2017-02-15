@@ -922,13 +922,14 @@ namespace Laser.Orchard.Mobile.Services {
             // sezione notification
             StringBuilder sbNotification = new StringBuilder();
             sbNotification.Clear();
+            JObject sbNotificationParsed = null;
             if (string.IsNullOrWhiteSpace(notificationIcon) == false) {
                 sbNotification.AppendFormat("{{ \"body\": \"{0}\"", FormatJsonValue(pushMessage.Text));
                 //sbNotification.AppendFormat(",\"title\":\"{0}\"", FormatJsonValue(pushMessage.Text));
                 sbNotification.AppendFormat(",\"icon\":\"{0}\"", notificationIcon);
                 sbNotification.Append("}");
+                sbNotificationParsed = JObject.Parse(sbNotification.ToString());
             }
-            var sbNotificationParsed = JObject.Parse(sbNotification.ToString());
             string hostCheck = _shellSetting.RequestUrlHost ?? "";
             string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
             string machineNameCheck = System.Environment.MachineName ?? "";
