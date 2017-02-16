@@ -36,6 +36,7 @@ using System.Web.Http;
 using OrchardCore = Orchard.Core;
 
 namespace Laser.Orchard.ContentExtension.Controllers {
+
     [WebApiKeyFilter(true)]
     public class ContentItemController : ApiController {
         private readonly IAuthenticationService _authenticationService;
@@ -88,6 +89,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             _transactionManager = transactionManager;
             _handlers = handlers;
         }
+
         public IEnumerable<IContentHandler> Handlers {
             get { return _handlers.Value; }
         }
@@ -113,15 +115,14 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                         tenantname = _shellSettings.Name + "/";
                     }
                     return Redirect("~/" + tenantname + "WebServices/Alias?displayAlias=" + ((dynamic)ContentToView).AutoroutePart.DisplayAlias);
-                } else {
+                }
+                else {
                     throw new Exception("Method not implemented, content without AutoroutePart");
                 }
-
-            } else
+            }
+            else
                 return _utilsServices.GetResponse(ResponseType.None, T("No content with this Id").ToString());
             return (_utilsServices.GetResponse(ResponseType.Success));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
-
-
         }
 
         /// <summary>
@@ -180,7 +181,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                             try {
                                 MediaLibraryPickerField mpf = (MediaLibraryPickerField)(term.Fields.Where(x => x.FieldDefinition.Name == "MediaLibraryPickerField").FirstOrDefault());
                                 mediaid = mpf.Ids[0];
-                            } catch { }
+                            }
+                            catch { }
                             if (!term.Selectable)
                                 valore = null;
                             if (term.FullPath == "/" + term.Id.ToString() || term.FullPath == term.Id.ToString())
@@ -203,7 +205,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                         eObj.Add(ctpd.PartDefinition.Name + "." + singleField.Name, re);
 
                         #endregion Tassonomia in Lingua
-                    } else
+                    }
+                    else
                         if (tipofield == typeof(EnumerationField).Name) {
                             string[] elencovalori = singleField.Settings["EnumerationFieldSettings.Options"].Split(new string[] { "\r\n" }, StringSplitOptions.None);
                             List<string> elencoValoriInLingua = new List<string>();
@@ -284,7 +287,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     }
                 }
                 return null;
-            } else
+            }
+            else
                 return null;
         }
 
@@ -310,10 +314,12 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     // propaga l'evento Removed per il ContentItem
                     var context = new RemoveContentContext(ContentToDelete);
                     Handlers.Invoke(handler => handler.Removed(context), Logger);
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     return _utilsServices.GetResponse(ResponseType.None, ex.Message);
                 }
-            } else
+            }
+            else
                 return _utilsServices.GetResponse(ResponseType.None, T("No content with this Id").ToString());
             return (_utilsServices.GetResponse(ResponseType.Success));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
         }
@@ -364,11 +370,13 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             else
                 if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
                     return StoreNewContentItem(eObj, currentUser.ContentItem);
-                } else
+                }
+                else
                     return (_utilsServices.GetResponse(ResponseType.InvalidXSRF));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
         }
 
         #region private method
+
         /// <summary>
         /// Formato DateTimeField: 2009-06-15T13:45:30  yyyy-MM-ddThh:mm:ss NB: L’ora deve essere riferita all’ora di Greenwich
         /// </summary>
@@ -383,7 +391,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                 if ((Int32)(((dynamic)eObj).Id) > 0) {
                     IdContentToModify = (Int32)(((dynamic)eObj).Id);
                 }
-            } catch {
+            }
+            catch {
                 // Fix per Username nullo
                 if (tipoContent == "User")
                     return _utilsServices.GetResponse(ResponseType.Validation, "Missing user Id");
@@ -399,7 +408,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     var typeSettings = li[0].TypeDefinition.Settings.TryGetModel<ContentTypeSettings>();
                     if (typeSettings.Draftable) {
                         NewOrModifiedContent = _orchardServices.ContentManager.Get(IdContentToModify, VersionOptions.DraftRequired); // quando edito estraggo sempre il draftrequired (come in Orchard.Core.Contents.Controllers)
-                    } else {
+                    }
+                    else {
                         NewOrModifiedContent = _orchardServices.ContentManager.Get(IdContentToModify, VersionOptions.Latest);
                     }
                     //if (li.Count() == 1)
@@ -411,7 +421,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     if (!_contentExtensionService.HasPermission(tipoContent, Methods.Post, NewOrModifiedContent))
                         return _utilsServices.GetResponse(ResponseType.UnAuthorized);
                 validateMessage = ValidateMessage(NewOrModifiedContent, "Modified");
-            } else {
+            }
+            else {
                 NewOrModifiedContent = _orchardServices.ContentManager.New(tipoContent);
                 if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.EditContent, NewOrModifiedContent)) {
                     if (!_contentExtensionService.HasPermission(tipoContent, Methods.Post))
@@ -429,7 +440,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     string language = "";
                     try {
                         language = ((dynamic)eObj).Language;
-                    } catch { }
+                    }
+                    catch { }
                     if (NewOrModifiedContent.As<LocalizationPart>() != null) {
                         if (!string.IsNullOrEmpty(language))
                             NewOrModifiedContent.As<LocalizationPart>().Culture = _cultureManager.GetCultureByName(language);
@@ -438,20 +450,22 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     validateMessage = ValidateMessage(NewOrModifiedContent, "");
                     if (string.IsNullOrEmpty(validateMessage)) {
                         //    _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.DraftRequired);
-                    } else {
+                    }
+                    else {
                         rsp = _utilsServices.GetResponse(ResponseType.None, validateMessage);
                     }
                     if (NewOrModifiedContent.As<AutoroutePart>() != null) {
-                        ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
-                        _autorouteService.Value.ProcessPath(((dynamic)NewOrModifiedContent).AutoroutePart);
-                        _autorouteService.Value.PublishAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
+                        //           ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
+                        //           _autorouteService.Value.ProcessPath(((dynamic)NewOrModifiedContent).AutoroutePart);
+                        //           _autorouteService.Value.PublishAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
                         dynamic data = new ExpandoObject();
                         data.DisplayAlias = ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias;
                         data.Id = (Int32)(((dynamic)NewOrModifiedContent).Id);
                         data.ContentType = ((dynamic)NewOrModifiedContent).ContentType;
                         rsp.Data = data;
                     }
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     rsp = _utilsServices.GetResponse(ResponseType.None, ex.Message);
                 }
             }
