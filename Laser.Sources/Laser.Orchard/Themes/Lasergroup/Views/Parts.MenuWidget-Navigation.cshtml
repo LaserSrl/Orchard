@@ -26,7 +26,7 @@
                     if (position > 0) {        
                         bool hasChildren = (item.Item.Items.Length > 0);
                         
-                        <li class="menu-item @(((bool)item.Selected) ? "current-page-ancestor active" : "") @((hasChildren) ? "menu-item-has-children dropdown" : "")">
+                        <li class="menu-item menu-item-type-post_type menu-item-object-page @(((bool)item.Selected) ? "current-page-ancestor active" : "") @((hasChildren) ? "menu-item-has-children dropdown" : "")">
 
                             @if(hasChildren) {
                                 <a href="@item.Href" class="dropdown-toggle" data-toggle="dropdown">@item.Text<b class="caret"></b></a>
