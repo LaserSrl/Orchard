@@ -515,16 +515,16 @@
                     if (LogErrors) {
                         AddToErrorString(string.Format("ERROR: User {0} has no credential container.", user.Email));
                     }
-                    AddToFeedbackDataLists(0, 0, hidUser.Id, new HIDCredentialContainer(),
-                        string.Format("Errore: L'utente ({0}) non ha dispositivi attivi associati.", user.Email));
+                    //AddToFeedbackDataLists(0, 0, hidUser.Id, new HIDCredentialContainer(),
+                    //    string.Format("Errore: L'utente ({0}) non ha dispositivi attivi associati.", user.Email));
                 }
             } else {
                 //we could not find the HIDUser
-                AddToFeedbackDataLists(0, 0, 0, new HIDCredentialContainer(),
-                    string.Format(@"Errore: Non è stato possibile individuare un'utenza HID corrispondente alla email: {0}. Errore interno: {1}",
-                        user.Email,
-                        SearchErrorString(sr, user)
-                    ));
+                //AddToFeedbackDataLists(0, 0, 0, new HIDCredentialContainer(),
+                //    string.Format(@"Errore: Non è stato possibile individuare un'utenza HID corrispondente alla email: {0}. Errore interno: {1}",
+                //        user.Email,
+                //        SearchErrorString(sr, user)
+                //    ));
                 if (LogEverything) {
                     AddToLogString(string.Format("ERROR: Impossible to find HID user: {0}", SearchErrorString(sr, user)));
                 }
