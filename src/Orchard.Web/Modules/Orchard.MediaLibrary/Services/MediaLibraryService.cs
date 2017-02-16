@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Title.Models;
 using Orchard.FileSystems.Media;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Factories;
 using Orchard.MediaLibrary.Models;
-using Orchard.Core.Title.Models;
 using Orchard.Validation;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Web;
+using System.Web.Configuration;
 
 namespace Orchard.MediaLibrary.Services {
     public class MediaLibraryService : IMediaLibraryService {
@@ -23,7 +24,7 @@ namespace Orchard.MediaLibrary.Services {
         private static char[] HttpUnallowed = new char[] { '<', '>', '*', '%', '&', ':', '\\', '?' };
 
         public MediaLibraryService(
-            IOrchardServices orchardServices, 
+            IOrchardServices orchardServices,
             IMimeTypeProvider mimeTypeProvider,
             IStorageProvider storageProvider,
             IEnumerable<IMediaFactorySelector> mediaFactorySelectors) {
@@ -63,7 +64,7 @@ namespace Orchard.MediaLibrary.Services {
                 query = query.Join<MediaPartRecord>().Where(m => m.FolderPath == folderPath);
             }
 
-            switch(order) {
+            switch (order) {
                 case "title":
                     return query.Join<TitlePartRecord>()
                                     .OrderBy(x => x.Title)
@@ -175,7 +176,7 @@ namespace Orchard.MediaLibrary.Services {
                 .Where(x => x != null)
                 .OrderByDescending(x => x.Priority);
 
-            if (!requestMediaFactoryResults.Any() )
+            if (!requestMediaFactoryResults.Any())
                 return null;
 
             return requestMediaFactoryResults.First().MediaFactory;
@@ -249,6 +250,16 @@ namespace Orchard.MediaLibrary.Services {
             };
         }
 
+        private void ValidatePathCharacters(string path, string paramName) {
+            //get the invalid characters from the web.config
+            string invalidChars = ((SystemWebSectionGroup)WebConfigurationManager.OpenWebConfiguration(null).GetSectionGroup("system.web")).HttpRuntime.RequestPathInvalidCharacters;
+            List<string> invalidCharacters = new List<string>() { "/", @"\" };
+            invalidCharacters.AddRange(invalidChars.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
+            foreach (string c in invalidCharacters) {
+                Argument.Validate(!path.Contains(c), paramName, T("The folder name cannot contain the '{0}' character.", c).ToString());
+            }
+        }
+
         /// <summary>
         /// Creates a media folder.
         /// </summary>
@@ -256,7 +267,7 @@ namespace Orchard.MediaLibrary.Services {
         /// <param name="folderName">The name of the folder to be created.</param>
         public void CreateFolder(string relativePath, string folderName) {
             Argument.ThrowIfNullOrEmpty(folderName, "folderName");
-            Argument.Validate(!folderName.Contains("&"), "newFolderName", T("The folder name cannot contain the '&' character").ToString());
+            ValidatePathCharacters(folderName, "folderName");
 
             _storageProvider.CreateFolder(relativePath == null ? folderName : _storageProvider.Combine(relativePath, folderName));
         }
@@ -279,7 +290,7 @@ namespace Orchard.MediaLibrary.Services {
         public void RenameFolder(string folderPath, string newFolderName) {
             Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
             Argument.ThrowIfNullOrEmpty(newFolderName, "newFolderName");
-            Argument.Validate(!newFolderName.Contains("&"), "newFolderName", T("The folder name cannot contain the '&' character").ToString());
+            ValidatePathCharacters(newFolderName, "newFolderName");
 
             _storageProvider.RenameFolder(folderPath, _storageProvider.Combine(Path.GetDirectoryName(folderPath), newFolderName));
         }
