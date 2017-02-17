@@ -1210,11 +1210,26 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         private void NotificationFailed(INotification notification, AggregateException notificationFailureException) {
-            string innerEx = "";
-            if (notificationFailureException.InnerException != null) {
-                innerEx = notificationFailureException.InnerException.Message;
+            string token = "";
+            try {
+                if (notification is ApnsNotification) {
+                    token = (notification as ApnsNotification).DeviceToken;
+                }
+                else if (notification is WnsNotification) {
+                    token = (notification as WnsNotification).ChannelUri;
+                }
+                else if (notification is GcmNotification) {
+                    token = (notification as GcmNotification).RegistrationIds[0];
+                }
+                string innerEx = "";
+                if (notificationFailureException.InnerException != null) {
+                    innerEx = notificationFailureException.InnerException.Message;
+                }
+                _myLog.WriteLog((T("Failure: " + notification.GetType().Name + " token: " + token + " -> " + notificationFailureException.Message + " " + innerEx + " -> " + notification.ToString())).ToString());
             }
-            _myLog.WriteLog((T("Failure: " + notification.GetType().Name + " -> " + notificationFailureException.Message + " " + innerEx + " -> " + notification.ToString())).ToString());
+            catch (Exception ex) {
+                _myLog.WriteLog("Error NotificationFailed: " + notification.GetType().Name + " token: " + token + " -> Error: " + ex.Message + " StackTRace: " + ex.StackTrace);
+            }
         }
 
         private void DeviceSubscriptionExpired(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, INotification notification, bool produzione, TipoDispositivo dispositivo) {
