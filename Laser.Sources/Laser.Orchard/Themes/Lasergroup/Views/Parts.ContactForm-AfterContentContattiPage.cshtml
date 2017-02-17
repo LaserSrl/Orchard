@@ -19,6 +19,8 @@
     var confirmEmail = formData != null ? ((NameValueCollection)formData)["ConfirmEmail"] : "";
     var subject = formData != null ? ((NameValueCollection)formData)["Subject"] : "";
     var message = formData != null ? ((NameValueCollection)formData)["Message"] : "";
+
+    dynamic item = Model.ContentItem;
 }
 
 <div class="col-sm-12 col-md-6">
@@ -26,25 +28,32 @@
         <div role="form" class="wpcf7" id="wpcf7_contactform" lang="it-IT" dir="ltr">
             <div class="screen-reader-response"></div>
             @{using (Html.BeginForm("sendcontactemail", "contactform", new { area = "Laser.Orchard.ContactForm" }, FormMethod.Post, new { @class = "wpcf7-form" })) {
+                <div style="display: none;">
+                    <input name="_wpcf7" value="5" type="hidden">
+                    <input name="_wpcf7_version" value="4.5" type="hidden">
+                    <input name="_wpcf7_locale" value="it_IT" type="hidden">
+                    <input name="_wpcf7_unit_tag" value="wpcf7_contactform" type="hidden">
+                    <input name="_wpnonce" value="9ab50dc509" type="hidden">
+                </div>
                 <div class="wpcf7-response-output wpcf7-display-none"></div>
                 <div class="form-group">
                     <label class="control-label" for="Name">@T("Name")<span class="required">*</span></label><br />
                     <span class="wpcf7-form-control-wrap">
-                        <input id="Name-@uniqueId" type="text" name="Name" value="@name" size="40" class="form-control" aria-required="true" aria-invalid="false" placeholder="@T("Your Name")" />
+                        <input id="Name-@uniqueId" type="text" name="Name" value="@name" size="40" class="wpcf7-form-control wpcf7-validates-as-required form-control" aria-required="true" aria-invalid="false" placeholder="@T("Your Name")" />
                     </span>
                 </div>
     
                 <div class="form-group">
                     <label class="control-label" for="Email">@T("Email")<span class="required">*</span></label><br />
                     <span class="wpcf7-form-control-wrap">
-                        <input id="Email-@uniqueId" type="email" name="Email" value="@email" size="40" class="form-control" aria-required="true" aria-invalid="false" placeholder="@T("Email Address")" />
+                        <input id="Email-@uniqueId" type="email" name="Email" value="@email" size="40" class="wpcf7-form-control wpcf7-validates-as-required form-control" aria-required="true" aria-invalid="false" placeholder="@T("Email Address")" />
                     </span>
                 </div>
     
                 <div class="form-group">
                     <label class="control-label" for="ConfirmEmail">@T("Confirm Email")<span class="required">*</span></label><br />
                     <span class="wpcf7-form-control-wrap">
-                        <input id="ConfirmEmail-@uniqueId" type="email" name="ConfirmEmail" value="@confirmEmail" size="40" class="form-control" aria-required="true" aria-invalid="false" placeholder="@T("Confirm Email Address")" />
+                        <input id="ConfirmEmail-@uniqueId" type="email" name="ConfirmEmail" value="@confirmEmail" size="40" class="wpcf7-form-control wpcf7-validates-as-required form-control" aria-required="true" aria-invalid="false" placeholder="@T("Confirm Email Address")" />
                     </span>
                 </div>
       
@@ -52,7 +61,7 @@
                     <div class="form-group">
                         <label class="control-label" for="Subject">@T("Subject")<span class="required">*</span></label><br />
                         <span class="wpcf7-form-control-wrap">
-                            <input id="Subject-@uniqueId" type="text" name="Subject" value="@subject" size="40" class="form-control" aria-required="true" aria-invalid="false" placeholder="@T("Subject")" />
+                            <input id="Subject-@uniqueId" type="text" name="Subject" value="@subject" size="40" class="wpcf7-form-control wpcf7-validates-as-required form-control" aria-required="true" aria-invalid="false" placeholder="@T("Subject")" />
                         </span>
                     </div>
                 }
@@ -60,7 +69,7 @@
                 <div class="form-group">
                     <label class="control-label" for="Message">@T("Message")<span class="required">*</span></label><br />
                     <span class="wpcf7-form-control-wrap messaggio">
-                        <textarea id="Message-@uniqueId" name="Message" cols="40" rows="4" class="form-control" aria-required="true" aria-invalid="false" placeholder="@T("Comments or Inquiry")"></textarea>
+                        <textarea id="Message-@uniqueId" name="Message" cols="40" rows="4" class="wpcf7-form-control wpcf7-validates-as-required form-control" aria-required="true" aria-invalid="false" placeholder="@T("Comments or Inquiry")"></textarea>
                     </span>
                 </div>
 
@@ -76,7 +85,8 @@
                 <input id="attachment_button-@uniqueId" type="button" @Html.Raw(displayAttachmentButton) value="@T("Add attachment")" />
                 
                 <p>
-                    <input type="submit" value="@T("SEND")" class="btn btn-invia pull-right" />
+                    <input type="submit" value="@T("SEND")" class="wpcf7-form-control wpcf7-submit btn btn-invia pull-right" />
+                    <img class="ajax-loader" src="@item.ContactFormWidget.ImageLoader.FirstMediaUrl" alt="Invio..." style="visibility: hidden;">
                 </p>
               }
             }
@@ -86,6 +96,9 @@
 
 @using (Script.Head()) {
     <script type="text/javascript">
+
+        var _wpcf7 = { "loaderUrl": "@item.ContactFormWidget.ImageLoader.FirstMediaUrl", "recaptcha": { "messages": { "empty": "Per favore dimostra che non sei un robot." } }, "sending": "Invio..." };
+
         $(document).ready(function () {
             $('#attachment_button-@uniqueId').click(function () {
                  $.colorbox({ iframe: true, width: "40%", height: "26%", href: "@(Url.Action("Add", "FileUpload", new { Area = "Laser.Orchard.ContactForm" }) + "?ContactFormID=" + uniqueId)", title: "@T("Upload file")" });

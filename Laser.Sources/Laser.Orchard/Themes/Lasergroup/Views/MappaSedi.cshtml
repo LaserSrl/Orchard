@@ -10,7 +10,9 @@
 }
 
 <div id="gmap"></div>
-<script>
+
+@using (Script.Head()) {
+<script type="text/javascript">
     function initMap() {
         var map = new google.maps.Map(document.getElementById('gmap'), {
           zoom: 9,
@@ -37,4 +39,4 @@
     }
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcfCOvLyBlk2UIkUVPLjmX4FOO-smyDk4&callback=initMap"></script>
-
+}
