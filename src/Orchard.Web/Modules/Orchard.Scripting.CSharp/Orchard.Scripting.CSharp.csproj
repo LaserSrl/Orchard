@@ -73,6 +73,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Lib\Mono.CSharp.dll" />
     <Content Include="Styles\workflows-activity-decision.css" />
     <Content Include="Web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
