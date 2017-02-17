@@ -1222,10 +1222,10 @@ namespace Laser.Orchard.Mobile.Services {
                     token = (notification as GcmNotification).RegistrationIds[0];
                 }
                 string innerEx = "";
-                if (notificationFailureException.InnerException != null) {
-                    innerEx = notificationFailureException.InnerException.Message;
+                foreach (var ie in notificationFailureException.InnerExceptions) {
+                    innerEx += " " + ie.Message;
                 }
-                _myLog.WriteLog((T("Failure: " + notification.GetType().Name + " token: " + token + " -> " + notificationFailureException.Message + " " + innerEx + " -> " + notification.ToString())).ToString());
+                _myLog.WriteLog((T("Failure: " + notification.GetType().Name + " token: " + token + " -> " + notificationFailureException.Message + " - InnerExceptions: " + innerEx + " -> " + notification.ToString())).ToString());
             }
             catch (Exception ex) {
                 _myLog.WriteLog("Error NotificationFailed: " + notification.GetType().Name + " token: " + token + " -> Error: " + ex.Message + " StackTRace: " + ex.StackTrace);
