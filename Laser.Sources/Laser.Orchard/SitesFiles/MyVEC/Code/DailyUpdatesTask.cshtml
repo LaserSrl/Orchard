@@ -117,7 +117,7 @@
                 AddToLogString(string.Format("IssueCredentialOK for invite {2} (id {0}), with previous status: {1}",
                     schedaId.ToString(), serialized, _contentManager.GetItemMetadata(scheda).DisplayText));
             }
-            var credential = cContainer.Credentials.First(cred => !cred.Status.Contains("REVOK"));
+            var credential = cContainer.Credentials.FirstOrDefault(cred => !cred.Status.Contains("REVOK"));
             if (credStatuses.Count == 0) {
                 //we never processed this SchedaInvito
                 AssignHiddenFieldValue(schedaId, string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
@@ -190,7 +190,7 @@
                 AddToLogString(string.Format("RevokeCredentialOK for invite {2} (id {0}), with previous status: {1}",
                     schedaId.ToString(), serialized, _contentManager.GetItemMetadata(scheda).DisplayText));
             }
-            var credential = cContainer.Credentials.First(cred => cred.Status.Contains("REVOK"));
+            var credential = cContainer.Credentials.FirstOrDefault(cred => cred.Status.Contains("REVOK"));
             if (credStatuses.Count == 0) {
                 //we never processed this SchedaInvito
                 AssignHiddenFieldValue(schedaId, string.Format("REVOKED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
@@ -267,8 +267,8 @@
                     }
                 } else if (cContainer.Error == CredentialErrors.CredentialDeliveredAlready) {
                     //update the SchedaInvito for which we had to issue a MobileID, and pack data for the feedback step
-                    HIDCredential credential = cContainer.Credentials.First(cred => cred.Status != "REVOKED");
-                    if (credential.Status.StartsWith("ISSUE") || credential.Status == "ISSUING") {
+                    HIDCredential credential = cContainer.Credentials.FirstOrDefault(cred => cred.Status != "REVOKED");
+                    if (credential != null && (credential.Status.StartsWith("ISSUE") || credential.Status == "ISSUING")) {
                         //things are fine
                         foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 1)) {
                             IssueCredentialOK(action, cContainer, hidUser);
@@ -281,7 +281,7 @@
                             dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
                             string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
                             List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                            string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id);
+                            string status = string.Format("TRIED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0);
                             credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                             credStatuses.Add(status);
                             AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
@@ -309,7 +309,8 @@
                         dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
                         List<string> credStatuses = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value))
                             .Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                        string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id);
+                        HIDCredential credential = cContainer.Credentials.FirstOrDefault(cred => cred.Status != "REVOKED");
+                        string status = string.Format("TRIED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0);
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                         credStatuses.Add(status);
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
@@ -379,7 +380,8 @@
                         dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
                         string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
                         List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                        string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id);
+                        HIDCredential credential = cContainer.Credentials.FirstOrDefault(cred => cred.Status != "REVOKED");
+                        string status = string.Format("TRIED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0);
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                         credStatuses.Add(status);
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
