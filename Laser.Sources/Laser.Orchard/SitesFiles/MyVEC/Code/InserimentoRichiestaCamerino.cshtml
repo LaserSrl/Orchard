@@ -45,7 +45,7 @@
             richiestaCamerino = _contentManager.New("RichiestaCamerino");
             _contentManager.Create(richiestaCamerino, VersionOptions.Draft);
             // title
-            richiestaCamerino.TitlePart.Title = string.Format("Richiesta camerino - {0} {1} {2}", ciProduct.TitlePart.Title, strColor, size);
+            richiestaCamerino.TitlePart.Title = "Camerino Virtuale"; //string.Format("Richiesta camerino - {0} {1} {2}", ciProduct.TitlePart.Title, strColor, size);
             // taglia
             richiestaCamerino.RichiestaCamerino.Taglia.Value = size;
             // prodotto
@@ -80,6 +80,7 @@
             // pubblica le modifiche
             _contentManager.Publish(richiestaCamerino);
             // salva nello state del workflow le info utili per la push ai Sales Assistant
+            wfCtx.SetState("DressingRequestId", richiestaCamerino.Id);
             wfCtx.SetState("RecipientsList", salesAssistantsIds);
             wfCtx.SetState("Product", ciProduct.TitlePart.Title);
             wfCtx.SetState("ProductSize", size);
