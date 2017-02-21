@@ -1221,11 +1221,19 @@ namespace Laser.Orchard.Mobile.Services {
                 else if (notification is GcmNotification) {
                     token = (notification as GcmNotification).RegistrationIds[0];
                 }
-                string innerEx = "";
+                var innerEx = new StringBuilder();
+                Exception inner = null;
                 foreach (var ie in notificationFailureException.InnerExceptions) {
-                    innerEx += " " + ie.Message;
+                    innerEx.AppendFormat("\r\n\t{0}", ie.Message);
+                    innerEx.AppendFormat("\r\n\t\t{0}", ie.StackTrace.Replace("\r\n", "\r\n\t\t"));
+                    inner = ie.InnerException;
+                    while (inner != null) {
+                        innerEx.AppendFormat("\r\n\t{0}", inner.Message);
+                        innerEx.AppendFormat("\r\n\t\t{0}", inner.StackTrace.Replace("\r\n", "\r\n\t\t"));
+                        inner = inner.InnerException;
+                    }
                 }
-                _myLog.WriteLog((T("Failure: " + notification.GetType().Name + " token: " + token + " -> " + notificationFailureException.Message + " - InnerExceptions: " + innerEx + " -> " + notification.ToString())).ToString());
+                _myLog.WriteLog((T("Failure: " + notification.GetType().Name + " token: " + token + " -> " + notificationFailureException.Message + " - InnerExceptions: " + innerEx.ToString() + "\r\n\t-> " + notification.ToString())).ToString());
             }
             catch (Exception ex) {
                 _myLog.WriteLog("Error NotificationFailed: " + notification.GetType().Name + " token: " + token + " -> Error: " + ex.Message + " StackTRace: " + ex.StackTrace);
