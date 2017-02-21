@@ -308,7 +308,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                 }
                 return cr;
             }
-            catch (OrchardSecurityException) {
+            catch (System.Security.SecurityException) {
                 return Json(_utilsServices.GetResponse(ResponseType.InvalidUser), JsonRequestBehavior.AllowGet);
             }
             catch {
