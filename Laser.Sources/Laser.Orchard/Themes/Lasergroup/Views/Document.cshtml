@@ -1,7 +1,7 @@
 ﻿@using Orchard.Environment.Configuration
 @using Orchard.UI.Resources
 @using Orchard.ContentManagement
-
+<!DOCTYPE html>
 @{
     var settings = WorkContext.Resolve<ShellSettings>();
     var tenantName = settings.Name;
@@ -20,14 +20,11 @@
     Script.Include("scripts.js").AtFoot();
     Script.Include("main.js").AtFoot();
 }
-
-
-<!DOCTYPE html>
-<html class="wf-opensans-n4-active wf-robotocondensed-n3-active wf-robotocondensed-n4-active wf-active" lang="it-IT">
+<html lang="it-IT">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@Layout.Title - Laser informatica</title>
     <style type="text/css">
         #wp-admin-bar-wp-logo {

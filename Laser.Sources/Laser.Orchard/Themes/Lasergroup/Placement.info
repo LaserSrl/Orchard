@@ -15,6 +15,5 @@
   </Match>
 -->
   <Place Parts_Common_Metadata="-" Parts_Common_Body="-"  />
-  <Place Fields_Common_Text__Sottotitolo="-" Fields_Enumeration="-" Fields_ContentPicker="-" Fields_MediaLibraryPicker="-" Fields_DateTime="-" Fields_Link="-" Fields_TaxonomyField="-" />
-  
+  <Place Fields_Common_Text__Sottotitolo="-" Fields_Enumeration="-" Fields_ContentPicker="-" Fields_MediaLibraryPicker="-" Fields_DateTime="-" Fields_Link="-" Fields_TaxonomyField_Localized="-" />
 </Placement>
