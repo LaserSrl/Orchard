@@ -56,6 +56,8 @@
     var urlPath = (Request.Path.EndsWith("/") ? Request.Path : Request.Path + "/");
     var urlHome = Url.Content("~/" + (!String.IsNullOrWhiteSpace(prefix) ? prefix + "/" : ""));
 
+    
+
 }
 
 <div id="page" class="hfeed site">
@@ -83,6 +85,10 @@
 
         @if (Model.AfterContent != null) {
             @Zone(Model.AfterContent)
+        }
+
+        @if (Model.AfterContentProdotto != null) {
+            @Zone(Model.AfterContentProdotto)
         }
 
     </div>
@@ -114,3 +120,8 @@
         @Zone(Model.Footer)
     }
 </div>
+<script type='text/javascript'>
+    /* <![CDATA[ */
+    var _wpcf7 = { "loaderUrl": "@subthemePath/images/ajax-loader.gif", "recaptcha": { "messages": { "empty": "Per favore dimostra che non sei un robot." } }, "sending": "Invio..." };
+    /* ]]> */
+</script>

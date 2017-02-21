@@ -1,7 +1,8 @@
 @{
     Layout.Title = Model.Title;
-    Layout.BaseClass = Model.ContentItem.Page.Colorebase.Value.ToLower() + " navbar-fixed";
     dynamic item = Model.ContentItem;
+
+    Layout.BaseClass = item.Page.Colorebase.Value.ToLower() + " page page-template page-template-page-" + item.AutoroutePart.DisplayAlias + " navbar-fixed";
     var sottotitolo = item.Page.Sottotitolo.Value;
 }
 

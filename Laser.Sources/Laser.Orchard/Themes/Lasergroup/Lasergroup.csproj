@@ -648,6 +648,21 @@
   <ItemGroup>
     <Content Include="Views\DettaglioBusiness.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ImmaginiProdotto.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\FasciaLoghi.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DettaglioProdotto.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ImmagineTestoProdotto.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget-AfterContentProdotto.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -1,13 +1,13 @@
 ﻿@{
     dynamic item = Model.ContentItem.ContentItem;
 
-    var medias = item.ElementoFascia.Gallery.MediaParts;
+    var medias = item.ElementoFasciaKrake.Gallery.MediaParts;
 }
 
 <div id="krake" class="container-fluid">
     <div class="row">
         <div class="col-xs-12 col-sm-6 text-center-xs">
-            <img src="@item.ElementoFascia.Image.FirstMediaUrl" class="img-responsive pull-right-sm pull-right-md pull-right-lg">
+            <img src="@item.ElementoFasciaKrake.Image.FirstMediaUrl" class="img-responsive pull-right-sm pull-right-md pull-right-lg">
         </div>
         <div class="col-xs-12 col-sm-6 hidden-xs">
             <div class="space-20 visible-xs"></div>
@@ -28,7 +28,7 @@
 
         }
     </div>
-    <h3 class="krake-description text-center container">@item.ElementoFascia.Abstract.Value</h3>
+    <h3 class="krake-description text-center container">@item.ElementoFasciaKrake.Abstract.Value</h3>
     <div class="krake-bottom"></div>
     <div class="krake-bottom-white"></div>
 </div>

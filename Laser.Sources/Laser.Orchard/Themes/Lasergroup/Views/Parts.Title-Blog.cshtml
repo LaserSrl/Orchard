@@ -1,6 +1,8 @@
 @{
     Layout.Title = Model.Title;
     dynamic item = Model.ContentItem;
+
+    Layout.BaseClass = "page page-template page-template-page-" + item.AutoroutePart.DisplayAlias + " navbar-fixed";
 }
 
 <div id="intro" style="height: auto;">

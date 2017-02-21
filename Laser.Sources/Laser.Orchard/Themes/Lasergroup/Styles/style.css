@@ -573,7 +573,7 @@ body.page-template-page-business .title{ color:#FF0903; }
 
 
 /* ------------- SOCIETA' - CHI SIAMO ------------------ */
-body.page-template-page-societa-chi-siamo #intro{ z-index:5; }
+body.page-template-page-chi-siamo #intro{ z-index:5; }
 #team{ padding:0 0 0 ; position:relative; overflow:hidden; }
 #team .team-top{ background:#fff; position:absolute; width:100%; left:0; z-index:5; top:0px; height:50px; border-radius: 0 0 50% 50%; }
 /*#team .team-top{ background:#fff; position:absolute; width:100%; left:0; z-index:5; top:0; height:50px; }*/

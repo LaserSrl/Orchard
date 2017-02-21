@@ -86,7 +86,6 @@
                 
                 <p>
                     <input type="submit" value="@T("SEND")" class="wpcf7-form-control wpcf7-submit btn btn-invia pull-right" />
-                    <img class="ajax-loader" src="@item.ContactFormWidget.ImageLoader.FirstMediaUrl" alt="Invio..." style="visibility: hidden;">
                 </p>
               }
             }
@@ -96,9 +95,6 @@
 
 @using (Script.Head()) {
     <script type="text/javascript">
-
-        var _wpcf7 = { "loaderUrl": "@item.ContactFormWidget.ImageLoader.FirstMediaUrl", "recaptcha": { "messages": { "empty": "Per favore dimostra che non sei un robot." } }, "sending": "Invio..." };
-
         $(document).ready(function () {
             $('#attachment_button-@uniqueId').click(function () {
                  $.colorbox({ iframe: true, width: "40%", height: "26%", href: "@(Url.Action("Add", "FileUpload", new { Area = "Laser.Orchard.ContactForm" }) + "?ContactFormID=" + uniqueId)", title: "@T("Upload file")" });
