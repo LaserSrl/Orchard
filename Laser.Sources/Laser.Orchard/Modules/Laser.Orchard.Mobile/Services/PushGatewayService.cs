@@ -394,6 +394,7 @@ namespace Laser.Orchard.Mobile.Services {
                 else {
                     language = language_param;
                 }
+                _myLog.WriteLog("SendPushService Start");
                 _myLog.WriteLog("language:" + language);
                 _myLog.WriteLog("Send to:" + device);
                 if (device == "All") {
@@ -460,6 +461,7 @@ namespace Laser.Orchard.Mobile.Services {
                     pushwindows.Eu = externalUrl;
                     SendAllWindows(ctype, pushwindows, produzione, language, queryDevice);
                 }
+                _myLog.WriteLog("SendPushService End");
             }
         }
 
@@ -894,7 +896,7 @@ namespace Laser.Orchard.Mobile.Services {
                             DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.Android);
                         }
                         else
-                            DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, notification, produzione, TipoDispositivo.Android);
+                            DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, produzione, TipoDispositivo.Android);
                     }
                     else {
                         NotificationFailed(notification, aggregateEx);
@@ -1000,6 +1002,13 @@ namespace Laser.Orchard.Mobile.Services {
             }
             if (certificateexist) {
                 var config = new ApnsConfiguration(environment, setting_file, setting_password);
+                // check sui device expired
+                var feedback = new FeedbackService(config);
+                feedback.FeedbackReceived += (token, expiredTime) => {
+                    DeviceSubscriptionExpired("ApnsNotification", token, expiredTime, produzione, TipoDispositivo.Apple);
+                };
+                feedback.Check();
+                // invio push
                 var push = new ApnsServiceBroker(config);
                 push.OnNotificationSucceeded += (notification) => {
                     NotificationSent(notification);
@@ -1019,7 +1028,7 @@ namespace Laser.Orchard.Mobile.Services {
                                 DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.Apple);
                             }
                             else
-                                DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, notification, produzione, TipoDispositivo.Apple);
+                                DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, produzione, TipoDispositivo.Apple);
                         }
                         else {
                             NotificationFailed(notification, aggregateEx);
@@ -1112,7 +1121,7 @@ namespace Laser.Orchard.Mobile.Services {
                             DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.WindowsMobile);
                         }
                         else
-                            DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, expiredException.Notification, produzione, TipoDispositivo.WindowsMobile);
+                            DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, produzione, TipoDispositivo.WindowsMobile);
                     }
                     else {
                         NotificationFailed(notification, aggregateEx);
@@ -1240,7 +1249,7 @@ namespace Laser.Orchard.Mobile.Services {
             }
         }
 
-        private void DeviceSubscriptionExpired(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, INotification notification, bool produzione, TipoDispositivo dispositivo) {
+        private void DeviceSubscriptionExpired(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, bool produzione, TipoDispositivo dispositivo) {
             try {
                 _myLog.WriteLog(T("Device Subscription Expired: " + sender + " -> " + expiredDeviceSubscriptionId).ToString());
                 lock (lockMonitor) {
