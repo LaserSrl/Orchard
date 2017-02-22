@@ -1,5 +1,4 @@
 ﻿@using Orchard.Projections.Services;
-
 @{
     int page = 1;
     int pageSize = Model.ContentItem.ProjectionPart.Record.Items;
@@ -10,15 +9,11 @@
 
     dynamic item = Model.ContentItem;
 }
-
 <div class="space-40"></div>
 <div class="space-40"></div>
-
 <div id="showcase" class="container-fluid">
     <div id="showcase-slider">
-
         @foreach (var resulted in queryItems) {
-
             <div class="showcase-item">
                 <div class="row">
                     <div class="col-xs-12 col-md-5 col-lg-4 showcase-item-img">
@@ -26,19 +21,14 @@
                             <a href="@resulted.Prodotto.Link.Value">
                                 <img width="113" height="109" src="@resulted.Prodotto.Logo.FirstMediaUrl" class="img-responsive wp-post-image" alt="@resulted.Prodotto.TitlePart.Title.ToLower()" /></a>
                         </div>
-
                         <div class="showcase-perspective">
                             <img src="@resulted.Prodotto.Gallery.FirstMediaUrl" class="img-responsive perspective-layer">
-
                             @foreach (var tipo in resulted.Prodotto.Tipologia.Terms) {
-                            
                                 <div class="perspective-layer category-layer" style="background:@tipo.ContentItem.TipologiaProdottiTerm.Colore.Value">
                                     <img src="@tipo.ContentItem.TipologiaProdottiTerm.Image.FirstMediaUrl" class="img-responsive category-layer-icon">
                                     <h5 class="category-layer-title">@tipo.Name</h5>
                                 </div>
-                            
                             }
-
                             <a href="@resulted.Prodotto.Link.Value" class="showcase-plus-link">@resulted.Prodotto.Link.Text</a>
                         </div>
                     </div>
@@ -53,10 +43,8 @@
                     </div>
                 </div>
             </div>
-            
         }
     </div>
-
     <a href="@item.ProjectionWidget.Link.Value" class="text-right all-showcase-link">@item.ProjectionWidget.Link.Text</a>
     <div class="space-20"></div>
     <div class="showcase-bottom"></div>

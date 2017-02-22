@@ -7,17 +7,13 @@
 
     string modalitaMenu = Model.ContentItem.MenuWidgetPart.MenuWidget.Modalita.Value;
 }
-
 @if (modalitaMenu == "Navigazione") {
     <div class="menu-menu-principale-container">
         <ul id="main-menu-home" class="nav navbar-nav handel-got-d hidden-xs" data-top="842">
-
             @foreach (var item in items) {
                 if (position > 0) {
                     bool hasChildren = (item.Item.Items.Length > 0);
-                        
                 <li class="menu-item menu-item-type-post_type menu-item-object-page @((hasChildren) ? "menu-item-has-children dropdown" : "")">
-
                     @if (hasChildren) {
                         <a href="@item.Href" class="dropdown-toggle" data-toggle="dropdown">@item.Text<b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -28,23 +24,19 @@
                     }
                 </li>
                 }
-
                 position = position + 1;
             }
         </ul>
     </div>
 } 
 else if (modalitaMenu == "Filtro") {
-
     var services = WorkContext.Resolve<Orchard.IOrchardServices>();
     var contentManager = services.ContentManager;
-    
     <div class="overflow-hidden">
         <div id="filter" class="clearfix">
             <a class="filter-label handel-got-d" href="#">Filter<i class="fa fa-angle-down"></i></a>
             <ul class="nav">
                 @foreach (var item in items) {
-                    
                     if (item.Text.Text == "Tutti") {
                         <li><a href="#all">@item.Text</a></li>
                     } 

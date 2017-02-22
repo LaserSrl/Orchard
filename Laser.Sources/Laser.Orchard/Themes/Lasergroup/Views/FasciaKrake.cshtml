@@ -3,7 +3,6 @@
 
     var medias = item.ElementoFasciaKrake.Gallery.MediaParts;
 }
-
 <div id="krake" class="container-fluid">
     <div class="row">
         <div class="col-xs-12 col-sm-6 text-center-xs">
@@ -19,13 +18,10 @@
     <div class="space-40"></div>
     <div class="space-20"></div>
     <div class="row row-krake-icons">
-
         @for (int i = 0; i < medias.Count; i++) {
-            
             <div class="col-xs-6 col-sm-4 col-md-2 text-center">
                 <img src="@medias[i].MediaUrl" class="img-responsive krake-icon">
             </div>
-
         }
     </div>
     <h3 class="krake-description text-center container">@item.ElementoFasciaKrake.Abstract.Value</h3>

@@ -26,24 +26,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@Layout.Title - Laser informatica</title>
-    <style type="text/css">
-        #wp-admin-bar-wp-logo {
-            display: none;
-        }
-
-        #wp-admin-bar-comments {
-            display: none;
-        }
-
-        #wp-admin-bar-new-content {
-            display: none;
-        }
-
-        #wp-admin-bar-_legacyoptions {
-            display: none;
-        }
-    </style>
-
     <script type="text/javascript">
         /* You can add more configuration options to webfontloader by previously defining the WebFontConfig with your options */
         if (typeof WebFontConfig === "undefined") {
@@ -98,26 +80,12 @@
         }(window, document, window._wpemojiSettings);
     </script>
     <style type="text/css">
-        img.wp-smiley,
-        img.emoji {
-            display: inline !important;
-            border: none !important;
-            box-shadow: none !important;
-            height: 1em !important;
-            width: 1em !important;
-            margin: 0 .07em !important;
-            vertical-align: -0.1em !important;
-            background: none !important;
-            padding: 0 !important;
-        }
+        img.wp-smiley,img.emoji {display: inline !important;border: none !important;box-shadow: none !important;height: 1em !important;width: 1em !important;margin: 0 .07em !important;vertical-align: -0.1em !important;background: none !important;padding: 0 !important;}
     </style>
     @Display(Model.Head)
-
 </head>
 <body class="@Layout.BaseClass">
     @Display(Model.Body)
     @Display(Model.Tail)
 </body>
-
-
 </html>

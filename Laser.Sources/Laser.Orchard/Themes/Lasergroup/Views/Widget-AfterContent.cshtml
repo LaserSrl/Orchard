@@ -2,20 +2,16 @@
     dynamic item = Model.ContentItem;
     string titleWidget = item.WidgetPart.Title;
 }
-
 @switch (titleWidget) {
     case "Link Krake":
         @Display(New.LinkKrake(ContentItem: item));
         break;
-
     case "Dettagli Societa":
         @Display(New.DettaglioSocieta(ContentItem: item));
         break;
-        
     case "Dettagli Business":
         @Display(New.DettaglioBusiness(ContentItem: item));
         break;
-        
     default:
         @Display(Model.Content)
             break;

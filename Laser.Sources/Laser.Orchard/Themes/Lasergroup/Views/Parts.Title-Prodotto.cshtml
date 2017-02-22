@@ -4,7 +4,6 @@
 
     Layout.BaseClass = "single single-showcase navbar-fixed";
 }
-
 <div id="intro" class="showcase-intro" style="height: 450px;">
     <canvas id="intro-canvas" width="1920" height="450"></canvas>
     <div class="container container-desc clearfix">
@@ -16,14 +15,11 @@
         <div class="col-xs-12 col-sm-6">
             <div class="showcase-perspective">
                 <img src="@item.Prodotto.Gallery.FirstMediaUrl" class="img-responsive perspective-layer">
-
                     @foreach (var tipo in item.Prodotto.Tipologia.Terms) {
-                            
                             <div class="perspective-layer category-layer" style="background:@tipo.ContentItem.TipologiaProdottiTerm.Colore.Value">
                                 <img src="@tipo.ContentItem.TipologiaProdottiTerm.Image.FirstMediaUrl" class="img-responsive category-layer-icon">
                                 <h5 class="category-layer-title">@tipo.Name</h5>
                             </div>
-                            
                         }
             </div>
         </div>
