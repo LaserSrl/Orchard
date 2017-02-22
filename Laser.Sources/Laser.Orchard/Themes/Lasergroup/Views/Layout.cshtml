@@ -49,7 +49,7 @@
     //Model.Id = "layout-wrapper";
     //Model.Classes.Add("main-bg");
     //var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model
-    var subthemePath = Url.Content("~/Themes/Lasergroup/Styles");
+    var subthemePath = Url.Content("~/Themes/Lasergroup");
     var settings = WorkContext.Resolve<Orchard.Environment.Configuration.ShellSettings>();
     var host = settings.RequestUrlHost;
     var prefix = settings.RequestUrlPrefix;
@@ -122,6 +122,6 @@
 </div>
 <script type='text/javascript'>
     /* <![CDATA[ */
-    var _wpcf7 = { "loaderUrl": "@subthemePath/images/ajax-loader.gif", "recaptcha": { "messages": { "empty": "@T("Per favore dimostra che non sei un robot.")" } }, "sending": "@T("Invio...")" };
+    var _wpcf7 = { "loaderUrl": "@subthemePath/styles/images/ajax-loader.gif", "recaptcha": { "messages": { "empty": "@T("Per favore dimostra che non sei un robot.")" } }, "sending": "@T("Invio...")" };
     /* ]]> */
 </script>
