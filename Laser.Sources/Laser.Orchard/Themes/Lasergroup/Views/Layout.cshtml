@@ -70,6 +70,10 @@
     </header>
 
     <div id="content" class="site-content">
+        @if (Model.Messages != null) {
+            @Zone(Model.Messages)
+        }
+
         @if (Model.Content != null) {
             @Zone(Model.Content)
         }
