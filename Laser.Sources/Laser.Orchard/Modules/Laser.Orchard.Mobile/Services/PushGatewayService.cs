@@ -1234,11 +1234,11 @@ namespace Laser.Orchard.Mobile.Services {
                 Exception inner = null;
                 foreach (var ie in notificationFailureException.InnerExceptions) {
                     innerEx.AppendFormat("\r\n\t{0}", ie.Message);
-                    innerEx.AppendFormat("\r\n\t\t{0}", ie.StackTrace.Replace("\r\n", "\r\n\t\t"));
+                    innerEx.AppendFormat("\r\n\t\t{0}", (ie.StackTrace ?? "").Replace("\r\n", "\r\n\t\t"));
                     inner = ie.InnerException;
                     while (inner != null) {
                         innerEx.AppendFormat("\r\n\t{0}", inner.Message);
-                        innerEx.AppendFormat("\r\n\t\t{0}", inner.StackTrace.Replace("\r\n", "\r\n\t\t"));
+                        innerEx.AppendFormat("\r\n\t\t{0}", (inner.StackTrace ?? "").Replace("\r\n", "\r\n\t\t"));
                         inner = inner.InnerException;
                     }
                 }
