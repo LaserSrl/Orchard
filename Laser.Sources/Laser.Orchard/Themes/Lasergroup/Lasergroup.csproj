@@ -546,7 +546,7 @@
     <Content Include="Views\DettagliKrake.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\LinkKrake.cshtml">
+    <Content Include="Views\HtmlLink.cshtml">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
@@ -614,16 +614,13 @@
     <Content Include="Views\FasciaSocieta.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DettaglioSocieta.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\FasciaContatti.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ElencoPartners.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DettaglioBusiness.cshtml" />
+    <Content Include="Views\HtmlImmagineContenuto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ImmaginiProdotto.cshtml" />
@@ -641,7 +638,7 @@
     <Content Include="Views\Widget-AfterContentProdotto.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Widget.Wrapper.cshtml" />
+    <Content Include="Views\_Widget.Wrapper.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Content.cshtml">

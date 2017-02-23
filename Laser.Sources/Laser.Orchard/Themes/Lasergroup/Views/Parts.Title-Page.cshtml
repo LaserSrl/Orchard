@@ -23,7 +23,13 @@
             break;
     }
 
-    Layout.BaseClass = item.Page.Colorebase.Value.ToLower() + " page page-template page-template-page-" + pageAlias + " navbar-fixed";
+    if (item.Page.Colorebase.Value != "Default") {
+        Layout.BaseClass = item.Page.Colorebase.Value.ToLower() + " page page-template page-template-page-" + pageAlias + " navbar-fixed";
+    }
+    else {
+        Layout.BaseClass = "page page-template page-template-page-" + pageAlias + " navbar-fixed";
+    }
+    
     var sottotitolo = item.Page.Sottotitolo.Value;
 }
 <div id="intro" style="height: @heightIntro px;">

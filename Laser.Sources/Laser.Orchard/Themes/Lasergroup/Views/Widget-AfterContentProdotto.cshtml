@@ -1,8 +1,9 @@
 ﻿@{
     dynamic item = Model.ContentItem;
-    string titleWidget = item.WidgetPart.Title;
+    string infoType = item.ShowcaseWidget.Specializzazione.Value;
 }
-@switch (titleWidget) {
+
+@switch (infoType) {
     case "Anteprima Web Mobile":
         <div class="container-fluid">
             @Display(New.ImmaginiProdotto(ContentItem: item));
