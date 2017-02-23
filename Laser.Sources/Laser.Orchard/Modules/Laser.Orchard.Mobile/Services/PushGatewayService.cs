@@ -1002,13 +1002,6 @@ namespace Laser.Orchard.Mobile.Services {
             }
             if (certificateexist) {
                 var config = new ApnsConfiguration(environment, setting_file, setting_password);
-                // check sui device expired
-                var feedback = new FeedbackService(config);
-                feedback.FeedbackReceived += (token, expiredTime) => {
-                    DeviceSubscriptionExpired("ApnsNotification", token, expiredTime, produzione, TipoDispositivo.Apple);
-                };
-                feedback.Check();
-                // invio push
                 var push = new ApnsServiceBroker(config);
                 push.OnNotificationSucceeded += (notification) => {
                     NotificationSent(notification);
@@ -1089,6 +1082,17 @@ namespace Laser.Orchard.Mobile.Services {
                         }
                     }
                     push.Stop();
+                    // check sui device expired
+                    try {
+                        var feedback = new FeedbackService(config);
+                        feedback.FeedbackReceived += (token, expiredTime) => {
+                            DeviceSubscriptionExpired("ApnsNotification", token, expiredTime, produzione, TipoDispositivo.Apple);
+                        };
+                        feedback.Check();
+                    }
+                    catch (Exception ex) {
+                        _myLog.WriteLog("PushApple-FeedbackService error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    }
                 }
             }
         }
