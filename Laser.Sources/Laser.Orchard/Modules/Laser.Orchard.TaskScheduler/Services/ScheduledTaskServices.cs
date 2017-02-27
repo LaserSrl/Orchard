@@ -34,7 +34,7 @@ namespace Laser.Orchard.TaskScheduler.Services {
         /// </summary>
         /// <returns>A list of task schedulers found in the db</returns>
         public List<ScheduledTaskPart> GetAllTasks() {
-            List<ScheduledTaskPart> parts = _orchardServices.ContentManager.Query().ForPart<ScheduledTaskPart>().List().ToList();
+            List<ScheduledTaskPart> parts = _orchardServices.ContentManager.Query("ScheduledTask").ForPart<ScheduledTaskPart>().List().ToList();
             foreach (ScheduledTaskPart pa in parts.Where(p => p.RunningTaskId != 0)) {
                 //check whether the task is still running. It might have been stopped by someone or something
                 if (_repoTasks.Get(pa.RunningTaskId) == null) {
@@ -115,7 +115,7 @@ namespace Laser.Orchard.TaskScheduler.Services {
                     //we have to create a new record
                     if (!vm.Delete) {
                         //we only create it if it was not also deleted already
-                        ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.New<ScheduledTaskPart>("ScheduledTaskPart");
+                        ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.New<ScheduledTaskPart>("ScheduledTask");
                         vm.UpdatePart(part);
                         _orchardServices.ContentManager.Create(part);
                         vm.Id = part.Id;
