@@ -72,5 +72,13 @@ namespace Laser.Orchard.TaskScheduler {
             );
             return 5;
         }
+        public int UpdateFrom5() {
+            ContentDefinitionManager.AlterTypeDefinition("ScheduledTask", cfg => cfg
+                .RemovePart(typeof(ScheduledTaskPart).Name)
+                .Creatable(false)
+                .Draftable(false)
+            );
+            return 6;
+        }
     }
 }
