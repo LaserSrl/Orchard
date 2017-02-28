@@ -13,10 +13,6 @@ namespace Laser.Orchard.TaskScheduler.Handlers {
         public ScheduledTaskPartHandler(IRepository<LaserTaskSchedulerRecord> repoTasks) {
             Filters.Add(StorageFilter.For(repoTasks));
             Filters.Add(new ActivatingFilter<ScheduledTaskPart>("ScheduledTask"));
-
-            OnRemoving<ScheduledTaskPart>((context, part) => {
-                repoTasks.Delete(part.Record);
-            });
         }
     }
 }
