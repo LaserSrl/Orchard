@@ -99,7 +99,8 @@ namespace Laser.Orchard.Questionnaires.Services {
         public bool SendTemplatedEmailRanking() {
             var query = _orchardServices.ContentManager.Query();
             var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.workflowfired == false).List();
-            var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().List();
+            // la condizione Id > 0 serve solo a forzare la join con la tabella RankingPartRecord, perché la clausola ForPart non è sufficiente (fa solo scansione in memoria)
+            var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().Where<RankingPartRecord>(x => x.Id > 0).List();
             foreach (GamePart gp in list) {
                 ContentItem Ci = gp.ContentItem;
                 if (((dynamic)Ci).ActivityPart != null && ((dynamic)Ci).ActivityPart.DateTimeEnd != null) {
