@@ -57,8 +57,8 @@ namespace Laser.Orchard.HID.Services {
         #endregion
         public string AuthorizationToken {
             get {
-                string tokenType = (string)_cacheStorageProvider.Get(CacheTokenTypeKey);
-                string accessToken = (string)_cacheStorageProvider.Get(CacheAccessTokenKey);
+                string tokenType = (string)_cacheStorageProvider.Get<string>(CacheTokenTypeKey);
+                string accessToken = (string)_cacheStorageProvider.Get<string>(CacheAccessTokenKey);
                 if (!string.IsNullOrWhiteSpace(tokenType) && !string.IsNullOrWhiteSpace(accessToken)) {
                     return tokenType + " " + accessToken;
                 }
