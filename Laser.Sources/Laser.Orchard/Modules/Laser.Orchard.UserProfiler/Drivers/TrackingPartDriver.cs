@@ -25,7 +25,7 @@ namespace Laser.Orchard.UserProfiler.Drivers {
         }
 
         protected override DriverResult Display(TrackingPart part, string displayType, dynamic shapeHelper) {
-            if (displayType == "Summary")
+            if (displayType.StartsWith("Summary"))
                 return null;
 
             //   var host = _shellsetting.RequestUrlHost;
