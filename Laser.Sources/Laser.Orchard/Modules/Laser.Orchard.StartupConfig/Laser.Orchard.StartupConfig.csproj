@@ -273,6 +273,7 @@
     <Compile Include="Services\IApiKeyService.cs" />
     <Compile Include="RazorCodeExecution\Services\IRazorExecuteService.cs" />
     <Compile Include="Services\IMaintenanceService.cs" />
+    <Compile Include="Services\ITransactionHelper.cs" />
     <Compile Include="Services\IUserSearchService.cs" />
     <Compile Include="Services\MaintenanceBanner.cs" />
     <Compile Include="Services\MaintenanceService.cs" />
