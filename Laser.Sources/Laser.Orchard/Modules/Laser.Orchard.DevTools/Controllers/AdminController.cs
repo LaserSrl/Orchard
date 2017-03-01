@@ -22,6 +22,7 @@ using System.Text;
 using Laser.Orchard.DevTools.ViewModels;
 
 namespace Laser.Orchard.DevTools.Controllers {
+
     public class AdminController : Controller {
         private readonly ICsrfTokenHelper _csrfTokenHelper;
         private readonly IScheduledTaskManager _scheduledTaskManager;
@@ -79,19 +80,23 @@ namespace Laser.Orchard.DevTools.Controllers {
             return View("Index", se);
         }
 
-
         [HttpGet]
         [Admin]
         public ActionResult ShowLog() {
             if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
                 return new HttpUnauthorizedResult();
-            string textfile = System.IO.File.ReadAllText(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Logs/orchard-debug-" + DateTime.Now.Year.ToString() + "." + DateTime.Now.Month.ToString().PadLeft(2, '0') + "." + DateTime.Now.Day.ToString().PadLeft(2, '0') + ".log"));
-            var ultimora = textfile.Split(new string[] { DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString().PadLeft(2, '0') + "-" + DateTime.Now.Day.ToString().PadLeft(2, '0') + " " }, StringSplitOptions.RemoveEmptyEntries);
-            StringBuilder sb = new StringBuilder();
-            for (int a = 1; a < ultimora.Length && a < 11; a++) {
-                sb.Append(ultimora[ultimora.Length - a] + Environment.NewLine + Environment.NewLine);
+            Segnalazione se;
+            if (System.IO.File.Exists(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Logs/orchard-error-" + DateTime.Now.Year.ToString() + "." + DateTime.Now.Month.ToString().PadLeft(2, '0') + "." + DateTime.Now.Day.ToString().PadLeft(2, '0') + ".log"))) {
+                string textfile = System.IO.File.ReadAllText(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Logs/orchard-error-" + DateTime.Now.Year.ToString() + "." + DateTime.Now.Month.ToString().PadLeft(2, '0') + "." + DateTime.Now.Day.ToString().PadLeft(2, '0') + ".log"));
+                var ultimora = textfile.Split(new string[] { DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString().PadLeft(2, '0') + "-" + DateTime.Now.Day.ToString().PadLeft(2, '0') + " " }, StringSplitOptions.RemoveEmptyEntries);
+                StringBuilder sb = new StringBuilder();
+                for (int a = ultimora.Length - 1; a >= 0; --a) {
+                    sb.Append(ultimora[a] + Environment.NewLine + Environment.NewLine);
+                }
+                se = new Segnalazione { Testo = sb.ToString() };
             }
-            Segnalazione se = new Segnalazione { Testo = sb.ToString() };
+            else
+                se = new Segnalazione { Testo = "Nessun file di log oggi" };
             return View("Index", se);
         }
 
@@ -101,7 +106,6 @@ namespace Laser.Orchard.DevTools.Controllers {
             if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
                 return new HttpUnauthorizedResult();
             IEnumerable<ScheduledTaskRecord> st = _repositoryScheduledTask.Fetch(t => true).OrderBy(x => x.ScheduledUtc);
-
 
             return View("ShowScheduledTask", (object)st);
         }
@@ -146,7 +150,8 @@ namespace Laser.Orchard.DevTools.Controllers {
                 foreach (string thekey in all) {
                     _cacheStorageProvider.Remove(thekey);
                 }
-            } else
+            }
+            else
                 _cacheStorageProvider.Remove(key);
             return RedirectToAction("ShowCachedData", "Admin");
         }
@@ -161,7 +166,8 @@ namespace Laser.Orchard.DevTools.Controllers {
                 foreach (string thekey in all) {
                     System.IO.File.Delete(thekey);
                 }
-            } else
+            }
+            else
                 System.IO.File.Delete(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Cache/" + key));
             return RedirectToAction("ShowCachedData", "Admin");
         }
@@ -177,7 +183,6 @@ namespace Laser.Orchard.DevTools.Controllers {
             return View("index", se);
         }
 
-
         [HttpGet]
         [Admin]
         public ActionResult GetValidApiKey() {
@@ -188,7 +193,8 @@ namespace Laser.Orchard.DevTools.Controllers {
                 var token = apiKeyService.GetValidApiKey(iv);
                 var tokenTS = apiKeyService.GetValidApiKey(iv, true);
                 se = new Segnalazione { Testo = string.Format("ApiKey: {0} \r\nApiKey: {1} \r\nAKIV: {2}", token, tokenTS, iv) };
-            } else {
+            }
+            else {
                 se = new Segnalazione { Testo = "Feature Laser.Orchard.StartupConfig.WebApiProtection not active." };
             }
             return View("index", se);
