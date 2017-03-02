@@ -11,13 +11,12 @@
 @using System.Collections.Generic;
 @using System.Linq;
 @functions{
-    string retString = "Error"; //possible outcomes: "Error","OK"
+    string retString = "Error"; //possible outcomes: "Error","OK","NoPush"
 
     string eMsg = String.Empty; //used to track errors and put them in the WF state
 
     //additional services
     ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
-    IFieldIndexService _fieldIndexService;
     IContentManager _contentManager;
     IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
 }
@@ -28,7 +27,6 @@
     try {
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
-        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         //Identify the store
         int storeId = _fieldIndexPartRecord.Table
@@ -55,37 +53,25 @@
         dynamic dCaller = caller;
         Model.Tokens["Workflow"].SetState("CustomerName", dCaller.User.ProfilePart.Name.Value ?? "");
         Model.Tokens["Workflow"].SetState("CustomerSurname", dCaller.User.ProfilePart.Surname.Value ?? "");
-        decimal storeVisits = (dCaller.User.ProfilePart.VisiteaNegozio.Value ?? (decimal)0) + 1;
-        dCaller.User.ProfilePart.VisiteaNegozio.Value = storeVisits;
-        _fieldIndexService.Set(
-                dCaller.FieldIndexPart,
-                "ProfilePart",
-                "VisiteaNegozio",
-                "",
-                storeVisits,
-                typeof(decimal)
-            );
+        //only update states if the user was not in the store OR if he had entered more than 10 minutes ago
+        string prevStore = dCaller.User.ProfilePart.InStore.Value;
+        DateTime? oldAccess = dCaller.User.ProfilePart.AccessoNegozio.DateTime;
         DateTime now = DateTime.UtcNow;
-        dCaller.User.ProfilePart.AccessoNegozio.DateTime = now; //the DateTimeField is always stored as UTC
-        _fieldIndexService.Set(
-                dCaller.FieldIndexPart,
-                "ProfilePart",
-                "AccessoNegozio",
-                "",
-                now,
-                typeof(DateTime)
-            );
-        dCaller.User.ProfilePart.InStore.Value = store.Id.ToString();
-        _fieldIndexService.Set(
-                dCaller.FieldIndexPart,
-                "ProfilePart",
-                "InStore",
-                "",
-                store.Id.ToString(),
-                typeof(string)
-            );
-        _communicationService.UserToContact((IUser)(dCaller.UserPart));
-        retString = "OK";
+        if (prevStore != store.Id.ToString() || (oldAccess == null || ((TimeSpan)now.Subtract(oldAccess.Value)).TotalMinutes > 10)) {
+            decimal storeVisits = (dCaller.User.ProfilePart.VisiteaNegozio.Value ?? (decimal)0) + 1;
+            dCaller.User.ProfilePart.VisiteaNegozio.Value = storeVisits;
+
+            dCaller.User.ProfilePart.AccessoNegozio.DateTime = now; //the DateTimeField is always stored as UTC
+            dCaller.User.ProfilePart.InStore.Value = store.Id.ToString();
+            // forza la pubblicazione per aggiornare i fieldIndex
+            _contentManager.Create(dCaller.ContentItem, VersionOptions.DraftRequired);
+            _contentManager.Publish(dCaller.ContentItem);
+            _communicationService.UserToContact((IUser)dCaller);
+            retString = "OK";
+        } else {
+            retString = "NoPush";
+        }
+
     } catch (Exception ex) {
         eMsg += ex.Message + Environment.NewLine;
         retString = "Error";

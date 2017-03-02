@@ -11,9 +11,15 @@
          var relatedVisita=_contentManager.Get(idVisita);
          // check necessario il fase di creazione contestuale della visita e degli inviti
          if(relatedVisita != null) {
-             item.ActivityPart.DateTimeStart = relatedVisita.ActivityPart.DateTimeStart;
-             item.ActivityPart.DateTimeEnd = relatedVisita.ActivityPart.DateTimeEnd;
-             item.ActivityPart.AllDay = relatedVisita.ActivityPart.AllDay;
+			if (item.ActivityPart.DateTimeStart != relatedVisita.ActivityPart.DateTimeStart ){
+				item.ActivityPart.DateTimeStart = relatedVisita.ActivityPart.DateTimeStart;
+            }
+			if (item.ActivityPart.DateTimeEnd != relatedVisita.ActivityPart.DateTimeEnd ){
+				item.ActivityPart.DateTimeEnd = relatedVisita.ActivityPart.DateTimeEnd;
+            }
+			if (item.ActivityPart.AllDay != relatedVisita.ActivityPart.AllDay){
+				item.ActivityPart.AllDay = relatedVisita.ActivityPart.AllDay;
+            }
          }
      }
      WriteLiteral("OK");
@@ -22,4 +28,3 @@
        WriteLiteral("Error");
   }
 }
-

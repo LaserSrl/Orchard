@@ -36,6 +36,7 @@ using System.Web.Http;
 using OrchardCore = Orchard.Core;
 
 namespace Laser.Orchard.ContentExtension.Controllers {
+
     [WebApiKeyFilter(true)]
     public class ContentItemController : ApiController {
         private readonly IAuthenticationService _authenticationService;
@@ -54,7 +55,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         private readonly ITransactionManager _transactionManager;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         public Localizer T { get; set; }
- 
+
         public ContentItemController(
            ShellSettings shellSettings,
            ICsrfTokenHelper csrfTokenHelper,
@@ -88,7 +89,9 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             _transactionManager = transactionManager;
             _handlers = handlers;
         }
-        public IEnumerable<IContentHandler> Handlers {
+
+        public IEnumerable<IContentHandler> Handlers
+        {
             get { return _handlers.Value; }
         }
 
@@ -101,29 +104,26 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     return _utilsServices.GetResponse(ResponseType.Validation, T("No content with this Id").ToString());
                 else
                     if (li.Count() == 1)
-                        ContentToView = li[0];
-                    else
-                        ContentToView = _orchardServices.ContentManager.Get(id, VersionOptions.Latest);
+                    ContentToView = li[0];
+                else
+                    ContentToView = _orchardServices.ContentManager.Get(id, VersionOptions.Latest);
                 if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.ViewContent, ContentToView))
                     if (!_contentExtensionService.HasPermission(ContentToView.ContentType, Methods.Get, ContentToView))
                         return _utilsServices.GetResponse(ResponseType.UnAuthorized);
                 if (((dynamic)ContentToView).AutoroutePart != null) {
                     string tenantname = "";
                     if (string.IsNullOrWhiteSpace(_shellSettings.RequestUrlPrefix) == false) {
-                        tenantname = _shellSettings.RequestUrlPrefix  + "/";
+                        tenantname = _shellSettings.RequestUrlPrefix + "/";
                     }
                     return Redirect(Url.Content("~/" + tenantname + "WebServices/Alias?displayAlias=" + ((dynamic)ContentToView).AutoroutePart.DisplayAlias));
                 }
                 else {
                     throw new Exception("Method not implemented, content without AutoroutePart");
                 }
-
             }
             else
                 return _utilsServices.GetResponse(ResponseType.None, T("No content with this Id").ToString());
             //return (_utilsServices.GetResponse(ResponseType.Success));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
-
-
         }
 
         /// <summary>
@@ -209,23 +209,23 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     }
                     else
                         if (tipofield == typeof(EnumerationField).Name) {
-                            string[] elencovalori = singleField.Settings["EnumerationFieldSettings.Options"].Split(new string[] { "\r\n" }, StringSplitOptions.None);
-                            List<string> elencoValoriInLingua = new List<string>();
-                            List<ElementDetail> ele = new List<ElementDetail>();
-                            foreach (string val in elencovalori) {
-                                ElementDetail tvm = new ElementDetail();
-                                tvm.Value = val;
-                                tvm.Name = _localizedStringManager.GetLocalizedString("UserEnumeratore", val, Language);
-                                ele.Add(tvm);
-                            }
-                            ResponseElement re = new ResponseElement();
-                            re.Values = ele;
-                            bool singlechoise = true;
-                            if (singleField.Settings["EnumerationFieldSettings.ListMode"] == "Listbox" || singleField.Settings["EnumerationFieldSettings.ListMode"] == "Checkbox")
-                                singlechoise = false;
-                            re.Setting = new ResponseSetting { Type = "Enumerator", Required = Convert.ToBoolean(singleField.Settings["EnumerationFieldSettings.Required"]), SingleChoice = singlechoise };
-                            eObj.Add(ctpd.PartDefinition.Name + "." + singleField.Name, re);
+                        string[] elencovalori = singleField.Settings["EnumerationFieldSettings.Options"].Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> elencoValoriInLingua = new List<string>();
+                        List<ElementDetail> ele = new List<ElementDetail>();
+                        foreach (string val in elencovalori) {
+                            ElementDetail tvm = new ElementDetail();
+                            tvm.Value = val;
+                            tvm.Name = _localizedStringManager.GetLocalizedString("UserEnumeratore", val, Language);
+                            ele.Add(tvm);
                         }
+                        ResponseElement re = new ResponseElement();
+                        re.Values = ele;
+                        bool singlechoise = true;
+                        if (singleField.Settings["EnumerationFieldSettings.ListMode"] == "Listbox" || singleField.Settings["EnumerationFieldSettings.ListMode"] == "Checkbox")
+                            singlechoise = false;
+                        re.Setting = new ResponseSetting { Type = "Enumerator", Required = Convert.ToBoolean(singleField.Settings["EnumerationFieldSettings.Required"]), SingleChoice = singlechoise };
+                        eObj.Add(ctpd.PartDefinition.Name + "." + singleField.Name, re);
+                    }
                 }
             }
 
@@ -304,9 +304,9 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     return _utilsServices.GetResponse(ResponseType.Validation, T("No content with this Id").ToString());
                 else
                     if (li.Count() == 1)
-                        ContentToDelete = li[0];
-                    else
-                        ContentToDelete = _orchardServices.ContentManager.Get(id, VersionOptions.Latest);
+                    ContentToDelete = li[0];
+                else
+                    ContentToDelete = _orchardServices.ContentManager.Get(id, VersionOptions.Latest);
                 if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.DeleteContent, ContentToDelete))
                     if (!_contentExtensionService.HasPermission(ContentToDelete.ContentType, Methods.Delete, ContentToDelete))
                         return _utilsServices.GetResponse(ResponseType.UnAuthorized);
@@ -336,9 +336,9 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                 return DeleteContent(id);
             else
                 if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken())
-                    return DeleteContent(id);
-                else
-                    return (_utilsServices.GetResponse(ResponseType.InvalidXSRF));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
+                return DeleteContent(id);
+            else
+                return (_utilsServices.GetResponse(ResponseType.InvalidXSRF));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
         }
 
         /// <summary>
@@ -370,13 +370,14 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                 return StoreNewContentItem(eObj, null);
             else
                 if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
-                    return StoreNewContentItem(eObj, currentUser.ContentItem);
-                }
-                else
-                    return (_utilsServices.GetResponse(ResponseType.InvalidXSRF));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
+                return StoreNewContentItem(eObj, currentUser.ContentItem);
+            }
+            else
+                return (_utilsServices.GetResponse(ResponseType.InvalidXSRF));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
         }
 
         #region private method
+
         /// <summary>
         /// Formato DateTimeField: 2009-06-15T13:45:30  yyyy-MM-ddThh:mm:ss NB: L’ora deve essere riferita all’ora di Greenwich
         /// </summary>
@@ -404,11 +405,19 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                 List<ContentItem> li = _orchardServices.ContentManager.GetAllVersions(IdContentToModify).ToList();
                 if (li.Count() == 0)
                     return _utilsServices.GetResponse(ResponseType.Validation, "No content with this Id");
-                else
-                    if (li.Count() == 1)
-                        NewOrModifiedContent = li[0];
-                    else
+                else {
+                    var typeSettings = li[0].TypeDefinition.Settings.TryGetModel<ContentTypeSettings>();
+                    if (typeSettings.Draftable) {
                         NewOrModifiedContent = _orchardServices.ContentManager.Get(IdContentToModify, VersionOptions.DraftRequired); // quando edito estraggo sempre il draftrequired (come in Orchard.Core.Contents.Controllers)
+                    }
+                    else {
+                        NewOrModifiedContent = _orchardServices.ContentManager.Get(IdContentToModify, VersionOptions.Latest);
+                    }
+                    //if (li.Count() == 1)
+                    //    NewOrModifiedContent = li[0];
+                    //else
+                    //    NewOrModifiedContent = _orchardServices.ContentManager.Get(IdContentToModify, VersionOptions.DraftRequired); // quando edito estraggo sempre il draftrequired (come in Orchard.Core.Contents.Controllers)
+                }
                 if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.EditContent, NewOrModifiedContent))
                     if (!_contentExtensionService.HasPermission(tipoContent, Methods.Post, NewOrModifiedContent))
                         return _utilsServices.GetResponse(ResponseType.UnAuthorized);
@@ -441,15 +450,15 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     }
                     validateMessage = ValidateMessage(NewOrModifiedContent, "");
                     if (string.IsNullOrEmpty(validateMessage)) {
-                    //    _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.DraftRequired);
+                        //    _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.DraftRequired);
                     }
                     else {
                         rsp = _utilsServices.GetResponse(ResponseType.None, validateMessage);
                     }
                     if (NewOrModifiedContent.As<AutoroutePart>() != null) {
-                        ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
-                        _autorouteService.Value.ProcessPath(((dynamic)NewOrModifiedContent).AutoroutePart);
-                        _autorouteService.Value.PublishAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
+                        //           ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
+                        //           _autorouteService.Value.ProcessPath(((dynamic)NewOrModifiedContent).AutoroutePart);
+                        //           _autorouteService.Value.PublishAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
                         dynamic data = new ExpandoObject();
                         data.DisplayAlias = ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias;
                         data.Id = (Int32)(((dynamic)NewOrModifiedContent).Id);
@@ -475,6 +484,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                 // forza il publish solo per i contenuti non draftable
                 var typeSettings = NewOrModifiedContent.TypeDefinition.Settings.TryGetModel<ContentTypeSettings>();
                 if ((typeSettings == null) || (typeSettings.Draftable == false)) {
+                    NewOrModifiedContent.VersionRecord.Published = false; //not draftable items may have this flag set to published, and that would mean that the .Publish would not actually be executed.
                     _orchardServices.ContentManager.Publish(NewOrModifiedContent);
                 }
                 // propaga l'evento Updated per il ContentItem

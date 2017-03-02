@@ -40,7 +40,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             // check sulle permission (esclude il modulo Generator)
             if (_controllerContextAccessor.Context.Controller.GetType().Namespace != "Laser.Orchard.Generator.Controllers") {
                 if (_orchardServices.Authorizer.Authorize(Permissions.ShowContacts) == false) {
-                    throw new OrchardSecurityException(T("You do not have permission to access this content."));
+                    throw new System.Security.SecurityException("You do not have permission to access this content.");
                 }
             }
             if (_utilsService.FeatureIsEnabled("Laser.Orchard.UserProfiler")) {

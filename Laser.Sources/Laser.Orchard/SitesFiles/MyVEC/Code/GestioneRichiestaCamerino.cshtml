@@ -1,4 +1,5 @@
 ﻿@using Orchard;
+@using Orchard.Security;
 @using Orchard.ContentManagement;
 @using Orchard.Data;
 @using Orchard.Projections.Models;
@@ -13,7 +14,6 @@
 
     IContentManager _contentManager;
     IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
-    IFieldIndexService _fieldIndexService;
 }
 @{
     if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
@@ -22,13 +22,12 @@
     try {
         //Model.ContentItem is a RichiestaInvito
         dynamic richiesta = Model.ContentItem;
-        if ((bool)(richiesta.RichiestaCamerino.Evasa.Value)) {
+        if ((bool)(richiesta.RichiestaCamerino.Evasa.Value ?? false)) {
             //Handled already.
             retString = "DoNothing";
         } else {
             _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
             _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
-            _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
             //Identify the store
             int storeId = _fieldIndexPartRecord.Table
                 .Where(f =>
@@ -43,14 +42,6 @@
             }
             int[] sIds = new int[] { storeId };
             richiesta.RichiestaCamerino.Negozio.Ids = sIds;
-            _fieldIndexService.Set(
-                richiesta.FieldIndexPart,
-                "RichiestaCamerino",
-                "Negozio",
-                "",
-                String.Join(",",sIds.Select<int, string>(id => "{" + id.ToString() + "}")),
-                typeof(string)
-            );
             //Identify the Sales assistants
             string csvIds = store.PuntoVendita.IdsSalesAssistants.Value;
             if (string.IsNullOrWhiteSpace(csvIds)) {
@@ -59,7 +50,7 @@
             //Identify the customer
             var caller = Model.OrchardServices.WorkContext.CurrentUser;
             if (caller == null) {
-                throw new Exception("Impossibile identificare l'utente che ha effettuato la Richiesta Camerino.");
+                caller = (IUser)(richiesta.CommonPart.Owner);
             }
             dynamic dCaller = caller;
             //Extract product information
@@ -75,6 +66,9 @@
             } else {
                 Model.Tokens["Workflow"].SetState("ProductColour", colour.TitlePart.Title);
             }
+            
+            // imposto la title con Nome Cognome dell'utente che ha richiesto 
+            richiesta.TitlePart.Title = dCaller.User.ProfilePart.Name.Value + " " + dCaller.User.ProfilePart.Surname.Value;
             //Set workflow states used by the Push Activity
             Model.Tokens["Workflow"].SetState("RecipientsList", csvIds);
             Model.Tokens["Workflow"].SetState("CustomerName", dCaller.User.ProfilePart.Name.Value ?? "");

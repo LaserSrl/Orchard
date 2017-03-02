@@ -24,7 +24,6 @@
     //Services
     IHIDAPIService _hidAPIService;
     IContentManager _contentManager;
-    IFieldIndexService _fieldIndexService;
     IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
 
     string eMsg = String.Empty;
@@ -55,17 +54,45 @@
     List<HIDCredentialContainer> credentialsFeedbackDataHIDcc = null;
     List<string> credentialsFeedbackDataErrors = null;
 
+    //Custom serializer for a List<String>
+    public string MyStringSerializer(IEnumerable<string> ss) {
+        return String.Join(",", ss.Select(s => String.Format(@"{{{0}}}{1}", s.Length.ToString(), s)));
+    }
+    //Custom serializer for List<int>
+    public string MyIntSerializer(IEnumerable<int> ii) {
+        return String.Join(",", ii.Select(i => string.Format(@"{{{0}}}", i.ToString())));
+    }
+    //Custom serializer for HIDCredentialContainer
+    //in the feedback emails we use the following properties:
+    // - Id
+    // - Manufacturer
+    // - Model
+    // - Credentials
+    public string MyCredentialContainerSerializer(HIDCredentialContainer cc) {
+        string sID = String.Format(@"{{{0}}}{1}", cc.Id.ToString().Length.ToString(), cc.Id.ToString());
+        string sManufacturer = String.Format(@"{{{0}}}{1}", (cc.Manufacturer??"").Length.ToString(), cc.Manufacturer??"");
+        string sModel = String.Format(@"{{{0}}}{1}", (cc.Model??"").Length.ToString(), cc.Model??"");
+        string sCreds = MyStringSerializer(cc.Credentials.Select(c => MyCredentialSerializer(c)));
+        string sCredentials = String.Format(@"{{{0}}}{1}", sCreds.Length.ToString(), sCreds);
+        return string.Format(@"{0},{1},{2},{3}",
+            sID,
+            sManufacturer,
+            sModel,
+            sCredentials
+            );
+    }
+    //Custom serializer for HIDCredential
+    //In the feedback email we use the following properties:
+    // - Status,
+    // - CardNumber
+    public string MyCredentialSerializer(HIDCredential cred) {
+        return string.Format(@"{0},{1}", cred.CardNumber, cred.Status);
+    }
+
+
     private void AssignHiddenFieldValue(int schedaId, string value) {
         dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
         scheda.SchedaInvito.HIDCredentialStatus.Value = value;
-        _fieldIndexService.Set(
-            scheda.FieldIndexPart,
-            "SchedaInvito",
-            "HIDCredentialStatus",
-            "",
-            value,
-            typeof(string)
-        );
     }
 
     private void AddToFeedbackDataLists(int vId, int iId, int hidId, HIDCredentialContainer cc, string error) {
@@ -78,6 +105,7 @@
 
     private void IssueCredentialOK(KeyValuePair<int, int> action, HIDCredentialContainer cContainer, HIDUser hidUser) {
         try {
+            bool schedaUpdated = false;
             int schedaId = action.Value;
             //the Key is the action 1=>ISSUE, 2=>REVOKE
             //first, get the status of the credentials for the invito
@@ -89,10 +117,11 @@
                 AddToLogString(string.Format("IssueCredentialOK for invite {2} (id {0}), with previous status: {1}",
                     schedaId.ToString(), serialized, _contentManager.GetItemMetadata(scheda).DisplayText));
             }
-            var credential = cContainer.Credentials.First(cred => !cred.Status.Contains("REVOK"));
+            var credential = cContainer.Credentials.FirstOrDefault(cred => !cred.Status.Contains("REVOK"));
             if (credStatuses.Count == 0) {
                 //we never processed this SchedaInvito
                 AssignHiddenFieldValue(schedaId, string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
+                schedaUpdated = true;
                 //we changed a field, so we add to the feedbackData lists
                 AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
             } else {
@@ -103,6 +132,7 @@
                     //we never used this CredentialContainer for this SchedaInvito
                     credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
+                    schedaUpdated = true;
                     //we changed a field, so we add to the feedbackData lists
                     AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
                 } else {
@@ -114,18 +144,25 @@
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                         credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
+                        schedaUpdated = true;
                         //we changed a field, so we add to the feedbackData lists
                         AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                            "In precedenza il MobileID era stato revocato.");
+                            ""); //"In precedenza il MobileID era stato revocato."); //since it's a successful issue, we don't write error strings
                     } else if (status.StartsWith("TRIED")) {
                         //we previously attempted to issue credentials, but failed
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                         credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
+                        schedaUpdated = true;
                         //we changed a field, so we add to the feedbackData lists
                         AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
                     }
                 }
+            }
+            if(schedaUpdated){
+                // force publish to update fieldIndexes
+                _contentManager.Create(scheda, VersionOptions.DraftRequired);
+                _contentManager.Publish(scheda);
             }
             if (LogEverything) {
                 AddToLogString(string.Format("IssueCredentialOK for invite id {0}, with final status: {1}", schedaId.ToString(), string.Join(",", credStatuses)));
@@ -144,6 +181,7 @@
 
     private void RevokeCredentialOK(KeyValuePair<int, int> action, HIDCredentialContainer cContainer, HIDUser hidUser) {
         try {
+            bool schedaUpdated = false;
             int schedaId = action.Value;
             dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
             string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
@@ -152,13 +190,15 @@
                 AddToLogString(string.Format("RevokeCredentialOK for invite {2} (id {0}), with previous status: {1}",
                     schedaId.ToString(), serialized, _contentManager.GetItemMetadata(scheda).DisplayText));
             }
-            var credential = cContainer.Credentials.First(cred => cred.Status.Contains("REVOK"));
+            var credential = cContainer.Credentials.FirstOrDefault(cred => cred.Status.Contains("REVOK"));
             if (credStatuses.Count == 0) {
                 //we never processed this SchedaInvito
                 AssignHiddenFieldValue(schedaId, string.Format("REVOKED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
+                schedaUpdated = true;
                 //we changed a field, so we add to the feedbackData lists
-                AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                    "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
+                //Never notify about revokes
+                //AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
+                //    "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
             } else {
                 //find the state for this CredentialContainer in the statuses
                 Func<string, bool> myStatus = st => st.Contains(string.Format(@" {0} ", cContainer.Id));
@@ -167,18 +207,27 @@
                     //we never used this CredentialContainer for this SchedaInvito
                     credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
+                    schedaUpdated = true;
                     //we changed a field, so we add to the feedbackData lists
-                    AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                        "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
+                    //Never notify about revokes
+                    //AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
+                    //    "Abbiamo revocato il MobileID, ma non lo avevamo mai rilasciato per questa visita.");
                 } else if (status.StartsWith("REVOKED")) {
                     //do nothing
                 } else {
                     credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                     credStatuses.Add(string.Format("REVOKED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                     AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
+                    schedaUpdated = true;
                     //we changed a field, so we add to the feedbackData lists
-                    AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
+                    //Never notify about revokes
+                    //AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
                 }
+            }
+            if (schedaUpdated) {
+                // force publish to update fieldIndexes
+                _contentManager.Create(scheda, VersionOptions.DraftRequired);
+                _contentManager.Publish(scheda);
             }
             if (LogEverything) {
                 AddToLogString(string.Format("RevokeCredentialOK for invite id {0}, with final status: {1}", schedaId.ToString(), string.Join(",", credStatuses)));
@@ -218,8 +267,8 @@
                     }
                 } else if (cContainer.Error == CredentialErrors.CredentialDeliveredAlready) {
                     //update the SchedaInvito for which we had to issue a MobileID, and pack data for the feedback step
-                    HIDCredential credential = cContainer.Credentials.First(cred => cred.Status != "REVOKED");
-                    if (credential.Status.StartsWith("ISSUE") || credential.Status == "ISSUING") {
+                    HIDCredential credential = cContainer.Credentials.FirstOrDefault(cred => cred.Status != "REVOKED");
+                    if (credential != null && (credential.Status.StartsWith("ISSUE") || credential.Status == "ISSUING")) {
                         //things are fine
                         foreach (KeyValuePair<int, int> action in actions.Where(act => act.Key == 1)) {
                             IssueCredentialOK(action, cContainer, hidUser);
@@ -232,13 +281,16 @@
                             dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
                             string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
                             List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                            string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED"));
+                            string status = string.Format("TRIED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0);
                             credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                             credStatuses.Add(status);
                             AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                             //we changed a field, so we add to the feedbackData lists
                             AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
                                 "ERRORE: Non è stato possibile assegnare un MobileID, perchè ce ne è già un'altro in uno stato non valido.");
+                            // force publish to update fieldIndexes
+                            _contentManager.Create(scheda, VersionOptions.DraftRequired);
+                            _contentManager.Publish(scheda);
                             if (LogEverything) {
                                 AddToLogString("ERROR: It was impossible to issue a MobileID: there is another one in an invalid state.");
                             }
@@ -257,13 +309,17 @@
                         dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
                         List<string> credStatuses = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value))
                             .Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                        string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id);
+                        HIDCredential credential = cContainer.Credentials.FirstOrDefault(cred => cred.Status != "REVOKED");
+                        string status = string.Format("TRIED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0);
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                         credStatuses.Add(status);
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                         //we changed a field, so we add to the feedbackData lists
                         AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
                             string.Format("ERRORE: Non è stato possibile assegnare un MobileID. Errore interno: {0}", UserErrorString(hidUser)));
+                        // force publish to update fieldIndexes
+                        _contentManager.Create(scheda, VersionOptions.DraftRequired);
+                        _contentManager.Publish(scheda);
                         if (LogEverything) {
                             AddToLogString(string.Format("ERROR: It was impossible to issue a MobileID: there is another one in an invalid state. Internal error: {0}", UserErrorString(hidUser)));
                         }
@@ -324,13 +380,18 @@
                         dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(schedaId));
                         string serialized = ((string)(scheda.SchedaInvito.HIDCredentialStatus.Value)) ?? "";
                         List<string> credStatuses = serialized.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(fTrim).ToList();
-                        string status = string.Format("TRIED {0} {1}", cContainer.Id, cContainer.Credentials.First(cred => cred.Status != "REVOKED").Id);
+                        HIDCredential credential = cContainer.Credentials.FirstOrDefault(cred => cred.Status != "REVOKED");
+                        string status = string.Format("TRIED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0);
                         credStatuses = credStatuses.Where(st => !st.Contains(string.Format(@" {0} ", cContainer.Id))).ToList();
                         credStatuses.Add(status);
                         AssignHiddenFieldValue(schedaId, string.Join(",", credStatuses));
                         //we changed a field, so we add to the feedbackData lists
-                        AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
-                            string.Format("ERRORE: Non è stato possibile revocare un MobileID. Errore interno: {0}", UserErrorString(hidUser)));
+                        //Never notify about revokes
+                        //AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer,
+                        //    string.Format("ERRORE: Non è stato possibile revocare un MobileID. Errore interno: {0}", UserErrorString(hidUser)));
+                        // force publish to update fieldIndexes
+                        _contentManager.Create(scheda, VersionOptions.DraftRequired);
+                        _contentManager.Publish(scheda);
                         if (LogEverything) {
                             AddToLogString(string.Format("ERROR: It was impossible to revoke a MobileID. Internal error: {0}", UserErrorString(hidUser)));
                         }
@@ -456,16 +517,16 @@
                     if (LogErrors) {
                         AddToErrorString(string.Format("ERROR: User {0} has no credential container.", user.Email));
                     }
-                    AddToFeedbackDataLists(0, 0, hidUser.Id, new HIDCredentialContainer(),
-                        string.Format("Errore: L'utente ({0}) non ha dispositivi attivi associati.", user.Email));
+                    //AddToFeedbackDataLists(0, 0, hidUser.Id, new HIDCredentialContainer(),
+                    //    string.Format("Errore: L'utente ({0}) non ha dispositivi attivi associati.", user.Email));
                 }
             } else {
                 //we could not find the HIDUser
-                AddToFeedbackDataLists(0, 0, 0, new HIDCredentialContainer(),
-                    string.Format(@"Errore: Non è stato possibile individuare un'utenza HID corrispondente alla email: {0}. Errore interno: {1}",
-                        user.Email,
-                        SearchErrorString(sr, user)
-                    ));
+                //AddToFeedbackDataLists(0, 0, 0, new HIDCredentialContainer(),
+                //    string.Format(@"Errore: Non è stato possibile individuare un'utenza HID corrispondente alla email: {0}. Errore interno: {1}",
+                //        user.Email,
+                //        SearchErrorString(sr, user)
+                //    ));
                 if (LogEverything) {
                     AddToLogString(string.Format("ERROR: Impossible to find HID user: {0}", SearchErrorString(sr, user)));
                 }
@@ -519,7 +580,6 @@
         //resolve service
         _hidAPIService = Model.OrchardServices.WorkContext.Resolve<IHIDAPIService>();
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
-        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         //Based on DateTime.Now, search visits we need to operate on
         DateTime rightNow = DateTime.Now;
@@ -558,33 +618,16 @@
                     item.Visita.PushInviata.Value = "Done";
                 }
                 item.Visita.Statovisita.Value = "Terminata";
-                _fieldIndexService.Set(
-                    item.FieldIndexPart,
-                    "Visita",
-                    "Statovisita",
-                    "",
-                    "Terminata",
-                    typeof(string)
-                );
                 // Revoke credentials for all guests
                 credentialAction = 2;
                 if (LogEverything) {
                     AddToLogString(string.Format("Should revoke credentials for visit: {0}.", _contentManager.GetItemMetadata(visit).DisplayText));
                 }
-            }
-            if (item.ActivityPart.DateTimeStart.Date >= today) {
+            } else if (item.ActivityPart.DateTimeStart.Date >= today) {
                 if (item.ActivityPart.DateTimeStart.Date == today) {
                     //this visit starts today
                     // Set its state to "In corso"
                     item.Visita.Statovisita.Value = "In corso";
-                    _fieldIndexService.Set(
-                        item.FieldIndexPart,
-                        "Visita",
-                        "Statovisita",
-                        "",
-                        "In corso",
-                        typeof(string)
-                    );
                 }
                 // Issue credentials for all guests
                 credentialAction = 1;
@@ -593,6 +636,10 @@
                 }
             }
             if (credentialAction > 0) {
+                // force publish on visita to update fieldIndexes
+                _contentManager.Create(item, VersionOptions.DraftRequired);
+                _contentManager.Publish(item);
+                // execute issue or revoke
                 var fieldsQuery = _fieldIndexPartRecord.Table
                     .Where(f =>
                         f.StringFieldIndexRecords.Any(r =>
@@ -637,11 +684,21 @@
     Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
     Model.Tokens["Workflow"].SetState("LoggingInformation", string.Join(Environment.NewLine, taskLog));
     if (credentialsFeedbackDataVisitIds.Count() != 0) {
-        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataVisitIds", credentialsFeedbackDataVisitIds);
-        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataInviteIds", credentialsFeedbackDataInviteIds);
-        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDUserIds", credentialsFeedbackDataHIDUserIds);
-        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDcc", credentialsFeedbackDataHIDcc);
-        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataErrors", credentialsFeedbackDataErrors);
+        //Use custome serialization of everything, because importing Newtonsoft.Json in email templates causes dll conflicts
+        //Because of that, it's only safe to pass strings
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataVisitIds",
+            MyIntSerializer(credentialsFeedbackDataVisitIds));
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataInviteIds",
+            MyIntSerializer(credentialsFeedbackDataInviteIds));
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDUserIds",
+            MyIntSerializer(credentialsFeedbackDataHIDUserIds));
+        string ccString = MyStringSerializer(
+                credentialsFeedbackDataHIDcc.Select<HIDCredentialContainer, string>(cc => MyCredentialContainerSerializer(cc))
+            );
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataHIDcc",
+            ccString);
+        Model.Tokens["Workflow"].SetState("CredentialsFeedbackDataErrors",
+            MyStringSerializer(credentialsFeedbackDataErrors));
         retString = "ProcessedCredentials";
     } else if (string.IsNullOrWhiteSpace(eMsg)) {
         retString = "OK";

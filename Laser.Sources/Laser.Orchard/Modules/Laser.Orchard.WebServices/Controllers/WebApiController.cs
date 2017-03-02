@@ -106,11 +106,10 @@ namespace Laser.Orchard.WebServices.Controllers {
                 return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
                 //return GetJson(content, page, pageSize);
             }
-            catch (OrchardSecurityException) {
+            catch (System.Security.SecurityException) {
                 return Json(_utilsServices.GetResponse(ResponseType.InvalidUser), JsonRequestBehavior.AllowGet);
             }
         }
-
     }
 
     public class EnumStringConverter : Newtonsoft.Json.Converters.StringEnumConverter {

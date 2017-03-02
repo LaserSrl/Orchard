@@ -55,9 +55,11 @@
     <None Include="MyVEC\Code\AccessoInStore.cshtml" />
     <None Include="MyVEC\Code\AppDownloaded.cshtml" />
     <None Include="MyVEC\Code\AssociazioneVisitaContatto.cshtml" />
+    <None Include="MyVEC\Code\CheckEmailCreator.cshtml" />
     <None Include="MyVEC\Code\CheckPrenotazioneParcheggio.cshtml" />
     <None Include="MyVEC\Code\CheckTarga.cshtml" />
     <None Include="MyVEC\Code\GestioneRichiestaCamerino.cshtml" />
+    <None Include="MyVEC\Code\InserimentoRichiestaCamerino.cshtml" />
     <None Include="MyVEC\Code\NotificaInviata.cshtml" />
     <None Include="MyVEC\Code\ReadCredenzialiUtente.cshtml" />
     <None Include="MyVEC\Code\RegistraPartecipazione.cshtml" />
