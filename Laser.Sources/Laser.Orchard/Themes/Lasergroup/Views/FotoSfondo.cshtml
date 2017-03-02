@@ -1,19 +1,17 @@
 ﻿@{
     dynamic item = Model.ContentItem.ContentItem;
-    var imgurl = item.ElementoFascia.Image.FirstMediaUrl;
-    var title = item.TitlePart.Title;
     var testoBody = item.BodyPart.Text;
-    var nomeContenitore = item.ElementoFascia.NomeContenitore.Value;
 }
-<div id="@nomeContenitore" style="background-image:url('@imgurl');">
-    <div class="@(nomeContenitore + "-top")"></div>
+
+<div id="foto-sfondo" style="background-image:url('@item.ElementoFascia.Image.FirstMediaUrl');">
+    <div class="foto-sfondo-top"></div>
     
     @if (testoBody != "") {
         <div class="container">
             <div class="row">
                 <div class="col-sm-12 col-md-8">
                     <div class="space-40"></div>
-                    <h3 class="business-showcase-title">@title</h3>
+                    <h3 class="foto-sfondo-title">@item.TitlePart.Title</h3>
                     <div class="space-40"></div>
                 </div>
                 <div class="col-sm-12 col-md-4 hidden-xs hidden-sm">
@@ -22,5 +20,5 @@
             </div>
         </div>
     }
-    <div class="@(nomeContenitore + "-bottom")"></div>
+    <div class="foto-sfondo-bottom"></div>
 </div>

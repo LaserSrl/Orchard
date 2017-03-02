@@ -78,7 +78,11 @@
             for (var x = 0; x < prodotto.ProdottoDPart.TipologiaTaxonomyField.Taxonomy.length; x++) {
 
                 if (prodotto.ProdottoDPart.TipologiaTaxonomyField.Terms[z] == prodotto.ProdottoDPart.TipologiaTaxonomyField.Taxonomy[x].Id) {
-                    classeContenitore += prodotto.ProdottoDPart.TipologiaTaxonomyField.Taxonomy[x].ClasseContenitoreTextField + " ";
+
+                    var slug = prodotto.ProdottoDPart.TipologiaTaxonomyField.Taxonomy[x].Slug;
+                    var slugTerms = slug.split('/');
+
+                    classeContenitore += slugTerms[1] + " ";
 
                     categories +=
                                     '<div class="perspective-layer category-layer" style="background:' + prodotto.ProdottoDPart.TipologiaTaxonomyField.Taxonomy[x].ColoreInputField + '">' +

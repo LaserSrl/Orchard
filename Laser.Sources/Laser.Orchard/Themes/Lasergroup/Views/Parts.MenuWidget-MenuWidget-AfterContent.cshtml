@@ -34,7 +34,7 @@ else if (modalitaMenu == "Filtro") {
     var contentManager = services.ContentManager;
     <div class="overflow-hidden">
         <div id="filter" class="clearfix">
-            <a class="filter-label handel-got-d" href="#">Filter<i class="fa fa-angle-down"></i></a>
+            <a class="filter-label handel-got-d" href="#">@T("Filter")<i class="fa fa-angle-down"></i></a>
             <ul class="nav">
                 @foreach (var item in items) {
                     if (item.Text.Text == "Tutti") {
@@ -42,7 +42,11 @@ else if (modalitaMenu == "Filtro") {
                     } 
                     else {
                         var term = contentManager.Get(item.Content.Id);
-                        <li><a href="#@term.TipologiaProdottiTerm.ClasseContenitore.Value">@item.Text</a></li>
+
+                        string slug = term.AutoroutePart.DisplayAlias;
+                        var slugTerms = slug.Split('/');
+                        
+                        <li><a href="#@slugTerms[1]">@item.Text</a></li>
                     }
                 }
             </ul>

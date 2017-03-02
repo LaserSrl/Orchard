@@ -1,10 +1,6 @@
 ﻿@{
     dynamic item = Model.ContentItem;
-    string tipoContenuto = "";
-    
-    if (item.ContentType == "HtmlWidget") {
-        tipoContenuto = item.HtmlWidget.Specializzazione.Value;
-    }
+    string tipoContenuto = item.HtmlWidget.Specializzazione.Value;
 }
 
 @switch (tipoContenuto) {
