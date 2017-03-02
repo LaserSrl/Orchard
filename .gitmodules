@@ -4,3 +4,6 @@
 [submodule "Nwazet.Commerce"]
 	path = Nwazet.Commerce
 	url = https://github.com/MatteoPiovanelli-Laser/Nwazet.Commerce.git
+[submodule "Four2n.MiniProfiler"]
+	path = Four2n.MiniProfiler
+	url = https://github.com/LaserSrl/Four2n.MiniProfiler.git
