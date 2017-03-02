@@ -35,6 +35,9 @@ namespace Laser.Orchard.WebServices.Controllers {
                         return Json(error, JsonRequestBehavior.AllowGet);
                     }
                 }
+                // verifica che le icon non siano state eliminate
+                listIconIds = _contentManager.Query().ForContentItems(listIconIds).List().Select(x => x.Id).ToList<int>();
+
             } catch (Exception ex) {
                 var error = _utilsServices.GetResponse(StartupConfig.ViewModels.ResponseType.None);
                 error.ErrorCode = StartupConfig.ViewModels.ErrorCode.GenericError;
