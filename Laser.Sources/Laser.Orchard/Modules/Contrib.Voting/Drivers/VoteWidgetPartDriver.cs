@@ -12,7 +12,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Data;
 
 namespace Contrib.Voting.Drivers {
-    public class VoteWidgetPartDriver : ContentPartDriver<VoteWidgetPart> {
+    public class VoteWidgetPartDriver : ContentPartCloningDriver<VoteWidgetPart> {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IRepository<ResultRecord> _resultRepository;
@@ -101,6 +101,14 @@ namespace Contrib.Voting.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("ContentType", part.ContentType);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Ascending", part.Ascending);
+        }
+
+        protected override void Cloning(VoteWidgetPart originalPart, VoteWidgetPart clonePart, CloneContentContext context) {
+            clonePart.FunctionName = originalPart.FunctionName;
+            clonePart.ContentType = originalPart.ContentType;
+            clonePart.Count = originalPart.Count;
+            clonePart.Ascending = originalPart.Ascending;
+            clonePart.Dimension = originalPart.Dimension;
         }
 
         private IEnumerable<string> GetContentTypes() {
