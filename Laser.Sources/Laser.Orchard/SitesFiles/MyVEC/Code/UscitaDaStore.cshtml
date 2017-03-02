@@ -2,6 +2,8 @@
 @using Laser.Orchard.CommunicationGateway.Services;
 @using Orchard;
 @using Orchard.ContentManagement;
+@using Orchard.Data;
+@using Orchard.Projections.Models;
 @using Orchard.Projections.Services;
 @using Orchard.Security;
 @using Orchard.Users.Models;
@@ -15,7 +17,8 @@
 
     //additional services
     ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
-    IFieldIndexService _fieldIndexService;
+    IContentManager _contentManager;
+    IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
 }
 @{
     if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
@@ -23,9 +26,16 @@
     }
     try {
         _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
-        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         //Identify the store
-        dynamic store = Model.ContentItem;
+        int storeId = _fieldIndexPartRecord.Table
+            .Where(f =>
+                f.StringFieldIndexRecords.Any(r =>
+                    r.PropertyName == "PuntoVendita.DefaultStore." && r.Value != null && r.Value != "")
+            )
+            .Select(x => x.ContentItemRecord.Id).FirstOrDefault();
+        dynamic store = (dynamic)(_contentManager.Get(storeId));
         if (store == null) {
             throw new Exception("Impossibile identificare il negozio.");
         }
@@ -43,36 +53,15 @@
             throw new Exception("Ci sono stati dei problemi: l'utente non risulta mai entrato nel negozio.");
         }
         TimeSpan thisTime = DateTime.UtcNow.Subtract(accessTime); //the DateTimeField is always stored as UTC
-        totalTime += (decimal)thisTime.TotalMinutes;
-        decimal meanTime = totalTime / nVisits;
+        totalTime = Math.Round(totalTime + (decimal)thisTime.TotalMinutes, 2);
+        decimal meanTime = Math.Round(totalTime / nVisits, 2);
         dCaller.User.ProfilePart.InStore.Value = "";
-        _fieldIndexService.Set(
-                dCaller.FieldIndexPart,
-                "ProfilePart",
-                "InStore",
-                "",
-                "",
-                typeof(string)
-            );
         dCaller.User.ProfilePart.TotaleTempoNegozio.Value = totalTime;
-        _fieldIndexService.Set(
-                dCaller.FieldIndexPart,
-                "ProfilePart",
-                "TotaleTempoNegozio",
-                "",
-                totalTime,
-                typeof(decimal)
-            );
         dCaller.User.ProfilePart.PermanenzaMediaNegozio.Value = meanTime;
-        _fieldIndexService.Set(
-                dCaller.FieldIndexPart,
-                "ProfilePart",
-                "PermanenzaMediaNegozio",
-                "",
-                meanTime,
-                typeof(decimal)
-            );
-        _communicationService.UserToContact((IUser)(dCaller.UserPart));
+        // forza la pubblicazione per aggiornare i fieldIndex
+        _contentManager.Create(dCaller.ContentItem, VersionOptions.DraftRequired);
+        _contentManager.Publish(dCaller.ContentItem);
+        _communicationService.UserToContact((IUser)dCaller);
         retString = "OK";
     } catch (Exception ex) {
         eMsg += ex.Message + Environment.NewLine;

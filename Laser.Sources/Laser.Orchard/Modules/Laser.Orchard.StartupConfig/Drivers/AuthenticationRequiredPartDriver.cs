@@ -25,7 +25,7 @@ namespace Laser.Orchard.StartupConfig.Drivers {
             // check sulle permission (esclude il modulo Generator)
             if (_controllerContextAccessor.Context.Controller.GetType().Namespace != "Laser.Orchard.Generator.Controllers") {
                 if (_orchardServices.WorkContext.CurrentUser == null) {
-                    throw new OrchardSecurityException(T("You do not have permission to access this content."));
+                    throw new System.Security.SecurityException("You do not have permission to access this content.");
                 }
             }
             return null;

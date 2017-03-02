@@ -34,7 +34,7 @@ namespace Laser.Orchard.TaskScheduler.Services {
         /// </summary>
         /// <returns>A list of task schedulers found in the db</returns>
         public List<ScheduledTaskPart> GetAllTasks() {
-            List<ScheduledTaskPart> parts = _orchardServices.ContentManager.Query().ForPart<ScheduledTaskPart>().List().ToList();
+            List<ScheduledTaskPart> parts = _orchardServices.ContentManager.Query("ScheduledTask").ForPart<ScheduledTaskPart>().List().ToList();
             foreach (ScheduledTaskPart pa in parts.Where(p => p.RunningTaskId != 0)) {
                 //check whether the task is still running. It might have been stopped by someone or something
                 if (_repoTasks.Get(pa.RunningTaskId) == null) {
@@ -115,7 +115,7 @@ namespace Laser.Orchard.TaskScheduler.Services {
                     //we have to create a new record
                     if (!vm.Delete) {
                         //we only create it if it was not also deleted already
-                        ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.New<ScheduledTaskPart>("ScheduledTaskPart");
+                        ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.New<ScheduledTaskPart>("ScheduledTask");
                         vm.UpdatePart(part);
                         _orchardServices.ContentManager.Create(part);
                         vm.Id = part.Id;
@@ -181,30 +181,34 @@ namespace Laser.Orchard.TaskScheduler.Services {
         /// <returns>A <type>DateTime</type> object containing the moment when the task whoudl be scheduled next.</returns>
         public DateTime ComputeNextScheduledTime(ScheduledTaskPart part) {
             DateTime result = part.ScheduledStartUTC == null ? DateTime.UtcNow : part.ScheduledStartUTC.Value;
-            switch (part.PeriodicityUnit) {
-                case TimeUnits.Seconds:
-                    result = result.AddSeconds(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Minutes:
-                    result = result.AddMinutes(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Hours:
-                    result = result.AddHours(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Days:
-                    result = result.AddDays(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Weeks:
-                    result = result.AddDays(7 * part.PeriodicityTime);
-                    break;
-                case TimeUnits.Months:
-                    result = result.AddMonths(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Years:
-                    result = result.AddYears(part.PeriodicityTime);
-                    break;
-                default:
-                    break;
+            // incrementa la start date in base alla periodicità fino a raggiungere una start date futura
+            // la periodicità è sicuramente > 0 come verificato nell'handler, quindi il ciclo seguente non è infinito
+            while (result <= DateTime.UtcNow) {
+                switch (part.PeriodicityUnit) {
+                    case TimeUnits.Seconds:
+                        result = result.AddSeconds(part.PeriodicityTime);
+                        break;
+                    case TimeUnits.Minutes:
+                        result = result.AddMinutes(part.PeriodicityTime);
+                        break;
+                    case TimeUnits.Hours:
+                        result = result.AddHours(part.PeriodicityTime);
+                        break;
+                    case TimeUnits.Days:
+                        result = result.AddDays(part.PeriodicityTime);
+                        break;
+                    case TimeUnits.Weeks:
+                        result = result.AddDays(7 * part.PeriodicityTime);
+                        break;
+                    case TimeUnits.Months:
+                        result = result.AddMonths(part.PeriodicityTime);
+                        break;
+                    case TimeUnits.Years:
+                        result = result.AddYears(part.PeriodicityTime);
+                        break;
+                    default:
+                        break;
+                }
             }
             part.ScheduledStartUTC = result;
             return result;

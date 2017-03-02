@@ -8,6 +8,14 @@
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
 
+msgctxt "!=.CommunicationContactDriver"
+msgid "No log."
+msgstr "Nessun log."
+
+msgctxt "!=.CommunicationContactDriver"
+msgid "You do not have permission to access this content."
+msgstr "Mancano i permessi per accedere a questo contenuto."
+
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/AdvertisingAdmin/Edit.cshtml"
 msgid "Edit Advertising"
 msgstr "Modifica Comunicato"
@@ -668,6 +676,22 @@ msgctxt "Laser.Orchard.CommunicationGateway.Navigation.AdminMenu"
 msgid "Settings"
 msgstr "Impostazioni"
 
+msgctxt "Laser.Orchard.CommunicationGateway.Projections.ExcludeMasterContact"
+msgid "Communication Contacts"
+msgstr "Contatti"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Projections.ExcludeMasterContact"
+msgid "Exclude Master Contact"
+msgstr "Esclude il Contatto Master"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Projections.ExcludeMasterContact"
+msgid "Filter for real contacts (master contact will be excluded)"
+msgstr "Filtra i contatti reali (il contatto master verrà escluso)"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Projections.ExcludeMasterContact"
+msgid "Filter only real contacts (master contact will be excluded)"
+msgstr "Filtra solo i contatti reali (il contatto master verrà escluso)"
+
 msgctxt "Laser.Orchard.CommunicationGateway.Services.CommunicationService"
 msgid "Master Contact Created"
 msgstr "Contatto Master creato"
@@ -679,4 +703,20 @@ msgstr "Sono stati sincronizzati {0} profili utente"
 msgctxt "Laser.Orchard.CommunicationGateway.Services.CommunicationService"
 msgid "This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function."
 msgstr "Questo contatto è stato associato al suo utente dalla funzione di sincronizzazione in data {0:dd-MM-yyyy HH:mm}"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Tokens.UserContactToken"
+msgid "Contact bound to the user"
+msgstr "Contatto legato all'utente"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Tokens.UserContactToken"
+msgid "The contact bound to the user"
+msgstr "Il contatto legato all'utente"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Tokens.UserContactToken"
+msgid "User Contact"
+msgstr "Contatto dell'Utente"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Tokens.UserContactToken"
+msgid "UserContact"
+msgstr "ContattoUtente"
 

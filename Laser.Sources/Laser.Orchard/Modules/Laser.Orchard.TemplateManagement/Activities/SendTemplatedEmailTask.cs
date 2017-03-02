@@ -20,6 +20,7 @@ using Orchard.UI.Notify;
 using System.Collections.Specialized;
 
 namespace Laser.Orchard.TemplateManagement.Activities {
+
     [OrchardFeature("Laser.Orchard.TemplateEmailActivities")]
     public class MailActivity : Task {
         private readonly IOrchardServices _orchardServices;
@@ -27,7 +28,6 @@ namespace Laser.Orchard.TemplateManagement.Activities {
         private readonly IMembershipService _membershipService;
         private readonly ITemplateService _templateServices;
         private readonly INotifier _notifier;
-
 
         public const string MessageType = "ActionTemplatedEmail";
 
@@ -65,7 +65,6 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             get { return "SendTemplatedEmail"; }
         }
 
-
         public override LocalizedString Description {
             get { return T("Sends an e-mail using a template to a specific user."); }
         }
@@ -74,10 +73,10 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             string recipient = activityContext.GetState<string>("Recipient");
             string recipientCC = activityContext.GetState<string>("RecipientCC");
             string fromEmail = activityContext.GetState<string>("FromEmail");
-            bool NotifyReadEmail = activityContext.GetState<bool?>("_NotifyReadEmail")??false;
-            
+            bool NotifyReadEmail = activityContext.GetState<string>("NotifyReadEmail") == "NotifyReadEmail";
+
             var properties = new Dictionary<string, string> {
-                {"Body", activityContext.GetState<string>("Body")}, 
+                {"Body", activityContext.GetState<string>("Body")},
                 {"Subject", activityContext.GetState<string>("Subject")},
                 {"RecipientOther",activityContext.GetState<string>("RecipientOther")},
                 {"RecipientCC",activityContext.GetState<string>("RecipientCC")},
@@ -108,14 +107,16 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                     }
                     sendTo.AddRange(SplitEmail(owner.As<IUser>().Email));
                 }
-            } else if (recipient == "author") {
+            }
+            else if (recipient == "author") {
                 var user = _orchardServices.WorkContext.CurrentUser;
 
                 // can be null if user is anonymous
                 if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
                     sendTo.AddRange(SplitEmail(user.Email));
                 }
-            } else if (recipient == "admin") {
+            }
+            else if (recipient == "admin") {
                 var username = _orchardServices.WorkContext.CurrentSite.SuperUser;
                 var user = _membershipService.GetUser(username);
 
@@ -123,14 +124,15 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                 if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
                     sendTo.AddRange(SplitEmail(user.As<IUser>().Email));
                 }
-            } else if (recipient == "other") {
+            }
+            else if (recipient == "other") {
                 sendTo.AddRange(SplitEmail(activityContext.GetState<string>("RecipientOther")));
             }
             if (!String.IsNullOrWhiteSpace(recipientCC)) {
                 sendCC.AddRange(SplitEmail(recipientCC));
             }
 
-            if (SendEmail(contentModel, templateId, sendTo, sendCC, null,NotifyReadEmail, fromEmail))
+            if (SendEmail(contentModel, templateId, sendTo, sendCC, null, NotifyReadEmail, fromEmail))
 
                 yield return T("Sent");
             else
@@ -142,7 +144,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             return commaSeparated.Split(new[] { ',', ';' });
         }
 
-        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> cc, IEnumerable<string> bcc,bool NotifyReadEmail, string fromEmail = null) {
+        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> cc, IEnumerable<string> bcc, bool NotifyReadEmail, string fromEmail = null) {
             var template = _templateServices.GetTemplate(templateId);
             var body = _templateServices.RitornaParsingTemplate(contentModel, templateId);
             if (body.StartsWith("Error On Template")) {
@@ -169,6 +171,5 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             _messageService.Send(SmtpMessageChannel.MessageType, data);
             return true;
         }
-
     }
 }

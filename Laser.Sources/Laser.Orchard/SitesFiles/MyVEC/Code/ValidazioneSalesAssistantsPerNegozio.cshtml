@@ -35,7 +35,6 @@
         List<int> ids = new List<int>();
         List<string> problemEmails = new List<string>();
         foreach (string email in emails) {
-            //Func<UserPartRecord, bool> thisEmail = u => u.Email == email;
             IUser kUser = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == email).List().FirstOrDefault();
             if (kUser == null) {
                 problemEmails.Add(email);
@@ -43,7 +42,8 @@
                 ids.Add(kUser.Id);
             }
         }
-        store.PuntoVendita.IdsSalesAssistants.Value = string.Join(",", ids.Select(id => id.ToString()));
+        string sIds = string.Join(",", ids.Select(id => id.ToString()));
+        store.PuntoVendita.IdsSalesAssistants.Value = sIds;
         if (problemEmails.Count > 0) {
             eMsg += "Non è stato possibile identificare le utenze corrispondenti ad alcune emails: " + string.Join(", ", problemEmails) + Environment.NewLine;
             retString = "Error";

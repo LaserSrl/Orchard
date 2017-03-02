@@ -1,5 +1,9 @@
 ﻿@using Orchard;
+@using Orchard.Security;
 @using Orchard.ContentManagement;
+@using Orchard.Data;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
 @using System;
 @using System.Collections.Generic;
 @using System.Linq;
@@ -7,6 +11,9 @@
     string retString = "Error"; //possible outcomes: "Error","DoNothing","Push" 
 
     string eMsg = String.Empty; //used to track errors and put them in the WF state
+
+    IContentManager _contentManager;
+    IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
 }
 @{
     if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
@@ -15,15 +22,26 @@
     try {
         //Model.ContentItem is a RichiestaInvito
         dynamic richiesta = Model.ContentItem;
-        if ((bool)(richiesta.RichiestaCamerino.Evasa.Value)) {
+        if ((bool)(richiesta.RichiestaCamerino.Evasa.Value ?? false)) {
             //Handled already.
             retString = "DoNothing";
         } else {
+            _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+            _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
             //Identify the store
-            var store = ((dynamic)Model.OrchardServices.ContentManager.Get(richiesta.RichiestaCamerino.Negozio.Ids[0]));
+            int storeId = _fieldIndexPartRecord.Table
+                .Where(f =>
+                    f.StringFieldIndexRecords.Any(r =>
+                        r.PropertyName == "PuntoVendita.DefaultStore." && r.Value != null && r.Value != "")
+                )
+                .Select(x => x.ContentItemRecord.Id).FirstOrDefault();
+            dynamic store = (dynamic)(_contentManager.Get(storeId));
+            //var store = ((dynamic)Model.OrchardServices.ContentManager.Get(richiesta.RichiestaCamerino.Negozio.Ids[0]));
             if (store == null) {
                 throw new Exception("Impossibile identificare il negozio dalla Richiesta Camerino.");
             }
+            int[] sIds = new int[] { storeId };
+            richiesta.RichiestaCamerino.Negozio.Ids = sIds;
             //Identify the Sales assistants
             string csvIds = store.PuntoVendita.IdsSalesAssistants.Value;
             if (string.IsNullOrWhiteSpace(csvIds)) {
@@ -32,7 +50,7 @@
             //Identify the customer
             var caller = Model.OrchardServices.WorkContext.CurrentUser;
             if (caller == null) {
-                throw new Exception("Impossibile identificare l'utente che ha effettuato la Richiesta Camerino.");
+                caller = (IUser)(richiesta.CommonPart.Owner);
             }
             dynamic dCaller = caller;
             //Extract product information
@@ -48,6 +66,9 @@
             } else {
                 Model.Tokens["Workflow"].SetState("ProductColour", colour.TitlePart.Title);
             }
+            
+            // imposto la title con Nome Cognome dell'utente che ha richiesto 
+            richiesta.TitlePart.Title = dCaller.User.ProfilePart.Name.Value + " " + dCaller.User.ProfilePart.Surname.Value;
             //Set workflow states used by the Push Activity
             Model.Tokens["Workflow"].SetState("RecipientsList", csvIds);
             Model.Tokens["Workflow"].SetState("CustomerName", dCaller.User.ProfilePart.Name.Value ?? "");

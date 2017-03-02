@@ -50,7 +50,7 @@ namespace Laser.Orchard.StartupConfig.Navigation {
                                         {"model.Id", definition.Name}
                                     })
                                     .Permission(DynamicPermissions.CreateDynamicPermission(
-                                        DynamicPermissions.PermissionTemplates["PublishOwnContent"],
+                                        DynamicPermissions.PermissionTemplates["EditOwnContent"],
                                         definition)));
                             }
                         }

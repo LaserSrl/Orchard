@@ -7,6 +7,8 @@
 @{
     Script.Require("jQuery");
     Script.Require("jQueryUI_Core").AtHead();
+    Script.Require("jQueryUI_Autocomplete").AtHead();
+    Style.Require("jQuery_Autocomplete").AtHead();
     Style.Require("AdvancedSearch").AtHead();
     Style.Require("FontAwesome430").AtHead();
     Style.Require("Accordion").AtHead();
@@ -23,6 +25,7 @@
 @using (Script.Head()) {
     <script type="text/javascript">
         $(document).ready(function () {
+            var aft = $("input[name=__RequestVerificationToken]:first").val();
             inputvalueignorelist = new Array('AdvancedOptions.SelectedLanguageId0', 'AdvancedOptions.SelectedOwner', 'AdvancedOptions.SelectedFromDate', 'AdvancedOptions.SelectedToDate', 'AdvancedOptions.DateFilterType0', 'AdvancedOptions.SelectedTermId0', 'AdvancedOptions.HasMediafalse');
             $('.accordion-section-content :input').each(function () {
                 if (!(inputvalueignorelist.indexOf((this.name + $(this).val())) >= 0)) {
@@ -80,6 +83,36 @@
                 }
 
                 e.preventDefault();
+            });
+
+            $.widget("custom.myautocomplete", $.ui.autocomplete, {
+                _renderItem: function (ul, item) {
+                    var row = $("<li style='width:30em'>");
+                    var aux = "<div style='width:14em;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.UserName + "</div><div style='margin-left:0.4em;width:14em;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.Email + "</div>";
+                    row = row.append($("<a>").html(aux));
+                    row = row.appendTo(ul);
+                    return row;
+                }
+            });
+
+            $("#ownerResults").myautocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Action("Search", "UsersAutocomplete", new { area = "Laser.Orchard.StartupConfig" })",
+                        data: { searchText: $("#ownerResults").val(), __RequestVerificationToken: aft },
+                        success: function (dataAutocomplete) {
+                            response(dataAutocomplete);
+                        }
+                    });
+                },
+                response: function (event, ui) {
+                    for (var x in ui.content) {
+                        ui.content[x].value = ui.content[x].UserName;
+                        @* non imposta ui.content[x].label perché la customizzazione non lo utilizza e quindi sarebbe inutile *@
+                    }
+                },
+                minLength: 3
             });
         });
     </script>
@@ -365,7 +398,7 @@
                                         (string)Model.AdvancedOptions.SelectedOwner :
                                         (string)WorkContext.CurrentUser.UserName,
                                     (!onlyMine) ?
-                                        (object)new { id = "ownerResults" } :
+                                        (object)new { id = "ownerResults", @placeholder = @T("User name or e-mail") } :
                                         (object)new { id = "ownerResults", @disabled = "disabled" }
                                 )
                                 &nbsp;
