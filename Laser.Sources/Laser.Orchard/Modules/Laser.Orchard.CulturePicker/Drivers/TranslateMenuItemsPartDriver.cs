@@ -12,10 +12,11 @@ using Orchard.ContentManagement;
 using Orchard.Localization.Models;
 using NHibernate.Criterion;
 using Orchard.Data;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.CulturePicker.Drivers {
     [OrchardFeature("Laser.Orchard.CulturePicker.TranslateMenuItems")]
-    public class TranslateMenuItemsPartDriver : ContentPartDriver<TranslateMenuItemsPart> {
+    public class TranslateMenuItemsPartDriver : ContentPartCloningDriver<TranslateMenuItemsPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly ILocalizationService _localizationService;
         private readonly ISessionLocator _sessionLocator;
@@ -84,6 +85,10 @@ namespace Laser.Orchard.CulturePicker.Drivers {
                     Model: part
                     )
                 );
+        }
+
+        protected override void Cloning(TranslateMenuItemsPart originalPart, TranslateMenuItemsPart clonePart, CloneContentContext context) {
+            //actualy clone nothing
         }
     }
 }

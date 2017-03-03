@@ -52,6 +52,12 @@ namespace Laser.Orchard.CulturePicker.Services {
                     break;
                 }
             }
+            if (masterId == 0) {
+                //the menu we are using as target form translation is the master, so we cannot really do anything
+                return true;
+                //going forward with masterId == 0 in orchard 1.10 actually crashes the navigation of the site
+                //because _menuServicec.GetMenu(0) actually returns a menu that is weird.
+            }
             var masterMenu = _menuService.GetMenu(masterId);//_contentManager.Get(masterId);
             var thisMenu = _menuService.GetMenu(tMenuId);
 
