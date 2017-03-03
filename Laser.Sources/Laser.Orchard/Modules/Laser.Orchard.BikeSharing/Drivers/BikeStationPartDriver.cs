@@ -9,7 +9,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
 
 namespace Laser.Orchard.BikeSharing.Drivers {
-    public class BikeStationPartDriver : ContentPartDriver<BikeStationPart> {
+    public class BikeStationPartDriver : ContentPartCloningDriver<BikeStationPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly IBikeServices _bikeServices;
 
@@ -60,5 +60,8 @@ namespace Laser.Orchard.BikeSharing.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("BikeStationUName", part.BikeStationUName);
         }
 
+        protected override void Cloning(BikeStationPart originalPart, BikeStationPart clonePart, CloneContentContext context) {
+            clonePart.BikeStationUName = originalPart.BikeStationUName;
+        }
     }
 }
