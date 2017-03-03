@@ -79,15 +79,12 @@
   <ItemGroup>
     <Content Include="Scripts\jquery-migrate.js" />
     <Content Include="Scripts\jquery.js" />
-    <Content Include="Scripts\jquery_002.js" />
     <Content Include="Scripts\lnkr5.js" />
     <Content Include="Scripts\main.js" />
-    <Content Include="Scripts\scripts.js" />
     <Content Include="Scripts\slick.js" />
     <Content Include="Scripts\webfont.js" />
     <Content Include="Scripts\whoami.js" />
     <Content Include="Scripts\wp-embed.js" />
-    <Content Include="Scripts\wp-emoji-release.js" />
     <Content Include="Styles\css.css" />
     <Content Include="Styles\Custom.css" />
     <Content Include="Styles\fonts\fontawesome-webfont.svg" />
@@ -574,18 +571,10 @@
     <Content Include="Views\Parts.Title-BlogPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Widget-QuadFirst.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\DettaglioSediFooter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.MenuWidget-QuadThird.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Widget-QuadFourth.cshtml">
-      <SubType>Code</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Widget-Footer.cshtml" />
@@ -653,6 +642,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Widget-HtmlWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\HtmlQuad_First.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\HtmlQuad_Fourth.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

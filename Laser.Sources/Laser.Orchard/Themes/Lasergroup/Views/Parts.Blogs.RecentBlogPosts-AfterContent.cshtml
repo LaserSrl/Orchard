@@ -1,21 +1,15 @@
 ﻿@using Orchard.Core.Common.Models;
 
 @{
-    var services = WorkContext.Resolve<Orchard.IOrchardServices>();
-    var contentManager = services.ContentManager;
-    
-    int partId = Model.ContentItem.RecentBlogPostsPart.BlogId;
-    int maxNews = Model.ContentItem.RecentBlogPostsPart.Count;
-    
-    var blogPart = contentManager.Get(partId);
-    var blogPosts = contentManager.Query().Where<CommonPartRecord>(bp => bp.Container.Id == blogPart.Id).OrderByDescending(x => x.CreatedUtc);
-
+    var blogPosts = Model.ContentItems.ContentItems.Items;
 }
 
 <div id="news-home" class="container-fluid">
     <div id="focus" class="row">
 
-        @foreach (dynamic post in blogPosts.List().Take(maxNews)) {
+        @foreach (var postContent in blogPosts) {
+
+            dynamic post = postContent.ContentItem;
 
             <div class="col-sm-12 col-md-6 col-news">
             <a class="focus-item news-item" href="@post.AutoroutePart.Path">
@@ -37,7 +31,7 @@
             </a>
             <div class="space-40 visible-xs visible-sm"></div>
         </div>
-            
+             
         }
     </div>
     <div class="news-bottom"></div>

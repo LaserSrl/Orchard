@@ -10,6 +10,12 @@
     case "Immagine e Contenuto":
         @Display(New.HtmlImmagineContenuto(ContentItem: item));
         break;
+    case "Footer Logo":
+        @Display(New.HtmlQuad_First(ContentItem: item));
+            break;
+    case "Footer Social":
+        @Display(New.HtmlQuad_Fourth(ContentItem: item));
+            break;
     default:
         @Display(Model.Content)
             break;
