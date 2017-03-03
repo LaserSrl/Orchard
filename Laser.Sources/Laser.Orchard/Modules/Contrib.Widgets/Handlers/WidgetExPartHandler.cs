@@ -11,28 +11,13 @@ namespace Contrib.Widgets.Handlers {
     public class WidgetExPartHandler : ContentHandler {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
-        private readonly IWidgetManager _widgetManager;
 
-        public WidgetExPartHandler(IRepository<WidgetExPartRecord> repository, IContentDefinitionManager contentDefinitionManager, IContentManager contentManager, IWidgetManager widgetManager) {
+        public WidgetExPartHandler(IRepository<WidgetExPartRecord> repository, IContentDefinitionManager contentDefinitionManager, IContentManager contentManager) {
             Filters.Add(StorageFilter.For(repository));
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
-            _widgetManager = widgetManager;
             OnActivated<WidgetExPart>(SetupFields);
-
-            OnPublished<WidgetsContainerPart>((context, part) => {
-                PublishWidgets(part);
-            });
         }
-        private void PublishWidgets(WidgetsContainerPart part) {
-            var contentItem = part.ContentItem;
-
-            var widgets = _widgetManager.GetWidgets(contentItem.Id, false);
-            foreach (var w in widgets) {
-                _contentManager.Publish(w.ContentItem);
-            }
-        }
-
         private void SetupFields(ActivatedContentContext context, WidgetExPart part) {
             part.HostField.Loader(() => part.Record.HostId != null ? _contentManager.Get(part.Record.HostId.Value) : null);
             part.HostField.Setter(x => {

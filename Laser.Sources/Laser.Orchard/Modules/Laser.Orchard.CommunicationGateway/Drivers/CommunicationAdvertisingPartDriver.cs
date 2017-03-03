@@ -10,9 +10,10 @@ using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.CommunicationGateway.Drivers {
-    public class CommunicationAdvertisingPartDriver : ContentPartDriver<CommunicationAdvertisingPart> {
+    public class CommunicationAdvertisingPartDriver : ContentPartCloningDriver<CommunicationAdvertisingPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly ICultureManager _cultureManager;
         public ILogger Logger { get; set; }
@@ -59,6 +60,10 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     ((dynamic)part).ContentLinked.Ids = new int[] { };
             return Editor(part, shapeHelper);
             //  return null;
+        }
+
+        protected override void Cloning(CommunicationAdvertisingPart originalPart, CommunicationAdvertisingPart clonePart, CloneContentContext context) {
+            clonePart.CampaignId = originalPart.CampaignId;
         }
     }
 }
