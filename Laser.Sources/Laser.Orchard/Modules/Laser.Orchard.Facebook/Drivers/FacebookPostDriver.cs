@@ -17,10 +17,11 @@ using Orchard.Mvc.Extensions;
 using Orchard.MediaLibrary.Models;
 using Orchard.Environment.Configuration;
 using Orchard.UI.Admin;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.Facebook.Drivers {
 
-    public class FacebookPostDriver : ContentPartDriver<FacebookPostPart> {
+    public class FacebookPostDriver : ContentPartCloningDriver<FacebookPostPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly IFacebookService _facebookService;
         private readonly ITokenizer _tokenizer;
@@ -132,6 +133,22 @@ namespace Laser.Orchard.Facebook.Drivers {
                 part.AccountList = vm.SelectedList.Select(x => Int32.Parse(x)).ToArray();
             }
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Cloning(FacebookPostPart originalPart, FacebookPostPart clonePart, CloneContentContext context) {
+            clonePart.FacebookMessage = originalPart.FacebookMessage;
+            //do not clone FacebookMessageSent so that we can send it in the cloned post
+            clonePart.FacebookCaption = originalPart.FacebookCaption;
+            clonePart.FacebookDescription = originalPart.FacebookDescription;
+            clonePart.FacebookName = originalPart.FacebookName;
+            clonePart.FacebookPicture = originalPart.FacebookPicture;
+            clonePart.FacebookIdPicture = originalPart.FacebookIdPicture;
+            clonePart.FacebookLink = originalPart.FacebookLink;
+            clonePart.SendOnNextPublish = originalPart.SendOnNextPublish;
+            clonePart.AccountList = originalPart.AccountList;
+            clonePart.FacebookType = originalPart.FacebookType;
+            clonePart.FacebookMessageToPost = originalPart.FacebookMessageToPost;
+            clonePart.HasImage = originalPart.HasImage;
         }
     }
 }
