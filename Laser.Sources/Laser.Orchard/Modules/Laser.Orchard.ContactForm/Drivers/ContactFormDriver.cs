@@ -11,7 +11,7 @@ using Orchard.ContentManagement.Handlers;
 using System.Xml.Linq;
 
 namespace Laser.Orchard.ContactForm.Drivers {
-    public class ContactFormDriver : ContentPartDriver<ContactFormPart> {
+    public class ContactFormDriver : ContentPartCloningDriver<ContactFormPart> {
 
         private readonly IUtilsServices _utilsServices;
         private readonly IStorageProvider _storageProvider;
@@ -128,5 +128,18 @@ namespace Laser.Orchard.ContactForm.Drivers {
             part.UseStaticSubject = bool.Parse(root.Attribute("UseStaticSubject").Value);
         }
         #endregion
+
+        protected override void Cloning(ContactFormPart originalPart, ContactFormPart clonePart, CloneContentContext context) {
+            clonePart.RecipientEmailAddress = originalPart.RecipientEmailAddress;
+            clonePart.StaticSubjectMessage = originalPart.StaticSubjectMessage;
+            clonePart.UseStaticSubject = originalPart.UseStaticSubject;
+            clonePart.DisplayNameField = originalPart.DisplayNameField;
+            clonePart.RequireNameField = originalPart.RequireNameField;
+            clonePart.TemplateRecord_Id = originalPart.TemplateRecord_Id;
+            clonePart.EnableUpload = originalPart.EnableUpload;
+            clonePart.AttachFiles = originalPart.AttachFiles;
+            clonePart.PathUpload = originalPart.PathUpload;
+            clonePart.RequireAttachment = originalPart.RequireAttachment;
+        }
     }
 }
