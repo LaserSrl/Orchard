@@ -9,9 +9,10 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 using System.Web.Hosting;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.ExternalContent.Drivers {
-    public class FieldExternalDriver : ContentFieldDriver<FieldExternal> {
+    public class FieldExternalDriver : ContentFieldCloningDriver<FieldExternal> {
         private readonly ShellSettings _shellSettings;
         private readonly IOrchardServices _orchardServices;
         private readonly IFieldExternalService _fieldExternalService;
@@ -74,5 +75,12 @@ namespace Laser.Orchard.ExternalContent.Drivers {
             return Editor(part, field, shapeHelper);
         }
 
+
+        protected override void Cloning(ContentPart part, FieldExternal originalField, FieldExternal cloneField, CloneContentContext context) {
+            cloneField.ExternalUrl = originalField.ExternalUrl;
+            cloneField.HttpVerbCode = originalField.HttpVerbCode;
+            cloneField.HttpDataTypeCode = originalField.HttpDataTypeCode;
+            cloneField.BodyRequest = originalField.BodyRequest;
+        }
     }
 }
