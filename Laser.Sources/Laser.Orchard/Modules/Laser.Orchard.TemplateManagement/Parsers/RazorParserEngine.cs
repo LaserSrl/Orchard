@@ -6,14 +6,22 @@ using Laser.Orchard.TemplateManagement.Models;
 using Laser.Orchard.TemplateManagement.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Logging;
+using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
+using Orchard.Environment.Configuration;
 
 namespace Laser.Orchard.TemplateManagement.Parsers {
+
     [OrchardFeature("Laser.Orchard.TemplateManagement.Parsers.Razor")]
     public class RazorParserEngine : ParserEngineBase {
-        private readonly IRazorMachine _razorMachine;
+        private readonly IRazorTemplateManager _razorTemplateManager;
+        private readonly ShellSettings _shellSettings;
 
-        public RazorParserEngine(IRazorMachine razorMachine) {
-            _razorMachine = razorMachine;
+        public RazorParserEngine(
+           IRazorTemplateManager razorTemplateManager,
+            ShellSettings shellSettings) {
+            //       _razorMachine = razorMachine;
+            _shellSettings = shellSettings;
+            _razorTemplateManager = razorTemplateManager;
         }
 
         public override string DisplayText {
@@ -25,26 +33,23 @@ namespace Laser.Orchard.TemplateManagement.Parsers {
         }
 
         public override string ParseTemplate(TemplatePart template, ParseTemplateContext context) {
+            int versionrecordid = template.Record.ContentItemRecord.Versions.Where(x => x.Published).FirstOrDefault().Id;
+            string key = _shellSettings.Name + versionrecordid.ToString();
+            // var tr = new RazorTemplateManager();
             var layout = template.Layout;
             var templateContent = template.Text;
             //var viewBag = context.ViewBag;
 
             if (layout != null) {
-                var layoutGuid = Guid.NewGuid();
-                _razorMachine.RegisterLayout("~/shared/_" + layoutGuid + ".cshtml", layout.Text);
-                templateContent = "@{ Layout = \"~/shared/_" + layoutGuid + ".cshtml\"; }\r\n" + templateContent;
+                _razorTemplateManager.AddLayout("Layout" + key, layout.Text);
+                templateContent = "@{ Layout = \"Layout" + key + "\"; }\r\n" + templateContent;
             }
 
             try {
-                // Convert viewBag to string/object pairs if required
-                //if (viewBag != null) {
-                //    if (viewBag is IEnumerable<KeyValuePair<string, string>>)
-                //        viewBag = ((IEnumerable<KeyValuePair<string, string>>) viewBag).Select(x => new KeyValuePair<string, object>(x.Key, x.Value)).ToDictionary(x => x.Key, x => x.Value);
-                //}
-                
-                var tmpl = _razorMachine.ExecuteContent(templateContent, context.Model, context.ViewBag);
+                var tmpl = _razorTemplateManager.RunString(key, templateContent, context.Model, (Dictionary<string, object>)context.ViewBag);
                 return tmpl;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 Logger.Log(LogLevel.Error, ex, "Failed to parse the {0} Razor template with layout {1}", template.Title, layout != null ? layout.Title : "[none]");
                 return BuildErrorContent(ex, template, layout);
             }
