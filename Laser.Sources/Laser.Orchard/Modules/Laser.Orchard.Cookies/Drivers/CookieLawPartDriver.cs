@@ -9,7 +9,7 @@ using System;
 namespace Laser.Orchard.Cookies.Drivers {
 
     
-    public class CookieLawPartDriver : ContentPartDriver<CookieLawPart> {
+    public class CookieLawPartDriver : ContentPartCloningDriver<CookieLawPart> {
 
         private readonly IWorkContextAccessor _workContextAccessor;
 
@@ -96,6 +96,20 @@ namespace Laser.Orchard.Cookies.Drivers {
                 return (TV)Convert.ChangeType(value, typeof(TV));
             }
             return default(TV);
+        }
+
+        protected override void Cloning(CookieLawPart originalPart, CookieLawPart clonePart, CloneContentContext context) {
+            clonePart.cookieDiscreetLinkText = originalPart.cookieDiscreetLinkText;
+            clonePart.cookiePolicyPageMessage = originalPart.cookiePolicyPageMessage;
+            clonePart.cookieErrorMessage = originalPart.cookieErrorMessage;
+            clonePart.cookieAcceptButtonText = originalPart.cookieAcceptButtonText;
+            clonePart.cookieDeclineButtonText = originalPart.cookieDeclineButtonText;
+            clonePart.cookieResetButtonText = originalPart.cookieResetButtonText;
+            clonePart.cookieWhatAreLinkText = originalPart.cookieWhatAreLinkText;
+            clonePart.cookieAnalyticsMessage = originalPart.cookieAnalyticsMessage;
+            clonePart.cookiePolicyLink = originalPart.cookiePolicyLink;
+            clonePart.cookieMessage = originalPart.cookieMessage;
+            clonePart.cookieWhatAreTheyLink = originalPart.cookieWhatAreTheyLink;
         }
     }
 }
