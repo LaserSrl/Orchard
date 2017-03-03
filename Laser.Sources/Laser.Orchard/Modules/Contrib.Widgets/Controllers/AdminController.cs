@@ -164,7 +164,7 @@ namespace Contrib.Widgets.Controllers {
             var contentItem = _services.ContentManager.Get(hostId, VersionOptions.Latest);
             var contentMetadata = _services.ContentManager.GetItemMetadata(contentItem);
             var returnUrl = Url.RouteUrl(contentMetadata.EditorRouteValues);
-            var widgetPart = _widgetsService.GetWidget(id);
+            var widgetPart = _contentManager.Get<WidgetPart>(id, VersionOptions.DraftRequired); //_widgetsService.GetWidget(id);
 
             if (widgetPart == null)
                 return HttpNotFound();
