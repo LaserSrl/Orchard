@@ -11,11 +11,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Orchard.UI.Admin;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.Mobile.Drivers {
 
     [OrchardFeature("Laser.Orchard.SmsGateway")]
-    public class SmsGatewayPartDriver : ContentPartDriver<SmsGatewayPart> {
+    public class SmsGatewayPartDriver : ContentPartCloningDriver<SmsGatewayPart> {
 
         private readonly ISmsServices _smsServices;
         private readonly IOrchardServices _orchardServices;
@@ -107,6 +108,23 @@ namespace Laser.Orchard.Mobile.Drivers {
                 part.RecipientList = null;
 
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Cloning(SmsGatewayPart originalPart, SmsGatewayPart clonePart, CloneContentContext context) {
+            clonePart.Message = originalPart.Message;
+            clonePart.HaveAlias = originalPart.HaveAlias;
+            clonePart.Alias = originalPart.Alias;
+            //SmsMessageSent is not copied over, because it is controlled by the handler
+            clonePart.SendToTestNumber = originalPart.SendToTestNumber;
+            clonePart.NumberForTest = originalPart.NumberForTest;
+            clonePart.SendOnNextPublish = originalPart.SendOnNextPublish;
+            //SmsDeliveredOrAcceptedNumber is computed as message are sent
+            //SmsRejectedOrExpiredNumber is computed as messages are sent
+            //SmsRecipientsNumber is updated by the handler
+            clonePart.PrefixForTest = originalPart.PrefixForTest;
+            clonePart.RecipientList = originalPart.RecipientList;
+            //ExternalId is not copied becuse it is a unique identifier to the external WS and set by the SmsGatewayEventHandler
+            clonePart.SendToRecipientList = originalPart.SendToRecipientList;
         }
     }
 }
