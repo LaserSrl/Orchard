@@ -16,7 +16,7 @@ using Orchard.Environment.Extensions;
 namespace Laser.Orchard.MailCommunication.Drivers {
 
     [OrchardFeature("Laser.Orchard.MailCommunication")]
-    public class MailCommunicationPartDriver : ContentPartDriver<MailCommunicationPart> {
+    public class MailCommunicationPartDriver : ContentPartCloningDriver<MailCommunicationPart> {
         private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;
         private readonly ITemplateService _templateService;
@@ -80,6 +80,17 @@ namespace Laser.Orchard.MailCommunication.Drivers {
         }
 
         protected override void Exporting(MailCommunicationPart part, ExportContentContext context) {
+        }
+
+        protected override void Cloning(MailCommunicationPart originalPart, MailCommunicationPart clonePart, CloneContentContext context) {
+            //do not clone MailMessageSent so that we can send it in the cloned part
+            clonePart.SendOnNextPublish = originalPart.SendOnNextPublish;
+            clonePart.SendToTestEmail = originalPart.SendToTestEmail;
+            clonePart.EmailForTest = originalPart.EmailForTest;
+            //do not clone RecipientsNumber because that is computed by the handler
+            //do not clone SentMailsNumber because that is computed by the handler
+            clonePart.UseRecipientList = originalPart.UseRecipientList;
+            clonePart.RecipientList = originalPart.RecipientList;
         }
     }
 }

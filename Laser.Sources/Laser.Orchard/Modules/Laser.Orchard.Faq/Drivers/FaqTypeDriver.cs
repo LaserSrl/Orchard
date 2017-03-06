@@ -2,12 +2,13 @@
 using Laser.Orchard.Faq.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Mvc;
 
 namespace Laser.Orchard.Faq.Drivers
 {
-    public class FaqTypeDriver : ContentPartDriver<FaqTypePart>
+    public class FaqTypeDriver : ContentPartCloningDriver<FaqTypePart>
     {
         private readonly IFaqTypeService _faqTypeService;
 
@@ -67,5 +68,9 @@ namespace Laser.Orchard.Faq.Drivers
             part.Title = context.Attribute(part.PartDefinition.Name, "FaqTypeTitle") ?? string.Empty;
         }
 
+
+        protected override void Cloning(FaqTypePart originalPart, FaqTypePart clonePart, CloneContentContext context) {
+            clonePart.Title = originalPart.Title;
+        }
     }
 }

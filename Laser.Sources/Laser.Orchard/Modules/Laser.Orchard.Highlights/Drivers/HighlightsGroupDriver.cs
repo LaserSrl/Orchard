@@ -30,7 +30,7 @@ using Orchard.Projections.ViewModels;
 
 namespace Laser.Orchard.Highlights.Drivers {
 
-    public class HighlightsGroupDriver : ContentPartDriver<HighlightsGroupPart> {
+    public class HighlightsGroupDriver : ContentPartCloningDriver<HighlightsGroupPart> {
 
         private readonly IHighlightsService _HighlightsService;
         private readonly IOrchardServices _orchardServices;
@@ -225,6 +225,14 @@ namespace Laser.Orchard.Highlights.Drivers {
 
             var groupID = Convert.ToInt16(context.Attribute(part.PartDefinition.Name, "GroupId"));
 
+            FinalizeImportAndClone(groupID, part);
+        }
+
+        protected override void Exported(HighlightsGroupPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("GroupId", part.Id.ToString());
+        }
+
+        private void FinalizeImportAndClone(int groupID, HighlightsGroupPart part) {
             _contentManager.Publish(part.ContentItem);
 
             var MediaViewerItems = _HighlightsService.GetHighlightsItemsByGroupId(groupID);
@@ -245,12 +253,16 @@ namespace Laser.Orchard.Highlights.Drivers {
             }
         }
 
-        protected override void Exported(HighlightsGroupPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("GroupId", part.Id.ToString());
+        protected override void Cloning(HighlightsGroupPart originalPart, HighlightsGroupPart clonePart, CloneContentContext context) {
+            clonePart.DisplayPlugin = originalPart.DisplayPlugin;
+            clonePart.DisplayTemplate = originalPart.DisplayTemplate;
+            clonePart.ItemsSourceType = originalPart.ItemsSourceType;
+            clonePart.Query_Id = originalPart.Query_Id;
         }
 
-
-
+        protected override void Cloned(HighlightsGroupPart originalPart, HighlightsGroupPart clonePart, CloneContentContext context) {
+            FinalizeImportAndClone(originalPart.Id, clonePart);
+        }
     }
 
 

@@ -12,7 +12,7 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.HiddenFields.Drivers {
-    public class HiddenStringFieldDriver : ContentFieldDriver<HiddenStringField> {
+    public class HiddenStringFieldDriver : ContentFieldCloningDriver<HiddenStringField> {
 
         public Localizer T { get; set; }
         private readonly IOrchardServices _orchardServices;
@@ -91,6 +91,14 @@ namespace Laser.Orchard.HiddenFields.Drivers {
 
         protected override void Exporting(ContentPart part, HiddenStringField field, ExportContentContext context) {
             context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
+        }
+
+        protected override void Cloning(ContentPart part, HiddenStringField originalField, HiddenStringField cloneField, CloneContentContext context) {
+            var settings = originalField.PartFieldDefinition.Settings.GetModel<HiddenStringFieldSettings>();
+            if (!settings.Tokenized) {
+                //Token replacement happens OnCreated, so if the field is tokenized we don't clone the Value
+                cloneField.Value = originalField.Value;
+            }
         }
 
         protected override void Describe(DescribeMembersContext context) {
