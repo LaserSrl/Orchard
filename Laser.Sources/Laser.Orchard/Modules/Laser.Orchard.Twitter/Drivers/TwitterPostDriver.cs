@@ -31,10 +31,11 @@ using System.Xml.Linq;
 using System.Linq.Expressions;
 using Orchard.Environment.Configuration;
 using Orchard.UI.Admin;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.Twitter.Drivers {
 
-    public class TwitterPostDriver : ContentPartDriver<TwitterPostPart> {
+    public class TwitterPostDriver : ContentPartCloningDriver<TwitterPostPart> {
         private readonly IImageProfileManager _imageProfileManager;
         private readonly IOrchardServices _orchardServices;
         private readonly ITwitterService _TwitterService;
@@ -172,6 +173,18 @@ namespace Laser.Orchard.Twitter.Drivers {
             else
                 part.AccountList = new Int32[] { };
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Cloning(TwitterPostPart originalPart, TwitterPostPart clonePart, CloneContentContext context) {
+            clonePart.TwitterMessage = originalPart.TwitterMessage;
+            //TwitterMessageSent is set by handlers and if cloned would prevent sending the message
+            clonePart.TwitterTitle = originalPart.TwitterTitle;
+            clonePart.TwitterDescription = originalPart.TwitterDescription;
+            clonePart.TwitterPicture = originalPart.TwitterPicture;
+            clonePart.TwitterCurrentLink = originalPart.TwitterCurrentLink;
+            clonePart.TwitterLink = originalPart.TwitterLink;
+            clonePart.SendOnNextPublish = originalPart.SendOnNextPublish;
+            clonePart.AccountList = originalPart.AccountList;
         }
     }
 }
