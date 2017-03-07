@@ -10,7 +10,7 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.TemplateManagement.Drivers {
-    public class CustomTemplatePickerPartDriver : ContentPartDriver<CustomTemplatePickerPart> {
+    public class CustomTemplatePickerPartDriver : ContentPartCloningDriver<CustomTemplatePickerPart> {
         private readonly IContentManager _contentManager;
         private readonly ITemplateService _templateService;
 
@@ -44,6 +44,10 @@ namespace Laser.Orchard.TemplateManagement.Drivers {
         }
 
         protected override void Exporting(CustomTemplatePickerPart part, ExportContentContext context) {
+        }
+
+        protected override void Cloning(CustomTemplatePickerPart originalPart, CustomTemplatePickerPart clonePart, CloneContentContext context) {
+            clonePart.SelectedTemplate = originalPart.SelectedTemplate;
         }
     }
 }
