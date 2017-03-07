@@ -19,14 +19,14 @@ using Orchard.OutputCache.Filters;
 using Orchard.Tokens;
 
 namespace Laser.Orchard.Questionnaires.Drivers {
-    public class QuestionnairePartDriver : ContentPartDriver<QuestionnairePart> {
+    public class QuestionnairePartDriver : ContentPartCloningDriver<QuestionnairePart> {
         private readonly IQuestionnairesServices _questServices;
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IOrchardServices _orchardServices;
         private readonly ICaptchaService _capthcaServices;
         private readonly ICurrentContentAccessor _currentContentAccessor;
         private readonly ITokenizer _tokenizer;
-        
+
         public QuestionnairePartDriver(IQuestionnairesServices questServices,
             IOrchardServices orchardServices,
             IControllerContextAccessor controllerContextAccessor,
@@ -43,8 +43,10 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         }
 
         public Localizer T { get; set; }
-        protected override string Prefix {
-            get {
+        protected override string Prefix
+        {
+            get
+            {
                 return "Questionnaire";
             }
         }
@@ -146,7 +148,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             else {
                 modelForEdit = _questServices.BuildEditModelForQuestionnairePart(part);
             }
-  
+
             _controllerContextAccessor.Context.Controller.TempData[Prefix + "ModelWithErrors"] = null;
             return ContentShape("Parts_Questionnaire_Edit",
                              () => shapeHelper.EditorTemplate(TemplateName: "Parts/Questionnaire_Edit",
@@ -253,7 +255,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                         Answer = a.Attribute("Answer").Value,
                         OriginalId = int.Parse(a.Attribute("OriginalId").Value),
                         CorrectResponse = bool.Parse(a.Attribute("CorrectResponse").Value),
-                        AllFiles = a.Attribute("AllFiles")!=null?a.Attribute("AllFiles").Value:null,
+                        AllFiles = a.Attribute("AllFiles") != null ? a.Attribute("AllFiles").Value : null,
                     };
                     answerModelList.Add(answerEditModel);
                 }
@@ -279,6 +281,46 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                     part.ContentItem, editModel); //aggiorno
         }
         #endregion
+
+        protected override void Cloning(QuestionnairePart originalPart, QuestionnairePart clonePart, CloneContentContext context) {
+            var editModel = _questServices.BuildEditModelForQuestionnairePart(clonePart);
+            editModel.MustAcceptTerms = originalPart.MustAcceptTerms;
+            editModel.TermsText = originalPart.TermsText;
+            editModel.UseRecaptcha = originalPart.UseRecaptcha;
+            //clone list of questions
+            var questionModelList = new List<QuestionEditModel>();
+            foreach (var question in originalPart.Questions) {
+                //clone answers
+                var answerModelList = new List<AnswerEditModel>();
+                foreach (var answer in question.Answers) {
+                    answerModelList.Add(new AnswerEditModel() {
+                        Answer = answer.Answer,
+                        Published = answer.Published,
+                        Position = answer.Position,
+                        OriginalId = answer.Id,
+                        CorrectResponse = answer.CorrectResponse,
+                        AllFiles = answer.AllFiles
+                    });
+                }
+                questionModelList.Add(new QuestionEditModel() {
+                    Question = question.Question,
+                    QuestionType = question.QuestionType,
+                    AnswerType = question.AnswerType,
+                    IsRequired = question.IsRequired,
+                    Published = question.Published,
+                    Position = question.Position,
+                    QuestionnairePartRecord_Id = clonePart.Id,
+                    Answers = answerModelList,
+                    Section = question.Section,
+                    Condition = question.Condition,
+                    ConditionType = question.ConditionType,
+                    OriginalId = question.Id,
+                    AllFiles = question.AllFiles
+                });
+            }
+            editModel.Questions = questionModelList;
+            _questServices.UpdateForContentItem(clonePart.ContentItem, editModel);
+        }
 
         ///// <summary>
         ///// Se il ContentItem corrente contiene una QuestionnairePart, invalida di fatto la cache.

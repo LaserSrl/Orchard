@@ -15,7 +15,7 @@ using Orchard.Localization.Services;
 
 namespace Laser.Orchard.Questionnaires.Drivers {
 
-    public class GamePartDriver : ContentPartDriver<GamePart> {
+    public class GamePartDriver : ContentPartCloningDriver<GamePart> {
         private readonly IOrchardServices _orchardServices;
         private readonly IDateLocalization _dateLocalization;
 
@@ -85,6 +85,21 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             root.SetAttributeValue("RandomResponse", part.RandomResponse);
             root.SetAttributeValue("RankingAndroidIdentifier", part.RankingAndroidIdentifier);
             root.SetAttributeValue("RankingIOSIdentifier",      part.RankingIOSIdentifier);
+        }
+
+        protected override void Cloning(GamePart originalPart, GamePart clonePart, CloneContentContext context) {
+            clonePart.AbstractText = originalPart.AbstractText;
+            clonePart.GameDate = originalPart.GameDate;
+            clonePart.RankingIOSIdentifier = originalPart.RankingIOSIdentifier;
+            clonePart.RankingAndroidIdentifier = originalPart.RankingAndroidIdentifier;
+            clonePart.MyOrder = originalPart.MyOrder;
+            //worflowFired is set in the QuestionnaireServices
+            clonePart.QuestionsSortedRandomlyNumber = originalPart.QuestionsSortedRandomlyNumber;
+            clonePart.RandomResponse = originalPart.RandomResponse;
+            clonePart.AnswerPoint = originalPart.AnswerPoint;
+            clonePart.AnswerTime = originalPart.AnswerTime;
+            //State is set in the Handler
+            clonePart.GameType = originalPart.GameType;
         }
     }
 }

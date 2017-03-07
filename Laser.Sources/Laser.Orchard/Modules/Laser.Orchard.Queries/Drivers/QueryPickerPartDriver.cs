@@ -8,12 +8,13 @@ using Laser.Orchard.Queries.Services;
 using Laser.Orchard.Queries.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 
 namespace Laser.Orchard.Queries.Drivers {
-    public class QueryPickerPartDriver : ContentPartDriver<QueryPickerPart> {
+    public class QueryPickerPartDriver : ContentPartCloningDriver<QueryPickerPart> {
         private readonly IQueryPickerService _queryPickerService;
         private readonly IRepository<QueryPartRecord> _queryRepository;
         private readonly IProjectionManager _projectionManager;
@@ -62,6 +63,10 @@ namespace Laser.Orchard.Queries.Drivers {
                     () => shapeHelper.EditorTemplate(TemplateName: "Parts/QueryPicker_Edit",
                         Model: model,
                         Prefix: Prefix));
+        }
+
+        protected override void Cloning(QueryPickerPart originalPart, QueryPickerPart clonePart, CloneContentContext context) {
+            clonePart.Ids = originalPart.Ids;
         }
     }
 }
