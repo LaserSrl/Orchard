@@ -11,7 +11,7 @@ using Orchard.Environment.Extensions;
 namespace Laser.Orchard.StartupConfig.TaxonomiesExtensions.Drivers {
 
     [OrchardFeature("Laser.Orchard.StartupConfig.TaxonomiesExtensions")]
-    public class TaxonomyExtensionPartDriver : ContentPartDriver<TaxonomyExtensionPart> {
+    public class TaxonomyExtensionPartDriver : ContentPartCloningDriver<TaxonomyExtensionPart> {
 
         protected override string Prefix { get { return "TaxonomyExtension"; } }
 
@@ -29,6 +29,10 @@ namespace Laser.Orchard.StartupConfig.TaxonomiesExtensions.Drivers {
         }
 
         protected override void Importing(TaxonomyExtensionPart part, ImportContentContext context) {
+        }
+
+        protected override void Cloning(TaxonomyExtensionPart originalPart, TaxonomyExtensionPart clonePart, CloneContentContext context) {
+            clonePart.OrderBy = originalPart.OrderBy;
         }
     }
 }
