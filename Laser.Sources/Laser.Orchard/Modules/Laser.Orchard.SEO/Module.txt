@@ -18,5 +18,5 @@ Features:
 	Laser.Orchard.KeywordHelper:
 		Name: Laser Keyword Helper
 		Description: This module is used by content creators to generate recommended keywords to use.
-		Dependencies: Laser.Orchard.jQueryPlugins
+		Dependencies: Laser.Orchard.jQueryPlugins,Orchard.Resources
 		Category: SEO
