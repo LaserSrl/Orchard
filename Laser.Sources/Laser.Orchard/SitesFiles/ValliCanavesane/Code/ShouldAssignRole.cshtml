@@ -1,0 +1,27 @@
+@using Orchard;
+@using Orchard.Security;
+@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Data;
+@using System.Linq;
+@{
+    string retString = "Error"; //possible outcomes: "Error","AssignPOIContributorRole", "UnassignPOIContributorRole", "DoNothing"
+    Orchard.Workflows.Models.WorkflowContext wfContext = null;
+}
+@{
+    try {
+        wfContext = Model.Tokens["Workflow"];
+
+        if (Model.ContentItem.User.Abilitatoaldataentry.Value == true) {
+            retString = "AssignPOIContributorRole";
+        } else if (Model.ContentItem.UserRolesPart.Roles.Contains("POI Contributor") == true) {
+            retString = ("UnassignPOIContributorRole");
+        } else {
+            retString = ("DoNothing");
+        }
+
+    } catch (Exception ex) {
+        wfContext.SetState("ErrorMessage", ex.Message);
+    }
+}
+@retString

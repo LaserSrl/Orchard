@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -23,6 +23,10 @@ msgstr "Azioni personalizzate:"
 msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflowsSettings_Edit.cshtml"
 msgid "Activity Name"
 msgstr "Nome Attività"
+
+msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflowsSettings_Edit.cshtml"
+msgid "Async"
+msgstr "Asincrono"
 
 msgctxt "~/Modules/Laser.Orchard.ButtonToWorkflows/Views/EditorTemplates/Parts/ButtonToWorkflowsSettings_Edit.cshtml"
 msgid "Button"

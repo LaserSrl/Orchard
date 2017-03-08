@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -141,8 +141,24 @@ msgid "Author"
 msgstr "Autore"
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "CC"
+msgstr "CC"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "E-mail"
 msgstr "E-mail"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "From"
+msgstr "Da"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "Notify at Read Email"
+msgstr "Notifica per l'avvenuta lettura."
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "Notify Read Email."
+msgstr "Notifica per l'avvenuta lettura."
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "Other:"
@@ -161,8 +177,16 @@ msgid "Site Admin"
 msgstr "Amministratore del sito"
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "Specify a comma-separated list of e-mail CC recipients."
+msgstr "Inserire una lista di indirizzi email da mettere in copia (CC), separati da virgola."
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "Specify a comma-separated list of e-mail recipients."
 msgstr "Specificare una lista di email di destinatari separata da virgola"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "Specify email sender."
+msgstr "Inserire il mittente della mail."
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "Template"

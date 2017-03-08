@@ -1,0 +1,80 @@
+﻿@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.CommunicationGateway.Services;
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Data;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
+@using Orchard.Security;
+@using Orchard.Users.Models;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","OK","NoPush"
+
+    string eMsg = String.Empty; //used to track errors and put them in the WF state
+
+    //additional services
+    ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
+    IContentManager _contentManager;
+    IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
+}
+@{
+    if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+        eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+    }
+    try {
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
+        _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+        //Identify the store
+        int storeId = _fieldIndexPartRecord.Table
+            .Where(f =>
+                f.StringFieldIndexRecords.Any(r =>
+                    r.PropertyName == "PuntoVendita.DefaultStore." && r.Value != null && r.Value != "")
+            )
+            .Select(x => x.ContentItemRecord.Id).FirstOrDefault();
+        dynamic store = (dynamic)(_contentManager.Get(storeId));
+        if (store == null) {
+            throw new Exception("Impossibile identificare il negozio.");
+        }
+        //Identify the Sales assistants
+        string csvIds = store.PuntoVendita.IdsSalesAssistants.Value;
+        if (string.IsNullOrWhiteSpace(csvIds)) {
+            throw new Exception("Il negozio per questa richiesta non ha nessun Sales Assistant.");
+        }
+        Model.Tokens["Workflow"].SetState("RecipientsList", csvIds);
+        //Identify customer
+        var caller = Model.OrchardServices.WorkContext.CurrentUser;
+        if (caller == null) {
+            throw new Exception("Impossibile identificare l'utente che ha effettuato l'accesso al Punto Vendita.");
+        }
+        dynamic dCaller = caller;
+        Model.Tokens["Workflow"].SetState("CustomerName", dCaller.User.ProfilePart.Name.Value ?? "");
+        Model.Tokens["Workflow"].SetState("CustomerSurname", dCaller.User.ProfilePart.Surname.Value ?? "");
+        //only update states if the user was not in the store OR if he had entered more than 10 minutes ago
+        string prevStore = dCaller.User.ProfilePart.InStore.Value;
+        DateTime? oldAccess = dCaller.User.ProfilePart.AccessoNegozio.DateTime;
+        DateTime now = DateTime.UtcNow;
+        if (prevStore != store.Id.ToString() || (oldAccess == null || ((TimeSpan)now.Subtract(oldAccess.Value)).TotalMinutes > 10)) {
+            decimal storeVisits = (dCaller.User.ProfilePart.VisiteaNegozio.Value ?? (decimal)0) + 1;
+            dCaller.User.ProfilePart.VisiteaNegozio.Value = storeVisits;
+
+            dCaller.User.ProfilePart.AccessoNegozio.DateTime = now; //the DateTimeField is always stored as UTC
+            dCaller.User.ProfilePart.InStore.Value = store.Id.ToString();
+            // forza la pubblicazione per aggiornare i fieldIndex
+            _contentManager.Create(dCaller.ContentItem, VersionOptions.DraftRequired);
+            _contentManager.Publish(dCaller.ContentItem);
+            _communicationService.UserToContact((IUser)dCaller);
+            retString = "OK";
+        } else {
+            retString = "NoPush";
+        }
+
+    } catch (Exception ex) {
+        eMsg += ex.Message + Environment.NewLine;
+        retString = "Error";
+    }
+    Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+}@retString

@@ -1,0 +1,79 @@
+@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.CommunicationGateway.Services;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using Orchard;
+@using Orchard.Security;
+@using Orchard.ContentManagement;
+@using Orchard.Projections.Services;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","OK"
+
+    //Services we will need
+    ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
+    IFieldIndexService _fieldIndexService;
+    IContentManager _contentManager;
+    Orchard.Workflows.Models.WorkflowContext wfCtx = null;
+}
+@{
+    try {
+        wfCtx = Model.Tokens["Workflow"];
+        //resolve services
+        _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
+        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        //resolve content item of type SchedaInvito
+        dynamic item = Model.ContentItem;
+        if (item.SchedaInvito.Visita.Ids.Length > 0) { //a Visita in the cpf is required, but I check anyway
+            var idVisita = item.SchedaInvito.Visita.Ids[0];
+            //Find the CommunicationContact related to the SchedaInvito:
+            // The Creator of the SchedaInvito is the User that corresponds to the guest we have invited
+            //var guest = _contentManager.Get((int)(item.CommonPart.Creator.Value));
+            //find the contact
+            int idute;
+            if (wfCtx.GetState("UseridCreator") != null) {
+                idute = Convert.ToInt32(((wfCtx.GetState("UseridCreator")).ToString()));
+            }
+            else{
+                idute = (int)(item.CommonPart.Creator.Value);
+            }
+            dynamic user = _contentManager.Get(idute);
+            // Get contact by his email because ShedaInvito can be created by a back-end user, so its creator isn't the guest it refers to
+            //dynamic contact = _communicationService.GetContactsFromMail(item.SchedaInvito.Email.Value)[0];
+            //************************
+            //update VisiteEffettuate
+            var cpf = user.ProfilePart.VisiteEffettuate;
+            if (item.SchedaInvito.Hapartecipato.Value ?? false) {
+                //add the Visita to the ContentPickerField in the CommunicationContact
+                if (!((int [])cpf.Ids).Any(id => id == idVisita)) {
+                    //only add if the Visita is not there already
+                    var idList = ((int [])cpf.Ids).ToList();
+                    idList.Add(idVisita);
+                    cpf.Ids = idList.ToArray();
+                }
+            }
+            else {
+                //remove the Visita from the ContentPickerField in the CommunicationContact
+                cpf.Ids = ((int [])cpf.Ids).Where(id => id != idVisita).ToArray();
+            }
+            //************************
+            //update InvitiVisita
+            var cpfInviti = user.ProfilePart.InvitiVisita;
+            //add the Visita to the ContentPickerField in the CommunicationContact
+            if (!((int[])cpfInviti.Ids).Any(id => id == idVisita)) {
+                //only add if the Visita is not there already
+                var idList = ((int[])cpfInviti.Ids).ToList();
+                idList.Add(idVisita);
+                cpfInviti.Ids = idList.ToArray();
+            }
+            // forza il publish per aggiornate i fieldIndex
+            _contentManager.Create(user, VersionOptions.DraftRequired);
+            _contentManager.Publish(user);
+            _communicationService.UserToContact((IUser)(user.UserPart));
+            retString = "OK";
+        }
+    } catch (Exception ex) {
+        wfCtx.SetState("ErrorMessage", ex.Message);
+    }
+}@retString

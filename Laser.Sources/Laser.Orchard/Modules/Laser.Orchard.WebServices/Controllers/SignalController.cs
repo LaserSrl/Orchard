@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Laser.Orchard.StartupConfig.Services;
+using System;
 using System.Web.Mvc;
-using Laser.Orchard.StartupConfig.Services;
 
 namespace Laser.Orchard.WebServices.Controllers {
     public class SignalController : Controller {
@@ -11,8 +8,8 @@ namespace Laser.Orchard.WebServices.Controllers {
         public SignalController(IActivityServices activityServices) {
             _activityServices = activityServices;
         }
-        [OutputCache(NoStore=true, Duration=0)]
-        public ActionResult Trigger(string signalName, int contentId, string returnUrl="") {
+        [OutputCache(NoStore = true, Duration = 0)]
+        public ActionResult Trigger(string signalName, int contentId, string returnUrl = "") {
             try {
                 _activityServices.TriggerSignal(signalName, contentId);
                 if (String.IsNullOrWhiteSpace(returnUrl)) {

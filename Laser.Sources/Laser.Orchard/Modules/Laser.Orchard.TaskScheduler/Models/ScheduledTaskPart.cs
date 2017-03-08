@@ -48,5 +48,10 @@ namespace Laser.Orchard.TaskScheduler.Models {
             get { return this.Retrieve(x => x.RunningTaskId); }
             set { this.Store(x => x.RunningTaskId, value); }
         }
+
+        public bool Autodestroy {
+            get { return this.Retrieve(x => x.Autodestroy); }
+            set { this.Store(x => x.Autodestroy, value); }
+        }
     }
 }

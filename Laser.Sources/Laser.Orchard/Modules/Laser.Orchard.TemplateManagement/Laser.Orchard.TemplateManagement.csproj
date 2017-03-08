@@ -287,13 +287,10 @@
     <Content Include="Styles\Common.min.css">
       <DependentUpon>Common.less</DependentUpon>
     </Content>
-    <Content Include="Styles\MessageTemplateEditor.css">
-      <DependentUpon>MessageTemplateEditor.less</DependentUpon>
+    <Content Include="Styles\TemplateEditor.css">
+      <DependentUpon>TemplateEditor.less</DependentUpon>
     </Content>
-    <Content Include="Styles\MessageTemplateEditor.less" />
-    <Content Include="Styles\MessageTemplateEditor.min.css">
-      <DependentUpon>MessageTemplateEditor.less</DependentUpon>
-    </Content>
+    <Content Include="Styles\TemplateEditor.less" />
     <None Include="Templates\BaseEmails\basic.html" />
     <None Include="Templates\BaseEmails\drip.html" />
     <None Include="Templates\BaseEmails\hero.html" />
@@ -307,6 +304,9 @@
     <None Include="Templates\BaseEmails\Usage notes.txt" />
     <None Include="Templates\BaseEmails\ValliCanavesaneExample.html" />
     <None Include="Templates\BaseEmails\welcome.html" />
+    <Content Include="Styles\TemplateEditor.min.css">
+      <DependentUpon>TemplateEditor.less</DependentUpon>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

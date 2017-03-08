@@ -1,5 +1,7 @@
 ﻿@using (Script.Head()) {
-    Script.Require("jQueryUI").AtHead();
+    Script.Require("jQueryUI_Core").AtHead();
+    Script.Require("jQueryUI_Widget").AtHead();
+    Script.Require("jQueryUI_Dialog").AtHead();
 }
 
 @using (Script.Foot()) {
@@ -97,30 +99,116 @@
     </script>
 }
 <div id="dialog-confirm" title="Publish action" style="display: none">
-    
-       @T("Actions to be performed:")<br />
-        
-        <div id="dialog-message"></div>
 
-    
+    @T("Actions to be performed:")<br />
+
+    <div id="dialog-message"></div>
+
+
 </div>
 <ul class="comm-tabbed">
 </ul>
-  
+
 <script type="text/javascript">
+    var antiForgeryToken, locCtrl, locSummary, locUrls;
+    var idRun = 0;
+    var arrUrl = [];
+    var arrFieldForUseManualRecipientList= [];
+    var arrFieldForManualRecipientList = [];
+    var arrOutput = [];
+    var arrFunc = [];
+    var locSummary;
+    var locUrls; 
+
+    function updateSummary() {
+        idRun++;
+        // pulisce il summary
+        for (var i = 0; i < arrOutput.length; i++) {
+            arrOutput[i] = "";
+        }
+        refresh();
+
+        var locSelected = locCtrl.find("option:checked");
+        var elencoIds = [];
+        for (var i = 0; i < locSelected.length; i++) {
+            elencoIds[i] = parseInt(locSelected.eq(i).val());
+        }
+        //alert(elencoIds);
+
+        if (arrUrl.length > 0) {
+            updateCounter(idRun, elencoIds, 0);
+        }
+    }
+
+    function updateCounter(pIdRun, elencoIds, idx) {
+        var manualValidRecipients = [];
+        if ($('#'+arrFieldForUseManualRecipientList[idx]).length) {
+            if ($('#'+arrFieldForUseManualRecipientList[idx]).is(":checked")){// check if the recipient list should be used
+                manualValidRecipients = $('#'+arrFieldForManualRecipientList[idx]).val().split(/(?:\r\n|\r|\n)/g);
+                if (manualValidRecipients.length==0) { // if the recipient list should be used but no user name is available force one element in the array
+                    manualValidRecipients[0] = "[none]";
+                }
+            }
+        }
+
+        $.ajax({
+            myIdx: idx, // parametro custom per la function success
+            type: "POST",
+            url: arrUrl[idx],
+            traditional: true,
+            data:{__RequestVerificationToken:antiForgeryToken, ids:elencoIds, manualRecipients: manualValidRecipients, contentId: @Model["ContentItemId"], idlocalization:@Model["LocalizationId"] },
+            dataType: "json",
+            success: function (data, status, jqXHR) {
+                if(pIdRun == idRun) {
+                    // aggiorna il summary se nel frattempo non è stato chiamato un altro updateSummary()
+                    arrOutput[this.myIdx] = data.Key + " " + data.Value;
+                    refresh();
+                }
+            },
+            complete: function(xhr,status) {
+                if(pIdRun == idRun) {
+                    // parte il counter successivo se nel frattempo non è stato chiamato un altro updateSummary()
+                    var newIdx = this.myIdx + 1;
+                    if(newIdx < arrUrl.length) {
+                        updateCounter(pIdRun, elencoIds, newIdx);
+                    }
+                }
+            }
+            //error: function (jqXHR, textStatus) {
+            //    locMsg = locMsg + textStatus;
+            //    var locSummary = $("#summary-totals");
+            //    //locSummary.text(aux3 + "; urls: " + aux4 + "; msg: " + locMsg);
+            //    locSummary.text("msg: " + locMsg);
+            //}
+        });
+    }
+
+    function refresh() {
+        var locMsg = "Totals: ";
+        for(var i=0; i<arrOutput.length;i++) {
+            locMsg = locMsg + arrOutput[i] + " ";
+        }
+        locSummary.html(locMsg);
+    }
 
     $(document).ready(function () {
-        $("#QueriesTotal").hide();
-        var locCtrl = $("#QueryPickerPart_SelectedIds");
+        antiForgeryToken = $("input[name=__RequestVerificationToken]:first").val();
+        locCtrl = $("#QueryPickerPart_SelectedIds");
         locCtrl.parent().after("<div id='summary-totals' style='border: solid 1px rgb(189, 188, 188)'></div>");
-        var locSummary = $("#summary-totals");
-        var locUrls = $("input[name=CountUrl]");
-        var idRun = 0;
-        var arrUrl = [];
-        var arrOutput = [];
-        var arrFunc = [];
+        locSummary = $("#summary-totals");
+        locUrls = $("input[name=CountUrl]");
+
+        $("#QueriesTotal").hide();
+
         for (var i = 0; i < locUrls.length; i++) {
-            arrUrl[i] = locUrls.eq(i).val();
+            arrUrl[i] = locUrls.eq(i).val().split('|')[0];
+            if (locUrls.eq(i).val().split('|').length>2){
+                arrFieldForUseManualRecipientList[i] = locUrls.eq(i).val().split('|')[1];
+                arrFieldForManualRecipientList[i] = locUrls.eq(i).val().split('|')[2];
+            } else {
+                arrFieldForUseManualRecipientList[i] = "";
+                arrFieldForManualRecipientList[i] = "";
+            }
             arrOutput[i] = "";
         }
         updateSummary();
@@ -128,65 +216,5 @@
             updateSummary();
         });
 
-        function updateSummary() {
-            idRun++;
-            // pulisce il summary
-            for (var i = 0; i < arrOutput.length; i++) {
-                arrOutput[i] = "";
-            }
-            refresh();
-
-            var locSelected = locCtrl.find("option:checked");
-            var elencoIds = [];
-            for (var i = 0; i < locSelected.length; i++) {
-                elencoIds[i] = parseInt(locSelected.eq(i).val());
-            }
-            //alert(elencoIds);
-
-            if (arrUrl.length > 0) {
-                updateCounter(idRun, elencoIds, 0);
-            }
-        }
-
-        function updateCounter(pIdRun, elencoIds, idx) {
-            $.ajax({
-                myIdx: idx, // parametro custom per la function success
-                type: "GET",
-                url: arrUrl[idx],
-                traditional: true,
-                data:{ids:elencoIds, idlocalization:@Model["LocalizationId"] },
-                dataType: "json",
-                success: function (data, status, jqXHR) {
-                    if(pIdRun == idRun) {
-                        // aggiorna il summary se nel frattempo non è stato chiamato un altro updateSummary()
-                        arrOutput[this.myIdx] = data.Key + " " + data.Value;
-                        refresh();
-                    }
-                },
-                complete: function(xhr,status) {
-                    if(pIdRun == idRun) {
-                        // parte il counter successivo se nel frattempo non è stato chiamato un altro updateSummary()
-                        var newIdx = this.myIdx + 1;
-                        if(newIdx < arrUrl.length) {
-                            updateCounter(pIdRun, elencoIds, newIdx);
-                        }
-                    }
-                }
-                //error: function (jqXHR, textStatus) {
-                //    locMsg = locMsg + textStatus;
-                //    var locSummary = $("#summary-totals");
-                //    //locSummary.text(aux3 + "; urls: " + aux4 + "; msg: " + locMsg);
-                //    locSummary.text("msg: " + locMsg);
-                //}
-            });
-        }
-
-        function refresh() {
-            var locMsg = "Totals: ";
-            for(var i=0; i<arrOutput.length;i++) {
-                locMsg = locMsg + arrOutput[i] + " ";
-            }
-            locSummary.html(locMsg);
-        }
     });
 </script>

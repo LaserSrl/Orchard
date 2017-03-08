@@ -6,8 +6,8 @@
     var outcomes = String.Join(",", actions == null ? new string[0] : actions.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => "'" + x.Trim() + "'").ToArray());
 }
 
-<div data-outcomes="@outcomes">
-    <div>Razor Execute</div>
+<div data-outcomes="@outcomes" title="@Model.State.RazorExecuteActivity_RazorView">
+    <div>Razor Execute<br />@Model.State.RazorExecuteActivity_RazorView</div>
     @*@name.CamelFriendly()*@
 </div>
 

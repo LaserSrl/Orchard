@@ -1,0 +1,41 @@
+@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.CommunicationGateway.Services;
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Projections.Services;
+@using Orchard.Security;
+@using Orchard.Users.Models;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@{
+    string retString = "CreateHiddenPromotionCode"; //possible outcomes: "Error","CreateHiddenPromotionCode"
+
+    string eMsg = String.Empty; //used to track errors and put them in the WF state
+
+    //additional services
+    IFieldIndexService _fieldIndexService;
+
+    dynamic ci = Model.ContentItem;
+
+    try {
+        if (System.String.IsNullOrWhiteSpace(ci.Promozione.Codicepromozione.Value)) {
+            var codicePromozionale = "promo_" + ci.Id + "_" + System.Guid.NewGuid().ToString();
+            ci.Promozione.Codicepromozione.Value = codicePromozionale;
+
+            _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+
+            _fieldIndexService.Set(
+                ci.FieldIndexPart,
+                "Promozione",
+                "Codicepromozione",
+                "",
+                codicePromozionale,
+                typeof(string)
+            );
+
+        }
+    } catch {
+        retString = "Error";
+    }
+}@retString

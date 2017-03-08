@@ -19,11 +19,8 @@ using System.Web;
 namespace Laser.Orchard.Mobile.Services {
 
     public interface ISmsCommunicationService : IDependency {
-        //IHqlQuery IntegrateAdditionalConditions(IHqlQuery query = null, IContent content = null);
-        //IHqlQuery IntegrateAdditionalConditions(IHqlQuery query, Int32? idlocalization);
-        //IList<SmsHQL> GetSmsQueryResult(Int32[] ids, Int32? idlingua);
-        IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false);
-        //List<string> GetSmsNumbersQueryResult(Int32[] ids, Int32? idlingua);
+        IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, int contentId = 0); 
+        IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, ContentItem advItem = null);
     }
 
     [OrchardFeature("Laser.Orchard.SmsGateway")]
@@ -41,30 +38,25 @@ namespace Laser.Orchard.Mobile.Services {
             _session = session;
         }
 
-        //public List<string> GetSmsNumbersQueryResult(Int32[] ids, Int32? idlingua)
-        //{
-        //    List<string> listaNumeri = new List<string>();
-        //    var lista = GetSmsQueryResult(ids, idlingua);
-        //    if (lista.Count > 0)
-        //    {
-        //        // Recupero elenco dei numeri di telefono
+        public IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, int contentId = 0) {
+            ContentItem contentItem = null;
+            if (contentId > 0) {
+                contentItem = _orchardServices.ContentManager.Get(contentId, VersionOptions.Latest);
+            }
+            return GetSmsQueryResult(ids, idlingua, countOnly, contentItem);
 
-        //        foreach (var item in lista)
-        //        {
-        //            string numeroTelefono = ((SmsHQL)item).SmsPrefix + ((SmsHQL)item).SmsNumber;
-        //            listaNumeri.Add(numeroTelefono);
-        //        }
-        //    }
-        //    return listaNumeri;
-        //}
-        
-        //public IList<SmsHQL> GetSmsQueryResult(Int32[] ids, Int32? idlingua)
-        public IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false)
+        }
+                
+        public IList GetSmsQueryResult(Int32[] ids, Int32? idlingua, bool countOnly = false, ContentItem advItem = null)
         {
             IHqlQuery query;
             if (ids != null && ids.Length > 0)
             {
-                query = IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(ids, null, new string[] { "CommunicationContact" }), idlingua);
+                Dictionary<string, object> tokens = new Dictionary<string, object>();
+                if (advItem != null) {
+                    tokens.Add("Content", advItem);
+                }
+                query = IntegrateAdditionalConditions(_queryPickerServices.GetCombinedContentQuery(ids, tokens, new string[] { "CommunicationContact" }), idlingua);
             }
             else
             {

@@ -277,6 +277,10 @@ msgid "Number of questions sorted Randomly"
 msgstr "Numero di domande ordinate in modo casuale"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Questionnaire Context"
+msgstr "Contesto del Questionario"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
 msgid "Random Response"
 msgstr "Risposta Casuale"
 
@@ -303,6 +307,10 @@ msgstr "Impostazioni - Parte Questionario - Immagini"
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
 msgid "Show Correct Response Option"
 msgstr "Visualizza Opzione Risposta Corretta"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "The Context this questionnaire refers to (eg. a commercial campaign name). It is usually usefull '{Content.DisplayText}'."
+msgstr "Il Contesto a cui il questionario si riferisce (es. il titolo di una campagna commerciale). Normalmente è utile utilizzare '{Content.DisplayText}'."
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/EditorTemplates/AnswerEditModel.cshtml"
 msgid "Add Picture"
@@ -708,6 +716,26 @@ msgctxt "Laser.Orchard.Questionnaires.Drivers.QuestionnairePartDriver"
 msgid "You have to be logged in, before answering a questionnaire!"
 msgstr "Devi essere autenticato per poter rispondere al nostro questionario!"
 
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireContextFilter"
+msgid "Filter for questionnaires without response for current User on a specific context."
+msgstr "Filtro per i questionari senza risposta per l'Utente corrente nel contesto indicato"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireContextFilter"
+msgid "Only unanswered Questionnare for current user on a specific context"
+msgstr "Solo questionari senza risposta per l'Utente corrente nel contesto indicato"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireContextFilter"
+msgid "Questionnaire"
+msgstr "Questionario"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireContextFilter"
+msgid "Questionnaires without response for current User on a specific context"
+msgstr "Questionari senza risposta per l'Utente corrente per il contesto indicato"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireContextFilterForm"
+msgid "Questionnaire Context"
+msgstr "Contesto del Questionario"
+
 msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireFilter"
 msgid "Filter for Questionnaire with not associated response to current user"
 msgstr "Filtro per questionari che sono senza risposta per l'utente corrente"
@@ -723,6 +751,38 @@ msgstr "Questionario"
 msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireFilter"
 msgid "Questionnaire without response for current User"
 msgstr "Questionari senza risposta per l'Utente corrente"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilter"
+msgid "Filter for specific questionnaire and context without response for current User."
+msgstr "Filtro per questionario e contesto specifico senza risposta per l'Utente corrente"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilter"
+msgid "Filter for specific questionnaire without response for current User."
+msgstr "Filtro per un questionario indicato senza risposta per l'Utente corrente"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilter"
+msgid "Only unanswered Questionnaire for current user"
+msgstr "Solo questionari senza risposta per l'Utente corrente"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilter"
+msgid "Questionnaire"
+msgstr "Questionario"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilter"
+msgid "Specific questionnaire and context without response for current User"
+msgstr "Questionario e contesto specifico senza risposta per l'Utente corrente"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilter"
+msgid "Specific questionnaire without response for current User"
+msgstr "Questionario specifico senza risposta per l'Utente corrente"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilterForm"
+msgid "Questionnaire Context"
+msgstr "Contesto del Questionario"
+
+msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireNotAnsweredFilterForm"
+msgid "Questionnaire Id"
+msgstr "ID del Questionario"
 
 msgctxt "Laser.Orchard.Questionnaires.Navigation.AdminMenu"
 msgid "Games"

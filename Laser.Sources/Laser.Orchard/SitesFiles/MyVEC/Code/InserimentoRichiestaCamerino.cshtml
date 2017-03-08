@@ -1,0 +1,99 @@
+@using Orchard;
+@using Orchard.Security;
+@using Orchard.Users.Models;
+@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
+@using Orchard.Autoroute.Models;
+@using Orchard.Data;
+@using System.Linq;
+@using System.Data;
+@using System.Collections.Generic;
+@functions{
+    Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
+    IContentManager _contentManager;
+    string retString = "Error"; //possible outcomes: "Error","Ok"
+    dynamic visita = null;
+    string csv = "";
+    dynamic ciProduct = null;
+    dynamic ciColor = null;
+    dynamic richiestaCamerino = null;
+    Orchard.Workflows.Models.WorkflowContext wfCtx = null;
+}
+@{
+    try {
+        wfCtx = Model.Tokens["Workflow"];
+        // inizializza i services
+        _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        // legge i dati in input
+        string product = System.Web.HttpContext.Current.Request["productId"];
+        string color = System.Web.HttpContext.Current.Request["color"];
+        string size = System.Web.HttpContext.Current.Request["size"];
+        // recupera il prodotto
+        var qry1 = _contentManager.Query().ForType("Prodotto");
+        qry1 = qry1.Where<AutoroutePartRecord>(x => (x.DisplayAlias == product));
+        ciProduct = qry1.List().FirstOrDefault();
+        // recupera il colore
+        var qry2 = _contentManager.Query().ForType("Colore");
+        qry2 = qry2.Where<AutoroutePartRecord>(x => (x.DisplayAlias == color));
+        ciColor = qry2.List().FirstOrDefault();
+        if (ciProduct != null) {
+            string strColor = (ciColor != null) ? ciColor.TitlePart.Title : color ?? "";
+            // costruisce la richiesta camerino
+            richiestaCamerino = _contentManager.New("RichiestaCamerino");
+            _contentManager.Create(richiestaCamerino, VersionOptions.Draft);
+            // title
+            richiestaCamerino.TitlePart.Title = "Camerino Virtuale"; //string.Format("Richiesta camerino - {0} {1} {2}", ciProduct.TitlePart.Title, strColor, size);
+            // taglia
+            richiestaCamerino.RichiestaCamerino.Taglia.Value = size;
+            // prodotto
+            richiestaCamerino.RichiestaCamerino.Prodotto.Ids = new int[] { ciProduct.Id };
+            // colore
+            if (ciColor != null) {
+                richiestaCamerino.RichiestaCamerino.Colore.Ids = new int[] { ciColor.Id };
+            }
+            // owner
+            var qry4 = _contentManager.Query().ForType("User");
+            qry4 = qry4.Where<UserPartRecord>(x => x.UserName == "camerino.virtuale");
+            var ciOwner = qry4.List().FirstOrDefault();
+            if (ciOwner != null) {
+                richiestaCamerino.CommonPart.Owner = ciOwner.As<IUser>();
+            }
+            else {
+                richiestaCamerino.CommonPart.Owner = ciProduct.CommonPart.Owner;
+            }
+            // negozio
+            int storeId = _fieldIndexPartRecord.Table.Where(f =>
+                f.StringFieldIndexRecords.Any(r =>
+                    r.PropertyName == "PuntoVendita.DefaultStore." && r.Value != null && r.Value != "")
+            ).Select(x => x.ContentItemRecord.Id).FirstOrDefault();
+            var ciNegozio = _contentManager.Get(storeId);
+            if(ciNegozio != null) {
+                richiestaCamerino.RichiestaCamerino.Negozio.Ids = new int[] { ciNegozio.Id };
+            }
+            // camerino
+            richiestaCamerino.RichiestaCamerino.Camerino.Value = "1";
+            // sales assistants
+            string salesAssistantsIds = ((dynamic)ciNegozio).PuntoVendita.IdsSalesAssistants.Value;
+            // pubblica le modifiche
+            _contentManager.Publish(richiestaCamerino);
+            // salva nello state del workflow le info utili per la push ai Sales Assistant
+            wfCtx.SetState("DressingRequestId", richiestaCamerino.Id);
+            wfCtx.SetState("RecipientsList", salesAssistantsIds);
+            wfCtx.SetState("Product", ciProduct.TitlePart.Title);
+            wfCtx.SetState("ProductSize", size);
+            wfCtx.SetState("ProductColour", strColor);
+            wfCtx.SetState("DressingRoom", richiestaCamerino.RichiestaCamerino.Camerino.Value);
+            retString = "Ok";
+        }
+        else{
+            wfCtx.SetState("ErrorMessage", "Prodotto richiesto non trovato");
+        }
+    }
+    catch (Exception ex) {
+        wfCtx.SetState("ErrorMessage", ex.Message);
+    }
+}
+@retString

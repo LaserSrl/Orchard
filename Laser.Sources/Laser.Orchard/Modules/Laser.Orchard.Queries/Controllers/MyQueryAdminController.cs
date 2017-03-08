@@ -23,7 +23,7 @@ namespace Laser.Orchard.Queries.Controllers {
         private readonly string contentType = "MyCustomQuery";
         private readonly dynamic TestPermission = Permissions.UserQuery;
         private readonly INotifier _notifier;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public MyQueryAdminController(
             IOrchardServices orchardServices,
@@ -127,7 +127,8 @@ namespace Laser.Orchard.Queries.Controllers {
                 Title = p.As<TitlePart>().Title,
                 ModifiedUtc = p.As<CommonPart>().ModifiedUtc,
                 UserName = p.As<CommonPart>().Owner.UserName,
-                ContentType = p.ContentType
+                ContentType = p.ContentType,
+                OneShotQuery = ( p.Parts.FirstOrDefault(x => x.PartDefinition.Name == "QueryUserFilterExtensionPart") != null) ? ((dynamic)p).QueryUserFilterExtensionPart.OneShotQuery.Value ?? false : false
             });
 
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);

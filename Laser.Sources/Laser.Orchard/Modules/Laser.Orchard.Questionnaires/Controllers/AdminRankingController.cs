@@ -44,8 +44,9 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 return new HttpUnauthorizedResult();
             var query = _orchardServices.ContentManager.Query();
-            var list = query.ForPart<GamePart>().List();
-            var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().List();
+            // la condizione Id > 0 nelle due righe seguenti serve solo a forzare la join con le tabelle GamePartRecord e RankingPartRecord rispettivamente, perché la clausola ForPart non è sufficiente (fa solo scansione in memoria)
+            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.Id > 0).List();
+            var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().Where<RankingPartRecord>(x => x.Id > 0).List();
             List<DisplaRankingTemplateVM> listaAllRank = new List<DisplaRankingTemplateVM>();
             foreach (GamePart gp in list) {
 

@@ -1,32 +1,38 @@
-﻿using System;
+﻿using Laser.Orchard.ButtonToWorkflows.Models;
+using Laser.Orchard.ButtonToWorkflows.Settings;
+using Laser.Orchard.ButtonToWorkflows.ViewModels;
+using Orchard;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Scheduling.Models;
+using Orchard.Data;
+using Orchard.Localization;
+using Orchard.UI.Notify;
+using Orchard.Workflows.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Drivers;
-using Orchard;
-using Orchard.Localization;
-using Laser.Orchard.ButtonToWorkflows.Models;
-using Orchard.ContentManagement.Handlers;
-using Laser.Orchard.ButtonToWorkflows.ViewModels;
-using Orchard.Workflows.Services;
-using Laser.Orchard.ButtonToWorkflows.Settings;
-using Orchard.UI.Notify;
 
 namespace Laser.Orchard.ButtonToWorkflows.Drivers {
+
     public class ButtonToWorkflowsDriver : ContentPartDriver<ButtonToWorkflowsPart> {
         private readonly IOrchardServices _orchardServices;
         public Localizer T { get; set; }
         private readonly IWorkflowManager _workflowManager;
         private readonly INotifier _notifier;
+        private readonly IRepository<ScheduledTaskRecord> _repositoryScheduledTask;
+
         protected override string Prefix {
             get { return "Laser.Mobile.ButtonToWorkflows"; }
         }
 
-        public ButtonToWorkflowsDriver(IOrchardServices orchardServices, IWorkflowManager workflowManager, INotifier notifier) {
+        public ButtonToWorkflowsDriver(IOrchardServices orchardServices, IWorkflowManager workflowManager, INotifier notifier, IRepository<ScheduledTaskRecord> repositoryScheduledTask) {
             _orchardServices = orchardServices;
             _workflowManager = workflowManager;
             _notifier = notifier;
+            _repositoryScheduledTask = repositoryScheduledTask;
             T = NullLocalizer.Instance;
         }
 
@@ -49,10 +55,9 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                 //        model.ButtonText = settings.ButtonText;
                 //    }
                 //}
-            } catch { }
+            }
+            catch { }
             return ContentShape("Parts_ButtonToWorkflows", () => shapeHelper.EditorTemplate(TemplateName: "Parts/ButtonToWorkflows", Model: model, Prefix: Prefix));
-
-
         }
 
         protected override DriverResult Editor(ButtonToWorkflowsPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -68,51 +73,50 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                             //   settings.ButtonNumber = settings.ButtonNumber[0].Split(',');
                             ButtonToWorkflowsSettingsPart settingmodulo = _orchardServices.WorkContext.CurrentSite.As<ButtonToWorkflowsSettingsPart>();
                             string[] elencoButtonsMessage = settingmodulo.ButtonsMessage.Split('£');
+                            string[] elencoButtonsActionAsync = settingmodulo.ButtonsAsync.Split('£');
                             part.ActionToExecute = model.ButtonAction + "_btn" + (model.ButtonNumber + 1).ToString();
                             //   _workflowManager.TriggerEvent(model.ButtonAction+"_btn"+(model.ButtonNumber+1).ToString(), content, () => new Dictionary<string, object> { { "Content", content } });
                             part.MessageToWrite = elencoButtonsMessage[model.ButtonNumber].ToString();
-                            //try {
-                            //      _notifier.Add(NotifyType.Information, T(elencoButtonsMessage[Convert.ToInt16(settings.ButtonNumber)]));
-                            //  }
-                            //  catch { }
-
+                            string valAsync = string.IsNullOrEmpty(elencoButtonsActionAsync[model.ButtonNumber]) ? "" : elencoButtonsActionAsync[model.ButtonNumber].ToLower();
+                            part.ActionAsync = valAsync.Equals("true");
                         }
-                } else {
+                }
+                else {
                     updater.AddModelError("Error Saving Content Item", T("Error Saving Content Item"));
                 }
             //  var viewModel = new ButtonToWorkflowsVM();
             return ContentShape("Parts_ButtonToWorkflows", () => shapeHelper.EditorTemplate(TemplateName: "Parts/ButtonToWorkflows", Model: bigmodel, Prefix: Prefix));
         }
+
         protected override void Importing(ButtonToWorkflowsPart part, ImportContentContext context) {
-            throw new NotImplementedException();
-            //TODO: Effettuare check su consistenza UserId
-            var root = context.Data.Element(part.PartDefinition.Name);
-            part.FromUser = root.Attribute("FromUser").Value;
-            part.ToUser = root.Attribute("ToUser").Value;
-            int nTempId;
-            if (int.TryParse(root.Attribute("FromIdUser").Value, out nTempId)) {
-                part.FromIdUser = int.Parse(root.Attribute("FromIdUser").Value);
-            }
-            if (int.TryParse(root.Attribute("ToIdUser").Value, out nTempId)) {
-                part.FromIdUser = int.Parse(root.Attribute("ToIdUser").Value);
-            }
-            part.ActionToExecute = root.Attribute("ActionToExecute").Value;
-            part.MessageToWrite = root.Attribute("MessageToWrite").Value;
+            ////           throw new NotImplementedException();
+            ////TODO: Effettuare check su consistenza UserId
+            //var root = context.Data.Element(part.PartDefinition.Name);
+            //part.FromUser = root.Attribute("FromUser").Value;
+            //part.ToUser = root.Attribute("ToUser").Value;
+            //int nTempId;
+            //if (int.TryParse(root.Attribute("FromIdUser").Value, out nTempId)) {
+            //    part.FromIdUser = int.Parse(root.Attribute("FromIdUser").Value);
+            //}
+            //if (int.TryParse(root.Attribute("ToIdUser").Value, out nTempId)) {
+            //    part.FromIdUser = int.Parse(root.Attribute("ToIdUser").Value);
+            //}
+            //part.ActionToExecute = ""; //root.Attribute("ActionToExecute").Value;
+            //part.MessageToWrite = "";// root.Attribute("MessageToWrite").Value;
+            //part.ActionAsync = false;// root.Attribute("ActionAsync").Value.ToLower() == "true";
+            //part.ButtonsDenied = root.Attribute("ButtonsDenied").Value.ToLower() == "true";
         }
+
         protected override void Exporting(ButtonToWorkflowsPart part, ExportContentContext context) {
-
-            var root = context.Element(part.PartDefinition.Name);
-            root.SetAttributeValue("FromUser", part.FromUser);
-            root.SetAttributeValue("ToUser", part.ToUser);
-            root.SetAttributeValue("FromIdUser", part.FromIdUser);
-            root.SetAttributeValue("ToIdUser", part.ToIdUser);
-            root.SetAttributeValue("ActionToExecute", part.ActionToExecute);
-            root.SetAttributeValue("MessageToWrite", part.MessageToWrite);
-
-
-
+            //var root = context.Element(part.PartDefinition.Name);
+            //root.SetAttributeValue("FromUser", part.FromUser);
+            //root.SetAttributeValue("ToUser", part.ToUser);
+            //root.SetAttributeValue("FromIdUser", part.FromIdUser);
+            //root.SetAttributeValue("ToIdUser", part.ToIdUser);
+            //root.SetAttributeValue("ActionToExecute", part.ActionToExecute);
+            //root.SetAttributeValue("MessageToWrite", part.MessageToWrite);
+            //root.SetAttributeValue("ActionAsync", part.ActionAsync);
+            //root.SetAttributeValue("ButtonsDenied", part.ButtonsDenied);
         }
-
-
     }
 }

@@ -12,7 +12,7 @@ namespace Laser.Orchard.Accessibility.Drivers
     {
         private readonly IOrchardServices _orchardServices;
         private readonly ShellSettings _shellSettings;
-        private Localizer t;
+        public Localizer t;
         public ILogger Logger { get; set; }
 
         protected override string Prefix {

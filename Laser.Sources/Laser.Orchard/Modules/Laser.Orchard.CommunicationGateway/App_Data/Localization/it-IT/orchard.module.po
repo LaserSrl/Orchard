@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -7,6 +7,14 @@
 # > msgctxt  "{ contesto del messaggio }"
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
+
+msgctxt "!=.CommunicationContactDriver"
+msgid "No log."
+msgstr "Nessun log."
+
+msgctxt "!=.CommunicationContactDriver"
+msgid "You do not have permission to access this content."
+msgstr "Mancano i permessi per accedere a questo contenuto."
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/AdvertisingAdmin/Edit.cshtml"
 msgid "Edit Advertising"
@@ -83,6 +91,10 @@ msgstr "minuti fa"
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/AdvertisingAdmin/index.cshtml"
 msgid "Published"
 msgstr "Pubblicato"
+
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/AdvertisingAdmin/index.cshtml"
+msgid "Scheduled"
+msgstr "Pianificato"
 
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/AdvertisingAdmin/index.cshtml"
 msgid "Search"
@@ -540,6 +552,22 @@ msgctxt "Laser.Orchard.CommunicationGateway.Controllers.AdvertisingAdminControll
 msgid "Campaign validity has expired. No changes allowed."
 msgstr "La validità della campagna è terminata. Nessuna modifica possibile."
 
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.AdvertisingExternalController"
+msgid "Couldn't create content"
+msgstr "Non è stato possibile creare il contenuto"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.AdvertisingExternalController"
+msgid "Creating CommunicationAdvertising failed: {0}"
+msgstr "Creazione del Comunicato non riuscita: {0}"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.AdvertisingExternalController"
+msgid "The provided data does not correspond to the required format."
+msgstr "I dati forniti non corrispondono al formato richiesto."
+
+msgctxt "Laser.Orchard.CommunicationGateway.Controllers.AdvertisingExternalController"
+msgid "User couldn't create Advertising"
+msgstr "L'utente non è autorizzato a creare Comunicati"
+
 msgctxt "Laser.Orchard.CommunicationGateway.Controllers.CampaignAdminController"
 msgid "Campaign saved"
 msgstr "Campagna salvata"
@@ -648,6 +676,22 @@ msgctxt "Laser.Orchard.CommunicationGateway.Navigation.AdminMenu"
 msgid "Settings"
 msgstr "Impostazioni"
 
+msgctxt "Laser.Orchard.CommunicationGateway.Projections.ExcludeMasterContact"
+msgid "Communication Contacts"
+msgstr "Contatti"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Projections.ExcludeMasterContact"
+msgid "Exclude Master Contact"
+msgstr "Esclude il Contatto Master"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Projections.ExcludeMasterContact"
+msgid "Filter for real contacts (master contact will be excluded)"
+msgstr "Filtra i contatti reali (il contatto master verrà escluso)"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Projections.ExcludeMasterContact"
+msgid "Filter only real contacts (master contact will be excluded)"
+msgstr "Filtra solo i contatti reali (il contatto master verrà escluso)"
+
 msgctxt "Laser.Orchard.CommunicationGateway.Services.CommunicationService"
 msgid "Master Contact Created"
 msgstr "Contatto Master creato"
@@ -659,4 +703,20 @@ msgstr "Sono stati sincronizzati {0} profili utente"
 msgctxt "Laser.Orchard.CommunicationGateway.Services.CommunicationService"
 msgid "This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function."
 msgstr "Questo contatto è stato associato al suo utente dalla funzione di sincronizzazione in data {0:dd-MM-yyyy HH:mm}"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Tokens.UserContactToken"
+msgid "Contact bound to the user"
+msgstr "Contatto legato all'utente"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Tokens.UserContactToken"
+msgid "The contact bound to the user"
+msgstr "Il contatto legato all'utente"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Tokens.UserContactToken"
+msgid "User Contact"
+msgstr "Contatto dell'Utente"
+
+msgctxt "Laser.Orchard.CommunicationGateway.Tokens.UserContactToken"
+msgid "UserContact"
+msgstr "ContattoUtente"
 

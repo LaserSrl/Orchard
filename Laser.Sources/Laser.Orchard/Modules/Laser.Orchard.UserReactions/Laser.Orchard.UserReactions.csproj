@@ -48,6 +48,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
@@ -120,6 +124,7 @@
     <Content Include="Styles\fonts\reactions.eot" />
     <Content Include="Styles\fonts\reactions.ttf" />
     <Content Include="Styles\fonts\reactions.woff" />
+    <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
     <None Include="Views\Admin\ListSummaryReactionByUsers.cshtml" />
     <Content Include="Styles\fonts\reactions.svg" />
     <Content Include="Styles\icons-reference.html" />
@@ -149,6 +154,8 @@
     <Compile Include="Drivers\UserReactionsPartDriver.cs" />
     <Compile Include="Handlers\SettingsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\UserReactionsPartHandler.cs" />
+    <Compile Include="Projections\ReactionClickedFilterForm.cs" />
+    <Compile Include="Projections\ReactionClickedQueryFilter.cs" />
     <Compile Include="Projections\UserReactionsQueryFilter.cs" />
     <Compile Include="Handlers\UserReactionsSettingsPartHandler.cs" />
     <Compile Include="Models\UserReactionsClickRecord.cs" />

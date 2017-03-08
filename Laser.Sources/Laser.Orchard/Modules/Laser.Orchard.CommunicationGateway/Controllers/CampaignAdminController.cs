@@ -22,7 +22,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly string contentType = "CommunicationCampaign";
         private readonly dynamic TestPermission = Permissions.ManageCampaigns;
         private readonly INotifier _notifier;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public CampaignAdminController(
             IOrchardServices orchardServices,

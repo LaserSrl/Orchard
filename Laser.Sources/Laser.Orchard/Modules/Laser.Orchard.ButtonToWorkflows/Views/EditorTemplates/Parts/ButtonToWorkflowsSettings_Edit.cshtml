@@ -12,6 +12,7 @@
                         <th scope="col">@T("Activity Name")</th>
                         <th scope="col">@T("Description")</th>
                          <th scope="col">@T("Message on button click")</th>
+                        <th scope="col">@T("Async")</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,6 +37,9 @@
                             @Html.TextBoxFor(m => m.ButtonsDescription1)</td>
                          <td>
                             @Html.TextBoxFor(m => m.ButtonsMessage1)</td>
+                        <td>
+                            @Html.CheckBoxFor(m => m.ButtonsAsync1)
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -48,6 +52,9 @@
                             @Html.TextBoxFor(m => m.ButtonsDescription2)</td>
                                <td>
                             @Html.TextBoxFor(m => m.ButtonsMessage2)</td>
+                        <td>
+                            @Html.CheckBoxFor(m => m.ButtonsAsync2)
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -60,6 +67,9 @@
                             @Html.TextBoxFor(m => m.ButtonsDescription3)</td>
                                <td>
                             @Html.TextBoxFor(m => m.ButtonsMessage3)</td>
+                        <td>
+                            @Html.CheckBoxFor(m => m.ButtonsAsync3)
+                        </td>
                     </tr>
 
                 </tbody>

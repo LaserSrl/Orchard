@@ -1,0 +1,12 @@
+﻿@Script.Require("JQuery");
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Model.CallUrl/Tracking/PostId',
+            type: "POST",
+            data: {id:@Model.PageID, __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'}
+        });
+    });
+    </script>
+}
