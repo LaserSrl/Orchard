@@ -308,6 +308,9 @@ namespace Laser.Orchard.WebServices.Controllers {
                 }
                 return cr;
             }
+            catch (System.Security.SecurityException) {
+                return Json(_utilsServices.GetResponse(ResponseType.InvalidUser), JsonRequestBehavior.AllowGet);
+            }
             catch {
                 return new HttpStatusCodeResult(500);
             }

@@ -14,6 +14,7 @@ using Orchard;
 using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.StartupConfig.Email {
+
     [OrchardFeature("Laser.Orchard.StartupConfig.MailExtensions")]
     public class MailHandler : Component, ISmtpChannel, IDisposable {
         private readonly SmtpSettingsPart _smtpSettings;
@@ -42,8 +43,6 @@ namespace Laser.Orchard.StartupConfig.Email {
         }
 
         public void Process(IDictionary<string, object> parameters) {
-
-
             if (!_smtpSettings.IsValid()) {
                 return;
             }
@@ -51,15 +50,18 @@ namespace Laser.Orchard.StartupConfig.Email {
             Attachment _attachment = null;
             if (parameters["Recipients"] is String[]) {
                 _recipient = String.Join(",", ((string[])parameters["Recipients"]));
-            } else
+            }
+            else
                 _recipient = parameters["Recipients"] as string;
 
             if (parameters.ContainsKey("Attachment")) {
                 var path = parameters["Attachment"].ToString();
                 _attachment = new Attachment(path);
-            } else if (parameters.ContainsKey("CC")) {
+            }
+            else if (parameters.ContainsKey("CC")) {
                 _cc = parameters["CC"].ToString();
-            } else if (parameters.ContainsKey("Bcc")) {
+            }
+            else if (parameters.ContainsKey("Bcc")) {
                 _bcc = parameters["Bcc"].ToString();
             }
             var emailMessage = new EmailMessage {
@@ -85,9 +87,17 @@ namespace Laser.Orchard.StartupConfig.Email {
             };
 
             var section = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
-            mailMessage.From = !String.IsNullOrWhiteSpace(_smtpSettings.Address)
-                ? new MailAddress(_smtpSettings.Address)
-                : new MailAddress(section.From);
+            string mailfrom = !String.IsNullOrWhiteSpace(_smtpSettings.Address) ? _smtpSettings.Address : section.From;
+            if (parameters.ContainsKey("FromEmail")) {
+                string tmp = parameters["FromEmail"].ToString();
+                if (EmailVerify(tmp))
+                    mailfrom = tmp;
+            }
+            mailMessage.From = new MailAddress(mailfrom);
+            mailMessage.ReplyToList.Add(new MailAddress(mailfrom));
+            //mailMessage.From = !String.IsNullOrWhiteSpace(_smtpSettings.Address)
+            //    ? new MailAddress(_smtpSettings.Address)
+            //    : new MailAddress(section.From);
             if (_attachment != null) {
                 mailMessage.Attachments.Add(_attachment);
             }
@@ -104,9 +114,24 @@ namespace Laser.Orchard.StartupConfig.Email {
                 foreach (var bcc in _bcc.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)) {
                     mailMessage.Bcc.Add(new MailAddress(bcc));
                 }
-
+                mailMessage.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
+                //mailMessage.Headers.Add("Read-Receipt-To",  mailMessage.From);
+                if (parameters.ContainsKey("NotifyReadEmail")) {
+                    if (parameters["NotifyReadEmail"] is bool) {
+                        if ((bool)(parameters["NotifyReadEmail"])) {
+                            mailMessage.Headers.Add("Disposition-Notification-To", mailfrom);
+                        }
+                    }
+                }
                 _smtpClientField.Value.Send(mailMessage);
-            } catch (Exception e) {
+                //SmtpClient mysmtp = _smtpClientField.Value;
+                //mysmtp.SendCompleted += (s, e) => {
+                //    mysmtp.Dispose();
+                //    mailMessage.Dispose();
+                //};
+                // mysmtp.SendAsync(mailMessage, null);
+            }
+            catch (Exception e) {
                 Logger.Error(e, "Could not send email");
             }
         }
@@ -134,7 +159,15 @@ namespace Laser.Orchard.StartupConfig.Email {
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             return smtpClient;
         }
+
+        private bool EmailVerify(string email) {
+            try {
+                var mail = new MailAddress(email);
+                return true;
+            }
+            catch {
+                return false;
+            }
+        }
     }
-
-
 }

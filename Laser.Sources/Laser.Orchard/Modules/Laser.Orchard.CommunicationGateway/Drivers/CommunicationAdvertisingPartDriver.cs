@@ -45,6 +45,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                 model.Add("LocalizationId", part.ContentItem.As<LocalizationPart>().Culture.Id);
             else
                 model.Add("LocalizationId", _cultureManager.GetCultureByName(_orchardServices.WorkContext.CurrentSite.SiteCulture).Id);
+            model.Add("ContentItemId", part.ContentItem.Id); 
             shapes.Add(ContentShape("Parts_Advertising_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/Advertising_Edit", Model: model, Prefix: Prefix)));//
             shapes.Add(ContentShape("Parts_AdvertisingSwitcher", () => shapeHelper.EditorTemplate(TemplateName: "Parts/AdvertisingSwitcher", Model: linkinterno, Prefix: Prefix)));
 

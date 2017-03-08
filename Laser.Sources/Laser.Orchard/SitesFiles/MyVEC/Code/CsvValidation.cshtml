@@ -1,0 +1,66 @@
+@using System.ComponentModel.DataAnnotations;
+@using Orchard.UI.Notify;
+@using Orchard.Localization;
+@{ 
+    // possible outcomes: Error, OK
+    // if OK, set {Workflow.State.InvitationNumber} to the number of invitation in CSV
+    // email;cognome;nome;azienda;prenotabile(SI||NO)
+    try {
+        var T = NullLocalizer.Instance;
+        bool validatecsv = true;
+        int maxnotiermessage = 3;
+        var testerEmail = new EmailAddressAttribute();
+        var _notifier = Model.OrchardServices.WorkContext.Resolve<INotifier>();
+        string error = "";
+        dynamic item = Model.ContentItem;
+        string csv = item.Visita.CSVlistaInvitati.Value;
+		string[] rowSeparator = new string[] { "\r\n", "\r", "\n" };
+        var allLines = csv.Split(rowSeparator, StringSplitOptions.RemoveEmptyEntries);
+        var numline = 0;
+        int messagenotified = 0;
+        foreach (string line in allLines) {
+            if (messagenotified <= maxnotiermessage) {
+                numline++;
+                var fields = line.Split(';');
+                if (fields.Length != 5) { //testo che ci siano tutti i campi
+                    validatecsv = false;
+                    messagenotified++;
+                    _notifier.Add(NotifyType.Error, T("linea " + numline.ToString() + ": previsti 5 campi"));
+                }
+                else {
+                    if (!testerEmail.IsValid(fields[0])) {
+                        validatecsv = false;
+                        messagenotified++;
+                        _notifier.Add(NotifyType.Error, T("linea " + numline.ToString() + ": Email non valida"));
+                    }
+                    if (string.IsNullOrEmpty(fields[1])) {
+                        validatecsv = false;
+                        messagenotified++;
+                        _notifier.Add(NotifyType.Error, T("linea " + numline.ToString() + ": Cognome obbligatorio"));
+                    }
+                    if (string.IsNullOrEmpty(fields[2])) {
+                        validatecsv = false;
+                        messagenotified++;
+                        _notifier.Add(NotifyType.Error, T("linea " + numline.ToString() + ": Nome obbligatorio"));
+                    }
+                    if (string.IsNullOrEmpty(fields[4]) || (fields[4].ToUpper() != "SI" && fields[4].ToUpper() != "NO")) {
+                        validatecsv = false;
+                        messagenotified++;
+                        _notifier.Add(NotifyType.Error, T("linea " + numline.ToString() + ": campo obbligatorio, valori consentiti, SI o NO"));
+                    }
+                }
+            }
+        }
+        if (validatecsv) {
+            var wfContext = Model.Tokens["Workflow"];
+            wfContext.SetState("InvitationNumber", numline);
+            WriteLiteral("OK");
+        }
+        else {
+            WriteLiteral("Error");
+        }
+    }
+    catch (Exception ex) {
+        WriteLiteral("Error");
+    }
+}

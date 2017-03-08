@@ -71,40 +71,47 @@ namespace Laser.Orchard.WebServices.Controllers {
         }
 
         public ActionResult Display(string alias, int page = 1, int pageSize = 10, int maxLevel = 10) {
-            JObject json;
+            try {
+                JObject json;
 
-            IContent content;
-            if (alias.ToLower() == "user+info" || alias.ToLower() == "user info") {
-                #region [ Richiesta dati di uno user ]
-                var currentUser = _authenticationService.GetAuthenticatedUser();
-                if (currentUser == null) {
-                    //  return Content((Json(_utilsServices.GetResponse(ResponseType.InvalidUser))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                    var result = new ContentResult { ContentType = "application/json" };
-                    result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidUser));
-                    return result;
-                } else
-                    if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
+                IContent content;
+                if (alias.ToLower() == "user+info" || alias.ToLower() == "user info") {
+                    #region [ Richiesta dati di uno user ]
+                    var currentUser = _authenticationService.GetAuthenticatedUser();
+                    if (currentUser == null) {
+                        //  return Content((Json(_utilsServices.GetResponse(ResponseType.InvalidUser))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
                         var result = new ContentResult { ContentType = "application/json" };
-                        result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
+                        result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidUser));
                         return result;
-                        //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                    } else {
-                        #region utente validato
-                        content = currentUser.ContentItem;
-                        #endregion
                     }
-                #endregion
+                    else
+                        if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
+                            var result = new ContentResult { ContentType = "application/json" };
+                            result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
+                            return result;
+                            //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
+                        }
+                        else {
+                            #region utente validato
+                            content = currentUser.ContentItem;
+                            #endregion
+                        }
+                    #endregion
 
-            } else {
-                content = _commonServices.GetContentByAlias(alias);
+                }
+                else {
+                    content = _commonServices.GetContentByAlias(alias);
+                }
+                //_maxLevel = maxLevel;
+                json = _contentSerializationServices.GetJson(content, page, pageSize);
+                //_contentSerializationServices.NormalizeSingleProperty(json);
+                return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
+                //return GetJson(content, page, pageSize);
             }
-            //_maxLevel = maxLevel;
-            json = _contentSerializationServices.GetJson(content, page, pageSize);
-            //_contentSerializationServices.NormalizeSingleProperty(json);
-            return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
-            //return GetJson(content, page, pageSize);
+            catch (System.Security.SecurityException) {
+                return Json(_utilsServices.GetResponse(ResponseType.InvalidUser), JsonRequestBehavior.AllowGet);
+            }
         }
-
     }
 
     public class EnumStringConverter : Newtonsoft.Json.Converters.StringEnumConverter {

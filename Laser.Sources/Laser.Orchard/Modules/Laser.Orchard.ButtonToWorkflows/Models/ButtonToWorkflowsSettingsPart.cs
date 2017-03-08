@@ -23,12 +23,24 @@ namespace Laser.Orchard.ButtonToWorkflows.Models {
             get { return this.Retrieve(r => r.ButtonsMessage); }
             set { this.Store(r => r.ButtonsMessage, value); }
         }
+        public string ButtonsAsync
+        {
+            get { string val = this.Retrieve(r => r.ButtonsAsync);
+            if (string.IsNullOrEmpty(val)) {
+                return "false£false£false£false";
+            }
+            else
+                return val;
+            }
+            set { this.Store(r => r.ButtonsAsync, value); }
+        }
     }
     public class ButtonToWorkflowsSettingsPartRecord : ContentPartRecord {
         public virtual string ButtonsText { get; set; }
         public virtual string ButtonsAction { get; set; }
         public virtual string ButtonsDescription { get; set; }
         public virtual string ButtonsMessage { get; set; }
+        public virtual string ButtonsAsync { get; set; }
     }
 }
 

@@ -19,19 +19,19 @@ mydoc = aggiungifiglio(mydoc, "root/_data", "OrdinamentoSection"); // Aggiunge a
         int.TryParse(bookToModify.ParentNode.SelectSingleNode("priority").ChildNodes[0].Value, out priority);
         if (gruppo == "none") {
             groppoFull = "Sponsor & Partner";
-            ordineGruppo = 1;
+            ordineGruppo = 0;
         } else if (gruppo == "contibuto") {
             groppoFull = "Con il contributo di";
             if (lang.ToLowerInvariant().StartsWith("en")){
                 groppoFull = "With contribution on";
             }
-            ordineGruppo = 2;
+            ordineGruppo = 1;
         } else if (gruppo == "sostegno") {
             groppoFull = "Con il sostegno di";
             if (lang.ToLowerInvariant().StartsWith("en")) {
                 groppoFull = "Supported by";
             }
-            ordineGruppo = 3;
+            ordineGruppo = 2;
         } else if (gruppo == "main") {
             groppoFull = "Main Sponsor";
             ordineGruppo = 4;
@@ -86,7 +86,10 @@ mydoc = aggiungifiglio(mydoc, "root/_data", "OrdinamentoSection"); // Aggiunge a
         } else if (gruppo == "TV") {
             groppoFull = "TV";
             ordineGruppo = 16;
-        } 
+        } else if (gruppo == "main media partner"){
+			groppoFull = "Main media partner";
+			ordineGruppo = 3;
+		}
 bookToModify.InnerText = groppoFull;
 bookToModify.ParentNode.SelectSingleNode("OrdinamentoLaser").InnerText = String.Concat(":lasernumeric", ((ordineGruppo * 100000000) + priority).ToString(), "lasernumeric:");
 bookToModify.ParentNode.SelectSingleNode("OrdinamentoSection").InnerText = String.Concat(":lasernumeric", ordineGruppo.ToString(), "lasernumeric:");

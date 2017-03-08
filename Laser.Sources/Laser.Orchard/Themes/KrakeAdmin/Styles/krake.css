@@ -264,6 +264,7 @@ button.link:hover {
 /*Ovverides jquery UI in order to make text into tabs same as the others */
 .ui-widget {
     font-size: 1em !important;
+    font-family: Roboto, sans-serif, Helvetica, Arial, sans-serif;
 }
 
 .ui-widget.ui-multiselect {
@@ -1279,7 +1280,6 @@ fieldset {
 
 .custom-button {
     clear: right;
-    margin-top: 20px;
 }
 
 .widgets-listed .widgets-zone-widgets h3 a,

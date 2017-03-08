@@ -85,12 +85,17 @@
     HttpContext.Current.Response.SetCookie(cookie);
     
     <div id='sezione-send'>
-        <div class="text-center text-pink"><h2>@T(TempData["QuestSuccess"].ToString())</h2></div>
+        <div class="text-center text-pink"><h2>@T("Thank you for submitting your feedback.")</h2></div>
     </div>
 }
 else {
     if (TempData["QuestError"] != null) {
-        <div class="quest-message quest-error">@Html.Raw(T(TempData["QuestError"].ToString()).Text.Replace("\r\n", "<br/>"))</div>
+        if(TempData.Keys.Contains("AlreadySubmitted") && Convert.ToBoolean(TempData["AlreadySubmitted"]) == true) {
+            <div class="quest-message quest-error">@Html.Raw(T("Sorry, you already submitted this questionnaire."))</div>
+        }
+        else {
+            <div class="quest-message quest-error">@Html.Raw(TempData["QuestError"].ToString().Replace("\r\n", "<br/>"))</div>
+        }
     }
     if (Questionnaire.MustAcceptTerms && !Questionnaire.HasAcceptedTerms) {
         using (Html.BeginFormAntiForgeryPost(Url.Action("AcceptTerms", "Questionnaire", new { area = "Laser.Orchard.Questionnaires", returnUrl = Context.Request.ToUrlString() }), FormMethod.Post)) {
@@ -159,7 +164,7 @@ else {
 <li data-condition="@Questionnaire.QuestionsWithResults[j].Condition" data-conditiontype="@Questionnaire.QuestionsWithResults[j].ConditionType" data-required="@(Questionnaire.QuestionsWithResults[j].IsRequired ? "true" : "false")" >
 
     <div class='space-40'></div>
-    <h3 class="text-center font1-2">@Questionnaire.QuestionsWithResults[j].Question</h3>
+    <h3 class="text-center font1-2" style="padding-bottom:2em">@Questionnaire.QuestionsWithResults[j].Question</h3>
        @if (Questionnaire.QuestionsWithResults[j].AllFiles != null && Questionnaire.QuestionsWithResults[j].AllFiles.Split(',').Count() > 0) {
            foreach (int ciId in Questionnaire.QuestionsWithResults[j].AllFiles.Split(',').Select(int.Parse).ToList()) {
                MediaPart mediaPart = ((ContentItem)contentManager.Get(ciId)).As<MediaPart>();

@@ -31,7 +31,7 @@ namespace Laser.Orchard.Twitter.Controllers {
         private readonly string contentType = "SocialTwitterAccount";
         private readonly dynamic TestPermission = Permissions.ManageTwitterAccount;
         private readonly INotifier _notifier;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public TwitterAccountController(
             IOrchardServices orchardServices,

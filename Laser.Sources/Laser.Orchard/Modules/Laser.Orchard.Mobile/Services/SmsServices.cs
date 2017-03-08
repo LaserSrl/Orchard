@@ -17,6 +17,7 @@ using Laser.Orchard.CommunicationGateway.Services;
 using Orchard.Tokens;
 using Laser.Orchard.Mobile.Handlers;
 using System.Collections;
+using System.Globalization;
 
 namespace Laser.Orchard.Mobile.Services {
 
@@ -25,7 +26,8 @@ namespace Laser.Orchard.Mobile.Services {
         //string SendSms(IList<SmsHQL> TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
         string SendSms(IList TelDestArr, string TestoSMS, string alias = null, string IdSMS = null, bool InviaConAlias = false);
         Config GetConfig();
-        string GetReportSmsStatus(string IdSMS);
+        int GetStatus();
+        SmsDeliveryReportResultVM GetReportSmsStatus(string IdSMS);
         void Synchronize();
     }
 
@@ -104,6 +106,7 @@ namespace Laser.Orchard.Mobile.Services {
             SmsContactPartRecord contactRecord = null;
             CommunicationSmsRecord smsRecord = null;
 
+            // Send for Contact Part
             if (content.ContainsKey("SmsContactPartRecord"))
             {
                 contactRecord = (content["SmsContactPartRecord"] as SmsContactPartRecord);
@@ -113,9 +116,9 @@ namespace Laser.Orchard.Mobile.Services {
                     risultato = smsRecord.Prefix + smsRecord.Sms;
                 }
             } 
-            // Send for test
-            else if (content.ContainsKey("SmsTestNumber")) {
-                risultato = content["SmsTestNumber"].ToString();
+            // Send for Lista Destinatari
+            else if (content.ContainsKey("SmsContactNumber")) {
+                risultato = content["SmsContactNumber"].ToString();
             }
 
             ////versione senza l'uso degli alias nella query HQL
@@ -177,17 +180,26 @@ namespace Laser.Orchard.Mobile.Services {
                     SmsNumber = numbers,
                 };
 
+                //EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
+                //SmsServiceReference.SmsWebServiceSoapClient _service;
+                //if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
+                //    WSHttpBinding binding = new WSHttpBinding();
+                //    binding.Security.Mode = SecurityMode.Transport;
+                //    _service = new SmsWebServiceSoapClient(binding, address);
+                //} else {
+                //    BasicHttpBinding binding = new BasicHttpBinding();
+                //    _service = new SmsWebServiceSoapClient(binding, address);
+                //}
+
                 //Specify the binding to be used for the client.
                 EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
-                SmsServiceReference.SmsWebServiceSoapClient _service;
+                BasicHttpBinding binding = new BasicHttpBinding();
+
                 if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-                    WSHttpBinding binding = new WSHttpBinding();
-                    binding.Security.Mode = SecurityMode.Transport;
-                    _service = new SmsWebServiceSoapClient(binding, address);
-                } else {
-                    BasicHttpBinding binding = new BasicHttpBinding();
-                    _service = new SmsWebServiceSoapClient(binding, address);
+                    binding.Security.Mode = BasicHttpSecurityMode.Transport;
                 }
+                SmsServiceReference.SmsWebServiceSoapClient _service = new SmsWebServiceSoapClient(binding, address);
+                
 
                 // Place Holder
                 List<SmsServiceReference.PlaceHolderMessaggio> listPH = GetPlaceHolder(telDestArr, testoSMS);
@@ -324,16 +336,12 @@ namespace Laser.Orchard.Mobile.Services {
             var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
 
             EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
-            SmsServiceReference.SmsWebServiceSoapClient _service;
+            BasicHttpBinding binding = new BasicHttpBinding();
 
             if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-                WSHttpBinding binding = new WSHttpBinding();
-                binding.Security.Mode = SecurityMode.Transport;
-                _service = new SmsWebServiceSoapClient(binding, address);
-            } else {
-                BasicHttpBinding binding = new BasicHttpBinding();
-                _service = new SmsWebServiceSoapClient(binding, address);
+                binding.Security.Mode = BasicHttpSecurityMode.Transport;
             }
+            SmsServiceReference.SmsWebServiceSoapClient _service = new SmsWebServiceSoapClient(binding, address);
 
             SmsServiceReference.Login login = new SmsServiceReference.Login();
             login.User = smsSettings.WsUsername;
@@ -345,48 +353,86 @@ namespace Laser.Orchard.Mobile.Services {
             return result;
         }
 
-        public string GetReportSmsStatus(string IdSMS) {
-            string reportStatus = null;
+        public SmsDeliveryReportResultVM GetReportSmsStatus(string IdSMS) {
+            SmsDeliveryReportResultVM esito = new SmsDeliveryReportResultVM();
 
             //Specify the binding to be used for the client.
             var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
 
             EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
-            SmsServiceReference.SmsWebServiceSoapClient _service;
+            BasicHttpBinding binding = new BasicHttpBinding();
 
             if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
-                WSHttpBinding binding = new WSHttpBinding();
-                binding.Security.Mode = SecurityMode.Transport;
-                _service = new SmsWebServiceSoapClient(binding, address);
-            } else {
-                BasicHttpBinding binding = new BasicHttpBinding();
-                _service = new SmsWebServiceSoapClient(binding, address);
+                binding.Security.Mode = BasicHttpSecurityMode.Transport;
             }
+            SmsServiceReference.SmsWebServiceSoapClient _service = new SmsWebServiceSoapClient(binding, address);
 
             SmsServiceReference.Login login = new SmsServiceReference.Login();
             login.User = smsSettings.WsUsername;
             login.Password = smsSettings.WsPassword;
             login.DriverId = smsSettings.MamDriverIdentifier;
 
-            // TODO - Dettaglio Utenti + Stato Sms
+            // Dettaglio Transfer Delivery Report
             SmsServiceReference.StatusByExtId[] ret = _service.GetSmsStateByExternalId(login, IdSMS);
 
-            int contACCEPTED = (from sms in ret where sms.SmsState.CompareTo("ACCEPTED") == 0 select sms).Count();
-            int contDELIVERED = (from sms in ret where sms.SmsState.CompareTo("DELIVERED") == 0 select sms).Count();
-            int contEXPIRED = (from sms in ret where sms.SmsState.CompareTo("EXPIRED") == 0 select sms).Count();
-            int contREJECTED = (from sms in ret where sms.SmsState.CompareTo("REJECTED") == 0 select sms).Count();
+            if (ret != null && ret.Length > 0) {
+                int contACCEPTED = (from sms in ret where sms.SmsState.CompareTo("ACCEPTED") == 0 select sms).Count();
+                int contDELIVERED = (from sms in ret where sms.SmsState.CompareTo("DELIVERED") == 0 select sms).Count();
+                int contEXPIRED = (from sms in ret where sms.SmsState.CompareTo("EXPIRED") == 0 select sms).Count();
+                int contREJECTED = (from sms in ret where sms.SmsState.CompareTo("REJECTED") == 0 select sms).Count();
 
-            int contSmsTotali = contACCEPTED + contDELIVERED + contEXPIRED + contREJECTED;
-            int contSmsInviati = contACCEPTED + contDELIVERED;
-            int contSmsFalliti = contEXPIRED + contREJECTED;
+                int contSmsTotali = contACCEPTED + contDELIVERED + contEXPIRED + contREJECTED;
+                int contSmsInviati = contACCEPTED + contDELIVERED;
+                int contSmsFalliti = contEXPIRED + contREJECTED;
 
-            reportStatus = "Tot Utenti: " + contSmsTotali.ToString();
-            reportStatus += " - Inviati: " + contSmsInviati.ToString();
-            reportStatus += " (Consegnati al terminale: " + contDELIVERED.ToString() + " - Consegnati all'operatore: " + contACCEPTED.ToString() + ")";
-            reportStatus += " - Falliti: " + contSmsFalliti.ToString();
-            reportStatus += " (Rejected: " + contREJECTED.ToString() + " - Expired: " + contEXPIRED.ToString() + ")";
+                string reportStatus = "Tot Utenti: " + contSmsTotali.ToString();
+                reportStatus += " - Inviati: " + contSmsInviati.ToString();
+                reportStatus += " (Consegnati al terminale: " + contDELIVERED.ToString() + " - Consegnati all'operatore: " + contACCEPTED.ToString() + ")";
+                reportStatus += " - Falliti: " + contSmsFalliti.ToString();
+                reportStatus += " (Rejected: " + contREJECTED.ToString() + " - Expired: " + contEXPIRED.ToString() + ")";
 
-            return reportStatus;
+                List<SmsDeliveryReportDetails> listDetails = new List<SmsDeliveryReportDetails>();
+                foreach (SmsServiceReference.StatusByExtId report in ret) {
+                    SmsDeliveryReportDetails detail = new SmsDeliveryReportDetails();
+
+                    detail.Recipient = report.SmsNumber.ToString();
+                    detail.SubmittedDate = Convert.ToDateTime(report.SmsLastUpdate, new CultureInfo("it-IT"));
+                    detail.RequestDate = Convert.ToDateTime(report.SmsSentDate, new CultureInfo("it-IT"));
+                    detail.Status = report.SmsState;
+
+                    listDetails.Add(detail);
+                }
+
+                esito.ReportStatus = reportStatus;
+                esito.Details = listDetails;
+            } 
+            else {
+                esito = null;
+            }
+
+            return esito;
+        }
+
+        public int GetStatus() {
+            //Specify the binding to be used for the client.
+            var smsSettings = _orchardServices.WorkContext.CurrentSite.As<SmsSettingsPart>();
+
+            EndpointAddress address = new EndpointAddress(smsSettings.SmsServiceEndPoint);
+            BasicHttpBinding binding = new BasicHttpBinding();
+
+            if (smsSettings.SmsServiceEndPoint.ToLower().StartsWith("https://")) {
+                binding.Security.Mode = BasicHttpSecurityMode.Transport;
+            }
+            SmsServiceReference.SmsWebServiceSoapClient _service = new SmsWebServiceSoapClient(binding, address);
+
+            SmsServiceReference.Login login = new SmsServiceReference.Login();
+            login.User = smsSettings.WsUsername;
+            login.Password = smsSettings.WsPassword;
+            login.DriverId = smsSettings.MamDriverIdentifier;
+
+            var result = _service.GetStatus(login);
+
+            return result;
         }
 
     }

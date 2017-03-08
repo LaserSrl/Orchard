@@ -20,12 +20,18 @@ namespace Laser.Orchard.Mobile.ViewModels {
             PushSentNumber = 0;
             PushAdvertising = true;
             PushTestNumber = 0;
+            UseRecipientList = false;
+            TestPushToDevice = false;
         }
         public string TitlePush { get; set; }
         public string TextPush { get; set; }
         public bool ToPush { get; set; }
         public bool TestPush { get; set; }
+        public bool TestPushToDevice { get; set; }
         public string DevicePush { get; set; }
+        public bool UseRecipientList { get; set; }
+        public string RecipientList { get; set; }
+
 
         // proprietà aggiuntive
         public bool PushSent { get; set; }
@@ -40,7 +46,7 @@ namespace Laser.Orchard.Mobile.ViewModels {
                 }).ToList(), "Value", "Text");
                 List<SelectListItem> _list = enumToList.ToList();
                 _list.Insert(0, new SelectListItem() { Value = "All", Text = "All" });
-                return new SelectList((IEnumerable<SelectListItem>)_list, "Value", "Text");    
+                return new SelectList((IEnumerable<SelectListItem>)_list, "Value", "Text");
             }
         }
         public bool ShowTestOptions { get; set; }

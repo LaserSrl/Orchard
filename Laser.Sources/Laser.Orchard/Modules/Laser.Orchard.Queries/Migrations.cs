@@ -61,5 +61,17 @@ namespace Laser.Orchard.Queries {
          p => p.Attachable(false));
             return 2;
         }
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterPartDefinition(
+                "QueryUserFilterExtensionPart",
+                 b => b
+                    .Attachable(false)
+                    .WithField("OneShotQuery", cfg => cfg.OfType("BooleanField")
+                        .WithSetting("BooleanFieldSettings.Hint", "If checked, the query will be shown in a separate group")
+                        .WithSetting("BooleanFieldSettings.DefaultValue", "false")
+                    )
+            );
+            return 3;
+        }
     }
 }

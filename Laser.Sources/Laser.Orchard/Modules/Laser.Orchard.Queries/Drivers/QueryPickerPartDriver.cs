@@ -36,17 +36,22 @@ namespace Laser.Orchard.Queries.Drivers {
             return Editor(part, null, shapeHelper);
         }
         protected override DriverResult Editor(QueryPickerPart part, IUpdateModel updater, dynamic shapeHelper) {
+            var queryList = _queryPickerService.GetUserDefinedQueries().Select(x =>
+                    new KeyValuePair<int, string>(x.Id, ((dynamic)x).TitlePart.Title));
+            var oneShotList = _queryPickerService.GetOneShotQueries().Select(x =>
+                    new KeyValuePair<int, string>(x.Id, ((dynamic)x).TitlePart.Title));
+
             var model = new QueryPickerVM {
                 SelectedIds = part.Ids,
-                AvailableQueries = new SelectList(_queryPickerService.GetUserDefinedQueries().Select(x =>
-                    new {
-                        Value = x.Id,
-                        Text = ((dynamic)x).TitlePart.Title
-                    }
-                    ), "Value", "Text", part.Ids)
+                AvailableQueries = queryList,
+                OneShotQueries = oneShotList
             };
             if (updater != null && updater.TryUpdateModel(model, Prefix, null, null)) {
-                part.Ids = model.SelectedIds;
+                if (HttpContext.Current.Request.Form[Prefix + ".SelectedIds"] == null) {
+                    part.Ids = new int[] {};
+                } else {
+                    part.Ids = model.SelectedIds;
+                }
             }
             var resultRecordNumber = 0;
             // TODO: rendere dinamico e injettabile l'array dei contenttypes

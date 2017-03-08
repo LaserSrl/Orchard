@@ -11,11 +11,11 @@ using System.Collections.Generic;
 
 namespace Laser.Orchard.ButtonToWorkflows.Drivers {
     [OrchardFeature("Laser.Orchard.ButtonToWorkflows")]
-    public class PushMobileSettingsPartDriver : ContentPartDriver<ButtonToWorkflowsSettingsPart> {
+    public class ButtonToWorkflowsSettingsPartDriver : ContentPartDriver<ButtonToWorkflowsSettingsPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly ShellSettings _shellSettings;
         private int numeropulsanti = 3;
-        public PushMobileSettingsPartDriver(IOrchardServices orchardServices, ShellSettings shellSettings) {
+        public ButtonToWorkflowsSettingsPartDriver(IOrchardServices orchardServices, ShellSettings shellSettings) {
             _orchardServices = orchardServices;
             _shellSettings = shellSettings;
         }
@@ -35,15 +35,19 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                 test += "£££";
             return test.Split('£');
         }
-        private ButtonToWorkflowsSettingsVM buildmodel(string listaText, string listaAction, string listaDescription, string listaMessage) {
+        private ButtonToWorkflowsSettingsVM buildmodel(string listaText, string listaAction, string listaDescription, string listaMessage,string listaAsync) {
             string[] listText = sistemaarray(listaText);
             string[] listAction = sistemaarray(listaAction);
             string[] listDescription = sistemaarray(listaDescription);
             string[] listMessage = sistemaarray(listaMessage);
+            string[] listAsync = sistemaarray(listaAsync);
             var viewModel = new ButtonToWorkflowsSettingsVM();
             viewModel.ButtonsAction1 = listAction[0];
             viewModel.ButtonsAction2 = listAction[1];
             viewModel.ButtonsAction3 = listAction[2];
+            viewModel.ButtonsAsync1 = string.IsNullOrEmpty(listAsync[0]) ? false : listAsync[0].ToLower().Equals("true");
+            viewModel.ButtonsAsync2 = string.IsNullOrEmpty(listAsync[1]) ? false : listAsync[1].ToLower().Equals("true");
+            viewModel.ButtonsAsync3 = string.IsNullOrEmpty(listAsync[2]) ? false : listAsync[2].ToLower().Equals("true");
             viewModel.ButtonsDescription1 = listDescription[0];
             viewModel.ButtonsDescription2 = listDescription[1];
             viewModel.ButtonsDescription3 = listDescription[2];
@@ -61,7 +65,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
             return ContentShape("Parts_ButtonToWorkflowsSettings_Edit", () => {
                 var viewModel = new ButtonToWorkflowsSettingsVM();
                 var getpart = _orchardServices.WorkContext.CurrentSite.As<ButtonToWorkflowsSettingsPart>();
-                viewModel = buildmodel(getpart.ButtonsText, getpart.ButtonsAction, getpart.ButtonsDescription,getpart.ButtonsMessage);
+                viewModel = buildmodel(getpart.ButtonsText, getpart.ButtonsAction, getpart.ButtonsDescription,getpart.ButtonsMessage,getpart.ButtonsAsync);
                 //try {
 
                 //    string[] listaButton = getpart.ButtonsText.Split('£');
@@ -96,12 +100,12 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                         part.ButtonsText =viewModel.ButtonsText1+'£'+viewModel.ButtonsText2+"£"+viewModel.ButtonsText3;
                         part.ButtonsDescription = viewModel.ButtonsDescription1 + '£' + viewModel.ButtonsDescription2 + "£" + viewModel.ButtonsDescription3;
                         part.ButtonsMessage = viewModel.ButtonsMessage1 + '£' + viewModel.ButtonsMessage2 + '£' + viewModel.ButtonsMessage3;
-
+                        part.ButtonsAsync = viewModel.ButtonsAsync1.ToString() + '£' + viewModel.ButtonsAsync2.ToString() + '£' + viewModel.ButtonsAsync3.ToString();
                     }
                 }
                 else {
                     viewModel = new ButtonToWorkflowsSettingsVM();
-                    viewModel = buildmodel(part.ButtonsText, part.ButtonsAction, part.ButtonsDescription,part.ButtonsMessage);
+                    viewModel = buildmodel(part.ButtonsText, part.ButtonsAction, part.ButtonsDescription,part.ButtonsMessage,part.ButtonsAsync);
                     //try {
                     //    string[] listaButton = part.ButtonsText.Split('£');
                     //    string[] listaAction = part.ButtonsAction.Split('£');

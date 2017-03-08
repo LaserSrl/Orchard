@@ -32,7 +32,7 @@ namespace Laser.Orchard.MailCommunication.Drivers
                 var vModel = new MailerSiteSettingsVM { Settings = part };
 
                 if (updater != null) {
-                    updater.TryUpdateModel(part, Prefix, null, null);
+                    updater.TryUpdateModel(vModel, Prefix, null, null);
                 }
                 return shapeHelper.EditorTemplate(TemplateName: "Parts/MailerSiteSettings", Model: vModel, Prefix: Prefix);
             })

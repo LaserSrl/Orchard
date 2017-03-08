@@ -1,50 +1,54 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
-using Laser.Orchard.CommunicationGateway.ViewModels;
-using Laser.Orchard.CommunicationGateway.Utils;
 using Laser.Orchard.ShortLinks.Services;
+using Laser.Orchard.StartupConfig.Fields;
+using Laser.Orchard.StartupConfig.Handlers;
 using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
-using NHibernate.Transform;
 using Orchard;
+using Orchard.Autoroute.Models;
+using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Records;
 using Orchard.ContentPicker.Fields;
+using Orchard.Core.Common.Fields;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Fields.Fields;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Logging;
 using Orchard.MediaLibrary.Fields;
 using Orchard.Modules.Services;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
+using Orchard.Projections.Services;
 using Orchard.Security;
 using Orchard.Tags.Models;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Models;
+using Orchard.Taxonomies.Services;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Text;
-using Orchard.Taxonomies.Services;
-using Orchard.Core.Common.Models;
-using Orchard.Localization.Services;
-using Laser.Orchard.StartupConfig.Handlers;
 
 namespace Laser.Orchard.CommunicationGateway.Services {
 
     public interface ICommunicationService : IDependency {
 
         bool AdvertisingIsAvailable(Int32 id);
+
         string GetCampaignLink(string CampaignSource, ContentPart part);
+
         bool CampaignLinkExist(ContentPart part);
+
         void UserToContact(IUser UserContent);
+
         CommunicationContactPart GetContactFromUser(int iduser);
+
         List<ContentItem> GetContactsFromMail(string mail);
 
         List<ContentItem> GetContactsFromSms(string prefix, string sms);
@@ -54,6 +58,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         ContentItem GetContactFromId(int id);
 
         void Synchronize();
+
         void UnboundFromUser(UserPart userPart);
 
         /// <summary>
@@ -63,6 +68,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         void RemoveMailsAndSms(int contactId);
 
         CommunicationContactPart EnsureMasterContact();
+
         CommunicationContactPart TryEnsureContact(int userId);
     }
 
@@ -77,13 +83,15 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly ICultureManager _cultureManager;
         private readonly IContactRelatedEventHandler _contactRelatedEventHandler;
         private readonly ITransactionManager _transactionManager;
+        private readonly IFieldIndexService _fieldIndexService;
+        private readonly IAutorouteService _autorouteService;
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
 
-        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, IContactRelatedEventHandler contactRelatedEventHandler, ITransactionManager transactionManager) {
+        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, IContactRelatedEventHandler contactRelatedEventHandler, ITransactionManager transactionManager, IFieldIndexService fieldIndexService, IAutorouteService autorouteService) {
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
@@ -96,6 +104,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _cultureManager = cultureManager;
             _contactRelatedEventHandler = contactRelatedEventHandler;
             _transactionManager = transactionManager;
+            _fieldIndexService = fieldIndexService;
+            _autorouteService = autorouteService;
 
             T = NullLocalizer.Instance;
         }
@@ -217,7 +227,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr
                 join civr.ContentItemRecord as cir
                 join cir.EmailContactPartRecord as EmailPart
-                join EmailPart.EmailRecord as EmailRecord 
+                join EmailPart.EmailRecord as EmailRecord
                 WHERE civr.Published=1 AND EmailRecord.Validated AND EmailRecord.Email = :mail";
 
             var elencoId = _session.For(null)
@@ -235,7 +245,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 FROM Orchard.ContentManagement.Records.ContentItemVersionRecord as civr
                 join civr.ContentItemRecord as cir
                 join cir.SmsContactPartRecord as SmsPart
-                join SmsPart.SmsRecord as SmsRecord 
+                join SmsPart.SmsRecord as SmsRecord
                 WHERE civr.Published=1 AND SmsRecord.Prefix = :prefix AND SmsRecord.Sms = :sms";
             var elencoId = _session.For(null)
                 .CreateQuery(hql)
@@ -401,7 +411,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 foreach (var contactEmail in contactEmailList) {
                     if ((contactEmail != null) && (contactEmail.ContentType == "CommunicationContact")) {
                         if ((contactEmail.As<CommunicationContactPart>().Record.UserPartRecord_Id == 0) && (contactEmail.As<CommunicationContactPart>().Master == false)) {
-                            contact = contactEmail;
+                            //contact = contactEmail;
+                            contact = _orchardServices.ContentManager.Get(contactEmail.Id, VersionOptions.DraftRequired);
                             contact.As<CommunicationContactPart>().Logs = TruncateFromStart(contact.As<CommunicationContactPart>().Logs + string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function. ").Text, DateTime.Now), 4000); //4000 sembra essere la lunghezza massima gestita da NHibernate per gli nvarchar(max)
                             contact.As<CommunicationContactPart>().UserIdentifier = UserContent.Id;
                             break; // associa solo il primo contatto che trova
@@ -410,13 +421,14 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 }
 
                 if (contact == null) {
-                    contact = _orchardServices.ContentManager.Create("CommunicationContact");
+                    contact = _orchardServices.ContentManager.Create("CommunicationContact", VersionOptions.Draft);
                     contact.As<CommunicationContactPart>().Master = false;
                     contact.As<CommunicationContactPart>().UserIdentifier = UserContent.Id;
                 }
             }
             else {
-                contact = contactsUsers.ContentItem;
+                // contact =contactsUsers.ContentItem;
+                contact = _orchardServices.ContentManager.Get(contactsUsers.Id, VersionOptions.DraftRequired);
             }
 
             // aggiorna Pushcategories
@@ -535,28 +547,97 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             if (asProfilePart) {
                 List<ContentPart> Lcp = new List<ContentPart>();
                 Lcp.Add(((ContentPart)((dynamic)contact).ProfilePart));
+                ContentPart contactProfile = (ContentPart)((dynamic)contact).ProfilePart;
                 foreach (dynamic cf in ((dynamic)UserContent).ProfilePart.Fields) {
-                    object myval;
-                    if (cf.FieldDefinition.Name == typeof(DateTimeField).Name)
-                        myval = ((object)(((dynamic)cf).DateTime));
-                    else if (cf.FieldDefinition.Name == typeof(MediaLibraryPickerField).Name || cf.FieldDefinition.Name == typeof(ContentPickerField).Name)
-                        myval = ((Int32[])cf.Ids).ToList().Select(x => (object)x).ToList();
-                    else if (cf.FieldDefinition.Name == typeof(TaxonomyField).Name) {
-                        List<TaxoVM> second = new List<TaxoVM>();
-                        var selectedTerms = _taxonomyService.GetTermsForContentItem(UserContent.Id, ((ContentField)cf).Name);
-                        foreach (TermPart tp in selectedTerms) {
-                            TaxoVM tv = new TaxoVM();
-                            tv.Id = tp.Id;
-                            tv.flag = true;
-                            second.Add(tv);
+                    if (cf is ICustomField) {
+                        // laser custom field type
+                        var valueList = ((ICustomField)cf).GetFieldValueList();
+                        if (valueList != null) {
+                            var contactField = (ICustomField)(contactProfile.Fields.FirstOrDefault(x => x.Name == cf.Name));
+                            foreach (var val in valueList) {
+                                contactField.SetFieldValue(val.ValueName, val.Value);
+                                //            _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, val.ValueName, val.Value, val.ValueType);
+                            }
                         }
-                        myval = ((object)(second.Select(x => (dynamic)x).ToList()));
                     }
-                    else {
-                        myval = ((object)(((dynamic)cf).Value));
+                    else { // orchard base field type
+                        object myval;
+                        if (cf.FieldDefinition.Name == typeof(DateTimeField).Name)
+                            myval = ((object)(((dynamic)cf).DateTime));
+                        else if (cf.FieldDefinition.Name == typeof(MediaLibraryPickerField).Name || cf.FieldDefinition.Name == typeof(ContentPickerField).Name)
+                            myval = ((Int32[])cf.Ids).ToList().Select(x => (object)x).ToList();
+                        else if (cf.FieldDefinition.Name == typeof(TaxonomyField).Name) {
+                            List<TaxoVM> second = new List<TaxoVM>();
+                            var selectedTerms = _taxonomyService.GetTermsForContentItem(UserContent.Id, ((ContentField)cf).Name);
+                            foreach (TermPart tp in selectedTerms) {
+                                TaxoVM tv = new TaxoVM();
+                                tv.Id = tp.Id;
+                                tv.flag = true;
+                                second.Add(tv);
+                            }
+                            myval = ((object)(second.Select(x => (dynamic)x).ToList()));
+                        }
+                        else if (cf.FieldDefinition.Name == typeof(LinkField).Name) {
+                            // gestisce in modo particolare il text
+                            LinkField linkField = (LinkField)cf;
+                            var profilePart = contact.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ProfilePart");
+                            if (profilePart != null) {
+                                LinkField contactField = (LinkField)(profilePart.Fields.FirstOrDefault(x => x.Name == linkField.Name));
+                                contactField.Text = linkField.Text;
+                            }
+                            // gestisce in modo standard il value
+                            myval = linkField.Value;
+                        }
+                        else {
+                            myval = ((object)(((dynamic)cf).Value));
+                        }
+                        _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, contact);
+
+                        //// determina il type e aggiorna il field index
+                        //string fieldTypeName = ((ContentField)cf).PartFieldDefinition.FieldDefinition.Name;
+                        //if (fieldTypeName == typeof(BooleanField).Name) {
+                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(int));
+                        //}
+                        //else if (fieldTypeName == typeof(DateTimeField).Name) {
+                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", ((DateTime)myval).Ticks, typeof(int));
+                        //}
+                        //else if (fieldTypeName == typeof(NumericField).Name) {
+                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(decimal));
+                        //}
+                        //else if (fieldTypeName == typeof(ContentPickerField).Name
+                        //    || fieldTypeName == typeof(MediaLibraryPickerField).Name) {
+                        //    string fieldValue = "";
+                        //    foreach (int relatedId in cf.Ids) {
+                        //        if (string.IsNullOrWhiteSpace(fieldValue.ToString()) == false) {
+                        //            fieldValue += ",";
+                        //        }
+                        //        fieldValue += string.Format("{{{0}}}", relatedId);
+                        //    }
+                        //    if (string.IsNullOrWhiteSpace(fieldValue.ToString())) {
+                        //        fieldValue = null;
+                        //    }
+                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", fieldValue, typeof(string));
+                        //}
+                        //else if (fieldTypeName == typeof(LinkField).Name) {
+                        //    LinkField linkField = (LinkField)cf;
+                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", linkField.Value, typeof(string));
+                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "Text", linkField.Text, typeof(string));
+                        //}
+                        //else if (fieldTypeName == typeof(InputField).Name
+                        //    || fieldTypeName == typeof(TextField).Name
+                        //    || fieldTypeName == typeof(EnumerationField).Name) {
+                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(string));
+                        //}
                     }
-                    _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, contact);
                 }
+            }
+            //if (string.IsNullOrEmpty(contact.As<AutoroutePart>().DisplayAlias)) {
+            //    contact.As<AutoroutePart>().DisplayAlias = _autorouteService.GenerateAlias(contact.As<AutoroutePart>());
+            //    _autorouteService.ProcessPath(contact.As<AutoroutePart>());
+            //    _autorouteService.PublishAlias(contact.As<AutoroutePart>());
+            //}
+            if (contact != null) {
+                _orchardServices.ContentManager.Publish(contact);
             }
         }
     }

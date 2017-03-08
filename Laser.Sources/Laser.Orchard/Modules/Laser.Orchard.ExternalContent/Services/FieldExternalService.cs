@@ -532,7 +532,10 @@ namespace Laser.Orchard.ExternalContent.Services {
                     output = output.Substring(1);
                 }
 
-                string xml = RemoveAllNamespaces(output);
+                // Fix per non generare eccezione se output è uguale a ""
+                string xml = "<root />";
+                if (output != "")
+                    xml = RemoveAllNamespaces(output);
 
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(xml);

@@ -637,6 +637,13 @@ namespace Laser.Orchard.Mobile.SmsServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetSmsStateByExternalId", ReplyAction="*")]
         System.Threading.Tasks.Task<Laser.Orchard.Mobile.SmsServiceReference.GetSmsStateByExternalIdResponse> GetSmsStateByExternalIdAsync(Laser.Orchard.Mobile.SmsServiceReference.GetSmsStateByExternalIdRequest request);
+        
+        // CODEGEN: Generating message contract since element name login from namespace http://tempuri.org/ is not marked nillable
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetStatus", ReplyAction="*")]
+        Laser.Orchard.Mobile.SmsServiceReference.GetStatusResponse GetStatus(Laser.Orchard.Mobile.SmsServiceReference.GetStatusRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetStatus", ReplyAction="*")]
+        System.Threading.Tasks.Task<Laser.Orchard.Mobile.SmsServiceReference.GetStatusResponse> GetStatusAsync(Laser.Orchard.Mobile.SmsServiceReference.GetStatusRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -855,6 +862,74 @@ namespace Laser.Orchard.Mobile.SmsServiceReference {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class GetStatusRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="GetStatus", Namespace="http://tempuri.org/", Order=0)]
+        public Laser.Orchard.Mobile.SmsServiceReference.GetStatusRequestBody Body;
+        
+        public GetStatusRequest() {
+        }
+        
+        public GetStatusRequest(Laser.Orchard.Mobile.SmsServiceReference.GetStatusRequestBody Body) {
+            this.Body = Body;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://tempuri.org/")]
+    public partial class GetStatusRequestBody {
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
+        public Laser.Orchard.Mobile.SmsServiceReference.Login login;
+        
+        public GetStatusRequestBody() {
+        }
+        
+        public GetStatusRequestBody(Laser.Orchard.Mobile.SmsServiceReference.Login login) {
+            this.login = login;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class GetStatusResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="GetStatusResponse", Namespace="http://tempuri.org/", Order=0)]
+        public Laser.Orchard.Mobile.SmsServiceReference.GetStatusResponseBody Body;
+        
+        public GetStatusResponse() {
+        }
+        
+        public GetStatusResponse(Laser.Orchard.Mobile.SmsServiceReference.GetStatusResponseBody Body) {
+            this.Body = Body;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://tempuri.org/")]
+    public partial class GetStatusResponseBody {
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=0)]
+        public int GetStatusResult;
+        
+        public GetStatusResponseBody() {
+        }
+        
+        public GetStatusResponseBody(int GetStatusResult) {
+            this.GetStatusResult = GetStatusResult;
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface SmsWebServiceSoapChannel : Laser.Orchard.Mobile.SmsServiceReference.SmsWebServiceSoap, System.ServiceModel.IClientChannel {
     }
@@ -961,6 +1036,31 @@ namespace Laser.Orchard.Mobile.SmsServiceReference {
             inValue.Body.login = login;
             inValue.Body.externalId = externalId;
             return ((Laser.Orchard.Mobile.SmsServiceReference.SmsWebServiceSoap)(this)).GetSmsStateByExternalIdAsync(inValue);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        Laser.Orchard.Mobile.SmsServiceReference.GetStatusResponse Laser.Orchard.Mobile.SmsServiceReference.SmsWebServiceSoap.GetStatus(Laser.Orchard.Mobile.SmsServiceReference.GetStatusRequest request) {
+            return base.Channel.GetStatus(request);
+        }
+        
+        public int GetStatus(Laser.Orchard.Mobile.SmsServiceReference.Login login) {
+            Laser.Orchard.Mobile.SmsServiceReference.GetStatusRequest inValue = new Laser.Orchard.Mobile.SmsServiceReference.GetStatusRequest();
+            inValue.Body = new Laser.Orchard.Mobile.SmsServiceReference.GetStatusRequestBody();
+            inValue.Body.login = login;
+            Laser.Orchard.Mobile.SmsServiceReference.GetStatusResponse retVal = ((Laser.Orchard.Mobile.SmsServiceReference.SmsWebServiceSoap)(this)).GetStatus(inValue);
+            return retVal.Body.GetStatusResult;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        System.Threading.Tasks.Task<Laser.Orchard.Mobile.SmsServiceReference.GetStatusResponse> Laser.Orchard.Mobile.SmsServiceReference.SmsWebServiceSoap.GetStatusAsync(Laser.Orchard.Mobile.SmsServiceReference.GetStatusRequest request) {
+            return base.Channel.GetStatusAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<Laser.Orchard.Mobile.SmsServiceReference.GetStatusResponse> GetStatusAsync(Laser.Orchard.Mobile.SmsServiceReference.Login login) {
+            Laser.Orchard.Mobile.SmsServiceReference.GetStatusRequest inValue = new Laser.Orchard.Mobile.SmsServiceReference.GetStatusRequest();
+            inValue.Body = new Laser.Orchard.Mobile.SmsServiceReference.GetStatusRequestBody();
+            inValue.Body.login = login;
+            return ((Laser.Orchard.Mobile.SmsServiceReference.SmsWebServiceSoap)(this)).GetStatusAsync(inValue);
         }
     }
 }

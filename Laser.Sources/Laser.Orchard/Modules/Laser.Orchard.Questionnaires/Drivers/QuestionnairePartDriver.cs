@@ -16,6 +16,7 @@ using Orchard.Security;
 using Laser.Orchard.Questionnaires.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.OutputCache.Filters;
+using Orchard.Tokens;
 
 namespace Laser.Orchard.Questionnaires.Drivers {
     public class QuestionnairePartDriver : ContentPartDriver<QuestionnairePart> {
@@ -24,18 +25,21 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         private readonly IOrchardServices _orchardServices;
         private readonly ICaptchaService _capthcaServices;
         private readonly ICurrentContentAccessor _currentContentAccessor;
+        private readonly ITokenizer _tokenizer;
         
         public QuestionnairePartDriver(IQuestionnairesServices questServices,
             IOrchardServices orchardServices,
             IControllerContextAccessor controllerContextAccessor,
             ICaptchaService capthcaServices,
-            ICurrentContentAccessor currentContentAccessor) {
+            ICurrentContentAccessor currentContentAccessor,
+            ITokenizer tokenizer) {
             _questServices = questServices;
             _orchardServices = orchardServices;
             _controllerContextAccessor = controllerContextAccessor;
             T = NullLocalizer.Instance;
             _capthcaServices = capthcaServices;
             _currentContentAccessor = currentContentAccessor;
+            _tokenizer = tokenizer;
         }
 
         public Localizer T { get; set; }
@@ -61,13 +65,10 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                 var viewModel = _questServices.BuildViewModelWithResultsForQuestionnairePart(part); //Modello mappato senza risposte
                 if (_controllerContextAccessor.Context != null) {
                     // valorizza il context
-                    var currentCi = _currentContentAccessor.CurrentContentItem;
-                    if ((currentCi != null) && currentCi.Has<TitlePart>()) {
-                        viewModel.Context = currentCi.Get<TitlePart>().Title;
-                    }
-                    else {
-                        viewModel.Context = _controllerContextAccessor.Context.HttpContext.Request.RawUrl;
-                    }
+                    var questionnaireContext = part.Settings.GetModel<QuestionnairesPartSettingVM>().QuestionnaireContext;
+                    //questionnaireContext = _tokenizer.Replace(questionnaireContext, new Dictionary<string, object> {{ "Content", part.ContentItem}});
+                    questionnaireContext = _tokenizer.Replace(questionnaireContext, new Dictionary<string, object> { { "Content", _currentContentAccessor.CurrentContentItem } });
+                    viewModel.Context = questionnaireContext;
                     // limita la lunghezza del context a 255 chars
                     if (viewModel.Context.Length > 255) {
                         viewModel.Context = viewModel.Context.Substring(0, 255);
@@ -260,7 +261,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                     Position = int.Parse(q.Attribute("Position").Value),
                     Published = bool.Parse(q.Attribute("Published").Value),
                     Question = q.Attribute("Question").Value,
-                    Section = q.Attribute("Section").Value,
+                    Section = q.Attribute("Section") != null ? q.Attribute("Section").Value : null,
                     QuestionType = (QuestionType)Enum.Parse(typeof(QuestionType), q.Attribute("QuestionType").Value),
                     AnswerType = (AnswerType)Enum.Parse(typeof(AnswerType), q.Attribute("AnswerType").Value),
                     IsRequired = bool.Parse(q.Attribute("IsRequired").Value),

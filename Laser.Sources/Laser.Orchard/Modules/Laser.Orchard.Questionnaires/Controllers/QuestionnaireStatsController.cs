@@ -26,7 +26,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         private readonly IScheduledTaskManager _taskManager;
         private readonly INotifier _notifier;
         private readonly ShellSettings _shellSettings;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public QuestionnaireStatsController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, IScheduledTaskManager taskManager, INotifier notifier, ShellSettings shellSettings) {
             _orchardServices = orchardServices;

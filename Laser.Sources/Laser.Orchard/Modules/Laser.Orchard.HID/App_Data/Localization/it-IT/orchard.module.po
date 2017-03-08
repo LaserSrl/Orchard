@@ -1,0 +1,174 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2017 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.HID/Views/Admin/Index.cshtml"
+msgid "Information for the account that manages Mobile Access"
+msgstr "Informazioni sull'account che gestisce il Mobile Access"
+
+msgctxt "~/Modules/Laser.Orchard.HID/Views/Admin/Index.cshtml"
+msgid "Input the App Version Strings used for the application, one per line. These strings are used in the mobile apps to configure the HID SDK. The system will use them to identify registered device. Only insert the immutable part of these strings (e.g.: no version numbers)."
+msgstr "Inserire le stringhe "App Version" usate per l'applicazione, una per riga. Queste stringhe sono usate nella App per configurare l'SDK di HID. Il sistema le utilizza per identificare i dispositivi registrati. Inserire solo la parte costante di queste stringhe (e.g.: non inserire i numeri di versione)"
+
+msgctxt "~/Modules/Laser.Orchard.HID/Views/Admin/Index.cshtml"
+msgid "Input the Part Numbers you want to be able to manage automatically, one per line."
+msgstr "Inserire i Part Number che si vuole gestire in maniera automatica, uno per riga."
+
+msgctxt "~/Modules/Laser.Orchard.HID/Views/Admin/Index.cshtml"
+msgid "Input your Customer ID."
+msgstr "Inserire il CustomerID."
+
+msgctxt "~/Modules/Laser.Orchard.HID/Views/Admin/Index.cshtml"
+msgid "Input your HID App Version Strings"
+msgstr "Inserire le stringhe "App Version" usate per l'applicazione."
+
+msgctxt "~/Modules/Laser.Orchard.HID/Views/Admin/Index.cshtml"
+msgid "Input your HID Part Numbers"
+msgstr "Inserire i Part Number"
+
+msgctxt "~/Modules/Laser.Orchard.HID/Views/Admin/Index.cshtml"
+msgid "Save"
+msgstr "Salva"
+
+msgctxt "~/Modules/Laser.Orchard.HID/Views/Admin/Index.cshtml"
+msgid "Selecting this checkbox will mean that we are using HID's test environment."
+msgstr "Selezionando questa checkbox, si utilizzerà un ambiente di test HID"
+
+msgctxt "~/Modules/Laser.Orchard.HID/Views/Admin/Index.cshtml"
+msgid "This information can be found from the HID Mobile Access Portal. "
+msgstr "Questa informazione può essere trovata nel portale HID Mobile Access."
+
+msgctxt "~/Modules/Laser.Orchard.HID/Views/Admin/Index.cshtml"
+msgid "This is the password for the account responsible for managing Mobile Access."
+msgstr "Questa è la password per l'account responsabile della gestione dei Mobile Access."
+
+msgctxt "~/Modules/Laser.Orchard.HID/Views/Admin/Index.cshtml"
+msgid "This is the username for the account responsible for managing Mobile Access."
+msgstr "Questa è il nome utente dell'account responsabile della gestione dei Mobile Access."
+
+msgctxt "~/Modules/Laser.Orchard.HID/Views/Admin/Index.cshtml"
+msgid "Use test environment."
+msgstr "Usa l'ambiente di test."
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserForm"
+msgid "E-Mail"
+msgstr "E-mail"
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserForm"
+msgid "Family Name"
+msgstr "Cognome"
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserForm"
+msgid "Given Name"
+msgstr "Nome"
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserForm"
+msgid "Krake User"
+msgstr "Utente Krake"
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserForm"
+msgid "Specify the email to be associated with the user in the HID system. Leave blank to use the email of the Krake User."
+msgstr "Specificare l'indirizzo email da associare con l'utente nei sistemi HID. Lasciare vuoto per usare l'email dell'utente Krake."
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserForm"
+msgid "Specify the family name of the user."
+msgstr "Specificare il cognome dell'utente."
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserForm"
+msgid "Specify the given name of the user."
+msgstr "Specificare il nome dell'utente."
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserForm"
+msgid "Specify the ID or the UserName of the Krake User to be used as origin. Leave blank to use the Creator of the Content Item that triggered the workflow."
+msgstr "Specificare l'ID o il nome utente dell'utente Krake da usare come origine. Lasciare vuoto per usare il Creator del Content Item che ha scatenato il workflow."
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserForm"
+msgid "The user's family name is required."
+msgstr "Il cognome dell'utente è obbligatorio."
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserForm"
+msgid "The user's given name is required."
+msgstr "Il nome dell'utente è obbligatorio."
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserForm"
+msgid "There were issues validating the values in the form."
+msgstr "Ci sono stati problemi nella validazione dei dati nel form."
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserForm"
+msgid "User details"
+msgstr "Dettagli dell'utente."
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserTask"
+msgid "Creates a user in the HID systems."
+msgstr "Crea una utenza nei sistemi di HID."
+
+msgctxt "Laser.Orchard.HID.Controllers.AdminController"
+msgid "Authentication OK."
+msgstr "Autenticazione OK."
+
+msgctxt "Laser.Orchard.HID.Controllers.AdminController"
+msgid "Client information invalid: Authentication failed."
+msgstr "Dati di login non validi: Autenticazione fallita."
+
+msgctxt "Laser.Orchard.HID.Controllers.AdminController"
+msgid "Communication errors: Authentication failed."
+msgstr "Errori di comunicazione: Autenticazione fallita."
+
+msgctxt "Laser.Orchard.HID.Controllers.AdminController"
+msgid "Could not save settings."
+msgstr "Impossibile salvare le impostazioni."
+
+msgctxt "Laser.Orchard.HID.Controllers.AdminController"
+msgid "Not allowed to manage HID settings"
+msgstr "Mancano i permessi per gestire le impostazione HID"
+
+msgctxt "Laser.Orchard.HID.Controllers.AdminController"
+msgid "Settings saved successfully."
+msgstr "Impostazioni salvate correttamente."
+
+msgctxt "Laser.Orchard.HID.Controllers.AdminController"
+msgid "Unable to attempt authentication."
+msgstr "Impossibile tentare l'autenticazione."
+
+msgctxt "Laser.Orchard.HID.Controllers.HIDAPIController"
+msgid "The Data field contains the new InvitationCode."
+msgstr "Il campo Data contiene il nuovo InvitationCode."
+
+msgctxt "Laser.Orchard.HID.Controllers.HIDAPIController"
+msgid "There was an error on the HID servers. This may be a temporary condition. Please try again."
+msgstr "C'è stato un errore sui server HID. Potrebbe essere una situazione temporanea. Riprovare più tardi."
+
+msgctxt "Laser.Orchard.HID.Controllers.HIDAPIController"
+msgid "There was an error while authenticating to the HID servers. This may be a temporary condition. Please try again."
+msgstr "C'è stato un errore durante l'autenticazione ai server HID. Potrebbe essere una situazione temporanea. Riprovare più tardi."
+
+msgctxt "Laser.Orchard.HID.Controllers.HIDAPIController"
+msgid "There was an error with the parameters passed for the search. Id: {0}; UserName: {1}; Email: {2}"
+msgstr "C'è stato un errore con i parametri passati per la ricerca. Id: {0}; Nome utente: {1}; Email: {2}"
+
+msgctxt "Laser.Orchard.HID.Controllers.HIDAPIController"
+msgid "Unknown error while searching for user on HID server. Id: {0}; UserName: {1}; Email: {2}"
+msgstr "Errore sconosciuto nella ricerca dell'utente sui server HID. Id: {0}; UserName: {1}; Email: {2}"
+
+msgctxt "Laser.Orchard.HID.Controllers.HIDAPIController"
+msgid "User does not exist on HID server. Id: {0}; UserName: {1}; Email: {2}"
+msgstr "L'utente non esiste sui server HID. Id: {0}; UserName: {1}; Email: {2}"
+
+msgctxt "Laser.Orchard.HID.Controllers.HIDAPIController"
+msgid "User is not unique on HID server. Id: {0}; UserName: {1}; Email: {2}"
+msgstr "L'utente non è univoco sui server HID. Id: {0}; UserName: {1}; Email: {2}"
+
+msgctxt "Laser.Orchard.HID.Navigation.AdminMenu"
+msgid "HID"
+msgstr "HID"
+
+msgctxt "Laser.Orchard.HID.Navigation.AdminMenu"
+msgid "Settings"
+msgstr "Impostazioni"
+

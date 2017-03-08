@@ -1,0 +1,10 @@
+﻿Name: Laser.Orchard Insert Stuff
+AntiForgery: enabled
+Version: 1.1
+OrchardVersion: 1.6
+Description: Inserts javascript, css, or raw html into the edit form for a content item.  Useful for client-side validation or UI tweaks.
+Features:
+    Laser.Orchard.InsertStuff:
+        Description: insert javascript, css, or raw html.
+		Category: Developer
+		Dependencies: Orchard.jQuery, Common, Settings

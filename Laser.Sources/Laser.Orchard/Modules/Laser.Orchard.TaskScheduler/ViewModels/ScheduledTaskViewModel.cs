@@ -19,6 +19,7 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
         public bool Delete { get; set; }
         //boolean to mark task for scheduling/unscheduling
         public bool Scheduling;
+        public bool Autodestroy{get;set;}
 
         public ScheduledTaskViewModel() {
             ScheduledStartUTC = null; // DateTime.UtcNow;
@@ -37,6 +38,7 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
             ContentItemId = part.ContentItemId;
             Running = part.RunningTaskId;
             Delete = false;
+            Autodestroy = part.Autodestroy;
         }
 
         //public ScheduledTaskPart CreatePartFromVM() {
@@ -82,6 +84,7 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
             part.PeriodicityUnit = this.PeriodicityUnit;
             part.ContentItemId = this.ContentItemId;
             part.RunningTaskId = this.Running;
+            part.Autodestroy = this.Autodestroy;
         }
     }
 }
