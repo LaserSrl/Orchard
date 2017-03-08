@@ -316,8 +316,8 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Activities\SendTemplatedEmailTask.cs" />
-    <Compile Include="Controllers\Activities\TemplatedEmailEditForm.cs" />
+    <Compile Include="Activities\SendTemplatedEmailTask.cs" />
+    <Compile Include="Activities\TemplatedEmailEditForm.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Drivers\CustomTemplatePickerPartDriver.cs" />
     <Compile Include="Handlers\CustomTemplatePickerPartHandler.cs" />
