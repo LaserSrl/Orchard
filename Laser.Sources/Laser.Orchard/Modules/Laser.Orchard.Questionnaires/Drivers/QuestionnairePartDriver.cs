@@ -99,8 +99,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                             }
 
                         }
-                    }
-                    else if (hasAcceptedTerms != null) { // l'utente ha appena accettato le condizionoi
+                    } else if (hasAcceptedTerms != null) { // l'utente ha appena accettato le condizionoi
                         viewModel.HasAcceptedTerms = (bool)_controllerContextAccessor.Context.Controller.TempData["HasAcceptedTerms"];
                     }
                 }
@@ -117,8 +116,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                                  () => shapeHelper.Parts_Questionnaire_FrontEnd_Edit(
                                      Questionnaire: viewModel,
                                      Prefix: Prefix));
-            }
-            else {
+            } else {
                 throw new OrchardSecurityException(T("You have to be logged in, before answering a questionnaire!"));
             }
             //return ContentShape("Parts_Questionnaire",
@@ -142,8 +140,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             QuestionnaireEditModel modelForEdit;
             if (_controllerContextAccessor.Context.Controller.TempData["ModelWithErrors"] != null) {
                 modelForEdit = (QuestionnaireEditModel)_controllerContextAccessor.Context.Controller.TempData["ModelWithErrors"];
-            }
-            else {
+            } else {
                 modelForEdit = _questServices.BuildEditModelForQuestionnairePart(part);
             }
   
@@ -177,20 +174,17 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                         try {
                             _questServices.UpdateForContentItem(
                                 part.ContentItem, editModel);
-                        }
-                        catch (Exception ex) {
+                        } catch (Exception ex) {
                             updater.AddModelError("QuestionnaireUpdateError", T("Cannot update questionnaire. " + ex.Message));
                             _controllerContextAccessor.Context.Controller.TempData[Prefix + "ModelWithErrors"] = editModel;
                         }
                     }
 
-                }
-                else {
+                } else {
                     updater.AddModelError("QuestionnaireUpdateError", T("Cannot update questionnaire"));
                     _controllerContextAccessor.Context.Controller.TempData[Prefix + "ModelWithErrors"] = editModel;
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 updater.AddModelError("QuestionnaireUpdateError", T("Cannot update questionnaire....... " + ex.Message + ex.StackTrace));
                 _controllerContextAccessor.Context.Controller.TempData[Prefix + "ModelWithErrors"] = editModel;
             }
@@ -248,28 +242,28 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                 var answerModelList = new List<AnswerEditModel>();
                 foreach (var a in answers) { // recupero le answers
                     var answerEditModel = new AnswerEditModel {
-                        Position = int.Parse(a.Attribute("Position").Value),
-                        Published = bool.Parse(a.Attribute("Published").Value),
-                        Answer = a.Attribute("Answer").Value,
-                        OriginalId = int.Parse(a.Attribute("OriginalId").Value),
-                        CorrectResponse = bool.Parse(a.Attribute("CorrectResponse").Value),
+                        Position = a.Attribute("Position") != null ? int.Parse(a.Attribute("Position").Value) : 0,
+                        Published = a.Attribute("Publshed") != null ? bool.Parse(a.Attribute("Published").Value) : false,
+                        Answer = a.Attribute("Answer") != null ? a.Attribute("Answer").Value : "",
+                        OriginalId = a.Attribute("OriginalId") != null ? int.Parse(a.Attribute("OriginalId").Value) : 0,
+                        CorrectResponse = a.Attribute("CorrectResponse") != null ? bool.Parse(a.Attribute("CorrectResponse").Value) : false,
                         AllFiles = a.Attribute("AllFiles")!=null?a.Attribute("AllFiles").Value:null,
                     };
                     answerModelList.Add(answerEditModel);
                 }
                 var questionEditModel = new QuestionEditModel {
-                    Position = int.Parse(q.Attribute("Position").Value),
-                    Published = bool.Parse(q.Attribute("Published").Value),
-                    Question = q.Attribute("Question").Value,
-                    Section = q.Attribute("Section") != null ? q.Attribute("Section").Value : null,
-                    QuestionType = (QuestionType)Enum.Parse(typeof(QuestionType), q.Attribute("QuestionType").Value),
-                    AnswerType = (AnswerType)Enum.Parse(typeof(AnswerType), q.Attribute("AnswerType").Value),
-                    IsRequired = bool.Parse(q.Attribute("IsRequired").Value),
+                    Position = q.Attribute("Position") != null ? int.Parse(q.Attribute("Position").Value) : 0,
+                    Published = q.Attribute("Published") != null ? bool.Parse(q.Attribute("Published").Value) : false,
+                    Question = q.Attribute("Question") != null ? q.Attribute("Question").Value : "",
+                    Section = q.Attribute("Section") != null ? q.Attribute("Section").Value : "",
+                    QuestionType = q.Attribute("QuestionType") != null ? (QuestionType)Enum.Parse(typeof(QuestionType), q.Attribute("QuestionType").Value) : QuestionType.SingleChoice,
+                    AnswerType = q.Attribute("AnswerType") != null ? (AnswerType)Enum.Parse(typeof(AnswerType), q.Attribute("AnswerType").Value) : AnswerType.None,
+                    IsRequired = q.Attribute("IsRequired") != null ? bool.Parse(q.Attribute("IsRequired").Value) : false,
                     QuestionnairePartRecord_Id = part.Id,
                     Answers = answerModelList,
                     Condition = q.Attribute("Condition") == null ? null : q.Attribute("Condition").Value,
-                    ConditionType = (ConditionType)Enum.Parse(typeof(ConditionType), q.Attribute("ConditionType").Value),
-                    OriginalId = int.Parse(q.Attribute("OriginalId").Value),
+                    ConditionType = q.Attribute("ConditionType") != null ? (ConditionType)Enum.Parse(typeof(ConditionType), q.Attribute("ConditionType").Value) : ConditionType.Show,
+                    OriginalId = q.Attribute("OriginalId") != null ? int.Parse(q.Attribute("OriginalId").Value) : 0,
                     AllFiles = q.Attribute("AllFiles") != null ? q.Attribute("AllFiles").Value : null,
                 };
                 questionModelList.Add(questionEditModel);
