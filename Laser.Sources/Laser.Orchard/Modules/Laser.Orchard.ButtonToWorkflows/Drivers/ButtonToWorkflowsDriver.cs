@@ -131,15 +131,15 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
 
 
 
-            var importedActionToExecute = context.Attribute(part.PartDefinition.Name, "ActionToExecute");
-            if (importedActionToExecute != null) {
-                part.ActionToExecute = importedActionToExecute;
-            }
+            //var importedActionToExecute = context.Attribute(part.PartDefinition.Name, "ActionToExecute");
+            //if (importedActionToExecute != null) {
+            //    part.ActionToExecute = importedActionToExecute;
+            //}
 
-            var importedMessageToWrite = context.Attribute(part.PartDefinition.Name, "MessageToWrite");
-            if (importedMessageToWrite != null) {
-                part.MessageToWrite = importedMessageToWrite;
-            }
+            //var importedMessageToWrite = context.Attribute(part.PartDefinition.Name, "MessageToWrite");
+            //if (importedMessageToWrite != null) {
+            //    part.MessageToWrite = importedMessageToWrite;
+            //}
 
         }
 
@@ -156,8 +156,8 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
             //context.Element(part.PartDefinition.Name).SetAttributeValue("ToUser", part.ToUser);
             //context.Element(part.PartDefinition.Name).SetAttributeValue("FromIdUser", part.FromIdUser);
             //context.Element(part.PartDefinition.Name).SetAttributeValue("ToIdUser", part.ToIdUser);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ActionToExecute", part.ActionToExecute);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("MessageToWrite", part.MessageToWrite);
+            //context.Element(part.PartDefinition.Name).SetAttributeValue("ActionToExecute", part.ActionToExecute);
+            //context.Element(part.PartDefinition.Name).SetAttributeValue("MessageToWrite", part.MessageToWrite);
         }
     }
 }
