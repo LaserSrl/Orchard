@@ -39,6 +39,7 @@
     <None Include="expoincitta\Mobile\EXPO_prod.p12" />
     <None Include="FestivalTV\Xslt\instagram.cshtml" />
     <None Include="FestivalTV\Xslt\ospiti.cshtml" />
+    <None Include="FondationGP\Code\AssignPublishExtensionStatus.cshtml" />
     <None Include="FondationGP\Mobile\pushProdMorgex.p12" />
     <None Include="FondationGP\Mobile\pushSvilMorgex.p12" />
     <None Include="FondationGP\Mobile\pushsviluppoAME.p12" />

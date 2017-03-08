@@ -178,6 +178,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.RazorScriptin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Four2n.MiniProfiler", "..\..\Four2n.MiniProfiler\Four2n.MiniProfiler.csproj", "{38927A00-463B-4747-BF29-CFE393ADF783}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.FidelityGateway", "Modules\Laser.Orchard.FidelityGateway\Laser.Orchard.FidelityGateway.csproj", "{E3AB6536-13D7-495D-9683-50C197B0F09F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.FidelityLoyalzoo", "Modules\Laser.Orchard.FidelityLoyalzoo\Laser.Orchard.FidelityLoyalzoo.csproj", "{F20087C6-B9F6-474D-88A6-750362E2EABA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.FidelitySimsol", "Modules\Laser.Orchard.FidelitySimsol\Laser.Orchard.FidelitySimsol.csproj", "{4C602F39-8A05-4512-93D9-4ACADEC38B5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -502,6 +508,18 @@ Global
 		{38927A00-463B-4747-BF29-CFE393ADF783}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38927A00-463B-4747-BF29-CFE393ADF783}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38927A00-463B-4747-BF29-CFE393ADF783}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3AB6536-13D7-495D-9683-50C197B0F09F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3AB6536-13D7-495D-9683-50C197B0F09F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3AB6536-13D7-495D-9683-50C197B0F09F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3AB6536-13D7-495D-9683-50C197B0F09F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F20087C6-B9F6-474D-88A6-750362E2EABA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F20087C6-B9F6-474D-88A6-750362E2EABA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F20087C6-B9F6-474D-88A6-750362E2EABA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F20087C6-B9F6-474D-88A6-750362E2EABA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C602F39-8A05-4512-93D9-4ACADEC38B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C602F39-8A05-4512-93D9-4ACADEC38B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C602F39-8A05-4512-93D9-4ACADEC38B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C602F39-8A05-4512-93D9-4ACADEC38B5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -587,5 +605,8 @@ Global
 		{3E6F7B80-38FE-4160-8E70-D75B95C2C3B5} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{8C812B56-F69A-4BE7-86A0-508759165BFE} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{38927A00-463B-4747-BF29-CFE393ADF783} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{E3AB6536-13D7-495D-9683-50C197B0F09F} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{F20087C6-B9F6-474D-88A6-750362E2EABA} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{4C602F39-8A05-4512-93D9-4ACADEC38B5A} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
