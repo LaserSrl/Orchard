@@ -65,41 +65,26 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             //  return null;
         }
 
-
         protected override void Importing(CommunicationAdvertisingPart part, ImportContentContext context) {
-            //throw new NotImplementedException();
-           // context.ImportAttribute(part.PartDefinition.Name, "CampaignId", s => part.ContentItem = context.GetItemFromSession(s));
-
-            //Mod 30-11-2016
             context.ImportAttribute(part.PartDefinition.Name, "CampaignId", x => {
+                // cerca la campagna con l'identity indicato
                 var campPartFromid = context.GetItemFromSession(x);
-
-                if (campPartFromid != null && campPartFromid.Is<CommunicationCampaignPart>()) {
-                    //associa id template
-                    part.CampaignId = campPartFromid.As<CommunicationCampaignPart>().Id;
+                // verifica che si tratti effettivamente di una campagna
+                if (campPartFromid != null && campPartFromid.Has<CommunicationCampaignPart>()) {
+                    part.CampaignId = campPartFromid.Id;
                 }
             });
-
-           
         }
 
         protected override void Exporting(CommunicationAdvertisingPart part, ExportContentContext context) {
-            //throw new NotImplementedException();
-            //var root = context.Element(part.PartDefinition.Name);
-            //root.SetAttributeValue("CampaignId", part.CampaignId);
-
-            // mod 30-11-2016
             var root = context.Element(part.PartDefinition.Name);
-
             if (part.CampaignId > 0) {
-                //cerco il corrispondente valore dell' identity dalla parts del template e lo associo al campo Layout 
+                //cerca il corrispondente valore dell' identity dalla campagna e lo uso come id della campagna stessa
                 var contItemCamp = _contentManager.Get(part.CampaignId);
                 if (contItemCamp != null) {
                     root.SetAttributeValue("CampaignId", _contentManager.GetItemMetadata(contItemCamp).Identity.ToString());
                 }
-
             }
-            ////////////////////////////////////////////////////////   
         }
 
     }
