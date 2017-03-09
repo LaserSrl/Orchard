@@ -79,6 +79,7 @@
   <ItemGroup>
     <Content Include="Scripts\jquery-migrate.js" />
     <Content Include="Scripts\jquery.js" />
+    <Content Include="Scripts\jquery_002.js" />
     <Content Include="Scripts\lnkr5.js" />
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\slick.js" />
@@ -577,9 +578,6 @@
     <Content Include="Views\Parts.MenuWidget-QuadThird.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Widget-Footer.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\FasciaBusiness.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -612,22 +610,16 @@
     <Content Include="Views\ImmaginiProdotto.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\FasciaLoghi.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\DettaglioProdotto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ImmagineTestoProdotto.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Widget-AfterContentProdotto.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\_Widget.Wrapper.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Content.cshtml">
+    <Content Include="Views\_Content.cshtml">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
@@ -648,6 +640,29 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\HtmlQuad_Fourth.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\HtmlFooter.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\LogOn.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Title-PaginaGenerica.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget-ShowcaseWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget-AppStoreWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Title-OffertaLavoro.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ElencoOfferteLavoro.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,6 +1,5 @@
 ﻿@using Orchard.Projections.Services;
 @{
-    var subthemePath = Url.Content("~/Themes/Lasergroup");
     int page = 1;
     int pageSize = Model.ContentItem.ProjectionPart.Record.Items;
     
@@ -18,7 +17,7 @@
 		                <div class="team-card">
 			                <div class="team-card-face team-card-front rotate-mobile">
 				                <div class="team-photo-mask">
-					                <img src="@item.Persona.Gallery.FirstMediaUrl" class="img-responsive"/>
+					                <img src="@Display.ResizeMediaUrl(Width: 418, Height: 235, Mode: "crop", Alignment: "middlecenter", Path: item.Persona.ImageFronte.MediaParts[0].MediaUrl)" class="img-responsive"/>
 				                </div>
 				                <div class="space-40"></div>
 				                <h4 class="team-name rotate-mobile">@item.TitlePart.Title</h4>
@@ -27,7 +26,7 @@
 			                </div>
 			                <div class="team-card-face team-card-back rotate-mobile">
 				                <div class="team-photo-mask rotate-mobile">
-					                <img src="@subthemePath/styles/images/retro.png" class="img-responsive" />
+					                <img src="@Display.ResizeMediaUrl(Width: 418, Height: 235, Mode: "crop", Alignment: "middlecenter", Path: item.Persona.ImageRetro.MediaParts[0].MediaUrl)" class="img-responsive" />
 				                </div>
 				                <p>@Html.Raw(item.BodyPart.Text)</p>
 			                </div>

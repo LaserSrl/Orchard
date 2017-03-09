@@ -134,3 +134,23 @@
 <!-- Start of HubSpot Embed Code -->
 <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/2170079.js"></script>
 <!-- End of HubSpot Embed Code -->
+
+<script type="text/javascript">
+
+    var isMobile = {
+        Android: function () { return navigator.userAgent.match(/Android/i); },
+        BlackBerry: function () { return navigator.userAgent.match(/BlackBerry/i); },
+        iOS: function () { return navigator.userAgent.match(/iPhone|iPad|iPod/i); },
+        Opera: function () { return navigator.userAgent.match(/Opera Mini/i); },
+        Windows: function () { return navigator.userAgent.match(/IEMobile/i); },
+        any: function () { return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()); }
+    };
+
+    jQuery(document).ready(function () {
+        if (!isMobile.any()) {
+            var body = jQuery('body');
+            if (!body.hasClass('navbar-fixed')) body.addClass('navbar-fixed');
+        }
+    });
+
+</script>

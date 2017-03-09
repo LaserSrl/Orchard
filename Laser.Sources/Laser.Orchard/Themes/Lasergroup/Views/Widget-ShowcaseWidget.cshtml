@@ -1,20 +1,12 @@
 ﻿@{
     dynamic item = Model.ContentItem;
-    string infoType = item.ShowcaseWidget.Specializzazione.Value;
+    string tipoContenuto = item.ShowcaseWidget.Specializzazione.Value;
 }
 
-@switch (infoType) {
+@switch (tipoContenuto) {
     case "Anteprima Web Mobile":
         <div class="container-fluid">
             @Display(New.ImmaginiProdotto(ContentItem: item));
-        </div>
-        break;
-    case "Fascia Loghi":
-        <div class="container-fluid">
-            <div class="space-40"></div>
-            @Display(New.FasciaLoghi(ContentItem: item));
-            <div class="space-40"></div>
-            <div class="space-40"></div>
         </div>
         break;
     case "Dettaglio Prodotto":
