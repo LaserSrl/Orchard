@@ -38,8 +38,20 @@ function navbar_sticky(){
     if (!elem.attr('data-top')) navbar_sticky_data_top();
     if (elem.attr('data-top') <= jQuery(this).scrollTop()){
         if(!body.hasClass('navbar-fixed')) body.addClass('navbar-fixed');
-    }else{
-        if(body.hasClass('navbar-fixed')) body.removeClass('navbar-fixed');
+    } else {
+
+        var isMobile = {
+            Android: function () { return navigator.userAgent.match(/Android/i); },
+            BlackBerry: function () { return navigator.userAgent.match(/BlackBerry/i); },
+            iOS: function () { return navigator.userAgent.match(/iPhone|iPad|iPod/i); },
+            Opera: function () { return navigator.userAgent.match(/Opera Mini/i); },
+            Windows: function () { return navigator.userAgent.match(/IEMobile/i); },
+            any: function () { return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()); }
+        };
+
+        if (body.hasClass('navbar-fixed') && !isMobile.any()) {
+            body.removeClass('navbar-fixed');
+        }
     }
 }
 
