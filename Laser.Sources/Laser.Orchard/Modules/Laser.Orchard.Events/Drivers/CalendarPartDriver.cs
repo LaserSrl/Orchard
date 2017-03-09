@@ -28,15 +28,17 @@ namespace Laser.Orchard.Events.Drivers
         private readonly IProjectionManager _projectionManager;
         private readonly IRepository<QueryPartRecord> _queryRepository;
         private readonly IEventsService _eventsService;
+        private readonly IRepository<LayoutRecord> _layoutRepository;
 
         public CalendarPartDriver(IProjectionManager projectionManager, IRepository<QueryPartRecord> queryRepository,
-                                  IOrchardServices orchardServices, IEventsService eventsService)
+                                  IOrchardServices orchardServices, IEventsService eventsService, IRepository<LayoutRecord> layoutRepository)
         {
             T = NullLocalizer.Instance;
             _projectionManager = projectionManager;
             _queryRepository = queryRepository;
             _eventsService = eventsService;
             _orchardServices = orchardServices;
+            _layoutRepository = layoutRepository;
         }
 
         protected override string Prefix
@@ -189,17 +191,62 @@ namespace Laser.Orchard.Events.Drivers
 
         protected override void Importing(CalendarPart part, global::Orchard.ContentManagement.Handlers.ImportContentContext context) {
             var root = context.Data.Element(part.PartDefinition.Name);
-            part.CalendarShape = root.Attribute("CalendarShape").Value;
-            part.DisplayPager = Boolean.Parse(root.Attribute("DisplayPager").Value);
-            part.ItemsPerPage = int.Parse(root.Attribute("ItemsPerPage").Value, CultureInfo.InvariantCulture);
-            part.NumDays = root.Attribute("NumDays").Value;
-            part.PagerSuffix = root.Attribute("PagerSuffix").Value;
-            part.StartDate = root.Attribute("StartDate").Value;
+            var CalendarShape = root.Attribute("CalendarShape");
+            if (CalendarShape != null) {
+                part.CalendarShape = CalendarShape.Value;
+            }
+            var DisplayPager = root.Attribute("DisplayPager");
+            if (DisplayPager != null) {
+                part.DisplayPager = Convert.ToBoolean(DisplayPager.Value);
+            }
+            var ItemsPerPage = root.Attribute("ItemsPerPage");
+            if (ItemsPerPage != null) {
+                part.ItemsPerPage = Convert.ToInt32(ItemsPerPage.Value);
+            }
+            var NumDays = root.Attribute("NumDays");
+            if (NumDays != null) {
+                part.NumDays = NumDays.Value;
+            }
+            var PagerSuffix = root.Attribute("PagerSuffix");
+            if (PagerSuffix != null) {
+                part.PagerSuffix = PagerSuffix.Value;
+            }
+            var StartDate = root.Attribute("StartDate");
+            if (StartDate != null) {
+                part.StartDate = StartDate.Value;
+            }
+            context.ImportAttribute(part.PartDefinition.Name, "QueryPartRecord_Id", x => {
+                // cerca la campagna con l'identity indicato
+                var query = context.GetItemFromSession(x);
+                // verifica che si tratti effettivamente di una query
+                if (query != null && query.Has<QueryPart>()) {
+                    part.QueryPartRecord = query.As<QueryPart>().Record;
+                    // layout
+                    var LayoutRecord_Description = root.Attribute("LayoutRecord_Description");
+                    var layoutDesc = LayoutRecord_Description != null ? LayoutRecord_Description.Value : null;
+                    var LayoutRecord_Position = root.Attribute("LayoutRecord_Position");
+                    var posizione = LayoutRecord_Position != null ? Convert.ToInt32(LayoutRecord_Position.Value) : 0;
 
-            //TODO: Importing cascade Layout and Query?
-            //part.QueryPartRecord 
-            //part.LayoutRecord
+                    var elencoLayout = _layoutRepository.Fetch(y => y.QueryPartRecord.Id == query.Id && (y.Description ?? "") == (layoutDesc ?? "")).OrderBy<LayoutRecord, int>(y => {
+                        return y.Id;
+                    });
+                    int conteggio = 0;
+                    foreach (var layout in elencoLayout) {
+                        if (conteggio == posizione) {
+                            part.LayoutRecord = layout;
+                            break;
+                        }
+                        conteggio++;
+                    }
 
+                    //var layout = _layoutRepository.Fetch(y => y.QueryPartRecord.Id == query.Id && y.Description == layoutDesc).OrderBy<LayoutRecord, int>(y => {
+                    //    return y.Id;
+                    //}).Take(posizione + 1).LastOrDefault();
+                    //if (layout != null) {
+                    //    part.LayoutRecord = layout;
+                    //}
+                }
+            });
         }
 
         protected override void Exporting(CalendarPart part, global::Orchard.ContentManagement.Handlers.ExportContentContext context) {
@@ -210,10 +257,26 @@ namespace Laser.Orchard.Events.Drivers
             root.SetAttributeValue("NumDays", part.NumDays);
             root.SetAttributeValue("PagerSuffix", part.PagerSuffix);
             root.SetAttributeValue("StartDate", part.StartDate);
-            
-            //TODO: Exporting cascade Layout and Query?
-            //part.QueryPartRecord 
-            //part.LayoutRecord
+            if(part.QueryPartRecord != null && part.QueryPartRecord.Id > 0) {
+                var query = _orchardServices.ContentManager.Get(part.QueryPartRecord.Id);
+                root.SetAttributeValue("QueryPartRecord_Id", _orchardServices.ContentManager.GetItemMetadata(query).Identity.ToString());
+                if (part.LayoutRecord != null && part.LayoutRecord.Id > 0) {
+                    // identifica il layout in base a description e posizione sequenziale (a parità di description)
+                    var layoutDesc = part.LayoutRecord.Description;
+                    var elencoLayout = _layoutRepository.Fetch(x => x.QueryPartRecord.Id == query.Id && x.Description == layoutDesc).OrderBy<LayoutRecord, int>(x => {
+                        return x.Id;
+                    });
+                    int posizione = 0;
+                    foreach (var layout in elencoLayout) {
+                        if (layout.Id == part.LayoutRecord.Id) {
+                            break;
+                        }
+                        posizione++;
+                    }
+                    root.SetAttributeValue("LayoutRecord_Description", layoutDesc);
+                    root.SetAttributeValue("LayoutRecord_Position", posizione);
+                }
+            }
         }
         private static string GetLayoutDescription(IEnumerable<LayoutDescriptor> layouts, LayoutRecord l)
         {

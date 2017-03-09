@@ -145,104 +145,67 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         /// <param name="part"></param>
         /// <param name="context"></param>
         protected override void Importing(EmailContactPart part, ImportContentContext context) {
-
-            var root = context.Data.Element(part.PartDefinition.Name);
             var emailRecord = context.Data.Element(part.PartDefinition.Name).Elements("EmailRecord");
-
             if (emailRecord != null) {
+                List<CommunicationEmailRecord> listComEmail = new List<CommunicationEmailRecord>();
+                foreach (var rec in emailRecord) {
+                    CommunicationEmailRecord recMail = new CommunicationEmailRecord();
+                    recMail.EmailContactPartRecord_Id = part.Id;
 
-            try {
+                    var Language = rec.Attribute("Language");
+                    if (Language != null)
+                        recMail.Language = Language.Value;
 
-                _transaction.Demand();
+                    var Validated = rec.Attribute("Validated");
+                    if (Validated != null)
+                        recMail.Validated = Convert.ToBoolean(Validated.Value);
 
-                 List<CommunicationEmailRecord> listcomemail = new List<CommunicationEmailRecord>();
+                    var DataInserimento = rec.Attribute("DataInserimento");
+                    if (DataInserimento != null)
+                        recMail.DataInserimento = Convert.ToDateTime(DataInserimento.Value);
 
-                 foreach (var rec in emailRecord) {
+                    var DataModifica = rec.Attribute("DataModifica");
+                    if (DataModifica != null)
+                        recMail.DataModifica = Convert.ToDateTime(DataModifica.Value);
 
-                        CommunicationEmailRecord recMail = new CommunicationEmailRecord();
+                    var Email = rec.Attribute("Email");
+                    if (Email != null)
+                        recMail.Email = Email.Value;
 
-                        ////////////////////////////////////////////////////////////////
-                        //mod 30-11-2016
-                        var tempPartFromid = context.GetItemFromSession(rec.Attribute("EmailContactPartRecord_Id").Value);
+                    var Produzione = rec.Attribute("Produzione");
+                    if (Produzione != null)
+                        recMail.Produzione = Convert.ToBoolean(Produzione.Value);
 
-                        if (tempPartFromid != null && tempPartFromid.Is<CommunicationContactPart>()) {
-                            //associa id contact
-                            recMail.EmailContactPartRecord_Id = tempPartFromid.As<CommunicationContactPart>().Id;
-                        }
-                        //////////////////////
+                    var AccettatoUsoCommerciale = rec.Attribute("AccettatoUsoCommerciale");
+                    if (AccettatoUsoCommerciale != null)
+                        recMail.AccettatoUsoCommerciale = Convert.ToBoolean(AccettatoUsoCommerciale.Value);
 
-                        var Validated = rec.Attribute("Validated").Value;
-                        if (Validated != null)
-                            recMail.Validated = Convert.ToBoolean(Validated);
+                    var AutorizzatoTerzeParti = rec.Attribute("AutorizzatoTerzeParti");
+                    if (AutorizzatoTerzeParti != null)
+                        recMail.AutorizzatoTerzeParti = Convert.ToBoolean(AutorizzatoTerzeParti.Value);
 
-                        var DataInserimento = rec.Attribute("DataInserimento").Value;
-                        if (DataInserimento != null)
-                            recMail.DataInserimento = Convert.ToDateTime(DataInserimento);
+                    var KeyUnsubscribe = rec.Attribute("KeyUnsubscribe");
+                    if (KeyUnsubscribe != null)
+                        recMail.KeyUnsubscribe = KeyUnsubscribe.Value;
 
-                        var DataModifica = rec.Attribute("DataModifica").Value;
-                        if (DataModifica != null)
-                            recMail.DataModifica = Convert.ToDateTime(DataModifica);
+                    var DataUnsubscribe = rec.Attribute("DataUnsubscribe");
+                    if (DataUnsubscribe != null)
+                        recMail.DataUnsubscribe = Convert.ToDateTime(DataUnsubscribe.Value);
 
-                        var Email = rec.Attribute("Email").Value;
-                        if (Email != null)
-                            recMail.Email = Email;
-
-                        var Produzione = rec.Attribute("Produzione").Value;
-                        if (Produzione != null)
-                            recMail.Produzione = Convert.ToBoolean(Produzione);
-
-                        var AccettatoUsoCommerciale = rec.Attribute("AccettatoUsoCommerciale").Value;
-                        if (AccettatoUsoCommerciale != null)
-                            recMail.AccettatoUsoCommerciale = Convert.ToBoolean(AccettatoUsoCommerciale);
-
-                        var AutorizzatoTerzeParti = rec.Attribute("AutorizzatoTerzeParti").Value;
-                        if (AutorizzatoTerzeParti != null)
-                            recMail.AutorizzatoTerzeParti = Convert.ToBoolean(AutorizzatoTerzeParti);
-
-                        _repoEmail.Create(recMail);
-
-                        listcomemail.Add(recMail);
-                        
-                    }
-
-                    part.EmailRecord = listcomemail;
-                    _repoEmail.Flush();
-
+                    _repoEmail.Create(recMail);
+                    listComEmail.Add(recMail);
                 }
-                catch (Exception ex) {
-                    _transaction.Cancel();
-
-                }
-
+                part.EmailRecord = listComEmail;
+                _repoEmail.Flush();
             }
         }
 
-
-
-
         protected override void Exporting(EmailContactPart part, ExportContentContext context) {
-
-            // var root = context.Element(part.PartDefinition.Name);
-
             if (part.EmailRecord != null) {
                 var root = context.Element(part.PartDefinition.Name);
                 foreach (CommunicationEmailRecord rec in part.EmailRecord) {
                     XElement emailText = new XElement("EmailRecord");
-
-
                     emailText.SetAttributeValue("Language", rec.Language);
-
-                    //mod 31-11-2016      
-                    // da settare con identity
-                    if (rec.EmailContactPartRecord_Id > 0) {
-                        //cerco il corrispondente valore dell' identity dalla parts del contact e lo associo al campo EmailContactPartRecord_Id 
-                        var contItemContact = _contentManager.Get(rec.EmailContactPartRecord_Id);
-                        if (contItemContact != null) {
-                            emailText.SetAttributeValue("EmailContactPartRecord_Id", _contentManager.GetItemMetadata(contItemContact).Identity.ToString());
-                        }
-                    }
-                    //////
-
                     emailText.SetAttributeValue("Validated", rec.Validated);
                     emailText.SetAttributeValue("DataInserimento", rec.DataInserimento);
                     emailText.SetAttributeValue("DataModifica", rec.DataModifica);
@@ -255,15 +218,6 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     root.Add(emailText);
                 }
             }
-
-
         }
-
-
-
-
-
-
     }
-
 }
