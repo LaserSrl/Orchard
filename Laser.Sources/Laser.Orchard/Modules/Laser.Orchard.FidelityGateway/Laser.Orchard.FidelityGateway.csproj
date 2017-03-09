@@ -6,12 +6,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A20337E4-97F8-4C58-AD5E-4D13CB52E2F0}</ProjectGuid>
+    <ProjectGuid>{E3AB6536-13D7-495D-9683-50C197B0F09F}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laser.Orchard.Fidelity</RootNamespace>
-    <AssemblyName>Laser.Orchard.Fidelity</AssemblyName>
+    <RootNamespace>Laser.Orchard.FidelityGateway</RootNamespace>
+    <AssemblyName>Laser.Orchard.FidelityGateway</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
@@ -47,39 +47,44 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Loyalzoo">
-      <HintPath>lib\Loyalzoo.dll</HintPath>
+    <Reference Include="Laser.Orchard.StartupConfig">
+      <HintPath>..\..\..\..\..\Orchard-1.8.1\Orchard.Source\src\Orchard.Web\Modules\Laser.Orchard.StartupConfig\bin\Laser.Orchard.StartupConfig.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Orchard.Core">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
+      <HintPath>..\..\..\..\..\Orchard-1.8.1\Orchard.Source\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Users, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Orchard.Modules, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Modules\bin\Orchard.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Users">
+      <HintPath>..\..\..\..\..\Orchard-1.8.1\Orchard.Source\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Workflows, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Workflows\bin\Orchard.Workflows.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -93,31 +98,32 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\FidelityAPIController.cs" />
-    <Compile Include="Controllers\FidelityController.cs" />
-    <Compile Include="Drivers\FidelitySiteSettingsDriver.cs" />
-    <Compile Include="Drivers\LoyalzooUserSettingsDriver.cs" />
-    <Compile Include="Enum.cs" />
-    <Compile Include="Handlers\FidelitySiteSettingsHandler.cs" />
-    <Compile Include="Handlers\LoyalzooUserEventHandler.cs" />
-    <Compile Include="Handlers\LoyalzooUserHandler.cs" />
-    <Compile Include="Menus\LoyalzooBackEndMenu.cs" />
+    <Compile Include="Activities\AddPointsActivity.cs" />
+    <Compile Include="Activities\RedeemRewardActivity.cs" />
+    <Compile Include="Controllers\ActionCampaignController.cs" />
+    <Compile Include="Controllers\FidelityBaseApiController.cs" />
+    <Compile Include="Drivers\FidelitySettingsPartDriver.cs" />
+    <Compile Include="Drivers\FidelityUserPartDriver.cs" />
+    <Compile Include="Handlers\FidelitySettingsHandler.cs" />
+    <Compile Include="Handlers\FidelityUserHandler.cs" />
+    <Compile Include="Menus\AdminMenu.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\FidelitySiteSettingsPart.cs" />
-    <Compile Include="Models\LoyalzooUserPart.cs" />
-    <Compile Include="Permissions\LoyalzooAccessPermission.cs" />
+    <Compile Include="Models\ActionInCampaignRecord.cs" />
+    <Compile Include="Models\APIResult.cs" />
+    <Compile Include="Models\CardPointsCampaign.cs" />
+    <Compile Include="Models\FidelityCampaign.cs" />
+    <Compile Include="Models\FidelityReward.cs" />
+    <Compile Include="Models\FidelitySettingsPart.cs" />
+    <Compile Include="Models\FidelityUserPart.cs" />
+    <Compile Include="Models\FidelityCustomer.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Routes\Routes.cs" />
-    <Compile Include="Services\FidelityService.cs" />
-    <Compile Include="Services\IFidelityService.cs" />
-    <Compile Include="ViewModels\APIViewModels.cs" />
-    <Compile Include="ViewModels\FidelitySiteSettingsViewModel.cs" />
-    <Compile Include="ViewModels\LoyalzooUserSettingsViewModel.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\LoyalzooUserSettings.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\FidelitySiteSettings.cshtml" />
+    <Compile Include="Services\FidelityBaseServices.cs" />
+    <Compile Include="Services\IFidelityServices.cs" />
+    <Compile Include="Services\ISendService.cs" />
+    <Compile Include="Services\NotificatorService.cs" />
+    <Compile Include="ViewModels\ActionCampaign.cs" />
+    <Compile Include="ViewModels\EditAction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">
@@ -125,16 +131,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
+    <Content Include="Views\EditorTemplates\Parts\FidelitySettingsPart.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Localization\fr-FR\orchard.module.po" />
+    <Content Include="Views\ActionCampaign\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
-      <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
-      <Name>Laser.Orchard.StartupConfig</Name>
-    </ProjectReference>
+    <Content Include="Views\ActionCampaign\Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
