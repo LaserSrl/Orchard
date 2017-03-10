@@ -47,12 +47,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Laser.Orchard.StartupConfig">
-      <HintPath>..\..\..\..\..\Orchard-1.8.1\Orchard.Source\src\Orchard.Web\Modules\Laser.Orchard.StartupConfig\bin\Laser.Orchard.StartupConfig.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Orchard.Core">
-      <HintPath>..\..\..\..\..\Orchard-1.8.1\Orchard.Source\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
@@ -62,7 +59,7 @@
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Modules\bin\Orchard.Modules.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Users">
-      <HintPath>..\..\..\..\..\Orchard-1.8.1\Orchard.Source\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Workflows, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -138,6 +135,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ActionCampaign\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
+      <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
+      <Name>Laser.Orchard.StartupConfig</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
