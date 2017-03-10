@@ -8,9 +8,8 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Users;
 using Orchard.Users.Models;
-
+using System.Linq;
 
 namespace Laser.Orchard.Facebook.Drivers {
 
@@ -54,108 +53,78 @@ namespace Laser.Orchard.Facebook.Drivers {
             return Editor(part, shapeHelper);
         }
 
-
         protected override void Importing(FacebookAccountPart part, ImportContentContext context) {
-
-            // mod. 06-12-2016
-            var importedIdPage = context.Attribute(part.PartDefinition.Name, "IdPage");
-            if (importedIdPage != null) {
-                part.IdPage = importedIdPage;
+            var IdPage = context.Attribute(part.PartDefinition.Name, "IdPage");
+            if (IdPage != null) {
+                part.IdPage = IdPage;
             }
-
-            //mod 06-12-2016
-            context.ImportAttribute(part.PartDefinition.Name, "IdUser", x => {
-                var tempPartFromid = context.GetItemFromSession(x);
-
-                if (tempPartFromid != null && tempPartFromid.Is<UserPart>()) {
-                    //associa id user
-                    part.IdUser = tempPartFromid.As<UserPart>().Id;
+            context.ImportAttribute(part.PartDefinition.Name, "UserIdentity", x => {
+                var user = context.ContentManager.Query("User").Where<UserPartRecord>(y => y.UserName == x).List().FirstOrDefault();
+                if (user != null) {
+                    part.IdUser = user.Id;
                 }
             });
-
-
-            var importedSocialName = context.Attribute(part.PartDefinition.Name, "SocialName");
-            if (importedSocialName != null) {
-                part.SocialName = importedSocialName;
+            var SocialName = context.Attribute(part.PartDefinition.Name, "SocialName");
+            if (SocialName != null) {
+                part.SocialName = SocialName;
             }
-
-            var importedAccountType = context.Attribute(part.PartDefinition.Name, "AccountType");
-            if (importedAccountType != null) {
-                part.AccountType = importedAccountType;
+            var AccountType = context.Attribute(part.PartDefinition.Name, "AccountType");
+            if (AccountType != null) {
+                part.AccountType = AccountType;
             }
-
-            var importedUserToken = context.Attribute(part.PartDefinition.Name, "UserToken");
-            if (importedUserToken != null) {
-                part.UserToken = importedUserToken;
+            var UserToken = context.Attribute(part.PartDefinition.Name, "UserToken");
+            if (UserToken != null) {
+                part.UserToken = UserToken;
             }
-
-            var importedPageToken = context.Attribute(part.PartDefinition.Name, "PageToken");
-            if (importedPageToken != null) {
-                part.PageToken = importedPageToken;
+            var PageToken = context.Attribute(part.PartDefinition.Name, "PageToken");
+            if (PageToken != null) {
+                part.PageToken = PageToken;
             }
-
-
-            var importedShared = context.Attribute(part.PartDefinition.Name, "Shared");
-            if (importedShared != null) {
-                part.Shared = bool.Parse(importedShared);
+            var Shared = context.Attribute(part.PartDefinition.Name, "Shared");
+            if (Shared != null) {
+                part.Shared = bool.Parse(Shared);
             }
-
-            var importedPageName = context.Attribute(part.PartDefinition.Name, "PageName");
-            if (importedPageName != null) {
-                part.PageName = importedPageName;
+            var PageName = context.Attribute(part.PartDefinition.Name, "PageName");
+            if (PageName != null) {
+                part.PageName = PageName;
             }
-
-            var importedValid = context.Attribute(part.PartDefinition.Name, "Valid");
-            if (importedValid != null) {
-                part.Valid = bool.Parse(importedValid);
+            var Valid = context.Attribute(part.PartDefinition.Name, "Valid");
+            if (Valid != null) {
+                part.Valid = bool.Parse(Valid);
             }
-
-            var importedDisplayAs = context.Attribute(part.PartDefinition.Name, "DisplayAs");
-            if (importedDisplayAs != null) {
-                part.DisplayAs = importedDisplayAs;
+            var DisplayAs = context.Attribute(part.PartDefinition.Name, "DisplayAs");
+            if (DisplayAs != null) {
+                part.DisplayAs = DisplayAs;
             }
-
-            var importedUserIdFacebook = context.Attribute(part.PartDefinition.Name, "UserName");
-            if (importedUserIdFacebook != null) {
-                part.UserIdFacebook = importedUserIdFacebook;
+            var UserName = context.Attribute(part.PartDefinition.Name, "UserName");
+            if (UserName != null) {
+                part.UserName = UserName;
             }
-
-            var importedUserName = context.Attribute(part.PartDefinition.Name, "UserIdFacebook");
-            if (importedUserName != null) {
-                part.UserName = importedUserName;
+            var UserIdFacebook = context.Attribute(part.PartDefinition.Name, "UserIdFacebook");
+            if (UserIdFacebook != null) {
+                part.UserIdFacebook = UserIdFacebook;
             }
-
         }
-
-
         protected override void Exporting(FacebookAccountPart part, ExportContentContext context) {
-
-            //mod. 06-12-2016
             var root = context.Element(part.PartDefinition.Name);
             root.SetAttributeValue("IdPage", part.IdPage);
-          
             if (part.IdUser > 0) {
-                //cerco il corrispondente valore dell' identity dalla partse lo associo al campo iduser 
-                var contItemUser = _contentManager.Get(part.IdUser);
+                //cerco il corrispondente valore dello username dell'utente
+                var contItemUser = _contentManager.Get<UserPart>(part.IdUser);
                 if (contItemUser != null) {
-                    root.SetAttributeValue("IdUser", _contentManager.GetItemMetadata(contItemUser).Identity.ToString());
+                    root.SetAttributeValue("UserIdentity", contItemUser.UserName);
                 }
             }
-
             root.SetAttributeValue("SocialName", part.SocialName);
             root.SetAttributeValue("AccountType", part.AccountType);
             root.SetAttributeValue("UserToken", part.UserToken);
             root.SetAttributeValue("PageToken", part.PageToken);
-
             root.SetAttributeValue("Shared", part.Shared);
             root.SetAttributeValue("PageName", part.PageName);
-
             root.SetAttributeValue("Valid", part.Valid);
             root.SetAttributeValue("DisplayAs", part.DisplayAs);
             root.SetAttributeValue("UserIdFacebook", part.UserIdFacebook);
             root.SetAttributeValue("UserName", part.UserName);
         }
-
-
     }
 }

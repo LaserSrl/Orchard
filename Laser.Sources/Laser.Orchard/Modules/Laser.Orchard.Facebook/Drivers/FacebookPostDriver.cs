@@ -19,6 +19,7 @@ using Orchard.Environment.Configuration;
 using Orchard.UI.Admin;
 using Orchard.ContentManagement.Handlers;
 using System.Xml.Linq;
+using Orchard.Users.Models;
 
 namespace Laser.Orchard.Facebook.Drivers {
 
@@ -135,125 +136,113 @@ namespace Laser.Orchard.Facebook.Drivers {
             return Editor(part, shapeHelper);
         }
 
-
-
         protected override void Exporting(FacebookPostPart part, ExportContentContext context) {
-
             var root = context.Element(part.PartDefinition.Name);
             root.SetAttributeValue("FacebookMessage", part.FacebookMessage);
             root.SetAttributeValue("FacebookMessageSent", part.FacebookMessageSent);
             root.SetAttributeValue("FacebookCaption", part.FacebookCaption);
             root.SetAttributeValue("FacebookDescription", part.FacebookDescription);
             root.SetAttributeValue("FacebookName", part.FacebookName);
+            root.SetAttributeValue("FacebookPicture", part.FacebookPicture);
+            root.SetAttributeValue("FacebookIdPicture", part.FacebookIdPicture);
             root.SetAttributeValue("FacebookLink", part.FacebookLink);
             root.SetAttributeValue("SendOnNextPublish", part.SendOnNextPublish);
-
+            root.SetAttributeValue("FacebookType", part.FacebookType.ToString());
+            root.SetAttributeValue("FacebookMessageToPost", part.FacebookMessageToPost);
+            root.SetAttributeValue("HasImage", part.HasImage);
             if (part.AccountList.Count() > 0) {
-
-                string identityList = string.Empty;
-
-                for (int x = 0; x < part.AccountList.Count(); x++) {
-                    XElement accText = new XElement("AccountList");
-                    var contItemContact = _contentManager.Get(part.AccountList[x]);
-                    if (contItemContact != null) {              
-                        accText.SetAttributeValue("AccountListSelected", _contentManager.GetItemMetadata(contItemContact).Identity.ToString());
-                        root.Add(accText);
+                XElement accountElement = null;
+                foreach (var accountId in part.AccountList) {
+                    var fbAccount = _contentManager.Get<FacebookAccountPart>(accountId);
+                    if (fbAccount != null) {
+                        accountElement = new XElement("Account", _contentManager.GetItemMetadata(fbAccount.ContentItem).Identity.ToString());
+                        root.Add(accountElement);
                     }
                 }
             }  
-
-            root.SetAttributeValue("FacebookMessageToPost", part.FacebookMessageToPost);
-            root.SetAttributeValue("HasImage", part.HasImage);
-
         }   
-
 
         protected override void Importing(FacebookPostPart part, ImportContentContext context) 
         {
             var root = context.Data.Element(part.PartDefinition.Name);
-
-            var importedFacebookMessage = context.Attribute(part.PartDefinition.Name, "FacebookMessage");
-            if (importedFacebookMessage != null) {
-                part.FacebookMessage = importedFacebookMessage;
+            var FacebookMessage = root.Attribute("FacebookMessage");
+            if (FacebookMessage != null) {
+                part.FacebookMessage = FacebookMessage.Value;
             }
-
-            var importedFacebookMessageSent = context.Attribute(part.PartDefinition.Name, "FacebookMessageSent");
-            if (importedFacebookMessageSent != null) {
-                part.FacebookMessageSent = bool.Parse(importedFacebookMessageSent);
+            var FacebookMessageSent = root.Attribute("FacebookMessageSent");
+            if (FacebookMessageSent != null) {
+                part.FacebookMessageSent = bool.Parse(FacebookMessageSent.Value);
             }
-
-            var importedFacebookCaption = context.Attribute(part.PartDefinition.Name, "FacebookCaption");
-            if (importedFacebookCaption != null) {
-                part.FacebookCaption = importedFacebookCaption;
+            var FacebookCaption = root.Attribute("FacebookCaption");
+            if (FacebookCaption != null) {
+                part.FacebookCaption = FacebookCaption.Value;
             }
-
-            var importedFacebookDescription = context.Attribute(part.PartDefinition.Name, "FacebookDescription");
-            if (importedFacebookDescription != null) {
-                part.FacebookDescription = importedFacebookDescription;
+            var FacebookDescription = root.Attribute("FacebookDescription");
+            if (FacebookDescription != null) {
+                part.FacebookDescription = FacebookDescription.Value;
             }
-
-            var importedFacebookName = context.Attribute(part.PartDefinition.Name, "FacebookName");
-            if (importedFacebookName != null) {
-                part.FacebookName = importedFacebookName;
+            var FacebookName = root.Attribute("FacebookName");
+            if (FacebookName != null) {
+                part.FacebookName = FacebookName.Value;
             }
-
-            var importedFacebookPicture = context.Attribute(part.PartDefinition.Name, "FacebookPicture");
-            if (importedFacebookPicture != null) {
-                part.FacebookPicture = importedFacebookPicture;
+            var FacebookPicture = root.Attribute("FacebookPicture");
+            if (FacebookPicture != null) {
+                part.FacebookPicture = FacebookPicture.Value;
             }
-
-            var importedFacebookIdPicture = context.Attribute(part.PartDefinition.Name, "FacebookIdPicture");
-            if (importedFacebookIdPicture != null) {
-                part.FacebookIdPicture = importedFacebookIdPicture;
+            var FacebookIdPicture = root.Attribute("FacebookIdPicture");
+            if (FacebookIdPicture != null) {
+                part.FacebookIdPicture = FacebookIdPicture.Value;
             }
-
-            var importedFacebookLink = context.Attribute(part.PartDefinition.Name, "FacebookLink");
-            if (importedFacebookLink != null) {
-                part.FacebookLink = importedFacebookLink;
+            var FacebookLink = root.Attribute("FacebookLink");
+            if (FacebookLink != null) {
+                part.FacebookLink = FacebookLink.Value;
             }
-
-            var importedSendOnNextPublish = context.Attribute(part.PartDefinition.Name, "SendOnNextPublish");
-            if (importedSendOnNextPublish != null) {
-                part.SendOnNextPublish = bool.Parse(importedSendOnNextPublish);
+            var SendOnNextPublish = root.Attribute("SendOnNextPublish");
+            if (SendOnNextPublish != null) {
+                part.SendOnNextPublish = bool.Parse(SendOnNextPublish.Value);
             }
-
-            var importedAccountSelected = context.Data.Element(part.PartDefinition.Name).Elements("AccountList");
-
-            if (importedAccountSelected != null && importedAccountSelected.Count() > 0) {
-                
-                var listaccount = _facebookService.GetValidFacebookAccount();
-                int countAcc= 0;
-                int[] accSel = new int[importedAccountSelected.Count()];
-                
-                foreach (var selectedAcc in importedAccountSelected) {                   
-                    var tempPartFromid = selectedAcc.Attribute("AccountListSelected").Value;
-                    var addltsin =  listaccount.Where(x => _contentManager.GetItemMetadata(_contentManager.Get(x.Id)).Identity.ToString() == tempPartFromid.ToString()).Select(x => x.Id).ToArray();
-                    accSel[countAcc]=addltsin[0];
-                    countAcc=countAcc + 1;
-                    
+            var FacebookMessageToPost = root.Attribute("FacebookMessageToPost");
+            if (FacebookMessageToPost != null) {
+                part.FacebookMessageToPost = FacebookMessageToPost.Value;
+            }
+            var HasImage = root.Attribute("HasImage");
+            if (HasImage != null) {
+                part.HasImage = bool.Parse(HasImage.Value);
+            }
+            var FacebookTypeElement = root.Attribute("FacebookType");
+            if (FacebookTypeElement != null) {
+                part.FacebookType = (FacebookType)(Enum.Parse(typeof(FacebookType), FacebookTypeElement.Value));
+            }
+            if (root.HasElements) {
+                List<int> accountList = new List<int>();
+                foreach (var userElement in root.Elements("Account")) {
+                    var fbAccount = context.GetItemFromSession(userElement.Value);
+                    if (fbAccount != null && fbAccount.Has<FacebookAccountPart>()) {
+                        accountList.Add(fbAccount.Id);
+                    }
                 }
-                part.AccountList = accSel;
+                if (accountList.Count > 0) {
+                    part.AccountList = accountList.ToArray();
+                }
             }
-            
+            //// old version
+            //var importedAccountSelected = context.Data.Element(part.PartDefinition.Name).Elements("AccountList");
 
-            var importedFacebookMessageToPost = context.Attribute(part.PartDefinition.Name, "FacebookMessageToPost");
-            if (importedFacebookMessageToPost != null) {
-                part.FacebookMessageToPost = importedFacebookMessageToPost;
-            }
-
-            var importedHasImage = context.Attribute(part.PartDefinition.Name, "HasImage");
-            if (importedHasImage != null) {
-                part.HasImage = bool.Parse(importedHasImage);
-            }
-
+            //if (importedAccountSelected != null && importedAccountSelected.Count() > 0) {
+                
+            //    var listaccount = _facebookService.GetValidFacebookAccount();
+            //    int countAcc= 0;
+            //    int[] accSel = new int[importedAccountSelected.Count()];
+                
+            //    foreach (var selectedAcc in importedAccountSelected) {                   
+            //        var tempPartFromid = selectedAcc.Attribute("AccountListSelected").Value;
+            //        var addltsin =  listaccount.Where(x => _contentManager.GetItemMetadata(_contentManager.Get(x.Id)).Identity.ToString() == tempPartFromid.ToString()).Select(x => x.Id).ToArray();
+            //        accSel[countAcc]=addltsin[0];
+            //        countAcc=countAcc + 1;
+                    
+            //    }
+            //    part.AccountList = accSel;
+            //}
         }
-
-
-
-        
-
-
-
-
     }
 }
