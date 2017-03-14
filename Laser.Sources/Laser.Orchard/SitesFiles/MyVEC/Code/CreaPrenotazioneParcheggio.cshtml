@@ -8,11 +8,13 @@
 @using Orchard.Security;
 @using Orchard.ContentManagement;
 @using Laser.Orchard.StartupConfig.Handlers;
+@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.CommunicationGateway.Services;
 
 @functions{
     IContentManager _contentManager;
     IMembershipService _membershipService;
-    IContactRelatedEventHandler _contactEventHandler;
+  //  IContactRelatedEventHandler _contactEventHandler;
     string retString = "Error"; //possible outcomes: "Error","Ok"
     dynamic invito = null;
     dynamic prenotazione = null;
@@ -24,35 +26,41 @@
         wfCtx = Model.Tokens["Workflow"];
         invito = Model.ContentItem;
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
-        _contactEventHandler = Model.OrchardServices.WorkContext.Resolve<IContactRelatedEventHandler>();
+  //      _contactEventHandler = Model.OrchardServices.WorkContext.Resolve<IContactRelatedEventHandler>();
         _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
+		ICommunicationService _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
+      
         int iduser = (int)invito.CommonPart.Creator.Value;
         dynamic RelatedUser = _contentManager.Get(iduser);
         IUser kUser = _membershipService.GetUser((string)RelatedUser.UserPart.UserName);
-        dynamic dUser = kUser;
+        dynamic dUser =_contentManager.Get((int)kUser.Id,VersionOptions.Published);
         string targa = Convert.ToString(wfCtx.GetState("Targa"));
         if (targa==""){
              if ((((int[])(dUser.User.ProfilePart.ReservedParking.Ids)).Contains((int)invito.Id)) ){
                  int[] val = ((int[])(dUser.ProfilePart.ReservedParking.Ids)).Where(xz=>xz != (int)invito.Id).ToArray();
                  dUser.ProfilePart.ReservedParking.Ids = val;
-                 _contactEventHandler.Synchronize(dUser);
+				 dUser.VersionRecord.Published = false;
+				_contentManager.Publish(dUser);
+				// _contactEventHandler.Publish(dUser);
+                _communicationService.UserToContact((IUser)dUser.UserPart);
+ 
              }
         }
         else{
             if (!(((int[])(dUser.User.ProfilePart.ReservedParking.Ids)).Contains((int)invito.Id)) ){
                 int[] val = ((int[])(dUser.ProfilePart.ReservedParking.Ids)).Concat(new int[] { (int)invito.Id }).ToArray();
                 dUser.ProfilePart.ReservedParking.Ids = val;
-                _contactEventHandler.Synchronize(dUser);
-            }
+				// _contactEventHandler.Publish(dUser);
+				dUser.VersionRecord.Published = false;
+				_contentManager.Publish(dUser);
+				_communicationService.UserToContact((IUser)dUser.UserPart);
+             }
        }
-        
-       
         if(invito.SchedaInvito.Prenotazioneparcheggio.Ids.Length == 0) {
             // crea nuova prenotazione
             prenotazione = _contentManager.New("Prenotazioneparcheggio");
             _contentManager.Create(prenotazione, VersionOptions.Draft);
             string codPrenotazione = string.Format("PARK00{0}", invito.Id);
-            
             prenotazione.Prenotazioneparcheggio.IDPrenotazione.Value = codPrenotazione;
             invito.SchedaInvito.Prenotazioneparcheggio.Ids = new int[] { prenotazione.Id };
         }
@@ -60,7 +68,6 @@
             // recupera prenotazione esistente
             prenotazione = Model.OrchardServices.ContentManager.Get(invito.SchedaInvito.Prenotazioneparcheggio.Ids[0], VersionOptions.DraftRequired);
         }
-       
         // aggiorna la targa
         prenotazione.Prenotazioneparcheggio.Targa.Value = targa;
         // aggiorna le date
@@ -68,6 +75,7 @@
         prenotazione.ActivityPart.DateTimeEnd = invito.ActivityPart.DateTimeEnd;
         prenotazione.ActivityPart.AllDay = invito.ActivityPart.AllDay;
         // salva
+		prenotazione.VersionRecord.Published = false;
         _contentManager.Publish(prenotazione);
         // aggiunge il codice prenotazione allo state del workflow
         wfCtx.SetState("CodPrenotazioneParcheggio", prenotazione.Prenotazioneparcheggio.IDPrenotazione.Value);

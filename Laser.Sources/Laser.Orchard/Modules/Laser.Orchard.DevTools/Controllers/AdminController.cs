@@ -20,6 +20,7 @@ using System.IO;
 using System.Web.Hosting;
 using System.Text;
 using Laser.Orchard.DevTools.ViewModels;
+using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
 
 namespace Laser.Orchard.DevTools.Controllers {
 
@@ -29,6 +30,7 @@ namespace Laser.Orchard.DevTools.Controllers {
         private readonly IRepository<ScheduledTaskRecord> _repositoryScheduledTask;
         private readonly ICacheStorageProvider _cacheStorageProvider;
         private readonly ShellSettings _shellSetting;
+        private readonly IRazorTemplateManager _razorTemplateManager;
         public IOrchardServices _orchardServices { get; set; }
         private readonly INotifier _notifier;
         public Localizer T { get; set; }
@@ -39,7 +41,8 @@ namespace Laser.Orchard.DevTools.Controllers {
             IOrchardServices orchardServices,
              INotifier notifier,
              ICacheStorageProvider cacheStorageProvider,
-            ShellSettings shellSetting) {
+            ShellSettings shellSetting,
+            IRazorTemplateManager razorTemplateManager) {
             _csrfTokenHelper = csrfTokenHelper;
             _orchardServices = orchardServices;
             _notifier = notifier;
@@ -48,6 +51,7 @@ namespace Laser.Orchard.DevTools.Controllers {
             _repositoryScheduledTask = repositoryScheduledTask;
             _cacheStorageProvider = cacheStorageProvider;
             _shellSetting = shellSetting;
+            _razorTemplateManager = razorTemplateManager;
         }
 
         [HttpGet]
@@ -180,6 +184,18 @@ namespace Laser.Orchard.DevTools.Controllers {
             //  _notifier.Add(NotifyType.Information, T());
             //  return RedirectToAction("index", "Admin", new { testo = JsonConvert.SerializeObject(_cacheStorageProvider.Get(key)) });
             Segnalazione se = new Segnalazione { Testo = JsonConvert.SerializeObject(_cacheStorageProvider.Get(key)) };
+            return View("index", se);
+        }
+
+        [HttpGet]
+        [Admin]
+        public ActionResult CleanRazor() {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
+                return new HttpUnauthorizedResult();
+            _razorTemplateManager.StartNewRazorEngine();
+            //  _notifier.Add(NotifyType.Information, T());
+            //  return RedirectToAction("index", "Admin", new { testo = JsonConvert.SerializeObject(_cacheStorageProvider.Get(key)) });
+            Segnalazione se = new Segnalazione { Testo = "Razor resettati" };
             return View("index", se);
         }
 

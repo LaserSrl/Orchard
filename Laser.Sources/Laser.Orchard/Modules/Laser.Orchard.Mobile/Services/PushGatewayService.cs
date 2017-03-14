@@ -1083,6 +1083,7 @@ namespace Laser.Orchard.Mobile.Services {
                         }
                     }
                     push.Stop();
+
                     // check sui device expired
                     try {
                         var feedback = new FeedbackService(config);

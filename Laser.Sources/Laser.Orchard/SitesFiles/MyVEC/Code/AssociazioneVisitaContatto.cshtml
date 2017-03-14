@@ -38,7 +38,7 @@
             else{
                 idute = (int)(item.CommonPart.Creator.Value);
             }
-            dynamic user = _contentManager.Get(idute);
+            dynamic user = _contentManager.Get(idute,VersionOptions.Published);
             // Get contact by his email because ShedaInvito can be created by a back-end user, so its creator isn't the guest it refers to
             //dynamic contact = _communicationService.GetContactsFromMail(item.SchedaInvito.Email.Value)[0];
             //************************
@@ -68,9 +68,10 @@
                 cpfInviti.Ids = idList.ToArray();
             }
             // forza il publish per aggiornate i fieldIndex
-            _contentManager.Create(user, VersionOptions.DraftRequired);
-            _contentManager.Publish(user);
+            //_contentManager.Create(user, VersionOptions.DraftRequired);
             _communicationService.UserToContact((IUser)(user.UserPart));
+			user.VersionRecord.Published = false;
+			_contentManager.Publish(user);
             retString = "OK";
         }
     } catch (Exception ex) {

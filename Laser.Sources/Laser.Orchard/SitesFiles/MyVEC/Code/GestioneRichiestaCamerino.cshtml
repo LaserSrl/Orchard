@@ -8,7 +8,7 @@
 @using System.Collections.Generic;
 @using System.Linq;
 @functions{
-    string retString = "Error"; //possible outcomes: "Error","DoNothing","Push" 
+    string retString = "Error"; //possible outcomes: "Error","DoNothing","Push"
 
     string eMsg = String.Empty; //used to track errors and put them in the WF state
 
@@ -25,7 +25,8 @@
         if ((bool)(richiesta.RichiestaCamerino.Evasa.Value ?? false)) {
             //Handled already.
             retString = "DoNothing";
-        } else {
+        }
+        else {
             _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
             _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
             //Identify the store
@@ -57,17 +58,19 @@
             var product = ((dynamic)Model.OrchardServices.ContentManager.Get(richiesta.RichiestaCamerino.Prodotto.Ids[0]));
             if (product == null) {
                 throw new Exception("Impossibile identificare il prodotto dalla Richiesta Camerino.");
-            } else {
+            }
+            else {
                 Model.Tokens["Workflow"].SetState("Product", product.TitlePart.Title);
             }
             var colour = ((dynamic)Model.OrchardServices.ContentManager.Get(richiesta.RichiestaCamerino.Colore.Ids[0]));
             if (colour == null) {
                 throw new Exception("Impossibile identificare il colore dalla Richiesta Camerino.");
-            } else {
+            }
+            else {
                 Model.Tokens["Workflow"].SetState("ProductColour", colour.TitlePart.Title);
             }
-            
-            // imposto la title con Nome Cognome dell'utente che ha richiesto 
+
+            // imposto la title con Nome Cognome dell'utente che ha richiesto
             richiesta.TitlePart.Title = dCaller.User.ProfilePart.Name.Value + " " + dCaller.User.ProfilePart.Surname.Value;
             //Set workflow states used by the Push Activity
             Model.Tokens["Workflow"].SetState("RecipientsList", csvIds);
@@ -77,7 +80,8 @@
             Model.Tokens["Workflow"].SetState("DressingRoom", richiesta.RichiestaCamerino.Camerino.Value ?? "");
             retString = "Push";
         }
-    } catch (Exception ex) {
+    }
+    catch (Exception ex) {
         eMsg += ex.Message + Environment.NewLine;
         //eMsg += ex.StackTrace + Environment.NewLine;
         retString = "Error";
