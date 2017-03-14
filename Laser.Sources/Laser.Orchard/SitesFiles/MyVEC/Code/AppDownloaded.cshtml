@@ -10,20 +10,21 @@
 @using System.Globalization;
 @using System.Collections.Generic;
 @using Laser.Orchard.StartupConfig.Handlers;
+@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.CommunicationGateway.Services;
 
 @functions{
     IMembershipService _membershipService;
-    IContactRelatedEventHandler _contactEventHandler;
 }
 @{
     _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
-    _contactEventHandler = Model.OrchardServices.WorkContext.Resolve<IContactRelatedEventHandler>(); 
+	ICommunicationService _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
     string retString = "OK";
     try {
         dynamic item = Model.ContentItem;
         if ((!(bool)(item.ProfilePart.AppDownloaded.Value ?? false)) && (!string.IsNullOrEmpty( Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["UUID"]))) {
             item.ProfilePart.AppDownloaded.Value = true;
-            _contactEventHandler.Synchronize(_membershipService.GetUser(item.User.UserPart.UserName));
+			_communicationService.UserToContact((IUser)(_membershipService.GetUser(item.User.UserPart.UserName).UserPart));
         }
         retString = "OK";
     } catch (Exception ex) {

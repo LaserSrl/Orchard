@@ -4,11 +4,6 @@ using Orchard;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
 using Orchard.Tokens;
-using RazorEngine;
-using RazorEngine.Compilation;
-using RazorEngine.Compilation.ReferenceResolver;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -37,26 +32,31 @@ using System.Web.Configuration;
 using Orchard.ContentManagement;
 using Orchard.Tasks.Scheduling;
 using Laser.Orchard.StartupConfig.Exceptions;
+using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
 
 //using System.Web.Razor;
 
-
-
-
 namespace Laser.Orchard.ExternalContent.Services {
+
     public interface IFieldExternalService : IDependency {
+
         dynamic GetContentfromField(Dictionary<string, object> contesto, string field, string nomexlst, FieldExternalSetting settings, string contentType = "", HttpVerbOptions httpMethod = HttpVerbOptions.GET, HttpDataTypeOptions httpDataType = HttpDataTypeOptions.JSON, string bodyRequest = "");
+
         string GetUrl(Dictionary<string, object> contesto, string externalUrl);
+
         void ScheduleNextTask(Int32 minute, ContentItem ci);
     }
 
     public class ExtensionObject {
+
         public string HtmlEncode(string input) {
             return System.Web.HttpUtility.HtmlEncode(input);
         }
+
         public string HtmlDecode(string input) {
             return (System.Web.HttpUtility.HtmlDecode(input)).Replace("\t", " ");
         }
+
         public string GuidToId(string input) {
             BigInteger huge = BigInteger.Parse('0' + input.Replace("-", "").Replace(" ", ""), NumberStyles.AllowHexSpecifier);
             return (huge + 5000000).ToString();
@@ -66,20 +66,23 @@ namespace Laser.Orchard.ExternalContent.Services {
             TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
             return myTI.ToTitleCase(input);
         }
-
     }
 
     public class FieldExternalService : IFieldExternalService {
+
         //    private readonly ICacheStorageProvider _cacheStorageProvider;
         private readonly ITokenizer _tokenizer;
+
         private readonly ShellSettings _shellSetting;
         private readonly IWorkContextAccessor _workContext;
         private readonly ICacheStorageProvider _cacheStorageProvider;
         private readonly IOrchardServices _orchardServices;
         private readonly IScheduledTaskManager _scheduledTaskManager;
         private const string TaskType = "FieldExternalTask";
+        private readonly IRazorTemplateManager _razorTemplateManager;
 
         public ILogger Logger { get; set; }
+
         public FieldExternalService(
             ITokenizer tokenizer
             , ShellSettings shellSetting
@@ -88,11 +91,13 @@ namespace Laser.Orchard.ExternalContent.Services {
             , IOrchardServices orchardServices
             , IScheduledTaskManager scheduledTaskManager
             //  , ICacheStorageProvider cacheStorageProvider
+            , IRazorTemplateManager razorTemplateManager
             ) {
             _tokenizer = tokenizer;
             _shellSetting = shellSetting;
             _workContext = workContext;
             Logger = NullLogger.Instance;
+            _razorTemplateManager = razorTemplateManager;
             //   _cacheService = cacheService;
             _orchardServices = orchardServices;
             if (_orchardServices.WorkContext != null) {
@@ -102,23 +107,23 @@ namespace Laser.Orchard.ExternalContent.Services {
 
             //    _cacheStorageProvider = cacheStorageProvider;
         }
+
         public void ScheduleNextTask(Int32 minute, ContentItem ci) {
             if (minute > 0) {
                 DateTime date = DateTime.UtcNow.AddMinutes(minute);
                 _scheduledTaskManager.CreateTask(TaskType, date, ci);
             }
         }
+
         public string GetUrl(Dictionary<string, object> contesto, string externalUrl) {
             bool threatUrlAsString = false;
             string pureCleanString, finalUrl;
             var tokenizedzedUrl = _tokenizer.Replace(externalUrl, contesto, new ReplaceOptions { Encoding = ReplaceOptions.UrlEncode });
             pureCleanString = tokenizedzedUrl = tokenizedzedUrl.Replace("+", "%20");
 
-
             threatUrlAsString = !tokenizedzedUrl.StartsWith("http");
             if (threatUrlAsString) { // gestisco il caso in cui l'URl dell'externalField sia in realtà una stringa
                 tokenizedzedUrl = String.Format("http://{0}/{1}/{2}", _shellSetting.RequestUrlHost ?? "www.fakedomain.com", _shellSetting.RequestUrlPrefix ?? "", tokenizedzedUrl ?? "");
-
             }
             Uri tokenizedzedUri;
             try {
@@ -128,7 +133,6 @@ namespace Laser.Orchard.ExternalContent.Services {
                 // gestisco il caso in cui passo un'url e non i parametri di un'url
                 tokenizedzedUrl = _tokenizer.Replace(externalUrl, contesto, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
                 tokenizedzedUri = new Uri(tokenizedzedUrl);
-
             }
             if (threatUrlAsString) {
                 finalUrl = pureCleanString.Split('?')[0];
@@ -143,11 +147,11 @@ namespace Laser.Orchard.ExternalContent.Services {
                     finalUrl += ((i == 0 ? "?" : "&") + item.Replace("?", ""));
                     i++;
                 }
-
             }
 
             return finalUrl;
         }
+
         private JObject jsonflusher(JObject jsonObject) {
             JObject newJsonObject = new JObject();
             //JObject newJsonObject = new JObject();
@@ -166,7 +170,6 @@ namespace Laser.Orchard.ExternalContent.Services {
                                 else
                                     myjarray.Add(jsonflusher((JObject)arr));
                             }
-
                         }
                         newJsonObject.Add(property.Name, myjarray);
                         // newJsonObject.Add(property.Name, jsonflusher((JObject)property.Value));
@@ -177,8 +180,8 @@ namespace Laser.Orchard.ExternalContent.Services {
                 }
             }
             return newJsonObject;
-
         }
+
         public dynamic GetContentfromField(Dictionary<string, object> contesto, string externalUrl, string nomexlst, FieldExternalSetting settings, string contentType = "", HttpVerbOptions httpMethod = HttpVerbOptions.GET, HttpDataTypeOptions httpDataType = HttpDataTypeOptions.JSON, string bodyRequest = "") {
             // DefaultCacheStorageProvider _cacheService = new DefaultCacheStorageProvider();
             dynamic ci = null;
@@ -232,7 +235,6 @@ namespace Laser.Orchard.ExternalContent.Services {
 
                     // fix json vuoto
                     if (webpagecontent == "<root />") {
-
                         XmlDocument xmlDoc = new XmlDocument();
                         xmlDoc.LoadXml(webpagecontent);
 
@@ -252,8 +254,9 @@ namespace Laser.Orchard.ExternalContent.Services {
 
                         dynamic mycache = null;
                         //    Dictionary<string, object> elementcached = null;
+                        Dictionary<string, object> dvb = new Dictionary<string, object>();
 
-                        DynamicViewBag dvb = new DynamicViewBag();
+                        // DynamicViewBag dvb = new DynamicViewBag();
                         // dvb.AddValue(settings.CacheInput, _cacheStorageProvider.Get(settings.CacheInput));
                         if (!string.IsNullOrEmpty(settings.CacheInput)) {
                             string inputcache = _tokenizer.Replace(settings.CacheInput, contesto);
@@ -262,7 +265,6 @@ namespace Laser.Orchard.ExternalContent.Services {
                             mycache = _cacheStorageProvider.Get<object>(inputcache);
                             // var Jsettings = new JsonSerializerSettings();
                             // Jsettings.TypeNameHandling = TypeNameHandling.Arrays;
-
 
                             //       string tmpelementcached = JsonConvert.SerializeObject(mycache);//, Jsettings);//, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                             //       JavaScriptSerializer sera = new JavaScriptSerializer();
@@ -297,10 +299,10 @@ namespace Laser.Orchard.ExternalContent.Services {
                         //     elementcached.Add("NoElement", new {value="true"});
                         if (mycache != null) {
                             XmlDocument xml = JsonConvert.DeserializeXmlNode(JsonConvert.SerializeObject(mycache));
-                            dvb.AddValue("CachedData", xml);
+                            dvb.Add("CachedData", xml);
                         }
                         else {
-                            dvb.AddValue("CachedData", new XmlDocument());
+                            dvb.Add("CachedData", new XmlDocument());
                         }
 
                         //     dvb.AddValue("CachedData", elementcached);
@@ -338,12 +340,8 @@ namespace Laser.Orchard.ExternalContent.Services {
             return (ci);
         }
 
-
         //   private string codifica(object o) {
-
         //if (myval!=null){
-
-
         //    foreach(string key in myval.Keys){
         //        if (!string.IsNullOrEmpty(key)){
         //            if (myval[key]!=null){
@@ -384,7 +382,7 @@ namespace Laser.Orchard.ExternalContent.Services {
         //    }
         //}
         //	return testo;
-        //	
+        //
         //   }
 
         //private static dynamic XmlToDynamic(XmlReader file, XElement node = null) {
@@ -411,7 +409,7 @@ namespace Laser.Orchard.ExternalContent.Services {
         //                    e => e.Name.LocalName.ToLower() == gn.Elements().First().Name.LocalName) ||
 
         //                // if there's only one child element then determine using the PluralizationService if
-        //            // the pluralization of the child elements name matches the parent node. 
+        //            // the pluralization of the child elements name matches the parent node.
         //                gn.Name.LocalName.ToLower() == pluralizationService.Pluralize(
         //                    gn.Elements().First().Name.LocalName).ToLower()
         //            );
@@ -435,8 +433,8 @@ namespace Laser.Orchard.ExternalContent.Services {
         //    return result;
         //}
         public List<XmlNode> listanodi = new List<XmlNode>();
-        private void correggiXML(XmlDocument xml) {
 
+        private void correggiXML(XmlDocument xml) {
             foreach (XmlNode nodo in xml.ChildNodes) {
                 doiteratenode(nodo, xml);
             }
@@ -450,8 +448,8 @@ namespace Laser.Orchard.ExternalContent.Services {
                     RenameNode(xml, sottonodo, sottonodo.Name + "text");
                 }
             }
-
         }
+
         private void doiteratenode(XmlNode nodo, XmlDocument xml) {
             foreach (XmlNode sottonodo in nodo.ChildNodes) {
                 int n;
@@ -463,7 +461,8 @@ namespace Laser.Orchard.ExternalContent.Services {
                 doiteratenode(sottonodo, xml);
             }
         }
-        void RenameNode(XmlDocument doc, XmlNode e, string newName) {
+
+        private void RenameNode(XmlDocument doc, XmlNode e, string newName) {
             XmlNode newNode = doc.CreateNode(e.NodeType, newName, null);
             while (e.HasChildNodes) {
                 newNode.AppendChild(e.FirstChild);
@@ -476,60 +475,25 @@ namespace Laser.Orchard.ExternalContent.Services {
             parent.ReplaceChild(newNode, e);
         }
 
-        private dynamic RazorTransform(string xmlpage, string xsltname, string contentType = "", DynamicViewBag dvb = null) {
+        private dynamic RazorTransform(string xmlpage, string xsltname, string contentType = "", Dictionary<string, object> dvb = null) {
             string output = "";
+            // RazorTemplateManager rtm = new RazorTemplateManager();
 
             string myfile = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\Xslt\" + contentType + xsltname + ".cshtml";
             if (!System.IO.File.Exists(myfile)) {
                 myfile = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\Xslt\" + xsltname + ".cshtml";
             }
+
             if (System.IO.File.Exists(myfile)) {
                 string mytemplate = File.ReadAllText(myfile);
                 string myfile2 = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\common.cshtml";
                 if (System.IO.File.Exists(myfile2)) {
                     mytemplate = File.ReadAllText(myfile2) + mytemplate; ;
                 }
+
                 if (!string.IsNullOrEmpty(mytemplate)) {
-                    var config = new TemplateServiceConfiguration();
-                    config.Namespaces.Add("Orchard");
-                    config.Namespaces.Add("Orchard.ContentManagement");
-                    config.Namespaces.Add("Orchard.Caching");
-                    string result = "";
                     var docwww = XDocument.Parse(xmlpage);
-
-
-                    //temp er = new temp();
-                    //    XmlDocument mydoc = er.ToXmlDocument(docwww);
-                    //er.GetChildValue(mydoc, "//event/descriptiontext", true);
-                    //    mydoc = er.ConvertArrayOfStringToString(mydoc, "/event", "descriptiontext", "Descriptiontext", true);
-
-
-                    //      er.ConvertStringTimeStampToDate(mydoc, "/endDateTime");
-
-                    //foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/_data/lasernumeric/film")) {
-                    //    if (!bookToModify.HasChildNodes) {
-                    //        bookToModify.ParentNode.ParentNode.RemoveChild(bookToModify.ParentNode);
-                    //    }
-                    //}
-                    //    mydoc = er.aggiungipadre(mydoc, "root", "_dataList", "_data");
-                    //    mydoc = er.aggiungipadre(mydoc, "root/_dataList/_data/media", "ImageList", "image");
-                    //    mydoc = er.rendinumeric(mydoc, "root/_dataList/_data/id");
-                    //    mydoc = er.cambianome(mydoc, "root/_dataList/_data/id", "OriginalId");
-                    ////    mydoc = er.RimuoviNodo(mydoc, "root/_dataList");
-                    //    mydoc = er.aggiungifiglio(mydoc, "root/_dataList/_data/media/ImageList", "image");
-                    //    mydoc = er.RimuoviAlberaturaTranne(mydoc, "root/_dataList");
-
-                    //        er.SpanXDocument(er.ToXDocument(mydoc).Root);
-                    using (var service = RazorEngineService.Create(config)) {
-                        //DynamicViewBag vb = new DynamicViewBag();
-                        //vb.AddValue("WorkContext", _workContext);
-                        //foreach(string 
-                        //vb.AddValue(
-                        //    dvb.Add
-                        //    vb.AddValue("CacheService", _cacheService); 
-
-                        result = service.RunCompile(mytemplate, "htmlRawTemplatea", null, docwww, dvb);
-                    }
+                    string result = _razorTemplateManager.RunString(myfile, mytemplate, docwww, dvb);
                     output = result.Replace("\r\n", "");
                     //if (!string.IsNullOrEmpty(resultnobr)) {
 
@@ -553,9 +517,6 @@ namespace Laser.Orchard.ExternalContent.Services {
 
                 XmlNode newNode = doc.DocumentElement;
 
-
-
-
                 //foreach (XmlNode node in newNode){
                 //    foreach (XmlNode childNode in node.ChildNodes) {
                 //    }
@@ -566,8 +527,6 @@ namespace Laser.Orchard.ExternalContent.Services {
 
                 newNode = XmlWithJsonArrayTag(newNode, doc);
 
-
-
                 //XmlDocument docc = new XmlDocument();
                 //XmlSchema schema = new XmlSchema();
                 //schema.Namespaces.Add("xmlns:json", "http://www.w3.org/1999/xhtml");
@@ -575,7 +534,6 @@ namespace Laser.Orchard.ExternalContent.Services {
                 //docc.ImportNode(newNode,true);
 
                 // string JsonDataxxx = JsonConvert.SerializeXmlNode(doc);
-
 
                 string JsonData = JsonConvert.SerializeXmlNode(newNode);
                 JsonData = JsonData.Replace(",{}]}", "]}");
@@ -613,8 +571,6 @@ namespace Laser.Orchard.ExternalContent.Services {
                 }
             }
 
-
-
             //   foreach( XmlNode iteratenode in xn.ChildNodes) {
             // for (Int32 i = xn.ChildNodes.Count - 1; i >= 0; i--) {// XmlNode iteratenode in xn.ChildNodes) {
             for (Int32 i = 0; i < xn.ChildNodes.Count; i++) {
@@ -640,12 +596,7 @@ namespace Laser.Orchard.ExternalContent.Services {
             //    }
 
             return xn;
-
         }
-
-
-
-
 
         private dynamic XsltTransform(string xmlpage, string xsltname, string contentType = "") {
             string output = "", myXmlFileMoreSpecific, myXmlFileLessSpecific, myXmlFile;
@@ -672,13 +623,11 @@ namespace Laser.Orchard.ExternalContent.Services {
 
                 argsList.AddExtensionObject("my:HttpUtility", new ExtensionObject());
 
-
                 string cult = _workContext.GetContext().CurrentCulture;
                 if (String.IsNullOrEmpty(cult))
                     cult = "it";
                 else
                     cult = cult.Substring(0, 2);
-
 
                 argsList.AddParam("LinguaParameter", "", cult);
 
@@ -689,7 +638,6 @@ namespace Laser.Orchard.ExternalContent.Services {
                     string _value = _workContext.GetContext().HttpContext.Request.QueryString[_key].ToString();
                     argsList.AddParam(_key.ToLower().Trim(), "", _value);
                 }
-
 
                 XsltSettings settings = new XsltSettings();
                 settings.EnableScript = true;
@@ -732,14 +680,10 @@ namespace Laser.Orchard.ExternalContent.Services {
             dynamic dynamiccontent_tmp = ser.Deserialize(JsonData, typeof(object));
             dynamic dynamiccontent = new DynamicJsonObject(dynamiccontent_tmp);
 
-
-
             return dynamiccontent;
         }
 
-
         private static string GetHttpPage(string uri, HttpVerbOptions httpMethod, HttpDataTypeOptions httpDataType, string bodyRequest, string certificatePath = null, string privateKey = null) {
-
             //Uri uri = new Uri("https://mysite.com/auth");
             //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri) as HttpWebRequest;
             //request.Accept = "application/xml";
@@ -815,11 +759,11 @@ namespace Laser.Orchard.ExternalContent.Services {
             }
             return new XElement(xmlDocument.Name.LocalName, xmlDocument.Elements().Select(el => RemoveAllNamespaces(el)));
         }
-
     }
 
     public class DynamicXml : DynamicObject {
-        XElement _root;
+        private XElement _root;
+
         private DynamicXml(XElement root) {
             _root = root;
         }
@@ -860,13 +804,5 @@ namespace Laser.Orchard.ExternalContent.Services {
 
             return true;
         }
-
-
-
-
-
-
-
-
     }
 }

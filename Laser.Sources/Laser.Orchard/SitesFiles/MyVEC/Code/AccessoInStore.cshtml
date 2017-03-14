@@ -50,7 +50,7 @@
         if (caller == null) {
             throw new Exception("Impossibile identificare l'utente che ha effettuato l'accesso al Punto Vendita.");
         }
-        dynamic dCaller = caller;
+        dynamic dCaller = caller; 
         Model.Tokens["Workflow"].SetState("CustomerName", dCaller.User.ProfilePart.Name.Value ?? "");
         Model.Tokens["Workflow"].SetState("CustomerSurname", dCaller.User.ProfilePart.Surname.Value ?? "");
         //only update states if the user was not in the store OR if he had entered more than 10 minutes ago
@@ -59,14 +59,16 @@
         DateTime now = DateTime.UtcNow;
         if (prevStore != store.Id.ToString() || (oldAccess == null || ((TimeSpan)now.Subtract(oldAccess.Value)).TotalMinutes > 10)) {
             decimal storeVisits = (dCaller.User.ProfilePart.VisiteaNegozio.Value ?? (decimal)0) + 1;
-            dCaller.User.ProfilePart.VisiteaNegozio.Value = storeVisits;
-
-            dCaller.User.ProfilePart.AccessoNegozio.DateTime = now; //the DateTimeField is always stored as UTC
-            dCaller.User.ProfilePart.InStore.Value = store.Id.ToString();
+            dynamic usitem= _contentManager.Get(dCaller.User.Id, VersionOptions.Published);
+			usitem.ProfilePart.VisiteaNegozio.Value = storeVisits;
+            usitem.ProfilePart.AccessoNegozio.DateTime = now; //the DateTimeField is always stored as UTC
+            usitem.ProfilePart.InStore.Value = store.Id.ToString();
             // forza la pubblicazione per aggiornare i fieldIndex
-            _contentManager.Create(dCaller.ContentItem, VersionOptions.DraftRequired);
-            _contentManager.Publish(dCaller.ContentItem);
-            _communicationService.UserToContact((IUser)dCaller);
+            //_contentManager.Create(usitem, VersionOptions.DraftRequired);
+           // _contentManager.Publish(usitem);
+			usitem.VersionRecord.Published = false;
+			_contentManager.Publish(usitem);
+            _communicationService.UserToContact((IUser)usitem.UserPart);
             retString = "OK";
         } else {
             retString = "NoPush";

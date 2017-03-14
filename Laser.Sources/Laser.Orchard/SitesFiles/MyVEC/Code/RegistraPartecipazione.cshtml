@@ -20,9 +20,8 @@
         var haPartecipato = (item.SchedaInvito.Hapartecipato.Value == null ? false:item.SchedaInvito.Hapartecipato.Value);
         if (!haPartecipato) {
             item.SchedaInvito.Hapartecipato.Value = true;
-            // force publish to update fieldIndexes
-            _contentManager.Create(item, VersionOptions.DraftRequired);
-            _contentManager.Publish(item);
+			item.VersionRecord.Published = false;
+			_contentManager.Publish(item);
             retString = "OK";
         } else {
             retString = "NothingToDo";

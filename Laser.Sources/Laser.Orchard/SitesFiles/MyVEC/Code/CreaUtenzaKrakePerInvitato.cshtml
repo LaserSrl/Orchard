@@ -135,7 +135,7 @@
                 user.ProfilePart.Name.Value = givenName;
                 user.ProfilePart.Surname.Value = familyName;
                 user.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
-                _contentManager.Create(user, VersionOptions.DraftRequired);
+                //_contentManager.Create(user, VersionOptions.DraftRequired);
                 _contentManager.Publish(user);
                 _communicationService.UserToContact((IUser)user.UserPart);
             }
@@ -151,12 +151,14 @@
         }
         else
         {
-            dynamic user = kUser.ContentItem;
+            dynamic user = _contentManager.Get(kUser.ContentItem.Id, VersionOptions.Published); //kUser.ContentItem;
             user.ProfilePart.Name.Value = givenName;
             user.ProfilePart.Surname.Value = familyName;
             user.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
-            _contentManager.Create(user, VersionOptions.DraftRequired);
-            _contentManager.Publish(user);
+           // _contentManager.Create(user, VersionOptions.DraftRequired);
+          //  _contentManager.Publish(user);
+			user.VersionRecord.Published = false;
+			_contentManager.Publish(user);
             _communicationService.UserToContact((IUser)user.UserPart);
         }
         //Set the creator of the SchedaInvito to the Krake user for the guest.
@@ -174,8 +176,10 @@
             }
         }
         // forza la pubblicaizone per aggiornare i fieldIndex
-        _contentManager.Create(item, VersionOptions.DraftRequired);
-        _contentManager.Publish(item);
+       // _contentManager.Create(item, VersionOptions.DraftRequired);
+
+	   item.VersionRecord.Published = false;
+		_contentManager.Publish(item);
         retString = "OK";
     } catch (Exception ex) {
         eMsg += string.Format("\r\n{0}", ex.Message);

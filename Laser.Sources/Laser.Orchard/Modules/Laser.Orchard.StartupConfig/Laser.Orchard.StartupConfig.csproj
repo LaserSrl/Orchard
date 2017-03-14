@@ -290,6 +290,7 @@
     <Compile Include="Projections\IProviderForProections.cs" />
     <Compile Include="RazorCodeExecution\Activities\RazorExecuteActivity.cs" />
     <Compile Include="RazorCodeExecution\Forms\RazorExecuteForm.cs" />
+    <Compile Include="RazorCodeExecution\Services\IRazorTemplateManager.cs" />
     <Compile Include="Services\ApiKeyService.cs" />
     <Compile Include="Services\ContentSerializationServices.cs" />
     <Compile Include="Services\IApiKeyService.cs" />
