@@ -115,9 +115,10 @@ namespace Laser.Orchard.Mobile.Drivers {
             clonePart.HaveAlias = originalPart.HaveAlias;
             clonePart.Alias = originalPart.Alias;
             //SmsMessageSent is not copied over, because it is controlled by the handler
+            clonePart.SmsMessageSent = false;
             clonePart.SendToTestNumber = originalPart.SendToTestNumber;
             clonePart.NumberForTest = originalPart.NumberForTest;
-            clonePart.SendOnNextPublish = originalPart.SendOnNextPublish;
+            clonePart.SendOnNextPublish = false;
             //SmsDeliveredOrAcceptedNumber is computed as message are sent
             //SmsRejectedOrExpiredNumber is computed as messages are sent
             //SmsRecipientsNumber is updated by the handler

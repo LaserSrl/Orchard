@@ -178,12 +178,13 @@ namespace Laser.Orchard.Twitter.Drivers {
         protected override void Cloning(TwitterPostPart originalPart, TwitterPostPart clonePart, CloneContentContext context) {
             clonePart.TwitterMessage = originalPart.TwitterMessage;
             //TwitterMessageSent is set by handlers and if cloned would prevent sending the message
+            clonePart.TwitterMessageSent = false;
             clonePart.TwitterTitle = originalPart.TwitterTitle;
             clonePart.TwitterDescription = originalPart.TwitterDescription;
             clonePart.TwitterPicture = originalPart.TwitterPicture;
             clonePart.TwitterCurrentLink = originalPart.TwitterCurrentLink;
             clonePart.TwitterLink = originalPart.TwitterLink;
-            clonePart.SendOnNextPublish = originalPart.SendOnNextPublish;
+            clonePart.SendOnNextPublish = false;
             clonePart.AccountList = originalPart.AccountList;
         }
     }

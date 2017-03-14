@@ -138,13 +138,14 @@ namespace Laser.Orchard.Facebook.Drivers {
         protected override void Cloning(FacebookPostPart originalPart, FacebookPostPart clonePart, CloneContentContext context) {
             clonePart.FacebookMessage = originalPart.FacebookMessage;
             //do not clone FacebookMessageSent so that we can send it in the cloned post
+            clonePart.FacebookMessageSent = false;
             clonePart.FacebookCaption = originalPart.FacebookCaption;
             clonePart.FacebookDescription = originalPart.FacebookDescription;
             clonePart.FacebookName = originalPart.FacebookName;
             clonePart.FacebookPicture = originalPart.FacebookPicture;
             clonePart.FacebookIdPicture = originalPart.FacebookIdPicture;
             clonePart.FacebookLink = originalPart.FacebookLink;
-            clonePart.SendOnNextPublish = originalPart.SendOnNextPublish;
+            clonePart.SendOnNextPublish = false;
             clonePart.AccountList = originalPart.AccountList;
             clonePart.FacebookType = originalPart.FacebookType;
             clonePart.FacebookMessageToPost = originalPart.FacebookMessageToPost;

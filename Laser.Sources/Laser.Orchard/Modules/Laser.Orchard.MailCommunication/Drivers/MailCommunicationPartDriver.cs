@@ -84,7 +84,8 @@ namespace Laser.Orchard.MailCommunication.Drivers {
 
         protected override void Cloning(MailCommunicationPart originalPart, MailCommunicationPart clonePart, CloneContentContext context) {
             //do not clone MailMessageSent so that we can send it in the cloned part
-            clonePart.SendOnNextPublish = originalPart.SendOnNextPublish;
+            clonePart.MailMessageSent = false;
+            clonePart.SendOnNextPublish = false;
             clonePart.SendToTestEmail = originalPart.SendToTestEmail;
             clonePart.EmailForTest = originalPart.EmailForTest;
             //do not clone RecipientsNumber because that is computed by the handler
