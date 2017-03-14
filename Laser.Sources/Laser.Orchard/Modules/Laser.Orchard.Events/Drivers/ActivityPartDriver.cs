@@ -7,9 +7,10 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
 using System;
 using System.Globalization;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.Events.Drivers {
-    public class ActivityPartDriver : ContentPartDriver<ActivityPart> {
+    public class ActivityPartDriver : ContentPartCloningDriver<ActivityPart> {
         public Localizer T { get; set; }
 
         private readonly IDateLocalization _dataLocalization;
@@ -227,6 +228,18 @@ namespace Laser.Orchard.Events.Drivers {
             root.SetAttributeValue("RepeatType", part.RepeatType);
             root.SetAttributeValue("RepeatValue", part.RepeatValue);
 
+        }
+
+        protected override void Cloning(ActivityPart originalPart, ActivityPart clonePart, CloneContentContext context) {
+            clonePart.DateTimeStart = originalPart.DateTimeStart;
+            clonePart.DateTimeEnd = originalPart.DateTimeEnd;
+            clonePart.AllDay = originalPart.AllDay;
+            clonePart.Repeat = originalPart.Repeat;
+            clonePart.RepeatType = originalPart.RepeatType;
+            clonePart.RepeatValue = originalPart.RepeatValue;
+            clonePart.RepeatDetails = originalPart.RepeatDetails;
+            clonePart.RepeatEnd = originalPart.RepeatEnd;
+            clonePart.RepeatEndDate = originalPart.RepeatEndDate;
         }
     }
 }

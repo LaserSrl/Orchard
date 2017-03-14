@@ -12,7 +12,7 @@ using Laser.Orchard.Highlights.ViewModels;
 
 namespace Laser.Orchard.Highlights.Drivers {
 
-    public class HighlightsItemDriver : ContentPartDriver<HighlightsItemPart> {
+    public class HighlightsItemDriver : ContentPartCloningDriver<HighlightsItemPart> {
 
         private readonly IHighlightsService _HighlightsService;
         private readonly IWorkContextAccessor _workContext;
@@ -162,6 +162,17 @@ namespace Laser.Orchard.Highlights.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("LinkTarget", part.LinkTarget);
 
 
+        }
+
+        protected override void Cloning(HighlightsItemPart originalPart, HighlightsItemPart clonePart, CloneContentContext context) {
+            clonePart.Video = originalPart.Video;
+            clonePart.Sottotitolo = originalPart.Sottotitolo;
+            clonePart.TitleSize = originalPart.TitleSize;
+            clonePart.HighlightsGroupPartRecordId = originalPart.HighlightsGroupPartRecordId;
+            clonePart.LinkUrl = originalPart.LinkUrl;
+            clonePart.LinkTarget = originalPart.LinkTarget;
+            clonePart.LinkText = originalPart.LinkText;
+            clonePart.ItemOrder = originalPart.ItemOrder;
         }
     }
 }

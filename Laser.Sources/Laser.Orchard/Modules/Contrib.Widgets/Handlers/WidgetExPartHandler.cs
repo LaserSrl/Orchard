@@ -1,4 +1,5 @@
 ﻿using Contrib.Widgets.Models;
+using Contrib.Widgets.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
@@ -17,7 +18,6 @@ namespace Contrib.Widgets.Handlers {
             _contentManager = contentManager;
             OnActivated<WidgetExPart>(SetupFields);
         }
-
         private void SetupFields(ActivatedContentContext context, WidgetExPart part) {
             part.HostField.Loader(() => part.Record.HostId != null ? _contentManager.Get(part.Record.HostId.Value) : null);
             part.HostField.Setter(x => {

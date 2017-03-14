@@ -163,6 +163,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\WidgetExPartDriver.cs" />
     <Compile Include="Handlers\WidgetExPartHandler.cs" />
+    <Compile Include="Handlers\WidgetsContainerPartHandler.cs" />
     <Compile Include="Models\WidgetExPart.cs" />
     <Compile Include="Services\IWidgetManager.cs" />
     <Compile Include="Services\ILayerManager.cs" />

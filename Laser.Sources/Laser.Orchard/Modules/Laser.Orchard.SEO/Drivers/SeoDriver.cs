@@ -9,12 +9,12 @@ using Orchard.Localization.Services;
 using Laser.Orchard.StartupConfig.Localization;
 using Laser.Orchard.SEO.ViewModels;
 using Laser.Orchard.SEO.Services;
-
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.SEO.Drivers {
 
 
-    public class SeoDriver : ContentPartDriver<SeoPart> {
+    public class SeoDriver : ContentPartCloningDriver<SeoPart> {
 
 
         private readonly IWorkContextAccessor _workContextAccessor;
@@ -107,6 +107,20 @@ namespace Laser.Orchard.SEO.Drivers {
             return Editor(part, shapeHelper);
         }
 
-
+        protected override void Cloning(SeoPart originalPart, SeoPart clonePart, CloneContentContext context) {
+            clonePart.TitleOverride = originalPart.TitleOverride;
+            clonePart.Keywords = originalPart.Keywords;
+            clonePart.Description = originalPart.Description;
+            clonePart.RobotsNoIndex = originalPart.RobotsNoIndex;
+            clonePart.RobotsNoFollow = originalPart.RobotsNoFollow;
+            clonePart.RobotsNoSnippet = originalPart.RobotsNoSnippet;
+            clonePart.RobotsNoOdp = originalPart.RobotsNoOdp;
+            clonePart.RobotsNoArchive = originalPart.RobotsNoArchive;
+            clonePart.RobotsUnavailableAfter = originalPart.RobotsUnavailableAfter;
+            clonePart.RobotsUnavailableAfterDate = originalPart.RobotsUnavailableAfterDate;
+            clonePart.RobotsNoImageIndex = originalPart.RobotsNoImageIndex;
+            clonePart.GoogleNoSiteLinkSearchBox = originalPart.GoogleNoSiteLinkSearchBox;
+            clonePart.GoogleNoTranslate = originalPart.GoogleNoTranslate;
+        }
     }
 }

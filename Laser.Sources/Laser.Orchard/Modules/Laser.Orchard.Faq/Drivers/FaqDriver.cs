@@ -5,12 +5,13 @@ using Laser.Orchard.Faq.ViewModels;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Localization;
 
 namespace Laser.Orchard.Faq.Drivers
 {
-    public class FaqDriver : ContentPartDriver<FaqPart>
+    public class FaqDriver : ContentPartCloningDriver<FaqPart>
     {
         private readonly IFaqTypeService _faqTypeService;
         private readonly IContentManager _contentManager;
@@ -103,6 +104,11 @@ namespace Laser.Orchard.Faq.Drivers
             }
 
             return avm;
+        }
+
+        protected override void Cloning(FaqPart originalPart, FaqPart clonePart, CloneContentContext context) {
+            clonePart.FaqTypeId = originalPart.FaqTypeId;
+            clonePart.Question = originalPart.Question;
         }
     }
 }

@@ -12,7 +12,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 
 namespace Laser.Orchard.Policy.Drivers {
-    public class PolicyTextInfoPartDriver : ContentPartDriver<PolicyTextInfoPart> {
+    public class PolicyTextInfoPartDriver : ContentPartCloningDriver<PolicyTextInfoPart> {
         private readonly IPolicyServices _policyServices;
         private readonly IOrchardServices _orchardServices;
         private readonly RequestContext _requestContext;
@@ -81,5 +81,11 @@ namespace Laser.Orchard.Policy.Drivers {
             part.UserHaveToAccept = userHaveToAccept;
         }
         #endregion
+
+        protected override void Cloning(PolicyTextInfoPart originalPart, PolicyTextInfoPart clonePart, CloneContentContext context) {
+            clonePart.UserHaveToAccept = originalPart.UserHaveToAccept;
+            clonePart.Priority = originalPart.Priority;
+            clonePart.PolicyType = originalPart.PolicyType;
+        }
     }
 }

@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 namespace Laser.Orchard.Mobile.Drivers {
     [OrchardFeature("Laser.Orchard.PushGateway")]
-    public class MobilePushPartDriver : ContentPartDriver<MobilePushPart> {
+    public class MobilePushPartDriver : ContentPartCloningDriver<MobilePushPart> {
 
         private readonly IOrchardServices _orchardServices;
         private readonly IControllerContextAccessor _controllerContextAccessor;
@@ -172,6 +172,20 @@ namespace Laser.Orchard.Mobile.Drivers {
             root.SetAttributeValue("PushSent", part.PushSent);
             root.SetAttributeValue("TargetDeviceNumber", part.TargetDeviceNumber);
             root.SetAttributeValue("PushSentNumber", part.PushSentNumber);
+        }
+
+        protected override void Cloning(MobilePushPart originalPart, MobilePushPart clonePart, CloneContentContext context) {
+            clonePart.TitlePush = originalPart.TitlePush;
+            clonePart.TextPush = originalPart.TextPush;
+            //The ToPush property is not copied over and left to default (false), else the handler will send the notifications
+            clonePart.TestPush = originalPart.TestPush;
+            clonePart.TestPushToDevice = originalPart.TestPushToDevice;
+            clonePart.DevicePush = originalPart.DevicePush;
+            clonePart.UseRecipientList = originalPart.UseRecipientList;
+            clonePart.RecipientList = originalPart.RecipientList;
+            //PushSent is not copied over, because it is controlled by the push services
+            //TargetDeviceNumber is not copied over, because it is controlled by the push services
+            //PushSentNumber is not copied over, because it is controlled by the push services
         }
     }
 }

@@ -9,10 +9,11 @@ using System.Linq;
 using System.Web;
 using System.Reflection;
 using System.IO;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.SEO.Drivers {
     [OrchardFeature("Laser.Orchard.KeywordHelper")]
-    public class KeywordHelperDriver : ContentPartDriver<KeywordHelperPart> {
+    public class KeywordHelperDriver : ContentPartCloningDriver<KeywordHelperPart> {
 
         public KeywordHelperDriver() {
 
@@ -72,6 +73,10 @@ namespace Laser.Orchard.SEO.Drivers {
                 part.Keywords = vm.ListToString();
             }
             return Editor(part,shapeHelper);
+        }
+
+        protected override void Cloning(KeywordHelperPart originalPart, KeywordHelperPart clonePart, CloneContentContext context) {
+            clonePart.Keywords = originalPart.Keywords;
         }
     }
 }

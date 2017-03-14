@@ -53,11 +53,11 @@
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Orchard.Core, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Orchard.Core, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Framework, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Orchard.Framework, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>

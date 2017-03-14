@@ -11,7 +11,7 @@ using Orchard.Logging;
 using System.Globalization;
 
 namespace Laser.Orchard.Maps.Drivers {
-    public class MapPartDriver : ContentPartDriver<MapPart> {
+    public class MapPartDriver : ContentPartCloningDriver<MapPart> {
         private readonly IOrchardServices _orchardServices;
 
         protected override string Prefix {
@@ -115,5 +115,12 @@ namespace Laser.Orchard.Maps.Drivers {
             part.LocationInfo = root.Attribute("LocationInfo") != null ? root.Attribute("LocationInfo").Value : "";
         }
         #endregion
+
+        protected override void Cloning(MapPart originalPart, MapPart clonePart, CloneContentContext context) {
+            clonePart.Latitude = originalPart.Latitude;
+            clonePart.Longitude = originalPart.Longitude;
+            clonePart.LocationInfo = originalPart.LocationInfo;
+            clonePart.LocationAddress = originalPart.LocationAddress;
+        }
     }
 }

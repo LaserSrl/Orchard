@@ -10,11 +10,12 @@ using System.Web.Mvc;
 using System.Linq;
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.StartupConfig.Drivers {
 
     [OrchardFeature("Laser.Orchard.StartupConfig.Maintenance")]
-    public class MaintenancePartDriver : ContentPartDriver<MaintenancePart> {
+    public class MaintenancePartDriver : ContentPartCloningDriver<MaintenancePart> {
        // public Localizer T { get; set; }
         private readonly IMaintenanceService _maintenance;
         private readonly ShellSettings _shellSettings;
@@ -62,6 +63,12 @@ namespace Laser.Orchard.StartupConfig.Drivers {
                 //  _notifier.Add(NotifyType.Error, T("Error on update google analytics"));
             }
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Cloning(MaintenancePart originalPart, MaintenancePart clonePart, CloneContentContext context) {
+            clonePart.MaintenanceNotifyType = originalPart.MaintenanceNotifyType;
+            clonePart.MaintenanceNotify = originalPart.MaintenanceNotify;
+            clonePart.Selected_Tenant = originalPart.Selected_Tenant;
         }
     }
 }

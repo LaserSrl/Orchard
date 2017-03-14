@@ -13,10 +13,11 @@ using Orchard.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.ShareLink.Drivers {
 
-    public class ShareLinkPartDriver : ContentPartDriver<ShareLinkPart> {
+    public class ShareLinkPartDriver : ContentPartCloningDriver<ShareLinkPart> {
         private readonly ITokenizer _tokenizer;
         private readonly IOrchardServices _orchardServices;
 
@@ -38,6 +39,9 @@ namespace Laser.Orchard.ShareLink.Drivers {
             var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
 
             ShareLinkVM vm = new ShareLinkVM();
+            Mapper.Initialize(cfg => {
+                cfg.CreateMap<ShareLinkPart, ShareLinkVM>();
+            });
             Mapper.Map<ShareLinkPart, ShareLinkVM>(part, vm);
             var moduleSetting = _orchardServices.WorkContext.CurrentSite.As<ShareLinkModuleSettingPart>();
             var partSetting = part.Settings.GetModel<ShareLinkPartSettingVM>();
@@ -135,6 +139,13 @@ namespace Laser.Orchard.ShareLink.Drivers {
             }
             else
                 return idimg; // non ho passato un id e quindi sarà un link
+        }
+
+        protected override void Cloning(ShareLinkPart originalPart, ShareLinkPart clonePart, CloneContentContext context) {
+            clonePart.SharedLink = originalPart.SharedLink;
+            clonePart.SharedText = originalPart.SharedText;
+            //SharedImage is set based on SharedIdImage
+            clonePart.SharedIdImage = originalPart.SharedIdImage;
         }
     }
 }

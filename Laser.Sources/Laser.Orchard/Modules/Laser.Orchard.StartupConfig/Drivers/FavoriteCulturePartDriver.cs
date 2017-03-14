@@ -13,7 +13,7 @@ using OrchardLocalization = Orchard.Localization;
 using Orchard.UI.Admin;
 
 namespace Laser.Orchard.StartupConfig.Drivers {
-    public class FavoriteCulturePartDriver : ContentPartDriver<FavoriteCulturePart> {
+    public class FavoriteCulturePartDriver : ContentPartCloningDriver<FavoriteCulturePart> {
         private readonly IOrchardServices _orchardServices;
         protected override string Prefix {
             get {
@@ -63,6 +63,10 @@ namespace Laser.Orchard.StartupConfig.Drivers {
         }
         protected override void Exporting(FavoriteCulturePart part, ExportContentContext context) {
             base.Exporting(part, context);
+        }
+
+        protected override void Cloning(FavoriteCulturePart originalPart, FavoriteCulturePart clonePart, CloneContentContext context) {
+            clonePart.Culture_Id = originalPart.Culture_Id;
         }
     }
 }

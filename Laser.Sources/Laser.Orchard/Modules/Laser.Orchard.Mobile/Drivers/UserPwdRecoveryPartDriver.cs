@@ -12,7 +12,7 @@ using Orchard.Localization;
 namespace Laser.Orchard.Mobile.Drivers {
 
     [OrchardFeature("Laser.Orchard.Sms")]
-    public class UserPwdRecoveryPartDriver : ContentPartDriver<UserPwdRecoveryPart> {
+    public class UserPwdRecoveryPartDriver : ContentPartCloningDriver<UserPwdRecoveryPart> {
 
         private readonly IOrchardServices _orchardServices;
         public Localizer T { get; set; }
@@ -38,5 +38,10 @@ namespace Laser.Orchard.Mobile.Drivers {
         }
 
         //TODO: UserPwdRecoveryPart Import/Export
+
+        protected override void Cloning(UserPwdRecoveryPart originalPart, UserPwdRecoveryPart clonePart, CloneContentContext context) {
+            clonePart.InternationalPrefix = originalPart.InternationalPrefix;
+            clonePart.PhoneNumber = originalPart.PhoneNumber;
+        }
     }
 }

@@ -17,10 +17,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.Events.Drivers
 {
-    public class CalendarPartDriver : ContentPartDriver<CalendarPart>
+    public class CalendarPartDriver : ContentPartCloningDriver<CalendarPart>
     {
         public Localizer T { get; set; }
         public IOrchardServices _orchardServices { get; set; }
@@ -219,6 +220,17 @@ namespace Laser.Orchard.Events.Drivers
         {
             var descriptor = layouts.FirstOrDefault(x => l.Category == x.Category && l.Type == x.Type);
             return String.IsNullOrWhiteSpace(l.Description) ? descriptor.Display(new LayoutContext { State = FormParametersHelper.ToDynamic(l.State) }).Text : l.Description;
+        }
+
+        protected override void Cloning(CalendarPart originalPart, CalendarPart clonePart, CloneContentContext context) {
+            clonePart.QueryPartRecord = originalPart.QueryPartRecord;
+            clonePart.LayoutRecord = originalPart.LayoutRecord;
+            clonePart.CalendarShape = originalPart.CalendarShape;
+            clonePart.ItemsPerPage = originalPart.ItemsPerPage;
+            clonePart.DisplayPager = originalPart.DisplayPager;
+            clonePart.PagerSuffix = originalPart.PagerSuffix;
+            clonePart.StartDate = originalPart.StartDate;
+            clonePart.NumDays = originalPart.NumDays;
         }
     }
 }

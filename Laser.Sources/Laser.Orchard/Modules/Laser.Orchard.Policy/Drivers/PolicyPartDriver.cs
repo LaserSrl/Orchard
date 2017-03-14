@@ -15,7 +15,7 @@ using Orchard.Mvc;
 using Orchard.OutputCache;
 
 namespace Laser.Orchard.Policy.Drivers {
-    public class PolicyPartDriver : ContentPartDriver<PolicyPart>, ICachingEventHandler {
+    public class PolicyPartDriver : ContentPartCloningDriver<PolicyPart>, ICachingEventHandler {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IControllerContextAccessor _controllerContextAccessor;
@@ -150,6 +150,11 @@ namespace Laser.Orchard.Policy.Drivers {
             }
 
             key.Append(_additionalCacheKey);
+        }
+
+        protected override void Cloning(PolicyPart originalPart, PolicyPart clonePart, CloneContentContext context) {
+            clonePart.IncludePendingPolicy = originalPart.IncludePendingPolicy;
+            clonePart.PolicyTextReferencesCsv = originalPart.PolicyTextReferencesCsv;
         }
     }
 }

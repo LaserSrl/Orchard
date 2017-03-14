@@ -12,12 +12,12 @@ using System.Collections.Generic;
 using Orchard.Utility.Extensions;
 using System;
 using System.Linq;
-
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.DynamicNavigation.Drivers {
 
 
-    public class DynamicMenuDriver : ContentPartDriver<DynamicMenuPart> {
+    public class DynamicMenuDriver : ContentPartCloningDriver<DynamicMenuPart> {
 
 
         private readonly IContentManager _contentManager;
@@ -153,6 +153,10 @@ namespace Laser.Orchard.DynamicNavigation.Drivers {
             return Editor(part, shapeHelper);
         }
 
-
+        protected override void Cloning(DynamicMenuPart originalPart, DynamicMenuPart clonePart, CloneContentContext context) {
+            clonePart.MenuId = originalPart.MenuId;
+            clonePart.LevelsToShow = originalPart.LevelsToShow;
+            clonePart.ShowFirstLevelBrothers = originalPart.ShowFirstLevelBrothers;
+        }
     }
 }

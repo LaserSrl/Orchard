@@ -67,14 +67,14 @@
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Autoroute\bin\Orchard.Autoroute.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Core, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Core\bin\Orchard.Core.dll</HintPath>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Fields, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Fields\bin\Orchard.Fields.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Framework, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard\bin\Debug\Orchard.Framework.dll</HintPath>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Localization, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Localization\bin\Orchard.Localization.dll</HintPath>
