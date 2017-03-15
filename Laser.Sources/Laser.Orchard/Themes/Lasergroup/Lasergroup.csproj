@@ -510,9 +510,6 @@
     <Content Include="Views\Parts.ContainerWidget.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\FotoSfondo.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\ImmagineTesto.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -542,11 +539,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DettagliKrake.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\HtmlLink.cshtml">
-      <SubType>Code</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.Title-ContattiPage.cshtml" />
@@ -604,9 +596,6 @@
     <Content Include="Views\ElencoPartners.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\HtmlImmagineContenuto.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\_Widget.Wrapper.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -660,6 +649,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Widget-ShowcaseLoghiWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget-ImmagineTitoloTestoWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget-LinkWidget.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

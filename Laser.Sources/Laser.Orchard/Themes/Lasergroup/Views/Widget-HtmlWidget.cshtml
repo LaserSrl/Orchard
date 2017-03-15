@@ -4,12 +4,6 @@
 }
 
 @switch (tipoContenuto) {
-    case "Link":
-        @Display(New.HtmlLink(ContentItem: item));
-        break;
-    case "Immagine e Contenuto":
-        @Display(New.HtmlImmagineContenuto(ContentItem: item));
-        break;
     case "Footer Logo":
         @Display(New.HtmlQuad_First(ContentItem: item));
             break;
