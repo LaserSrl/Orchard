@@ -607,15 +607,6 @@
     <Content Include="Views\HtmlImmagineContenuto.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ImmaginiProdotto.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\DettaglioProdotto.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\ImmagineTestoProdotto.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\_Widget.Wrapper.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -651,18 +642,24 @@
     <Content Include="Views\Parts.Title-PaginaGenerica.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Widget-ShowcaseWidget.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Widget-AppStoreWidget.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Parts.Title-OffertaLavoro.cshtml">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ElencoOfferteLavoro.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget-ShowcaseDettaglioWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget-ShowcaseImmagineTestoWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget-ShowcaseImmaginiWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget-ShowcaseLoghiWidget.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -10,14 +10,14 @@
     Layout.Title = "Home";
     
     if (isMobile == true){
-        Layout.BaseClass = "home page-template page-template-page-home navbar-fixed";
+        Layout.BaseClass = "home page page-template page-template-page-home navbar-fixed";
     }
     else {
-        Layout.BaseClass = "home page-template page-template-page-home";
+        Layout.BaseClass = "home page page-template page-template-page-home";
     }
 }
-<div id="intro" style="height: 956px;">
-	<canvas id="intro-canvas" width="1920" height="956"></canvas>
+<div id="intro">
+	<canvas id="intro-canvas"></canvas>
 	<div class="container container-desc clearfix">
 		<h2 class="handel-got-d claim">@Model.Title</h2>        
 		<h3 class="handel-got-d claim-rosso">@Model.ContentItem.HomePage.Sottotitolo.Value</h3>        

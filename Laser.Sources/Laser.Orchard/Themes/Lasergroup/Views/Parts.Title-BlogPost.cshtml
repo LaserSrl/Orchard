@@ -1,59 +1,96 @@
+@using Orchard.Mvc;
+@using Orchard.Utility.Extensions;
 @{
     Layout.Title = Model.Title;
     dynamic item = Model.ContentItem;
 
     Layout.BaseClass = "single single-news navbar-fixed";
     var medias = item.BlogPost.Gallery.MediaParts;
+
+    var services = WorkContext.Resolve<IHttpContextAccessor>();
+    var httpContext = services.Current();
+    var baseUrl = httpContext.Request.ToApplicationRootUrlString();
+
+    var settings = WorkContext.Resolve<Orchard.Environment.Configuration.ShellSettings>();
+    string urlPrefix = settings.RequestUrlPrefix;
+
+    if (!string.IsNullOrWhiteSpace(urlPrefix)) {
+        urlPrefix = urlPrefix + "/";
+    } else {
+        urlPrefix = "";
+    }
+    baseUrl = baseUrl.TrimEnd('/');
+
+    var pathShareBar = baseUrl + "/" + urlPrefix + item.AutoroutePart.Path;
 }
 
 
 <div class="container single-news-title">
-	<div class="col-xs-12 col-sm-12 col-intro-desc news-block">
-		<div class="space-40"></div>
-		<div class="space-20"></div>
-		<h1 class="handel-got-d title">@T("News")</h1>
-		<h2 class="page-claim">@Model.Title</h2>
-		<div class="single-news-item-date">@item.CommonPart.CreatedUtc.Date.ToString("dd/MM/yyyy")</div>
-	</div>
+    <div class="col-xs-12 col-sm-12 col-intro-desc news-block">
+        <div class="space-40"></div>
+        <div class="space-20"></div>
+        <h1 class="handel-got-d title">@T("News")</h1>
+        <h2 class="page-claim">@Model.Title</h2>
+        <div class="single-news-item-date">@item.CommonPart.CreatedUtc.Date.ToString("dd/MM/yyyy")</div>
+    </div>
+
+    <div class="space-20"></div>
+    <div class="col-xs-12 col-sm-12 col-intro-desc news-block">
+        <div class="sharebar">
+            <!-- AddThis Button BEGIN -->
+            <div class="addthis_toolbox addthis_32x32_style addthis_default_style"
+                addthis:url="@pathShareBar"
+                addthis:title="@Model.Title">
+                <a class="addthis_button_facebook"></a>
+                <a class="addthis_button_twitter"></a>
+                <a class="addthis_button_email"></a>
+                <a class="addthis_button_google"></a>
+                <a class="addthis_button_compact"></a>
+            </div>
+            <script type="text/javascript">        var addthis_config = { "data_track_clickback": true };</script>
+            <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=laser.srl.ao@gmail.com"></script>
+            <!-- AddThis Button END -->
+        </div>
+    </div>
 </div>
 
 <div id="news">
-	<div class="container">
-		<div class="text-center news-block">
-			<div class="single-news-top"></div>
-			<img src="@item.BlogPost.Image.FirstMediaUrl" class="img-responsive wp-post-image" alt="@item.BlogPost.Image.MediaParts[0].Title">
-		</div>
-	</div>
+    <div class="container">
+        <div class="text-center news-block">
+            <div class="single-news-top"></div>
+            <img src="@item.BlogPost.Image.FirstMediaUrl" class="img-responsive wp-post-image" alt="@item.BlogPost.Image.MediaParts[0].Title">
+        </div>
+    </div>
 
-	<div class="space-20"></div>
-	<div class="container">
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 news-block news-text">
-			@Html.Raw(item.BlogPostPart.Text)
-		</div>
-	</div>
+    <div class="space-20"></div>
+    <div class="container">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 news-block news-text">
+            @Html.Raw(item.BlogPostPart.Text)
+        </div>
+    </div>
 
-	<div class="space-20"></div>
-	<div class="container">
-		<div class="news-block">
-			<div class="lightgallery" id="gallery">
-				<div class="row">
+    <div class="space-20"></div>
+    <div class="container">
+        <div class="news-block">
+            <div class="lightgallery" id="gallery">
+                <div class="row">
 
                     @for (int i = 0; i < medias.Count; i++) {
                         <div class="col-xs-6 col-sm-4 col-md-2 text-center">
-						    <a href="@medias[i].MediaUrl" class="thumbnail" data-sub-html="">
-							    <img src="@Display.ResizeMediaUrl(Width: 350, Height: 350, Mode: "crop", Alignment: "middlecenter", Path: medias[i].MediaUrl)" class="img-responsive">
-						    </a>
-					    </div>
+                            <a href="@medias[i].MediaUrl" class="thumbnail" data-sub-html="">
+                                <img src="@Display.ResizeMediaUrl(Width: 350, Height: 350, Mode: "crop", Alignment: "middlecenter", Path: medias[i].MediaUrl)" class="img-responsive">
+                            </a>
+                        </div>
                     }
 
-				</div>
-			</div>
-		</div>
+                </div>
+            </div>
+        </div>
         <div class="space-20"></div>
-		<div class="news-block">
-			<div class="single-news-item-date pull-right">
+        <div class="news-block">
+            <div class="single-news-item-date pull-right">
                 <a href="http://www.laser-group.com/news" class="link-back-news">@T("Back to news")</a>
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 </div>
