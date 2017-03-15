@@ -657,7 +657,7 @@ namespace Laser.Orchard.WebServices.Controllers {
         /// </summary>
         /// <param name="key">default cache key such as defined in Orchard.OutpuCache</param>
         /// <returns>The new cache key</returns>
-        public StringBuilder InflatingCacheKey(StringBuilder key) {
+        public void KeyGenerated(StringBuilder key) {
             var area = _request.RequestContext.RouteData.Values["area"];
             var controller = _request.RequestContext.RouteData.Values["controller"];
             var action = _request.RequestContext.RouteData.Values["action"];
@@ -668,17 +668,13 @@ namespace Laser.Orchard.WebServices.Controllers {
                         var policy = item.As<Policy.Models.PolicyPart>();
                         if (policy != null && (policy.HasPendingPolicies ?? false)) {
                             key.Append("policy-not-accepted;");
-                        } else if (policy != null && !(policy.HasPendingPolicies ?? false)) {
+                        }
+                        else if (policy != null && !(policy.HasPendingPolicies ?? false)) {
                             key.Append("policy-accepted;");
                         }
                     }
                 }
             }
-            return key;
-        }
-
-        public void KeyGenerated(StringBuilder key) {
-            //throw new NotImplementedException();
         }
     }
 }
