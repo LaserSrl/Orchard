@@ -6,6 +6,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Users.Models;
@@ -103,6 +104,9 @@ namespace Laser.Orchard.Facebook.Drivers {
             var UserIdFacebook = context.Attribute(part.PartDefinition.Name, "UserIdFacebook");
             if (UserIdFacebook != null) {
                 part.UserIdFacebook = UserIdFacebook;
+            }
+            if (part.Has<CommonPart>()) {
+                part.As<CommonPart>().Owner = _orchardServices.WorkContext.CurrentUser;
             }
         }
         protected override void Exporting(FacebookAccountPart part, ExportContentContext context) {

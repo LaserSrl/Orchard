@@ -76,27 +76,27 @@ namespace Laser.Orchard.NewsLetters.Drivers {
         }
 
 
-        #region [ Import/Export ]
-        protected override void Exporting(SubscriberRegistrationPart part, ExportContentContext context) {
+        //#region [ Import/Export ]
+        //protected override void Exporting(SubscriberRegistrationPart part, ExportContentContext context) {
 
-            context.Element(part.PartDefinition.Name).SetAttributeValue("NewsletterDefinitionIds", part.NewsletterDefinitionIds);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("PermitCumulativeRegistrations", part.PermitCumulativeRegistrations);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("NewsletterDefinitionIds", part.NewsletterDefinitionIds);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("PermitCumulativeRegistrations", part.PermitCumulativeRegistrations);
 
-        }
+        //}
 
-        protected override void Importing(SubscriberRegistrationPart part, ImportContentContext context) {
-            var importedNewsletterDefinitionIds = context.Attribute(part.PartDefinition.Name, "NewsletterDefinitionIds");
-            if (importedNewsletterDefinitionIds != null) {
-                part.NewsletterDefinitionIds = importedNewsletterDefinitionIds;
-            }
+        //protected override void Importing(SubscriberRegistrationPart part, ImportContentContext context) {
+        //    var importedNewsletterDefinitionIds = context.Attribute(part.PartDefinition.Name, "NewsletterDefinitionIds");
+        //    if (importedNewsletterDefinitionIds != null) {
+        //        part.NewsletterDefinitionIds = importedNewsletterDefinitionIds;
+        //    }
 
-            var importedPermitCumulativeRegistrations = context.Attribute(part.PartDefinition.Name, "PermitCumulativeRegistrations");
-            if (importedPermitCumulativeRegistrations != null) {
-                part.PermitCumulativeRegistrations = bool.Parse(importedPermitCumulativeRegistrations);
-            }
+        //    var importedPermitCumulativeRegistrations = context.Attribute(part.PartDefinition.Name, "PermitCumulativeRegistrations");
+        //    if (importedPermitCumulativeRegistrations != null) {
+        //        part.PermitCumulativeRegistrations = bool.Parse(importedPermitCumulativeRegistrations);
+        //    }
 
-        }
-        #endregion
+        //}
+        //#endregion
 
     }
 }

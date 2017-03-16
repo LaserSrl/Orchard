@@ -60,33 +60,33 @@ namespace Laser.Orchard.NewsLetters.Drivers {
         }
 
 
-        #region [ Import/Export ]
-        protected override void Exporting(NewsletterDefinitionPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("TemplateRecord_Id", part.TemplateRecord_Id);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ConfirmSubscrptionTemplateRecord_Id", part.ConfirmSubscrptionTemplateRecord_Id);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("DeleteSubscrptionTemplateRecord_Id", part.DeleteSubscrptionTemplateRecord_Id);
-        }
+        //#region [ Import/Export ]
+        //protected override void Exporting(NewsletterDefinitionPart part, ExportContentContext context) {
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("TemplateRecord_Id", part.TemplateRecord_Id);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("ConfirmSubscrptionTemplateRecord_Id", part.ConfirmSubscrptionTemplateRecord_Id);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("DeleteSubscrptionTemplateRecord_Id", part.DeleteSubscrptionTemplateRecord_Id);
+        //}
 
 
-        protected override void Importing(NewsletterDefinitionPart part, ImportContentContext context) {
+        //protected override void Importing(NewsletterDefinitionPart part, ImportContentContext context) {
             
-            var importedTemplateRecord_Id = context.Attribute(part.PartDefinition.Name, "TemplateRecord_Id");
-            if (importedTemplateRecord_Id != null) {
-                part.TemplateRecord_Id = int.Parse(importedTemplateRecord_Id);
-            }
+        //    var importedTemplateRecord_Id = context.Attribute(part.PartDefinition.Name, "TemplateRecord_Id");
+        //    if (importedTemplateRecord_Id != null) {
+        //        part.TemplateRecord_Id = int.Parse(importedTemplateRecord_Id);
+        //    }
 
-            var importedConfirmSubscrptionTemplateRecord_Id = context.Attribute(part.PartDefinition.Name, "ConfirmSubscrptionTemplateRecord_Id");
-            if (importedConfirmSubscrptionTemplateRecord_Id != null) {
-                part.ConfirmSubscrptionTemplateRecord_Id = int.Parse(importedConfirmSubscrptionTemplateRecord_Id);
-            }
+        //    var importedConfirmSubscrptionTemplateRecord_Id = context.Attribute(part.PartDefinition.Name, "ConfirmSubscrptionTemplateRecord_Id");
+        //    if (importedConfirmSubscrptionTemplateRecord_Id != null) {
+        //        part.ConfirmSubscrptionTemplateRecord_Id = int.Parse(importedConfirmSubscrptionTemplateRecord_Id);
+        //    }
 
-            var importedDeleteSubscrptionTemplateRecord_Id = context.Attribute(part.PartDefinition.Name, "DeleteSubscrptionTemplateRecord_Id");
-            if (importedDeleteSubscrptionTemplateRecord_Id != null) {
-                part.DeleteSubscrptionTemplateRecord_Id = int.Parse(importedDeleteSubscrptionTemplateRecord_Id);
-            }
+        //    var importedDeleteSubscrptionTemplateRecord_Id = context.Attribute(part.PartDefinition.Name, "DeleteSubscrptionTemplateRecord_Id");
+        //    if (importedDeleteSubscrptionTemplateRecord_Id != null) {
+        //        part.DeleteSubscrptionTemplateRecord_Id = int.Parse(importedDeleteSubscrptionTemplateRecord_Id);
+        //    }
 
 
-        }
-        #endregion
+        //}
+        //#endregion
     }
 }

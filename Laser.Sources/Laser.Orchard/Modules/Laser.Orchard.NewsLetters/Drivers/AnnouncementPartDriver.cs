@@ -52,25 +52,25 @@ namespace Laser.Orchard.NewsLetters.Drivers {
         }
 
 
-        #region [ Import/Export ]
-        protected override void Exporting(AnnouncementPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("AnnouncementTitle", part.AnnouncementTitle);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("AttachToNextNewsletterIds", part.AttachToNextNewsletterIds);
-        }
+        //#region [ Import/Export ]
+        //protected override void Exporting(AnnouncementPart part, ExportContentContext context) {
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("AnnouncementTitle", part.AnnouncementTitle);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("AttachToNextNewsletterIds", part.AttachToNextNewsletterIds);
+        //}
 
-        protected override void Importing(AnnouncementPart part, ImportContentContext context) {
-            var importedAnnouncementTitle = context.Attribute(part.PartDefinition.Name, "AnnouncementTitle");
-            if (importedAnnouncementTitle != null) {
-                part.AnnouncementTitle = importedAnnouncementTitle;
-            }
+        //protected override void Importing(AnnouncementPart part, ImportContentContext context) {
+        //    var importedAnnouncementTitle = context.Attribute(part.PartDefinition.Name, "AnnouncementTitle");
+        //    if (importedAnnouncementTitle != null) {
+        //        part.AnnouncementTitle = importedAnnouncementTitle;
+        //    }
 
-            var importedAttachToNextNewsletterIds = context.Attribute(part.PartDefinition.Name, "AttachToNextNewsletterIds");
-            if (importedAttachToNextNewsletterIds != null) {
-                part.AttachToNextNewsletterIds = importedAttachToNextNewsletterIds;
-            }
+        //    var importedAttachToNextNewsletterIds = context.Attribute(part.PartDefinition.Name, "AttachToNextNewsletterIds");
+        //    if (importedAttachToNextNewsletterIds != null) {
+        //        part.AttachToNextNewsletterIds = importedAttachToNextNewsletterIds;
+        //    }
 
-        }
-        #endregion
+        //}
+        //#endregion
 
     }
 }

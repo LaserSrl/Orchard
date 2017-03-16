@@ -9,30 +9,25 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Localization;
 
-namespace Laser.Orchard.Faq.Drivers
-{
-    public class FaqDriver : ContentPartDriver<FaqPart>
-    {
+namespace Laser.Orchard.Faq.Drivers {
+    public class FaqDriver : ContentPartDriver<FaqPart> {
         private readonly IFaqTypeService _faqTypeService;
         private readonly IContentManager _contentManager;
         private readonly IFaqService _faqService;
 
         public Localizer T;
 
-        public FaqDriver(IContentManager contentManager, IFaqService faqService, IFaqTypeService faqTypeService)
-        {
+        public FaqDriver(IContentManager contentManager, IFaqService faqService, IFaqTypeService faqTypeService) {
             _contentManager = contentManager;
             _faqTypeService = faqTypeService;
             _faqService = faqService;
         }
 
-        protected override string Prefix
-        {
+        protected override string Prefix {
             get { return "Faq"; }
         }
 
-        protected override DriverResult Display(FaqPart part, string displayType, dynamic shapeHelper)
-        {
+        protected override DriverResult Display(FaqPart part, string displayType, dynamic shapeHelper) {
             var faqType =
                 _contentManager.Query<FaqTypePart>(VersionOptions.Published, "FaqType")
                                .Where<FaqTypePartRecord>(t => t.Id == part.FaqTypeId)
@@ -47,8 +42,7 @@ namespace Laser.Orchard.Faq.Drivers
         }
 
 
-        protected override DriverResult Editor(FaqPart part, dynamic shapeHelper)
-        {
+        protected override DriverResult Editor(FaqPart part, dynamic shapeHelper) {
             var temp = ContentShape("Parts_Faq_Edit",
                                 () => shapeHelper.EditorTemplate(
                                     TemplateName: "Parts/Faq",
@@ -58,75 +52,51 @@ namespace Laser.Orchard.Faq.Drivers
         }
 
         //POST
-        protected override DriverResult Editor(FaqPart part, IUpdateModel updater, dynamic shapeHelper)
-        {
+        protected override DriverResult Editor(FaqPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new EditFaqViewModel();
-            if (updater.TryUpdateModel(model, Prefix, null, null))
-            {
-                if (string.IsNullOrWhiteSpace(model.Question))
-                {
+            if (updater.TryUpdateModel(model, Prefix, null, null)) {
+                if (string.IsNullOrWhiteSpace(model.Question)) {
                     updater.AddModelError(Prefix, T("Error"));
                 }
             }
-            if (part.ContentItem.Id != 0)
-            {
+            if (part.ContentItem.Id != 0) {
                 _faqService.UpdateFaqForContentItem(part.ContentItem, model);
             }
-            
+
             return Editor(part, shapeHelper);
         }
 
-
-        protected override void Exporting(FaqPart part, ExportContentContext context)
-        {
-           
-            //12-12-2016
+        protected override void Exporting(FaqPart part, ExportContentContext context) {
             var root = context.Element(part.PartDefinition.Name);
-           
-            if (part.FaqTypeId > 0) {
-                
-                ////cerco il corrispondente valore dell' identity dalla parts del template e lo associo al campo 
-                var contItemTempl = _contentManager.Get(part.FaqTypeId);
-                if (contItemTempl != null) {
-                    root.SetAttributeValue("FaqTypeId", _contentManager.GetItemMetadata(contItemTempl).Identity.ToString());
-                }
-             
+            var faqType = _contentManager.Get<FaqTypePart>(part.FaqTypeId);
+            if (faqType != null) {
+                root.SetAttributeValue("FaqTypeTitle", faqType.Title);
             }
-            ////////////////////////////////////////////////////////   
-            
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Question", part.Question);
+            root.SetAttributeValue("Question", part.Question);
         }
 
-
-
-        protected override void Importing(FaqPart part, ImportContentContext context)
-        {
-            part.Question = context.Attribute(part.PartDefinition.Name, "Question") ?? string.Empty;
-
-            //////12-12-2016
-            context.ImportAttribute(part.PartDefinition.Name, "FaqTypeId", x => {
-                var tempPartFromid = context.GetItemFromSession(x);
-
-                if (tempPartFromid != null && tempPartFromid.Is<FaqTypePart>()) {
-                    //associa id faq
-                    part.FaqTypeId = tempPartFromid.As<FaqTypePart>().Id;
+        protected override void Importing(FaqPart part, ImportContentContext context) {
+            var root = context.Data.Element(part.PartDefinition.Name);
+            var Question = root.Attribute("Question");
+            if (Question != null) {
+                part.Question = Question.Value;
+            }
+            var FaqTypeTitle = root.Attribute("FaqTypeTitle");
+            if (FaqTypeTitle != null) {
+                var fType = _contentManager.Query("FaqType").Where<FaqTypePartRecord>(x => x.Title == FaqTypeTitle.Value).List().FirstOrDefault();
+                if (fType != null) {
+                    part.FaqTypeId = fType.Id;
                 }
-            });
-
-           
+            }
         }
 
-
-        private EditFaqViewModel BuildEditorViewModel(FaqPart part)
-        {
-            var avm = new EditFaqViewModel
-            {
+        private EditFaqViewModel BuildEditorViewModel(FaqPart part) {
+            var avm = new EditFaqViewModel {
                 Question = part.Question,
                 FaqTypes = _faqTypeService.GetFaqTypes(false)
             };
 
-            if (part.FaqTypeId > 0)
-            {
+            if (part.FaqTypeId > 0) {
                 avm.FaqType = part.FaqTypeId;
             }
 

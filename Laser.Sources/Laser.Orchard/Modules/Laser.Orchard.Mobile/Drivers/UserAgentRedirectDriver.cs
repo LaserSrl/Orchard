@@ -74,18 +74,14 @@ namespace Laser.Orchard.Mobile.Drivers {
 
         #region [ Import/Export ]
         protected override void Exporting(UserAgentRedirectPart part, ExportContentContext context) {
-
             var root = context.Element(part.PartDefinition.Name);
-            XElement partElement = new XElement("Part");
             root.SetAttributeValue("AppName", part.AppName);
             root.SetAttributeValue("AutoRedirect", part.AutoRedirect);
-            root.SetAttributeValue("AutoRedirect", part.AutoRedirect);
-            root.Add(partElement);
             foreach (var q in part.Stores) {
-                XElement question = new XElement("Stores");
-                question.SetAttributeValue("AppStoreKey", q.AppStoreKey);
-                question.SetAttributeValue("RedirectUrl", q.RedirectUrl);
-                root.Add(question);
+                XElement store = new XElement("Stores");
+                store.SetAttributeValue("AppStoreKey", q.AppStoreKey);
+                store.SetAttributeValue("RedirectUrl", q.RedirectUrl);
+                root.Add(store);
             }
         }
 

@@ -78,11 +78,10 @@ namespace Laser.Orchard.MessageStore.Drivers {
                 part.MessageText = importedMessageText;
             }
 
-            // ver 30-11-2016
-            //var importedGruppoid = context.Attribute(part.PartDefinition.Name, "Gruppoid");
-            //if (importedGruppoid != null) {
-            //    part.Gruppoid = int.Parse(importedGruppoid);
-            //}
+            var importedGruppoid = context.Attribute(part.PartDefinition.Name, "Gruppoid");
+            if (importedGruppoid != null) {
+                part.Gruppoid = int.Parse(importedGruppoid);
+            }
 
             var importedMessageFrom = context.Attribute(part.PartDefinition.Name, "MessageFrom");
             if (importedMessageFrom != null) {
@@ -124,7 +123,7 @@ namespace Laser.Orchard.MessageStore.Drivers {
 
         protected override void Exporting(MessageStorePart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("MessageText", part.MessageText);
-            //context.Element(part.PartDefinition.Name).SetAttributeValue("Gruppoid", part.Gruppoid);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Gruppoid", part.Gruppoid);
             context.Element(part.PartDefinition.Name).SetAttributeValue("MessageFrom", part.MessageFrom);
             context.Element(part.PartDefinition.Name).SetAttributeValue("MessageTo", part.MessageTo);
             context.Element(part.PartDefinition.Name).SetAttributeValue("MessageDate", part.MessageDate);

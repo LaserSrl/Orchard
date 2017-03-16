@@ -97,44 +97,44 @@ namespace Laser.Orchard.NewsLetters.Drivers {
         }
 
 
-        #region [ Import/Export ]
-        protected override void Exporting(NewsletterEditionPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("NewsletterDefinitionPartRecord_Id", part.NewsletterDefinitionPartRecord_Id);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Number", part.Number);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Dispatched", part.Dispatched);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("DispatchDate", part.DispatchDate);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("AnnouncementIds", part.AnnouncementIds);
-        }
+        //#region [ Import/Export ]
+        //protected override void Exporting(NewsletterEditionPart part, ExportContentContext context) {
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("NewsletterDefinitionPartRecord_Id", part.NewsletterDefinitionPartRecord_Id);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("Number", part.Number);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("Dispatched", part.Dispatched);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("DispatchDate", part.DispatchDate);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("AnnouncementIds", part.AnnouncementIds);
+        //}
 
-        protected override void Importing(NewsletterEditionPart part, ImportContentContext context) {
+        //protected override void Importing(NewsletterEditionPart part, ImportContentContext context) {
 
-            var importedNewsletterDefinitionPartRecord_Id = context.Attribute(part.PartDefinition.Name, "NewsletterDefinitionPartRecord_Id");
-            if (importedNewsletterDefinitionPartRecord_Id != null) {
-                part.NewsletterDefinitionPartRecord_Id = int.Parse(importedNewsletterDefinitionPartRecord_Id);
-            }
+        //    var importedNewsletterDefinitionPartRecord_Id = context.Attribute(part.PartDefinition.Name, "NewsletterDefinitionPartRecord_Id");
+        //    if (importedNewsletterDefinitionPartRecord_Id != null) {
+        //        part.NewsletterDefinitionPartRecord_Id = int.Parse(importedNewsletterDefinitionPartRecord_Id);
+        //    }
 
-            var importedNumber = context.Attribute(part.PartDefinition.Name, "Number");
-            if (importedNumber != null) {
-                part.Number = int.Parse(importedNumber);
-            }
+        //    var importedNumber = context.Attribute(part.PartDefinition.Name, "Number");
+        //    if (importedNumber != null) {
+        //        part.Number = int.Parse(importedNumber);
+        //    }
 
-            var importedDispatched = context.Attribute(part.PartDefinition.Name, "Dispatched");
-            if (importedDispatched != null) {
-                part.Dispatched = bool.Parse(importedDispatched);
-            }
+        //    var importedDispatched = context.Attribute(part.PartDefinition.Name, "Dispatched");
+        //    if (importedDispatched != null) {
+        //        part.Dispatched = bool.Parse(importedDispatched);
+        //    }
 
-            var importedDispatchDate = context.Attribute(part.PartDefinition.Name, "DispatchDate");
-            if (importedDispatchDate != null) {
-                part.DispatchDate = DateTime.Parse(importedDispatchDate);
-            }
+        //    var importedDispatchDate = context.Attribute(part.PartDefinition.Name, "DispatchDate");
+        //    if (importedDispatchDate != null) {
+        //        part.DispatchDate = DateTime.Parse(importedDispatchDate);
+        //    }
 
-            var importedAnnouncementIds = context.Attribute(part.PartDefinition.Name, "AnnouncementIds");
-            if (importedAnnouncementIds != null) {
-                part.AnnouncementIds = importedAnnouncementIds;
-            }
+        //    var importedAnnouncementIds = context.Attribute(part.PartDefinition.Name, "AnnouncementIds");
+        //    if (importedAnnouncementIds != null) {
+        //        part.AnnouncementIds = importedAnnouncementIds;
+        //    }
 
-        }
-        #endregion
+        //}
+        //#endregion
 
     }
 }

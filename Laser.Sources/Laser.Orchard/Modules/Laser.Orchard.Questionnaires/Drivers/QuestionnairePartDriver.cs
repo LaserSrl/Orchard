@@ -194,7 +194,6 @@ namespace Laser.Orchard.Questionnaires.Drivers {
 
         #region [ Import/Export ]
         protected override void Exporting(QuestionnairePart part, ExportContentContext context) {
-
             var root = context.Element(part.PartDefinition.Name);
             XElement termsText = new XElement("TermsText");
             root.SetAttributeValue("MustAcceptTerms", part.MustAcceptTerms);
@@ -213,24 +212,32 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                 question.SetAttributeValue("IsRequired", q.IsRequired);
                 question.SetAttributeValue("Condition", q.Condition);
                 question.SetAttributeValue("ConditionType", q.ConditionType);
-                question.SetAttributeValue("AllFiles", q.AllFiles);
+                ExportMedia(question, q.AllFiles, "AllFiles");
                 foreach (var a in q.Answers) {
                     XElement answer = new XElement("Answer");
                     answer.SetAttributeValue("OriginalId", a.Id);
                     answer.SetAttributeValue("Position", a.Position);
                     answer.SetAttributeValue("Published", a.Published);
                     answer.SetAttributeValue("Answer", a.Answer);
-                    answer.SetAttributeValue("AllFiles", a.AllFiles);
                     answer.SetAttributeValue("CorrectResponse", a.CorrectResponse);
+                    ExportMedia(answer, a.AllFiles, "AllFiles");
                     question.Add(answer);
                 }
                 root.Add(question);
             }
         }
-
+        private void ExportMedia(XElement parent, string elencoId, string childsName) {
+            var sArrFiles = (elencoId ?? "").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            var iArrFiles = sArrFiles.Select(x => int.Parse(x));
+            foreach (var mediaId in iArrFiles) {
+                var ci = _orchardServices.ContentManager.Get(mediaId);
+                var mediaIdentity = _orchardServices.ContentManager.GetItemMetadata(ci).Identity.ToString();
+                parent.Add(new XElement(childsName, mediaIdentity));
+            }
+        }
         protected override void Importing(QuestionnairePart part, ImportContentContext context) {
             var root = context.Data.Element(part.PartDefinition.Name);
-            var questions = context.Data.Element(part.PartDefinition.Name).Elements("Question");
+            var questions = root.Elements("Question");
             var editModel = _questServices.BuildEditModelForQuestionnairePart(part);
             editModel.MustAcceptTerms = bool.Parse(root.Attribute("MustAcceptTerms").Value);
             editModel.UseRecaptcha = bool.Parse(root.Attribute("UseRecaptcha").Value);
@@ -247,7 +254,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                         Answer = a.Attribute("Answer") != null ? a.Attribute("Answer").Value : "",
                         OriginalId = a.Attribute("OriginalId") != null ? int.Parse(a.Attribute("OriginalId").Value) : 0,
                         CorrectResponse = a.Attribute("CorrectResponse") != null ? bool.Parse(a.Attribute("CorrectResponse").Value) : false,
-                        AllFiles = a.Attribute("AllFiles")!=null?a.Attribute("AllFiles").Value:null,
+                        AllFiles = ImportMedia(a, "AllFiles")
                     };
                     answerModelList.Add(answerEditModel);
                 }
@@ -264,13 +271,30 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                     Condition = q.Attribute("Condition") == null ? null : q.Attribute("Condition").Value,
                     ConditionType = q.Attribute("ConditionType") != null ? (ConditionType)Enum.Parse(typeof(ConditionType), q.Attribute("ConditionType").Value) : ConditionType.Show,
                     OriginalId = q.Attribute("OriginalId") != null ? int.Parse(q.Attribute("OriginalId").Value) : 0,
-                    AllFiles = q.Attribute("AllFiles") != null ? q.Attribute("AllFiles").Value : null,
+                    AllFiles = ImportMedia(q, "AllFiles")
                 };
                 questionModelList.Add(questionEditModel);
             }
             editModel.Questions = questionModelList; // metto tutto nel model 
             _questServices.UpdateForContentItem(
                     part.ContentItem, editModel); //aggiorno
+        }
+        private string ImportMedia(XElement parent, string childsName) {
+            List<int> iArrFiles = new List<int>();
+            var mediaElements = parent.Elements("AllFiles");
+            if (mediaElements != null) {
+                foreach (var element in mediaElements) {
+                    var ci = _orchardServices.ContentManager.ResolveIdentity(new ContentIdentity(element.Value));
+                    if(ci != null){
+                        iArrFiles.Add(ci.Id);
+                    }
+                }
+            }
+            var elencoId = string.Join(",", iArrFiles);
+            if(string.IsNullOrWhiteSpace(elencoId)) {
+                elencoId = null;
+            }
+            return elencoId;
         }
         #endregion
 
