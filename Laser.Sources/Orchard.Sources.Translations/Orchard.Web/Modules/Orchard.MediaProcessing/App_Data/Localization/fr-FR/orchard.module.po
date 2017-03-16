@@ -1,15 +1,23 @@
+#. "Name"
+#: "~/Modules/Orchard.MediaProcessing/Module.txt"
 msgctxt "~/Modules/Orchard.MediaProcessing/Module.txt"
 msgid "Media Processing"
 msgstr "Traitement de média"
 
+#. "Author"
+#: "~/Modules/Orchard.MediaProcessing/Module.txt"
 msgctxt "~/Modules/Orchard.MediaProcessing/Module.txt"
 msgid "John Murdock, Sébastien Ros"
 msgstr "John Murdock, Sébastien Ros"
 
+#. "Website"
+#: "~/Modules/Orchard.MediaProcessing/Module.txt"
 msgctxt "~/Modules/Orchard.MediaProcessing/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
+#: "~/Modules/Orchard.MediaProcessing/Module.txt"
 msgctxt "~/Modules/Orchard.MediaProcessing/Module.txt"
 msgid "Module for processing Media e.g. image resizing"
 msgstr "Module pour traiter les médias, ex : redimensionnement d'image"

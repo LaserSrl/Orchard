@@ -1,15 +1,23 @@
+#. "Name"
+#: "~/Modules/Orchard.PublishLater/Module.txt"
 msgctxt "~/Modules/Orchard.PublishLater/Module.txt"
 msgid "Publish Later"
 msgstr "Publier plus tard"
 
+#. "Author"
+#: "~/Modules/Orchard.PublishLater/Module.txt"
 msgctxt "~/Modules/Orchard.PublishLater/Module.txt"
 msgid "The Orchard Team"
 msgstr "L'équipe Orchard"
 
+#. "Website"
+#: "~/Modules/Orchard.PublishLater/Module.txt"
 msgctxt "~/Modules/Orchard.PublishLater/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
+#: "~/Modules/Orchard.PublishLater/Module.txt"
 msgctxt "~/Modules/Orchard.PublishLater/Module.txt"
 msgid "The PublishLater module introduces draft creation and scheduled publishing functionality."
 msgstr "Le module de publication retardée permet la création de brouillons et la planification de publication."

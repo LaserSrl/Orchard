@@ -1,15 +1,23 @@
+#. "Name"
+#: "~/Modules/Orchard.ContentTypes/Module.txt"
 msgctxt "~/Modules/Orchard.ContentTypes/Module.txt"
 msgid "ContentTypes"
 msgstr "Tipi di Contenuto"
 
+#. "Author"
+#: "~/Modules/Orchard.ContentTypes/Module.txt"
 msgctxt "~/Modules/Orchard.ContentTypes/Module.txt"
 msgid "The Orchard Team"
 msgstr "Il Team di Orchard"
 
+#. "Website"
+#: "~/Modules/Orchard.ContentTypes/Module.txt"
 msgctxt "~/Modules/Orchard.ContentTypes/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
+#: "~/Modules/Orchard.ContentTypes/Module.txt"
 msgctxt "~/Modules/Orchard.ContentTypes/Module.txt"
 msgid "ContentTypes modules enables the creation and alteration of content types not based on code."
 msgstr "Il modulo Tipi di Contenuto permette la creazione e la modifica di Tipi di Contenuto senza codice."
@@ -113,6 +121,11 @@ msgstr "La Parte \"{0}\" è stata eliminata."
 msgctxt "Orchard.ContentTypes.Controllers.AdminController"
 msgid "Not allowed to create a content part."
 msgstr "Non sei autorizzato a creare una Parte di Contenuto."
+
+#: "Orchard.ContentTypes.Controllers.AdminController"
+msgctxt "Orchard.ContentTypes.Controllers.AdminController"
+msgid "Cannot add part named '{0}'. It already exists."
+msgstr "Non è possibile aggiungere la parte denominata '{0}' perchè esiste già."
 
 #: "Orchard.ContentTypes.Controllers.AdminController"
 msgctxt "Orchard.ContentTypes.Controllers.AdminController"
@@ -401,6 +414,11 @@ msgstr "Salva"
 
 #: "~/Modules/Orchard.ContentTypes/Views/Admin/EditPlacement.cshtml"
 msgctxt "~/Modules/Orchard.ContentTypes/Views/Admin/EditPlacement.cshtml"
+msgid "Are you sure you want to restore these placements?"
+msgstr "Sei sicuro di voler ripristinare questi posizionamenti?"
+
+#: "~/Modules/Orchard.ContentTypes/Views/Admin/EditPlacement.cshtml"
+msgctxt "~/Modules/Orchard.ContentTypes/Views/Admin/EditPlacement.cshtml"
 msgid "Restore"
 msgstr "Ripristina"
 
@@ -496,6 +514,16 @@ msgstr "Determina se un'istanza di questo Tipo di Contenuto può essere creata t
 
 #: "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"
 msgctxt "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"
+msgid "Listable"
+msgstr "Elencabile"
+
+#: "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"
+msgctxt "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"
+msgid "Determines if an instance of this content type can be listed through the UI."
+msgstr "Determina se un'istanza di questa tipologia di contenuto (Content Type) può essere elencata tramite interfaccia utente."
+
+#: "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"
+msgctxt "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"
 msgid "Draftable"
 msgstr "Supporto bozza"
 
@@ -503,6 +531,16 @@ msgstr "Supporto bozza"
 msgctxt "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"
 msgid "Determines if this content type supports draft versions."
 msgstr "Determina se questa Tipo di Contenuto supporta le bozze."
+
+#: "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"
+msgctxt "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"
+msgid "Securable"
+msgstr "Proteggibile"
+
+#: "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"
+msgctxt "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"
+msgid "Determines if this content type can have custom permissions."
+msgstr "Determina se questo tipo di contenuto (Content Item) può avere autorizzazioni personalizzate."
 
 #: "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"
 msgctxt "~/Modules/Orchard.ContentTypes/Views/DefinitionTemplates/ContentTypeSettingsViewModel.cshtml"

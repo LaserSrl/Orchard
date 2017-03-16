@@ -113,6 +113,11 @@ msgctxt "Orchard.Commands.Builtin.HelpCommand"
 msgid "Command {0} doesn't exist"
 msgstr "Il comando {0} non esiste"
 
+#: "Orchard.Data.Migration.DataMigrationManager"
+msgctxt "Orchard.Data.Migration.DataMigrationManager"
+msgid "Error while running migration version {0} for {1}."
+msgstr "Errore durante la migrazione dalla versione {0} a {1}."
+
 #: "Orchard.Data.Migration.DataMigrationNotificationProvider"
 msgctxt "Orchard.Data.Migration.DataMigrationNotificationProvider"
 msgid "Some features need to be upgraded: {0}"
@@ -127,6 +132,11 @@ msgstr "Errore durante la migrazione dati: bisogna specificare il tipo del campo
 msgctxt "Orchard.Data.Migration.Interpreters.MySqlCommandInterpreter"
 msgid "Error while executing data migration: you need to specify the field's type in order to change its properties"
 msgstr "Errore durante la migrazione dei dati: è necessario specificare il tipo del campo per cambiare le sue proprietà"
+
+#: "Orchard.Data.Migration.Schema.SchemaBuilder"
+msgctxt "Orchard.Data.Migration.Schema.SchemaBuilder"
+msgid "An unexpected error occured while executing the SQL statement: {0}"
+msgstr "Errore imprevisto nell'esecuzione del comando SQL: {0}"
 
 #: "Orchard.DisplayManagement.Implementation.DefaultDisplayManager"
 msgctxt "Orchard.DisplayManagement.Implementation.DefaultDisplayManager"
@@ -165,8 +175,10 @@ msgstr "Il riferimento all'assembly '{0}' per il progetto '{1}' non può essere 
 
 #: "Orchard.Environment.Extensions.Compilers.DefaultExtensionCompiler"
 msgctxt "Orchard.Environment.Extensions.Compilers.DefaultExtensionCompiler"
-msgid "Error compiling module \"{0}\" from file \"{1}\":\r\n{2}"
-msgstr "Errore compilando il modulo \"{0}\" a partire dal file \"{1}\":\r\n{2}"
+msgid "Error compiling module \"{0}\" from file \"{1}\":\r\n"
+"{2}"
+msgstr "Errore compilando il modulo \"{0}\" a partire dal file \"{1}\":\r\n"
+"{2}"
 
 #: "Orchard.Environment.Extensions.Folders.ExtensionHarvester"
 msgctxt "Orchard.Environment.Extensions.Folders.ExtensionHarvester"
@@ -187,6 +199,11 @@ msgstr "Impossibile ottenere lo stato per la caratteristica {0}"
 msgctxt "Orchard.Environment.Features.FeatureManager"
 msgid "Found {0} states for feature {1}"
 msgstr "Trovati {0} stati per la caratteristica {1}"
+
+#: "Orchard.Environment.ShellBuilders.CompositionStrategy"
+msgctxt "Orchard.Environment.ShellBuilders.CompositionStrategy"
+msgid "The feature '{0}' was listed as a dependency of '{1}' of extension '{2}', but this feature could not be found. Please update your manifest file or install the module providing the missing feature."
+msgstr "La funzionalità {0}' è indicata come dipendenza di '{1}' dell' estensione '{2}', ma questa funzionalità potrebbe non esistere. Si prega di aggiornare il file di manifest oppure installare il modulo che garantisce la funzionalità mancante."
 
 #: "Orchard.Events.DefaultOrchardEventBus"
 msgctxt "Orchard.Events.DefaultOrchardEventBus"
@@ -283,6 +300,11 @@ msgctxt "Orchard.Mvc.DataAnnotations.LocalizedStringLengthAttribute"
 msgid "The field {0} must be a string with a maximum length of {1}."
 msgstr "Il campo {0} deve essere una stringa con una lunghezza massima di {1}."
 
+#: "Orchard.Recipes.Services.RecipeBuilder"
+msgctxt "Orchard.Recipes.Services.RecipeBuilder"
+msgid "Exported from Orchard"
+msgstr "Esportato da Orchard"
+
 #: "Orchard.Security.Authorizer"
 msgctxt "Orchard.Security.Authorizer"
 msgid "{0}. Anonymous users do not have {1} permission."
@@ -297,19 +319,4 @@ msgstr "{0}. L'utente attuale, {2}, non ha il permesso {1}."
 msgctxt "Orchard.UI.Admin.AdminFilter"
 msgid "Can't access the admin"
 msgstr "Impossibile accedere all'amministrazione"
-
-#. "Hello world"
-msgctxt "Orchard.Tests.UI.Notify.NotifierTests"
-msgid "Hello world"
-msgstr "Ciao a tutti"
-
-#. "More Info"
-msgctxt "Orchard.Tests.UI.Notify.NotifierTests"
-msgid "More Info"
-msgstr "Altre informazioni"
-
-#. "Boom"
-msgctxt "Orchard.Tests.UI.Notify.NotifierTests"
-msgid "Boom"
-msgstr "Boom"
 

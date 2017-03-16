@@ -1,0 +1,222 @@
+#. "Name"
+#. "Orchard.Dashboards.Name"
+#: "~/Modules/Orchard.Dashboards/Module.txt"
+msgctxt "~/Modules/Orchard.Dashboards/Module.txt"
+msgid "Dashboards"
+msgstr "Cruscotti"
+
+#. "Author"
+#: "~/Modules/Orchard.Dashboards/Module.txt"
+msgctxt "~/Modules/Orchard.Dashboards/Module.txt"
+msgid "The Orchard Team"
+msgstr "Il Team di Orchard"
+
+#. "Website"
+#: "~/Modules/Orchard.Dashboards/Module.txt"
+msgctxt "~/Modules/Orchard.Dashboards/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+#. "Description"
+#. "Orchard.Dashboards.Description"
+#: "~/Modules/Orchard.Dashboards/Module.txt"
+msgctxt "~/Modules/Orchard.Dashboards/Module.txt"
+msgid "The Dashboards module enables administrators to customize the dashboard screen of the administration UI of the application."
+msgstr "Il modulo Dashboard consente agli amministratori di personalizzare la schermata di amministrazione dell'applicazione."
+
+#. "Orchard.Dashboards.Category"
+#: "~/Modules/Orchard.Dashboards/Module.txt"
+msgctxt "~/Modules/Orchard.Dashboards/Module.txt"
+msgid "Admin"
+msgstr "Amministratore"
+
+#: "Orchard.Dashboards.AdminMenu"
+msgctxt "Orchard.Dashboards.AdminMenu"
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: "Orchard.Dashboards.AdminMenu"
+msgctxt "Orchard.Dashboards.AdminMenu"
+msgid "Dashboard"
+msgstr "Cruscotto"
+
+#. "Your dashboard has been saved."
+msgctxt "Orchard.Dashboards.Controllers.DashboardController"
+msgid "Your dashboard has been saved."
+msgstr "Il tuo cruscotto è stato salvato."
+
+#: "Orchard.Dashboards.Controllers.DashboardController"
+msgctxt "Orchard.Dashboards.Controllers.DashboardController"
+msgid "Your dashboard has been published."
+msgstr "Il tuo cruscotto è stato pubblicato."
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Welcome to Orchard"
+msgstr "Benvenuto in Orchard"
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Get up and running"
+msgstr "Incomincia a lavorare"
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Start by exploring the menu on the left and familiarize yourself with Orchard. As for the basics, we suggest <a href=\"{0}\">changing the theme</a>, <a href=\"{1}\">adding some pages</a>, <a href=\"{2}\">setup up a blog</a>, and <a href=\"{3}\">configuring basic settings</a>."
+msgstr "Inizia ad esplorare il menu a sinistra e a prendere confidenza con Orchard. Per quanto riguarda le basi, ti consigliamo di <a href=\"{0}\">cambiare il tema</a>, di <a href=\"{1}\">aggiungere alcune pagine</a>, <a href=\"{2}\">configurare un blog</a>, e <a href=\"{3}\">configurare le impostazioni</a>."
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Get more goodies"
+msgstr "Ottieni altre chicche"
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Change the way your site works and looks with <a href=\"{0}\">themes</a> and <a href=\"{1}\">modules</a>. There’s plenty to choose from in the <a href=\"http://gallery.orchardproject.net/\">Orchard Gallery</a>. We’re always adding things, so be sure to check back often to see what’s new."
+msgstr "Cambia il modo in cui il tuo sito appare e naviga con i <a href=\"{0}\">temi</a> e i <a href=\"{1}\">moduli</a>. Troverai un'ampia scelta nella <a href=\"http://gallery.orchardproject.net/\">Orchard Gallery</a>. Aggiungiamo componenti di continuo, per cui fai spesso visita per verificare se vi sono novità."
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Read the Docs"
+msgstr "Leggi la documentazione"
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Are you ready to go deeper and become an Orchard expert? Take a look at the <a href=\"http://docs.orchardproject.net\">Orchard Documentation</a> to learn about how everything connects together and what makes Orchard tick."
+msgstr "Sei pronto ad approfondire e diventare un esperto di Orchard? Dai un'occhiata alla <a href=\"http://docs.orchardproject.net\">Wiki della Documentazione Orchard</a> per conoscere come funzionano le varie parti del sistema e tutto ciò che rende unico Orchard."
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Make friends"
+msgstr "Trova nuovi amici"
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Find friends that share your interest of Orchard. There are a couple ways that you can <a href=\"http://orchardproject.net/discussions\">discuss and get connected</a> to the project including mailing lists, forums and IRC."
+msgstr "Trova amici che condividono il tuo stesso interesse per Orchard. Ci sono un paio di modi per <a href=\"http://orchardproject.net/discussions\">discutere e rimanere collegato al progetto</a>, tra cui mailing list, forum e IRC."
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Contribute back"
+msgstr "Contribuisci"
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Help grow Orchard. We encourage contributions of all sorts, including code submissions, documentation, translations, feature recommendations, and more. Here are some ways to <a href=\"http://orchardproject.net/contribution\">give back to the project</a>."
+msgstr "Aiuta a far crescere il progetto Orchard. Noi incoraggiamo ogni sorta di contributo tramite invio di codice, creazione di documentazione, traduzioni, raccomandazioni e consigli tecnici ed altro ancora. Vai al seguente link per seguire le istruzioni su come contribuire <a href=\"http://orchardproject.net/contribution\">torna al progetto</a>."
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Stay up to date"
+msgstr "Tieniti aggiornato"
+
+#: "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/StaticDashboard.cshtml"
+msgid "Your browser does not support iframes. You can't see advisory messages."
+msgstr "Il tuo browser non supporta gli iframe. Non potrai vedere i messaggi di avviso."
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/Edit.cshtml"
+msgid "Edit Dashboard"
+msgstr "Modifica Dashboard"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "Manage Dashboards"
+msgstr "Gestione cruscotti"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "Create New Dashboard"
+msgstr "Crea nuovo cruscotto"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "Actions:"
+msgstr "Azioni:"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "Choose action..."
+msgstr "Scegli un azione..."
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "Publish Now"
+msgstr "Pubblica ora"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "Unpublish"
+msgstr "Annulla pubblicazione"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+#. "Apply"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "Apply"
+msgstr "Applica"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "Culture"
+msgstr "Lingua"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "any (show all)"
+msgstr "qualsiasi (mostra tutto)"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "Ordered by"
+msgstr "Ordinati per"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "recently created"
+msgstr "recentemente creato"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "recently modified"
+msgstr "recentemente modificato"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "recently published"
+msgstr "recentemente pubblicato"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "Filter by"
+msgstr "Filtra per"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "latest"
+msgstr "più recente"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "published"
+msgstr "pubblicato"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "unpublished"
+msgstr "non pubblicato"
+
+#: "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Dashboard/List.cshtml"
+msgid "all versions"
+msgstr "tutte le versioni"
+
+#: "~/Modules/Orchard.Dashboards/Views/Parts/Layout.Dashboard.cshtml"
+msgctxt "~/Modules/Orchard.Dashboards/Views/Parts/Layout.Dashboard.cshtml"
+msgid "Edit"
+msgstr "Modifica"
+

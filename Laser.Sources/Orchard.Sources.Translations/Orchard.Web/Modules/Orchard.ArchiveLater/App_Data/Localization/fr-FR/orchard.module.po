@@ -1,15 +1,23 @@
+#. "Name"
+#: "~/Modules/Orchard.ArchiveLater/Module.txt"
 msgctxt "~/Modules/Orchard.ArchiveLater/Module.txt"
 msgid "Archive Later"
 msgstr "Archiver plus tard"
 
+#. "Author"
+#: "~/Modules/Orchard.ArchiveLater/Module.txt"
 msgctxt "~/Modules/Orchard.ArchiveLater/Module.txt"
 msgid "The Orchard Team"
 msgstr "L'équipe Orchard"
 
+#. "Website"
+#: "~/Modules/Orchard.ArchiveLater/Module.txt"
 msgctxt "~/Modules/Orchard.ArchiveLater/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
+#: "~/Modules/Orchard.ArchiveLater/Module.txt"
 msgctxt "~/Modules/Orchard.ArchiveLater/Module.txt"
 msgid "The ArchiveLater module introduces scheduled archiving functionality."
 msgstr "Le module d'archivage différé permet de planifier l'archivage de contenu."

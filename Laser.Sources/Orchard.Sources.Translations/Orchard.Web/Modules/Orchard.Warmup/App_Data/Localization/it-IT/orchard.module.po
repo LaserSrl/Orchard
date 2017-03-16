@@ -1,15 +1,23 @@
+#. "Name"
+#: "~/Modules/Orchard.Warmup/Module.txt"
 msgctxt "~/Modules/Orchard.Warmup/Module.txt"
 msgid "Warmup"
 msgstr "Warmup"
 
+#. "Author"
+#: "~/Modules/Orchard.Warmup/Module.txt"
 msgctxt "~/Modules/Orchard.Warmup/Module.txt"
 msgid "The Orchard Team"
 msgstr "Il Team di Orchard"
 
+#. "Website"
+#: "~/Modules/Orchard.Warmup/Module.txt"
 msgctxt "~/Modules/Orchard.Warmup/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
+#: "~/Modules/Orchard.Warmup/Module.txt"
 msgctxt "~/Modules/Orchard.Warmup/Module.txt"
 msgid "Provides a mecanism to generate a static version of pages for being used during application warm up."
 msgstr "Fornisce un meccanismo per generare una versione statica delle pagina da usare durante l'avvio (warmup) dell'applicazione."

@@ -1,24 +1,36 @@
+#. "Name"
+#: "~/Modules/Orchard.ContentPermissions/Module.txt"
 msgctxt "~/Modules/Orchard.ContentPermissions/Module.txt"
 msgid "Orchard.ContentPermissions"
 msgstr "Orchard.ContentPermissions"
 
+#. "Author"
+#: "~/Modules/Orchard.ContentPermissions/Module.txt"
 msgctxt "~/Modules/Orchard.ContentPermissions/Module.txt"
 msgid "Chris Pyle, S�bastien Ros"
 msgstr "Chris Pyle, Sébastien Ros"
 
+#. "Website"
+#: "~/Modules/Orchard.ContentPermissions/Module.txt"
 msgctxt "~/Modules/Orchard.ContentPermissions/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
 #. "Orchard.ContentPermissions.Description"
+#: "~/Modules/Orchard.ContentPermissions/Module.txt"
 msgctxt "~/Modules/Orchard.ContentPermissions/Module.txt"
 msgid "Allows item-level front end view permissions."
 msgstr "Permette le autorizzazioni di visualizzazione a livello di elemento per il front-end."
 
+#. "Orchard.ContentPermissions.Name"
+#: "~/Modules/Orchard.ContentPermissions/Module.txt"
 msgctxt "~/Modules/Orchard.ContentPermissions/Module.txt"
 msgid "Content Item Permissions"
 msgstr "Autorizzazioni per gli Elementi di Contenuto"
 
+#. "Orchard.ContentPermissions.Category"
+#: "~/Modules/Orchard.ContentPermissions/Module.txt"
 msgctxt "~/Modules/Orchard.ContentPermissions/Module.txt"
 msgid "Security"
 msgstr "Sicurezza"
@@ -27,6 +39,11 @@ msgstr "Sicurezza"
 msgctxt "Orchard.ContentPermissions.Drivers.ContentPermissionsPartDriver"
 msgid "Could not update permissions"
 msgstr "Impossibile aggiornare le autorizzazioni"
+
+#: "Orchard.ContentPermissions.Services.DynamicPermissions"
+msgctxt "Orchard.ContentPermissions.Services.DynamicPermissions"
+msgid "{0} - {1}"
+msgstr "{0} - {1}"
 
 #. "Permissions applied"
 msgctxt "~/Modules/Orchard.ContentPermissions/Views/Parts.ContentPermissions.SummaryAdmin.cshtml"
@@ -70,6 +87,11 @@ msgstr "Eliminare qualsiasi contenuto"
 
 #: "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/ContentPermissionsPartViewModel.cshtml"
 msgctxt "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/ContentPermissionsPartViewModel.cshtml"
+msgid "Preview any content"
+msgstr "Anteprima di tutti i contenuti"
+
+#: "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/ContentPermissionsPartViewModel.cshtml"
+msgctxt "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/ContentPermissionsPartViewModel.cshtml"
 msgid "View own content"
 msgstr "Vedere i propri contenuti"
 
@@ -90,6 +112,11 @@ msgstr "Eliminare il proprio contenuto"
 
 #: "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/ContentPermissionsPartViewModel.cshtml"
 msgctxt "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/ContentPermissionsPartViewModel.cshtml"
+msgid "Preview own content"
+msgstr "Anteprima dei propri contenuti"
+
+#: "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/ContentPermissionsPartViewModel.cshtml"
+msgctxt "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/ContentPermissionsPartViewModel.cshtml"
 msgid "Only show those roles in the editor:"
 msgstr "Visualizza solo questi ruoli nell'editor:"
 
@@ -97,6 +124,16 @@ msgstr "Visualizza solo questi ruoli nell'editor:"
 msgctxt "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/ContentPermissionsPartViewModel.cshtml"
 msgid "Uncheck the roles for which you don't want the editor to change the permissions for."
 msgstr "Deselezionare i ruoli per i quali non volete l'editor per modificare le autorizzazioni."
+
+#: "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/SecurableContentItemsSettingsViewModel.cshtml"
+msgctxt "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/SecurableContentItemsSettingsViewModel.cshtml"
+msgid "Securable Content Items"
+msgstr "Elementi di contenuto proteggibili"
+
+#: "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/SecurableContentItemsSettingsViewModel.cshtml"
+msgctxt "~/Modules/Orchard.ContentPermissions/Views/DefinitionTemplates/SecurableContentItemsSettingsViewModel.cshtml"
+msgid "Determines if an instance of this content type can have custom permissions."
+msgstr "Determina se un'istanza di questo tipo di contenuto può avere autorizzazioni personalizzate."
 
 #: "~/Modules/Orchard.ContentPermissions/Views/EditorTemplates/Parts.ContentPermissions.cshtml"
 msgctxt "~/Modules/Orchard.ContentPermissions/Views/EditorTemplates/Parts.ContentPermissions.cshtml"
@@ -135,6 +172,11 @@ msgstr "Elimina questo elemento"
 
 #: "~/Modules/Orchard.ContentPermissions/Views/EditorTemplates/Parts.ContentPermissions.cshtml"
 msgctxt "~/Modules/Orchard.ContentPermissions/Views/EditorTemplates/Parts.ContentPermissions.cshtml"
+msgid "Preview this item"
+msgstr "Anteprima di questo elemento"
+
+#: "~/Modules/Orchard.ContentPermissions/Views/EditorTemplates/Parts.ContentPermissions.cshtml"
+msgctxt "~/Modules/Orchard.ContentPermissions/Views/EditorTemplates/Parts.ContentPermissions.cshtml"
 msgid "View own"
 msgstr "Visualizza i propri"
 
@@ -152,4 +194,9 @@ msgstr "Pubblica i propri"
 msgctxt "~/Modules/Orchard.ContentPermissions/Views/EditorTemplates/Parts.ContentPermissions.cshtml"
 msgid "Delete own"
 msgstr "Elimina i propri"
+
+#: "~/Modules/Orchard.ContentPermissions/Views/EditorTemplates/Parts.ContentPermissions.cshtml"
+msgctxt "~/Modules/Orchard.ContentPermissions/Views/EditorTemplates/Parts.ContentPermissions.cshtml"
+msgid "Preview own"
+msgstr "Anteprima dell'elemento di proprietà"
 

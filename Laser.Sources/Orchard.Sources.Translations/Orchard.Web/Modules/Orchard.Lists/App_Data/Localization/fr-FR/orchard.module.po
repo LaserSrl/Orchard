@@ -1,15 +1,23 @@
+#. "Name"
+#: "~/Modules/Orchard.Lists/Module.txt"
 msgctxt "~/Modules/Orchard.Lists/Module.txt"
 msgid "Lists"
 msgstr "Listes"
 
+#. "Author"
+#: "~/Modules/Orchard.Lists/Module.txt"
 msgctxt "~/Modules/Orchard.Lists/Module.txt"
 msgid "The Orchard Team"
 msgstr "L'équipe Orchard"
 
+#. "Website"
+#: "~/Modules/Orchard.Lists/Module.txt"
 msgctxt "~/Modules/Orchard.Lists/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
+#: "~/Modules/Orchard.Lists/Module.txt"
 msgctxt "~/Modules/Orchard.Lists/Module.txt"
 msgid "Introduces a preconfigured container-enabled content type."
 msgstr "Un type conteneur prêt à l'emploi."
@@ -271,11 +279,6 @@ msgstr "Eléments"
 
 #: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
 msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
-msgid "Move to..."
-msgstr "Déplacer vers..."
-
-#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
-msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
 msgid "Actions:"
 msgstr "Actions :"
 
@@ -303,11 +306,6 @@ msgstr "Supprimer"
 msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
 msgid "Remove from List"
 msgstr "Retirer de la liste"
-
-#: "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
-msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"
-msgid "Move to List..."
-msgstr "Déplacer de la liste..."
 
 #. "Apply"
 msgctxt "~/Modules/Orchard.Lists/Views/Parts.Container.BulkActions.cshtml"

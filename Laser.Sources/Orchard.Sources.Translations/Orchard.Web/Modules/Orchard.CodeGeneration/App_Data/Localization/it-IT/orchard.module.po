@@ -1,15 +1,23 @@
+#. "Name"
+#: "~/Modules/Orchard.CodeGeneration/Module.txt"
 msgctxt "~/Modules/Orchard.CodeGeneration/Module.txt"
 msgid "Code Generation"
 msgstr "Generazione di codice"
 
+#. "Author"
+#: "~/Modules/Orchard.CodeGeneration/Module.txt"
 msgctxt "~/Modules/Orchard.CodeGeneration/Module.txt"
 msgid "The Orchard Team"
 msgstr "Il team di Orchard"
 
+#. "Website"
+#: "~/Modules/Orchard.CodeGeneration/Module.txt"
 msgctxt "~/Modules/Orchard.CodeGeneration/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
+#: "~/Modules/Orchard.CodeGeneration/Module.txt"
 msgctxt "~/Modules/Orchard.CodeGeneration/Module.txt"
 msgid "Tools to create Orchard components."
 msgstr "Strumenti per creare componenti per Orchard."

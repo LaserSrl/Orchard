@@ -1,15 +1,23 @@
+#. "Name"
+#: "~/Modules/Orchard.SecureSocketsLayer/Module.txt"
 msgctxt "~/Modules/Orchard.SecureSocketsLayer/Module.txt"
 msgid "Secure Sockets Layer"
 msgstr "Secure Sockets Layer"
 
+#. "Author"
+#: "~/Modules/Orchard.SecureSocketsLayer/Module.txt"
 msgctxt "~/Modules/Orchard.SecureSocketsLayer/Module.txt"
 msgid "The Orchard Team"
 msgstr "L'équipe Orchard"
 
+#. "Website"
+#: "~/Modules/Orchard.SecureSocketsLayer/Module.txt"
 msgctxt "~/Modules/Orchard.SecureSocketsLayer/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
+#: "~/Modules/Orchard.SecureSocketsLayer/Module.txt"
 msgctxt "~/Modules/Orchard.SecureSocketsLayer/Module.txt"
 msgid "This module will ensure SSL is used when accessing specific parts of the website like the dashboard, authentication pages or custom pages."
 msgstr "Ce module s'assurera que SSL est utilisé lors de l'accès à des parties spécifiques du site Web comme le tableau de bord, des pages d'authentification ou des pages personnalisées."

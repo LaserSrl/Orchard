@@ -1,0 +1,172 @@
+#. "Name"
+#. "Orchard.Resources.Name"
+#: "~/Modules/Orchard.Resources/Module.txt"
+msgctxt "~/Modules/Orchard.Resources/Module.txt"
+msgid "Resources"
+msgstr "Ressources"
+
+#. "Author"
+#: "~/Modules/Orchard.Resources/Module.txt"
+msgctxt "~/Modules/Orchard.Resources/Module.txt"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+#. "Website"
+#: "~/Modules/Orchard.Resources/Module.txt"
+msgctxt "~/Modules/Orchard.Resources/Module.txt"
+msgid "http://orchardproject.net"
+msgstr "http://orchardproject.net"
+
+#. "Description"
+#. "Orchard.Resources.Description"
+#: "~/Modules/Orchard.Resources/Module.txt"
+msgctxt "~/Modules/Orchard.Resources/Module.txt"
+msgid "Provides a variety of third-party client-side libraries (stylesheets and scripts) used by other modules."
+msgstr "Offre une variété de librairies côté client (feuilles de style et de scripts), utilisées par d'autres modules."
+
+#. "Orchard.Resources.Category"
+#: "~/Modules/Orchard.Resources/Module.txt"
+msgctxt "~/Modules/Orchard.Resources/Module.txt"
+msgid "Core"
+msgstr "Core"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Prev"
+msgstr "Préc."
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Show the previous month"
+msgstr "Afficher le mois précédent"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "<<"
+msgstr "<<"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Show the previous year"
+msgstr "Afficher l'année précédente"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Next"
+msgstr "Suiv."
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Show the next month"
+msgstr "Afficher le mois prochain"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid ">>"
+msgstr ">>"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Show the next year"
+msgstr "Afficher l'année prochaine"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Current"
+msgstr "En cours"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Show the current month"
+msgstr "Afficher le mois en cours"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Show today's month"
+msgstr "Afficher le mois du jour"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Clear"
+msgstr "Effacer"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Clear the date field"
+msgstr "Efface le champ de date"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Done"
+msgstr "Terminé"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Close the datepicker"
+msgstr "Fermez le sélecteur de date"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Change the year"
+msgstr "Modifier l'année"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Change the month"
+msgstr "Modifier le mois"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Wk"
+msgstr "Sem"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Week of the year"
+msgstr "Semaine de l'année"
+
+#: "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/CalendarsPickerLocalization.cshtml"
+msgid "Select a date"
+msgstr "Sélectionnez une date"
+
+#: "~/Modules/Orchard.Resources/Views/TimeEntryLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/TimeEntryLocalization.cshtml"
+msgid "Now"
+msgstr "Maintenant"
+
+#: "~/Modules/Orchard.Resources/Views/TimeEntryLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/TimeEntryLocalization.cshtml"
+msgid "Previous field"
+msgstr "Champ précédent"
+
+#: "~/Modules/Orchard.Resources/Views/TimeEntryLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/TimeEntryLocalization.cshtml"
+msgid "Next field"
+msgstr "Champ suivant"
+
+#: "~/Modules/Orchard.Resources/Views/TimeEntryLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/TimeEntryLocalization.cshtml"
+msgid "Increment"
+msgstr "Incrémenter"
+
+#: "~/Modules/Orchard.Resources/Views/TimeEntryLocalization.cshtml"
+msgctxt "~/Modules/Orchard.Resources/Views/TimeEntryLocalization.cshtml"
+msgid "Decrement"
+msgstr "Décrémenter"
+
+#. "Date"
+msgctxt "~/Modules/Orchard.Resources/Views/EditorTemplates/DateTimeEditor.cshtml"
+msgid "Date"
+msgstr "Date"
+
+#. "Time"
+msgctxt "~/Modules/Orchard.Resources/Views/EditorTemplates/DateTimeEditor.cshtml"
+msgid "Time"
+msgstr "Heure"
+
