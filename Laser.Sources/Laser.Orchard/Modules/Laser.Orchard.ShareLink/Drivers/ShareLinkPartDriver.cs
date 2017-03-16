@@ -166,30 +166,20 @@ namespace Laser.Orchard.ShareLink.Drivers {
                 part.SharedImage = importedSharedImage;
             }
 
-            //mod. 05-12-2016 ....il campo SharedImage rappresenta sempre l'url dell' immagine
             var importedSharedIdImage = context.Attribute(part.PartDefinition.Name, "SharedIdImage");
             if (importedSharedIdImage != null) {
                 part.SharedIdImage = importedSharedIdImage;
             }
-
-
         }
 
 
         protected override void Exporting(ShareLinkPart part, ExportContentContext context) 
         {
-            //mod. 05-12-2016 ....il campo SharedImage rappresenta sempre l'url dell' immagine
             var root = context.Element(part.PartDefinition.Name);
-           
-            if (part.SharedImage != string.Empty && part.SharedImage != null)
-                root.SetAttributeValue("SharedIdImage", part.SharedIdImage);
-            
+            root.SetAttributeValue("SharedIdImage", part.SharedIdImage);
             root.SetAttributeValue("SharedLink", part.SharedLink);
             root.SetAttributeValue("SharedText", part.SharedText);
             root.SetAttributeValue("SharedImage", part.SharedImage);
-
         }
-
-
     }
 }

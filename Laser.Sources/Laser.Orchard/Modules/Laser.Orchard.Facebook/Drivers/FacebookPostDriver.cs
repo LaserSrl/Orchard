@@ -139,14 +139,14 @@ namespace Laser.Orchard.Facebook.Drivers {
         protected override void Exporting(FacebookPostPart part, ExportContentContext context) {
             var root = context.Element(part.PartDefinition.Name);
             root.SetAttributeValue("FacebookMessage", part.FacebookMessage);
-            root.SetAttributeValue("FacebookMessageSent", part.FacebookMessageSent);
+            //FacebookMessageSent non serve per l'import
             root.SetAttributeValue("FacebookCaption", part.FacebookCaption);
             root.SetAttributeValue("FacebookDescription", part.FacebookDescription);
             root.SetAttributeValue("FacebookName", part.FacebookName);
             root.SetAttributeValue("FacebookPicture", part.FacebookPicture);
             root.SetAttributeValue("FacebookIdPicture", part.FacebookIdPicture);
             root.SetAttributeValue("FacebookLink", part.FacebookLink);
-            root.SetAttributeValue("SendOnNextPublish", part.SendOnNextPublish);
+            //SendOnNextPublish non serve per l'import
             root.SetAttributeValue("FacebookType", part.FacebookType.ToString());
             root.SetAttributeValue("FacebookMessageToPost", part.FacebookMessageToPost);
             root.SetAttributeValue("HasImage", part.HasImage);
@@ -169,10 +169,7 @@ namespace Laser.Orchard.Facebook.Drivers {
             if (FacebookMessage != null) {
                 part.FacebookMessage = FacebookMessage.Value;
             }
-            var FacebookMessageSent = root.Attribute("FacebookMessageSent");
-            if (FacebookMessageSent != null) {
-                part.FacebookMessageSent = bool.Parse(FacebookMessageSent.Value);
-            }
+            part.FacebookMessageSent = false;
             var FacebookCaption = root.Attribute("FacebookCaption");
             if (FacebookCaption != null) {
                 part.FacebookCaption = FacebookCaption.Value;
@@ -197,10 +194,7 @@ namespace Laser.Orchard.Facebook.Drivers {
             if (FacebookLink != null) {
                 part.FacebookLink = FacebookLink.Value;
             }
-            var SendOnNextPublish = root.Attribute("SendOnNextPublish");
-            if (SendOnNextPublish != null) {
-                part.SendOnNextPublish = bool.Parse(SendOnNextPublish.Value);
-            }
+            part.SendOnNextPublish = false;
             var FacebookMessageToPost = root.Attribute("FacebookMessageToPost");
             if (FacebookMessageToPost != null) {
                 part.FacebookMessageToPost = FacebookMessageToPost.Value;

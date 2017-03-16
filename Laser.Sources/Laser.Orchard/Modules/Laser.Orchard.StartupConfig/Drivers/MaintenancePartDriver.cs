@@ -71,38 +71,10 @@ namespace Laser.Orchard.StartupConfig.Drivers {
         }
 
         protected override void Importing(MaintenancePart part, ImportContentContext context) {
-           
-            var importedMaintenanceNotify = context.Attribute(part.PartDefinition.Name, "MaintenanceNotify");
-            if (importedMaintenanceNotify != null) {
-                part.MaintenanceNotify =importedMaintenanceNotify;
-            }
-
-            var importedSelected_Tenant = context.Attribute(part.PartDefinition.Name, "Selected_Tenant");
-            if (importedSelected_Tenant != null) {
-                part.Selected_Tenant = importedSelected_Tenant;
-            }
-
-            var importedMaintenanceNotifyType = context.Attribute(part.PartDefinition.Name, "MaintenanceNotifyType");
-            if (importedMaintenanceNotifyType != null) {
-                part.MaintenanceNotifyType = (NotifyType)Enum.Parse(typeof(NotifyType),importedMaintenanceNotifyType);
-            }
+            // si è deciso di non esportare e importare nulla
         }
-
-
         protected override void Exporting(MaintenancePart part, ExportContentContext context) {
-            //mod 30-11-2016
-            context.Element(part.PartDefinition.Name).SetAttributeValue("MaintenanceNotify", part.MaintenanceNotify);
-            ////////////////////////////////////////
-
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Selected_Tenant", part.Selected_Tenant);          
-            
-            var MaintenanceNotifyTypeRec = (NotifyType)part.MaintenanceNotifyType;
-            
-            context.Element(part.PartDefinition.Name).SetAttributeValue("MaintenanceNotifyType", MaintenanceNotifyTypeRec);
-
+            // si è deciso di non esportare e importare nulla
         }
-
-       
-       
     }
 }

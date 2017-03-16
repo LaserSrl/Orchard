@@ -96,54 +96,54 @@ namespace Laser.Orchard.UserReactions.Drivers {
 
 
 
-        protected override void Importing(UserReactionsPart part, ImportContentContext context) {
+        //protected override void Importing(UserReactionsPart part, ImportContentContext context) {
 
-            var root = context.Data.Element(part.PartDefinition.Name);
-            var reactions = context.Data.Element(part.PartDefinition.Name).Elements("Reactions");
+        //    var root = context.Data.Element(part.PartDefinition.Name);
+        //    var reactions = context.Data.Element(part.PartDefinition.Name).Elements("Reactions");
 
-            //aggiorna il numero delle reactions sulla tabella di summary. Le reaction type sono aggiornate con import dei settings
-            foreach (var reacts in reactions) 
-            {
-                var singleReact = new UserReactionsSummaryRecord();
-                singleReact.Quantity = int.Parse(reacts.Attribute("Quantity").Value);         
+        //    //aggiorna il numero delle reactions sulla tabella di summary. Le reaction type sono aggiornate con import dei settings
+        //    foreach (var reacts in reactions) 
+        //    {
+        //        var singleReact = new UserReactionsSummaryRecord();
+        //        singleReact.Quantity = int.Parse(reacts.Attribute("Quantity").Value);         
                         
-                var recType = reacts.Element("UserReactionsTypesRecord");
-                if (recType != null) 
-                {
-                    singleReact.UserReactionsTypesRecord = _repositoryTypesRecord.Get(tr => tr.TypeName == recType.Attribute("TypeName").Value);
-                 }
-                _repositorySummaryRecord.Create(singleReact);
-                 part.Reactions.Add(singleReact);    
-           }            
-        }
+        //        var recType = reacts.Element("UserReactionsTypesRecord");
+        //        if (recType != null) 
+        //        {
+        //            singleReact.UserReactionsTypesRecord = _repositoryTypesRecord.Get(tr => tr.TypeName == recType.Attribute("TypeName").Value);
+        //         }
+        //        _repositorySummaryRecord.Create(singleReact);
+        //         part.Reactions.Add(singleReact);    
+        //   }            
+        //}
 
 
-        protected override void Exporting(UserReactionsPart part, ExportContentContext context) {
+        //protected override void Exporting(UserReactionsPart part, ExportContentContext context) {
             
-            var root = context.Element(part.PartDefinition.Name);
+        //    var root = context.Element(part.PartDefinition.Name);
 
-            if (part.Reactions.Count() > 0) {
-                foreach (UserReactionsSummaryRecord receq in part.Reactions) 
-                {
-                    XElement reactions = new XElement("Reactions");
-                    reactions.SetAttributeValue("Id", receq.Id);
-                    reactions.SetAttributeValue("Quantity", receq.Quantity);
-                    root.Add(reactions);
+        //    if (part.Reactions.Count() > 0) {
+        //        foreach (UserReactionsSummaryRecord receq in part.Reactions) 
+        //        {
+        //            XElement reactions = new XElement("Reactions");
+        //            reactions.SetAttributeValue("Id", receq.Id);
+        //            reactions.SetAttributeValue("Quantity", receq.Quantity);
+        //            root.Add(reactions);
 
-                    XElement userReactionsTypesRecord = new XElement("UserReactionsTypesRecord");
-                    userReactionsTypesRecord.SetAttributeValue("Id", receq.UserReactionsTypesRecord.Id);
-                    userReactionsTypesRecord.SetAttributeValue("TypeName", receq.UserReactionsTypesRecord.TypeName);
-                    userReactionsTypesRecord.SetAttributeValue("Priority", receq.UserReactionsTypesRecord.Priority);
-                    userReactionsTypesRecord.SetAttributeValue("CssName", ((receq.UserReactionsTypesRecord.CssName != null) ? receq.UserReactionsTypesRecord.CssName : ""));
-                    userReactionsTypesRecord.SetAttributeValue("Activating", receq.UserReactionsTypesRecord.Activating);
+        //            XElement userReactionsTypesRecord = new XElement("UserReactionsTypesRecord");
+        //            userReactionsTypesRecord.SetAttributeValue("Id", receq.UserReactionsTypesRecord.Id);
+        //            userReactionsTypesRecord.SetAttributeValue("TypeName", receq.UserReactionsTypesRecord.TypeName);
+        //            userReactionsTypesRecord.SetAttributeValue("Priority", receq.UserReactionsTypesRecord.Priority);
+        //            userReactionsTypesRecord.SetAttributeValue("CssName", ((receq.UserReactionsTypesRecord.CssName != null) ? receq.UserReactionsTypesRecord.CssName : ""));
+        //            userReactionsTypesRecord.SetAttributeValue("Activating", receq.UserReactionsTypesRecord.Activating);
                     
-                    reactions.Add(userReactionsTypesRecord);
+        //            reactions.Add(userReactionsTypesRecord);
                    
-                }
+        //        }
 
-            }
+        //    }
 
-        }
+        //}
 
 
         

@@ -13,20 +13,23 @@ using OrchardLocalization = Orchard.Localization;
 using Orchard.UI.Admin;
 using Orchard.Localization.Records;
 using Orchard.Localization.Models;
+using Orchard.Localization.Services;
 
 namespace Laser.Orchard.StartupConfig.Drivers {
     public class FavoriteCulturePartDriver : ContentPartDriver<FavoriteCulturePart> {
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
+        private readonly ICultureManager _cultureManager;
 
         protected override string Prefix {
             get {
                 return "FavoriteCulturePart";
             }
         }
-        public FavoriteCulturePartDriver(IOrchardServices orchardServices, IContentManager contentManager) {
+        public FavoriteCulturePartDriver(IOrchardServices orchardServices, IContentManager contentManager, ICultureManager cultureManager) {
             _orchardServices = orchardServices;
             _contentManager = contentManager;
+            _cultureManager = cultureManager;
         }
         protected override DriverResult Display(FavoriteCulturePart part, string displayType, dynamic shapeHelper) {
             bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
@@ -64,32 +67,22 @@ namespace Laser.Orchard.StartupConfig.Drivers {
 
         }
 
-
         protected override void Importing(FavoriteCulturePart part, ImportContentContext context) {
-            // mod 30-11-2016
             context.ImportAttribute(part.PartDefinition.Name, "Culture_Id", x => {
-                var tempPartFromid = context.GetItemFromSession(x);
-
-                if (tempPartFromid != null && tempPartFromid.Is<LocalizationPart>()) {
-                    //associa id culture
-                    part.Culture_Id = tempPartFromid.As<LocalizationPart>().Culture.Id;
+                var culture = _cultureManager.GetCultureByName(x);
+                if (culture != null) {
+                    part.Culture_Id = culture.Id;
                 }
             });
         }
-
         protected override void Exporting(FavoriteCulturePart part, ExportContentContext context) {
-            // mod 30-11-2016
             var root = context.Element(part.PartDefinition.Name);
-
             if (part.Culture_Id > 0) {
-                //cerco il corrispondente valore dell' identity dalla parts del menu e lo associo al campo menuid 
-                var contItemMenu = _contentManager.Get(part.Culture_Id);
-                if (contItemMenu != null) {
-                    root.SetAttributeValue("Culture_Id", _contentManager.GetItemMetadata(contItemMenu).Identity.ToString());
+                var culture = _cultureManager.GetCultureById(part.Culture_Id);
+                if (culture != null) {
+                    root.SetAttributeValue("Culture_Id", culture.Culture);
                 }
-
             }
-
         }
     }
 }

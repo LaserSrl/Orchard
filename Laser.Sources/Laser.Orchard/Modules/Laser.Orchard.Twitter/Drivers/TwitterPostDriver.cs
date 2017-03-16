@@ -245,18 +245,13 @@ namespace Laser.Orchard.Twitter.Drivers {
             return Editor(part, shapeHelper);
         }
 
-
         protected override void Importing(TwitterPostPart part, ImportContentContext context) {
-
             var importedTwitterMessage = context.Attribute(part.PartDefinition.Name, "TwitterMessage");
             if (importedTwitterMessage != null) {
                 part.TwitterMessage = importedTwitterMessage;
             }
 
-            var importedTwitterMessageSent = context.Attribute(part.PartDefinition.Name, "TwitterMessageSent");
-            if (importedTwitterMessageSent != null) {
-                part.TwitterMessageSent = Convert.ToBoolean(importedTwitterMessageSent);
-            }
+            part.TwitterMessageSent = false;
 
             var importedTwitterTitle = context.Attribute(part.PartDefinition.Name, "TwitterTitle");
             if (importedTwitterTitle != null) {
@@ -282,63 +277,42 @@ namespace Laser.Orchard.Twitter.Drivers {
             if (importedTwitterLink != null) {
                 part.TwitterLink = importedTwitterLink;
             }
+            part.SendOnNextPublish = false;
 
-            var importedSendOnNextPublish = context.Attribute(part.PartDefinition.Name, "SendOnNextPublish");
-            if (importedSendOnNextPublish != null) {
-                part.SendOnNextPublish = Convert.ToBoolean(importedSendOnNextPublish);
-            }
-
-            var importedAccountSelected = context.Data.Element(part.PartDefinition.Name).Elements("AccountList");
-
-            if (importedAccountSelected != null && importedAccountSelected.Count() > 0) {
-
-                var listaccount = _TwitterService.GetValidTwitterAccount();
-                int countAcc = 0;
-                int[] accSel = new int[importedAccountSelected.Count()];
-
-                foreach (var selectedAcc in importedAccountSelected) {
-                    var tempPartFromid = selectedAcc.Attribute("AccountListSelected").Value;
-                    var addltsin = listaccount.Where(x => _contentManager.GetItemMetadata(_contentManager.Get(x.Id)).Identity.ToString() == tempPartFromid.ToString()).Select(x => x.Id).ToArray();
-                    accSel[countAcc] = addltsin[0];
-                    countAcc = countAcc + 1;
-
+            var root = context.Data.Element(part.PartDefinition.Name);
+            if (root.HasElements) {
+                List<int> accountList = new List<int>();
+                foreach (var userElement in root.Elements("Account")) {
+                    var twAccount = context.GetItemFromSession(userElement.Value);
+                    if (twAccount != null && twAccount.Has<TwitterAccountPart>()) {
+                        accountList.Add(twAccount.Id);
+                    }
                 }
-                part.AccountList = accSel;
+                if (accountList.Count > 0) {
+                    part.AccountList = accountList.ToArray();
+                }
             }
-
         }
-
-
         protected override void Exporting(TwitterPostPart part, ExportContentContext context) {
-
             var root = context.Element(part.PartDefinition.Name);
-
             root.SetAttributeValue("TwitterMessage", part.TwitterMessage);
-            root.SetAttributeValue("TwitterMessageSent", part.TwitterMessageSent);
+            //TwitterMessageSent non serve per l'import
             root.SetAttributeValue("TwitterTitle", part.TwitterTitle);
             root.SetAttributeValue("TwitterDescription", part.TwitterDescription);
             root.SetAttributeValue("TwitterPicture", part.TwitterPicture);
             root.SetAttributeValue("TwitterCurrentLink", part.TwitterCurrentLink);
             root.SetAttributeValue("TwitterLink", part.TwitterLink);
-            root.SetAttributeValue("SendOnNextPublish", part.SendOnNextPublish);
-           
+            //SendOnNextPublish non serve per l'import
             if (part.AccountList.Count() > 0) {
-
-                string identityList = string.Empty;
-
-                for (int x = 0; x < part.AccountList.Count(); x++) {
-                    XElement accText = new XElement("AccountList");
-                    var contItemContact = _contentManager.Get(part.AccountList[x]);
-                    if (contItemContact != null) {
-                        accText.SetAttributeValue("AccountListSelected", _contentManager.GetItemMetadata(contItemContact).Identity.ToString());
-                        root.Add(accText);
+                XElement accountElement = null;
+                foreach (var accountId in part.AccountList) {
+                    var twAccount = _contentManager.Get<TwitterAccountPart>(accountId);
+                    if (twAccount != null) {
+                        accountElement = new XElement("Account", _contentManager.GetItemMetadata(twAccount.ContentItem).Identity.ToString());
+                        root.Add(accountElement);
                     }
                 }
             }  
-
-
         }
-
-       
     }
 }
