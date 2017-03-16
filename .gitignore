@@ -190,3 +190,4 @@ src/Orchard.Web/Modules/Orchard.DynamicForms/node_modules
 #enable all /lib artifacts
 !lib/*/*.*
 */.vs/*
+.vs
