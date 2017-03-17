@@ -4,6 +4,7 @@ using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.UI.Admin;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class EmailContactPartDriver : ContentPartDriver<EmailContactPart> {
@@ -50,10 +52,12 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     }
                     return ContentShape("Parts_EmailContact",
                         () => shapeHelper.Parts_EmailContact(Elenco: viewModel.Elenco));
-                } else {
+                }
+                else {
                     return null;
                 }
-            } else {
+            }
+            else {
                 return null;
             }
         }
@@ -130,6 +134,88 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         //    _transaction.RequireNew();
             return Editor(part, shapeHelper);
         }
-    }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part"></param>
+        /// <param name="context"></param>
+        protected override void Importing(EmailContactPart part, ImportContentContext context) {
+            var emailRecord = context.Data.Element(part.PartDefinition.Name).Elements("EmailRecord");
+            if (emailRecord != null) {
+                List<CommunicationEmailRecord> listComEmail = new List<CommunicationEmailRecord>();
+                foreach (var rec in emailRecord) {
+                    CommunicationEmailRecord recMail = new CommunicationEmailRecord();
+                    recMail.EmailContactPartRecord_Id = part.Id;
+
+                    var Language = rec.Attribute("Language");
+                    if (Language != null)
+                        recMail.Language = Language.Value;
+
+                    var Validated = rec.Attribute("Validated");
+                    if (Validated != null)
+                        recMail.Validated = Convert.ToBoolean(Validated.Value);
+
+                    var DataInserimento = rec.Attribute("DataInserimento");
+                    if (DataInserimento != null)
+                        recMail.DataInserimento = Convert.ToDateTime(DataInserimento.Value);
+
+                    var DataModifica = rec.Attribute("DataModifica");
+                    if (DataModifica != null)
+                        recMail.DataModifica = Convert.ToDateTime(DataModifica.Value);
+
+                    var Email = rec.Attribute("Email");
+                    if (Email != null)
+                        recMail.Email = Email.Value;
+
+                    var Produzione = rec.Attribute("Produzione");
+                    if (Produzione != null)
+                        recMail.Produzione = Convert.ToBoolean(Produzione.Value);
+
+                    var AccettatoUsoCommerciale = rec.Attribute("AccettatoUsoCommerciale");
+                    if (AccettatoUsoCommerciale != null)
+                        recMail.AccettatoUsoCommerciale = Convert.ToBoolean(AccettatoUsoCommerciale.Value);
+
+                    var AutorizzatoTerzeParti = rec.Attribute("AutorizzatoTerzeParti");
+                    if (AutorizzatoTerzeParti != null)
+                        recMail.AutorizzatoTerzeParti = Convert.ToBoolean(AutorizzatoTerzeParti.Value);
+
+                    var KeyUnsubscribe = rec.Attribute("KeyUnsubscribe");
+                    if (KeyUnsubscribe != null)
+                        recMail.KeyUnsubscribe = KeyUnsubscribe.Value;
+
+                    var DataUnsubscribe = rec.Attribute("DataUnsubscribe");
+                    if (DataUnsubscribe != null)
+                        recMail.DataUnsubscribe = Convert.ToDateTime(DataUnsubscribe.Value);
+
+                    _repoEmail.Create(recMail);
+                    listComEmail.Add(recMail);
+    }
+                part.EmailRecord = listComEmail;
+                _repoEmail.Flush();
+            }
+        }
+
+        protected override void Exporting(EmailContactPart part, ExportContentContext context) {
+            if (part.EmailRecord != null) {
+                var root = context.Element(part.PartDefinition.Name);
+                foreach (CommunicationEmailRecord rec in part.EmailRecord) {
+                    XElement emailText = new XElement("EmailRecord");
+                    emailText.SetAttributeValue("Language", rec.Language);
+                    emailText.SetAttributeValue("Validated", rec.Validated);
+                    emailText.SetAttributeValue("DataInserimento", rec.DataInserimento);
+                    emailText.SetAttributeValue("DataModifica", rec.DataModifica);
+                    emailText.SetAttributeValue("Email", rec.Email);
+                    emailText.SetAttributeValue("Produzione", rec.Produzione);
+                    emailText.SetAttributeValue("AccettatoUsoCommerciale", rec.AccettatoUsoCommerciale);
+                    emailText.SetAttributeValue("AutorizzatoTerzeParti", rec.AutorizzatoTerzeParti);
+                    emailText.SetAttributeValue("KeyUnsubscribe", rec.KeyUnsubscribe);
+                    emailText.SetAttributeValue("DataUnsubscribe", rec.DataUnsubscribe);
+                    root.Add(emailText);
+                }
+            }
+        }
+    }
 }

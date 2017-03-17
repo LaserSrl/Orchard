@@ -142,36 +142,40 @@ namespace Laser.Orchard.Mobile.Drivers {
             var TextPush = context.Attribute(part.PartDefinition.Name, "TextPush");
             if (TextPush != null)
                 part.TextPush = TextPush;
-            var ToPush = context.Attribute(part.PartDefinition.Name, "ToPush");
-            if (ToPush != null)
-                part.ToPush = bool.Parse(ToPush);
+            //ToPush non ha senso per l'import
             var TestPush = context.Attribute(part.PartDefinition.Name, "TestPush");
             if (TestPush != null)
                 part.TestPush = bool.Parse(TestPush);
+            var TestPushToDevice = context.Attribute(part.PartDefinition.Name, "TestPushToDevice");
+            if (TestPushToDevice != null)
+                part.TestPushToDevice = bool.Parse(TestPushToDevice);
             var DevicePush = context.Attribute(part.PartDefinition.Name, "DevicePush");
             if (DevicePush != null)
                 part.DevicePush = DevicePush;
-            var PushSent = context.Attribute(part.PartDefinition.Name, "PushSent");
-            if (PushSent != null)
-                part.PushSent = bool.Parse(PushSent);
-            var TargetDeviceNumber = context.Attribute(part.PartDefinition.Name, "TargetDeviceNumber");
-            if (TargetDeviceNumber != null)
-                part.TargetDeviceNumber = int.Parse(TargetDeviceNumber);
-            var PushSentNumber = context.Attribute(part.PartDefinition.Name, "PushSentNumber");
-            if (PushSentNumber != null)
-                part.PushSentNumber = int.Parse(PushSentNumber);
+            var UseRecipientList = context.Attribute(part.PartDefinition.Name, "UseRecipientList");
+            if (UseRecipientList != null)
+                part.UseRecipientList = bool.Parse(UseRecipientList);
+            var RecipientList = context.Attribute(part.PartDefinition.Name, "RecipientList");
+            if (RecipientList != null)
+                part.RecipientList = RecipientList;
+            //PushSent non ha senso per l'import
+            //TargetDeviceNumber non ha senso per l'import
+            //PushSentNumber non ha senso per l'import
         }
 
         protected override void Exporting(MobilePushPart part, ExportContentContext context) {
             var root = context.Element(part.PartDefinition.Name);
             root.SetAttributeValue("TitlePush", part.TitlePush);
             root.SetAttributeValue("TextPush", part.TextPush);
-            root.SetAttributeValue("ToPush", part.ToPush);
+            //ToPush non ha senso per l'import
             root.SetAttributeValue("TestPush", part.TestPush);
+            root.SetAttributeValue("TestPushToDevice", part.TestPushToDevice);
             root.SetAttributeValue("DevicePush", part.DevicePush);
-            root.SetAttributeValue("PushSent", part.PushSent);
-            root.SetAttributeValue("TargetDeviceNumber", part.TargetDeviceNumber);
-            root.SetAttributeValue("PushSentNumber", part.PushSentNumber);
+            root.SetAttributeValue("UseRecipientList", part.UseRecipientList);
+            root.SetAttributeValue("RecipientList", part.RecipientList);
+            //PushSent non ha senso per l'import
+            //TargetDeviceNumber non ha senso per l'import
+            //PushSentNumber non ha senso per l'import
         }
 
         protected override void Cloning(MobilePushPart originalPart, MobilePushPart clonePart, CloneContentContext context) {

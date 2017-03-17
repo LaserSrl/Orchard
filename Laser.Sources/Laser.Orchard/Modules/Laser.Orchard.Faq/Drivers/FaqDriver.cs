@@ -19,20 +19,17 @@ namespace Laser.Orchard.Faq.Drivers
 
         public Localizer T;
 
-        public FaqDriver(IContentManager contentManager, IFaqService faqService, IFaqTypeService faqTypeService)
-        {
+        public FaqDriver(IContentManager contentManager, IFaqService faqService, IFaqTypeService faqTypeService) {
             _contentManager = contentManager;
             _faqTypeService = faqTypeService;
             _faqService = faqService;
         }
 
-        protected override string Prefix
-        {
+        protected override string Prefix {
             get { return "Faq"; }
         }
 
-        protected override DriverResult Display(FaqPart part, string displayType, dynamic shapeHelper)
-        {
+        protected override DriverResult Display(FaqPart part, string displayType, dynamic shapeHelper) {
             var faqType =
                 _contentManager.Query<FaqTypePart>(VersionOptions.Published, "FaqType")
                                .Where<FaqTypePartRecord>(t => t.Id == part.FaqTypeId)
@@ -47,8 +44,7 @@ namespace Laser.Orchard.Faq.Drivers
         }
 
 
-        protected override DriverResult Editor(FaqPart part, dynamic shapeHelper)
-        {
+        protected override DriverResult Editor(FaqPart part, dynamic shapeHelper) {
             var temp = ContentShape("Parts_Faq_Edit",
                                 () => shapeHelper.EditorTemplate(
                                     TemplateName: "Parts/Faq",
@@ -58,48 +54,51 @@ namespace Laser.Orchard.Faq.Drivers
         }
 
         //POST
-        protected override DriverResult Editor(FaqPart part, IUpdateModel updater, dynamic shapeHelper)
-        {
+        protected override DriverResult Editor(FaqPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new EditFaqViewModel();
-            if (updater.TryUpdateModel(model, Prefix, null, null))
-            {
-                if (string.IsNullOrWhiteSpace(model.Question))
-                {
+            if (updater.TryUpdateModel(model, Prefix, null, null)) {
+                if (string.IsNullOrWhiteSpace(model.Question)) {
                     updater.AddModelError(Prefix, T("Error"));
                 }
             }
-            if (part.ContentItem.Id != 0)
-            {
+            if (part.ContentItem.Id != 0) {
                 _faqService.UpdateFaqForContentItem(part.ContentItem, model);
             }
             
             return Editor(part, shapeHelper);
         }
 
-        protected override void Exporting(FaqPart part, global::Orchard.ContentManagement.Handlers.ExportContentContext context)
-        {
-            context.Element(part.PartDefinition.Name)
-                       .SetAttributeValue("FaqTypeId", part.FaqTypeId);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Question", part.Question);
+        protected override void Exporting(FaqPart part, ExportContentContext context) {
+            var root = context.Element(part.PartDefinition.Name);
+            var faqType = _contentManager.Get<FaqTypePart>(part.FaqTypeId);
+            if (faqType != null) {
+                root.SetAttributeValue("FaqTypeTitle", faqType.Title);
+        }
+            root.SetAttributeValue("Question", part.Question);
         }
 
-        protected override void Importing(FaqPart part, global::Orchard.ContentManagement.Handlers.ImportContentContext context)
-        {
-            part.Question = context.Attribute(part.PartDefinition.Name, "Question") ?? string.Empty;
-            part.FaqTypeId = context.Attribute(part.PartDefinition.Name, "FaqTypeId") == string.Empty ? 0 : int.Parse(context.Attribute(part.PartDefinition.Name, "FaqTypeId"));
+        protected override void Importing(FaqPart part, ImportContentContext context) {
+            var root = context.Data.Element(part.PartDefinition.Name);
+            var Question = root.Attribute("Question");
+            if (Question != null) {
+                part.Question = Question.Value;
+        }
+            var FaqTypeTitle = root.Attribute("FaqTypeTitle");
+            if (FaqTypeTitle != null) {
+                var fType = _contentManager.Query("FaqType").Where<FaqTypePartRecord>(x => x.Title == FaqTypeTitle.Value).List().FirstOrDefault();
+                if (fType != null) {
+                    part.FaqTypeId = fType.Id;
+                }
+            }
         }
 
-
-        private EditFaqViewModel BuildEditorViewModel(FaqPart part)
-        {
-            var avm = new EditFaqViewModel
-            {
+        private EditFaqViewModel BuildEditorViewModel(FaqPart part) {
+            var avm = new EditFaqViewModel {
                 Question = part.Question,
                 FaqTypes = _faqTypeService.GetFaqTypes(false)
             };
 
-            if (part.FaqTypeId > 0)
-            {
+            if (part.FaqTypeId > 0) {
                 avm.FaqType = part.FaqTypeId;
             }
 

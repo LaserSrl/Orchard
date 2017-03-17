@@ -205,15 +205,42 @@ namespace Laser.Orchard.Events.Drivers {
 
         protected override void Importing(ActivityPart part, global::Orchard.ContentManagement.Handlers.ImportContentContext context) {
             var root = context.Data.Element(part.PartDefinition.Name);
-            part.AllDay = Boolean.Parse(root.Attribute("AllDay").Value);
-            part.DateTimeEnd = root.Attribute("DateTimeEnd").Value != null ? DateTime.Parse(root.Attribute("DateTimeEnd").Value, CultureInfo.InvariantCulture) : (DateTime?)null;
-            part.DateTimeStart = root.Attribute("DateTimeStart").Value != null ? DateTime.Parse(root.Attribute("DateTimeStart").Value, CultureInfo.InvariantCulture) : (DateTime?)null;
-            part.Repeat = Boolean.Parse(root.Attribute("Repeat").Value);
-            part.RepeatDetails = root.Attribute("RepeatDetails").Value;
-            part.RepeatEnd = Boolean.Parse(root.Attribute("RepeatEnd").Value);
-            part.RepeatEndDate = root.Attribute("RepeatEndDate").Value != null ? DateTime.Parse(root.Attribute("RepeatEndDate").Value, CultureInfo.InvariantCulture) : (DateTime?)null;
-            part.RepeatType = root.Attribute("RepeatType").Value;
-            part.RepeatValue = int.Parse(root.Attribute("RepeatValue").Value, CultureInfo.InvariantCulture);
+            var AllDay = root.Attribute("AllDay");
+            if (AllDay != null) {
+                part.AllDay = Convert.ToBoolean(AllDay.Value);
+            }
+            var DateTimeEnd = root.Attribute("DateTimeEnd");
+            if (DateTimeEnd != null) {
+                part.DateTimeEnd = Convert.ToDateTime(DateTimeEnd.Value);
+            }
+            var DateTimeStart = root.Attribute("DateTimeStart");
+            if (DateTimeStart != null) {
+                part.DateTimeStart = Convert.ToDateTime(DateTimeStart.Value);
+            }
+            var Repeat = root.Attribute("Repeat");
+            if (Repeat != null) {
+                part.Repeat = Convert.ToBoolean(Repeat.Value);
+            }
+            var RepeatDetails = root.Attribute("RepeatDetails");
+            if (RepeatDetails != null) {
+                part.RepeatDetails = RepeatDetails.Value;
+            }
+            var RepeatEnd = root.Attribute("RepeatEnd");
+            if (RepeatEnd != null) {
+                part.RepeatEnd = Convert.ToBoolean(RepeatEnd.Value);
+            }
+            var RepeatEndDate = root.Attribute("RepeatEndDate");
+            if (RepeatEndDate != null) {
+                part.RepeatEndDate = Convert.ToDateTime(RepeatEndDate.Value);
+            }
+            var RepeatType = root.Attribute("RepeatType");
+            if (RepeatType != null) {
+                part.RepeatType = RepeatType.Value;
+            }
+            var RepeatValue = root.Attribute("RepeatValue");
+            if (RepeatValue != null) {
+                part.RepeatValue = Convert.ToInt32(RepeatValue.Value);
+            }
         }
 
         protected override void Exporting(ActivityPart part, global::Orchard.ContentManagement.Handlers.ExportContentContext context) {
@@ -227,7 +254,6 @@ namespace Laser.Orchard.Events.Drivers {
             root.SetAttributeValue("RepeatEndDate", part.RepeatEndDate.HasValue ? part.RepeatEndDate.Value.ToString(CultureInfo.InvariantCulture) : null);
             root.SetAttributeValue("RepeatType", part.RepeatType);
             root.SetAttributeValue("RepeatValue", part.RepeatValue);
-
         }
 
         protected override void Cloning(ActivityPart originalPart, ActivityPart clonePart, CloneContentContext context) {

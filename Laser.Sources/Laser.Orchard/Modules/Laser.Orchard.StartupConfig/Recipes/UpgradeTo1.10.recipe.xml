@@ -1,0 +1,13 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>Upgrade laser to Orchard 1.10</Name>
+    <Description>Run this recipe to upgrade to Orchard 1.10 Laser instances.</Description>
+    <Author>Hermes Sbicego</Author>
+    <WebSite>laser-group.com</WebSite>
+    <Tags></Tags>
+    <Version>1.10.1</Version>
+  </Recipe>
+
+  <Feature enable="TinyMce" />
+</Orchard>

@@ -9,6 +9,8 @@ using Orchard.UI.Notify;
 using System.Linq;
 using Orchard.ContentManagement.Handlers;
 using System.Xml.Linq;
+using Orchard.Data;
+using Laser.Orchard.TemplateManagement.Models;
 
 namespace Laser.Orchard.ContactForm.Drivers {
     public class ContactFormDriver : ContentPartCloningDriver<ContactFormPart> {
@@ -16,13 +18,18 @@ namespace Laser.Orchard.ContactForm.Drivers {
         private readonly IUtilsServices _utilsServices;
         private readonly IStorageProvider _storageProvider;
         private readonly INotifier _notifier;
+        private readonly IRepository<TemplatePartRecord> _repositoryTemplatePartRecord;
+        private readonly IContentManager _contentManager;
 
         public Localizer T { get; set; }
 
-        public ContactFormDriver(IUtilsServices utilsServices, INotifier notifier, IStorageProvider storageProvider) {
+        public ContactFormDriver(IUtilsServices utilsServices, INotifier notifier, IStorageProvider storageProvider, 
+            IRepository<TemplatePartRecord> repositoryTemplatePartRecord, IContentManager contentManager) {
+            _contentManager = contentManager;
             _storageProvider = storageProvider;
             _utilsServices = utilsServices;
             _notifier = notifier;
+            _repositoryTemplatePartRecord = repositoryTemplatePartRecord;
         }
 
         /// <summary>
@@ -102,30 +109,70 @@ namespace Laser.Orchard.ContactForm.Drivers {
 
         #region [ Import/Export ]
         protected override void Exporting(ContactFormPart part, ExportContentContext context) {
-
             var root = context.Element(part.PartDefinition.Name);
             root.SetAttributeValue("AttachFiles", part.AttachFiles);
             root.SetAttributeValue("DisplayNameField", part.DisplayNameField);
             root.SetAttributeValue("EnableUpload", part.EnableUpload);
             root.SetAttributeValue("PathUpload", part.PathUpload);
             root.SetAttributeValue("RecipientEmailAddress", part.RecipientEmailAddress);
+            root.SetAttributeValue("RequireAttachment", part.RequireAttachment);
             root.SetAttributeValue("RequireNameField", part.RequireNameField);
             root.SetAttributeValue("StaticSubjectMessage", part.StaticSubjectMessage);
-            root.SetAttributeValue("TemplateRecord_Id", -1); //Ovvero nessun template
             root.SetAttributeValue("UseStaticSubject", part.UseStaticSubject);
+            if (part.TemplateRecord_Id > 0) 
+            {
+                //cerco il corrispondente valore dell' identity dalla parts del template e lo associo al campo Layout 
+                var contItemTempl=_contentManager.Get(part.TemplateRecord_Id);
+                if (contItemTempl != null) {
+                    root.SetAttributeValue("TemplateRecord_Id", _contentManager.GetItemMetadata(contItemTempl).Identity.ToString());
+                }
+            }
         }
 
         protected override void Importing(ContactFormPart part, ImportContentContext context) {
             var root = context.Data.Element(part.PartDefinition.Name);
-            part.AttachFiles = bool.Parse(root.Attribute("AttachFiles").Value);
-            part.DisplayNameField = bool.Parse(root.Attribute("DisplayNameField").Value);
-            part.EnableUpload = bool.Parse(root.Attribute("EnableUpload").Value);
-            part.PathUpload = root.Attribute("PathUpload").Value;
-            part.RecipientEmailAddress = root.Attribute("RecipientEmailAddress").Value;
-            part.RequireNameField = bool.Parse(root.Attribute("RequireNameField").Value);
-            part.StaticSubjectMessage = root.Attribute("StaticSubjectMessage").Value;
-            part.TemplateRecord_Id = int.Parse(root.Attribute("TemplateRecord_Id").Value);
-            part.UseStaticSubject = bool.Parse(root.Attribute("UseStaticSubject").Value);
+            var AttachFiles = root.Attribute("AttachFiles");
+            if (AttachFiles != null) {
+                part.AttachFiles = bool.Parse(AttachFiles.Value);
+            }
+            var DisplayNameField = root.Attribute("DisplayNameField");
+            if (DisplayNameField != null) {
+                part.DisplayNameField = bool.Parse(DisplayNameField.Value);
+            }
+            var EnableUpload = root.Attribute("EnableUpload");
+            if (EnableUpload != null) {
+                part.EnableUpload = bool.Parse(EnableUpload.Value);
+            }
+            var PathUpload = root.Attribute("PathUpload");
+            if (PathUpload != null) {
+                part.PathUpload = PathUpload.Value;
+            }
+            var RecipientEmailAddress = root.Attribute("RecipientEmailAddress");
+            if (RecipientEmailAddress != null) {
+                part.RecipientEmailAddress = RecipientEmailAddress.Value;
+            }
+            var RequireAttachment = root.Attribute("RequireAttachment");
+            if (RequireAttachment != null) {
+                part.RequireAttachment = bool.Parse(RequireAttachment.Value);
+            }
+            var RequireNameField = root.Attribute("RequireNameField");
+            if (RequireNameField != null) {
+                part.RequireNameField = bool.Parse(RequireNameField.Value);
+            }
+            var StaticSubjectMessage = root.Attribute("StaticSubjectMessage");
+            if (StaticSubjectMessage != null) {
+                part.StaticSubjectMessage = StaticSubjectMessage.Value;
+            }
+            var UseStaticSubject = root.Attribute("UseStaticSubject");
+            if (UseStaticSubject != null) {
+                part.UseStaticSubject = bool.Parse(UseStaticSubject.Value);
+            }
+            context.ImportAttribute(part.PartDefinition.Name, "TemplateRecord_Id", (x) => {
+                var template = context.GetItemFromSession(x);
+                if (template != null && template.Has<TemplatePart>()) {
+                    part.TemplateRecord_Id = template.Id;
+                }
+            });
         }
         #endregion
 

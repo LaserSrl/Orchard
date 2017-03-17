@@ -70,5 +70,11 @@ namespace Laser.Orchard.StartupConfig.Drivers {
             clonePart.MaintenanceNotify = originalPart.MaintenanceNotify;
             clonePart.Selected_Tenant = originalPart.Selected_Tenant;
         }
+        protected override void Importing(MaintenancePart part, ImportContentContext context) {
+            // si è deciso di non esportare e importare nulla
+        }
+        protected override void Exporting(MaintenancePart part, ExportContentContext context) {
+            // si è deciso di non esportare e importare nulla
+        }
     }
 }
