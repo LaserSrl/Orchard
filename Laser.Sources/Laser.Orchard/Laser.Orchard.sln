@@ -102,6 +102,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Policy", "Modules\Laser.Orchard.Policy\Laser.Orchard.Policy.csproj", "{09A8FBDA-B443-4F01-BC64-8115AC31ABB3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.CommunicationGateway", "Modules\Laser.Orchard.CommunicationGateway\Laser.Orchard.CommunicationGateway.csproj", "{BB12E69F-0976-407D-A716-542B7D22EE5F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{22DD309C-74F3-4E57-843C-ED46A7122758} = {22DD309C-74F3-4E57-843C-ED46A7122758}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.WebServices", "Modules\Laser.Orchard.WebServices\Laser.Orchard.WebServices.csproj", "{AC33341C-4396-47A8-A1D7-0C74C9AA4969}"
 EndProject
