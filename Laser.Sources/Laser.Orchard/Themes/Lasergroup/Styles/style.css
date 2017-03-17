@@ -284,7 +284,7 @@ body.navbar-fixed .navbar-default{ background:#fff; border:0; border-radius:0;  
     .navbar-toggle .icon-bar + .icon-bar{ margin-top:6px; }
     .navbar-nav{ background:#fff; margin:0 -15px; border-bottom:1px solid #eee; }
     .navbar-nav > li{ display:block; padding:0; }
-    .navbar-nav > li > a{ border:0; padding:15px 0; border-left:8px solid transparent; }
+    .navbar-nav > li > a{ border:0; padding:15px 15px 0px 0px; border-left:8px solid transparent; }
     .navbar-nav .dropdown-menu{ display:none !important; }
 }
 
@@ -641,7 +641,7 @@ body.page-template-page-societa-chi-siamo #intro{ z-index:5; }
 
 #offerte .team-photo-mask{ height:250px; overflow:hidden; }
 #offerte .team-name{ font-weight:400; margin:0; font-size:22px; }
-#offerte .team-name a{ color:#333;}
+#offerte .team-name a{ color:#767B7C;}
 #offerte .team-ruolo{ font-weight:400; margin:5px 0 0; font-size:18px; color:#FF0903; }
 #offerte .team-plus{ font-size:30px; font-weight:300; color:#FF0903; margin: 30px 0 0; display:block; }
 #offerte .team-plus a{ color:#ff0903; }

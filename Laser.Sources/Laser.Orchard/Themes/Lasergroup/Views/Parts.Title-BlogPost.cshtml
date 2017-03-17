@@ -24,6 +24,12 @@
     var pathShareBar = baseUrl + "/" + urlPrefix + item.AutoroutePart.Path;
 }
 
+@using (Script.Head()) {
+    <meta property="og:url" content="@pathShareBar" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="@Model.Title" />
+    <meta property="og:image" content="@item.BlogPost.Image.FirstMediaUrl" />
+}
 
 <div class="container single-news-title">
     <div class="col-xs-12 col-sm-12 col-intro-desc news-block">

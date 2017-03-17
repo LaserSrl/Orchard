@@ -3,25 +3,6 @@
     dynamic item = Model.ContentItem;
 
     string pageAlias = item.AutoroutePart.DisplayAlias;
-    int heightIntro = 345;
-
-    switch (pageAlias) {
-        case "business":
-            heightIntro = 335;
-            break;
-
-        case "krake":
-            heightIntro = 400;
-            break;
-
-        case "software-development":
-            heightIntro = 371;
-            break;
-
-        default:
-            heightIntro = 345;
-            break;
-    }
 
     if (item.Page.Colorebase.Value != "Default") {
         Layout.BaseClass = item.Page.Colorebase.Value.ToLower() + " page page-template page-template-page-" + pageAlias + " navbar-fixed";
@@ -32,8 +13,9 @@
     
     var sottotitolo = item.Page.Sottotitolo.Value;
 }
-<div id="intro" style="height: @heightIntro px;">
-    <canvas id="intro-canvas" width="1920" height="@heightIntro"></canvas>
+
+<div id="intro">
+    <canvas id="intro-canvas"></canvas>
     <div class="container container-desc clearfix">
         <div class="col-xs-12 col-sm-6 col-intro-desc">
             <h1 class="handel-got-d title">@((sottotitolo == "SOCIETÀ") ? sottotitolo : Model.Title)</h1>
@@ -86,3 +68,4 @@
         }
     </div>
 </div>
+<div class="space-40"></div>

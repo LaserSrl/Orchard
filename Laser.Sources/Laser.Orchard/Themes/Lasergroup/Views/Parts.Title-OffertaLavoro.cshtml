@@ -23,8 +23,16 @@
 
     var pathShareBar = baseUrl + "/" + urlPrefix + item.AutoroutePart.Path;
 }
-<div id="intro" style="height: 345px;">
-    <canvas id="intro-canvas" width="1920" height="345"></canvas>
+
+@using (Script.Head()) {
+    <meta property="og:url" content="@pathShareBar" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="@Model.Title" />
+    <meta property="og:image" content="@item.OffertaLavoro.Image.FirstMediaUrl" />
+}
+
+<div id="intro">
+    <canvas id="intro-canvas"></canvas>
     <div class="container container-desc clearfix">
         <div class="col-xs-12 col-sm-8 col-intro-desc">
             <h1 class="handel-got-d title">@T("WORK WITH US")</h1>
