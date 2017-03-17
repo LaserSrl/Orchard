@@ -39,11 +39,20 @@ namespace Laser.Orchard.TemplateManagement.Drivers {
             return ContentShape("Parts_CustomTemplatePicker_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/CustomTemplatePicker_Edit", Model: vModel, Prefix: Prefix));
         }
 
-        //TODO: Importing/Exporting 
         protected override void Importing(CustomTemplatePickerPart part, ImportContentContext context) {
+            context.ImportAttribute(part.PartDefinition.Name, "SelectedTemplate", x => {
+                var itemFromid = context.GetItemFromSession(x);
+                if (itemFromid != null && itemFromid.Is<TemplatePart>()) {
+                    part.SelectedTemplate = itemFromid.As<TemplatePart>();
+                }
+            });
         }
-
         protected override void Exporting(CustomTemplatePickerPart part, ExportContentContext context) {
+            var root = context.Element(part.PartDefinition.Name);
+            if (part.SelectedTemplate != null) {
+                var templateIdentity = _contentManager.GetItemMetadata(part.SelectedTemplate.ContentItem).Identity.ToString();
+                root.SetAttributeValue("SelectedTemplate", templateIdentity);
+            }         
         }
 
         protected override void Cloning(CustomTemplatePickerPart originalPart, CustomTemplatePickerPart clonePart, CloneContentContext context) {

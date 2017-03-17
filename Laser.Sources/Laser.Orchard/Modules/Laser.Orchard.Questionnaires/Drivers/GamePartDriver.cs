@@ -12,6 +12,7 @@ using Orchard.Tasks.Scheduling;
 using System;
 using System.Globalization;
 using Orchard.Localization.Services;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.Questionnaires.Drivers {
 
@@ -71,6 +72,8 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             part.RandomResponse = Boolean.Parse(root.Attribute("RandomResponse").Value);
             part.RankingAndroidIdentifier = root.Attribute("RankingAndroidIdentifier").Value;
             part.RankingIOSIdentifier = root.Attribute("RankingIOSIdentifier").Value;
+            part.State = Int32.Parse(root.Attribute("State").Value);
+            //workflowfired non serve per l'import
         }
 
         protected override void Exporting(GamePart part, ExportContentContext context) {
@@ -84,7 +87,9 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             root.SetAttributeValue("QuestionsSortedRandomlyNumber", part.QuestionsSortedRandomlyNumber);
             root.SetAttributeValue("RandomResponse", part.RandomResponse);
             root.SetAttributeValue("RankingAndroidIdentifier", part.RankingAndroidIdentifier);
-            root.SetAttributeValue("RankingIOSIdentifier",      part.RankingIOSIdentifier);
+            root.SetAttributeValue("RankingIOSIdentifier", part.RankingIOSIdentifier);
+            root.SetAttributeValue("State", part.State);
+            //workflowfired non serve per l'import
         }
 
         protected override void Cloning(GamePart originalPart, GamePart clonePart, CloneContentContext context) {

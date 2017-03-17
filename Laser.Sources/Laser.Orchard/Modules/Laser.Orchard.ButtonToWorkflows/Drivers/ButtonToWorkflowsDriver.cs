@@ -89,8 +89,9 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
         }
 
         protected override void Importing(ButtonToWorkflowsPart part, ImportContentContext context) {
-            ////           throw new NotImplementedException();
-            ////TODO: Effettuare check su consistenza UserId
+            //throw new NotImplementedException();
+            //TODO: Effettuare check su consistenza UserId
+
             //var root = context.Data.Element(part.PartDefinition.Name);
             //part.FromUser = root.Attribute("FromUser").Value;
             //part.ToUser = root.Attribute("ToUser").Value;
@@ -101,13 +102,49 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
             //if (int.TryParse(root.Attribute("ToIdUser").Value, out nTempId)) {
             //    part.FromIdUser = int.Parse(root.Attribute("ToIdUser").Value);
             //}
-            //part.ActionToExecute = ""; //root.Attribute("ActionToExecute").Value;
-            //part.MessageToWrite = "";// root.Attribute("MessageToWrite").Value;
-            //part.ActionAsync = false;// root.Attribute("ActionAsync").Value.ToLower() == "true";
-            //part.ButtonsDenied = root.Attribute("ButtonsDenied").Value.ToLower() == "true";
+            //part.ActionToExecute = root.Attribute("ActionToExecute").Value;
+            //part.MessageToWrite = root.Attribute("MessageToWrite").Value;
+
+
+
+
+            // Mod 30-11-2016 
+            //////////var importedFromUser = context.Attribute(part.PartDefinition.Name, "FromUser");
+            //////////if (importedFromUser != null) {
+            //////////    part.FromUser = importedFromUser;
+            //////////}
+
+            //////////var importedToUser = context.Attribute(part.PartDefinition.Name, "ToUser");
+            //////////if (importedToUser != null) {
+            //////////    part.ToUser = importedToUser;
+            //////////}
+
+            //////////var importedFromIdUser = context.Attribute(part.PartDefinition.Name, "FromIdUser");
+            //////////if (importedFromIdUser != null) {
+            //////////    part.FromIdUser = Convert.ToInt32(importedFromIdUser);
+            //////////}
+
+            //////////var importedToIdUser = context.Attribute(part.PartDefinition.Name, "ToIdUser");
+            //////////if (importedToIdUser != null) {
+            //////////    part.ToIdUser = Convert.ToInt32(importedToIdUser);
+            //////////}
+
+
+
+            //var importedActionToExecute = context.Attribute(part.PartDefinition.Name, "ActionToExecute");
+            //if (importedActionToExecute != null) {
+            //    part.ActionToExecute = importedActionToExecute;
+            //}
+
+            //var importedMessageToWrite = context.Attribute(part.PartDefinition.Name, "MessageToWrite");
+            //if (importedMessageToWrite != null) {
+            //    part.MessageToWrite = importedMessageToWrite;
+            //}
+
         }
 
         protected override void Exporting(ButtonToWorkflowsPart part, ExportContentContext context) {
+
             //var root = context.Element(part.PartDefinition.Name);
             //root.SetAttributeValue("FromUser", part.FromUser);
             //root.SetAttributeValue("ToUser", part.ToUser);
@@ -115,8 +152,12 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
             //root.SetAttributeValue("ToIdUser", part.ToIdUser);
             //root.SetAttributeValue("ActionToExecute", part.ActionToExecute);
             //root.SetAttributeValue("MessageToWrite", part.MessageToWrite);
-            //root.SetAttributeValue("ActionAsync", part.ActionAsync);
-            //root.SetAttributeValue("ButtonsDenied", part.ButtonsDenied);
+            //context.Element(part.PartDefinition.Name).SetAttributeValue("FromUser", part.FromUser);
+            //context.Element(part.PartDefinition.Name).SetAttributeValue("ToUser", part.ToUser);
+            //context.Element(part.PartDefinition.Name).SetAttributeValue("FromIdUser", part.FromIdUser);
+            //context.Element(part.PartDefinition.Name).SetAttributeValue("ToIdUser", part.ToIdUser);
+            //context.Element(part.PartDefinition.Name).SetAttributeValue("ActionToExecute", part.ActionToExecute);
+            //context.Element(part.PartDefinition.Name).SetAttributeValue("MessageToWrite", part.MessageToWrite);
         }
     }
 }

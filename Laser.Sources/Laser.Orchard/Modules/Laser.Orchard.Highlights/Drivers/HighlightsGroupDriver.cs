@@ -194,32 +194,51 @@ namespace Laser.Orchard.Highlights.Drivers {
             return Editor(part, shapeHelper);
         }
 
+
+
+
         protected override void Exporting(HighlightsGroupPart part, ExportContentContext context) {
 
             var container = _contentManager.Get(part.Record.Id);
+
+           
             if (container != null) {
+
                 var containerIdentity = _contentManager.GetItemMetadata(container).Identity;
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Id", part.Record.Id.ToString());
-            }
+                context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayPlugin", part.DisplayPlugin);
+                context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayTemplate", part.DisplayTemplate);
+                context.Element(part.PartDefinition.Name).SetAttributeValue("Query_Id", part.Query_Id);
+                context.Element(part.PartDefinition.Name).SetAttributeValue("ItemsSourceType", part.ItemsSourceType);
 
-            context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayPlugin", part.DisplayPlugin);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayTemplate", part.DisplayTemplate);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Query_Id", part.Query_Id);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ItemsSourceType", part.ItemsSourceType);
+            }
         }
+
+
 
         protected override void Importing(HighlightsGroupPart part, ImportContentContext context) {
-            part.DisplayPlugin = context.Attribute(part.PartDefinition.Name, "DisplayPlugin");
+
+            var importedDisplayPlugin = context.Attribute(part.PartDefinition.Name, "DisplayPlugin");
+            if (importedDisplayPlugin != null) {
+                part.DisplayPlugin = importedDisplayPlugin;
+            }
+            
             var displayTemplate = Enums.DisplayTemplate.List;
-            Enum.TryParse<Enums.DisplayTemplate>(context.Attribute(part.PartDefinition.Name, "DisplayTemplate"), out displayTemplate);
-            part.DisplayTemplate = displayTemplate;
+            Enum.TryParse<Enums.DisplayTemplate>(context.Attribute(part.PartDefinition.Name, "DisplayTemplate"), out displayTemplate); 
+            if(displayTemplate!=null)
+                part.DisplayTemplate = displayTemplate;
+            
             var itemsSourceType = Enums.ItemsSourceTypes.ByHand;
             Enum.TryParse<Enums.ItemsSourceTypes>(context.Attribute(part.PartDefinition.Name, "ItemsSourceType"), out itemsSourceType);
+            if(itemsSourceType!=null)
             part.ItemsSourceType = itemsSourceType;
+            
             var query_Id = -1;
             int.TryParse(context.Attribute(part.PartDefinition.Name, "Query_Id"), out query_Id);
-            part.Query_Id = query_Id;
+            if(query_Id!=null)
+                part.Query_Id = query_Id;
         }
+
 
         protected override void Imported(HighlightsGroupPart part, ImportContentContext context) {
 
