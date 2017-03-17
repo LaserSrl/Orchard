@@ -7,4 +7,3 @@ Features:
     Laser.Orchard.InsertStuff:
         Description: insert javascript, css, or raw html.
 		Category: Developer
-		Dependencies: Orchard.jQuery, Common, Settings
