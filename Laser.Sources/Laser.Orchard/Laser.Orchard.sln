@@ -154,6 +154,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.ChartaWS", "Modules\Laser.Orchard.ChartaWS\Laser.Orchard.ChartaWS.csproj", "{5279F7EA-8309-4B1C-A089-68ACF917C519}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Braintree", "Modules\Laser.Orchard.Braintree\Laser.Orchard.Braintree.csproj", "{DDF6FDC9-29A3-43E6-8724-3CE9E26289B6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E6900A95-3D80-497D-AD29-998ADC8AD3D7} = {E6900A95-3D80-497D-AD29-998ADC8AD3D7}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvreaMontalto", "Themes\IvreaMontalto\IvreaMontalto.csproj", "{9DF0A376-D4BE-494A-8F3B-291E65C41684}"
 EndProject

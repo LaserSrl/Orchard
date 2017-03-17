@@ -99,8 +99,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                             }
 
                         }
-                    }
-                    else if (hasAcceptedTerms != null) { // l'utente ha appena accettato le condizionoi
+                    } else if (hasAcceptedTerms != null) { // l'utente ha appena accettato le condizionoi
                         viewModel.HasAcceptedTerms = (bool)_controllerContextAccessor.Context.Controller.TempData["HasAcceptedTerms"];
                     }
                 }
@@ -117,8 +116,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                                  () => shapeHelper.Parts_Questionnaire_FrontEnd_Edit(
                                      Questionnaire: viewModel,
                                      Prefix: Prefix));
-            }
-            else {
+            } else {
                 throw new OrchardSecurityException(T("You have to be logged in, before answering a questionnaire!"));
             }
             //return ContentShape("Parts_Questionnaire",
@@ -142,8 +140,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             QuestionnaireEditModel modelForEdit;
             if (_controllerContextAccessor.Context.Controller.TempData["ModelWithErrors"] != null) {
                 modelForEdit = (QuestionnaireEditModel)_controllerContextAccessor.Context.Controller.TempData["ModelWithErrors"];
-            }
-            else {
+            } else {
                 modelForEdit = _questServices.BuildEditModelForQuestionnairePart(part);
             }
   
@@ -177,20 +174,17 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                         try {
                             _questServices.UpdateForContentItem(
                                 part.ContentItem, editModel);
-                        }
-                        catch (Exception ex) {
+                        } catch (Exception ex) {
                             updater.AddModelError("QuestionnaireUpdateError", T("Cannot update questionnaire. " + ex.Message));
                             _controllerContextAccessor.Context.Controller.TempData[Prefix + "ModelWithErrors"] = editModel;
                         }
                     }
 
-                }
-                else {
+                } else {
                     updater.AddModelError("QuestionnaireUpdateError", T("Cannot update questionnaire"));
                     _controllerContextAccessor.Context.Controller.TempData[Prefix + "ModelWithErrors"] = editModel;
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 updater.AddModelError("QuestionnaireUpdateError", T("Cannot update questionnaire....... " + ex.Message + ex.StackTrace));
                 _controllerContextAccessor.Context.Controller.TempData[Prefix + "ModelWithErrors"] = editModel;
             }
@@ -200,7 +194,6 @@ namespace Laser.Orchard.Questionnaires.Drivers {
 
         #region [ Import/Export ]
         protected override void Exporting(QuestionnairePart part, ExportContentContext context) {
-
             var root = context.Element(part.PartDefinition.Name);
             XElement termsText = new XElement("TermsText");
             root.SetAttributeValue("MustAcceptTerms", part.MustAcceptTerms);
@@ -219,24 +212,32 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                 question.SetAttributeValue("IsRequired", q.IsRequired);
                 question.SetAttributeValue("Condition", q.Condition);
                 question.SetAttributeValue("ConditionType", q.ConditionType);
-                question.SetAttributeValue("AllFiles", q.AllFiles);
+                ExportMedia(question, q.AllFiles, "AllFiles");
                 foreach (var a in q.Answers) {
                     XElement answer = new XElement("Answer");
                     answer.SetAttributeValue("OriginalId", a.Id);
                     answer.SetAttributeValue("Position", a.Position);
                     answer.SetAttributeValue("Published", a.Published);
                     answer.SetAttributeValue("Answer", a.Answer);
-                    answer.SetAttributeValue("AllFiles", a.AllFiles);
                     answer.SetAttributeValue("CorrectResponse", a.CorrectResponse);
+                    ExportMedia(answer, a.AllFiles, "AllFiles");
                     question.Add(answer);
                 }
                 root.Add(question);
             }
         }
-
+        private void ExportMedia(XElement parent, string elencoId, string childsName) {
+            var sArrFiles = (elencoId ?? "").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            var iArrFiles = sArrFiles.Select(x => int.Parse(x));
+            foreach (var mediaId in iArrFiles) {
+                var ci = _orchardServices.ContentManager.Get(mediaId);
+                var mediaIdentity = _orchardServices.ContentManager.GetItemMetadata(ci).Identity.ToString();
+                parent.Add(new XElement(childsName, mediaIdentity));
+            }
+        }
         protected override void Importing(QuestionnairePart part, ImportContentContext context) {
             var root = context.Data.Element(part.PartDefinition.Name);
-            var questions = context.Data.Element(part.PartDefinition.Name).Elements("Question");
+            var questions = root.Elements("Question");
             var editModel = _questServices.BuildEditModelForQuestionnairePart(part);
             editModel.MustAcceptTerms = bool.Parse(root.Attribute("MustAcceptTerms").Value);
             editModel.UseRecaptcha = bool.Parse(root.Attribute("UseRecaptcha").Value);
@@ -248,35 +249,52 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                 var answerModelList = new List<AnswerEditModel>();
                 foreach (var a in answers) { // recupero le answers
                     var answerEditModel = new AnswerEditModel {
-                        Position = int.Parse(a.Attribute("Position").Value),
-                        Published = bool.Parse(a.Attribute("Published").Value),
-                        Answer = a.Attribute("Answer").Value,
-                        OriginalId = int.Parse(a.Attribute("OriginalId").Value),
-                        CorrectResponse = bool.Parse(a.Attribute("CorrectResponse").Value),
-                        AllFiles = a.Attribute("AllFiles")!=null?a.Attribute("AllFiles").Value:null,
+                        Position = a.Attribute("Position") != null ? int.Parse(a.Attribute("Position").Value) : 0,
+                        Published = a.Attribute("Publshed") != null ? bool.Parse(a.Attribute("Published").Value) : false,
+                        Answer = a.Attribute("Answer") != null ? a.Attribute("Answer").Value : "",
+                        OriginalId = a.Attribute("OriginalId") != null ? int.Parse(a.Attribute("OriginalId").Value) : 0,
+                        CorrectResponse = a.Attribute("CorrectResponse") != null ? bool.Parse(a.Attribute("CorrectResponse").Value) : false,
+                        AllFiles = ImportMedia(a, "AllFiles")
                     };
                     answerModelList.Add(answerEditModel);
                 }
                 var questionEditModel = new QuestionEditModel {
-                    Position = int.Parse(q.Attribute("Position").Value),
-                    Published = bool.Parse(q.Attribute("Published").Value),
-                    Question = q.Attribute("Question").Value,
-                    Section = q.Attribute("Section") != null ? q.Attribute("Section").Value : null,
-                    QuestionType = (QuestionType)Enum.Parse(typeof(QuestionType), q.Attribute("QuestionType").Value),
-                    AnswerType = (AnswerType)Enum.Parse(typeof(AnswerType), q.Attribute("AnswerType").Value),
-                    IsRequired = bool.Parse(q.Attribute("IsRequired").Value),
+                    Position = q.Attribute("Position") != null ? int.Parse(q.Attribute("Position").Value) : 0,
+                    Published = q.Attribute("Published") != null ? bool.Parse(q.Attribute("Published").Value) : false,
+                    Question = q.Attribute("Question") != null ? q.Attribute("Question").Value : "",
+                    Section = q.Attribute("Section") != null ? q.Attribute("Section").Value : "",
+                    QuestionType = q.Attribute("QuestionType") != null ? (QuestionType)Enum.Parse(typeof(QuestionType), q.Attribute("QuestionType").Value) : QuestionType.SingleChoice,
+                    AnswerType = q.Attribute("AnswerType") != null ? (AnswerType)Enum.Parse(typeof(AnswerType), q.Attribute("AnswerType").Value) : AnswerType.None,
+                    IsRequired = q.Attribute("IsRequired") != null ? bool.Parse(q.Attribute("IsRequired").Value) : false,
                     QuestionnairePartRecord_Id = part.Id,
                     Answers = answerModelList,
                     Condition = q.Attribute("Condition") == null ? null : q.Attribute("Condition").Value,
-                    ConditionType = (ConditionType)Enum.Parse(typeof(ConditionType), q.Attribute("ConditionType").Value),
-                    OriginalId = int.Parse(q.Attribute("OriginalId").Value),
-                    AllFiles = q.Attribute("AllFiles") != null ? q.Attribute("AllFiles").Value : null,
+                    ConditionType = q.Attribute("ConditionType") != null ? (ConditionType)Enum.Parse(typeof(ConditionType), q.Attribute("ConditionType").Value) : ConditionType.Show,
+                    OriginalId = q.Attribute("OriginalId") != null ? int.Parse(q.Attribute("OriginalId").Value) : 0,
+                    AllFiles = ImportMedia(q, "AllFiles")
                 };
                 questionModelList.Add(questionEditModel);
             }
             editModel.Questions = questionModelList; // metto tutto nel model 
             _questServices.UpdateForContentItem(
                     part.ContentItem, editModel); //aggiorno
+        }
+        private string ImportMedia(XElement parent, string childsName) {
+            List<int> iArrFiles = new List<int>();
+            var mediaElements = parent.Elements("AllFiles");
+            if (mediaElements != null) {
+                foreach (var element in mediaElements) {
+                    var ci = _orchardServices.ContentManager.ResolveIdentity(new ContentIdentity(element.Value));
+                    if(ci != null){
+                        iArrFiles.Add(ci.Id);
+                    }
+                }
+            }
+            var elencoId = string.Join(",", iArrFiles);
+            if(string.IsNullOrWhiteSpace(elencoId)) {
+                elencoId = null;
+            }
+            return elencoId;
         }
         #endregion
 

@@ -31,6 +31,7 @@ using System.Xml.Linq;
 using System.Linq.Expressions;
 using Orchard.Environment.Configuration;
 using Orchard.UI.Admin;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.Twitter.Drivers {
 
@@ -44,14 +45,19 @@ namespace Laser.Orchard.Twitter.Drivers {
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IStorageProvider _storageProvider;
         private readonly ShellSettings _shellSettings;
+       
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+        private readonly IContentManager _contentManager;
 
         protected override string Prefix {
             get { return "Laser.Orchard.Twitter"; }
         }
 
-        public TwitterPostDriver(IImageProfileManager imageProfileManager, IStorageProvider storageProvider, IOrchardServices orchardServices, ITwitterService TwitterService, IProviderConfigurationService providerConfigurationService, ITokenizer tokenizer, IHttpContextAccessor httpContextAccessor, IControllerContextAccessor controllerContextAccessor, ShellSettings shellSettings) {
+        public TwitterPostDriver(IImageProfileManager imageProfileManager, IStorageProvider storageProvider, IOrchardServices orchardServices, ITwitterService TwitterService, 
+                                 IProviderConfigurationService providerConfigurationService, ITokenizer tokenizer, 
+                                 IHttpContextAccessor httpContextAccessor, IControllerContextAccessor controllerContextAccessor,
+                                 ShellSettings shellSettings, IContentManager contentManager) {
             _storageProvider = storageProvider;
             _imageProfileManager = imageProfileManager;
             _httpContextAccessor = httpContextAccessor;
@@ -63,6 +69,7 @@ namespace Laser.Orchard.Twitter.Drivers {
             _shellSettings = shellSettings;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Display(TwitterPostPart part, string displayType, dynamic shapeHelper) {
@@ -237,6 +244,75 @@ namespace Laser.Orchard.Twitter.Drivers {
             //  }
             return Editor(part, shapeHelper);
         }
-       
+
+        protected override void Importing(TwitterPostPart part, ImportContentContext context) {
+            var importedTwitterMessage = context.Attribute(part.PartDefinition.Name, "TwitterMessage");
+            if (importedTwitterMessage != null) {
+                part.TwitterMessage = importedTwitterMessage;
+            }
+
+            part.TwitterMessageSent = false;
+
+            var importedTwitterTitle = context.Attribute(part.PartDefinition.Name, "TwitterTitle");
+            if (importedTwitterTitle != null) {
+                part.TwitterTitle = importedTwitterTitle;
+            }
+
+            var importedTwitterDescription = context.Attribute(part.PartDefinition.Name, "TwitterDescription");
+            if (importedTwitterDescription != null) {
+                part.TwitterDescription = importedTwitterDescription;
+            }
+
+            var importedTwitterPicture = context.Attribute(part.PartDefinition.Name, "TwitterPicture");
+            if (importedTwitterPicture != null) {
+                part.TwitterPicture = importedTwitterPicture;
+            }
+
+            var importedTwitterCurrentLink = context.Attribute(part.PartDefinition.Name, "TwitterCurrentLink");
+            if (importedTwitterCurrentLink != null) {
+                part.TwitterCurrentLink = Convert.ToBoolean(importedTwitterCurrentLink);
+            }
+
+            var importedTwitterLink = context.Attribute(part.PartDefinition.Name, "TwitterLink");
+            if (importedTwitterLink != null) {
+                part.TwitterLink = importedTwitterLink;
+            }
+            part.SendOnNextPublish = false;
+
+            var root = context.Data.Element(part.PartDefinition.Name);
+            if (root.HasElements) {
+                List<int> accountList = new List<int>();
+                foreach (var userElement in root.Elements("Account")) {
+                    var twAccount = context.GetItemFromSession(userElement.Value);
+                    if (twAccount != null && twAccount.Has<TwitterAccountPart>()) {
+                        accountList.Add(twAccount.Id);
+                    }
+                }
+                if (accountList.Count > 0) {
+                    part.AccountList = accountList.ToArray();
+                }
+            }
+        }
+        protected override void Exporting(TwitterPostPart part, ExportContentContext context) {
+            var root = context.Element(part.PartDefinition.Name);
+            root.SetAttributeValue("TwitterMessage", part.TwitterMessage);
+            //TwitterMessageSent non serve per l'import
+            root.SetAttributeValue("TwitterTitle", part.TwitterTitle);
+            root.SetAttributeValue("TwitterDescription", part.TwitterDescription);
+            root.SetAttributeValue("TwitterPicture", part.TwitterPicture);
+            root.SetAttributeValue("TwitterCurrentLink", part.TwitterCurrentLink);
+            root.SetAttributeValue("TwitterLink", part.TwitterLink);
+            //SendOnNextPublish non serve per l'import
+            if (part.AccountList.Count() > 0) {
+                XElement accountElement = null;
+                foreach (var accountId in part.AccountList) {
+                    var twAccount = _contentManager.Get<TwitterAccountPart>(accountId);
+                    if (twAccount != null) {
+                        accountElement = new XElement("Account", _contentManager.GetItemMetadata(twAccount.ContentItem).Identity.ToString());
+                        root.Add(accountElement);
+                    }
+                }
+            }  
+        }
     }
 }

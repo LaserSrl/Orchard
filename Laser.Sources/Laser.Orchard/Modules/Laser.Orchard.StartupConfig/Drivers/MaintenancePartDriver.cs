@@ -10,6 +10,10 @@ using System.Web.Mvc;
 using System.Linq;
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
+using Orchard.ContentManagement.Handlers;
+using Orchard.UI.Notify;
+using System;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.StartupConfig.Drivers {
 
@@ -64,6 +68,13 @@ namespace Laser.Orchard.StartupConfig.Drivers {
                 //  _notifier.Add(NotifyType.Error, T("Error on update google analytics"));
             }
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Importing(MaintenancePart part, ImportContentContext context) {
+            // si è deciso di non esportare e importare nulla
+        }
+        protected override void Exporting(MaintenancePart part, ExportContentContext context) {
+            // si è deciso di non esportare e importare nulla
         }
     }
 }

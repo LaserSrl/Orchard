@@ -70,15 +70,25 @@ namespace Laser.Orchard.Policy.Drivers {
 
         protected override void Importing(PolicyTextInfoPart part, ImportContentContext context) {
             var root = context.Data.Element(part.PartDefinition.Name);
+
             var policyType = PolicyTypeOptions.Policy;
             var priority = 0;
             var userHaveToAccept = false;
+
             Enum.TryParse<PolicyTypeOptions>(root.Attribute("PolicyType").Value, out policyType);
+            
             Int32.TryParse(root.Attribute("Priority").Value, out priority);
+            
             bool.TryParse(root.Attribute("UserHaveToAccept").Value, out userHaveToAccept);
-            part.PolicyType = policyType;
-            part.Priority = priority;
-            part.UserHaveToAccept = userHaveToAccept;
+            
+            if(policyType!=null)
+                part.PolicyType = policyType;
+
+            if(priority!=null)
+                part.Priority = priority;
+
+            if(userHaveToAccept!=null)
+                part.UserHaveToAccept = userHaveToAccept;
         }
         #endregion
     }

@@ -1,6 +1,9 @@
 ﻿using Laser.Orchard.Queues.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
+using System;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.Queues.Drivers
 {
