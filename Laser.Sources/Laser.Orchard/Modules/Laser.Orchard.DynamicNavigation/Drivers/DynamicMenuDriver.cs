@@ -158,47 +158,47 @@ namespace Laser.Orchard.DynamicNavigation.Drivers {
 
 
 
-        protected override void Importing(DynamicMenuPart part, ImportContentContext context) {
+        //protected override void Importing(DynamicMenuPart part, ImportContentContext context) {
             
-            //mod 05-12-2016
-            context.ImportAttribute(part.PartDefinition.Name, "MenuId", x => {
-                var tempPartFromid = context.GetItemFromSession(x);
+        //    //mod 05-12-2016
+        //    context.ImportAttribute(part.PartDefinition.Name, "MenuId", x => {
+        //        var tempPartFromid = context.GetItemFromSession(x);
 
-                if (tempPartFromid != null && tempPartFromid.Is<MenuPart>()) {
-                    //associa id menu
-                    part.MenuId = tempPartFromid.As<MenuPart>().Id;
-                }
-            });
+        //        if (tempPartFromid != null && tempPartFromid.Is<MenuPart>()) {
+        //            //associa id menu
+        //            part.MenuId = tempPartFromid.As<MenuPart>().Id;
+        //        }
+        //    });
 
 
-            var importedLevelsToShow = context.Attribute(part.PartDefinition.Name, "LevelsToShow");
-            if (importedLevelsToShow != null) {
-                part.LevelsToShow = int.Parse(importedLevelsToShow);
-            }
+        //    var importedLevelsToShow = context.Attribute(part.PartDefinition.Name, "LevelsToShow");
+        //    if (importedLevelsToShow != null) {
+        //        part.LevelsToShow = int.Parse(importedLevelsToShow);
+        //    }
 
-            var importedShowFirstLevelBrothers = context.Attribute(part.PartDefinition.Name, "ShowFirstLevelBrothers");
-            if (importedShowFirstLevelBrothers != null) {
-                part.ShowFirstLevelBrothers = bool.Parse(importedShowFirstLevelBrothers);
-            }
+        //    var importedShowFirstLevelBrothers = context.Attribute(part.PartDefinition.Name, "ShowFirstLevelBrothers");
+        //    if (importedShowFirstLevelBrothers != null) {
+        //        part.ShowFirstLevelBrothers = bool.Parse(importedShowFirstLevelBrothers);
+        //    }
 
-        }
+        //}
 
-        protected override void Exporting(DynamicMenuPart part, ExportContentContext context) {
+        //protected override void Exporting(DynamicMenuPart part, ExportContentContext context) {
             
-            //mod. 05-12-2016
-            var root = context.Element(part.PartDefinition.Name);
+        //    //mod. 05-12-2016
+        //    var root = context.Element(part.PartDefinition.Name);
             
-            if (part.MenuId > 0) {
-                //cerco il corrispondente valore dell' identity dalla parts del menu e lo associo al campo menuid 
-                var contItemMenu = _contentManager.Get(part.MenuId);
-                if (contItemMenu != null) {
-                    root.SetAttributeValue("MenuId", _contentManager.GetItemMetadata(contItemMenu).Identity.ToString());
-                }
+        //    if (part.MenuId > 0) {
+        //        //cerco il corrispondente valore dell' identity dalla parts del menu e lo associo al campo menuid 
+        //        var contItemMenu = _contentManager.Get(part.MenuId);
+        //        if (contItemMenu != null) {
+        //            root.SetAttributeValue("MenuId", _contentManager.GetItemMetadata(contItemMenu).Identity.ToString());
+        //        }
               
-            }
-            root.SetAttributeValue("LevelsToShow", part.LevelsToShow);
-            root.SetAttributeValue("ShowFirstLevelBrothers", part.ShowFirstLevelBrothers);
-        }
+        //    }
+        //    root.SetAttributeValue("LevelsToShow", part.LevelsToShow);
+        //    root.SetAttributeValue("ShowFirstLevelBrothers", part.ShowFirstLevelBrothers);
+        //}
 
 
 
