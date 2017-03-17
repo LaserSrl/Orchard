@@ -9,6 +9,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Users.Models;
+using System.Linq;
 
 namespace Laser.Orchard.Twitter.Drivers {
 
@@ -52,15 +53,11 @@ namespace Laser.Orchard.Twitter.Drivers {
             return Editor(part, shapeHelper);
         }
 
-
         protected override void Importing(TwitterAccountPart part, ImportContentContext context) {
-
-
-            context.ImportAttribute(part.PartDefinition.Name, "IdUser", x => {
-                var tempPartFromid = context.GetItemFromSession(x);
-                if (tempPartFromid != null && tempPartFromid.Is<UserPart>()) {
-                    //associa id user
-                    part.IdUser = tempPartFromid.As<UserPart>().Id;
+            context.ImportAttribute(part.PartDefinition.Name, "UserIdentity", x => {
+                var user = context.ContentManager.Query("User").Where<UserPartRecord>(y => y.UserName == x).List().FirstOrDefault();
+                if (user != null) {
+                    part.IdUser = user.Id;
                 }
             });
 
@@ -94,23 +91,15 @@ namespace Laser.Orchard.Twitter.Drivers {
                 part.DisplayAs = importedDisplayAs;
             }
         }
-
-
-
         protected override void Exporting(TwitterAccountPart part, ExportContentContext context) {
-
-            //06-12-2016
             var root = context.Element(part.PartDefinition.Name);
-
             if (part.IdUser > 0) {
-                //cerco il corrispondente valore dell' identity dalla partse lo associo al campo iduser 
-                var contItemUser = _contentManager.Get(part.IdUser);
+                //cerco il corrispondente valore dello username dell'utente
+                var contItemUser = _contentManager.Get<UserPart>(part.IdUser);
                 if (contItemUser != null) {
-                    root.SetAttributeValue("IdUser", _contentManager.GetItemMetadata(contItemUser).Identity.ToString());
+                    root.SetAttributeValue("UserIdentity", contItemUser.UserName);
                 }
             }
-
-
             root.SetAttributeValue("SocialName", part.SocialName);
             root.SetAttributeValue("AccountType", part.AccountType);
             root.SetAttributeValue("UserTokenSecret", part.UserTokenSecret);
@@ -118,7 +107,5 @@ namespace Laser.Orchard.Twitter.Drivers {
             root.SetAttributeValue("Valid", part.Valid);
             root.SetAttributeValue("DisplayAs", part.DisplayAs);
         }
-
-
     }
 }
