@@ -244,8 +244,6 @@
     <Compile Include="Navigation\ContentAdminMenu.cs" />
     <Compile Include="Projections\DefaultHqlExpressionFactoryExtensions.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionPartDriver.cs" />
-    <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionsSiteSettingsDriver.cs" />
-    <Compile Include="TaxonomiesExtensions\Drivers\TermPartExtensionDriver.cs" />
     <Compile Include="Controllers\UsersGroupsSettingsController.cs" />
     <Compile Include="Drivers\UsersGroupsDriver.cs" />
     <Compile Include="Exceptions\ExternalFieldRemoteException.cs" />
@@ -267,8 +265,6 @@
     <Compile Include="Handlers\IContactRelatedEventHandler.cs" />
     <Compile Include="Handlers\MaintenancePartHandler.cs" />
     <Compile Include="TaxonomiesExtensions\Handlers\TaxonomyExtensionPartHandler.cs" />
-    <Compile Include="TaxonomiesExtensions\Handlers\TaxonomyExtensionsSiteSettingsHandler.cs" />
-    <Compile Include="TaxonomiesExtensions\Handlers\TermPartLocalizationHandler.cs" />
     <Compile Include="Handlers\UserEventHandler.cs" />
     <Compile Include="Handlers\UsersGroupsHandler.cs" />
     <Compile Include="Handlers\UsersGroupsSettingsHandler.cs" />
@@ -278,7 +274,6 @@
     <Compile Include="MediaExtensionsRoutes.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Migrations\RelationshipsEnhancerMigrations.cs" />
-    <Compile Include="TaxonomiesExtensions\Migrations\TaxonomyExtensionsMigrations.cs" />
     <Compile Include="Models\ContentPickerConnector.cs" />
     <Compile Include="Models\FavoriteCulturePart.cs" />
     <Compile Include="Models\MaintenancePart.cs" />
@@ -299,15 +294,6 @@
     <Compile Include="Services\IUserSearchService.cs" />
     <Compile Include="Services\MaintenanceBanner.cs" />
     <Compile Include="Services\MaintenanceService.cs" />
-    <Compile Include="TaxonomiesExtensions\EventHandlers\TaxonomyPickerFieldLocalizationShapeTableEventHandler.cs" />
-    <Compile Include="TaxonomiesExtensions\EventHandlers\TermPartSynchronizationEventHandler.cs" />
-    <Compile Include="TaxonomiesExtensions\Events\ILocalizationExtensionEventHandler.cs" />
-    <Compile Include="TaxonomiesExtensions\Handlers\LocalizationHandler.cs" />
-    <Compile Include="TaxonomiesExtensions\Handlers\TaxonomyTermMovedHandler.cs" />
-    <Compile Include="TaxonomiesExtensions\Models\ContainerSynchronizedContext.cs" />
-    <Compile Include="TaxonomiesExtensions\Models\IContainerSynchronizedContext.cs" />
-    <Compile Include="TaxonomiesExtensions\Models\ISynchronizingDataToLocalizedVersionsContext.cs" />
-    <Compile Include="TaxonomiesExtensions\Models\SynchronizingDataToLocalizedVersionsContext.cs" />
     <Compile Include="Tokens\AdditionalDateTokens.cs" />
     <Compile Include="Tokens\OwnerEmailToken.cs" />
     <Compile Include="Tokens\RazorCodeExecutionToken.cs" />
@@ -315,7 +301,6 @@
     <Compile Include="ViewModels\MaintenanceIndexVM.cs" />
     <Compile Include="ViewModels\MaintenanceVM.cs" />
     <Compile Include="ViewModels\Response.cs" />
-    <Compile Include="Models\TaxonomyExtensionsSiteSettingsPart.cs" />
     <Compile Include="Models\UsersGroupsPart.cs" />
     <Compile Include="Models\UsersGroupsSettings.cs" />
     <Compile Include="Navigation\UsersGroupsSettingsMenu.cs" />
@@ -338,7 +323,6 @@
     <Compile Include="Services\ContentExtensionsServices.cs" />
     <Compile Include="Services\ControllerContextAccessor.cs" />
     <Compile Include="Services\ICsrfTokenHelper.cs" />
-    <Compile Include="TaxonomiesExtensions\Services\TaxonomyExtensionsServices.cs" />
     <Compile Include="Services\UsersGroupsServices.cs" />
     <Compile Include="Services\UsersGroupsSettingsService.cs" />
     <Compile Include="Services\IActivityServices.cs" />
