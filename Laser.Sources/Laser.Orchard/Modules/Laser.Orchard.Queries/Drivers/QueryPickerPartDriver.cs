@@ -13,6 +13,7 @@ using Orchard.Data;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.ContentManagement.Handlers;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.Queries.Drivers {
     public class QueryPickerPartDriver : ContentPartCloningDriver<QueryPickerPart> {
@@ -72,28 +73,29 @@ namespace Laser.Orchard.Queries.Drivers {
 
 
         protected override void Importing(QueryPickerPart part, ImportContentContext context) {
-            var importedIds = context.Attribute(part.PartDefinition.Name, "Ids");
-          
-            if (importedIds != null) {
-                for (int x = 0; x <= importedIds.Count(); x++) {
-                    part.Ids[x] = importedIds[x];
+            var root = context.Data.Element(part.PartDefinition.Name);
+            List<int> idList = new List<int>();
+            var queryList = root.Elements("QueryId");
+            foreach (var element in queryList) {
+                var ciQuery = _contentManager.ResolveIdentity(new ContentIdentity(element.Value));
+                if (ciQuery != null) {
+                    idList.Add(ciQuery.Id);
                 }
             }
+            part.Ids = idList.ToArray();
         }
 
         protected override void Exporting(QueryPickerPart part, ExportContentContext context) {
-           
-            if (part.Ids.Count() > 0) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("Ids", part.Ids);
-                var IdsList = context.Element(part.PartDefinition.Name).Element("Ids");
-                for (int x = 0; x == part.Ids.Count(); x++) {
-                    IdsList.Element("Ids").SetAttributeValue("Ids", part.Ids[x]);
+            var root = context.Element(part.PartDefinition.Name);
+            if (part.Ids != null) {
+                foreach (var qId in part.Ids) {
+                    var ciQuery = _contentManager.Get(qId);
+                    if(ciQuery != null) {
+                        var identity =_contentManager.GetItemMetadata(ciQuery).Identity.ToString();
+                        root.Add(new XElement("QueryId", identity));
                 }
             }
         }
-
-
-
-
+    }
     }
 }

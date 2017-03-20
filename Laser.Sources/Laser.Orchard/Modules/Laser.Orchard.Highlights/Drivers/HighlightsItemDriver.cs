@@ -160,8 +160,6 @@ namespace Laser.Orchard.Highlights.Drivers {
 
             context.Element(part.PartDefinition.Name).SetAttributeValue("ItemOrder", part.ItemOrder);
             context.Element(part.PartDefinition.Name).SetAttributeValue("LinkTarget", part.LinkTarget);
-
-
         }
 
         protected override void Cloning(HighlightsItemPart originalPart, HighlightsItemPart clonePart, CloneContentContext context) {
