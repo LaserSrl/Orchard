@@ -9,14 +9,13 @@ using System.Web.Mvc;
 using System.Linq;
 
 namespace Laser.Orchard.Mobile.Controllers {
-    [OrchardFeature("Laser.Orchard.PushGateway")]
     public class CountPanelController : Controller {
         private readonly IOrchardServices _orchardServices;
         private readonly IPushGatewayService _pushGatewayService;
         private readonly ISmsCommunicationService _smsCommunicationService;
-        public CountPanelController(IOrchardServices orchardServices, IPushGatewayService pushGatewayService) {
+        public CountPanelController(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
-            _pushGatewayService = pushGatewayService;
+            _orchardServices.WorkContext.TryResolve<IPushGatewayService>(out _pushGatewayService);
             _orchardServices.WorkContext.TryResolve<ISmsCommunicationService>(out _smsCommunicationService);
         }
 

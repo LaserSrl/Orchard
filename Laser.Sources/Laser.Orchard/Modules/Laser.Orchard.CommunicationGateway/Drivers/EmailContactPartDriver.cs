@@ -147,11 +147,26 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         protected override void Importing(EmailContactPart part, ImportContentContext context) {
             var emailRecord = context.Data.Element(part.PartDefinition.Name).Elements("EmailRecord");
             if (emailRecord != null) {
-                List<CommunicationEmailRecord> listComEmail = new List<CommunicationEmailRecord>();
+                if (part.EmailRecord == null) {
+                    part.EmailRecord = new List<CommunicationEmailRecord>();
+                }
                 foreach (var rec in emailRecord) {
-                    CommunicationEmailRecord recMail = new CommunicationEmailRecord();
-                    recMail.EmailContactPartRecord_Id = part.Id;
+                    string locEmail = "";
+                    var Email = rec.Attribute("Email");
+                    if (Email != null)
+                        locEmail = Email.Value;
 
+                    CommunicationEmailRecord recMail = part.EmailRecord.FirstOrDefault(x =>
+                        x.Email == locEmail);
+                    if (recMail == null) {
+                        recMail = new CommunicationEmailRecord();
+                        recMail.EmailContactPartRecord_Id = part.Id;
+                        recMail.Email = locEmail;
+                        recMail.DataInserimento = DateTime.Now; //valore iniziale temporaneo per poter creare il record
+                        recMail.DataModifica = DateTime.Now; //valore iniziale temporaneo per poter creare il record
+                        _repoEmail.Create(recMail);
+                        part.EmailRecord.Add(recMail);
+                    }
                     var Language = rec.Attribute("Language");
                     if (Language != null)
                         recMail.Language = Language.Value;
@@ -167,10 +182,6 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     var DataModifica = rec.Attribute("DataModifica");
                     if (DataModifica != null)
                         recMail.DataModifica = Convert.ToDateTime(DataModifica.Value);
-
-                    var Email = rec.Attribute("Email");
-                    if (Email != null)
-                        recMail.Email = Email.Value;
 
                     var Produzione = rec.Attribute("Produzione");
                     if (Produzione != null)
@@ -191,11 +202,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     var DataUnsubscribe = rec.Attribute("DataUnsubscribe");
                     if (DataUnsubscribe != null)
                         recMail.DataUnsubscribe = Convert.ToDateTime(DataUnsubscribe.Value);
-
-                    _repoEmail.Create(recMail);
-                    listComEmail.Add(recMail);
                 }
-                part.EmailRecord = listComEmail;
                 _repoEmail.Flush();
             }
         }
