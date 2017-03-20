@@ -17,7 +17,8 @@ using System.Xml.Linq;
 namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class EmailContactPartDriver : ContentPartDriver<EmailContactPart> {
         public Localizer T { get; set; }
-        protected override string Prefix {
+        protected override string Prefix
+        {
             get { return "Laser.Mobile.EmailContact"; }
         }
         private readonly IRepository<CommunicationEmailRecord> _repoEmail;
@@ -73,9 +74,9 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     Mapper.Map<CommunicationEmailRecord, View_EmailVM_element>(cm, vm);
                     viewModel.Elenco.Add(vm);
                 }
-            }  
+            }
             return ContentShape("Parts_EmailContact_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/EmailContact_Edit", Model: viewModel, Prefix: Prefix));
-            
+
         }
 
 
@@ -93,45 +94,45 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                 }
                 else
                     if (!vmel.Delete) {
-                        if (!string.IsNullOrEmpty(vmel.Email)) {
-                            if (_repoEmail.Fetch(x => x.Email == vmel.Email && x.Id != vmel.Id).Count() > 0) {
-                                error = true;
-                                updater.AddModelError("Error", T("Email can't be assigned is linked to other contact"));
-                            }
+                    if (!string.IsNullOrEmpty(vmel.Email)) {
+                        if (_repoEmail.Fetch(x => x.Email == vmel.Email && x.Id != vmel.Id).Count() > 0) {
+                            error = true;
+                            updater.AddModelError("Error", T("Email can't be assigned is linked to other contact"));
                         }
-                        if (vmel.Id > 0) {
-                            CommunicationEmailRecord cmr = _repoEmail.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
-                            if (cmr.Email != vmel.Email || cmr.Validated != vmel.Validated || 
-                                cmr.AccettatoUsoCommerciale != vmel.AccettatoUsoCommerciale ||
-                                cmr.AutorizzatoTerzeParti != vmel.AutorizzatoTerzeParti) {
-                                cmr.Email = vmel.Email;
-                                cmr.Validated = vmel.Validated;
-                                cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
-                                cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
-                                cmr.DataModifica = DateTime.Now;
-                                _repoEmail.Update(cmr);
-
-                            }
-                        }
-                        else {
-                            View_EmailVM_element vm = new View_EmailVM_element();
-                            CommunicationEmailRecord cmr = new CommunicationEmailRecord();
-                            Mapper.Map<View_EmailVM_element, CommunicationEmailRecord>(vm, cmr);
+                    }
+                    if (vmel.Id > 0) {
+                        CommunicationEmailRecord cmr = _repoEmail.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
+                        if (cmr.Email != vmel.Email || cmr.Validated != vmel.Validated ||
+                            cmr.AccettatoUsoCommerciale != vmel.AccettatoUsoCommerciale ||
+                            cmr.AutorizzatoTerzeParti != vmel.AutorizzatoTerzeParti) {
                             cmr.Email = vmel.Email;
                             cmr.Validated = vmel.Validated;
                             cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
                             cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
-                            cmr.EmailContactPartRecord_Id = part.Id;
-                            _repoEmail.Create(cmr);
+                            cmr.DataModifica = DateTime.Now;
+                            _repoEmail.Update(cmr);
 
                         }
                     }
+                    else {
+                        View_EmailVM_element vm = new View_EmailVM_element();
+                        CommunicationEmailRecord cmr = new CommunicationEmailRecord();
+                        Mapper.Map<View_EmailVM_element, CommunicationEmailRecord>(vm, cmr);
+                        cmr.Email = vmel.Email;
+                        cmr.Validated = vmel.Validated;
+                        cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
+                        cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
+                        cmr.EmailContactPartRecord_Id = part.Id;
+                        _repoEmail.Create(cmr);
+
+                    }
+                }
             }
             if (error == true)
                 _transaction.Cancel();
             else
                 _repoEmail.Flush();
-        //    _transaction.RequireNew();
+            //    _transaction.RequireNew();
             return Editor(part, shapeHelper);
         }
 
@@ -145,11 +146,26 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         protected override void Importing(EmailContactPart part, ImportContentContext context) {
             var emailRecord = context.Data.Element(part.PartDefinition.Name).Elements("EmailRecord");
             if (emailRecord != null) {
-                List<CommunicationEmailRecord> listComEmail = new List<CommunicationEmailRecord>();
+                if (part.EmailRecord == null) {
+                    part.EmailRecord = new List<CommunicationEmailRecord>();
+                }
                 foreach (var rec in emailRecord) {
-                    CommunicationEmailRecord recMail = new CommunicationEmailRecord();
-                    recMail.EmailContactPartRecord_Id = part.Id;
+                    string locEmail = "";
+                    var Email = rec.Attribute("Email");
+                    if (Email != null)
+                        locEmail = Email.Value;
 
+                    CommunicationEmailRecord recMail = part.EmailRecord.FirstOrDefault(x =>
+                        x.Email == locEmail);
+                    if (recMail == null) {
+                        recMail = new CommunicationEmailRecord();
+                        recMail.EmailContactPartRecord_Id = part.Id;
+                        recMail.Email = locEmail;
+                        recMail.DataInserimento = DateTime.Now; //valore iniziale temporaneo per poter creare il record
+                        recMail.DataModifica = DateTime.Now; //valore iniziale temporaneo per poter creare il record
+                        _repoEmail.Create(recMail);
+                        part.EmailRecord.Add(recMail);
+                    }
                     var Language = rec.Attribute("Language");
                     if (Language != null)
                         recMail.Language = Language.Value;
@@ -165,10 +181,6 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     var DataModifica = rec.Attribute("DataModifica");
                     if (DataModifica != null)
                         recMail.DataModifica = Convert.ToDateTime(DataModifica.Value);
-
-                    var Email = rec.Attribute("Email");
-                    if (Email != null)
-                        recMail.Email = Email.Value;
 
                     var Produzione = rec.Attribute("Produzione");
                     if (Produzione != null)
@@ -189,11 +201,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     var DataUnsubscribe = rec.Attribute("DataUnsubscribe");
                     if (DataUnsubscribe != null)
                         recMail.DataUnsubscribe = Convert.ToDateTime(DataUnsubscribe.Value);
-
-                    _repoEmail.Create(recMail);
-                    listComEmail.Add(recMail);
-    }
-                part.EmailRecord = listComEmail;
+                }
                 _repoEmail.Flush();
             }
         }

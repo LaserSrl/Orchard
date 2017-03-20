@@ -17,7 +17,8 @@ using System.Xml.Linq;
 namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class SmsContactPartDriver : ContentPartDriver<SmsContactPart> {
         public Localizer T { get; set; }
-        protected override string Prefix {
+        protected override string Prefix
+        {
             get { return "Laser.Mobile.SmsContact"; }
         }
         private readonly IRepository<CommunicationSmsRecord> _repoSms;
@@ -30,7 +31,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             T = NullLocalizer.Instance;
             _transaction = transaction;
             _orchardServices = orchardServices;
-            
+
             var mapperConfiguration = new MapperConfiguration(cfg => {
                 cfg.CreateMap<CommunicationSmsRecord, View_SmsVM_element>();
                 cfg.CreateMap<View_SmsVM_element, CommunicationSmsRecord>();
@@ -94,40 +95,40 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                 }
                 else
                     if (!vmel.Delete) {
-                        if (!string.IsNullOrEmpty(vmel.Sms))
-                            if (_repoSms.Fetch(x => x.Sms == vmel.Sms && x.Prefix == vmel.Prefix && x.Id != vmel.Id).Count() > 0) {
-                                error = true;
-                                updater.AddModelError("Error", T("Sms can't be assigned is linked to other contact"));
-                            }
-                        if (vmel.Id > 0) {
-                            CommunicationSmsRecord cmr = _repoSms.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
-                            if (cmr.Sms != vmel.Sms || cmr.Prefix != vmel.Prefix || cmr.Validated != vmel.Validated|| 
-                                cmr.AccettatoUsoCommerciale != vmel.AccettatoUsoCommerciale ||
-                                cmr.AutorizzatoTerzeParti != vmel.AutorizzatoTerzeParti) {
-                                cmr.Sms = vmel.Sms;
-                                cmr.Prefix = vmel.Prefix;
-                                cmr.Validated = vmel.Validated;
-                                cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
-                                cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
-                                cmr.DataModifica = DateTime.Now;
-                                _repoSms.Update(cmr);
-
-                            }
+                    if (!string.IsNullOrEmpty(vmel.Sms))
+                        if (_repoSms.Fetch(x => x.Sms == vmel.Sms && x.Prefix == vmel.Prefix && x.Id != vmel.Id).Count() > 0) {
+                            error = true;
+                            updater.AddModelError("Error", T("Sms can't be assigned is linked to other contact"));
                         }
-                        else {
-                            View_SmsVM_element vm = new View_SmsVM_element();
-                            CommunicationSmsRecord cmr = new CommunicationSmsRecord();
-                            _mapper.Map<View_SmsVM_element, CommunicationSmsRecord>(vm, cmr);
+                    if (vmel.Id > 0) {
+                        CommunicationSmsRecord cmr = _repoSms.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
+                        if (cmr.Sms != vmel.Sms || cmr.Prefix != vmel.Prefix || cmr.Validated != vmel.Validated ||
+                            cmr.AccettatoUsoCommerciale != vmel.AccettatoUsoCommerciale ||
+                            cmr.AutorizzatoTerzeParti != vmel.AutorizzatoTerzeParti) {
                             cmr.Sms = vmel.Sms;
+                            cmr.Prefix = vmel.Prefix;
                             cmr.Validated = vmel.Validated;
                             cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
                             cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
-                            cmr.Prefix = vmel.Prefix;
-                            cmr.SmsContactPartRecord_Id = part.Id;
-                            _repoSms.Create(cmr);
+                            cmr.DataModifica = DateTime.Now;
+                            _repoSms.Update(cmr);
 
                         }
                     }
+                    else {
+                        View_SmsVM_element vm = new View_SmsVM_element();
+                        CommunicationSmsRecord cmr = new CommunicationSmsRecord();
+                        _mapper.Map<View_SmsVM_element, CommunicationSmsRecord>(vm, cmr);
+                        cmr.Sms = vmel.Sms;
+                        cmr.Validated = vmel.Validated;
+                        cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
+                        cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
+                        cmr.Prefix = vmel.Prefix;
+                        cmr.SmsContactPartRecord_Id = part.Id;
+                        _repoSms.Create(cmr);
+
+                    }
+                }
             }
             if (error == true)
                 _transaction.Cancel();
@@ -145,9 +146,31 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         protected override void Importing(SmsContactPart part, ImportContentContext context) {
             var importedSmsRecord = context.Data.Element(part.PartDefinition.Name).Elements("SmsRecord");
             if (importedSmsRecord != null) {
-                List<CommunicationSmsRecord> listCom = new List<CommunicationSmsRecord>();
+                if (part.SmsRecord == null) {
+                    part.SmsRecord = new List<CommunicationSmsRecord>();
+                }
                 foreach (var sms in importedSmsRecord) {
-                    CommunicationSmsRecord comSms = new CommunicationSmsRecord();
+                    string locPrefix = "";
+                    var Prefix = sms.Attribute("Prefix");
+                    if (Prefix != null)
+                        locPrefix = Prefix.Value;
+
+                    string locSms = "";
+                    var Sms = sms.Attribute("Sms");
+                    if (Sms != null)
+                        locSms = Sms.Value;
+
+                    CommunicationSmsRecord comSms = part.SmsRecord.FirstOrDefault(x =>
+                        x.Prefix == locPrefix && x.Sms == locSms);
+                    if (comSms == null) {
+                        comSms = new CommunicationSmsRecord();
+                        comSms.SmsContactPartRecord_Id = part.Id;
+                        comSms.Prefix = locPrefix;
+                        comSms.Sms = locSms;
+                        _repoSms.Create(comSms);
+                        part.SmsRecord.Add(comSms);
+                    }
+
                     var Language = sms.Attribute("Language");
                     if (Language != null)
                         comSms.Language = Language.Value;
@@ -164,14 +187,6 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     if (DataInserimento != null)
                         comSms.DataInserimento = Convert.ToDateTime(DataInserimento.Value);
 
-                    var Prefix = sms.Attribute("Prefix");
-                    if (Prefix != null)
-                        comSms.Prefix = Prefix.Value;
-
-                    var Sms = sms.Attribute("Sms");
-                    if (Sms != null)
-                        comSms.Sms = Sms.Value;
-
                     var Produzione = sms.Attribute("Produzione");
                     if (Produzione != null)
                         comSms.Produzione = Convert.ToBoolean(Produzione.Value);
@@ -183,11 +198,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     var AutorizzatoTerzeParti = sms.Attribute("AutorizzatoTerzeParti");
                     if (AutorizzatoTerzeParti != null)
                         comSms.AutorizzatoTerzeParti = Convert.ToBoolean(AutorizzatoTerzeParti.Value);
-
-                    _repoSms.Create(comSms);
-                    listCom.Add(comSms);
-    }
-                part.SmsRecord = listCom;
+                }
                 _repoSms.Flush();
             }
         }
