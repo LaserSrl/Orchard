@@ -168,9 +168,31 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         protected override void Importing(SmsContactPart part, ImportContentContext context) {
             var importedSmsRecord = context.Data.Element(part.PartDefinition.Name).Elements("SmsRecord");
             if (importedSmsRecord != null) {
-                List<CommunicationSmsRecord> listCom = new List<CommunicationSmsRecord>();
+                if (part.SmsRecord == null) {
+                    part.SmsRecord = new List<CommunicationSmsRecord>();
+                }
                 foreach (var sms in importedSmsRecord) {
-                    CommunicationSmsRecord comSms = new CommunicationSmsRecord();
+                    string locPrefix = "";
+                    var Prefix = sms.Attribute("Prefix");
+                    if (Prefix != null)
+                        locPrefix = Prefix.Value;
+
+                    string locSms = "";
+                    var Sms = sms.Attribute("Sms");
+                    if (Sms != null)
+                        locSms = Sms.Value;
+
+                    CommunicationSmsRecord comSms = part.SmsRecord.FirstOrDefault(x => 
+                        x.Prefix == locPrefix && x.Sms == locSms);
+                    if (comSms == null) {
+                        comSms = new CommunicationSmsRecord();
+                        comSms.SmsContactPartRecord_Id = part.Id;
+                        comSms.Prefix = locPrefix;
+                        comSms.Sms = locSms;
+                        _repoSms.Create(comSms);
+                        part.SmsRecord.Add(comSms);
+                    }
+
                     var Language = sms.Attribute("Language");
                     if (Language != null)
                         comSms.Language = Language.Value;
@@ -187,14 +209,6 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     if (DataInserimento != null)
                         comSms.DataInserimento = Convert.ToDateTime(DataInserimento.Value);
 
-                    var Prefix = sms.Attribute("Prefix");
-                    if (Prefix != null)
-                        comSms.Prefix = Prefix.Value;
-
-                    var Sms = sms.Attribute("Sms");
-                    if (Sms != null)
-                        comSms.Sms = Sms.Value;
-
                     var Produzione = sms.Attribute("Produzione");
                     if (Produzione != null)
                         comSms.Produzione = Convert.ToBoolean(Produzione.Value);
@@ -206,11 +220,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     var AutorizzatoTerzeParti = sms.Attribute("AutorizzatoTerzeParti");
                     if (AutorizzatoTerzeParti != null)
                         comSms.AutorizzatoTerzeParti = Convert.ToBoolean(AutorizzatoTerzeParti.Value);
-
-                    _repoSms.Create(comSms);
-                    listCom.Add(comSms);
                 }
-                part.SmsRecord = listCom;
                 _repoSms.Flush();
             }
         }
