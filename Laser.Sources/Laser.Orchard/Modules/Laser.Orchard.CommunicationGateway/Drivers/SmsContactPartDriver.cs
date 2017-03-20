@@ -160,7 +160,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     if (Sms != null)
                         locSms = Sms.Value;
 
-                    CommunicationSmsRecord comSms = part.SmsRecord.FirstOrDefault(x =>
+                    CommunicationSmsRecord comSms = part.Record.SmsRecord.FirstOrDefault(x => 
                         x.Prefix == locPrefix && x.Sms == locSms);
                     if (comSms == null) {
                         comSms = new CommunicationSmsRecord();
