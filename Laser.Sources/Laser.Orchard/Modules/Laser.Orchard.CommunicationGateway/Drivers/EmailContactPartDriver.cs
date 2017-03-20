@@ -156,7 +156,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     if (Email != null)
                         locEmail = Email.Value;
 
-                    CommunicationEmailRecord recMail = part.EmailRecord.FirstOrDefault(x =>
+                    CommunicationEmailRecord recMail = part.Record.EmailRecord.FirstOrDefault(x =>
                         x.Email == locEmail);
                     if (recMail == null) {
                         recMail = new CommunicationEmailRecord();
