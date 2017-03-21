@@ -4,6 +4,7 @@ using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.UI.Admin;
@@ -11,11 +12,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class EmailContactPartDriver : ContentPartDriver<EmailContactPart> {
         public Localizer T { get; set; }
-        protected override string Prefix {
+        protected override string Prefix
+        {
             get { return "Laser.Mobile.EmailContact"; }
         }
         private readonly IRepository<CommunicationEmailRecord> _repoEmail;
@@ -50,10 +53,12 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     }
                     return ContentShape("Parts_EmailContact",
                         () => shapeHelper.Parts_EmailContact(Elenco: viewModel.Elenco));
-                } else {
+                }
+                else {
                     return null;
                 }
-            } else {
+            }
+            else {
                 return null;
             }
         }
@@ -69,9 +74,9 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     Mapper.Map<CommunicationEmailRecord, View_EmailVM_element>(cm, vm);
                     viewModel.Elenco.Add(vm);
                 }
-            }  
+            }
             return ContentShape("Parts_EmailContact_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/EmailContact_Edit", Model: viewModel, Prefix: Prefix));
-            
+
         }
 
 
@@ -89,47 +94,136 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                 }
                 else
                     if (!vmel.Delete) {
-                        if (!string.IsNullOrEmpty(vmel.Email)) {
-                            if (_repoEmail.Fetch(x => x.Email == vmel.Email && x.Id != vmel.Id).Count() > 0) {
-                                error = true;
-                                updater.AddModelError("Error", T("Email can't be assigned is linked to other contact"));
-                            }
+                    if (!string.IsNullOrEmpty(vmel.Email)) {
+                        if (_repoEmail.Fetch(x => x.Email == vmel.Email && x.Id != vmel.Id).Count() > 0) {
+                            error = true;
+                            updater.AddModelError("Error", T("Email can't be assigned is linked to other contact"));
                         }
-                        if (vmel.Id > 0) {
-                            CommunicationEmailRecord cmr = _repoEmail.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
-                            if (cmr.Email != vmel.Email || cmr.Validated != vmel.Validated || 
-                                cmr.AccettatoUsoCommerciale != vmel.AccettatoUsoCommerciale ||
-                                cmr.AutorizzatoTerzeParti != vmel.AutorizzatoTerzeParti) {
-                                cmr.Email = vmel.Email;
-                                cmr.Validated = vmel.Validated;
-                                cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
-                                cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
-                                cmr.DataModifica = DateTime.Now;
-                                _repoEmail.Update(cmr);
-
-                            }
-                        }
-                        else {
-                            View_EmailVM_element vm = new View_EmailVM_element();
-                            CommunicationEmailRecord cmr = new CommunicationEmailRecord();
-                            Mapper.Map<View_EmailVM_element, CommunicationEmailRecord>(vm, cmr);
+                    }
+                    if (vmel.Id > 0) {
+                        CommunicationEmailRecord cmr = _repoEmail.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
+                        if (cmr.Email != vmel.Email || cmr.Validated != vmel.Validated ||
+                            cmr.AccettatoUsoCommerciale != vmel.AccettatoUsoCommerciale ||
+                            cmr.AutorizzatoTerzeParti != vmel.AutorizzatoTerzeParti) {
                             cmr.Email = vmel.Email;
                             cmr.Validated = vmel.Validated;
                             cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
                             cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
-                            cmr.EmailContactPartRecord_Id = part.Id;
-                            _repoEmail.Create(cmr);
+                            cmr.DataModifica = DateTime.Now;
+                            _repoEmail.Update(cmr);
 
                         }
                     }
+                    else {
+                        View_EmailVM_element vm = new View_EmailVM_element();
+                        CommunicationEmailRecord cmr = new CommunicationEmailRecord();
+                        Mapper.Map<View_EmailVM_element, CommunicationEmailRecord>(vm, cmr);
+                        cmr.Email = vmel.Email;
+                        cmr.Validated = vmel.Validated;
+                        cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
+                        cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
+                        cmr.EmailContactPartRecord_Id = part.Id;
+                        _repoEmail.Create(cmr);
+
+                    }
+                }
             }
             if (error == true)
                 _transaction.Cancel();
             else
                 _repoEmail.Flush();
-        //    _transaction.RequireNew();
+            //    _transaction.RequireNew();
             return Editor(part, shapeHelper);
         }
-    }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part"></param>
+        /// <param name="context"></param>
+        protected override void Importing(EmailContactPart part, ImportContentContext context) {
+            var emailRecord = context.Data.Element(part.PartDefinition.Name).Elements("EmailRecord");
+            if (emailRecord != null) {
+                if (part.EmailRecord == null) {
+                    part.EmailRecord = new List<CommunicationEmailRecord>();
+                }
+                foreach (var rec in emailRecord) {
+                    string locEmail = "";
+                    var Email = rec.Attribute("Email");
+                    if (Email != null)
+                        locEmail = Email.Value;
+
+                    CommunicationEmailRecord recMail = part.Record.EmailRecord.FirstOrDefault(x =>
+                        x.Email == locEmail);
+                    if (recMail == null) {
+                        recMail = new CommunicationEmailRecord();
+                        recMail.EmailContactPartRecord_Id = part.Id;
+                        recMail.Email = locEmail;
+                        recMail.DataInserimento = DateTime.Now; //valore iniziale temporaneo per poter creare il record
+                        recMail.DataModifica = DateTime.Now; //valore iniziale temporaneo per poter creare il record
+                        _repoEmail.Create(recMail);
+                        part.EmailRecord.Add(recMail);
+                    }
+                    var Language = rec.Attribute("Language");
+                    if (Language != null)
+                        recMail.Language = Language.Value;
+
+                    var Validated = rec.Attribute("Validated");
+                    if (Validated != null)
+                        recMail.Validated = Convert.ToBoolean(Validated.Value);
+
+                    var DataInserimento = rec.Attribute("DataInserimento");
+                    if (DataInserimento != null)
+                        recMail.DataInserimento = Convert.ToDateTime(DataInserimento.Value);
+
+                    var DataModifica = rec.Attribute("DataModifica");
+                    if (DataModifica != null)
+                        recMail.DataModifica = Convert.ToDateTime(DataModifica.Value);
+
+                    var Produzione = rec.Attribute("Produzione");
+                    if (Produzione != null)
+                        recMail.Produzione = Convert.ToBoolean(Produzione.Value);
+
+                    var AccettatoUsoCommerciale = rec.Attribute("AccettatoUsoCommerciale");
+                    if (AccettatoUsoCommerciale != null)
+                        recMail.AccettatoUsoCommerciale = Convert.ToBoolean(AccettatoUsoCommerciale.Value);
+
+                    var AutorizzatoTerzeParti = rec.Attribute("AutorizzatoTerzeParti");
+                    if (AutorizzatoTerzeParti != null)
+                        recMail.AutorizzatoTerzeParti = Convert.ToBoolean(AutorizzatoTerzeParti.Value);
+
+                    var KeyUnsubscribe = rec.Attribute("KeyUnsubscribe");
+                    if (KeyUnsubscribe != null)
+                        recMail.KeyUnsubscribe = KeyUnsubscribe.Value;
+
+                    var DataUnsubscribe = rec.Attribute("DataUnsubscribe");
+                    if (DataUnsubscribe != null)
+                        recMail.DataUnsubscribe = Convert.ToDateTime(DataUnsubscribe.Value);
+                }
+                _repoEmail.Flush();
+            }
+        }
+
+        protected override void Exporting(EmailContactPart part, ExportContentContext context) {
+            if (part.EmailRecord != null) {
+                var root = context.Element(part.PartDefinition.Name);
+                foreach (CommunicationEmailRecord rec in part.EmailRecord) {
+                    XElement emailText = new XElement("EmailRecord");
+                    emailText.SetAttributeValue("Language", rec.Language);
+                    emailText.SetAttributeValue("Validated", rec.Validated);
+                    emailText.SetAttributeValue("DataInserimento", rec.DataInserimento);
+                    emailText.SetAttributeValue("DataModifica", rec.DataModifica);
+                    emailText.SetAttributeValue("Email", rec.Email);
+                    emailText.SetAttributeValue("Produzione", rec.Produzione);
+                    emailText.SetAttributeValue("AccettatoUsoCommerciale", rec.AccettatoUsoCommerciale);
+                    emailText.SetAttributeValue("AutorizzatoTerzeParti", rec.AutorizzatoTerzeParti);
+                    emailText.SetAttributeValue("KeyUnsubscribe", rec.KeyUnsubscribe);
+                    emailText.SetAttributeValue("DataUnsubscribe", rec.DataUnsubscribe);
+                    root.Add(emailText);
+                }
+            }
+        }
+    }
 }

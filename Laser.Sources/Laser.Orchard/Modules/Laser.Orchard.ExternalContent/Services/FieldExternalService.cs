@@ -536,6 +536,7 @@ namespace Laser.Orchard.ExternalContent.Services {
                 // string JsonDataxxx = JsonConvert.SerializeXmlNode(doc);
 
                 string JsonData = JsonConvert.SerializeXmlNode(newNode);
+                JsonData = JsonData.Replace(",\"\"]}", "]}"); // aggiunto perchè nella nuova versione di newtonjson i nodi xml vuoti non vengono piu tradotti in null ma in ""
                 JsonData = JsonData.Replace(",{}]}", "]}");
 
                 JsonData = JsonData.Replace("\":lasernumeric", "");
@@ -545,8 +546,9 @@ namespace Laser.Orchard.ExternalContent.Services {
                 JsonData = JsonData.Replace(@"\r\n", "");
                 JsonData = JsonData.Replace("\":laserDate", "\"\\/Date(");
                 JsonData = JsonData.Replace("laserDate:\"", ")\\/\"");
+             
 
-                JavaScriptSerializer ser = new JavaScriptSerializer() {
+            JavaScriptSerializer ser = new JavaScriptSerializer() {
                     MaxJsonLength = Int32.MaxValue
                 };
                 dynamic dynamiccontent_tmp = ser.Deserialize(JsonData, typeof(object));
@@ -665,6 +667,7 @@ namespace Laser.Orchard.ExternalContent.Services {
             doc.LoadXml(xml);
             XmlNode newNode = doc.DocumentElement;
             string JsonData = JsonConvert.SerializeXmlNode(newNode);
+            JsonData = JsonData.Replace(",\"\"]}", "]}"); // aggiunto perchè nella nuova versione di newtonjson i nodi xml vuoti non vengono piu tradotti in "" ma in null
             JsonData = JsonData.Replace("\":lasernumeric", "");
             JsonData = JsonData.Replace("lasernumeric:\"", "");
             JsonData = JsonData.Replace("\":laserboolean", "");

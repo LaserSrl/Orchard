@@ -3,6 +3,7 @@ using Laser.Orchard.Fidelity.ViewModels;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Security;
 using System;
@@ -74,5 +75,34 @@ namespace Laser.Orchard.Fidelity.Drivers {
 
             return Editor(part, shapeHelper);
         }
+
+
+        protected override void Importing(LoyalzooUserPart part, ImportContentContext context) {
+
+            var importedLoyalzooUsername = context.Attribute(part.PartDefinition.Name, "LoyalzooUsername");
+            if (importedLoyalzooUsername != null) {
+                part.LoyalzooUsername = importedLoyalzooUsername;
+            }
+
+            var importedLoyalzooPassword = context.Attribute(part.PartDefinition.Name, "LoyalzooPassword");
+            if (importedLoyalzooPassword != null) {
+                part.LoyalzooPassword = importedLoyalzooPassword;
+            }
+
+            var importedCustomerSessionId = context.Attribute(part.PartDefinition.Name, "CustomerSessionId");
+            if (importedCustomerSessionId != null) {
+                part.CustomerSessionId = importedCustomerSessionId;
+            }
+
+        }
+
+
+        protected override void Exporting(LoyalzooUserPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("LoyalzooUsername", part.LoyalzooUsername);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("LoyalzooPassword", part.LoyalzooPassword);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("CustomerSessionId", part.CustomerSessionId);
+        }
+
+
     }
 }

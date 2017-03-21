@@ -18,6 +18,7 @@ using Orchard.MediaLibrary.Models;
 using Orchard.Environment.Configuration;
 using Orchard.UI.Admin;
 using Orchard.ContentManagement.Handlers;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.Facebook.Drivers {
 
@@ -28,18 +29,21 @@ namespace Laser.Orchard.Facebook.Drivers {
         private readonly ShellSettings _shellSettings;
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+        private readonly IContentManager _contentManager;
 
         protected override string Prefix {
             get { return "Laser.Orchard.Facebook"; }
         }
 
-        public FacebookPostDriver(ShellSettings shellSettings, IOrchardServices orchardServices, IFacebookService facebookService, ITokenizer tokenizer) {
+        public FacebookPostDriver(ShellSettings shellSettings, IOrchardServices orchardServices, IFacebookService facebookService,
+                                  ITokenizer tokenizer, IContentManager contentManager) {
             _orchardServices = orchardServices;
             _facebookService = facebookService;
             _shellSettings = shellSettings;
             _tokenizer = tokenizer;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
+             _contentManager=contentManager;
         }
 
         protected override DriverResult Display(FacebookPostPart part, string displayType, dynamic shapeHelper) {
@@ -150,6 +154,109 @@ namespace Laser.Orchard.Facebook.Drivers {
             clonePart.FacebookType = originalPart.FacebookType;
             clonePart.FacebookMessageToPost = originalPart.FacebookMessageToPost;
             clonePart.HasImage = originalPart.HasImage;
+        }
+
+        protected override void Exporting(FacebookPostPart part, ExportContentContext context) {
+            var root = context.Element(part.PartDefinition.Name);
+            root.SetAttributeValue("FacebookMessage", part.FacebookMessage);
+            //FacebookMessageSent non serve per l'import
+            root.SetAttributeValue("FacebookCaption", part.FacebookCaption);
+            root.SetAttributeValue("FacebookDescription", part.FacebookDescription);
+            root.SetAttributeValue("FacebookName", part.FacebookName);
+            root.SetAttributeValue("FacebookPicture", part.FacebookPicture);
+            root.SetAttributeValue("FacebookIdPicture", part.FacebookIdPicture);
+            root.SetAttributeValue("FacebookLink", part.FacebookLink);
+            //SendOnNextPublish non serve per l'import
+            root.SetAttributeValue("FacebookType", part.FacebookType.ToString());
+            root.SetAttributeValue("FacebookMessageToPost", part.FacebookMessageToPost);
+            root.SetAttributeValue("HasImage", part.HasImage);
+            if (part.AccountList.Count() > 0) {
+                XElement accountElement = null;
+                foreach (var accountId in part.AccountList) {
+                    var fbAccount = _contentManager.Get<FacebookAccountPart>(accountId);
+                    if (fbAccount != null) {
+                        accountElement = new XElement("Account", _contentManager.GetItemMetadata(fbAccount.ContentItem).Identity.ToString());
+                        root.Add(accountElement);
+                    }
+                }
+            }  
+        }   
+
+        protected override void Importing(FacebookPostPart part, ImportContentContext context) 
+        {
+            var root = context.Data.Element(part.PartDefinition.Name);
+            var FacebookMessage = root.Attribute("FacebookMessage");
+            if (FacebookMessage != null) {
+                part.FacebookMessage = FacebookMessage.Value;
+            }
+            part.FacebookMessageSent = false;
+            var FacebookCaption = root.Attribute("FacebookCaption");
+            if (FacebookCaption != null) {
+                part.FacebookCaption = FacebookCaption.Value;
+            }
+            var FacebookDescription = root.Attribute("FacebookDescription");
+            if (FacebookDescription != null) {
+                part.FacebookDescription = FacebookDescription.Value;
+            }
+            var FacebookName = root.Attribute("FacebookName");
+            if (FacebookName != null) {
+                part.FacebookName = FacebookName.Value;
+            }
+            var FacebookPicture = root.Attribute("FacebookPicture");
+            if (FacebookPicture != null) {
+                part.FacebookPicture = FacebookPicture.Value;
+            }
+            var FacebookIdPicture = root.Attribute("FacebookIdPicture");
+            if (FacebookIdPicture != null) {
+                part.FacebookIdPicture = FacebookIdPicture.Value;
+            }
+            var FacebookLink = root.Attribute("FacebookLink");
+            if (FacebookLink != null) {
+                part.FacebookLink = FacebookLink.Value;
+            }
+            part.SendOnNextPublish = false;
+            var FacebookMessageToPost = root.Attribute("FacebookMessageToPost");
+            if (FacebookMessageToPost != null) {
+                part.FacebookMessageToPost = FacebookMessageToPost.Value;
+            }
+            var HasImage = root.Attribute("HasImage");
+            if (HasImage != null) {
+                part.HasImage = bool.Parse(HasImage.Value);
+            }
+            var FacebookTypeElement = root.Attribute("FacebookType");
+            if (FacebookTypeElement != null) {
+                part.FacebookType = (FacebookType)(Enum.Parse(typeof(FacebookType), FacebookTypeElement.Value));
+            }
+            if (root.HasElements) {
+                List<int> accountList = new List<int>();
+                foreach (var userElement in root.Elements("Account")) {
+                    var fbAccount = context.GetItemFromSession(userElement.Value);
+                    if (fbAccount != null && fbAccount.Has<FacebookAccountPart>()) {
+                        accountList.Add(fbAccount.Id);
+                    }
+                }
+                if (accountList.Count > 0) {
+                    part.AccountList = accountList.ToArray();
+                }
+            }
+            //// old version
+            //var importedAccountSelected = context.Data.Element(part.PartDefinition.Name).Elements("AccountList");
+
+            //if (importedAccountSelected != null && importedAccountSelected.Count() > 0) {
+                
+            //    var listaccount = _facebookService.GetValidFacebookAccount();
+            //    int countAcc= 0;
+            //    int[] accSel = new int[importedAccountSelected.Count()];
+                
+            //    foreach (var selectedAcc in importedAccountSelected) {                   
+            //        var tempPartFromid = selectedAcc.Attribute("AccountListSelected").Value;
+            //        var addltsin =  listaccount.Where(x => _contentManager.GetItemMetadata(_contentManager.Get(x.Id)).Identity.ToString() == tempPartFromid.ToString()).Select(x => x.Id).ToArray();
+            //        accSel[countAcc]=addltsin[0];
+            //        countAcc=countAcc + 1;
+                    
+            //    }
+            //    part.AccountList = accSel;
+            //}
         }
     }
 }

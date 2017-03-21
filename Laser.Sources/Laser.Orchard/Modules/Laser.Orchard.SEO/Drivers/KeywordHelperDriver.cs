@@ -78,5 +78,19 @@ namespace Laser.Orchard.SEO.Drivers {
         protected override void Cloning(KeywordHelperPart originalPart, KeywordHelperPart clonePart, CloneContentContext context) {
             clonePart.Keywords = originalPart.Keywords;
         }
+
+        protected override void Importing(KeywordHelperPart part, ImportContentContext context) {
+            var importedKeywords = context.Attribute(part.PartDefinition.Name, "Keywords");
+            if (importedKeywords != null) {
+                part.Keywords = importedKeywords;
+            }
+        }
+
+        protected override void Exporting(KeywordHelperPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Keywords", part.Keywords);
+        }
+
+
+
     }
 }

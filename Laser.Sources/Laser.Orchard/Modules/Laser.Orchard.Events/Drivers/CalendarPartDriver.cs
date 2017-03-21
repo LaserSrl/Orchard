@@ -29,15 +29,17 @@ namespace Laser.Orchard.Events.Drivers
         private readonly IProjectionManager _projectionManager;
         private readonly IRepository<QueryPartRecord> _queryRepository;
         private readonly IEventsService _eventsService;
+        private readonly IRepository<LayoutRecord> _layoutRepository;
 
         public CalendarPartDriver(IProjectionManager projectionManager, IRepository<QueryPartRecord> queryRepository,
-                                  IOrchardServices orchardServices, IEventsService eventsService)
+                                  IOrchardServices orchardServices, IEventsService eventsService, IRepository<LayoutRecord> layoutRepository)
         {
             T = NullLocalizer.Instance;
             _projectionManager = projectionManager;
             _queryRepository = queryRepository;
             _eventsService = eventsService;
             _orchardServices = orchardServices;
+            _layoutRepository = layoutRepository;
         }
 
         protected override string Prefix
@@ -190,19 +192,63 @@ namespace Laser.Orchard.Events.Drivers
 
         protected override void Importing(CalendarPart part, global::Orchard.ContentManagement.Handlers.ImportContentContext context) {
             var root = context.Data.Element(part.PartDefinition.Name);
-            part.CalendarShape = root.Attribute("CalendarShape").Value;
-            part.DisplayPager = Boolean.Parse(root.Attribute("DisplayPager").Value);
-            part.ItemsPerPage = int.Parse(root.Attribute("ItemsPerPage").Value, CultureInfo.InvariantCulture);
-            part.NumDays = root.Attribute("NumDays").Value;
-            part.PagerSuffix = root.Attribute("PagerSuffix").Value;
-            part.StartDate = root.Attribute("StartDate").Value;
-
-            //TODO: Importing cascade Layout and Query?
-            //part.QueryPartRecord 
-            //part.LayoutRecord
-
+            var CalendarShape = root.Attribute("CalendarShape");
+            if (CalendarShape != null) {
+                part.CalendarShape = CalendarShape.Value;
+            }
+            var DisplayPager = root.Attribute("DisplayPager");
+            if (DisplayPager != null) {
+                part.DisplayPager = Convert.ToBoolean(DisplayPager.Value);
+            }
+            var ItemsPerPage = root.Attribute("ItemsPerPage");
+            if (ItemsPerPage != null) {
+                part.ItemsPerPage = Convert.ToInt32(ItemsPerPage.Value);
+            }
+            var NumDays = root.Attribute("NumDays");
+            if (NumDays != null) {
+                part.NumDays = NumDays.Value;
+            }
+            var PagerSuffix = root.Attribute("PagerSuffix");
+            if (PagerSuffix != null) {
+                part.PagerSuffix = PagerSuffix.Value;
+            }
+            var StartDate = root.Attribute("StartDate");
+            if (StartDate != null) {
+                part.StartDate = StartDate.Value;
+            }
+            context.ImportAttribute(part.PartDefinition.Name, "Query", x => {
+                // cerca la campagna con l'identity indicato
+                var query = context.GetItemFromSession(x);
+                // verifica che si tratti effettivamente di una query
+                if (query != null && query.Has<QueryPart>()) {
+                    part.QueryPartRecord = query.As<QueryPart>().Record;
+                    // layout
+                    var layoutIndex = context.Attribute(part.PartDefinition.Name, "LayoutIndex");
+                    int layoutIndexValue = 0;
+                    if (layoutIndex != null
+                        && Int32.TryParse(layoutIndex, out layoutIndexValue)
+                        && layoutIndexValue >= 0
+                        && part.Record.QueryPartRecord.Layouts.Count > layoutIndexValue) {
+                        part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts[Int32.Parse(layoutIndex)];
+                    }
+                }
+            });
         }
-
+        // scommentare il metodo seguente nella versione 1.10.x e commentare la parte corrispondente in Importing
+        //protected override void ImportCompleted(ProjectionPart part, ImportContentContext context) {
+        //    var query = context.Attribute(part.PartDefinition.Name, "Query");
+        //    if (query != null) {
+        //        part.Record.QueryPartRecord = context.GetItemFromSession(query).As<QueryPart>().Record;
+        //        var layoutIndex = context.Attribute(part.PartDefinition.Name, "LayoutIndex");
+        //        int layoutIndexValue;
+        //        if (layoutIndex != null
+        //            && Int32.TryParse(layoutIndex, out layoutIndexValue)
+        //            && layoutIndexValue >= 0
+        //            && part.Record.QueryPartRecord.Layouts.Count > layoutIndexValue) {
+        //            part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts[Int32.Parse(layoutIndex)];
+        //        }
+        //    }
+        //}
         protected override void Exporting(CalendarPart part, global::Orchard.ContentManagement.Handlers.ExportContentContext context) {
             var root = context.Element(part.PartDefinition.Name);
             root.SetAttributeValue("CalendarShape", part.CalendarShape);
@@ -211,10 +257,11 @@ namespace Laser.Orchard.Events.Drivers
             root.SetAttributeValue("NumDays", part.NumDays);
             root.SetAttributeValue("PagerSuffix", part.PagerSuffix);
             root.SetAttributeValue("StartDate", part.StartDate);
-            
-            //TODO: Exporting cascade Layout and Query?
-            //part.QueryPartRecord 
-            //part.LayoutRecord
+            if (part.QueryPartRecord != null && part.QueryPartRecord.Id > 0) {
+                var query = _orchardServices.ContentManager.Get(part.QueryPartRecord.Id);
+                root.SetAttributeValue("Query", _orchardServices.ContentManager.GetItemMetadata(query).Identity.ToString());
+                root.SetAttributeValue("LayoutIndex", part.Record.QueryPartRecord.Layouts.IndexOf(part.Record.LayoutRecord));
+            }
         }
         private static string GetLayoutDescription(IEnumerable<LayoutDescriptor> layouts, LayoutRecord l)
         {

@@ -13,12 +13,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Orchard.ContentManagement;
+using Orchard.Users.Models;
 
 namespace Laser.Orchard.CommunicationGateway.Drivers {
 
     public class CommunicationContactDriver : ContentPartDriver<CommunicationContactPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly IControllerContextAccessor _controllerContextAccessor;
+        private readonly IContentManager _contentManager;
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
@@ -28,12 +31,14 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             get { return "Laser.Orchard.CommunicationGateway"; }
         }
 
-        public CommunicationContactDriver(IOrchardServices orchardServices, IUtilsServices utilsService, IControllerContextAccessor controllerContextAccessor) {
+        public CommunicationContactDriver(IOrchardServices orchardServices, IUtilsServices utilsService, IControllerContextAccessor controllerContextAccessor, IContentManager contentManager) {
+
             _orchardServices = orchardServices;
             _controllerContextAccessor = controllerContextAccessor;
             _utilsService = utilsService;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Display(CommunicationContactPart part, string displayType, dynamic shapeHelper) {
@@ -85,31 +90,35 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             return ContentShape("Parts_CommunicationContact_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/CommunicationContact_Edit", Model: model, Prefix: Prefix));
         }
 
-        //protected override void Importing(CommunicationContactPart part, ImportContentContext context) {
-        //    var root = context.Data.Element(part.PartDefinition.Name);
-        //    part.AllDay = Boolean.Parse(root.Attribute("AllDay").Value);
-        //    part.DateTimeEnd = root.Attribute("DateTimeEnd").Value != null ? DateTime.Parse(root.Attribute("DateTimeEnd").Value, CultureInfo.InvariantCulture) : (DateTime?)null;
-        //    part.DateTimeStart = root.Attribute("DateTimeStart").Value != null ? DateTime.Parse(root.Attribute("DateTimeStart").Value, CultureInfo.InvariantCulture) : (DateTime?)null;
-        //    part.Repeat = Boolean.Parse(root.Attribute("Repeat").Value);
-        //    part.RepeatDetails = root.Attribute("RepeatDetails").Value;
-        //    part.RepeatEnd = Boolean.Parse(root.Attribute("RepeatEnd").Value);
-        //    part.RepeatEndDate = root.Attribute("RepeatEndDate").Value != null ? DateTime.Parse(root.Attribute("RepeatEndDate").Value, CultureInfo.InvariantCulture) : (DateTime?)null;
-        //    part.RepeatType = root.Attribute("RepeatType").Value;
-        //    part.RepeatValue = int.Parse(root.Attribute("RepeatValue").Value, CultureInfo.InvariantCulture);
-        //}
+        protected override void Importing(CommunicationContactPart part, ImportContentContext context) {
+            context.ImportAttribute(part.PartDefinition.Name, "UserIdentifier", x => {
+                var user = context.ContentManager.Query("User").Where<UserPartRecord>(y => y.UserName == x).List().FirstOrDefault();
+                if (user != null) {
+                    //associa id user
+                    part.UserIdentifier = user.Id;
+                }
+            });
+            var importedMaster = context.Attribute(part.PartDefinition.Name, "Master");
+            if (importedMaster != null) {
+                part.Master = Convert.ToBoolean(importedMaster);
+            }
+            var importedLogs = context.Attribute(part.PartDefinition.Name, "Logs");
+            if (importedLogs != null) {
+                part.Logs = importedLogs;
+            }
+        }
 
-        //protected override void Exporting(CommunicationContactPart part, ExportContentContext context) {
-        //    var root = context.Element(part.PartDefinition.Name);
-        //    root.SetAttributeValue("AllDay", part.AllDay);
-        //    root.SetAttributeValue("DateTimeEnd", part.DateTimeEnd.HasValue ? part.DateTimeEnd.Value.ToString(CultureInfo.InvariantCulture) : null);
-        //    root.SetAttributeValue("DateTimeStart", part.DateTimeStart.HasValue ? part.DateTimeStart.Value.ToString(CultureInfo.InvariantCulture) : null);
-        //    root.SetAttributeValue("Repeat", part.Repeat);
-        //    root.SetAttributeValue("RepeatDetails", part.RepeatDetails);
-        //    root.SetAttributeValue("RepeatEnd", part.RepeatEnd);
-        //    root.SetAttributeValue("RepeatEndDate", part.RepeatEndDate.HasValue ? part.RepeatEndDate.Value.ToString(CultureInfo.InvariantCulture) : null);
-        //    root.SetAttributeValue("RepeatType", part.RepeatType);
-        //    root.SetAttributeValue("RepeatValue", part.RepeatValue);
-
-        //}
+        protected override void Exporting(CommunicationContactPart part, ExportContentContext context) {
+            var root = context.Element(part.PartDefinition.Name);
+            if (part.UserIdentifier > 0) {
+                //cerca lo username corrispondente
+                var contItemUser = _contentManager.Get(part.UserIdentifier);
+                if (contItemUser != null) {
+                    root.SetAttributeValue("UserIdentifier", contItemUser.As<UserPart>().UserName);
+                }
+            }
+            root.SetAttributeValue("Master", part.Master);
+            root.SetAttributeValue("Logs", part.Logs);
+        }
     }
 }

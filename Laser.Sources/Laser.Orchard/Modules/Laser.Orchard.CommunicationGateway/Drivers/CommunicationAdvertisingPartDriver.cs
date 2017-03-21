@@ -16,18 +16,21 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class CommunicationAdvertisingPartDriver : ContentPartCloningDriver<CommunicationAdvertisingPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly ICultureManager _cultureManager;
+        private readonly IContentManager _contentManager;
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+
 
         protected override string Prefix {
             get { return "Laser.Orchard.CommunicationAdvertisingPartDriver"; }
         }
 
-        public CommunicationAdvertisingPartDriver(IOrchardServices orchardServices, ICultureManager cultureManager) {
+        public CommunicationAdvertisingPartDriver(IOrchardServices orchardServices, ICultureManager cultureManager, IContentManager contentManager) {
             _orchardServices = orchardServices;
             //    Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             _cultureManager = cultureManager;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Editor(CommunicationAdvertisingPart part, dynamic shapeHelper) {
@@ -60,6 +63,28 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     ((dynamic)part).ContentLinked.Ids = new int[] { };
             return Editor(part, shapeHelper);
             //  return null;
+        }
+
+        protected override void Importing(CommunicationAdvertisingPart part, ImportContentContext context) {
+            context.ImportAttribute(part.PartDefinition.Name, "CampaignId", x => {
+                // cerca la campagna con l'identity indicato
+                var campPartFromid = context.GetItemFromSession(x);
+                // verifica che si tratti effettivamente di una campagna
+                if (campPartFromid != null && campPartFromid.Has<CommunicationCampaignPart>()) {
+                    part.CampaignId = campPartFromid.Id;
+                }
+            });
+        }
+
+        protected override void Exporting(CommunicationAdvertisingPart part, ExportContentContext context) {
+            var root = context.Element(part.PartDefinition.Name);
+            if (part.CampaignId > 0) {
+                //cerca il corrispondente valore dell' identity dalla campagna e lo uso come id della campagna stessa
+                var contItemCamp = _contentManager.Get(part.CampaignId);
+                if (contItemCamp != null) {
+                    root.SetAttributeValue("CampaignId", _contentManager.GetItemMetadata(contItemCamp).Identity.ToString());
+                }
+            }
         }
 
         protected override void Cloning(CommunicationAdvertisingPart originalPart, CommunicationAdvertisingPart clonePart, CloneContentContext context) {

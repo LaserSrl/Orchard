@@ -100,11 +100,14 @@ namespace Laser.Orchard.StartupConfig.Drivers {
         }
 
         protected override void Importing(UsersGroupsPart part, ImportContentContext context) {
-            throw new NotImplementedException();
+            var importedUserGroup = context.Attribute(part.PartDefinition.Name, "UserGroup");
+            if (importedUserGroup != null) {
+                part.UserGroup = importedUserGroup;
+            }
         }
 
         protected override void Exporting(UsersGroupsPart part, ExportContentContext context) {
-            throw new NotImplementedException();
+            context.Element(part.PartDefinition.Name).SetAttributeValue("UserGroup", part.UserGroup);
         }
     }
 
