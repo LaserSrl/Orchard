@@ -76,9 +76,6 @@
     <Reference Include="Orchard.Workflows">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Workflows\bin\Orchard.Workflows.dll</HintPath>
     </Reference>
-    <Reference Include="RazorEngine">
-      <HintPath>..\..\..\packages\RazorEngine.3.7.0\lib\net45\RazorEngine.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -341,7 +338,6 @@
     <Compile Include="Models\SiteSettingsPart.cs" />
     <Compile Include="Models\TemplatePart.cs" />
     <Compile Include="Parsers\RazorParserEngine.cs" />
-    <Compile Include="Parsers\RazorMachine.cs" />
     <Compile Include="Services\TemplateService.cs" />
     <Compile Include="Parsers\SimpleTextParserEngine.cs" />
     <Compile Include="ViewModels\TemplateViewModel.cs" />

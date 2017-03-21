@@ -12,9 +12,7 @@
 @using System.Linq;
 @functions{
     string retString = "Error"; //possible outcomes: "Error","OK"
-
     string eMsg = String.Empty; //used to track errors and put them in the WF state
-
     //additional services
     ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
     IContentManager _contentManager;
@@ -55,13 +53,16 @@
         TimeSpan thisTime = DateTime.UtcNow.Subtract(accessTime); //the DateTimeField is always stored as UTC
         totalTime = Math.Round(totalTime + (decimal)thisTime.TotalMinutes, 2);
         decimal meanTime = Math.Round(totalTime / nVisits, 2);
-        dCaller.User.ProfilePart.InStore.Value = "";
-        dCaller.User.ProfilePart.TotaleTempoNegozio.Value = totalTime;
-        dCaller.User.ProfilePart.PermanenzaMediaNegozio.Value = meanTime;
+		dynamic usDraft=_contentManager.Get(dCaller.User.Id, VersionOptions.Published);
+        usDraft.ProfilePart.InStore.Value = "";
+        usDraft.ProfilePart.TotaleTempoNegozio.Value = totalTime;
+        usDraft.ProfilePart.PermanenzaMediaNegozio.Value = meanTime;
         // forza la pubblicazione per aggiornare i fieldIndex
-        _contentManager.Create(dCaller.ContentItem, VersionOptions.DraftRequired);
-        _contentManager.Publish(dCaller.ContentItem);
-        _communicationService.UserToContact((IUser)dCaller);
+        //_contentManager.Create(dCaller.ContentItem, VersionOptions.DraftRequired);
+       // _contentManager.Publish(usDraft);
+	   	usDraft.VersionRecord.Published = false;
+        _contentManager.Publish(usDraft);
+        _communicationService.UserToContact((IUser)usDraft.UserPart);
         retString = "OK";
     } catch (Exception ex) {
         eMsg += ex.Message + Environment.NewLine;

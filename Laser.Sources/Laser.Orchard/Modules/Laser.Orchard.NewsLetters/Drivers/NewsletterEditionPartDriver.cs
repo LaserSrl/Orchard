@@ -97,56 +97,44 @@ namespace Laser.Orchard.NewsLetters.Drivers {
         }
 
 
-        #region [ Import/Export ]
-        protected override void Exporting(NewsletterEditionPart part, ExportContentContext context) {
+        //#region [ Import/Export ]
+        //protected override void Exporting(NewsletterEditionPart part, ExportContentContext context) {
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("NewsletterDefinitionPartRecord_Id", part.NewsletterDefinitionPartRecord_Id);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("Number", part.Number);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("Dispatched", part.Dispatched);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("DispatchDate", part.DispatchDate);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("AnnouncementIds", part.AnnouncementIds);
+        //}
 
-            //foreach (var q in part.Questions) {
-            //    XElement question = new XElement("Question");
-            //    question.SetAttributeValue("Position", q.Position);
-            //    question.SetAttributeValue("Published", q.Published);
-            //    question.SetAttributeValue("Question", q.Question);
-            //    question.SetAttributeValue("QuestionType", q.QuestionType);
-            //    foreach (var a in q.Answers) {
-            //        XElement answer = new XElement("Answer");
-            //        answer.SetAttributeValue("Position", a.Position);
-            //        answer.SetAttributeValue("Published", a.Published);
-            //        answer.SetAttributeValue("Answer", a.Answer);
-            //        question.Add(answer);
-            //    }
-            //    context.Element(part.PartDefinition.Name).Add(question);
-            //}
-        }
+        //protected override void Importing(NewsletterEditionPart part, ImportContentContext context) {
 
-        protected override void Importing(NewsletterEditionPart part, ImportContentContext context) {
-            //var questions = context.Data.Element(part.PartDefinition.Name).Elements("Question");
-            //var editModel = _questServices.BuildEditModelForQuestionnairePart(part);
-            //var questionModelList = new List<QuestionEditModel>();
-            //foreach (var q in questions) { // recupero le questions
-            //    var answers = q.Elements("Answer");
-            //    var answerModelList = new List<AnswerEditModel>();
-            //    foreach (var a in answers) { // recupero le answers
-            //        var answerEditModel = new AnswerEditModel {
-            //            Position = int.Parse(a.Attribute("Position").Value),
-            //            Published = bool.Parse(a.Attribute("Published").Value),
-            //            Answer = a.Attribute("Answer").Value,
-            //        };
-            //        answerModelList.Add(answerEditModel);
-            //    }
-            //    var questionEditModel = new QuestionEditModel {
-            //        Position = int.Parse(q.Attribute("Position").Value),
-            //        Published = bool.Parse(q.Attribute("Published").Value),
-            //        Question = q.Attribute("Question").Value,
-            //        QuestionType = (QuestionType)Enum.Parse(typeof(QuestionType), q.Attribute("QuestionType").Value),
-            //        QuestionnairePartRecord_Id = part.Id,
-            //        Answers = answerModelList
-            //    };
-            //    questionModelList.Add(questionEditModel);
-            //}
-            //editModel.Questions = questionModelList; // metto tutto nel model 
-            //_questServices.UpdateForContentItem(
-            //        part.ContentItem, editModel); //aggiorno
-        }
-        #endregion
+        //    var importedNewsletterDefinitionPartRecord_Id = context.Attribute(part.PartDefinition.Name, "NewsletterDefinitionPartRecord_Id");
+        //    if (importedNewsletterDefinitionPartRecord_Id != null) {
+        //        part.NewsletterDefinitionPartRecord_Id = int.Parse(importedNewsletterDefinitionPartRecord_Id);
+        //    }
+
+        //    var importedNumber = context.Attribute(part.PartDefinition.Name, "Number");
+        //    if (importedNumber != null) {
+        //        part.Number = int.Parse(importedNumber);
+        //    }
+
+        //    var importedDispatched = context.Attribute(part.PartDefinition.Name, "Dispatched");
+        //    if (importedDispatched != null) {
+        //        part.Dispatched = bool.Parse(importedDispatched);
+        //    }
+
+        //    var importedDispatchDate = context.Attribute(part.PartDefinition.Name, "DispatchDate");
+        //    if (importedDispatchDate != null) {
+        //        part.DispatchDate = DateTime.Parse(importedDispatchDate);
+        //    }
+
+        //    var importedAnnouncementIds = context.Attribute(part.PartDefinition.Name, "AnnouncementIds");
+        //    if (importedAnnouncementIds != null) {
+        //        part.AnnouncementIds = importedAnnouncementIds;
+        //    }
+
+        //}
+        //#endregion
 
     }
 }

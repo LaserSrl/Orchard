@@ -25,6 +25,37 @@ namespace Laser.Orchard.Cookies.Drivers {
                 () => shapeHelper.Parts_CookieLaw(CookieSettings: cookieSettings, CookieLawPart: part));
         }
 
+        protected override DriverResult Editor(CookieLawPart part, dynamic shapeHelper) {
+
+            var workContext = _workContextAccessor.GetContext();
+            var cookieSettings = workContext.CurrentSite.As<CookieSettingsPart>();
+            var editModel = new Laser.Orchard.Cookies.ViewModels.CookieLawEditModel {
+                CookieLaw = part,
+                CookieSettings = cookieSettings
+            };
+
+            return ContentShape("Parts_CookieLaw_Edit",
+                                () => shapeHelper.EditorTemplate(
+                                      TemplateName: "Parts/CookieLawWidgetSettings",
+                                      Model: editModel,
+                                      Prefix: Prefix));
+        }
+
+        protected override DriverResult Editor(CookieLawPart part, IUpdateModel updater, dynamic shapeHelper) {
+
+            var workContext = _workContextAccessor.GetContext();
+            var cookieSettings = workContext.CurrentSite.As<CookieSettingsPart>();
+            var editModel = new Laser.Orchard.Cookies.ViewModels.CookieLawEditModel {
+                CookieLaw = part,
+                CookieSettings = cookieSettings
+            };
+
+            updater.TryUpdateModel(editModel, Prefix, null, null);
+            return Editor(editModel.CookieLaw, shapeHelper);
+        }
+
+
+
         protected override void Exporting(CookieLawPart part, ExportContentContext context) {
 
             var element = context.Element(part.PartDefinition.Name);
@@ -41,6 +72,8 @@ namespace Laser.Orchard.Cookies.Drivers {
             element.SetAttributeValue("cookieMessage", part.cookieMessage);
             element.SetAttributeValue("cookieWhatAreTheyLink", part.cookieWhatAreTheyLink);
         }
+
+
 
         protected override void Importing(CookieLawPart part, ImportContentContext context) {
 
@@ -59,36 +92,6 @@ namespace Laser.Orchard.Cookies.Drivers {
             part.cookieWhatAreTheyLink = GetAttribute<string>(context, partName, "cookieWhatAreTheyLink");
         }
 
-        protected override DriverResult Editor(CookieLawPart part, dynamic shapeHelper) {
-
-            var workContext = _workContextAccessor.GetContext();
-            var cookieSettings = workContext.CurrentSite.As<CookieSettingsPart>();
-            var editModel = new Laser.Orchard.Cookies.ViewModels.CookieLawEditModel
-            {
-                CookieLaw = part,
-                CookieSettings = cookieSettings
-            };
-
-            return ContentShape("Parts_CookieLaw_Edit",
-                                () => shapeHelper.EditorTemplate(
-                                      TemplateName: "Parts/CookieLawWidgetSettings",
-                                      Model: editModel,
-                                      Prefix: Prefix));
-        }
-
-        protected override DriverResult Editor(CookieLawPart part, IUpdateModel updater, dynamic shapeHelper) {
-
-            var workContext = _workContextAccessor.GetContext();
-            var cookieSettings = workContext.CurrentSite.As<CookieSettingsPart>();
-            var editModel = new Laser.Orchard.Cookies.ViewModels.CookieLawEditModel
-            {
-                CookieLaw = part,
-                CookieSettings = cookieSettings
-            };
-
-            updater.TryUpdateModel(editModel, Prefix, null, null);
-            return Editor(editModel.CookieLaw, shapeHelper);
-        }
 
         private TV GetAttribute<TV>(ImportContentContext context, string partName, string elementName) {
             string value = context.Attribute(partName, elementName);
@@ -97,5 +100,15 @@ namespace Laser.Orchard.Cookies.Drivers {
             }
             return default(TV);
         }
+
+
+       
+
+       
+
+      
+       
+      
+
     }
 }

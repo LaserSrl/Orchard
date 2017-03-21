@@ -28,6 +28,7 @@ using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.UI.Admin;
@@ -35,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class SmsContactPartDriver : ContentPartDriver<SmsContactPart> {
@@ -45,12 +47,14 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         private readonly IRepository<CommunicationSmsRecord> _repoSms;
         private readonly ITransactionManager _transaction;
         private readonly IOrchardServices _orchardServices;
+        private readonly IContentManager _contentManager;
 
-        public SmsContactPartDriver(IRepository<CommunicationSmsRecord> repoSms, ITransactionManager transaction, IOrchardServices orchardServices) {
+        public SmsContactPartDriver(IRepository<CommunicationSmsRecord> repoSms, ITransactionManager transaction, IOrchardServices orchardServices, IContentManager contentManager) {
             _repoSms = repoSms;
             T = NullLocalizer.Instance;
             _transaction = transaction;
             _orchardServices = orchardServices;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Display(SmsContactPart part, string displayType, dynamic shapeHelper) {
@@ -71,10 +75,12 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     }
                     return ContentShape("Parts_SmsContact",
                         () => shapeHelper.Parts_SmsContact(Elenco: viewModel.Elenco));
-                } else {
+                }
+                else {
                     return null;
                 }
-            } else {
+            }
+            else {
                 return null;
             }
         }
@@ -117,7 +123,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                             }
                         if (vmel.Id > 0) {
                             CommunicationSmsRecord cmr = _repoSms.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
-                            if (cmr.Sms != vmel.Sms || cmr.Prefix != vmel.Prefix || cmr.Validated != vmel.Validated|| 
+                            if (cmr.Sms != vmel.Sms || cmr.Prefix != vmel.Prefix || cmr.Validated != vmel.Validated ||
                                 cmr.AccettatoUsoCommerciale != vmel.AccettatoUsoCommerciale ||
                                 cmr.AutorizzatoTerzeParti != vmel.AutorizzatoTerzeParti) {
                                 cmr.Sms = vmel.Sms;
@@ -152,6 +158,80 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                 _repoSms.Flush();
             return Editor(part, shapeHelper);
         }
-    }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part"></param>
+        /// <param name="context"></param>
+        protected override void Importing(SmsContactPart part, ImportContentContext context) {
+            var importedSmsRecord = context.Data.Element(part.PartDefinition.Name).Elements("SmsRecord");
+            if (importedSmsRecord != null) {
+                List<CommunicationSmsRecord> listCom = new List<CommunicationSmsRecord>();
+                foreach (var sms in importedSmsRecord) {
+                    CommunicationSmsRecord comSms = new CommunicationSmsRecord();
+                    var Language = sms.Attribute("Language");
+                    if (Language != null)
+                        comSms.Language = Language.Value;
+
+                    var Validated = sms.Attribute("Validated");
+                    if (Validated != null)
+                        comSms.Validated = Convert.ToBoolean(Validated.Value);
+
+                    var DataModifica = sms.Attribute("DataModifica");
+                    if (DataModifica != null)
+                        comSms.DataModifica = Convert.ToDateTime(DataModifica.Value);
+
+                    var DataInserimento = sms.Attribute("DataInserimento");
+                    if (DataInserimento != null)
+                        comSms.DataInserimento = Convert.ToDateTime(DataInserimento.Value);
+
+                    var Prefix = sms.Attribute("Prefix");
+                    if (Prefix != null)
+                        comSms.Prefix = Prefix.Value;
+
+                    var Sms = sms.Attribute("Sms");
+                    if (Sms != null)
+                        comSms.Sms = Sms.Value;
+
+                    var Produzione = sms.Attribute("Produzione");
+                    if (Produzione != null)
+                        comSms.Produzione = Convert.ToBoolean(Produzione.Value);
+
+                    var AccettatoUsoCommerciale = sms.Attribute("AccettatoUsoCommerciale");
+                    if (AccettatoUsoCommerciale != null)
+                        comSms.AccettatoUsoCommerciale = Convert.ToBoolean(AccettatoUsoCommerciale.Value);
+
+                    var AutorizzatoTerzeParti = sms.Attribute("AutorizzatoTerzeParti");
+                    if (AutorizzatoTerzeParti != null)
+                        comSms.AutorizzatoTerzeParti = Convert.ToBoolean(AutorizzatoTerzeParti.Value);
+
+                    _repoSms.Create(comSms);
+                    listCom.Add(comSms);
+                }
+                part.SmsRecord = listCom;
+                _repoSms.Flush();
+            }
+        }
+
+        protected override void Exporting(SmsContactPart part, ExportContentContext context) {
+            if (part.SmsRecord != null) {
+                var root = context.Element(part.PartDefinition.Name);
+                foreach (CommunicationSmsRecord rec in part.SmsRecord) {
+                    XElement smsText = new XElement("SmsRecord");
+                    smsText.SetAttributeValue("Language", rec.Language);
+                    smsText.SetAttributeValue("Validated", rec.Validated);
+                    smsText.SetAttributeValue("DataInserimento", rec.DataInserimento);
+                    smsText.SetAttributeValue("DataModifica", rec.DataModifica);
+                    smsText.SetAttributeValue("Sms", rec.Sms);
+                    smsText.SetAttributeValue("Prefix", rec.Prefix);
+                    smsText.SetAttributeValue("Produzione", rec.Produzione);
+                    smsText.SetAttributeValue("AccettatoUsoCommerciale", rec.AccettatoUsoCommerciale);
+                    smsText.SetAttributeValue("AutorizzatoTerzeParti", rec.AutorizzatoTerzeParti);
+                    root.Add(smsText);
+                }
+            }
+        }
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.ContentExtension.Services;
+using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
@@ -22,10 +23,6 @@ using Orchard.Security;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
-using RazorEngine.Compilation;
-using RazorEngine.Compilation.ReferenceResolver;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -54,6 +51,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         private readonly IUtilsServices _utilsServices;
         private readonly ITransactionManager _transactionManager;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
+        private readonly IRazorTemplateManager _razorTemplateManager;
         public Localizer T { get; set; }
 
         public ContentItemController(
@@ -70,8 +68,10 @@ namespace Laser.Orchard.ContentExtension.Controllers {
            ITaxonomyService taxonomyService,
            ILocalizedStringManager localizedStringManager,
            ITransactionManager transactionManager,
-            Lazy<IEnumerable<IContentHandler>> handlers
+            Lazy<IEnumerable<IContentHandler>> handlers,
+            IRazorTemplateManager razorTemplateManager
            ) {
+            _razorTemplateManager = razorTemplateManager;
             _localizedStringManager = localizedStringManager;
             _taxonomyService = taxonomyService;
             _contentDefinitionManager = contentDefinitionManager;
@@ -499,19 +499,16 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             if (!System.IO.Directory.Exists(validate_folder))
                 System.IO.Directory.CreateDirectory(validate_folder);
             string myfile = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSettings.Name + @"\Validation\" + ci.ContentType + postfix + ".cshtml";
-            if (System.IO.File.Exists(myfile)) {
-                string mytemplate = File.ReadAllText(myfile);
-                if (!string.IsNullOrEmpty(mytemplate)) {
-                    var config = new TemplateServiceConfiguration();
-                    string result = "";
-                    using (var service = RazorEngineService.Create(config)) {
-                        result = service.RunCompile(mytemplate, "htmlRawTemplatea", null, (Object)ci);
-                    }
-                    string resultnobr = result.Replace("\r\n", "").Replace(" ", "");
-                    if (!string.IsNullOrEmpty(resultnobr)) {
-                        return result;
-                    }
-                }
+            var model = new RazorModelContext {
+                OrchardServices = _orchardServices,
+                ContentItem = ci,
+                Tokens = new Dictionary<string, object>(),
+                T = T
+            };
+            string result = _razorTemplateManager.RunFile(myfile, model);
+            string resultnobr = result.Replace("\r\n", "").Replace(" ", "");
+            if (!string.IsNullOrEmpty(resultnobr)) {
+                return result;
             }
             return null;
         }
@@ -529,38 +526,37 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         #endregion private method
     }
 
-    internal class MyIReferenceResolver : IReferenceResolver {
+    //internal class MyIReferenceResolver : IReferenceResolver {
+    //    //public string FindLoaded(IEnumerable<string> refs, string find) {
+    //    //    return refs.First(r => r.EndsWith(System.IO.Path.DirectorySeparatorChar + find));
+    //    //}
+    //    public IEnumerable<CompilerReference> GetReferences(TypeContext context, IEnumerable<CompilerReference> includeAssemblies) {
+    //        return new[]{
+    //             CompilerReference.From(HostingEnvironment.MapPath("~/")+  @"bin\Orchard.Framework.dll")
+    //            //CompilerReference.From(HostingEnvironment.MapPath("~/")+  @"App_Data\Dependencies\Orchard.dll")
+    //                    };
+    //        // TypeContext gives you some context for the compilation (which templates, which namespaces and types)
 
-        //public string FindLoaded(IEnumerable<string> refs, string find) {
-        //    return refs.First(r => r.EndsWith(System.IO.Path.DirectorySeparatorChar + find));
-        //}
-        public IEnumerable<CompilerReference> GetReferences(TypeContext context, IEnumerable<CompilerReference> includeAssemblies) {
-            return new[]{
-                 CompilerReference.From(HostingEnvironment.MapPath("~/")+  @"bin\Orchard.Framework.dll")
-                //CompilerReference.From(HostingEnvironment.MapPath("~/")+  @"App_Data\Dependencies\Orchard.dll")
-                        };
-            // TypeContext gives you some context for the compilation (which templates, which namespaces and types)
+    //        // You must make sure to include all libraries that are required!
+    //        // Mono compiler does add more standard references than csc!
+    //        // If you want mono compatibility include ALL references here, including mscorlib!
+    //        // If you include mscorlib here the compiler is called with /nostdlib.
+    //        //IEnumerable<string> loadedAssemblies = (new UseCurrentAssembliesReferenceResolver())
+    //        //    .GetReferences(context, includeAssemblies)
+    //        //    .Select(r => r.GetFile())
+    //        //    .ToArray();
 
-            // You must make sure to include all libraries that are required!
-            // Mono compiler does add more standard references than csc!
-            // If you want mono compatibility include ALL references here, including mscorlib!
-            // If you include mscorlib here the compiler is called with /nostdlib.
-            //IEnumerable<string> loadedAssemblies = (new UseCurrentAssembliesReferenceResolver())
-            //    .GetReferences(context, includeAssemblies)
-            //    .Select(r => r.GetFile())
-            //    .ToArray();
+    //        //    yield return CompilerReference.From(FindLoaded(loadedAssemblies, "mscorlib.dll"));
+    //        //    yield return CompilerReference.From(FindLoaded(loadedAssemblies, "System.dll"));
+    //        //      yield return CompilerReference.From(FindLoaded(loadedAssemblies, "System.Core.dll"));
+    //        //     yield return CompilerReference.From(typeof(MyIReferenceResolver).Assembly); // Assembly
 
-            //    yield return CompilerReference.From(FindLoaded(loadedAssemblies, "mscorlib.dll"));
-            //    yield return CompilerReference.From(FindLoaded(loadedAssemblies, "System.dll"));
-            //      yield return CompilerReference.From(FindLoaded(loadedAssemblies, "System.Core.dll"));
-            //     yield return CompilerReference.From(typeof(MyIReferenceResolver).Assembly); // Assembly
-
-            // There are several ways to load an assembly:
-            //yield return CompilerReference.From("Path-to-my-custom-assembly"); // file path (string)
-            //byte[] assemblyInByteArray = --- Load your assembly ---;
-            //yield return CompilerReference.From(assemblyInByteArray); // byte array (roslyn only)
-            //string assemblyFile = --- Get the path to the assembly ---;
-            //yield return CompilerReference.From(File.OpenRead(assemblyFile)); // stream (roslyn only)
-        }
-    }
+    //        // There are several ways to load an assembly:
+    //        //yield return CompilerReference.From("Path-to-my-custom-assembly"); // file path (string)
+    //        //byte[] assemblyInByteArray = --- Load your assembly ---;
+    //        //yield return CompilerReference.From(assemblyInByteArray); // byte array (roslyn only)
+    //        //string assemblyFile = --- Get the path to the assembly ---;
+    //        //yield return CompilerReference.From(File.OpenRead(assemblyFile)); // stream (roslyn only)
+    //    }
+    //}
 }

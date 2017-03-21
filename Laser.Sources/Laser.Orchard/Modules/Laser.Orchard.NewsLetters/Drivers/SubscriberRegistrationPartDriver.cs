@@ -76,56 +76,27 @@ namespace Laser.Orchard.NewsLetters.Drivers {
         }
 
 
-        #region [ Import/Export ]
-        protected override void Exporting(SubscriberRegistrationPart part, ExportContentContext context) {
+        //#region [ Import/Export ]
+        //protected override void Exporting(SubscriberRegistrationPart part, ExportContentContext context) {
 
-            //foreach (var q in part.Questions) {
-            //    XElement question = new XElement("Question");
-            //    question.SetAttributeValue("Position", q.Position);
-            //    question.SetAttributeValue("Published", q.Published);
-            //    question.SetAttributeValue("Question", q.Question);
-            //    question.SetAttributeValue("QuestionType", q.QuestionType);
-            //    foreach (var a in q.Answers) {
-            //        XElement answer = new XElement("Answer");
-            //        answer.SetAttributeValue("Position", a.Position);
-            //        answer.SetAttributeValue("Published", a.Published);
-            //        answer.SetAttributeValue("Answer", a.Answer);
-            //        question.Add(answer);
-            //    }
-            //    context.Element(part.PartDefinition.Name).Add(question);
-            //}
-        }
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("NewsletterDefinitionIds", part.NewsletterDefinitionIds);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("PermitCumulativeRegistrations", part.PermitCumulativeRegistrations);
 
-        protected override void Importing(SubscriberRegistrationPart part, ImportContentContext context) {
-            //var questions = context.Data.Element(part.PartDefinition.Name).Elements("Question");
-            //var editModel = _questServices.BuildEditModelForQuestionnairePart(part);
-            //var questionModelList = new List<QuestionEditModel>();
-            //foreach (var q in questions) { // recupero le questions
-            //    var answers = q.Elements("Answer");
-            //    var answerModelList = new List<AnswerEditModel>();
-            //    foreach (var a in answers) { // recupero le answers
-            //        var answerEditModel = new AnswerEditModel {
-            //            Position = int.Parse(a.Attribute("Position").Value),
-            //            Published = bool.Parse(a.Attribute("Published").Value),
-            //            Answer = a.Attribute("Answer").Value,
-            //        };
-            //        answerModelList.Add(answerEditModel);
-            //    }
-            //    var questionEditModel = new QuestionEditModel {
-            //        Position = int.Parse(q.Attribute("Position").Value),
-            //        Published = bool.Parse(q.Attribute("Published").Value),
-            //        Question = q.Attribute("Question").Value,
-            //        QuestionType = (QuestionType)Enum.Parse(typeof(QuestionType), q.Attribute("QuestionType").Value),
-            //        QuestionnairePartRecord_Id = part.Id,
-            //        Answers = answerModelList
-            //    };
-            //    questionModelList.Add(questionEditModel);
-            //}
-            //editModel.Questions = questionModelList; // metto tutto nel model 
-            //_questServices.UpdateForContentItem(
-            //        part.ContentItem, editModel); //aggiorno
-        }
-        #endregion
+        //}
+
+        //protected override void Importing(SubscriberRegistrationPart part, ImportContentContext context) {
+        //    var importedNewsletterDefinitionIds = context.Attribute(part.PartDefinition.Name, "NewsletterDefinitionIds");
+        //    if (importedNewsletterDefinitionIds != null) {
+        //        part.NewsletterDefinitionIds = importedNewsletterDefinitionIds;
+        //    }
+
+        //    var importedPermitCumulativeRegistrations = context.Attribute(part.PartDefinition.Name, "PermitCumulativeRegistrations");
+        //    if (importedPermitCumulativeRegistrations != null) {
+        //        part.PermitCumulativeRegistrations = bool.Parse(importedPermitCumulativeRegistrations);
+        //    }
+
+        //}
+        //#endregion
 
     }
 }

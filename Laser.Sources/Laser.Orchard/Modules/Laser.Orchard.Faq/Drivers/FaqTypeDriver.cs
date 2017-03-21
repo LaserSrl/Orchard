@@ -2,50 +2,44 @@
 using Laser.Orchard.Faq.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Mvc;
 
-namespace Laser.Orchard.Faq.Drivers
-{
-    public class FaqTypeDriver : ContentPartDriver<FaqTypePart>
-    {
+namespace Laser.Orchard.Faq.Drivers {
+    public class FaqTypeDriver : ContentPartDriver<FaqTypePart> {
         private readonly IFaqTypeService _faqTypeService;
 
         public Localizer T;
 
-        public FaqTypeDriver(IFaqTypeService faqTypeService)
-        {
+        public FaqTypeDriver(IFaqTypeService faqTypeService) {
             _faqTypeService = faqTypeService;
             T = NullLocalizer.Instance;
         }
 
-        protected override DriverResult Display(FaqTypePart part, string displayType, dynamic shapeHelper)
-        {
+        protected override DriverResult Display(FaqTypePart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_FaqType",
-                                () => shapeHelper.Parts_FaqType (
+                                () => shapeHelper.Parts_FaqType(
                                     Title: part.Title,
                                     Id: part.Id));
         }
 
-        protected override string Prefix
-        {
+        protected override string Prefix {
             get { return "FaqType"; }
         }
 
-        protected override DriverResult Editor(FaqTypePart part, dynamic shapeHelper)
-        {
+        protected override DriverResult Editor(FaqTypePart part, dynamic shapeHelper) {
 
             var temp = ContentShape("Parts_FaqType_Edit",
                                 () => shapeHelper.EditorTemplate(
                                     TemplateName: "Parts/FaqType",
                                     Model: part,
                                     Prefix: Prefix));
-            
+
             return temp;
         }
 
-        protected override DriverResult Editor(FaqTypePart part, IUpdateModel updater, dynamic shapeHelper)
-        {
+        protected override DriverResult Editor(FaqTypePart part, IUpdateModel updater, dynamic shapeHelper) {
             //var temp = _faqTypeService.TypeNameAlredyExists("qwe");
             updater.TryUpdateModel(part, Prefix, null, null);
             //if (part.Title!= null && _faqTypeService.TypeNameAlredyExists(part.Title))
@@ -56,16 +50,16 @@ namespace Laser.Orchard.Faq.Drivers
             return Editor(part, shapeHelper);
         }
 
-        protected override void Exporting(FaqTypePart part, global::Orchard.ContentManagement.Handlers.ExportContentContext context)
-        {
-            context.Element(part.PartDefinition.Name)
-                   .SetAttributeValue("FaqTypeTitle", part.Title);
+        protected override void Exporting(FaqTypePart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Title", part.Title);
         }
 
-        protected override void Importing(FaqTypePart part, global::Orchard.ContentManagement.Handlers.ImportContentContext context)
-        {
-            part.Title = context.Attribute(part.PartDefinition.Name, "FaqTypeTitle") ?? string.Empty;
+        protected override void Importing(FaqTypePart part, ImportContentContext context) {
+            var root = context.Data.Element(part.PartDefinition.Name);
+            var faqTitle = root.Attribute("Title");
+            if (faqTitle != null) {
+                part.Title = faqTitle.Value;
+            }
         }
-
     }
 }

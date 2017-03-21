@@ -1060,7 +1060,8 @@ namespace Laser.Orchard.Mobile.Services {
                             if ((dispositivo.RegistrationUrlHost == hostCheck) && (dispositivo.RegistrationUrlPrefix == prefixCheck) && (dispositivo.RegistrationMachineName == machineNameCheck)) {
                                 push.QueueNotification(new ApnsNotification {
                                     DeviceToken = dispositivo.Token,
-                                    Payload = sbParsed
+                                    Payload = sbParsed,
+                                    LowPriority = false
                                 });
 
                                 if ((repeatable == false) && (pushMessage.idContent > 0)) {
@@ -1082,6 +1083,7 @@ namespace Laser.Orchard.Mobile.Services {
                         }
                     }
                     push.Stop();
+
                     // check sui device expired
                     try {
                         var feedback = new FeedbackService(config);

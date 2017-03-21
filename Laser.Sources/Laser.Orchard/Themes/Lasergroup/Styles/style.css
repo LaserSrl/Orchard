@@ -768,7 +768,11 @@ body.page-template-page-societa-chi-siamo #intro{ z-index:5; }
 .showcase-claim-desc{ font-weight:300; color:#ff0903; font-size:40px; margin:0; }
 
 @media(max-width:991px){ #intro.showcase-intro .showcase-perspective{ height:300px; width:100%; }}
-@media(max-width:767px){ #intro.showcase-intro .showcase-perspective{ height:200px; }}
+@media(max-width:767px){ 
+    #intro.showcase-intro .showcase-perspective{ height:200px; }
+    .showcase-claim{ font-weight:300; font-size:30px; color:#333; margin:0; }
+    .showcase-claim-desc{ font-weight:300; color:#ff0903; font-size:20px; margin:0; }
+}
 
 
 /* ------------------- NEWS ------------------ */
