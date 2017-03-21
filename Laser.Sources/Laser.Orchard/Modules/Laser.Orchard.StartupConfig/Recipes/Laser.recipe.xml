@@ -44,7 +44,6 @@
            Laser.Orchard.Maps,
            Laser.Orchard.StartupConfig.UriCultureSelector,
            Laser.Orchard.StartupConfig.MediaExtensions,
-           Laser.Orchard.StartupConfig.MailExtensions,
            Laser.Orchard.TemplateManagement.Parsers.Razor,
            Orchard.Search.Content,
            Lucene,
