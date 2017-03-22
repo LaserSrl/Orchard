@@ -1,4 +1,4 @@
-﻿Name: Laser Orchard Template ManagementLaser Orchard Template Email Activities
+﻿Name: Laser.Orchard.TemplateManagement
 AntiForgery: enabled
 Author:  Laser srl
 Website: 

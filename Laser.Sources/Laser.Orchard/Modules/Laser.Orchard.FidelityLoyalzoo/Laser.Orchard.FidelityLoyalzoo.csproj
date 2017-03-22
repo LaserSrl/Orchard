@@ -54,10 +54,6 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Laser.Orchard.FidelityGateway, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Laser.Orchard.FidelityGateway\bin\Laser.Orchard.FidelityGateway.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
@@ -73,7 +69,7 @@
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Modules\bin\Orchard.Modules.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Users">
-      <HintPath>..\..\..\..\..\Orchard-1.8.1\Orchard.Source\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Workflows, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -104,6 +100,12 @@
     <Compile Include="Services\FidelityLoyalzooService.cs" />
     <Compile Include="Services\LoyalzooSendService.cs" />
     <Compile Include="Services\NotificatorService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Laser.Orchard.FidelityGateway\Laser.Orchard.FidelityGateway.csproj">
+      <Project>{e3ab6536-13d7-495d-9683-50c197b0f09f}</Project>
+      <Name>Laser.Orchard.FidelityGateway</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
