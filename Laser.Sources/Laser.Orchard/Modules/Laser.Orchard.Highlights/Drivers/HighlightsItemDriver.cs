@@ -148,9 +148,7 @@ namespace Laser.Orchard.Highlights.Drivers {
                 context.Element(part.PartDefinition.Name).SetAttributeValue("LinkUrl", part.LinkUrl);
             }
 
-            if (part.Video != null) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("Video", part.Video);
-            }
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Video", part.Video);
 
             if (part.Sottotitolo != null) {
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Sottotitolo", part.Sottotitolo);
@@ -160,15 +158,9 @@ namespace Laser.Orchard.Highlights.Drivers {
                 context.Element(part.PartDefinition.Name).SetAttributeValue("TitleSize", part.TitleSize);
             }
 
-            if (part.ItemOrder != null) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("ItemOrder", part.ItemOrder);
-            }
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ItemOrder", part.ItemOrder);
 
-            if (part.LinkTarget != null) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("LinkTarget", part.LinkTarget);
-            }
-
-
+            context.Element(part.PartDefinition.Name).SetAttributeValue("LinkTarget", part.LinkTarget);
         }
     }
 }
