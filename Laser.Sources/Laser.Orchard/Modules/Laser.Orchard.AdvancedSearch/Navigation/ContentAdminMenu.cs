@@ -31,7 +31,7 @@ namespace Laser.Orchard.AdvancedSearch.Navigation {
             var contentTypeDefinitions = _contentDefinitionManager
                 .ListTypeDefinitions().OrderBy(d => d.Name);
             var contentTypes = contentTypeDefinitions
-                .Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable)
+                .Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Listable)
                 .OrderBy(ctd => ctd.DisplayName);
             if (contentTypes.Any()) {
                 builder
@@ -40,7 +40,7 @@ namespace Laser.Orchard.AdvancedSearch.Navigation {
                         menu.LinkToFirstChild(false);
                         foreach (var contentTypeDefinition in contentTypes) {
                             if (string.Compare(
-                                contentTypeDefinition.Settings["ContentTypeSettings.Creatable"],
+                                contentTypeDefinition.Settings["ContentTypeSettings.Listable"],
                                 "true", StringComparison.OrdinalIgnoreCase) == 0) {
                                 ContentTypeDefinition definition = contentTypeDefinition;
                                 menu.Add(T(contentTypeDefinition.DisplayName), "5", item => 
