@@ -219,7 +219,7 @@ namespace Pubblicazione {
             progressstep++;
             bw.ReportProgress(100 * progressstep / totaleprogress);
             Thread.Sleep(100);
-            if (e.Argument == "btnFullDeploy") {
+            if (e.Argument.ToString() == "btnFullDeploy") {
                 ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\App_Data\Localization", "*.*"), Path.Combine(deploypath, @"App_Data\Localization"));
                 progressstep++;
                 bw.ReportProgress(100 * progressstep / totaleprogress);
@@ -262,14 +262,14 @@ namespace Pubblicazione {
                 bw.ReportProgress(100 * progressstep / totaleprogress);
                 Thread.Sleep(100);
                 foreach (var additionalFile in additionalFiles) {
-                    ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules", additionalFile), deploypath, ExclusionFileOptions.None);
-                    ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes", additionalFile), deploypath, ExclusionFileOptions.None);
+                    ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules", additionalFile), Path.Combine(deploypath, "Modules"), ExclusionFileOptions.None);
+                    ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes", additionalFile), Path.Combine(deploypath, "Themes"), ExclusionFileOptions.None);
                     progressstep++;
                     bw.ReportProgress(100 * progressstep / totaleprogress);
                     Thread.Sleep(100);
                 }
             } else {
-                if (e.Argument == "btnAll") {
+                if (e.Argument.ToString() == "btnAll") {
                     foreach (var a in this.clbModules.CheckedItems) {
                         DirectoryInfo parentDir = Directory.GetParent(elencoModuli[a.ToString()]);
                         ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
