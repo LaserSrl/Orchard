@@ -305,7 +305,6 @@
     <Compile Include="Models\UsersGroupsSettings.cs" />
     <Compile Include="Navigation\UsersGroupsSettingsMenu.cs" />
     <Compile Include="Navigation\MenuItemLinkAlternatesFactory.cs" />
-    <Compile Include="Security\MediaAuthorizationEventHandler.cs" />
     <Compile Include="Security\DynamicGroupsPermissions.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -317,7 +316,6 @@
     <Compile Include="Rules\CultureRuleProvider.cs" />
     <Compile Include="Rules\IsOrchardContentProvider.cs" />
     <Compile Include="Security\GroupsPermissions.cs" />
-    <Compile Include="Security\MediaPermissions.cs" />
     <Compile Include="Services\ActivityServices.cs" />
     <Compile Include="Services\CommonsServices.cs" />
     <Compile Include="Services\ContentExtensionsServices.cs" />

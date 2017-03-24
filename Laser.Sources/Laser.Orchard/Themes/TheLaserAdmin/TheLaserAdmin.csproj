@@ -106,12 +106,6 @@
     <Content Include="Views\Dashboard\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Orchard.MediaLibrary\Admin\index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Orchard.MediaLibrary\Parts\Media.Actions.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\EditorTemplates\Fields\MediaLibraryPicker.Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
