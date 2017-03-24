@@ -35,7 +35,7 @@ namespace Laser.Bootstrap.Controllers {
                 AdditionalThemes = additionalThemes,
             };
 
-            return View(viewModel);
+            return View("OptionsIndex", viewModel);
         }
 
         [HttpPost]
@@ -55,7 +55,7 @@ namespace Laser.Bootstrap.Controllers {
 
             Services.Notifier.Information(T("Your settings have been saved."));
 
-            return View(viewModel);
+            return View("OptionsIndex", viewModel);
         }
     }
 }

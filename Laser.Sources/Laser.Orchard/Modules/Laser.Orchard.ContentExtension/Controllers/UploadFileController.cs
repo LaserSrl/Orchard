@@ -7,6 +7,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
+using Orchard.MediaLibrary;
 using Orchard.MediaLibrary.Models;
 using Orchard.MediaLibrary.Services;
 using Orchard.UI.Notify;
@@ -71,7 +72,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         }
 
         private JsonResult PostFileFunction(HttpPostedFileBase file, string contentType = "") {
-            if (!_orchardServices.Authorizer.Authorize(MediaPermissions.InsertMedia)) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ImportMediaContent)) {
                 return Json(_utilsServices.GetResponse(ResponseType.UnAuthorized));
             }
             Int32 output = 0;

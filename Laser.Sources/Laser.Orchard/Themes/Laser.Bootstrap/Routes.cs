@@ -14,7 +14,7 @@ namespace Laser.Bootstrap {
             return new[] {
                 new RouteDescriptor {
                     Priority = 5,
-                    Route = new Route("Admin/" + Constants.RoutesAreaName,
+                    Route = new Route("BootstrapTheme/Admin/" + Constants.RoutesAreaName,
                         new RouteValueDictionary {
                             {"area", Constants.RoutesAreaName},
                             {"controller", "Admin"},

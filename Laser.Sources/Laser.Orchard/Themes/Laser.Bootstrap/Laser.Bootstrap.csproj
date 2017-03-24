@@ -229,7 +229,7 @@
     <Content Include="Content\fonts\glyphicons\glyphicons-halflings-regular.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\OptionsIndex.cshtml" />
     <Content Include="Views\BadgeOfHonor.cshtml" />
     <Content Include="Views\Branding.cshtml" />
     <Content Include="Views\CommentAuthor.cshtml" />
