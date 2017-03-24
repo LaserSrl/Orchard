@@ -2,22 +2,20 @@
     dynamic item = Model.ContentItem;
 }
 
-<div class="container-fluid">
-    <div class="space-40"></div>
-    <div class="container text-center" id="showcase-loghi">
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center">
-                <a href="@item.ShowcaseLoghiWidget.LinkAppleStore.Value">
-                    <img src="@item.ShowcaseLoghiWidget.LogoAppleStore.FirstMediaUrl" class="img-responsive">
-                </a>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center">
-                <a href="@item.ShowcaseLoghiWidget.LinkGooglePlay.Value">
-                    <img src="@item.ShowcaseLoghiWidget.LogoGooglePlay.FirstMediaUrl" class="img-responsive">
-                </a>
-            </div>
+<div class="space-40"></div>
+<div class="container text-center" id="showcase-loghi">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center">
+            <a href="@item.ShowcaseLoghiWidget.LinkAppleStore.Value" target="@item.ShowcaseLoghiWidget.LinkAppleStore.Target">
+                <img src="@item.ShowcaseLoghiWidget.LogoAppleStore.FirstMediaUrl" class="img-responsive">
+            </a>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center">
+            <a href="@item.ShowcaseLoghiWidget.LinkGooglePlay.Value" target="@item.ShowcaseLoghiWidget.LinkGooglePlay.Target">
+                <img src="@item.ShowcaseLoghiWidget.LogoGooglePlay.FirstMediaUrl" class="img-responsive">
+            </a>
         </div>
     </div>
-    <div class="space-40"></div>
-    <div class="space-40"></div>
 </div>
+<div class="space-40"></div>
+<div class="space-40"></div>

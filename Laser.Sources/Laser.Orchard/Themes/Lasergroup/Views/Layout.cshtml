@@ -62,7 +62,7 @@
 
 <div id="page" class="hfeed site">
     <header id="header" class="site-header" role="banner">
-        
+
         @if (Model.Navigation != null) { 
             @Zone(Model.Navigation)
         }
@@ -80,8 +80,8 @@
 
         @if (Model.AfterContentContattiPage != null) {
             <div class="container">
-		        <div class="space-40"></div>
-		        <div class="row">
+                <div class="space-40"></div>
+                <div class="row">
                     @Zone(Model.AfterContentContattiPage)
                 </div>
             </div>
@@ -92,7 +92,9 @@
         }
 
         @if (Model.AfterContentProdotto != null) {
-            @Zone(Model.AfterContentProdotto)
+            <div class="container">
+                @Zone(Model.AfterContentProdotto)
+            </div>
         }
 
     </div>
@@ -104,7 +106,7 @@
             @if (Model.QuadFirst != null) {
                 @Zone(Model.QuadFirst)
             }
-            
+
             @if (Model.QuadSecond != null) {
                 @Zone(Model.QuadSecond)
             }

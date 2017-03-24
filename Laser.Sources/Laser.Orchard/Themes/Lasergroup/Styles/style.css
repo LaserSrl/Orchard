@@ -186,7 +186,7 @@ body.home{ padding-top:0; }
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{ font-family: 'Roboto', sans-serif; font-weight:700; }
 
 
-.showcase-item-img{ position:relative; min-height: 503px; }
+.showcase-item-img{ position:relative; min-height: 410px; }
 @media(max-width:1240px){ .showcase-item-img{ position:relative; min-height: 365px; } }
 
 .showcase-item-logo{ float:right; width:18%; }
@@ -469,7 +469,7 @@ body.page-template-page-business .title{ color:#FF0903; }
 @media(max-width:767px){
     #business-footer .business-claim{ font-size:35px; }
     .business-claim{ font-size: 20px; font-weight:300; color:#444; margin: 40px 0; }
-    .business-description{ text-align: justify; }
+    .business-description{ text-align: justify; overflow-wrap: break-word; }
 }
 
 
@@ -714,7 +714,7 @@ body.page-template-page-societa-chi-siamo #intro{ z-index:5; }
 #showcase-container{ position:relative; }
 #showcase-container .showcase-container-bottom{ border-bottom:5px solid #00A8E5; position:absolute; width:100%; left:0; z-index:6; bottom:-50px; height:50px; border-radius: 0 0 50% 50%; }
 
-#showcase-container .showcase-title{ font-size:25px; text-transform:none; font-weight:300; margin:0; }
+#showcase-container .showcase-title{ font-size:25px; text-transform:none; font-weight:300; margin:0; padding-right:15px; }
 #showcase-container .showcase-title a{ color:#333; }
 #showcase-container .showcase-title a:hover{ text-decoration:none; }
 #showcase-container .showcase-item-logo{ float:none; width:auto; }

@@ -27,6 +27,10 @@
 @using (Script.Head()) {
 <script type="text/javascript">
     jQuery(window).load(function (x) {
+        
+        var contPage = 0;
+        $("#currentPage").val(contPage);
+        
         //load_more_showcase(x);
         jQuery('#load_showcase').bind('inview', function (e, isInView) {
             if (isInView) load_more_showcase(e);
@@ -39,8 +43,8 @@
         jQuery('#load_posts_loader').addClass('active');
 
         var contPage = jQuery('#currentPage').val();
-
         contPage++;
+
         $("#currentPage").val(contPage);
 
         jQuery.ajax({
