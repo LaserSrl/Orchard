@@ -1,4 +1,5 @@
 ﻿using Orchard.Localization;
+using OrchardThemes = Orchard.Themes;
 using Orchard.Themes.Services;
 using Orchard.UI.Navigation;
 
@@ -16,22 +17,11 @@ namespace Laser.Bootstrap {
         public void GetNavigation(NavigationBuilder builder) {
             var themeName = _siteThemeService.GetSiteTheme();
             if (themeName.Name == Constants.ThemeName) {
-                builder.AddImageSet("themes")
-                    .Add(T("Themes"), "10", BuildMenu);
+                builder.Add(T("Themes"),
+                    menu => menu
+                        .Add(T("Theme Options"), "1.0", item => item.Action("Index", "Admin", new { area = Constants.RoutesAreaName }).LocalNav())
+                    );
             }
-        }
-
-        private void BuildMenu(NavigationItemBuilder menu) {
-            menu.Add(T(""), "10.1",
-                item => item
-                    .Action("Index", "Admin", new { area = Constants.RoutesAreaName })
-                    .Permission(Bootstrap.Permissions.ManageThemeSettings)
-            );
-            menu.Add(T("Choose Options"), "10.2",
-                item => item
-                    .Action("Index", "Admin", new { area = Constants.RoutesAreaName })
-                    .Permission(Bootstrap.Permissions.ManageThemeSettings)
-            );
         }
     }
 }
