@@ -1,7 +1,7 @@
 ﻿@import"../reset.css";
 @import"../forms.css";
-@import url(http://fonts.googleapis.com/css?family=Passion+One);
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,400italic);
+@import url(https://fonts.googleapis.com/css?family=Passion+One);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,400italic);
 
 body {
     background: url(images/body-bg.gif) 50% 0;
