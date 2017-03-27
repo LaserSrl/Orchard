@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <a href="#" data-id="@contentItem.Id" class="media-library-picker-remove">@T("Remove")</a>
-                    @{   if (Authorizer.Authorize(Laser.Orchard.StartupConfig.Security.MediaPermissions.EditMedia, T(""))) {
+                    @{   if (Authorizer.Authorize(Orchard.MediaLibrary.Permissions.EditMediaContent, T(""))) {
                        @T(" | ") <a href="@editUrl">@T("Edit")</a>
                          }
                     }
