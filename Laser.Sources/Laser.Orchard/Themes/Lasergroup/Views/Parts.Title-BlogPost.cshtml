@@ -22,6 +22,13 @@
     baseUrl = baseUrl.TrimEnd('/');
 
     var pathShareBar = baseUrl + "/" + urlPrefix + item.AutoroutePart.Path;
+
+    string bodyHtml = item.BodyPart.Text;
+    var description = Html.Excerpt(bodyHtml, 100).ToString().Replace("<p>", "").Replace("</p>","");
+    if (!string.IsNullOrEmpty(item.SeoPart.Description)) {
+        description = item.SeoPart.Description;
+    }
+    
 }
 
 @using (Script.Head()) {
@@ -29,6 +36,7 @@
     <meta property="og:type" content="article" />
     <meta property="og:title" content="@Model.Title" />
     <meta property="og:image" content="@item.BlogPost.Image.FirstMediaUrl" />
+    <meta property="og:description" content="@description" />
 }
 
 <div class="container single-news-title">
@@ -71,7 +79,7 @@
     <div class="space-20"></div>
     <div class="container">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 news-block news-text">
-            @Html.Raw(item.BlogPostPart.Text)
+            @Html.Raw(item.BodyPart.Text)
         </div>
     </div>
 
@@ -95,7 +103,7 @@
         <div class="space-20"></div>
         <div class="news-block">
             <div class="single-news-item-date pull-right">
-                <a href="https://www.laser-group.com/news" class="link-back-news">@T("Back to news")</a>
+                <a href="~/news" class="link-back-news">@T("Back to news")</a>
             </div>
         </div>
     </div>

@@ -22,6 +22,12 @@
     baseUrl = baseUrl.TrimEnd('/');
 
     var pathShareBar = baseUrl + "/" + urlPrefix + item.AutoroutePart.Path;
+
+    string bodyHtml = item.BodyPart.Text;
+    var description = Html.Excerpt(bodyHtml, 100).ToString().Replace("<p>", "").Replace("</p>", "");
+    if (!string.IsNullOrEmpty(item.SeoPart.Description)) {
+        description = item.SeoPart.Description;
+    }
 }
 
 @using (Script.Head()) {
@@ -29,6 +35,7 @@
     <meta property="og:type" content="article" />
     <meta property="og:title" content="@Model.Title" />
     <meta property="og:image" content="@item.OffertaLavoro.Image.FirstMediaUrl" />
+    <meta property="og:description" content="@description" />
 }
 
 <div id="intro">
@@ -62,12 +69,13 @@
     </div>
 </div>
 <div class="container">
+    <div class="space-40"></div>
     <p>@Html.Raw(item.BodyPart.Text)</p>
 
     <div class="space-20"></div>
     <div class="news-block">
         <div class="single-news-item-date pull-right">
-            <a href="https://www.laser-group.com/lavora-con-noi" class="link-back-news">@T("Back to work with us")</a>
+            <a href="~/lavora-con-noi" class="link-back-news">@T("Back to work with us")</a>
         </div>
     </div>
 </div>
