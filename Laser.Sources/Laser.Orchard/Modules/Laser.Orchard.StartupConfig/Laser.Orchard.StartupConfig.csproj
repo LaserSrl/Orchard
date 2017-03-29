@@ -294,6 +294,7 @@
     <Compile Include="Services\IUserSearchService.cs" />
     <Compile Include="Services\MaintenanceBanner.cs" />
     <Compile Include="Services\MaintenanceService.cs" />
+    <Compile Include="TaxonomiesExtensions\Services\TaxonomyServiceExtension.cs" />
     <Compile Include="Tokens\AdditionalDateTokens.cs" />
     <Compile Include="Tokens\OwnerEmailToken.cs" />
     <Compile Include="Tokens\RazorCodeExecutionToken.cs" />
