@@ -251,7 +251,6 @@
     <Compile Include="Fields\ICustomField.cs" />
     <Compile Include="FileDownloader\Controllers\FileDownloaderController.cs" />
     <Compile Include="FileDownloader\ViewModels\FilesListVM.cs" />
-    <Compile Include="Handlers\BlogPostPartHandler.cs" />
     <Compile Include="Handlers\ContentEventHandler.cs" />
     <Compile Include="Handlers\ContentPickerConnectorHandler.cs" />
     <Compile Include="Controllers\MediaTransformController.cs" />
