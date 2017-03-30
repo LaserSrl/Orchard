@@ -30,6 +30,7 @@
            Orchard.OutputCache,
            Orchard.Taxonomies,
            Orchard.Workflows,
+           Orchard.ContentPicker.LocalizationExtensions,
  				   Laser.Orchard.StartupConfig,
            Laser.Orchard.GoogleAnalytics,
            Laser.Orchard.TemplateEmailActivities,
