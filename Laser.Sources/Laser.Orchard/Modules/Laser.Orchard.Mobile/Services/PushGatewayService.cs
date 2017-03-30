@@ -1192,7 +1192,7 @@ namespace Laser.Orchard.Mobile.Services {
 
         private void DeviceSubscriptionChanged(object sender, string oldSubscriptionId, string newSubscriptionId, INotification notification, bool produzione, TipoDispositivo tipoDispositivo) {
             try {
-                _myLog.WriteLog(T("Device Registration Changed:  Old-> " + oldSubscriptionId + "  New-> " + newSubscriptionId + " -> " + notification).ToString());
+                _myLog.WriteLog(string.Format("Device Registration Changed:  Old-> {0}  New-> {1} -> {2}", oldSubscriptionId, newSubscriptionId, notification));
                 lock (lockMonitor) {
                     List<PushNotificationRecord> pnrList = _pushNotificationRepository.Fetch(x => x.Token == oldSubscriptionId && x.Device == tipoDispositivo && x.Produzione == produzione).ToList();
                     foreach (var pnr in pnrList) {
@@ -1213,13 +1213,13 @@ namespace Laser.Orchard.Mobile.Services {
 
         private void NotificationSent(INotification notification) {
             if (notification is ApnsNotification) {
-                _myLog.WriteLog(T("Sent: " + notification.GetType().Name + " -> " + (notification as ApnsNotification).DeviceToken + " -> " + notification).ToString());
+                _myLog.WriteLog(string.Format("Sent: {0} -> {1} -> {2}", notification.GetType().Name, (notification as ApnsNotification).DeviceToken, notification));
             }
             else if (notification is WnsNotification) {
-                _myLog.WriteLog(T("Sent: " + notification.GetType().Name + " -> " + (notification as WnsNotification).ChannelUri + " -> " + notification).ToString());
+                _myLog.WriteLog(string.Format("Sent: {0} -> {1} -> {2}", notification.GetType().Name, (notification as WnsNotification).ChannelUri, notification));
             }
             else {
-                _myLog.WriteLog(T("Sent: " + notification.GetType().Name + " -> " + notification).ToString());
+                _myLog.WriteLog(string.Format("Sent: {0} -> {1}", notification.GetType().Name, notification));
             }
             messageSent++;
         }
@@ -1248,16 +1248,16 @@ namespace Laser.Orchard.Mobile.Services {
                         inner = inner.InnerException;
                     }
                 }
-                _myLog.WriteLog((T("Failure: " + notification.GetType().Name + " token: " + token + " -> " + notificationFailureException.Message + " - InnerExceptions: " + innerEx.ToString() + "\r\n\t-> " + notification.ToString())).ToString());
+                _myLog.WriteLog(string.Format("Failure: {0} token: {1} -> {2} - InnerExceptions: {3}\r\n\t-> {4}", notification.GetType().Name, token, notificationFailureException.Message, innerEx.ToString(), notification.ToString()));
             }
             catch (Exception ex) {
-                _myLog.WriteLog("Error NotificationFailed: " + notification.GetType().Name + " token: " + token + " -> Error: " + ex.Message + " StackTRace: " + ex.StackTrace);
+                _myLog.WriteLog(string.Format("Error NotificationFailed: {0} token: {1} -> Error: {2} StackTrace: {3}", notification.GetType().Name, token, ex.Message, ex.StackTrace));
             }
         }
 
         private void DeviceSubscriptionExpired(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, bool produzione, TipoDispositivo dispositivo) {
             try {
-                _myLog.WriteLog(T("Device Subscription Expired: " + sender + " -> " + expiredDeviceSubscriptionId).ToString());
+                _myLog.WriteLog(string.Format("Device Subscription Expired: {0} -> {1}", sender, expiredDeviceSubscriptionId));
                 lock (lockMonitor) {
                     var myrepo = _pushNotificationRepository.Fetch(x => x.Token == expiredDeviceSubscriptionId && x.Produzione == produzione && x.Device == dispositivo).ToList();
                     if (myrepo.Count() == 1) {
@@ -1265,15 +1265,15 @@ namespace Laser.Orchard.Mobile.Services {
                         pnr.Validated = false;
                         _pushNotificationRepository.Update(pnr);
                         _pushNotificationRepository.Flush();
-                        _myLog.WriteLog(T("Device Subscription Expired Action: " + sender + " not validated -> " + expiredDeviceSubscriptionId).ToString());
+                        _myLog.WriteLog(string.Format("Device Subscription Expired Action: {0} not validated -> {1}", sender, expiredDeviceSubscriptionId));
                     }
                     else {
-                        _myLog.WriteLog(T("Device Subscription Expired Error: " + sender + " -> token not found or token not unique:" + expiredDeviceSubscriptionId).ToString());
+                        _myLog.WriteLog(string.Format("Device Subscription Expired Error: {0} -> token not found or token not unique: {1}", sender, expiredDeviceSubscriptionId));
                     }
                 }
             }
             catch (Exception ex) {
-                _myLog.WriteLog("Error DeviceSubscriptionExpired: tipoDispositivo: " + dispositivo + " -> expiredDeviceSubscriptionId" + expiredDeviceSubscriptionId + "Error :" + ex.Message + " StackTRace:" + ex.StackTrace);
+                _myLog.WriteLog(string.Format("Error DeviceSubscriptionExpired: tipoDispositivo: {0} -> expiredDeviceSubscriptionId: {1} - Error: {2} StackTrace: {3}", dispositivo, expiredDeviceSubscriptionId, ex.Message, ex.StackTrace));
             }
         }
     }
