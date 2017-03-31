@@ -27,9 +27,9 @@
 }
 @{
     string LogVisita = "";
-//    var watch = System.Diagnostics.Stopwatch.StartNew();
+    //    var watch = System.Diagnostics.Stopwatch.StartNew();
     try {
-       
+
         wfCtx = Model.Tokens["Workflow"];
         Orchard.Workflows.Services.IWorkflowManager wfManager = Model.OrchardServices.WorkContext.Resolve<Orchard.Workflows.Services.IWorkflowManager>();
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
@@ -47,21 +47,21 @@
                                     .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Visita." && r.Value == visitaId))
                                     .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Email." && r.Value == fields[0]))
                                     .Select(x => x.ContentItemRecord.Id);
-                                var ids = fieldsQuery.ToList();
-                                bool creaInvito = true;
-                                if (ids.Count > 0) {
-                                    // sto lavorando con i field, quindi devo verificare se l'invito non è stato eliminato
-                                    foreach (var id in ids) {
-                                        ci = Model.OrchardServices.ContentManager.Get(id);
-                                        if (ci != null) {
-                                            creaInvito = false;
-                                            break;
-                                        }
-                                    }
-                                }
+                var ids = fieldsQuery.ToList();
+                bool creaInvito = true;
+                if (ids.Count > 0) {
+                    // sto lavorando con i field, quindi devo verificare se l'invito non è stato eliminato
+                    foreach (var id in ids) {
+                        ci = Model.OrchardServices.ContentManager.Get(id);
+                        if (ci != null) {
+                            creaInvito = false;
+                            break;
+                        }
+                    }
+                }
                 if (creaInvito) {
                     invito = Model.OrchardServices.ContentManager.New("SchedaInvito");
-                    Model.OrchardServices.ContentManager.Create(invito,VersionOptions.Draft);
+                    Model.OrchardServices.ContentManager.Create(invito, VersionOptions.Draft);
                     invito.SchedaInvito.Visita.Ids = new int[] { visita.Id };
                     invito.SchedaInvito.Email.Value = fields[0];
                     invito.ActivityPart.DateTimeStart = visita.ActivityPart.DateTimeStart;
@@ -70,22 +70,29 @@
                     invito.SchedaInvito.Cognome.Value = fields[1];
                     invito.SchedaInvito.Nome.Value = fields[2];
                     invito.SchedaInvito.Azienda.Value = fields[3];
-                        if (fields[4].ToUpper() == "SI") {
-                            invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value = true;
-                        }
-                        else if (fields[4].ToUpper() == "NO") {
-                            invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value = false;
-                        }
-                        else { // se non specificato il default è true
-                            invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value = true;
-                        }
+                    if (fields[4].ToUpper() == "SI") {
+                        invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value = true;
+                    } else if (fields[4].ToUpper() == "NO") {
+                        invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value = false;
+                    } else { // se non specificato il default è true
+                        invito.SchedaInvito.AbilitaPrenotazioneParcheggio.Value = true;
+                    }
+                    if (fields.Length == 6) { // campo opzionale per i tornelli
+                        if (fields[5].ToUpper() == "SI") {
+                            invito.SchedaInvito.AbilitaTornelli.Value = true;
+                    } else if (fields[5].ToUpper() == "NO") {
+                        invito.SchedaInvito.AbilitaTornelli.Value = false;
+                    } else { // se non specificato il default è true
+                        invito.SchedaInvito.AbilitaTornelli.Value = true;
+                    }
+                    }
                     if (invito.CommonPart.Owner == null) {
                         invito.CommonPart.Owner = visita.CommonPart.Owner;
                     }
                     if (invito.CommonPart.Creator.Value == null) {
                         invito.CommonPart.Creator.Value = visita.CommonPart.Owner.Id;
                     }
-                    invito.TitlePart.Title = fields[1]+" " + fields[2] +" - " + visita.TitlePart.Title;
+                    invito.TitlePart.Title = fields[1] + " " + fields[2] + " - " + visita.TitlePart.Title;
                     invito.AutoroutePart.DisplayAlias = "Schedainvito" + invito.Id.ToString();
                     _contentManager.Publish(invito);
                     LogVisita += DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " Creato scheda invito -> " + invito.SchedaInvito.Email.Value + Environment.NewLine;
@@ -105,15 +112,13 @@
             }
         }
         retString = "Ok";
-    }
-    catch (Exception ex) {
+    } catch (Exception ex) {
         wfCtx.SetState("ErrorMessage", ex.Message);
         LogVisita += DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " Errore : Creazione inviti. Si è verificato un errore relativo al contenuto: " + Model.ContentItem.Id + Environment.NewLine;
         //  _transactionManager.Cancel();
-    }
-    finally {
-    //    watch.Stop();
-    //    Model.ContentItem.Visita.Log.Value += "!!"+watch.ElapsedMilliseconds+"!!";
+    } finally {
+        //    watch.Stop();
+        //    Model.ContentItem.Visita.Log.Value += "!!"+watch.ElapsedMilliseconds+"!!";
         Model.ContentItem.Visita.Log.Value += LogVisita;
     }
 }
