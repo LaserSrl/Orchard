@@ -304,6 +304,9 @@ namespace Laser.Orchard.HID.Models {
                     default:
                         break;
                 }
+                if (onlyLatestContainer) {
+                    break; //we only do the most recent container
+                }
                 //TODO: Move this functionality to a method of HIDCredentialContainer, like credentialContainer.IssueCredential(partNumber)
                 //HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(IssueCredentialEndpointFormat, credentialContainer.Id));
                 //wr.Method = WebRequestMethods.Http.Post;

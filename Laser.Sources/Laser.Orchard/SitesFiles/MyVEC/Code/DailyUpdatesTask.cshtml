@@ -121,6 +121,7 @@
             if (credStatuses.Count == 0) {
                 //we never processed this SchedaInvito
                 AssignHiddenFieldValue(schedaId, string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
+                credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                 schedaUpdated = true;
                 //we changed a field, so we add to the feedbackData lists
                 AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
