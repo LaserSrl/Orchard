@@ -12,13 +12,12 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.TaskScheduler.Services {
-    public class ScheduledTaskService : IScheduledTaskService {
 
+    public class ScheduledTaskService : IScheduledTaskService {
         private readonly IRepository<LaserTaskSchedulerRecord> _repoLaserTaskScheduler;
         private readonly IOrchardServices _orchardServices;
         private readonly IScheduledTaskManager _taskManager;
         private readonly IRepository<ScheduledTaskRecord> _repoTasks;
-
 
         public ScheduledTaskService(IRepository<LaserTaskSchedulerRecord> repoLaserTaskScheduler,
             IOrchardServices orchardServices,
@@ -29,6 +28,7 @@ namespace Laser.Orchard.TaskScheduler.Services {
             _taskManager = taskManager;
             _repoTasks = repoTasks;
         }
+
         /// <summary>
         /// Get all the scheulers from the db
         /// </summary>
@@ -55,21 +55,18 @@ namespace Laser.Orchard.TaskScheduler.Services {
             var keys = formData.AllKeys.Where(k => k.IndexOf("allTasks[") == 0).ToArray();
 
             List<ScheduledTaskViewModel> vmsForTasks = new List<ScheduledTaskViewModel>();
-            int nVms = keys.Length / 9; //this is the number of fields we get from the views, and should be the number of fields in the ScheduledTaskViewModel
-
-            //note: here we are using the name of the properties and fields in the strings:
-            //if those are changed for any reason, the strings in this method should reflect that
+            int nVms = keys.Where(x => x.EndsWith("].Id")).Count();
             for (int i = 0; i < nVms; i++) {
-                //get the number to use as index for the keys. It may not correspond to i in the case where
-                //some schedulers have been deleted
-                string kk = keys[i * 9];
+                string kk = (keys.Where(x => x.EndsWith("].Id"))).ToArray()[i];
+
                 int index = int.Parse(kk.Split(new string[] { "[", "]" }, StringSplitOptions.RemoveEmptyEntries)[1]);
                 string thisObject = String.Format("allTasks[{0}].", index);
                 DateTime? inputDate;
                 try {
                     inputDate = String.IsNullOrWhiteSpace(formData[thisObject + "ScheduledStartUTC"]) ? (DateTime?)null :
                         Convert.ToDateTime(formData[thisObject + "ScheduledStartUTC"]);
-                } catch (Exception) {
+                }
+                catch (Exception) {
                     inputDate = null;
                 }
                 vmsForTasks.Add(new ScheduledTaskViewModel {
@@ -106,12 +103,14 @@ namespace Laser.Orchard.TaskScheduler.Services {
                         //the task is definitely not running, so we may safely remove the scheduler
                         _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get(vm.Id));
                         //(note that a handler is invoked to clean up the repositor)
-                    } else {
+                    }
+                    else {
                         //update the part
                         ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.Get<ScheduledTaskPart>(vm.Id);
                         vm.UpdatePart(part);
                     }
-                } else {
+                }
+                else {
                     //we have to create a new record
                     if (!vm.Delete) {
                         //we only create it if it was not also deleted already
@@ -139,8 +138,8 @@ namespace Laser.Orchard.TaskScheduler.Services {
             }
             _taskManager.CreateTask(taskTypeStr, part.ScheduledStartUTC ?? DateTime.UtcNow, ci);
             part.RunningTaskId = _repoTasks.Get(str => str.TaskType.Equals(taskTypeStr)).Id;
-    
         }
+
         /// <summary>
         /// Unschedule an existing task based on the view model
         /// </summary>
@@ -153,7 +152,8 @@ namespace Laser.Orchard.TaskScheduler.Services {
                 var str = _repoTasks.Get(tId);
                 if (str != null) {
                     _repoTasks.Delete(str);
-                } else {
+                }
+                else {
                     //tId might have changed since the moment we got the information into the view models
                     //e.g. if the task is periodic, it will generate a new Id and update it.
                     //let's check here if there are tasks with the part id in the TaskType
@@ -169,9 +169,8 @@ namespace Laser.Orchard.TaskScheduler.Services {
                     }
                 }
             }
-            
-            part.RunningTaskId = 0;
 
+            part.RunningTaskId = 0;
         }
 
         /// <summary>
@@ -188,24 +187,31 @@ namespace Laser.Orchard.TaskScheduler.Services {
                     case TimeUnits.Seconds:
                         result = result.AddSeconds(part.PeriodicityTime);
                         break;
+
                     case TimeUnits.Minutes:
                         result = result.AddMinutes(part.PeriodicityTime);
                         break;
+
                     case TimeUnits.Hours:
                         result = result.AddHours(part.PeriodicityTime);
                         break;
+
                     case TimeUnits.Days:
                         result = result.AddDays(part.PeriodicityTime);
                         break;
+
                     case TimeUnits.Weeks:
                         result = result.AddDays(7 * part.PeriodicityTime);
                         break;
+
                     case TimeUnits.Months:
                         result = result.AddMonths(part.PeriodicityTime);
                         break;
+
                     case TimeUnits.Years:
                         result = result.AddYears(part.PeriodicityTime);
                         break;
+
                     default:
                         break;
                 }
