@@ -279,10 +279,18 @@ namespace Laser.Orchard.HID.Models {
             if (CredentialContainers.Count == 0) {
                 Error = UserErrors.DoesNotHaveDevices;
             }
+            var containers = CredentialContainers;
             if (onlyLatestContainer) {
-                CredentialContainers = CredentialContainers.OrderByDescending(cc => cc.Id).ToList();
+                //IEnumerable<T>.Distinct should preserve the ordering, but it is not actually guaranteed to
+                containers = containers
+                    .GroupBy(cc => cc.Manufacturer)
+                    .SelectMany(group => {
+                        return group
+                            .GroupBy(cc => cc.Model)
+                            .Select(sub => sub.OrderByDescending(cc => cc.Id).First());
+                    }).ToList();
             }
-            foreach (var credentialContainer in CredentialContainers) {
+            foreach (var credentialContainer in containers) {
                 credentialContainer.IssueCredential(partNumber, this, _HIDService);
                 //error handling:
                 switch (credentialContainer.Error) {

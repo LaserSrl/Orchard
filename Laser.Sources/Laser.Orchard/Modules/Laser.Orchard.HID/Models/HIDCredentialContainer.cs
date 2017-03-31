@@ -140,4 +140,43 @@ namespace Laser.Orchard.HID.Models {
             return this;
         }
     }
+
+    public class HIDCredentialContainerEqualityComparer : IEqualityComparer<HIDCredentialContainer> {
+        public bool Equals(HIDCredentialContainer cc1, HIDCredentialContainer cc2) {
+            if (Object.ReferenceEquals(cc1, cc2)) return true;
+            if (Object.ReferenceEquals(cc1, null) || Object.ReferenceEquals(cc2, null))
+                return false;
+
+            return (cc1.Manufacturer == cc2.Manufacturer && cc1.Model == cc2.Model);
+        }
+        // If Equals() returns true for a pair of objects 
+        // then GetHashCode() must return the same value for these objects.
+        public int GetHashCode(HIDCredentialContainer cc) {
+            if (Object.ReferenceEquals(cc, null)) return 0;
+            
+            int manufacturerCode = cc.Manufacturer == null ? 0 : cc.Manufacturer.GetHashCode();
+            int modelCode = cc.Model == null ? 0 : cc.Model.GetHashCode();
+
+            return manufacturerCode ^ modelCode;
+        }
+    }
+
+    public class HIDCredentialContainerModelEqualityComparer : IEqualityComparer<HIDCredentialContainer> {
+        public bool Equals(HIDCredentialContainer cc1, HIDCredentialContainer cc2) {
+            if (Object.ReferenceEquals(cc1, cc2)) return true;
+            if (Object.ReferenceEquals(cc1, null) || Object.ReferenceEquals(cc2, null))
+                return false;
+
+            return cc1.Model == cc2.Model;
+        }
+        // If Equals() returns true for a pair of objects 
+        // then GetHashCode() must return the same value for these objects.
+        public int GetHashCode(HIDCredentialContainer cc) {
+            if (Object.ReferenceEquals(cc, null)) return 0;
+
+            int modelCode = cc.Model == null ? 0 : cc.Model.GetHashCode();
+
+            return modelCode;
+        }
+    }
 }
