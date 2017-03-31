@@ -267,6 +267,8 @@ namespace Laser.Orchard.HID.Services {
             return hidUser;
         }
 
+
+
         public HIDUser RevokeCredentials(IUser user) {
             return RevokeCredentials(user, GetSiteSettings().PartNumbers);
         }
