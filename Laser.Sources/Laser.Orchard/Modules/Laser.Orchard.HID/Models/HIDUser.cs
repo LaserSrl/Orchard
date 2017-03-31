@@ -280,7 +280,7 @@ namespace Laser.Orchard.HID.Models {
                 Error = UserErrors.DoesNotHaveDevices;
             }
             var containers = CredentialContainers;
-            if (onlyLatestContainer) {
+            if (onlyLatestContainer && CredentialContainers.Count > 1) {
                 //IEnumerable<T>.Distinct should preserve the ordering, but it is not actually guaranteed to
                 containers = containers
                     .GroupBy(cc => cc.Manufacturer)
@@ -312,55 +312,6 @@ namespace Laser.Orchard.HID.Models {
                     default:
                         break;
                 }
-                if (onlyLatestContainer) {
-                    break; //we only do the most recent container
-                }
-                //TODO: Move this functionality to a method of HIDCredentialContainer, like credentialContainer.IssueCredential(partNumber)
-                //HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(IssueCredentialEndpointFormat, credentialContainer.Id));
-                //wr.Method = WebRequestMethods.Http.Post;
-                //wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
-                //wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
-                //byte[] bodyData = Encoding.UTF8.GetBytes(IssueCredentialBody(partNumber));
-                //using (Stream reqStream = wr.GetRequestStream()) {
-                //    reqStream.Write(bodyData, 0, bodyData.Length);
-                //}
-                //try {
-                //    using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
-                //        if (resp.StatusCode == HttpStatusCode.OK) {
-                //            using (var reader = new StreamReader(resp.GetResponseStream())) {
-                //                string respJson = reader.ReadToEnd();
-                //                JObject json = JObject.Parse(respJson);
-                //                credentialContainer.Add(json);
-                //            }
-                //            Error = UserErrors.NoError;
-                //        }
-                //    }
-                //} catch (Exception ex) {
-                //    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
-                //    if (resp != null) {
-                //        if (resp.StatusCode == HttpStatusCode.Unauthorized) {
-                //            if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
-                //                return IssueCredential(partNumber);
-                //            }
-                //            Error = UserErrors.AuthorizationFailed;
-                //        } else {
-                //            ErrorFromStatusCode(resp.StatusCode);
-                //        }
-                //        if (Error == UserErrors.PreconditionFailed) {
-                //            var rBody = (new StreamReader(resp.GetResponseStream())).ReadToEnd();
-                //            if (JObject.Parse(rBody)["detail"].ToString().Trim().ToUpperInvariant() == "THIS CREDENTIAL IS ALREADY DELIVERED TO THIS CREDENTIALCONTAINER.") {
-                //                credentialContainer.Error = CredentialErrors.CredentialDeliveredAlready;
-                //                Error = UserErrors.NoError;
-                //            }
-                //        }
-                //    } else {
-                //        Error = UserErrors.UnknownError;
-                //    }
-                //}
-                //if (Error != UserErrors.NoError && Error != UserErrors.PreconditionFailed) {
-                //    credentialContainer.Error = CredentialErrors.UnknownError;
-                //    //break; //break early on error
-                //}
             }
 
             return this;
