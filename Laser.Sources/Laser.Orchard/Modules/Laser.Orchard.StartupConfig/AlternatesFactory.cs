@@ -22,7 +22,8 @@ namespace Laser.Orchard.StartupConfig {
               .OnDisplaying(displayedContext => {
                   if (displayedContext.ShapeMetadata.Type == "Zone") {
                       lastZone = displayedContext.Shape.ZoneName;
-                  } else {
+                  }
+                  else {
                       ContentItem contentItem = displayedContext.Shape.ContentItem;
                       ContentPart contentPart = displayedContext.Shape.ContentPart is ContentPart ? displayedContext.Shape.ContentPart : null;
                       ContentField contentField = displayedContext.Shape.ContentField is ContentField ? displayedContext.Shape.ContentField : null;
@@ -37,21 +38,21 @@ namespace Laser.Orchard.StartupConfig {
                                   displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + suffix);
                               }
                           }
-                          var queryName = _queryService.GetQuery(contentPart.As<ProjectionPart>().Record.QueryPartRecord.Id).Name;
-                          queryName = queryName.Normalize(System.Text.NormalizationForm.FormD).ToLower().Replace(" ", "");
-                          if (!displayedContext.ShapeMetadata.Alternates.Contains(shapeName + "__" + contentItem.ContentType + suffix + "__ForQuery__" + queryName)) {
-                              displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + suffix + "__ForQuery__" + queryName);
-                          }
-                          if (!String.IsNullOrWhiteSpace(zoneName)) {
-                              if (!displayedContext.ShapeMetadata.Alternates.Contains(shapeName + "__" + contentItem.ContentType + suffix + "__ForQuery__" + queryName + "__" + zoneName)) {
-                                  displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + suffix + "__ForQuery__" + queryName + "__" + zoneName);
+                          if (contentPart.As<ProjectionPart>().Record.QueryPartRecord != null) {
+                              var queryName = _queryService.GetQuery(contentPart.As<ProjectionPart>().Record.QueryPartRecord.Id).Name;
+                              queryName = queryName.Normalize(System.Text.NormalizationForm.FormD).ToLower().Replace(" ", "");
+                              if (!displayedContext.ShapeMetadata.Alternates.Contains(shapeName + "__" + contentItem.ContentType + suffix + "__ForQuery__" + queryName)) {
+                                  displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + suffix + "__ForQuery__" + queryName);
+                              }
+                              if (!String.IsNullOrWhiteSpace(zoneName)) {
+                                  if (!displayedContext.ShapeMetadata.Alternates.Contains(shapeName + "__" + contentItem.ContentType + suffix + "__ForQuery__" + queryName + "__" + zoneName)) {
+                                      displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentItem.ContentType + suffix + "__ForQuery__" + queryName + "__" + zoneName);
+                                  }
                               }
                           }
                       }
                   }
               });
         }
-
-
     }
 }
