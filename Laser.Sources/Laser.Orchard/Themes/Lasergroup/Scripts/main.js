@@ -101,6 +101,24 @@ jQuery(document).ready(function(){
             arrows: true,
       });
     }
+
+    if (jQuery('body').hasClass('page-template-page-chi-siamo')) {
+        jQuery('.team-card-face').click(function (e) {
+            e.preventDefault();
+            var check_class = jQuery(this).parent('.team-card').hasClass('active');
+            jQuery('.team-card').removeClass('active');
+            if (!check_class) jQuery(this).parent('.team-card').addClass('active');
+        });
+    }
+
+    if (jQuery('body').hasClass('page-template-page-krake')) {
+        jQuery('.krake-card-face').click(function (e) {
+            e.preventDefault();
+            var check_class = jQuery(this).parent('.krake-card').hasClass('active');
+            jQuery('.krake-card').removeClass('active');
+            if (!check_class) jQuery(this).parent('.krake-card').addClass('active');
+        });
+    }
 });
 
 (function() {
