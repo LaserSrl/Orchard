@@ -691,8 +691,7 @@ namespace Laser.Orchard.Mobile.Services {
                 catch {
                     // ignora volutamente qualsiasi errore
                 }
-                _myLog.WriteLog(ex.Message);
-                _myLog.WriteLog("Errore invio Push del content " + ci.Id + " " + title);
+                _myLog.WriteLog("Errore invio Push del content " + ci.Id + " \"" + title + "\" - Error: " + ex.Message + "\r\n" + ex.StackTrace);
             }
         }
 
@@ -1212,16 +1211,21 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         private void NotificationSent(INotification notification) {
-            if (notification is ApnsNotification) {
-                _myLog.WriteLog(string.Format("Sent: {0} -> {1} -> {2}", notification.GetType().Name, (notification as ApnsNotification).DeviceToken, notification));
+            try {
+                if (notification is ApnsNotification) {
+                    _myLog.WriteLog(string.Format("Sent: {0} -> {1} -> {2}", notification.GetType().Name, (notification as ApnsNotification).DeviceToken, notification));
+                }
+                else if (notification is WnsNotification) {
+                    _myLog.WriteLog(string.Format("Sent: {0} -> {1} -> {2}", notification.GetType().Name, (notification as WnsNotification).ChannelUri, notification));
+                }
+                else {
+                    _myLog.WriteLog(string.Format("Sent: {0} -> {1}", notification.GetType().Name, notification));
+                }
+                messageSent++;
             }
-            else if (notification is WnsNotification) {
-                _myLog.WriteLog(string.Format("Sent: {0} -> {1} -> {2}", notification.GetType().Name, (notification as WnsNotification).ChannelUri, notification));
+            catch (Exception ex) {
+                _myLog.WriteLog("Error NotificationSent: notification: " + notification + " -> Error: " + ex.Message + " StackTRace: " + ex.StackTrace);
             }
-            else {
-                _myLog.WriteLog(string.Format("Sent: {0} -> {1}", notification.GetType().Name, notification));
-            }
-            messageSent++;
         }
 
         private void NotificationFailed(INotification notification, AggregateException notificationFailureException) {

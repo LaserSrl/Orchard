@@ -9601,3 +9601,8 @@ div.zone-header > #culture-selection select {
     right:250px;
     top: 20px;
 }
+
+/*Workaround: O 1.10 ha una logica di ricerca che si attiva via js, non supportata dal tema di admin attuale*/
+input#adminfilter {
+    display: none;
+}
