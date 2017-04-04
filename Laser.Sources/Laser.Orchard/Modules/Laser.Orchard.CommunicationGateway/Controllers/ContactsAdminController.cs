@@ -116,20 +116,14 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             ContentItem content;
             if (id == 0) {
                 var newContent = _contentManager.New(contentType);
-
-                if (draftable) {
-                    _contentManager.Create(newContent, VersionOptions.Draft);
-                } else {
-                    _contentManager.Create(newContent);
-                }
-
+                // crea sempre in draft per poter pubblicare dopo la valorizzazione dei campi, 
+                // in modo da aggiornare i dati nelle tabelle fieldIndexRecord
+                _contentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
             } else {
-                if (draftable) {
-                    content = _contentManager.Get(id, VersionOptions.DraftRequired);
-                } else {
-                    content = _contentManager.Get(id);
-                }
+                // parte sempre da una versione draft per poter pubblicare dopo la valorizzazione dei campi, 
+                // in modo da aggiornare i dati nelle tabelle fieldIndexRecord
+                content = _contentManager.Get(id, VersionOptions.DraftRequired);
                 // verifica che il contact non sia legato a un utente
                 if (content.As<CommunicationContactPart>().UserIdentifier != 0) {
                     return new HttpUnauthorizedResult();
@@ -146,7 +140,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _orchardServices.TransactionManager.Cancel();
                 return View(model);
             } else {
-                if (draftable) {
+                if (!draftable) {
                     _contentManager.Publish(content);
                 }
             }
