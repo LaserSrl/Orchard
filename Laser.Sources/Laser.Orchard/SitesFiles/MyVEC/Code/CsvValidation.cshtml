@@ -4,7 +4,8 @@
 @{ 
     // possible outcomes: Error, OK
     // if OK, set {Workflow.State.InvitationNumber} to the number of invitation in CSV
-    // email;cognome;nome;azienda;prenotabile(SI||NO)
+    // email;cognome;nome;azienda;prenotabile(SI||NO);tornelli(SI||NO)
+    // the sixth field is optional
     try {
         var T = NullLocalizer.Instance;
         bool validatecsv = true;
@@ -22,7 +23,7 @@
             if (messagenotified <= maxnotiermessage) {
                 numline++;
                 var fields = line.Split(';');
-                if (fields.Length != 5) { //testo che ci siano tutti i campi
+                if (fields.Length < 5 || fields.Length > 6) { //testo che ci siano tutti i campi
                     validatecsv = false;
                     messagenotified++;
                     _notifier.Add(NotifyType.Error, T("linea " + numline.ToString() + ": previsti 5 campi"));
@@ -47,6 +48,13 @@
                         validatecsv = false;
                         messagenotified++;
                         _notifier.Add(NotifyType.Error, T("linea " + numline.ToString() + ": campo obbligatorio, valori consentiti, SI o NO"));
+                    }
+                    if (fields.Length == 6) { //test the tornelli field
+                        if (fields[5].ToUpper() != "SI" && fields[5].ToUpper() != "NO") {
+                            validatecsv = false;
+                            messagenotified++;
+                            _notifier.Add(NotifyType.Error, T("linea " + numline.ToString() + ": valori consentiti per abilitazione tornelli, SI o NO"));
+                        }
                     }
                 }
             }

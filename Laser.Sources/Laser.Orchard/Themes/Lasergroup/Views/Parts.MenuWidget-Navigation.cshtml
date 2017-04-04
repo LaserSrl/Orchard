@@ -1,0 +1,43 @@
+﻿@{
+    var Menu = Model.Menu;
+    var items = (IList<dynamic>)Enumerable.Cast<dynamic>(Menu.Items);
+
+    int position = 0;
+    var linkHome = items[0].Href;
+}
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div id="header-top" class="container"></div>
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+			</button>
+			<a href="@linkHome" title="Laser Informatica" rel="home" id="logo">&nbsp;</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<div class="menu-menu-principale-container">
+                <ul id="main-menu" class="nav navbar-nav handel-got-d">
+                @foreach (var item in items) {
+                    if (position > 0) {        
+                        bool hasChildren = (item.Item.Items.Length > 0);
+                        <li class="menu-item menu-item-type-post_type menu-item-object-page @(((bool)item.Selected) ? "current-page-ancestor active" : "") @((hasChildren) ? "menu-item-has-children dropdown" : "")">
+                            @if(hasChildren) {
+                                <a href="@item.Href" class="dropdown-toggle" data-toggle="dropdown">@item.Text<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    @DisplayChildren(item)
+                                </ul>
+                            }
+                            else {
+                                <a href="@item.Href">@item.Text</a>
+                            }
+                        </li>
+                    }
+                    position = position + 1;
+                }
+				</ul>
+			</div>
+		</div>
+	</div>
+</nav>

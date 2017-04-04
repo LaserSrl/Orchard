@@ -1,0 +1,30 @@
+﻿@{
+    dynamic item = Model.ContentItem;
+
+    var medias = item.ElementoFasciaKrake.Gallery.MediaParts;
+}
+<div id="krake" class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 text-center-xs">
+            <img src="@item.ElementoFasciaKrake.Image.FirstMediaUrl" class="img-responsive pull-right-sm pull-right-md pull-right-lg">
+        </div>
+        <div class="col-xs-12 col-sm-6 hidden-xs">
+            <div class="space-20 visible-xs"></div>
+            <div class="krake-claim-container">
+                <h4 class="krake-claim handel-got-d">@Html.Raw(item.BodyPart.Text)</h4>
+            </div>
+        </div>
+    </div>
+    <div class="space-40"></div>
+    <div class="space-20"></div>
+    <div class="row row-krake-icons">
+        @for (int i = 0; i < medias.Count; i++) {
+            <div class="col-xs-6 col-sm-4 col-md-2 text-center">
+                <img src="@medias[i].MediaUrl" class="img-responsive krake-icon">
+            </div>
+        }
+    </div>
+    <h3 class="krake-description text-center container">@item.ElementoFasciaKrake.Abstract.Value</h3>
+    <div class="krake-bottom"></div>
+    <div class="krake-bottom-white"></div>
+</div>
