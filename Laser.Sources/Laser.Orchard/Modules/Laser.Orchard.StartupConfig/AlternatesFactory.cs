@@ -22,7 +22,7 @@ namespace Laser.Orchard.StartupConfig {
               .OnDisplaying(displayedContext => {
                   if (displayedContext.ShapeMetadata.Type == "Zone") {
                       lastZone = displayedContext.Shape.ZoneName;
-                  } else {
+                  } else if (displayedContext.Shape.ContentItem is ContentItem) {
                       ContentItem contentItem = displayedContext.Shape.ContentItem;
                       ContentPart contentPart = displayedContext.Shape.ContentPart is ContentPart ? displayedContext.Shape.ContentPart : null;
                       ContentField contentField = displayedContext.Shape.ContentField is ContentField ? displayedContext.Shape.ContentField : null;

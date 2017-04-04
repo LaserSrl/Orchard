@@ -1,0 +1,19 @@
+﻿@{
+    dynamic item = Model.ContentItem;
+    string tipoContenuto = item.HtmlWidget.Specializzazione.Value;
+}
+
+@switch (tipoContenuto) {
+    case "Footer Logo":
+        @Display(New.HtmlQuad_First(ContentItem: item));
+            break;
+    case "Footer Social":
+        @Display(New.HtmlQuad_Fourth(ContentItem: item));
+            break;
+    case "Footer Testo":
+            @Display(New.HtmlFooter(ContentItem: item));
+            break;
+    default:
+        @Display(Model.Content)
+            break;
+}
