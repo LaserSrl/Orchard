@@ -121,14 +121,14 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _contentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
             } else {
-                // forza published a false per poter pubblicare dopo la valorizzazione dei campi, 
-                // in modo da aggiornare i dati nelle tabelle fieldIndexRecord
                 content = _contentManager.Get(id);
-                content.VersionRecord.Published = false;
                 // verifica che il contact non sia legato a un utente
                 if (content.As<CommunicationContactPart>().UserIdentifier != 0) {
                     return new HttpUnauthorizedResult();
                 }
+                // forza published a false per poter pubblicare dopo la valorizzazione dei campi, 
+                // in modo da aggiornare i dati nelle tabelle fieldIndexRecord
+                content.VersionRecord.Published = false;
             }
 
             var model = _contentManager.UpdateEditor(content, this);
