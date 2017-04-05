@@ -37,7 +37,11 @@ function navbar_sticky(){
 
     if (!elem.attr('data-top')) navbar_sticky_data_top();
     if (elem.attr('data-top') <= jQuery(this).scrollTop()){
-        if(!body.hasClass('navbar-fixed')) body.addClass('navbar-fixed');
+        if (!body.hasClass('navbar-fixed')) {
+            body.addClass('navbar-fixed');
+            var scrollHeight = jQuery(this).scrollTop() + $('#navFixed').height();
+            jQuery(this).scrollTop(scrollHeight);
+        }
     } else {
 
         var isMobile = {
