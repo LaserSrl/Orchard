@@ -70,8 +70,8 @@
     // - Credentials
     public string MyCredentialContainerSerializer(HIDCredentialContainer cc) {
         string sID = String.Format(@"{{{0}}}{1}", cc.Id.ToString().Length.ToString(), cc.Id.ToString());
-        string sManufacturer = String.Format(@"{{{0}}}{1}", (cc.Manufacturer??"").Length.ToString(), cc.Manufacturer??"");
-        string sModel = String.Format(@"{{{0}}}{1}", (cc.Model??"").Length.ToString(), cc.Model??"");
+        string sManufacturer = String.Format(@"{{{0}}}{1}", (cc.Manufacturer ?? "").Length.ToString(), cc.Manufacturer ?? "");
+        string sModel = String.Format(@"{{{0}}}{1}", (cc.Model ?? "").Length.ToString(), cc.Model ?? "");
         string sCreds = MyStringSerializer(cc.Credentials.Select(c => MyCredentialSerializer(c)));
         string sCredentials = String.Format(@"{{{0}}}{1}", sCreds.Length.ToString(), sCreds);
         return string.Format(@"{0},{1},{2},{3}",
@@ -121,6 +121,7 @@
             if (credStatuses.Count == 0) {
                 //we never processed this SchedaInvito
                 AssignHiddenFieldValue(schedaId, string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
+                credStatuses.Add(string.Format("ISSUED {0} {1}", cContainer.Id, credential != null ? credential.Id : 0));
                 schedaUpdated = true;
                 //we changed a field, so we add to the feedbackData lists
                 AddToFeedbackDataLists(scheda.SchedaInvito.Visita.Ids[0], schedaId, hidUser.Id, cContainer, "");
@@ -159,7 +160,7 @@
                     }
                 }
             }
-            if(schedaUpdated){
+            if (schedaUpdated) {
                 // force publish to update fieldIndexes
                 _contentManager.Create(scheda, VersionOptions.DraftRequired);
                 _contentManager.Publish(scheda);
@@ -654,14 +655,16 @@
                     dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(siId));
                     if (scheda != null) { //item may have been deleted
                         //mark all HID operations that we have to perform for each user
-                        int userId = (int)(scheda.CommonPart.Creator.Value);
-                        List<KeyValuePair<int, int>> actions = null;
-                        KeyValuePair<int, int> action = new KeyValuePair<int, int>(credentialAction, siId);
-                        if (userActions.TryGetValue(userId, out actions)) {
-                            actions.Add(action);
-                        } else {
-                            actions = new List<KeyValuePair<int, int>>() { action };
-                            userActions.Add(userId, actions);
+                        if (scheda.SchedaInvito.AbilitaTornelli.Value == null || scheda.SchedaInvito.AbilitaTornelli.Value == true) {
+                            int userId = (int)(scheda.CommonPart.Creator.Value);
+                            List<KeyValuePair<int, int>> actions = null;
+                            KeyValuePair<int, int> action = new KeyValuePair<int, int>(credentialAction, siId);
+                            if (userActions.TryGetValue(userId, out actions)) {
+                                actions.Add(action);
+                            } else {
+                                actions = new List<KeyValuePair<int, int>>() { action };
+                                userActions.Add(userId, actions);
+                            }
                         }
                     }
                 }

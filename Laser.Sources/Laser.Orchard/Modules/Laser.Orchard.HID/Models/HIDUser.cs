@@ -35,7 +35,8 @@ namespace Laser.Orchard.HID.Models {
             Error = UserErrors.UnknownError;
         }
 
-        private HIDUser(IHIDAPIService hidService) : this(){
+        private HIDUser(IHIDAPIService hidService)
+            : this() {
             _HIDService = hidService;
         }
 
@@ -65,7 +66,7 @@ namespace Laser.Orchard.HID.Models {
                     json["urn:hid:scim:api:ma:1.0:CredentialContainer"]
                     .Children()
                     .Select(jt => new HIDCredentialContainer(jt, _HIDService))
-                    .Where(cc => onlyActiveContainers ? cc.Status=="ACTIVE" : true)
+                    .Where(cc => onlyActiveContainers ? cc.Status == "ACTIVE" : true)
                     .Where(cc => avStrings.Any(avs => cc.ApplicationVersion.Contains(avs)))
                     );
             }
@@ -268,7 +269,7 @@ namespace Laser.Orchard.HID.Models {
             return JObject.Parse(string.Format(IssueCredentialBodyFormat, pn)).ToString();
         }
 
-        public HIDUser IssueCredential(string partNumber) {
+        public HIDUser IssueCredential(string partNumber, bool onlyLatestContainer = true) {
             if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
                 if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
                     Error = UserErrors.AuthorizationFailed;
@@ -278,52 +279,37 @@ namespace Laser.Orchard.HID.Models {
             if (CredentialContainers.Count == 0) {
                 Error = UserErrors.DoesNotHaveDevices;
             }
+            if (onlyLatestContainer && CredentialContainers.Count > 1) {
+                //IEnumerable<T>.Distinct should preserve the ordering, but it is not actually guaranteed to
+                CredentialContainers = CredentialContainers
+                    .GroupBy(cc => cc.Manufacturer)
+                    .SelectMany(group => {
+                        return group
+                            .GroupBy(cc => cc.Model)
+                            .Select(sub => sub.OrderByDescending(cc => cc.Id).First());
+                    }).ToList();
+            }
             foreach (var credentialContainer in CredentialContainers) {
-                //TODO: Move this functionality to a method of HIDCredentialContainer, like credentialContainer.IssueCredential(partNumber)
-                HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(IssueCredentialEndpointFormat, credentialContainer.Id));
-                wr.Method = WebRequestMethods.Http.Post;
-                wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
-                wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
-                byte[] bodyData = Encoding.UTF8.GetBytes(IssueCredentialBody(partNumber));
-                using (Stream reqStream = wr.GetRequestStream()) {
-                    reqStream.Write(bodyData, 0, bodyData.Length);
-                }
-                try {
-                    using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
-                        if (resp.StatusCode == HttpStatusCode.OK) {
-                            using (var reader = new StreamReader(resp.GetResponseStream())) {
-                                string respJson = reader.ReadToEnd();
-                                JObject json = JObject.Parse(respJson);
-                                credentialContainer.Add(json);
-                            }
-                            Error = UserErrors.NoError;
-                        }
-                    }
-                } catch (Exception ex) {
-                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
-                    if (resp != null) {
-                        if (resp.StatusCode == HttpStatusCode.Unauthorized) {
-                            if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
-                                return IssueCredential(partNumber);
-                            }
-                            Error = UserErrors.AuthorizationFailed;
-                        } else {
-                            ErrorFromStatusCode(resp.StatusCode);
-                        }
-                        if (Error == UserErrors.PreconditionFailed) {
-                            var rBody = (new StreamReader(resp.GetResponseStream())).ReadToEnd();
-                            if (JObject.Parse(rBody)["detail"].ToString().Trim().ToUpperInvariant() == "THIS CREDENTIAL IS ALREADY DELIVERED TO THIS CREDENTIALCONTAINER.") {
-                                credentialContainer.Error = CredentialErrors.CredentialDeliveredAlready;
-                                Error = UserErrors.NoError;
-                            }
-                        }
-                    } else {
+                credentialContainer.IssueCredential(partNumber, this, _HIDService);
+                //error handling:
+                switch (credentialContainer.Error) {
+                    case CredentialErrors.NoError:
+                        Error = UserErrors.NoError;
+                        break;
+                    case CredentialErrors.UnknownError:
                         Error = UserErrors.UnknownError;
-                    }
-                }
-                if (Error != UserErrors.NoError && Error != UserErrors.PreconditionFailed) {
-                    credentialContainer.Error = CredentialErrors.UnknownError;
-                    //break; //break early on error
+                        break;
+                    case CredentialErrors.CredentialDeliveredAlready:
+                        Error = UserErrors.NoError;
+                        break;
+                    case CredentialErrors.AuthorizationFailed:
+                        if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
+                            return IssueCredential(partNumber);
+                        }
+                        Error = UserErrors.AuthorizationFailed;
+                        break;
+                    default:
+                        break;
                 }
             }
 

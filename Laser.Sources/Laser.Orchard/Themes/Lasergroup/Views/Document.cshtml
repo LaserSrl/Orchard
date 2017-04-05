@@ -1,0 +1,52 @@
+﻿@using Orchard.Environment.Configuration
+@using Orchard.UI.Resources
+@using Orchard.ContentManagement
+<!DOCTYPE html>
+@{
+    var settings = WorkContext.Resolve<ShellSettings>();
+    var tenantName = settings.Name;
+    Script.Include("webfont.js").AtHead();
+    Script.Require("JQuery").AtHead();
+    Script.Include("jquery-migrate.js").AtHead();
+    Script.Include("slick.js").AtHead();
+
+    Style.Include("styles.css").AtHead();
+    Style.Include("slick.css").AtHead();
+    Style.Include("style.css").AtHead();
+    Style.Include("css.css").AtHead();
+    Style.Include("Custom.css").AtHead();
+
+    Script.Include("jquery_002.js").AtFoot();
+    Script.Include("main.js").AtFoot();
+}
+<html lang="it-IT">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="@Url.Content(Html.ThemePath(WorkContext.CurrentTheme, "/Styles/images/favicon_laser.gif"))" type="image/gif">
+	<link rel="shortcut icon" href="@Url.Content(Html.ThemePath(WorkContext.CurrentTheme, "/Styles/images/favicon_laser.gif"))" type="image/gif" />
+    <title>@Layout.Title - Laser informatica</title>
+    <script type="text/javascript">
+        /* You can add more configuration options to webfontloader by previously defining the WebFontConfig with your options */
+        if (typeof WebFontConfig === "undefined") {
+            WebFontConfig = new Object();
+        }
+        WebFontConfig['google'] = { families: ['Open+Sans:400', 'Roboto+Condensed:300,400'] };
+
+        (function () {
+            var wf = document.createElement('script');
+            wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })();
+    </script>
+    @Display(Model.Head)
+</head>
+<body class="@Layout.BaseClass">
+    @Display(Model.Body)
+    @Display(Model.Tail)
+</body>
+</html>
