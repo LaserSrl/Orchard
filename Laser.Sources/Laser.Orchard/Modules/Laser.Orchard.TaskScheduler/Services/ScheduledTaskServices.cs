@@ -12,6 +12,7 @@ using System.Linq;
 using System.Web;
 using Orchard.Localization.Services;
 using System.Globalization;
+using Laser.Orchard.StartupConfig.Localization;
 
 namespace Laser.Orchard.TaskScheduler.Services {
 
@@ -21,17 +22,20 @@ namespace Laser.Orchard.TaskScheduler.Services {
         private readonly IScheduledTaskManager _taskManager;
         private readonly IRepository<ScheduledTaskRecord> _repoTasks;
         private readonly IDateLocalizationServices _dateServices;
+        private readonly IDateLocalization _dateLocalization;
 
         public ScheduledTaskService(IRepository<LaserTaskSchedulerRecord> repoLaserTaskScheduler,
             IOrchardServices orchardServices,
             IScheduledTaskManager taskManager,
             IRepository<ScheduledTaskRecord> repoTasks,
-            IDateLocalizationServices dateServices) {
+            IDateLocalizationServices dateServices,
+            IDateLocalization dateLocalization) {
             _repoLaserTaskScheduler = repoLaserTaskScheduler;
             _orchardServices = orchardServices;
             _taskManager = taskManager;
             _repoTasks = repoTasks;
             _dateServices = dateServices;
+            _dateLocalization = dateLocalization;
         }
 
         /// <summary>
@@ -69,7 +73,8 @@ namespace Laser.Orchard.TaskScheduler.Services {
                 try {
                     string formDate = formData[thisObject + "ScheduledStartUTCEditor.Date"];
                     string formTime = formData[thisObject + "ScheduledStartUTCEditor.Time"];
-                    inputDate = _dateServices.ConvertFromLocalizedString(formDate, formTime);
+                    //inputDate = _dateServices.ConvertFromLocalizedString(formDate, formTime);
+                    inputDate = _dateLocalization.StringToDatetime(formDate, formTime);
                 }
                 catch (Exception) {
                     inputDate = null;
