@@ -84,8 +84,6 @@ namespace Orchard.Taxonomies.Handlers {
                                 var newTerm = _localizationService.GetLocalizedContentItem(masterTermPart, missingCulture);
                                 if (newTerm != null)
                                     newTermParts.Add(newTerm.ContentItem.As<TermPart>());
-                                else
-                                    _notifier.Add(NotifyType.Warning, T("Term {0} can't be localized on {1}, term has been removed on this language", originalTermPart.ContentItem.As<TitlePart>().Title, missingCulture));
                             }
                         }
                         else
