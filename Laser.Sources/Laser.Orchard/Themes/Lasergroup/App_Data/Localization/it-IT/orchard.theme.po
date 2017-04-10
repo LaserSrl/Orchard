@@ -1,0 +1,110 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2017 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Themes/Lasergroup/Views/ElencoProdotti.cshtml"
+msgid "Show more showcases"
+msgstr "Carica altri showcases"
+
+msgctxt "~/Themes/Lasergroup/Views/ElencoProdottiHome.cshtml"
+msgid "See all projects"
+msgstr "Guarda tutti i progetti"
+
+msgctxt "~/Themes/Lasergroup/Views/Layout.cshtml"
+msgid "Please show me you are not a robot."
+msgstr "Dimostra che non sei un robot."
+
+msgctxt "~/Themes/Lasergroup/Views/Layout.cshtml"
+msgid "Send..."
+msgstr "Invio..."
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "Add attachment"
+msgstr "Allega file"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "Comments or Inquiry"
+msgstr "Il tuo messaggio"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "Confirm Email"
+msgstr "Conferma Email"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "Confirm Email Address"
+msgstr "Conferma il tuo indirizzo email"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "Email"
+msgstr "Email"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "Email Address"
+msgstr "Il tuo indirizzo email"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "Email address in invalid format"
+msgstr "Formato non valido"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "Message"
+msgstr "Messaggio"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "Name"
+msgstr "Nome e Cognome"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "One or more fields contain errors. Please check and try again."
+msgstr "Uno o più campi contengono errori. Correggi e riprova."
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "SEND"
+msgstr "INVIA"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "The email and confirmation do not match"
+msgstr "Email ed email di conferma non corrispondono"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "The field is required."
+msgstr "Campo obbligatorio"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "Upload file"
+msgstr "Carica allegato"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
+msgid "Your Name"
+msgstr "Il tuo nome e cognome"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.Map-MapWidget.cshtml"
+msgid "Map"
+msgstr "Mappa"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.MenuWidget-MenuWidget-AfterContent.cshtml"
+msgid "Filter"
+msgstr "Filtra"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.Title-BlogPost.cshtml"
+msgid "Back to news"
+msgstr "Torna alle news"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.Title-BlogPost.cshtml"
+msgid "News"
+msgstr "News"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.Title-OffertaLavoro.cshtml"
+msgid "Back to work with us"
+msgstr "Torna alle offerte"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.Title-OffertaLavoro.cshtml"
+msgid "WORK WITH US"
+msgstr "LAVORA CON NOI"
+

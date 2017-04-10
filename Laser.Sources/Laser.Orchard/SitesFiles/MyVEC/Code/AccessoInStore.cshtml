@@ -15,6 +15,12 @@
 
     string eMsg = String.Empty; //used to track errors and put them in the WF state
 
+    string logData = String.Empty;
+    List<string> taskLog = new List<string>();
+    private void AddToLogString(string text) {
+        taskLog.Add(String.Format("{0}: {1}", DateTime.Now.ToString(), text));
+    }
+
     //additional services
     ICommunicationService _communicationService; //from Laser.Orchard.CommunicationGateway
     IContentManager _contentManager;
@@ -25,6 +31,7 @@
         eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
     }
     try {
+        AddToLogString("Beginning to process StoreIn signal.");
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
@@ -39,25 +46,31 @@
         if (store == null) {
             throw new Exception("Impossibile identificare il negozio.");
         }
+        AddToLogString(string.Format("The store has Id {0} and title {1}", storeId.ToString(), (string)(store.TitlePart.Title)));
         //Identify the Sales assistants
         string csvIds = store.PuntoVendita.IdsSalesAssistants.Value;
         if (string.IsNullOrWhiteSpace(csvIds)) {
             throw new Exception("Il negozio per questa richiesta non ha nessun Sales Assistant.");
         }
         Model.Tokens["Workflow"].SetState("RecipientsList", csvIds);
+        AddToLogString(string.Format("The store assistants Ids are: {0}", csvIds));
         //Identify customer
         var caller = Model.OrchardServices.WorkContext.CurrentUser;
         if (caller == null) {
             throw new Exception("Impossibile identificare l'utente che ha effettuato l'accesso al Punto Vendita.");
         }
-        dynamic dCaller = caller; 
+        dynamic dCaller = caller;
+        AddToLogString(string.Format("The user entering is {0} {1}", dCaller.User.ProfilePart.Name.Value ?? "", dCaller.User.ProfilePart.Surname.Value ?? ""));
         Model.Tokens["Workflow"].SetState("CustomerName", dCaller.User.ProfilePart.Name.Value ?? "");
         Model.Tokens["Workflow"].SetState("CustomerSurname", dCaller.User.ProfilePart.Surname.Value ?? "");
         //only update states if the user was not in the store OR if he had entered more than 10 minutes ago
         string prevStore = dCaller.User.ProfilePart.InStore.Value;
         DateTime? oldAccess = dCaller.User.ProfilePart.AccessoNegozio.DateTime;
         DateTime now = DateTime.UtcNow;
+        AddToLogString(string.Format("Old values: InStore = {0}; oldAccess = {1}. UtcNow = {2}",
+            prevStore, oldAccess.HasValue ? oldAccess.Value.ToString() : "", now.ToString()));
         if (prevStore != store.Id.ToString() || (oldAccess == null || ((TimeSpan)now.Subtract(oldAccess.Value)).TotalMinutes > 10)) {
+            AddToLogString("Updating information");
             decimal storeVisits = (dCaller.User.ProfilePart.VisiteaNegozio.Value ?? (decimal)0) + 1;
             dynamic usitem= _contentManager.Get(dCaller.User.Id, VersionOptions.Published);
 			usitem.ProfilePart.VisiteaNegozio.Value = storeVisits;
@@ -70,7 +83,9 @@
 			_contentManager.Publish(usitem);
             _communicationService.UserToContact((IUser)usitem.UserPart);
             retString = "OK";
+            AddToLogString("Done with updates. Send push notifications.");
         } else {
+            AddToLogString("There is no need to update information and send push notifications.");
             retString = "NoPush";
         }
 
@@ -79,4 +94,5 @@
         retString = "Error";
     }
     Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    Model.Tokens["Workflow"].SetState("LoggingInformation", string.Join(Environment.NewLine, taskLog));
 }@retString
