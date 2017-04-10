@@ -50,6 +50,7 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
             config.Namespaces.Add("Orchard.ContentManagement");
             config.Namespaces.Add("Orchard.Caching");
             _razorEngine = RazorEngineService.Create(config);
+           
         }
 
         private IRazorEngineService _razorEngine;
@@ -91,9 +92,10 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
                 DateTime d = System.IO.File.GetLastWriteTime(localFilePath);
                 key += d.ToShortDateString() + d.ToLongTimeString();
             }
+            string codeTemplate="";
             if (!RazorEngineServiceStatic.IsTemplateCached(key, null)) {
                 if (System.IO.File.Exists(localFilePath)) {
-                    string codeTemplate = File.ReadAllText(localFilePath);
+                    codeTemplate = File.ReadAllText(localFilePath);
                     if (!string.IsNullOrEmpty(codeTemplate)) {
                         RazorEngineServiceStatic.AddTemplate(key, new LoadedTemplateSource(codeTemplate, localFilePath));
                         //   listCached.Add(localFilePath);
@@ -105,7 +107,14 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
                 else
                     return "";
             }
-            string result = RazorEngineServiceStatic.Run(key, null, (Object)model);
+            string result = "";
+#if DEBUG
+            codeTemplate = File.ReadAllText(localFilePath);
+            result = RazorEngineServiceStatic.RunCompile(new LoadedTemplateSource(codeTemplate, localFilePath), Guid.NewGuid().ToString(), null, (Object)model);
+            // non uso la cache in modo da permettere il debug anche nel caso in cui il razor venga caricato più volte
+#else
+             result = RazorEngineServiceStatic.Run(key, null, (Object)model);
+#endif
             string resultnobr = (result ?? "").Replace("\r\n", "").Replace(" ", "");
             if (!string.IsNullOrEmpty(resultnobr))
                 return result;
