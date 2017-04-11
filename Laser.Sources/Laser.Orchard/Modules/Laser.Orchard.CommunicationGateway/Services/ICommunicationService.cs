@@ -8,9 +8,11 @@ using Orchard;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentPicker.Fields;
 using Orchard.Core.Common.Fields;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Contents.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Fields.Fields;
@@ -85,13 +87,31 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly ITransactionManager _transactionManager;
         private readonly IFieldIndexService _fieldIndexService;
         private readonly IAutorouteService _autorouteService;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
+
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
 
-        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ISessionLocator session, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, IContactRelatedEventHandler contactRelatedEventHandler, ITransactionManager transactionManager, IFieldIndexService fieldIndexService, IAutorouteService autorouteService) {
+        public CommunicationService(
+            ITaxonomyService taxonomyService,
+            IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord,
+            INotifier notifier,
+            IModuleService moduleService,
+            IOrchardServices orchardServices,
+            IShortLinksService shortLinksService,
+            IContentExtensionsServices contentExtensionsServices,
+            ISessionLocator session,
+            ICultureManager cultureManager,
+            IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord,
+            IContactRelatedEventHandler contactRelatedEventHandler,
+            ITransactionManager transactionManager,
+            IFieldIndexService fieldIndexService,
+            IAutorouteService autorouteService,
+            IContentDefinitionManager contentDefinitionManager) {
+
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
             _contentExtensionsServices = contentExtensionsServices;
@@ -106,6 +126,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _transactionManager = transactionManager;
             _fieldIndexService = fieldIndexService;
             _autorouteService = autorouteService;
+            _contentDefinitionManager = contentDefinitionManager;
 
             T = NullLocalizer.Instance;
         }
@@ -155,8 +176,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             foreach (var contact in activeMasters) {
                 if (master == null) {
                     master = contact;
-                }
-                else {
+                } else {
                     mastersToBeDeleted.Add(contact.ContentItem);
                 }
             }
@@ -289,27 +309,23 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             try {
                 int idCampagna = ((int)((dynamic)part).CampaignId);
                 CampaignName = _orchardServices.ContentManager.Get(idCampagna).As<TitlePart>().Title;
-            }
-            catch {
+            } catch {
                 // comunicato non legato a campagna
             }
             string link = "";
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
                 link = (string)(((dynamic)part).UrlLinked.Value);
-            }
-            else {
+            } else {
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
                 if (pickerField != null && pickerField.ContentItems != null) {
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
                     if (firstItem != null) {
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
                         link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
-                    }
-                    else {
+                    } else {
                         return "";
                     }
-                }
-                else {
+                } else {
                     return "";
                 }
             }
@@ -331,8 +347,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
                 linkExist = true;
-            }
-            else {
+            } else {
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
 
                 if (pickerField != null) {
@@ -341,8 +356,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         if (firstItem != null) {
                             linkExist = true;
                         }
-                    }
-                    catch { }
+                    } catch { }
                 }
             }
 
@@ -399,11 +413,17 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             try {
                 var profpart = ((dynamic)UserContent).ProfilePart;
                 asProfilePart = true;
-            }
-            catch { asProfilePart = false; }
+            } catch { asProfilePart = false; }
 
             // identifica il Contact relativo a UserContent
-            var contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == UserContent.Id).List().FirstOrDefault();
+            var contactsUsers = _orchardServices
+                .ContentManager
+                .Query<CommunicationContactPart, CommunicationContactPartRecord>()
+                .Where(x => x.UserPartRecord_Id == UserContent.Id)
+                .List().FirstOrDefault();
+
+            var typeIsDraftable = _contentDefinitionManager.GetTypeDefinition("CommunicationContact").Settings.GetModel<ContentTypeSettings>().Draftable;
+
             ContentItem contact = null;
             if (contactsUsers == null) {
                 // cerca un eventuale contatto con la stessa mail ma non ancora legato a uno user
@@ -412,8 +432,11 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     if ((contactEmail != null) && (contactEmail.ContentType == "CommunicationContact")) {
                         if ((contactEmail.As<CommunicationContactPart>().Record.UserPartRecord_Id == 0) && (contactEmail.As<CommunicationContactPart>().Master == false)) {
                             //contact = contactEmail;
-                            contact = _orchardServices.ContentManager.Get(contactEmail.Id, VersionOptions.DraftRequired);
-                            contact.As<CommunicationContactPart>().Logs = TruncateFromStart(contact.As<CommunicationContactPart>().Logs + string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function. ").Text, DateTime.Now), 4000); //4000 sembra essere la lunghezza massima gestita da NHibernate per gli nvarchar(max)
+                            contact = _orchardServices.ContentManager.Get(contactEmail.Id, typeIsDraftable ? VersionOptions.DraftRequired : VersionOptions.Latest);
+                            contact.As<CommunicationContactPart>().Logs =
+                                TruncateFromStart(contact.As<CommunicationContactPart>().Logs +
+                                    string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function. ").Text,
+                                    DateTime.Now), 4000); //4000 sembra essere la lunghezza massima gestita da NHibernate per gli nvarchar(max)
                             contact.As<CommunicationContactPart>().UserIdentifier = UserContent.Id;
                             break; // associa solo il primo contatto che trova
                         }
@@ -421,47 +444,47 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 }
 
                 if (contact == null) {
+                    //even if typeIsDraftable == false, it's fine to create as Draft, because we are going to publish later in this method
+                    //and creating as draft does the same things as not as draft, but sets Published = false already.
                     contact = _orchardServices.ContentManager.Create("CommunicationContact", VersionOptions.Draft);
                     contact.As<CommunicationContactPart>().Master = false;
                     contact.As<CommunicationContactPart>().UserIdentifier = UserContent.Id;
                 }
-            }
-            else {
+            } else {
                 // contact =contactsUsers.ContentItem;
-                contact = _orchardServices.ContentManager.Get(contactsUsers.Id, VersionOptions.DraftRequired);
+                contact = _orchardServices.ContentManager.Get(contactsUsers.Id, typeIsDraftable ? VersionOptions.DraftRequired : VersionOptions.Latest);
             }
 
-            // aggiorna Pushcategories
+            #region aggiorna Pushcategories
             try {
                 if (((dynamic)UserContent.ContentItem).User.Pushcategories != null && (((dynamic)contact).CommunicationContactPart).Pushcategories != null) {
                     //List<TermPart> ListTermPartToAdd = ((TaxonomyField)((dynamic)UserContent.ContentItem).User.Pushcategories).Terms.ToList();
                     List<TermPart> ListTermPartToAdd = _taxonomyService.GetTermsForContentItem(UserContent.Id, "Pushcategories").ToList();
                     _taxonomyService.UpdateTerms(contact, ListTermPartToAdd, "Pushcategories");
                 }
+            } catch { // non ci sono le Pushcategories
             }
-            catch { // non ci sono le Pushcategories
-            }
+            #endregion
 
-            // aggiorna FavoriteCulture
+            #region aggiorna FavoriteCulture
             try {
                 if ((UserContent.ContentItem.As<FavoriteCulturePart>() != null) && (contact.As<FavoriteCulturePart>() != null)) {
                     if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != 0) {
                         if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != contact.As<FavoriteCulturePart>().Culture_Id) {
                             contact.As<FavoriteCulturePart>().Culture_Id = UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id;
                         }
-                    }
-                    else {
+                    } else {
                         // imposta la culture di default
                         var defaultCultureId = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture()).Id;
                         contact.As<FavoriteCulturePart>().Culture_Id = defaultCultureId;
                         UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id = defaultCultureId;
                     }
                 }
+            } catch { // non si ha l'estensione per favorite culture
             }
-            catch { // non si ha l'estensione per favorite culture
-            }
+            #endregion
 
-            // aggiorna email
+            #region aggiorna email
             if (!string.IsNullOrEmpty(UserContent.Email) && UserContent.ContentItem.As<UserPart>().RegistrationStatus == UserStatus.Approved) {
                 CommunicationEmailRecord cmr = null;
                 if (contact != null) {
@@ -474,8 +497,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         _repositoryCommunicationEmailRecord.Update(cmr);
                         _repositoryCommunicationEmailRecord.Flush();
                     }
-                }
-                else {
+                } else {
                     CommunicationEmailRecord newrec = new CommunicationEmailRecord();
                     newrec.Email = UserContent.Email;
                     newrec.EmailContactPartRecord_Id = contact.Id;
@@ -488,8 +510,9 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     _repositoryCommunicationEmailRecord.Flush();
                 }
             }
+            #endregion
 
-            // aggiorna sms
+            #region aggiorna sms
             try {
                 dynamic userPwdRecoveryPart = ((dynamic)UserContent.ContentItem).UserPwdRecoveryPart;
                 if (userPwdRecoveryPart != null) {
@@ -510,8 +533,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                             newsms.Produzione = true;
                             _repositoryCommunicationSmsRecord.Create(newsms);
                             _repositoryCommunicationSmsRecord.Flush();
-                        }
-                        else {
+                        } else {
                             csr.Prefix = pref;
                             csr.Sms = num;
                             csr.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
@@ -521,29 +543,29 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         }
                     }
                 }
-            }
-            catch {
+            } catch {
                 // non è abilitato il modulo Laser.Mobile.SMS, quindi non allineo il telefono
             }
+            #endregion
 
-            // aggiorna Title
+            #region aggiorna Title
             if (string.IsNullOrWhiteSpace(UserContent.UserName) == false) {
                 contact.As<TitlePart>().Title = UserContent.UserName;
-            }
-            else if (string.IsNullOrWhiteSpace(UserContent.Email) == false) {
+            } else if (string.IsNullOrWhiteSpace(UserContent.Email) == false) {
                 contact.As<TitlePart>().Title = UserContent.Email;
-            }
-            else {
+            } else {
                 contact.As<TitlePart>().Title = string.Format("User with ID {0}", UserContent.Id);
             }
+            #endregion
 
-            // aggiorna CommonPart
+            #region aggiorna CommonPart
             if (contact.Has<CommonPart>()) {
                 contact.As<CommonPart>().ModifiedUtc = DateTime.Now;
                 contact.As<CommonPart>().Owner = UserContent;
             }
+            #endregion
 
-            // aggiorna ProfilePart
+            #region aggiorna ProfilePart
             if (asProfilePart) {
                 List<ContentPart> Lcp = new List<ContentPart>();
                 Lcp.Add(((ContentPart)((dynamic)contact).ProfilePart));
@@ -559,8 +581,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                                 //            _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, val.ValueName, val.Value, val.ValueType);
                             }
                         }
-                    }
-                    else { // orchard base field type
+                    } else { // orchard base field type
                         object myval;
                         if (cf.FieldDefinition.Name == typeof(DateTimeField).Name)
                             myval = ((object)(((dynamic)cf).DateTime));
@@ -576,8 +597,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                                 second.Add(tv);
                             }
                             myval = ((object)(second.Select(x => (dynamic)x).ToList()));
-                        }
-                        else if (cf.FieldDefinition.Name == typeof(LinkField).Name) {
+                        } else if (cf.FieldDefinition.Name == typeof(LinkField).Name) {
                             // gestisce in modo particolare il text
                             LinkField linkField = (LinkField)cf;
                             var profilePart = contact.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ProfilePart");
@@ -587,56 +607,22 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                             }
                             // gestisce in modo standard il value
                             myval = linkField.Value;
-                        }
-                        else {
+                        } else {
                             myval = ((object)(((dynamic)cf).Value));
                         }
                         _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, contact);
-
-                        //// determina il type e aggiorna il field index
-                        //string fieldTypeName = ((ContentField)cf).PartFieldDefinition.FieldDefinition.Name;
-                        //if (fieldTypeName == typeof(BooleanField).Name) {
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(int));
-                        //}
-                        //else if (fieldTypeName == typeof(DateTimeField).Name) {
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", ((DateTime)myval).Ticks, typeof(int));
-                        //}
-                        //else if (fieldTypeName == typeof(NumericField).Name) {
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(decimal));
-                        //}
-                        //else if (fieldTypeName == typeof(ContentPickerField).Name
-                        //    || fieldTypeName == typeof(MediaLibraryPickerField).Name) {
-                        //    string fieldValue = "";
-                        //    foreach (int relatedId in cf.Ids) {
-                        //        if (string.IsNullOrWhiteSpace(fieldValue.ToString()) == false) {
-                        //            fieldValue += ",";
-                        //        }
-                        //        fieldValue += string.Format("{{{0}}}", relatedId);
-                        //    }
-                        //    if (string.IsNullOrWhiteSpace(fieldValue.ToString())) {
-                        //        fieldValue = null;
-                        //    }
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", fieldValue, typeof(string));
-                        //}
-                        //else if (fieldTypeName == typeof(LinkField).Name) {
-                        //    LinkField linkField = (LinkField)cf;
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", linkField.Value, typeof(string));
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "Text", linkField.Text, typeof(string));
-                        //}
-                        //else if (fieldTypeName == typeof(InputField).Name
-                        //    || fieldTypeName == typeof(TextField).Name
-                        //    || fieldTypeName == typeof(EnumerationField).Name) {
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(string));
-                        //}
                     }
                 }
             }
+            #endregion
             //if (string.IsNullOrEmpty(contact.As<AutoroutePart>().DisplayAlias)) {
             //    contact.As<AutoroutePart>().DisplayAlias = _autorouteService.GenerateAlias(contact.As<AutoroutePart>());
             //    _autorouteService.ProcessPath(contact.As<AutoroutePart>());
             //    _autorouteService.PublishAlias(contact.As<AutoroutePart>());
             //}
             if (contact != null) {
+                //Whether the type is draftable or not, we still want to publish it, so at worst setting Published = false does nothing
+                contact.VersionRecord.Published = false;
                 _orchardServices.ContentManager.Publish(contact);
             }
         }
