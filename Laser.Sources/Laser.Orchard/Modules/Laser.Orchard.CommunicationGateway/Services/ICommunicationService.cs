@@ -174,7 +174,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             foreach (var contact in activeMasters) {
                 if (master == null) {
                     master = contact;
-                } else {
+                }
+                else {
                     mastersToBeDeleted.Add(contact.ContentItem);
                 }
             }
@@ -307,23 +308,27 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             try {
                 int idCampagna = ((int)((dynamic)part).CampaignId);
                 CampaignName = _orchardServices.ContentManager.Get(idCampagna).As<TitlePart>().Title;
-            } catch {
+            }
+            catch {
                 // comunicato non legato a campagna
             }
             string link = "";
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
                 link = (string)(((dynamic)part).UrlLinked.Value);
-            } else {
+            }
+            else {
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
                 if (pickerField != null && pickerField.ContentItems != null) {
                     var firstItem = pickerField.ContentItems.FirstOrDefault();
                     if (firstItem != null) {
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
                         link = urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(firstItem));
-                    } else {
+                    }
+                    else {
                         return "";
                     }
-                } else {
+                }
+                else {
                     return "";
                 }
             }
@@ -345,7 +350,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
             if (!string.IsNullOrEmpty(((dynamic)part).UrlLinked.Value)) {
                 linkExist = true;
-            } else {
+            }
+            else {
                 var pickerField = ((dynamic)part).ContentLinked as ContentPickerField;
 
                 if (pickerField != null) {
@@ -354,9 +360,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         if (firstItem != null) {
                             linkExist = true;
                         }
-                    } catch { }
                     }
+                    catch { }
                 }
+            }
 
             return linkExist;
         }
@@ -412,7 +419,11 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 var profpart = ((dynamic)UserContent).ProfilePart;
                 if (profpart != null) {
                     asProfilePart = true;
-            } catch { asProfilePart = false; }
+                }
+            }
+            catch {
+                asProfilePart = false;
+            }
 
             // identifica il Contact relativo a UserContent
             var contactsUsers = _orchardServices
@@ -449,7 +460,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     contact.As<CommunicationContactPart>().Master = false;
                     contact.As<CommunicationContactPart>().UserIdentifier = UserContent.Id;
                 }
-            } else {
+            }
+            else {
                 // contact =contactsUsers.ContentItem;
                 contact = _orchardServices.ContentManager.Get(contactsUsers.Id, typeIsDraftable ? VersionOptions.DraftRequired : VersionOptions.Latest);
             }
@@ -461,7 +473,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     List<TermPart> ListTermPartToAdd = _taxonomyService.GetTermsForContentItem(UserContent.Id, "Pushcategories").ToList();
                     _taxonomyService.UpdateTerms(contact, ListTermPartToAdd, "Pushcategories");
                 }
-            } catch { // non ci sono le Pushcategories
+            }
+            catch { // non ci sono le Pushcategories
             }
             #endregion
 
@@ -472,14 +485,16 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != contact.As<FavoriteCulturePart>().Culture_Id) {
                             contact.As<FavoriteCulturePart>().Culture_Id = UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id;
                         }
-                    } else {
+                    }
+                    else {
                         // imposta la culture di default
                         var defaultCultureId = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture()).Id;
                         contact.As<FavoriteCulturePart>().Culture_Id = defaultCultureId;
                         UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id = defaultCultureId;
                     }
                 }
-            } catch { // non si ha l'estensione per favorite culture
+            }
+            catch { // non si ha l'estensione per favorite culture
             }
             #endregion
 
@@ -496,7 +511,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         _repositoryCommunicationEmailRecord.Update(cmr);
                         _repositoryCommunicationEmailRecord.Flush();
                     }
-                } else {
+                }
+                else {
                     CommunicationEmailRecord newrec = new CommunicationEmailRecord();
                     newrec.Email = UserContent.Email;
                     newrec.EmailContactPartRecord_Id = contact.Id;
@@ -532,7 +548,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                             newsms.Produzione = true;
                             _repositoryCommunicationSmsRecord.Create(newsms);
                             _repositoryCommunicationSmsRecord.Flush();
-                        } else {
+                        }
+                        else {
                             csr.Prefix = pref;
                             csr.Sms = num;
                             csr.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
@@ -542,7 +559,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         }
                     }
                 }
-            } catch {
+            }
+            catch {
                 // non è abilitato il modulo Laser.Mobile.SMS, quindi non allineo il telefono
             }
             #endregion
@@ -550,9 +568,11 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             #region aggiorna Title
             if (string.IsNullOrWhiteSpace(UserContent.UserName) == false) {
                 contact.As<TitlePart>().Title = UserContent.UserName;
-            } else if (string.IsNullOrWhiteSpace(UserContent.Email) == false) {
+            }
+            else if (string.IsNullOrWhiteSpace(UserContent.Email) == false) {
                 contact.As<TitlePart>().Title = UserContent.Email;
-            } else {
+            }
+            else {
                 contact.As<TitlePart>().Title = string.Format("User with ID {0}", UserContent.Id);
             }
             #endregion
@@ -580,7 +600,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                                 //            _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, val.ValueName, val.Value, val.ValueType);
                             }
                         }
-                    } else { // orchard base field type
+                    }
+                    else { // orchard base field type
                         object myval;
                         if (cf.FieldDefinition.Name == typeof(DateTimeField).Name)
                             myval = ((object)(((dynamic)cf).DateTime));
@@ -596,7 +617,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                                 second.Add(tv);
                             }
                             myval = ((object)(second.Select(x => (dynamic)x).ToList()));
-                        } else if (cf.FieldDefinition.Name == typeof(LinkField).Name) {
+                        }
+                        else if (cf.FieldDefinition.Name == typeof(LinkField).Name) {
                             // gestisce in modo particolare il text 
                             LinkField linkField = (LinkField)cf;
                             var profilePart = contact.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ProfilePart");
@@ -606,7 +628,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                             }
                             // gestisce in modo standard il value
                             myval = linkField.Value;
-                        } else {
+                        }
+                        else {
                             myval = ((object)(((dynamic)cf).Value));
                         }
                         _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, contact);
