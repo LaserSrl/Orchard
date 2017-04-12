@@ -10,45 +10,45 @@
     }
     @*Change favicon*@
     @*RegisterLink(new LinkEntry {Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content("~/modules/orchard.themes/Content/orchard.ico")});*@
-    var folderStylePath = Url.Content("~/Themes/KrakeAdmin/Styles");
-    RegisterLink(new LinkEntry { Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content(folderStylePath + "/Images/logo_krake.ico") });
-    Script.Include("html5.js").UseCondition("lt IE 9").AtHead();
+var folderStylePath = Url.Content("~/Themes/KrakeAdmin/Styles");
+RegisterLink(new LinkEntry { Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content(folderStylePath + "/Images/logo_krake.ico") });
+Script.Include("html5.js").UseCondition("lt IE 9").AtHead();
 
-    string title = Convert.ToString(Model.Title);
-    string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
+string title = Convert.ToString(Model.Title);
+string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
 
-    //---- include js libraries ----//
-    //generic & tools
-    Script.Include("bootstrap.min.js").AtHead();
-    Script.Include("jquery.autosize.min.js").AtHead();
-    // specific for krake theme
-    Script.Require("jQuery").AtHead();
-    Script.Include("App.js").AtHead();
-    Script.Include("AppCard.js").AtHead();
-    Script.Include("AppForm.js").AtHead();
-    Script.Include("AppNavigation.js").AtHead();
-    Script.Include("AppNavSearch.js").AtHead();
-    Script.Include("AppOffcanvas.js").AtHead();
-    Script.Include("AppVendor.js").AtHead();
-    Script.Include("jquery.nanoscroller.min.js").AtHead();
-    //custom
-    Script.Include("krake.js").AtHead(); //dsweb custom library
-    Script.Include("main.js").AtHead(); //laser-orchard custom library
-    
-    //---- include css files ----//
-    // generic & utilities
-    Style.Include("bootstrap.css").AtHead();
-    Style.Include("font-awesome.min.css").AtHead();
-    Style.Include("iconic-font.min.css").AtHead();
-    Style.Include("https://fonts.googleapis.com/css?family=Roboto:400,700,500,300,100,900").AtHead();
-    //custom
-    Style.Include("krake.css?date=30062016").AtHead(); //dsweb custom styles TO DO JOIN with krakeadmin.css!!
-    Style.Include("krakeadmin.css?date=29112016").AtHead(); //dsweb custom styles
-    Style.Include("krake-navicon.css").AtHead();
-    
-    
-    
-    
+//---- include js libraries ----//
+//generic & tools
+Script.Include("bootstrap.min.js").AtHead();
+Script.Include("jquery.autosize.min.js").AtHead();
+// specific for krake theme
+Script.Require("jQuery").AtHead();
+Script.Include("App.js").AtHead();
+Script.Include("AppCard.js").AtHead();
+Script.Include("AppForm.js").AtHead();
+Script.Include("AppNavigation.js").AtHead();
+Script.Include("AppNavSearch.js").AtHead();
+Script.Include("AppOffcanvas.js").AtHead();
+Script.Include("AppVendor.js").AtHead();
+Script.Include("jquery.nanoscroller.min.js").AtHead();
+//custom
+Script.Include("krake.js").AtHead(); //dsweb custom library
+Script.Include("main.js").AtHead(); //laser-orchard custom library
+
+//---- include css files ----//
+// generic & utilities
+Style.Include("bootstrap.css").AtHead();
+Style.Include("font-awesome.min.css").AtHead();
+Style.Include("iconic-font.min.css").AtHead();
+Style.Include("https://fonts.googleapis.com/css?family=Roboto:400,700,500,300,100,900").AtHead();
+//custom
+Style.Include("krake.css?date=30062016").AtHead(); //dsweb custom styles TO DO JOIN with krakeadmin.css!!
+Style.Include("krakeadmin.css?date=29112016").AtHead(); //dsweb custom styles
+Style.Include("krake-navicon.css").AtHead();
+
+
+
+
 }
 <!DOCTYPE html> 
 <html lang="@WorkContext.CurrentCulture" class="static @Html.ClassForPage()"> 
