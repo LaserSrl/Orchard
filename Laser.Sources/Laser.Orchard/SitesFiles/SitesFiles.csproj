@@ -35,6 +35,9 @@
     <None Include="AutoMotoEpoca\Mobile\AME_DEV.p12" />
     <None Include="AutoMotoEpoca\Mobile\AME_PROD.p12" />
     <None Include="common.cshtml" />
+    <None Include="ExpertMallardo\Code\UpdatePuntiVendita.cshtml" />
+    <None Include="ExpertMallardo\Mobile\devExpert.p12" />
+    <None Include="ExpertMallardo\Mobile\prodExpert.p12" />
     <None Include="expoincitta\Mobile\EXPO_dev.p12" />
     <None Include="expoincitta\Mobile\EXPO_prod.p12" />
     <None Include="FestivalTV\Xslt\instagram.cshtml" />
@@ -43,6 +46,10 @@
     <None Include="FondationGP\Mobile\pushProdMorgex.p12" />
     <None Include="FondationGP\Mobile\pushSvilMorgex.p12" />
     <None Include="FondationGP\Mobile\pushsviluppoAME.p12" />
+    <None Include="Hkt00\Mobile\AME_DEV.p12" />
+    <None Include="Hkt00\Mobile\AME_PROD.p12" />
+    <None Include="Hkt00\Mobile\KrakeSampleDev.p12" />
+    <None Include="Hkt00\Mobile\KrakeSampleProd.p12" />
     <None Include="IvreaTerritorio\Mobile\pushVisitami.p12" />
     <None Include="IvreaTerritorio\WebServices\CalendarEvent.cshtml" />
     <None Include="IvreaTerritorio\WebServices\CalendarEvent1.cshtml" />
@@ -85,7 +92,13 @@
     <None Include="MyVEC\Code\ValidazioneSalesAssistantsPerNegozio.cshtml" />
     <None Include="MyVEC\Mobile\devVec.p12" />
     <None Include="MyVEC\Mobile\prodVec.p12" />
+    <None Include="Quincinetto\Mobile\dev._3_2017.p12" />
+    <None Include="Quincinetto\Mobile\dev_4_2018.p12" />
+    <None Include="Quincinetto\Mobile\prod_3_2017.p12" />
+    <None Include="Quincinetto\Mobile\prod_4_2018.p12" />
     <None Include="RomaMunicipioII\Code\ImportOsp.cshtml" />
+    <None Include="SSC\Mobile\BolognaDev.p12" />
+    <None Include="SSC\Mobile\BolognaProd.p12" />
     <None Include="TerritorioMorgex\Mobile\pushProdMorgex.p12" />
     <None Include="TerritorioMorgex\Mobile\pushSvilMorgex.p12" />
     <None Include="Tff\Xslt\getfilm.cshtml" />
@@ -100,11 +113,24 @@
     <None Include="TorinoCampidoglio\Xslt\torinolivinglabnews.cshtml" />
     <None Include="TurismoTorino\Mobile\ttdev.p12" />
     <None Include="TurismoTorino\Mobile\ttprod.p12" />
+    <None Include="ValliCanavesane\Code\ChangeOwner.cshtml" />
+    <None Include="ValliCanavesane\Code\ElaboraRichiestaDisponibilita.cshtml" />
+    <None Include="ValliCanavesane\Code\GeneraCodicePromo.cshtml" />
+    <None Include="ValliCanavesane\Code\ImportEvents.cshtml" />
+    <None Include="ValliCanavesane\Code\ImportWorkflowIsRunning.cshtml" />
+    <None Include="ValliCanavesane\Code\ShouldAssignRole.cshtml" />
+    <None Include="ValliCanavesane\Code\ShouldSendPasswordEmail.cshtml" />
     <None Include="Vialfre\Mobile\pushDevVialfre.p12" />
     <None Include="Vialfre\Mobile\pushProdVialfre.p12" />
-    <None Include="VisitMilano\ExternalListaEventi.cshtml" />
-    <None Include="VisitMilano\ExternalListaItinerari.cshtml" />
-    <None Include="VisitMilano\ExternalListaLuoghi.cshtml" />
+    <None Include="VisitMilano\Code\AssignPublishExtensionStatus.cshtml" />
+    <None Include="VisitMilano\Code\visitmilanotermseventi.cshtml" />
+    <None Include="VisitMilano\Code\visitmilanotermsitinerari.cshtml" />
+    <None Include="VisitMilano\Code\visitmilanotermsluoghi.cshtml" />
+    <None Include="VisitMilano\Mobile\dev_3_2018.p12" />
+    <None Include="VisitMilano\Mobile\prod_4_2018.p12" />
+    <None Include="VisitMilano\Xslt\ExternalListaEventi.cshtml" />
+    <None Include="VisitMilano\Xslt\ExternalListaItinerari.cshtml" />
+    <None Include="VisitMilano\Xslt\ExternalListaLuoghi.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AltoAdige\Xslt\feedurl.xslt" />
@@ -117,6 +143,9 @@
     <Content Include="FondationGP\Xslt\NewsField.xslt">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Hkt00\Xslt\BikeSharing.xslt" />
+    <Content Include="Hkt00\Xslt\OtpStops.xslt" />
+    <Content Include="Hkt00\Xslt\OtpStopTimes.xslt" />
     <Content Include="TorinoCampidoglio\Xslt\ListaEventi.xslt" />
     <Content Include="TurismoTorino\Xslt\ElencoProduttori.xslt">
       <SubType>Designer</SubType>
@@ -140,9 +169,9 @@
     <Content Include="Vialfre\Xslt\Visitami.xslt">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="VisitMilano\BikeSharing.xslt" />
-    <Content Include="VisitMilano\OtpStops.xslt" />
-    <Content Include="VisitMilano\OtpStopTimes.xslt" />
+    <Content Include="VisitMilano\Xslt\BikeSharing.xslt" />
+    <Content Include="VisitMilano\Xslt\OtpStops.xslt" />
+    <Content Include="VisitMilano\Xslt\OtpStopTimes.xslt" />
     <Content Include="ViviIlBiellese\Xslt\feedurl.xslt" />
     <Content Include="WakeUp.hta" />
   </ItemGroup>
