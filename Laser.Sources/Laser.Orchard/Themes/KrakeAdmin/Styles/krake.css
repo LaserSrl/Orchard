@@ -112,6 +112,10 @@ fieldset.save-button {
     min-width: 110px;
 }
 
+.close{
+    opacity: 1 !important;
+}
+
 span .button {
     height: 20px;
 }
@@ -306,6 +310,16 @@ fieldset.publish-button {
 select:not(.selector):not(.ui-datepicker-month):not(.ui-datepicker-year):not(.calendars-month-year) {
     min-width: 300px;
 }
+
+.bulk-actions > #filterResults, #orderResults, #filterCultures{
+    min-width: 10px;
+}
+
+.bulk-actions > button {
+    float: right;
+    margin-top: 10px;
+}
+
 /*ie fix*/
 select::-ms-expand {
     display: none;
@@ -1466,9 +1480,6 @@ html.dashboard #content {
     border: 1px solid #e0e0e0;
     
 }
-
-
-
 
 .media-thumbnail-video {
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAAA8CAIAAABQAItJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAUtJREFUaEPt2rGNg0AQheHriZCEiJw6KIEKqIEK6IAKqICYlApIQIgb2WObQwu71hhrd+59KWM0fzJywM+qCGJ8pT1mGIY0TSOPxXHc9z2vu7GPaZqGf+G9uq556Yc/MV3X8WAg2rbl1W9eMcuyFEXBU4HI83yaJg7YxszznGUZT0VRWZb8YKOqKn58Y5yRcHn/diZJknEc+cFRzG7oyWVGQrgDYk5nJBCDGBJkDHn3LH6EcIfDGKsvxFghxgQxFlfF6DkAR4u6zEgId0DM6YwEYhBDgowh1rNIjDMSLu+/5L+ZDxDjq38Zo+cA7IaeXGYkhDsg5nRGAjGIIUHGkHfP4kcIdziMsfpCjBViTBBjcVWMngNwtKjLjIRwB8SczkggBjEkyBhiPYvEOCPh8n6n06zqQyCi5xOtOz0fz93p+awxaIjxlaKYdf0FZhXqxLZlZI0AAAAASUVORK5CYII=');
