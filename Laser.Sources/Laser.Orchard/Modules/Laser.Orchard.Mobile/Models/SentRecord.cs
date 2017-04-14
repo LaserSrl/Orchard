@@ -12,5 +12,6 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual int PushedItem { get; set; }
         public virtual DateTime SentDate { get; set; }
         public virtual string DeviceType { get; set; }
+        public virtual string Outcome { get; set; }
     }
 }

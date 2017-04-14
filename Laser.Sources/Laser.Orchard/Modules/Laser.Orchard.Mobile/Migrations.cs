@@ -295,6 +295,12 @@ namespace Laser.Orchard.Mobile {
                         );
             return 28;
         }
+        public int UpdateFrom28() {
+            SchemaBuilder.AlterTable("SentRecord", table => table
+                .AddColumn<string>("Outcome")
+            );
+            return 29;
+        }
 
     }
 }
