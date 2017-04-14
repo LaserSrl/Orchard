@@ -493,7 +493,7 @@ namespace Laser.Orchard.ExternalContent.Services {
 
                 if (!string.IsNullOrEmpty(mytemplate)) {
                     var docwww = XDocument.Parse(xmlpage);
-                    string result = _razorTemplateManager.RunString(myfile, mytemplate, docwww, dvb);
+                    string result = _razorTemplateManager.RunString(myfile, mytemplate, docwww, dvb,null);
                     output = result.Replace("\r\n", "");
                     //if (!string.IsNullOrEmpty(resultnobr)) {
 

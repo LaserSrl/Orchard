@@ -4,6 +4,7 @@ using Laser.Orchard.OpenAuthentication.Security;
 using Laser.Orchard.OpenAuthentication.Services;
 using Laser.Orchard.OpenAuthentication.Services.Clients;
 using Laser.Orchard.StartupConfig.Services;
+using Laser.Orchard.StartupConfig.ViewModels;
 using Orchard;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -19,6 +20,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
+
 namespace Laser.Orchard.OpenAuthentication.Controllers {
     [Themed]
     public class AccountController : Controller {
@@ -29,6 +31,8 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         private readonly IOpenAuthMembershipServices _openAuthMembershipServices;
         private readonly IOrchardOpenAuthClientProvider _openAuthClientProvider;
         private readonly IControllerContextAccessor _controllerContextAccessor;
+        private readonly IUtilsServices _utilsServices;
+        private readonly IOrchardServices _orchardServices;
 
         public AccountController(
             INotifier notifier,
@@ -37,7 +41,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             IOpenAuthMembershipServices openAuthMembershipServices,
             IOrchardOpenAuthClientProvider openAuthClientProvider,
             IControllerContextAccessor controllerContextAccessor,
-            IUserEventHandler userEventHandler) {
+            IUserEventHandler userEventHandler, IUtilsServices utilsServices, IOrchardServices orchardServices) {
             _notifier = notifier;
             _orchardOpenAuthWebSecurity = orchardOpenAuthWebSecurity;
             _authenticationService = authenticationService;
@@ -45,6 +49,8 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             _openAuthClientProvider = openAuthClientProvider;
             _controllerContextAccessor = controllerContextAccessor;
             _userEventHandler = userEventHandler;
+            _utilsServices = utilsServices;
+            _orchardServices = orchardServices;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -137,11 +143,13 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
         [OutputCache(NoStore = true, Duration = 0)]
         public JsonResult ExternalTokenLogOnLogic(string __provider__, string token, string secret = "") {
-            TempDataDictionary registeredServicesData = new TempDataDictionary();
+           // TempDataDictionary registeredServicesData = new TempDataDictionary();
+            var result = new Response();
 
             try {
                 if (String.IsNullOrWhiteSpace(__provider__) || String.IsNullOrWhiteSpace(token)) {
-                    return Json(new { success = false, registeredServices = registeredServicesData, message = T("One or more of the required parameters was not provided or was an empty string.").Text }, JsonRequestBehavior.AllowGet);
+                    result = _utilsServices.GetResponse(ResponseType.None, "One or more of the required parameters was not provided or was an empty string.");
+                    return Json(result, JsonRequestBehavior.AllowGet);
                 }
 
                 // ricava il return URL così come registrato nella configurazione del provider di OAuth (es. Google)
@@ -150,19 +158,20 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 AuthenticationResult authResult = _openAuthClientProvider.GetUserData(__provider__, dummy, token, secret, returnUrl);
                 IUser authenticatedUser;
                 if (!authResult.IsSuccessful) {
-                    return Json(new { success = false, registeredServices = registeredServicesData, message = T("Token authentication failed.").Text }, JsonRequestBehavior.AllowGet);
+                    result = _utilsServices.GetResponse(ResponseType.InvalidUser, "Token authentication failed.");
+                    return Json(result, JsonRequestBehavior.AllowGet);
                 }
                 else {
 
                     if (_orchardOpenAuthWebSecurity.Login(authResult.Provider, authResult.ProviderUserId)) {
-                        if (HttpContext.Response.Cookies.Count == 0)
-                            return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);
+                        if (HttpContext.Response.Cookies.Count == 0) {
+                            result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
+                            return Json(result, JsonRequestBehavior.AllowGet);
+                        }                   
                         else {
-                            registeredServicesData = _controllerContextAccessor.Context.Controller.TempData;
                             authenticatedUser = _authenticationService.GetAuthenticatedUser();
-                            _userEventHandler.LoggedIn(authenticatedUser);
-
-                            return Json(new { success = true, registeredServices = registeredServicesData, message = T("You have been logged using your {0} account.", authResult.Provider).Text }, JsonRequestBehavior.AllowGet);
+                            _userEventHandler.LoggedIn(authenticatedUser);                          
+                            return Json(GetUserResult(""), JsonRequestBehavior.AllowGet);
                         }
                     } else {
                         authenticatedUser = _authenticationService.GetAuthenticatedUser(); 
@@ -173,14 +182,14 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider, authResult.ProviderUserId,
                                                                           authenticatedUser, authResult.ExtraData.ToJson());
 
-                        if (HttpContext.Response.Cookies.Count == 0)
-                            return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);
+                        if (HttpContext.Response.Cookies.Count == 0) {
+                            result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
+                            return Json(result, JsonRequestBehavior.AllowGet);
+                        }              
                         else {
-                            registeredServicesData = _controllerContextAccessor.Context.Controller.TempData;
                             // Handle LoggedIn Event
                             _userEventHandler.LoggedIn(authenticatedUser);
-
-                            return Json(new { success = true, registeredServices = registeredServicesData, message = T("Your {0} account has been attached to your local account.", authResult.Provider).Text }, JsonRequestBehavior.AllowGet);
+                            return Json(GetUserResult(T("Your {0} account has been attached to your local account.", authResult.Provider).Text), JsonRequestBehavior.AllowGet);
                         }
                     }
 
@@ -197,26 +206,41 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
                         _authenticationService.SignIn(newUser, false);
 
-                        if (HttpContext.Response.Cookies.Count == 0)
-                            return Json(new { success = false, registeredServices = registeredServicesData, message = T("Unable to send back a cookie.").Text }, JsonRequestBehavior.AllowGet);
-                        else {
-                            registeredServicesData = _controllerContextAccessor.Context.Controller.TempData;
+                        if (HttpContext.Response.Cookies.Count == 0) {
+                            result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
+                            return Json(result, JsonRequestBehavior.AllowGet);
 
+                        }
+                        else {
                             // Handle LoggedIn Event
                             _userEventHandler.LoggedIn(newUser);
 
-                            return Json(new { success = true, registeredServices = registeredServicesData, message = T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text }, JsonRequestBehavior.AllowGet);
+                            return Json(GetUserResult(T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text), JsonRequestBehavior.AllowGet);
                         }
                     }
-
-                    return Json(new { success = false, registeredServices = registeredServicesData, message = T("Login failed.").Text }, JsonRequestBehavior.AllowGet);
+                    result = _utilsServices.GetResponse(ResponseType.None, "Login failed.");
+                    return Json(result, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception e) {
-                return Json(new { success = false, registeredServices = registeredServicesData, message = e.Message }, JsonRequestBehavior.AllowGet);
+                result = _utilsServices.GetResponse(ResponseType.None, e.Message);
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
+
+        public Response GetUserResult(String message) {
+            List<string> roles = new List<string>();
+            if (_orchardServices.WorkContext.CurrentUser != null) {
+                roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+            }
+            var registeredServicesData = new {
+                RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
+                Roles = roles
+            };
+            return _utilsServices.GetResponse(ResponseType.Success, message, registeredServicesData);
+        }
     }
+
 
     internal class OpenAuthLoginResult : ActionResult {
         private readonly string _providerName;
