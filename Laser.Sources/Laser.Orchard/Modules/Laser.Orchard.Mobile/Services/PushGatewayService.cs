@@ -994,7 +994,6 @@ namespace Laser.Orchard.Mobile.Services {
                 }
                 push.Stop();
                 push = null;
-                _transactionManager.RequireNew();
             }
 
             // aggiorna la validità degli expired
