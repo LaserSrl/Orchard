@@ -647,7 +647,7 @@ body.page-template-page-societa-chi-siamo #intro{ z-index:5; }
 #offerte .team-card-face{  position:absolute; width:100%; height:100%; background:#fff; -webkit-backface-visibility:hidden; -moz-backface-visibility:hidden; backface-visibility: hidden; }
 
 #offerte .team-photo-mask{ height:250px; overflow:hidden; }
-#offerte .team-name{ font-weight:400; margin:0; font-size:22px; }
+#offerte .team-name{ font-weight:400; margin:0; font-size:22px; padding-top:10px; }
 #offerte .team-name a{ color:#767B7C;}
 #offerte .team-ruolo{ font-weight:400; margin:5px 0 0; font-size:18px; color:#FF0903; }
 #offerte .team-plus{ font-size:30px; font-weight:300; color:#FF0903; margin: 30px 0 0; display:block; }
