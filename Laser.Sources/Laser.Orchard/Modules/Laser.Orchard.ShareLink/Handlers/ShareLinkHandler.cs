@@ -73,7 +73,10 @@ namespace Laser.Orchard.ShareLink.Handlers {
             Int32.TryParse(idimg.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
             if (idimage > 0) {
                 var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
-                return urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
+                if(ContentImage != null) {
+                    return urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
+                }
+                return "";
             }
             else
                 return idimg; // non ho passato un id e quindi sarà un link
