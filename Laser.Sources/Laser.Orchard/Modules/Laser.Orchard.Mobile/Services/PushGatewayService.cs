@@ -87,8 +87,6 @@ namespace Laser.Orchard.Mobile.Services {
             _tokenizer = tokenizer;
             _shellSetting = shellSetting;
             messageSent = 0;
-            _sentRecords = new ConcurrentDictionary<string, SentRecord>();
-            _deviceChanges = new ConcurrentBag<DeviceChange>();
         }
 
         public IList GetPushQueryResult(Int32[] ids, bool countOnly = false, int contentId = 0) {
@@ -877,6 +875,7 @@ namespace Laser.Orchard.Mobile.Services {
 
         private void InitializeRecipients(List<PushNotificationVM> listdispositivo, int idContent, bool repeatable = false) {
             _sentRecords = new ConcurrentDictionary<string, SentRecord>();
+            _deviceChanges = new ConcurrentBag<DeviceChange>();
             // salva l'elenco delle push da inviare
             foreach (PushNotificationVM pnr in listdispositivo) {
                 try {
