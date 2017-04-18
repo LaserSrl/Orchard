@@ -39,14 +39,16 @@ namespace Laser.Orchard.TemplateManagement.Parsers {
             var layout = template.Layout;
             var templateContent = template.Text;
             //var viewBag = context.ViewBag;
-
+            string layoutString = null;
             if (layout != null) {
-                _razorTemplateManager.AddLayout("Layout" + key, layout.Text);
+                key+="_"+ template.Layout.Record.ContentItemRecord.Versions.Where(x => x.Published).FirstOrDefault().Id;
+                layoutString = layout.Text;
+              //  _razorTemplateManager.AddLayout("Layout" + key, layout.Text);
                 templateContent = "@{ Layout = \"Layout" + key + "\"; }\r\n" + templateContent;
             }
 
             try {
-                var tmpl = _razorTemplateManager.RunString(key, templateContent, context.Model, (Dictionary<string, object>)context.ViewBag);
+                var tmpl = _razorTemplateManager.RunString(key, templateContent, context.Model, (Dictionary<string, object>)context.ViewBag, layoutString);
                 return tmpl;
             }
             catch (Exception ex) {

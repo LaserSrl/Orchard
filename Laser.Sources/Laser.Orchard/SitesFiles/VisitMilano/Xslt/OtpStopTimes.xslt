@@ -69,8 +69,10 @@
           <xsl:element name="StopTime" namespace=""></xsl:element>
         </StopTimesList>
       </Pattern>
-      <xsl:element name="Pattern" namespace=""></xsl:element>
-      <!-->xsl:apply-templates select="node()"/-->
+      <xsl:if test="position() = last()">
+        <xsl:element name="Pattern" namespace=""></xsl:element>
+      </xsl:if>
+    <!-->xsl:apply-templates select="node()"/-->
   </xsl:template>
   <!--<xsl:template match="pattern">
     <xsl:element name="Pattern" namespace="">

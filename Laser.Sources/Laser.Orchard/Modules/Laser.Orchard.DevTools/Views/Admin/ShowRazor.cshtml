@@ -1,0 +1,43 @@
+﻿@using (Script.Head()) {
+    Script.Require("jQuery_DataTables").AtHead();
+    Style.Require("jQuery_DataTables").AtHead();
+}
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#jquerytable').DataTable();
+        });
+    </script>
+}
+<div style="text-align:right">
+    <a class="button primaryAction" href="@Url.Action("CleanRazor", "Admin", new { area = "Laser.Orchard.DevTools" })" title="@T("Clean Razor")">@T("Clean Razor")</a>
+</div>
+<table id="jquerytable" class="display" cellspacing="0" width="100%">
+    <thead>
+    <th>List Cached Razor</th>
+    </tr>
+    </thead>
+    @foreach (string sc in (List<string>) Model.RazorList) {
+        <tr>
+            <td>@sc</td>
+        </tr>
+    }
+</table>
+
+<br />
+<br />
+    <table id="jquerytable2" class="display" cellspacing="0" width="100%">
+        <thead>
+        <th>
+            @if (((List<string>)Model.RazorOldList).Count > 0) {
+                @Html.Raw("List elapsed razor cached in Memory(keys have been destroyed)");
+            }
+        </th>
+        </tr>
+        </thead>
+        @foreach (string sc in (List<string>)Model.RazorOldList) {
+            <tr>
+                <td>@sc</td>
+            </tr>
+        }
+    </table>

@@ -8,9 +8,11 @@ using Orchard;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentPicker.Fields;
 using Orchard.Core.Common.Fields;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Contents.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Fields.Fields;
@@ -84,14 +86,30 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         private readonly ITransactionManager _transactionManager;
         private readonly IFieldIndexService _fieldIndexService;
         private readonly IAutorouteService _autorouteService;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
+
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
 
-        public CommunicationService(ITaxonomyService taxonomyService, IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord, INotifier notifier, IModuleService moduleService, IOrchardServices orchardServices, IShortLinksService shortLinksService, IContentExtensionsServices contentExtensionsServices, ICultureManager cultureManager, IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord, IContactRelatedEventHandler contactRelatedEventHandler, ITransactionManager transactionManager, IFieldIndexService fieldIndexService, IAutorouteService autorouteService) {
-
+        public CommunicationService(
+            ITaxonomyService taxonomyService,
+            IRepository<CommunicationEmailRecord> repositoryCommunicationEmailRecord,
+            INotifier notifier,
+            IModuleService moduleService,
+            IOrchardServices orchardServices,
+            IShortLinksService shortLinksService,
+            IContentExtensionsServices contentExtensionsServices,
+            ISessionLocator session,
+            ICultureManager cultureManager,
+            IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord,
+            IContactRelatedEventHandler contactRelatedEventHandler,
+            ITransactionManager transactionManager,
+            IFieldIndexService fieldIndexService,
+            IAutorouteService autorouteService,
+            IContentDefinitionManager contentDefinitionManager) {
 
             _orchardServices = orchardServices;
             _shortLinksService = shortLinksService;
@@ -106,6 +124,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _transactionManager = transactionManager;
             _fieldIndexService = fieldIndexService;
             _autorouteService = autorouteService;
+            _contentDefinitionManager = contentDefinitionManager;
 
             T = NullLocalizer.Instance;
         }
@@ -403,11 +422,18 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 }
             }
             catch {
-                // ignora volutamente eventuali errori: significa che non è presente la ProfilePart
+                asProfilePart = false;
             }
 
             // identifica il Contact relativo a UserContent
-            var contactsUsers = _orchardServices.ContentManager.Query<CommunicationContactPart, CommunicationContactPartRecord>().Where(x => x.UserPartRecord_Id == UserContent.Id).List().FirstOrDefault();
+            var contactsUsers = _orchardServices
+                .ContentManager
+                .Query<CommunicationContactPart, CommunicationContactPartRecord>()
+                .Where(x => x.UserPartRecord_Id == UserContent.Id)
+                .List().FirstOrDefault();
+
+            var typeIsDraftable = _contentDefinitionManager.GetTypeDefinition("CommunicationContact").Settings.GetModel<ContentTypeSettings>().Draftable;
+
             ContentItem contact = null;
             if (contactsUsers == null) {
                 // cerca un eventuale contatto con la stessa mail ma non ancora legato a uno user
@@ -416,8 +442,11 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     if ((contactEmail != null) && (contactEmail.ContentType == "CommunicationContact")) {
                         if ((contactEmail.As<CommunicationContactPart>().Record.UserPartRecord_Id == 0) && (contactEmail.As<CommunicationContactPart>().Master == false)) {
                             //contact = contactEmail;
-                            contact = _orchardServices.ContentManager.Get(contactEmail.Id, VersionOptions.DraftRequired);
-                            contact.As<CommunicationContactPart>().Logs = TruncateFromStart(contact.As<CommunicationContactPart>().Logs + string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function. ").Text, DateTime.Now), 4000); //4000 sembra essere la lunghezza massima gestita da NHibernate per gli nvarchar(max)
+                            contact = _orchardServices.ContentManager.Get(contactEmail.Id, typeIsDraftable ? VersionOptions.DraftRequired : VersionOptions.Latest);
+                            contact.As<CommunicationContactPart>().Logs =
+                                TruncateFromStart(contact.As<CommunicationContactPart>().Logs +
+                                    string.Format(T("This contact has been bound to its user on {0:yyyy-MM-dd HH:mm} by contact synchronize function. ").Text,
+                                    DateTime.Now), 4000); //4000 sembra essere la lunghezza massima gestita da NHibernate per gli nvarchar(max)
                             contact.As<CommunicationContactPart>().UserIdentifier = UserContent.Id;
                             break; // associa solo il primo contatto che trova
                         }
@@ -425,6 +454,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 }
 
                 if (contact == null) {
+                    //even if typeIsDraftable == false, it's fine to create as Draft, because we are going to publish later in this method
+                    //and creating as draft does the same things as not as draft, but sets Published = false already.
                     contact = _orchardServices.ContentManager.Create("CommunicationContact", VersionOptions.Draft);
                     contact.As<CommunicationContactPart>().Master = false;
                     contact.As<CommunicationContactPart>().UserIdentifier = UserContent.Id;
@@ -432,10 +463,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             else {
                 // contact =contactsUsers.ContentItem;
-                contact = _orchardServices.ContentManager.Get(contactsUsers.Id, VersionOptions.DraftRequired);
+                contact = _orchardServices.ContentManager.Get(contactsUsers.Id, typeIsDraftable ? VersionOptions.DraftRequired : VersionOptions.Latest);
             }
 
-            // aggiorna Pushcategories
+            #region aggiorna Pushcategories
             try {
                 if (((dynamic)UserContent.ContentItem).User.Pushcategories != null && (((dynamic)contact).CommunicationContactPart).Pushcategories != null) {
                     //List<TermPart> ListTermPartToAdd = ((TaxonomyField)((dynamic)UserContent.ContentItem).User.Pushcategories).Terms.ToList();
@@ -445,8 +476,9 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             catch { // non ci sono le Pushcategories
             }
+            #endregion
 
-            // aggiorna FavoriteCulture
+            #region aggiorna FavoriteCulture
             try {
                 if ((UserContent.ContentItem.As<FavoriteCulturePart>() != null) && (contact.As<FavoriteCulturePart>() != null)) {
                     if (UserContent.ContentItem.As<FavoriteCulturePart>().Culture_Id != 0) {
@@ -464,8 +496,9 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             catch { // non si ha l'estensione per favorite culture
             }
+            #endregion
 
-            // aggiorna email
+            #region aggiorna email
             if (!string.IsNullOrEmpty(UserContent.Email) && UserContent.ContentItem.As<UserPart>().RegistrationStatus == UserStatus.Approved) {
                 CommunicationEmailRecord cmr = null;
                 if (contact != null) {
@@ -492,8 +525,9 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     _repositoryCommunicationEmailRecord.Flush();
                 }
             }
+            #endregion
 
-            // aggiorna sms
+            #region aggiorna sms
             try {
                 dynamic userPwdRecoveryPart = ((dynamic)UserContent.ContentItem).UserPwdRecoveryPart;
                 if (userPwdRecoveryPart != null) {
@@ -529,8 +563,9 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             catch {
                 // non è abilitato il modulo Laser.Mobile.SMS, quindi non allineo il telefono
             }
+            #endregion
 
-            // aggiorna Title
+            #region aggiorna Title
             if (string.IsNullOrWhiteSpace(UserContent.UserName) == false) {
                 contact.As<TitlePart>().Title = UserContent.UserName;
             }
@@ -540,14 +575,16 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             else {
                 contact.As<TitlePart>().Title = string.Format("User with ID {0}", UserContent.Id);
             }
+            #endregion
 
-            // aggiorna CommonPart
+            #region aggiorna CommonPart
             if (contact.Has<CommonPart>()) {
                 contact.As<CommonPart>().ModifiedUtc = DateTime.Now;
                 contact.As<CommonPart>().Owner = UserContent;
             }
+            #endregion
 
-            // aggiorna ProfilePart
+            #region aggiorna ProfilePart
             if (asProfilePart) {
                 List<ContentPart> Lcp = new List<ContentPart>();
                 Lcp.Add(((ContentPart)((dynamic)contact).ProfilePart));
@@ -596,51 +633,18 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                             myval = ((object)(((dynamic)cf).Value));
                         }
                         _contentExtensionsServices.StoreInspectExpandoFields(Lcp, ((string)((dynamic)cf).Name), myval, contact);
-
-                        //// determina il type e aggiorna il field index
-                        //string fieldTypeName = ((ContentField)cf).PartFieldDefinition.FieldDefinition.Name;
-                        //if (fieldTypeName == typeof(BooleanField).Name) {
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(int));
-                        //}
-                        //else if (fieldTypeName == typeof(DateTimeField).Name) {
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", ((DateTime)myval).Ticks, typeof(int));
-                        //}
-                        //else if (fieldTypeName == typeof(NumericField).Name) {
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(decimal));
-                        //}
-                        //else if (fieldTypeName == typeof(ContentPickerField).Name
-                        //    || fieldTypeName == typeof(MediaLibraryPickerField).Name) {
-                        //    string fieldValue = "";
-                        //    foreach (int relatedId in cf.Ids) {
-                        //        if (string.IsNullOrWhiteSpace(fieldValue.ToString()) == false) {
-                        //            fieldValue += ",";
-                        //        }
-                        //        fieldValue += string.Format("{{{0}}}", relatedId);
-                        //    }
-                        //    if (string.IsNullOrWhiteSpace(fieldValue.ToString())) {
-                        //        fieldValue = null;
-                        //    }
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", fieldValue, typeof(string));
-                        //}
-                        //else if (fieldTypeName == typeof(LinkField).Name) {
-                        //    LinkField linkField = (LinkField)cf;
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", linkField.Value, typeof(string));
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "Text", linkField.Text, typeof(string));
-                        //}
-                        //else if (fieldTypeName == typeof(InputField).Name
-                        //    || fieldTypeName == typeof(TextField).Name
-                        //    || fieldTypeName == typeof(EnumerationField).Name) {
-                        //    _fieldIndexService.Set(((dynamic)contact).FieldIndexPart, "ProfilePart", ((dynamic)cf).Name, "", myval, typeof(string));
-                        //}
                     }
                 }
             }
+            #endregion
             //if (string.IsNullOrEmpty(contact.As<AutoroutePart>().DisplayAlias)) {
             //    contact.As<AutoroutePart>().DisplayAlias = _autorouteService.GenerateAlias(contact.As<AutoroutePart>());
             //    _autorouteService.ProcessPath(contact.As<AutoroutePart>());
             //    _autorouteService.PublishAlias(contact.As<AutoroutePart>());
             //}
             if (contact != null) {
+                //Whether the type is draftable or not, we still want to publish it, so at worst setting Published = false does nothing
+                contact.VersionRecord.Published = false;
                 _orchardServices.ContentManager.Publish(contact);
             }
         }
