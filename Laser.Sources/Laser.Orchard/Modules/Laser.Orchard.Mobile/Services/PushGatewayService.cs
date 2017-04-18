@@ -17,7 +17,6 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Tokens;
 using Orchard.UI.Notify;
-using Orchard.Users.Models;
 using PushSharp.Apple;
 using PushSharp.Core;
 using PushSharp.Google;
@@ -69,12 +68,11 @@ namespace Laser.Orchard.Mobile.Services {
         public Localizer T { get; set; }
 
         private Int32 messageSent;
-        private object lockMonitor;
         private const int MAX_PUSH_TEXT_LENGTH = 160;
 
         private ContentItem senderContentItemContainer;
-        private ConcurrentDictionary<string, SentRecord> _sentRecords = new ConcurrentDictionary<string, SentRecord>();
-        private ConcurrentBag<DeviceChange> _deviceChanges = new ConcurrentBag<DeviceChange>();
+        private ConcurrentDictionary<string, SentRecord> _sentRecords;
+        private ConcurrentBag<DeviceChange> _deviceChanges;
 
         public PushGatewayService(IPushNotificationService pushNotificationService, IQueryPickerService queryPickerServices, IOrchardServices orchardServices, ITransactionManager transactionManager, IMylogService myLog, IRepository<SentRecord> sentRepository, IRepository<PushNotificationRecord> pushNotificationRepository, INotifier notifier, ICommunicationService communicationService, ITokenizer tokenizer, ShellSettings shellSetting) {
             _pushNotificationService = pushNotificationService;
@@ -89,7 +87,8 @@ namespace Laser.Orchard.Mobile.Services {
             _tokenizer = tokenizer;
             _shellSetting = shellSetting;
             messageSent = 0;
-            lockMonitor = new object();
+            _sentRecords = new ConcurrentDictionary<string, SentRecord>();
+            _deviceChanges = new ConcurrentBag<DeviceChange>();
         }
 
         public IList GetPushQueryResult(Int32[] ids, bool countOnly = false, int contentId = 0) {
@@ -922,31 +921,28 @@ namespace Laser.Orchard.Mobile.Services {
             _transactionManager.RequireNew();
 
             // salva l'elenco delle push da inviare
-            lock (lockMonitor) {
-                foreach (PushNotificationVM pnr in listdispositivo) {
-                    try {
-                        // verifica che il device sia stato registrato nell'ambiente corrente
-                        if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck) && (pnr.RegistrationMachineName == machineNameCheck)) {
-                            if ((repeatable == false) && (pushMessage.idContent > 0)) {
-                                SentRecord sr = new SentRecord {
-                                    DeviceType = TipoDispositivo.Android.ToString(),
-                                    PushNotificationRecord_Id = pnr.Id,
-                                    PushedItem = pushMessage.idContent,
-                                    SentDate = DateTime.UtcNow,
-                                    Outcome = ""
-                                };
-                                _sentRecords.AddOrUpdate(pnr.Token, sr, (key, record) => {
-                                    return sr;
-                                });
-                                _sentRepository.Create(sr);
-                            }
+            foreach (PushNotificationVM pnr in listdispositivo) {
+                try {
+                    // verifica che il device sia stato registrato nell'ambiente corrente
+                    if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck) && (pnr.RegistrationMachineName == machineNameCheck)) {
+                        if ((repeatable == false) && (pushMessage.idContent > 0)) {
+                            SentRecord sr = new SentRecord {
+                                DeviceType = TipoDispositivo.Android.ToString(),
+                                PushNotificationRecord_Id = pnr.Id,
+                                PushedItem = pushMessage.idContent,
+                                SentDate = DateTime.UtcNow,
+                                Outcome = ""
+                            };
+                            _sentRecords.AddOrUpdate(pnr.Token, sr, (key, record) => {
+                                return sr;
+                            });
+                            _sentRepository.Create(sr);
                         }
                     }
-                    catch (Exception ex) {
-                        _myLog.WriteLog("PushAndroid error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
-                    }
                 }
-                _sentRepository.Flush();
+                catch (Exception ex) {
+                    _myLog.WriteLog("PushAndroid error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                }
             }
             _transactionManager.RequireNew();
 
@@ -1004,19 +1000,16 @@ namespace Laser.Orchard.Mobile.Services {
             // aggiorna la validità degli expired
             foreach (var device in _sentRecords.Where(x => x.Value.Outcome == "ex")) {
                 try {
-                    lock (lockMonitor) {
-                        var myrepo = _pushNotificationRepository.Fetch(x => x.Token == device.Key && x.Produzione == produzione && x.Device.ToString() == device.Value.DeviceType).ToList();
-                        if (myrepo.Count() == 1) {
-                            PushNotificationRecord pnr = myrepo.FirstOrDefault();
-                            pnr.Validated = false;
-                            _pushNotificationRepository.Update(pnr);
-                            _myLog.WriteLog(string.Format("Device Subscription Expired Action: {0} not validated -> {1}", device.Value.DeviceType, device.Key));
-                        }
-                        else {
-                            _myLog.WriteLog(string.Format("Device Subscription Expired Error: {0} -> token not found or token not unique: {1}", device.Value.DeviceType, device.Key));
-                        }
+                    var myrepo = _pushNotificationRepository.Fetch(x => x.Token == device.Key && x.Produzione == produzione && x.Device.ToString() == device.Value.DeviceType).ToList();
+                    if (myrepo.Count() == 1) {
+                        PushNotificationRecord pnr = myrepo.FirstOrDefault();
+                        pnr.Validated = false;
+                        _pushNotificationRepository.Update(pnr);
+                        _myLog.WriteLog(string.Format("Device Subscription Expired Action: {0} not validated -> {1}", device.Value.DeviceType, device.Key));
                     }
-                }
+                    else {
+                        _myLog.WriteLog(string.Format("Device Subscription Expired Error: {0} -> token not found or token not unique: {1}", device.Value.DeviceType, device.Key));
+                    }                }
                 catch (Exception ex) {
                     _myLog.WriteLog("PushAndroid expired error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
@@ -1025,24 +1018,22 @@ namespace Laser.Orchard.Mobile.Services {
             _transactionManager.RequireNew();
 
             // salva tutti i device per i quali è cambiato il token
-            lock (lockMonitor) {
-                foreach (var change in _deviceChanges) {
-                    try {
-                        List<PushNotificationRecord> pnrList = _pushNotificationRepository.Fetch(x => x.Token == change.OldToken && x.Device.ToString() == change.TipoDispositivo && x.Produzione == change.Produzione).ToList();
-                        foreach (var pnr in pnrList) {
-                            IEnumerable<PushNotificationRecord> nuovo = _pushNotificationRepository.Fetch(x => x.Token == change.NewToken && x.Device.ToString() == change.TipoDispositivo && x.Produzione == change.Produzione);
-                            if (nuovo == null || nuovo.FirstOrDefault() == null) {
-                                // aggiorna il vecchio token
-                                pnr.Token = change.NewToken;
-                                pnr.Validated = true;
-                            }
-                            // non serve settare validated a false per il vecchio token perché è già stato fatto in quanto expired
-                            _pushNotificationRepository.Update(pnr);
+            foreach (var change in _deviceChanges) {
+                try {
+                    List<PushNotificationRecord> pnrList = _pushNotificationRepository.Fetch(x => x.Token == change.OldToken && x.Device.ToString() == change.TipoDispositivo && x.Produzione == change.Produzione).ToList();
+                    foreach (var pnr in pnrList) {
+                        IEnumerable<PushNotificationRecord> nuovo = _pushNotificationRepository.Fetch(x => x.Token == change.NewToken && x.Device.ToString() == change.TipoDispositivo && x.Produzione == change.Produzione);
+                        if (nuovo == null || nuovo.FirstOrDefault() == null) {
+                            // aggiorna il vecchio token
+                            pnr.Token = change.NewToken;
+                            pnr.Validated = true;
                         }
+                        // non serve settare validated a false per il vecchio token perché è già stato fatto in quanto expired
+                        _pushNotificationRepository.Update(pnr);
                     }
-                    catch (Exception ex) {
-                        _myLog.WriteLog("PushAndroid deviceChanged error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
-                    }
+                }
+                catch (Exception ex) {
+                    _myLog.WriteLog("PushAndroid deviceChanged error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
                 _pushNotificationRepository.Flush();
             }
@@ -1161,10 +1152,8 @@ namespace Laser.Orchard.Mobile.Services {
                                         PushedItem = pushMessage.idContent,
                                         SentDate = DateTime.UtcNow
                                     };
-                                    lock (lockMonitor) {
-                                        _sentRepository.Create(sr);
-                                        _sentRepository.Flush();
-                                    }
+                                    _sentRepository.Create(sr);
+                                    _sentRepository.Flush();
                                 }
                             }
                         }
@@ -1262,10 +1251,8 @@ namespace Laser.Orchard.Mobile.Services {
                                 PushedItem = pushMessage.idContent,
                                 SentDate = DateTime.UtcNow
                             };
-                            lock (lockMonitor) {
-                                _sentRepository.Create(sr);
-                                _sentRepository.Flush();
-                            }
+                            _sentRepository.Create(sr);
+                            _sentRepository.Flush();
                         }
                     }
                 }
@@ -1282,20 +1269,6 @@ namespace Laser.Orchard.Mobile.Services {
 
         private void DeviceSubscriptionChanged(object sender, string oldSubscriptionId, string newSubscriptionId, INotification notification, bool produzione, TipoDispositivo tipoDispositivo) {
             try {
-                //_myLog.WriteLog(string.Format("Device Registration Changed:  Old-> {0}  New-> {1} -> {2}", oldSubscriptionId, newSubscriptionId, notification));
-                //// aggiorna il token del device su db
-                //lock (lockMonitor) {
-                //    List<PushNotificationRecord> pnrList = _pushNotificationRepository.Fetch(x => x.Token == oldSubscriptionId && x.Device == tipoDispositivo && x.Produzione == produzione).ToList();
-                //    foreach (var pnr in pnrList) {
-                //        IEnumerable<PushNotificationRecord> esiste_il_nuovo = _pushNotificationRepository.Fetch(x => x.Token == newSubscriptionId && x.Device == tipoDispositivo && x.Produzione == produzione);
-                //        if (esiste_il_nuovo != null && esiste_il_nuovo.FirstOrDefault() != null)
-                //            pnr.Validated = false;
-                //        else
-                //            pnr.Token = newSubscriptionId;
-                //        _pushNotificationRepository.Update(pnr);
-                //    }
-                //    _pushNotificationRepository.Flush();
-                //}
                 var srOld = _sentRecords.AddOrUpdate(oldSubscriptionId, new SentRecord(), (key, record) => {
                     record.Outcome = "ex";
                     return record;
