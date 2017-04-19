@@ -62,6 +62,9 @@
                 <label for="@Html.FieldIdFor(m => m.ShowTestOptions)" class="forcheckbox">@T("Show Test Options") </label>
                 <span class="hint">@T("Will able back office to send push to development device")</span>
             </div>
+            @Html.LabelFor(m => m.PushSendBufferSize, T("Number of push messages sent in a single transaction"))
+            @Html.TextBoxFor(m => m.PushSendBufferSize)
+            <span class="hint">@T("50 is dthe default value.")</span>
         </fieldset>
         <fieldset>
             <h2>@T("Setting Taxonomy")</h2>

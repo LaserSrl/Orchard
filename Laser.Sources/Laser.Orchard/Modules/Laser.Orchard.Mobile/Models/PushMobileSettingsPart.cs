@@ -63,6 +63,10 @@ namespace Laser.Orchard.Mobile.Models {
             get { return Record.AndroidPushNotificationIcon; }
             set { Record.AndroidPushNotificationIcon = value; }
         }
+        public int PushSendBufferSize { 
+            get { return Record.PushSendBufferSize; }
+            set { Record.PushSendBufferSize = value; }
+        }
     }
 
     [OrchardFeature("Laser.Orchard.PushGateway")]
@@ -81,6 +85,7 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual string AndroidPushServiceUrl { get; set; }
         public virtual string AndroidPushNotificationIcon { get; set; }
         public virtual string TaxonomyName { get; set; }
+        public virtual int PushSendBufferSize { get; set; }
     }
 }
 

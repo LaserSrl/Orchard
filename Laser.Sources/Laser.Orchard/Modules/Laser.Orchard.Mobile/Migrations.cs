@@ -301,6 +301,11 @@ namespace Laser.Orchard.Mobile {
             );
             return 29;
         }
-
+        public int UpdateFrom29() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                       .AddColumn<int>("PushSendBufferSize")
+                       );
+            return 30;
+        }
     }
 }

@@ -60,6 +60,7 @@ namespace Laser.Orchard.Mobile.Drivers {
                 viewModel.ShowTestOptions = getpart.ShowTestOptions;
                 viewModel.ApplePushSound = getpart.ApplePushSound;
                 viewModel.TaxonomyName = getpart.TaxonomyName;
+                viewModel.PushSendBufferSize = getpart.PushSendBufferSize;
 
                 List<TaxonomyPart> tps = _taxonomyService.GetTaxonomies().ToList();
                 IEnumerable<ListItem> selectList =
@@ -87,6 +88,7 @@ namespace Laser.Orchard.Mobile.Drivers {
                         part.WindowsEndPoint = viewModel.WindowsEndPoint;
                         part.ShowTestOptions = viewModel.ShowTestOptions;
                         part.TaxonomyName = viewModel.TaxonomyName;
+                        part.PushSendBufferSize = viewModel.PushSendBufferSize;
                     }
                 }
                 else {
@@ -104,6 +106,7 @@ namespace Laser.Orchard.Mobile.Drivers {
                     viewModel.ShowTestOptions = part.ShowTestOptions;
                     viewModel.ApplePushSound = part.ApplePushSound;
                     viewModel.TaxonomyName = part.TaxonomyName;
+                    viewModel.PushSendBufferSize = part.PushSendBufferSize;
                 }
                 return shapeHelper.EditorTemplate(TemplateName: "Parts/PushMobileSettings_Edit", Model: viewModel, Prefix: Prefix);
             })

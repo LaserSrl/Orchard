@@ -23,6 +23,7 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public string AppleCertificateTenant { get; set; }
         public bool ShowTestOptions { get; set; }
         public string TaxonomyName { get; set; }
+        public int PushSendBufferSize { get; set; }
         public SelectList ListOfTaxonomies { get; set; }
 
         public SelectList ListOfCertificates {
