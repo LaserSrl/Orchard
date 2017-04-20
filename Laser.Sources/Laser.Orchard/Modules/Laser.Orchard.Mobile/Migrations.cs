@@ -163,7 +163,10 @@ namespace Laser.Orchard.Mobile {
         }
 
         public int UpdateFrom12() {
-
+            SchemaBuilder.CreateTable("MobileContactPartRecord",
+                 table => table
+                     .ContentPartRecord()
+              );
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
             type => type
@@ -182,10 +185,7 @@ namespace Laser.Orchard.Mobile {
             return 14;
         }
         public int UpdateFrom14() {
-            SchemaBuilder.CreateTable("MobileContactPartRecord",
-                             table => table
-                                 .ContentPartRecord()
-                );
+
             return 15;
         }
          public int UpdateFrom15() {
