@@ -1046,9 +1046,9 @@ namespace Laser.Orchard.Mobile.Services {
                 if (pushSettings.CommitSentOnly == false) {
                     InitializeRecipientsOnDb();
                 }
-                // ciclo con retry sui ko e sui nuovi
+                // ciclo con retry sui nuovi
                 GcmNotification objNotification = null;
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 2; i++) { // cicla 2 volte: la prima per i device in input, la seconda per quelli changed
                     var push = new GcmServiceBroker(config);
                     push.OnNotificationSucceeded += (notification) => {
                         NotificationSent(notification);
@@ -1165,8 +1165,8 @@ namespace Laser.Orchard.Mobile.Services {
                 if (pushSettings.CommitSentOnly == false) {
                     InitializeRecipientsOnDb();
                 }
-                // ciclo con retry sui ko e sui nuovi
-                for (int i = 0; i < 2; i++) {
+                // ciclo con retry sui nuovi
+                for (int i = 0; i < 2; i++) { // cicla 2 volte: la prima per i device in input, la seconda per quelli changed
                     var push = new ApnsServiceBroker(config);
                     push.OnNotificationSucceeded += (notification) => {
                         NotificationSent(notification);
@@ -1263,8 +1263,8 @@ namespace Laser.Orchard.Mobile.Services {
                 if (pushSettings.CommitSentOnly == false) {
                     InitializeRecipientsOnDb();
                 }
-                // ciclo con retry sui ko e sui nuovi
-                for (int i = 0; i < 2; i++) {
+                // ciclo con retry sui nuovi
+                for (int i = 0; i < 2; i++) { // cicla 2 volte: la prima per i device in input, la seconda per quelli changed
                     var push = new WnsServiceBroker(config);
                     push.OnNotificationSucceeded += (notification) => {
                         NotificationSent(notification);
