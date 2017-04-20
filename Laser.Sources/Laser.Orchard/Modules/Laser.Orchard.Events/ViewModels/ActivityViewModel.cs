@@ -17,7 +17,7 @@ namespace Laser.Orchard.Events.ViewModels {
                     Date = DateStart,
                     Time = TimeStart,
                     ShowDate = true,
-                    ShowTime = !AllDay
+                    ShowTime = true
                 };
             }
             set
@@ -35,7 +35,7 @@ namespace Laser.Orchard.Events.ViewModels {
                     Date = DateEnd,
                     Time = TimeEnd,
                     ShowDate = true,
-                    ShowTime = !AllDay
+                    ShowTime = true
                 };
             }
             set
@@ -63,7 +63,6 @@ namespace Laser.Orchard.Events.ViewModels {
 
         public bool RepeatEnd { get; set; }
 
-        [Required]
         public string RepeatEndDate { get; set; }
 
         public bool Monday { get; set; }

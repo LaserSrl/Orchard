@@ -148,7 +148,7 @@ namespace Laser.Orchard.Events.Drivers {
                     .ForMember(dest => dest.RepeatEndDate, opt => opt.Ignore())
                     .ForMember(dest => dest.RepeatDetails, opt => opt.Ignore())
                     //ContentPart has a Settings property, that would clash with the Settings property from ActivityViewModel
-                    .ForMember(dest => dest.Settings, opt => opt.Ignore()); 
+                    .ForMember(dest => dest.Settings, opt => opt.Ignore());
                 });
 
                 Mapper.Map(activityVM, part);
@@ -165,9 +165,15 @@ namespace Laser.Orchard.Events.Drivers {
                         part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, activityVM.TimeStart);
                         part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, activityVM.TimeEnd);
                     }
+                }
+                else
+                    updater.AddModelError(Prefix + "DateRequiredError", T("The starting date and ending date of the event are required."));
 
+                if (part.Repeat) {
                     part.RepeatEndDate = _dataLocalization.StringToDatetime(activityVM.RepeatEndDate, "");
-
+                    if (part.RepeatEnd && part.RepeatEndDate == null){
+                        updater.AddModelError(Prefix + "DateRepeateRequiredError", T("The repeat end date is required."));
+                    }
                     string repeatDetails = "";
                     if (activityVM.RepeatType == "W") {
                         if (activityVM.Monday)
@@ -196,8 +202,6 @@ namespace Laser.Orchard.Events.Drivers {
                     }
                     part.RepeatDetails = repeatDetails;
                 }
-                else
-                    updater.AddModelError("DateRequiredError", T("The starting date and ending date of the event are required."));
             }
 
             return Editor(part, shapeHelper);

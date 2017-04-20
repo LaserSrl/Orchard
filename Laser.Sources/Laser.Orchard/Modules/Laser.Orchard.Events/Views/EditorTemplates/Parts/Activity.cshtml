@@ -12,29 +12,15 @@
     <script type="text/javascript">
         $(function () {
             //The AllDay field determines whether the time fields should be displayed
+            HideShowTime();
             $('#@Html.FieldIdFor(m => m.AllDay)').click(function () {
-                if ($('#@Html.FieldIdFor(m => m.AllDay)').is(':checked')) {
-                    $('#@Html.FieldIdFor(m => m)_@Html.FieldIdFor(m => m.DateStartEditor)').find('.time').hide();
-                    $('#@Html.FieldIdFor(m => m)_@Html.FieldIdFor(m => m.DateEndEditor)').find('.time').hide();
-                } else {
-                    $('#@Html.FieldIdFor(m => m)_@Html.FieldIdFor(m => m.DateStartEditor)').find('.time').show();
-                    $('#@Html.FieldIdFor(m => m)_@Html.FieldIdFor(m => m.DateEndEditor)').find('.time').show();
-                }
+                HideShowTime();
             });
 
             //Visualizzo la sezione con le opzioni di ripetizione in base alla selezione o meno del campo Repeat
-            if ('@Model.Repeat' == 'True') {
-                $('#repeat').show();
-            } else {
-                $('#repeat').hide();
-            }
-
+            HideShowRepeate();
             $('#@Html.FieldIdFor(m => m.Repeat)').click(function () {
-                if ($('#@Html.FieldIdFor(m => m.Repeat)').is(':checked')) {
-                    $('#repeat').show();
-                } else {
-                    $('#repeat').hide();
-                }
+                HideShowRepeate();
             });
 
             //Visualizzo la sezione con le scelte di dettaglio sulla ripetizione degli eventi in base al tipo di ripetizione
@@ -72,6 +58,24 @@
                 }
             });
         })
+
+        function HideShowRepeate() {
+            if ($('#@Html.FieldIdFor(m => m.Repeat)').is(':checked')) {
+                $('#repeat').show();
+            } else {
+                $('#repeat').hide();
+            }
+        }
+
+        function HideShowTime() {
+            if ($('#@Html.FieldIdFor(m => m.AllDay)').is(':checked')) {
+                $('#@Html.FieldIdFor(m => m)_@Html.FieldIdFor(m => m.DateStartEditor)').find('.time').hide();
+                $('#@Html.FieldIdFor(m => m)_@Html.FieldIdFor(m => m.DateEndEditor)').find('.time').hide();
+            } else {
+                $('#@Html.FieldIdFor(m => m)_@Html.FieldIdFor(m => m.DateStartEditor)').find('.time').show();
+                $('#@Html.FieldIdFor(m => m)_@Html.FieldIdFor(m => m.DateEndEditor)').find('.time').show();
+            }
+        }
     </script>
 }
 
