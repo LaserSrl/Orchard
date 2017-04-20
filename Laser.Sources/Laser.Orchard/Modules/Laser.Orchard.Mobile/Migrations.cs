@@ -313,5 +313,14 @@ namespace Laser.Orchard.Mobile {
                        );
             return 31;
         }
+        public int UpdateFrom31() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                .AddColumn<int>("DelayMinutesBeforeRetry", col => col.WithDefault(5))
+            );
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                .AddColumn<int>("MaxNumRetry", col => col.WithDefault(3))
+            );
+            return 32;
+        }
     }
 }

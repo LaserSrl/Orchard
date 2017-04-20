@@ -72,6 +72,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         CommunicationContactPart EnsureMasterContact();
 
         CommunicationContactPart TryEnsureContact(int userId);
+
+        int SetFailureForRetry(int contentId, string context, string data);
     }
 
     public class CommunicationService : ICommunicationService {
@@ -93,6 +95,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
+        private readonly IRepository<CommunicationRetryRecord> _repositoryCommunicationRetryRecord;
 
         public CommunicationService(
             ITaxonomyService taxonomyService,
@@ -109,6 +112,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             ITransactionManager transactionManager,
             IFieldIndexService fieldIndexService,
             IAutorouteService autorouteService,
+            IRepository<CommunicationRetryRecord> repositoryCommunicationRetryRecord,
             IContentDefinitionManager contentDefinitionManager) {
 
             _orchardServices = orchardServices;
@@ -118,6 +122,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _notifier = notifier;
             _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
             _repositoryCommunicationSmsRecord = repositoryCommunicationSmsRecord;
+            _repositoryCommunicationRetryRecord = repositoryCommunicationRetryRecord;
             _taxonomyService = taxonomyService;
             _cultureManager = cultureManager;
             _contactRelatedEventHandler = contactRelatedEventHandler;
@@ -407,7 +412,30 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             return result;
         }
-
+        public int SetFailureForRetry(int contentId, string context, string data) {
+            int result = 1;
+            CommunicationRetryRecord retry = _repositoryCommunicationRetryRecord.Get(x => x.ContentItemRecord_Id == contentId && x.Context == context);
+            //var enumRetry = _repositoryCommunicationRetryRecord.Fetch(x => x.ContentItemRecord_Id == contentId && x.Context == context);
+            //if(enumRetry != null && enumRetry.Count() > 0) {
+            //    retry = enumRetry.FirstOrDefault();
+            //}
+            if(retry == null) {
+                retry = new CommunicationRetryRecord {
+                    ContentItemRecord_Id = contentId,
+                    Context = context,
+                    NoOfFailures = 1,
+                    Data = data
+                };
+                _repositoryCommunicationRetryRecord.Create(retry);
+            }
+            else {
+                retry.NoOfFailures++;
+                retry.Data = data;
+                result = retry.NoOfFailures;
+                _repositoryCommunicationRetryRecord.Update(retry);
+            }
+            return result;
+        }
         public void UserToContact(IUser UserContent) {
             // verifiche preliminari
             if (UserContent.Id == 0) {

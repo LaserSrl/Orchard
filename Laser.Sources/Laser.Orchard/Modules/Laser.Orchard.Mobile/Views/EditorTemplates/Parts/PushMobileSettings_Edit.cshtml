@@ -65,12 +65,22 @@
             <div class="checkbox-and-label">
                 @Html.LabelFor(m => m.PushSendBufferSize, T("Number of push messages to send in each database transaction"))
                 @Html.TextBoxFor(m => m.PushSendBufferSize)
-                <span class="hint">@T("50 is dthe default value.")</span>
+                <span class="hint">@T("Default value: 50.")</span>
             </div>
             <div class="checkbox-and-label">
                 @Html.CheckBoxFor(m => m.CommitSentOnly)
                 <label for="@Html.FieldIdFor(m => m.CommitSentOnly)" class="forcheckbox">@T("Commit sent recipients only") </label>
                 <span class="hint">@T("Check if you prefer to send some push message twice rather than loose some push message in case of system error.")</span>
+            </div>
+            <div class="checkbox-and-label">
+                @Html.LabelFor(m => m.DelayMinutesBeforeRetry, T("Delay in minutes before nex retry"))
+                @Html.TextBoxFor(m => m.DelayMinutesBeforeRetry)
+                <span class="hint">@T("Default value: 5.")</span>
+            </div>
+            <div class="checkbox-and-label">
+                @Html.LabelFor(m => m.MaxNumRetry, T("Max number of retries"))
+                @Html.TextBoxFor(m => m.MaxNumRetry)
+                <span class="hint">@T("Typical value: 3.")</span>
             </div>
 </fieldset>
         <fieldset>

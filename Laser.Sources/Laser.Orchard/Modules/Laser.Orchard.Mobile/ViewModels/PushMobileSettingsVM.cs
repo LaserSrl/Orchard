@@ -25,6 +25,8 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public string TaxonomyName { get; set; }
         public int PushSendBufferSize { get; set; }
         public bool CommitSentOnly { get; set; }
+        public int DelayMinutesBeforeRetry { get; set; }
+        public int MaxNumRetry { get; set; }
         public SelectList ListOfTaxonomies { get; set; }
 
         public SelectList ListOfCertificates {

@@ -43,7 +43,7 @@ namespace Laser.Orchard.Mobile.Services {
 
         void PublishedPushEventTest(ContentItem ci);
 
-        void PublishedPushEvent(ContentItem ci);
+        string PublishedPushEvent(ContentItem ci);
 
         void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "", string externalUrl = "");
 
@@ -69,6 +69,7 @@ namespace Laser.Orchard.Mobile.Services {
 
         private Int32 messageSent;
         private const int MAX_PUSH_TEXT_LENGTH = 160;
+        private string _result;
 
         private ContentItem senderContentItemContainer;
         private ConcurrentDictionary<string, SentRecord> _sentRecords;
@@ -539,14 +540,20 @@ namespace Laser.Orchard.Mobile.Services {
                 SendAllWindowsPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable: true);
             }
         }
-
-        public void PublishedPushEvent(ContentItem ci) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ci"></param>
+        /// <returns>An error list, if any.</returns>
+        public string PublishedPushEvent(ContentItem ci) {
+            _result = "";
             senderContentItemContainer = ci;
             bool SendPushToSpecificDevices;
             try {
                 _myLog.WriteLog("Iniziato invio Push del content " + ci.Id);
                 ContentItem savedCi = _orchardServices.ContentManager.Get(ci.Id);
                 MobilePushPart mpp = ci.As<MobilePushPart>();
+                messageSent = CountSentOnDb(ci.Id);
                 SendPushToSpecificDevices = mpp.UseRecipientList;
                 if (mpp.ToPush) {
                     bool stopPush = false;
@@ -602,7 +609,7 @@ namespace Laser.Orchard.Mobile.Services {
                             produzione = !(mpp.TestPush);
                         }
 
-                        // tipo didispositivo (Android, Apple, Windows)
+                        // tipo di dispositivo (Android, Apple, Windows)
                         TipoDispositivo? locTipoDispositivo = null;
                         if (mpp.DevicePush != "All") {
                             TipoDispositivo auxTipoDispositivo;
@@ -643,8 +650,10 @@ namespace Laser.Orchard.Mobile.Services {
                                 pushMessage);
                         }
                         // aggiorna la MobilePushPart
-                        mpp.PushSent = true;
-                        mpp.PushSentNumber = messageSent;
+                        ContentItem ci2 = _orchardServices.ContentManager.Get(ci.Id);
+                        MobilePushPart mpp2 = ci2.As<MobilePushPart>();
+                        mpp2.PushSent = true;
+                        mpp2.PushSentNumber = messageSent;
                         int counter = 0;
                         if (ci.ContentType == "CommunicationAdvertising") {
                             IList counterAux;
@@ -668,7 +677,7 @@ namespace Laser.Orchard.Mobile.Services {
                                 counter = Convert.ToInt32(estrazione);
                             }
                         }
-                        mpp.TargetDeviceNumber = counter;
+                        mpp2.TargetDeviceNumber = counter;
                         _notifier.Information(T("Notification sent: " + messageSent.ToString()));
                         _myLog.WriteLog("Notification sent: " + messageSent.ToString());
                     }
@@ -691,7 +700,9 @@ namespace Laser.Orchard.Mobile.Services {
                     // ignora volutamente qualsiasi errore
                 }
                 _myLog.WriteLog("Errore invio Push del content " + ci.Id + " \"" + title + "\" - Error: " + ex.Message + "\r\n" + ex.StackTrace);
+                _result += "PublishedPushEvent ";
             }
+            return _result;
         }
 
         private string[] getextrainfo(Int32 id_of_content) {
@@ -815,6 +826,7 @@ namespace Laser.Orchard.Mobile.Services {
             }
             catch (Exception ex) {
                 _myLog.WriteLog(string.Format("Error in PushNotificationService.GetListMobileDevice(): {0} - {1}", ex.Message, ex.StackTrace));
+                _result += "GetListMobileDevice ";
             }
             return lista;
         }
@@ -895,6 +907,7 @@ namespace Laser.Orchard.Mobile.Services {
                 }
                 catch (Exception ex) {
                     _myLog.WriteLog("PushGateway.InitializeRecipients error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    _result += "InitializeRecipients ";
                 }
             }
         }
@@ -965,29 +978,18 @@ namespace Laser.Orchard.Mobile.Services {
             }
             _transactionManager.RequireNew();
         }
+        private int CountSentOnDb(int contentId) {
+            int result = 0;
+            try {
+                result = _sentRepository.Count(x => x.PushedItem == contentId && x.Outcome == "ok");
+            }
+            catch (Exception ex) {
+                _myLog.WriteLog("PushGateway CountSentOnDb error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+            }
+            return result;
+        }
         private void PushAndroid(List<PushNotificationVM> listdispositivo, bool produzione, PushMessage pushMessage, bool repeatable = false) {
             listdispositivo = CleanRecipients(listdispositivo, pushMessage.idContent, repeatable);
-
-            //// studio di carico
-            //DateTime dt = DateTime.Now;
-            //repeatable = false;
-            //for(int idx=0; idx < 70; idx++) {
-            //    listdispositivo.Add(new PushNotificationVM {
-            //        Id = 78 + idx,
-            //        Device = TipoDispositivo.Android,
-            //        Language = "it-IT",
-            //        DataInserimento = dt,
-            //        DataModifica = dt,
-            //        MobileContactPartRecord_Id = 2,
-            //        Produzione = true,
-            //        RegistrationMachineName = "LASER-SVILUPPO",
-            //        RegistrationUrlHost = "",
-            //        RegistrationUrlPrefix = "ivreaterritorio",
-            //        Token = idx.ToString() + "-tk837439v3yb9r3buqboehnpherbptq-ep8tyqp47yt8q73648t7y3847y8q7h4tu-qhbetiquhberf",
-            //        UUIdentifier = "uuid765765kjhkjhkjh",
-            //        Validated = true
-            //    });
-            //}
 
             // calcola la configurazione per Android
             var pushSettings = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>();

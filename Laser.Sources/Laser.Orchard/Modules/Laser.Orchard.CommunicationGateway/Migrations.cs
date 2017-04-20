@@ -355,5 +355,16 @@ namespace Laser.Orchard.CommunicationGateway {
                    );
             return 25;
         }
+        public int UpdateFrom25() {
+            SchemaBuilder.CreateTable("CommunicationRetryRecord",
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<int>("ContentItemRecord_Id", column => column.WithDefault(0))
+                    .Column<string>("Context", column => column.WithLength(100))
+                    .Column<int>("NoOfFailures", column => column.WithDefault(0))
+                    .Column<string>("Data", column => column.Unlimited())
+             );
+            return 26;
+        }
     }
 }

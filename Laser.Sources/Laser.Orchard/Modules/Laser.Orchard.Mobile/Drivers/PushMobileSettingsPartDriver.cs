@@ -62,6 +62,8 @@ namespace Laser.Orchard.Mobile.Drivers {
                 viewModel.TaxonomyName = getpart.TaxonomyName;
                 viewModel.PushSendBufferSize = getpart.PushSendBufferSize;
                 viewModel.CommitSentOnly = getpart.CommitSentOnly;
+                viewModel.DelayMinutesBeforeRetry = getpart.DelayMinutesBeforeRetry;
+                viewModel.MaxNumRetry = getpart.MaxNumRetry;
 
                 List<TaxonomyPart> tps = _taxonomyService.GetTaxonomies().ToList();
                 IEnumerable<ListItem> selectList =
@@ -91,6 +93,8 @@ namespace Laser.Orchard.Mobile.Drivers {
                         part.TaxonomyName = viewModel.TaxonomyName;
                         part.PushSendBufferSize = viewModel.PushSendBufferSize;
                         part.CommitSentOnly = viewModel.CommitSentOnly;
+                        part.DelayMinutesBeforeRetry = viewModel.DelayMinutesBeforeRetry;
+                        part.MaxNumRetry = viewModel.MaxNumRetry;
                     }
                 }
                 else {
@@ -110,6 +114,8 @@ namespace Laser.Orchard.Mobile.Drivers {
                     viewModel.TaxonomyName = part.TaxonomyName;
                     viewModel.PushSendBufferSize = part.PushSendBufferSize;
                     viewModel.CommitSentOnly = part.CommitSentOnly;
+                    viewModel.DelayMinutesBeforeRetry = part.DelayMinutesBeforeRetry;
+                    viewModel.MaxNumRetry = part.MaxNumRetry;
                 }
                 return shapeHelper.EditorTemplate(TemplateName: "Parts/PushMobileSettings_Edit", Model: viewModel, Prefix: Prefix);
             })

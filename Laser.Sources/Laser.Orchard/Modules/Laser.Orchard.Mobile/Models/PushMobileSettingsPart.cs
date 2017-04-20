@@ -71,6 +71,16 @@ namespace Laser.Orchard.Mobile.Models {
             get { return Record.CommitSentOnly; }
             set { Record.CommitSentOnly = value; }
         }
+        public int DelayMinutesBeforeRetry
+        {
+            get { return Record.DelayMinutesBeforeRetry; }
+            set { Record.DelayMinutesBeforeRetry = value; }
+        }
+        public int MaxNumRetry
+        {
+            get { return Record.MaxNumRetry; }
+            set { Record.MaxNumRetry = value; }
+        }
     }
 
     [OrchardFeature("Laser.Orchard.PushGateway")]
@@ -91,6 +101,8 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual string TaxonomyName { get; set; }
         public virtual int PushSendBufferSize { get; set; }
         public virtual bool CommitSentOnly { get; set; }
+        public virtual int DelayMinutesBeforeRetry { get; set; }
+        public virtual int MaxNumRetry { get; set; }
     }
 }
 
