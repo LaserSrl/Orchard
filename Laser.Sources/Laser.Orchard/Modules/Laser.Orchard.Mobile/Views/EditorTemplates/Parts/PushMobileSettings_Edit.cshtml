@@ -62,10 +62,17 @@
                 <label for="@Html.FieldIdFor(m => m.ShowTestOptions)" class="forcheckbox">@T("Show Test Options") </label>
                 <span class="hint">@T("Will able back office to send push to development device")</span>
             </div>
-            @Html.LabelFor(m => m.PushSendBufferSize, T("Number of push messages sent in a single transaction"))
-            @Html.TextBoxFor(m => m.PushSendBufferSize)
-            <span class="hint">@T("50 is dthe default value.")</span>
-        </fieldset>
+            <div class="checkbox-and-label">
+                @Html.LabelFor(m => m.PushSendBufferSize, T("Number of push messages to send in each database transaction"))
+                @Html.TextBoxFor(m => m.PushSendBufferSize)
+                <span class="hint">@T("50 is dthe default value.")</span>
+            </div>
+            <div class="checkbox-and-label">
+                @Html.CheckBoxFor(m => m.CommitSentOnly)
+                <label for="@Html.FieldIdFor(m => m.CommitSentOnly)" class="forcheckbox">@T("Commit sent recipients only") </label>
+                <span class="hint">@T("Check if you prefer to send some push message twice rather than loose some push message in case of system error.")</span>
+            </div>
+</fieldset>
         <fieldset>
             <h2>@T("Setting Taxonomy")</h2>
             @Html.LabelFor(m => m.TaxonomyName, T("Enter Taxonomy Name used"))

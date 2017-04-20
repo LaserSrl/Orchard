@@ -307,5 +307,11 @@ namespace Laser.Orchard.Mobile {
                        );
             return 30;
         }
+        public int UpdateFrom30() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                       .AddColumn<bool>("CommitSentOnly")
+                       );
+            return 31;
+        }
     }
 }

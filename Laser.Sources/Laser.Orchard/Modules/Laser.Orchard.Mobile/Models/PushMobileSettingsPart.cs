@@ -67,6 +67,10 @@ namespace Laser.Orchard.Mobile.Models {
             get { return Record.PushSendBufferSize; }
             set { Record.PushSendBufferSize = value; }
         }
+        public bool CommitSentOnly {
+            get { return Record.CommitSentOnly; }
+            set { Record.CommitSentOnly = value; }
+        }
     }
 
     [OrchardFeature("Laser.Orchard.PushGateway")]
@@ -86,6 +90,7 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual string AndroidPushNotificationIcon { get; set; }
         public virtual string TaxonomyName { get; set; }
         public virtual int PushSendBufferSize { get; set; }
+        public virtual bool CommitSentOnly { get; set; }
     }
 }
 
