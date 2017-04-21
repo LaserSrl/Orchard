@@ -73,7 +73,7 @@
                 <span class="hint">@T("Check if you prefer to send some push message twice rather than loose some push message in case of system error.")</span>
             </div>
             <div class="checkbox-and-label">
-                @Html.LabelFor(m => m.DelayMinutesBeforeRetry, T("Delay in minutes before nex retry"))
+                @Html.LabelFor(m => m.DelayMinutesBeforeRetry, T("Delay in minutes before next retry"))
                 @Html.TextBoxFor(m => m.DelayMinutesBeforeRetry)
                 <span class="hint">@T("Default value: 5.")</span>
             </div>
