@@ -1,4 +1,5 @@
-﻿@model List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM>
+﻿@model UserReactionsTotalRec
+ @*List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM>*@
 @using Laser.Orchard.UserReactions.Models
 @using Laser.Orchard.UserReactions.ViewModels
 @using Orchard.ContentManagement
@@ -10,7 +11,7 @@
 
     Style.Require("jQueryColorBox").AtHead();
 
-    // List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model;
+    //List<Laser.Orchard.UserReactions.ViewModels.UserReactionsVM> part = Model;
 
     IUserReactionsService _reactionService;
     WorkContext.TryResolve<IUserReactionsService>(out _reactionService);
@@ -18,36 +19,39 @@
 
     var settings = WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
     Style.Require(settings.StyleFileNameProvider.ToString());
-  
+
 }
 <fieldset>
     <legend>@T("User Reactions")</legend>
-<div class="reaction-wrapper">
+    <div class="reaction-wrapper">
 
-    @{foreach (var item in Model) {
+        @{  foreach (var item in Model.UserReactionsTotals) {
 
-          var quantità = "(" + @item.Quantity + ")";
-          var itemName = " " + _reactionService.GetReactionEnumTranslations((ReactionsNames)Enum.Parse(typeof(ReactionsNames), item.TypeName)) + " ";
-          string attCSS = string.Format("reaction-icon-{0}", item.TypeName.ToLowerInvariant());
-          var id = @item.TypeId;
-      
-       
-        <div class="reaction-container" id="@id">
-            <div class="reaction-icon @attCSS"></div>
-            @{var itemNameCount = "itemName" + @id; }
-            @{var itemQtyCount = "itemQuantity" + @id; }
-            <div>
-                <span class="reaction-name" id="@itemNameCount">@itemName</span>
-                <span class="reaction-qty" id="@itemQtyCount">@quantità</span>
-            </div>
-        </div>    
-      } 
-    
-    }
-    <a href="@Url.Action("ListSummaryReactionByUsers", "Admin", new { Area = "Laser.Orchard.UserReactions", Content = @Model.FirstOrDefault().Id, page = 1, pageSize = 10 })" class="colorbox button reaction-summary">@T("Open summary")</a>
-</div>
+                var quantità = "(" + @item.Quantity + ")";
+                var itemName = " " + _reactionService.GetReactionEnumTranslations((ReactionsNames)Enum.Parse(typeof(ReactionsNames), item.TypeName)) + " ";
+                string attCSS = string.Format("reaction-icon-{0}", item.TypeName.ToLowerInvariant());
+                var id = @item.TypeId;
 
-    </fieldset>
+
+                <div class="reaction-container" id="@id">
+                    <div class="reaction-icon @attCSS"></div>
+                    @{var itemNameCount = "itemName" + @id; }
+                    @{var itemQtyCount = "itemQuantity" + @id; }
+                    <div>
+                        <span class="reaction-name" id="@itemNameCount">@itemName</span>
+                        <span class="reaction-qty" id="@itemQtyCount">@quantità</span>
+                    </div>
+                </div>
+                        }
+
+                        if (@Model.UserReactionsTotals.Count > 0) {
+
+        <a href="@Url.Action("ListSummaryReactionByUsers", "Admin", new { Area = "Laser.Orchard.UserReactions", Content = @Model.UserReactionsTotals.FirstOrDefault().Id, page = 1, pageSize = 10 })" class="colorbox button reaction-summary">@T("Open summary")</a>
+                            }
+                        }
+    </div>
+
+</fieldset>
 @using (Script.Head()) {
     <script type="text/javascript">
         $(document).ready(function () {
