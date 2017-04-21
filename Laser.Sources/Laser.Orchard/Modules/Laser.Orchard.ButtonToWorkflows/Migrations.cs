@@ -17,36 +17,45 @@ namespace Laser.Orchard.ButtonToWorkflows {
          );
             return 2;
         }
+
         public int UpdateFrom2() {
             SchemaBuilder.AlterTable("ButtonToWorkflowsSettingsPartRecord", table => table
                         .AddColumn<string>("ButtonsDescription")
-                      
+
          );
             return 3;
         }
+
         public int UpdateFrom3() {
             SchemaBuilder.AlterTable("ButtonToWorkflowsSettingsPartRecord", table => table
                         .AddColumn<string>("ButtonsMessage")
 
          );
             return 4;
-
-            
         }
+
         public int UpdateFrom4() {
             SchemaBuilder.AlterTable("ButtonToWorkflowsSettingsPartRecord", table => table
                         .AddColumn<string>("ButtonsAsync")
          );
             return 5;
         }
-        //        public int UpdateFrom4() {
-        //            SchemaBuilder.AlterTable("ButtonToWorkflowsPart", table => table
-        //                        .AddColumn<string>("ActionToExecute")
-        //         );
-        //            SchemaBuilder.AlterTable("ButtonToWorkflowsPart", table => table
-        //             .AddColumn<string>("MessageToWrite")
-        //);
-        //            return 5;
-        //        }
+
+        public int UpdateFrom5() {
+            SchemaBuilder.CreateTable("DynamicButtonToWorkflowsRecord", table => table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<string>("ButtonName")
+                .Column<string>("ButtonText")
+                .Column<string>("ButtonDescription")
+                .Column<string>("ButtonMessage")
+                .Column<bool>("ButtonAsync")
+            );
+
+            ContentDefinitionManager.AlterPartDefinition("DynamicButtonToWorkflowsPart",
+                part => part.Attachable()
+                            .WithDescription("Allows to associate dynamically created buttons that are able to trigger workflows."));
+
+            return 6;
+        }
     }
 }
