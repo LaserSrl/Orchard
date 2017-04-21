@@ -26,7 +26,6 @@ namespace Laser.Orchard.Mobile.Services {
     }
 
     public class PushNotificationService : IPushNotificationService {
-        private readonly IRepository<SentRecord> _sentRepository;
         private readonly IRepository<PushNotificationRecord> _pushNotificationRepository;
         private readonly IRepository<UserDeviceRecord> _userDeviceRecord;
         private readonly IQueryPickerService _queryPickerServices;
@@ -42,20 +41,18 @@ namespace Laser.Orchard.Mobile.Services {
         private const int MAX_PUSH_TEXT_LENGTH = 160;
 
         public PushNotificationService(
-            IRepository<SentRecord> sentRepository,
-                IOrchardServices orchardServices,
-                IRepository<PushNotificationRecord> pushNotificationRepository,
-                IRepository<UserDeviceRecord> userDeviceRecord,
-                INotifier notifier,
-                IMylogService myLog,
-                ShellSettings shellSetting,
-                ISessionLocator sessionLocator,
-                ITokenizer tokenizer,
-                IQueryPickerService queryPickerService,
-                ITransactionManager transactionManager
+            IOrchardServices orchardServices,
+            IRepository<PushNotificationRecord> pushNotificationRepository,
+            IRepository<UserDeviceRecord> userDeviceRecord,
+            INotifier notifier,
+            IMylogService myLog,
+            ShellSettings shellSetting,
+            ISessionLocator sessionLocator,
+            ITokenizer tokenizer,
+            IQueryPickerService queryPickerService,
+            ITransactionManager transactionManager
          ) {
             _orchardServices = orchardServices;
-            _sentRepository = sentRepository;
             T = NullLocalizer.Instance;
             _pushNotificationRepository = pushNotificationRepository;
             _notifier = notifier;

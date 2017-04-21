@@ -865,10 +865,11 @@ namespace Laser.Orchard.Mobile.Services {
 
         private List<PushNotificationVM> RemoveSent(List<PushNotificationVM> listdispositivo, Int32 IdContent) {
             if (IdContent > 0) {
-                List<Int32> listainvii = _sentRepository.Fetch(x => x.PushedItem == IdContent).Select(y => y.PushNotificationRecord_Id).ToList();
+                List<Int32> listainvii = _sentRepository.Fetch(x => x.PushedItem == IdContent && x.Repeatable == false).Select(y => y.PushNotificationRecord_Id).ToList();
                 return listdispositivo.Where(x => !listainvii.Contains(x.Id)).ToList();
             }
             else {
+                // se il contenuto è estemporaneo (non salvato su db) non fa nessun filtro sulle push già inviate
                 return listdispositivo;
             }
         }
@@ -892,18 +893,17 @@ namespace Laser.Orchard.Mobile.Services {
             for(int idx=offset; idx < Math.Min(offset+size, listdispositivo.Count); idx++) {
                 try {
                     var pnr = listdispositivo[idx];
-                    if ((repeatable == false) && (idContent > 0)) {
-                        SentRecord sr = new SentRecord {
-                            DeviceType = pnr.Device.ToString(),
-                            PushNotificationRecord_Id = pnr.Id,
-                            PushedItem = idContent,
-                            SentDate = DateTime.UtcNow,
-                            Outcome = ""
-                        };
-                        _sentRecords.AddOrUpdate(pnr.Token, sr, (key, record) => {
-                            return sr;
-                        });
-                    }
+                    SentRecord sr = new SentRecord {
+                        DeviceType = pnr.Device.ToString(),
+                        PushNotificationRecord_Id = pnr.Id,
+                        PushedItem = idContent,
+                        SentDate = DateTime.UtcNow,
+                        Outcome = "",
+                        Repeatable = repeatable
+                    };
+                    _sentRecords.AddOrUpdate(pnr.Token, sr, (key, record) => {
+                        return sr;
+                    });
                 }
                 catch (Exception ex) {
                     _myLog.WriteLog("PushGateway.InitializeRecipients error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
@@ -1060,7 +1060,7 @@ namespace Laser.Orchard.Mobile.Services {
                                 var oldId = expiredException.OldSubscriptionId;
                                 var newId = expiredException.NewSubscriptionId;
                                 if (!string.IsNullOrWhiteSpace(newId)) {
-                                    DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.Android);
+                                    DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.Android, repeatable);
                                 }
                                 else
                                     DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, produzione, TipoDispositivo.Android);
@@ -1179,7 +1179,7 @@ namespace Laser.Orchard.Mobile.Services {
                                 var oldId = expiredException.OldSubscriptionId;
                                 var newId = expiredException.NewSubscriptionId;
                                 if (!string.IsNullOrWhiteSpace(newId)) {
-                                    DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.Apple);
+                                    DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.Apple, repeatable);
                                 }
                                 else
                                     DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, produzione, TipoDispositivo.Apple);
@@ -1276,7 +1276,7 @@ namespace Laser.Orchard.Mobile.Services {
                                 var oldId = expiredException.OldSubscriptionId;
                                 var newId = expiredException.NewSubscriptionId;
                                 if (!string.IsNullOrWhiteSpace(newId)) {
-                                    DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.WindowsMobile);
+                                    DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.WindowsMobile, repeatable);
                                 }
                                 else
                                     DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, produzione, TipoDispositivo.WindowsMobile);
@@ -1314,7 +1314,7 @@ namespace Laser.Orchard.Mobile.Services {
             return (text ?? "").Replace("\\", "\\\\").Replace("\"", "\\\"");
         }
 
-        private void DeviceSubscriptionChanged(object sender, string oldSubscriptionId, string newSubscriptionId, INotification notification, bool produzione, TipoDispositivo tipoDispositivo) {
+        private void DeviceSubscriptionChanged(object sender, string oldSubscriptionId, string newSubscriptionId, INotification notification, bool produzione, TipoDispositivo tipoDispositivo, bool repeatable) {
             try {
                 var srOld = _sentRecords.AddOrUpdate(oldSubscriptionId, new SentRecord(), (key, record) => {
                     record.Outcome = "ex";
@@ -1326,7 +1326,8 @@ namespace Laser.Orchard.Mobile.Services {
                     PushedItem = srOld.PushedItem,
                     PushNotificationRecord_Id = srOld.PushNotificationRecord_Id,
                     SentDate = srOld.SentDate,
-                    Outcome = ""
+                    Outcome = "",
+                    Repeatable = repeatable
                 };
                 _sentRecords.AddOrUpdate(newSubscriptionId, srNew, (key, record) => {
                     return srNew;

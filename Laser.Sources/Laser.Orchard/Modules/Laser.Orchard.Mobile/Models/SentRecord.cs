@@ -13,5 +13,6 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual DateTime SentDate { get; set; }
         public virtual string DeviceType { get; set; }
         public virtual string Outcome { get; set; }
+        public virtual bool Repeatable { get; set; }
     }
 }

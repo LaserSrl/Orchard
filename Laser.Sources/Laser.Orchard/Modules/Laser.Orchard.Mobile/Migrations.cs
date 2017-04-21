@@ -322,5 +322,11 @@ namespace Laser.Orchard.Mobile {
             );
             return 32;
         }
+        public int UpdateFrom32() {
+            SchemaBuilder.AlterTable("SentRecord", table => table
+                .AddColumn<bool>("Repeatable", col => col.WithDefault(false))
+            );
+            return 33;
+        }
     }
 }
