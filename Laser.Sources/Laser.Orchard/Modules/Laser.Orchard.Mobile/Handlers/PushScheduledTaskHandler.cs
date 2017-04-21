@@ -36,16 +36,28 @@ namespace Laser.Orchard.Mobile.Handlers {
                     return;
                 }
                 // esegue l'invio delle push
-                var errors = _pushGatewayService.PublishedPushEvent(context.Task.ContentItem);
-                if (string.IsNullOrEmpty(errors) == false) {
-                    // in caso di errori, rischedula il task per un max di N volte
-                    var pushSettings = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>();
-                    var nFailures = _communicationService.SetFailureForRetry(context.Task.ContentItem.Id, "push", errors);
-                    if (nFailures < pushSettings.MaxNumRetry) {
-                        // applica il valore di default (5) nel caso di setting non valorizzato
-                        var delay = pushSettings.DelayMinutesBeforeRetry == 0 ? 5 : pushSettings.DelayMinutesBeforeRetry;
-                        _taskManager.CreateTask("Laser.Orchard.PushNotification.Task", DateTime.UtcNow.AddMinutes(delay), context.Task.ContentItem);
+                var state = _pushGatewayService.PublishedPushEvent(context.Task.ContentItem);
+                //verifica se rischedulare l'invio
+                var pushSettings = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>();
+                bool runAgain = false;
+                if (state.IterationComplete == false) {
+                    // non ha termnato l'iterazione
+                    runAgain = true;
+                }
+                else {
+                    if(string.IsNullOrWhiteSpace(state.Errors)) {
+                        // ci sono stati errori
+                        var nFailures = _communicationService.SetFailureForRetry(context.Task.ContentItem.Id, "push", state.Errors);
+                        if (nFailures < pushSettings.MaxNumRetry) {
+                            runAgain = true;
+                        }
                     }
+                }
+                if (runAgain) {
+                    // rischedula il task
+                    // applica il valore di default (5) nel caso di setting non valorizzato
+                    var delay = pushSettings.DelayMinutesBeforeRetry == 0 ? 5 : pushSettings.DelayMinutesBeforeRetry;
+                    _taskManager.CreateTask("Laser.Orchard.PushNotification.Task", DateTime.UtcNow.AddMinutes(delay), context.Task.ContentItem);
                 }
             }
             catch (Exception ex) {

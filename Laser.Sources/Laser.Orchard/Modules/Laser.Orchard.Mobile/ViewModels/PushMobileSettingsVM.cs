@@ -2,7 +2,6 @@
 using System.IO;
 using System.Web.Hosting;
 using System.Web.Mvc;
-using System.Web;
 using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.Mobile.ViewModels {
@@ -27,6 +26,7 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public bool CommitSentOnly { get; set; }
         public int DelayMinutesBeforeRetry { get; set; }
         public int MaxNumRetry { get; set; }
+        public int MaxPushPerIteration { get; set; }
         public SelectList ListOfTaxonomies { get; set; }
 
         public SelectList ListOfCertificates {

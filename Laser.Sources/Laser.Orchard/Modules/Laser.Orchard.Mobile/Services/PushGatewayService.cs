@@ -43,7 +43,7 @@ namespace Laser.Orchard.Mobile.Services {
 
         void PublishedPushEventTest(ContentItem ci);
 
-        string PublishedPushEvent(ContentItem ci);
+        PushState PublishedPushEvent(ContentItem ci);
 
         void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "", string externalUrl = "");
 
@@ -67,9 +67,10 @@ namespace Laser.Orchard.Mobile.Services {
         private readonly ShellSettings _shellSetting;
         public Localizer T { get; set; }
 
-        private Int32 messageSent;
+        private int _messageSent; // numero di push con esito positivo
+        private int _pushNumber; // numero di push aggiunte alla coda di invio
         private const int MAX_PUSH_TEXT_LENGTH = 160;
-        private string _result;
+        private PushState _result;
 
         private ContentItem senderContentItemContainer;
         private ConcurrentDictionary<string, SentRecord> _sentRecords;
@@ -87,7 +88,8 @@ namespace Laser.Orchard.Mobile.Services {
             _communicationService = communicationService;
             _tokenizer = tokenizer;
             _shellSetting = shellSetting;
-            messageSent = 0;
+            _messageSent = 0;
+            _pushNumber = 0;
         }
 
         public IList GetPushQueryResult(Int32[] ids, bool countOnly = false, int contentId = 0) {
@@ -545,15 +547,16 @@ namespace Laser.Orchard.Mobile.Services {
         /// </summary>
         /// <param name="ci"></param>
         /// <returns>An error list, if any.</returns>
-        public string PublishedPushEvent(ContentItem ci) {
-            _result = "";
+        public PushState PublishedPushEvent(ContentItem ci) {
+            _result = new PushState();
+            _result.IterationComplete = true;
             senderContentItemContainer = ci;
             bool SendPushToSpecificDevices;
             try {
                 _myLog.WriteLog("Iniziato invio Push del content " + ci.Id);
                 ContentItem savedCi = _orchardServices.ContentManager.Get(ci.Id);
                 MobilePushPart mpp = ci.As<MobilePushPart>();
-                messageSent = CountSentOnDb(ci.Id);
+                _messageSent = 0;
                 SendPushToSpecificDevices = mpp.UseRecipientList;
                 if (mpp.ToPush) {
                     bool stopPush = false;
@@ -653,7 +656,7 @@ namespace Laser.Orchard.Mobile.Services {
                         ContentItem ci2 = _orchardServices.ContentManager.Get(ci.Id);
                         MobilePushPart mpp2 = ci2.As<MobilePushPart>();
                         mpp2.PushSent = true;
-                        mpp2.PushSentNumber = messageSent;
+                        mpp2.PushSentNumber = CountSentOnDb(ci.Id);
                         int counter = 0;
                         if (ci.ContentType == "CommunicationAdvertising") {
                             IList counterAux;
@@ -678,8 +681,8 @@ namespace Laser.Orchard.Mobile.Services {
                             }
                         }
                         mpp2.TargetDeviceNumber = counter;
-                        _notifier.Information(T("Notification sent: " + messageSent.ToString()));
-                        _myLog.WriteLog("Notification sent: " + messageSent.ToString());
+                        _notifier.Information(T("Notifications sent: " + _messageSent.ToString()));
+                        _myLog.WriteLog("Notifications sent: " + _messageSent.ToString());
                     }
                 }
                 string title = "no title";
@@ -700,7 +703,8 @@ namespace Laser.Orchard.Mobile.Services {
                     // ignora volutamente qualsiasi errore
                 }
                 _myLog.WriteLog("Errore invio Push del content " + ci.Id + " \"" + title + "\" - Error: " + ex.Message + "\r\n" + ex.StackTrace);
-                _result += "PublishedPushEvent ";
+                //aggiorna il result
+                _result.Errors = "Error in PublishedPushEvent: " + ex.Message;
             }
             return _result;
         }
@@ -826,7 +830,8 @@ namespace Laser.Orchard.Mobile.Services {
             }
             catch (Exception ex) {
                 _myLog.WriteLog(string.Format("Error in PushNotificationService.GetListMobileDevice(): {0} - {1}", ex.Message, ex.StackTrace));
-                _result += "GetListMobileDevice ";
+                //aggiorna il result
+                _result.Errors = "Error in GetListMobileDevice: " + ex.Message;
             }
             return lista;
         }
@@ -886,12 +891,16 @@ namespace Laser.Orchard.Mobile.Services {
                 && x.RegistrationUrlPrefix == prefixCheck && x.RegistrationMachineName == machineNameCheck).ToList();
         }
 
-        private void InitializeRecipients(List<PushNotificationVM> listdispositivo, int offset, int size, int idContent, bool repeatable = false) {
+        private void InitializeRecipients(List<PushNotificationVM> listdispositivo, int offset, int size, int idContent, bool repeatable, PushMobileSettingsPart pushSettings) {
             _sentRecords = new ConcurrentDictionary<string, SentRecord>();
             _deviceChanges = new ConcurrentBag<DeviceChange>();
             // salva l'elenco delle push da inviare
             for(int idx=offset; idx < Math.Min(offset+size, listdispositivo.Count); idx++) {
                 try {
+                    if (_pushNumber >= pushSettings.MaxPushPerIteration) {
+                        _result.IterationComplete = false;
+                        break;
+                    }
                     var pnr = listdispositivo[idx];
                     SentRecord sr = new SentRecord {
                         DeviceType = pnr.Device.ToString(),
@@ -904,10 +913,12 @@ namespace Laser.Orchard.Mobile.Services {
                     _sentRecords.AddOrUpdate(pnr.Token, sr, (key, record) => {
                         return sr;
                     });
+                    _pushNumber++;
                 }
                 catch (Exception ex) {
                     _myLog.WriteLog("PushGateway.InitializeRecipients error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
-                    _result += "InitializeRecipients ";
+                    //aggiorna il result
+                    _result.Errors = "Error in InitializeRecipients: " + ex.Message;
                 }
             }
         }
@@ -981,7 +992,9 @@ namespace Laser.Orchard.Mobile.Services {
         private int CountSentOnDb(int contentId) {
             int result = 0;
             try {
-                result = _sentRepository.Count(x => x.PushedItem == contentId && x.Outcome == "ok");
+                if (contentId != 0) {
+                    result = _sentRepository.Count(x => x.PushedItem == contentId && x.Outcome == "ok");
+                }
             }
             catch (Exception ex) {
                 _myLog.WriteLog("PushGateway CountSentOnDb error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
@@ -1042,7 +1055,7 @@ namespace Laser.Orchard.Mobile.Services {
                 size = 50; //default value
             }
             while (offset < listdispositivo.Count) {
-                InitializeRecipients(listdispositivo, offset, size, pushMessage.idContent, repeatable);
+                InitializeRecipients(listdispositivo, offset, size, pushMessage.idContent, repeatable, pushSettings);
                 if (pushSettings.CommitSentOnly == false) {
                     InitializeRecipientsOnDb();
                 }
@@ -1099,6 +1112,7 @@ namespace Laser.Orchard.Mobile.Services {
                 UpdateOutcomesOnDb();
                 offset += size;
             }
+            // check se ha tentato di inviare tutto o se è uscito per limite di push per ogni run
         }
 
         private void PushApple(List<PushNotificationVM> listdispositivo, bool produzione, PushMessage pushMessage, bool repeatable = false) {
@@ -1161,7 +1175,7 @@ namespace Laser.Orchard.Mobile.Services {
                 size = 50; //default value
             }
             while (offset < listdispositivo.Count) {
-                InitializeRecipients(listdispositivo, offset, size, pushMessage.idContent, repeatable);
+                InitializeRecipients(listdispositivo, offset, size, pushMessage.idContent, repeatable, pushSettings);
                 if (pushSettings.CommitSentOnly == false) {
                     InitializeRecipientsOnDb();
                 }
@@ -1259,7 +1273,7 @@ namespace Laser.Orchard.Mobile.Services {
                 size = 50; //default value
             }
             while (offset < listdispositivo.Count) {
-                InitializeRecipients(listdispositivo, offset, size, pushMessage.idContent, repeatable);
+                InitializeRecipients(listdispositivo, offset, size, pushMessage.idContent, repeatable, pushSettings);
                 if (pushSettings.CommitSentOnly == false) {
                     InitializeRecipientsOnDb();
                 }
@@ -1362,7 +1376,7 @@ namespace Laser.Orchard.Mobile.Services {
                     record.Outcome = "ok";
                     return record;
                 });
-                messageSent++;
+                _messageSent++;
             }
             catch (Exception ex) {
                 _myLog.WriteLog("Error NotificationSent: notification: " + notification + " -> Error: " + ex.Message + " StackTRace: " + ex.StackTrace);

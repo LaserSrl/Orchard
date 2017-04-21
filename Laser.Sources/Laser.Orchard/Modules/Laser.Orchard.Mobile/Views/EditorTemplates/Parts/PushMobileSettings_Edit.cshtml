@@ -82,6 +82,11 @@
                 @Html.TextBoxFor(m => m.MaxNumRetry)
                 <span class="hint">@T("Typical value: 3.")</span>
             </div>
+            <div class="checkbox-and-label">
+                @Html.LabelFor(m => m.MaxPushPerIteration, T("Max number of push per iteration"))
+                @Html.TextBoxFor(m => m.MaxPushPerIteration)
+                <span class="hint">@T("Typical value: 1000.")</span>
+            </div>
 </fieldset>
         <fieldset>
             <h2>@T("Setting Taxonomy")</h2>

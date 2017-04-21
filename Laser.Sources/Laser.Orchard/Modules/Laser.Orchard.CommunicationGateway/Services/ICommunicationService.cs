@@ -415,23 +415,23 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         public int SetFailureForRetry(int contentId, string context, string data) {
             int result = 1;
             CommunicationRetryRecord retry = _repositoryCommunicationRetryRecord.Get(x => x.ContentItemRecord_Id == contentId && x.Context == context);
-            //var enumRetry = _repositoryCommunicationRetryRecord.Fetch(x => x.ContentItemRecord_Id == contentId && x.Context == context);
-            //if(enumRetry != null && enumRetry.Count() > 0) {
-            //    retry = enumRetry.FirstOrDefault();
-            //}
             if(retry == null) {
+                // inizializza un nuovo oggetto
                 retry = new CommunicationRetryRecord {
                     ContentItemRecord_Id = contentId,
                     Context = context,
-                    NoOfFailures = 1,
-                    Data = data
+                    NoOfFailures = 0,
+                    Data = ""
                 };
+            }
+            retry.NoOfFailures++;
+            retry.Data = data;
+            result = retry.NoOfFailures;
+
+            if(retry.Id == 0) {
                 _repositoryCommunicationRetryRecord.Create(retry);
             }
             else {
-                retry.NoOfFailures++;
-                retry.Data = data;
-                result = retry.NoOfFailures;
                 _repositoryCommunicationRetryRecord.Update(retry);
             }
             return result;

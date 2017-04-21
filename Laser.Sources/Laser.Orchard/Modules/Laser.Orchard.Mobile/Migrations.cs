@@ -328,5 +328,11 @@ namespace Laser.Orchard.Mobile {
             );
             return 33;
         }
+        public int UpdateFrom33() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                .AddColumn<int>("MaxPushPerIteration", col => col.WithDefault(1000))
+            );
+            return 34;
+        }
     }
 }
