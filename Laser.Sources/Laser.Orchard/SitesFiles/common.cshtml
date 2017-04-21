@@ -432,7 +432,7 @@
         foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/data/caption")) {
             var captionText = bookToModify.SelectSingleNode("text").InnerText;
             XmlNode caption = mydoc.CreateElement("CaptionText");
-            caption.InnerXml = captionText;
+            caption.InnerText = captionText;
             bookToModify.ParentNode.AppendChild(caption);
         }
         mydoc=cambianome(mydoc,"root/lista/data/caption", "ToRemove");
