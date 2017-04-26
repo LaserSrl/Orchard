@@ -15,12 +15,14 @@ using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.ContentManagement.Handlers;
+using Laser.Orchard.ShareLink.Servicies;
 
 namespace Laser.Orchard.ShareLink.Drivers {
 
     public class ShareLinkPartDriver : ContentPartCloningDriver<ShareLinkPart> {
         private readonly ITokenizer _tokenizer;
         private readonly IOrchardServices _orchardServices;
+        private readonly IShareLinkService _sharelinkservice;
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
@@ -31,12 +33,13 @@ namespace Laser.Orchard.ShareLink.Drivers {
         }
 
 
-        public ShareLinkPartDriver(IOrchardServices orchardServices, ITokenizer tokenizer, IContentManager contentManager) {
+        public ShareLinkPartDriver(IOrchardServices orchardServices, ITokenizer tokenizer, IContentManager contentManager, IShareLinkService sharelinkService) {
             _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             _tokenizer = tokenizer;
             _contentManager = contentManager;
+            _sharelinkservice = sharelinkService;
         }
 
 
@@ -87,13 +90,13 @@ namespace Laser.Orchard.ShareLink.Drivers {
             string ListId = "";
             if (!string.IsNullOrEmpty(partSetting.SharedImage)) {
                 ListId = _tokenizer.Replace(partSetting.SharedImage, tokens);
-                vm.SharedImage = getimgurl(ListId);
+                vm.SharedImage = _sharelinkservice.GetImgUrl(ListId);
                 vm.ShowSharedImage = false;
             }
             else {
                 if (!string.IsNullOrEmpty(moduleSetting.SharedImage)) {
                    ListId = _tokenizer.Replace(moduleSetting.SharedImage, tokens);
-                    vm.SharedImage = getimgurl(ListId);
+                    vm.SharedImage = _sharelinkservice.GetImgUrl(ListId);
                     vm.ShowSharedImage = false;
                 }
             }
@@ -108,7 +111,7 @@ namespace Laser.Orchard.ShareLink.Drivers {
                     OptionList ol = new OptionList {
                         Value = myid,
                         Text = "",
-                        ImageUrl = getimgurl(myid),
+                        ImageUrl = _sharelinkservice.GetImgUrl(myid),
                         Selected = part.SharedIdImage == myid ? "selected=\"selected\"" : ""
                     };
                     optionList.Add(ol);
@@ -132,22 +135,10 @@ namespace Laser.Orchard.ShareLink.Drivers {
 
             if (vm.SharedImage != null) {
                 part.SharedIdImage = vm.SharedImage.Replace("{", "").Replace("}", "");
-                part.SharedImage = getimgurl(part.SharedIdImage);
+                part.SharedImage = _sharelinkservice.GetImgUrl(part.SharedIdImage);
             }
 
             return Editor(part, shapeHelper);
-        }
-
-        private string getimgurl(string idimg) {
-            var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-            Int32 idimage = 0;
-            Int32.TryParse(idimg.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
-            if (idimage > 0) {
-                var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
-                return urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
-            }
-            else
-                return idimg; // non ho passato un id e quindi sarà un link
         }
 
         protected override void Cloning(ShareLinkPart originalPart, ShareLinkPart clonePart, CloneContentContext context) {
