@@ -60,6 +60,11 @@ namespace Laser.Orchard.Mobile.Drivers {
                 viewModel.ShowTestOptions = getpart.ShowTestOptions;
                 viewModel.ApplePushSound = getpart.ApplePushSound;
                 viewModel.TaxonomyName = getpart.TaxonomyName;
+                viewModel.PushSendBufferSize = getpart.PushSendBufferSize;
+                viewModel.CommitSentOnly = getpart.CommitSentOnly;
+                viewModel.DelayMinutesBeforeRetry = getpart.DelayMinutesBeforeRetry;
+                viewModel.MaxNumRetry = getpart.MaxNumRetry;
+                viewModel.MaxPushPerIteration = getpart.MaxPushPerIteration;
 
                 List<TaxonomyPart> tps = _taxonomyService.GetTaxonomies().ToList();
                 IEnumerable<ListItem> selectList =
@@ -87,6 +92,11 @@ namespace Laser.Orchard.Mobile.Drivers {
                         part.WindowsEndPoint = viewModel.WindowsEndPoint;
                         part.ShowTestOptions = viewModel.ShowTestOptions;
                         part.TaxonomyName = viewModel.TaxonomyName;
+                        part.PushSendBufferSize = viewModel.PushSendBufferSize;
+                        part.CommitSentOnly = viewModel.CommitSentOnly;
+                        part.DelayMinutesBeforeRetry = viewModel.DelayMinutesBeforeRetry;
+                        part.MaxNumRetry = viewModel.MaxNumRetry;
+                        part.MaxPushPerIteration = viewModel.MaxPushPerIteration;
                     }
                 }
                 else {
@@ -104,6 +114,11 @@ namespace Laser.Orchard.Mobile.Drivers {
                     viewModel.ShowTestOptions = part.ShowTestOptions;
                     viewModel.ApplePushSound = part.ApplePushSound;
                     viewModel.TaxonomyName = part.TaxonomyName;
+                    viewModel.PushSendBufferSize = part.PushSendBufferSize;
+                    viewModel.CommitSentOnly = part.CommitSentOnly;
+                    viewModel.DelayMinutesBeforeRetry = part.DelayMinutesBeforeRetry;
+                    viewModel.MaxNumRetry = part.MaxNumRetry;
+                    viewModel.MaxPushPerIteration = part.MaxPushPerIteration;
                 }
                 return shapeHelper.EditorTemplate(TemplateName: "Parts/PushMobileSettings_Edit", Model: viewModel, Prefix: Prefix);
             })

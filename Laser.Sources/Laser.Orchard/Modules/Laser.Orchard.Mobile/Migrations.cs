@@ -295,6 +295,44 @@ namespace Laser.Orchard.Mobile {
                         );
             return 28;
         }
-
+        public int UpdateFrom28() {
+            SchemaBuilder.AlterTable("SentRecord", table => table
+                .AddColumn<string>("Outcome")
+            );
+            return 29;
+        }
+        public int UpdateFrom29() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                       .AddColumn<int>("PushSendBufferSize")
+                       );
+            return 30;
+        }
+        public int UpdateFrom30() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                       .AddColumn<bool>("CommitSentOnly")
+                       );
+            return 31;
+        }
+        public int UpdateFrom31() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                .AddColumn<int>("DelayMinutesBeforeRetry", col => col.WithDefault(5))
+            );
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                .AddColumn<int>("MaxNumRetry", col => col.WithDefault(3))
+            );
+            return 32;
+        }
+        public int UpdateFrom32() {
+            SchemaBuilder.AlterTable("SentRecord", table => table
+                .AddColumn<bool>("Repeatable", col => col.WithDefault(false))
+            );
+            return 33;
+        }
+        public int UpdateFrom33() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                .AddColumn<int>("MaxPushPerIteration", col => col.WithDefault(1000))
+            );
+            return 34;
+        }
     }
 }
