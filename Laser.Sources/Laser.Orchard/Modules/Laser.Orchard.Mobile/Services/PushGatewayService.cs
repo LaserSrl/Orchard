@@ -549,7 +549,7 @@ namespace Laser.Orchard.Mobile.Services {
         /// <returns>An error list, if any.</returns>
         public PushState PublishedPushEvent(ContentItem ci) {
             _result = new PushState();
-            _result.IterationComplete = true;
+            _result.CompletedIteration = true;
             senderContentItemContainer = ci;
             bool SendPushToSpecificDevices;
             try {
@@ -898,7 +898,7 @@ namespace Laser.Orchard.Mobile.Services {
             for(int idx=offset; idx < Math.Min(offset+size, listdispositivo.Count); idx++) {
                 try {
                     if (_pushNumber >= pushSettings.MaxPushPerIteration) {
-                        _result.IterationComplete = false;
+                        _result.CompletedIteration = false;
                         break;
                     }
                     var pnr = listdispositivo[idx];

@@ -10,6 +10,5 @@ namespace Laser.Orchard.CommunicationGateway.Models {
         public virtual string Context { get; set; }
         public virtual int NoOfFailures { get; set; }
         public virtual string Data { get; set; }
-        public virtual bool IterationComplete { get; set; }
     }
 }

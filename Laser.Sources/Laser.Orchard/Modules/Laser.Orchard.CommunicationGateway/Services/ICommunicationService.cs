@@ -73,7 +73,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         CommunicationContactPart TryEnsureContact(int userId);
 
-        int SetFailureForRetry(int contentId, string context, string data);
+        int SetFailureForRetry(int contentId, string context, string data, bool completedIteration);
     }
 
     public class CommunicationService : ICommunicationService {
@@ -412,7 +412,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             return result;
         }
-        public int SetFailureForRetry(int contentId, string context, string data) {
+        public int SetFailureForRetry(int contentId, string context, string data, bool completedIteration) {
             int result = 1;
             CommunicationRetryRecord retry = _repositoryCommunicationRetryRecord.Get(x => x.ContentItemRecord_Id == contentId && x.Context == context);
             if(retry == null) {
@@ -424,8 +424,14 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     Data = ""
                 };
             }
-            retry.NoOfFailures++;
-            retry.Data = data;
+            // aggiorna gli errori solo se ce ne sono, per non perdere l'informazione sulla presenza di errori all'interno dell'iterazione corrente
+            if (string.IsNullOrWhiteSpace(data) == false) {
+                retry.Data = data;
+            }
+            if (completedIteration && string.IsNullOrWhiteSpace(retry.Data) == false) {
+                retry.NoOfFailures++;
+                retry.Data = "";  // azzera gli errori all'inizio di una nuova iterazione
+            }
             result = retry.NoOfFailures;
 
             if(retry.Id == 0) {
