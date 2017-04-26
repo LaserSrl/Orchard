@@ -131,7 +131,13 @@ namespace Laser.Orchard.ShareLink.Drivers {
         protected override DriverResult Editor(ShareLinkPart part, IUpdateModel updater, dynamic shapeHelper) {
             ShareLinkVM vm = new ShareLinkVM();
             updater.TryUpdateModel(vm, Prefix, null, null);
-            Mapper.Map<ShareLinkVM, ShareLinkPart>(vm, part);
+            Mapper.Initialize(cfg => {
+                cfg.CreateMap<ShareLinkVM, ShareLinkPart>()
+                .ForSourceMember(src => src.ShowSharedImage, opt => opt.Ignore())
+                .ForSourceMember(src => src.ShowSharedLink, opt => opt.Ignore())
+                .ForSourceMember(src => src.ShowSharedText, opt => opt.Ignore());
+                    });
+            Mapper.Map(vm, part);
 
             if (vm.SharedImage != null) {
                 part.SharedIdImage = vm.SharedImage.Replace("{", "").Replace("}", "");
