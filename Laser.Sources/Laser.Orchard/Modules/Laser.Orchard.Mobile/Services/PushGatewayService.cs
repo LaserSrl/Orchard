@@ -894,10 +894,11 @@ namespace Laser.Orchard.Mobile.Services {
         private void InitializeRecipients(List<PushNotificationVM> listdispositivo, int offset, int size, int idContent, bool repeatable, PushMobileSettingsPart pushSettings) {
             _sentRecords = new ConcurrentDictionary<string, SentRecord>();
             _deviceChanges = new ConcurrentBag<DeviceChange>();
+            int maxPushPerIteration = pushSettings.MaxPushPerIteration == 0 ? 1000 : pushSettings.MaxPushPerIteration;
             // salva l'elenco delle push da inviare
-            for(int idx=offset; idx < Math.Min(offset+size, listdispositivo.Count); idx++) {
+            for (int idx=offset; idx < Math.Min(offset+size, listdispositivo.Count); idx++) {
                 try {
-                    if (_pushNumber >= pushSettings.MaxPushPerIteration) {
+                    if (_pushNumber >= maxPushPerIteration) {
                         _result.CompletedIteration = false;
                         break;
                     }
@@ -1050,10 +1051,7 @@ namespace Laser.Orchard.Mobile.Services {
             }
 
             int offset = 0;
-            int size = pushSettings.PushSendBufferSize;
-            if(size == 0) {
-                size = 50; //default value
-            }
+            int size = pushSettings.PushSendBufferSize == 0 ? 50 : pushSettings.PushSendBufferSize;
             while (offset < listdispositivo.Count) {
                 InitializeRecipients(listdispositivo, offset, size, pushMessage.idContent, repeatable, pushSettings);
                 if (pushSettings.CommitSentOnly == false) {
@@ -1170,10 +1168,7 @@ namespace Laser.Orchard.Mobile.Services {
             }
 
             int offset = 0;
-            int size = pushSettings.PushSendBufferSize;
-            if (size == 0) {
-                size = 50; //default value
-            }
+            int size = pushSettings.PushSendBufferSize == 0 ? 50 : pushSettings.PushSendBufferSize;
             while (offset < listdispositivo.Count) {
                 InitializeRecipients(listdispositivo, offset, size, pushMessage.idContent, repeatable, pushSettings);
                 if (pushSettings.CommitSentOnly == false) {
@@ -1268,10 +1263,7 @@ namespace Laser.Orchard.Mobile.Services {
             var sbXElement = XElement.Parse(sb.ToString());
 
             int offset = 0;
-            int size = pushSettings.PushSendBufferSize;
-            if (size == 0) {
-                size = 50; //default value
-            }
+            int size = pushSettings.PushSendBufferSize == 0 ? 50 : pushSettings.PushSendBufferSize;
             while (offset < listdispositivo.Count) {
                 InitializeRecipients(listdispositivo, offset, size, pushMessage.idContent, repeatable, pushSettings);
                 if (pushSettings.CommitSentOnly == false) {

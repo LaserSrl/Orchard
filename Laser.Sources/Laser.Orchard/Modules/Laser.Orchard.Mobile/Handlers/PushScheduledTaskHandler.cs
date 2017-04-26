@@ -46,7 +46,8 @@ namespace Laser.Orchard.Mobile.Handlers {
                     runAgain = true;
                 }
                 if (string.IsNullOrWhiteSpace(state.Errors) == false) {
-                    if (nFailures < pushSettings.MaxNumRetry) {
+                    // il numero di iterazioni totali non deve superare il numero di retry + 1
+                    if (nFailures <= pushSettings.MaxNumRetry) {
                         runAgain = true;
                     }
                 }
