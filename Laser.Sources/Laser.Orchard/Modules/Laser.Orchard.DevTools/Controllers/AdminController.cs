@@ -20,6 +20,7 @@ using Orchard.Tasks.Scheduling;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
+using System.Dynamic;
 
 namespace Laser.Orchard.DevTools.Controllers {
 
@@ -196,6 +197,17 @@ namespace Laser.Orchard.DevTools.Controllers {
             //  return RedirectToAction("index", "Admin", new { testo = JsonConvert.SerializeObject(_cacheStorageProvider.Get(key)) });
             Segnalazione se = new Segnalazione { Testo = "Razor resettati" };
             return View("index", se);
+        }
+
+        [HttpGet]
+        [Admin]
+        public ActionResult ShowRazor() {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
+                return new HttpUnauthorizedResult();
+            dynamic module = new ExpandoObject();
+            module.RazorList = _razorTemplateManager.GetListCached();
+            module.RazorOldList = _razorTemplateManager.GetListOldCached();
+            return View(module);
         }
 
         [HttpGet]

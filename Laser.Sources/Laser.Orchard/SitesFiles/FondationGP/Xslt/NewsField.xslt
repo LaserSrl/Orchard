@@ -90,7 +90,9 @@ public string UnixTicks( string dtstring)
 	<xsl:variable name="day" select="substring-after(substring-after($date, '/'), '/')" />
 	<xsl:variable name="timeutc" select="substring-after(., ' ')" />
 	<xsl:element name="{local-name()}" namespace="">
+		<xsl:if test="$year!=''">
 		<xsl:value-of select="concat(':laserDate',user:UnixTicks(concat($year,'-',$month,'-',$day,' ',$timeutc)),'laserDate:')" />
+		</xsl:if>
 	</xsl:element>
 </xsl:template>
 <xsl:template match="url">

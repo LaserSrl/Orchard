@@ -9,27 +9,34 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
 
     public interface IRazorTemplateManager : ISingletonDependency {
 
-        string RunString(string key, string code, Object model, Dictionary<string, object> dicdvb = null);
+        string RunString(string key, string code, Object model, Dictionary<string, object> dicdvb =null, string Layout = null);
 
         string RunFile(string localFilePath, RazorModelContext model);
 
-        void AddLayout(string key, string code);
+     //   void AddLayout(string key, string code);
 
         void StartNewRazorEngine();
 
         List<string> GetListCached();
+        List<string> GetListOldCached();
+
     }
 
     public class RazorTemplateManager : IRazorTemplateManager {
 
         public RazorTemplateManager() {
             listCached = new List<string>();
+            listOldCached = new List<string>();
         }
 
         private List<string> listCached;
-
+        private List<string> listOldCached;
         public List<string> GetListCached() {
             return listCached;
+        }
+
+        public List<string> GetListOldCached() {
+            return listOldCached;
         }
 
         public IRazorEngineService RazorEngineServiceStatic {
@@ -50,19 +57,24 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
             config.Namespaces.Add("Orchard.ContentManagement");
             config.Namespaces.Add("Orchard.Caching");
             _razorEngine = RazorEngineService.Create(config);
-           
+            listOldCached.AddRange(listCached);
+            listCached = new List<string>();
+
         }
 
         private IRazorEngineService _razorEngine;
 
-        public void AddLayout(string key, string code) {
-            if (!RazorEngineServiceStatic.IsTemplateCached(key, null)) {
-                RazorEngineServiceStatic.AddTemplate(key, new LoadedTemplateSource(code, null));
-                // listCached.Add(key);
-            }
-        }
+        //public void AddLayout(string key, string code) {
+            
 
-        public string RunString(string key, string code, Object model, Dictionary<string, object> dicdvb = null) {
+        //    if (!RazorEngineServiceStatic.IsTemplateCached(key, null)) {
+        //        RazorEngineServiceStatic.AddTemplate(key, code);// new LoadedTemplateSource(code, null));
+        // //    RazorEngineServiceStatic.Compile(key);
+        // //       listCached.Add(key);
+        //    }
+        //}
+
+        public string RunString(string key, string code, Object model, Dictionary<string, object> dicdvb =null,string Layout=null) {
             DynamicViewBag dvb = new DynamicViewBag();
             if (dicdvb != null)
                 foreach (var k in dicdvb.Keys) {
@@ -70,9 +82,12 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
                 }
             if (!RazorEngineServiceStatic.IsTemplateCached(key, null)) {
                 if (!string.IsNullOrEmpty(code)) {
+                    if (!string.IsNullOrEmpty(Layout)) {
+                        RazorEngineServiceStatic.AddTemplate("Layout"+key, Layout);
+                    }                    
                     RazorEngineServiceStatic.AddTemplate(key, new LoadedTemplateSource(code, null));
-                    //  listCached.Add(key);
                     RazorEngineServiceStatic.Compile(key, null);
+                    listCached.Add(key);
                 }
                 else
                     return null;
@@ -98,8 +113,8 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
                     codeTemplate = File.ReadAllText(localFilePath);
                     if (!string.IsNullOrEmpty(codeTemplate)) {
                         RazorEngineServiceStatic.AddTemplate(key, new LoadedTemplateSource(codeTemplate, localFilePath));
-                        //   listCached.Add(localFilePath);
                         RazorEngineServiceStatic.Compile(key, null);
+                        listCached.Add(localFilePath);
                     }
                     else
                         return "";
