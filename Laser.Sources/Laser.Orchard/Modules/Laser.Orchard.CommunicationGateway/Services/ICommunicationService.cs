@@ -421,16 +421,18 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                     ContentItemRecord_Id = contentId,
                     Context = context,
                     NoOfFailures = 0,
-                    Data = ""
+                    Data = "",
+                    PendingErrors = false
                 };
             }
             // aggiorna gli errori solo se ce ne sono, per non perdere l'informazione sulla presenza di errori all'interno dell'iterazione corrente
             if (string.IsNullOrWhiteSpace(data) == false) {
                 retry.Data = data;
+                retry.PendingErrors = true;
             }
-            if (completedIteration && string.IsNullOrWhiteSpace(retry.Data) == false) {
+            if (completedIteration && retry.PendingErrors) {
                 retry.NoOfFailures++;
-                retry.Data = "";  // azzera gli errori all'inizio di una nuova iterazione
+                retry.PendingErrors = false; // resetta il flag degli errori all'inizio di una nuova iterazione
             }
             result = retry.NoOfFailures;
 

@@ -366,5 +366,11 @@ namespace Laser.Orchard.CommunicationGateway {
              );
             return 26;
         }
+        public int UpdateFrom26() {
+            SchemaBuilder.AlterTable("CommunicationRetryRecord",
+                table => table.AddColumn<bool>("PendingErrors", column => column.WithDefault(false))
+            );
+            return 27;
+        }
     }
 }
