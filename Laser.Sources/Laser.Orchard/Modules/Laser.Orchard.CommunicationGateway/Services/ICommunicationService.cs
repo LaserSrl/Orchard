@@ -5,12 +5,10 @@ using Laser.Orchard.StartupConfig.Handlers;
 using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard;
-using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentPicker.Fields;
-using Orchard.Core.Common.Fields;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Title.Models;
@@ -73,7 +71,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         CommunicationContactPart TryEnsureContact(int userId);
 
-        int SetFailureForRetry(int contentId, string context, string data, bool completedIteration);
+        /// <summary>
+        /// Returns false if no further run is needed, true if further run is needed.
+        /// </summary>
+        bool GetRunAgainNeeded(int contentId, string context, string data, bool completedIteration, int maxNumRetry);
     }
 
     public class CommunicationService : ICommunicationService {
@@ -412,8 +413,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             return result;
         }
-        public int SetFailureForRetry(int contentId, string context, string data, bool completedIteration) {
-            int result = 1;
+        public bool GetRunAgainNeeded(int contentId, string context, string data, bool completedIteration, int maxNumRetry) {
+            bool result = false; // "non è necessario eseguire un altro run"
             CommunicationRetryRecord retry = _repositoryCommunicationRetryRecord.Get(x => x.ContentItemRecord_Id == contentId && x.Context == context);
             if(retry == null) {
                 // inizializza un nuovo oggetto
@@ -430,12 +431,22 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 retry.Data = data;
                 retry.PendingErrors = true;
             }
-            if (completedIteration && retry.PendingErrors) {
-                retry.NoOfFailures++;
-                retry.PendingErrors = false; // resetta il flag degli errori all'inizio di una nuova iterazione
-            }
-            result = retry.NoOfFailures;
 
+            if (completedIteration) {
+                if (retry.PendingErrors) {
+                    retry.NoOfFailures++;
+                    retry.PendingErrors = false; // resetta il flag degli errori all'inizio di una nuova iterazione
+                    if(retry.NoOfFailures <= maxNumRetry) {
+                        // maxNumRetry non ancora raggiunto quindi è necessario un nuovo retry
+                        result = true;
+                    }
+                }
+            }
+            else {
+                // è necessario almeno un altro run per completare l'iterazione
+                result = true;
+            }
+            // salva su db il record aggiornato
             if(retry.Id == 0) {
                 _repositoryCommunicationRetryRecord.Create(retry);
             }

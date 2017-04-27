@@ -39,18 +39,7 @@ namespace Laser.Orchard.Mobile.Handlers {
                 var state = _pushGatewayService.PublishedPushEvent(context.Task.ContentItem);
                 //verifica se rischedulare l'invio
                 var pushSettings = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>();
-                var nFailures = _communicationService.SetFailureForRetry(context.Task.ContentItem.Id, "push", state.Errors, state.CompletedIteration);
-                bool runAgain = false;
-                if (state.CompletedIteration == false) {
-                    // non ha terminato l'iterazione
-                    runAgain = true;
-                }
-                if (string.IsNullOrWhiteSpace(state.Errors) == false) {
-                    // il numero di iterazioni totali non deve superare il numero di retry + 1
-                    if (nFailures <= pushSettings.MaxNumRetry) {
-                        runAgain = true;
-                    }
-                }
+                var runAgain = _communicationService.GetRunAgainNeeded(context.Task.ContentItem.Id, "push", state.Errors, state.CompletedIteration, pushSettings.MaxNumRetry);
                 if (runAgain) {
                     // rischedula il task
                     // applica il valore di default (5) nel caso di setting non valorizzato

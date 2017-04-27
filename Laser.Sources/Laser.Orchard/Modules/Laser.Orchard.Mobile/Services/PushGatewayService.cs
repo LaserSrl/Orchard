@@ -1012,9 +1012,15 @@ namespace Laser.Orchard.Mobile.Services {
                 setting = pushSettings.AndroidApiKey;
             else
                 setting = pushSettings.AndroidApiKeyDevelopment;
-            if (string.IsNullOrWhiteSpace(setting)) {
-                _myLog.WriteLog("Error PushAndroid: missing Android API Key.");
-                _result.Errors = "Error PushAndroid: missing Android API Key.";
+            if (listdispositivo.Count > 0) {
+                if (string.IsNullOrWhiteSpace(setting)) {
+                    _myLog.WriteLog("Error PushAndroid: missing Android API Key.");
+                    _result.Errors = "Error PushAndroid: missing Android API Key.";
+                    return;
+                }
+            }
+            else {
+                // nessuna push da inviare
                 return;
             }
             var config = new GcmConfiguration(setting);
@@ -1144,9 +1150,15 @@ namespace Laser.Orchard.Mobile.Services {
                 if (string.IsNullOrEmpty(pushSettings.ApplePathCertificateFileDevelopment))
                     certificateexist = false;
             }
-            if (certificateexist == false) {
-                _myLog.WriteLog("Error PushApple: missing Apple certificate file.");
-                _result.Errors = "Error PushApple: missing Apple certificate file.";
+            if (listdispositivo.Count > 0) {
+                if (certificateexist == false) {
+                    _myLog.WriteLog("Error PushApple: missing Apple certificate file.");
+                    _result.Errors = "Error PushApple: missing Apple certificate file.";
+                    return;
+                }
+            }
+            else {
+                // nessuna push da inviare
                 return;
             }
             var config = new ApnsConfiguration(environment, setting_file, setting_password);
@@ -1251,9 +1263,15 @@ namespace Laser.Orchard.Mobile.Services {
             var setting_WindowsAppPackageName = pushSettings.WindowsAppPackageName;
             var setting_WindowsAppSecurityIdentifier = pushSettings.WindowsAppSecurityIdentifier;
             var setting_WindowsEndPoint = pushSettings.WindowsEndPoint;
-            if(string.IsNullOrWhiteSpace(setting_WindowsAppPackageName) || string.IsNullOrWhiteSpace(setting_WindowsAppSecurityIdentifier) || string.IsNullOrWhiteSpace(setting_WindowsEndPoint)) {
-                _myLog.WriteLog("Error PushWindows: missing Windows Mobile settings.");
-                _result.Errors = "Error PushWindows: missing Windows Mobile settings.";
+            if(listdispositivo.Count > 0) {
+                if (string.IsNullOrWhiteSpace(setting_WindowsAppPackageName) || string.IsNullOrWhiteSpace(setting_WindowsAppSecurityIdentifier) || string.IsNullOrWhiteSpace(setting_WindowsEndPoint)) {
+                    _myLog.WriteLog("Error PushWindows: missing Windows Mobile settings.");
+                    _result.Errors = "Error PushWindows: missing Windows Mobile settings.";
+                    return;
+                }
+            }
+            else {
+                // nessuna push da inviare
                 return;
             }
             var config = new WnsConfiguration(setting_WindowsAppPackageName, setting_WindowsAppSecurityIdentifier, setting_WindowsEndPoint);
