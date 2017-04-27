@@ -48,21 +48,26 @@ namespace Laser.Orchard.ButtonToWorkflows.Handlers {
 
             OnUpdated<DynamicButtonToWorkflowsPart>((context, part) => {
                 try {
-                    var content = context.ContentItem;
+                    if (!string.IsNullOrWhiteSpace(part.ButtonName)) {
+                        var content = context.ContentItem;
 
-                    if (part.ActionAsync) {
-                        _scheduledTaskManager.CreateTask("Laser.Orchard.DynamicButtonToWorkflows.Task", DateTime.UtcNow.AddMinutes(1), part.ContentItem);
+                        if (part.ActionAsync) {
+                            _scheduledTaskManager.CreateTask("Laser.Orchard.DynamicButtonToWorkflows.Task", DateTime.UtcNow.AddMinutes(1), part.ContentItem);
+
+                            if (!string.IsNullOrEmpty(part.MessageToWrite))
+                                _notifier.Add(NotifyType.Information, T(part.MessageToWrite));
+                        }
+                        else {
+                            _workflowManager.TriggerEvent("DynamicButtonEvent", content, () => new Dictionary<string, object> { { "ButtonName", part.ButtonName } });
+
+                            if (!string.IsNullOrEmpty(part.MessageToWrite))
+                                _notifier.Add(NotifyType.Information, T(part.MessageToWrite));
+
+                            part.ButtonName = "";
+                            part.MessageToWrite = "";
+                            part.ActionAsync = false;
+                        }
                     }
-                    else {
-                        _workflowManager.TriggerEvent("DynamicButtonEvent", content, () => new Dictionary<string, object> { { "ButtonName", part.ButtonName } });
-
-                        part.ButtonName = "";
-                        part.MessageToWrite = "";
-                        part.ActionAsync = false;
-                    }
-
-                    if (!string.IsNullOrEmpty(part.MessageToWrite))
-                        _notifier.Add(NotifyType.Information, T(part.MessageToWrite));
                 }
                 catch (Exception ex) {
                     Logger.Error(ex, "Error in DynamicButtonToWorkflowsPartHandler. ContentItem: {0}", context.ContentItem);
