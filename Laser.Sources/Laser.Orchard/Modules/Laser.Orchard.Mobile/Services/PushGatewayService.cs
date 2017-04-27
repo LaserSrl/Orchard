@@ -1012,6 +1012,11 @@ namespace Laser.Orchard.Mobile.Services {
                 setting = pushSettings.AndroidApiKey;
             else
                 setting = pushSettings.AndroidApiKeyDevelopment;
+            if (string.IsNullOrWhiteSpace(setting)) {
+                _myLog.WriteLog("Error PushAndroid: missing Android API Key.");
+                _result.Errors = "Error PushAndroid: missing Android API Key.";
+                return;
+            }
             var config = new GcmConfiguration(setting);
             var serviceUrl = pushSettings.AndroidPushServiceUrl;
             var notificationIcon = pushSettings.AndroidPushNotificationIcon;
@@ -1140,6 +1145,8 @@ namespace Laser.Orchard.Mobile.Services {
                     certificateexist = false;
             }
             if (certificateexist == false) {
+                _myLog.WriteLog("Error PushApple: missing Apple certificate file.");
+                _result.Errors = "Error PushApple: missing Apple certificate file.";
                 return;
             }
             var config = new ApnsConfiguration(environment, setting_file, setting_password);
@@ -1244,6 +1251,11 @@ namespace Laser.Orchard.Mobile.Services {
             var setting_WindowsAppPackageName = pushSettings.WindowsAppPackageName;
             var setting_WindowsAppSecurityIdentifier = pushSettings.WindowsAppSecurityIdentifier;
             var setting_WindowsEndPoint = pushSettings.WindowsEndPoint;
+            if(string.IsNullOrWhiteSpace(setting_WindowsAppPackageName) || string.IsNullOrWhiteSpace(setting_WindowsAppSecurityIdentifier) || string.IsNullOrWhiteSpace(setting_WindowsEndPoint)) {
+                _myLog.WriteLog("Error PushWindows: missing Windows Mobile settings.");
+                _result.Errors = "Error PushWindows: missing Windows Mobile settings.";
+                return;
+            }
             var config = new WnsConfiguration(setting_WindowsAppPackageName, setting_WindowsAppSecurityIdentifier, setting_WindowsEndPoint);
 
             // genera il payload
