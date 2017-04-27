@@ -221,6 +221,18 @@ msgid "This Push message has been already sent. You will be able to edit and sav
 msgstr "Questa PUSH è già stata inoltrata. Sarà possibile modificarla e salvarla, ma non sarà più reinoltrata."
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "0 means default value (1000)."
+msgstr "0 indica il valore di default (1000)."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "0 means default value (5)."
+msgstr "0 indica il valore di default (5)."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "0 means default value (50)."
+msgstr "0 indica il valore di default (50)."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Android ApiKey"
 msgstr "ApiKey Android"
 
@@ -257,6 +269,18 @@ msgid "Apple Push Sound"
 msgstr "Apple Push Sound"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Check if you prefer to send some push message twice rather than loose some push message in case of system error."
+msgstr "Selezionare per scegliere di inviare alcuni messaggi push due volte piuttosto che non inviarli in caso di errore di sistema."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Commit sent recipients only"
+msgstr "Committare solo i destinatari per i quali il messaggio push è già stato inviato al server."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Delay in minutes before next iteration or retry"
+msgstr "Intervallo di tempo in minuti prima della prossima iterazione o nuovo tentativo di invio."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Enter Taxonomy Name used"
 msgstr "Inserire il nome usato per la tassonomia"
 
@@ -267,6 +291,18 @@ msgstr "Lasciare vuoto per usare l'URL di default di Firebase oppure impostare l
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Leave blank to use Gcm default URL or set to the Firebase Service URL: https://fcm.googleapis.com/fcm/send"
 msgstr "Lasciare vuoto per usare l'URL di default di Gcm oppure impostare l'URL del Servizio Firebase https://fcm.googleapis.com/fcm/send"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Max number of push messages to send in each database transaction"
+msgstr "Numero massimo di messaggi push da inviare per ogni transazione del database"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Max number of push per iteration"
+msgstr "Numero massimo di messaggi push da inviare per ogni iterazione"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Max number of retries in case of errors"
+msgstr "Numero massimo di nuovi tentativi di invio in caso di errore"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Optional icon in push notification section of the payload. Leave blank to suppress notification section."
@@ -295,6 +331,10 @@ msgstr "Impostazioni Tassonomia"
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Show Test Options"
 msgstr "Visualizza Opzioni di Test"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Suggested value: 2. Set to 0 for no retries in case of errors on first sending."
+msgstr "Valore suggerito: 2. Impostare a 0 per inibire nuovi tentativi di invio in caso di errore al primo tentativo."
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Will able back office to send push to development device"
@@ -608,6 +648,14 @@ msgctxt "Laser.Orchard.Mobile.Handlers.SiteSettingsPartHandler"
 msgid "PushMobile"
 msgstr "PushMobile"
 
+msgctxt "Laser.Orchard.Mobile.Handlers.SmsGatewayPartHandler"
+msgid "Send SMS to test phone number failed."
+msgstr "Fallito invio dell'SMS al numero telefonico di test."
+
+msgctxt "Laser.Orchard.Mobile.Handlers.SmsGatewayPartHandler"
+msgid "SMS sent successfully to test phone number."
+msgstr "SMS inviato con successo al numero telefonico di test."
+
 msgctxt "Laser.Orchard.Mobile.Handlers.SmsSettingsPartHandler"
 msgid "SMS"
 msgstr "SMS"
@@ -671,6 +719,10 @@ msgstr "Nessuna push sarà inoltrata, il contenuto di riferimento deve essere pu
 msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
 msgid "Notification sent: "
 msgstr "Notifica inviata:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
+msgid "Notifications sent: "
+msgstr "Notifiche inviate:"
 
 msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
 msgid "Sent: "
