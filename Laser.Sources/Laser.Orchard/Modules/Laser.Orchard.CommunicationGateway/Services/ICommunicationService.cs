@@ -5,12 +5,10 @@ using Laser.Orchard.StartupConfig.Handlers;
 using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard;
-using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentPicker.Fields;
-using Orchard.Core.Common.Fields;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Title.Models;
@@ -72,6 +70,11 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         CommunicationContactPart EnsureMasterContact();
 
         CommunicationContactPart TryEnsureContact(int userId);
+
+        /// <summary>
+        /// Returns false if no further run is needed, true if further run is needed.
+        /// </summary>
+        bool GetRunAgainNeeded(int contentId, string context, string data, bool completedIteration, int maxNumRetry);
     }
 
     public class CommunicationService : ICommunicationService {
@@ -93,6 +96,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         private readonly IRepository<CommunicationEmailRecord> _repositoryCommunicationEmailRecord;
         private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
+        private readonly IRepository<CommunicationRetryRecord> _repositoryCommunicationRetryRecord;
 
         public CommunicationService(
             ITaxonomyService taxonomyService,
@@ -109,6 +113,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             ITransactionManager transactionManager,
             IFieldIndexService fieldIndexService,
             IAutorouteService autorouteService,
+            IRepository<CommunicationRetryRecord> repositoryCommunicationRetryRecord,
             IContentDefinitionManager contentDefinitionManager) {
 
             _orchardServices = orchardServices;
@@ -118,6 +123,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             _notifier = notifier;
             _repositoryCommunicationEmailRecord = repositoryCommunicationEmailRecord;
             _repositoryCommunicationSmsRecord = repositoryCommunicationSmsRecord;
+            _repositoryCommunicationRetryRecord = repositoryCommunicationRetryRecord;
             _taxonomyService = taxonomyService;
             _cultureManager = cultureManager;
             _contactRelatedEventHandler = contactRelatedEventHandler;
@@ -407,7 +413,48 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             return result;
         }
+        public bool GetRunAgainNeeded(int contentId, string context, string data, bool completedIteration, int maxNumRetry) {
+            bool result = false; // "non è necessario eseguire un altro run"
+            CommunicationRetryRecord retry = _repositoryCommunicationRetryRecord.Get(x => x.ContentItemRecord_Id == contentId && x.Context == context);
+            if(retry == null) {
+                // inizializza un nuovo oggetto
+                retry = new CommunicationRetryRecord {
+                    ContentItemRecord_Id = contentId,
+                    Context = context,
+                    NoOfFailures = 0,
+                    Data = "",
+                    PendingErrors = false
+                };
+            }
+            // aggiorna gli errori solo se ce ne sono, per non perdere l'informazione sulla presenza di errori all'interno dell'iterazione corrente
+            if (string.IsNullOrWhiteSpace(data) == false) {
+                retry.Data = data;
+                retry.PendingErrors = true;
+            }
 
+            if (completedIteration) {
+                if (retry.PendingErrors) {
+                    retry.NoOfFailures++;
+                    retry.PendingErrors = false; // resetta il flag degli errori all'inizio di una nuova iterazione
+                    if(retry.NoOfFailures <= maxNumRetry) {
+                        // maxNumRetry non ancora raggiunto quindi è necessario un nuovo retry
+                        result = true;
+                    }
+                }
+            }
+            else {
+                // è necessario almeno un altro run per completare l'iterazione
+                result = true;
+            }
+            // salva su db il record aggiornato
+            if(retry.Id == 0) {
+                _repositoryCommunicationRetryRecord.Create(retry);
+            }
+            else {
+                _repositoryCommunicationRetryRecord.Update(retry);
+            }
+            return result;
+        }
         public void UserToContact(IUser UserContent) {
             // verifiche preliminari
             if (UserContent.Id == 0) {

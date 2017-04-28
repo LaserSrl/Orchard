@@ -149,26 +149,26 @@ namespace Laser.Orchard.Questionnaires.Services {
             ContentItem Ci = gp.ContentItem;
 
             var session = _transactionManager.GetSession();// _sessionLocator.For(typeof(RankingPartRecord));
-            var generalRankQuery = GenerateRankingQuery(gameId: gameID, page: 1, pageSize: 10)
-                .GetExecutableQueryOver(session)
-                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData)) //TODO: use transformers. Start from the IResultTransformer in RankingTemplateVM.cs. Also http://blog.andrewawhitaker.com/queryover-series
-                                                                                //.Future();
-                .Future<RankingTemplateVM>();
-            var appleRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.Apple.ToString(), page: 1, pageSize: 10)
-                .GetExecutableQueryOver(session)
-                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
-                //.Future();
-                .Future<RankingTemplateVM>();
-            var androidRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.Android.ToString(), page: 1, pageSize: 10)
-                .GetExecutableQueryOver(session)
-                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
-                //.Future();
-                .Future<RankingTemplateVM>();
-            var windowsRankQuery = GenerateRankingQuery(gameId: gameID, device: TipoDispositivo.WindowsMobile.ToString(), page: 1, pageSize: 10)
-                .GetExecutableQueryOver(session)
-                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
-                //.Future();
-                .Future<RankingTemplateVM>();
+            var generalRankQuery = QueryForRanking(gameId: gameID, page: 1, pageSize: 10);
+            //.GetExecutableQueryOver(session)
+            //.TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData)) //TODO: use transformers. Start from the IResultTransformer in RankingTemplateVM.cs. Also http://blog.andrewawhitaker.com/queryover-series
+            //                                                                //.Future();
+            //.Future<RankingTemplateVM>();
+            var appleRankQuery = QueryForRanking(gameId: gameID, device: TipoDispositivo.Apple.ToString(), page: 1, pageSize: 10);
+            //.GetExecutableQueryOver(session)
+            //.TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+            ////.Future();
+            //.Future<RankingTemplateVM>();
+            var androidRankQuery = QueryForRanking(gameId: gameID, device: TipoDispositivo.Android.ToString(), page: 1, pageSize: 10);
+            //.GetExecutableQueryOver(session)
+            //.TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+            ////.Future();
+            //.Future<RankingTemplateVM>();
+            var windowsRankQuery = QueryForRanking(gameId: gameID, device: TipoDispositivo.WindowsMobile.ToString(), page: 1, pageSize: 10);
+                //.GetExecutableQueryOver(session)
+                //.TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
+                ////.Future();
+                //.Future<RankingTemplateVM>();
 
             //List<RankingTemplateVM> generalRank = new List<RankingTemplateVM>();
             //foreach (RankingPartRecord obj in generalRankQuery) { //Trasformers would allow getting rid of these iterations
@@ -188,7 +188,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             //}
 
             //if (SendEmail(Ci, generalRank, appleRank, androidRank, windowsRank)) {
-            if (SendEmail(Ci, generalRankQuery.ToList(), appleRankQuery.ToList(), androidRankQuery.ToList(), windowsRankQuery.ToList())) {
+            if (SendEmail(Ci, generalRankQuery, appleRankQuery.ToList(), androidRankQuery.ToList(), windowsRankQuery.ToList())) {
                 _workflowManager.TriggerEvent("GameRankingSubmitted", Ci, () => new Dictionary<string, object> { { "Content", Ci } });
                 gp.workflowfired = true;
                 return true;
@@ -235,6 +235,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             if (emailRecipe != "") {
                 var editModel = new Dictionary<string, object>();
                 editModel.Add("Content", Ci);
+                editModel.Add("ListRanking", generalRank);
                 editModel.Add("GeneralRanking", generalRank);
                 editModel.Add("AppleRanking", appleRank);
                 editModel.Add("AndroidRanking", androidRank);
@@ -310,9 +311,9 @@ namespace Laser.Orchard.Questionnaires.Services {
         /// <param name="Ascending">A flag to determine the sorting order for the scores: <value>true</value> order by ascending score; 
         /// <value>false</value> order by descending score.</param>
         /// <returns>A <type>QueryOver</type> object built from the parameters and that can be used to execute queries on the DB.</returns>
-        private QueryOver<RankingPartRecord> GenerateRankingQuery(
+        public List<RankingTemplateVM> QueryForRanking(
             Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false) {
-
+            var session = _transactionManager.GetSession();
             RankingPartRecord rprAlias = null; //used as alias in correlated subqueries
             QueryOver<RankingPartRecord, RankingPartRecord> qoRpr = QueryOver.Of<RankingPartRecord>(() => rprAlias)
                 .Where(t => t.ContentIdentifier == gameId);
@@ -343,7 +344,12 @@ namespace Laser.Orchard.Questionnaires.Services {
 
             qoRpr = CheckSortDirection(qoRpr, Ascending);
 
-            return qoRpr.Skip(pageSize * (page - 1)).Take(pageSize);
+           var rank =  (qoRpr.Skip(pageSize * (page - 1)).Take(pageSize));
+
+
+            return rank.GetExecutableQueryOver(session).List().Select(x => ConvertFromDBData(x)).ToList();
+           
+
         }
 
         /// <summary>
@@ -359,106 +365,13 @@ namespace Laser.Orchard.Questionnaires.Services {
         /// <returns>A <type>List &lt; RankingTemplateVM &gt;</type> containingn the objects representing the desired ranking.</returns>
         /// <example> QueryForRanking (3, TipoDispositivo.Apple.ToString()) would return the top10 scores for game number 3
         /// scored by iOs users, sorted from the highest score down.</example>
-        public List<RankingTemplateVM> QueryForRanking(
-            Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false) {
-            //TODO: the query string should be tested on different instances.
-            var session = _transactionManager.GetSession();// _sessionLocator.For(typeof(RankingPartRecord));
-            //TODO: test the query on both MySql and Postgre 
-            //List<RankingTemplateVM> lRank = new List<RankingTemplateVM>(); //list we will return
-            //string queryDeviceCondition = "";
-            //if (device == TipoDispositivo.Apple.ToString())
-            //    queryDeviceCondition += "AND Device = '" + TipoDispositivo.Apple + "' ";
-            //else if (device == TipoDispositivo.Android.ToString())
-            //    queryDeviceCondition += "AND Device = '" + TipoDispositivo.Android + "' ";
-            //else if (device == TipoDispositivo.WindowsMobile.ToString())
-            //    queryDeviceCondition += "AND Device = '" + TipoDispositivo.WindowsMobile + "' ";
-            //THe following commented lines contain the original SQL query we used
-            #region original SQL query
-            ////if we create a SQL query, we use [table names] instead of Domain.Names, so we need the following line
-            //string tableName = ((ILockable)session.GetSessionImplementation().GetEntityPersister(null, new RankingPartRecord())).RootTableName;
-            //string subQueryPoints = "SELECT MAX(Point) "
-            //        + "FROM [" + tableName + "] " //Laser.Orchard.Questionnaires.Models.RankingPartRecord "
-            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
-            //        + "AND Identifier = rpr.Identifier ";
-            //string subQueryDate = "SELECT MIN(RegistrationDate) "
-            //        + "FROM [" + tableName + "] " //Laser.Orchard.Questionnaires.Models.RankingPartRecord "
-            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
-            //        + "GROUP BY Identifier, Point ";
-            //string queryTable = "SELECT rpr.[Point], rpr.[Identifier], rpr.[UsernameGameCenter], rpr.[Device], rpr.[ContentIdentifier], rpr.[User_Id], rpr.[AccessSecured], rpr.[RegistrationDate] "
-            //        + "FROM [" + tableName + "] as rpr " //Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
-            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
-            //        + "AND Point = ( " + subQueryPoints + " ) "
-            //        + "AND RegistrationDate IN ( " + subQueryDate + " ) ";
-            //if (Ascending)
-            //    queryTable += "ORDER BY Point ";
-            //else
-            //    queryTable += "ORDER BY Point DESC "; 
-            //var tableQuery = session
-            //    .CreateSQLQuery(queryTable)
-            //    .SetFirstResult((pageSize * (page - 1)))    //paging
-            //    .SetMaxResults(pageSize); ;                 //paging
-            ////var ranking = tableQuery.List();
-            //var ranking = tableQuery
-            //    .SetResultTransformer(Transformers.AliasToBean<RankingPartRecordIntermediate>())
-            //    .List();
-            ////get the query results into the list
-            //foreach (RankingPartRecordIntermediate obj in ranking) {
-            //    lRank.Add(ConvertFromDBData(obj));
-            //}
-            #endregion
-
-            #region HQL query on nHibernate
-            //string subHQLPoints = "SELECT MAX(Point) "
-            //        + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord "
-            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
-            //        + "AND Identifier = rpr.Identifier ";
-            //string subHQLDate = "SELECT MIN(RegistrationDate) "
-            //        + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord "
-            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
-            //        + "GROUP BY Identifier, Point ";
-            //string hqlTable = "SELECT rpr.Point as Point, rpr.Identifier as Identifier, rpr.UsernameGameCenter as UsernameGameCenter, rpr.Device as Device, rpr.ContentIdentifier as ContentIdentifier, rpr.User_Id as User_Id, rpr.AccessSecured as AccessSecured, rpr.RegistrationDate as RegistrationDate "
-            //        + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
-            //        + "WHERE ContentIdentifier=" + gameId + " " + queryDeviceCondition
-            //        + "AND Point = ( " + subHQLPoints + " ) "
-            //        + "AND RegistrationDate IN ( " + subHQLDate + " ) ";
-            //if (Ascending)
-            //    hqlTable += "ORDER BY Point ";
-            //else
-            //    hqlTable += "ORDER BY Point DESC "; 
-            //var tableHQL = session
-            //    .CreateQuery(hqlTable)
-            //    .SetFirstResult((pageSize * (page - 1)))    //paging
-            //    .SetMaxResults(pageSize);                   //paging
-            //var ranking = tableHQL
-            //    .SetResultTransformer(Transformers.AliasToBean<RankingPartRecord>()) //to use this we explicitly give the aliases in the query
-            //    .List();
-            ////get the query results into the list
-            //foreach (RankingPartRecord obj in ranking) {
-            //    lRank.Add(ConvertFromDBData(obj));
-            //}
-            #endregion
-
-
-            #region nHibernate query
-
-            //var ranking = GenerateRankingQuery(gameId: gameId, device: device, page: page, pageSize: pageSize)
-            //    .GetExecutableQueryOver(session)
-            //    //.TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
-            //    .List();
-            var rankrank = GenerateRankingQuery(gameId: gameId, device: device, page: page, pageSize: pageSize)
-                .GetExecutableQueryOver(session)
-                .TransformUsing(new AliasToBeanVMFromRecord(ConvertFromDBData))
-                .List<RankingTemplateVM>();
-            ////TODO: do this step with a custom transformer directly in the nHibernate query (implementing IResultTransformer) 
-            ////see https://github.com/nhibernate/nhibernate-core/tree/master/src/NHibernate/Transform for examples
-            //foreach (RankingPartRecord obj in ranking) {
-            //    lRank.Add(ConvertFromDBData(obj));
-            //}
-            #endregion
-
-
-            return rankrank.ToList(); // lRank;
-        }
+        //public List<RankingTemplateVM> QueryForRanking(
+        //    Int32 gameId, string device = "General", int page = 1, int pageSize = 10, bool Ascending = false) {
+        //    var session = _transactionManager.GetSession();
+        //    var rank = GenerateRankingQuery(gameId: gameId, device: device, page: page, pageSize: pageSize)
+        //       .GetExecutableQueryOver(session).List();
+        //    return rank.Select(x => ConvertFromDBData(x)).ToList(); 
+        //}
 
         /// <summary>
         /// Verifies what kind of device we want to query for, and eventually adds the corresponding query.

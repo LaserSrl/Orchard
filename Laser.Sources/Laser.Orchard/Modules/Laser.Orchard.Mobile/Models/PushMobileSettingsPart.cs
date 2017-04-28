@@ -63,6 +63,26 @@ namespace Laser.Orchard.Mobile.Models {
             get { return Record.AndroidPushNotificationIcon; }
             set { Record.AndroidPushNotificationIcon = value; }
         }
+        public int PushSendBufferSize {
+            get { return Record.PushSendBufferSize; }
+            set { Record.PushSendBufferSize = value; }
+        }
+        public bool CommitSentOnly {
+            get { return Record.CommitSentOnly; }
+            set { Record.CommitSentOnly = value; }
+        }
+        public int DelayMinutesBeforeRetry {
+            get { return Record.DelayMinutesBeforeRetry; }
+            set { Record.DelayMinutesBeforeRetry = value; }
+        }
+        public int MaxNumRetry {
+            get { return Record.MaxNumRetry; }
+            set { Record.MaxNumRetry = value; }
+        }
+        public int MaxPushPerIteration {
+            get { return Record.MaxPushPerIteration; }
+            set { Record.MaxPushPerIteration = value; }
+        }
     }
 
     [OrchardFeature("Laser.Orchard.PushGateway")]
@@ -81,6 +101,11 @@ namespace Laser.Orchard.Mobile.Models {
         public virtual string AndroidPushServiceUrl { get; set; }
         public virtual string AndroidPushNotificationIcon { get; set; }
         public virtual string TaxonomyName { get; set; }
+        public virtual int PushSendBufferSize { get; set; }
+        public virtual bool CommitSentOnly { get; set; }
+        public virtual int DelayMinutesBeforeRetry { get; set; }
+        public virtual int MaxNumRetry { get; set; }
+        public virtual int MaxPushPerIteration { get; set; }
     }
 }
 

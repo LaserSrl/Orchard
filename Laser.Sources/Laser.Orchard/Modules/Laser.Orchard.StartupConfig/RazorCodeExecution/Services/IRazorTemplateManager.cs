@@ -56,6 +56,7 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
             config.Namespaces.Add("Orchard");
             config.Namespaces.Add("Orchard.ContentManagement");
             config.Namespaces.Add("Orchard.Caching");
+            config.Namespaces.Add("System.Web.Helpers");
             _razorEngine = RazorEngineService.Create(config);
             listOldCached.AddRange(listCached);
             listCached = new List<string>();
