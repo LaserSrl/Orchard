@@ -128,6 +128,7 @@
     <Compile Include="PartSettings\ShareLinkEditEvents.cs" />
     <Compile Include="Models\ShareLinkModuleSettingPart.cs" />
     <Compile Include="PartSettings\ShareLinkPartSettingVM.cs" />
+    <Compile Include="Servicies\ShareLinkService.cs" />
     <Compile Include="ViewModels\OptionList.cs" />
     <Compile Include="ViewModels\ShareLinkModuleSettingVM.cs" />
     <Compile Include="ViewModels\ShareLinkVM.cs" />

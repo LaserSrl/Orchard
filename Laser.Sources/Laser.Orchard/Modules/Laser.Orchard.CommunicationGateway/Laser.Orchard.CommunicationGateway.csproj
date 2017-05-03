@@ -212,6 +212,7 @@
     <Compile Include="Models\CommunicationContactPart.cs" />
     <Compile Include="Models\CommunicationDeliveryReportRecord.cs" />
     <Compile Include="Models\CommunicationEmailRecord.cs" />
+    <Compile Include="Models\CommunicationRetryRecord.cs" />
     <Compile Include="Models\CommunicationSmsRecord.cs" />
     <Compile Include="Models\EmailContactPart.cs" />
     <Compile Include="Models\QueryFilterPart.cs" />

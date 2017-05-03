@@ -17,7 +17,6 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Tokens;
 using Orchard.UI.Notify;
-using Orchard.Users.Models;
 using PushSharp.Apple;
 using PushSharp.Core;
 using PushSharp.Google;
@@ -30,6 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Hosting;
 using System.Xml.Linq;
+using System.Collections.Concurrent;
 
 namespace Laser.Orchard.Mobile.Services {
 
@@ -43,7 +43,7 @@ namespace Laser.Orchard.Mobile.Services {
 
         void PublishedPushEventTest(ContentItem ci);
 
-        void PublishedPushEvent(ContentItem ci);
+        PushState PublishedPushEvent(ContentItem ci);
 
         void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "", string externalUrl = "");
 
@@ -67,12 +67,14 @@ namespace Laser.Orchard.Mobile.Services {
         private readonly ShellSettings _shellSetting;
         public Localizer T { get; set; }
 
-        private Int32 messageSent;
-        private object lockMonitor;
+        private int _messageSent; // numero di push con esito positivo
+        private int _pushNumber; // numero di push aggiunte alla coda di invio
         private const int MAX_PUSH_TEXT_LENGTH = 160;
+        private PushState _result;
 
         private ContentItem senderContentItemContainer;
-
+        private ConcurrentDictionary<string, SentRecord> _sentRecords;
+        private ConcurrentBag<DeviceChange> _deviceChanges;
 
         public PushGatewayService(IPushNotificationService pushNotificationService, IQueryPickerService queryPickerServices, IOrchardServices orchardServices, ITransactionManager transactionManager, IMylogService myLog, IRepository<SentRecord> sentRepository, IRepository<PushNotificationRecord> pushNotificationRepository, INotifier notifier, ICommunicationService communicationService, ITokenizer tokenizer, ShellSettings shellSetting) {
             _pushNotificationService = pushNotificationService;
@@ -86,8 +88,8 @@ namespace Laser.Orchard.Mobile.Services {
             _communicationService = communicationService;
             _tokenizer = tokenizer;
             _shellSetting = shellSetting;
-            messageSent = 0;
-            lockMonitor = new object();
+            _messageSent = 0;
+            _pushNumber = 0;
         }
 
         public IList GetPushQueryResult(Int32[] ids, bool countOnly = false, int contentId = 0) {
@@ -540,14 +542,21 @@ namespace Laser.Orchard.Mobile.Services {
                 SendAllWindowsPart(mpp, idContent, idContentRelated, language, produzione, queryDevice, ids, repeatable: true);
             }
         }
-
-        public void PublishedPushEvent(ContentItem ci) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ci"></param>
+        /// <returns>An error list, if any.</returns>
+        public PushState PublishedPushEvent(ContentItem ci) {
+            _result = new PushState();
+            _result.CompletedIteration = true;
             senderContentItemContainer = ci;
             bool SendPushToSpecificDevices;
             try {
                 _myLog.WriteLog("Iniziato invio Push del content " + ci.Id);
                 ContentItem savedCi = _orchardServices.ContentManager.Get(ci.Id);
                 MobilePushPart mpp = ci.As<MobilePushPart>();
+                _messageSent = 0;
                 SendPushToSpecificDevices = mpp.UseRecipientList;
                 if (mpp.ToPush) {
                     bool stopPush = false;
@@ -603,7 +612,7 @@ namespace Laser.Orchard.Mobile.Services {
                             produzione = !(mpp.TestPush);
                         }
 
-                        // tipo didispositivo (Android, Apple, Windows)
+                        // tipo di dispositivo (Android, Apple, Windows)
                         TipoDispositivo? locTipoDispositivo = null;
                         if (mpp.DevicePush != "All") {
                             TipoDispositivo auxTipoDispositivo;
@@ -644,8 +653,10 @@ namespace Laser.Orchard.Mobile.Services {
                                 pushMessage);
                         }
                         // aggiorna la MobilePushPart
-                        mpp.PushSent = true;
-                        mpp.PushSentNumber = messageSent;
+                        ContentItem ci2 = _orchardServices.ContentManager.Get(ci.Id);
+                        MobilePushPart mpp2 = ci2.As<MobilePushPart>();
+                        mpp2.PushSent = true;
+                        mpp2.PushSentNumber = CountSentOnDb(ci.Id);
                         int counter = 0;
                         if (ci.ContentType == "CommunicationAdvertising") {
                             IList counterAux;
@@ -669,9 +680,9 @@ namespace Laser.Orchard.Mobile.Services {
                                 counter = Convert.ToInt32(estrazione);
                             }
                         }
-                        mpp.TargetDeviceNumber = counter;
-                        _notifier.Information(T("Notification sent: " + messageSent.ToString()));
-                        _myLog.WriteLog("Notification sent: " + messageSent.ToString());
+                        mpp2.TargetDeviceNumber = counter;
+                        _notifier.Information(T("Notifications sent: " + _messageSent.ToString()));
+                        _myLog.WriteLog("Notifications sent: " + _messageSent.ToString());
                     }
                 }
                 string title = "no title";
@@ -692,7 +703,10 @@ namespace Laser.Orchard.Mobile.Services {
                     // ignora volutamente qualsiasi errore
                 }
                 _myLog.WriteLog("Errore invio Push del content " + ci.Id + " \"" + title + "\" - Error: " + ex.Message + "\r\n" + ex.StackTrace);
+                //aggiorna il result
+                _result.Errors = "Error in PublishedPushEvent: " + ex.Message;
             }
+            return _result;
         }
 
         private string[] getextrainfo(Int32 id_of_content) {
@@ -816,6 +830,8 @@ namespace Laser.Orchard.Mobile.Services {
             }
             catch (Exception ex) {
                 _myLog.WriteLog(string.Format("Error in PushNotificationService.GetListMobileDevice(): {0} - {1}", ex.Message, ex.StackTrace));
+                //aggiorna il result
+                _result.Errors = "Error in GetListMobileDevice: " + ex.Message;
             }
             return lista;
         }
@@ -854,26 +870,162 @@ namespace Laser.Orchard.Mobile.Services {
 
         private List<PushNotificationVM> RemoveSent(List<PushNotificationVM> listdispositivo, Int32 IdContent) {
             if (IdContent > 0) {
-                List<Int32> listainvii = _sentRepository.Fetch(x => x.PushedItem == IdContent).Select(y => y.PushNotificationRecord_Id).ToList();
+                List<Int32> listainvii = _sentRepository.Fetch(x => x.PushedItem == IdContent && x.Repeatable == false).Select(y => y.PushNotificationRecord_Id).ToList();
                 return listdispositivo.Where(x => !listainvii.Contains(x.Id)).ToList();
             }
             else {
+                // se il contenuto è estemporaneo (non salvato su db) non fa nessun filtro sulle push già inviate
                 return listdispositivo;
             }
         }
 
-        private void PushAndroid(List<PushNotificationVM> listdispositivo, bool produzione, PushMessage pushMessage, bool repeatable = false) {
+        private List<PushNotificationVM> CleanRecipients(List<PushNotificationVM> listdispositivo, int idContent, bool repeatable = false) {
             if (repeatable == false) {
-                listdispositivo = RemoveSent(listdispositivo, pushMessage.idContent);
+                listdispositivo = RemoveSent(listdispositivo, idContent);
             }
+            // elimina i dispositivi non registrati sulla macchina corrente
+            string hostCheck = _shellSetting.RequestUrlHost ?? "";
+            string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
+            string machineNameCheck = System.Environment.MachineName ?? "";
+            return listdispositivo.Where(x => x.RegistrationUrlHost == hostCheck
+                && x.RegistrationUrlPrefix == prefixCheck && x.RegistrationMachineName == machineNameCheck).ToList();
+        }
+
+        private void InitializeRecipients(List<PushNotificationVM> listdispositivo, int offset, int size, int idContent, bool repeatable, PushMobileSettingsPart pushSettings) {
+            _sentRecords = new ConcurrentDictionary<string, SentRecord>();
+            _deviceChanges = new ConcurrentBag<DeviceChange>();
+            int maxPushPerIteration = pushSettings.MaxPushPerIteration == 0 ? 1000 : pushSettings.MaxPushPerIteration;
+            // salva l'elenco delle push da inviare
+            for (int idx=offset; idx < Math.Min(offset+size, listdispositivo.Count); idx++) {
+                try {
+                    if (_pushNumber >= maxPushPerIteration) {
+                        _result.CompletedIteration = false;
+                        break;
+                    }
+                    var pnr = listdispositivo[idx];
+                    SentRecord sr = new SentRecord {
+                        DeviceType = pnr.Device.ToString(),
+                        PushNotificationRecord_Id = pnr.Id,
+                        PushedItem = idContent,
+                        SentDate = DateTime.UtcNow,
+                        Outcome = "",
+                        Repeatable = repeatable
+                    };
+                    _sentRecords.AddOrUpdate(pnr.Token, sr, (key, record) => {
+                        return sr;
+                    });
+                    _pushNumber++;
+                }
+                catch (Exception ex) {
+                    _myLog.WriteLog("PushGateway.InitializeRecipients error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    //aggiorna il result
+                    _result.Errors = "Error in InitializeRecipients: " + ex.Message;
+                }
+            }
+        }
+
+        private void InitializeRecipientsOnDb() {
+            foreach(var sr in _sentRecords.Values) {
+                _sentRepository.Create(sr);
+            }
+            _transactionManager.RequireNew();
+        }
+        private void UpdateDevicesOnDb(bool produzione) {
+            // aggiorna la validità degli expired
+            foreach(var device in _sentRecords.Where(x => x.Value.Outcome == "ex")) { 
+                try {
+                    var myrepo = _pushNotificationRepository.Fetch(x => x.Token == device.Key && x.Produzione == produzione && x.Device.ToString() == device.Value.DeviceType).ToList();
+                    if (myrepo.Count() == 1) {
+                        PushNotificationRecord pnr = myrepo.FirstOrDefault();
+                        pnr.Validated = false;
+                        _pushNotificationRepository.Update(pnr);
+                        _myLog.WriteLog(string.Format("Device Subscription Expired Action: {0} not validated -> {1}", device.Value.DeviceType, device.Key));
+                    }
+                    else {
+                        _myLog.WriteLog(string.Format("Device Subscription Expired Error: {0} -> token not found or token not unique: {1}", device.Value.DeviceType, device.Key));
+                    }
+                }
+                catch (Exception ex) {
+                    _myLog.WriteLog("PushAndroid expired error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                }
+            }
+            _transactionManager.RequireNew();
+
+            // salva tutti i device per i quali è cambiato il token
+            foreach (var change in _deviceChanges) {
+                try {
+                    List<PushNotificationRecord> pnrList = _pushNotificationRepository.Fetch(x => x.Token == change.OldToken && x.Device.ToString() == change.TipoDispositivo && x.Produzione == change.Produzione).ToList();
+                    foreach (var pnr in pnrList) {
+                        IEnumerable<PushNotificationRecord> nuovo = _pushNotificationRepository.Fetch(x => x.Token == change.NewToken && x.Device.ToString() == change.TipoDispositivo && x.Produzione == change.Produzione);
+                        if (nuovo == null || nuovo.FirstOrDefault() == null) {
+                            // aggiorna il vecchio token
+                            pnr.Token = change.NewToken;
+                            pnr.Validated = true;
+                        }
+                        // non serve settare validated a false per il vecchio token perché è già stato fatto in quanto expired
+                        _pushNotificationRepository.Update(pnr);
+                    }
+                }
+                catch (Exception ex) {
+                    _myLog.WriteLog("PushAndroid deviceChanged error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                }
+                _pushNotificationRepository.Flush();
+            }
+            _transactionManager.RequireNew();
+        }
+        private void UpdateOutcomesOnDb() {
+            // aggiorna gli esiti su db
+            foreach (var device in _sentRecords) {
+                try {
+                    if (device.Value.Id == 0) {
+                        _sentRepository.Create(device.Value);
+                    }
+                    else {
+                        _sentRepository.Update(device.Value);
+                    }
+                }
+                catch (Exception ex) {
+                    _myLog.WriteLog("PushAndroid outcome error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                }
+            }
+            _transactionManager.RequireNew();
+        }
+        private int CountSentOnDb(int contentId) {
+            int result = 0;
+            try {
+                if (contentId != 0) {
+                    result = _sentRepository.Count(x => x.PushedItem == contentId && x.Outcome == "ok");
+                }
+            }
+            catch (Exception ex) {
+                _myLog.WriteLog("PushGateway CountSentOnDb error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+            }
+            return result;
+        }
+        private void PushAndroid(List<PushNotificationVM> listdispositivo, bool produzione, PushMessage pushMessage, bool repeatable = false) {
+            listdispositivo = CleanRecipients(listdispositivo, pushMessage.idContent, repeatable);
+
+            // calcola la configurazione per Android
+            var pushSettings = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>();
             string setting = "";
             if (produzione)
-                setting = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidApiKey;
+                setting = pushSettings.AndroidApiKey;
             else
-                setting = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidApiKeyDevelopment;
+                setting = pushSettings.AndroidApiKeyDevelopment;
+            if (listdispositivo.Count > 0) {
+                if (string.IsNullOrWhiteSpace(setting)) {
+                    _myLog.WriteLog("Error PushAndroid: missing Android API Key.");
+                    _result.Errors = "Error PushAndroid: missing Android API Key.";
+                    return;
+                }
+            }
+            else {
+                // nessuna push da inviare
+                return;
+            }
             var config = new GcmConfiguration(setting);
-            var serviceUrl = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidPushServiceUrl;
-            var notificationIcon = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AndroidPushNotificationIcon;
+            var serviceUrl = pushSettings.AndroidPushServiceUrl;
+            var notificationIcon = pushSettings.AndroidPushNotificationIcon;
             if (string.IsNullOrWhiteSpace(serviceUrl)) {
                 // default: FCM
                 config.OverrideUrl("https://fcm.googleapis.com/fcm/send");
@@ -881,30 +1033,7 @@ namespace Laser.Orchard.Mobile.Services {
             else {
                 config.OverrideUrl(serviceUrl);
             }
-            var push = new GcmServiceBroker(config);
-            push.OnNotificationSucceeded += (notification) => {
-                NotificationSent(notification);
-            };
-            push.OnNotificationFailed += (notification, aggregateEx) => {
-                aggregateEx.Handle(ex => {
-                    if (ex is DeviceSubscriptionExpiredException) {
-                        var expiredException = (DeviceSubscriptionExpiredException)ex;
-                        var oldId = expiredException.OldSubscriptionId;
-                        var newId = expiredException.NewSubscriptionId;
-                        if (!string.IsNullOrWhiteSpace(newId)) {
-                            DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.Android);
-                        }
-                        else
-                            DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, produzione, TipoDispositivo.Android);
-                    }
-                    else {
-                        NotificationFailed(notification, aggregateEx);
-                    }
-
-                    // Mark it as handled
-                    return true;
-                });
-            };
+            
             // compone il payload
             StringBuilder sb = new StringBuilder();
             sb.Clear();
@@ -931,55 +1060,77 @@ namespace Laser.Orchard.Mobile.Services {
                 sbNotification.Append("}");
                 sbNotificationParsed = JObject.Parse(sbNotification.ToString());
             }
-            string hostCheck = _shellSetting.RequestUrlHost ?? "";
-            string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
-            string machineNameCheck = System.Environment.MachineName ?? "";
-            push.Start();
-            GcmNotification objNotification = null;
 
-            foreach (PushNotificationVM pnr in listdispositivo) {
-                try {
-                    // verifica che il device sia stato registrato nell'ambiente corrente
-                    if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck) && (pnr.RegistrationMachineName == machineNameCheck)) {
-                        objNotification = new GcmNotification {
-                            RegistrationIds = new List<string> { pnr.Token },
-                            Data = sbParsed,
-                            Priority = GcmNotificationPriority.High
-                            // necessario per bypassare il fatto che l'app non sia in whitelist
-                            //TimeToLive = 172800 //2 giorni espressi in secondi
-                        };
-                        if (sbNotification.Length > 0) {
-                            objNotification.Notification = sbNotificationParsed;
-                        }
-                        push.QueueNotification(objNotification);
-                        if ((repeatable == false) && (pushMessage.idContent > 0)) {
-                            SentRecord sr = new SentRecord {
-                                DeviceType = TipoDispositivo.Android.ToString(),
-                                PushNotificationRecord_Id = pnr.Id,
-                                PushedItem = pushMessage.idContent,
-                                SentDate = DateTime.UtcNow
-                            };
-                            lock (lockMonitor) {
-                                _sentRepository.Create(sr);
-                                _sentRepository.Flush();
+            int offset = 0;
+            int size = pushSettings.PushSendBufferSize == 0 ? 50 : pushSettings.PushSendBufferSize;
+            while (offset < listdispositivo.Count) {
+                InitializeRecipients(listdispositivo, offset, size, pushMessage.idContent, repeatable, pushSettings);
+                if (pushSettings.CommitSentOnly == false) {
+                    InitializeRecipientsOnDb();
+                }
+                // ciclo con retry sui nuovi
+                GcmNotification objNotification = null;
+                for (int i = 0; i < 2; i++) { // cicla 2 volte: la prima per i device in input, la seconda per quelli changed
+                    var push = new GcmServiceBroker(config);
+                    push.OnNotificationSucceeded += (notification) => {
+                        NotificationSent(notification);
+                    };
+                    push.OnNotificationFailed += (notification, aggregateEx) => {
+                        aggregateEx.Handle(ex => {
+                            if (ex is DeviceSubscriptionExpiredException) {
+                                var expiredException = (DeviceSubscriptionExpiredException)ex;
+                                var oldId = expiredException.OldSubscriptionId;
+                                var newId = expiredException.NewSubscriptionId;
+                                if (!string.IsNullOrWhiteSpace(newId)) {
+                                    DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.Android, repeatable);
+                                }
+                                else
+                                    DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, produzione, TipoDispositivo.Android);
                             }
+                            else {
+                                NotificationFailed(notification, aggregateEx);
+                            }
+                            // Mark it as handled
+                            return true;
+                        });
+                    };
+                    push.Start();
+                    foreach (var device in _sentRecords.Where(x => x.Value.Outcome == "")) {
+                        try {
+                            objNotification = new GcmNotification {
+                                RegistrationIds = new List<string> { device.Key },
+                                Data = sbParsed,
+                                Priority = GcmNotificationPriority.High
+                                // necessario per bypassare il fatto che l'app non sia in whitelist
+                                //TimeToLive = 172800 //2 giorni espressi in secondi
+                            };
+                            if (sbNotification.Length > 0) {
+                                objNotification.Notification = sbNotificationParsed;
+                            }
+                            push.QueueNotification(objNotification);
+                        }
+                        catch (Exception ex) {
+                            _myLog.WriteLog("PushAndroid retry error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                         }
                     }
-                }
-                catch (Exception ex) {
-                    _myLog.WriteLog("PushAndroid error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
-                }
-            }
+                    push.Stop();
+                    push = null;
+                } // end retry cicle
 
-            push.Stop();
+                UpdateDevicesOnDb(produzione);
+                UpdateOutcomesOnDb();
+                offset += size;
+            }
+            // check se ha tentato di inviare tutto o se è uscito per limite di push per ogni run
         }
 
         private void PushApple(List<PushNotificationVM> listdispositivo, bool produzione, PushMessage pushMessage, bool repeatable = false) {
-            if (repeatable == false) {
-                listdispositivo = RemoveSent(listdispositivo, pushMessage.idContent);
-            }
+            listdispositivo = CleanRecipients(listdispositivo, pushMessage.idContent, repeatable);
+
+            // calcola la configurazione per Apple
+            var pushSettings = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>();
             if (string.IsNullOrWhiteSpace(pushMessage.Sound))
-                pushMessage.Sound = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ApplePushSound;
+                pushMessage.Sound = pushSettings.ApplePushSound;
             if (string.IsNullOrWhiteSpace(pushMessage.Sound))
                 pushMessage.Sound = "sound.caf"; //default
             string setting_password = "";
@@ -988,100 +1139,101 @@ namespace Laser.Orchard.Mobile.Services {
             ApnsConfiguration.ApnsServerEnvironment environment = ApnsConfiguration.ApnsServerEnvironment.Sandbox;
             if (produzione) {
                 environment = ApnsConfiguration.ApnsServerEnvironment.Production;
-                setting_password = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AppleCertificatePassword;
-                setting_file = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\Mobile\" + _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ApplePathCertificateFile;
-                if (string.IsNullOrEmpty(_orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ApplePathCertificateFile))
+                setting_password = pushSettings.AppleCertificatePassword;
+                setting_file = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\Mobile\" + pushSettings.ApplePathCertificateFile;
+                if (string.IsNullOrEmpty(pushSettings.ApplePathCertificateFile))
                     certificateexist = false;
             }
             else {
-                setting_password = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().AppleCertificatePasswordDevelopment;
-                setting_file = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\Mobile\" + _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ApplePathCertificateFileDevelopment;
-                if (string.IsNullOrEmpty(_orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ApplePathCertificateFileDevelopment))
+                setting_password = pushSettings.AppleCertificatePasswordDevelopment;
+                setting_file = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSetting.Name + @"\Mobile\" + pushSettings.ApplePathCertificateFileDevelopment;
+                if (string.IsNullOrEmpty(pushSettings.ApplePathCertificateFileDevelopment))
                     certificateexist = false;
             }
-            if (certificateexist) {
-                var config = new ApnsConfiguration(environment, setting_file, setting_password);
-                var push = new ApnsServiceBroker(config);
-                push.OnNotificationSucceeded += (notification) => {
-                    NotificationSent(notification);
-                };
+            if (listdispositivo.Count > 0) {
+                if (certificateexist == false) {
+                    _myLog.WriteLog("Error PushApple: missing Apple certificate file.");
+                    _result.Errors = "Error PushApple: missing Apple certificate file.";
+                    return;
+                }
+            }
+            else {
+                // nessuna push da inviare
+                return;
+            }
+            var config = new ApnsConfiguration(environment, setting_file, setting_password);
 
-                push.OnNotificationFailed += (notification, aggregateEx) => {
-                    aggregateEx.Handle(ex => {
-                        if (ex is DeviceSubscriptionExpiredException) {
-                            var expiredException = (DeviceSubscriptionExpiredException)ex;
-
-                            var oldId = expiredException.OldSubscriptionId;
-                            var newId = expiredException.NewSubscriptionId;
-
-                            if (!string.IsNullOrWhiteSpace(newId)) {
-                                // If this value isn't null, our subscription changed
-
-                                DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.Apple);
-                            }
-                            else
-                                DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, produzione, TipoDispositivo.Apple);
-                        }
-                        else {
-                            NotificationFailed(notification, aggregateEx);
-                        }
-                        // Mark it as handled
-                        return true;
-                    });
-                };
-                // compone il payload
-                if (pushMessage.Text.Length > MAX_PUSH_TEXT_LENGTH) {
-                    _notifier.Information(T("Sent: message payload exceed the limit"));
-                    _myLog.WriteLog("Sent: message payload exceed the limit");
+            // compone il payload
+            JObject sbParsed = null;
+            if (pushMessage.Text.Length > MAX_PUSH_TEXT_LENGTH) {
+                _notifier.Information(T("Sent: message payload exceed the limit"));
+                _myLog.WriteLog("Sent: message payload exceed the limit");
+            }
+            else {
+                StringBuilder sb = new StringBuilder();
+                sb.Clear();
+                sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", FormatJsonValue(pushMessage.Text), FormatJsonValue(pushMessage.Sound));
+                if (!string.IsNullOrEmpty(pushMessage.Eu)) {
+                    sb.AppendFormat(",\"Eu\":\"{0}\"", FormatJsonValue(pushMessage.Eu));
                 }
                 else {
-                    StringBuilder sb = new StringBuilder();
-                    sb.Clear();
-                    sb.AppendFormat("{{ \"aps\": {{ \"alert\": \"{0}\", \"sound\":\"{1}\"}}", FormatJsonValue(pushMessage.Text), FormatJsonValue(pushMessage.Sound));
-                    if (!string.IsNullOrEmpty(pushMessage.Eu)) {
-                        sb.AppendFormat(",\"Eu\":\"{0}\"", FormatJsonValue(pushMessage.Eu));
-                    }
-                    else {
-                        sb.AppendFormat(",\"Id\":{0}", pushMessage.idContent);
-                        sb.AppendFormat(",\"Rid\":{0}", pushMessage.idRelated);
-                        sb.AppendFormat(",\"Ct\":\"{0}\"", FormatJsonValue(pushMessage.Ct));
-                        sb.AppendFormat(",\"Al\":\"{0}\"", FormatJsonValue(pushMessage.Al));
-                    }
-                    sb.Append("}");
-                    var sbParsed = JObject.Parse(sb.ToString());
-                    string hostCheck = _shellSetting.RequestUrlHost ?? "";
-                    string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
-                    string machineNameCheck = System.Environment.MachineName ?? "";
-                    push.Start();
-                    foreach (PushNotificationVM dispositivo in listdispositivo) {
-                        try {
-                            // verifica che il device sia stato registrato nell'ambiente corrente
-                            if ((dispositivo.RegistrationUrlHost == hostCheck) && (dispositivo.RegistrationUrlPrefix == prefixCheck) && (dispositivo.RegistrationMachineName == machineNameCheck)) {
-                                push.QueueNotification(new ApnsNotification {
-                                    DeviceToken = dispositivo.Token,
-                                    Payload = sbParsed,
-                                    LowPriority = false
-                                });
+                    sb.AppendFormat(",\"Id\":{0}", pushMessage.idContent);
+                    sb.AppendFormat(",\"Rid\":{0}", pushMessage.idRelated);
+                    sb.AppendFormat(",\"Ct\":\"{0}\"", FormatJsonValue(pushMessage.Ct));
+                    sb.AppendFormat(",\"Al\":\"{0}\"", FormatJsonValue(pushMessage.Al));
+                }
+                sb.Append("}");
+                sbParsed = JObject.Parse(sb.ToString());
+            }
 
-                                if ((repeatable == false) && (pushMessage.idContent > 0)) {
-                                    SentRecord sr = new SentRecord {
-                                        DeviceType = TipoDispositivo.Apple.ToString(),
-                                        PushNotificationRecord_Id = dispositivo.Id,
-                                        PushedItem = pushMessage.idContent,
-                                        SentDate = DateTime.UtcNow
-                                    };
-                                    lock (lockMonitor) {
-                                        _sentRepository.Create(sr);
-                                        _sentRepository.Flush();
-                                    }
+            int offset = 0;
+            int size = pushSettings.PushSendBufferSize == 0 ? 50 : pushSettings.PushSendBufferSize;
+            while (offset < listdispositivo.Count) {
+                InitializeRecipients(listdispositivo, offset, size, pushMessage.idContent, repeatable, pushSettings);
+                if (pushSettings.CommitSentOnly == false) {
+                    InitializeRecipientsOnDb();
+                }
+                // ciclo con retry sui nuovi
+                for (int i = 0; i < 2; i++) { // cicla 2 volte: la prima per i device in input, la seconda per quelli changed
+                    var push = new ApnsServiceBroker(config);
+                    push.OnNotificationSucceeded += (notification) => {
+                        NotificationSent(notification);
+                    };
+
+                    push.OnNotificationFailed += (notification, aggregateEx) => {
+                        aggregateEx.Handle(ex => {
+                            if (ex is DeviceSubscriptionExpiredException) {
+                                var expiredException = (DeviceSubscriptionExpiredException)ex;
+                                var oldId = expiredException.OldSubscriptionId;
+                                var newId = expiredException.NewSubscriptionId;
+                                if (!string.IsNullOrWhiteSpace(newId)) {
+                                    DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.Apple, repeatable);
                                 }
+                                else
+                                    DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, produzione, TipoDispositivo.Apple);
                             }
+                            else {
+                                NotificationFailed(notification, aggregateEx);
+                            }
+                            // Mark it as handled
+                            return true;
+                        });
+                    };
+                    push.Start();
+                    foreach (var device in _sentRecords.Where(x => x.Value.Outcome == "")) {
+                        try {
+                            push.QueueNotification(new ApnsNotification {
+                                DeviceToken = device.Key,
+                                Payload = sbParsed,
+                                LowPriority = false
+                            });
                         }
                         catch (Exception ex) {
-                            _myLog.WriteLog("PushApple error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                            _myLog.WriteLog("PushApple retry error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                         }
                     }
                     push.Stop();
+                    push = null;
 
                     // check sui device expired
                     try {
@@ -1094,47 +1246,35 @@ namespace Laser.Orchard.Mobile.Services {
                     catch (Exception ex) {
                         _myLog.WriteLog("PushApple-FeedbackService error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                     }
-                }
+                } // end retry cicle
+
+                UpdateDevicesOnDb(produzione);
+                UpdateOutcomesOnDb();
+                offset += size;
             }
         }
 
         private void PushWindows(List<PushNotificationVM> listdispositivo, bool produzione, PushMessage pushMessage, bool repeatable = false) {
-            if (repeatable == false) {
-                listdispositivo = RemoveSent(listdispositivo, pushMessage.idContent);
-            }
+            listdispositivo = CleanRecipients(listdispositivo, pushMessage.idContent, repeatable);
 
+            // calcola la configurazione per WindowsPhone
             // TODO: gestire settaggi produzione/sviluppo?
-            var setting_WindowsAppPackageName = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().WindowsAppPackageName;
-            var setting_WindowsAppSecurityIdentifier = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().WindowsAppSecurityIdentifier;
-            var setting_WindowsEndPoint = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().WindowsEndPoint;
+            var pushSettings = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>();
+            var setting_WindowsAppPackageName = pushSettings.WindowsAppPackageName;
+            var setting_WindowsAppSecurityIdentifier = pushSettings.WindowsAppSecurityIdentifier;
+            var setting_WindowsEndPoint = pushSettings.WindowsEndPoint;
+            if(listdispositivo.Count > 0) {
+                if (string.IsNullOrWhiteSpace(setting_WindowsAppPackageName) || string.IsNullOrWhiteSpace(setting_WindowsAppSecurityIdentifier) || string.IsNullOrWhiteSpace(setting_WindowsEndPoint)) {
+                    _myLog.WriteLog("Error PushWindows: missing Windows Mobile settings.");
+                    _result.Errors = "Error PushWindows: missing Windows Mobile settings.";
+                    return;
+                }
+            }
+            else {
+                // nessuna push da inviare
+                return;
+            }
             var config = new WnsConfiguration(setting_WindowsAppPackageName, setting_WindowsAppSecurityIdentifier, setting_WindowsEndPoint);
-            var push = new WnsServiceBroker(config);
-            push.OnNotificationSucceeded += (notification) => {
-                NotificationSent(notification);
-            };
-            push.OnNotificationFailed += (notification, aggregateEx) => {
-                aggregateEx.Handle(ex => {
-                    if (ex is DeviceSubscriptionExpiredException) {
-                        var expiredException = (DeviceSubscriptionExpiredException)ex;
-
-                        var oldId = expiredException.OldSubscriptionId;
-                        var newId = expiredException.NewSubscriptionId;
-
-                        if (!string.IsNullOrWhiteSpace(newId)) {
-                            // If this value isn't null, our subscription changed
-
-                            DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.WindowsMobile);
-                        }
-                        else
-                            DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, produzione, TipoDispositivo.WindowsMobile);
-                    }
-                    else {
-                        NotificationFailed(notification, aggregateEx);
-                    }
-                    // Mark it as handled
-                    return true;
-                });
-            };
 
             // genera il payload
             StringBuilder sb = new StringBuilder();
@@ -1151,59 +1291,90 @@ namespace Laser.Orchard.Mobile.Services {
             }
             sb.Append("</binding></visual></toast>");
             var sbXElement = XElement.Parse(sb.ToString());
-            string hostCheck = _shellSetting.RequestUrlHost ?? "";
-            string prefixCheck = _shellSetting.RequestUrlPrefix ?? "";
-            string machineNameCheck = System.Environment.MachineName ?? "";
-            push.Start();
-            foreach (PushNotificationVM pnr in listdispositivo) {
-                // verifica che il device sia stato registrato nell'ambiente corrente
-                try {
-                    if ((pnr.RegistrationUrlHost == hostCheck) && (pnr.RegistrationUrlPrefix == prefixCheck) && (pnr.RegistrationMachineName == machineNameCheck)) {
-                        push.QueueNotification(new WnsToastNotification {
-                            ChannelUri = pnr.Token,
-                            Payload = sbXElement
-                        });
 
-                        if ((repeatable == false) && (pushMessage.idContent > 0)) {
-                            SentRecord sr = new SentRecord {
-                                DeviceType = TipoDispositivo.WindowsMobile.ToString(),
-                                PushNotificationRecord_Id = pnr.Id,
-                                PushedItem = pushMessage.idContent,
-                                SentDate = DateTime.UtcNow
-                            };
-                            lock (lockMonitor) {
-                                _sentRepository.Create(sr);
-                                _sentRepository.Flush();
+            int offset = 0;
+            int size = pushSettings.PushSendBufferSize == 0 ? 50 : pushSettings.PushSendBufferSize;
+            while (offset < listdispositivo.Count) {
+                InitializeRecipients(listdispositivo, offset, size, pushMessage.idContent, repeatable, pushSettings);
+                if (pushSettings.CommitSentOnly == false) {
+                    InitializeRecipientsOnDb();
+                }
+                // ciclo con retry sui nuovi
+                for (int i = 0; i < 2; i++) { // cicla 2 volte: la prima per i device in input, la seconda per quelli changed
+                    var push = new WnsServiceBroker(config);
+                    push.OnNotificationSucceeded += (notification) => {
+                        NotificationSent(notification);
+                    };
+                    push.OnNotificationFailed += (notification, aggregateEx) => {
+                        aggregateEx.Handle(ex => {
+                            if (ex is DeviceSubscriptionExpiredException) {
+                                var expiredException = (DeviceSubscriptionExpiredException)ex;
+                                var oldId = expiredException.OldSubscriptionId;
+                                var newId = expiredException.NewSubscriptionId;
+                                if (!string.IsNullOrWhiteSpace(newId)) {
+                                    DeviceSubscriptionChanged(notification.GetType().Name, oldId, newId, expiredException.Notification, produzione, TipoDispositivo.WindowsMobile, repeatable);
+                                }
+                                else
+                                    DeviceSubscriptionExpired(notification.GetType().Name, oldId, expiredException.ExpiredAt, produzione, TipoDispositivo.WindowsMobile);
                             }
+                            else {
+                                NotificationFailed(notification, aggregateEx);
+                            }
+                            // Mark it as handled
+                            return true;
+                        });
+                    };
+                    push.Start();
+                    foreach (var device in _sentRecords.Where(x => x.Value.Outcome == "")) {
+                        try {
+                            push.QueueNotification(new WnsToastNotification {
+                                ChannelUri = device.Key,
+                                Payload = sbXElement
+                            });
+                        }
+                        catch (Exception ex) {
+                            _myLog.WriteLog("PushWindows retry error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                         }
                     }
-                }
-                catch (Exception ex) {
-                    _myLog.WriteLog("PushWindows error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
-                }
+                    push.Stop();
+                    push = null;
+                } // end retry cicle
+
+                UpdateDevicesOnDb(produzione);
+                UpdateOutcomesOnDb();
+                offset += size;
             }
-            push.Stop();
         }
 
         private string FormatJsonValue(string text) {
             return (text ?? "").Replace("\\", "\\\\").Replace("\"", "\\\"");
         }
 
-        private void DeviceSubscriptionChanged(object sender, string oldSubscriptionId, string newSubscriptionId, INotification notification, bool produzione, TipoDispositivo tipoDispositivo) {
+        private void DeviceSubscriptionChanged(object sender, string oldSubscriptionId, string newSubscriptionId, INotification notification, bool produzione, TipoDispositivo tipoDispositivo, bool repeatable) {
             try {
+                var srOld = _sentRecords.AddOrUpdate(oldSubscriptionId, new SentRecord(), (key, record) => {
+                    record.Outcome = "ex";
+                    return record;
+                });
+                var srNew = new SentRecord {
+                    DeviceType = srOld.DeviceType,
+                    Id = 0,
+                    PushedItem = srOld.PushedItem,
+                    PushNotificationRecord_Id = srOld.PushNotificationRecord_Id,
+                    SentDate = srOld.SentDate,
+                    Outcome = "",
+                    Repeatable = repeatable
+                };
+                _sentRecords.AddOrUpdate(newSubscriptionId, srNew, (key, record) => {
+                    return srNew;
+                });
+                _deviceChanges.Add(new DeviceChange {
+                    OldToken = oldSubscriptionId,
+                    NewToken = newSubscriptionId,
+                    Produzione = produzione,
+                    TipoDispositivo = tipoDispositivo.ToString()
+                });
                 _myLog.WriteLog(string.Format("Device Registration Changed:  Old-> {0}  New-> {1} -> {2}", oldSubscriptionId, newSubscriptionId, notification));
-                lock (lockMonitor) {
-                    List<PushNotificationRecord> pnrList = _pushNotificationRepository.Fetch(x => x.Token == oldSubscriptionId && x.Device == tipoDispositivo && x.Produzione == produzione).ToList();
-                    foreach (var pnr in pnrList) {
-                        IEnumerable<PushNotificationRecord> esiste_il_nuovo = _pushNotificationRepository.Fetch(x => x.Token == newSubscriptionId && x.Device == tipoDispositivo && x.Produzione == produzione);
-                        if (esiste_il_nuovo != null && esiste_il_nuovo.FirstOrDefault() != null)
-                            pnr.Validated = false;
-                        else
-                            pnr.Token = newSubscriptionId;
-                        _pushNotificationRepository.Update(pnr);
-                    }
-                    _pushNotificationRepository.Flush();
-                }
             }
             catch (Exception ex) {
                 _myLog.WriteLog("Error DeviceSubscriptionChanged: tipoDispositivo: " + tipoDispositivo + " -> oldSubscriptionId" + oldSubscriptionId + " -> newSubscriptionId" + newSubscriptionId + "Error :" + ex.Message + " StackTRace:" + ex.StackTrace);
@@ -1212,16 +1383,22 @@ namespace Laser.Orchard.Mobile.Services {
 
         private void NotificationSent(INotification notification) {
             try {
+                string token = "";
                 if (notification is ApnsNotification) {
-                    _myLog.WriteLog(string.Format("Sent: {0} -> {1} -> {2}", notification.GetType().Name, (notification as ApnsNotification).DeviceToken, notification));
+                    token = (notification as ApnsNotification).DeviceToken;
                 }
                 else if (notification is WnsNotification) {
-                    _myLog.WriteLog(string.Format("Sent: {0} -> {1} -> {2}", notification.GetType().Name, (notification as WnsNotification).ChannelUri, notification));
+                    token = (notification as WnsNotification).ChannelUri;
                 }
-                else {
-                    _myLog.WriteLog(string.Format("Sent: {0} -> {1}", notification.GetType().Name, notification));
+                else if(notification is GcmNotification) {
+                    token = (notification as GcmNotification).RegistrationIds[0];
                 }
-                messageSent++;
+                _myLog.WriteLog(string.Format("Sent: {0} -> {1} -> {2}", notification.GetType().Name, token, notification));
+                _sentRecords.AddOrUpdate(token, new SentRecord(), (key, record) => {
+                    record.Outcome = "ok";
+                    return record;
+                });
+                _messageSent++;
             }
             catch (Exception ex) {
                 _myLog.WriteLog("Error NotificationSent: notification: " + notification + " -> Error: " + ex.Message + " StackTRace: " + ex.StackTrace);
@@ -1253,6 +1430,10 @@ namespace Laser.Orchard.Mobile.Services {
                     }
                 }
                 _myLog.WriteLog(string.Format("Failure: {0} token: {1} -> {2} - InnerExceptions: {3}\r\n\t-> {4}", notification.GetType().Name, token, notificationFailureException.Message, innerEx.ToString(), notification.ToString()));
+                _sentRecords.AddOrUpdate(token, new SentRecord(), (key, record) => {
+                    record.Outcome = "ko";
+                    return record;
+                });
             }
             catch (Exception ex) {
                 _myLog.WriteLog(string.Format("Error NotificationFailed: {0} token: {1} -> Error: {2} StackTrace: {3}", notification.GetType().Name, token, ex.Message, ex.StackTrace));
@@ -1261,24 +1442,33 @@ namespace Laser.Orchard.Mobile.Services {
 
         private void DeviceSubscriptionExpired(object sender, string expiredDeviceSubscriptionId, DateTime timestamp, bool produzione, TipoDispositivo dispositivo) {
             try {
+                _sentRecords.AddOrUpdate(expiredDeviceSubscriptionId, new SentRecord(), (key, record) => {
+                    record.Outcome = "ex";
+                    return record;
+                });
                 _myLog.WriteLog(string.Format("Device Subscription Expired: {0} -> {1}", sender, expiredDeviceSubscriptionId));
-                lock (lockMonitor) {
-                    var myrepo = _pushNotificationRepository.Fetch(x => x.Token == expiredDeviceSubscriptionId && x.Produzione == produzione && x.Device == dispositivo).ToList();
-                    if (myrepo.Count() == 1) {
-                        PushNotificationRecord pnr = myrepo.FirstOrDefault();
-                        pnr.Validated = false;
-                        _pushNotificationRepository.Update(pnr);
-                        _pushNotificationRepository.Flush();
-                        _myLog.WriteLog(string.Format("Device Subscription Expired Action: {0} not validated -> {1}", sender, expiredDeviceSubscriptionId));
-                    }
-                    else {
-                        _myLog.WriteLog(string.Format("Device Subscription Expired Error: {0} -> token not found or token not unique: {1}", sender, expiredDeviceSubscriptionId));
-                    }
-                }
             }
             catch (Exception ex) {
                 _myLog.WriteLog(string.Format("Error DeviceSubscriptionExpired: tipoDispositivo: {0} -> expiredDeviceSubscriptionId: {1} - Error: {2} StackTrace: {3}", dispositivo, expiredDeviceSubscriptionId, ex.Message, ex.StackTrace));
             }
         }
+
+        /// <summary>
+        /// Classe di utility per la gestione dei token modificati
+        /// </summary>
+        private class DeviceChange {
+            public string OldToken { get; set; }
+            public string NewToken { get; set; }
+            public bool Produzione { get; set; }
+            public string TipoDispositivo { get; set; }
+
+            public DeviceChange() {
+                OldToken = "";
+                NewToken = "";
+                Produzione = false;
+                TipoDispositivo = "";
+            }
+        }
+
     }
 }

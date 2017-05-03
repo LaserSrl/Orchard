@@ -120,21 +120,41 @@
   <ItemGroup>
     <Compile Include="Activity\ButtonToWorkflowsForm.cs" />
     <Compile Include="Activity\ButtonToWorkflowsEvent.cs" />
+    <Compile Include="Activity\DynamicButtonToWorkflowsEvent.cs" />
+    <Compile Include="Activity\DynamicButtonToWorkflowsForm.cs" />
     <Compile Include="Drivers\ButtonToWorkflowsDriver.cs" />
     <Compile Include="Drivers\ButtonToWorkflowsSettingsPartDriver.cs" />
+    <Compile Include="Drivers\DynamicButtonToWorkflowsDriver.cs" />
+    <Compile Include="Drivers\DynamicButtonToWorkflowsSettingsPartDriver.cs" />
     <Compile Include="Handlers\ButtonToWorflowsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\ButtonToWorkflowsHandler.cs" />
+    <Compile Include="Handlers\DynamicButtonToWorflowsScheduledTaskHandler.cs" />
+    <Compile Include="Handlers\DynamicButtonToWorkflowsHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ButtonToWorkflowsPart.cs" />
     <Compile Include="Models\ButtonToWorkflowsSettingsPart.cs" />
+    <Compile Include="Models\DynamicButtonToWorkflowsPart.cs" />
+    <Compile Include="Models\DynamicButtonToWorkflowsRecord.cs" />
+    <Compile Include="Models\DynamicButtonToWorkflowsSettingsPart.cs" />
     <Compile Include="Permission\ButtonPermissions.cs" />
+    <Compile Include="Permission\DynamicButtonPermissions.cs" />
+    <Compile Include="Services\DynamicButtonToWorkflowsService.cs" />
     <Compile Include="Settings\ButtonsEvents.cs" />
     <Compile Include="Settings\ButtonsSetting.cs" />
+    <Compile Include="Settings\DynamicButtonsEvents.cs" />
+    <Compile Include="Settings\DynamicButtonsSetting.cs" />
     <Compile Include="ViewModels\ButtonToWorkflowsSettingsVM.cs" />
     <Compile Include="ViewModels\ButtonToWorkflowsVM.cs" />
+    <Compile Include="ViewModels\DynamicButtonToWorkflowsEditVM.cs" />
+    <Compile Include="ViewModels\DynamicButtonToWorkflowsSettingsVM.cs" />
+    <Compile Include="ViewModels\ValidationProviders\ValidateDynamicButtonData.cs" />
     <Content Include="Views\DefinitionTemplates\ButtonsSetting.cshtml" />
     <Content Include="packages.config" />
+    <Content Include="Views\EditorTemplates\DynamicButtonToWorkflowsEdit.cshtml" />
+    <Content Include="Views\DefinitionTemplates\DynamicButtonsSetting.cshtml" />
     <None Include="Views\EditorTemplates\Parts\ButtonToWorkflowsSettings_Edit.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\DynamicButtonToWorkflowsSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\DynamicButtonToWorkflows.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\ButtonToWorkflows.cshtml" />
@@ -144,6 +164,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
+      <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
+      <Name>Laser.Orchard.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
+      <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
+      <Name>Laser.Orchard.StartupConfig</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

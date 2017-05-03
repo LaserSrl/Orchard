@@ -85,12 +85,14 @@ namespace Laser.Orchard.UserReactions.Drivers {
         //Evento Edit
         protected override DriverResult Editor(UserReactionsPart part, dynamic shapeHelper) {
 
-            IList<UserReactionsVM> viewmodel = _userReactionService.GetTot(part);
+            List<UserReactionsVM> viewmodel = _userReactionService.GetTot(part);
+            UserReactionsTotalRec listUserView = new UserReactionsTotalRec();
+            listUserView.UserReactionsTotals = viewmodel;
+                return ContentShape("Parts_UserReactions_Edit", () => shapeHelper.EditorTemplate(
+                                      TemplateName: "Parts/UserReactionsEdit",
+                                      Model: listUserView,
+                                      Prefix: Prefix));
 
-            return ContentShape("Parts_UserReactions_Edit", () => shapeHelper.EditorTemplate(
-                                  TemplateName: "Parts/UserReactionsEdit",
-                                  Model: viewmodel,
-                                  Prefix: Prefix));
 
         }
 
