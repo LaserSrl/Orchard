@@ -691,7 +691,6 @@ input[type="number"]:focus {
     height: 65vh;
 }
 
-#media-library-main-list,
 #media-library-main-navigation {
     height: 100%;
 }
