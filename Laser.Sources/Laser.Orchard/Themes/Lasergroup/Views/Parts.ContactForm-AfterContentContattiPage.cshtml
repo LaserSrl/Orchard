@@ -89,6 +89,11 @@
 
 @using (Script.Foot()) {
     <script type="text/javascript">
+
+        function fnTrim(x) {
+            return x.replace(/^\s+|\s+$/gm, '');
+        }
+
         $(document).ready(function () {
             $('#attachment_button-@uniqueId').click(function () {
                 $.colorbox({ iframe: true, width: "40%", height: "26%", href: "@(Url.Action("Add", "FileUpload", new { Area = "Laser.Orchard.ContactForm" }) + "?ContactFormID=" + uniqueId)", title: "@T("Upload file")" });
@@ -103,10 +108,10 @@
             $("#btnInvia").click(function () {
                 var errors = 0;
 
-                var name = $('#Name-@uniqueId').val();
-                var email = $('#Email-@uniqueId').val();
-                var confirmEmail = $('#ConfirmEmail-@uniqueId').val();
-                var message = $('#Message-@uniqueId').val();
+                var name = fnTrim($('#Name-@uniqueId').val());
+                var email = fnTrim($('#Email-@uniqueId').val());
+                var confirmEmail = fnTrim($('#ConfirmEmail-@uniqueId').val());
+                var message = fnTrim($('#Message-@uniqueId').val());
 
                 // Name
                 if (name == '') {

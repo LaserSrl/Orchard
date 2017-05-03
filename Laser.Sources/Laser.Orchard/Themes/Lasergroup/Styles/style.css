@@ -490,6 +490,7 @@ body.page-template-page-business .title{ color:#FF0903; }
 #foto-sfondo .foto-sfondo-top{ background:#fff; position:absolute; width:100%; left:0; z-index:5; top:0px; height:50px; border-radius: 0 0 50% 50%; }
 #foto-sfondo .foto-sfondo-bottom{ background:#fff; position:absolute; width:100%; left:0; z-index:5; bottom:0px; height:50px; border-radius: 50% 50% 0 0; }
 #foto-sfondo .foto-sfondo-title{ font-size:60px; margin:0; font-weight:300; }
+#foto-sfondo a { color: #FFFFFF; text-decoration: none; }
 @media(max-width:1199px){ #foto-sfondo{ background-size:cover; background-attachment:scroll; }}
 @media(max-width:767px){
     #foto-sfondo .foto-sfondo-title{ font-size:30px; }
@@ -503,6 +504,7 @@ body.page-template-page-business .title{ color:#FF0903; }
 #footer .footer-title{ font-size:25px; font-weight:400; margin:0 0 10px; }
 #footer .footer-title img{ vertical-align:bottom; }
 #footer .footer-nav-title{ font-size:20px; }
+#footer .footer-sedi a { color: #767B7C; text-decoration: none; }
 #footer-menu{ border-left:2px solid #FF0903; padding-left:10px; font-size:16px; }
 #footer-menu > li > a{ padding:0; color:#333; }
 #footer-menu > li > a:hover,#footer-menu > li > a:focus{ background:none; color:#333; }
