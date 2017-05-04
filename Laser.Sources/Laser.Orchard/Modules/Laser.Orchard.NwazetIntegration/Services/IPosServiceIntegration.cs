@@ -1,24 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using Laser.Orchard.NwazetIntegration.Models;
 using Laser.Orchard.PaymentGateway.Models;
 using Laser.Orchard.PaymentGateway.ViewModels;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
+using Orchard;
 using Orchard.DisplayManagement;
+using Orchard.ContentManagement;
+using Orchard.Core.Title.Models;
+using System.Web.Mvc;
 
 namespace Laser.Orchard.NwazetIntegration.Services {
     public interface IPosServiceIntegration : ICheckoutService {
     }
 
     public class PosServiceIntegration : IPosServiceIntegration {
+        private readonly IOrchardServices _orchardServices; 
         private readonly IEnumerable<IPosService> _posServices;
         private readonly dynamic _shapeFactory;
+        private readonly IOrderService _orderService;
+        private readonly ICurrencyProvider _currencyProvider;
+        private readonly IPaymentService _paymentService;
 
-        public PosServiceIntegration(IEnumerable<IPosService> posServices, IShapeFactory shapeFactory) {
+        public PosServiceIntegration(
+            IOrchardServices orchardServices, 
+            IEnumerable<IPosService> posServices, 
+            IShapeFactory shapeFactory,
+            IOrderService orderService,
+            ICurrencyProvider currencyProvider,
+            IPaymentService paymentService) {
+            _orchardServices = orchardServices;
             _posServices = posServices;
             _shapeFactory = shapeFactory;
+            _orderService = orderService;
+            _currencyProvider = currencyProvider;
+            _paymentService = paymentService;
         }
 
         public string Name
@@ -30,24 +47,60 @@ namespace Laser.Orchard.NwazetIntegration.Services {
         }
 
         public dynamic BuildCheckoutButtonShape(IEnumerable<dynamic> productShapes, IEnumerable<ShoppingCartQuantityProduct> productQuantities, IEnumerable<ShippingOption> shippingOptions, TaxAmount taxes, string country, string zipCode, IEnumerable<string> custom) {
-            //throw new NotImplementedException();
-            decimal amount = 100;
-
-            PaymentVM model = new PaymentVM {
-                Record = new PaymentRecord {
-                    Reason = "Buy products",
-                    Amount = amount,
-                    Currency = "EUR",
-                    ContentItemId = 0
-                },
-                PosList = _posServices.ToList(),
-                ContentItem = null
-            };
-            return _shapeFactory.Pos(model);
+            var charge = new KrakePaymentCharge();
+            List<CheckoutItem> items = new List<CheckoutItem>();
+            double subTotal = 0;
+            double total = 0;
+            foreach(var prod in productQuantities) {
+                items.Add(new CheckoutItem {
+                    Attributes =prod.AttributeIdsToValues,
+                    LinePriceAdjustment =prod.LinePriceAdjustment,
+                    OriginalPrice = prod.OriginalPrice,
+                    Price = prod.Price,
+                    ProductId = prod.Product.Id,
+                    PromotionId = prod.Promotion == null ? null : (int?)(prod.Promotion.Id),
+                    Quantity = prod.Quantity,
+                    Title = prod.Product.ContentItem.As<TitlePart>().Title
+                });
+                subTotal += prod.Price;
+            }
+            total = subTotal;
+            bool insertOrder = false;
+            foreach(var opt in shippingOptions) {
+                if(opt != null) {
+                    insertOrder = true;
+                    total += opt.Price;
+                }
+            }
+            if (insertOrder) {
+                var order = _orderService.CreateOrder(charge, items, subTotal, total, taxes, null, null, null, null, null, null, OrderPart.Cancelled);
+                decimal amount = new decimal(total);
+                PaymentVM payment = new PaymentVM {
+                    Record = new PaymentRecord {
+                        Reason = string.Format("Purchase Order kpo{0}", order.Id),
+                        Amount = amount,
+                        Currency = "USD", // TODO: leggere questo valore dai settings
+                        ContentItemId = order.Id
+                    },
+                    PosList = _posServices.ToList(),
+                    ContentItem = null
+                };
+                return _shapeFactory.Pos(Payment: payment);
+            }
+            else {
+                return null;
+            }
         }
 
         public string GetChargeAdminUrl(string transactionId) {
-            return _posServices.ElementAt(0).GetPosActionUrl(transactionId);
+            string result = "";
+            var payment = _paymentService.GetPaymentByTransactionId(transactionId);
+            if(payment != null) {
+                var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                var url = urlHelper.Action("Info", "Payment", new { area = "Laser.Orchard.PaymentGateway" });
+                result = string.Format("{0}?paymentId={1}", url, payment.Id);
+            }
+            return result;
         }
     }
 }
