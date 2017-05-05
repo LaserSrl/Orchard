@@ -13,4 +13,6 @@
         });
     </script>
 }
-<button type="button" id="payButton" style="padding: 10px 10px">@T("Checkout")</button>
+@using (Html.BeginFormAntiForgeryPost(Url.Action())) {
+    <button type="button" id="payButton" style="padding: 10px 10px">@T("Checkout")</button>
+}
