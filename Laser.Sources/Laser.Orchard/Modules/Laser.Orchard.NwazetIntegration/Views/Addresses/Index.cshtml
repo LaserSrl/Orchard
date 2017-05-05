@@ -18,7 +18,7 @@
     @Html.HiddenFor(m => m.OrderId)
     <fieldset>
         <legend>@T("Shipping Address")</legend>
-        @*@Display.AddressForm(Prefix: "ShippingAddress", Address: Model.ShippingAddress)*@
+        @Display.AddressForm(Prefix: "ShippingAddress", Address: Model.ShippingAddress)
     </fieldset>
     <fieldset class="toggle-billing">
         <input id="toggle-billing-address" type="checkbox" checked="checked" />
@@ -26,7 +26,7 @@
     </fieldset>
     <fieldset class="billing-address">
         <legend>@T("Billing Address")</legend>
-        @*@Display.AddressForm(Prefix: "BillingAddress", Address: Model.BillingAddress)*@
+        @Display.AddressForm(Prefix: "BillingAddress", Address: Model.BillingAddress)
     </fieldset>
 
     <label for="email">@T("email")</label>

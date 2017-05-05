@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Nwazet.Commerce.Models;
+﻿using Nwazet.Commerce.Models;
 
 namespace Laser.Orchard.NwazetIntegration.Models {
     public class KrakePaymentCharge : ICharge {

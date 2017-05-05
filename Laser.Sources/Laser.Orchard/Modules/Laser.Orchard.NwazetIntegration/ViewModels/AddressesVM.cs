@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Laser.Orchard.NwazetIntegration.Models;
+using Nwazet.Commerce.Models;
 
 namespace Laser.Orchard.NwazetIntegration.ViewModels {
     public class AddressesVM {
