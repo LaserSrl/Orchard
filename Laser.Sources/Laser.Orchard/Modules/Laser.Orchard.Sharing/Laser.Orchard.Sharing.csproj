@@ -145,16 +145,9 @@
     <Content Include="Views\DefinitionTemplates\ShareBarTypePartSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Modes\ShareBar.VerticalShareCounter.cshtml" />
-    <Content Include="Views\Modes\ShareBar.HorizontalShareCounter.cshtml" />
-    <Content Include="Views\Modes\ShareBar.ToolboxFacebookLike.cshtml" />
-    <Content Include="Views\Modes\ShareBar.Css3StyleButtons.cshtml" />
-    <Content Include="Views\Modes\ShareBar.RetweetLikeShare.cshtml" />
-    <Content Include="Views\Modes\ShareBar.MediumIcons.cshtml" />
     <Content Include="Views\Parts\Share.ShareBar.cshtml" />
     <Content Include="Views\Modes.ShareBar.GoogleLikeShare.cshtml" />
     <Content Include="packages.config" />
-    <None Include="Views\Modes\ShareBar.TweetLikeShare.cshtml" />
     <Content Include="Views\Modes.ShareBar.Css3StyleButtons.cshtml" />
     <Content Include="Views\Modes.ShareBar.VerticalShareCounter.cshtml" />
     <Content Include="Views\Modes.ShareBar.HorizontalShareCounter.cshtml" />

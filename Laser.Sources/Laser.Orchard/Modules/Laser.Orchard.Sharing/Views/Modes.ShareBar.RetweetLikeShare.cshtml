@@ -10,12 +10,7 @@
         <a class="addthis_button_compact">Share</a>
     </div>
     <script type="text/javascript">        var addthis_config = { "data_track_clickback": true };</script>
-    @if ((Model.ViewModel.Account as string)[0] == '#') {
-        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js@(Model.ViewModel.Account as string)"></script>
-    }
-    else {
-        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#username=@(Model.ViewModel.Account as string)"></script>
-    }
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=@(Model.ViewModel.Account as string)"></script>
     <!-- AddThis Button END -->
     @*@LinkShare.GetHtml(Model.ViewModel.Title as string, Model.ViewModel.Link as string)*@
 </div>
