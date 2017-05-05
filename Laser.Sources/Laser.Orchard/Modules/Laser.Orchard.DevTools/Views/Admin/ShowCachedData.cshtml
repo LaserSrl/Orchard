@@ -27,7 +27,7 @@
     </tfoot>
     @foreach (string sc in Model) {
         <tr>
-            <td>@sc&nbsp</td>
+            <td>@sc&nbsp;</td>
             <td>
                 <a class="button primaryAction" href="@Url.Action("ShowCachedDataEdit", "Admin", new { area = "Laser.Orchard.DevTools", key = sc })" title="@T("Edit")">@T("Edit")</a></td>
             <td>

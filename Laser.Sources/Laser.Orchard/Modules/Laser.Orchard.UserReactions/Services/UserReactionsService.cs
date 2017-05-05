@@ -24,7 +24,7 @@ namespace Laser.Orchard.UserReactions.Services {
     public interface IUserReactionsService : IDependency {
         IQueryable<UserReactionsTypesRecord> GetTypesTable();
         UserReactionsTypes GetTypesTableWithStyles();
-        IList<UserReactionsVM> GetTot(UserReactionsPart part);
+        List<UserReactionsVM> GetTot(UserReactionsPart part);
         UserReactionsVM CalculateTypeClick(int IconType, int CurrentPage);
         ReactionsSummaryVM GetSummaryReaction(int CurrentPage);
         UserReactionsPartSettings GetSettingPart(UserReactionsPartSettings Model);
@@ -240,7 +240,7 @@ namespace Laser.Orchard.UserReactions.Services {
         /// </summary>
         /// <param name="part"></param>
         /// <returns></returns>       
-        public IList<UserReactionsVM> GetTot(UserReactionsPart part) {
+        public List<UserReactionsVM> GetTot(UserReactionsPart part) {
             //Part
             IList<UserReactionsVM> viewmodel = new List<UserReactionsVM>();
             //settings type

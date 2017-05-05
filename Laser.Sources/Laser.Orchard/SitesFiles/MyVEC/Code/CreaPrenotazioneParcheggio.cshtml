@@ -74,6 +74,7 @@
         prenotazione.ActivityPart.DateTimeStart = invito.ActivityPart.DateTimeStart;
         prenotazione.ActivityPart.DateTimeEnd = invito.ActivityPart.DateTimeEnd;
         prenotazione.ActivityPart.AllDay = invito.ActivityPart.AllDay;
+        prenotazione.CommonPart.Owner = dUser.UserPart;
         // salva
 		prenotazione.VersionRecord.Published = false;
         _contentManager.Publish(prenotazione);

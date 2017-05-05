@@ -10,16 +10,19 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.MediaLibrary.Models;
+using Laser.Orchard.ShareLink.Servicies;
 
 namespace Laser.Orchard.ShareLink.Handlers {
 
     public class ShareLinkHandler : ContentHandler {
         private readonly ITokenizer _tokenizer;
         private readonly IOrchardServices _orchardServices;
-        public ShareLinkHandler(IRepository<ShareLinkPartRecord> repository, ITokenizer tokenizer, IOrchardServices orchardServices) {
+        private readonly IShareLinkService _sharelinkService;
+        public ShareLinkHandler(IRepository<ShareLinkPartRecord> repository, ITokenizer tokenizer, IOrchardServices orchardServices, IShareLinkService sharelinkService) {
             Filters.Add(StorageFilter.For(repository));
             _orchardServices = orchardServices;
             _tokenizer = tokenizer;
+            _sharelinkService = sharelinkService;
             OnGetDisplayShape<ShareLinkPart>((context, part) => {
                 var moduleSetting = _orchardServices.WorkContext.CurrentSite.As<ShareLinkModuleSettingPart>();
                 var partSetting = part.Settings.GetModel<ShareLinkPartSettingVM>();
@@ -50,36 +53,22 @@ namespace Laser.Orchard.ShareLink.Handlers {
                 if (!(partSetting.ShowImageChoise)) {
                     if (!string.IsNullOrEmpty(partSetting.SharedImage)) {
                         ListId = _tokenizer.Replace(partSetting.SharedImage, tokens);
-                        part.SharedImage = getimgurl(ListId);
+                        part.SharedImage = _sharelinkService.GetImgUrl(ListId);
 
                     }
                     else {
                         if (!string.IsNullOrEmpty(moduleSetting.SharedImage)) {
                             ListId = _tokenizer.Replace(moduleSetting.SharedImage, tokens);
-                            part.SharedImage = getimgurl(ListId);
+                            part.SharedImage = _sharelinkService.GetImgUrl(ListId);
 
                         }
                     }
 
                     part.SharedIdImage = part.SharedImage.Replace("{", "").Replace("}", "");
-                    part.SharedImage = getimgurl(part.SharedIdImage);
+                    part.SharedImage = _sharelinkService.GetImgUrl(part.SharedIdImage);
                 }
             });
 
-        }
-        private string getimgurl(string idimg) {
-            var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-            Int32 idimage = 0;
-            Int32.TryParse(idimg.Replace("{", "").Replace("}", "").Split(',')[0], out idimage); ;
-            if (idimage > 0) {
-                var ContentImage = _orchardServices.ContentManager.Get(idimage, VersionOptions.Published);
-                if(ContentImage != null) {
-                    return urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
-                }
-                return "";
-            }
-            else
-                return idimg; // non ho passato un id e quindi sarà un link
         }
     }
 }
