@@ -102,15 +102,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AddressesController.cs" />
+    <Compile Include="Models\Address.cs" />
     <Compile Include="Models\KrakePaymentCharge.cs" />
     <Compile Include="PaymentEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CurrencyProviderService.cs" />
     <Compile Include="Services\IPosServiceIntegration.cs" />
+    <Compile Include="ViewModels\AddressesVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets.json" />
     <Content Include="Assets\Styles.less" />
+    <Content Include="Scripts\ship.js" />
     <Content Include="Styles\Styles.css" />
     <Content Include="Styles\Styles.min.css" />
     <Content Include="Web.config" />
@@ -118,7 +121,9 @@
     <Content Include="Styles\Web.config" />
     <Content Include="Module.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\AddressForm.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Nwazet.Commerce\Nwazet.Commerce.csproj">
       <Project>{909acc2c-d672-4752-b75b-6822e05fe0e3}</Project>

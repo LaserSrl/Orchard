@@ -1,18 +1,3 @@
-﻿@{
-    Script.Require("jQuery").AtHead();
-    var payment = Model.Payment.Record;
-}
-@using (Script.Head()) {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var query = "reason=@Url.Encode(payment.Reason)&amount=@Convert.ToString(payment.Amount, System.Globalization.CultureInfo.InvariantCulture)&currency=@Url.Encode(payment.Currency)&itemId=@payment.ContentItemId.ToString()";
-            //self.location = "@Url.Action("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway" })?" + query;
-            $("#payButton").click(function () {
-                self.location = "@Url.Action("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway" })?" + query;
-            });
-        });
-    </script>
-}
-@using (Html.BeginFormAntiForgeryPost(Url.Action())) {
-    <button type="button" id="payButton" style="padding: 10px 10px">@T("Checkout")</button>
+﻿@using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Addresses", new { area = "Laser.Orchard.NwazetIntegration", OrderId = Model.OrderId }))) {
+    <button type="submit" id="payButton" style="padding: 10px 10px">@T("Checkout")</button>
 }

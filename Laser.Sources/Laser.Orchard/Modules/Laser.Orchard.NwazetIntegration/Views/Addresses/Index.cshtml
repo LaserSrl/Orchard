@@ -1,8 +1,47 @@
-﻿@using (Html.BeginFormAntiForgeryPost()) {
+﻿@model Laser.Orchard.NwazetIntegration.ViewModels.AddressesVM
+@using System.Web.Mvc;
+@{
+    var title = Layout.Title = T("Checkout: Shipping & Billing Addresses");
+    Script.Require("jQuery");
+    Script.Include("ship.js");
+    using (Script.Foot()) {
+        <script type="text/javascript">
+            var requiredFormat = "@T("{0} is required.")",
+                required = "@T("Required information")";
+        </script>
+    }
+}
+<h1>@title</h1>
+<div class="ship-errors"></div>
 
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Index"), FormMethod.Post, new { @id = "address-form" })) {
+    @Html.HiddenFor(m => m.OrderId)
+    <fieldset>
+        <legend>@T("Shipping Address")</legend>
+        @*@Display.AddressForm(Prefix: "ShippingAddress", Address: Model.ShippingAddress)*@
+    </fieldset>
+    <fieldset class="toggle-billing">
+        <input id="toggle-billing-address" type="checkbox" checked="checked" />
+        <label for="toggle-billing-address" class="for-checkbox">@T("Bill me at the shipping address.")</label>
+    </fieldset>
+    <fieldset class="billing-address">
+        <legend>@T("Billing Address")</legend>
+        @*@Display.AddressForm(Prefix: "BillingAddress", Address: Model.BillingAddress)*@
+    </fieldset>
 
+    <label for="email">@T("email")</label>
+    <input id="email" type="text" name="Email" value="@Model.Email" class="input-large required" />
+    <div class="hint">@T("Please provide an e-mail address for us to use in order to give you updates on your order.")</div>
 
+    <label for="phone">@T("Phone")</label>
+    <input id="phone" type="text" name="Phone" value="@Model.Phone" class="input-large" />
+    <div class="hint">@T("Please provide a phone number where we can reach you in case we need additional information. This is also required when shipping to some countries.")</div>
 
-    <button type="submit" id="payButton" style="padding: 10px 10px">@T("Next")</button>
-    <button type="submit" id="cartButton" formaction="" style="padding: 10px 10px">@T("Back to cart")</button>
+    <label for="@Html.Id("specialInstructions")">@T("Special Instructions")</label>
+    <textarea id="@Html.Id("specialInstructions")" name="@Html.Name("SpecialInstructions")" rows="6" cols="80" class="input-xxlarge"></textarea>
+
+    <div>
+        <button type="submit" id="payButton" name="Submit" value="save" style="padding: 10px 10px">@T("Next")</button>
+        <button type="submit" id="cartButton" name="Submit" value="cart" style="padding: 10px 10px">@T("Back to cart")</button>
+    </div>
 }
