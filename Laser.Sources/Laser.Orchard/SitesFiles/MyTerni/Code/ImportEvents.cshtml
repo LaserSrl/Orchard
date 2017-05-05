@@ -1,0 +1,245 @@
+﻿@using JsonHelper = System.Web.Helpers;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Net;
+@using System.Globalization;
+@using Orchard.Autoroute.Models;
+@using Orchard.ContentManagement;
+@using Orchard.Core.Common.Models;
+@using Orchard.Core.Title.Models;
+@using Orchard.MediaLibrary.Services;
+@using Orchard.Fields.Fields;
+@using Orchard.Data;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
+@using Orchard.MediaLibrary.Models;
+@using Orchard.Security;
+@using Orchard.Taxonomies.Services;
+@using Orchard.Taxonomies.Models;
+@using Orchard.Users.Models;
+@using Orchard.Utility.Extensions;
+@using Laser.Orchard.Maps.Models;
+@using Laser.Orchard.ShareLink.Models;
+@using Laser.Orchard.Events.Models;
+@using Orchard.Workflows;
+@using Orchard.Localization;
+@using Orchard.Localization.Models;
+
+
+
+@functions{
+    string retString = "";
+    IContentManager _contentManager;
+    ITaxonomyService _taxonomyService;
+    Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
+    IMediaLibraryService _mediaLibraryService;
+    IEnumerable<TermPart> taxoTerms;
+    IMembershipService _membershipService;
+    IUser creator;
+    int creatorId;
+    Orchard.Workflows.Models.WorkflowContext wfCtx = null;
+    Orchard.Data.IRepository<Orchard.Localization.Records.CultureRecord> _cultureRepository;
+}
+@{
+    try {
+        wfCtx = Model.Tokens["Workflow"];
+        //get services
+        _cultureRepository = Model.OrchardServices.WorkContext.Resolve<Orchard.Data.IRepository<Orchard.Localization.Records.CultureRecord>>();
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _taxonomyService = Model.OrchardServices.WorkContext.Resolve<ITaxonomyService>();
+        _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<Orchard.Data.IRepository<FieldIndexPartRecord>>();
+        _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
+        _mediaLibraryService = Model.OrchardServices.WorkContext.Resolve<IMediaLibraryService>();
+        creator = _membershipService.GetUser("ImportRobot");
+        creatorId = creator.Id;
+        //
+        //http://dati.umbria.it/dataset
+        //	Attrattori
+        //	Eventi http://dati.umbria.it/dataset/410faa97-546b-4362-a6d7-f8794d18ed19/resource/8afe729a-0f59-4647-95ee-481577e83bea/download/eventijsonitit.zipeventiitit.json
+        //	Proposte (itinerari)
+        taxoTerms = _taxonomyService.GetTerms(_taxonomyService.GetTaxonomyByName("Categoria Eventi").Id);
+        bool faitestcomune = true;
+        int importamax = 30000;
+        string codicecomune = "055032";
+        string codicecomune2 = "55032";
+        string DefaultComune = "Terni";
+        float DefaultComunelat = 42.567133f;
+        float DefaultComunelng = 12.649871f;
+
+        List<string> Tassonomiedaescudere = new List<string>(new string[] { "Assisi", "Bevagna", "Castiglione del Lago", "Città della Pieve", "Foligno", "Gubbio", "Magione", "Montefalco", "Paciano", "Panicale", "Passignano sul Trasimeno", "Perugia", "Piegaro", "Spello", "Trevi", "Tuoro sul Trasimeno", "Umbertide" });
+
+        // Test esistenza MediaFolder
+        var mFolders = _mediaLibraryService.GetMediaFolders(null).Where(mf => mf.Name == "ImportedMediaResources");
+        if (mFolders.Count() == 0) {
+            _mediaLibraryService.CreateFolder(null, "ImportedMediaResources");
+        }
+
+        WebResponse resp;
+        string url = String.Format("http://dati.umbria.it/dataset/410faa97-546b-4362-a6d7-f8794d18ed19/resource/8afe729a-0f59-4647-95ee-481577e83bea/download/eventijsonitit.zipeventiitit.json");
+        //retString += url;
+        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+        req.Headers.Add(HttpRequestHeader.ContentEncoding, "gzip");
+        req.Method = "GET";
+        req.ContentType = "application/json; charset=utf-8";
+        resp = req.GetResponse();
+        string respstring = "";
+        using (var sr = new StreamReader(resp.GetResponseStream())) {
+            respstring = sr.ReadToEnd();
+        }
+        dynamic jsonObj = JsonHelper.Json.Decode(respstring);
+
+        int importati = 0;
+        foreach (var elem in jsonObj.contenuto) {
+
+            ContentItem mycontent = null;
+            // se comune terni
+            if (importati < importamax &&  (!faitestcomune || (elem["codice-istat-comune"] != null && (((string)(elem["codice-istat-comune"])).Equals(codicecomune) || (((string)(elem["codice-istat-comune"])).Equals(codicecomune2)))))) {
+                importati++;
+                string idcontenuto = elem["id-contenuto"];
+                System.Linq.Expressions.Expression<Func<FieldIndexPartRecord, bool>> CheckFieldIndexRecord = fip =>
+                    fip.StringFieldIndexRecords.Any(sfi =>
+                    sfi.PropertyName.Contains("CalendarEvent.RemoteId.")
+                    && sfi.Value.Contains(idcontenuto));
+                var fieldsQuery = _fieldIndexPartRecord.Table.Where(CheckFieldIndexRecord);
+                List<int> calEventsIds = fieldsQuery.Select(fip => fip.ContentItemRecord.Id).ToList();
+                foreach (var idcalEvent in calEventsIds) {
+                    if (idcalEvent > 0 && mycontent == null) {
+                        mycontent = _contentManager.Get(idcalEvent, VersionOptions.Published);
+                    }
+                }
+                if (mycontent == null) {
+                    mycontent = _contentManager.New("CalendarEvent");
+                    _contentManager.Create(mycontent);
+                }
+                //Title
+                mycontent.As<TitlePart>().Title = elem.titolo??"";
+                //
+
+                // SubTitle
+                //      ((dynamic)mycontent).CalendarEvent.​SubTitle.Value = elem["titolo-testo"];
+
+                // RemoteId
+                ((dynamic)mycontent).CalendarEvent.​RemoteId.Value = elem["id-contenuto"];
+
+                // Body calcolo
+                string body = "";
+                try {
+                    foreach (var pezBody in elem.descrizioni) {
+                        if (pezBody.titolo != null) {
+                            body += "<strong>" + pezBody.titolo + "</strong><br/><br/>";
+                        }
+                        if (pezBody.corpo != null) {
+                            body += pezBody.corpo + "<br/><br/>";
+                        }
+                    }
+                }
+                catch (Exception ex) { }
+
+                // Body
+                mycontent.As<BodyPart>().Format = "Html";
+                mycontent.As<BodyPart>().Text = body ?? "";
+
+
+                //Localization
+                mycontent.As<LocalizationPart>().Culture = _cultureRepository.Table.ToList().Where(cr => cr.Culture.IndexOf("it-IT") == 0).FirstOrDefault();
+
+                //Categoria
+                // pulisci categoria da dati che non sono categorie
+                var elencocompletocategorie = (((Array)elem["categorie-associate"]).OfType<string>()).ToList();
+                elencocompletocategorie.Remove(elem.comune);
+                var elencocategorie = elencocompletocategorie.Except(Tassonomiedaescudere);
+                //
+                foreach (string cate in elencocategorie) {
+                    string stringcate = cate.Trim();
+                    var term = taxoTerms.Where(t => t.Name.Equals(stringcate, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                    if (term == null) {
+                        // add term to taxonomy
+                        term = _taxonomyService.NewTerm(_taxonomyService.GetTaxonomyByName("Categoria Eventi"));
+                        term.Name = stringcate;
+                        term.Selectable = true;
+                        _contentManager.Create(term, VersionOptions.Published);
+                        taxoTerms = _taxonomyService.GetTerms(_taxonomyService.GetTaxonomyByName("Categoria Eventi").Id);
+                    }
+                    mycontent.As<TermsPart>().Terms.Add(new TermContentItem {
+                        TermsPartRecord = mycontent.As<TermsPart>().Record,
+                        TermRecord = term.Record,
+                        Field = "Categoria"
+                    });
+                }
+
+                // Common
+                var commonPart = mycontent.As<CommonPart>();
+                if (commonPart != null) {
+                    commonPart.Owner = creator;
+                    commonPart.ModifiedUtc = DateTime.UtcNow;
+                    ((NumericField)commonPart.Fields.Where(x => x.Name.Equals("Creator")).SingleOrDefault()).Value = creatorId;
+                    ((NumericField)commonPart.Fields.Where(x => x.Name.Equals("LastModifier")).SingleOrDefault()).Value = creatorId;
+                }
+
+                // Gallery
+                Dictionary<string, int> urlPresenti = new Dictionary<string, int>();
+                foreach (int idimage in ((dynamic)mycontent).CalendarEvent.Gallery.Ids) {
+                    var imagepart = _contentManager.Get<MediaPart>(idimage);
+                    if (imagepart != null) {
+                        urlPresenti.Add(imagepart.FileName.Trim(), idimage);
+                    }
+                }
+                List<int> galleryids = new List<int>();
+                if (elem.Immagini != null) {
+                    try {
+                        foreach (var jsonimage in elem.Immagini) {
+                            string urlimage = jsonimage.url.Trim();
+                            if (!urlPresenti.Keys.Contains(urlimage)) {
+                                var orchardimg = _contentManager.New<MediaPart>("Image");
+                                orchardimg.MimeType = "image/jpg";
+                                orchardimg.LogicalType = "Picture";
+                                orchardimg.FolderPath = "ImportedMediaResources";
+                                orchardimg.Title = (string)jsonimage.testoAlternativo ?? "";
+                                orchardimg.FileName = urlimage;
+                                _contentManager.Create(orchardimg);
+                                galleryids.Add(orchardimg.Id);
+                            }
+                            else {
+                                galleryids.Add(urlPresenti[urlimage]);
+                            }
+                        }
+                    ((dynamic)mycontent).CalendarEvent.Gallery.Ids = galleryids.ToArray();
+                    }catch(Exception ex) { }
+                }
+                // Activity
+                if (elem["data-inizio"] != null) {
+                    mycontent.As<ActivityPart>().DateTimeStart = DateTime.Parse(elem["data-inizio"]);
+                }
+                if (elem["data-fine"] != null) {
+                    mycontent.As<ActivityPart>().DateTimeEnd = DateTime.Parse(elem["data-fine"]);
+                }
+
+                // Autoroute
+                mycontent.As<AutoroutePart>().DisplayAlias = "Event_" + elem["id-contenuto"].ToString();
+
+                //Map
+                if (elem.coordinate != null && elem.coordinate.latitudine != null && elem.coordinate.longitudine != null) {
+                    mycontent.As<MapPart>().LocationInfo = elem.comune;
+                    mycontent.As<MapPart>().Latitude = float.Parse(elem.coordinate.latitudine, CultureInfo.InvariantCulture.NumberFormat);
+                    mycontent.As<MapPart>().Longitude = float.Parse(elem.coordinate.longitudine, CultureInfo.InvariantCulture.NumberFormat);
+                }
+                else {
+                    mycontent.As<MapPart>().LocationInfo = DefaultComune;
+                    mycontent.As<MapPart>().Latitude = DefaultComunelat;
+                    mycontent.As<MapPart>().Longitude = DefaultComunelng;
+                }
+
+                // pubblico il contenuto
+                mycontent.VersionRecord.Published = false;
+                _contentManager.Publish(mycontent);
+            }
+        }
+        retString = "Done";
+    }
+    catch (Exception ex) {
+        wfCtx.SetState("ErrorMessage", ex.Message +" stack: "+ ex.StackTrace);
+
+        retString = "Error";
+    }
+}@retString
