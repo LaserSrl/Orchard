@@ -2,7 +2,12 @@
     Script.Require("jQuery").AtHead();
 }
 @using (Script.Foot()) {
-    <script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js#pubid=@(Model.ViewModel.Account as string)&async=1"> </script>
+    if ((Model.ViewModel.Account as string)[0] == '#') {
+        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js@(Model.ViewModel.Account as string)"></script>
+    }
+    else {
+        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#username=@(Model.ViewModel.Account as string)"></script>
+    }
 
 }
 @using (Script.Foot())
