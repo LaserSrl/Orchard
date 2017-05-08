@@ -44,7 +44,8 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
                             Title = prod.Product.ContentItem.As<TitlePart>().Title
                         });
                     }
-                    var charge = new KrakePaymentCharge();
+                    var paymentGuid = Guid.NewGuid().ToString();
+                    var charge = new KrakePaymentCharge("Payment Gateway", paymentGuid);
                     var currency = "USD"; // TODO: leggere la currency dai settings
                     var order = _orderService.CreateOrder(
                         charge, 
@@ -66,7 +67,7 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
                         "", 
                         currency);
                     var reason = string.Format("Purchase Order kpo{0}", order.Id);
-                    result = RedirectToAction("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway", reason = reason, amount = order.Total, currency = order.CurrencyCode, itemId = order.Id });
+                    result = RedirectToAction("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway", reason = reason, amount = order.Total, currency = order.CurrencyCode, itemId = order.Id, newPaymentGuid = paymentGuid });
                     break;
                 default:
                     model.ShippingAddress = new Address();

@@ -62,7 +62,7 @@ namespace Laser.Orchard.NwazetIntegration.Services {
         }
         public string GetChargeAdminUrl(string transactionId) {
             string result = "";
-            var payment = _paymentService.GetPaymentByTransactionId(transactionId);
+            var payment = _paymentService.GetPaymentByGuid(transactionId);
             if(payment != null) {
                 var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
                 var url = urlHelper.Action("Info", "Payment", new { area = "Laser.Orchard.PaymentGateway" });

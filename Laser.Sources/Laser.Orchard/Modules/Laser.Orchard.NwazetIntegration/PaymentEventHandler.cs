@@ -28,29 +28,12 @@ namespace Laser.Orchard.NwazetIntegration {
             var payment = _paymentService.GetPayment(paymentId);
             if(payment != null) {
                 var order = _orderService.Get(payment.ContentItemId);
-                order.Status = OrderPart.Cancelled;
-                order.LogActivity(OrderPart.Note, "Temporary order before payment.");
-                var charge = new KrakePaymentCharge(payment.PosName) {TransactionId = payment.TransactionId };
-                _orderService.CreateOrder(
-                    charge, 
-                    order.Items, 
-                    order.SubTotal, 
-                    order.Total, 
-                    order.Taxes, 
-                    order.ShippingOption, 
-                    order.ShippingAddress, 
-                    order.BillingAddress, 
-                    order.CustomerEmail, 
-                    order.CustomerPhone, 
-                    order.SpecialInstructions, 
-                    OrderPart.Pending, 
-                    order.TrackingUrl, 
-                    order.IsTestOrder, 
-                    order.UserId,
-                    (double)(payment.Amount),
-                    string.Format("kpo{0}", order.Id),
-                    payment.Currency
-                );
+                // agggiorna l'odine in base al pagamento effettuato
+                order.Status = OrderPart.Pending;
+                order.AmountPaid = (double)payment.Amount;
+                order.PurchaseOrder = string.Format("kpo{0}", order.Id);
+                order.CurrencyCode = payment.Currency;
+                order.LogActivity(OrderPart.Event, string.Format("Payed on POS {0}.", payment.PosName));
             }
         }
     }

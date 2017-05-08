@@ -59,7 +59,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public PaymentRecord StartPayment(PaymentRecord values) {
+        public PaymentRecord StartPayment(PaymentRecord values, string newPaymentGuid = null) {
             // verifica che siano presenti i valori necessari
             if ((values.Amount <= 0)
                 || string.IsNullOrWhiteSpace(values.Currency)) {
@@ -76,7 +76,19 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 values.UserId = user.Id;
             }
 
-            values.Guid = Guid.NewGuid().ToString(); 
+            if(newPaymentGuid == null) {
+                values.Guid = Guid.NewGuid().ToString();
+            }
+            else {
+                var checkGuid = _repository.Fetch(x => x.Guid == newPaymentGuid);
+                if(checkGuid != null && checkGuid.Count() > 0) {
+                    // se il guid esiste già solleva un'eccezione
+                    throw new Exception(string.Format("PaymentGateway.PosServiceBase: Guid already exists ({0}).",newPaymentGuid));
+                }
+                else {
+                    values.Guid = newPaymentGuid;
+                }
+            }
 
             int paymentId = SavePaymentInfo(values);
             values.Id = paymentId;

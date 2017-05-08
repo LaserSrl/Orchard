@@ -64,7 +64,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         /// <param name="itemId">Optional, the Id of a ContentItem associated with the payment</param>
         /// <returns>A page proposing the paymet options</returns>
         [Themed]
-        public ActionResult Pay(string reason, decimal amount, string currency, int itemId = 0) {
+        public ActionResult Pay(string reason, decimal amount, string currency, int itemId = 0, string newPaymentGuid = null) {
             ContentItem item = null;
             if (itemId > 0) {
                 item = _orchardServices.ContentManager.Get(itemId);
@@ -79,7 +79,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                 PosList = _posServices.ToList(),
                 ContentItem = item
             };
-            model.Record = _posServiceEmpty.StartPayment(model.Record);
+            model.Record = _posServiceEmpty.StartPayment(model.Record, newPaymentGuid);
             return View("Pay", model);
         }
         /// <summary>

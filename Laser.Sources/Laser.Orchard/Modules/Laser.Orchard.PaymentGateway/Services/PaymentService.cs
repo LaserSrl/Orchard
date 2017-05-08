@@ -55,5 +55,13 @@ namespace Laser.Orchard.PaymentGateway.Services {
             }
             return record;
         }
+        public PaymentRecord GetPaymentByGuid(string paymentGuid) {
+            PaymentRecord record = null;
+            var list = _repository.Fetch(x => x.Guid == paymentGuid);
+            if (list != null) {
+                record = list.FirstOrDefault();
+            }
+            return record;
+        }
     }
 }

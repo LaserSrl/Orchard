@@ -3,8 +3,10 @@
 namespace Laser.Orchard.NwazetIntegration.Models {
     public class KrakePaymentCharge : ICharge {
         private string _text;
-        public KrakePaymentCharge(string text = "Krake payment") {
+        private string _transactionId;
+        public KrakePaymentCharge(string text = "Krake payment", string transactionId = "") {
             _text = text;
+            _transactionId = transactionId;
         }
         public string ChargeText
         {
@@ -14,6 +16,12 @@ namespace Laser.Orchard.NwazetIntegration.Models {
             }
         }
         public CheckoutError Error { get; set; }
-        public string TransactionId { get; set; }
+        public string TransactionId
+        {
+            get
+            {
+                return _transactionId;
+            }
+        }
     }
 }
