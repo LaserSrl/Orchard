@@ -8,39 +8,65 @@ using Laser.Orchard.NwazetIntegration.ViewModels;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Orchard.Themes;
+using Orchard.ContentManagement;
+using Orchard.Core.Title.Models;
+using Laser.Orchard.NwazetIntegration.Models;
 
 namespace Laser.Orchard.NwazetIntegration.Controllers {
     public class AddressesController : Controller {
         private readonly IOrderService _orderService;
         private readonly IPosServiceIntegration _posServiceIntegration;
-        public AddressesController(IOrderService orderService, IPosServiceIntegration posServiceIntegration) {
+        private readonly IShoppingCart _shoppingCart;
+        public AddressesController(IOrderService orderService, IPosServiceIntegration posServiceIntegration, IShoppingCart shoppingCart) {
             _orderService = orderService;
             _posServiceIntegration = posServiceIntegration;
+            _shoppingCart = shoppingCart;
         }
         
         public ActionResult Index(AddressesVM model) {
             ActionResult result = null;
-            OrderPart order = null;
             switch (model.Submit) {
                 case "cart":
                     result = RedirectToAction("Index", "ShoppingCart", new { area = "Nwazet.Commerce" });
                     break;
                 case "save":
-                    if (model.OrderId > 0) {
-                        order = _orderService.Get(model.OrderId);
-                        order.ShippingAddress = model.ShippingAddress;
-                        order.BillingAddress = model.BillingAddress;
-                        //// other fields
-                        //order.CustomerEmail = model.Email;
-                        //order.CustomerPhone = model.Phone;
-                        //order.SpecialInstructions = model.SpecialInstructions;
-
-                        var reason = string.Format("Purchase Order kpo{0}", order.Id);
-                        result = RedirectToAction("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway", reason = reason, amount = order.Total, currency = order.CurrencyCode, itemId = order.Id });
+                    // costruisce la lista di CheckoutItems in base al contenuto del carrello
+                    List<CheckoutItem> items = new List<CheckoutItem>();
+                    foreach (var prod in _shoppingCart.GetProducts()) {
+                        items.Add(new CheckoutItem {
+                            Attributes = prod.AttributeIdsToValues,
+                            LinePriceAdjustment = prod.LinePriceAdjustment,
+                            OriginalPrice = prod.OriginalPrice,
+                            Price = prod.Price,
+                            ProductId = prod.Product.Id,
+                            PromotionId = prod.Promotion == null ? null : (int?)(prod.Promotion.Id),
+                            Quantity = prod.Quantity,
+                            Title = prod.Product.ContentItem.As<TitlePart>().Title
+                        });
                     }
-                    else {
-                        result = RedirectToAction("Index", "ShoppingCart", new { area = "Nwazet.Commerce" });
-                    }
+                    var charge = new KrakePaymentCharge();
+                    var currency = "USD"; // TODO: leggere la currency dai settings
+                    var order = _orderService.CreateOrder(
+                        charge, 
+                        items, 
+                        _shoppingCart.Subtotal(), 
+                        _shoppingCart.Total(), 
+                        _shoppingCart.Taxes(), 
+                        _shoppingCart.ShippingOption, 
+                        model.ShippingAddress, 
+                        model.BillingAddress, 
+                        model.Email, 
+                        model.Phone, 
+                        model.SpecialInstructions, 
+                        OrderPart.Cancelled, 
+                        null, 
+                        false, 
+                        -1, 
+                        0, 
+                        "", 
+                        currency);
+                    var reason = string.Format("Purchase Order kpo{0}", order.Id);
+                    result = RedirectToAction("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway", reason = reason, amount = order.Total, currency = order.CurrencyCode, itemId = order.Id });
                     break;
                 default:
                     model.ShippingAddress = new Address();

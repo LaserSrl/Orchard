@@ -29,6 +29,7 @@ namespace Laser.Orchard.NwazetIntegration {
             if(payment != null) {
                 var order = _orderService.Get(payment.ContentItemId);
                 order.Status = OrderPart.Cancelled;
+                order.LogActivity(OrderPart.Note, "Temporary order before payment.");
                 var charge = new KrakePaymentCharge(payment.PosName) {TransactionId = payment.TransactionId };
                 _orderService.CreateOrder(
                     charge, 

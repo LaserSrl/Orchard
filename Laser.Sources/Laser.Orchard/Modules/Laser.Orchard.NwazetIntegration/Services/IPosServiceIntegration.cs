@@ -47,35 +47,14 @@ namespace Laser.Orchard.NwazetIntegration.Services {
         }
 
         public dynamic BuildCheckoutButtonShape(IEnumerable<dynamic> productShapes, IEnumerable<ShoppingCartQuantityProduct> productQuantities, IEnumerable<ShippingOption> shippingOptions, TaxAmount taxes, string country, string zipCode, IEnumerable<string> custom) {
-            var charge = new KrakePaymentCharge();
-            List<CheckoutItem> items = new List<CheckoutItem>();
-            double subTotal = 0;
-            double total = 0;
-            foreach(var prod in productQuantities) {
-                items.Add(new CheckoutItem {
-                    Attributes =prod.AttributeIdsToValues,
-                    LinePriceAdjustment =prod.LinePriceAdjustment,
-                    OriginalPrice = prod.OriginalPrice,
-                    Price = prod.Price,
-                    ProductId = prod.Product.Id,
-                    PromotionId = prod.Promotion == null ? null : (int?)(prod.Promotion.Id),
-                    Quantity = prod.Quantity,
-                    Title = prod.Product.ContentItem.As<TitlePart>().Title
-                });
-                subTotal += prod.Price;
-            }
-            total = subTotal;
             bool insertOrder = false;
             foreach(var opt in shippingOptions) {
                 if(opt != null) {
                     insertOrder = true;
-                    total += opt.Price;
                 }
             }
             if (insertOrder) {
-                var currency = "USD"; // TODO: leggere la currency dai settings
-                var order = _orderService.CreateOrder(charge, items, subTotal, total, taxes, null, null, null, null, null, null, OrderPart.Cancelled, null, false, -1, 0, "", currency);
-                return _shapeFactory.Pos(OrderId: order.Id);
+                return _shapeFactory.Pos();
             }
             else {
                 return null;
@@ -90,20 +69,6 @@ namespace Laser.Orchard.NwazetIntegration.Services {
                 result = string.Format("{0}?paymentId={1}", url, payment.Id);
             }
             return result;
-        }
-        private PaymentVM GetPaymentInfo(OrderPart order) {
-            decimal amount = new decimal(order.Total);
-            PaymentVM payment = new PaymentVM {
-                Record = new PaymentRecord {
-                    Reason = string.Format("Purchase Order kpo{0}", order.Id),
-                    Amount = amount,
-                    Currency = order.CurrencyCode,
-                    ContentItemId = order.Id
-                },
-                PosList = _posServices.ToList(),
-                ContentItem = null
-            };
-            return payment;
         }
     }
 }
