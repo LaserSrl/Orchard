@@ -11,16 +11,21 @@ using Orchard.Themes;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Laser.Orchard.NwazetIntegration.Models;
+using Orchard;
 
 namespace Laser.Orchard.NwazetIntegration.Controllers {
     public class AddressesController : Controller {
         private readonly IOrderService _orderService;
         private readonly IPosServiceIntegration _posServiceIntegration;
         private readonly IShoppingCart _shoppingCart;
-        public AddressesController(IOrderService orderService, IPosServiceIntegration posServiceIntegration, IShoppingCart shoppingCart) {
+        private readonly IOrchardServices _orchardServices;
+        private readonly ICurrencyProvider _currencyProvider;
+        public AddressesController(IOrderService orderService, IPosServiceIntegration posServiceIntegration, IShoppingCart shoppingCart, IOrchardServices orchardServices, ICurrencyProvider currencyProvider) {
             _orderService = orderService;
             _posServiceIntegration = posServiceIntegration;
             _shoppingCart = shoppingCart;
+            _orchardServices = orchardServices;
+            _currencyProvider = currencyProvider;
         }
         
         public ActionResult Index(AddressesVM model) {
@@ -45,8 +50,15 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
                         });
                     }
                     var paymentGuid = Guid.NewGuid().ToString();
-                    var charge = new KrakePaymentCharge("Payment Gateway", paymentGuid);
-                    var currency = "USD"; // TODO: leggere la currency dai settings
+                    var charge = new PaymentGatewayCharge("Payment Gateway", paymentGuid);
+                    // get Orchard user id
+                    var userId = -1;
+                    var currentUser = _orchardServices.WorkContext.CurrentUser;
+                    if (currentUser != null) {
+                        userId = currentUser.Id;
+                    }
+
+                    var currency = _currencyProvider.CurrencyCode;
                     var order = _orderService.CreateOrder(
                         charge, 
                         items, 
@@ -62,10 +74,11 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
                         OrderPart.Cancelled, 
                         null, 
                         false, 
-                        -1, 
+                        userId, 
                         0, 
                         "", 
                         currency);
+                    order.LogActivity(OrderPart.Event, "Order created");
                     var reason = string.Format("Purchase Order kpo{0}", order.Id);
                     result = RedirectToAction("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway", reason = reason, amount = order.Total, currency = order.CurrencyCode, itemId = order.Id, newPaymentGuid = paymentGuid });
                     break;

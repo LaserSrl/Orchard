@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Laser.Orchard.PaymentGateway;
+﻿using Laser.Orchard.PaymentGateway;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.Models;
-using Laser.Orchard.NwazetIntegration.Models;
 
-namespace Laser.Orchard.NwazetIntegration {
+namespace Laser.Orchard.NwazetIntegration.Handlers {
     public class PaymentEventHandler : IPaymentEventHandler {
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
-        public PaymentEventHandler(IOrderService orderService, IPaymentService paymentService) {
+        private readonly IShoppingCart _shoppingCart;
+        public PaymentEventHandler(IOrderService orderService, IPaymentService paymentService, IShoppingCart shoppingCart) {
             _orderService = orderService;
             _paymentService = paymentService;
+            _shoppingCart = shoppingCart;
         }
         public void OnError(int paymentId, int contentItemId) {
             var payment = _paymentService.GetPayment(paymentId);
@@ -34,6 +31,7 @@ namespace Laser.Orchard.NwazetIntegration {
                 order.PurchaseOrder = string.Format("kpo{0}", order.Id);
                 order.CurrencyCode = payment.Currency;
                 order.LogActivity(OrderPart.Event, string.Format("Payed on POS {0}.", payment.PosName));
+                _shoppingCart.Clear();
             }
         }
     }

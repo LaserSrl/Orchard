@@ -102,10 +102,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AddressesController.cs" />
-    <Compile Include="Models\KrakePaymentCharge.cs" />
-    <Compile Include="PaymentEventHandler.cs" />
+    <Compile Include="Models\PaymentGatewayCharge.cs" />
+    <Compile Include="Handlers\PaymentEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\CurrencyProviderService.cs" />
     <Compile Include="Services\IPosServiceIntegration.cs" />
     <Compile Include="ViewModels\AddressesVM.cs" />
   </ItemGroup>
