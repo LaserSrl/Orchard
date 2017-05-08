@@ -2,10 +2,12 @@
 @using Orchard.Localization.Models
 @using Orchard.Environment.Extensions.Models
 @{
-    Script.Require("AdminWidgetContainer");
+    Style.Require("TheAdminWidgetContainerStyle");
     Script.Require("jQueryUI_Core");
-    Script.Require("ThemeAdminAdminJs");
     Script.Require("AdminWidgetContainer");
+
+    // Script.Require("ThemeAdminAdminJs");
+    Script.Include("~/Themes/TheAdmin/scripts/admin.js");
 
     var zones = Model.Zones;
     var theme = (ExtensionDescriptor)Model.CurrentTheme;
