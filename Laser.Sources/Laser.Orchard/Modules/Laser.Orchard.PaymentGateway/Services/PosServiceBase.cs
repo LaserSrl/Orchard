@@ -255,7 +255,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 //return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, HttpUtility.UrlEncode(jsonResponse));
                 //return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, respQString);
             }
-            return new UrlHelper(HttpContext.Current.Request.RequestContext).Action("Info", "Payment", new { area = "Laser.Orchard.PaymentGateway", paymentId = paymentId });
+            return new UrlHelper(HttpContext.Current.Request.RequestContext).Action("Info", "Payment", new { area = "Laser.Orchard.PaymentGateway", paymentId = paymentId, guid = pRecord.Guid });
         }
         /// <summary>
         /// Salva il pagamento e restituisce il PaymentId.
