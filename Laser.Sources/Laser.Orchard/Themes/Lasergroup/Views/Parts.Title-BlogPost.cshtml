@@ -72,7 +72,7 @@
     <div class="container">
         <div class="text-center news-block">
             <div class="single-news-top"></div>
-            <img src="@item.BlogPost.Image.FirstMediaUrl" class="img-responsive wp-post-image" alt="@item.BlogPost.Image.MediaParts[0].Title">
+            <img src="@item.BlogPost.Image.FirstMediaUrl"  title="@item.BlogPost.Image.MediaParts[0].Title" alt="@item.BlogPost.Image.MediaParts[0].AlternateText"  class="img-responsive wp-post-image" alt="@item.BlogPost.Image.MediaParts[0].Title">
         </div>
     </div>
 
@@ -92,7 +92,7 @@
                     @for (int i = 0; i < medias.Count; i++) {
                         <div class="col-xs-6 col-sm-4 col-md-2 text-center">
                             <a href="@medias[i].MediaUrl" class="thumbnail" data-sub-html="">
-                                <img src="@Display.ResizeMediaUrl(Width: 350, Height: 350, Mode: "crop", Alignment: "middlecenter", Path: medias[i].MediaUrl)" class="img-responsive">
+                                <img src="@Display.ResizeMediaUrl(Width: 350, Height: 350, Mode: "crop", Alignment: "middlecenter", Path: medias[i].MediaUrl)"  title="@medias[i].Title" alt="@medias[i].AlternateText"  class="img-responsive">
                             </a>
                         </div>
                     }
