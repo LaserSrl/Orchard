@@ -1,18 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Laser.Orchard.NwazetIntegration.Models;
-using Laser.Orchard.PaymentGateway.Models;
-using Laser.Orchard.PaymentGateway.ViewModels;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Orchard;
 using Orchard.DisplayManagement;
-using Orchard.ContentManagement;
-using Orchard.Core.Title.Models;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.NwazetIntegration.Services {
     public interface IPosServiceIntegration : ICheckoutService {
+        string GetOrderNumber(int orderId);
     }
 
     public class PosServiceIntegration : IPosServiceIntegration {
@@ -42,7 +37,7 @@ namespace Laser.Orchard.NwazetIntegration.Services {
         {
             get
             {
-                return "Krake payments";
+                return "Payment Gateway payments";
             }
         }
 
@@ -69,6 +64,9 @@ namespace Laser.Orchard.NwazetIntegration.Services {
                 result = string.Format("{0}?paymentId={1}", url, payment.Id);
             }
             return result;
+        }
+        public string GetOrderNumber(int orderId) {
+            return string.Format("KPO-{0}", orderId);
         }
     }
 }

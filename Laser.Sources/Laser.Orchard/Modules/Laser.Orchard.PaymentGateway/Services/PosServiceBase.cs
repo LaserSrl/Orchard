@@ -83,7 +83,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 var checkGuid = _repository.Fetch(x => x.Guid == newPaymentGuid);
                 if(checkGuid != null && checkGuid.Count() > 0) {
                     // se il guid esiste già solleva un'eccezione
-                    throw new Exception(string.Format("PaymentGateway.PosServiceBase: Guid already exists ({0}).",newPaymentGuid));
+                    throw new Exception(string.Format("PaymentGateway.PosServiceBase: Guid already exists ({0}).", newPaymentGuid));
                 }
                 else {
                     values.Guid = newPaymentGuid;

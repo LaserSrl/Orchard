@@ -79,7 +79,7 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
                         "", 
                         currency);
                     order.LogActivity(OrderPart.Event, "Order created");
-                    var reason = string.Format("Purchase Order kpo{0}", order.Id);
+                    var reason = string.Format("Purchase Order {0}", _posServiceIntegration.GetOrderNumber(order.Id));
                     result = RedirectToAction("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway", reason = reason, amount = order.Total, currency = order.CurrencyCode, itemId = order.Id, newPaymentGuid = paymentGuid });
                     break;
                 default:
