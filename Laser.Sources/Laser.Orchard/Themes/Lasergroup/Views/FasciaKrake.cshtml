@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-xs-12 col-sm-6 text-center-xs">
             <a href="~/krake">
-                <img src="@item.ElementoFasciaKrake.Image.FirstMediaUrl" class="img-responsive pull-right-sm pull-right-md pull-right-lg">
+                <img src="@item.ElementoFasciaKrake.Image.FirstMediaUrl"  title="@item.ElementoFasciaKrake.Image.MediaParts[0].Title" alt="@item.ElementoFasciaKrake.Image.MediaParts[0].AlternateText"  class="img-responsive pull-right-sm pull-right-md pull-right-lg">
             </a>
         </div>
         <div class="col-xs-12 col-sm-6 hidden-xs">
@@ -22,7 +22,7 @@
     <div class="row row-krake-icons">
         @for (int i = 0; i < medias.Count; i++) {
             <div class="col-xs-6 col-sm-4 col-md-2 text-center">
-                <img src="@medias[i].MediaUrl" class="img-responsive krake-icon">
+                <img src="@medias[i].MediaUrl"  title="@medias[i].Title" alt="@medias[i].AlternateText"  class="img-responsive krake-icon">
             </div>
         }
     </div>

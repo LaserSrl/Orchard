@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -329,6 +330,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Localization\it-IT\orchard.theme.po" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget-AfterContentProdotto.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ShowcaseBackLink.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
