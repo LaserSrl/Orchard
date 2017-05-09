@@ -138,7 +138,9 @@
 
                 // Body
                 mycontent.As<BodyPart>().Format = "Html";
-                mycontent.As<BodyPart>().Text = body ?? "";
+                if (!string.IsNullOrEmpty(body)){
+                    mycontent.As<BodyPart>().Text = body ?? "";
+                }
 
 
                 //Localization
@@ -225,9 +227,11 @@
                     mycontent.As<MapPart>().Longitude = float.Parse(elem.coordinate.longitudine, CultureInfo.InvariantCulture.NumberFormat);
                 }
                 else {
-                    mycontent.As<MapPart>().LocationInfo = DefaultComune;
-                    mycontent.As<MapPart>().Latitude = DefaultComunelat;
-                    mycontent.As<MapPart>().Longitude = DefaultComunelng;
+                    if (string.IsNullOrEmpty(mycontent.As<MapPart>().LocationInfo)) {
+                        mycontent.As<MapPart>().LocationInfo = DefaultComune;
+                        mycontent.As<MapPart>().Latitude = DefaultComunelat;
+                        mycontent.As<MapPart>().Longitude = DefaultComunelng;
+                    }
                 }
 
                 // pubblico il contenuto
