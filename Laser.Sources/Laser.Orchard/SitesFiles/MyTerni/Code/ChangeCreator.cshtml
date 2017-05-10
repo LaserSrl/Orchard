@@ -1,0 +1,22 @@
+@using System.IO;
+@using System.Collections.Generic;
+@using System.Linq;
+@using Orchard;
+@using Orchard.Data;
+@using Orchard.Security;
+@using Orchard.ContentManagement;
+@using Orchard.Users.Models;
+@using Orchard.Utility.Extensions;
+@{
+    string result = "Done";
+	try{
+	dynamic ci = Model.ContentItem;
+	string username=ci.Multa.UserText.Value;
+	IMembershipService _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();    
+    UserPart getUser = (UserPart)_membershipService.GetUser(username);
+	ci.CommonPart.Creator.Value=getUser.Id;
+	} catch (Exception ex) {
+        result = "Error";
+    }
+}@result
+ 

@@ -4,16 +4,21 @@ using RazorEngine.Templating;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using RazorEngine.Compilation.ReferenceResolver;
+using RazorEngine.Compilation;
+using System.Linq;
+using System.Web;
+using System.Web.Hosting;
 
 namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
 
     public interface IRazorTemplateManager : ISingletonDependency {
 
-        string RunString(string key, string code, Object model, Dictionary<string, object> dicdvb =null, string Layout = null);
+        string RunString(string key, string code, Object model, Dictionary<string, object> dicdvb = null, string Layout = null);
 
         string RunFile(string localFilePath, RazorModelContext model);
 
-     //   void AddLayout(string key, string code);
+        //   void AddLayout(string key, string code);
 
         void StartNewRazorEngine();
 
@@ -39,8 +44,10 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
             return listOldCached;
         }
 
-        public IRazorEngineService RazorEngineServiceStatic {
-            get {
+        public IRazorEngineService RazorEngineServiceStatic
+        {
+            get
+            {
                 if (_razorEngine == null) {
                     StartNewRazorEngine();
                 }
@@ -56,7 +63,9 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
             config.Namespaces.Add("Orchard");
             config.Namespaces.Add("Orchard.ContentManagement");
             config.Namespaces.Add("Orchard.Caching");
-            config.Namespaces.Add("System.Web.Helpers");
+            //config.Namespaces.Add("System.Web.Helpers");
+            config.ReferenceResolver = new MyIReferenceResolver();
+
             _razorEngine = RazorEngineService.Create(config);
             listOldCached.AddRange(listCached);
             listCached = new List<string>();
@@ -66,7 +75,7 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
         private IRazorEngineService _razorEngine;
 
         //public void AddLayout(string key, string code) {
-            
+
 
         //    if (!RazorEngineServiceStatic.IsTemplateCached(key, null)) {
         //        RazorEngineServiceStatic.AddTemplate(key, code);// new LoadedTemplateSource(code, null));
@@ -75,7 +84,7 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
         //    }
         //}
 
-        public string RunString(string key, string code, Object model, Dictionary<string, object> dicdvb =null,string Layout=null) {
+        public string RunString(string key, string code, Object model, Dictionary<string, object> dicdvb = null, string Layout = null) {
             DynamicViewBag dvb = new DynamicViewBag();
             if (dicdvb != null)
                 foreach (var k in dicdvb.Keys) {
@@ -84,8 +93,8 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
             if (!RazorEngineServiceStatic.IsTemplateCached(key, null)) {
                 if (!string.IsNullOrEmpty(code)) {
                     if (!string.IsNullOrEmpty(Layout)) {
-                        RazorEngineServiceStatic.AddTemplate("Layout"+key, Layout);
-                    }                    
+                        RazorEngineServiceStatic.AddTemplate("Layout" + key, Layout);
+                    }
                     RazorEngineServiceStatic.AddTemplate(key, new LoadedTemplateSource(code, null));
                     RazorEngineServiceStatic.Compile(key, null);
                     listCached.Add(key);
@@ -108,7 +117,7 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
                 DateTime d = System.IO.File.GetLastWriteTime(localFilePath);
                 key += d.ToShortDateString() + d.ToLongTimeString();
             }
-            string codeTemplate="";
+            string codeTemplate = "";
             if (!RazorEngineServiceStatic.IsTemplateCached(key, null)) {
                 if (System.IO.File.Exists(localFilePath)) {
                     codeTemplate = File.ReadAllText(localFilePath);
@@ -136,6 +145,28 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
                 return result;
             else
                 return "";
+        }
+    }
+
+
+    // implementato IReferenceResolver perchè nel metodo nativo sceglieva la first fra le dll basandosi sul nome
+    // implementato in modo che scelga l'ultima versione, modifica dovuta al fatto che ogni tanto il razor andava in errore dicendo che json non esisteva come metodo in system.web.helpers
+    // le dll su cui viene fatta la ricerca includone quelle in dependecies e nella gac.
+    public class MyIReferenceResolver : IReferenceResolver {
+        public IEnumerable<CompilerReference> GetReferences(TypeContext context, IEnumerable<CompilerReference> includeAssemblies = null) {
+
+            var allAssembly = CompilerServicesUtility
+                  .GetLoadedAssemblies();
+
+            var AssemblyToReference = allAssembly
+                    .Where(a => !a.IsDynamic && File.Exists(a.Location) && !a.Location.Contains("CompiledRazorTemplates.Dynamic") && a.FullName.IndexOf("System.Web.Helpers") < 0)//(CompilerServiceBase.DynamicTemplateNamespace))
+                       .GroupBy(a => a.GetName().Name).Select(grp => grp.First(y => y.GetName().Version == grp.Max(x => x.GetName().Version))) // only select distinct assemblies based on FullName to avoid loading duplicate assemblies
+                       .Select(a => CompilerReference.From(a))
+               .Concat(includeAssemblies ?? Enumerable.Empty<CompilerReference>());
+            yield return CompilerReference.From(HostingEnvironment.ApplicationPhysicalPath + @"Modules\Laser.Orchard.StartupConfig\bin\System.Web.Helpers.dll");
+            foreach (var assembly in AssemblyToReference)
+                yield return assembly;
+
         }
     }
 }
