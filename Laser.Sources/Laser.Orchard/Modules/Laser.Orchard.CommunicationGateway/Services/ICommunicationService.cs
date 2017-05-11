@@ -75,6 +75,10 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         /// Returns false if no further run is needed, true if further run is needed.
         /// </summary>
         bool GetRunAgainNeeded(int contentId, string context, string data, bool completedIteration, int maxNumRetry);
+
+        void AddEmailToContact(string email, ContentItem contact);
+
+        void AddSmsToContact(string pref, string num, ContentItem contact);
     }
 
     public class CommunicationService : ICommunicationService {
@@ -416,7 +420,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         public bool GetRunAgainNeeded(int contentId, string context, string data, bool completedIteration, int maxNumRetry) {
             bool result = false; // "non è necessario eseguire un altro run"
             CommunicationRetryRecord retry = _repositoryCommunicationRetryRecord.Get(x => x.ContentItemRecord_Id == contentId && x.Context == context);
-            if(retry == null) {
+            if (retry == null) {
                 // inizializza un nuovo oggetto
                 retry = new CommunicationRetryRecord {
                     ContentItemRecord_Id = contentId,
@@ -436,7 +440,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 if (retry.PendingErrors) {
                     retry.NoOfFailures++;
                     retry.PendingErrors = false; // resetta il flag degli errori all'inizio di una nuova iterazione
-                    if(retry.NoOfFailures <= maxNumRetry) {
+                    if (retry.NoOfFailures <= maxNumRetry) {
                         // maxNumRetry non ancora raggiunto quindi è necessario un nuovo retry
                         result = true;
                     }
@@ -447,7 +451,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 result = true;
             }
             // salva su db il record aggiornato
-            if(retry.Id == 0) {
+            if (retry.Id == 0) {
                 _repositoryCommunicationRetryRecord.Create(retry);
             }
             else {
@@ -455,6 +459,65 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
             return result;
         }
+
+        public void AddEmailToContact(string email, ContentItem contact) {
+            if (!string.IsNullOrEmpty(email)) {
+                CommunicationEmailRecord cmr = null;
+                if (contact != null) {
+                    cmr = _repositoryCommunicationEmailRecord.Fetch(x => x.Email == email && x.EmailContactPartRecord_Id == contact.Id).FirstOrDefault();
+                }
+                if (cmr != null) {
+                    if (cmr.EmailContactPartRecord_Id != contact.Id) {
+                        cmr.EmailContactPartRecord_Id = contact.Id;
+                        cmr.DataModifica = DateTime.Now;
+                        _repositoryCommunicationEmailRecord.Update(cmr);
+                        _repositoryCommunicationEmailRecord.Flush();
+                    }
+                }
+                else {
+                    CommunicationEmailRecord newrec = new CommunicationEmailRecord();
+                    newrec.Email = email;
+                    newrec.EmailContactPartRecord_Id = contact.Id;
+                    newrec.Id = 0;
+                    newrec.Validated = true;
+                    newrec.DataInserimento = DateTime.Now;
+                    newrec.DataModifica = DateTime.Now;
+                    newrec.Produzione = true;
+                    _repositoryCommunicationEmailRecord.Create(newrec);
+                    _repositoryCommunicationEmailRecord.Flush();
+                }
+            }
+        }
+
+        public void AddSmsToContact(string pref, string num, ContentItem contact) {
+            CommunicationContactPart ciCommunication = contact.As<CommunicationContactPart>();
+            if (ciCommunication != null) {
+                CommunicationSmsRecord csr = _repositoryCommunicationSmsRecord.Fetch(x => x.SmsContactPartRecord_Id == ciCommunication.ContentItem.Id).FirstOrDefault();
+                if (csr == null) {
+                    CommunicationSmsRecord newsms = new CommunicationSmsRecord();
+                    newsms.Prefix = pref;
+                    newsms.Sms = num;
+                    newsms.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
+                    newsms.Id = 0;
+                    newsms.Validated = true;
+                    newsms.DataInserimento = DateTime.Now;
+                    newsms.DataModifica = DateTime.Now;
+                    newsms.Produzione = true;
+                    _repositoryCommunicationSmsRecord.Create(newsms);
+                    _repositoryCommunicationSmsRecord.Flush();
+                }
+                else {
+                    csr.Prefix = pref;
+                    csr.Sms = num;
+                    csr.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
+                    csr.DataModifica = DateTime.Now;
+                    _repositoryCommunicationSmsRecord.Update(csr);
+                    _repositoryCommunicationSmsRecord.Flush();
+                }
+            }
+        }
+
+
         public void UserToContact(IUser UserContent) {
             // verifiche preliminari
             if (UserContent.Id == 0) {
@@ -547,30 +610,31 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
             #region aggiorna email
             if (!string.IsNullOrEmpty(UserContent.Email) && UserContent.ContentItem.As<UserPart>().RegistrationStatus == UserStatus.Approved) {
-                CommunicationEmailRecord cmr = null;
-                if (contact != null) {
-                    cmr = _repositoryCommunicationEmailRecord.Fetch(x => x.Email == UserContent.Email && x.EmailContactPartRecord_Id == contact.Id).FirstOrDefault();
-                }
-                if (cmr != null) {
-                    if (cmr.EmailContactPartRecord_Id != contact.Id) {
-                        cmr.EmailContactPartRecord_Id = contact.Id;
-                        cmr.DataModifica = DateTime.Now;
-                        _repositoryCommunicationEmailRecord.Update(cmr);
-                        _repositoryCommunicationEmailRecord.Flush();
-                    }
-                }
-                else {
-                    CommunicationEmailRecord newrec = new CommunicationEmailRecord();
-                    newrec.Email = UserContent.Email;
-                    newrec.EmailContactPartRecord_Id = contact.Id;
-                    newrec.Id = 0;
-                    newrec.Validated = true;
-                    newrec.DataInserimento = DateTime.Now;
-                    newrec.DataModifica = DateTime.Now;
-                    newrec.Produzione = true;
-                    _repositoryCommunicationEmailRecord.Create(newrec);
-                    _repositoryCommunicationEmailRecord.Flush();
-                }
+                AddEmailToContact(UserContent.Email, contact);
+                //CommunicationEmailRecord cmr = null;
+                //if (contact != null) {
+                //    cmr = _repositoryCommunicationEmailRecord.Fetch(x => x.Email == UserContent.Email && x.EmailContactPartRecord_Id == contact.Id).FirstOrDefault();
+                //}
+                //if (cmr != null) {
+                //    if (cmr.EmailContactPartRecord_Id != contact.Id) {
+                //        cmr.EmailContactPartRecord_Id = contact.Id;
+                //        cmr.DataModifica = DateTime.Now;
+                //        _repositoryCommunicationEmailRecord.Update(cmr);
+                //        _repositoryCommunicationEmailRecord.Flush();
+                //    }
+                //}
+                //else {
+                //    CommunicationEmailRecord newrec = new CommunicationEmailRecord();
+                //    newrec.Email = UserContent.Email;
+                //    newrec.EmailContactPartRecord_Id = contact.Id;
+                //    newrec.Id = 0;
+                //    newrec.Validated = true;
+                //    newrec.DataInserimento = DateTime.Now;
+                //    newrec.DataModifica = DateTime.Now;
+                //    newrec.Produzione = true;
+                //    _repositoryCommunicationEmailRecord.Create(newrec);
+                //    _repositoryCommunicationEmailRecord.Flush();
+                //}
             }
             #endregion
 
@@ -578,33 +642,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             try {
                 dynamic userPwdRecoveryPart = ((dynamic)UserContent.ContentItem).UserPwdRecoveryPart;
                 if (userPwdRecoveryPart != null) {
-                    string pref = userPwdRecoveryPart.InternationalPrefix;
-                    string num = userPwdRecoveryPart.PhoneNumber;
-                    CommunicationContactPart ciCommunication = contact.As<CommunicationContactPart>();
-                    if (ciCommunication != null) {
-                        CommunicationSmsRecord csr = _repositoryCommunicationSmsRecord.Fetch(x => x.SmsContactPartRecord_Id == ciCommunication.ContentItem.Id).FirstOrDefault();
-                        if (csr == null) {
-                            CommunicationSmsRecord newsms = new CommunicationSmsRecord();
-                            newsms.Prefix = pref;
-                            newsms.Sms = num;
-                            newsms.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
-                            newsms.Id = 0;
-                            newsms.Validated = true;
-                            newsms.DataInserimento = DateTime.Now;
-                            newsms.DataModifica = DateTime.Now;
-                            newsms.Produzione = true;
-                            _repositoryCommunicationSmsRecord.Create(newsms);
-                            _repositoryCommunicationSmsRecord.Flush();
-                        }
-                        else {
-                            csr.Prefix = pref;
-                            csr.Sms = num;
-                            csr.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
-                            csr.DataModifica = DateTime.Now;
-                            _repositoryCommunicationSmsRecord.Update(csr);
-                            _repositoryCommunicationSmsRecord.Flush();
-                        }
-                    }
+                    AddSmsToContact(userPwdRecoveryPart.InternationalPrefix, userPwdRecoveryPart.PhoneNumber, contact);
                 }
             }
             catch {
