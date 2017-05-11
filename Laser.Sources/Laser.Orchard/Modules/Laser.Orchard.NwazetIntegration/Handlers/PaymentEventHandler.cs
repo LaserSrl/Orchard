@@ -30,7 +30,7 @@ namespace Laser.Orchard.NwazetIntegration.Handlers {
                 var order = _orderService.Get(payment.ContentItemId);
                 // agggiorna l'odine in base al pagamento effettuato
                 order.Status = OrderPart.Pending;
-                order.AmountPaid = (double)payment.Amount;
+                order.AmountPaid = payment.Amount;
                 order.PurchaseOrder = _posServiceIntegration.GetOrderNumber(order.Id);
                 order.CurrencyCode = payment.Currency;
                 order.LogActivity(OrderPart.Event, string.Format("Payed on POS {0}.", payment.PosName));
