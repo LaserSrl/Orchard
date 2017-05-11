@@ -96,22 +96,35 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         /// This controller shows information about a specific payment
         /// </summary>
         /// <param name="paymentId">An Id corresponding to the record that contains the payment information</param>
+        /// <param name="guid">The Guid corresponding to the payment. The check on this value is performed only for anonymous users.</param>
         /// <returns>A page reporting the information for the payment</returns>
         [Themed]
-        public ActionResult Info(int paymentId) {
+        public ActionResult Info(int paymentId, string guid = "") {
             int currentUserId = -1; // utente inesistente
             var user = _orchardServices.WorkContext.CurrentUser;
             if (user != null) {
                 currentUserId = user.Id;
             }
             var payment = _repository.Get(paymentId);
-            if ((_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner) == false)
-                && (payment.UserId != currentUserId)) {
+            var unauthorized = false;
+            if (currentUserId == -1) {
+                // user anonimo
+                if (guid != payment.Guid) {
+                    unauthorized = true;
+                }
+            }
+            else {
+                // user autenticato
+                if ((_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner) == false)
+                    && (payment.UserId != currentUserId)) {
+                    unauthorized = true;
+                }
+            }
+            if (unauthorized) {
                 return new HttpUnauthorizedResult();
             }
             return View("Info", payment);
         }
-
 
         /// <summary>
         /// This method tells whether a given payment has been terminated. The payment is identified by either its Id or its Guid.
