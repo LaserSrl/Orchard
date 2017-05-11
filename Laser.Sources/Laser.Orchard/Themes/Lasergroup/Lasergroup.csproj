@@ -78,6 +78,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\BlogPostThumbnail.cshtml" />
     <Content Include="Scripts\jquery-migrate.js" />
     <Content Include="Scripts\jquery.js" />
     <Content Include="Scripts\jquery_002.js" />
@@ -336,6 +337,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ShowcaseBackLink.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Search.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

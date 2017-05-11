@@ -14,6 +14,6 @@
     <Place Parts_Common_Metadata="-"/>
   </Match>
 -->
-  <Place Parts_Common_Metadata="-" Parts_Common_Body="-" Parts_Share_ShareBar="-" />
+  <Place Parts_Common_Metadata="-" Parts_Common_Body="-" Parts_Share_ShareBar="-" Parts_Tags_ShowTags="-" />
   <Place Fields_Common_Text__Sottotitolo="-" Fields_Enumeration="-" Fields_ContentPicker="-" Fields_MediaLibraryPicker="-" Fields_DateTime="-" Fields_Link="-" Fields_TaxonomyField="-" Fields_Numeric="-" Fields_Common_Text="-" />
 </Placement>
