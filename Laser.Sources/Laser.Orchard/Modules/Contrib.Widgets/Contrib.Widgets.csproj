@@ -165,6 +165,7 @@
     <Compile Include="Handlers\WidgetExPartHandler.cs" />
     <Compile Include="Handlers\WidgetsContainerPartHandler.cs" />
     <Compile Include="Models\WidgetExPart.cs" />
+    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\IWidgetManager.cs" />
     <Compile Include="Services\ILayerManager.cs" />
     <Compile Include="Services\WidgetManager.cs" />

@@ -28,7 +28,14 @@
     if (!string.IsNullOrEmpty(item.SeoPart.Description)) {
         description = item.SeoPart.Description;
     }
-    
+
+        var tagsHtml = new List<IHtmlString>();
+        foreach (var t in Model.ContentItem.TagsPart.CurrentTags) {
+            if (tagsHtml.Any()) {
+                tagsHtml.Add(new HtmlString(", "));
+            }
+            tagsHtml.Add(Html.ActionLink((string)t, "Search", "Home", new { area = "Orchard.Tags", tagName = (string)t }, new { }));
+        }
 }
 
 @using (Script.Head()) {
@@ -72,7 +79,7 @@
     <div class="container">
         <div class="text-center news-block">
             <div class="single-news-top"></div>
-            <img src="@item.BlogPost.Image.FirstMediaUrl" class="img-responsive wp-post-image" alt="@item.BlogPost.Image.MediaParts[0].Title">
+            <img src="@item.BlogPost.Image.FirstMediaUrl"  title="@item.BlogPost.Image.MediaParts[0].Title" alt="@item.BlogPost.Image.MediaParts[0].AlternateText"  class="img-responsive wp-post-image" alt="@item.BlogPost.Image.MediaParts[0].Title">
         </div>
     </div>
 
@@ -92,13 +99,21 @@
                     @for (int i = 0; i < medias.Count; i++) {
                         <div class="col-xs-6 col-sm-4 col-md-2 text-center">
                             <a href="@medias[i].MediaUrl" class="thumbnail" data-sub-html="">
-                                <img src="@Display.ResizeMediaUrl(Width: 350, Height: 350, Mode: "crop", Alignment: "middlecenter", Path: medias[i].MediaUrl)" class="img-responsive">
+                                <img src="@Display.ResizeMediaUrl(Width: 350, Height: 350, Mode: "crop", Alignment: "middlecenter", Path: medias[i].MediaUrl)"  title="@medias[i].Title" alt="@medias[i].AlternateText"  class="img-responsive">
                             </a>
                         </div>
                     }
 
                 </div>
             </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 news-block news-text">
+            @if (tagsHtml.Any()) {
+                <p class="tags">
+                    <span>@T("Tags:")</span>
+                    @foreach (var htmlString in tagsHtml) { @htmlString }
+                </p>
+            }
         </div>
         <div class="space-20"></div>
         <div class="news-block">
