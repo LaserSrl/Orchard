@@ -19,8 +19,4 @@
 
     @Html.HiddenFor(m => m.CommentedOn)
     @Html.HiddenFor(m => m.RepliedOn)
-    <div>
-      @Html.EditorFor(m => m.UseRecaptcha)
-      <label for="@Html.FieldIdFor(m => m.UseRecaptcha)" class="forcheckbox">@T("Use recaptcha")</label>
-    </div>
 
