@@ -311,6 +311,7 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         public void SendPushToContact(ContentItem ci, string contactTitle) {
+            _result = null;
             // ricava l'elenco dei device
             var elencoDevice = GetDevicesByContact(contactTitle);
 
@@ -366,6 +367,7 @@ namespace Laser.Orchard.Mobile.Services {
         /// <param name="messageWindows"></param>
         /// <param name="sound">Used in Apple Message</param>
         public void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "", string externalUrl = "") {
+            _result = null;
             bool stopPush = false;
             ContentItem relatedContentItem = null;
             string ctype = "";
@@ -468,6 +470,7 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         public void PublishedPushEventTest(ContentItem ci) {
+            _result = null;
             int maxIdVersionRecord = _orchardServices.ContentManager.GetAllVersions(ci.Id).Max(x => x.VersionRecord.Id);
             ContentItem savedCi = _orchardServices.ContentManager.GetAllVersions(ci.Id).Where(x => x.VersionRecord.Id == maxIdVersionRecord).FirstOrDefault();
             MobilePushPart mpp = ci.As<MobilePushPart>();
@@ -898,7 +901,7 @@ namespace Laser.Orchard.Mobile.Services {
             // salva l'elenco delle push da inviare
             for (int idx=offset; idx < Math.Min(offset+size, listdispositivo.Count); idx++) {
                 try {
-                    if (_pushNumber >= maxPushPerIteration) {
+                    if (_result != null && _pushNumber >= maxPushPerIteration) {
                         _result.CompletedIteration = false;
                         break;
                     }
