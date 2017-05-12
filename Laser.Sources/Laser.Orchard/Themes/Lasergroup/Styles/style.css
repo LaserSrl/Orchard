@@ -831,6 +831,21 @@ body.page-template-page-societa-chi-siamo #intro{ z-index:5; }
 
 .box-all-news { margin-bottom: 15px; }
 
+/* ------------------- COMMENTI ------------------ */
+
+.container > .well {
+    margin-top: 20px;
+    border: 1px solid #ff0903;
+} 
+
+.numero-commenti{
+    margin-top:0px;
+}
+
+.commmenter{
+    margin-top:0px;
+}
+
 /* ------------------- CONTATTI ------------------ */
 #gmap{ height:350px; width:100%; }
 .contact-title{ font-size: 25px; font-weight: 400; margin: 0; color:#333; }

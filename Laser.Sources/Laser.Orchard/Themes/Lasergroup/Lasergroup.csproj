@@ -115,6 +115,10 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Views\Parts.CommentForm-BlogPost.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Comment.cshtml" />
+    <Content Include="Views\Parts.ListOfComments-BlogPost.cshtml" />
+    <Content Include="Views\Parts.Comment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\fonts\fontawesome-webfont.eot" />
