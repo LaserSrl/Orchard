@@ -75,7 +75,7 @@ namespace Laser.Orchard.Braintree.Controllers {
             };
             payment = _posService.StartPayment(payment);
             var result = new { Token = clientToken, Pid = payment.Id };
-            return Json(result);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
