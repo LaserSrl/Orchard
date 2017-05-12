@@ -56,6 +56,28 @@ namespace Laser.Orchard.Braintree.Controllers {
             return View("Index", model);
         }
 
+        /// <summary>
+        /// Entry point per dispositivi mobile per iniziare il pagamento tramite Braintree.
+        /// </summary>
+        /// <param name="reason"></param>
+        /// <param name="amount"></param>
+        /// <param name="currency"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetTokenAndPid(string reason, decimal amount, string currency, int itemId = 0) {
+            var clientToken = _braintreeService.GetClientToken();
+            var payment = new PaymentRecord {
+                Reason = reason,
+                Amount = amount,
+                Currency = currency,
+                ContentItemId = itemId
+            };
+            payment = _posService.StartPayment(payment);
+            var result = new { Token = clientToken, Pid = payment.Id };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet]
         public ActionResult GetToken() {
             var clientToken = _braintreeService.GetClientToken();

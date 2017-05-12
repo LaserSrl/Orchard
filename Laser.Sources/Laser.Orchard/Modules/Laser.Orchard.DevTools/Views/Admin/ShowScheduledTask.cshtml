@@ -22,9 +22,9 @@
 </thead>
     @foreach (Orchard.Core.Scheduling.Models.ScheduledTaskRecord sc in Model) {
         <tr >
-<td >@sc.Id&nbsp</td>
-<td >@sc.ScheduledUtc&nbsp</td>
-  <td >  @sc.TaskType&nbsp  </td>  
+<td >@sc.Id&nbsp;</td>
+<td >@sc.ScheduledUtc&nbsp;</td>
+  <td >  @sc.TaskType&nbsp;  </td>  
       
        @if (sc.ContentItemVersionRecord!=null){
            if (sc.ContentItemVersionRecord.Infoset!=null){
