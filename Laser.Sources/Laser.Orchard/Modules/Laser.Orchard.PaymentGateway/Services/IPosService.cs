@@ -53,7 +53,7 @@ public interface IPosService : IDependency {
 
     #region Methods implemented in the abstract service base
     string GetPaymentInfoUrl(int paymentId);
-    PaymentRecord StartPayment(PaymentRecord values);
+    PaymentRecord StartPayment(PaymentRecord values, string newPaymentGuid = null);
     PaymentRecord GetPaymentInfo(int paymentId);
     void EndPayment(int paymentId, bool success, string error, string info, string transactionId = "");
     /// <summary>
