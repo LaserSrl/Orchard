@@ -9,24 +9,25 @@
 </div>
 <fieldset>
     <legend>@T("ContentType Permission Settings")</legend>
-    <table class="items" >
-        <thead>
-            <tr>
-                <th>@T("ContentType")</th>
-                <th>@T("Permission Get")</th>
-               <th>@T("Permission Post")</th>
-                 <th>@T("Permission Publish")</th>
-                <th>@T("Permission Delete")</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var culture in Model.ListContPermission)
-            {
-                @Html.EditorFor(settings=>settings.ListContPermission[i])
-                i++;
-            }
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="items">
+            <thead>
+                <tr>
+                    <th>@T("ContentType")</th>
+                    <th>@T("Permission Get")</th>
+                    <th>@T("Permission Post")</th>
+                    <th>@T("Permission Publish")</th>
+                    <th>@T("Permission Delete")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var culture in Model.ListContPermission) {
+                    @Html.EditorFor(settings => settings.ListContPermission[i])
+                    i++;
+                }
+            </tbody>
+        </table>
+    </div>
     <ul>
     <li>@T("Replace ContentType with empty value to delete element")</li>
     <li>@T("Set the permission in orchard style es: don't set EditOwnUserReport permission at UserReport contenttype but EditUserReport (and assign at users EditOwnUserReport permission)")</li>
