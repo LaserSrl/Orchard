@@ -15,22 +15,26 @@
 <div class="ship-errors"></div>
 
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Index"), FormMethod.Post, new { @id = "address-form" })) {
-    <fieldset>
+     <fieldset>
         <legend>@T("Shipping Address")</legend>
-        @Display.CommerceAddressForm(Prefix: "shippingAddress", Address: Model.ShippingAddress, IncludeCountry: true)
+        @Display.AddressForm(Prefix: "shippingAddress", Address: Model.ShippingAddress, IncludeCountry: true,ListAddress:Model.ListAvailableShippingAddress)
     </fieldset>
+
     <fieldset class="toggle-billing">
         <input id="toggle-billing-address" type="checkbox" checked="checked" />
         <label for="toggle-billing-address" class="for-checkbox">@T("Bill me at the shipping address.")</label>
     </fieldset>
     <fieldset class="billing-address">
         <legend>@T("Billing Address")</legend>
-        @Display.CommerceAddressForm(Prefix: "billingAddress", Address: Model.BillingAddress, IncludeCountry: true)
+        @Display.AddressForm(Prefix: "billingAddress", Address: Model.BillingAddress, IncludeCountry: true, ListAddress: Model.ListAvailableBillingAddress)
     </fieldset>
 
     <label for="@Html.Id("Email")">@T("e-mail")</label>
     <input id="@Html.Id("Email")" type="text" name="@Html.Name("Email")" value="@Model.Email" class="input-large required" />
     <div class="hint">@T("Please provide an e-mail address for us to use in order to give you updates on your order.")</div>
+
+    <label for="@Html.Id("PhonePrefix")">@T("Phone Prefix")</label>
+    <input id="@Html.Id("PhonePrefix")" type="text" name="@Html.Name("PhonePrefix")" value="@Model.PhonePrefix" class="input-large" />
 
     <label for="@Html.Id("Phone")">@T("Phone")</label>
     <input id="@Html.Id("Phone")" type="text" name="@Html.Name("Phone")" value="@Model.Phone" class="input-large" />

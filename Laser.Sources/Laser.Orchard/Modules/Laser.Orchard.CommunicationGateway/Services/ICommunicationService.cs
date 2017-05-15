@@ -490,29 +490,31 @@ namespace Laser.Orchard.CommunicationGateway.Services {
         }
 
         public void AddSmsToContact(string pref, string num, ContentItem contact) {
-            CommunicationContactPart ciCommunication = contact.As<CommunicationContactPart>();
-            if (ciCommunication != null) {
-                CommunicationSmsRecord csr = _repositoryCommunicationSmsRecord.Fetch(x => x.SmsContactPartRecord_Id == ciCommunication.ContentItem.Id).FirstOrDefault();
-                if (csr == null) {
-                    CommunicationSmsRecord newsms = new CommunicationSmsRecord();
-                    newsms.Prefix = pref;
-                    newsms.Sms = num;
-                    newsms.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
-                    newsms.Id = 0;
-                    newsms.Validated = true;
-                    newsms.DataInserimento = DateTime.Now;
-                    newsms.DataModifica = DateTime.Now;
-                    newsms.Produzione = true;
-                    _repositoryCommunicationSmsRecord.Create(newsms);
-                    _repositoryCommunicationSmsRecord.Flush();
-                }
-                else {
-                    csr.Prefix = pref;
-                    csr.Sms = num;
-                    csr.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
-                    csr.DataModifica = DateTime.Now;
-                    _repositoryCommunicationSmsRecord.Update(csr);
-                    _repositoryCommunicationSmsRecord.Flush();
+            if (!string.IsNullOrEmpty(num)) {
+                CommunicationContactPart ciCommunication = contact.As<CommunicationContactPart>();
+                if (ciCommunication != null) {
+                    CommunicationSmsRecord csr = _repositoryCommunicationSmsRecord.Fetch(x => x.SmsContactPartRecord_Id == ciCommunication.ContentItem.Id).FirstOrDefault();
+                    if (csr == null) {
+                        CommunicationSmsRecord newsms = new CommunicationSmsRecord();
+                        newsms.Prefix = pref;
+                        newsms.Sms = num;
+                        newsms.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
+                        newsms.Id = 0;
+                        newsms.Validated = true;
+                        newsms.DataInserimento = DateTime.Now;
+                        newsms.DataModifica = DateTime.Now;
+                        newsms.Produzione = true;
+                        _repositoryCommunicationSmsRecord.Create(newsms);
+                        _repositoryCommunicationSmsRecord.Flush();
+                    }
+                    else {
+                        csr.Prefix = pref;
+                        csr.Sms = num;
+                        csr.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
+                        csr.DataModifica = DateTime.Now;
+                        _repositoryCommunicationSmsRecord.Update(csr);
+                        _repositoryCommunicationSmsRecord.Flush();
+                    }
                 }
             }
         }
