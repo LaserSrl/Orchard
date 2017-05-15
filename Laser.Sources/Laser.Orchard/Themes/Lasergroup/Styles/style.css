@@ -637,7 +637,7 @@ body.page-template-page-societa-chi-siamo #intro{ z-index:5; }
 }
 
 @media(max-width:1199px){ 
-    #team .team-card.active{ -webkit-transform: rotateY( -180deg ); -moz-transform: rotateY( -180deg ); transform: rotateY( -180deg ); } 
+    #team .team-item:active .team-card{ -webkit-transform: rotateY( -180deg ); -moz-transform: rotateY( -180deg ); transform: rotateY( -180deg ); } 
 }
 
 /* ------------- SOCIETA' - LAVORA CON NOI ------------------ */
