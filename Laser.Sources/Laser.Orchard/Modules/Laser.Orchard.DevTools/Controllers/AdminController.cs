@@ -106,6 +106,26 @@ namespace Laser.Orchard.DevTools.Controllers {
 
         [HttpGet]
         [Admin]
+        public ActionResult ShowLogInfo() {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
+                return new HttpUnauthorizedResult();
+            Segnalazione se;
+            if (System.IO.File.Exists(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Logs/orchard-laser-" + DateTime.Now.Year.ToString() + "." + DateTime.Now.Month.ToString().PadLeft(2, '0') + "." + DateTime.Now.Day.ToString().PadLeft(2, '0') + ".log"))) {
+                string textfile = System.IO.File.ReadAllText(String.Format(HostingEnvironment.MapPath("~/") + "App_Data/Logs/orchard-laser-" + DateTime.Now.Year.ToString() + "." + DateTime.Now.Month.ToString().PadLeft(2, '0') + "." + DateTime.Now.Day.ToString().PadLeft(2, '0') + ".log"));
+                var ultimora = textfile.Split(new string[] { DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString().PadLeft(2, '0') + "-" + DateTime.Now.Day.ToString().PadLeft(2, '0') + " " }, StringSplitOptions.RemoveEmptyEntries);
+                StringBuilder sb = new StringBuilder();
+                for (int a = ultimora.Length - 1; a >= 0; --a) {
+                    sb.Append(ultimora[a] + Environment.NewLine + Environment.NewLine);
+                }
+                se = new Segnalazione { Testo = sb.ToString() };
+            }
+            else
+                se = new Segnalazione { Testo = "Nessun file di log oggi" };
+            return View("Index", se);
+        }
+
+        [HttpGet]
+        [Admin]
         public ActionResult ShowScheduledTask() {
             if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
                 return new HttpUnauthorizedResult();
