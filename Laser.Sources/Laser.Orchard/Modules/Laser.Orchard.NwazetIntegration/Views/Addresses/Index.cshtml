@@ -17,7 +17,7 @@
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Index"), FormMethod.Post, new { @id = "address-form" })) {
     <fieldset>
         <legend>@T("Shipping Address")</legend>
-        @Display.CommerceAddressForm(Prefix: "shippingAddress", Address: Model.ShippingAddress, IncludeCountry: true)
+        @Display.AddressForm(Prefix: "shippingAddress", Address: Model.ShippingAddress, IncludeCountry: true)
     </fieldset>
     <fieldset class="toggle-billing">
         <input id="toggle-billing-address" type="checkbox" checked="checked" />
@@ -25,7 +25,7 @@
     </fieldset>
     <fieldset class="billing-address">
         <legend>@T("Billing Address")</legend>
-        @Display.CommerceAddressForm(Prefix: "billingAddress", Address: Model.BillingAddress, IncludeCountry: true)
+        @Display.AddressForm(Prefix: "billingAddress", Address: Model.BillingAddress, IncludeCountry: true)
     </fieldset>
 
     <label for="@Html.Id("Email")">@T("e-mail")</label>
