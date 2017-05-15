@@ -1,0 +1,81 @@
+@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.StartupConfig.Models;
+@using Orchard.Data;
+@using Orchard.Localization.Records;
+@using Orchard.Localization.Services;
+@using System;
+@using System.Linq;
+
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","OK"
+    string eMsg = String.Empty; //used to track errors and put them in the WF state
+
+    IRepository<CommunicationEmailRecord> _emailRepository;
+    IRepository<CommunicationSmsRecord> _smsRepository;
+    ICultureManager _cultureManager;
+}
+@{
+    if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+        eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+    }
+    try {
+        _smsRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<CommunicationSmsRecord>>();
+        _emailRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<CommunicationEmailRecord>>();
+        _cultureManager = Model.OrchardServices.WorkContext.Resolve<ICultureManager>();
+
+        dynamic communicationContact = Model.ContentItem;
+
+		string nome = (string)communicationContact.ProfilePart.Nome.Value;
+		string cognome = (string)communicationContact.ProfilePart.Cognome.Value;
+        string email = (string)communicationContact.ProfilePart.Email.Value;
+        string prefisso = (string)communicationContact.ProfilePart.PrefissoTelefonico.Value;
+        string telefono = (string)communicationContact.ProfilePart.NumeroTelefonico.Value;
+
+        EmailContactPart emailContactPart = (EmailContactPart)communicationContact.EmailContactPart;
+        SmsContactPart smsContactPart = (SmsContactPart)communicationContact.SmsContactPart;
+        FavoriteCulturePart favoriteCulturePart = (FavoriteCulturePart)communicationContact.FavoriteCulturePart;
+		
+		if (!String.IsNullOrWhiteSpace(cognome) || !String.IsNullOrWhiteSpace(nome)) {
+			Model.ContentItem.TitlePart.Title = String.Format("{0}{1}{2}", cognome != null ? cognome : "", cognome != null && nome != null ? " " : "", nome != null ? nome : "");
+		}
+
+        CultureRecord preferredCulture = _cultureManager.GetCultureById(favoriteCulturePart.Culture_Id);
+
+        if (!emailContactPart.EmailRecord.Any(x => x.Email == email && x.EmailContactPartRecord_Id == emailContactPart.Id)) {
+            CommunicationEmailRecord cer = new CommunicationEmailRecord();
+            cer.Email = email;
+            cer.Validated = true;
+            cer.Produzione = true;
+            cer.Language = preferredCulture.Culture;
+            cer.AccettatoUsoCommerciale = false;
+            cer.AutorizzatoTerzeParti = false;
+            cer.EmailContactPartRecord_Id = emailContactPart.Id;
+            cer.DataInserimento = DateTime.Now;
+            cer.DataModifica = DateTime.Now;
+            _emailRepository.Create(cer);
+        }
+
+        if (!smsContactPart.SmsRecord.Any(x => x.Prefix == prefisso && x.Sms == telefono && x.SmsContactPartRecord_Id == smsContactPart.Id)) {
+            CommunicationSmsRecord csr = new CommunicationSmsRecord();
+            csr.Prefix = prefisso;
+            csr.Sms = telefono;
+            csr.Validated = true;
+            csr.Produzione = true;
+            csr.Language = preferredCulture.Culture;
+            csr.AccettatoUsoCommerciale = false;
+            csr.AutorizzatoTerzeParti = false;
+            csr.SmsContactPartRecord_Id = smsContactPart.Id;
+            csr.DataInserimento = DateTime.Now;
+            csr.DataModifica = DateTime.Now;
+            _smsRepository.Create(csr);
+        }
+
+        retString = "OK";
+    }
+    catch (Exception ex) {
+        eMsg += ex.Message + Environment.NewLine + ex.StackTrace;
+        retString = "Error";
+    }
+
+    Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+}@retString

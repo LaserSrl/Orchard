@@ -124,9 +124,6 @@ namespace Pubblicazione {
                         Projects[i]);
                 Projects[i] = Path.GetFullPath(Projects[i]);
                 if (!Projects[i].EndsWith(".Tests.csproj")) { //Esclude i progetti di test che per convenzione sono nella subfolder Tests del modulo e hanno nome che termina con .Tests.csproj
-                    if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Modules\"))
-                        MyelencoModuli.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
-
                     if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Themes\")) {
                         if (!Projects[i].EndsWith(@"\Themes\Themes.csproj")) {
                             MyelencoTemi.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
@@ -136,9 +133,14 @@ namespace Pubblicazione {
                             MyelencoTemi.Add("TheThemeMachine", Path.Combine(basepath, "Orchard.Sources\\src\\Orchard.Web\\Themes\\TheThemeMachine\\"));
                         }
                     }
-
-                    if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Libraries\"))
+                    else if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Libraries\"))
                         MyelencoLibrerie.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
+                    else if (Projects[i].Contains(basepath) && Projects[i].EndsWith(@"SitesFiles\SitesFiles.csproj")) {
+                        // do nothing => exclude this project
+                    }
+                    else //if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Modules\"))
+                        MyelencoModuli.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
+
                 }
             }
 
