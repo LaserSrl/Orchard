@@ -56,10 +56,6 @@
       <HintPath>..\..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -336,7 +332,6 @@
     <Compile Include="Models\PushMobileSettingsPart.cs" />
     <Compile Include="Models\UserAgentRedirect.cs" />
     <Compile Include="Routes\Routes.cs" />
-    <Compile Include="Services\MylogService.cs" />
     <Compile Include="Services\PushNotificationService.cs" />
     <Compile Include="Services\UserAgentRedirectServices.cs" />
     <Compile Include="Settings\PushMobileEditorEvents.cs" />
