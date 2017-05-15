@@ -27,7 +27,7 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
             _orchardServices = orchardServices;
             _currencyProvider = currencyProvider;
         }
-        
+        [Themed]
         public ActionResult Index(AddressesVM model) {
             ActionResult result = null;
             switch (model.Submit) {
