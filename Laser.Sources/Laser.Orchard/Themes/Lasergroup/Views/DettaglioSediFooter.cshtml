@@ -8,9 +8,11 @@
     var queryItems = services.GetContentItems(queryId, (page - 1) * pageSize, pageSize);
 }
 @foreach (var item in queryItems) {
-    <div class="col-xs-12 col-sm-4 col-md-2">
+    <div class="footer-sedi col-xs-12 col-sm-4 col-md-2">
         <div class="space-20"></div>
-        <h5 class="footer-title"><img src="@item.Sede.Icona.FirstMediaUrl" />&nbsp;@item.TitlePart.Title</h5>
+        <a href="~/contatti">
+            <h5 class="footer-title"><img src="@item.Sede.Icona.FirstMediaUrl" />&nbsp;@item.TitlePart.Title</h5>
+        </a>
         <p class="footer-contact">@Html.Raw(item.BodyPart.Text)</p>
     </div>
 }
