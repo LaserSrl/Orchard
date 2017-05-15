@@ -77,7 +77,30 @@ namespace Laser.Orchard.Braintree.Controllers {
             var result = new { Token = clientToken, Pid = payment.Id };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-
+        private PaymentResult FinalizePayment(string nonce, string sPid) {
+            int pid = int.Parse(sPid);
+            decimal amount = _posService.GetPaymentInfo(pid).Amount;
+            var payResult = _braintreeService.Pay(nonce, amount, null);
+            string error = "";
+            string transactionId = "";
+            if (payResult.Success == false) {
+                error = payResult.ResponseText;
+            }
+            else {
+                // pagamento ok
+                transactionId = payResult.TransactionId;
+            }
+            string info = JsonConvert.SerializeObject(payResult);
+            _posService.EndPayment(pid, payResult.Success, error, info, transactionId);
+            return new PaymentResult { Pid = pid, Success = payResult.Success, Error = error, TransactionId = transactionId};
+        }
+        [HttpPost]
+        public ActionResult PayMobile(MobilePay model) {
+            string nonce = model.payment_method_nonce;
+            string sPid = model.pid;
+            var outcome = FinalizePayment(nonce, sPid);
+            return Json(outcome);
+        }
         [HttpGet]
         public ActionResult GetToken() {
             var clientToken = _braintreeService.GetClientToken();
@@ -89,20 +112,20 @@ namespace Laser.Orchard.Braintree.Controllers {
         public ActionResult Pay() {
             string nonce = Request["payment_method_nonce"];
             string sPid = Request["pid"];
-            int pid = int.Parse(sPid);
-            decimal amount = _posService.GetPaymentInfo(pid).Amount;
-            var payResult = _braintreeService.Pay(nonce, amount, null);
-            string error = "";
-            string transactionId = "";
-            if (payResult.Success == false) {
-                error = payResult.ResponseText;
-            } else {
-                // pagamento ok
-                transactionId = payResult.TransactionId;
-            }
-            string info = JsonConvert.SerializeObject(payResult);
-            _posService.EndPayment(pid, payResult.Success, error, info, transactionId);
-            return Redirect(_posService.GetPaymentInfoUrl(pid));
+            var outcome = FinalizePayment(nonce, sPid);
+            return Redirect(_posService.GetPaymentInfoUrl(outcome.Pid));
+        }
+
+        public class MobilePay {
+            public string payment_method_nonce { get; set; }
+            public string pid { get; set; }
+        }
+
+        private class PaymentResult {
+            public int Pid { get; set; }
+            public bool Success { get; set; }
+            public string Error { get; set; }
+            public string TransactionId { get; set; }
         }
     }
 }
