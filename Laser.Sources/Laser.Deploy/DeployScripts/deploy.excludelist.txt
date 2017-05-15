@@ -14,3 +14,6 @@ Web.Release.config
 \Files\
 \Tests\
 obj\
+.git
+.gitignore
+.hgignore

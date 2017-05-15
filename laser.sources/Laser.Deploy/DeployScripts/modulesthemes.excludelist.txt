@@ -23,3 +23,6 @@ obj\
 \bin\Microsoft
 \bin\Orchard.Core
 \bin\Orchard.Framework
+.git
+.gitignore
+.hgignore
