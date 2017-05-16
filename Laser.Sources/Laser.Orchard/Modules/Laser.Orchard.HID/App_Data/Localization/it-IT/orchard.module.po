@@ -105,8 +105,36 @@ msgid "User details"
 msgstr "Dettagli dell'utente."
 
 msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserTask"
+msgid "AuthorizationFailed"
+msgstr "Autorizzazione fallita"
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserTask"
 msgid "Creates a user in the HID systems."
 msgstr "Crea una utenza nei sistemi di HID."
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserTask"
+msgid "InvalidParameters"
+msgstr "Parametri invalidi"
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserTask"
+msgid "NoIUser"
+msgstr "Nessun IUser"
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserTask"
+msgid "OK"
+msgstr "Ok"
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserTask"
+msgid "Security"
+msgstr "Sicurezza"
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserTask"
+msgid "UnknownError"
+msgstr "Errore Sconosciuto"
+
+msgctxt "Laser.Orchard.HID.Activities.CreateHIDUserTask"
+msgid "UserExists"
+msgstr "L'utente esiste"
 
 msgctxt "Laser.Orchard.HID.Controllers.AdminController"
 msgid "Authentication OK."

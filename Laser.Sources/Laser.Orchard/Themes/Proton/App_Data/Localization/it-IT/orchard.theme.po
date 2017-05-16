@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -15,6 +15,10 @@ msgstr "di"
 msgctxt "~/Themes/Proton/Views/Content-BlogPost.Summary.cshtml"
 msgid "READ MORE"
 msgstr "LEGGI TUTTO"
+
+msgctxt "~/Themes/Proton/Views/FeaturedProdotti.cshtml"
+msgid "INFO"
+msgstr "Info"
 
 msgctxt "~/Themes/Proton/Views/Fields.ContentPicker-Prodottiassociati.cshtml"
 msgid "Related Works"
@@ -111,6 +115,10 @@ msgstr "Upload file"
 msgctxt "~/Themes/Proton/Views/Parts.ContactForm-PaginaContatto.cshtml"
 msgid "Your Name"
 msgstr "Il tuo Nome"
+
+msgctxt "~/Themes/Proton/Views/Parts.ContentPickerConnector-Puntovendita.cshtml"
+msgid "Events"
+msgstr "Eventi"
 
 msgctxt "~/Themes/Proton/Views/Parts.MenuWidget-Breadcrumb.cshtml"
 msgid "Home"

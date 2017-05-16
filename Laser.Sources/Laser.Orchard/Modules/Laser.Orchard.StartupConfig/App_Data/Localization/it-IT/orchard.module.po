@@ -12,6 +12,10 @@ msgctxt "!=.AuthenticationRequiredPartDriver"
 msgid "You do not have permission to access this content."
 msgstr "Mancano i permessi per accedere a questo contenuto."
 
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/Commands/Execute.cshtml"
+msgid "Command line"
+msgstr "Linea di comando"
+
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/DefinitionTemplates/ContentPickerFieldExtensionSettings.cshtml"
 msgid "Cascade Publish Action"
 msgstr "Pubblica a Cascata"
@@ -333,6 +337,14 @@ msgid "Users"
 msgstr "Utenti"
 
 msgctxt "Laser.Orchard.StartupConfig.Activities.WebApiResponseActivity"
+msgid "Done"
+msgstr "Fatto"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.WebApiResponseActivity"
+msgid "Utils"
+msgstr "Utilità"
+
+msgctxt "Laser.Orchard.StartupConfig.Activities.WebApiResponseActivity"
 msgid "When called from a WebApi Signal Trigger, it returns a Response object."
 msgstr "Quando viene chiamato con un WebApi Signal Trigger, restituisce un oggetto di tipo Response."
 
@@ -399,6 +411,10 @@ msgstr "Selezionare il nuovo Proprietario del Contenuto"
 msgctxt "Laser.Orchard.StartupConfig.Activities.WorkflowChangeOwnerForm"
 msgid "Set Owner of content picker element"
 msgstr "Impostare il Proprietario del picker del contenuto"
+
+msgctxt "Laser.Orchard.StartupConfig.Controllers.CommandsController"
+msgid "Not authorized to use the web console"
+msgstr "Non autorizzato a usare la web console"
 
 msgctxt "Laser.Orchard.StartupConfig.Controllers.MaintenanceAdminController"
 msgid "Couldn't remove content"
@@ -724,6 +740,46 @@ msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
 msgid "Validation error"
 msgstr "Errore di validazione"
 
+msgctxt "Laser.Orchard.StartupConfig.TaxonomiesExtensions.Projections.TaxonomyTokenFilter"
+msgid "Categorized content items (search by token)"
+msgstr "Elementi di contenuto catalogati (ricerca tramite token)"
+
+msgctxt "Laser.Orchard.StartupConfig.TaxonomiesExtensions.Projections.TaxonomyTokenFilter"
+msgid "Categorized with terms specified by token"
+msgstr "Catalogati con i termini specificati tramite token"
+
+msgctxt "Laser.Orchard.StartupConfig.TaxonomiesExtensions.Projections.TaxonomyTokenFilter"
+msgid "Has terms (tokenized)"
+msgstr "Ha termini (tokenized)"
+
+msgctxt "Laser.Orchard.StartupConfig.TaxonomiesExtensions.Projections.TaxonomyTokenFilter"
+msgid "None of the ids \"{0}\" is a term."
+msgstr "Nessuno degli id \"{0}\" è un termine."
+
+msgctxt "Laser.Orchard.StartupConfig.TaxonomiesExtensions.Projections.TaxonomyTokenFilter"
+msgid "Taxonomy"
+msgstr "Tassonomia"
+
+msgctxt "Laser.Orchard.StartupConfig.TaxonomiesExtensions.Projections.TaxonomyTokenForm"
+msgid "Automatically include children terms in filtering"
+msgstr "Includi automaticamente i termini figli nel filtro"
+
+msgctxt "Laser.Orchard.StartupConfig.TaxonomiesExtensions.Projections.TaxonomyTokenForm"
+msgid "Is associated to all the specified terms"
+msgstr "E' associato a tutti i termini specificati"
+
+msgctxt "Laser.Orchard.StartupConfig.TaxonomiesExtensions.Projections.TaxonomyTokenForm"
+msgid "Is associated to one of the specified terms"
+msgstr "E' associato a uno dei termini specificati"
+
+msgctxt "Laser.Orchard.StartupConfig.TaxonomiesExtensions.Projections.TaxonomyTokenForm"
+msgid "Source Token"
+msgstr "Sorgente del Token"
+
+msgctxt "Laser.Orchard.StartupConfig.TaxonomiesExtensions.Projections.TaxonomyTokenForm"
+msgid "The token used as a source for term identifiers"
+msgstr "Il token usato come sorgente degli ID dei termini"
+
 msgctxt "Laser.Orchard.StartupConfig.Tokens.AdditionalDateTokens"
 msgid "Add Days|Months|Years to a date"
 msgstr "Add Days|Months|Years ad una data"
@@ -765,6 +821,10 @@ msgid "Owner email of content item "
 msgstr "Email del proprietario del contenuto."
 
 msgctxt "Laser.Orchard.StartupConfig.Tokens.OwnerEmailToken"
+msgid "OwnerEmail"
+msgstr "ProprietarioEmail"
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.OwnerEmailToken"
 msgid "The email of user creator."
 msgstr "L'email dell'utente creatore."
 
@@ -795,6 +855,10 @@ msgstr "Token per campi Tassonomia"
 msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Handlers.ProtectionSettingsHandler"
 msgid "Web Api"
 msgstr "Api Web"
+
+msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Handlers.ProtectionSettingsHandler"
+msgid "WebApi"
+msgstr "WebApi"
 
 msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Migration"
 msgid "A default app named \"{0}\" has been created. Its Api Key is {1}."

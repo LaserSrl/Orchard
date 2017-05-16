@@ -449,12 +449,24 @@ msgid "Settings - Sms Placeholders"
 msgstr "Impostazioni - Segnaposti per SMS"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "High"
+msgstr "Alta"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "Low"
+msgstr "Bassa"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
 msgid "Mam driver identifier"
 msgstr "Identificativo driver Mam"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
 msgid "Mam has alias"
 msgstr "Mam ha un alias"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "Medium"
+msgstr "Media"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
 msgid "Protocol"
