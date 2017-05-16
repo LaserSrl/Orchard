@@ -637,7 +637,7 @@ body.page-template-page-societa-chi-siamo #intro{ z-index:5; }
 }
 
 @media(max-width:1199px){ 
-    #team .team-card.active{ -webkit-transform: rotateY( -180deg ); -moz-transform: rotateY( -180deg ); transform: rotateY( -180deg ); } 
+    #team .team-item:active .team-card{ -webkit-transform: rotateY( -180deg ); -moz-transform: rotateY( -180deg ); transform: rotateY( -180deg ); } 
 }
 
 /* ------------- SOCIETA' - LAVORA CON NOI ------------------ */
@@ -830,6 +830,21 @@ body.page-template-page-societa-chi-siamo #intro{ z-index:5; }
 }
 
 .box-all-news { margin-bottom: 15px; }
+
+/* ------------------- COMMENTI ------------------ */
+
+.container > .well {
+    margin-top: 20px;
+    border: 1px solid #ff0903;
+} 
+
+.numero-commenti{
+    margin-top:0px;
+}
+
+.commmenter{
+    margin-top:0px;
+}
 
 /* ------------------- CONTATTI ------------------ */
 #gmap{ height:350px; width:100%; }
