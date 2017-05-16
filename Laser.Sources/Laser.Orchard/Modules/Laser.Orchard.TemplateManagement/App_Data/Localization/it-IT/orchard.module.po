@@ -217,6 +217,10 @@ msgid "Template"
 msgstr "Modello"
 
 msgctxt "Laser.Orchard.TemplateManagement.Services.TemplateService"
+msgid "Error on template, mail not sent"
+msgstr "Errore ne template, email non inviata"
+
+msgctxt "Laser.Orchard.TemplateManagement.Services.TemplateService"
 msgid "Sent "
 msgstr "Inviato"
 

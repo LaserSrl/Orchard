@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -51,6 +51,38 @@ msgstr "Non sono d'accordo"
 msgctxt "~/Themes/KrakeDefaultTheme/Views/Layout.cshtml"
 msgid "Powered by Krake"
 msgstr "Powered by Krake"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/LogOn.cshtml"
+msgid " if you don't have an account."
+msgstr "se non hai un account"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/LogOn.cshtml"
+msgid "Account Information"
+msgstr "Informazioni Account"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/LogOn.cshtml"
+msgid "Enter username and password"
+msgstr "Inserisci nome utente e password"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/LogOn.cshtml"
+msgid "Login was unsuccessful. Please correct the errors and try again."
+msgstr "La login non è riuscita. Correggere gli errori e riprovare."
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/LogOn.cshtml"
+msgid "Lost your Password?"
+msgstr "Hai dimenticato la tua password?"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/LogOn.cshtml"
+msgid "Register"
+msgstr "Registra"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/LogOn.cshtml"
+msgid "Remember Me"
+msgstr "Ricordami"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/LogOn.cshtml"
+msgid "Sign In"
+msgstr "Accedi"
 
 msgctxt "~/Themes/KrakeDefaultTheme/Views/OpenAuthLogOn.cshtml"
 msgid " if you don't have an account."
@@ -215,4 +247,28 @@ msgstr "Esci"
 msgctxt "~/Themes/KrakeDefaultTheme/Views/Parts.MenuWidget-Navigation.cshtml"
 msgid "Welcome,"
 msgstr "Benvenuto,"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Register.cshtml"
+msgid "Account creation was unsuccessful. Please correct the errors and try again."
+msgstr "La creazione dell'account non è riuscita. Correggere gli errori e riprovare."
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Register.cshtml"
+msgid "Account Information"
+msgstr "Informazioni Account"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Register.cshtml"
+msgid "Create a New Account"
+msgstr "Creare un nuovo Account"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Register.cshtml"
+msgid "Passwords are required to be a minimum of {0} characters in length."
+msgstr "Le password devono essere lunghe almeno {0} caratteri."
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Register.cshtml"
+msgid "Register"
+msgstr "Registra"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Register.cshtml"
+msgid "Use the form below to create a new account."
+msgstr "Utilizzare il modulo seguente per creare un nuovo account."
 
