@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -243,6 +243,8 @@ msgstr "Nuova Edizione"
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
 msgid "Properties"
 msgstr "Proprietà
+
+msgctxt "
 
 msgctxt "~/Modules/Laser.Orchard.NewsLetters/Views/NewsletterAdmin/Index.cshtml"
 msgid "Subscribers"
