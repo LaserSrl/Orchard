@@ -270,6 +270,8 @@ namespace Pubblicazione {
                     bw.ReportProgress(100 * progressstep / totaleprogress);
                     Thread.Sleep(100);
                 }
+                // eccezione per StartupConfig
+                File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules\Laser.Orchard.StartupConfig\bin\System.Web.Helpers.dll"), Path.Combine(deploypath, @"Modules\Laser.Orchard.StartupConfig\bin\System.Web.Helpers.dll"));
             } else {
                 if (e.Argument.ToString() == "btnAll") {
                     foreach (var a in this.clbModules.CheckedItems) {
@@ -278,6 +280,10 @@ namespace Pubblicazione {
                         ProcessXcopy(parentDir.FullName + @"\*.recipe.xml", deploypath + @"\Modules\" + a.ToString(), ExclusionFileOptions.None);
                         foreach (var additionalFile in additionalFiles) {
                             ProcessXcopy(Path.Combine(parentDir.FullName, additionalFile), Path.Combine(deploypath, "Modules", a.ToString()), ExclusionFileOptions.None);
+                        }
+                        if(a.ToString() == "Laser.Orchard.StartupConfig") {
+                            // eccezione per StartupConfig
+                            File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules\Laser.Orchard.StartupConfig\bin\System.Web.Helpers.dll"), Path.Combine(deploypath, @"Modules\Laser.Orchard.StartupConfig\bin\System.Web.Helpers.dll"));
                         }
                         progressstep++;
                         bw.ReportProgress(100 * progressstep / totaleprogress);
