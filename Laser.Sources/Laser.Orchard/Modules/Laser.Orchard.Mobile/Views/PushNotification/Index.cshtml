@@ -17,6 +17,7 @@
         </fieldset>
 }
 <br />
+<div class="table-responsive">
 <table class="items" summary="@T("List of devices.")">
     <colgroup>
         <col id="Col1" />
@@ -31,11 +32,11 @@
         <tr>
             <th scope="col">&nbsp;&darr;</th>
             <th scope="col">@T("Device")</th>
+            <th scope="col">@T("DataInserimento")</th>
+            <th scope="col">@T("DataModifica")</th>
             <th scope="col">@T("UUIdentifier")</th>
             <th scope="col">@T("Token")</th>
             <th scope="col">@T("Validated")</th>
-            <th scope="col">@T("DataInserimento")</th>
-            <th scope="col">@T("DataModifica")</th>
             <th scope="col">@T("Produzione")</th>
             <th scope="col">@T("Language")</th>
             <th scope="col">@T("Registration Host")</th>
@@ -50,11 +51,11 @@
         <tr  id="@("tr_Element" + singlerecord.Id)">
             <td>@singlerecord.Id</td>
             <td>@singlerecord.Device</td>
-            <td>@singlerecord.UUIdentifier</td>
-            <td>@singlerecord.Token</td>
-            <td>@singlerecord.Validated</td>
             <td>@singlerecord.DataInserimento</td>
             <td>@singlerecord.DataModifica</td>
+            <td><div class="deviceTdminWidth">@singlerecord.UUIdentifier</div></td>
+            <td>@singlerecord.Token</td>
+            <td>@singlerecord.Validated</td>
             <td>@singlerecord.Produzione</td>
             <td>@singlerecord.Language</td>
             <td>@singlerecord.RegistrationUrlHost</td>
@@ -69,6 +70,7 @@
         }
     }
 </table>
+    </div>
 @using (Html.BeginForm("Index", "Routes", FormMethod.Post)) {
     @Display(Model.Pager)
 }

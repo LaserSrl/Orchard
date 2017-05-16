@@ -1256,6 +1256,11 @@ table.items tbody tr:hover {
     background-color: #EDF9F5;
 }
 
+.deviceTdminWidth{
+    min-width:135px;
+}
+
+
 /* Pager
 ***************************************************************/
 

@@ -59,7 +59,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public PaymentRecord StartPayment(PaymentRecord values) {
+        public PaymentRecord StartPayment(PaymentRecord values, string newPaymentGuid = null) {
             // verifica che siano presenti i valori necessari
             if ((values.Amount <= 0)
                 || string.IsNullOrWhiteSpace(values.Currency)) {
@@ -76,7 +76,19 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 values.UserId = user.Id;
             }
 
-            values.Guid = Guid.NewGuid().ToString(); 
+            if(newPaymentGuid == null) {
+                values.Guid = Guid.NewGuid().ToString();
+            }
+            else {
+                var checkGuid = _repository.Fetch(x => x.Guid == newPaymentGuid);
+                if(checkGuid != null && checkGuid.Count() > 0) {
+                    // se il guid esiste già solleva un'eccezione
+                    throw new Exception(string.Format("PaymentGateway.PosServiceBase: Guid already exists ({0}).", newPaymentGuid));
+                }
+                else {
+                    values.Guid = newPaymentGuid;
+                }
+            }
 
             int paymentId = SavePaymentInfo(values);
             values.Id = paymentId;
@@ -243,7 +255,7 @@ namespace Laser.Orchard.PaymentGateway.Services {
                 //return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, HttpUtility.UrlEncode(jsonResponse));
                 //return string.Format("{0}:{1}", pRecord.CustomRedirectSchema, respQString);
             }
-            return new UrlHelper(HttpContext.Current.Request.RequestContext).Action("Info", "Payment", new { area = "Laser.Orchard.PaymentGateway", paymentId = paymentId });
+            return new UrlHelper(HttpContext.Current.Request.RequestContext).Action("Info", "Payment", new { area = "Laser.Orchard.PaymentGateway", paymentId = paymentId, guid = pRecord.Guid });
         }
         /// <summary>
         /// Salva il pagamento e restituisce il PaymentId.

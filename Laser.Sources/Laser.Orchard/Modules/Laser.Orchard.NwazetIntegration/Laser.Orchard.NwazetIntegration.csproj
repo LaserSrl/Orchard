@@ -6,19 +6,18 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{975D6F8C-1AA5-4E4C-9712-74D6A3D966B6}</ProjectGuid>
+    <ProjectGuid>{DC68A88C-E516-4030-8DA7-D954F5EA7424}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Laser.Orchard.Sharing</RootNamespace>
-    <AssemblyName>Laser.Orchard.Sharing</AssemblyName>
+    <RootNamespace>Laser.Orchard.NwazetIntegration</RootNamespace>
+    <AssemblyName>Laser.Orchard.NwazetIntegration</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
+    <UpgradeBackupLocation />
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
@@ -35,7 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -54,12 +53,10 @@
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Orchard.Core, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Framework, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -72,12 +69,12 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
@@ -104,57 +101,51 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\AddThis.TweetLikeShare.css" />
-    <Content Include="Styles\AddThis.LargeIcons.css" />
-    <Content Include="Styles\AddThis.RetweetLikeShare.css" />
-    <Content Include="Styles\AddThis.Css3StyleButtons.css" />
+    <Compile Include="Controllers\AddressesController.cs" />
+    <Compile Include="Models\PaymentGatewayCharge.cs" />
+    <Compile Include="Handlers\PaymentEventHandler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IPosServiceIntegration.cs" />
+    <Compile Include="ViewModels\AddressesVM.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets.json" />
+    <Content Include="Assets\Styles.less" />
+    <Content Include="Scripts\ship.js" />
+    <Content Include="Styles\Styles.css" />
+    <Content Include="Styles\Styles.min.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\Share.Settings.cshtml" />
+    <Content Include="Views\AddressForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Drivers\ShareBarPartDriver.cs" />
-    <Compile Include="Drivers\ShareBarSettingsPartDriver.cs" />
-    <Compile Include="Handlers\ShareBarPartHandler.cs" />
-    <Compile Include="Handlers\ShareBarSettingsPartHandler.cs" />
-    <Compile Include="Migrations.cs" />
-    <Compile Include="MissingSettingsBanner.cs" />
-    <Compile Include="ResourceManifest.cs" />
-    <Compile Include="Settings\ShareBarMode.cs" />
-    <Compile Include="Models\ShareBarPart.cs" />
-    <Compile Include="Models\ShareBarSettingsPart.cs" />
-    <Compile Include="Models\ShareBarSettingsPartRecord.cs" />
-    <Compile Include="Permissions.cs" />
-    <Compile Include="Settings\ShareBarTypePartSettings.cs" />
-    <Compile Include="ViewModels\ShareBarViewModel.cs" />
+    <ProjectReference Include="..\..\..\..\Nwazet.Commerce\Nwazet.Commerce.csproj">
+      <Project>{909acc2c-d672-4752-b75b-6822e05fe0e3}</Project>
+      <Name>Nwazet.Commerce</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.PaymentGateway\Laser.Orchard.PaymentGateway.csproj">
+      <Project>{e6900a95-3d80-497d-ad29-998adc8ad3d7}</Project>
+      <Name>Laser.Orchard.PaymentGateway</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Placement.info">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Views\Pos.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\DefinitionTemplates\ShareBarTypePartSettings.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\Share.ShareBar.cshtml" />
-    <Content Include="Views\Modes.ShareBar.GoogleLikeShare.cshtml" />
     <Content Include="packages.config" />
-    <Content Include="Views\Modes.ShareBar.Css3StyleButtons.cshtml" />
-    <Content Include="Views\Modes.ShareBar.VerticalShareCounter.cshtml" />
-    <Content Include="Views\Modes.ShareBar.HorizontalShareCounter.cshtml" />
-    <Content Include="Views\Modes.ShareBar.MediumIcons.cshtml" />
-    <Content Include="Views\Modes.ShareBar.RetweetLikeShare.cshtml" />
-    <Content Include="Views\Modes.ShareBar.ToolboxFacebookLike.cshtml" />
-    <Content Include="Views\Modes.ShareBar.TweetLikeShare.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PaymentGatewayOrder.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Addresses\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -200,8 +191,4 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>
