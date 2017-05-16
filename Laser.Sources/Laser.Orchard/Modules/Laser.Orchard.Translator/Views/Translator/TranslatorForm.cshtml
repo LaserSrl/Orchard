@@ -93,9 +93,9 @@
             if ('@ViewBag.SaveSuccess' == 'True') {
                 window.parent.$('#message-@Model.Id').children("span").html("@Model.Message");
                 if ('@String.IsNullOrWhiteSpace(Model.TranslatedMessage)' == 'True')
-                    window.parent.$('#message-@Model.Id').children("i").attr("class", "icon-remove");
+                    window.parent.$('#message-@Model.Id').children("i").attr("class", "fa fa-times");
                 else
-                    window.parent.$('#message-@Model.Id').children("i").attr("class", "icon-ok");
+                    window.parent.$('#message-@Model.Id').children("i").attr("class", "fa fa-check");
             }
 
             if ('@ViewBag.DeleteSuccess' == 'True') {
