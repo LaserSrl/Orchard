@@ -37,8 +37,20 @@ msgid "Show Cached Data"
 msgstr "Mostra dati in cache"
 
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Show Error Log"
+msgstr "Log di Errore"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Show Info Log"
+msgstr "Log di Info"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
 msgid "Show Log"
 msgstr "Mostra Log"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Show Razor"
+msgstr "Visualizza Razor"
 
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
 msgid "Show scheduled task"
@@ -67,6 +79,10 @@ msgstr "Elimina Cache"
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowCachedData.cshtml"
 msgid "Remove FileSystem"
 msgstr "Elimina da filesystem"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowRazor.cshtml"
+msgid "Clean Razor"
+msgstr "Pulisci i Razor"
 
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowScheduledTask.cshtml"
 msgid "Remove"
