@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using AutoMapper;
+using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.NwazetIntegration.Models;
 using Nwazet.Commerce.Models;
@@ -17,23 +18,28 @@ namespace Laser.Orchard.NwazetIntegration.Services {
         void OrderToContact(OrderPart order);
         List<AddressRecord> GetShippingByUser(IUser user);
         List<AddressRecord> GetBillingByUser(IUser user);
+        string[] GetPhone(IUser user);
+
     }
 
 
 
-    public class NwazetCommunicationService: INwazetCommunicationService {
+    public class NwazetCommunicationService : INwazetCommunicationService {
 
         private readonly IOrchardServices _orchardServices;
         private readonly ICommunicationService _communicationService;
         private readonly IRepository<AddressRecord> _addressRecord;
+        private readonly IRepository<CommunicationSmsRecord> _repositoryCommunicationSmsRecord;
         public ILogger _Logger { get; set; }
         public NwazetCommunicationService(
             IOrchardServices orchardServices
-            ,ICommunicationService communicationService
-            , IRepository<AddressRecord> addressRecord) {
+            , ICommunicationService communicationService
+            , IRepository<AddressRecord> addressRecord
+            , IRepository<CommunicationSmsRecord> repositoryCommunicationSmsRecord) {
             _orchardServices = orchardServices;
             _communicationService = communicationService;
             _addressRecord = addressRecord;
+            _repositoryCommunicationSmsRecord = repositoryCommunicationSmsRecord;
             _Logger = NullLogger.Instance;
 
         }
@@ -57,6 +63,27 @@ namespace Laser.Orchard.NwazetIntegration.Services {
             return GetAddressByUser(user, AddressRecordType.BillingAddress);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>string[2] prefix e sms</returns>
+        public string[] GetPhone(IUser user) {
+            var contactpart = _communicationService.GetContactFromUser(user.Id);
+            if (contactpart == null) { // non dovrebbe mai succedere (inserito nel caso cambiassimo la logica già implementata)
+                _communicationService.UserToContact(user);
+                contactpart = _communicationService.GetContactFromUser(user.Id);
+            }
+            if (contactpart == null)
+                return new string[2];
+            else {
+                var csr = _repositoryCommunicationSmsRecord.Fetch(x => x.SmsContactPartRecord_Id == contactpart.Id).FirstOrDefault();
+                if (csr != null) {
+                    return new string[] { csr.Prefix, csr.Sms };
+                }
+            }
+            return new string[2];
+        }
         public void OrderToContact(OrderPart order) {
             // tutto in try catch perchè viene scatenato appena finito il pagamento e quindi non posso permettermi di annullare la transazione
             try {
@@ -102,20 +129,20 @@ namespace Laser.Orchard.NwazetIntegration.Services {
                     catch (Exception ex) {
                         _Logger.Error("OrderToContact -> AddEmailToContact -> order id= " + order.Id.ToString() + " Error: " + ex.Message);
                     }
-                    try {
-                        _communicationService.AddSmsToContact((order.CustomerPhone+' ').Split(' ')[0], (order.CustomerPhone + ' ').Split(' ')[1], contactItem);
+                    try { // non sovrascrivo se dato già presente
+                        _communicationService.AddSmsToContact((order.CustomerPhone + ' ').Split(' ')[0], (order.CustomerPhone + ' ').Split(' ')[1], contactItem, false);
                     }
                     catch (Exception ex) {
                         _Logger.Error("OrderToContact -> AddSmsToContact -> order id= " + order.Id.ToString() + " Error: " + ex.Message);
                     }
                 }
             }
-            catch (Exception myex){
-                _Logger.Error("OrderToContact -> order id= " + order.Id.ToString()+" Error: " + myex.Message);
+            catch (Exception myex) {
+                _Logger.Error("OrderToContact -> order id= " + order.Id.ToString() + " Error: " + myex.Message);
             }
         }
 
-        private void StoreAddress(Address address, string typeAddress,  ContentItem contact) {
+        private void StoreAddress(Address address, string typeAddress, ContentItem contact) {
             var typeAddressValue = (AddressRecordType)Enum.Parse(typeof(AddressRecordType), typeAddress);
             Mapper.Initialize(cfg => {
                 cfg.CreateMap<Address, AddressRecord>();

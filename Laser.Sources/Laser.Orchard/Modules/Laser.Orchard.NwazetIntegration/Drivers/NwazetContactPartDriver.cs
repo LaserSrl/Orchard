@@ -19,7 +19,6 @@ namespace Laser.Orchard.NwazetIntegration.Drivers {
         {
             get { return "Laser.Mobile.NwazetContact"; }
         }
-
         protected override DriverResult Display(NwazetContactPart part, string displayType, dynamic shapeHelper) {
             //Determine if we're on an admin page
             bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
@@ -27,7 +26,7 @@ namespace Laser.Orchard.NwazetIntegration.Drivers {
                 if (displayType == "Detail") {
                     if (part.NwazetAddressRecord != null && part.NwazetAddressRecord.Count > 0)
                         return ContentShape("Parts_NwazetContact",
-                            () => shapeHelper.Parts_NwazetContact(Address: part.NwazetAddressRecord));
+                            () => shapeHelper.Parts_NwazetContact(Address: part.NwazetAddressRecord,Email:part.ContentItem));
                 }
             }
             return null;

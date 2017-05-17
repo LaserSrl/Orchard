@@ -35,7 +35,7 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
             _currencyProvider = currencyProvider;
             _nwazetCommunicationService = nwazetCommunicationService;
         }
-       [Themed] 
+        [Themed]
         public ActionResult Index(AddressesVM model) {
             ActionResult result = null;
 
@@ -69,23 +69,23 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
 
                     var currency = _currencyProvider.CurrencyCode;
                     var order = _orderService.CreateOrder(
-                        charge, 
-                        items, 
-                        _shoppingCart.Subtotal(), 
-                        _shoppingCart.Total(), 
-                        _shoppingCart.Taxes(), 
-                        _shoppingCart.ShippingOption, 
-                        model.ShippingAddress, 
-                        model.BillingAddress, 
+                        charge,
+                        items,
+                        _shoppingCart.Subtotal(),
+                        _shoppingCart.Total(),
+                        _shoppingCart.Taxes(),
+                        _shoppingCart.ShippingOption,
+                        model.ShippingAddress,
+                        model.BillingAddress,
                         model.Email,
-                        model.PhonePrefix+" "+model.Phone, 
-                        model.SpecialInstructions, 
-                        OrderPart.Cancelled, 
-                        null, 
-                        false, 
-                        userId, 
-                        0, 
-                        "", 
+                        model.PhonePrefix + " " + model.Phone,
+                        model.SpecialInstructions,
+                        OrderPart.Cancelled,
+                        null,
+                        false,
+                        userId,
+                        0,
+                        "",
                         currency);
                     order.LogActivity(OrderPart.Event, "Order created");
                     var reason = string.Format("Purchase Order {0}", _posServiceIntegration.GetOrderNumber(order.Id));
@@ -98,6 +98,14 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
                     if (thecurrentUser != null) {
                         model.ListAvailableBillingAddress = _nwazetCommunicationService.GetBillingByUser(thecurrentUser);
                         model.ListAvailableShippingAddress = _nwazetCommunicationService.GetShippingByUser(thecurrentUser);
+                        model.Email = thecurrentUser.Email;
+                        var cel = _nwazetCommunicationService.GetPhone(thecurrentUser);
+                        if (cel.Length == 2) {
+                            model.PhonePrefix = cel[0];
+                            model.Phone = cel[1];
+                        }
+
+
                     }
                     result = View("Index", model);
                     break;

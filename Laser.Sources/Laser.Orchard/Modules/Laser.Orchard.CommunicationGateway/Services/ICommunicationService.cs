@@ -78,7 +78,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
 
         void AddEmailToContact(string email, ContentItem contact);
 
-        void AddSmsToContact(string pref, string num, ContentItem contact);
+        void AddSmsToContact(string pref, string num, ContentItem contact, bool overridexisting);
     }
 
     public class CommunicationService : ICommunicationService {
@@ -489,7 +489,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             }
         }
 
-        public void AddSmsToContact(string pref, string num, ContentItem contact) {
+        public void AddSmsToContact(string pref, string num, ContentItem contact,bool overridexisting=true) {
             if (!string.IsNullOrEmpty(num)) {
                 CommunicationContactPart ciCommunication = contact.As<CommunicationContactPart>();
                 if (ciCommunication != null) {
@@ -508,12 +508,14 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         _repositoryCommunicationSmsRecord.Flush();
                     }
                     else {
-                        csr.Prefix = pref;
-                        csr.Sms = num;
-                        csr.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
-                        csr.DataModifica = DateTime.Now;
-                        _repositoryCommunicationSmsRecord.Update(csr);
-                        _repositoryCommunicationSmsRecord.Flush();
+                        if (overridexisting) {
+                            csr.Prefix = pref;
+                            csr.Sms = num;
+                            csr.SmsContactPartRecord_Id = ciCommunication.ContentItem.Id;
+                            csr.DataModifica = DateTime.Now;
+                            _repositoryCommunicationSmsRecord.Update(csr);
+                            _repositoryCommunicationSmsRecord.Flush();
+                        }
                     }
                 }
             }
@@ -644,7 +646,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
             try {
                 dynamic userPwdRecoveryPart = ((dynamic)UserContent.ContentItem).UserPwdRecoveryPart;
                 if (userPwdRecoveryPart != null) {
-                    AddSmsToContact(userPwdRecoveryPart.InternationalPrefix, userPwdRecoveryPart.PhoneNumber, contact);
+                    AddSmsToContact(userPwdRecoveryPart.InternationalPrefix, userPwdRecoveryPart.PhoneNumber, contact,true);
                 }
             }
             catch {
