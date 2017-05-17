@@ -266,3 +266,10 @@ span.navicon-statistics:before {
 .navicon-layouts {
     background-image: none !important; 
 }
+
+.navicon-commerce:before {
+	content: "\f07a";
+}
+.navicon-commerce {
+	background-image: none !important;
+}
