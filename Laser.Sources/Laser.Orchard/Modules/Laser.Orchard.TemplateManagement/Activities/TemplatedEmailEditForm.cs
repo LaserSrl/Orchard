@@ -70,11 +70,25 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                                 Description: T("Specify a comma-separated list of e-mail CC recipients."),
                                 Classes: new[] { "large", "text", "tokenized" }
                             ),
+                            _BCCEmails: Shape.Textbox(
+                                Id: "recipient-bcc-email",
+                                Name: "RecipientBCC",
+                                Title: T("BCC"),
+                                Description: T("Specify a comma-separated list of e-mail BCC recipients."),
+                                Classes: new[] { "large", "text", "tokenized" }
+                            ),
                                _FromEmails: Shape.Textbox(
                                 Id: "from-email",
                                 Name: "FromEmail",
                                 Title: T("From"),
                                 Description: T("Specify email sender."),
+                                Classes: new[] { "large", "text", "tokenized" }
+                            ),
+                            _ReplyTo: Shape.Textbox(
+                                Id: "reply-to",
+                                Name: "ReplyTo",
+                                Title: T("ReplyTo"),
+                                Description: T("Specify reply to."),
                                 Classes: new[] { "large", "text", "tokenized" }
                             ),
                             _NotifyReadEmail: Shape.Checkbox(
