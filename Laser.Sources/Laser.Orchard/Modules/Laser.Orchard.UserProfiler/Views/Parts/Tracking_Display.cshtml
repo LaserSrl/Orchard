@@ -3,7 +3,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajax({
-                url: '@Model.CallUrl/Tracking/PostId',
+              url: "@Url.Action( "PostId", "Profile", new { area = "Laser.Orchard.UserProfiler" })",
             type: "POST",
             data: {id:@Model.PageID, __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'}
         });
