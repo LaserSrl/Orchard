@@ -52,15 +52,15 @@ msgctxt "Orchard.SecureSocketsLayer.Commands.SecureSocketsLayersCommand"
 msgid "'Insecure Host Name' site setting set to '{0}'"
 msgstr "'Nome Host non sicuro' impostato a '{0}'"
 
-#: "Orchard.SecureSocketsLayer.Filters.SecureSocketsLayersFilter"
-msgctxt "Orchard.SecureSocketsLayer.Filters.SecureSocketsLayersFilter"
-msgid "You need to configure the SSL settings."
-msgstr "È necessario configurare le impostazioni SSL."
-
 #: "Orchard.SecureSocketsLayer.Handlers.SslSettingsPartHandler"
 msgctxt "Orchard.SecureSocketsLayer.Handlers.SslSettingsPartHandler"
 msgid "SSL"
 msgstr "SSL"
+
+#: "Orchard.SecureSocketsLayer.Services.MissingSettingsBanner"
+msgctxt "Orchard.SecureSocketsLayer.Services.MissingSettingsBanner"
+msgid "The <a href=\"{0}\">SSL settings</a> need to be configured."
+msgstr "È necessario configurare le <a href=\"{0}\">Impostazioni SSL</a>."
 
 #: "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
 msgctxt "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
@@ -96,6 +96,46 @@ msgstr "(Obbligatorio) Il nome dell'host non sicuro dove il traffico deve essere
 msgctxt "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
 msgid "Force SSL on all pages"
 msgstr "Forza SSL su tutte le pagine"
+
+#: "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgctxt "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgid "Enable HTTP Strict Transport Security"
+msgstr "Abilitare HTTP Strict Transport Security"
+
+#: "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgctxt "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgid "<a href='https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security' target='_blank'>More information about HSTS</a>"
+msgstr "<a href='https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security' target='_blank'>Ulteriori informazioni su HSTS</a>"
+
+#: "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgctxt "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgid "Expiration time"
+msgstr "Data di scadenza"
+
+#: "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgctxt "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgid "(Mandatory) Specify the max age of HSTS in seconds (e.g. 31536000 is one year). If you set this parameter to 0, the HSTS Header will immediately expire."
+msgstr "(Obbligatorio) Specificare l'età massima (max age) di HSTS in secondi (es. 31536000 è un anno). Se si imposta questo parametro su 0, l'intestazione HSTS scadrà immediatamente."
+
+#: "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgctxt "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgid "Include Subdomains"
+msgstr "Includi i sottodomini"
+
+#: "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgctxt "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgid "Applies the HSTS rules to all of the site's subdomains."
+msgstr "Applica le regole HSTS a tutti i sottodomini del sito."
+
+#: "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgctxt "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgid "Preload"
+msgstr "Precaricamento"
+
+#: "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgctxt "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
+msgid "You can use this if you successfully submitted your domain to an HSTS preload service and serve all subdomains over HTTPS. If you send this directive, it can have PERMANENT CONSEQUENCES. Please read the <a href='https://hstspreload.appspot.com/' target='_blank'>details</a> before sending the header with \"preload\"."
+msgstr "Puoi utilizzare questa opzione se hai inviato con successo il tuo dominio a un servizio di precaricamento HSTS e servi tutti i sottodomini in HTTPS. Se si conferma questa opzione, si possono avere CONSEGUENZE PERMANENTI. Si prega di leggere attentamente i <a href='https://hstspreload.appspot.com/' target='_blank'>dettagli</a> prima di inviare l'intestazione con \"precaricamento\"."
 
 #: "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"
 msgctxt "~/Modules/Orchard.SecureSocketsLayer/Views/EditorTemplates/Parts/SecureSocketsLayer.Settings.cshtml"

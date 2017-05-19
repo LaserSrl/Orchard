@@ -87,7 +87,7 @@ msgstr "Trovati {0} elementi"
 
 #: "Orchard.Blogs.Commands.BlogCommands"
 msgctxt "Orchard.Blogs.Commands.BlogCommands"
-msgid "An error occured while loading the feed at {0}."
+msgid "An error occurred while loading the feed at {0}."
 msgstr "Si è verificato un errore durante il caricamento del feed in {0}."
 
 #. "Blog not found with specified Id: {0}"
@@ -104,6 +104,16 @@ msgstr "Aggiunta post: {0}..."
 msgctxt "Orchard.Blogs.Commands.BlogCommands"
 msgid "Import feed completed."
 msgstr "Importazione feed completata."
+
+#. "Creating {0} widget failed: blog was not found."
+msgctxt "Orchard.Blogs.Commands.BlogWidgetCommands"
+msgid "Creating {0} widget failed: blog was not found."
+msgstr "Creazione del widget {0} fallita: il blog non è stato trovato."
+
+#. "{0} widget created successfully."
+msgctxt "Orchard.Blogs.Commands.BlogWidgetCommands"
+msgid "{0} widget created successfully."
+msgstr "Widget {0} creato con successo."
 
 #: "Orchard.Blogs.Controllers.BlogAdminController"
 msgctxt "Orchard.Blogs.Controllers.BlogAdminController"
@@ -255,11 +265,6 @@ msgctxt "~/Modules/Orchard.Blogs/Views/Content-Blog.DetailAdmin.cshtml"
 msgid "New Post"
 msgstr "Nuovo Post"
 
-#: "~/Modules/Orchard.Blogs/Views/Content-Blog.Edit.cshtml"
-msgctxt "~/Modules/Orchard.Blogs/Views/Content-Blog.Edit.cshtml"
-msgid "New Blog"
-msgstr "Nuovo Blog"
-
 #: "~/Modules/Orchard.Blogs/Views/Content-BlogPost.SummaryAdmin.cshtml"
 msgctxt "~/Modules/Orchard.Blogs/Views/Content-BlogPost.SummaryAdmin.cshtml"
 msgid "View"
@@ -332,8 +337,8 @@ msgstr "Nuovo Post"
 
 #: "~/Modules/Orchard.Blogs/Views/Parts.Blogs.BlogArchives.cshtml"
 msgctxt "~/Modules/Orchard.Blogs/Views/Parts.Blogs.BlogArchives.cshtml"
-msgid "None found"
-msgstr "Trovato nulla"
+msgid "There are no posts in the archives."
+msgstr "Non ci sono post negli archivi."
 
 #: "~/Modules/Orchard.Blogs/Views/Parts.Blogs.BlogPost.List.cshtml"
 msgctxt "~/Modules/Orchard.Blogs/Views/Parts.Blogs.BlogPost.List.cshtml"

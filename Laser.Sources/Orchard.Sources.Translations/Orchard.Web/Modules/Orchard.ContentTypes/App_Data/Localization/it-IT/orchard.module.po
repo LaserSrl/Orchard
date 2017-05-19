@@ -232,6 +232,11 @@ msgctxt "~/Modules/Orchard.ContentTypes/Views/Admin/AddFieldTo.cshtml"
 msgid "Save"
 msgstr "Salva"
 
+#: "~/Modules/Orchard.ContentTypes/Views/Admin/AddFieldTo.cshtml"
+msgctxt "~/Modules/Orchard.ContentTypes/Views/Admin/AddFieldTo.cshtml"
+msgid "Cancel"
+msgstr "Annulla"
+
 #: "~/Modules/Orchard.ContentTypes/Views/Admin/AddPartsTo.cshtml"
 msgctxt "~/Modules/Orchard.ContentTypes/Views/Admin/AddPartsTo.cshtml"
 msgid "Add Parts To \"{0}\""
@@ -366,6 +371,11 @@ msgstr "Nome del campo che sarà utilizzato nella visualizzazione."
 msgctxt "~/Modules/Orchard.ContentTypes/Views/Admin/EditField.cshtml"
 msgid "Save"
 msgstr "Salva"
+
+#: "~/Modules/Orchard.ContentTypes/Views/Admin/EditField.cshtml"
+msgctxt "~/Modules/Orchard.ContentTypes/Views/Admin/EditField.cshtml"
+msgid "Cancel"
+msgstr "Annulla"
 
 #: "~/Modules/Orchard.ContentTypes/Views/Admin/EditPart.cshtml"
 msgctxt "~/Modules/Orchard.ContentTypes/Views/Admin/EditPart.cshtml"

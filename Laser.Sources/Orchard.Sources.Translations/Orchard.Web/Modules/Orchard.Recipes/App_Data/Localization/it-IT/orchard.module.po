@@ -172,6 +172,16 @@ msgctxt "Orchard.Recipes.Providers.Executors.RecipesStep"
 msgid "A recipe with the same name has been detected for extension \"{0}\". Please make sure recipes are uniquely named."
 msgstr "Una ricetta con lo stesso nome è stata rilevata per l' estensione \"{0}\". Si prega di assicurarsi che le ricette siano denominate in maniera univoca."
 
+#: "Orchard.Recipes.Providers.Executors.RemoveContentDefinitionStep"
+msgctxt "Orchard.Recipes.Providers.Executors.RemoveContentDefinitionStep"
+msgid "Remove Content Definition"
+msgstr "Rimuove la definizione del contenuto"
+
+#: "Orchard.Recipes.Providers.Executors.RemoveContentDefinitionStep"
+msgctxt "Orchard.Recipes.Providers.Executors.RemoveContentDefinitionStep"
+msgid "Removes a list of content definitions."
+msgstr "Rimuove un elenco di definizioni di contenuto."
+
 #: "Orchard.Recipes.Providers.Executors.RemoveContentStep"
 msgctxt "Orchard.Recipes.Providers.Executors.RemoveContentStep"
 msgid "Remove Content"
