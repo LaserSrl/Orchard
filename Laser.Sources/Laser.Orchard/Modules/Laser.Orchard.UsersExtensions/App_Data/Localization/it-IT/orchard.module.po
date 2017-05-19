@@ -41,8 +41,8 @@ msgid "Registration behaviour"
 msgstr "Comportamento durante la fare di registrazione"
 
 msgctxt "~/Modules/Laser.Orchard.UsersExtensions/Views/EditorTemplates/Parts/UsersRegistrationSettings.cshtml"
-msgid "User Registration - Policies Acceptation"
-msgstr "Registrazione Utenti - Accettazione Informative"
+msgid "Users registration - policies acceptation"
+msgstr "Registrazione utenti - accettazione informative"
 
 msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsAPIController"
 msgid "Generic error"
@@ -145,7 +145,11 @@ msgid "User has to accept policies!"
 msgstr "L'utente deve accettare le informative!"
 
 msgctxt "Laser.Orchard.UsersExtensions.Handlers.UserRegistrationSettingsPartHandler"
-msgid "User Extras"
+msgid "UserExtras"
+msgstr "Extra dell'Utente"
+
+msgctxt "Laser.Orchard.UsersExtensions.Handlers.UserRegistrationSettingsPartHandler"
+msgid "Users extras"
 msgstr "Informazioni supplementari utenti"
 
 msgctxt "Laser.Orchard.UsersExtensions.Services.UserActionMethods"

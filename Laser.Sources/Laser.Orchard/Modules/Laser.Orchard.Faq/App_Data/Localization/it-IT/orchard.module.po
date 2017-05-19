@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -31,6 +31,10 @@ msgstr "In questa pagina sono presenti Faq"
 msgctxt "~/Modules/Laser.Orchard.Faq/Views/EditorTemplates/Parts/FaqWidgetAjax.cshtml"
 msgid "this content has a FAQ Widget"
 msgstr "In questa pagina sono presenti Faq"
+
+msgctxt "~/Modules/Laser.Orchard.Faq/Views/Parts/Faq.cshtml"
+msgid "Faq Type"
+msgstr "Tipo di Faq"
 
 msgctxt "~/Modules/Laser.Orchard.Faq/Views/Parts/Faq.cshtml"
 msgid "FaqType"

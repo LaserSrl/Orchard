@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -77,6 +78,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\BlogPostThumbnail.cshtml" />
     <Content Include="Scripts\jquery-migrate.js" />
     <Content Include="Scripts\jquery.js" />
     <Content Include="Scripts\jquery_002.js" />
@@ -113,6 +115,10 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Views\Parts.CommentForm-BlogPost.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Comment.cshtml" />
+    <Content Include="Views\Parts.ListOfComments-BlogPost.cshtml" />
+    <Content Include="Views\Parts.Comment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\fonts\fontawesome-webfont.eot" />
@@ -329,6 +335,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Localization\it-IT\orchard.theme.po" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget-AfterContentProdotto.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ShowcaseBackLink.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Search.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

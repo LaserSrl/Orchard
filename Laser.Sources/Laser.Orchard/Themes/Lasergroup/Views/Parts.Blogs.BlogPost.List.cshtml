@@ -14,7 +14,7 @@
 	                <div class="news-item">
 		                <div class="news-item-photo-mask">
 			                <a href="@post.AutoroutePart.Path">
-				                <img src="@Display.ResizeMediaUrl(Width: 600, Height: 300, Mode: "crop", Alignment: "middlecenter", Path: post.BlogPost.Image.MediaParts[0].MediaUrl)" class="img-responsive wp-post-image" alt="@post.BlogPost.Image.MediaParts[0].Title">
+				                <img src="@Display.ResizeMediaUrl(Width: 600, Height: 300, Mode: "crop", Alignment: "middlecenter", Path: post.BlogPost.Image.MediaParts[0].MediaUrl)" title="@post.BlogPost.Image.MediaParts[0].Title" alt="@post.BlogPost.Image.MediaParts[0].AlternateText"  class="img-responsive wp-post-image" alt="@post.BlogPost.Image.MediaParts[0].Title">
 			                </a>
 		                </div>
 		                <div class="space-40"></div>

@@ -11,24 +11,30 @@
     mydoc = cambianome(mydoc, "/content", "DescriptionText");
     mydoc = cambianome(mydoc, "/excerpt", "ExcerptText");
     mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/thumbnail", "ImageUrl");
-
+	
+	mydoc = ConvertDateWithFormat(mydoc, "/date");
+	mydoc = ConvertDateWithFormat(mydoc, "/modified");
 
     mydoc = aggiungipadre(mydoc, "root/ExternalNews/ExternalNew", "Categories", "categories");
     mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/Categories/categories", "Category");
 
     mydoc = aggiungipadre(mydoc, "root/ExternalNews/ExternalNew", "Tags", "tags");
     mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/Tags/tags", "Tag");
+	
     mydoc = aggiungipadre(mydoc, "root/ExternalNews/ExternalNew", "Attachments", "attachments");
     mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/Attachments/attachments", "Attachment");
+	mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/Attachments/Attachment/images/medium_large", "mediumlarge");
+	
     mydoc = aggiungipadre(mydoc, "root/ExternalNews/ExternalNew", "Custom_fields", "custom_fields");
     mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/Custom_fields/custom_fields", "Custom_field");
-    mydoc = aggiungipadre(mydoc, "root/ExternalNews/ExternalNew", "Thumbnail_images", "thumbnail_images");
-    mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/Thumbnail_images/thumbnail_images", "Thumbnail_image");
-
+	
+    mydoc = aggiungipadre(mydoc, "root/ExternalNews/ExternalNew", "ThumbnailImages", "thumbnail_images");
+    mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/ThumbnailImages/thumbnail_images", "ThumbnailImage");
+	mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/ThumbnailImages/ThumbnailImage/medium_large", "mediumlarge");
 
     mydoc = cambianome(mydoc, "/ExternalNews/ExternalNew/id", "Sid");
     foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalNews/ExternalNew/Sid")) {
-        child_node.InnerText = "ExternalNews:" + child_node.InnerText;
+        child_node.InnerText = "ExternalNew:" + child_node.InnerText;
     }
 
     mydoc = cambianome(mydoc, "/ExternalNews/ExternalNew/author", "Author");
@@ -51,7 +57,11 @@
     foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalNews/ExternalNew/Attachments/Attachment/Sid")) {
         child_node.InnerText = "Tag:" + child_node.InnerText;
     }
+	
+	mydoc = RimuoviFratelliMultiplo(mydoc, "root/ExternalNews/ExternalNew/Attachments/Attachment/images/full");
+	mydoc = RimuoviFratelliMultiplo(mydoc, "root/ExternalNews/ExternalNew/ThumbnailImages/ThumbnailImage/full");
     
+	mydoc = cambianome(mydoc, "root/ExternalNews", "ToRemove");
     
     SpanXDocument(ToXDocument(mydoc).Root);
 }				

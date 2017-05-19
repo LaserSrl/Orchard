@@ -12,6 +12,9 @@
     mydoc = cambianome(mydoc, "/excerpt", "ExcerptText");
     mydoc = cambianome(mydoc, "root/ExternalEvents/ExternalEvent/thumbnail", "ImageUrl");
 	
+	mydoc = ConvertDateWithFormat(mydoc, "/date");
+	mydoc = ConvertDateWithFormat(mydoc, "/modified");
+	
 	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/tags")){
 		child_to_remove.ParentNode.RemoveChild(child_to_remove);
 	}
@@ -42,8 +45,9 @@
 
     mydoc = aggiungipadre(mydoc, "root/ExternalEvents/ExternalEvent", "Attachments", "attachments");
     mydoc = cambianome(mydoc, "root/ExternalEvents/ExternalEvent/Attachments/attachments", "Attachment");
-    mydoc = aggiungipadre(mydoc, "root/ExternalEvents/ExternalEvent", "Thumbnail_images", "thumbnail_images");
-    mydoc = cambianome(mydoc, "root/ExternalEvents/ExternalEvent/Thumbnail_images/thumbnail_images", "Thumbnail_image");
+	
+    mydoc = aggiungipadre(mydoc, "root/ExternalEvents/ExternalEvent", "ThumbnailImages", "thumbnail_images");
+    mydoc = cambianome(mydoc, "root/ExternalEvents/ExternalEvent/ThumbnailImages/thumbnail_images", "ThumbnailImage");
 
     mydoc = cambianome(mydoc, "/ExternalEvents/ExternalEvent/id", "Sid");
     foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalEvents/ExternalEvent/Sid")) {
@@ -58,6 +62,11 @@
 	foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalEvents/ExternalEvent")) {
         mydoc = AggiungiShareLink(mydoc, child_node, child_node["TitleText"].InnerText, child_node["LinkText"].InnerText, child_node["ImageUrl"].InnerText);
     }
+	
+	mydoc = RimuoviFratelliMultiplo(mydoc, "root/ExternalEvents/ExternalEvent/Attachments/Attachment/images/full");
+	mydoc = RimuoviFratelliMultiplo(mydoc, "root/ExternalEvents/ExternalEvent/ThumbnailImages/ThumbnailImage/full");
+	
+	mydoc = cambianome(mydoc, "root/ExternalEvents", "ToRemove");
 	
 	SpanXDocument(ToXDocument(mydoc).Root);
 }				

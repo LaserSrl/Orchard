@@ -8,6 +8,10 @@
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
 
+msgctxt "~/Themes/Lasergroup/Views/EditorTemplates/Parts.Comment.cshtml"
+msgid "Hi, {0}!"
+msgstr "Ciao, {0}!"
+
 msgctxt "~/Themes/Lasergroup/Views/ElencoProdotti.cshtml"
 msgid "Show more showcases"
 msgstr "Carica altri showcases"
@@ -16,6 +20,18 @@ msgctxt "~/Themes/Lasergroup/Views/ElencoProdottiHome.cshtml"
 msgid "See all projects"
 msgstr "Guarda tutti i progetti"
 
+msgctxt "~/Themes/Lasergroup/Views/Home/Search.cshtml"
+msgid "Contents tagged with {0}"
+msgstr "Contenuti taggati con {0}"
+
+msgctxt "~/Themes/Lasergroup/Views/Home/Search.cshtml"
+msgid "Tagged with <span>{0}</span>"
+msgstr "Taggato con <span>{0}</span>"
+
+msgctxt "~/Themes/Lasergroup/Views/Home/Search.cshtml"
+msgid "Tags"
+msgstr "Tags"
+
 msgctxt "~/Themes/Lasergroup/Views/Layout.cshtml"
 msgid "Please show me you are not a robot."
 msgstr "Dimostra che non sei un robot."
@@ -23,6 +39,62 @@ msgstr "Dimostra che non sei un robot."
 msgctxt "~/Themes/Lasergroup/Views/Layout.cshtml"
 msgid "Send..."
 msgstr "Invio..."
+
+msgctxt "~/Themes/Lasergroup/Views/LogOn.cshtml"
+msgid " if you don't have an account."
+msgstr "se non hai un account."
+
+msgctxt "~/Themes/Lasergroup/Views/LogOn.cshtml"
+msgid "Account Information"
+msgstr "Informazioni Account"
+
+msgctxt "~/Themes/Lasergroup/Views/LogOn.cshtml"
+msgid "Login was unsuccessful. Please correct the errors and try again."
+msgstr "La login non è riuscita. Correggere gli errori e riprovare."
+
+msgctxt "~/Themes/Lasergroup/Views/LogOn.cshtml"
+msgid "Lost your Password?"
+msgstr "Hai dimenticato la tua password?"
+
+msgctxt "~/Themes/Lasergroup/Views/LogOn.cshtml"
+msgid "Password"
+msgstr "Password"
+
+msgctxt "~/Themes/Lasergroup/Views/LogOn.cshtml"
+msgid "Please enter your username and password."
+msgstr "Inserire utente e password."
+
+msgctxt "~/Themes/Lasergroup/Views/LogOn.cshtml"
+msgid "Register"
+msgstr "Registra"
+
+msgctxt "~/Themes/Lasergroup/Views/LogOn.cshtml"
+msgid "Remember Me"
+msgstr "Ricordami"
+
+msgctxt "~/Themes/Lasergroup/Views/LogOn.cshtml"
+msgid "Sign In"
+msgstr "Accedi"
+
+msgctxt "~/Themes/Lasergroup/Views/LogOn.cshtml"
+msgid "Username"
+msgstr "Nome utente"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.CommentForm-BlogPost.cshtml"
+msgid "Comments have been disabled for this content."
+msgstr "I commenti sono stati disabilitati per questo contenuto."
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.CommentForm-BlogPost.cshtml"
+msgid "Submit Comment"
+msgstr "Invia Commento"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.CommentForm-BlogPost.cshtml"
+msgid "You are not authorized to add a comment."
+msgstr "Non sei autorizzato ad aggiungere commenti"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.CommentForm-BlogPost.cshtml"
+msgid "You must {0} to comment."
+msgstr "Occorre {0} per commentare"
 
 msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
 msgid "Add attachment"
@@ -82,7 +154,7 @@ msgstr "Carica allegato"
 
 msgctxt "~/Themes/Lasergroup/Views/Parts.ContactForm-AfterContentContattiPage.cshtml"
 msgid "Your Name"
-msgstr "Il tuo nome e cognome"
+msgstr "Il tuo nome"
 
 msgctxt "~/Themes/Lasergroup/Views/Parts.Map-MapWidget.cshtml"
 msgid "Map"
@@ -100,11 +172,23 @@ msgctxt "~/Themes/Lasergroup/Views/Parts.Title-BlogPost.cshtml"
 msgid "News"
 msgstr "News"
 
+msgctxt "~/Themes/Lasergroup/Views/Parts.Title-BlogPost.cshtml"
+msgid "Show all news"
+msgstr "Tutte le news"
+
+msgctxt "~/Themes/Lasergroup/Views/Parts.Title-BlogPost.cshtml"
+msgid "Tags:"
+msgstr "Tags:"
+
 msgctxt "~/Themes/Lasergroup/Views/Parts.Title-OffertaLavoro.cshtml"
 msgid "Back to work with us"
-msgstr "Torna alle offerte"
+msgstr "Torna indietro"
 
 msgctxt "~/Themes/Lasergroup/Views/Parts.Title-OffertaLavoro.cshtml"
 msgid "WORK WITH US"
 msgstr "LAVORA CON NOI"
+
+msgctxt "~/Themes/Lasergroup/Views/ShowcaseBackLink.cshtml"
+msgid "Show all showcases"
+msgstr "Tutti gli showcases"
 

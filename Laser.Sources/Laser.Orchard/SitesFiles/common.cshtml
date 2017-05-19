@@ -188,6 +188,22 @@
         }
         return doc;
     }
+	
+	XmlDocument RimuoviFratelliMultiplo(XmlDocument doc, string nomenodo){
+        foreach (XmlNode child_node in doc.SelectNodes("/" + nomenodo)) {
+			int index = 0;
+			XmlNode parent = child_node.ParentNode;
+			while (index < parent.ChildNodes.Count){
+				if (parent.ChildNodes[index] != child_node){
+					parent.RemoveChild(parent.ChildNodes[index]);
+				}
+				else {
+					index++;
+				}
+			}
+		}
+        return doc;
+    }
 
     XmlDocument CreaContatore(XmlDocument doc,string dalnodo,string campodacreare){
         int i=0;
