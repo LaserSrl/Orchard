@@ -503,8 +503,8 @@ msgstr "QueryString:<element>"
 
 #: "Orchard.Tokens.Providers.RequestTokens"
 msgctxt "Orchard.Tokens.Providers.RequestTokens"
-msgid "The Query String value for the specified element."
-msgstr "Il valore di stringa di Query per l'elemento specificato."
+msgid "The Query String value for the specified element. To chain text, surround the <element> with parentheses, e.g. 'QueryString:(param1)'."
+msgstr "Il valore Query String per l'elemento specificato. Per collegare il testo, circonda <element> con le parentesi, ad esempio 'QueryString:(param1)'."
 
 #: "Orchard.Tokens.Providers.RequestTokens"
 msgctxt "Orchard.Tokens.Providers.RequestTokens"
@@ -513,8 +513,8 @@ msgstr "Modulo:<element>"
 
 #: "Orchard.Tokens.Providers.RequestTokens"
 msgctxt "Orchard.Tokens.Providers.RequestTokens"
-msgid "The Form value for the specified element."
-msgstr "Il valore del modulo per l'elemento specificato."
+msgid "The Form value for the specified element. To chain text, surround the <element> with parentheses, e.g. 'Form:(param1)'."
+msgstr "Il valore di Form per l'elemento specificato. Per collegare il testo, circonda <element> con le parentesi, ad esempio 'Form:(param1)'."
 
 #: "Orchard.Tokens.Providers.RequestTokens"
 msgctxt "Orchard.Tokens.Providers.RequestTokens"

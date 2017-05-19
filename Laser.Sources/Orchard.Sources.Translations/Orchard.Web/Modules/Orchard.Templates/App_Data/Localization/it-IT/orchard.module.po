@@ -100,18 +100,23 @@ msgstr "Errore nell'elaborazione del Modello grafico: {0}"
 
 #: "Orchard.Templates.Drivers.ShapePartDriver"
 msgctxt "Orchard.Templates.Drivers.ShapePartDriver"
+msgid "A template with the given name and rendering mode already exists."
+msgstr "Esiste già un modello con il nome e la modalità di rendering specificati."
+
+#: "Orchard.Templates.Drivers.ShapePartDriver"
+msgctxt "Orchard.Templates.Drivers.ShapePartDriver"
 msgid "{0} names can only contain alphanumerical or underscore (_) characters and have to start with a letter."
 msgstr "i nomi {0} possono solo contenere solo caratteri alfanumerici o sottolineatura (_) e devono iniziare con una lettera."
-
-#: "Orchard.Templates.Drivers.TitlePartDriver"
-msgctxt "Orchard.Templates.Drivers.TitlePartDriver"
-msgid "A template with the given name already exists."
-msgstr "Un modello con il nome specificato esiste già."
 
 #: "Orchard.Templates.Services.NoTemplateProcessorBanner"
 msgctxt "Orchard.Templates.Services.NoTemplateProcessorBanner"
 msgid "To be able to use Templates enable a template processor like Razor Templates."
 msgstr "Per poter utilizzare i Modelli è necessario un Processore di Modelli tipo Modelli Razor."
+
+#: "~/Modules/Orchard.Templates/Views/Parts.Shape.SummaryAdmin.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/Parts.Shape.SummaryAdmin.cshtml"
+msgid "Rendering mode: {0}"
+msgstr "Modalità di rendering: {0}"
 
 #: "~/Modules/Orchard.Templates/Views/Admin/CreatableTypeList.cshtml"
 msgctxt "~/Modules/Orchard.Templates/Views/Admin/CreatableTypeList.cshtml"
@@ -222,4 +227,9 @@ msgstr "Il nome di questo modello grafico, che può essere utilizzato con codice
 msgctxt "~/Modules/Orchard.Templates/Views/DefinitionTemplates/ShapePartSettingsViewModel.cshtml"
 msgid "Template Processor"
 msgstr "Processore di Modelli grafici"
+
+#: "~/Modules/Orchard.Templates/Views/EditorTemplates/Parts.Shape.cshtml"
+msgctxt "~/Modules/Orchard.Templates/Views/EditorTemplates/Parts.Shape.cshtml"
+msgid "Rendering Mode"
+msgstr "Modalità di rendering"
 

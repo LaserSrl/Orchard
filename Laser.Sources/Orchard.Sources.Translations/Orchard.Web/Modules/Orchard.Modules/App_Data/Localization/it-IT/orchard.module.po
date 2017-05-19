@@ -186,8 +186,8 @@ msgstr "La funzionalità {0} è stata aggiornata con successo"
 
 #: "Orchard.Modules.Controllers.AdminController"
 msgctxt "Orchard.Modules.Controllers.AdminController"
-msgid "An error occured while updating the feature {0}: {1}"
-msgstr "Si è verificato un errore aggiornando la funzionalità {0}: {1}"
+msgid "An error occurred while updating the feature {0}: {1}"
+msgstr "Si è verificato un errore durante l'aggiornamento della funzionalità {0}: {1}"
 
 #: "Orchard.Modules.Data.Migration.DataMigrationNotificationProvider"
 msgctxt "Orchard.Modules.Data.Migration.DataMigrationNotificationProvider"

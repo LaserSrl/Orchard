@@ -1,0 +1,84 @@
+@using System.Text.RegularExpressions;
+
+@{
+	var anno = DateTime.Now.Year.ToString();
+	var pattern = "/spettacoli/";
+	var fieldToSearchPattern = "LinkText";
+	
+	Regex rgxVc = new Regex(@"\[[\/]?vc[^]]+]");
+	Regex rgxVcDateOrari = new Regex(@"\[vc_tab title=&#8221;([^&]*?)&#82(?:21|43);[^]]*?]\[vc_column_text[^]]*?]([^[]*?)\[\/vc_column_text]\[\/vc_tab]");
+
+	XmlDocument mydoc = ToXmlDocument(Model);
+
+    mydoc = aggiungipadre(mydoc, "root", "ExternalEvents", "TeatroAstraSpettacoliList");
+    mydoc = RimuoviFratelli(mydoc, "root/ExternalEvents");
+    
+    mydoc = cambianome(mydoc, "root/ExternalEvents/TeatroAstraSpettacoliList", "ExternalEvent");
+	
+	mydoc = cambianome(mydoc, "/title", "TitleText");
+    mydoc = cambianome(mydoc, "/link", "LinkText");
+    mydoc = cambianome(mydoc, "/content", "DescriptionText");
+    mydoc = cambianome(mydoc, "/excerpt", "ExcerptText");
+    mydoc = cambianome(mydoc, "root/ExternalEvents/ExternalEvent/thumbnail", "ImageUrl");
+	mydoc = cambianome(mydoc, "root/ExternalEvents/ExternalEvent/_links", "links");
+	mydoc = cambianome(mydoc, "root/ExternalEvents/ExternalEvent/links/version-history", "versionhistory");
+	
+	mydoc = ConvertDateWithFormat(mydoc, "/date");
+	mydoc = ConvertDateWithFormat(mydoc, "/modified");
+	mydoc = ConvertDateWithFormat(mydoc, "/date_gmt");
+	mydoc = ConvertDateWithFormat(mydoc, "/modified_gmt");
+	
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/tags")){
+		child_to_remove.ParentNode.RemoveChild(child_to_remove);
+	}
+	
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/categories")){
+		child_to_remove.ParentNode.RemoveChild(child_to_remove);
+	}
+	
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/author")){
+		child_to_remove.ParentNode.RemoveChild(child_to_remove);
+	}
+	
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/comment_count")){
+		child_to_remove.ParentNode.RemoveChild(child_to_remove);
+	}
+	
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/comment_status")){
+		child_to_remove.ParentNode.RemoveChild(child_to_remove);
+	}
+	
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/comments")){
+		child_to_remove.ParentNode.RemoveChild(child_to_remove);
+	}
+    
+    mydoc = cambianome(mydoc, "/ExternalEvents/ExternalEvent/id", "Sid");
+    foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalEvents/ExternalEvent/Sid")) {
+        child_node.InnerText = "ExternalEvent:" + child_node.InnerText;
+    }
+    
+	foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalEvents/ExternalEvent")) {
+        mydoc = AggiungiShareLink(mydoc, child_node, child_node["TitleText"].InnerText, child_node["LinkText"].InnerText, "");
+    }
+	
+	foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalEvents/ExternalEvent")) {
+        string url = child_node[fieldToSearchPattern].InnerText;
+		if (!url.Contains(pattern)) {
+			child_node.ParentNode.RemoveChild(child_node);
+		}
+    }
+	
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/ExcerptText")){
+		child_to_remove.ParentNode.RemoveChild(child_to_remove);
+	}
+	
+	foreach(XmlNode child_node in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/DescriptionText")){
+		child_node.InnerText = child_node.InnerText.Replace("\u2028", " ");
+		child_node.InnerText = rgxVcDateOrari.Replace(child_node.InnerText, "<div>$1<ul><li>$2</li></ul></div>");
+		child_node.InnerText = rgxVc.Replace(child_node.InnerText, "");
+	}
+	
+	mydoc = cambianome(mydoc, "root/ExternalEvents", "ToRemove");
+	
+	SpanXDocument(ToXDocument(mydoc).Root);
+}				

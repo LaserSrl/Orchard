@@ -449,12 +449,24 @@ msgid "Settings - Sms Placeholders"
 msgstr "Impostazioni - Segnaposti per SMS"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "High"
+msgstr "Alta"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "Low"
+msgstr "Bassa"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
 msgid "Mam driver identifier"
 msgstr "Identificativo driver Mam"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
 msgid "Mam has alias"
 msgstr "Mam ha un alias"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "Medium"
+msgstr "Media"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
 msgid "Protocol"
@@ -641,8 +653,8 @@ msgid "Cannot Update!"
 msgstr "Impossibile aggiornare!"
 
 msgctxt "Laser.Orchard.Mobile.Handlers.MobilePushPartHandler"
-msgid "Push message sent to contact {0}."
-msgstr "Messsaggio push inviato al contatto {0}."
+msgid "Push message will be sent to contact {0} in a minute."
+msgstr "Messsaggio push sarà inviato al contatto {0} entro minuto."
 
 msgctxt "Laser.Orchard.Mobile.Handlers.SiteSettingsPartHandler"
 msgid "PushMobile"

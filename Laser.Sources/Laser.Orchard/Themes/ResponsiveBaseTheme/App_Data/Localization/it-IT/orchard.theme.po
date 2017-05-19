@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -8,9 +8,25 @@
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
 
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/BadgeOfHonor.cshtml"
+msgid "&#169; The Theme Machine 2010."
+msgstr "&#169; Il Tema Macchina 2010."
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/BadgeOfHonor.cshtml"
+msgid "Powered by <a href=\"{0}\" target=\"_blank\">Orchard</a>"
+msgstr "Offerto da <a href=\"{0}\" target=\"_blank\">Orchard</a>"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Fields.ContentPicker-AsideSecond-ProdottiEccellenze.cshtml"
+msgid "more"
+msgstr "di più"
+
 msgctxt "~/Themes/ResponsiveBaseTheme/Views/Fields.ContentPicker-AsideSecond-ProdottiEccellenze.cshtml"
 msgid "No content items."
 msgstr "Nessun contenuto."
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Fields.ContentPicker-AsideSecond-Ricette.cshtml"
+msgid "more"
+msgstr "di più"
 
 msgctxt "~/Themes/ResponsiveBaseTheme/Views/Fields.ContentPicker-AsideSecond-Ricette.cshtml"
 msgid "No content items."
@@ -25,8 +41,28 @@ msgid "Select"
 msgstr "Seleziona"
 
 msgctxt "~/Themes/ResponsiveBaseTheme/Views/Pager.cshtml"
+msgid "<"
+msgstr "<"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Pager.cshtml"
+msgid ">"
+msgstr ">"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Pager.cshtml"
 msgid "Showing items {0} - {1} of {2}"
 msgstr "Elementi {0} - {1} di {2}"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.Blogs.BlogArchives.cshtml"
+msgid "None found"
+msgstr "Non trovato"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.Common.Body.Summary.cshtml"
+msgid "more"
+msgstr "di più"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.Common.Body.Summary-Prodotto.cshtml"
+msgid "more"
+msgstr "di più"
 
 msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContactForm-Suggerimento.cshtml"
 msgid "Add attachment"
@@ -97,6 +133,10 @@ msgid "Your Name"
 msgstr "Il vostro nome"
 
 msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContentPickerConnector-AsideSecond.cshtml"
+msgid "more"
+msgstr "di più"
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.ContentPickerConnector-AsideSecond.cshtml"
 msgid "No content items."
 msgstr "Nessun contenuto."
 
@@ -108,6 +148,10 @@ msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.Map.cshtml"
 msgid "Find us"
 msgstr "Trovaci"
 
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts.Map-Itinerario.cshtml"
+msgid "more"
+msgstr "di più"
+
 msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts_CardsForm.cshtml"
 msgid "Message"
 msgstr "Messaggio"
@@ -115,6 +159,10 @@ msgstr "Messaggio"
 msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts_CardsForm.cshtml"
 msgid "Please fill all the texts in the fields."
 msgstr "Riempire tutti i campi, grazie."
+
+msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts_CardsForm.cshtml"
+msgid "Recipient Name"
+msgstr "Nome del recipiente"
 
 msgctxt "~/Themes/ResponsiveBaseTheme/Views/Parts_CardsForm.cshtml"
 msgid "Send"
