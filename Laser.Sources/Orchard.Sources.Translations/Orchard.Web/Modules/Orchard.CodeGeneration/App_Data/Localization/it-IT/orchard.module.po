@@ -129,6 +129,6 @@ msgstr "Attenzione: Impossibile trovare il file Solution {0}"
 
 #: "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
 msgctxt "Orchard.CodeGeneration.Commands.CodeGenerationCommands"
-msgid "An unexpected error occured while trying to refresh the Visual Studio solution. Please reload it."
-msgstr "Un errore non previsto é avvenuto ricaricando la solution di Visual Studio. Ricaricala manualmente."
+msgid "An unexpected error occurred while trying to refresh the Visual Studio solution. Please reload it."
+msgstr "Si è verificato un errore imprevisto durante il tentativo di aggiornare la soluzione di Visual Studio. Si prega di ricaricare."
 

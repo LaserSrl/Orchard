@@ -98,6 +98,21 @@ msgctxt "Orchard.Roles.Activities.IsInRoleActivity"
 msgid "No"
 msgstr "No"
 
+#: "Orchard.Roles.Activities.UnssignRoleActivity"
+msgctxt "Orchard.Roles.Activities.UnssignRoleActivity"
+msgid "User"
+msgstr "Utente"
+
+#: "Orchard.Roles.Activities.UnssignRoleActivity"
+msgctxt "Orchard.Roles.Activities.UnssignRoleActivity"
+msgid "Unassign specific roles from the current content item if it's a user."
+msgstr "Deseleziona specifici ruoli dall'elemento di contenuto corrente se è un utente."
+
+#. "Done"
+msgctxt "Orchard.Roles.Activities.UnssignRoleActivity"
+msgid "Done"
+msgstr "Completato"
+
 #: "Orchard.Roles.Activities.UserTaskActivity"
 msgctxt "Orchard.Roles.Activities.UserTaskActivity"
 msgid "Tasks"
@@ -285,6 +300,16 @@ msgstr "Assegna i ruoli: {0}"
 
 #: "~/Modules/Orchard.Roles/Views/Activity-AssignRole.cshtml"
 msgctxt "~/Modules/Orchard.Roles/Views/Activity-AssignRole.cshtml"
+msgid "No roles specified"
+msgstr "Nessun ruolo specificato"
+
+#: "~/Modules/Orchard.Roles/Views/Activity-UnassignRole.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Activity-UnassignRole.cshtml"
+msgid "Unassign roles: {0}"
+msgstr "Deseleziona ruoli: {0}"
+
+#: "~/Modules/Orchard.Roles/Views/Activity-UnassignRole.cshtml"
+msgctxt "~/Modules/Orchard.Roles/Views/Activity-UnassignRole.cshtml"
 msgid "No roles specified"
 msgstr "Nessun ruolo specificato"
 

@@ -57,6 +57,11 @@ msgctxt "~/Modules/Orchard.PublishLater/Views/EditorTemplates/Parts/PublishLater
 msgid "Publish Later"
 msgstr "Pubblica in seguito"
 
+#: "~/Modules/Orchard.PublishLater/Views/EditorTemplates/Parts/PublishLater.cshtml"
+msgctxt "~/Modules/Orchard.PublishLater/Views/EditorTemplates/Parts/PublishLater.cshtml"
+msgid "Cancel Publish Later"
+msgstr "Annulla Pubblicazione Differita"
+
 #: "~/Modules/Orchard.PublishLater/Views/Parts/PublishLater.Metadata.cshtml"
 msgctxt "~/Modules/Orchard.PublishLater/Views/Parts/PublishLater.Metadata.cshtml"
 msgid "Published: {0}"

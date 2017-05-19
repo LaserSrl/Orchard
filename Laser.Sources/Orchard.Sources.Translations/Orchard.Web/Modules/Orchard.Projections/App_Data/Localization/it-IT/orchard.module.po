@@ -319,6 +319,16 @@ msgstr "Non è tra"
 
 #: "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"
 msgctxt "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"
+msgid "Is null"
+msgstr "È nullo"
+
+#: "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"
+msgctxt "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"
+msgid "Is not null"
+msgstr "Non è nullo"
+
+#: "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"
+msgctxt "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"
 msgid "Year"
 msgstr "Anno"
 
@@ -346,6 +356,16 @@ msgstr "Minuto"
 msgctxt "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"
 msgid "Second"
 msgstr "Secondo"
+
+#: "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"
+msgctxt "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"
+msgid "{0} is null"
+msgstr "{0} è nullo"
+
+#: "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"
+msgctxt "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"
+msgid "{0} is not null"
+msgstr "{0} non è nullo"
 
 #: "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"
 msgctxt "Orchard.Projections.FilterEditors.Forms.DateTimeFilterForm"

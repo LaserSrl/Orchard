@@ -1260,6 +1260,21 @@ msgctxt "~/Modules/Orchard.Layouts/Views/EditorTemplates/Parts.ElementWrapper.cs
 msgid "Element {0}"
 msgstr "Elemento {0}"
 
+#: "~/Modules/Orchard.Layouts/Views/Element/Create.cshtml"
+msgctxt "~/Modules/Orchard.Layouts/Views/Element/Create.cshtml"
+msgid "Add {0}"
+msgstr "Aggiungere {0}"
+
+#: "~/Modules/Orchard.Layouts/Views/Element/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Layouts/Views/Element/Edit.cshtml"
+msgid "Add {0}"
+msgstr "Aggiungere {0}"
+
+#: "~/Modules/Orchard.Layouts/Views/Element/Edit.cshtml"
+msgctxt "~/Modules/Orchard.Layouts/Views/Element/Edit.cshtml"
+msgid "Edit {0}"
+msgstr "Modifica {0}"
+
 #: "~/Modules/Orchard.Layouts/Views/Elements/ContentItem.Design.cshtml"
 msgctxt "~/Modules/Orchard.Layouts/Views/Elements/ContentItem.Design.cshtml"
 msgid "-"

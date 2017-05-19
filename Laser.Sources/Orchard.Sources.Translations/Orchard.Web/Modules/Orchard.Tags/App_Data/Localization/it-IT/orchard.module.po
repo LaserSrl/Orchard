@@ -70,6 +70,11 @@ msgctxt "Orchard.Tags.AdminMenu"
 msgid "List"
 msgstr "Lista"
 
+#: "Orchard.Tags.Commands.TagWidgetCommands"
+msgctxt "Orchard.Tags.Commands.TagWidgetCommands"
+msgid "{0} widget created successfully."
+msgstr "Widget {0} creato con successo."
+
 #: "Orchard.Tags.Controllers.AdminController"
 msgctxt "Orchard.Tags.Controllers.AdminController"
 msgid "Can't manage tags"
@@ -299,6 +304,11 @@ msgstr "Contenuti taggati con {0}"
 msgctxt "~/Modules/Orchard.Tags/Views/Home/Search.cshtml"
 msgid "Contents tagged with <span>{0}</span>"
 msgstr "Contenuti taggati con <span>{0}</span>"
+
+#: "~/Modules/Orchard.Tags/Views/Parts/TagCloud.cshtml"
+msgctxt "~/Modules/Orchard.Tags/Views/Parts/TagCloud.cshtml"
+msgid "There are no tags to display."
+msgstr "Non ci sono tag da visualizzare."
 
 #: "~/Modules/Orchard.Tags/Views/Parts/Tags.ShowTags.cshtml"
 msgctxt "~/Modules/Orchard.Tags/Views/Parts/Tags.ShowTags.cshtml"

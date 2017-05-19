@@ -236,6 +236,11 @@ msgstr "Il controllo da comporre quando si presenta l'elenco delle opzioni."
 
 #: "Orchard.DynamicForms.Drivers.EnumerationElementDriver"
 msgctxt "Orchard.DynamicForms.Drivers.EnumerationElementDriver"
+msgid "The default value of this enumeration field."
+msgstr "Il valore predefinito di questo campo di enumerazione."
+
+#: "Orchard.DynamicForms.Drivers.EnumerationElementDriver"
+msgctxt "Orchard.DynamicForms.Drivers.EnumerationElementDriver"
 msgid "Select List"
 msgstr "Elenco di selezione"
 
@@ -401,6 +406,11 @@ msgstr "Specificare l'espressione per ottenere il valore di ciascuna opzione."
 
 #: "Orchard.DynamicForms.Drivers.QueryElementDriver"
 msgctxt "Orchard.DynamicForms.Drivers.QueryElementDriver"
+msgid "The default value of this query field."
+msgstr "Il valore predefinito di questo campo di query."
+
+#: "Orchard.DynamicForms.Drivers.QueryElementDriver"
+msgctxt "Orchard.DynamicForms.Drivers.QueryElementDriver"
 msgid "The control to render when presenting the list of options."
 msgstr "Il controllo da comporre quando si presenta l'elenco delle opzioni."
 
@@ -488,6 +498,11 @@ msgstr "Specificare l'espressione per ottenere il testo da visualizzare di ciasc
 msgctxt "Orchard.DynamicForms.Drivers.TaxonomyElementDriver"
 msgid "Specify the expression to get the value of each option."
 msgstr "Specificare l'espressione per ottenere il valore di ciascuna opzione."
+
+#: "Orchard.DynamicForms.Drivers.TaxonomyElementDriver"
+msgctxt "Orchard.DynamicForms.Drivers.TaxonomyElementDriver"
+msgid "The default value of this query field."
+msgstr "Il valore predefinito di questo campo di query."
 
 #: "Orchard.DynamicForms.Drivers.TaxonomyElementDriver"
 msgctxt "Orchard.DynamicForms.Drivers.TaxonomyElementDriver"
@@ -603,6 +618,11 @@ msgstr "La lunghezza minima richiesta."
 msgctxt "Orchard.DynamicForms.Drivers.TextFieldElementDriver"
 msgid "The maximum length allowed."
 msgstr "La lunghezza massima consentita."
+
+#: "Orchard.DynamicForms.Drivers.TextFieldElementDriver"
+msgctxt "Orchard.DynamicForms.Drivers.TextFieldElementDriver"
+msgid "The regular expression the text must match with."
+msgstr "L'espressione regolare per convalidare il testo."
 
 #: "Orchard.DynamicForms.Drivers.TextFieldElementDriver"
 msgctxt "Orchard.DynamicForms.Drivers.TextFieldElementDriver"
@@ -888,6 +908,21 @@ msgstr " | "
 msgctxt "~/Modules/Orchard.DynamicForms/Views/BlueprintAdmin/Index.cshtml"
 msgid "Remove"
 msgstr "Elimina"
+
+#: "~/Modules/Orchard.DynamicForms/Views/EditorTemplates/BuilderSteps/FormSubmissions.cshtml"
+msgctxt "~/Modules/Orchard.DynamicForms/Views/EditorTemplates/BuilderSteps/FormSubmissions.cshtml"
+msgid "Form"
+msgstr "Modulo"
+
+#: "~/Modules/Orchard.DynamicForms/Views/EditorTemplates/BuilderSteps/FormSubmissions.cshtml"
+msgctxt "~/Modules/Orchard.DynamicForms/Views/EditorTemplates/BuilderSteps/FormSubmissions.cshtml"
+msgid "Select All"
+msgstr "Seleziona tutti"
+
+#: "~/Modules/Orchard.DynamicForms/Views/EditorTemplates/BuilderSteps/FormSubmissions.cshtml"
+msgctxt "~/Modules/Orchard.DynamicForms/Views/EditorTemplates/BuilderSteps/FormSubmissions.cshtml"
+msgid "Choose the forms to include in the export file"
+msgstr "Scegliere i moduli (form) da includere nel file di esportazione"
 
 #: "~/Modules/Orchard.DynamicForms/Views/Elements/IpAddressField.Design.cshtml"
 msgctxt "~/Modules/Orchard.DynamicForms/Views/Elements/IpAddressField.Design.cshtml"

@@ -93,16 +93,6 @@ msgstr "Livello creato con successo."
 
 #: "Orchard.Widgets.Commands.WidgetCommands"
 msgctxt "Orchard.Widgets.Commands.WidgetCommands"
-msgid "Creating widget failed : type {0} was not found. Supported widget types are: {1}."
-msgstr "Creazione del widget fallita: tipo {0} non trovato. Tipi di widget supportati: {1}."
-
-#: "Orchard.Widgets.Commands.WidgetCommands"
-msgctxt "Orchard.Widgets.Commands.WidgetCommands"
-msgid "Creating widget failed : layer {0} was not found."
-msgstr "Creazione del widget fallita: livello {0} non trovato."
-
-#: "Orchard.Widgets.Commands.WidgetCommands"
-msgctxt "Orchard.Widgets.Commands.WidgetCommands"
 msgid "Widget created successfully."
 msgstr "Widget creato con successo."
 
@@ -225,6 +215,16 @@ msgstr "Non ci sono script engine abilitati al momento"
 msgctxt "Orchard.Widgets.Services.RuleManager"
 msgid "Expression is not a boolean value"
 msgstr "L'espressione non è un valore booleano"
+
+#: "Orchard.Widgets.Services.WidgetCommandsService"
+msgctxt "Orchard.Widgets.Services.WidgetCommandsService"
+msgid "Creating widget failed : type {0} was not found. Supported widget types are: {1}."
+msgstr "Creazione del widget fallita: tipo {0} non trovato. Tipi di widget supportati: {1}."
+
+#: "Orchard.Widgets.Services.WidgetCommandsService"
+msgctxt "Orchard.Widgets.Services.WidgetCommandsService"
+msgid "Creating widget failed : layer {0} was not found."
+msgstr "Creazione del widget fallita: livello {0} non trovato."
 
 #: "~/Modules/Orchard.Widgets/Views/Widget.ControlWrapper.cshtml"
 msgctxt "~/Modules/Orchard.Widgets/Views/Widget.ControlWrapper.cshtml"
@@ -428,8 +428,8 @@ msgstr "Regola di Livello"
 
 #: "~/Modules/Orchard.Widgets/Views/EditorTemplates/Parts.Widgets.LayerPart.cshtml"
 msgctxt "~/Modules/Orchard.Widgets/Views/EditorTemplates/Parts.Widgets.LayerPart.cshtml"
-msgid "An expression that evaluates to true when the widgets in this layer must be displayed. See <a href=\"http://docs.orchardproject.net/Documentation/Managing-widgets#AddingaLayer\">http://docs.orchardproject.net/Documentation/Managing-widgets#AddingaLayer</a> for more information."
-msgstr "Un espressione che restituisce Vero quando i widget di questo Livello devono essere visualizzati. Per maggiori informazioni leggi <a href=\"http://docs.orchardproject.net/Documentation/Managing-widgets#AddingaLayer\">http://docs.orchardproject.net/Documentation/Managing-widgets#AddingaLayer</a>."
+msgid "An expression that evaluates to true when the widgets in this layer must be displayed. See <a href=\"http://docs.orchardproject.net/en/latest/Documentation/Managing-widgets/#adding-a-layer\">http://docs.orchardproject.net/en/latest/Documentation/Managing-widgets/#adding-a-layer</a> for more information."
+msgstr "Un espressione che restituisce Vero quando i widget di questo livello devono essere visualizzati. Per maggiori informazioni vedere <a href=\"http://docs.orchardproject.net/en/latest/Documentation/Managing-widgets/#adding-a-layer\">http://docs.orchardproject.net/en/latest/Documentation/Managing-widgets/#adding-a-layer</a>."
 
 #: "~/Modules/Orchard.Widgets/Views/EditorTemplates/Parts.Widgets.WidgetPart.cshtml"
 msgctxt "~/Modules/Orchard.Widgets/Views/EditorTemplates/Parts.Widgets.WidgetPart.cshtml"
@@ -495,6 +495,11 @@ msgstr "Classi Css"
 msgctxt "~/Modules/Orchard.Widgets/Views/EditorTemplates/Parts.Widgets.WidgetPart.cshtml"
 msgid "Add custom css classes for the widget separated by spaces."
 msgstr "Aggiungere le classi css per il widget separate da spazi."
+
+#: "~/Modules/Orchard.Widgets/Views/Elements/Widget.Design.cshtml"
+msgctxt "~/Modules/Orchard.Widgets/Views/Elements/Widget.Design.cshtml"
+msgid "{0} - {1}"
+msgstr "{0} - {1}"
 
 #: "~/Modules/Orchard.Widgets/Views/Elements/Widget.Design.cshtml"
 msgctxt "~/Modules/Orchard.Widgets/Views/Elements/Widget.Design.cshtml"

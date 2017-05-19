@@ -161,6 +161,11 @@ msgstr "Modelli"
 
 #: "~/Modules/Orchard.Autoroute/Views/DefinitionTemplates/AutorouteSettings.cshtml"
 msgctxt "~/Modules/Orchard.Autoroute/Views/DefinitionTemplates/AutorouteSettings.cshtml"
+msgid "All cultures"
+msgstr "Tutte le lingue"
+
+#: "~/Modules/Orchard.Autoroute/Views/DefinitionTemplates/AutorouteSettings.cshtml"
+msgctxt "~/Modules/Orchard.Autoroute/Views/DefinitionTemplates/AutorouteSettings.cshtml"
 msgid "Default"
 msgstr "Predefinito"
 

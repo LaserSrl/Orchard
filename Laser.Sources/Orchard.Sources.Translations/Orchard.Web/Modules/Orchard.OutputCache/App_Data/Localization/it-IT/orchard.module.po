@@ -155,6 +155,16 @@ msgstr "Quando definita, usando valori separati da virgola, imposta la memorizza
 
 #: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
 msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "Vary Cookie String Parameters"
+msgstr "Parametri per variare le cache in base al valori dei cookie"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgid "When defined, using comma separated values, sets caching to vary via specified cookie string parameters"
+msgstr "Quando definito, utilizzando nomi di cookie separati da virgola, crea cache diverse in base ai valori dei cookie specificati"
+
+#: "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.OutputCache/Views/Admin/Index.cshtml"
 msgid "Ignored URLs"
 msgstr "URL ignorate"
 
