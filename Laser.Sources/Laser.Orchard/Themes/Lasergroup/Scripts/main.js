@@ -106,7 +106,7 @@ jQuery(document).ready(function(){
       });
     }
 
-    if (jQuery('#team')!=null) {
+    if (document.getElementById('team')) {
         jQuery('.team-card-face').click(function (e) {
             e.preventDefault();
             var check_class = jQuery(this).parent('.team-card').hasClass('active');
