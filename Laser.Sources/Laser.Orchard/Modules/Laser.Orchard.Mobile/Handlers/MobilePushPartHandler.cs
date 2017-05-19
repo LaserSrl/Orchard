@@ -48,7 +48,7 @@ namespace Laser.Orchard.Mobile.Handlers {
                     // invia la push
                     if ((string.IsNullOrWhiteSpace(contactTitle) == false) && (string.IsNullOrWhiteSpace(part.TextPush) == false)) {
                         _pushGatewayService.SendPushToContact(part.ContentItem, contactTitle);
-                        _notifier.Information(T("Push message sent to contact {0}.", contactTitle));
+                        _notifier.Information(T("Push message will be sent to contact {0} in a minute.", contactTitle));
                     }
                 }
             });
