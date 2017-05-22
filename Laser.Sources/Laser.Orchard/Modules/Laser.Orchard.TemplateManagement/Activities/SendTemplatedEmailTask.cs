@@ -72,7 +72,9 @@ namespace Laser.Orchard.TemplateManagement.Activities {
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
             string recipient = activityContext.GetState<string>("Recipient");
             string recipientCC = activityContext.GetState<string>("RecipientCC");
+            string recipientBCC = activityContext.GetState<string>("RecipientBCC");
             string fromEmail = activityContext.GetState<string>("FromEmail");
+            string replyTo = activityContext.GetState<string>("ReplyTo");
             bool NotifyReadEmail = activityContext.GetState<string>("NotifyReadEmail") == "NotifyReadEmail";
 
             var properties = new Dictionary<string, string> {
@@ -80,11 +82,14 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                 {"Subject", activityContext.GetState<string>("Subject")},
                 {"RecipientOther",activityContext.GetState<string>("RecipientOther")},
                 {"RecipientCC",activityContext.GetState<string>("RecipientCC")},
+                {"RecipientBCC",activityContext.GetState<string>("RecipientBCC")},
+                {"ReplyTo",activityContext.GetState<string>("ReplyTo")},
                 {"EmailTemplate",activityContext.GetState<string>("EmailTemplate")},
                 {"FromEmail",activityContext.GetState<string>("FromEmail")}
             };
             List<string> sendTo = new List<string>();
             List<string> sendCC = new List<string>();
+            List<string> sendBCC = new List<string>();
             var templateId = 0;
             int.TryParse(properties["EmailTemplate"], out templateId);
             int contentVersion = 0;
@@ -131,8 +136,10 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             if (!String.IsNullOrWhiteSpace(recipientCC)) {
                 sendCC.AddRange(SplitEmail(recipientCC));
             }
-
-            if (SendEmail(contentModel, templateId, sendTo, sendCC, null, NotifyReadEmail, fromEmail))
+            if (!String.IsNullOrWhiteSpace(recipientBCC)) {
+                sendBCC.AddRange(SplitEmail(recipientBCC));
+            }
+            if (SendEmail(contentModel, templateId, sendTo, sendCC, sendBCC, NotifyReadEmail, fromEmail, replyTo))
 
                 yield return T("Sent");
             else
@@ -144,7 +151,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             return commaSeparated.Split(new[] { ',', ';' });
         }
 
-        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> cc, IEnumerable<string> bcc, bool NotifyReadEmail, string fromEmail = null) {
+        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> cc, IEnumerable<string> bcc, bool NotifyReadEmail, string fromEmail = null, string replyTo = null) {
             var template = _templateServices.GetTemplate(templateId);
             var body = _templateServices.RitornaParsingTemplate(contentModel, templateId);
             if (body.StartsWith("Error On Template")) {
@@ -166,6 +173,9 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             }
             if (fromEmail != null) {
                 data.Add("FromEmail", fromEmail);
+            }
+            if(replyTo != null) {
+                data.Add("ReplyTo", replyTo);
             }
             data.Add("NotifyReadEmail", NotifyReadEmail);
             _messageService.Send(SmtpMessageChannel.MessageType, data);
