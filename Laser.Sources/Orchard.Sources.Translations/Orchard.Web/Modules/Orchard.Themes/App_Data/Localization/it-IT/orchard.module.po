@@ -179,9 +179,9 @@ msgctxt "Orchard.Themes.Controllers.AdminController"
 msgid "The theme {0} was updated successfully."
 msgstr "Il tema {0} è stato aggiornato con successo."
 
-#. "An error occured while updating the theme {0}: {1}"
+#. "An error occurred while updating the theme {0}: {1}"
 msgctxt "Orchard.Themes.Controllers.AdminController"
-msgid "An error occured while updating the theme {0}: {1}"
+msgid "An error occurred while updating the theme {0}: {1}"
 msgstr "Si è verificato un errore durante l'aggiornamento del tema {0}: {1}"
 
 #: "Orchard.Themes.Events.ThemeDisableEventHandler"

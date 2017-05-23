@@ -65,8 +65,13 @@ msgstr "La coda è stata sospesa."
 
 #: "Orchard.JobsQueue.Controllers.AdminController"
 msgctxt "Orchard.JobsQueue.Controllers.AdminController"
-msgid "Processing has started."
-msgstr "Il processo è cominciato."
+msgid "Processing is in progress."
+msgstr "L'elaborazione è in corso."
+
+#: "Orchard.JobsQueue.Controllers.AdminController"
+msgctxt "Orchard.JobsQueue.Controllers.AdminController"
+msgid "Processing has been completed."
+msgstr "L'elaborazione è stata completata."
 
 #: "~/Modules/Orchard.JobsQueue/Views/Admin/Details.cshtml"
 msgctxt "~/Modules/Orchard.JobsQueue/Views/Admin/Details.cshtml"

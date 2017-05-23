@@ -60,10 +60,15 @@ msgctxt "Orchard.MediaLibrary.Controllers.AdminController"
 msgid "Couldn't clone media items"
 msgstr "Impossibile duplicare gli elementi multimediali"
 
-#: "Orchard.MediaLibrary.Controllers.ClientStorageController"
+#. "This file type is not allowed: {0}"
 msgctxt "Orchard.MediaLibrary.Controllers.ClientStorageController"
 msgid "This file type is not allowed: {0}"
 msgstr "Non è consentito questo tipo di file: {0}"
+
+#: "Orchard.MediaLibrary.Controllers.ClientStorageController"
+msgctxt "Orchard.MediaLibrary.Controllers.ClientStorageController"
+msgid "Cannot replace {0} with {1}"
+msgstr "Non è possibile sostituire {0} con {1}"
 
 #. "Couldn't create media folder"
 msgctxt "Orchard.MediaLibrary.Controllers.FolderController"
@@ -115,6 +120,31 @@ msgctxt "Orchard.MediaLibrary.Controllers.FolderController"
 msgid "Couldn't move media items"
 msgstr "Non è stato possibile spostare gli elementi multimediali"
 
+#. "Cannot replace {0} with OEmbed"
+msgctxt "Orchard.MediaLibrary.Controllers.OEmbedController"
+msgid "Cannot replace {0} with OEmbed"
+msgstr "Non è possibile sostituire {0} con OEmbed"
+
+#: "Orchard.MediaLibrary.Controllers.OEmbedController"
+msgctxt "Orchard.MediaLibrary.Controllers.OEmbedController"
+msgid "Media imported successfully."
+msgstr "Media importati correttamente."
+
+#: "Orchard.MediaLibrary.Controllers.OEmbedController"
+msgctxt "Orchard.MediaLibrary.Controllers.OEmbedController"
+msgid "Media replaced successfully."
+msgstr "Media sostituiti con successo."
+
+#. "This file type is not allowed: {0}"
+msgctxt "Orchard.MediaLibrary.Controllers.WebSearchController"
+msgid "This file type is not allowed: {0}"
+msgstr "Non è consentito questo tipo di file: {0}"
+
+#: "Orchard.MediaLibrary.Controllers.WebSearchController"
+msgctxt "Orchard.MediaLibrary.Controllers.WebSearchController"
+msgid "Cannot replace {0} with {1}"
+msgstr "Non è possibile sostituire {0} con {1}"
+
 #: "Orchard.MediaLibrary.Drivers.MediaLibraryPickerFieldDriver"
 msgctxt "Orchard.MediaLibrary.Drivers.MediaLibraryPickerFieldDriver"
 msgid "The field {0} is mandatory"
@@ -164,6 +194,11 @@ msgstr "Indirizzo del file multimediale"
 msgctxt "Orchard.MediaLibrary.Providers.WebSearchMenu"
 msgid "Web Search"
 msgstr "Ricerca Web"
+
+#: "Orchard.MediaLibrary.Services.MediaLibraryService"
+msgctxt "Orchard.MediaLibrary.Services.MediaLibraryService"
+msgid "No media factory available to handle this resource."
+msgstr "Nessun gestore disponibile per gestire questa risorsa."
 
 #: "Orchard.MediaLibrary.Services.XmlRpcHandler"
 msgctxt "Orchard.MediaLibrary.Services.XmlRpcHandler"
@@ -297,6 +332,11 @@ msgstr "Crea"
 
 #: "~/Modules/Orchard.MediaLibrary/Views/Admin/Import.cshtml"
 msgctxt "~/Modules/Orchard.MediaLibrary/Views/Admin/Import.cshtml"
+msgid "Replace"
+msgstr "Sostituisci"
+
+#: "~/Modules/Orchard.MediaLibrary/Views/Admin/Import.cshtml"
+msgctxt "~/Modules/Orchard.MediaLibrary/Views/Admin/Import.cshtml"
 msgid "Any"
 msgstr "Qualsiasi"
 
@@ -347,6 +387,11 @@ msgstr "Elimina"
 
 #: "~/Modules/Orchard.MediaLibrary/Views/Admin/Index.cshtml"
 msgctxt "~/Modules/Orchard.MediaLibrary/Views/Admin/Index.cshtml"
+msgid "Replace"
+msgstr "Sostituisci"
+
+#: "~/Modules/Orchard.MediaLibrary/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaLibrary/Views/Admin/Index.cshtml"
 msgid "Clone"
 msgstr "Duplica"
 
@@ -369,6 +414,11 @@ msgstr "Sei sicuro di che voler cancellare questi elementi multimediali?"
 msgctxt "~/Modules/Orchard.MediaLibrary/Views/Admin/Index.cshtml"
 msgid "Are you sure you want to clone this media item ?"
 msgstr "Sei sicuro di volere duplicare questo elemento multimediale?"
+
+#: "~/Modules/Orchard.MediaLibrary/Views/Admin/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaLibrary/Views/Admin/Index.cshtml"
+msgid "Are you sure you want to replace this media item ?"
+msgstr "Sei sicuro che vuoi sostituire questo elemento multimediale?"
 
 #: "~/Modules/Orchard.MediaLibrary/Views/Admin/Index.cshtml"
 msgctxt "~/Modules/Orchard.MediaLibrary/Views/Admin/Index.cshtml"
@@ -545,11 +595,6 @@ msgctxt "~/Modules/Orchard.MediaLibrary/Views/OEmbed/Index.cshtml"
 msgid "Please enter the URL of the embeddable media you want to integrate (requires an oEmbed compatible media provider such as YouTube):"
 msgstr "Si prega di inserire l'URL dell'elemento multimediale che si desidera integrare (richiede un provider di supporto compatibile oEmbed come ad esempio YouTube):"
 
-#. "Preview"
-msgctxt "~/Modules/Orchard.MediaLibrary/Views/OEmbed/Index.cshtml"
-msgid "Preview"
-msgstr "Anteprima"
-
 #: "~/Modules/Orchard.MediaLibrary/Views/OEmbed/Index.cshtml"
 msgctxt "~/Modules/Orchard.MediaLibrary/Views/OEmbed/Index.cshtml"
 msgid "media url"
@@ -622,8 +667,18 @@ msgstr "Altezza"
 
 #: "~/Modules/Orchard.MediaLibrary/Views/OEmbed/Index.cshtml"
 msgctxt "~/Modules/Orchard.MediaLibrary/Views/OEmbed/Index.cshtml"
+msgid "Preview"
+msgstr "Anteprima"
+
+#: "~/Modules/Orchard.MediaLibrary/Views/OEmbed/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaLibrary/Views/OEmbed/Index.cshtml"
 msgid "Import"
 msgstr "Importa"
+
+#: "~/Modules/Orchard.MediaLibrary/Views/OEmbed/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaLibrary/Views/OEmbed/Index.cshtml"
+msgid "Replace"
+msgstr "Sostituisci"
 
 #: "~/Modules/Orchard.MediaLibrary/Views/Parts/Audio.Metadata.cshtml"
 msgctxt "~/Modules/Orchard.MediaLibrary/Views/Parts/Audio.Metadata.cshtml"
@@ -819,4 +874,14 @@ msgstr "Apri"
 msgctxt "~/Modules/Orchard.MediaLibrary/Views/WebSearch/Index.cshtml"
 msgid "SELECTION"
 msgstr "SELEZIONE"
+
+#: "~/Modules/Orchard.MediaLibrary/Views/WebSearch/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaLibrary/Views/WebSearch/Index.cshtml"
+msgid "Import"
+msgstr "Importa"
+
+#: "~/Modules/Orchard.MediaLibrary/Views/WebSearch/Index.cshtml"
+msgctxt "~/Modules/Orchard.MediaLibrary/Views/WebSearch/Index.cshtml"
+msgid "Replace"
+msgstr "Sostituisci"
 

@@ -27,20 +27,7 @@ namespace Laser.Orchard.UserProfiler.Drivers {
         protected override DriverResult Display(TrackingPart part, string displayType, dynamic shapeHelper) {
             if (displayType.StartsWith("Summary"))
                 return null;
-
-            //   var host = _shellsetting.RequestUrlHost;
-            //   var prefix = _shellsetting.RequestUrlPrefix;
-            string CallUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
-            var prefix = _shellsettings.RequestUrlPrefix;
-            //if (!string.IsNullOrEmpty(host))
-            //    CallUrl += host;
-            if (!string.IsNullOrEmpty(prefix) && prefix.ToLower() != "default") {
-                if (CallUrl.EndsWith("/"))
-                    CallUrl += prefix;
-                else
-                    CallUrl += "/" + prefix;
-            }
-            return ContentShape("Parts_Tracking_Display", () => shapeHelper.Parts_Tracking_Display(PageID: part.Id, CallUrl: CallUrl));
+            return ContentShape("Parts_Tracking_Display", () => shapeHelper.Parts_Tracking_Display(PageID: part.Id));
         }
     }
 }

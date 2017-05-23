@@ -135,8 +135,8 @@ msgstr "Errore durante la migrazione dei dati: è necessario specificare il tipo
 
 #: "Orchard.Data.Migration.Schema.SchemaBuilder"
 msgctxt "Orchard.Data.Migration.Schema.SchemaBuilder"
-msgid "An unexpected error occured while executing the SQL statement: {0}"
-msgstr "Errore imprevisto nell'esecuzione del comando SQL: {0}"
+msgid "An unexpected error occurred while executing the SQL statement: {0}"
+msgstr "Si è verificato un errore imprevisto durante l'esecuzione dell'istruzione SQL: {0}"
 
 #: "Orchard.DisplayManagement.Implementation.DefaultDisplayManager"
 msgctxt "Orchard.DisplayManagement.Implementation.DefaultDisplayManager"

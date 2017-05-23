@@ -191,7 +191,7 @@
                 if (elem.Immagini != null) {
                     try {
                         foreach (var jsonimage in elem.Immagini) {
-                            string urlimage = jsonimage.url.Trim();
+                            string urlimage = jsonimage.url.Trim()+".jpg";
                             if (!urlPresenti.Keys.Contains(urlimage)) {
                                 var orchardimg = _contentManager.New<MediaPart>("Image");
                                 orchardimg.MimeType = "image/jpg";
