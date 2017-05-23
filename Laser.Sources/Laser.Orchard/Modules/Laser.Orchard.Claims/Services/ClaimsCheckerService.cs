@@ -145,7 +145,9 @@ namespace Laser.Orchard.Claims.Services {
                     crit = Restrictions.Or(crit, innerCrit);
                 }
             }
-            newCriteria = newCriteria.Add(Restrictions.Or(Restrictions.IsNull("laserClaims.Id"), crit));
+            if(crit != null) {
+                newCriteria = newCriteria.Add(Restrictions.Or(Restrictions.IsNull("laserClaims.Id"), crit));
+            }
         }
     }
 }
