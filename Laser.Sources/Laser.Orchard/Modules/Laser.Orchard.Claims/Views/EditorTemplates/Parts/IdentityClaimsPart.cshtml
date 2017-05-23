@@ -1,0 +1,11 @@
+﻿@model Laser.Orchard.Claims.ViewModels.IdentityClaimsPartVM
+
+<fieldset>
+    <legend>@T("Claims")</legend>
+    <div class="editor-label">
+        @Html.LabelFor(m => m.IdentityClaims.ClaimsSets)
+    </div>
+    <div class="editor-field">
+        @Html.TextAreaFor(m => m.ClaimsArea)
+    </div>
+</fieldset>

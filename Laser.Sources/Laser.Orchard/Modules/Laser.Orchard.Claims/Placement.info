@@ -1,0 +1,5 @@
+﻿<Placement>
+  <Place Parts_RequiredClaimsPart_Edit="Content:after"/>
+  <Place Parts_IdentityClaimsPart_Edit="Content:after"/>
+  <Place Parts_ClaimsSiteSettings_Edit="Content:1" />
+</Placement>
