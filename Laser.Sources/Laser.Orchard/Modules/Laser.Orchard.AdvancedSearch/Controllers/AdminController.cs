@@ -24,6 +24,7 @@ using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
 using Orchard.Settings;
+using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
@@ -105,6 +106,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
+        [Admin]
         public ActionResult List(ListContentsViewModelExtension model, PagerParameters pagerParameters) {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
@@ -485,6 +487,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
         }
 
+        [Admin]
         [HttpPost, ActionName("List")]
         [Mvc.FormValueRequired("submit.Filter")]
         public ActionResult ListFilterPOST(ContentOptions options, AdvancedContentOptions advancedOptions) {
@@ -540,6 +543,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             return RedirectToAction("List", routeValues);
         }
 
+        [Admin]
         [HttpPost, ActionName("List")]
         [Mvc.FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {
@@ -595,6 +599,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             return View("CreatableTypeList", viewModel);
         }
 
+        [Admin]
         public ActionResult Create(string id, int? containerId) {
             if (string.IsNullOrEmpty(id))
                 return CreatableTypeList(containerId);
@@ -624,6 +629,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             });
         }
 
+        [Admin]
         [HttpPost, ActionName("Create")]
         [Mvc.FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST(string id, string returnUrl) {
@@ -664,6 +670,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             return RedirectToRoute(adminRouteValues);
         }
 
+        [Admin]
         public ActionResult Edit(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
@@ -677,6 +684,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             return View(model);
         }
 
+        [Admin]
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int id, string returnUrl) {
@@ -686,6 +694,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             });
         }
 
+        [Admin]
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Publish")]
         public ActionResult EditAndPublishPOST(int id, string returnUrl) {
@@ -700,6 +709,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             return EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
+        [Admin]
         private ActionResult EditPOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
 
@@ -740,6 +750,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } }));
         }
 
+        [Admin]
         [HttpPost]
         public ActionResult Clone(int id, string returnUrl) {
             var contentItem = _contentManager.GetLatest(id);
@@ -762,6 +773,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
+        [Admin]
         [HttpPost]
         public ActionResult Remove(int id, string returnUrl) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
@@ -779,6 +791,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
+        [Admin]
         [HttpPost]
         public ActionResult Publish(int id, string returnUrl) {
             var contentItem = _contentManager.GetLatest(id);
@@ -795,6 +808,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
+        [Admin]
         [HttpPost]
         public ActionResult Unpublish(int id, string returnUrl) {
             var contentItem = _contentManager.GetLatest(id);
