@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.Claims.Models {
-    public class ClaimsSiteSettingsPart : ContentPart {
+    public class ClaimsSiteSettings : ContentPart {
         public bool ApplyToFrontEnd {
             get { return this.Retrieve(x => x.ApplyToFrontEnd); }
             set { this.Store(x => x.ApplyToFrontEnd, value); }

@@ -8,11 +8,11 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.Claims.Handlers {
-    public class ClaimsSiteSettingsPartHandler : ContentHandler {
+    public class ClaimsSiteSettingsHandler : ContentHandler {
         public Localizer T { get; set; }
-        public ClaimsSiteSettingsPartHandler() {
+        public ClaimsSiteSettingsHandler() {
             T = NullLocalizer.Instance;
-            Filters.Add(new ActivatingFilter<ClaimsSiteSettingsPart>("Site"));
+            Filters.Add(new ActivatingFilter<ClaimsSiteSettings>("Site"));
         }
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
             if (context.ContentItem.ContentType != "Site") {

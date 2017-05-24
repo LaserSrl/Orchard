@@ -71,6 +71,10 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Tokens, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Users">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
     </Reference>
@@ -116,21 +120,23 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Drivers\ClaimsSiteSettingsPartDriver.cs" />
+    <Compile Include="Drivers\ClaimsSiteSettingsDriver.cs" />
     <Compile Include="Drivers\IdentityClaimsPartDriver.cs" />
     <Compile Include="Drivers\RequiredClaimsPartDriver.cs" />
-    <Compile Include="Handlers\ClaimsSiteSettingsPartHandler.cs" />
+    <Compile Include="Handlers\ClaimsSiteSettingsHandler.cs" />
     <Compile Include="Handlers\IdentityClaimsPartHandler.cs" />
     <Compile Include="Handlers\RequiredClaimsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\ClaimsSiteSettingsPart.cs" />
+    <Compile Include="Models\ClaimsSiteSettings.cs" />
     <Compile Include="Models\IdentityClaimsPart.cs" />
     <Compile Include="Models\IdentityClaimsRecord.cs" />
     <Compile Include="Models\RequiredClaimsPart.cs" />
+    <Compile Include="Models\RequiredClaimsPartSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ClaimsContentManager.cs" />
     <Compile Include="Providers\ClaimsQueryCriteria.cs" />
     <Compile Include="Services\ClaimsCheckerService.cs" />
+    <Compile Include="Settings\RequiredClaimsPartSettingsHooks.cs" />
     <Compile Include="ViewModels\IdentityClaimsPartVM.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\ClaimsSiteSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\RequiredClaimsPartSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

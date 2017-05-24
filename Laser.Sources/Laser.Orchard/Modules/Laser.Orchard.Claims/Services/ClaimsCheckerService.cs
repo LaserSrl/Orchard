@@ -55,7 +55,7 @@ namespace Laser.Orchard.Claims.Services {
                 if (userName == superuser) {
                     _isSuperUser = true;
                 }
-                var applyToFrontEnd = aux.Element.Element("ClaimsSiteSettingsPart").Attribute("ApplyToFrontEnd").Value;
+                var applyToFrontEnd = aux.Element.Element("ClaimsSiteSettings").Attribute("ApplyToFrontEnd").Value;
                 if(applyToFrontEnd.Equals("true", StringComparison.InvariantCultureIgnoreCase) == false) {
                     _applyToFrontEnd = false;
                 } 

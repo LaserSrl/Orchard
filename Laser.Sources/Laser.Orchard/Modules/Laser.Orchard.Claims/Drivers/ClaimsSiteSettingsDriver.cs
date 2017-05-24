@@ -8,22 +8,22 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.Claims.Drivers {
-    public class ClaimsSiteSettingsPartDriver : ContentPartDriver<ClaimsSiteSettingsPart> {
+    public class ClaimsSiteSettingsDriver : ContentPartDriver<ClaimsSiteSettings> {
         private const string TemplateName = "Parts/ClaimsSiteSettings";
 
-        public ClaimsSiteSettingsPartDriver() {
+        public ClaimsSiteSettingsDriver() {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        protected override string Prefix { get { return "ClaimsSettings"; } }
+        protected override string Prefix { get { return "ClaimsSiteSettings"; } }
 
-        protected override DriverResult Editor(ClaimsSiteSettingsPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(ClaimsSiteSettings part, dynamic shapeHelper) {
             return Editor(part, null, shapeHelper);
         }
 
-        protected override DriverResult Editor(ClaimsSiteSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(ClaimsSiteSettings part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_ClaimsSiteSettings_Edit", () => {
                 if (updater != null) {
                     updater.TryUpdateModel(part, Prefix, null, null);

@@ -1,0 +1,13 @@
+﻿@model Laser.Orchard.Claims.Models.RequiredClaimsPartSettings
+
+<fieldset>
+    <legend></legend>
+    <div>
+        @Html.LabelFor(m => m.AlwaysApplyDefault, T("Apply default on each item"))
+        @Html.CheckBoxFor(m => m.AlwaysApplyDefault)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.ClaimsDefault, T("Default claims"))
+        @Html.TextBoxFor(m => m.ClaimsDefault, new { @class = "text medium tokenized" })
+    </div>
+</fieldset>
