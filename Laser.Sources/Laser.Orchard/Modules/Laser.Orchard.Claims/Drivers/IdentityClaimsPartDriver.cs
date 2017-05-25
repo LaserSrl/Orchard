@@ -1,5 +1,7 @@
 ﻿using Laser.Orchard.Claims.Models;
+using Laser.Orchard.Claims.Security;
 using Laser.Orchard.Claims.ViewModels;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Data;
@@ -14,14 +16,19 @@ namespace Laser.Orchard.Claims.Drivers {
     public class IdentityClaimsPartDriver : ContentPartDriver<IdentityClaimsPart> {
         private readonly ITransactionManager _transactionManager;
         private readonly ITokenizer _tokenizer;
-        public IdentityClaimsPartDriver(ITokenizer tokenizer, ITransactionManager transactionManager) {
+        private readonly IOrchardServices _orchardServices;
+        public IdentityClaimsPartDriver(ITokenizer tokenizer, ITransactionManager transactionManager, IOrchardServices orchardServices) {
             _tokenizer = tokenizer;
             _transactionManager = transactionManager;
+            _orchardServices = orchardServices;
         }
         protected override DriverResult Display(IdentityClaimsPart part, string displayType, dynamic shapeHelper) {
             return null;
         }
         protected override DriverResult Editor(IdentityClaimsPart part, dynamic shapeHelper) {
+            if (_orchardServices.Authorizer.Authorize(ClaimsPermissions.EditClaims) == false) {
+                return null;
+            }
             var forceDefault = Convert.ToBoolean(part.Settings["IdentityClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
             if (forceDefault) {
                 return null;
@@ -33,7 +40,9 @@ namespace Laser.Orchard.Claims.Drivers {
                     Prefix: Prefix));
         }
         protected override DriverResult Editor(IdentityClaimsPart part, IUpdateModel updater, dynamic shapeHelper) {
-            //updater.TryUpdateModel(part, Prefix, null, null);
+            if (_orchardServices.Authorizer.Authorize(ClaimsPermissions.EditClaims) == false) {
+                return null;
+            }
             IdentityClaimsPartVM vm = new IdentityClaimsPartVM(part);
             updater.TryUpdateModel(vm, Prefix, null, null);
             // applica i settings

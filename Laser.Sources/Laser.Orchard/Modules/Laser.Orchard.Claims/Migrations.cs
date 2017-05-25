@@ -9,11 +9,6 @@ using System.Web;
 namespace Laser.Orchard.Claims {
     public class Migrations : DataMigrationImpl {
         public int Create() {
-            //ContentDefinitionManager.AlterPartDefinition(
-            //    "RequiredClaimsPart",
-            //     b => b
-            //        .Attachable(true)
-            //);
             SchemaBuilder.CreateTable("RequiredClaimsPartRecord",
                 table => table
                     .ContentPartRecord()
