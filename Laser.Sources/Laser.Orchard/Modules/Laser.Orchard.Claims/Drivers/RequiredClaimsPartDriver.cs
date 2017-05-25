@@ -24,9 +24,8 @@ namespace Laser.Orchard.Claims.Drivers {
         }
 
         protected override DriverResult Editor(RequiredClaimsPart part, dynamic shapeHelper) {
-            var claimsDefault = part.Settings["RequiredClaimsPartSettings.ClaimsDefault"];
-            var alwaysApplyDefault = Convert.ToBoolean(part.Settings["RequiredClaimsPartSettings.AlwaysApplyDefault"], CultureInfo.InvariantCulture);
-            if (alwaysApplyDefault) {
+            var forceDefault = Convert.ToBoolean(part.Settings["RequiredClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
+            if (forceDefault) {
                 return null;
             }
             return ContentShape("Parts_RequiredClaimsPart_Edit",
@@ -38,9 +37,10 @@ namespace Laser.Orchard.Claims.Drivers {
 
         protected override DriverResult Editor(RequiredClaimsPart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part, Prefix, null, null);
+            // applica i settings
             var claimsDefault = part.Settings["RequiredClaimsPartSettings.ClaimsDefault"];
-            var alwaysApplyDefault = Convert.ToBoolean(part.Settings["RequiredClaimsPartSettings.AlwaysApplyDefault"], CultureInfo.InvariantCulture);
-            if (alwaysApplyDefault) {
+            var forceDefault = Convert.ToBoolean(part.Settings["RequiredClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
+            if (forceDefault) {
                 part.Claims = _tokenizer.Replace(claimsDefault, part.ContentItem);
             } else {
                 if (string.IsNullOrWhiteSpace(part.Claims)) {

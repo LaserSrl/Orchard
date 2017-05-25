@@ -21,7 +21,7 @@ namespace Laser.Orchard.Claims.Settings {
             var model = new RequiredClaimsPartSettings();
             updateModel.TryUpdateModel(model, "RequiredClaimsPartSettings", null, null);
             builder.WithSetting("RequiredClaimsPartSettings.ClaimsDefault", model.ClaimsDefault);
-            builder.WithSetting("RequiredClaimsPartSettings.AlwaysApplyDefault", ((bool)model.AlwaysApplyDefault).ToString());
+            builder.WithSetting("RequiredClaimsPartSettings.ForceDefault", ((bool)model.ForceDefault).ToString());
             yield return DefinitionTemplate(model);
         }
     }

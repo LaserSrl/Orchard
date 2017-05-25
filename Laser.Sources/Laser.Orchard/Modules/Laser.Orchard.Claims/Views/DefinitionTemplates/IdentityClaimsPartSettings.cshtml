@@ -1,4 +1,4 @@
-﻿@model Laser.Orchard.Claims.Models.RequiredClaimsPartSettings
+﻿@model Laser.Orchard.Claims.Models.IdentityClaimsPartSettings
 
 <fieldset>
     <legend></legend>
@@ -9,7 +9,7 @@
     </div>
     <div>
         @Html.LabelFor(m => m.ClaimsDefault, T("Default claims"))
-        @Html.TextBoxFor(m => m.ClaimsDefault, new { @class = "text medium tokenized" })
+        @Html.TextAreaFor(m => m.ClaimsDefault, new { @class = "text medium tokenized" })
     </div>
 </fieldset>
 @Display.TokenHint()
