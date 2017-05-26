@@ -136,6 +136,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ClaimsContentManager.cs" />
     <Compile Include="Providers\ClaimsQueryCriteria.cs" />
+    <Compile Include="Providers\ClaimsAuthorizationEventHandler.cs" />
     <Compile Include="Security\ClaimsPermissions.cs" />
     <Compile Include="Services\ClaimsCheckerService.cs" />
     <Compile Include="Settings\IdentityClaimsPartSettingsHooks.cs" />
