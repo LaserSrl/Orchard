@@ -97,7 +97,17 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
                         RazorEngineServiceStatic.AddTemplate("Layout" + key, Layout);
                     }
 #if DEBUG
-                    string defFileName = System.IO.Path.GetTempPath() + key + ".cshtml";
+                    // key puo' essere un nome ("caso customtemplate") o un file con tutta la path (caso fieldexternal)
+                    string defFileName = key;
+                    try {
+                        defFileName= Path.GetFileName(key);
+                    }
+                    catch (Exception ex) {
+                       
+                    }
+                    if (string.IsNullOrEmpty(defFileName))
+                        defFileName = key;
+                    defFileName = System.IO.Path.GetTempPath() + defFileName + ".cshtml";
                     code = "@{System.Diagnostics.Debugger.Break();}" + code;
                     File.WriteAllText(defFileName, code);
                    
