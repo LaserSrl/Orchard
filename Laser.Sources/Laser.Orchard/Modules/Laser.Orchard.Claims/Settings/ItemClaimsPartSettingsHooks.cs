@@ -10,18 +10,18 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.Claims.Settings {
-    public class RequiredClaimsPartSettingsHooks : ContentDefinitionEditorEventsBase {
+    public class ItemClaimsPartSettingsHooks : ContentDefinitionEditorEventsBase {
         public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition) {
-            if (definition.PartDefinition.Name != "RequiredClaimsPart") yield break;
-            var model = definition.Settings.GetModel<RequiredClaimsPartSettings>();
+            if (definition.PartDefinition.Name != "ItemClaimsPart") yield break;
+            var model = definition.Settings.GetModel<ItemClaimsPartSettings>();
             yield return DefinitionTemplate(model);
         }
         public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel) {
-            if (builder.Name != "RequiredClaimsPart") yield break;
-            var model = new RequiredClaimsPartSettings();
-            updateModel.TryUpdateModel(model, "RequiredClaimsPartSettings", null, null);
-            builder.WithSetting("RequiredClaimsPartSettings.ClaimsDefault", model.ClaimsDefault);
-            builder.WithSetting("RequiredClaimsPartSettings.ForceDefault", ((bool)model.ForceDefault).ToString());
+            if (builder.Name != "ItemClaimsPart") yield break;
+            var model = new ItemClaimsPartSettings();
+            updateModel.TryUpdateModel(model, "ItemClaimsPartSettings", null, null);
+            builder.WithSetting("ItemClaimsPartSettings.ClaimsDefault", model.ClaimsDefault);
+            builder.WithSetting("ItemClaimsPartSettings.ForceDefault", ((bool)model.ForceDefault).ToString());
             yield return DefinitionTemplate(model);
         }
     }

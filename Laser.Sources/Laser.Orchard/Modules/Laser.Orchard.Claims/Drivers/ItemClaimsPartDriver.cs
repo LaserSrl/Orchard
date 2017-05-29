@@ -11,52 +11,52 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.Claims.Drivers {
-    public class RequiredClaimsPartDriver : ContentPartDriver<RequiredClaimsPart> {
+    public class ItemClaimsPartDriver : ContentPartDriver<ItemClaimsPart> {
         private readonly ITokenizer _tokenizer;
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContext;
         private readonly IOrchardServices _orchardServices;
-        public RequiredClaimsPartDriver(ITokenizer tokenizer, IContentManager contentManager, IWorkContextAccessor workContext, IOrchardServices orchardServices) {
+        public ItemClaimsPartDriver(ITokenizer tokenizer, IContentManager contentManager, IWorkContextAccessor workContext, IOrchardServices orchardServices) {
             _tokenizer = tokenizer;
             _contentManager = contentManager;
             _workContext = workContext;
             _orchardServices = orchardServices;
         }
-        protected override DriverResult Display(RequiredClaimsPart part, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(ItemClaimsPart part, string displayType, dynamic shapeHelper) {
             return null;
         }
 
-        protected override DriverResult Editor(RequiredClaimsPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(ItemClaimsPart part, dynamic shapeHelper) {
             if (_orchardServices.Authorizer.Authorize(ClaimsPermissions.EditClaims) == false) {
                 return null;
             }
             var forceDefault = false;
-            if (part.Settings.ContainsKey("RequiredClaimsPartSettings.ForceDefault")) {
-                forceDefault = Convert.ToBoolean(part.Settings["RequiredClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
+            if (part.Settings.ContainsKey("ItemClaimsPartSettings.ForceDefault")) {
+                forceDefault = Convert.ToBoolean(part.Settings["ItemClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
             }
             if (forceDefault) {
                 return null;
             }
-            return ContentShape("Parts_RequiredClaimsPart_Edit",
+            return ContentShape("Parts_ItemClaimsPart_Edit",
                 () => shapeHelper.EditorTemplate(
-                    TemplateName: "Parts/RequiredClaimsPart",
+                    TemplateName: "Parts/ItemClaimsPart",
                     Model: part,
                     Prefix: Prefix));
         }
 
-        protected override DriverResult Editor(RequiredClaimsPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(ItemClaimsPart part, IUpdateModel updater, dynamic shapeHelper) {
             if (_orchardServices.Authorizer.Authorize(ClaimsPermissions.EditClaims) == false) {
                 return null;
             }
             updater.TryUpdateModel(part, Prefix, null, null);
             // applica i settings
             var claimsDefault = "";
-            if (part.Settings.ContainsKey("RequiredClaimsPartSettings.ClaimsDefault")) {
-                claimsDefault = part.Settings["RequiredClaimsPartSettings.ClaimsDefault"];
+            if (part.Settings.ContainsKey("ItemClaimsPartSettings.ClaimsDefault")) {
+                claimsDefault = part.Settings["ItemClaimsPartSettings.ClaimsDefault"];
             }
             var forceDefault = false;
-            if (part.Settings.ContainsKey("RequiredClaimsPartSettings.ForceDefault")) {
-                forceDefault = Convert.ToBoolean(part.Settings["RequiredClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
+            if (part.Settings.ContainsKey("ItemClaimsPartSettings.ForceDefault")) {
+                forceDefault = Convert.ToBoolean(part.Settings["ItemClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
             }
             if (forceDefault) {
                 part.Claims = _tokenizer.Replace(claimsDefault, part.ContentItem);

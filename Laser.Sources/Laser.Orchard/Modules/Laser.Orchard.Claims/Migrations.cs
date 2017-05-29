@@ -5,12 +5,12 @@ using Orchard.ContentManagement.MetaData;
 namespace Laser.Orchard.Claims {
     public class Migrations : DataMigrationImpl {
         public int Create() {
-            SchemaBuilder.CreateTable("RequiredClaimsPartRecord",
+            SchemaBuilder.CreateTable("ItemClaimsPartRecord",
                 table => table
                     .ContentPartVersionRecord()
                     .Column("Claims", System.Data.DbType.String, c => c.Unlimited()));
             ContentDefinitionManager.AlterPartDefinition(
-                "RequiredClaimsPart",
+                "ItemClaimsPart",
                  b => b
                     .Attachable(true)
             );

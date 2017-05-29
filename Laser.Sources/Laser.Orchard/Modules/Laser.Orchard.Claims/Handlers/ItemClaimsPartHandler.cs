@@ -8,8 +8,8 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.Claims.Handlers {
-    public class RequiredClaimsPartHandler : ContentHandler {
-        public RequiredClaimsPartHandler(IRepository<RequiredClaimsPartRecord> repository, ITokenizer tokenizer) {
+    public class ItemClaimsPartHandler : ContentHandler {
+        public ItemClaimsPartHandler(IRepository<ItemClaimsPartRecord> repository, ITokenizer tokenizer) {
             Filters.Add(StorageFilter.For(repository));
         }
     }

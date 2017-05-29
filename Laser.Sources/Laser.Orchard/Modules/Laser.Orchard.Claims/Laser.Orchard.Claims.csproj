@@ -122,24 +122,24 @@
   <ItemGroup>
     <Compile Include="Drivers\ClaimsSiteSettingsDriver.cs" />
     <Compile Include="Drivers\IdentityClaimsPartDriver.cs" />
-    <Compile Include="Drivers\RequiredClaimsPartDriver.cs" />
+    <Compile Include="Drivers\ItemClaimsPartDriver.cs" />
     <Compile Include="Handlers\ClaimsSiteSettingsHandler.cs" />
     <Compile Include="Handlers\IdentityClaimsPartHandler.cs" />
-    <Compile Include="Handlers\RequiredClaimsPartHandler.cs" />
+    <Compile Include="Handlers\ItemClaimsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ClaimsSiteSettings.cs" />
     <Compile Include="Models\IdentityClaimsPart.cs" />
     <Compile Include="Models\IdentityClaimsPartSettings.cs" />
     <Compile Include="Models\IdentityClaimsRecord.cs" />
-    <Compile Include="Models\RequiredClaimsPart.cs" />
-    <Compile Include="Models\RequiredClaimsPartSettings.cs" />
+    <Compile Include="Models\ItemClaimsPart.cs" />
+    <Compile Include="Models\ItemClaimsPartSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ClaimsQueryCriteria.cs" />
     <Compile Include="Providers\ClaimsAuthorizationEventHandler.cs" />
     <Compile Include="Security\ClaimsPermissions.cs" />
     <Compile Include="Services\ClaimsCheckerService.cs" />
     <Compile Include="Settings\IdentityClaimsPartSettingsHooks.cs" />
-    <Compile Include="Settings\RequiredClaimsPartSettingsHooks.cs" />
+    <Compile Include="Settings\ItemClaimsPartSettingsHooks.cs" />
     <Compile Include="ViewModels\IdentityClaimsPartVM.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -159,7 +159,7 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\RequiredClaimsPart.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\ItemClaimsPart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />
@@ -171,7 +171,7 @@
     <Content Include="Views\EditorTemplates\Parts\ClaimsSiteSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DefinitionTemplates\RequiredClaimsPartSettings.cshtml" />
+    <Content Include="Views\DefinitionTemplates\ItemClaimsPartSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\IdentityClaimsPartSettings.cshtml" />

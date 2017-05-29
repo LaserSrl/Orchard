@@ -93,7 +93,7 @@ namespace Laser.Orchard.Claims.Services {
             if (_isSuperUser || (_isBackEnd == false && _applyToFrontEnd == false)) {
                 return contentItem;
             }
-            var claimsPart = contentItem.As<RequiredClaimsPart>();
+            var claimsPart = contentItem.As<ItemClaimsPart>();
             if(claimsPart != null) {
                 var itemClaims = new List<string>();
                 if(string.IsNullOrWhiteSpace(claimsPart.Claims) == false) {
@@ -131,7 +131,7 @@ namespace Laser.Orchard.Claims.Services {
             if (_isSuperUser || (_isBackEnd == false && _applyToFrontEnd == false)) {
                 return;
             }
-            var newCriteria = criteria.CreateCriteria("RequiredClaimsPartRecord", "laserClaims", NHibernate.SqlCommand.JoinType.LeftOuterJoin);
+            var newCriteria = criteria.CreateCriteria("ItemClaimsPartRecord", "laserClaims", NHibernate.SqlCommand.JoinType.LeftOuterJoin);
             AbstractCriterion crit = null;
 
             // almeno un set di claims dell'utente deve essere presente nell'item (or di and)
