@@ -65,6 +65,17 @@ namespace Laser.Orchard.Claims.Drivers {
                     part.Claims = _tokenizer.Replace(claimsDefault, part.ContentItem);
                 }
             }
+            // elimina eventuali spazi iniziali e finali
+            part.Claims = part.Claims.Trim();
+            // verifica che il valore di Claims sia sempre preceduto e seguuito dalla virgola
+            if(string.IsNullOrWhiteSpace(part.Claims) == false) {
+                if(part.Claims.StartsWith(",") == false) {
+                    part.Claims = "," + part.Claims;
+                }
+                if (part.Claims.EndsWith(",") == false) {
+                    part.Claims += ",";
+                }
+            }
             return Editor(part, shapeHelper);
         }
     }
