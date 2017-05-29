@@ -10,75 +10,75 @@
 
 	XmlDocument mydoc = ToXmlDocument(Model);
 
-    mydoc = aggiungipadre(mydoc, "root", "ExternalEvents", "TeatroAstraSpettacoliList");
-    mydoc = RimuoviFratelli(mydoc, "root/ExternalEvents");
+    mydoc = aggiungipadre(mydoc, "root", "ExternalShows", "TeatroAstraSpettacoliList");
+    mydoc = RimuoviFratelli(mydoc, "root/ExternalShows");
     
-    mydoc = cambianome(mydoc, "root/ExternalEvents/TeatroAstraSpettacoliList", "ExternalEvent");
+    mydoc = cambianome(mydoc, "root/ExternalShows/TeatroAstraSpettacoliList", "ExternalShow");
 	
 	mydoc = cambianome(mydoc, "/title", "TitleText");
     mydoc = cambianome(mydoc, "/link", "LinkText");
     mydoc = cambianome(mydoc, "/content", "DescriptionText");
     mydoc = cambianome(mydoc, "/excerpt", "ExcerptText");
-    mydoc = cambianome(mydoc, "root/ExternalEvents/ExternalEvent/thumbnail", "ImageUrl");
-	mydoc = cambianome(mydoc, "root/ExternalEvents/ExternalEvent/_links", "links");
-	mydoc = cambianome(mydoc, "root/ExternalEvents/ExternalEvent/links/version-history", "versionhistory");
+    mydoc = cambianome(mydoc, "root/ExternalShows/ExternalShow/thumbnail", "ImageUrl");
+	mydoc = cambianome(mydoc, "root/ExternalShows/ExternalShow/_links", "links");
+	mydoc = cambianome(mydoc, "root/ExternalShows/ExternalShow/links/version-history", "versionhistory");
 	
 	mydoc = ConvertDateWithFormat(mydoc, "/date");
 	mydoc = ConvertDateWithFormat(mydoc, "/modified");
 	mydoc = ConvertDateWithFormat(mydoc, "/date_gmt");
 	mydoc = ConvertDateWithFormat(mydoc, "/modified_gmt");
 	
-	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/tags")){
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalShows/ExternalShow/tags")){
 		child_to_remove.ParentNode.RemoveChild(child_to_remove);
 	}
 	
-	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/categories")){
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalShows/ExternalShow/categories")){
 		child_to_remove.ParentNode.RemoveChild(child_to_remove);
 	}
 	
-	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/author")){
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalShows/ExternalShow/author")){
 		child_to_remove.ParentNode.RemoveChild(child_to_remove);
 	}
 	
-	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/comment_count")){
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalShows/ExternalShow/comment_count")){
 		child_to_remove.ParentNode.RemoveChild(child_to_remove);
 	}
 	
-	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/comment_status")){
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalShows/ExternalShow/comment_status")){
 		child_to_remove.ParentNode.RemoveChild(child_to_remove);
 	}
 	
-	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/comments")){
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalShows/ExternalShow/comments")){
 		child_to_remove.ParentNode.RemoveChild(child_to_remove);
 	}
     
-    mydoc = cambianome(mydoc, "/ExternalEvents/ExternalEvent/id", "Sid");
-    foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalEvents/ExternalEvent/Sid")) {
-        child_node.InnerText = "ExternalEvent:" + child_node.InnerText;
+    mydoc = cambianome(mydoc, "/ExternalShows/ExternalShow/id", "Sid");
+    foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalShows/ExternalShow/Sid")) {
+        child_node.InnerText = "ExternalShow:" + child_node.InnerText;
     }
     
-	foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalEvents/ExternalEvent")) {
+	foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalShows/ExternalShow")) {
         mydoc = AggiungiShareLink(mydoc, child_node, child_node["TitleText"].InnerText, child_node["LinkText"].InnerText, "");
     }
 	
-	foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalEvents/ExternalEvent")) {
+	foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalShows/ExternalShow")) {
         string url = child_node[fieldToSearchPattern].InnerText;
 		if (!url.Contains(pattern)) {
 			child_node.ParentNode.RemoveChild(child_node);
 		}
     }
 	
-	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/ExcerptText")){
+	foreach(XmlNode child_to_remove in mydoc.SelectNodes("/root/ExternalShows/ExternalShow/ExcerptText")){
 		child_to_remove.ParentNode.RemoveChild(child_to_remove);
 	}
 	
-	foreach(XmlNode child_node in mydoc.SelectNodes("/root/ExternalEvents/ExternalEvent/DescriptionText")){
+	foreach(XmlNode child_node in mydoc.SelectNodes("/root/ExternalShows/ExternalShow/DescriptionText")){
 		child_node.InnerText = child_node.InnerText.Replace("\u2028", " ");
 		child_node.InnerText = rgxVcDateOrari.Replace(child_node.InnerText, "<div>$1<ul><li>$2</li></ul></div>");
 		child_node.InnerText = rgxVc.Replace(child_node.InnerText, "");
 	}
 	
-	mydoc = cambianome(mydoc, "root/ExternalEvents", "ToRemove");
+	mydoc = cambianome(mydoc, "root/ExternalShows", "ToRemove");
 	
 	SpanXDocument(ToXDocument(mydoc).Root);
 }				

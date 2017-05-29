@@ -9,6 +9,7 @@ using RazorEngine.Compilation;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
+using System.Diagnostics;
 
 namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
 
@@ -95,13 +96,24 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
                     if (!string.IsNullOrEmpty(Layout)) {
                         RazorEngineServiceStatic.AddTemplate("Layout" + key, Layout);
                     }
+#if DEBUG
+                    string defFileName = System.IO.Path.GetTempPath() + key + ".cshtml";
+                    code = "@{System.Diagnostics.Debugger.Break();}" + code;
+                    File.WriteAllText(defFileName, code);
+                   
+                    RazorEngineServiceStatic.AddTemplate(key, new LoadedTemplateSource(code, defFileName));
+                   // Debugger.Break();
+
+#else
                     RazorEngineServiceStatic.AddTemplate(key, new LoadedTemplateSource(code, null));
+#endif
                     RazorEngineServiceStatic.Compile(key, null);
                     listCached.Add(key);
                 }
                 else
                     return null;
             }
+
             return RazorEngineServiceStatic.Run(key, null, (Object)model, dvb);
         }
 
