@@ -243,6 +243,8 @@
     <Compile Include="Models\AuthenticationRequiredPart.cs" />
     <Compile Include="Navigation\ContentAdminMenu.cs" />
     <Compile Include="Projections\DefaultHqlExpressionFactoryExtensions.cs" />
+    <Compile Include="Projections\OwnerIdFilter.cs" />
+    <Compile Include="Projections\OwnerIdForm.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionPartDriver.cs" />
     <Compile Include="Controllers\UsersGroupsSettingsController.cs" />
     <Compile Include="Drivers\UsersGroupsDriver.cs" />
