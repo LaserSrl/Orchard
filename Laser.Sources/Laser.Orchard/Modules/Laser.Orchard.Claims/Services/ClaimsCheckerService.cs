@@ -48,19 +48,22 @@ namespace Laser.Orchard.Claims.Services {
                 _isBackEnd = false;
             }
             // recupera il site per capire se l'utente è un amministratore e leggere i settings
+            var aux = _repoSite.Get(1).Infoset;
             try {
                 userName = context.User.Identity.Name;
-                var aux = _repoSite.Get(1).Infoset;
                 var superuser = aux.Element.Element("SiteSettingsPart").Attribute("SuperUser").Value;
                 if (userName == superuser) {
                     _isSuperUser = true;
                 }
+            } catch {
+                _isSuperUser = true;
+            }
+            try { 
                 var applyToFrontEnd = aux.Element.Element("ClaimsSiteSettings").Attribute("ApplyToFrontEnd").Value;
                 if(applyToFrontEnd.Equals("true", StringComparison.InvariantCultureIgnoreCase) == false) {
                     _applyToFrontEnd = false;
                 } 
             } catch {
-                _isSuperUser = true;
                 _applyToFrontEnd = true;
             }
             // recupera le claims dell'utente
@@ -98,7 +101,10 @@ namespace Laser.Orchard.Claims.Services {
                         itemClaims.Add(row);
                     }
                 }
-
+                // se l'item non ha nessuna claim ed è nuovo (id=0) è visibile a tutti
+                if (itemClaims.Count == 0 && contentItem.Id == 0) {
+                    return contentItem;
+                }
                 // almeno un set di claims dell'utente deve essere presente nell'item
                 var granted = false;
                 foreach (var set in _userClaims) {

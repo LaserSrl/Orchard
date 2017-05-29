@@ -134,7 +134,6 @@
     <Compile Include="Models\RequiredClaimsPart.cs" />
     <Compile Include="Models\RequiredClaimsPartSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\ClaimsContentManager.cs" />
     <Compile Include="Providers\ClaimsQueryCriteria.cs" />
     <Compile Include="Providers\ClaimsAuthorizationEventHandler.cs" />
     <Compile Include="Security\ClaimsPermissions.cs" />

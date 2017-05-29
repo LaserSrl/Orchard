@@ -29,7 +29,10 @@ namespace Laser.Orchard.Claims.Drivers {
             if (_orchardServices.Authorizer.Authorize(ClaimsPermissions.EditClaims) == false) {
                 return null;
             }
-            var forceDefault = Convert.ToBoolean(part.Settings["IdentityClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
+            var forceDefault = false;
+            if (part.Settings.ContainsKey("IdentityClaimsPartSettings.ForceDefault")) {
+                forceDefault = Convert.ToBoolean(part.Settings["IdentityClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
+            }
             if (forceDefault) {
                 return null;
             }
@@ -46,8 +49,14 @@ namespace Laser.Orchard.Claims.Drivers {
             IdentityClaimsPartVM vm = new IdentityClaimsPartVM(part);
             updater.TryUpdateModel(vm, Prefix, null, null);
             // applica i settings
-            var claimsDefault = part.Settings["IdentityClaimsPartSettings.ClaimsDefault"];
-            var forceDefault = Convert.ToBoolean(part.Settings["IdentityClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
+            var claimsDefault = "";
+            if (part.Settings.ContainsKey("IdentityClaimsPartSettings.ClaimsDefault")) {
+                claimsDefault = part.Settings["IdentityClaimsPartSettings.ClaimsDefault"];
+            }
+            var forceDefault = false;
+            if (part.Settings.ContainsKey("IdentityClaimsPartSettings.ForceDefault")) {
+                forceDefault = Convert.ToBoolean(part.Settings["IdentityClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
+            }
             if (forceDefault) {
                 vm.ClaimsArea = _tokenizer.Replace(claimsDefault, part.ContentItem);
             } else {

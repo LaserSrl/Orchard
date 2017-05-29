@@ -7,6 +7,8 @@
     </div>
     <div class="editor-field">
         @Html.TextBoxFor(m => m.Claims)
-        <span class="hint">@T("If youu leave blank, default value as set in settings will be applied on saving.")</span>
+        <span class="hint">@T("A claims in the following form (beware leading and trailing commas): ,key1=val1,key2=val2,. Example: ,company=Microsoft,sector=marketing,country=italy,.")<br />
+        @T("If youu leave blank, default value as set in settings will be applied on saving.")
+    </span>
     </div>
 </fieldset>

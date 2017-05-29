@@ -11,9 +11,6 @@ namespace Laser.Orchard.Claims.Handlers {
     public class RequiredClaimsPartHandler : ContentHandler {
         public RequiredClaimsPartHandler(IRepository<RequiredClaimsPartRecord> repository, ITokenizer tokenizer) {
             Filters.Add(StorageFilter.For(repository));
-            OnUpdated<RequiredClaimsPart>((ctx, part) => {
-                part.Claims = tokenizer.Replace(part.Claims, part.ContentItem);
-            });
         }
     }
 }

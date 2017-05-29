@@ -31,10 +31,8 @@ namespace Laser.Orchard.Claims.Drivers {
                 return null;
             }
             var forceDefault = false;
-            try {
+            if (part.Settings.ContainsKey("RequiredClaimsPartSettings.ForceDefault")) {
                 forceDefault = Convert.ToBoolean(part.Settings["RequiredClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
-            } catch {
-                forceDefault = false;
             }
             if (forceDefault) {
                 return null;
@@ -52,8 +50,14 @@ namespace Laser.Orchard.Claims.Drivers {
             }
             updater.TryUpdateModel(part, Prefix, null, null);
             // applica i settings
-            var claimsDefault = part.Settings["RequiredClaimsPartSettings.ClaimsDefault"];
-            var forceDefault = Convert.ToBoolean(part.Settings["RequiredClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
+            var claimsDefault = "";
+            if (part.Settings.ContainsKey("RequiredClaimsPartSettings.ClaimsDefault")) {
+                claimsDefault = part.Settings["RequiredClaimsPartSettings.ClaimsDefault"];
+            }
+            var forceDefault = false;
+            if (part.Settings.ContainsKey("RequiredClaimsPartSettings.ForceDefault")) {
+                forceDefault = Convert.ToBoolean(part.Settings["RequiredClaimsPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
+            }
             if (forceDefault) {
                 part.Claims = _tokenizer.Replace(claimsDefault, part.ContentItem);
             } else {
