@@ -952,7 +952,7 @@ namespace Laser.Orchard.Mobile.Services {
                     }
                 }
                 catch (Exception ex) {
-                    LogError("PushAndroid expired error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    LogError("UpdateDevicesOnDb error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
             }
             _transactionManager.RequireNew();
@@ -973,7 +973,7 @@ namespace Laser.Orchard.Mobile.Services {
                     }
                 }
                 catch (Exception ex) {
-                    LogError("PushAndroid deviceChanged error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    LogError("UpdateDevicesOnDb error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
                 _pushNotificationRepository.Flush();
             }
@@ -991,7 +991,7 @@ namespace Laser.Orchard.Mobile.Services {
                     }
                 }
                 catch (Exception ex) {
-                    LogError("PushAndroid outcome error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    LogError("UpdateOutcomesOnDb error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
             }
             _transactionManager.RequireNew();
@@ -1358,22 +1358,31 @@ namespace Laser.Orchard.Mobile.Services {
 
         private void DeviceSubscriptionChanged(object sender, string oldSubscriptionId, string newSubscriptionId, INotification notification, bool produzione, TipoDispositivo tipoDispositivo, bool repeatable) {
             try {
-                var srOld = _sentRecords.AddOrUpdate(oldSubscriptionId, new SentRecord(), (key, record) => {
-                    record.Outcome = "ex";
-                    return record;
-                });
-                var srNew = new SentRecord {
-                    DeviceType = srOld.DeviceType,
-                    Id = 0,
-                    PushedItem = srOld.PushedItem,
-                    PushNotificationRecord_Id = srOld.PushNotificationRecord_Id,
-                    SentDate = srOld.SentDate,
-                    Outcome = "",
-                    Repeatable = repeatable
-                };
-                _sentRecords.AddOrUpdate(newSubscriptionId, srNew, (key, record) => {
-                    return srNew;
-                });
+                SentRecord srOld = null;
+                SentRecord srNew = null;
+                if (string.IsNullOrWhiteSpace(oldSubscriptionId) == false) {
+                    srOld = _sentRecords.AddOrUpdate(oldSubscriptionId, new SentRecord(), (key, record) => {
+                        record.Outcome = "ex";
+                        return record;
+                    });
+                }
+                if (srOld != null) {
+                    srNew = new SentRecord {
+                        DeviceType = srOld.DeviceType,
+                        Id = 0,
+                        PushedItem = srOld.PushedItem,
+                        PushNotificationRecord_Id = srOld.PushNotificationRecord_Id,
+                        SentDate = srOld.SentDate,
+                        Outcome = "",
+                        Repeatable = repeatable
+                    };
+                    _sentRecords.AddOrUpdate(newSubscriptionId, srNew, (key, record) => {
+                        return srNew;
+                    });
+                } 
+                else {
+                    LogError("Error DeviceSubscriptionChanged: tipoDispositivo: " + tipoDispositivo + " -> oldSubscriptionId" + oldSubscriptionId + " -> newSubscriptionId" + newSubscriptionId + "Error: old token not in _sentRecords.");
+                }
                 _deviceChanges.Add(new DeviceChange {
                     OldToken = oldSubscriptionId,
                     NewToken = newSubscriptionId,
