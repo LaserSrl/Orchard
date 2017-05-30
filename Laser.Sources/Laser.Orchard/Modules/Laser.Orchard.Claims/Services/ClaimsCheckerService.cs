@@ -101,8 +101,8 @@ namespace Laser.Orchard.Claims.Services {
                         itemClaims.Add(row);
                     }
                 }
-                // se l'item non ha nessuna claim ed è nuovo (id=0) è visibile a tutti
-                if (itemClaims.Count == 0 && contentItem.Id == 0) {
+                // se l'item non ha nessuna claim è visibile a tutti
+                if (itemClaims.Count == 0) {
                     return contentItem;
                 }
                 // almeno un set di claims dell'utente deve essere presente nell'item
@@ -152,7 +152,7 @@ namespace Laser.Orchard.Claims.Services {
                 }
             }
             if(crit != null) {
-                newCriteria = newCriteria.Add(Restrictions.Or(Restrictions.IsNull("laserClaims.Id"), crit));
+                newCriteria = newCriteria.Add(Restrictions.Or(Restrictions.Or(Restrictions.IsNull("laserClaims.Claims"), Restrictions.Eq("laserClaims.Claims", "")), crit));
             }
         }
     }
