@@ -1,17 +1,13 @@
 ﻿using Orchard.ContentManagement;
-using Orchard.Events;
 using Orchard.Localization;
 using System;
-using System.Globalization;
-using Laser.Orchard.StartupConfig.Models;
-using Orchard.Localization.Services;
 using Orchard.Core.Common.Models;
+using System.Collections.Generic;
 
 namespace Laser.Orchard.StartupConfig.Projections {
     public class OwnerIdFilter : IFilterProvider {
-        private readonly ICultureManager _cultureManager;
 
-        public OwnerIdFilter(ICultureManager cultureManager) {
+        public OwnerIdFilter() {
             T = NullLocalizer.Instance;
         }
 
@@ -30,17 +26,26 @@ namespace Laser.Orchard.StartupConfig.Projections {
             var query = (IHqlQuery)context.Query;
             if (context.State != null)
                 if (context.State.OwnerId != null && context.State.OwnerId != "") {
-                    var ownerId = 0;
-                    if (!int.TryParse(context.State.OwnerId.Value.ToString(), out ownerId)) {
-                       //??
+                    List<int> ownersId = new List<int>();
+                    string[] owns = context.State.OwnerId.Value.ToString().Split(',');
+                    foreach (string own in owns) {
+                        var ownerId = 0;
+                        if (int.TryParse(own, out ownerId)) {
+                            ownersId.Add(ownerId);
+                        }
                     }
-                    context.Query = query.Where(x => x.ContentPartRecord<CommonPartRecord>(), x => x.Eq("OwnerId", ownerId));
+
+                    context.Query = query.Where(x => x.ContentPartRecord<CommonPartRecord>(),
+                        x => x.In("OwnerId", ownersId.ToArray()));
                 }
             return;
         }
 
         public LocalizedString DisplayFilter(dynamic context) {
-            return T("Content Items associated with {0} as owner id.", context.State.OwnerId);
+            if (context.State.OwnerId != null && context.State.OwnerId != "")
+                return T("Content Items with owner id equal to: {0}.", context.State.OwnerId);
+            else
+                return T("No owner Id found");
         }
     }
 }

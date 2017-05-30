@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Orchard.DisplayManagement;
-using Orchard.Events;
 using Orchard.Localization;
 
 
@@ -25,7 +21,7 @@ namespace Laser.Orchard.StartupConfig.Projections {
                         _OwnerId: Shape.TextBox(
                             Id: "OwnerId", Name: "OwnerId",
                             Title: T("Owner Id"),
-                            Description: T("The owner id code to filter for."),
+                            Description: T("The owner id code to filter for,  if more than one divided by a comma."),
                             Classes: new[] { "text", "tokenized" }
                             )
                             );
