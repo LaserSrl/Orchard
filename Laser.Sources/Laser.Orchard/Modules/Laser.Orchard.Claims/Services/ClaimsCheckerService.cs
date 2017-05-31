@@ -101,10 +101,11 @@ namespace Laser.Orchard.Claims.Services {
                         var roles = userRoles.Select(x => x.Role);
                         var permissions = _repoRolePermissions.Fetch(x => roles.Contains(x.Role) 
                             && x.Permission.FeatureName == "Laser.Orchard.Claims");
-                        if(permissions.FirstOrDefault(x => x.Permission.Name == ClaimsPermissions.ApplyClaimsOnVisibility.Name) != null) {
+                        if (permissions.FirstOrDefault(x => x.Permission.Name == ClaimsPermissions.ApplyClaimsOnVisibility.Name) != null) {
                             _applyClaimsOnVisibility = true;
+                            _applyClaimsOnManagement = true;
                         }
-                        if (permissions.FirstOrDefault(x => x.Permission.Name == ClaimsPermissions.ApplyClaimsOnManagement.Name) != null) {
+                        else if (permissions.FirstOrDefault(x => x.Permission.Name == ClaimsPermissions.ApplyClaimsOnManagement.Name) != null) {
                             _applyClaimsOnManagement = true;
                         }
                     }
