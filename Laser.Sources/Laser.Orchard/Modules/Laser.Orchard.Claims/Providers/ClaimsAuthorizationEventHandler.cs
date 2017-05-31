@@ -21,7 +21,7 @@ namespace Laser.Orchard.Claims.Security {
 
         public void Complete(CheckAccessContext context) {
             if (context.Content != null) {
-                var ci = _claimsCheckerService.CheckClaims(context.Content.ContentItem);
+                var ci = _claimsCheckerService.CheckClaims(context.Content.ContentItem, context.Permission);
                 if (ci == null) {
                     context.Granted = false;
                     context.Adjusted = true;

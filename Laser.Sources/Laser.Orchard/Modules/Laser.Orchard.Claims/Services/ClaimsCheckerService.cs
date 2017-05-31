@@ -11,29 +11,42 @@ using System.Collections.Generic;
 using System.Web;
 using System.Linq;
 using System;
+using Orchard.Roles.Models;
+using Orchard.Security;
+using Laser.Orchard.Claims.Security;
+using Orchard.Security.Permissions;
+using Orchard.Core.Contents;
 
 namespace Laser.Orchard.Claims.Services {
     public interface IClaimsCheckerService : IDependency {
-        ContentItem CheckClaims(ContentItem contentItem);
+        ContentItem CheckClaims(ContentItem contentItem, Permission permission);
         void CheckClaims(ICriteria criteria);
     }
     public class ClaimsCheckerService : IClaimsCheckerService {
         private readonly IRepository<UserPartRecord> _repoUsers;
         private readonly IRepository<ContentItemRecord> _repoSite;
         private readonly IRepository<IdentityClaimsRecord> _repoClaims;
+        private readonly IRepository<UserRolesPartRecord> _repoUserRoles;
+        private readonly IRepository<RolesPermissionsRecord> _repoRolePermissions;
         private bool _isBackEnd;
         private List<List<string>> _userClaims;
         private bool _isSuperUser;
         private bool _applyToFrontEnd;
+        private bool _applyClaimsOnVisibility;
+        private bool _applyClaimsOnManagement;
         // Warning: se si aggiungono parametri al costruttore prestare attenzione a non creare dipendenze circolari
         // perché questo costruttore viene richiamato PRIMA di avere a disposizione il content manager.
         public ClaimsCheckerService(
             IRepository<UserPartRecord> repoUsers, 
             IRepository<ContentItemRecord> repoSite,
-            IRepository<IdentityClaimsRecord> repoClaims) {
+            IRepository<IdentityClaimsRecord> repoClaims,
+            IRepository<UserRolesPartRecord> repoUserRoles,
+            IRepository<RolesPermissionsRecord> repoRolePermissions) {
             _repoUsers = repoUsers;
             _repoSite = repoSite;
             _repoClaims = repoClaims;
+            _repoUserRoles = repoUserRoles;
+            _repoRolePermissions = repoRolePermissions;
             _userClaims = new List<List<string>>();
             var context = HttpContext.Current;
             string userName = "";
@@ -82,6 +95,18 @@ namespace Laser.Orchard.Claims.Services {
                             }
                             _userClaims.Add(claims);
                         }
+
+                        // recupera le claims permissions dell'utente
+                        var userRoles = _repoUserRoles.Fetch(x => x.UserId == userId);
+                        var roles = userRoles.Select(x => x.Role);
+                        var permissions = _repoRolePermissions.Fetch(x => roles.Contains(x.Role) 
+                            && x.Permission.FeatureName == "Laser.Orchard.Claims");
+                        if(permissions.FirstOrDefault(x => x.Permission.Name == ClaimsPermissions.ApplyClaimsOnVisibility.Name) != null) {
+                            _applyClaimsOnVisibility = true;
+                        }
+                        if (permissions.FirstOrDefault(x => x.Permission.Name == ClaimsPermissions.ApplyClaimsOnManagement.Name) != null) {
+                            _applyClaimsOnManagement = true;
+                        }
                     }
                 }
             }
@@ -89,9 +114,16 @@ namespace Laser.Orchard.Claims.Services {
                 // non aggiunge claims all'utente
             }
         }
-        public ContentItem CheckClaims(ContentItem contentItem) {
+        public ContentItem CheckClaims(ContentItem contentItem, Permission permission) {
             if (_isSuperUser || (_isBackEnd == false && _applyToFrontEnd == false)) {
                 return contentItem;
+            }
+            if(_applyClaimsOnManagement == false) {
+                return contentItem;
+            } else if(_applyClaimsOnVisibility == false) {
+                if(permission == Permissions.ViewContent || permission == Permissions.PreviewContent) {
+                    return contentItem;
+                }
             }
             var claimsPart = contentItem.As<ItemClaimsPart>();
             if(claimsPart != null) {
@@ -128,7 +160,7 @@ namespace Laser.Orchard.Claims.Services {
             return contentItem;
         }
         public void CheckClaims(ICriteria criteria) {
-            if (_isSuperUser || (_isBackEnd == false && _applyToFrontEnd == false)) {
+            if (_isSuperUser || (_applyClaimsOnVisibility == false) || (_isBackEnd == false && _applyToFrontEnd == false)) {
                 return;
             }
             var newCriteria = criteria.CreateCriteria("ItemClaimsPartRecord", "laserClaims", NHibernate.SqlCommand.JoinType.LeftOuterJoin);
