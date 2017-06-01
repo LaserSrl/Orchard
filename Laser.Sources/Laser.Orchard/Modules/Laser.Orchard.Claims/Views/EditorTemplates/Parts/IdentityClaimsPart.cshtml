@@ -7,7 +7,7 @@
     </div>
     <div class="editor-field">
         @Html.TextAreaFor(m => m.ClaimsArea)
-        <span class="hint">@T("A claims per row. Each claims has the following form: key1=val1,key2=val2. Example: company=Microsoft,sector=marketing,country=italy.")<br />
+        <span class="hint">@T("A claims per row. Each claims has the following form: key1=val1,key2=val2?key3=val3. Example: company=Microsoft,sector=marketing,country=italy?city=Rome. Claims following question mark are applied on edit only and are optional.")<br />
             @T("If youu leave blank, default value as set in settings will be applied on saving.")</span>
     </div>
 </fieldset>

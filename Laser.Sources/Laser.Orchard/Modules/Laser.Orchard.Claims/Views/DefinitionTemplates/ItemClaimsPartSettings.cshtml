@@ -10,6 +10,9 @@
     <div>
         @Html.LabelFor(m => m.ClaimsDefault, T("Default claims"))
         @Html.TextBoxFor(m => m.ClaimsDefault, new { @class = "text medium tokenized" })
+        <span class="hint">
+            @T("A claims in the following form: ,key1=val1,key2=val2,. Example: ,company=Microsoft,sector=marketing,country=italy,.")<br />
+        </span>
     </div>
 </fieldset>
 @Display.TokenHint()
