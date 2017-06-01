@@ -218,6 +218,7 @@
     <Compile Include="Models\QueryFilterPart.cs" />
     <Compile Include="Models\SmsContactPart.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Projections\EmailFilter.cs" />
     <Compile Include="Projections\ExcludeMasterContact.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\AdvertisingEventHandler.cs" />
