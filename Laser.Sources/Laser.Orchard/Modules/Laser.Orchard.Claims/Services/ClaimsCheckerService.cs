@@ -11,9 +11,6 @@ using System.Collections.Generic;
 using System.Web;
 using System.Linq;
 using System;
-using Orchard.Roles.Models;
-using Orchard.Security;
-using Laser.Orchard.Claims.Security;
 using Orchard.Security.Permissions;
 using Orchard.Core.Contents;
 
@@ -26,31 +23,26 @@ namespace Laser.Orchard.Claims.Services {
         private readonly IRepository<UserPartRecord> _repoUsers;
         private readonly IRepository<ContentItemRecord> _repoSite;
         private readonly IRepository<IdentityClaimsRecord> _repoClaims;
-        private readonly IRepository<UserRolesPartRecord> _repoUserRoles;
-        private readonly IRepository<RolesPermissionsRecord> _repoRolePermissions;
         private bool _isBackEnd;
-        private List<List<string>> _userClaims;
+        private List<List<string>> _userClaimsForView;
+        private List<List<string>> _userClaimsForEdit;
         private bool _isSuperUser;
         private bool _applyToFrontEnd;
-        private bool _applyClaimsOnVisibility;
-        private bool _applyClaimsOnManagement;
         // Warning: se si aggiungono parametri al costruttore prestare attenzione a non creare dipendenze circolari
         // perché questo costruttore viene richiamato PRIMA di avere a disposizione il content manager.
         public ClaimsCheckerService(
             IRepository<UserPartRecord> repoUsers, 
             IRepository<ContentItemRecord> repoSite,
-            IRepository<IdentityClaimsRecord> repoClaims,
-            IRepository<UserRolesPartRecord> repoUserRoles,
-            IRepository<RolesPermissionsRecord> repoRolePermissions) {
+            IRepository<IdentityClaimsRecord> repoClaims) {
             _repoUsers = repoUsers;
             _repoSite = repoSite;
             _repoClaims = repoClaims;
-            _repoUserRoles = repoUserRoles;
-            _repoRolePermissions = repoRolePermissions;
-            _userClaims = new List<List<string>>();
+            _userClaimsForView = new List<List<string>>();
+            _userClaimsForEdit = new List<List<string>>();
             var context = HttpContext.Current;
             string userName = "";
             _applyToFrontEnd = true;
+            var commaSeparator = new[] { ',' };
             try {
                 _isBackEnd = AdminFilter.IsApplied(context.Request.RequestContext);
                 if (_isBackEnd == false) {
@@ -89,24 +81,28 @@ namespace Laser.Orchard.Claims.Services {
                         // recupera le claims dell'utente tramite un repository
                         var claimsList = _repoClaims.Fetch(x => x.IdentityClaimsPartRecord_id == userId);
                         foreach(var set in claimsList) {
-                            var claims = new List<string>();
-                            foreach(var val in set.IdentityClaims.Split(',')) {
-                                claims.Add(val);
+                            if (string.IsNullOrWhiteSpace(set.IdentityClaims) == false) {
+                                var viewSection = "";
+                                var editSection = "";
+                                var sections = set.IdentityClaims.Split('?');
+                                viewSection = sections[0];
+                                if (sections.Length > 1) {
+                                    editSection = sections[1];
+                                }
+                                // claims for view content
+                                var viewClaims = new List<string>();
+                                var editClaims = new List<string>();
+                                foreach (var val in viewSection.Split(commaSeparator, StringSplitOptions.RemoveEmptyEntries)) {
+                                    viewClaims.Add(val);
+                                    editClaims.Add(val);
+                                }
+                                _userClaimsForView.Add(viewClaims);
+                                // claims for edit content
+                                foreach (var val in editSection.Split(commaSeparator, StringSplitOptions.RemoveEmptyEntries)) {
+                                    editClaims.Add(val);
+                                }
+                                _userClaimsForEdit.Add(editClaims);
                             }
-                            _userClaims.Add(claims);
-                        }
-
-                        // recupera le claims permissions dell'utente
-                        var userRoles = _repoUserRoles.Fetch(x => x.UserId == userId);
-                        var roles = userRoles.Select(x => x.Role);
-                        var permissions = _repoRolePermissions.Fetch(x => roles.Contains(x.Role) 
-                            && x.Permission.FeatureName == "Laser.Orchard.Claims");
-                        if (permissions.FirstOrDefault(x => x.Permission.Name == ClaimsPermissions.ApplyClaimsOnVisibility.Name) != null) {
-                            _applyClaimsOnVisibility = true;
-                            _applyClaimsOnManagement = true;
-                        }
-                        else if (permissions.FirstOrDefault(x => x.Permission.Name == ClaimsPermissions.ApplyClaimsOnManagement.Name) != null) {
-                            _applyClaimsOnManagement = true;
                         }
                     }
                 }
@@ -116,21 +112,23 @@ namespace Laser.Orchard.Claims.Services {
             }
         }
         public ContentItem CheckClaims(ContentItem contentItem, Permission permission) {
+            if(contentItem.Id == 26) {
+                var aux = 0;
+            }
             if (_isSuperUser || (_isBackEnd == false && _applyToFrontEnd == false)) {
                 return contentItem;
             }
-            if(_applyClaimsOnManagement == false) {
-                return contentItem;
-            } else if(_applyClaimsOnVisibility == false) {
-                if(permission == Permissions.ViewContent || permission == Permissions.PreviewContent) {
-                    return contentItem;
-                }
+            List<List<string>> userClaimsToTest = null;
+            if (permission == Permissions.ViewContent || permission == Permissions.PreviewContent) {
+                userClaimsToTest = _userClaimsForView;
+            } else {
+                userClaimsToTest = _userClaimsForEdit;
             }
             var claimsPart = contentItem.As<ItemClaimsPart>();
             if(claimsPart != null) {
                 var itemClaims = new List<string>();
                 if(string.IsNullOrWhiteSpace(claimsPart.Claims) == false) {
-                    foreach (var row in claimsPart.Claims.Split(',')) {
+                    foreach (var row in claimsPart.Claims.Trim().Split(',')) {
                         itemClaims.Add(row);
                     }
                 }
@@ -140,7 +138,7 @@ namespace Laser.Orchard.Claims.Services {
                 }
                 // almeno un set di claims dell'utente deve essere presente nell'item
                 var granted = false;
-                foreach (var set in _userClaims) {
+                foreach (var set in userClaimsToTest) {
                     // check sul singolo set di claims
                     var setGranted = true;
                     foreach (var row in set) {
@@ -161,14 +159,14 @@ namespace Laser.Orchard.Claims.Services {
             return contentItem;
         }
         public void CheckClaims(ICriteria criteria) {
-            if (_isSuperUser || (_applyClaimsOnVisibility == false) || (_isBackEnd == false && _applyToFrontEnd == false)) {
+            if (_isSuperUser || (_isBackEnd == false && _applyToFrontEnd == false)) {
                 return;
             }
             var newCriteria = criteria.CreateCriteria("ItemClaimsPartRecord", "laserClaims", NHibernate.SqlCommand.JoinType.LeftOuterJoin);
             AbstractCriterion crit = null;
 
             // almeno un set di claims dell'utente deve essere presente nell'item (or di and)
-            foreach(var set in _userClaims) {
+            foreach(var set in _userClaimsForView) {
                 AbstractCriterion innerCrit = null;
                 foreach (var row in set) {
                     var kv = "%," + row + ",%";
