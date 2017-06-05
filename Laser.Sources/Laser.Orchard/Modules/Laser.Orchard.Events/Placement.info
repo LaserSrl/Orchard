@@ -2,8 +2,8 @@
     <Place Parts_Activity_Edit="Content:2" Place="" Parts_Calendar_Edit="Content:2"/>
     <Place Parts_Calendar="Content:2" Parts_EventList="Content:2"/>
     <Place Parts_Common_Metadata_Summary="-"/>
-  
-    <Match DisplayType="SummaryAdmin">
+  <Place Parts_Activity="Content:3" />
+  <Match DisplayType="SummaryAdmin">
       <Place Parts_Calendar="-" Parts_EventList="-" />
     </Match>
   
