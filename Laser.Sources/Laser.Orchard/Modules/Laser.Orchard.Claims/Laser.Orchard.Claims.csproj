@@ -71,6 +71,9 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Projections">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Roles">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Roles\bin\Orchard.Roles.dll</HintPath>
     </Reference>
@@ -136,6 +139,7 @@
     <Compile Include="Models\IdentityClaimsRecord.cs" />
     <Compile Include="Models\ItemClaimsPart.cs" />
     <Compile Include="Models\ItemClaimsPartSettings.cs" />
+    <Compile Include="Projections\ApplyClaimsQueryFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ClaimsQueryCriteria.cs" />
     <Compile Include="Providers\ClaimsAuthorizationEventHandler.cs" />

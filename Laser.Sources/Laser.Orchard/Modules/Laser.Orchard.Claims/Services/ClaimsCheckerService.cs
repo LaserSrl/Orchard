@@ -13,11 +13,14 @@ using System.Linq;
 using System;
 using Orchard.Security.Permissions;
 using Orchard.Core.Contents;
+using Orchard.Projections.Descriptors.Filter;
+using LExp = System.Linq.Expressions;
 
 namespace Laser.Orchard.Claims.Services {
     public interface IClaimsCheckerService : IDependency {
         ContentItem CheckClaims(ContentItem contentItem, Permission permission);
         void CheckClaims(ICriteria criteria);
+        void CheckClaims(FilterContext context);
     }
     public class ClaimsCheckerService : IClaimsCheckerService {
         private readonly IRepository<UserPartRecord> _repoUsers;
@@ -31,7 +34,7 @@ namespace Laser.Orchard.Claims.Services {
         // Warning: se si aggiungono parametri al costruttore prestare attenzione a non creare dipendenze circolari
         // perché questo costruttore viene richiamato PRIMA di avere a disposizione il content manager.
         public ClaimsCheckerService(
-            IRepository<UserPartRecord> repoUsers, 
+            IRepository<UserPartRecord> repoUsers,
             IRepository<ContentItemRecord> repoSite,
             IRepository<IdentityClaimsRecord> repoClaims) {
             _repoUsers = repoUsers;
@@ -48,8 +51,7 @@ namespace Laser.Orchard.Claims.Services {
                 if (_isBackEnd == false) {
                     _isBackEnd = context.Request.RawUrl.IndexOf("/Admin/", StringComparison.InvariantCultureIgnoreCase) >= 0;
                 }
-            } 
-            catch {
+            } catch {
                 _isBackEnd = false;
             }
             // recupera il site per capire se l'utente è un amministratore e leggere i settings
@@ -63,24 +65,24 @@ namespace Laser.Orchard.Claims.Services {
             } catch {
                 _isSuperUser = true;
             }
-            try { 
+            try {
                 var applyToFrontEnd = aux.Element.Element("ClaimsSiteSettings").Attribute("ApplyToFrontEnd").Value;
-                if(applyToFrontEnd.Equals("true", StringComparison.InvariantCultureIgnoreCase) == false) {
+                if (applyToFrontEnd.Equals("true", StringComparison.InvariantCultureIgnoreCase) == false) {
                     _applyToFrontEnd = false;
-                } 
+                }
             } catch {
                 _applyToFrontEnd = true;
             }
             // recupera le claims dell'utente
             try {
-                if(string.IsNullOrWhiteSpace(userName) == false) {
+                if (string.IsNullOrWhiteSpace(userName) == false) {
                     // recupera l'id dell'utente
                     var userRecord = _repoUsers.Fetch(x => x.UserName == userName).FirstOrDefault();
                     if (userRecord != null) {
                         var userId = userRecord.Id;
                         // recupera le claims dell'utente tramite un repository
                         var claimsList = _repoClaims.Fetch(x => x.IdentityClaimsPartRecord_id == userId);
-                        foreach(var set in claimsList) {
+                        foreach (var set in claimsList) {
                             if (string.IsNullOrWhiteSpace(set.IdentityClaims) == false) {
                                 var viewSection = "";
                                 var editSection = "";
@@ -106,13 +108,12 @@ namespace Laser.Orchard.Claims.Services {
                         }
                     }
                 }
-            }
-            catch {
+            } catch {
                 // non aggiunge claims all'utente
             }
         }
         public ContentItem CheckClaims(ContentItem contentItem, Permission permission) {
-            if(contentItem.Id == 26) {
+            if (contentItem.Id == 26) {
                 var aux = 0;
             }
             if (_isSuperUser || (_isBackEnd == false && _applyToFrontEnd == false)) {
@@ -125,9 +126,9 @@ namespace Laser.Orchard.Claims.Services {
                 userClaimsToTest = _userClaimsForEdit;
             }
             var claimsPart = contentItem.As<ItemClaimsPart>();
-            if(claimsPart != null) {
+            if (claimsPart != null) {
                 var itemClaims = new List<string>();
-                if(string.IsNullOrWhiteSpace(claimsPart.Claims) == false) {
+                if (string.IsNullOrWhiteSpace(claimsPart.Claims) == false) {
                     foreach (var row in claimsPart.Claims.Trim().Split(',')) {
                         itemClaims.Add(row);
                     }
@@ -166,7 +167,7 @@ namespace Laser.Orchard.Claims.Services {
             AbstractCriterion crit = null;
 
             // almeno un set di claims dell'utente deve essere presente nell'item (or di and)
-            foreach(var set in _userClaimsForView) {
+            foreach (var set in _userClaimsForView) {
                 AbstractCriterion innerCrit = null;
                 foreach (var row in set) {
                     var kv = "%," + row + ",%";
@@ -176,15 +177,55 @@ namespace Laser.Orchard.Claims.Services {
                         innerCrit = Restrictions.And(innerCrit, Restrictions.Like("laserClaims.Claims", kv));
                     }
                 }
-                if(crit == null) {
+                if (crit == null) {
                     crit = innerCrit;
                 } else {
                     crit = Restrictions.Or(crit, innerCrit);
                 }
             }
-            if(crit != null) {
+            if (crit != null) {
                 newCriteria = newCriteria.Add(Restrictions.Or(Restrictions.Or(Restrictions.IsNull("laserClaims.Claims"), Restrictions.Eq("laserClaims.Claims", "")), crit));
             }
+        }
+        public void CheckClaims(FilterContext context) {
+            if (_isSuperUser || (_isBackEnd == false && _applyToFrontEnd == false)) {
+                return;
+            }
+
+            // almeno un set di claims dell'utente deve essere presente nell'item (or di and)
+            Action<IHqlExpressionFactory> crit = null;
+            foreach (var set in _userClaimsForView) {
+                Action<IHqlExpressionFactory> innerCrit = null;
+                foreach (var row in set) {
+                    var kv = "," + row + ",";
+                    if (innerCrit == null) {
+                        innerCrit = BuildLikeExpression(kv);
+                    } else {
+                        innerCrit = BuildAndLikeExpression(innerCrit, kv);
+                    }
+                }
+                if (crit == null) {
+                    crit = innerCrit;
+                } else {
+                    crit = BuildOrExpression(crit, innerCrit);
+                }
+            }
+            if (crit != null) {
+                context.Query.Where(a => a.ContentPartRecord<ItemClaimsPartRecord>("left join"), x1 =>
+                    x1.Or(x2 => x2.Or(x3 => x3.IsNull("Claims"), x4 => x4.Eq("Claims", "")), crit)
+                );
+            }
+        }
+        // I tre metodi seguenti sembrano necessari: se si include il loro contenuto inline, si creano funzioni ricorsive
+        // che generano una StackOverflowException. Invece utilizzando dei metodi separati questo non succede.
+        private Action<IHqlExpressionFactory> BuildLikeExpression(string theValue) {
+            return x => x.Like("Claims", theValue, HqlMatchMode.Anywhere);
+        }
+        private Action<IHqlExpressionFactory> BuildAndLikeExpression(Action<IHqlExpressionFactory> lCrit, string theValue) {
+            return y => y.And(lCrit, x => x.Like("Claims", theValue, HqlMatchMode.Anywhere));
+        }
+        private Action<IHqlExpressionFactory> BuildOrExpression(Action<IHqlExpressionFactory> lCrit, Action<IHqlExpressionFactory> rCrit) {
+            return x => x.Or(lCrit, rCrit);
         }
     }
 }
