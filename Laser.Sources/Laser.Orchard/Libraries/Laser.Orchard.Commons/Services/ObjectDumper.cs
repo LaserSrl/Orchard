@@ -118,7 +118,7 @@ namespace Laser.Orchard.Commons.Services {
                 if (o == null) {
                     DumpValue(null, name);
                 } else if (o.GetType().IsValueType || o is string) {
-                    if (nameDynamicJsonArray.Equals("ActivityPart") && FormatType(o) == "DateTime") {
+                    if (nameDynamicJsonArray.Equals("LocalazedDate") && FormatType(o) == "DateTime") {
                         var currentTimeZone = _orchardServices.WorkContext.CurrentTimeZone;
                         DateTime localizedDate = TimeZoneInfo.ConvertTimeFromUtc((DateTime) o, currentTimeZone);
                         DumpValue(localizedDate, name);
@@ -427,8 +427,8 @@ namespace Laser.Orchard.Commons.Services {
 
                 if (prop.GetIndexParameters().Length == 0 && prop.CanRead) {
                     if (!_skipParts.Contains(o.GetType().Name)) {
-                        if(FormatType(o).Equals("ActivityPart")){
-                            Dump(prop.GetValue(o, null), member.Name, "ActivityPart");
+                        if(FormatType(o).Equals("ActivityPart") || FormatType(o).Equals("DateTimeField")) {
+                            Dump(prop.GetValue(o, null), member.Name, "LocalazedDate");
                         } else {
                             Dump(prop.GetValue(o, null), member.Name);
                         }
