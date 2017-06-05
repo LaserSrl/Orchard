@@ -339,7 +339,7 @@ namespace Laser.Orchard.WebServices.Controllers {
             XElement dump;
             XElement projectionDump = null;
             // il dump dell'oggetto principale non filtra per field
-            ObjectDumper dumper = new ObjectDumper(deeplevel, null, false, tinyResponse, complexBehaviour);
+            ObjectDumper dumper = new ObjectDumper(deeplevel, null, false, tinyResponse, complexBehaviour, _orchardServices);
             dynamic shape; //, specificShape;
             var sb = new StringBuilder();
             List<XElement> listContent = new List<XElement>();
@@ -382,7 +382,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                         sb.Append(",");
                     }
                     sb.Append("{");
-                    dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
+                    dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour, _orchardServices);
                     projectionDump = dumper.Dump(item, String.Format("[{0}]", i));
                     JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                     sb.Append("}");
@@ -436,7 +436,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                             sb.Append(",");
                         }
                         sb.Append("{");
-                        dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
+                        dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour, _orchardServices);
                         projectionDump = dumper.Dump(item, String.Format("[{0}]", i));
                         JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                         sb.Append("}");
@@ -474,7 +474,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                                 sb.Append(",");
                             }
                             sb.Append("{");
-                            dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
+                            dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour, _orchardServices);
                             projectionDump = dumper.Dump(item, String.Format("[{0}]", i));
                             JsonConverter.ConvertToJSon(projectionDump, sb);
                             sb.Append("}");
@@ -506,7 +506,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                     //sb.Append(", \"m\": [");
 
                     sb.Append("{");
-                    dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
+                    dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour, _orchardServices);
                     //nameDynamicJsonArray = "List<generic>";
                     if (ExtertalFields.ContentObject != null) {
                         if (ExtertalFields.ContentObject.GetType() == typeof(ExternalFieldRemoteException)) {
@@ -547,7 +547,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                                 sb.Append(",");
                             }
                             sb.Append("{");
-                            dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
+                            dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour, _orchardServices);
                             projectionDump = dumper.Dump(item, String.Format("[{0}]", i));
                             JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                             sb.Append("}");
@@ -600,12 +600,12 @@ namespace Laser.Orchard.WebServices.Controllers {
                             sb.Append(",");
                         }
                         sb.Append("{");
-                        dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
+                        dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour, _orchardServices);
                         if (resultTarget == ResultTarget.Contents) {
                             projectionDump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
                             JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                         } else {
-                            var dumperForPart = new ObjectDumper(deeplevel, _filterContentFieldsParts, true, tinyResponse, complexBehaviour);
+                            var dumperForPart = new ObjectDumper(deeplevel, _filterContentFieldsParts, true, tinyResponse, complexBehaviour, _orchardServices);
                             projectionDump = dumperForPart.Dump(item, "TermPart");
                             JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                         }
