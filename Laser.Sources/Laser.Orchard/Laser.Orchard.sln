@@ -191,7 +191,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nwazet.Commerce", "..\..\Nw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.NwazetIntegration", "Modules\Laser.Orchard.NwazetIntegration\Laser.Orchard.NwazetIntegration.csproj", "{DC68A88C-E516-4030-8DA7-D954F5EA7424}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Claims", "Modules\Laser.Orchard.Claims\Laser.Orchard.Claims.csproj", "{79839A86-B5CA-4318-81A5-F8114D2AF078}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.DataProtection", "Modules\Laser.Orchard.DataProtection\Laser.Orchard.DataProtection.csproj", "{79839A86-B5CA-4318-81A5-F8114D2AF078}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
