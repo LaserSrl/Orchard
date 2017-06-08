@@ -3,8 +3,8 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 
 namespace Laser.Orchard.DataProtection.Handlers {
-    public class DataContextPartHandler : ContentHandler {
-        public DataContextPartHandler(IRepository<DataContextPartRecord> repository) {
+    public class DataProtectionContextPartHandler : ContentHandler {
+        public DataProtectionContextPartHandler(IRepository<DataProtectionContextPartRecord> repository) {
             Filters.Add(StorageFilter.For(repository));
         }
     }

@@ -122,16 +122,16 @@ namespace Laser.Orchard.DataProtection.Services {
             } else {
                 userRestrictionsToTest = _userRestrictionsForEdit;
             }
-            var dataContextPart = contentItem.As<DataContextPart>();
-            if (dataContextPart != null) {
-                var dataContext = new List<string>();
-                if (string.IsNullOrWhiteSpace(dataContextPart.Context) == false) {
-                    foreach (var row in dataContextPart.Context.Trim().Split(',')) {
-                        dataContext.Add(row);
+            var dataProtectionContextPart = contentItem.As<DataProtectionContextPart>();
+            if (dataProtectionContextPart != null) {
+                var dataProtectionContext = new List<string>();
+                if (string.IsNullOrWhiteSpace(dataProtectionContextPart.Context) == false) {
+                    foreach (var row in dataProtectionContextPart.Context.Trim().Split(',')) {
+                        dataProtectionContext.Add(row);
                     }
                 }
                 // se l'item non ha nessun data context è visibile a tutti
-                if (dataContext.Count == 0) {
+                if (dataProtectionContext.Count == 0) {
                     return contentItem;
                 }
                 // almeno un set di restrictions dell'utente deve essere presente nell'item
@@ -140,7 +140,7 @@ namespace Laser.Orchard.DataProtection.Services {
                     // check sul singolo set di restrictions
                     var setGranted = true;
                     foreach (var row in set) {
-                        if (dataContext.Contains(row) == false) {
+                        if (dataProtectionContext.Contains(row) == false) {
                             setGranted = false;
                             break;
                         }
@@ -160,7 +160,7 @@ namespace Laser.Orchard.DataProtection.Services {
             if (_isSuperUser || (_isBackEnd == false && _applyToFrontEnd == false)) {
                 return;
             }
-            var newCriteria = criteria.CreateCriteria("DataContextPartRecord", "laserDataContext", NHibernate.SqlCommand.JoinType.LeftOuterJoin);
+            var newCriteria = criteria.CreateCriteria("DataProtectionContextPartRecord", "laserDataContext", NHibernate.SqlCommand.JoinType.LeftOuterJoin);
             AbstractCriterion crit = null;
 
             // almeno un set di restrictions dell'utente deve essere presente nell'item (or di and)
@@ -208,7 +208,7 @@ namespace Laser.Orchard.DataProtection.Services {
                 }
             }
             if (crit != null) {
-                context.Query.Where(a => a.ContentPartRecord<DataContextPartRecord>("left join"), x1 =>
+                context.Query.Where(a => a.ContentPartRecord<DataProtectionContextPartRecord>("left join"), x1 =>
                     x1.Or(x2 => x2.Or(x3 => x3.IsNull("Context"), x4 => x4.Eq("Context", "")), crit)
                 );
             }

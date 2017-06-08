@@ -11,52 +11,52 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.DataProtection.Drivers {
-    public class DataContextPartDriver : ContentPartDriver<DataContextPart> {
+    public class DataProtectionContextPartDriver : ContentPartDriver<DataProtectionContextPart> {
         private readonly ITokenizer _tokenizer;
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContext;
         private readonly IOrchardServices _orchardServices;
-        public DataContextPartDriver(ITokenizer tokenizer, IContentManager contentManager, IWorkContextAccessor workContext, IOrchardServices orchardServices) {
+        public DataProtectionContextPartDriver(ITokenizer tokenizer, IContentManager contentManager, IWorkContextAccessor workContext, IOrchardServices orchardServices) {
             _tokenizer = tokenizer;
             _contentManager = contentManager;
             _workContext = workContext;
             _orchardServices = orchardServices;
         }
-        protected override DriverResult Display(DataContextPart part, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(DataProtectionContextPart part, string displayType, dynamic shapeHelper) {
             return null;
         }
 
-        protected override DriverResult Editor(DataContextPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(DataProtectionContextPart part, dynamic shapeHelper) {
             if (_orchardServices.Authorizer.Authorize(DataProtectionPermissions.ManageDataProtection) == false) {
                 return null;
             }
             var forceDefault = false;
-            if (part.Settings.ContainsKey("DataContextPartSettings.ForceDefault")) {
-                forceDefault = Convert.ToBoolean(part.Settings["DataContextPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
+            if (part.Settings.ContainsKey("DataProtectionContextPartSettings.ForceDefault")) {
+                forceDefault = Convert.ToBoolean(part.Settings["DataProtectionContextPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
             }
             if (forceDefault) {
                 return null;
             }
-            return ContentShape("Parts_DataContextPart_Edit",
+            return ContentShape("Parts_DataProtectionContextPart_Edit",
                 () => shapeHelper.EditorTemplate(
-                    TemplateName: "Parts/DataContextPart",
+                    TemplateName: "Parts/DataProtectionContextPart",
                     Model: part,
                     Prefix: Prefix));
         }
 
-        protected override DriverResult Editor(DataContextPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(DataProtectionContextPart part, IUpdateModel updater, dynamic shapeHelper) {
             if (_orchardServices.Authorizer.Authorize(DataProtectionPermissions.ManageDataProtection) == false) {
                 return null;
             }
             updater.TryUpdateModel(part, Prefix, null, null);
             // applica i settings
             var contextDefault = "";
-            if (part.Settings.ContainsKey("DataContextPartSettings.ContextDefault")) {
-                contextDefault = part.Settings["DataContextPartSettings.ContextDefault"];
+            if (part.Settings.ContainsKey("DataProtectionContextPartSettings.ContextDefault")) {
+                contextDefault = part.Settings["DataProtectionContextPartSettings.ContextDefault"];
             }
             var forceDefault = false;
-            if (part.Settings.ContainsKey("DataContextPartSettings.ForceDefault")) {
-                forceDefault = Convert.ToBoolean(part.Settings["DataContextPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
+            if (part.Settings.ContainsKey("DataProtectionContextPartSettings.ForceDefault")) {
+                forceDefault = Convert.ToBoolean(part.Settings["DataProtectionContextPartSettings.ForceDefault"], CultureInfo.InvariantCulture);
             }
             if (forceDefault) {
                 part.Context = _tokenizer.Replace(contextDefault, part.ContentItem);

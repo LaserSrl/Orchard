@@ -10,18 +10,18 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.DataProtection.Settings {
-    public class DataContextPartSettingsHooks : ContentDefinitionEditorEventsBase {
+    public class DataProtectionContextPartSettingsHooks : ContentDefinitionEditorEventsBase {
         public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition) {
-            if (definition.PartDefinition.Name != "DataContextPart") yield break;
-            var model = definition.Settings.GetModel<DataContextPartSettings>();
+            if (definition.PartDefinition.Name != "DataProtectionContextPart") yield break;
+            var model = definition.Settings.GetModel<DataProtectionContextPartSettings>();
             yield return DefinitionTemplate(model);
         }
         public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel) {
-            if (builder.Name != "DataContextPart") yield break;
-            var model = new DataContextPartSettings();
-            updateModel.TryUpdateModel(model, "DataContextPartSettings", null, null);
-            builder.WithSetting("DataContextPartSettings.ContextDefault", model.ContextDefault);
-            builder.WithSetting("DataContextPartSettings.ForceDefault", ((bool)model.ForceDefault).ToString());
+            if (builder.Name != "DataProtectionContextPart") yield break;
+            var model = new DataProtectionContextPartSettings();
+            updateModel.TryUpdateModel(model, "DataProtectionContextPartSettings", null, null);
+            builder.WithSetting("DataProtectionContextPartSettings.ContextDefault", model.ContextDefault);
+            builder.WithSetting("DataProtectionContextPartSettings.ForceDefault", ((bool)model.ForceDefault).ToString());
             yield return DefinitionTemplate(model);
         }
     }

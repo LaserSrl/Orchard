@@ -5,12 +5,12 @@ using Orchard.ContentManagement.MetaData;
 namespace Laser.Orchard.DataProtection {
     public class Migrations : DataMigrationImpl {
         public int Create() {
-            SchemaBuilder.CreateTable("DataContextPartRecord",
+            SchemaBuilder.CreateTable("DataProtectionContextPartRecord",
                 table => table
                     .ContentPartVersionRecord()
                     .Column("Context", System.Data.DbType.String, c => c.Unlimited()));
             ContentDefinitionManager.AlterPartDefinition(
-                "DataContextPart",
+                "DataProtectionContextPart",
                  b => b
                     .Attachable(true)
             );

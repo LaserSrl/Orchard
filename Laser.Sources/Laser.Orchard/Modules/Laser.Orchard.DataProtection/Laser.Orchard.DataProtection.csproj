@@ -128,17 +128,17 @@
   <ItemGroup>
     <Compile Include="Drivers\DataProtectionSiteSettingsDriver.cs" />
     <Compile Include="Drivers\DataRestrictionsPartDriver.cs" />
-    <Compile Include="Drivers\DataContextPartDriver.cs" />
+    <Compile Include="Drivers\DataProtectionContextPartDriver.cs" />
     <Compile Include="Handlers\DataProtectionSiteSettingsHandler.cs" />
     <Compile Include="Handlers\DataRestrictionsPartHandler.cs" />
-    <Compile Include="Handlers\DataContextPartHandler.cs" />
+    <Compile Include="Handlers\DataProtectionContextPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\DataProtectionSiteSettings.cs" />
     <Compile Include="Models\DataRestrictionsPart.cs" />
     <Compile Include="Models\DataRestrictionsPartSettings.cs" />
     <Compile Include="Models\DataRestrictionsRecord.cs" />
-    <Compile Include="Models\DataContextPart.cs" />
-    <Compile Include="Models\DataContextPartSettings.cs" />
+    <Compile Include="Models\DataProtectionContextPart.cs" />
+    <Compile Include="Models\DataProtectionContextPartSettings.cs" />
     <Compile Include="Projections\ApplyDataProtectionQueryFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\DataProtectionQueryCriteria.cs" />
@@ -146,7 +146,7 @@
     <Compile Include="Security\DataProtectionPermissions.cs" />
     <Compile Include="Services\DataProtectionCheckerService.cs" />
     <Compile Include="Settings\DataRestrictionsPartSettingsHooks.cs" />
-    <Compile Include="Settings\DataContextPartSettingsHooks.cs" />
+    <Compile Include="Settings\DataProtectionContextPartSettingsHooks.cs" />
     <Compile Include="ViewModels\DataRestrictionsPartVM.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -166,7 +166,7 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\DataContextPart.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\DataProtectionContextPart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />
@@ -178,7 +178,7 @@
     <Content Include="Views\EditorTemplates\Parts\DataProtectionSiteSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DefinitionTemplates\DataContextPartSettings.cshtml" />
+    <Content Include="Views\DefinitionTemplates\DataProtectionContextPartSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\DataRestrictionsPartSettings.cshtml" />
