@@ -95,7 +95,24 @@ namespace Laser.Orchard.Mobile.Services {
 
             Logger = OrchardLogging.NullLogger.Instance;
         }
-
+        private void NotifySentNumber(int sentNumber) {
+            // notifica solo se la richiesta arriva direttamente da web, non se si tratta di un task
+            if(System.Web.HttpContext.Current != null) {
+                _notifier.Information(T("Notifications sent: {0}", sentNumber));
+            }
+        }
+        private void NotifyNoPush() {
+            // notifica solo se la richiesta arriva direttamente da web, non se si tratta di un task
+            if (System.Web.HttpContext.Current != null) {
+                _notifier.Information(T("No push will be sent, related content must be published"));
+            }
+        }
+        private void NotifyApplePayloadExceed() {
+            // notifica solo se la richiesta arriva direttamente da web, non se si tratta di un task
+            if (System.Web.HttpContext.Current != null) {
+                _notifier.Information(T("Apple message payload exceeds the limit"));
+            }
+        }
         public IList GetPushQueryResult(Int32[] ids, bool countOnly = false, int contentId = 0) {
             ContentItem contentItem = null;
             if (contentId > 0) {
@@ -379,7 +396,7 @@ namespace Laser.Orchard.Mobile.Services {
             if (idContentRelated > 0) {
                 relatedContentItem = _orchardServices.ContentManager.Get(idContentRelated);
                 if (!relatedContentItem.IsPublished()) {
-                    _notifier.Information(T("No push will be sent, related content must be published"));
+                    NotifyNoPush();
                     LogInfo("No push will be sent, related content must be published");
                     stopPush = true;
                 }
@@ -586,7 +603,7 @@ namespace Laser.Orchard.Mobile.Services {
                         }
                         contentForPush = (dynamic)relatedContentItem;
                         if (!relatedContentItem.IsPublished()) {
-                            _notifier.Information(T("No push will be sent, related content must be published"));
+                            NotifyNoPush();
                             LogInfo("No push will be sent, related content must be published");
                             stopPush = true;
                         }
@@ -688,7 +705,7 @@ namespace Laser.Orchard.Mobile.Services {
                             }
                         }
                         mpp2.TargetDeviceNumber = counter;
-                        _notifier.Information(T("Notifications sent: " + _messageSent.ToString()));
+                        NotifySentNumber(_messageSent);
                         LogInfo("Notifications sent: " + _messageSent.ToString());
                     }
                 }
@@ -851,8 +868,8 @@ namespace Laser.Orchard.Mobile.Services {
         private void SendAllApplePart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds, bool repeatable = false) {
             PushMessage newpush = GeneratePushMessage(mpp, idcontent, idContentRelated);
             if (newpush.Text.Length > MAX_PUSH_TEXT_LENGTH) {
-                _notifier.Information(T("Apple send: message payload exceed the limit"));
-                LogInfo("Apple send: message payload exceed the limit");
+                NotifyApplePayloadExceed();
+                LogInfo("Apple message payload exceeds the limit");
                 newpush.ValidPayload = false;
             }
             SendAllApple(mpp.ContentItem.ContentType, newpush, produzione, language, queryDevice, queryIds, repeatable);
@@ -1206,8 +1223,8 @@ namespace Laser.Orchard.Mobile.Services {
             // compone il payload
             JObject sbParsed = null;
             if (pushMessage.Text.Length > MAX_PUSH_TEXT_LENGTH) {
-                _notifier.Information(T("Sent: message payload exceed the limit"));
-                LogInfo("Sent: message payload exceed the limit");
+                NotifyApplePayloadExceed();
+                LogInfo("Apple message payload exceeds the limit");
             }
             else {
                 StringBuilder sb = new StringBuilder();
