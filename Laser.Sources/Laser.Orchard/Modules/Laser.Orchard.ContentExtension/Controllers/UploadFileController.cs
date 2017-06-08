@@ -1,13 +1,13 @@
 ﻿using Laser.Orchard.ContentExtension.ViewModels;
 using Laser.Orchard.ContentExtension.Services;
-using Laser.Orchard.StartupConfig.Security;
+using  Laser.Orchard.StartupConfig.Security;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
-using Orchard.MediaLibrary;
+using mlib= Orchard.MediaLibrary;
 using Orchard.MediaLibrary.Models;
 using Orchard.MediaLibrary.Services;
 using Orchard.UI.Notify;
@@ -72,7 +72,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         }
 
         private JsonResult PostFileFunction(HttpPostedFileBase file, string contentType = "") {
-            if (!_orchardServices.Authorizer.Authorize(Permissions.ImportMediaContent)) {
+            if (!_orchardServices.Authorizer.Authorize(mlib.Permissions.ImportMediaContent)) {
                 return Json(_utilsServices.GetResponse(ResponseType.UnAuthorized));
             }
             Int32 output = 0;

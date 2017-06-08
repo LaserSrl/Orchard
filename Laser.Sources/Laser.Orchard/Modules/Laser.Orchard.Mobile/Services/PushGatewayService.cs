@@ -77,6 +77,7 @@ namespace Laser.Orchard.Mobile.Services {
         private ContentItem senderContentItemContainer;
         private ConcurrentDictionary<string, SentRecord> _sentRecords;
         private ConcurrentBag<DeviceChange> _deviceChanges;
+        private ConcurrentBag<DeviceChange> _deviceExpired;
 
         public PushGatewayService(IPushNotificationService pushNotificationService, IQueryPickerService queryPickerServices, IOrchardServices orchardServices, ITransactionManager transactionManager, IRepository<SentRecord> sentRepository, IRepository<PushNotificationRecord> pushNotificationRepository, INotifier notifier, ICommunicationService communicationService, ITokenizer tokenizer, ShellSettings shellSetting) {
             _pushNotificationService = pushNotificationService;
@@ -94,7 +95,24 @@ namespace Laser.Orchard.Mobile.Services {
 
             Logger = OrchardLogging.NullLogger.Instance;
         }
-
+        private void NotifySentNumber(int sentNumber) {
+            // notifica solo se la richiesta arriva direttamente da web, non se si tratta di un task
+            if(System.Web.HttpContext.Current != null) {
+                _notifier.Information(T("Notifications sent: {0}", sentNumber));
+            }
+        }
+        private void NotifyNoPush() {
+            // notifica solo se la richiesta arriva direttamente da web, non se si tratta di un task
+            if (System.Web.HttpContext.Current != null) {
+                _notifier.Information(T("No push will be sent, related content must be published"));
+            }
+        }
+        private void NotifyApplePayloadExceed() {
+            // notifica solo se la richiesta arriva direttamente da web, non se si tratta di un task
+            if (System.Web.HttpContext.Current != null) {
+                _notifier.Information(T("Apple message payload exceeds the limit"));
+            }
+        }
         public IList GetPushQueryResult(Int32[] ids, bool countOnly = false, int contentId = 0) {
             ContentItem contentItem = null;
             if (contentId > 0) {
@@ -378,7 +396,7 @@ namespace Laser.Orchard.Mobile.Services {
             if (idContentRelated > 0) {
                 relatedContentItem = _orchardServices.ContentManager.Get(idContentRelated);
                 if (!relatedContentItem.IsPublished()) {
-                    _notifier.Information(T("No push will be sent, related content must be published"));
+                    NotifyNoPush();
                     LogInfo("No push will be sent, related content must be published");
                     stopPush = true;
                 }
@@ -585,7 +603,7 @@ namespace Laser.Orchard.Mobile.Services {
                         }
                         contentForPush = (dynamic)relatedContentItem;
                         if (!relatedContentItem.IsPublished()) {
-                            _notifier.Information(T("No push will be sent, related content must be published"));
+                            NotifyNoPush();
                             LogInfo("No push will be sent, related content must be published");
                             stopPush = true;
                         }
@@ -687,7 +705,7 @@ namespace Laser.Orchard.Mobile.Services {
                             }
                         }
                         mpp2.TargetDeviceNumber = counter;
-                        _notifier.Information(T("Notifications sent: " + _messageSent.ToString()));
+                        NotifySentNumber(_messageSent);
                         LogInfo("Notifications sent: " + _messageSent.ToString());
                     }
                 }
@@ -850,8 +868,8 @@ namespace Laser.Orchard.Mobile.Services {
         private void SendAllApplePart(MobilePushPart mpp, Int32 idcontent, Int32 idContentRelated, string language, bool produzione, string queryDevice, int[] queryIds, bool repeatable = false) {
             PushMessage newpush = GeneratePushMessage(mpp, idcontent, idContentRelated);
             if (newpush.Text.Length > MAX_PUSH_TEXT_LENGTH) {
-                _notifier.Information(T("Apple send: message payload exceed the limit"));
-                LogInfo("Apple send: message payload exceed the limit");
+                NotifyApplePayloadExceed();
+                LogInfo("Apple message payload exceeds the limit");
                 newpush.ValidPayload = false;
             }
             SendAllApple(mpp.ContentItem.ContentType, newpush, produzione, language, queryDevice, queryIds, repeatable);
@@ -900,6 +918,7 @@ namespace Laser.Orchard.Mobile.Services {
         private void InitializeRecipients(List<PushNotificationVM> listdispositivo, int offset, int size, int idContent, bool repeatable, PushMobileSettingsPart pushSettings) {
             _sentRecords = new ConcurrentDictionary<string, SentRecord>();
             _deviceChanges = new ConcurrentBag<DeviceChange>();
+            _deviceExpired = new ConcurrentBag<DeviceChange>();
             int maxPushPerIteration = pushSettings.MaxPushPerIteration == 0 ? 1000 : pushSettings.MaxPushPerIteration;
             // salva l'elenco delle push da inviare
             for (int idx=offset; idx < Math.Min(offset+size, listdispositivo.Count); idx++) {
@@ -936,7 +955,7 @@ namespace Laser.Orchard.Mobile.Services {
             }
             _transactionManager.RequireNew();
         }
-        private void UpdateDevicesOnDb(bool produzione) {
+        private void UpdateDevicesAndOutcomesOnDb(bool produzione) {
             // aggiorna la validità degli expired
             foreach(var device in _sentRecords.Where(x => x.Value.Outcome == "ex")) { 
                 try {
@@ -948,11 +967,11 @@ namespace Laser.Orchard.Mobile.Services {
                         LogInfo(string.Format("Device Subscription Expired Action: {0} not validated -> {1}", device.Value.DeviceType, device.Key));
                     }
                     else {
-                        LogInfo(string.Format("Device Subscription Expired Error: {0} -> token not found or token not unique: {1}", device.Value.DeviceType, device.Key));
+                        LogError(string.Format("UpdateDevicesAndOutcomesOnDb - Device Subscription Expired Error: {0} -> token not found or token not unique: {1}", device.Value.DeviceType, device.Key));
                     }
                 }
                 catch (Exception ex) {
-                    LogError("PushAndroid expired error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    LogError("UpdateDevicesAndOutcomesOnDb - Update expired error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
             }
             _transactionManager.RequireNew();
@@ -973,13 +992,28 @@ namespace Laser.Orchard.Mobile.Services {
                     }
                 }
                 catch (Exception ex) {
-                    LogError("PushAndroid deviceChanged error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    LogError("UpdateDevicesAndOutcomesOnDb - Device changed error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
                 _pushNotificationRepository.Flush();
             }
             _transactionManager.RequireNew();
-        }
-        private void UpdateOutcomesOnDb() {
+
+            // aggiorna i device expired segnalati in ritardo dal feedback service
+            foreach (var change in _deviceExpired) {
+                try {
+                    List<PushNotificationRecord> pnrList = _pushNotificationRepository.Fetch(x => x.Token == change.OldToken && x.Device.ToString() == change.TipoDispositivo).ToList();
+                    foreach (var pnr in pnrList) {
+                        change.OldDeviceId = pnr.Id;
+                        pnr.Validated = false;
+                        _pushNotificationRepository.Update(pnr);
+                    }
+                } catch (Exception ex) {
+                    LogError("UpdateDevicesAndOutcomesOnDb - Device expired feedback error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                }
+                _pushNotificationRepository.Flush();
+            }
+            _transactionManager.RequireNew();
+
             // aggiorna gli esiti su db
             foreach (var device in _sentRecords) {
                 try {
@@ -991,8 +1025,26 @@ namespace Laser.Orchard.Mobile.Services {
                     }
                 }
                 catch (Exception ex) {
-                    LogError("PushAndroid outcome error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    LogError("UpdateDevicesAndOutcomesOnDb - Outcome error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
+            }
+            _transactionManager.RequireNew();
+
+            // aggiorna l'ultimo esito per i device expired segnalati in ritardo dal feedback service
+            foreach (var change in _deviceExpired) {
+                try {
+                    var record = _sentRepository.Fetch(x => x.PushNotificationRecord_Id == change.OldDeviceId).OrderByDescending(x => x.SentDate).FirstOrDefault();
+                    if(record != null) {
+                        record.Outcome = "ex";
+                        _sentRepository.Update(record);
+                        LogInfo(string.Format("UpdateDevicesAndOutcomesOnDb - Updated late feedback outcome for token {0} (Id: {1}).", change.OldToken, change.OldDeviceId));
+                    } else {
+                        LogInfo(string.Format("UpdateDevicesAndOutcomesOnDb - SentRecord not found for expired token {0} reported by late feedback.", change.OldToken));
+                    }
+                } catch (Exception ex) {
+                    LogError("UpdateDevicesAndOutcomesOnDb - Late feedback outcome error: " + ex.Message + " StackTrace: " + ex.StackTrace);
+                }
+                _sentRepository.Flush();
             }
             _transactionManager.RequireNew();
         }
@@ -1123,8 +1175,7 @@ namespace Laser.Orchard.Mobile.Services {
                     push = null;
                 } // end retry cicle
 
-                UpdateDevicesOnDb(produzione);
-                UpdateOutcomesOnDb();
+                UpdateDevicesAndOutcomesOnDb(produzione);
                 offset += size;
             }
             // check se ha tentato di inviare tutto o se è uscito per limite di push per ogni run
@@ -1172,8 +1223,8 @@ namespace Laser.Orchard.Mobile.Services {
             // compone il payload
             JObject sbParsed = null;
             if (pushMessage.Text.Length > MAX_PUSH_TEXT_LENGTH) {
-                _notifier.Information(T("Sent: message payload exceed the limit"));
-                LogInfo("Sent: message payload exceed the limit");
+                NotifyApplePayloadExceed();
+                LogInfo("Apple message payload exceeds the limit");
             }
             else {
                 StringBuilder sb = new StringBuilder();
@@ -1245,7 +1296,7 @@ namespace Laser.Orchard.Mobile.Services {
                     try {
                         var feedback = new FeedbackService(config);
                         feedback.FeedbackReceived += (token, expiredTime) => {
-                            DeviceSubscriptionExpired("ApnsNotification", token, expiredTime, produzione, TipoDispositivo.Apple);
+                            DeviceSubscriptionExpiredLateFeedback(token, expiredTime, TipoDispositivo.Apple);
                         };
                         feedback.Check();
                     }
@@ -1254,8 +1305,7 @@ namespace Laser.Orchard.Mobile.Services {
                     }
                 } // end retry cicle
 
-                UpdateDevicesOnDb(produzione);
-                UpdateOutcomesOnDb();
+                UpdateDevicesAndOutcomesOnDb(produzione);
                 offset += size;
             }
         }
@@ -1346,8 +1396,7 @@ namespace Laser.Orchard.Mobile.Services {
                     push = null;
                 } // end retry cicle
 
-                UpdateDevicesOnDb(produzione);
-                UpdateOutcomesOnDb();
+                UpdateDevicesAndOutcomesOnDb(produzione);
                 offset += size;
             }
         }
@@ -1358,22 +1407,31 @@ namespace Laser.Orchard.Mobile.Services {
 
         private void DeviceSubscriptionChanged(object sender, string oldSubscriptionId, string newSubscriptionId, INotification notification, bool produzione, TipoDispositivo tipoDispositivo, bool repeatable) {
             try {
-                var srOld = _sentRecords.AddOrUpdate(oldSubscriptionId, new SentRecord(), (key, record) => {
-                    record.Outcome = "ex";
-                    return record;
-                });
-                var srNew = new SentRecord {
-                    DeviceType = srOld.DeviceType,
-                    Id = 0,
-                    PushedItem = srOld.PushedItem,
-                    PushNotificationRecord_Id = srOld.PushNotificationRecord_Id,
-                    SentDate = srOld.SentDate,
-                    Outcome = "",
-                    Repeatable = repeatable
-                };
-                _sentRecords.AddOrUpdate(newSubscriptionId, srNew, (key, record) => {
-                    return srNew;
-                });
+                SentRecord srOld = null;
+                SentRecord srNew = null;
+                if (string.IsNullOrWhiteSpace(oldSubscriptionId) == false) {
+                    srOld = _sentRecords.AddOrUpdate(oldSubscriptionId, new SentRecord(), (key, record) => {
+                        record.Outcome = "ex";
+                        return record;
+                    });
+                }
+                if (srOld != null) {
+                    srNew = new SentRecord {
+                        DeviceType = srOld.DeviceType,
+                        Id = 0,
+                        PushedItem = srOld.PushedItem,
+                        PushNotificationRecord_Id = srOld.PushNotificationRecord_Id,
+                        SentDate = srOld.SentDate,
+                        Outcome = "",
+                        Repeatable = repeatable
+                    };
+                    _sentRecords.AddOrUpdate(newSubscriptionId, srNew, (key, record) => {
+                        return srNew;
+                    });
+                } 
+                else {
+                    LogError("Error DeviceSubscriptionChanged: tipoDispositivo: " + tipoDispositivo + " -> oldSubscriptionId" + oldSubscriptionId + " -> newSubscriptionId" + newSubscriptionId + "Error: old token not in _sentRecords.");
+                }
                 _deviceChanges.Add(new DeviceChange {
                     OldToken = oldSubscriptionId,
                     NewToken = newSubscriptionId,
@@ -1458,6 +1516,27 @@ namespace Laser.Orchard.Mobile.Services {
                 LogError(string.Format("Error DeviceSubscriptionExpired: tipoDispositivo: {0} -> expiredDeviceSubscriptionId: {1} - Error: {2} StackTrace: {3}", dispositivo, expiredDeviceSubscriptionId, ex.Message, ex.StackTrace));
             }
         }
+        private void DeviceSubscriptionExpiredLateFeedback(string token, DateTime timestamp, TipoDispositivo dispositivo) {
+            try {
+                if (_sentRecords.ContainsKey(token)) {
+                    _sentRecords.AddOrUpdate(token, new SentRecord(), (key, record) => {
+                        record.Outcome = "ex";
+                        return record;
+                    });
+                    LogInfo(string.Format("Device Subscription Expired (feedback service): {0} -> {1}", dispositivo, token));
+                } else {
+                    // fallback nel caso in cui il device non faccia parte dell'attuale gruppo di device appena pushati ma di un gruppo precedente
+                    _deviceExpired.Add(new DeviceChange {
+                        OldToken = token,
+                        NewToken = null,
+                        TipoDispositivo = dispositivo.ToString()
+                    });
+                    LogInfo(string.Format("Device Subscription Expired (late feedback service): {0} -> {1}", dispositivo, token));
+                }
+            } catch (Exception ex) {
+                LogError(string.Format("Error DeviceSubscriptionExpiredLateFeedback: tipoDispositivo: {0} -> expiredDeviceSubscriptionId: {1} - Error: {2} StackTrace: {3}", dispositivo, token, ex.Message, ex.StackTrace));
+            }
+        }
 
         private void LogError(string message) {
             Logger.Log(OrchardLogging.LogLevel.Error, null, message, null);
@@ -1475,6 +1554,7 @@ namespace Laser.Orchard.Mobile.Services {
             public string NewToken { get; set; }
             public bool Produzione { get; set; }
             public string TipoDispositivo { get; set; }
+            public int OldDeviceId { get; set; }
 
             public DeviceChange() {
                 OldToken = "";
