@@ -950,11 +950,11 @@ namespace Laser.Orchard.Mobile.Services {
                         LogInfo(string.Format("Device Subscription Expired Action: {0} not validated -> {1}", device.Value.DeviceType, device.Key));
                     }
                     else {
-                        LogInfo(string.Format("Device Subscription Expired Error: {0} -> token not found or token not unique: {1}", device.Value.DeviceType, device.Key));
+                        LogError(string.Format("UpdateDevicesAndOutcomesOnDb - Device Subscription Expired Error: {0} -> token not found or token not unique: {1}", device.Value.DeviceType, device.Key));
                     }
                 }
                 catch (Exception ex) {
-                    LogError("UpdateDevicesOnDb error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    LogError("UpdateDevicesAndOutcomesOnDb - Update expired error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
             }
             _transactionManager.RequireNew();
@@ -975,13 +975,13 @@ namespace Laser.Orchard.Mobile.Services {
                     }
                 }
                 catch (Exception ex) {
-                    LogError("UpdateDevicesOnDb error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    LogError("UpdateDevicesAndOutcomesOnDb - Device changed error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
                 _pushNotificationRepository.Flush();
             }
             _transactionManager.RequireNew();
 
-            // aggiorna i device expired segnalati dal feedback service
+            // aggiorna i device expired segnalati in ritardo dal feedback service
             foreach (var change in _deviceExpired) {
                 try {
                     List<PushNotificationRecord> pnrList = _pushNotificationRepository.Fetch(x => x.Token == change.OldToken && x.Device.ToString() == change.TipoDispositivo).ToList();
@@ -991,7 +991,7 @@ namespace Laser.Orchard.Mobile.Services {
                         _pushNotificationRepository.Update(pnr);
                     }
                 } catch (Exception ex) {
-                    LogError("UpdateDevicesOnDb error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    LogError("UpdateDevicesAndOutcomesOnDb - Device expired feedback error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
                 _pushNotificationRepository.Flush();
             }
@@ -1008,21 +1008,24 @@ namespace Laser.Orchard.Mobile.Services {
                     }
                 }
                 catch (Exception ex) {
-                    LogError("UpdateOutcomesOnDb error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    LogError("UpdateDevicesAndOutcomesOnDb - Outcome error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
             }
             _transactionManager.RequireNew();
 
-            // aggiorna l'ultimo esito per i device expired segnalati dal feedback service
+            // aggiorna l'ultimo esito per i device expired segnalati in ritardo dal feedback service
             foreach (var change in _deviceExpired) {
                 try {
                     var record = _sentRepository.Fetch(x => x.PushNotificationRecord_Id == change.OldDeviceId).OrderByDescending(x => x.SentDate).FirstOrDefault();
                     if(record != null) {
                         record.Outcome = "ex";
                         _sentRepository.Update(record);
+                        LogInfo(string.Format("UpdateDevicesAndOutcomesOnDb - Updated late feedback outcome for token {0} (Id: {1}).", change.OldToken, change.OldDeviceId));
+                    } else {
+                        LogInfo(string.Format("UpdateDevicesAndOutcomesOnDb - SentRecord not found for expired token {0} reported by late feedback.", change.OldToken));
                     }
                 } catch (Exception ex) {
-                    LogError("UpdateDevicesOnDb error:  " + ex.Message + " StackTrace: " + ex.StackTrace);
+                    LogError("UpdateDevicesAndOutcomesOnDb - Late feedback outcome error: " + ex.Message + " StackTrace: " + ex.StackTrace);
                 }
                 _sentRepository.Flush();
             }
@@ -1498,12 +1501,21 @@ namespace Laser.Orchard.Mobile.Services {
         }
         private void DeviceSubscriptionExpiredLateFeedback(string token, DateTime timestamp, TipoDispositivo dispositivo) {
             try {
-                _deviceExpired.Add(new DeviceChange {
-                    OldToken = token,
-                    NewToken = null,
-                    TipoDispositivo = dispositivo.ToString()
-                });
-                LogInfo(string.Format("Device Subscription Expired (feedback service): {0} -> {1}", dispositivo, token));
+                if (_sentRecords.ContainsKey(token)) {
+                    _sentRecords.AddOrUpdate(token, new SentRecord(), (key, record) => {
+                        record.Outcome = "ex";
+                        return record;
+                    });
+                    LogInfo(string.Format("Device Subscription Expired (feedback service): {0} -> {1}", dispositivo, token));
+                } else {
+                    // fallback nel caso in cui il device non faccia parte dell'attuale gruppo di device appena pushati ma di un gruppo precedente
+                    _deviceExpired.Add(new DeviceChange {
+                        OldToken = token,
+                        NewToken = null,
+                        TipoDispositivo = dispositivo.ToString()
+                    });
+                    LogInfo(string.Format("Device Subscription Expired (late feedback service): {0} -> {1}", dispositivo, token));
+                }
             } catch (Exception ex) {
                 LogError(string.Format("Error DeviceSubscriptionExpiredLateFeedback: tipoDispositivo: {0} -> expiredDeviceSubscriptionId: {1} - Error: {2} StackTrace: {3}", dispositivo, token, ex.Message, ex.StackTrace));
             }
