@@ -38,6 +38,7 @@ namespace Orchard.Reporting
               .WithPart("CommonPart")
               .WithPart("DataReportViewerPart")
               .Creatable()
+              .Listable()
               .DisplayedAs("Data Report Viewer"));
 
             ContentDefinitionManager.AlterTypeDefinition("DataReportViewerWidget", cfg => cfg
