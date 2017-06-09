@@ -26,3 +26,10 @@ obj\
 .git
 .gitignore
 .hgignore
+\Modules\Orchard.Azure.Tests\
+\Modules\Orchard.Core.Tests\
+\Modules\Orchard.Framework\
+\Modules\Orchard.Specs\
+\Modules\Orchard.Tests.Modules\
+\Modules\Orchard.Tests\
+\Modules\Orchard.Web.Tests\
