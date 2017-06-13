@@ -9,8 +9,10 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
 using System.Globalization;
 using System.Web.Helpers;
+using Orchard.Localization;
 using System.Dynamic;
 using System.Numerics;
+using Orchard;
 
 namespace Laser.Orchard.Commons.Services {
 
@@ -45,7 +47,9 @@ namespace Laser.Orchard.Commons.Services {
         private string[] _complexBehaviour;
         // object/key/dump
 
-        public ObjectDumper(int levels, string[] filterContentFieldsParts = null, bool omitContentItem = false, bool tinyResponse = true, string[] complexBehaviour = null) {
+        private readonly IOrchardServices _orchardServices;
+
+        public ObjectDumper(int levels,  string[] filterContentFieldsParts = null, bool omitContentItem = false, bool tinyResponse = true, string[] complexBehaviour = null, IOrchardServices orchardServices = null) {
             _levels = levels;
             _xdoc = new XDocument();
             _xdoc.Add(_current = new XElement("ul"));
@@ -68,6 +72,8 @@ namespace Laser.Orchard.Commons.Services {
             };
             _filterContentFieldsParts = filterContentFieldsParts;
             _omitContentItem = omitContentItem;
+
+            _orchardServices = orchardServices;
         }
         public List<ContentFlags> RenderedContentList { get { return _contentRendered; } }
 
@@ -112,6 +118,11 @@ namespace Laser.Orchard.Commons.Services {
                 if (o == null) {
                     DumpValue(null, name);
                 } else if (o.GetType().IsValueType || o is string) {
+                    if (nameDynamicJsonArray.Equals("LocalazedDate") && FormatType(o) == "DateTime") {
+                        var currentTimeZone = _orchardServices.WorkContext.CurrentTimeZone;
+                        DateTime localizedDate = TimeZoneInfo.ConvertTimeFromUtc((DateTime) o, currentTimeZone);
+                        DumpValue(localizedDate, name);
+                    }
                     DumpValue(o, name);
                 } else {
                     if (_parents.Count >= _levels) {
@@ -416,7 +427,11 @@ namespace Laser.Orchard.Commons.Services {
 
                 if (prop.GetIndexParameters().Length == 0 && prop.CanRead) {
                     if (!_skipParts.Contains(o.GetType().Name)) {
-                        Dump(prop.GetValue(o, null), member.Name);
+                        if(FormatType(o).Equals("ActivityPart") || FormatType(o).Equals("DateTimeField")) {
+                            Dump(prop.GetValue(o, null), member.Name, "LocalazedDate");
+                        } else {
+                            Dump(prop.GetValue(o, null), member.Name);
+                        }
                     }
                 }
             }
