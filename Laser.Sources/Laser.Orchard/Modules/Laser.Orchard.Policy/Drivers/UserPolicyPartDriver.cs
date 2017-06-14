@@ -41,9 +41,11 @@ namespace Laser.Orchard.Policy.Drivers {
         }
         protected override DriverResult Editor(UserPolicyPart part, IUpdateModel updater, dynamic shapeHelper) {
             if (currentControllerAction == CONTROLLER_ACTION) return null;// nulla deve essere mostrato in fase di registrazione
-            if (!updater.TryUpdateModel(part, Prefix, null, null)) {
-                updater.AddModelError("UserPolicyPartError", T("UserPolicyPart Error"));
-            }
+
+            // non è necessario aggiornare il model perché le policy non sono editabili
+            // ma forza il caricamento della property UserPolicyAnswers per evitare errori NHibernate sulla view
+            // in caso ci siano altri errori di validazione
+            part.UserPolicyAnswers.ToList();
             return Editor(part, shapeHelper);
         }
 

@@ -107,6 +107,13 @@ namespace Pubblicazione {
 
         private ProjectClass ReadProject(string pathsoluzion, Dictionary<string, string> MyelencoLibrerie, Dictionary<string, string> MyelencoModuli, Dictionary<string, string> MyelencoTemi) {
             //this.tbOrchardDev.Text = Properties.Settings.Default.BasePlatformRootPath;
+            var excludeProjectsList = new string[0];
+            try {
+                var aux = Directory.GetParent(deploypath).FullName;
+                excludeProjectsList = File.ReadAllLines(Path.Combine(aux, "projects.excludelist.txt"));
+            } catch {
+                // non esclude nessun progetto
+            }
             string Content;
             try {
                 Content = File.ReadAllText(pathsoluzion);
@@ -118,6 +125,7 @@ namespace Pubblicazione {
                 , RegexOptions.Compiled);
             var matches = projReg.Matches(Content).Cast<Match>();
             var Projects = matches.Select(x => x.Groups[2].Value).ToList();
+            Projects = Projects.Except(excludeProjectsList).ToList();
             for (int i = 0; i < Projects.Count; ++i) {
                 if (!Path.IsPathRooted(Projects[i]))
                     Projects[i] = Path.Combine(Path.GetDirectoryName(pathsoluzion),
@@ -209,8 +217,22 @@ namespace Pubblicazione {
             // this.TheprogressBar.Maximum = (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count) * 2;
             // this.TheprogressBar.Step = 1;
             if (Directory.Exists(deploypath) && this.chkDeleteFolder.Checked) {
-                Directory.Delete(deploypath, true);
-                Thread.Sleep(1);
+                try {
+                    Directory.Delete(deploypath, true);
+                } catch {
+                    // eventuali errori sono gestiti qui di seguito
+                }
+                int deleteLoopCount = 0;
+                while(Directory.Exists(deploypath) && deleteLoopCount < 20) {
+                    Thread.Sleep(100);
+                    deleteLoopCount++;
+                }
+                if (Directory.Exists(deploypath)) {
+                    Action action2 = () => Mylog.AppendText("Unable to delete output folder. Aborted.\r\n");
+                    Mylog.Invoke(action2);
+                    EndTask(e);
+                    return;
+                }
             }
             Directory.CreateDirectory(deploypath);
             //foreach (var a in this.clbLibrary.CheckedItems) {
@@ -310,8 +332,8 @@ namespace Pubblicazione {
                         Thread.Sleep(100);
                     }
                     if (this.clbThemesOrchard.CheckedItems.Count > 0) { // se ho scelto almeno un tema Orchard, allora devo copiare anche \Themes\bin\*.*
-                        File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes\web.config"), Path.Combine(deploypath, @"Themes\web.config"));
                         ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes\bin", "*.*"), Path.Combine(deploypath, @"Themes\bin"));
+                        File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes\web.config"), Path.Combine(deploypath, @"Themes\web.config"));
                     }
                     foreach (var a in this.clbThemesOrchard.CheckedItems) {
                         ProcessXcopy(Path.Combine(elencoTemiOrchard[a.ToString()], "*.*"), Path.Combine(deploypath, @"Themes", a.ToString()));
@@ -337,7 +359,11 @@ namespace Pubblicazione {
             //       this.OperazioneTerminata.Visible = true;
 
             //          this.btnAll.Enabled = true;
+            EndTask(e);
+        }
 
+        private void EndTask(DoWorkEventArgs e) {
+            Action action = null;
             switch (e.Argument.ToString()) {
                 case "btnFullDeploy":
                     action = () => btnFullDeploy.Enabled = true;
@@ -358,7 +384,6 @@ namespace Pubblicazione {
             action = () => OperazioneTerminata.Visible = true;
             OperazioneTerminata.Invoke(action);
         }
-
         private void Form1_Load(object sender, EventArgs e) {
             Initialize();
             bw.WorkerReportsProgress = true;

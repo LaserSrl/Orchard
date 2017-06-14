@@ -191,7 +191,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nwazet.Commerce", "..\..\Nw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.NwazetIntegration", "Modules\Laser.Orchard.NwazetIntegration\Laser.Orchard.NwazetIntegration.csproj", "{DC68A88C-E516-4030-8DA7-D954F5EA7424}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Reporting", "Modules\Orchard.Reporting\Orchard.Reporting.csproj", "{7325984D-D6AC-4491-BC4E-F9C32B92C87C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.DataProtection", "Modules\Laser.Orchard.DataProtection\Laser.Orchard.DataProtection.csproj", "{79839A86-B5CA-4318-81A5-F8114D2AF078}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -537,10 +537,10 @@ Global
 		{DC68A88C-E516-4030-8DA7-D954F5EA7424}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC68A88C-E516-4030-8DA7-D954F5EA7424}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC68A88C-E516-4030-8DA7-D954F5EA7424}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7325984D-D6AC-4491-BC4E-F9C32B92C87C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7325984D-D6AC-4491-BC4E-F9C32B92C87C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7325984D-D6AC-4491-BC4E-F9C32B92C87C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7325984D-D6AC-4491-BC4E-F9C32B92C87C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79839A86-B5CA-4318-81A5-F8114D2AF078}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79839A86-B5CA-4318-81A5-F8114D2AF078}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79839A86-B5CA-4318-81A5-F8114D2AF078}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79839A86-B5CA-4318-81A5-F8114D2AF078}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -631,6 +631,6 @@ Global
 		{F6AC05CA-152F-4835-9830-A69363330B78} = {142C1A4D-CD11-419D-88CE-ED97548901AA}
 		{909ACC2C-D672-4752-B75B-6822E05FE0E3} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{DC68A88C-E516-4030-8DA7-D954F5EA7424} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
-		{7325984D-D6AC-4491-BC4E-F9C32B92C87C} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{79839A86-B5CA-4318-81A5-F8114D2AF078} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
