@@ -36,6 +36,7 @@ namespace Orchard.Reporting
 
             ContentDefinitionManager.AlterTypeDefinition("DataReportViewer", cfg => cfg
               .WithPart("CommonPart")
+              .WithPart("TitlePart")
               .WithPart("DataReportViewerPart")
               .Creatable()
               .Listable()
