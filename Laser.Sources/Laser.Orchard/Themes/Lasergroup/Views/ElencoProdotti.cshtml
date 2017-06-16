@@ -15,10 +15,14 @@
             <div id="showcases">
             </div>
             <div class="text-center">
-                <div class="space-20"></div>
-                <a id="load_showcase" class="btn btn-primary" " href="laser.orchard.webservices/webapi/display">@T("Show more showcases")</a>
-                <div id="load_posts_loader"></div>
+                <div class="space-20" ></div>
+                <div id="load-showcase-div-button">
+                    <a id="load_showcase" class="btn btn-primary" href="laser.orchard.webservices/webapi/display">@T("Show more showcases")</a>
+                    <div id="load_posts_loader"></div>
+                </div>         
             </div>
+            <input type="hidden" value="nofilter" id="hiddenFilter" />
+            <input type="hidden" value='@T("Show more showcases")' id="textButtonShowShowcase" />
             <input type="hidden" id="currentPage" value="@page">
         </div>
         <div class="showcase-container-bottom"></div>
@@ -40,6 +44,12 @@
 
     function load_more_showcase(e) {
         e.preventDefault();
+
+        var filter = "";
+        if ($('#hiddenFilter').attr('value') && $('#hiddenFilter').attr('value') != 'nofilter') {
+            filter = '&TermIds=' + $('#hiddenFilter').attr('value');
+        }
+
         jQuery('#load_posts_loader').addClass('active');
 
         var contPage = jQuery('#currentPage').val();
@@ -50,7 +60,7 @@
         jQuery.ajax({
             url: jQuery('#load_showcase').attr('href'),
             dataType: 'json',
-            data: 'alias=vetrina-prodotti&page=' + contPage + '&pageSize=@pageSize',
+            data: 'alias=vetrina-prodotti&page=' + contPage + '&pageSize=@pageSize' + filter,
             success: function (response) {
 
                 jQuery('#load_posts_loader').removeClass('active');
