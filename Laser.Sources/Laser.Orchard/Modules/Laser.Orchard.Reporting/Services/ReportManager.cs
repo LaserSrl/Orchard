@@ -178,20 +178,23 @@ namespace Laser.Orchard.Reporting.Services
                 result = hql.SetResultTransformer(Transformers.AliasToEntityMap).Enumerable();
             }
 
+            if(hql.ReturnAliases.Count() < 2) {
+                throw new ArgumentOutOfRangeException("HQL query not valid: please specify at least 2 columns in select clause.");
+            }
 
             var dictionary = new Dictionary<string, AggregationResult>();
             foreach(var record in result) {
                 var ht = record as Hashtable;
-                string key = ht[report.GroupByType].ToString();
+                string key = ht[hql.ReturnAliases[0]].ToString();
                 if (returnValue.ContainsKey(key)) {
                     var previousItem = returnValue[key];
-                    previousItem.AggregationValue += 1;
+                    previousItem.AggregationValue += Convert.ToDouble(ht[hql.ReturnAliases[1]]);
                     returnValue[key] = previousItem;
                 } else {
                     returnValue[key] = new AggregationResult {
-                        AggregationValue = 1,
+                        AggregationValue = Convert.ToDouble(ht[hql.ReturnAliases[1]]),
                         Label = key,
-                        GroupingField = report.GroupByType
+                        GroupingField = key
                     };
                 }
             }

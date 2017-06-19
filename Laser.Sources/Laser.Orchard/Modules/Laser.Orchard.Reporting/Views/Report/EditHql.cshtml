@@ -26,16 +26,6 @@
             @Html.DropDownListFor(c => c.ChartTypeId, Model.ChartTypes, new { @class = "select-medium" })
             @Html.ValidationMessageFor(c => c.ChartTypeId)
         </fieldset>
-        <fieldset>
-            <label for="AggregateMethod">@T("Aggregate Method")</label>
-            @Html.DropDownListFor(c => c.AggregateMethod, Model.Aggregations, new { @class = "select-medium" })
-            @Html.ValidationMessageFor(c => c.AggregateMethod)
-        </fieldset>
-        <fieldset>
-            <label for="CategoryAndType">@T("Group by field")</label>
-            <input id="CategoryAndType" name="CategoryAndType" value="@Model.CategoryAndType" type="text" maxlength="202" class="text-medium" />
-            @Html.ValidationMessageFor(c => c.CategoryAndType)
-        </fieldset>
         <fieldset class="save-button">
             <input type="hidden" value="@Model.ReportId" name="ReportId" id="ReportId" />
             <button class="primaryAction" type="submit" value="@T("Save")">@T("Save")</button>

@@ -158,30 +158,14 @@ namespace Laser.Orchard.Reporting.Controllers
                 return View("CreateHql", model);
             }
 
-            var groupByCategory = "HqlField";
-            var groupByType = model.CategoryAndType;
-
-            if (string.IsNullOrWhiteSpace(groupByType)) {
-                ModelState.AddModelError("CategoryAndType", T("There is no GroupBy field matched with the given parameters").Text);
-                FillRelatedData(model);
-                return View("CreateHql", model);
-            }
-
-            //AggregateMethods selectedAggregate = (AggregateMethods)model.AggregateMethod;
-            //if (!groupByDescriptor.AggregateMethods.Any(c => c == selectedAggregate)) {
-            //    ModelState.AddModelError("AggregateMethod", T("The selected field does't support the selected Aggregate method").Text);
-            //    FillRelatedData(model);
-            //    return View("Create", model);
-            //}
-
             ReportRecord newReport = new ReportRecord {
                 Title = model.Title,
                 Name = model.Name,
                 Query = new QueryPartRecord { Id = model.QueryId.Value },
                 ChartType = model.ChartTypeId,
-                GroupByCategory = groupByCategory,
-                GroupByType = groupByType,
-                AggregateMethod = model.AggregateMethod
+                GroupByCategory = "",
+                GroupByType = "",
+                AggregateMethod = 0
             };
 
             reportRepository.Create(newReport);
@@ -296,23 +280,13 @@ namespace Laser.Orchard.Reporting.Controllers
                 }
             }
 
-            var groupByCategory = "HqlField";
-            var groupByType = model.CategoryAndType;
-
-            //AggregateMethods selectedAggregate = (AggregateMethods)model.AggregateMethod;
-            //if (!groupByDescriptor.AggregateMethods.Any(c => c == selectedAggregate)) {
-            //    this.ModelState.AddModelError("AggregateMethod", T("The selected field does't support the selected Aggregate method").Text);
-            //    this.FillRelatedData(model);
-            //    return this.View("Edit", model);
-            //}
-
             report.Title = model.Title;
             report.Name = model.Name;
             report.Query = model.QueryId.HasValue ? new QueryPartRecord { Id = model.QueryId.Value } : null;
-            report.GroupByCategory = groupByCategory;
-            report.GroupByType = groupByType;
+            report.GroupByCategory = "";
+            report.GroupByType = "";
             report.ChartType = model.ChartTypeId;
-            report.AggregateMethod = model.AggregateMethod;
+            report.AggregateMethod = 0;
 
             reportRepository.Update(report);
             reportRepository.Flush();
@@ -360,11 +334,9 @@ namespace Laser.Orchard.Reporting.Controllers
 
             var model = new HqlReportViewModel {
                 ReportId = report.Id,
-                CategoryAndType = report.GroupByType,
                 Title = report.Title,
                 Name = report.Name,
                 ChartTypeId = report.ChartType,
-                AggregateMethod = report.AggregateMethod,
                 QueryId = report.Query != null ? (int?)report.Query.Id : null
             };
 
@@ -456,13 +428,6 @@ namespace Laser.Orchard.Reporting.Controllers
             // Fill charts
             model.ChartTypes.Add(new SelectListItem { Text = T("Pie Chart").Text, Value = ((byte)ChartTypes.PieChart).ToString(CultureInfo.InvariantCulture) });
             model.ChartTypes.Add(new SelectListItem { Text = T("Simple List").Text, Value = ((byte)ChartTypes.SimpleList).ToString(CultureInfo.InvariantCulture) });
-
-            // Fill Aggregations
-            model.Aggregations.Add(new SelectListItem { Text = T("Count").Text, Value = ((byte)AggregateMethods.Count).ToString(CultureInfo.InvariantCulture) });
-            model.Aggregations.Add(new SelectListItem { Text = T("Sum").Text, Value = ((byte)AggregateMethods.Sum).ToString(CultureInfo.InvariantCulture) });
-            model.Aggregations.Add(new SelectListItem { Text = T("Average").Text, Value = ((byte)AggregateMethods.Average).ToString(CultureInfo.InvariantCulture) });
-            model.Aggregations.Add(new SelectListItem { Text = T("Minimum").Text, Value = ((byte)AggregateMethods.Minimum).ToString(CultureInfo.InvariantCulture) });
-            model.Aggregations.Add(new SelectListItem { Text = T("Maximum").Text, Value = ((byte)AggregateMethods.Maximum).ToString(CultureInfo.InvariantCulture) });
         }
     }
 }

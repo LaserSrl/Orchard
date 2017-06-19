@@ -10,13 +10,6 @@ namespace Laser.Orchard.Reporting.ViewModels {
     public class HqlReportViewModel {
         private Collection<SelectListItem> queries = new Collection<SelectListItem>();
         private Collection<SelectListItem> chartTypes = new Collection<SelectListItem>();
-        private Collection<SelectListItem> aggregations = new Collection<SelectListItem>();
-
-        public Collection<SelectListItem> Aggregations {
-            get {
-                return aggregations;
-            }
-        }
 
         public Collection<SelectListItem> Queries {
             get {
@@ -40,15 +33,8 @@ namespace Laser.Orchard.Reporting.ViewModels {
         [Required]
         public string Title { get; set; }
 
-        [MaxLength(202)]
-        [Required]
-        public string CategoryAndType { get; set; }
-
         [Required]
         public int ChartTypeId { get; set; }
-
-        [Required]
-        public int AggregateMethod { get; set; }
 
         [Required]
         public int? QueryId { get; set; }

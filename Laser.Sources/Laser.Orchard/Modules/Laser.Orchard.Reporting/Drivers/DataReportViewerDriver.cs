@@ -55,7 +55,7 @@ namespace Laser.Orchard.Reporting.Drivers
 
                 IEnumerable<AggregationResult> reportData = null;
                 int count = 0;
-                if(report.GroupByCategory == "HqlField") {
+                if(report.GroupByCategory == "") {
                     reportData = reportManger.RunHqlReport(report, part.ContentItem);
                     count = reportData.Count(); // this.reportManger.GetHqlCount(report, part.ContentItem);
                 } else {
