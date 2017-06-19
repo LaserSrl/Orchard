@@ -5,7 +5,9 @@
 }
 
 <div class="wrapper p2 hr-border-1">
-    <img src="@Display.ResizeMediaUrl(Width: 150, Height: 150, Mode: "crop", Alignment: "middlecenter", Path: Model.ContentItem.BlogPost.Gallery.MediaParts[0].MediaUrl)" class="img-indent" />
+    @if (Model.ContentItem.BlogPost.Gallery.MediaParts.Count != 0) {
+        <img src="@Display.ResizeMediaUrl(Width: 150, Height: 150, Mode: "crop", Alignment: "middlecenter", Path: Model.ContentItem.BlogPost.Gallery.MediaParts[0].MediaUrl)" class="img-indent" />
+    }
     <dl class="extra-wrap def-list-1">
         <dt>
             @Html.ItemDisplayLink(title, (Orchard.ContentManagement.ContentItem)Model.ContentItem)

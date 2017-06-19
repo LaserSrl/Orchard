@@ -12,7 +12,6 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
-using Orchard.ContentManagement.Handlers;
 using System.Xml.Linq;
 
 namespace Laser.Orchard.Queries.Drivers {
