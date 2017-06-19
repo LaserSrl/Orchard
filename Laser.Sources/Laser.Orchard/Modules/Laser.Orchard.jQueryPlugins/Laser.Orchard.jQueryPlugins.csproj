@@ -201,13 +201,19 @@
     <Content Include="Styles\images\multiselect\fake_sel_red.gif" />
     <Content Include="Styles\images\multiselect\fake_sel_red_pad.gif" />
     <Content Include="Styles\images\colorbox\overlay.png" />
+    <Content Include="Styles\jqDataTable\images\favicon.ico" />
+    <Content Include="Styles\images\sort_asc.png" />
+    <Content Include="Styles\jqDataTable\images\sort_asc_disabled.png" />
+    <Content Include="Styles\images\sort_both.png" />
+    <Content Include="Styles\jqDataTable\images\sort_desc.png" />
+    <Content Include="Styles\jqDataTable\images\sort_desc_disabled.png" />
+    <Content Include="Styles\jqDataTable\jquery.dataTables.min.css" />
     <Content Include="Styles\jqPlot\jquery.jqplot.css" />
     <Content Include="Styles\jqPlot\jquery.jqplot.min.css" />
     <Content Include="Styles\jquery.caroufredsel.responsive.css" />
     <Content Include="Styles\jquery.cycle.css" />
     <Content Include="Styles\jquery.autocomplete.css" />
     <Content Include="Styles\jquery.colorbox.css" />
-    <Content Include="Styles\jquery.dataTables.min.css" />
     <Content Include="Styles\jquery.multiSelect.css" />
     <Content Include="Styles\jquery.ui.multiselect.widget.css" />
     <Content Include="Styles\Jssor\img\a17.png" />
@@ -232,6 +238,7 @@
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
     <Content Include="Styles\Jssor\jssor.bannerslider.css" />
+    <Content Include="Styles\jqDataTable\images\Sorting icons.psd" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ResourceManifest.cs" />
