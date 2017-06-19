@@ -116,7 +116,7 @@ namespace Laser.Orchard.Mobile.WorkFlows {
 
                 device = "All";
             }
-            _pushGatewayService.SendPushService(produzione, device, idRelated, language, messageApple, messageAndroid, messageWindows, sound, querydevice);
+            _pushGatewayService.SendPushService(produzione, device, idRelated, contentItem, language, messageApple, messageAndroid, messageWindows, sound, querydevice);
 
             yield return T("Sent");
         }
