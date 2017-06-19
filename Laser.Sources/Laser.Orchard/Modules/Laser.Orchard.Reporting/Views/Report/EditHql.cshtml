@@ -1,0 +1,45 @@
+﻿@using Laser.Orchard.Reporting.ViewModels
+@model HqlReportViewModel
+@{
+    Style.Include("reporting");
+}
+@using (Html.BeginFormAntiForgeryPost(Url.Action("EditHqlPost", "Report", new { area = "Laser.Orchard.Reporting" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
+    <h1>@T("Edit")</h1>
+    <div class="group">
+        <fieldset>
+            <label for="Name">@T("Name")</label>
+            <input id="Name" name="Name" value="@Model.Name" type="text" maxlength="50" class="text-medium" />
+            @Html.ValidationMessageFor(c => c.Name)
+        </fieldset>
+        <fieldset>
+            <label for="Title">@T("Title")</label>
+            <input id="Title" name="Title" value="@Model.Title" type="text" maxlength="50" class="text-medium" />
+            @Html.ValidationMessageFor(c => c.Title)
+        </fieldset>
+        <fieldset>
+            <label for="QueryId">@T("Query")</label>
+            @Html.DropDownListFor(c => c.QueryId, Model.Queries, new { @class = "select-medium" })
+            @Html.ValidationMessageFor(c => c.QueryId)
+        </fieldset>
+        <fieldset>
+            <label for="ChartTypeId">@T("Chart Types")</label>
+            @Html.DropDownListFor(c => c.ChartTypeId, Model.ChartTypes, new { @class = "select-medium" })
+            @Html.ValidationMessageFor(c => c.ChartTypeId)
+        </fieldset>
+        <fieldset>
+            <label for="AggregateMethod">@T("Aggregate Method")</label>
+            @Html.DropDownListFor(c => c.AggregateMethod, Model.Aggregations, new { @class = "select-medium" })
+            @Html.ValidationMessageFor(c => c.AggregateMethod)
+        </fieldset>
+        <fieldset>
+            <label for="CategoryAndType">@T("Group by field")</label>
+            <input id="CategoryAndType" name="CategoryAndType" value="@Model.CategoryAndType" type="text" maxlength="202" class="text-medium" />
+            @Html.ValidationMessageFor(c => c.CategoryAndType)
+        </fieldset>
+        <fieldset class="save-button">
+            <input type="hidden" value="@Model.ReportId" name="ReportId" id="ReportId" />
+            <button class="primaryAction" type="submit" value="@T("Save")">@T("Save")</button>
+        </fieldset>
+    </div>
+
+}

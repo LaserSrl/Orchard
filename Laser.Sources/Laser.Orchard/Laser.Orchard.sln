@@ -193,6 +193,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.NwazetIntegra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.DataProtection", "Modules\Laser.Orchard.DataProtection\Laser.Orchard.DataProtection.csproj", "{79839A86-B5CA-4318-81A5-F8114D2AF078}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Reporting", "Modules\Laser.Orchard.Reporting\Laser.Orchard.Reporting.csproj", "{7325984D-D6AC-4491-BC4E-F9C32B92C87C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -541,6 +543,10 @@ Global
 		{79839A86-B5CA-4318-81A5-F8114D2AF078}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79839A86-B5CA-4318-81A5-F8114D2AF078}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79839A86-B5CA-4318-81A5-F8114D2AF078}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7325984D-D6AC-4491-BC4E-F9C32B92C87C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7325984D-D6AC-4491-BC4E-F9C32B92C87C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7325984D-D6AC-4491-BC4E-F9C32B92C87C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7325984D-D6AC-4491-BC4E-F9C32B92C87C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -632,5 +638,6 @@ Global
 		{909ACC2C-D672-4752-B75B-6822E05FE0E3} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{DC68A88C-E516-4030-8DA7-D954F5EA7424} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{79839A86-B5CA-4318-81A5-F8114D2AF078} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{7325984D-D6AC-4491-BC4E-F9C32B92C87C} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal
