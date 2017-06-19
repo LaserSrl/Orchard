@@ -5,7 +5,6 @@
 @using Orchard.Localization.Services;
 @using System;
 @using System.Linq;
-
 @functions{
     string retString = "Error"; //possible outcomes: "Error","OK"
     string eMsg = String.Empty; //used to track errors and put them in the WF state
@@ -41,7 +40,7 @@
 
         CultureRecord preferredCulture = _cultureManager.GetCultureById(favoriteCulturePart.Culture_Id);
 
-        if (!emailContactPart.EmailRecord.Any(x => x.Email == email && x.EmailContactPartRecord_Id == emailContactPart.Id)) {
+        if (emailContactPart.EmailRecord==null || ( !emailContactPart.EmailRecord.Any(x => x.Email == email && x.EmailContactPartRecord_Id == emailContactPart.Id))) {
             CommunicationEmailRecord cer = new CommunicationEmailRecord();
             cer.Email = email;
             cer.Validated = true;
@@ -55,7 +54,7 @@
             _emailRepository.Create(cer);
         }
 
-        if (!smsContactPart.SmsRecord.Any(x => x.Prefix == prefisso && x.Sms == telefono && x.SmsContactPartRecord_Id == smsContactPart.Id)) {
+        if (smsContactPart.SmsRecord==null || (!smsContactPart.SmsRecord.Any(x => x.Prefix == prefisso && x.Sms == telefono && x.SmsContactPartRecord_Id == smsContactPart.Id))) {
             CommunicationSmsRecord csr = new CommunicationSmsRecord();
             csr.Prefix = prefisso;
             csr.Sms = telefono;
