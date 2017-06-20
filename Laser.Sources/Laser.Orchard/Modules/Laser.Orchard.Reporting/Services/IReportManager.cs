@@ -17,6 +17,5 @@ namespace Laser.Orchard.Reporting.Services
         IEnumerable<AggregationResult> RunReport(ReportRecord report, IContent container);
         IEnumerable<AggregationResult> RunHqlReport(ReportRecord report, IContent container);
         int GetCount(ReportRecord report, IContent container);
-        int GetHqlCount(ReportRecord report, IContent container);
     }
 }

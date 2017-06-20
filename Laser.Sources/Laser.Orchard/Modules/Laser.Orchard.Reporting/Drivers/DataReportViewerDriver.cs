@@ -57,7 +57,7 @@ namespace Laser.Orchard.Reporting.Drivers
                 int count = 0;
                 if(report.GroupByCategory == "") {
                     reportData = reportManger.RunHqlReport(report, part.ContentItem);
-                    count = reportData.Count(); // this.reportManger.GetHqlCount(report, part.ContentItem);
+                    count = reportData.Count();  //.Sum(x => x.AggregationValue); // this.reportManger.GetHqlCount(report, part.ContentItem);
                 } else {
                     reportData = reportManger.RunReport(report, part.ContentItem);
                     count = this.reportManger.GetCount(report, part.ContentItem);

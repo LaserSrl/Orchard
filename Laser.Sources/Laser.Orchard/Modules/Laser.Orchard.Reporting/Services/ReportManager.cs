@@ -76,43 +76,6 @@ namespace Laser.Orchard.Reporting.Services
             return contentQueries.Sum(c => c.Count());
         }
 
-        public int GetHqlCount(ReportRecord report, IContent container) {
-            if (report == null) { throw new ArgumentNullException("report"); }
-            if (report.Query == null) { throw new ArgumentException("There is no QueryRecord associated with the Report"); }
-
-            var queryRecord = contentManager.Get(report.Query.Id);
-            var contentQuery = queryRecord.Parts.FirstOrDefault(x => x.PartDefinition.Name == "MyCustomQueryPart");
-            if (contentQuery == null) {
-                throw new ArgumentOutOfRangeException("HQL query not valid.");
-            }
-            var queryField = contentQuery.Get(typeof(TextField), "QueryString") as TextField;
-            var query = queryField.Value.Trim();
-            Dictionary<string, AggregationResult> returnValue = new Dictionary<string, AggregationResult>();
-
-            if (query.StartsWith("select ", StringComparison.InvariantCultureIgnoreCase) == false) {
-                query = "select * " + query;
-            }
-            var hql = _transactionManager.GetSession().CreateQuery(queryField.Value);
-            var result = hql.SetResultTransformer(Transformers.AliasToEntityMap).Enumerable();
-            var dictionary = new Dictionary<string, AggregationResult>();
-            foreach (var record in result) {
-                var ht = record as Hashtable;
-                string key = ht[report.GroupByType].ToString();
-                if (returnValue.ContainsKey(key)) {
-                    var previousItem = returnValue[key];
-                    previousItem.AggregationValue += 1;
-                    returnValue[key] = previousItem;
-                } else {
-                    returnValue[key] = new AggregationResult {
-                        AggregationValue = 1,
-                        Label = key,
-                        GroupingField = report.GroupByType
-                    };
-                }
-            }
-            return returnValue.Count;
-        }
-
         public IEnumerable<AggregationResult> RunReport(ReportRecord report, IContent container)
         {
             if (report == null) { throw new ArgumentNullException("report"); }
@@ -165,24 +128,26 @@ namespace Laser.Orchard.Reporting.Services
             }
             var queryField = contentQuery.Get(typeof(TextField), "QueryString") as TextField;
             var query = queryField.Value.Trim();
+            // tokens replacement
+            Dictionary<string, object> contextDictionary = new Dictionary<string, object>();
+            if (container != null) {
+                contextDictionary.Add("Content", container);
+            }
+            query = _tokenizer.Replace(query, contextDictionary);
             IQuery hql = null;
             Dictionary<string, AggregationResult> returnValue = new Dictionary<string, AggregationResult>();
             IEnumerable result = null;
+            // check on hql query
             if (query.StartsWith("select ", StringComparison.InvariantCultureIgnoreCase) == false) {
-                throw new ArgumentOutOfRangeException("HQL query not valid: please specify select clause.");
-                //query = "select * " + query;
-                //hql = _transactionManager.GetSession().CreateQuery(query);
-                //result = hql.Enumerable(); // .SetResultTransformer(Transformers.AliasToEntityMap).Enumerable();
+                throw new ArgumentOutOfRangeException("HQL query not valid: please specify select clause with at least 2 columns (the first for labels, the second for values).");
             } else {
                 hql = _transactionManager.GetSession().CreateQuery(query);
                 result = hql.SetResultTransformer(Transformers.AliasToEntityMap).Enumerable();
             }
-
             if(hql.ReturnAliases.Count() < 2) {
-                throw new ArgumentOutOfRangeException("HQL query not valid: please specify at least 2 columns in select clause.");
+                throw new ArgumentOutOfRangeException("HQL query not valid: please specify select clause with at least 2 columns (the first for labels, the second for values).");
             }
 
-            var dictionary = new Dictionary<string, AggregationResult>();
             foreach(var record in result) {
                 var ht = record as Hashtable;
                 string key = ht[hql.ReturnAliases[0]].ToString();
