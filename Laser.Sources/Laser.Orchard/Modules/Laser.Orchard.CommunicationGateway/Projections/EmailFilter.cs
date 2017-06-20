@@ -51,24 +51,42 @@ namespace Laser.Orchard.CommunicationGateway.Projections {
                     subquery += "WHERE contact.Email LIKE :email";
                     parameters.Add("email", "%" + Convert.ToString(context.State.Value) + "%");
                     break;
-                //case Form.StringOperator.ContainsAny:
-                //    if (string.IsNullOrEmpty((string)context.State.Value))
-                //        subquery += "Id = 0";
-                //    else {
-                //        int i = 0;
-                //        string[] values = Convert.ToString(context.State.Value).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                //
-                //        subquery += "WHERE ";
-                //
-                //        foreach (var value in values) {
-                //            subquery += String.Format("contact.Email LIKE :email{0} ", i);
-                //            parameters.Add("email" + i, value);
-                //            i++;
-                //            if (i < values.Length)
-                //                subquery += "OR ";
-                //        }
-                //    }
-                //    break;
+                case Form.StringOperator.ContainsAny:
+                    if (string.IsNullOrEmpty((string)context.State.Value))
+                        subquery += "Id = 0";
+                    else {
+                        int i = 0;
+                        string[] values = Convert.ToString(context.State.Value).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                
+                        subquery += "WHERE ";
+                
+                        foreach (var value in values) {
+                            subquery += String.Format("contact.Email LIKE :email{0} ", i);
+                            parameters.Add("email" + i, "%" + value + "%");
+                            i++;
+                            if (i < values.Length)
+                                subquery += "OR ";
+                        }
+                    }
+                    break;
+                case Form.StringOperator.ContainsAll:
+                    if (string.IsNullOrEmpty((string)context.State.Value))
+                        subquery += "Id = 0";
+                    else {
+                        int i = 0;
+                        string[] values = Convert.ToString(context.State.Value).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        subquery += "WHERE ";
+
+                        foreach (var value in values) {
+                            subquery += String.Format("contact.Email LIKE :email{0} ", i);
+                            parameters.Add("email" + i, "%" + value + "%");
+                            i++;
+                            if (i < values.Length)
+                                subquery += "AND ";
+                        }
+                    }
+                    break;
                 case Form.StringOperator.NotContains:
                     subquery += "WHERE contact.Email NOT LIKE :email";
                     parameters.Add("email", "%" + Convert.ToString(context.State.Value) + "%");
