@@ -1,0 +1,93 @@
+@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.StartupConfig.Models;
+@using Orchard.Data;
+@using Orchard.Localization.Records;
+@using Orchard.Localization.Services;
+@using Orchard.ContentManagement;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
+@using System;
+@using System.Linq;
+@functions{
+ //   string retString = "Error"; //possible outcomes: "Error","OK"
+ //   string eMsg = String.Empty; //used to track errors and put them in the WF state
+                                //  IRepository<CommunicationEmailRecord> _emailRepository;
+                                //  IContentManager _contentManager;
+//    Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
+//    IContentManager _contentManager;
+	IRepository<CommunicationEmailRecord> _emailRepository;
+    IRepository<CommunicationSmsRecord> _smsRepository;
+ //   ICultureManager _cultureManager;
+}
+@{
+    string retstring = "";
+    _smsRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<CommunicationSmsRecord>>();
+    _emailRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<CommunicationEmailRecord>>();
+    //    _cultureManager = Model.OrchardServices.WorkContext.Resolve<ICultureManager>();
+    dynamic communicationContact = Model.ContentItem;
+    //	EmailContactPart emailContactPart = (EmailContactPart)communicationContact.EmailContactPart;
+    //    SmsContactPart smsContactPart = (SmsContactPart)communicationContact.SmsContactPart;
+    //    FavoriteCulturePart favoriteCulturePart = (FavoriteCulturePart)communicationContact.FavoriteCulturePart;
+
+    string email = (string)communicationContact.ProfilePart.Email.Value;
+    string prefisso = (string)communicationContact.ProfilePart.PrefissoTelefonico.Value;
+    string telefono = (string)communicationContact.ProfilePart.NumeroTelefonico.Value;
+    int contactid = communicationContact.Id;
+
+    var _emailRecord = _emailRepository.Fetch(x => x.Email == email && x.EmailContactPartRecord_Id != contactid ).FirstOrDefault();
+    if (_emailRecord!=null)   {
+        retstring = "email non univoca";
+    }
+
+    var _smsRecord = _smsRepository.Fetch(x => x.Prefix == prefisso && x.Sms == telefono &&  x.SmsContactPartRecord_Id != contactid ).FirstOrDefault();
+    if (_smsRecord!=null)   {
+        retstring = "Telefono non univoco";
+    }
+
+
+
+    //   if (!emailContactPart.EmailRecord.Any(x => x.Email == email && x.EmailContactPartRecord_Id == emailContactPart.Id)) {
+    //  
+    //
+    //
+    //   
+    //   _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<Orchard.Data.IRepository<FieldIndexPartRecord>>();
+    //   _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+    //   // _emailRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<CommunicationEmailRecord>>();
+    //   dynamic communicationContact = Model.ContentItem;
+    //   int contactid = communicationContact.Id;
+    //   //  string normalizedUserName = communicationContact.As<CommunicationContactPart>().NormalizedUserName;
+    //   string email = ((dynamic)communicationContact).ProfilePart.Email.Value;
+    //   string numeroTelefonico = ((dynamic)communicationContact).ProfilePart.NumeroTelefonico.Value;
+    //
+    //   System.Linq.Expressions.Expression<Func<FieldIndexPartRecord, bool>> CheckFieldIndexRecord = fip =>
+    //                   fip.StringFieldIndexRecords.Any(sfi =>
+    //                       sfi.PropertyName.Contains("ProfilePart.Email.")
+    //                       && sfi.Value.Contains(email)
+    //                  );
+    //   var fieldsQuery = _fieldIndexPartRecord.Table.Where(CheckFieldIndexRecord);
+    //   var     unique = fieldsQuery.Where(x => x.ContentItemRecord.Id != contactid).Select(fip => fip.ContentItemRecord.Id).ToList().Count() == 0;
+    //   //  bool notunique = _emailRepository.Fetch(x => x.Email == email && x.EmailContactPartRecord_Id!= contactid).Count()>0;
+    //   if (!unique) {
+    //       retstring = "email non univoca";
+    //   }
+    //   unique = true;
+    //   System.Linq.Expressions.Expression<Func<FieldIndexPartRecord, bool>> Checktel = fip =>
+    //               fip.StringFieldIndexRecords.Any(sfi =>
+    //                   sfi.PropertyName.Contains("ProfilePart.NumeroTelefonico.")
+    //                   && sfi.Value.Contains(numeroTelefonico)
+    //              );
+    //   fieldsQuery = _fieldIndexPartRecord.Table.Where(Checktel);
+    //   var listci= fieldsQuery.Where(x => x.ContentItemRecord.Id != contactid).Select(fip => fip.ContentItemRecord.Id).ToList<int>();
+    //   foreach( int id in listci) {
+    //       var ci=_contentManager.Get(id);
+    //       if (ci != null) {
+    //           if (((dynamic)ci).ProfilePart.PrefissoTelefonico.Value == ((dynamic)communicationContact).ProfilePart.PrefissoTelefonico.Value) {
+    //               unique = false;
+    //           }
+    //       }
+    //   }
+    //   if (!unique) {
+    //       retstring = "Telefono non univoco";
+//   }
+}@retstring
