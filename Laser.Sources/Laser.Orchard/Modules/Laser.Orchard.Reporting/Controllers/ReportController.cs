@@ -379,9 +379,7 @@ namespace Laser.Orchard.Reporting.Controllers
                 });
             }
 
-            // Fill charts
-            model.ChartTypes.Add(new SelectListItem { Text = T("Pie Chart").Text, Value = ((byte)ChartTypes.PieChart).ToString(CultureInfo.InvariantCulture) });
-            model.ChartTypes.Add(new SelectListItem { Text = T("Simple List").Text, Value = ((byte)ChartTypes.SimpleList).ToString(CultureInfo.InvariantCulture) });
+            FillCharts(model.ChartTypes);
 
             // Fill Aggregations
             model.Aggregations.Add(new SelectListItem { Text = T("Count").Text, Value = ((byte)AggregateMethods.Count).ToString(CultureInfo.InvariantCulture) });
@@ -424,10 +422,13 @@ namespace Laser.Orchard.Reporting.Controllers
                     Value = query.Id.ToString()
                 });
             }
-
-            // Fill charts
-            model.ChartTypes.Add(new SelectListItem { Text = T("Pie Chart").Text, Value = ((byte)ChartTypes.PieChart).ToString(CultureInfo.InvariantCulture) });
-            model.ChartTypes.Add(new SelectListItem { Text = T("Simple List").Text, Value = ((byte)ChartTypes.SimpleList).ToString(CultureInfo.InvariantCulture) });
+            FillCharts(model.ChartTypes);
+        }
+        private void FillCharts(Collection<SelectListItem> chartTypes) {
+            chartTypes.Add(new SelectListItem { Text = T("Pie Chart").Text, Value = ((byte)ChartTypes.PieChart).ToString(CultureInfo.InvariantCulture) });
+            chartTypes.Add(new SelectListItem { Text = T("Simple List").Text, Value = ((byte)ChartTypes.SimpleList).ToString(CultureInfo.InvariantCulture) });
+            chartTypes.Add(new SelectListItem { Text = T("Histogram").Text, Value = ((byte)ChartTypes.Histogram).ToString(CultureInfo.InvariantCulture) });
+            chartTypes.Add(new SelectListItem { Text = T("Line Chart").Text, Value = ((byte)ChartTypes.LineChart).ToString(CultureInfo.InvariantCulture) });
         }
     }
 }

@@ -55,12 +55,12 @@ namespace Laser.Orchard.Reporting.Drivers
 
                 IEnumerable<AggregationResult> reportData = null;
                 int count = 0;
-                if(report.GroupByCategory == "") {
+                if(string.IsNullOrWhiteSpace(report.GroupByCategory)) {
                     reportData = reportManger.RunHqlReport(report, part.ContentItem);
-                    count = reportData.Count();  //.Sum(x => x.AggregationValue); // this.reportManger.GetHqlCount(report, part.ContentItem);
+                    count = reportData.Count();
                 } else {
                     reportData = reportManger.RunReport(report, part.ContentItem);
-                    count = this.reportManger.GetCount(report, part.ContentItem);
+                    count = reportManger.GetCount(report, part.ContentItem);
                 }
 
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -87,9 +87,19 @@ namespace Laser.Orchard.Reporting.Drivers
                          () => shapeHelper.Parts_DataReportViewer_SimpleList(
                              Model: model
                              ));
-                }
-                else
-                {
+                } else if (report.ChartType == (int)ChartTypes.Histogram) {
+                    return ContentShape("Parts_DataReportViewer_Histogram",
+                         () => shapeHelper.Parts_DataReportViewer_Histogram(
+                             Model: model,
+                             Series1: serializer.Serialize(reportData.Select(c => new object[] { c.Label, c.AggregationValue }).ToArray())
+                             ));
+                } else if (report.ChartType == (int)ChartTypes.LineChart) {
+                    return ContentShape("Parts_DataReportViewer_LineChart",
+                         () => shapeHelper.Parts_DataReportViewer_LineChart(
+                             Model: model,
+                             Series1: serializer.Serialize(reportData.Select(c => new object[] { c.Label, c.AggregationValue }).ToArray())
+                             ));
+                } else {
                     return ContentShape("Parts_DataReportViewer",
                           () => shapeHelper.Parts_DataReportViewer_Summary(
                               Model: new DataReportViewerViewModel { ReportTitle = part.Record.Report.Title }

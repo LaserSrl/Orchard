@@ -159,7 +159,7 @@ namespace Laser.Orchard.Reporting.Services
                     returnValue[key] = new AggregationResult {
                         AggregationValue = Convert.ToDouble(ht[hql.ReturnAliases[1]]),
                         Label = key,
-                        GroupingField = key
+                        GroupingField = hql.ReturnAliases[0]
                     };
                 }
             }

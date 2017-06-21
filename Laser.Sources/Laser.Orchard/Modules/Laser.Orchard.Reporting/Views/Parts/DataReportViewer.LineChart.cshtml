@@ -1,0 +1,33 @@
+﻿@using Laser.Orchard.Reporting.ViewModels;
+@{
+    Style.Include("jquery-ui.css");
+    Style.Include("jquery.jqplot.css");
+    Style.Include("reporting.css");
+    DataReportViewerViewModel dataReportViewerViewModel = Model.Model;
+    string chartContainerId = "chartContainer" + Model.ContentItem.Id.ToString();
+    string chartId = "chart" + Model.ContentItem.Id.ToString();
+    string chartClass = string.IsNullOrEmpty(dataReportViewerViewModel.ChartCssClass) ? "default-chart" : dataReportViewerViewModel.ChartCssClass;
+}
+<div class="@dataReportViewerViewModel.ContainerCssClass" id="@chartContainerId">
+    <h3>@dataReportViewerViewModel.ReportTitle</h3>
+    <div class="chart @chartClass" id="@chartId" style="height:300px; width:400px;"></div>
+    @if (dataReportViewerViewModel.Data.Count == 0) {
+        <h3>@T("There is no data")</h3>
+    }
+</div>
+@using (Script.Foot()) {
+    Script.Require("jqplot");
+    Script.Require("categoryAxisjqplot");
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function(){
+            var s1 = @Html.Raw(Model.Series1);
+            $('#@chartId').jqplot([s1], {
+                axes: {
+                    xaxis: {
+                        renderer: $.jqplot.CategoryAxisRenderer
+                    }
+                }
+            });
+        });
+    </script>
+}

@@ -26,7 +26,7 @@
             <td></td>
             <td>@item.Name</td>
             <td>
-                @if (item.CategoryAndType == "HqlField") {
+                @if (string.IsNullOrWhiteSpace(item.CategoryAndType)) {
                     <text><a href="@Url.Action("EditHql", "Report", new { area = "Laser.Orchard.Reporting", id = item.ReportId})">@T("Edit")</a> |</text>
                 } else {
                     <text><a href="@Url.Action("Edit", "Report", new { area = "Laser.Orchard.Reporting", id = item.ReportId})">@T("Edit")</a> |</text>

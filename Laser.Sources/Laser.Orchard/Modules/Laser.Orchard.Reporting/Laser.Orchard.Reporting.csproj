@@ -216,6 +216,8 @@
     <Content Include="Views\Parts\DataReportViewer.SimpleList.cshtml" />
     <Content Include="Views\Report\CreateHql.cshtml" />
     <Content Include="Views\Report\EditHql.cshtml" />
+    <Content Include="Views\Parts\DataReportViewer.Histogram.cshtml" />
+    <Content Include="Views\Parts\DataReportViewer.LineChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
