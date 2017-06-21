@@ -1,0 +1,20 @@
+﻿@using Orchard.ContentManagement
+@{
+    var contentItem = (ContentItem)Model.ContentItem;
+    var imageUrl = (string)Model.ImageUrl;
+    var minHeight = (int?)Model.MinHeight ?? 400;
+    var h3Text = (HtmlString)Model.H3Text;
+    var h2Text = (HtmlString)Model.H2Text;
+    var divStyle = string.Format("background: url({0}) no-repeat 0px 0px; min-height: {1}px;", imageUrl, minHeight);
+}
+<div class="banner" style="@divStyle">
+    <div class="container">
+        @if (h3Text != null) {
+            <h3>@h3Text</h3>
+        }
+        @if (h2Text != null) {
+            <h2>@h2Text</h2>
+        }
+        
+    </div>
+</div>
