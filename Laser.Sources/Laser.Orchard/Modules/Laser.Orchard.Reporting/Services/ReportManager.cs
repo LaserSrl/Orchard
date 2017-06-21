@@ -140,12 +140,15 @@ namespace Laser.Orchard.Reporting.Services
             // check on hql query
             if (query.StartsWith("select ", StringComparison.InvariantCultureIgnoreCase) == false) {
                 throw new ArgumentOutOfRangeException("HQL query not valid: please specify select clause with at least 2 columns (the first for labels, the second for values).");
-            } else {
+            } 
+            try {
                 hql = _transactionManager.GetSession().CreateQuery(query);
+                if (hql.ReturnAliases.Count() < 2) {
+                    throw new ArgumentOutOfRangeException("HQL query not valid: please specify select clause with at least 2 columns (the first for labels, the second for values).");
+                }
                 result = hql.SetResultTransformer(Transformers.AliasToEntityMap).Enumerable();
-            }
-            if(hql.ReturnAliases.Count() < 2) {
-                throw new ArgumentOutOfRangeException("HQL query not valid: please specify select clause with at least 2 columns (the first for labels, the second for values).");
+            } catch {
+                result = new object[0];
             }
 
             foreach(var record in result) {

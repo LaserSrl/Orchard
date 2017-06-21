@@ -248,6 +248,7 @@
     <Compile Include="Settings\DataReportViewerSettingsEvents.cs" />
     <Compile Include="ViewModels\EditDataReportViewerViewModel.cs" />
     <Compile Include="ViewModels\HqlReportViewModel.cs" />
+    <Compile Include="ViewModels\ReportDisplayViewModel.cs" />
     <Compile Include="ViewModels\ReportGroupByFieldCollectionViewModel.cs" />
     <Compile Include="ViewModels\ReportGroupByFieldViewModel.cs" />
     <Compile Include="ViewModels\ReportListViewModel.cs" />

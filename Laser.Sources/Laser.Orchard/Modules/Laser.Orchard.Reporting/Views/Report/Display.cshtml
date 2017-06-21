@@ -1,1 +1,12 @@
-﻿@Display(BuildDisplay(Model, "Detail"))
+﻿@model Laser.Orchard.Reporting.ViewModels.ReportDisplayViewModel
+
+<form method="get">
+    <div>
+        @foreach (var tag in Model.InputParameters) {
+            @Html.Label(tag)
+            @Html.TextBox(tag, Request.QueryString[tag])
+        }
+        <button class="primaryAction" type="submit" value="@T("Refresh")">@T("Refresh")</button>
+    </div>
+</form>
+@Display(BuildDisplay(Model.DataReportViewerContent, "Detail"))

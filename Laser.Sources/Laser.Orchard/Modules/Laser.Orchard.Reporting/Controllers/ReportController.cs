@@ -20,6 +20,7 @@ using Orchard.UI.Navigation;
 using Orchard.Settings;
 using Orchard.DisplayManagement;
 using Orchard;
+using System.Text.RegularExpressions;
 
 namespace Laser.Orchard.Reporting.Controllers
 {
@@ -345,13 +346,26 @@ namespace Laser.Orchard.Reporting.Controllers
             return View(model);
         }
 
-        public ActionResult Display(int id) {
+        public ActionResult Display(ReportDisplayViewModel model) {
             if (!services.Authorizer.Authorize(Security.Permissions.ShowAdminReports, T("Not authorized to list Reports")))
                 return new HttpUnauthorizedResult();
 
-            var model = services.ContentManager.Get(id);
-            if(model.Has<DataReportViewerPart>() == false) {
-                throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "{0}={1}", T("There is no report with the Id"), id.ToString(CultureInfo.InvariantCulture)));
+            var ci = services.ContentManager.Get(model.Id);
+            if(ci.Has<DataReportViewerPart>() == false) {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "{0}={1}", T("There is no report with the Id"), model.Id.ToString(CultureInfo.InvariantCulture)));
+            }
+            model.DataReportViewerContent = ci;
+            var reportId = ci.As<DataReportViewerPart>().Record.Report.Id; // Query.ContentItemRecord.Infoset.Element.Element(System.Xml.Linq.XName.Get(""));
+            var queryId = reportRepository.Get(reportId).Query.Id;
+            var query = services.ContentManager.Get(queryId);
+            if(query.ContentType == "MyCustomQuery") {
+                var hql = query.VersionRecord.Infoset.Element.Element("MyCustomQueryPart").Element("QueryString").Value;
+                var tags = new List<string>();
+                Regex regEx = new Regex(@"\{Request\.QueryString\:[\w]+\}");
+                foreach(Match tag in regEx.Matches(hql)) {
+                    tags.Add(tag.Value.Substring(21, tag.Value.Length - 21 - 1));
+                }
+                model.InputParameters = tags.ToList();
             }
             return View(model);
         }
