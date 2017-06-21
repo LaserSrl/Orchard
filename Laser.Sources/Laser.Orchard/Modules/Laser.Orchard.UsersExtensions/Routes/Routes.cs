@@ -29,9 +29,22 @@ namespace Laser.Orchard.UsersExtensions.Routes {
                             {"area", "Laser.Orchard.UsersExtensions"}
                         },
                         new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "External/VodafoneLogOn",
+                        new RouteValueDictionary {
+                            {"area", "Laser.Orchard.UsersExtensions"},
+                            {"controller", "UserUtility"},
+                            {"action", "VodafoneLogon"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Laser.Orchard.UsersExtensions"}
+                        },
+                        new MvcRouteHandler())
                 }
             };
         }
-
     }
 }

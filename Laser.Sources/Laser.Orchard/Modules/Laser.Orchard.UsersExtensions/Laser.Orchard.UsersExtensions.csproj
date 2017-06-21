@@ -152,6 +152,7 @@
     <Compile Include="Controllers\PoliciesController.cs" />
     <Compile Include="Controllers\UserActionsAPIController.cs" />
     <Compile Include="Controllers\UserActionsController.cs" />
+    <Compile Include="Controllers\UserUtilityController.cs" />
     <Compile Include="Drivers\UserRegistrationPolicyPartDriver.cs" />
     <Compile Include="Enumerators.cs" />
     <Compile Include="Filters\PolicyFilter.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Routes\Routes.cs" />
     <Compile Include="Services\IUserActionMethods.cs" />
     <Compile Include="Services\IUsersExtensionsServices.cs" />
+    <Compile Include="Util\VodafoneEncryption.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\UserRegistrationPolicy_Edit.cshtml" />
