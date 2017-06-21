@@ -345,6 +345,16 @@ namespace Laser.Orchard.Reporting.Controllers
             return View(model);
         }
 
+        public ActionResult Display(int id) {
+            if (!services.Authorizer.Authorize(Security.Permissions.ShowAdminReports, T("Not authorized to list Reports")))
+                return new HttpUnauthorizedResult();
+
+            var model = services.ContentManager.Get(id);
+            if(model.Has<DataReportViewerPart>() == false) {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "{0}={1}", T("There is no report with the Id"), id.ToString(CultureInfo.InvariantCulture)));
+            }
+            return View(model);
+        }
         private string EncodeGroupByCategoryAndGroupByType(string category, string type)
         {
             return string.Format(CultureInfo.InvariantCulture, "{0}__{1}", category, type);

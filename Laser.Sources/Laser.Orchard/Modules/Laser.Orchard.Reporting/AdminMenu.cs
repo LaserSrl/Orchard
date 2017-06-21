@@ -40,7 +40,7 @@ namespace Laser.Orchard.Reporting
                     .LinkToFirstChild(false);
                 foreach(var report in reportViewers) {
                     item.Add(sub => sub.Caption(T(report.ContentItem.As<TitlePart>().Title ?? "[No title]"))
-                    .Url(urlHelper.ItemDisplayUrl(report))
+                    .Action("Display", "Report", new { area = "Laser.Orchard.Reporting", id = report.Id})
                     );
                 }
             });
