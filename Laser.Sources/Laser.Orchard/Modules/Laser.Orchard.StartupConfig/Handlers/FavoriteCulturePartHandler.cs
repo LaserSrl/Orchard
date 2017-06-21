@@ -25,8 +25,12 @@ namespace Laser.Orchard.StartupConfig.Handlers {
         }
 
         private void LoadCulture(FavoriteCulturePart part) {
-            part.Culture = _cultureRepository.Table.Where(r => r.Id == part.Culture_Id)
-                 .ToList().FirstOrDefault().Culture;
+          var culturerecord=  _cultureRepository.Table.Where(r => r.Id == part.Culture_Id).ToList().FirstOrDefault();
+            if (culturerecord != null)
+                part.Culture = culturerecord.Culture;
+            else
+                part.Culture = _cultureRepository.Table.Where(r => r.Culture == _orchardService.WorkContext.CurrentCulture)
+                    .ToList().FirstOrDefault().Culture;
         }
 
         private void UpdateCulture(FavoriteCulturePart part) {
