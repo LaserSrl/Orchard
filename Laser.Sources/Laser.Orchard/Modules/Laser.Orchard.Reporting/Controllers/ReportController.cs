@@ -361,9 +361,9 @@ namespace Laser.Orchard.Reporting.Controllers
             if(query.ContentType == "MyCustomQuery") {
                 var hql = query.VersionRecord.Infoset.Element.Element("MyCustomQueryPart").Element("QueryString").Value;
                 var tags = new List<string>();
-                Regex regEx = new Regex(@"\{Request\.QueryString\:[\w]+\}");
+                Regex regEx = new Regex(@"\{Request\.Form\:[\w]+\}");
                 foreach(Match tag in regEx.Matches(hql)) {
-                    tags.Add(tag.Value.Substring(21, tag.Value.Length - 21 - 1));
+                    tags.Add(tag.Value.Substring(14, tag.Value.Length - 14 - 1));
                 }
                 model.InputParameters = tags.ToList();
             }

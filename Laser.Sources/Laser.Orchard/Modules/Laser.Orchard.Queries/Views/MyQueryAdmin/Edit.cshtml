@@ -1,5 +1,14 @@
-﻿@{ Layout.Title = "Edit Query"; }
+﻿@{ 
+    Layout.Title = "Edit Query";
+    Script.Require("jQuery");
+}
 
 @using (Html.BeginFormAntiForgeryPost()) {
+    @Display.TokenHint()
     @Display(Model)
 }
+<script type="text/javascript">
+    $(function () {
+        $("textarea[name='MyCustomQueryPart.QueryString.Text']").addClass("tokenized");
+})
+</script>

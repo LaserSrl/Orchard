@@ -9,5 +9,8 @@ namespace Laser.Orchard.Reporting.ViewModels {
         public int Id { get; set; }
         public ContentItem DataReportViewerContent { get; set; }
         public List<string> InputParameters { get; set; }
+        public ReportDisplayViewModel() {
+            InputParameters = new List<string>();
+        }
     }
 }
