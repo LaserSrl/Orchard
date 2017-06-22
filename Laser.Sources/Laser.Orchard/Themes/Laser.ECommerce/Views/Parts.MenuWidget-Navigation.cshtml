@@ -27,7 +27,7 @@
                     }
                     if (item.Content != null && item.Content is TermPart && item.Item.Items.Length > 0) {
                         <a href="#" data-toggle="dropdown">@item.Text</a>
-                        @Display.TaxonomyMenuLink(Item: item)
+                        @Display.NavigationTaxonomyMenuLink(Item: item)
                     } else {
                         @renderedMenuItemLink
                         if (item.Item.Items.Length > 0) {

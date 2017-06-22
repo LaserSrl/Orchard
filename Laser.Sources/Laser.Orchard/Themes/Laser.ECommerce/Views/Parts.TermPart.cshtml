@@ -1,0 +1,42 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Fields
+@using Orchard.MediaLibrary.Models
+@*
+    This shape displays a term and all content items associated to it.
+    - ContentItems is a List shape
+    - Pager is a Pager shape
+    - Taxonomy is the parent taxonomy
+    - ContentPart is the TermPart displayed
+*@
+@{
+    Model.ContentItems.Classes.Add("content-items");
+
+    //find banner image url
+    MediaPart mediaPart = null;
+    var contentItem = (ContentItem)Model.ContentItem;
+    //Get fields from the contentItem
+    var fields = contentItem.Parts.SelectMany(pa => pa.Fields);
+    var field = fields
+            .Where(fi => fi is MediaLibraryPickerField && fi.Name == "Banner")
+            .FirstOrDefault() as MediaLibraryPickerField;
+    if (field != null && field.MediaParts.Any()) {
+        mediaPart = field.MediaParts.First();
+    }
+
+    if (mediaPart != null) {
+        WorkContext.Layout.BeforeMain.Add(New.Banner(
+                ContentItem: (ContentItem)Model.ContentItem,
+                ImageUrl: mediaPart.MediaUrl
+            ), "5");
+    } else {
+        WorkContext.Layout.BeforeMain.Add(New.Banner(
+                ContentItem: (ContentItem)Model.ContentItem
+            ));
+    }
+}
+@foreach (var itemShape in Model.ContentItems) {
+    <div class="products_grid_right_grid3">
+        @Display(itemShape)
+    </div>
+}
+@Display(Model.Pager)

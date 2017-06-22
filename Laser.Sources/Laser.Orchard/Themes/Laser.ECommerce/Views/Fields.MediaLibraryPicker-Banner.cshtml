@@ -11,7 +11,7 @@
 }
 @if (contents.Any()) {
     var mediaPart = contents.First();
-    WorkContext.Layout.BeforeContent.Add(New.Banner(
+    WorkContext.Layout.BeforeMain.Add(New.Banner(
         ContentItem: (ContentItem)Model.ContentItem,
         ImageUrl: mediaPart.MediaUrl
     ), "5");

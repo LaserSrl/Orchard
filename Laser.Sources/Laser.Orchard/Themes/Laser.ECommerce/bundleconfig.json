@@ -10,5 +10,11 @@
     "inputFiles": [
       "Styles/Style.css"
     ]
+  },
+  {
+    "outputFileName": "Styles/fasthover.min.css",
+    "inputFiles": [
+      "Styles/fasthover.css"
+    ]
   }
 ]

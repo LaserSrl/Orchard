@@ -62,6 +62,9 @@
     <Reference Include="Orchard.Taxonomies">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Taxonomies\bin\Orchard.Taxonomies.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Widgets">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Widgets\bin\Orchard.Widgets.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -106,9 +109,9 @@
   <ItemGroup>
     <Content Include="Assets.json" />
     <Content Include="Scripts\shoppingcart.widget.js" />
-    <Content Include="Styles\Site.css" />
-    <Content Include="Styles\Site.min.css">
-      <DependentUpon>Site.css</DependentUpon>
+    <Content Include="Styles\fasthover.css" />
+    <Content Include="Styles\fasthover.min.css">
+      <DependentUpon>fasthover.css</DependentUpon>
     </Content>
     <Content Include="Styles\Style.css" />
     <Content Include="Styles\Style.min.css">
@@ -152,12 +155,18 @@
     <Content Include="Views\Parts.MenuWidget-Navigation.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\TaxonomyMenuLink.cshtml" />
+    <Content Include="Views\NavigationTaxonomyMenuLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bundleconfig.json" />
     <Content Include="Views\Banner.cshtml" />
     <Content Include="Views\Fields.MediaLibraryPicker-Banner.cshtml" />
+    <Content Include="Views\Parts.TermPart.cshtml" />
+    <Content Include="Views\Content-Product.Summary.cshtml" />
+    <Content Include="Views\Parts.ProductPart.cshtml" />
+    <Content Include="Views\Parts.ProductPart.AddButton.cshtml" />
+    <Content Include="Views\Price.cshtml" />
+    <Content Include="Views\Parts.MenuWidget-AsideFirst.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

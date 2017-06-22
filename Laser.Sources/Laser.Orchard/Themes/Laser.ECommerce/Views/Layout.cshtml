@@ -84,8 +84,14 @@
 <div id="layout-main-container">
     <div id="layout-main" class="group">
         @if (Model.AsideFirst != null) {
+            var items = Model.AsideFirst.Items;
+            if (items.Count > 0) {
+                foreach (var item in items) {
+                    item.Content.Classes.Add("col-md-4 products_grid_left");
+                }//FUTURE MATTEO: FIX THIS
+            }
             <aside id="aside-first" class="aside-first group">
-                @Zone(Model.AsideFirst)
+                    @Zone(Model.AsideFirst)
             </aside>
         }
         <div id="layout-content" class="group">
@@ -126,24 +132,23 @@
 @if (Model.TripelFirst != null || Model.TripelSecond != null || Model.TripelThird != null) {
     <div id="layout-tripel-container">
         <div id="layout-tripel" class="group">
-            @* as in beer *@
-        @if (Model.TripelFirst != null) {
-            <div id="tripel-first">
-                @Zone(Model.TripelFirst)
-            </div>
-        }
-        @if (Model.TripelSecond != null) {
-            <div id="tripel-second">
-                @Zone(Model.TripelSecond)
-            </div>
-        }
-        @if (Model.TripelThird != null) {
-            <div id="tripel-third">
-                @Zone(Model.TripelThird)
-            </div>
-        }
+            @if (Model.TripelFirst != null) {
+                <div id="tripel-first">
+                    @Zone(Model.TripelFirst)
+                </div>
+            }
+            @if (Model.TripelSecond != null) {
+                <div id="tripel-second">
+                    @Zone(Model.TripelSecond)
+                </div>
+            }
+            @if (Model.TripelThird != null) {
+                <div id="tripel-third">
+                    @Zone(Model.TripelThird)
+                </div>
+            }
+        </div>
     </div>
-</div>
 }
 <div id="layout-footer" class="group">
     <footer id="footer">

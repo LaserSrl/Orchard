@@ -14,4 +14,19 @@
     <Place Parts_Common_Metadata="-"/>
   </Match>
 -->
+  <Place Fields_Common_Text__BannerH2="-"/>
+  <Place Fields_Common_Text__BannerH3="-"/>
+  <Place Fields_Numeric__BannerHeight="-"/>
+  <Place Fields_TaxonomyField="-" />
+  <Place Parts_Common_Metadata_Summary="-" />
+  <Match ContentType="ProductsTerm">
+    <Place Parts_Common_Metadata="-"
+           Parts_Title="-"
+           Fields_MediaLibraryPicker__Banner="-"/>
+  </Match>
+  <Match DisplayType="Summary">
+    <Place Parts_Product="Content:3.1;Alternate=Parts_ProductPart" />
+    <Place Parts_Product_AddButton="Content:3.3;Alternate=Parts_ProductPart_AddButton"/>
+    <Place Parts_Common_Body_Summary="-" />
+  </Match>
 </Placement>
