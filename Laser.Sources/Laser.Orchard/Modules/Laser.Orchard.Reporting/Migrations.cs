@@ -51,5 +51,15 @@ namespace Laser.Orchard.Reporting
 
             return 2;
         }
+        public int UpdateFrom2() {
+            // crea un content type vuoto di servizio (usato in fase di visualizzazione del report e dei relativi filtri)
+            ContentDefinitionManager.AlterTypeDefinition("DataReportEmptyType", cfg => cfg
+              .Draftable(false)
+              .Listable(false)
+              .Securable(false)
+              .Creatable(false)
+              .DisplayedAs("Data Report Empty Type"));
+            return 3;
+        }
     }
 }

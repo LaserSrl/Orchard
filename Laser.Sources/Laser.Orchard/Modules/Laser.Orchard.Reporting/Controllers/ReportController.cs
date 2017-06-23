@@ -354,19 +354,22 @@ namespace Laser.Orchard.Reporting.Controllers
             if(ci.Has<DataReportViewerPart>() == false) {
                 throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "{0}={1}", T("There is no report with the Id"), model.Id.ToString(CultureInfo.InvariantCulture)));
             }
-            model.DataReportViewerContent = ci;
-            var reportId = ci.As<DataReportViewerPart>().Record.Report.Id; // Query.ContentItemRecord.Infoset.Element.Element(System.Xml.Linq.XName.Get(""));
-            var queryId = reportRepository.Get(reportId).Query.Id;
-            var query = services.ContentManager.Get(queryId);
-            if(query.ContentType == "MyCustomQuery") {
-                var hql = query.VersionRecord.Infoset.Element.Element("MyCustomQueryPart").Element("QueryString").Value;
-                var tags = new List<string>();
-                Regex regEx = new Regex(@"\{Request\.Form\:[\w]+\}");
-                foreach(Match tag in regEx.Matches(hql)) {
-                    tags.Add(tag.Value.Substring(14, tag.Value.Length - 14 - 1));
-                }
-                model.InputParameters = tags.ToList();
-            }
+            var viewerPart = ci.As<DataReportViewerPart>();
+            model.DataReportViewerContent = services.ContentManager.New("DataReportEmptyType");
+            model.DataReportViewerContent.Weld(viewerPart);
+            var filterPart = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == ci.ContentType);
+            model.FilterContent = services.ContentManager.New("DataReportEmptyType");
+            model.FilterContent.Weld(filterPart);
+
+            //dynamic pippo = new System.Dynamic.ExpandoObject();
+            //TryUpdateModel(pippo);
+
+            //dynamic dynFilterPart = filterPart;
+            //var elencoKeys = Request.Form.AllKeys.Where(x => x.StartsWith(ci.ContentType + "."));
+            //foreach(var key in elencoKeys) {
+
+            //}
+
             return View(model);
         }
         private string EncodeGroupByCategoryAndGroupByType(string category, string type)

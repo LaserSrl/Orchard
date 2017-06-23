@@ -1,12 +1,19 @@
 ﻿@model Laser.Orchard.Reporting.ViewModels.ReportDisplayViewModel
-
+@using Orchard.ContentManagement
+@{ 
+    Script.Require("jQueryUI_Widget");
+    IContentManager contentManager = null;
+    WorkContext.TryResolve<IContentManager>(out contentManager);
+}
 @using (Html.BeginFormAntiForgeryPost()) {
-    <div>
-        @foreach (var tag in Model.InputParameters) {
-            @Html.Label(tag)
-            @Html.TextBox(tag, Request.Form[tag])
-        }
-        <button class="primaryAction" type="submit" value="@T("Refresh")">@T("Refresh")</button>
+    <div id="reportFilters">
+        @Display(contentManager.BuildEditor(Model.FilterContent))
+       <button class="primaryAction" type="submit" value="@T("Refresh")">@T("Refresh")</button>
     </div>
 }
 @Display(BuildDisplay(Model.DataReportViewerContent, "Detail"))
+<script type="text/javascript">
+    $(function () {
+        $("#reportFilters button[value='submit.Save']").hide();
+    });
+</script>
