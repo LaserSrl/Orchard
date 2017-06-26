@@ -81,16 +81,10 @@
         @Zone(Model.BeforeMain)
     </div>
 }
-<div id="layout-main-container">
+<div id="layout-main-container" class="group">
     <div id="layout-main" class="group">
         @if (Model.AsideFirst != null) {
-            var items = Model.AsideFirst.Items;
-            if (items.Count > 0) {
-                foreach (var item in items) {
-                    item.Content.Classes.Add("col-md-4 products_grid_left");
-                }//FUTURE MATTEO: FIX THIS
-            }
-            <aside id="aside-first" class="aside-first group">
+            <aside id="aside-first" class="aside-first group col-md-4 products_grid_left">
                     @Zone(Model.AsideFirst)
             </aside>
         }
@@ -125,6 +119,7 @@
     </div>
 </div>
 @if (Model.AfterMain != null) {
+    <div class="clearfix"> </div>
     <div id="layout-after-main" class="group">
         @Zone(Model.AfterMain)
     </div>

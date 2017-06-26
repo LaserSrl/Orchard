@@ -20,7 +20,7 @@ body a:hover{
 	text-decoration:none;
 }
 /*-- header --*/
-input[type="submit"],.panel-body ul li a,.checkout-right-basket a,.additional_info_sub_grid_right a,.panel_bottom li a,.panel-title a,.breadcrumb_dress ul li a,.multi-column-dropdown li a,.footer-copy p a,.w3_footer_grid ul li a,.agileinfo_banner_bottom1_grid_left a,.navbar-default .navbar-nav > li > a,.simpleCart_shelfItem p a,.agile_ecommerce_tab_left h5 a,.w3_hs_bottom ul li a,.team-bottom a{
+input[type="submit"],.panel-body ul li a,.checkout-right-basket a,.additional_info_sub_grid_right a,.panel_bottom li a,.panel-title a,.breadcrumb_products ul li a,.multi-column-dropdown li a,.footer-copy p a,.w3_footer_grid ul li a,.agileinfo_banner_bottom1_grid_left a,.navbar-default .navbar-nav > li > a,.simpleCart_shelfItem p a,.simpleCart_shelfItem p button,.agile_ecommerce_tab_left h5 a,.w3_hs_bottom ul li a,.team-bottom a{
 	transition:.5s ease-in-out;
 	-webkit-transition:.5s ease-in-out;
 	-moz-transition:.5s ease-in-out;
@@ -297,7 +297,7 @@ ul.multi-column-dropdown h6 {
 /*-- //navigation --*/
 /*-- banner --*/
 .banner{
-	/*background:url(../images/b1.jpg) no-repeat 0px 0px;*/
+	/*background:url(Images/b1.jpg) no-repeat 0px 0px;*/
 /*-- w3layouts --*/
 	background-size:cover;
 	-webkit-background-size:cover;
@@ -343,7 +343,7 @@ ul.multi-column-dropdown h6 {
 }
 /*-- //banner --*/
 /*-- banner-bottom --*/
-.banner-bottom,.team,.checkout,.additional_info,.team-bottom,.single,.mail,.special-deals,.about,.faq,.typo,.new-products,.banner-bottom1,.top-brands,.dresses,.w3l_related_products{
+.banner-bottom,.team,.checkout,.additional_info,.team-bottom,.single,.mail,.special-deals,.about,.faq,.typo,.new-products,.banner-bottom1,.top-brands,.dresses,.ecommerce_related_contents{
 	padding:5em 0;
 }
 .modal-body iframe {
@@ -352,7 +352,7 @@ ul.multi-column-dropdown h6 {
     border: none;
 }
 .video-img {
-    background: url(../images/2.jpg)no-repeat center;
+    background: url(Images/2.jpg)no-repeat center;
     -webkit-background-size: cover;
     background-size: cover;
     -moz-background-size: cover;
@@ -477,6 +477,21 @@ ul.multi-column-dropdown h6 {
 	color:#fff;
 	border:1px solid #ff9b05;
 }
+.simpleCart_shelfItem p button{
+    font-size: 14px;
+    color:#212121;
+    margin: 0;
+    text-decoration: none;
+    text-transform: uppercase;
+    padding: .5em 2em;
+    border: 1px solid;
+    border-radius: 25px;
+}
+.simpleCart_shelfItem p button:hover{
+	background:#ff9b05;
+	color:#fff;
+	border:1px solid #ff9b05;
+}
 /*-- image-hover --*/
 .w3_hs_bottom{
 	position: absolute;
@@ -513,7 +528,7 @@ ul.multi-column-dropdown h6 {
     -ms-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
 }
-.agile_ecommerce_tab_left:hover .w3_hs_bottom ul,.w3l_related_products_grid:hover .flex_ecommerce{
+.agile_ecommerce_tab_left:hover .w3_hs_bottom ul,.ecommerce_related_contents_grid:hover .flex_ecommerce{
     -webkit-transform: translateY(0px);
     -moz-transform: translateY(0px);
     -o-transform: translateY(0px);
@@ -606,7 +621,7 @@ ul.multi-column-dropdown h6 {
 
 .starRating:not(old) > label {
     float: right;
-    background: url(../images/star.png);
+    background: url(Images/star.png);
     background-size: contain;
     margin-right: 2px;
 }
@@ -616,7 +631,7 @@ ul.multi-column-dropdown h6 {
   display         : block;
   width           : 18px;
   height          : 18px;
-  background      : url(../images/star-.png);
+  background      : url(Images/star-.png);
   background-size : contain;
   opacity         : 0;
   transition      : opacity 0.2s linear;
@@ -660,14 +675,14 @@ ul.multi-column-dropdown h6 {
 }
 /*-- //banner-bottom --*/
 /*-- special-deals --*/
-.special-deals h2,.new-products h3,.top-brands h3,.w3l_related_products h3,.team h3,.mail h3{
+.special-deals h2,.new-products h3,.top-brands h3,.ecommerce_related_contents h3,.team h3,.mail h3{
 	font-size:2em;
 	color:#212121;
 	position:relative;
 	padding-bottom:1em;
 	text-align:center;
 }
-.special-deals h2:before,.new-products h3:before,.top-brands h3:before,.w3l_related_products h3:before,.team h3:before,.mail h3:before{
+.special-deals h2:before,.new-products h3:before,.top-brands h3:before,.ecommerce_related_contents h3:before,.team h3:before,.mail h3:before{
 	content: '';
     position: absolute;
     top: 27%;
@@ -676,7 +691,7 @@ ul.multi-column-dropdown h6 {
     height: 1px;
     width: 10%;
 }
-.special-deals h2:after,.new-products h3:after,.top-brands h3:after,.w3l_related_products h3:after,.team h3:after,.mail h3:after{
+.special-deals h2:after,.new-products h3:after,.top-brands h3:after,.ecommerce_related_contents h3:after,.team h3:after,.mail h3:after{
 	content: '';
     position: absolute;
     bottom: 79%;
@@ -865,7 +880,7 @@ ul.wmuSliderPagination {
 /*-- //new-products --*/
 /*-- banner-bottom1 --*/
 .agileinfo_banner_bottom1_grid_left{
-	background:url(../images/44.jpg) no-repeat 0px 0px;
+	background:url(Images/44.jpg) no-repeat 0px 0px;
 	background-size:cover;
 	-webkit-background-size:cover;
 	-moz-background-size:cover;
@@ -902,15 +917,15 @@ ul.wmuSliderPagination {
     font-size: 1em;
     letter-spacing: 2px;
     color: #ff9b05;
-    background: url(../images/img-sp.png) no-repeat 112px -4px;
+    background: url(Images/img-sp.png) no-repeat 112px -4px;
     padding: 0 45px 0 0;
 }
 .agileinfo_banner_bottom1_grid_left a:hover,.team-bottom a:hover{
 	color:#212121;
-	background:url(../images/img-sp.png) no-repeat 112px -38px;
+	background:url(Images/img-sp.png) no-repeat 112px -38px;
 }
 .agileinfo_banner_bottom1_grid_right{
-	background:url(../images/45.jpg) no-repeat 0px 0px;
+	background:url(Images/45.jpg) no-repeat 0px 0px;
 	background-size:cover;
 	-webkit-background-size:cover;
 	-moz-background-size:cover;
@@ -1001,15 +1016,15 @@ ul.wmuSliderPagination {
 	background:#ECECEC;
 	padding:3em 0;
 }
-.w3agile_newsletter_left h3{
+.ecommerce_newsletter_left h3{
 	font-size:2em;
 	color:#212121;
 }
-.w3agile_newsletter_left p{
+.ecommerce_newsletter_left p{
 	color:#999;
 	line-height:1.8em;
 }
-.w3agile_newsletter_right input[type="email"]{
+.ecommerce_newsletter_right input[type="email"]{
 	outline: none;
     padding: 10px;
     color: #212121;
@@ -1019,15 +1034,15 @@ ul.wmuSliderPagination {
     border:1px solid #DBDBDB;
     float: left;
 }
-.w3agile_newsletter_right input[type="submit"]{
+.ecommerce_newsletter_right input[type="submit"]{
 	outline: none;
     padding: 10px 0;
     width: 15%;
-    background: url(../images/img-sp.png) no-repeat 26px -65px #ff9b05;
+    background: url(Images/img-sp.png) no-repeat 26px -65px #ff9b05;
     border: none;
 }
-.w3agile_newsletter_right input[type="submit"]:hover{
-    background: url(../images/img-sp.png) no-repeat 26px -65px #212121;
+.ecommerce_newsletter_right input[type="submit"]:hover{
+    background: url(Images/img-sp.png) no-repeat 26px -65px #212121;
 }
 /*-- //newsletter --*/
 /*-- footer --*/
@@ -1082,7 +1097,7 @@ ul.wmuSliderPagination {
 }
 .w3_footer_grid ul.info li a {
     padding-left: 3em;
-    background: url(../images/img-sp.png) no-repeat -6px -98px;
+    background: url(Images/img-sp.png) no-repeat -6px -98px;
 }
 .w3_footer_grid h4{
 	margin:2em 0 1em;
@@ -1095,43 +1110,43 @@ ul.wmuSliderPagination {
 	margin: 0 !important;
 }
 .agileits_social_button ul li a.facebook{
-	background: url(../images/img-sp.png) no-repeat -1px -130px #414141;
+	background: url(Images/img-sp.png) no-repeat -1px -130px #414141;
     display: block;
     width: 35px;
     height: 35px;
 }
 .agileits_social_button ul li a.facebook:hover{
-	background:url(../images/img-sp.png) no-repeat -1px -130px #5E5E5E;
+	background:url(Images/img-sp.png) no-repeat -1px -130px #5E5E5E;
     display: block;
 }
 .agileits_social_button ul li a.twitter{
-	background: url(../images/img-sp.png) no-repeat -41px -130px #414141;
+	background: url(Images/img-sp.png) no-repeat -41px -130px #414141;
     display: block;
     width: 35px;
     height: 35px;
 }
 .agileits_social_button ul li a.twitter:hover{
-	background: url(../images/img-sp.png) no-repeat -41px -130px #5E5E5E;
+	background: url(Images/img-sp.png) no-repeat -41px -130px #5E5E5E;
     display: block;
 }
 .agileits_social_button ul li a.google{
-	background: url(../images/img-sp.png) no-repeat -80px -130px #414141;
+	background: url(Images/img-sp.png) no-repeat -80px -130px #414141;
     display: block;
     width: 35px;
     height: 35px;
 }
 .agileits_social_button ul li a.google:hover{
-	background: url(../images/img-sp.png) no-repeat -80px -130px #5E5E5E;
+	background: url(Images/img-sp.png) no-repeat -80px -130px #5E5E5E;
     display: block;
 }
 .agileits_social_button ul li a.pinterest{
-	background:url(../images/img-sp.png) no-repeat -123px -130px #414141;
+	background:url(Images/img-sp.png) no-repeat -123px -130px #414141;
     display: block;
     width: 35px;
     height: 35px;
 }
 .agileits_social_button ul li a.pinterest:hover{
-	background:url(../images/img-sp.png) no-repeat -123px -130px #5E5E5E;
+	background:url(Images/img-sp.png) no-repeat -123px -130px #5E5E5E;
     display: block;
 }
 .footer-copy1{
@@ -1333,7 +1348,7 @@ h3.other-nw {
 }
 .entypo-facebook:before {
     content: " ";
-    background: url(../images/img-sp.png) no-repeat 7px -125px;
+    background: url(Images/img-sp.png) no-repeat 7px -125px;
     display: block;
     width: 3em;
     height: 3em;
@@ -1345,7 +1360,7 @@ h3.other-nw {
 }
 .entypo-twitter:before {
     content: " ";
-    background:url(../images/img-sp.png) no-repeat -35px -125px;
+    background:url(Images/img-sp.png) no-repeat -35px -125px;
     display: block;
     width: 3em;
     height: 3em;
@@ -1357,7 +1372,7 @@ h3.other-nw {
 }
 .entypo-dribbble:before {
     content: " ";
-    background:url(../images/img-sp.png) no-repeat -74px -125px;
+    background:url(Images/img-sp.png) no-repeat -74px -125px;
     display: block;
     width: 3em;
     height: 3em;
@@ -1369,34 +1384,34 @@ h3.other-nw {
 }
 .entypo-behance:before {
     content: " ";
-    background:url(../images/img-sp.png) no-repeat -117px -125px;
+    background:url(Images/img-sp.png) no-repeat -117px -125px;
     display: block;
     width: 3em;
     height: 3em;
 }
 /*-- //login --*/
 /*-- breadcrumb --*/
-.breadcrumb_dress{
+.breadcrumb_products{
 	background:#f5f5f5;
 	padding:.5em 0;
 	text-align: center;
 }
-.breadcrumb_dress ul li{
+.breadcrumb_products ul li{
 	display:inline-block;
 	color:#999;
 	font-size:14px;
 }
-.breadcrumb_dress ul li a{
+.breadcrumb_products ul li a{
 	color:#212121;
 	text-decoration:none;
 }
-.breadcrumb_dress ul li a:hover{
+.breadcrumb_products ul li a:hover{
 	color:#999;
 }
-.breadcrumb_dress ul li a span {
+.breadcrumb_products ul li a span {
     padding-right: 1em;
 }
-.breadcrumb_dress ul li i{
+.breadcrumb_products ul li i{
     padding:0 1em;
 }
 /*-- //breadcrumb --*/
@@ -1482,7 +1497,7 @@ h3.other-nw {
 	list-style-type: none;
     margin-bottom: 1em;
     padding-left: 1.5em;
-    background: url(../images/img-sp.png) no-repeat -13px -172px;
+    background: url(Images/img-sp.png) no-repeat -13px -172px;
 }
 .panel-body ul li a{
     font-size: 14px;
@@ -1655,7 +1670,7 @@ select.select_item {
 }
 /*-- //dresses --*/
 /*-- related-products --*/
-.w3l_related_products h3:before {
+.ecommerce_related_contents h3:before {
     left: 27% !important;
 }
 #flexiselDemo2{
@@ -1713,15 +1728,15 @@ select.select_item {
 .nbs-flexisel-nav-left {
 	left:-5%;
 	top:38% !important;
-	background:url(../images/left-arrow.png) no-repeat 0px 0px;
+	background:url(Images/left-arrow.png) no-repeat 0px 0px;
 }
 .nbs-flexisel-nav-right {
 	right:-5%;
 	top:38% !important;
-	background:url(../images/right-arrow.png) no-repeat 0px 0px;
+	background:url(Images/right-arrow.png) no-repeat 0px 0px;
 }
 /*--//flexisel--*/
-.w3l_related_products_grid{
+.ecommerce_related_contents_grid{
 	position:relative;
 }
 p.flexisel_ecommerce_cart {
@@ -2242,7 +2257,7 @@ h2.typoh2{
 }
 .checkbox input + i:after {
     content: '';
-    background: url("../images/check.png") no-repeat 1px 2px;
+    background: url("Images/check.png") no-repeat 1px 2px;
     top: 0px;
     left: 2px;
     width: 16px;
@@ -2455,7 +2470,7 @@ td.invert-image a img {
 	position:relative;
 }
 .close1,.close2,.close3 {
-    background: url('../images/close.png') no-repeat 0px 0px;
+    background: url('Images/close.png') no-repeat 0px 0px;
     cursor: pointer;
     width: 32px;
     height: 32px;
@@ -2805,7 +2820,7 @@ td.invert-image a img {
 	.agileinfo_banner_bottom1_grid_right h4 {
 		width: 30%;
 	}
-	.banner-bottom, .team, .checkout, .additional_info, .team-bottom, .single, .mail, .special-deals, .about, .faq, .typo, .new-products, .banner-bottom1, .top-brands, .dresses, .w3l_related_products {
+	.banner-bottom, .team, .checkout, .additional_info, .team-bottom, .single, .mail, .special-deals, .about, .faq, .typo, .new-products, .banner-bottom1, .top-brands, .dresses, .ecommerce_related_contents {
 		padding: 4em 0;
 	}
 	.footer-copy-pos {
@@ -2884,11 +2899,11 @@ td.invert-image a img {
 	.w3agile_special_deals_grid_left_grid1 {
 		padding: 1em 1em 4.3em;
 	}
-	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .w3l_related_products h3:before, .team h3:before, .mail h3:before {
+	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before {
 		left: 22%;
 		width: 15%;
 	}
-	.special-deals h2:after, .new-products h3:after, .top-brands h3:after, .w3l_related_products h3:after, .team h3:after, .mail h3:after {
+	.special-deals h2:after, .new-products h3:after, .top-brands h3:after, .ecommerce_related_contents h3:after, .team h3:after, .mail h3:after {
 		right: 40%;
 		width: 13%;
 	}
@@ -2898,10 +2913,10 @@ td.invert-image a img {
 	.w3_hs_bottom_sub ul {
 		padding:7em 0 0 !important;
 	}
-	.w3agile_newsletter_right input[type="submit"] {
+	.ecommerce_newsletter_right input[type="submit"] {
 		width: 18%;
 	}
-	.w3agile_newsletter_right input[type="email"] {
+	.ecommerce_newsletter_right input[type="email"] {
 		width: 82%;
 	}
 	.w3_footer_grid {
@@ -2929,7 +2944,7 @@ td.invert-image a img {
 	.w3_hs_bottom_sub1 ul {
 		padding: 6em 0 0 !important;
 	}
-	.w3l_related_products h3:before {
+	.ecommerce_related_contents h3:before {
 		left: 19% !important;
 	}
 	.flex_ecommerce {
@@ -3038,13 +3053,13 @@ td.invert-image a img {
 	.agileinfo_banner_bottom1_grid_right {
 		padding: 8.5em 0 0;
 	}
-	.banner-bottom, .team, .checkout, .additional_info, .team-bottom, .single, .mail, .special-deals, .about, .faq, .typo, .new-products, .banner-bottom1, .top-brands, .dresses, .w3l_related_products {
+	.banner-bottom, .team, .checkout, .additional_info, .team-bottom, .single, .mail, .special-deals, .about, .faq, .typo, .new-products, .banner-bottom1, .top-brands, .dresses, .ecommerce_related_contents {
 		padding: 3em 0;
 	}
-	.special-deals h2, .new-products h3, .top-brands h3, .w3l_related_products h3, .team h3, .mail h3 {
+	.special-deals h2, .new-products h3, .top-brands h3, .ecommerce_related_contents h3, .team h3, .mail h3 {
 		font-size: 1.8em;
 	}
-	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .w3l_related_products h3:before, .team h3:before, .mail h3:before {
+	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before {
 		left: 18%;
 	}
 	.w3agile_special_deals_grids {
@@ -3078,21 +3093,21 @@ td.invert-image a img {
 	.sliderfig {
 		margin: 2em 0 0;
 	}
-	.w3agile_newsletter_left h3 {
+	.ecommerce_newsletter_left h3 {
 		font-size: 1.7em;
 		text-align: center;
 	}
-	.w3agile_newsletter_left p {
+	.ecommerce_newsletter_left p {
 		text-align: center;
 		margin: 0.5em 0 2em;
 	}
-	.w3agile_newsletter_right input[type="submit"] {
+	.ecommerce_newsletter_right input[type="submit"] {
 		width:15%;
 	}
-	.w3agile_newsletter_right input[type="email"] {
+	.ecommerce_newsletter_right input[type="email"] {
 		width: 85%;
 	}
-	.w3agile_newsletter_right {
+	.ecommerce_newsletter_right {
 		width: 80%;
 		margin: 0 auto;
 	}
@@ -3164,7 +3179,7 @@ td.invert-image a img {
 	.w3_hs_bottom_sub1 ul {
 		padding: 7em 0 0 !important;
 	}
-	.w3l_related_products h3:before {
+	.ecommerce_related_contents h3:before {
 		left: 16% !important;
 	}
 	.flex_ecommerce {
@@ -3451,22 +3466,22 @@ td.invert-image a img {
 		width: 2em;
 	}
 	.entypo-facebook:before {
-		background: url(../images/img-sp.png) no-repeat -1px -131px;
+		background: url(Images/img-sp.png) no-repeat -1px -131px;
 		width: 2em;
 		height: 2em;
 	}
 	.entypo-dribbble:before {
-		background: url(../images/img-sp.png) no-repeat -82px -131px;
+		background: url(Images/img-sp.png) no-repeat -82px -131px;
 		width: 2em;
 		height: 2em;
 	}
 	.entypo-twitter:before {
-		background: url(../images/img-sp.png) no-repeat -42px -131px;
+		background: url(Images/img-sp.png) no-repeat -42px -131px;
 		width: 2em;
 		height: 2em;
 	}
 	.entypo-behance:before {
-		background: url(../images/img-sp.png) no-repeat -124px -131px;
+		background: url(Images/img-sp.png) no-repeat -124px -131px;
 		width: 2em;
 		height: 2em;
 	}
@@ -3555,13 +3570,13 @@ td.invert-image a img {
 	.agileinfo_banner_bottom1_grid_left {
 		background-position: -85px 0px;
 	}
-	.special-deals h2, .new-products h3, .top-brands h3, .w3l_related_products h3, .team h3, .mail h3 {
+	.special-deals h2, .new-products h3, .top-brands h3, .ecommerce_related_contents h3, .team h3, .mail h3 {
 		font-size: 1.6em;
 	}
 	.w3agile_special_deals_grid_right {
 		width: 72%;
 	}
-	.banner-bottom, .team, .checkout, .additional_info, .team-bottom, .single, .mail, .special-deals, .about, .faq, .typo, .new-products, .banner-bottom1, .top-brands, .dresses, .w3l_related_products {
+	.banner-bottom, .team, .checkout, .additional_info, .team-bottom, .single, .mail, .special-deals, .about, .faq, .typo, .new-products, .banner-bottom1, .top-brands, .dresses, .ecommerce_related_contents {
 		padding: 2em 0;
 	}
 	.agileinfo_new_products_grid {
@@ -3573,13 +3588,13 @@ td.invert-image a img {
 	.w3_hs_bottom_sub ul {
 		padding: 9em 0 0 !important;
 	}
-	.w3agile_newsletter_right input[type="email"] {
+	.ecommerce_newsletter_right input[type="email"] {
 		width: 83%;
 	}
-	.w3agile_newsletter_right {
+	.ecommerce_newsletter_right {
 		width: 90%;
 	}
-	.w3agile_newsletter_right input[type="submit"] {
+	.ecommerce_newsletter_right input[type="submit"] {
 		width: 17%;
 	}
 	.w3_footer_grid h3:after {
@@ -3666,7 +3681,7 @@ td.invert-image a img {
 	.w3ls_about_grid_right {
 		margin: 1em 0 0;
 	}
-	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .w3l_related_products h3:before, .team h3:before, .mail h3:before {
+	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before {
 		left:18%;
 	}
 	.mail h3:before {
@@ -3719,6 +3734,9 @@ td.invert-image a img {
 		padding: 6px 8px;
 	}
 	.simpleCart_shelfItem p a {
+		padding: .5em 1.9em;
+	}
+    .simpleCart_shelfItem p button {
 		padding: .5em 1.9em;
 	}
 }
@@ -3792,11 +3810,11 @@ td.invert-image a img {
 	.agileinfo_banner_bottom1_grid_right h4 {
 		width: 30%;
 	}
-	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .w3l_related_products h3:before, .team h3:before, .mail h3:before {
+	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before {
 		left: 7%;
 		width: 20%;
 	}
-	.special-deals h2:after, .new-products h3:after, .top-brands h3:after, .w3l_related_products h3:after, .team h3:after, .mail h3:after {
+	.special-deals h2:after, .new-products h3:after, .top-brands h3:after, .ecommerce_related_contents h3:after, .team h3:after, .mail h3:after {
 		right: 36%;
 		width: 20%;
 	}
@@ -3822,19 +3840,19 @@ td.invert-image a img {
 	.agileinfo_new_products_grid:nth-child(2) {
 		margin: 2em 0;
 	}
-	.w3agile_newsletter_left h3 {
+	.ecommerce_newsletter_left h3 {
 		font-size: 1.5em;
 	}
 	.newsletter {
 		padding: 2em 0;
 	}
-	.w3agile_newsletter_right {
+	.ecommerce_newsletter_right {
 		width: 100%;
 	}
-	.w3agile_newsletter_right input[type="submit"] {
+	.ecommerce_newsletter_right input[type="submit"] {
 		width: 18%;
 	}
-	.w3agile_newsletter_right input[type="email"] {
+	.ecommerce_newsletter_right input[type="email"] {
 		width: 82%;
 	}
 	.w3_footer_grid h3 {
@@ -3899,7 +3917,7 @@ td.invert-image a img {
 	.products_grid_right_grid3:nth-child(6) {
 		margin: 0;
 	}
-	.w3l_related_products h3:before {
+	.ecommerce_related_contents h3:before {
 		left: 3% !important;
 	}
 	#flexiselDemo2 {
@@ -4075,14 +4093,14 @@ td.invert-image a img {
 	.w3agile_special_deals_grid_right_pos h4, .w3agile_special_deals_grid_right_pos h5 {
 		font-size: 1.5em;
 	}
-	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .w3l_related_products h3:before, .team h3:before, .mail h3:before {
+	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before {
 		left: 1%;
 	}
-	.w3agile_newsletter_right input[type="submit"] {
-		background: url(../images/img-sp.png) no-repeat 14px -65px #ff9b05;
+	.ecommerce_newsletter_right input[type="submit"] {
+		background: url(Images/img-sp.png) no-repeat 14px -65px #ff9b05;
 	}
-	.w3agile_newsletter_right input[type="submit"]:hover {
-		background: url(../images/img-sp.png) no-repeat 14px -65px #212121;
+	.ecommerce_newsletter_right input[type="submit"]:hover {
+		background: url(Images/img-sp.png) no-repeat 14px -65px #212121;
 	}
 	.products_grid_left_grid_sub {
 		width: 80%;
@@ -4095,7 +4113,7 @@ td.invert-image a img {
 		float: none;
 		margin: 1em 0 0;
 	}
-	.w3l_related_products h3:before {
+	.ecommerce_related_contents h3:before {
 		left: -1% !important;
 	}
 	td.invert-image a img {
@@ -4163,7 +4181,7 @@ td.invert-image a img {
 	.banner1, .banner2, .banner3, .banner4, .banner5, .banner6, .banner7, .banner8, .banner9 {
 		min-height: 150px;
 	}
-	.special-deals h2, .new-products h3, .top-brands h3, .w3l_related_products h3, .team h3, .mail h3 {
+	.special-deals h2, .new-products h3, .top-brands h3, .ecommerce_related_contents h3, .team h3, .mail h3 {
 		font-size: 1.4em;
 	}
 	.color-quality-left {
@@ -4224,7 +4242,7 @@ td.invert-image a img {
 	}
 }
 @media (max-width:375px){
-	.wthree_banner_bottom_left,.w3ls_about_grid_left,.wthree_banner_bottom_right,.w3agile_special_deals_grid_left,.w3agile_special_deals_grid_right,.w3agile_newsletter_right,.w3agile_newsletter_left {
+	.wthree_banner_bottom_left,.w3ls_about_grid_left,.wthree_banner_bottom_right,.w3agile_special_deals_grid_left,.w3agile_special_deals_grid_right,.ecommerce_newsletter_right,.ecommerce_newsletter_left {
 		padding: 0;
 	}
 	.agileinfo_banner_bottom1_grid_left {
@@ -4358,21 +4376,21 @@ td.invert-image a img {
 	}
 	.agileinfo_banner_bottom1_grid_left a, .team-bottom a {
 		font-size: 14px;
-		background: url(../images/img-sp.png) no-repeat 93px -5px;
+		background: url(Images/img-sp.png) no-repeat 93px -5px;
 	}
 	.agileinfo_banner_bottom1_grid_left a:hover, .team-bottom a:hover {
-		background:url(../images/img-sp.png) no-repeat 93px -39px;
+		background:url(Images/img-sp.png) no-repeat 93px -39px;
 	}
 	.top-brands img {
 		width: 60%;
 	}
-	.w3agile_newsletter_right input[type="submit"] {
-		background: url(../images/img-sp.png) no-repeat 9px -65px #ff9b05;
+	.ecommerce_newsletter_right input[type="submit"] {
+		background: url(Images/img-sp.png) no-repeat 9px -65px #ff9b05;
 	}
-	.w3agile_newsletter_right input[type="submit"]:hover {
-		background: url(../images/img-sp.png) no-repeat 9px -65px #212121;
+	.ecommerce_newsletter_right input[type="submit"]:hover {
+		background: url(Images/img-sp.png) no-repeat 9px -65px #212121;
 	}
-	.w3_footer_grid ul li,.contact-left ul li,.contact-left input[type="text"], .contact-left input[type="email"],.contact-left textarea,.occasional label,.review_grids input[type="text"], .review_grids input[type="email"], .review_grids textarea,.breadcrumb_dress ul li,.panel-body ul li a,.ecommerce_color ul li a,select.select_item,.color-quality ul li a {
+	.w3_footer_grid ul li,.contact-left ul li,.contact-left input[type="text"], .contact-left input[type="email"],.contact-left textarea,.occasional label,.review_grids input[type="text"], .review_grids input[type="email"], .review_grids textarea,.breadcrumb_products ul li,.panel-body ul li a,.ecommerce_color ul li a,select.select_item,.color-quality ul li a {
 		font-size: 13px;
 	}
 	.w3_footer_grid h3 {
@@ -4423,7 +4441,7 @@ td.invert-image a img {
 	.modal-body {
 		padding: 0em 1em 0em;
 	}
-	.special-deals h2, .new-products h3, .top-brands h3, .w3l_related_products h3, .team h3, .mail h3 {
+	.special-deals h2, .new-products h3, .top-brands h3, .ecommerce_related_contents h3, .team h3, .mail h3 {
 		font-size: 1.2em;
 	}
 	.banner2 {

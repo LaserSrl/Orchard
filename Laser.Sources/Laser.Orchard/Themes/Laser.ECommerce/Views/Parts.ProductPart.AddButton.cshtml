@@ -13,15 +13,12 @@
         {"data-productid", productId},
         {"enctype", "multipart/form-data"}
                 })) {
-
     if (Model.ProductAttributes != null) {
         foreach (var productAttributeShape in Model.ProductAttributes) {
             @Display(productAttributeShape)
         }
     }
-
     int quantityValue = Model.MinimumOrderQuantity > 1 ? Model.MinimumOrderQuantity : 1;
-
     <div class="addtocart-quantity-and-button">
         <input name="id" value="@productId" type="hidden" />
         <input name="quantity" value="@quantityValue" class="addtocart-quantity" type="hidden" />

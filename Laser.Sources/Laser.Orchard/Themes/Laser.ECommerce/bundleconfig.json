@@ -16,5 +16,11 @@
     "inputFiles": [
       "Styles/fasthover.css"
     ]
+  },
+  {
+    "outputFileName": "Scripts/jquery.flexisel.min.js",
+    "inputFiles": [
+      "Scripts/jquery.flexisel.js"
+    ]
   }
 ]

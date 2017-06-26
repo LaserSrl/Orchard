@@ -53,6 +53,9 @@
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Orchard.ContentPicker">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPicker\bin\Orchard.ContentPicker.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Core\bin\Orchard.Core.dll</HintPath>
     </Reference>
@@ -108,6 +111,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets.json" />
+    <Content Include="Scripts\jquery.flexisel.min.js">
+      <DependentUpon>jquery.flexisel.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.iframe-transport.js" />
+    <Content Include="Styles\Images\img-sp.png" />
+    <Content Include="Styles\Images\left-arrow.png" />
+    <Content Include="Styles\Images\right-arrow.png" />
+    <Content Include="Scripts\jquery.flexisel.js" />
     <Content Include="Scripts\shoppingcart.widget.js" />
     <Content Include="Styles\fasthover.css" />
     <Content Include="Styles\fasthover.min.css">
@@ -124,7 +135,9 @@
     <Content Include="Content\Web.config" />
     <Content Include="Theme.txt" />
     <Content Include="Theme.png" />
-    <Content Include="Placement.info" />
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -143,6 +156,10 @@
     <ProjectReference Include="..\..\..\..\Nwazet.Commerce\Nwazet.Commerce.csproj">
       <Project>{909acc2c-d672-4752-b75b-6822e05fe0e3}</Project>
       <Name>Nwazet.Commerce</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Laser.Orchard.NewsLetters\Laser.Orchard.NewsLetters.csproj">
+      <Project>{51da5b67-ce19-4629-b15e-eaef85de5666}</Project>
+      <Name>Laser.Orchard.NewsLetters</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +184,12 @@
     <Content Include="Views\Parts.ProductPart.AddButton.cshtml" />
     <Content Include="Views\Price.cshtml" />
     <Content Include="Views\Parts.MenuWidget-AsideFirst.cshtml" />
+    <Content Include="Views\Parts.MenuWidget-BeforeMain.cshtml" />
+    <Content Include="Views\Fields.ContentPicker-RelatedProducts.cshtml" />
+    <Content Include="Views\RelatedContentsSlider.cshtml" />
+    <Content Include="Views\Content-Product-AfterMain-Summary.cshtml" />
+    <Content Include="Views\Content.Detail.cshtml" />
+    <Content Include="Views\Parts.SubscriberRegistration.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
