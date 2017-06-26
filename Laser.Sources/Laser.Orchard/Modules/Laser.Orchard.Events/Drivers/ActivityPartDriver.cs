@@ -33,22 +33,63 @@ namespace Laser.Orchard.Events.Drivers {
         /// <param name="shapeHelper">The shape helper.</param>
         protected override DriverResult Display(ActivityPart part, string displayType, dynamic shapeHelper) {
 
-            ActivityDisplayViewModel activityVM = new ActivityDisplayViewModel();
+            var partSettings = part.Settings.GetModel<ActivityPartSettings>();
 
+            DateTime? localDateTimeStart = _dataLocalization.ReadDateLocalized(part.DateTimeStart, true);
+            DateTime? localDateTimeEnd = _dataLocalization.ReadDateLocalized(part.DateTimeEnd, true);
+            DateTime? localDateRepeatEnd = _dataLocalization.ReadDateLocalized(part.RepeatEndDate, true);
+            ActivityViewModel activityVM = new ActivityViewModel();
+ 
             Mapper.Initialize(cfg => {
-                cfg.CreateMap<ActivityPart, ActivityDisplayViewModel>()
-                    .ForMember(dest => dest.DateTimeStart, opt => opt.Ignore())
-                    .ForMember(dest => dest.DateTimeEnd, opt => opt.Ignore())
-                    .ForMember(dest => dest.RepeatEndDate, opt => opt.Ignore());
+                cfg.CreateMap<ActivityPart, ActivityViewModel>()
+                    .ForMember(dest => dest.DateStart, opt => opt.Ignore())
+                    .ForMember(dest => dest.DateEnd, opt => opt.Ignore())
+                    .ForMember(dest => dest.TimeStart, opt => opt.Ignore())
+                    .ForMember(dest => dest.TimeEnd, opt => opt.Ignore())
+                    .ForMember(dest => dest.RepeatEndDate, opt => opt.Ignore())
+                    .ForMember(dest => dest.Monday, opt => opt.Ignore())
+                    .ForMember(dest => dest.Tuesday, opt => opt.Ignore())
+                    .ForMember(dest => dest.Wednesday, opt => opt.Ignore())
+                    .ForMember(dest => dest.Thursday, opt => opt.Ignore())
+                    .ForMember(dest => dest.Friday, opt => opt.Ignore())
+                    .ForMember(dest => dest.Saturday, opt => opt.Ignore())
+                    .ForMember(dest => dest.Sunday, opt => opt.Ignore())
+                    .ForMember(dest => dest.RepeatByDayNumber, opt => opt.Ignore())
+                    .ForMember(dest => dest.Settings, opt => opt.Ignore());
             });
 
-            Mapper.Map<ActivityPart, ActivityDisplayViewModel>(part, activityVM);
+            Mapper.Map(part, activityVM);
 
-            activityVM.DateTimeStart = _dataLocalization.ReadDateLocalized(part.DateTimeStart, true);
-            activityVM.DateTimeEnd = _dataLocalization.ReadDateLocalized(part.DateTimeEnd, true);
-            activityVM.RepeatEndDate = _dataLocalization.ReadDateLocalized(part.RepeatEndDate, true);
-          
-            return ContentShape("Parts_Activity",
+            activityVM.DateStart = _dataLocalization.WriteDateLocalized(localDateTimeStart);
+            activityVM.DateEnd = _dataLocalization.WriteDateLocalized(localDateTimeEnd);
+            activityVM.TimeStart = _dataLocalization.WriteTimeLocalized(localDateTimeStart);
+            activityVM.TimeEnd = _dataLocalization.WriteTimeLocalized(localDateTimeEnd);
+            activityVM.RepeatEndDate = _dataLocalization.WriteDateLocalized(part.RepeatEndDate);
+            activityVM.Settings = partSettings;
+            if (part.RepeatType == "W") {
+                activityVM.Monday = part.RepeatDetails.Contains(DayOfWeek.Monday.ToString());
+                activityVM.Tuesday = part.RepeatDetails.Contains(DayOfWeek.Tuesday.ToString());
+                activityVM.Wednesday = part.RepeatDetails.Contains(DayOfWeek.Wednesday.ToString());
+                activityVM.Thursday = part.RepeatDetails.Contains(DayOfWeek.Thursday.ToString());
+                activityVM.Friday = part.RepeatDetails.Contains(DayOfWeek.Friday.ToString());
+                activityVM.Saturday = part.RepeatDetails.Contains(DayOfWeek.Saturday.ToString());
+                activityVM.Sunday = part.RepeatDetails.Contains(DayOfWeek.Sunday.ToString());
+            } else {
+                activityVM.Monday = false;
+                activityVM.Tuesday = false;
+                activityVM.Wednesday = false;
+                activityVM.Thursday = false;
+                activityVM.Friday = false;
+                activityVM.Saturday = false;
+                activityVM.Sunday = false;
+            }
+
+            if (part.RepeatType == "M")
+                activityVM.RepeatByDayNumber = part.RepeatDetails.Contains("DayNum");
+            else
+                activityVM.RepeatByDayNumber = true;
+
+            return ContentShape("Parts_ActivityDisplay",
                                     () => shapeHelper.EditorTemplate(
                                           TemplateName: "Parts/ActivityDisplay",
                                           Model: activityVM,

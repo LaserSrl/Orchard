@@ -1,13 +1,50 @@
-﻿@model Laser.Orchard.Events.ViewModels.ActivityDisplayViewModel
+﻿@model Laser.Orchard.Events.ViewModels.ActivityViewModel
 
-<div>
-    @Html.LabelFor(m => m.DateTimeStart, T("Start date"))
-    @Html.TextBoxFor(m => m.DateTimeStart)
-    @Html.LabelFor(m => m.DateTimeEnd, T("End date"))
-    @Html.TextBoxFor(m => m.DateTimeEnd)
-    @Html.LabelFor(m => m.RepeatEndDate, T("Repeate date"))
-    @Html.TextBoxFor(m => m.RepeatEndDate)
+@{
+    var repeatTypes = new Dictionary<string, string>
+    ();
+    repeatTypes.Add("D", T("days").ToString());
+    repeatTypes.Add("W", T("weeks").ToString());
+    repeatTypes.Add("M", T("months").ToString());
+    repeatTypes.Add("Y", T("years").ToString());
+}
+    <div class="activityPart">
+        @T("Start event: ") @Model.DateStart @Model.TimeStart
+        <br />
+        @T("End event:") @Model.DateEnd  @Model.TimeEnd
+        <br />
+        @if (Model.Repeat) {
+            @T("Repeat every: ") @Model.RepeatValue @(" ") @repeatTypes[Model.RepeatType];
+            if (Model.RepeatType.Equals("W")) {
+                List<string> days = new List<string>();
+                if (Model.Monday) {
+                    days.Add(T("Monday").ToString());
+                }
+                if (Model.Thursday) {
+                    days.Add(T("Thursday").ToString());
+                }
+                if (Model.Wednesday) {
+                    days.Add(T("Wednesday").ToString());
+                }
+                if (Model.Tuesday) {
+                    days.Add(T("Tuesday").ToString());
+                }
+                if (Model.Friday) {
+                    days.Add(T("Friday").ToString());
+                }
+                if (Model.Saturday) {
+                    days.Add(T("Saturday").ToString());
+                }
+                if (Model.Sunday) {
+                    days.Add(T("Sunday").ToString());
+                }
+                @(" (" + String.Join(", ", days.ToArray()) + ")");
+            }
+            <br />
+            if (Model.RepeatEnd) {
+                @T("Repeat until the day: ") @Model.RepeatEndDate
+            }
+        }
+    </div>
 
-</div>
-    
 
