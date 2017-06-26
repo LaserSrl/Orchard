@@ -62,7 +62,7 @@
                             List<AnswerStatsViewModel> answersList = new List<AnswerStatsViewModel>();
 
                             if (question.QuestionType == Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {
-                                answersList = question.Answers.OrderByDescending(x => x.Count).ThenBy(x => x.Answer).Take(answersToShow).ToList();
+                                answersList = question.Answers.OrderByDescending(x => x.LastDate).ThenByDescending(x => x.Count).ThenBy(x => x.Answer).Take(answersToShow).ToList();
                             } else {
                                 answersList = question.Answers.OrderByDescending(x => x.Count).ThenBy(x => x.Answer).ToList();
                             }
