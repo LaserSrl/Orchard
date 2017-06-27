@@ -61,5 +61,9 @@ namespace Laser.Orchard.Reporting
               .DisplayedAs("Data Report Empty Type"));
             return 3;
         }
+        public int UpdateFrom3() {
+            ContentDefinitionManager.DeleteTypeDefinition("DataReportEmptyType");
+            return 4;
+        }
     }
 }
