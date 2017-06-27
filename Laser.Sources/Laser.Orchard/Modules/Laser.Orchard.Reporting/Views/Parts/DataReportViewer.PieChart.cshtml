@@ -1,8 +1,5 @@
 ﻿@using Laser.Orchard.Reporting.ViewModels;
 @{
-    Style.Include("jquery-ui.css");
-    Style.Include("jquery.jqplot.css");
-    Style.Include("reporting.css");
     DataReportViewerViewModel dataReportViewerViewModel = Model.Model;
     var data = dataReportViewerViewModel.JsonData;
     string chartContainerId = "chartContainer" + Model.ContentItem.Id.ToString();
@@ -18,14 +15,6 @@
         <h3>@T("There is no data")</h3>
     }
 </div>
-@using (Script.Foot())
-{
-    Script.Require("jqplot");
-    Script.Require("piejqplot");
-    Script.Require("donutRendererjqplot");
-    Script.Require("Chosen");
-    Script.Require("Reporting");
-    <script language="javascript" type="text/javascript">
-        $("#@chartContainerId").Reporting();
-    </script>
-}
+<script language="javascript" type="text/javascript">
+    $("#@chartContainerId").Reporting();
+</script>

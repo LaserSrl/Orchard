@@ -1,8 +1,5 @@
 ﻿@using Laser.Orchard.Reporting.ViewModels;
 @{
-    Style.Include("jquery-ui.css");
-    Style.Include("jquery.jqplot.css");
-    Style.Include("reporting.css");
     DataReportViewerViewModel dataReportViewerViewModel = Model.Model;
     string chartContainerId = "chartContainer" + Model.ContentItem.Id.ToString();
     string chartId = "chart" + Model.ContentItem.Id.ToString();
@@ -15,23 +12,18 @@
         <h3>@T("There is no data")</h3>
     }
 </div>
-@using (Script.Foot()) {
-    Script.Require("jqplot");
-    Script.Require("barjqplot");
-    Script.Require("categoryAxisjqplot");
-    <script language="javascript" type="text/javascript">
-        $(document).ready(function(){
-            var s1 = @Html.Raw(Model.Series1);
-            $('#@chartId').jqplot([s1], {
-                seriesDefaults: {
-                    renderer: $.jqplot.BarRenderer
-                },
-                axes: {
-                    xaxis: {
-                        renderer: $.jqplot.CategoryAxisRenderer
-                    }
+<script language="javascript" type="text/javascript">
+    (function(){
+        var s1 = @Html.Raw(Model.Series1);
+        $('#@chartId').jqplot([s1], {
+            seriesDefaults: {
+                renderer: $.jqplot.BarRenderer
+            },
+            axes: {
+                xaxis: {
+                    renderer: $.jqplot.CategoryAxisRenderer
                 }
-            });
+            }
         });
-    </script>
-}
+    })();
+</script>

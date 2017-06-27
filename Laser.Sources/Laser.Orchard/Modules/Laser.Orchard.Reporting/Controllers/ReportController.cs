@@ -21,6 +21,7 @@ using Orchard.Settings;
 using Orchard.DisplayManagement;
 using Orchard;
 using System.Text.RegularExpressions;
+using Orchard.Themes;
 
 namespace Laser.Orchard.Reporting.Controllers
 {
@@ -347,29 +348,36 @@ namespace Laser.Orchard.Reporting.Controllers
         }
 
         public ActionResult Display(ReportDisplayViewModel model) {
-            if (!services.Authorizer.Authorize(Security.Permissions.ShowAdminReports, T("Not authorized to list Reports")))
+            if (!services.Authorizer.Authorize(Security.Permissions.ShowAdminReports, T("Not authorized to list Reports"))) {
                 return new HttpUnauthorizedResult();
-
+            }
             var ci = services.ContentManager.Get(model.Id);
             if(ci.Has<DataReportViewerPart>() == false) {
                 throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "{0}={1}", T("There is no report with the Id"), model.Id.ToString(CultureInfo.InvariantCulture)));
             }
-            var viewerPart = ci.As<DataReportViewerPart>();
-            model.DataReportViewerContent = services.ContentManager.New("DataReportEmptyType");
-            model.DataReportViewerContent.Weld(viewerPart);
             var filterPart = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == ci.ContentType);
-            model.FilterContent = services.ContentManager.New("DataReportEmptyType");
-            model.FilterContent.Weld(filterPart);
-
-            //dynamic pippo = new System.Dynamic.ExpandoObject();
-            //TryUpdateModel(pippo);
-
-            //dynamic dynFilterPart = filterPart;
-            //var elencoKeys = Request.Form.AllKeys.Where(x => x.StartsWith(ci.ContentType + "."));
-            //foreach(var key in elencoKeys) {
-
-            //}
-
+            if(filterPart != null) {
+                model.FilterContent = services.ContentManager.New("DataReportEmptyType");
+                model.FilterContent.Weld(filterPart);
+            }
+            else {
+                model.ViewerContent = services.ContentManager.New("DataReportEmptyType");
+                model.ViewerContent.Weld(ci.As<DataReportViewerPart>());
+            }
+            return View(model);
+        }
+        [Themed(Enabled = false)]
+        public ActionResult DisplayChart(int id) {
+            if (!services.Authorizer.Authorize(Security.Permissions.ShowAdminReports, T("Not authorized to list Reports"))) {
+                return new HttpUnauthorizedResult();
+            }
+            var ci = services.ContentManager.Get(id);
+            if (ci.Has<DataReportViewerPart>() == false) {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "{0}={1}", T("There is no report with the Id"), id));
+            }
+            var viewerPart = ci.As<DataReportViewerPart>();
+            var model = services.ContentManager.New("DataReportEmptyType");
+            model.Weld(viewerPart);
             return View(model);
         }
         private string EncodeGroupByCategoryAndGroupByType(string category, string type)
