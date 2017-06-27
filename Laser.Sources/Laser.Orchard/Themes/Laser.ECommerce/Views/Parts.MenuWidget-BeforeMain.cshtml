@@ -4,6 +4,7 @@
     var items = (IList<dynamic>)Enumerable.Cast<dynamic>(Menu.Items);
 
     //We are only going to show the home link and the path to the current thing
+    var title = Layout.Title.ToString();
 }
 
 <div class="breadcrumb_products">
@@ -20,7 +21,7 @@
                     item = items.LastOrDefault();
                     <li>@item.Text</li>
                 } else {
-                    <li>@Layout.Title</li>
+                    <li>@title</li>
                 }
             }
         </ul>

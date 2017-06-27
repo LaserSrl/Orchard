@@ -111,10 +111,28 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets.json" />
+    <Content Include="Scripts\imagezoom.js" />
+    <Content Include="Scripts\imagezoom.min.js">
+      <DependentUpon>imagezoom.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery.flexisel.min.js">
       <DependentUpon>jquery.flexisel.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\jquery.flexslider.js" />
+    <Content Include="Scripts\jquery.flexslider.min.js">
+      <DependentUpon>jquery.flexslider.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery.iframe-transport.js" />
+    <Content Include="Scripts\jquery.iframe-transport.min.js">
+      <DependentUpon>jquery.iframe-transport.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\shoppingcart.widget.min.js">
+      <DependentUpon>shoppingcart.widget.js</DependentUpon>
+    </Content>
+    <Content Include="Styles\flexslider.css" />
+    <Content Include="Styles\flexslider.min.css">
+      <DependentUpon>flexslider.css</DependentUpon>
+    </Content>
     <Content Include="Styles\Images\img-sp.png" />
     <Content Include="Styles\Images\left-arrow.png" />
     <Content Include="Styles\Images\right-arrow.png" />
@@ -190,6 +208,12 @@
     <Content Include="Views\Content-Product-AfterMain-Summary.cshtml" />
     <Content Include="Views\Content.Detail.cshtml" />
     <Content Include="Views\Parts.SubscriberRegistration.cshtml" />
+    <Content Include="Views\List-ProjectionPage.cshtml" />
+    <Content Include="Views\Parts.Title.cshtml" />
+    <Content Include="Views\ProductGallery.cshtml" />
+    <Content Include="Views\Parts.Title-Product.cshtml" />
+    <Content Include="Views\Parts.Stars.Details-Product.cshtml" />
+    <Content Include="Views\Fields.Common.Text-Product-Description.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -22,5 +22,35 @@
     "inputFiles": [
       "Scripts/jquery.flexisel.js"
     ]
+  },
+  {
+    "outputFileName": "Scripts/shoppingcart.widget.min.js",
+    "inputFiles": [
+      "Scripts/shoppingcart.widget.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/jquery.iframe-transport.min.js",
+    "inputFiles": [
+      "Scripts/jquery.iframe-transport.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/jquery.flexslider.min.js",
+    "inputFiles": [
+      "Scripts/jquery.flexslider.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/imagezoom.min.js",
+    "inputFiles": [
+      "Scripts/imagezoom.js"
+    ]
+  },
+  {
+    "outputFileName": "Styles/flexslider.min.css",
+    "inputFiles": [
+      "Styles/flexslider.css"
+    ]
   }
 ]

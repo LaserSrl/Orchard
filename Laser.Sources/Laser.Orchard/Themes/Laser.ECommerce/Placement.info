@@ -14,21 +14,34 @@
     <Place Parts_Common_Metadata="-"/>
   </Match>
 -->
-  <Place Fields_Common_Text__BannerH2="-"/>
-  <Place Fields_Common_Text__BannerH3="-"/>
-  <Place Fields_Numeric__BannerHeight="-"/>
+  <Place Fields_Common_Text__BannerH2="-" />
+  <Place Fields_Common_Text__BannerH3="-" />
+  <Place Fields_Numeric__BannerHeight="-" />
   <Place Fields_TaxonomyField="-" />
+  <Place Fields_Boolean__IsNewProduct="-" />
   <Place Parts_Common_Metadata_Summary="-" />
-  
+  <Place Parts_Common_Metadata="-" />
   <Match ContentType="ProductsTerm">
     <Place Parts_Common_Metadata="-"
-           Parts_Title="-"
-           Fields_MediaLibraryPicker__Banner="-"/>
+           Fields_MediaLibraryPicker__Banner="-" />
+  </Match>
+  <Match ContentType="ProjectionPage">
+    <Place Parts_Common_Metadata="-"
+           Fields_MediaLibraryPicker__Banner="-" />
+  </Match>
+  <Match ContentType="Product" DisplayType="Detail">
+    <Place Fields_MediaLibraryPicker__ProductImage="Content:0;Alternate=ProductGallery" 
+           Parts_Title="Content:1"
+           Parts_Stars_Details="Content:2"
+           Fields_Common_Text__Description="Content:3"
+           Parts_Product="Content:4;Alternate=Parts_ProductPart" 
+           Parts_Common_Body="Content:5"/>
   </Match>
   <Match DisplayType="Summary">
     <Place Parts_Product="Content:3.1;Alternate=Parts_ProductPart" />
-    <Place Parts_Product_AddButton="Content:3.3;Alternate=Parts_ProductPart_AddButton"/>
+    <Place Parts_Product_AddButton="Content:3.3;Alternate=Parts_ProductPart_AddButton" />
     <Place Parts_Common_Body_Summary="-" />
     <Place Fields_ContentPicker__RelatedProducts="-" />
+    <Place Fields_Common_Text__Description="-" />
   </Match>
 </Placement>

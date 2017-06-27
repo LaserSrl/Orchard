@@ -8,7 +8,7 @@
 }
 @if (contentItems.Any()) {
     var items = contentItems.ToList();
-    while (items.Count < 4) { //hack: the slider wors best with at least 4 items
+    while (items.Count < 4) { //hack: the slider works best with at least 4 items
         items.AddRange(contentItems);
     }
     <div class="ecommerce_related_contents">

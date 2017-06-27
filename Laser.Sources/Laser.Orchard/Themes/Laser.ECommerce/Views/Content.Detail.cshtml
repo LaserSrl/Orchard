@@ -39,7 +39,7 @@
         var taxField = fields
             .Where(fi => fi is TaxonomyField)
             .FirstOrDefault() as TaxonomyField;
-        if (taxField.Terms.Any()) {
+        if (taxField != null && taxField.Terms.Any()) {
             WorkContext.Layout.BeforeMain.Add(New.Banner(
                 ContentItem: (ContentItem)taxField.Terms.FirstOrDefault().ContentItem,
                 H2Text: new HtmlString(title)
