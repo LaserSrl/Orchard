@@ -9,11 +9,40 @@
     repeatTypes.Add("Y", T("years").ToString());
 }
     <div class="activityPart">
-        @T("Start event: ") @Model.DateStart @Model.TimeStart
-        <br />
-        @T("End event:") @Model.DateEnd  @Model.TimeEnd
-        <br />
+        @{ 
+            var eventDates = "";
+            var dataInizio = Model.DateStart;
+            var dataFine = Model.DateEnd;
+            var oraInizio = Model.TimeStart;
+            var oraFine = Model.TimeEnd;
+            if (Model.AllDay) {
+                if (dataInizio == dataFine) {
+                    eventDates = dataInizio;
+                } else {
+                    eventDates = String.Format("{0} - {1}", dataInizio, dataFine);
+                }
+            } else {
+                if (dataInizio == dataFine) {
+                    if (!oraFine.ToString().EndsWith("59")) {
+                        eventDates = String.Format("{0}, {1} / {2}", dataInizio, oraInizio, oraFine);
+                    } else {
+                        eventDates = String.Format("{0}, {1}", dataInizio, oraInizio);
+                    }
+                } else {
+                    if (!oraFine.EndsWith("59")) {
+                        eventDates = String.Format("{0} - {1}, {2} - {3}", dataInizio, oraInizio, dataFine, oraFine);
+                    } else {
+                        eventDates = String.Format("{0} - {1}, {2}", dataInizio, dataFine, oraInizio);
+                    }
+                }
+            }
+        }
+
+        @if (!String.IsNullOrWhiteSpace(eventDates)) {
+            @eventDates
+        }
         @if (Model.Repeat) {
+            <br />
             @T("Repeat every: ") @Model.RepeatValue @(" ") @repeatTypes[Model.RepeatType];
             if (Model.RepeatType.Equals("W")) {
                 List<string> days = new List<string>();
@@ -40,9 +69,8 @@
                 }
                 @(" (" + String.Join(", ", days.ToArray()) + ")");
             }
-            <br />
             if (Model.RepeatEnd) {
-                @T("Repeat until the day: ") @Model.RepeatEndDate
+                @T(" - Repeat until the day: ") @Model.RepeatEndDate
             }
         }
     </div>
