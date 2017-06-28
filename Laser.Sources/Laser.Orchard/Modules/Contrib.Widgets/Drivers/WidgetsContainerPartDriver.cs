@@ -16,7 +16,7 @@ using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Themes.Services;
 using Orchard.Widgets.Services;
-
+using Contrib.Widgets.Settings;
 
 namespace Contrib.Widgets.Drivers {
     [OrchardFeature("Contrib.Widgets")]
@@ -57,7 +57,15 @@ namespace Contrib.Widgets.Drivers {
             if (displayType != "Detail")
                 return null;
 
+            var settings = part.Settings.GetModel<WidgetsContainerSettings>();
+
             var widgetParts = _widgetManager.GetWidgets(part.Id, part.ContentItem.IsPublished());
+
+            if (!string.IsNullOrWhiteSpace(settings.AllowedWidgets))
+                widgetParts = widgetParts.Where(x => settings.AllowedWidgets.Split(',').Contains(x.TypeDefinition.Name));
+
+            if (!string.IsNullOrWhiteSpace(settings.AllowedZones))
+                widgetParts = widgetParts.Where(x => settings.AllowedZones.Split(',').Contains(x.Zone));
 
             // Build and add shape to zone.
             var workContext = _wca.GetContext();
@@ -72,12 +80,21 @@ namespace Contrib.Widgets.Drivers {
 
         protected override DriverResult Editor(WidgetsContainerPart part, dynamic shapeHelper) {
             return ContentShape("Parts_WidgetsContainer", () => {
+                var settings = part.Settings.GetModel<WidgetsContainerSettings>();
+
                 var currentTheme = _siteThemeService.GetSiteTheme();
                 var currentThemesZones = _widgetsService.GetZones(currentTheme).ToList();
+                if (!string.IsNullOrWhiteSpace(settings.AllowedZones))
+                    currentThemesZones = currentThemesZones.Where(x => settings.AllowedZones.Split(',').Contains(x)).ToList();
+
                 var widgetTypes = _widgetsService.GetWidgetTypeNames().ToList();
+                if (!string.IsNullOrWhiteSpace(settings.AllowedWidgets))
+                    widgetTypes = widgetTypes.Where(x => settings.AllowedWidgets.Split(',').Contains(x)).ToList();
                 var widgets = _widgetManager.GetWidgets(part.Id, part.ContentItem.IsPublished());
+
                 var zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
                 var zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
+
                 var layer = _widgetsService.GetLayers().First();
 
                 // recupero i contenuti localizzati una try è necessaria in quanto non è detto che un contenuto sia localizzato
