@@ -2,9 +2,11 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
+using Orchard.Environment.Extensions;
 using Orchard.Projections.Models;
 
 namespace Laser.Orchard.ContentExtension.Models {
+    [OrchardFeature("Laser.Orchard.ContentExtension.DynamicProjection")]
     public class DynamicProjectionPart : ContentPart<DynamicProjectionPartRecord> {
         public string MenuLabel {
             get {return this.Retrieve(x => x.MenuLabel);}
@@ -36,11 +38,12 @@ namespace Laser.Orchard.ContentExtension.Models {
         }
 
     }
+    [OrchardFeature("Laser.Orchard.ContentExtension.DynamicProjection")]
     public class DynamicProjectionPartRecord:ContentPartRecord {
         public const ushort DefaultMenuTextLength = 255;
 
         public DynamicProjectionPartRecord() {
-            MaxItems = 20;
+            MaxItems = 0;
         }
 
         [StringLength(DefaultMenuTextLength)]

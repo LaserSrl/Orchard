@@ -7,3 +7,8 @@ OrchardVersion: 1.10
 Description: Enable Content Manipulation feature from extarnal orchard's environment
 Dependencies: Laser.Orchard.StartupConfig,Orchard.MediaLibrary,Orchard.Localization,Orchard.Fields,Orchard.ContentPicker,Orchard.Taxonomies,Laser.Orchard.WebServices
 Category: Content
+Features:
+    Laser.Orchard.ContentExtension.DynamicProjection:
+        Name:  Dynamic Projection
+        Description: Add  Dynamic Projection ContentType and DynamicProjectionPart to customize projection.
+	    Category: Content
