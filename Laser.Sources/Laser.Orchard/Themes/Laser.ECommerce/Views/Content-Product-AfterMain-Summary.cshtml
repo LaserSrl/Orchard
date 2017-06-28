@@ -29,11 +29,13 @@
         while (allUrls.Count() < 6) { //hack: the hover animation works best with at least 6 items
             allUrls.AddRange(productImages.Select(mp => mp.MediaUrl));
         }
-        <div class="hs-wrapper hs-wrapper3">
-            @foreach (var imageUrl in allUrls) {
-                <img src="@Display.ResizeMediaUrl(Width: 255, Height: 340, Mode: "pad", Alignment: "middlecenter", Path: imageUrl)" alt=" " class="img-responsive" />
-            }
-        </div>
+        <a href="@Url.ItemDisplayUrl(contentItem)">
+            <div class="hs-wrapper hs-wrapper3">
+                @foreach (var imageUrl in allUrls) {
+                    <img src="@Display.ResizeMediaUrl(Width: 255, Height: 340, Mode: "pad", Alignment: "middlecenter", Path: imageUrl)" alt=" " class="img-responsive" />
+                }
+            </div>
+        </a>
     }
     <h5><a href="@Url.ItemDisplayUrl(contentItem)">@title</a></h5>
     <div class="simpleCart_shelfItem">
@@ -45,4 +47,3 @@
         </div>
     }
 </div>
-

@@ -1,25 +1,12 @@
 ﻿@using Orchard.Utility.Extensions;
 @{
     Style.Require("Contrib_Stars");
-    Script.Require("jQuery");
-    Script.Require("Contrib_Stars");
-
-    const string viewName = "ConfirmRatingDelete";
-    if (!HttpContext.Current.Items.Contains(viewName)) {
-        HttpContext.Current.Items[viewName] = true;
-        WorkContext.Layout.AfterContent.Add(New.Partial(TemplateName: viewName));
-    }
 
     var roundedResult = Math.Round(Model.ContentPart.Rating.CurrentVotingResult.Value * 2, MidpointRounding.AwayFromZero) / 2;
     var currentResultClass = string.Format("stars-value-{0}", Math.Floor(roundedResult));
-
-    double userRating = Model.ContentPart.Rating.UserRating;
-    var canRateClass = Request.IsAuthenticated ? "stars-can-rate" : "";
-    string toolTip = Request.IsAuthenticated ? "" : "Log-in to rate this item";
-    var userRatingClass = Request.IsAuthenticated && Model.ContentPart.Rating.UserRating > 0 ? string.Format("stars-user-rating-{0}", userRating) : "";
 }
-<div class="col-md-8 single-right stars-rating @canRateClass" title="@toolTip">
-    <div class="stars-current-result @currentResultClass @userRatingClass rating1" style="display:inline;">
+<div class="col-md-8 single-right stars-rating">
+    <div class="stars-current-result @currentResultClass" style="display:inline;">
         @if (roundedResult == .5) {
             <span class="star-0-5 a-half-star">@T(".").ToString()</span>
             <span class="star-1 a-star a-half-star">@T("-").ToString()</span>

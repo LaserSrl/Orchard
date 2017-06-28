@@ -52,5 +52,11 @@
     "inputFiles": [
       "Styles/flexslider.css"
     ]
+  },
+  {
+    "outputFileName": "Scripts/easyResponsiveTabs.min.js",
+    "inputFiles": [
+      "Scripts/easyResponsiveTabs.js"
+    ]
   }
 ]

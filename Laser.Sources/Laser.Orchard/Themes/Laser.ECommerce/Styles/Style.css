@@ -2535,6 +2535,71 @@ td.invert-image a img {
     top: 0.1em;
 }
 /*-- //checkout --*/
+
+/*-- ui-dialog --*/
+.ui-widget.review-dialog {
+    /*font-family: Verdana,Arial,sans-serif;*/
+    font-size: .8em;
+}
+
+.ui-widget-content.review-dialog {
+    background: #F6F6F6;
+    border: 1px solid #ff9b05;
+    color: #222222;
+}
+
+.ui-dialog.review-dialog {
+    left: 0;
+    outline: 0 none;
+    padding: 0 !important;
+    position: absolute;
+    top: 0;
+}
+
+.ui-dialog.review-dialog .ui-dialog-content {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    overflow: auto;
+    position: relative;
+    padding: 0 !important;
+    margin: 0;
+}
+
+.ui-dialog.review-dialog .ui-widget-header {
+    background: #ff9b05;
+    border: 0;
+    color: #fff;
+    font-weight: normal;
+}
+
+.ui-dialog.review-dialog .ui-dialog-titlebar {
+    padding: 0.1em .5em;
+    position: relative;
+    font-size: 1em;
+}
+
+.ui-dialog.review-dialog div.buttons {
+    text-align:center;
+}
+
+.ui-dialog.review-dialog div.buttons input[type=button], .ui-dialog.review-dialog div.buttons input[type=submit] {
+    color: #212121;
+    background-color: #ff9b05;
+    text-decoration: none;
+    text-transform: uppercase;
+    border: none;
+    margin: 4px;
+}
+.ui-dialog.review-dialog div.buttons input[type=button]:hover, .ui-dialog.review-dialog div.buttons input[type=submit]:hover{
+	background:#ff9b05;
+	color:#fff;
+	border:1px solid #ff9b05;
+}
+
+.ui-dialog.review-dialog .ui-dialog-titlebar button.ui-dialog-titlebar-close {
+    display: none;
+}
+/*-- //ui-dialog --*/
 /* Structure
 ***************************************************************/
 #layout-wrapper {
@@ -4559,7 +4624,7 @@ body
 }
 
 /* Forms */
-select, textarea, input.text, input.textMedium, input.text-small, input.text-box { max-width: 65%;}
+select, /*textarea,*/ input.text, input.textMedium, input.text-small, input.text-box { max-width: 65%;}
 
 } /* end media query */
 

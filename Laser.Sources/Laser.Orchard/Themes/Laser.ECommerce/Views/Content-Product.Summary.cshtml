@@ -23,27 +23,27 @@
         .FirstOrDefault() as BooleanField;
 }
 <div class="agile_ecommerce_tab_left products_grid">
-    <a href="@Url.ItemDisplayUrl(contentItem)">
-        @if (productImages != null && productImages.Any()) {
-            var allUrls = productImages.Select(mp => mp.MediaUrl).ToList();
-            while (allUrls.Count() < 6) { //hack: the hover animation works best with at least 6 items
-                allUrls.AddRange(productImages.Select(mp => mp.MediaUrl));
-            }
+    @if (productImages != null && productImages.Any()) {
+        var allUrls = productImages.Select(mp => mp.MediaUrl).ToList();
+        while (allUrls.Count() < 6) { //hack: the hover animation works best with at least 6 items
+            allUrls.AddRange(productImages.Select(mp => mp.MediaUrl));
+        }
+        <a href="@Url.ItemDisplayUrl(contentItem)">
             <div class="hs-wrapper hs-wrapper2">
                 @foreach (var imageUrl in allUrls) {
                     <img src="@Display.ResizeMediaUrl(Width: 223, Height: 298, Mode: "pad", Alignment: "middlecenter", Path: imageUrl)" alt=" " class="img-responsive" />
                 }
             </div>
-        }
-        <h5>@title</h5>
-        <div class="simpleCart_shelfItem">
-            @Display(Model.Content)
+        </a>
+    }
+    <h5><a href="@Url.ItemDisplayUrl(contentItem)">@title</a></h5>
+    <div class="simpleCart_shelfItem">
+        @Display(Model.Content)
+    </div>
+    @if (isNewField != null && isNewField.Value.HasValue && isNewField.Value.Value) {
+        <div class="products_grid_pos">
+            <h6>New</h6>
         </div>
-        @if (isNewField != null && isNewField.Value.HasValue && isNewField.Value.Value) {
-            <div class="products_grid_pos">
-                <h6>New</h6>
-            </div>
-        }
-    </a>
+    }
 </div>
 

@@ -34,8 +34,10 @@
            Parts_Title="Content:1"
            Parts_Stars_Details="Content:2"
            Fields_Common_Text__Description="Content:3"
-           Parts_Product="Content:4;Alternate=Parts_ProductPart" 
-           Parts_Common_Body="Content:5"/>
+           Parts_Product="Content:4.1;Alternate=Parts_ProductPart_Detail" 
+           Parts_Product_AddButton="Content:4.2;Alternate=Parts_ProductPart_AddButton_Detail"
+           Parts_Common_Body="Content:5;Alternate=Parts_Product_AdditionalInfo_Detail"
+           Parts_Reviews="-" />
   </Match>
   <Match DisplayType="Summary">
     <Place Parts_Product="Content:3.1;Alternate=Parts_ProductPart" />

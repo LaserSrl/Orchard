@@ -111,6 +111,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets.json" />
+    <Content Include="Scripts\easyResponsiveTabs.js" />
+    <Content Include="Scripts\easyResponsiveTabs.min.js">
+      <DependentUpon>easyResponsiveTabs.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\imagezoom.js" />
     <Content Include="Scripts\imagezoom.min.js">
       <DependentUpon>imagezoom.js</DependentUpon>
@@ -133,6 +137,7 @@
     <Content Include="Styles\flexslider.min.css">
       <DependentUpon>flexslider.css</DependentUpon>
     </Content>
+    <Content Include="Styles\Images\close.png" />
     <Content Include="Styles\Images\img-sp.png" />
     <Content Include="Styles\Images\left-arrow.png" />
     <Content Include="Styles\Images\right-arrow.png" />
@@ -142,6 +147,8 @@
     <Content Include="Styles\fasthover.min.css">
       <DependentUpon>fasthover.css</DependentUpon>
     </Content>
+    <Content Include="Styles\Images\star-.png" />
+    <Content Include="Styles\Images\star.png" />
     <Content Include="Styles\Style.css" />
     <Content Include="Styles\Style.min.css">
       <DependentUpon>Style.css</DependentUpon>
@@ -174,6 +181,10 @@
     <ProjectReference Include="..\..\..\..\Nwazet.Commerce\Nwazet.Commerce.csproj">
       <Project>{909acc2c-d672-4752-b75b-6822e05fe0e3}</Project>
       <Name>Nwazet.Commerce</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Contrib.Reviews\Contrib.Reviews.csproj">
+      <Project>{f72680eb-12ee-482f-93c8-2f1279e2b710}</Project>
+      <Name>Contrib.Reviews</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Modules\Laser.Orchard.NewsLetters\Laser.Orchard.NewsLetters.csproj">
       <Project>{51da5b67-ce19-4629-b15e-eaef85de5666}</Project>
@@ -214,6 +225,10 @@
     <Content Include="Views\Parts.Title-Product.cshtml" />
     <Content Include="Views\Parts.Stars.Details-Product.cshtml" />
     <Content Include="Views\Fields.Common.Text-Product-Description.cshtml" />
+    <Content Include="Views\Parts.ProductPart.AddButton.Detail.cshtml" />
+    <Content Include="Views\Parts.ProductPart.Detail.cshtml" />
+    <Content Include="Views\Parts.Product.AdditionalInfo.Detail.cshtml" />
+    <Content Include="Views\Parts.Product.Reviews.Detail.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
