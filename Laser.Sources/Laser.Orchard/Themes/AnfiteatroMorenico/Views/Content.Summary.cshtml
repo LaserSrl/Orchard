@@ -1,8 +1,9 @@
 ﻿@using Orchard.Utility.Extensions;
-
+@using Laser.Orchard.StartupConfig.Localization;
 @{
     var cssClass = "";
     var eventDates = "";
+    dynamic dateLocal = WorkContext.Resolve<IDateLocalization>();
     var contentType = Model.ContentItem.ContentType;
     var contentPart = ((IList<Orchard.ContentManagement.ContentPart>)Model.ContentItem.Parts).Where(s => s.PartDefinition.Name == contentType).FirstOrDefault();
     Orchard.MediaLibrary.Fields.MediaLibraryPickerField gallery = (Orchard.MediaLibrary.Fields.MediaLibraryPickerField)contentPart.Fields.Where(f => f.DisplayName == "Gallery").FirstOrDefault();
@@ -15,30 +16,30 @@
     } else if (contentType == "CalendarEvent") {
         cssClass = "eventi";
 
-        var dataInizioFull = Model.ContentItem.ActivityPart.DateTimeStart;
-        var dataFineFull = Model.ContentItem.ActivityPart.DateTimeEnd;
-        var dataInizio = Model.ContentItem.ActivityPart.DateTimeStart.Date;
-        var dataFine = Model.ContentItem.ActivityPart.DateTimeEnd.Date;
-        var oraInizio = Model.ContentItem.ActivityPart.DateTimeStart.ToString("HH:mm");
-        var oraFine = Model.ContentItem.ActivityPart.DateTimeEnd.ToString("HH:mm");
+        var dataInizioFull = dateLocal.ReadDateLocalized(Model.ContentItem.ActivityPart.DateTimeStart, true);
+        var dataFineFull = dateLocal.ReadDateLocalized(Model.ContentItem.ActivityPart.DateTimeEnd, true);
+        var dataInizio = dataInizioFull.Date;
+        var dataFine = dataFineFull.Date;
+        var oraInizio = dataInizioFull.ToString("HH:mm");
+        var oraFine = dataFineFull.ToString("HH:mm");
         if (Model.ContentItem.ActivityPart.AllDay) {
             if (dataInizio == dataFine) {
-                eventDates = Model.ContentItem.ActivityPart.DateTimeStart.ToString("D");
+                eventDates = dataInizio.ToString("dd MMMM yyyy");
             } else {
                 eventDates = String.Format("{0} - {1}", dataInizio.ToString("dd MMMM yyyy"), dataFine.ToString("dd MMMM yyyy"));
             }
         } else {
             if (dataInizio == dataFine) {
-                if (!oraFine.EndsWith("59")) {
-                    eventDates = String.Format("{0}, {1} / {2}", Model.ContentItem.ActivityPart.DateTimeStart.ToString("dd MMMM yyyy"), oraInizio, oraFine);
+                if (!oraFine.ToString().EndsWith("59")) {
+                    eventDates = String.Format("{0}, {1} / {2}", dataInizio.ToString("dd MMMM yyyy"), oraInizio, oraFine);
                 } else {
-                    eventDates = String.Format("{0}, {1}", Model.ContentItem.ActivityPart.DateTimeStart.ToString("dd MMMM yyyy"), oraInizio);
+                    eventDates = String.Format("{0}, {1}", dataInizio.ToString("dd MMMM yyyy"), oraInizio);
                 }
             } else {
                 if (!oraFine.EndsWith("59")) {
-                    eventDates = String.Format("{0} - {1}, {2} / {3}", Model.ContentItem.ActivityPart.DateTimeStart.ToString("dd MMMM yyyy"), Model.ContentItem.ActivityPart.DateTimeEnd.ToString("dd MMMM yyyy"), oraInizio, oraFine);
+                    eventDates = String.Format("{0} - {1} / {2} - {3}", dataInizio.ToString("dd MMMM yyyy"), oraInizio, dataFine.ToString("dd MMMM yyyy"), oraFine);
                 } else {
-                    eventDates = String.Format("{0} - {1}, {2}", Model.ContentItem.ActivityPart.DateTimeStart.ToString("dd MMMM yyyy"), Model.ContentItem.ActivityPart.DateTimeEnd.ToString("dd MMMM yyyy"), oraInizio);
+                    eventDates = String.Format("{0} - {1}, {2}", dataInizio.ToString("dd MMMM yyyy"),dataFine.DateTimeEnd.ToString("dd MMMM yyyy"), oraInizio);
                 }
             }
         }
