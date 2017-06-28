@@ -53,7 +53,7 @@ namespace Laser.Orchard.jQueryPlugins {
 
             //Styles
 
-            manifest.DefineStyle("jQuery_DataTables").SetUrl("jquery.dataTables.min.css");
+            manifest.DefineStyle("jQuery_DataTables").SetUrl("jqDataTable/jquery.dataTables.min.css");
             manifest.DefineStyle("jQuery_ImagePicker_Low").SetUrl("image-picker_low.css");
             manifest.DefineStyle("jQuery_ImagePicker").SetUrl("image-picker.css");
             manifest.DefineStyle("jQuery_MultiSelect").SetUrl("jquery.multiSelect.css");

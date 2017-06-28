@@ -3,7 +3,6 @@ using Orchard.ContentManagement;
 using Orchard.Events;
 using Orchard.Localization;
 using System;
-using System.Globalization;
 
 namespace Laser.Orchard.CommunicationGateway.Projections {
 
