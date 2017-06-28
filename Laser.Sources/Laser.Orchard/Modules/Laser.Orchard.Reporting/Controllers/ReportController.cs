@@ -348,7 +348,8 @@ namespace Laser.Orchard.Reporting.Controllers
         }
 
         public ActionResult Display(ReportDisplayViewModel model) {
-            if (!services.Authorizer.Authorize(Security.Permissions.ShowAdminReports, T("Not authorized to list Reports"))) {
+            var permissionToTest = new Security.Permissions(services.ContentManager).GetPermissions().FirstOrDefault(x => x.Name == string.Format("ShowDataReport{0}", model.Id));
+            if (!services.Authorizer.Authorize(permissionToTest, T("Not authorized to acess this report"))) {
                 return new HttpUnauthorizedResult();
             }
             var ci = services.ContentManager.Get(model.Id);
@@ -368,7 +369,8 @@ namespace Laser.Orchard.Reporting.Controllers
         }
         [Themed(Enabled = false)]
         public ActionResult DisplayChart(int id) {
-            if (!services.Authorizer.Authorize(Security.Permissions.ShowAdminReports, T("Not authorized to list Reports"))) {
+            var permissionToTest = new Security.Permissions(services.ContentManager).GetPermissions().FirstOrDefault(x => x.Name == string.Format("ShowDataReport{0}", id));
+            if (!services.Authorizer.Authorize(permissionToTest, T("Not authorized to list Reports"))) {
                 return new HttpUnauthorizedResult();
             }
             var ci = services.ContentManager.Get(id);

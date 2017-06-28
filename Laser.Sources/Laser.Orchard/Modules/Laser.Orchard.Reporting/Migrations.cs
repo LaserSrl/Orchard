@@ -49,20 +49,6 @@ namespace Laser.Orchard.Reporting
               .WithSetting("Stereotype", "Widget")
               .DisplayedAs("Data Report Viewer Widget"));
 
-            return 2;
-        }
-        public int UpdateFrom2() {
-            // crea un content type vuoto di servizio (usato in fase di visualizzazione del report e dei relativi filtri)
-            ContentDefinitionManager.AlterTypeDefinition("DataReportEmptyType", cfg => cfg
-              .Draftable(false)
-              .Listable(false)
-              .Securable(false)
-              .Creatable(false)
-              .DisplayedAs("Data Report Empty Type"));
-            return 3;
-        }
-        public int UpdateFrom3() {
-            ContentDefinitionManager.DeleteTypeDefinition("DataReportEmptyType");
             return 4;
         }
     }

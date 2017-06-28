@@ -31,16 +31,19 @@ namespace Laser.Orchard.Reporting
                     q => q.Action("Index", "Report", new { area = "Laser.Orchard.Reporting" }).Permission(Permissions.ManageQueries).LocalNav()), null);
 
             // report list
+            var reportPermissions = new Security.Permissions(_contentManager).GetPermissions().ToList();
             var reportViewers = _contentManager.Query<DataReportViewerPart>().List();
             var urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
             builder.Add(item => {
                 item.Caption(T("Admin Data Reports"))
-                    .Permission(Security.Permissions.ShowAdminReports)
+                    .Permission(Security.Permissions.ShowDataReports)
                     .Position("3.05")
                     .LinkToFirstChild(false);
                 foreach(var report in reportViewers) {
-                    item.Add(sub => sub.Caption(T(report.ContentItem.As<TitlePart>() == null? "[No title]" : report.ContentItem.As<TitlePart>().Title))
-                    .Action("Display", "Report", new { area = "Laser.Orchard.Reporting", id = report.Id})
+                    item.Add(sub => sub
+                        .Caption(T(report.ContentItem.As<TitlePart>() == null? "[No title]" : report.ContentItem.As<TitlePart>().Title))
+                        .Action("Display", "Report", new { area = "Laser.Orchard.Reporting", id = report.Id})
+                        .Permission(reportPermissions.FirstOrDefault(x => x.Name == string.Format("ShowDataReport{0}", report.Id)))
                     );
                 }
             });
