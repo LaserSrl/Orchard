@@ -1,12 +1,9 @@
 ﻿using Orchard.Security.Permissions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Localization;
 using Orchard.ContentManagement;
 using Laser.Orchard.Reporting.Models;
-using Orchard.Localization;
 using Orchard.Core.Title.Models;
 
 namespace Laser.Orchard.Reporting.Security {
@@ -42,21 +39,23 @@ namespace Laser.Orchard.Reporting.Security {
 
         public IEnumerable<Permission> GetPermissions() {
             var result = new List<Permission>();
-            var reportPermissions = new List<Permission>();
+            var reportPermissions = GetReportPermissions();
+            ShowDataReports.ImpliedBy = reportPermissions;
             result.Add(ShowDataReports);
-            foreach(var report in GetReports()) {
+            result.AddRange(reportPermissions);
+            return result;
+        }
+        public IEnumerable<Permission> GetReportPermissions() {
+            var reportPermissions = new List<Permission>();
+            var reportList = _contentManager.Query<DataReportViewerPart>().List();
+            foreach (var report in reportList) {
                 var title = (report.ContentItem.Has<TitlePart>() ? report.ContentItem.As<TitlePart>().Title : T("[No Title]").ToString());
                 reportPermissions.Add(new Permission {
                     Name = string.Format("ShowDataReport{0}", report.Id),
                     Description = string.Format("Show Data Report {0}", title)
                 });
             }
-            ShowDataReports.ImpliedBy = reportPermissions;
-            result.AddRange(reportPermissions);
-            return result;
-        }
-        private IEnumerable<DataReportViewerPart> GetReports() {
-            return _contentManager.Query<DataReportViewerPart>().List();
+            return reportPermissions;
         }
     }
 }

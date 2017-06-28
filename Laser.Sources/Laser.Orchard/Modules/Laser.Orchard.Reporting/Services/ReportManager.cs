@@ -1,6 +1,5 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.Data;
-using Orchard.DisplayManagement.Shapes;
 using Orchard.Forms.Services;
 using Orchard.Projections.Descriptors;
 using Orchard.Projections.Descriptors.Filter;
@@ -12,14 +11,15 @@ using Orchard.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Orchard.Core.Common.Fields;
 using System.Collections;
 using NHibernate.Transform;
 using NHibernate;
+using Orchard.Core.Title.Models;
+using Orchard.Localization;
+using Orchard.Security;
 
-namespace Laser.Orchard.Reporting.Services
-{
+namespace Laser.Orchard.Reporting.Services {
     public class ReportManager : IReportManager
     {
         private readonly IEnumerable<IGroupByParameterProvider> groupByProviders;
@@ -28,6 +28,8 @@ namespace Laser.Orchard.Reporting.Services
         private readonly ITokenizer _tokenizer;
         private readonly IRepository<QueryPartRecord> queryRepository;
         private readonly ITransactionManager _transactionManager;
+        private readonly IAuthorizer _authorizer;
+        public Localizer T { get; set; }
 
         public ReportManager(
             IRepository<QueryPartRecord> queryRepository,
@@ -35,7 +37,8 @@ namespace Laser.Orchard.Reporting.Services
             IEnumerable<IGroupByParameterProvider> groupByProviders,
             IContentManager contentManager,
             ITokenizer tokenizer,
-            ITransactionManager transactionManager)
+            ITransactionManager transactionManager,
+            IAuthorizer authorizer)
         {
             this.queryRepository = queryRepository;
             this.projectionManager = projectionManager;
@@ -43,6 +46,8 @@ namespace Laser.Orchard.Reporting.Services
             this.contentManager = contentManager;
             this.groupByProviders = groupByProviders;
             _transactionManager = transactionManager;
+            _authorizer = authorizer;
+            T = NullLocalizer.Instance;
         }
 
         public IEnumerable<TypeDescriptor<GroupByDescriptor>> DescribeGroupByFields()
@@ -221,6 +226,26 @@ namespace Laser.Orchard.Reporting.Services
                 yield return contentQuery;
             }
         }
-
+        public IEnumerable<ReportItem> GetReportListForCurrentUser(string titleFilter = "") {
+            string filter = (titleFilter ?? "").ToLowerInvariant();
+            var reportLst = new List<ReportItem>();
+            var reportPermissions = new Security.Permissions(contentManager).GetReportPermissions();
+            var unfilteredList = GetReports().Select(x => new ReportItem {
+                Id = x.Id,
+                Title =  (x.Has<TitlePart>() ? x.As<TitlePart>().Title : T("[No Title]").ToString())
+            });
+            foreach(var report in unfilteredList) {
+                if (report.Title.ToLowerInvariant().Contains(filter)) {
+                    var permissionToTest = reportPermissions.FirstOrDefault(x => x.Name == string.Format("ShowDataReport{0}", report.Id));
+                    if (_authorizer.Authorize(permissionToTest)) {
+                        reportLst.Add(report);
+                    }
+                }
+            }
+            return reportLst;
+        }
+        public IEnumerable<DataReportViewerPart> GetReports() {
+            return contentManager.Query<DataReportViewerPart>().List();
+        }
     }
 }

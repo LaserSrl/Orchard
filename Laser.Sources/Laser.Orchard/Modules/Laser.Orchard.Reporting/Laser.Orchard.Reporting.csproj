@@ -220,6 +220,7 @@
     <Content Include="Views\Parts\DataReportViewer.LineChart.cshtml" />
     <Content Include="Views\Report\Display.cshtml" />
     <Content Include="Views\Report\DisplayChart.cshtml" />
+    <Content Include="Views\Report\ShowReports.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="Models\AggregateMethods.cs" />
     <Compile Include="Models\ChartTypes.cs" />
     <Compile Include="Models\DataReportViewerPart.cs" />
+    <Compile Include="Models\ReportItem.cs" />
     <Compile Include="Models\ReportRecord.cs" />
     <Compile Include="Models\DataReportViewerPartRecord.cs" />
     <Compile Include="Security\Permissions.cs" />
@@ -255,6 +257,7 @@
     <Compile Include="ViewModels\ReportListViewModel.cs" />
     <Compile Include="ViewModels\ReportViewModel.cs" />
     <Compile Include="ViewModels\DataReportViewerViewModel.cs" />
+    <Compile Include="ViewModels\ShowReportsViewModel.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

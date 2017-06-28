@@ -5,12 +5,10 @@ using Orchard.Projections.Models;
 using Laser.Orchard.Reporting.Models;
 using Laser.Orchard.Reporting.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using Orchard.ContentManagement;
-using System.Web;
 using System.Web.Mvc;
 using Orchard.Core.Title.Models;
 using Laser.Orchard.Reporting.Providers;
@@ -20,11 +18,9 @@ using Orchard.UI.Navigation;
 using Orchard.Settings;
 using Orchard.DisplayManagement;
 using Orchard;
-using System.Text.RegularExpressions;
 using Orchard.Themes;
 
-namespace Laser.Orchard.Reporting.Controllers
-{
+namespace Laser.Orchard.Reporting.Controllers {
     [ValidateInput(false), Admin]
     public class ReportController : Controller
     {
@@ -348,9 +344,9 @@ namespace Laser.Orchard.Reporting.Controllers
         }
 
         public ActionResult Display(ReportDisplayViewModel model) {
-            var permissionToTest = new Security.Permissions(services.ContentManager).GetPermissions().FirstOrDefault(x => x.Name == string.Format("ShowDataReport{0}", model.Id));
-            if (!services.Authorizer.Authorize(permissionToTest, T("Not authorized to acess this report"))) {
-                return new HttpUnauthorizedResult();
+            var reportList = reportManager.GetReportListForCurrentUser();
+            if(reportList.FirstOrDefault(x => x.Id == model.Id) == null) { 
+                return new HttpUnauthorizedResult(T("Not authorized to list Reports").ToString());
             }
             var ci = services.ContentManager.Get(model.Id);
             if(ci.Has<DataReportViewerPart>() == false) {
@@ -369,9 +365,9 @@ namespace Laser.Orchard.Reporting.Controllers
         }
         [Themed(Enabled = false)]
         public ActionResult DisplayChart(int id) {
-            var permissionToTest = new Security.Permissions(services.ContentManager).GetPermissions().FirstOrDefault(x => x.Name == string.Format("ShowDataReport{0}", id));
-            if (!services.Authorizer.Authorize(permissionToTest, T("Not authorized to list Reports"))) {
-                return new HttpUnauthorizedResult();
+            var reportList = reportManager.GetReportListForCurrentUser();
+            if (reportList.FirstOrDefault(x => x.Id == id) == null) {
+                return new HttpUnauthorizedResult(T("Not authorized to list Reports").ToString());
             }
             var ci = services.ContentManager.Get(id);
             if (ci.Has<DataReportViewerPart>() == false) {
@@ -380,6 +376,15 @@ namespace Laser.Orchard.Reporting.Controllers
             var viewerPart = ci.As<DataReportViewerPart>();
             var model = services.ContentManager.New("DataReportEmptyType");
             model.Weld(viewerPart);
+            return View(model);
+        }
+        public ActionResult ShowReports(ShowReportsViewModel model) {
+            var list = reportManager.GetReportListForCurrentUser(model.TitleFilter);
+            model.PagerParameters.Page = model.page;
+            Pager pager = new Pager(services.WorkContext.CurrentSite, model.PagerParameters);
+            var pagerShape = services.New.Pager(pager).TotalItemCount(list.Count());
+            model.Pager = pagerShape;
+            model.Reports = list.Skip(pager.GetStartIndex()).Take(pager.PageSize);
             return View(model);
         }
         private string EncodeGroupByCategoryAndGroupByType(string category, string type)

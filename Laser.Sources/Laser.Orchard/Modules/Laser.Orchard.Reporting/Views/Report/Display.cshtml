@@ -15,6 +15,7 @@
     IContentManager contentManager = null;
     WorkContext.TryResolve<IContentManager>(out contentManager);
 }
+<p class="breadcrumb"><a href="@Url.Action("ShowReports", "Report", new { area = "Laser.Orchard.Reporting" })">@T("Reports List")</a> &#62; @T("Execute report")</p>
 @if(Model.FilterContent != null) {
     using (Html.BeginFormAntiForgeryPost(Url.Action("DisplayChart"))) {
         <div id="reportFilters">

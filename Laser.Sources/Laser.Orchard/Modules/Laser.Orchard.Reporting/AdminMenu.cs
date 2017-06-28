@@ -1,23 +1,11 @@
-﻿using Laser.Orchard.Reporting.Models;
-using Orchard.ContentManagement;
-using Orchard.Core.Title.Models;
-using Orchard.Localization;
+﻿using Orchard.Localization;
 using Orchard.Projections;
 using Orchard.UI.Navigation;
-using Orchard.Mvc.Html;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 
-namespace Laser.Orchard.Reporting
-{
+namespace Laser.Orchard.Reporting {
     public class AdminMenu : INavigationProvider
     {
-        private readonly IContentManager _contentManager;
-        public AdminMenu(IContentManager contentManager) {
-            _contentManager = contentManager;
+        public AdminMenu() {
             T = NullLocalizer.Instance;
         }
         public Localizer T { get; set; }
@@ -30,22 +18,11 @@ namespace Laser.Orchard.Reporting
                     menu.Add(T("Data Reports"), "1.0",
                     q => q.Action("Index", "Report", new { area = "Laser.Orchard.Reporting" }).Permission(Permissions.ManageQueries).LocalNav()), null);
 
-            // report list
-            var reportPermissions = new Security.Permissions(_contentManager).GetPermissions().ToList();
-            var reportViewers = _contentManager.Query<DataReportViewerPart>().List();
-            var urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
             builder.Add(item => {
                 item.Caption(T("Admin Data Reports"))
                     .Permission(Security.Permissions.ShowDataReports)
                     .Position("3.05")
-                    .LinkToFirstChild(false);
-                foreach(var report in reportViewers) {
-                    item.Add(sub => sub
-                        .Caption(T(report.ContentItem.As<TitlePart>() == null? "[No title]" : report.ContentItem.As<TitlePart>().Title))
-                        .Action("Display", "Report", new { area = "Laser.Orchard.Reporting", id = report.Id})
-                        .Permission(reportPermissions.FirstOrDefault(x => x.Name == string.Format("ShowDataReport{0}", report.Id)))
-                    );
-                }
+                    .Action("ShowReports", "Report", new { area = "Laser.Orchard.Reporting" });
             });
         }
     }
