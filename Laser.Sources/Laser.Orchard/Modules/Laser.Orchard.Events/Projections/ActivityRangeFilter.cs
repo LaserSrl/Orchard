@@ -6,6 +6,7 @@ using Orchard.Localization;
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using Laser.Orchard.StartupConfig.Localization;
 
 namespace Laser.Orchard.Events.Projections {
 
@@ -18,11 +19,13 @@ namespace Laser.Orchard.Events.Projections {
 
         public Localizer T { get; set; }
 
+        private readonly IDateLocalization _dataLocalization;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Lazy<CultureInfo> _cultureInfo;
 
-        public ActivityRangeFilter(IWorkContextAccessor workContextAccessor) {
+        public ActivityRangeFilter(IWorkContextAccessor workContextAccessor, IDateLocalization dataLocalization) {
             T = NullLocalizer.Instance;
+            _dataLocalization = dataLocalization;
             _workContextAccessor = workContextAccessor;
             _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(_workContextAccessor.GetContext().CurrentSite.SiteCulture));
         }
@@ -62,6 +65,8 @@ namespace Laser.Orchard.Events.Projections {
                         error = true;
                     }
                     else {
+                        dateFrom = (DateTime)_dataLocalization.StringToDatetime(dateFrom.ToString("dd/MM/yyyy", _cultureInfo.Value), dateFrom.ToString("HH:mm", _cultureInfo.Value), true);
+                        dateTo = (DateTime)_dataLocalization.StringToDatetime(dateTo.ToString("dd/MM/yyyy", _cultureInfo.Value), dateTo.ToString("HH:mm", _cultureInfo.Value), true);
                         context.Query = query.Where(
                                                     x => x.ContentPartRecord<ActivityPartRecord>(),
                                                     f => f.Disjunction(

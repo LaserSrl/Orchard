@@ -45,7 +45,7 @@
             if (!oraFine.EndsWith("59")) {
                 eventDates = String.Format("{0} - {1} / {2} - {3}", dataInizio.ToString("dd MMMM yyyy"), oraInizio, dataFine.ToString("dd MMMM yyyy"), oraFine);
             } else {
-                eventDates = String.Format("{0} - {1}, {2}", dataInizio.ToString("dd MMMM yyyy"), dataFine.DateTimeEnd.ToString("dd MMMM yyyy"), oraInizio);
+                eventDates = String.Format("{0} - {1}, {2}", dataInizio.ToString("dd MMMM yyyy"), dataFine.ToString("dd MMMM yyyy"), oraInizio);
             }
         }
 

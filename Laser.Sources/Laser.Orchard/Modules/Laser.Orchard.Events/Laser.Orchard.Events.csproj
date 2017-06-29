@@ -158,7 +158,6 @@
     <Compile Include="Services\IEventsService.cs" />
     <Compile Include="Settings\ActivityPartSettingsHooks.cs" />
     <Compile Include="Tokens\EventTokens.cs" />
-    <Compile Include="ViewModels\ActivityDisplayViewModel.cs" />
     <Compile Include="ViewModels\ActivityViewModel.cs" />
     <Compile Include="ViewModels\AggregatedEventViewModel.cs" />
     <Compile Include="ViewModels\CalendarEditViewModel.cs" />
