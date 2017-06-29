@@ -9602,6 +9602,13 @@ div.zone-header > #culture-selection select {
     top: 20px;
 }
 
+div.summary div.stars-rating h3 {
+    font-size: 15px;
+    font-weight: normal;
+    float: left;
+    margin: 5px 5px 0 0 !important;
+}
+
 /*Workaround: O 1.10 ha una logica di ricerca che si attiva via js, non supportata dal tema di admin attuale*/
 input#adminfilter {
     display: none;
