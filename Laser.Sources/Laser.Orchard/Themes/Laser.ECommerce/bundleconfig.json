@@ -58,5 +58,11 @@
     "inputFiles": [
       "Scripts/easyResponsiveTabs.js"
     ]
+  },
+  {
+    "outputFileName": "Styles/fonts/font-awesome-4.6.2/css/font-awesome.min.css",
+    "inputFiles": [
+      "Styles/fonts/font-awesome-4.6.2/css/font-awesome.css"
+    ]
   }
 ]

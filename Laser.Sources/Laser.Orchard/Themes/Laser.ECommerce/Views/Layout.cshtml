@@ -9,8 +9,13 @@
 @{
     Func<dynamic, dynamic> Zone = x => Display(x); // Zone as an alias for Display to help make it obvious when we're displaying zones
 
+
+    WorkContext.Layout.Header.Add(New.Branding(), "5"); // Site name and link to the home page
+
+    WorkContext.Layout.HeaderLeft.Add(New.LoginLogoutRegister(), "5"); // Link to Login page or logoff action
+    
     /* Layout classification based on filled zones
-   ***************************************************************/
+    ***************************************************************/
 
     //Add classes to the wrapper div to toggle side header widget zones on and off
     var headerSideClass = CalcuClassify(new[] { "HeaderLeft", "HeaderRight" }, "header-"); // for header-1, header-2 or header-12 if any of the header side zones are filled
@@ -36,13 +41,12 @@
         Model.Classes.Add(footerQuadClass);
     }
 
-    WorkContext.Layout.Header.Add(New.Branding(), "5"); // Site name and link to the home page
 
     Model.Id = "layout-wrapper";
     var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model
 }
 @tag.StartElement
-<div id="layout-header-group" class="group">
+<div id="layout-header-group" class="group container">
     @if (Model.HeaderLeft != null) {
         <header id="layout-header-left" class="">
             <div id="header-left" class="header header-left">
@@ -64,6 +68,7 @@
             </div>
         </header>
     }
+    <div class="clearfix"> </div>
 </div>
 
 @if (Model.Navigation != null) {

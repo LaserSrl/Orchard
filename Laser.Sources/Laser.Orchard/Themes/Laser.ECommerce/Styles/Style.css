@@ -34,7 +34,9 @@ input[type="submit"],.panel-body ul li a,.checkout-right-basket a,.additional_in
 }
 .header-center{
 	float:left;
-	margin-left:22em;
+	/*margin-left:22em;*/
+    text-align: center;
+    width: 100%;
 }
 .header-center h1 a{
 	font-size:1.1em;
@@ -1246,6 +1248,7 @@ h2.resp-accordion {
 	color:#212121;
 	width:100%;
 	font-size:14px;
+    margin: 1em 0 0;
 }
 .register input[type="password"],.register input[type="email"]{
 	margin:1em 0 0;
@@ -2017,19 +2020,19 @@ h2.typoh2{
 }
 /*-- //faq --*/
 /*-- about --*/
-.w3ls_about_grid_left p{
+.ecommerce_about_grid_left p{
 	color:#999;
 	line-height:1.8em;
 	margin-bottom:2em;
 }
-.w3ls_about_grid_left2 p{
+.ecommerce_about_grid_left2 p{
 	color:#999;
 	line-height:1.8em;
 }
-.w3ls_about_grid_left1 {
+.ecommerce_about_grid_left1 {
     text-align: center;
 }
-.w3ls_about_grid_left1 span{
+.ecommerce_about_grid_left1 span{
 	color:#ff9b05;
 	font-size:1.5em;
 	top: 1em;
@@ -2600,6 +2603,27 @@ td.invert-image a img {
     display: none;
 }
 /*-- //ui-dialog --*/
+
+/*-- open auth --*/
+.fa-facebook, .fa-twitter{
+    color:white;
+}
+.fa-stack{
+    font-size:3em !important;
+    margin-left: 7%;
+}
+.social-login-buttons button {
+    color: #fff;
+    background-color: transparent;
+    border: 0 none !important;
+}
+.social-login-buttons i {
+    /*font-size: 2em;*/
+}
+.social-hover:hover {
+    cursor:pointer;
+}
+/*-- //open auth --*/
 /* Structure
 ***************************************************************/
 #layout-wrapper {
@@ -2617,7 +2641,8 @@ td.invert-image a img {
 /* - HeaderCenter - */
 .header-center {
     float: left;
-    margin-left: 22em;
+    /*margin-left: 22em;*/
+    width: 100%;
 }
 
     .header-center h1 a {
@@ -3295,10 +3320,10 @@ td.invert-image a img {
 	.w3l_faq_grids {
 		width: 100%;
 	}
-	.w3ls_about_grid_right{
+	.ecommerce_about_grid_right{
 		margin:2em 0 0;
 	}
-	.w3ls_about_grid_right img {
+	.ecommerce_about_grid_right img {
 		margin: 0 auto;
 	}
 	.wthree_team_grid {
@@ -3743,7 +3768,7 @@ td.invert-image a img {
 	.w3l_faq_grid h3 {
 		font-size: 1.19em;
 	}
-	.w3ls_about_grid_right {
+	.ecommerce_about_grid_right {
 		margin: 1em 0 0;
 	}
 	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before {
@@ -4307,7 +4332,7 @@ td.invert-image a img {
 	}
 }
 @media (max-width:375px){
-	.wthree_banner_bottom_left,.w3ls_about_grid_left,.wthree_banner_bottom_right,.w3agile_special_deals_grid_left,.w3agile_special_deals_grid_right,.ecommerce_newsletter_right,.ecommerce_newsletter_left {
+	.wthree_banner_bottom_left,.ecommerce_about_grid_left,.wthree_banner_bottom_right,.w3agile_special_deals_grid_left,.w3agile_special_deals_grid_right,.ecommerce_newsletter_right,.ecommerce_newsletter_left {
 		padding: 0;
 	}
 	.agileinfo_banner_bottom1_grid_left {

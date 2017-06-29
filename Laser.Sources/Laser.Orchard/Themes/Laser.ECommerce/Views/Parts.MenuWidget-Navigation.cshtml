@@ -5,7 +5,7 @@
     var items = (IList<dynamic>)Enumerable.Cast<dynamic>(Menu.Items);
 }
 <div class="collapse navbar-collapse">
-    <ul class="nav navbar-nav navbar-right">
+    <ul class="nav navbar-nav">
         @foreach (var item in items) {
             if (!HasText(item.Text)) {
                 @DisplayChildren(item)
@@ -26,7 +26,7 @@
                         item.Classes.Add("dropdown");
                     }
                     if (item.Content != null && item.Content is TermPart && item.Item.Items.Length > 0) {
-                        <a href="#" data-toggle="dropdown">@item.Text</a>
+                        <a href="#" data-toggle="dropdown">@item.Text <b class="caret"></b></a>
                         @Display.NavigationTaxonomyMenuLink(Item: item)
                     } else {
                         @renderedMenuItemLink

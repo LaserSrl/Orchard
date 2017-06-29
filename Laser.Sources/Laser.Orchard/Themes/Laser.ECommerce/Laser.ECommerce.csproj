@@ -137,6 +137,12 @@
     <Content Include="Styles\flexslider.min.css">
       <DependentUpon>flexslider.css</DependentUpon>
     </Content>
+    <Content Include="Styles\fonts\font-awesome-4.6.2\css\font-awesome.css" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\css\font-awesome.min.css">
+      <DependentUpon>font-awesome.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.svg" />
+    <Content Include="Styles\fonts\krake.svg" />
     <Content Include="Styles\Images\close.png" />
     <Content Include="Styles\Images\img-sp.png" />
     <Content Include="Styles\Images\left-arrow.png" />
@@ -173,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
+    <Folder Include="Styles\fonts\font-awesome-4.6.2\scss\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ShoppingCartWidget.cshtml" />
@@ -189,6 +196,10 @@
     <ProjectReference Include="..\..\Modules\Laser.Orchard.NewsLetters\Laser.Orchard.NewsLetters.csproj">
       <Project>{51da5b67-ce19-4629-b15e-eaef85de5666}</Project>
       <Name>Laser.Orchard.NewsLetters</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Laser.Orchard.OpenAuthentication\Laser.Orchard.OpenAuthentication.csproj">
+      <Project>{9ce00190-3abe-41e2-966f-76a9b017eb65}</Project>
+      <Name>Laser.Orchard.OpenAuthentication</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +240,36 @@
     <Content Include="Views\Parts.ProductPart.Detail.cshtml" />
     <Content Include="Views\Parts.Product.AdditionalInfo.Detail.cshtml" />
     <Content Include="Views\Parts.Product.Reviews.Detail.cshtml" />
+    <Content Include="Views\LoginLogoutRegister.cshtml" />
+    <Content Include="Views\LogOn.cshtml" />
+    <Content Include="Views\OpenAuthLogOn.cshtml" />
+    <Content Include="Views\OpenAuthRegister.cshtml" />
+    <Content Include="Views\Register.cshtml" />
+    <Content Include="Styles\fonts\HandelGotD-Bold.otf" />
+    <Content Include="Styles\fonts\krake.eot" />
+    <Content Include="Styles\fonts\krake.ttf" />
+    <Content Include="Styles\fonts\krake.woff" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.eot" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.woff" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\FontAwesome.otf" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\animated.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\bordered-pulled.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\core.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\fixed-width.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\font-awesome.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\icons.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\larger.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\list.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\mixins.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\path.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\rotated-flipped.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\screen-reader.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\stacked.less" />
+    <Content Include="Styles\fonts\font-awesome-4.6.2\less\variables.less" />
+    <Content Include="Views\OpenAuthLogonForm.cshtml" />
+    <Content Include="Views\OpenAuthRegisterForm.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
