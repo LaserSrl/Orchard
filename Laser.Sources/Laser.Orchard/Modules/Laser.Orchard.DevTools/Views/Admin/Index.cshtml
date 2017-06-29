@@ -12,6 +12,7 @@
     <a class="button primaryAction" href="@Url.Action("GetList", "adminranking", new { area = "Laser.Orchard.Questionnaires" })" title="@T("RankingList")">@T("Ranking List")</a>
 -->
 <a class="button primaryAction" href="@Url.Action("ListAll", "PaymentInfo", new { area = "Laser.Orchard.PaymentGateway" })" title="@T("Payment list")">@T("Payment list")</a>
+<a class="button primaryAction" href="@Url.Action("ShowCustomHqlQuery", "Admin", new { area = "Laser.Orchard.DevTools" })" title="@T("Custom HQL query")">@T("Custom HQL query")</a>
 <br />
 <fieldset>
     @if (!string.IsNullOrEmpty(Model.Testo)) {
