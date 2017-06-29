@@ -30,7 +30,7 @@
             if (!oraFine.EndsWith("59")) {
                 eventDates = String.Format("{0} - {1} / {2} - {3}", dataInizio.ToString("dd MMMM yyyy"), oraInizio, dataFine.ToString("dd MMMM yyyy"), oraFine);
             } else {
-                eventDates = String.Format("{0} - {1}, {2}", dataInizio.ToString("dd MMMM yyyy"), dataFine.DateTimeEnd.ToString("dd MMMM yyyy"), oraInizio);
+                eventDates = String.Format("{0} - {1}, {2}", dataInizio.ToString("dd MMMM yyyy"), dataFine.ToString("dd MMMM yyyy"), oraInizio);
             }
         }
     }
@@ -39,12 +39,16 @@
 <div class="row">
     <div class="col-xs-12 col-sm-4">
         <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" title="@T("Go to page {0}",Model.ContentItem.TitlePart.Title)">
-		@{var alt=Model.ContentItem.CalendarEvent.Gallery.MediaParts[0].AlternateText;
-		if (string.IsNullOrEmpty(alt)){
-		alt=Model.ContentItem.TitlePart.Title;
-		}
-		}
-            <img src="@Display.ResizeMediaUrl(Width: 720, Height: 480, Mode: "pad", Alignment: "middlecenter", Path: Model.ContentItem.CalendarEvent.Gallery.MediaParts[0].MediaUrl)" class="img-responsive" alt="@alt">
+		@{
+            string alt = "";
+            if (Model.ContentItem.CalendarEvent.Gallery.MediaParts.Count != 0) {
+                alt = Model.ContentItem.CalendarEvent.Gallery.MediaParts[0].AlternateText;
+                if (string.IsNullOrEmpty(alt)) {
+                    alt = Model.ContentItem.TitlePart.Title;
+                }
+                <img src="@Display.ResizeMediaUrl(Width: 720, Height: 480, Mode: "pad", Alignment: "middlecenter", Path: Model.ContentItem.CalendarEvent.Gallery.MediaParts[0].MediaUrl)" class="img-responsive" alt="@alt">
+            }
+        }
         </a>
     </div>
     <div class="col-xs-12 col-sm-8">
