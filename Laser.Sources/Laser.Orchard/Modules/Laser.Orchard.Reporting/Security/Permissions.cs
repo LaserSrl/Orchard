@@ -40,12 +40,13 @@ namespace Laser.Orchard.Reporting.Security {
         public IEnumerable<Permission> GetPermissions() {
             var result = new List<Permission>();
             var reportPermissions = GetReportPermissions();
-            ShowDataReports.ImpliedBy = reportPermissions;
+            ShowDataReports.ImpliedBy = reportPermissions.Values;
             result.Add(ShowDataReports);
-            result.AddRange(reportPermissions);
+            result.AddRange(reportPermissions.Values);
             return result;
         }
-        public IEnumerable<Permission> GetReportPermissions() {
+        public Dictionary<int, Permission> GetReportPermissions() {
+            Dictionary<int, Permission> result = new Dictionary<int, Permission>();
             var reportPermissions = new List<Permission>();
             var reportList = _contentManager.Query<DataReportViewerPart>().List();
             foreach (var report in reportList) {
@@ -54,8 +55,12 @@ namespace Laser.Orchard.Reporting.Security {
                     Name = string.Format("ShowDataReport{0}", report.Id),
                     Description = string.Format("Show Data Report {0}", title)
                 });
+                result.Add(report.Id, new Permission {
+                    Name = string.Format("ShowDataReport{0}", report.Id),
+                    Description = string.Format("Show Data Report {0}", title)
+                });
             }
-            return reportPermissions;
+            return result;
         }
     }
 }

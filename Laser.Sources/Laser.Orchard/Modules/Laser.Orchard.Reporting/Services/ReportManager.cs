@@ -18,6 +18,7 @@ using NHibernate;
 using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Security.Permissions;
 
 namespace Laser.Orchard.Reporting.Services {
     public class ReportManager : IReportManager
@@ -29,7 +30,16 @@ namespace Laser.Orchard.Reporting.Services {
         private readonly IRepository<QueryPartRecord> queryRepository;
         private readonly ITransactionManager _transactionManager;
         private readonly IAuthorizer _authorizer;
+        private Dictionary<int, Permission> _reportPermissions;
         public Localizer T { get; set; }
+        private Dictionary<int, Permission> ReportPermissions {
+            get {
+                if (_reportPermissions == null) {
+                    _reportPermissions = new Security.Permissions(contentManager).GetReportPermissions();
+                }
+                return _reportPermissions;
+            }
+        }
 
         public ReportManager(
             IRepository<QueryPartRecord> queryRepository,
@@ -229,15 +239,13 @@ namespace Laser.Orchard.Reporting.Services {
         public IEnumerable<ReportItem> GetReportListForCurrentUser(string titleFilter = "") {
             string filter = (titleFilter ?? "").ToLowerInvariant();
             var reportLst = new List<ReportItem>();
-            var reportPermissions = new Security.Permissions(contentManager).GetReportPermissions();
             var unfilteredList = GetReports().Select(x => new ReportItem {
                 Id = x.Id,
                 Title =  (x.Has<TitlePart>() ? x.As<TitlePart>().Title : T("[No Title]").ToString())
             });
             foreach(var report in unfilteredList) {
                 if (report.Title.ToLowerInvariant().Contains(filter)) {
-                    var permissionToTest = reportPermissions.FirstOrDefault(x => x.Name == string.Format("ShowDataReport{0}", report.Id));
-                    if (_authorizer.Authorize(permissionToTest)) {
+                    if (_authorizer.Authorize(ReportPermissions[report.Id])) {
                         reportLst.Add(report);
                     }
                 }
