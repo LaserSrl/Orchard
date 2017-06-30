@@ -130,6 +130,10 @@
     <Content Include="Scripts\jquery.iframe-transport.min.js">
       <DependentUpon>jquery.iframe-transport.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\shoppingcart.js" />
+    <Content Include="Scripts\shoppingcart.min.js">
+      <DependentUpon>shoppingcart.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\shoppingcart.widget.min.js">
       <DependentUpon>shoppingcart.widget.js</DependentUpon>
     </Content>
@@ -270,6 +274,9 @@
     <Content Include="Styles\fonts\font-awesome-4.6.2\less\variables.less" />
     <Content Include="Views\OpenAuthLogonForm.cshtml" />
     <Content Include="Views\OpenAuthRegisterForm.cshtml" />
+    <Content Include="Views\LogOnForm.cshtml" />
+    <Content Include="Views\RegisterForm.cshtml" />
+    <Content Include="Views\ShoppingCart.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

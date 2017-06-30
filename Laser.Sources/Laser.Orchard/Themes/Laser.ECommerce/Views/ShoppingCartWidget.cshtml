@@ -1,10 +1,9 @@
 ﻿@{
-
     Script.Require("jQuery");
     Script.Include("jquery.iframe-transport.js", "jquery.iframe-transport.min.js");
     Script.Include("shoppingcart.widget.js", "shoppingcart.widget.min.js");
 }
-<div class="shopping-cart-container minicart"
+<div id="shopping-cart-widget-container" class="shopping-cart-container minicart"
      data-load="@Url.Action("NakedCart", "ShoppingCart", new {area="Nwazet.Commerce"})"
      data-update="@Url.Action("AjaxUpdate", "ShoppingCart", new {area="Nwazet.Commerce"})"
      data-token="@Html.AntiForgeryTokenValueOrchard()"
@@ -16,4 +15,5 @@
     Nwazet.WaitWhileWeRestoreYourCart = "@T("Please wait while we restore your shopping cart...")";
     Nwazet.FailedToLoadCart = "@T("Failed to load the cart")";
 </script>
+
 

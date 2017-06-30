@@ -64,5 +64,11 @@
     "inputFiles": [
       "Styles/fonts/font-awesome-4.6.2/css/font-awesome.css"
     ]
+  },
+  {
+    "outputFileName": "Scripts/shoppingcart.min.js",
+    "inputFiles": [
+      "Scripts/shoppingcart.js"
+    ]
   }
 ]

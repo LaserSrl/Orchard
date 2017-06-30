@@ -7,11 +7,12 @@
             var defaults = {
                 type: 'default', //default, vertical, accordion;
                 width: 'auto',
-                fit: true
+                fit: true,
+                active: 0
             }
             //Variables
             var options = $.extend(defaults, options);            
-            var opt = options, jtype = opt.type, jfit = opt.fit, jwidth = opt.width, vtabs = 'vertical', accord = 'accordion';
+            var opt = options, jtype = opt.type, jfit = opt.fit, jwidth = opt.width, jindex = opt.active, vtabs = 'vertical', accord = 'accordion';
 
             //Main function
             this.each(function () {
@@ -52,6 +53,7 @@
                 });
 
                 //Assigning the 'aria-controls' to Tab items
+                var activeIndex = jindex >= $respTabs.find('.resp-tab-item').length ? 0 : jindex;
                 var count = 0,
                     $tabContent;
                 $respTabs.find('.resp-tab-item').each(function () {
@@ -60,9 +62,9 @@
                     $tabItem.attr('role', 'tab');
 
                     //First active tab                   
-                    $respTabs.find('.resp-tab-item').first().addClass('resp-tab-active');
-                    $respTabs.find('.resp-accordion').first().addClass('resp-tab-active');
-                    $respTabs.find('.resp-tab-content').first().addClass('resp-tab-content-active').attr('style', 'display:block');
+                    $respTabs.find('.resp-tab-item').eq(activeIndex).addClass('resp-tab-active');
+                    $respTabs.find('.resp-accordion').eq(activeIndex).addClass('resp-tab-active');
+                    $respTabs.find('.resp-tab-content').eq(activeIndex).addClass('resp-tab-content-active').attr('style', 'display:block');
 
                     //Assigning the 'aria-labelledby' attr to tab-content
                     var tabcount = 0;

@@ -25,9 +25,7 @@
     var whitelabelLogo = Url.Content(String.Format("~/media/AdminResources/Logo/{0}-logo-frontoffice.png", tenantname));
 
 }
-<div class="row">
-    @Html.ValidationSummary(T("Login was unsuccessful. Please correct the errors and try again.").ToString())
-</div>
+
 @if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(externalLoginData)) {
     <div class="row">
         <p>@T("This user account will be linked to <b>{0}</b> when you login.", userName)</p>

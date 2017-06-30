@@ -2472,7 +2472,7 @@ td.invert-image a img {
 .rem{
 	position:relative;
 }
-.close1,.close2,.close3 {
+.closeX {
     background: url('Images/close.png') no-repeat 0px 0px;
     cursor: pointer;
     width: 32px;
@@ -2509,7 +2509,7 @@ td.invert-image a img {
 }
 .checkout-right-basket{
 	float: right;
-    margin: 8em 0 0 0em;
+    margin: 0; /*8em 0 0 0em;*/
 }
 .checkout-left-basket ul li span {
     float: right;
@@ -4086,7 +4086,7 @@ td.invert-image a img {
 		border-right: none;
 		border-bottom: none;
 	}
-	tr.rem1, tr.rem2, tr.rem3 {
+	tr.remX {
 		border: 1px solid #D7D7D7;
 		padding-bottom: 2em;
 		display: block;
