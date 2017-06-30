@@ -49,7 +49,8 @@ namespace Laser.Orchard.Commons.Services {
 
         private readonly IOrchardServices _orchardServices;
 
-        public ObjectDumper(int levels,  string[] filterContentFieldsParts = null, bool omitContentItem = false, bool tinyResponse = true, string[] complexBehaviour = null, IOrchardServices orchardServices = null) {
+        //def: int levels,  string[] filterContentFieldsParts = null, bool omitContentItem = false, bool tinyResponse = true, string[] complexBehaviour = null, IOrchardServices orchardServices = null
+        public ObjectDumper(int levels, string[] filterContentFieldsParts, bool omitContentItem, bool tinyResponse, string[] complexBehaviour, IOrchardServices orchardServices) {
             _levels = levels;
             _xdoc = new XDocument();
             _xdoc.Add(_current = new XElement("ul"));
@@ -92,7 +93,7 @@ namespace Laser.Orchard.Commons.Services {
             if (o == null && !_complexBehaviour.Select(s => s.ToLowerInvariant()).Contains("returnnulls")) { // Se non devo
                 return null;
             }
-            if (o != null){
+            if (o != null) {
                 if (FormatType(o) == "FieldExternal") {
                     // testo il caso in cui non ho un contentobject ma un content url
                     if (((dynamic)o).ContentObject != null) {
@@ -108,7 +109,7 @@ namespace Laser.Orchard.Commons.Services {
                         }
                     }
                 }
-            } 
+            }
             //_parents.Push(o);
             _parents.Push("a");
             // starts a new container
@@ -118,17 +119,22 @@ namespace Laser.Orchard.Commons.Services {
                 if (o == null) {
                     DumpValue(null, name);
                 } else if (o.GetType().IsValueType || o is string) {
-                    if (nameDynamicJsonArray.Equals("LocalazedDate") && FormatType(o) == "DateTime") {
+                    if (nameDynamicJsonArray.Equals("LocalizedDate") && FormatType(o) == "DateTime") {
                         var currentTimeZone = _orchardServices.WorkContext.CurrentTimeZone;
-                        DateTime localizedDate = TimeZoneInfo.ConvertTimeFromUtc((DateTime) o, currentTimeZone);
+                        DateTime localizedDate = TimeZoneInfo.ConvertTimeFromUtc((DateTime)o, currentTimeZone);
                         DumpValue(localizedDate, name);
+                    } else {
+                        DumpValue(o, name);
                     }
-                    DumpValue(o, name);
                 } else {
                     if (_parents.Count >= _levels) {
                         return _current;
                     } else if (o.ToString().EndsWith(".ContentItemVersionRecord") || o.ToString().EndsWith(".ContentItemRecord")) {
                         return _current;
+                    }
+
+                    if(nameDynamicJsonArray.Equals("LocalizedDate") && name.Equals("ContentItem")) {
+                        nameDynamicJsonArray = "";
                     }
 
                     DumpObject(o, name, nameDynamicJsonArray);
@@ -176,7 +182,7 @@ namespace Laser.Orchard.Commons.Services {
                 elementType = nameDynamicJsonArray;
             _current.Add(
                 new XElement("h1", new XText(name)),
-                // new XElement("span", elementType)
+                 // new XElement("span", elementType)
                  new XElement("span", elementType, new XAttribute("type", "string"))
 
             );
@@ -252,21 +258,21 @@ namespace Laser.Orchard.Commons.Services {
                             SafeCall(() => Dump(dynObject[member], member, "string[]"));//, "List<"+member+">"));
                         else
                             if (ArrayLoop[0].GetType().Equals(typeof(int)))
-                                SafeCall(() => Dump(dynObject[member], member, "Int32[]"));
-                            else
+                            SafeCall(() => Dump(dynObject[member], member, "Int32[]"));
+                        else
                                 if (ArrayLoop[0].GetType().Equals(typeof(DateTime)))
-                                    SafeCall(() => Dump(dynObject[member], member, "DateTime[]"));
-                                else {
-                                    int posizion = 0;
-                                    //    SafeCall(() => Dump(new VirtualPart(), '[' + posizion.ToString() + ']'));
+                            SafeCall(() => Dump(dynObject[member], member, "DateTime[]"));
+                        else {
+                            int posizion = 0;
+                            //    SafeCall(() => Dump(new VirtualPart(), '[' + posizion.ToString() + ']'));
 
-                                    foreach (var item in ArrayLoop) {
-                                        if (item != null) {
-                                            SafeCall(() => Dump(item, '[' + posizion.ToString() + ']', padrearray));
-                                            posizion++;
-                                        }
-                                    }
+                            foreach (var item in ArrayLoop) {
+                                if (item != null) {
+                                    SafeCall(() => Dump(item, '[' + posizion.ToString() + ']', padrearray));
+                                    posizion++;
                                 }
+                            }
+                        }
 
                     } else {
                         SafeCall(() => Dump(dynObject[member], member, padrearray));
@@ -427,8 +433,8 @@ namespace Laser.Orchard.Commons.Services {
 
                 if (prop.GetIndexParameters().Length == 0 && prop.CanRead) {
                     if (!_skipParts.Contains(o.GetType().Name)) {
-                        if(FormatType(o).Equals("ActivityPart") || FormatType(o).Equals("DateTimeField")) {
-                            Dump(prop.GetValue(o, null), member.Name, "LocalazedDate");
+                        if (FormatType(o).Equals("ActivityPart") || FormatType(o).Equals("DateTimeField")) {
+                            Dump(prop.GetValue(o, null), member.Name, "LocalizedDate");
                         } else {
                             Dump(prop.GetValue(o, null), member.Name);
                         }
