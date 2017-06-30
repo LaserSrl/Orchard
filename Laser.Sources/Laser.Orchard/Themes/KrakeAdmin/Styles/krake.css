@@ -620,6 +620,10 @@ legend {
     width: 10px;
 }
 
+div.settings span.tokenized-popup {
+    margin-top: -6px;
+}
+
 #maplocation {
     margin-left: 90px;
 }
