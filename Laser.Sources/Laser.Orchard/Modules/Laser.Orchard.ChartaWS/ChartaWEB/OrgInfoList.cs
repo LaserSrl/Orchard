@@ -88,7 +88,7 @@ namespace ChartaWEB
 
                 // serializza il risultato
                 System.Xml.Linq.XElement dump = null;
-                ObjectDumper dumper = new ObjectDumper(10, null, false, true, null);
+                ObjectDumper dumper = new ObjectDumper(10, null, false, true, null, null); //da passare orchard service
                 var sb = new StringBuilder();
                 sb.Append("{\"m\":[{\"n\":\"Reply\", \"v\":\"Reply\"}]"); // json start
                 sb.Append(",\"l\":[{"); // lista start

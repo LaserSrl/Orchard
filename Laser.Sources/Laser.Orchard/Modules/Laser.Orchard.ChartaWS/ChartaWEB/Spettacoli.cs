@@ -108,7 +108,7 @@ namespace ChartaWEB
                 // serializza il risultato
                 var sb = new StringBuilder();
                 sb.Append("{\"m\":[{\"n\":\"Reply\",\"v\":\"Reply\"}], \"l\":[{"); // lista start
-                var dumper = new ObjectDumper(10, null, false, true, null);
+                var dumper = new ObjectDumper(10, null, false, true, null, null); //da passare orchard service
                 var dump = dumper.Dump(lista.ToArray(), "Spettacoli");
                 JsonConverter.ConvertToJSon(dump, sb, false, true);
                 sb.Append("}]}"); // lista end
