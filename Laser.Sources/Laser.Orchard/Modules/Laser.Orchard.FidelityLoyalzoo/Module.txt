@@ -9,3 +9,4 @@ Features:
     Laser.Orchard.FidelityLoyalzoo:
 		Category: FidelityProvider
         Description: Modulo di estenzione del fidelity gateway che serve per la comunicazione con il provider Loyalzoo.
+		Dependencies: Laser.Orchard.FidelityGateway

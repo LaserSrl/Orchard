@@ -9,3 +9,4 @@ Features:
     Laser.Orchard.FidelityGateway:
 		Category: FidelityBase
         Description:  Modulo Base Fidelity
+		Dependencies: Laser.Orchard.StartupConfig
