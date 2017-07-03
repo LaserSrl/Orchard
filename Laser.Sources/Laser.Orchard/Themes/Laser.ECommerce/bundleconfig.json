@@ -70,5 +70,17 @@
     "inputFiles": [
       "Scripts/shoppingcart.js"
     ]
+  },
+  {
+    "outputFileName": "Scripts/ship.min.js",
+    "inputFiles": [
+      "Scripts/ship.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/wishlists.min.js",
+    "inputFiles": [
+      "Scripts/wishlists.js"
+    ]
   }
 ]

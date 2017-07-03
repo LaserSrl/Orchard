@@ -130,12 +130,20 @@
     <Content Include="Scripts\jquery.iframe-transport.min.js">
       <DependentUpon>jquery.iframe-transport.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\ship.js" />
+    <Content Include="Scripts\ship.min.js">
+      <DependentUpon>ship.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\shoppingcart.js" />
     <Content Include="Scripts\shoppingcart.min.js">
       <DependentUpon>shoppingcart.js</DependentUpon>
     </Content>
     <Content Include="Scripts\shoppingcart.widget.min.js">
       <DependentUpon>shoppingcart.widget.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\wishlists.js" />
+    <Content Include="Scripts\wishlists.min.js">
+      <DependentUpon>wishlists.js</DependentUpon>
     </Content>
     <Content Include="Styles\flexslider.css" />
     <Content Include="Styles\flexslider.min.css">
@@ -213,7 +221,7 @@
     <Content Include="Views\Branding.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.MenuWidget-Navigation.cshtml" />
+    <Content Include="Views\Parts\MenuWidget-Navigation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\NavigationTaxonomyMenuLink.cshtml" />
@@ -222,28 +230,28 @@
     <None Include="bundleconfig.json" />
     <Content Include="Views\Banner.cshtml" />
     <Content Include="Views\Fields.MediaLibraryPicker-Banner.cshtml" />
-    <Content Include="Views\Parts.TermPart.cshtml" />
+    <Content Include="Views\Parts\TermPart.cshtml" />
     <Content Include="Views\Content-Product.Summary.cshtml" />
-    <Content Include="Views\Parts.ProductPart.cshtml" />
-    <Content Include="Views\Parts.ProductPart.AddButton.cshtml" />
+    <Content Include="Views\Parts\ProductPart.cshtml" />
+    <Content Include="Views\Parts\ProductPart.AddButton.cshtml" />
     <Content Include="Views\Price.cshtml" />
-    <Content Include="Views\Parts.MenuWidget-AsideFirst.cshtml" />
-    <Content Include="Views\Parts.MenuWidget-BeforeMain.cshtml" />
+    <Content Include="Views\Parts\MenuWidget-AsideFirst.cshtml" />
+    <Content Include="Views\Parts\MenuWidget-BeforeMain.cshtml" />
     <Content Include="Views\Fields.ContentPicker-RelatedProducts.cshtml" />
     <Content Include="Views\RelatedContentsSlider.cshtml" />
     <Content Include="Views\Content-Product-AfterMain-Summary.cshtml" />
     <Content Include="Views\Content.Detail.cshtml" />
-    <Content Include="Views\Parts.SubscriberRegistration.cshtml" />
+    <Content Include="Views\Parts\SubscriberRegistration.cshtml" />
     <Content Include="Views\List-ProjectionPage.cshtml" />
-    <Content Include="Views\Parts.Title.cshtml" />
+    <Content Include="Views\Parts\Title.cshtml" />
     <Content Include="Views\ProductGallery.cshtml" />
-    <Content Include="Views\Parts.Title-Product.cshtml" />
-    <Content Include="Views\Parts.Stars.Details-Product.cshtml" />
+    <Content Include="Views\Parts\Title-Product.cshtml" />
+    <Content Include="Views\Parts\Stars.Details-Product.cshtml" />
     <Content Include="Views\Fields.Common.Text-Product-Description.cshtml" />
-    <Content Include="Views\Parts.ProductPart.AddButton.Detail.cshtml" />
-    <Content Include="Views\Parts.ProductPart.Detail.cshtml" />
-    <Content Include="Views\Parts.Product.AdditionalInfo.Detail.cshtml" />
-    <Content Include="Views\Parts.Product.Reviews.Detail.cshtml" />
+    <Content Include="Views\Parts\ProductPart.AddButton.Detail.cshtml" />
+    <Content Include="Views\Parts\ProductPart.Detail.cshtml" />
+    <Content Include="Views\Parts\Product.AdditionalInfo.Detail.cshtml" />
+    <Content Include="Views\Parts\Product.Reviews.Detail.cshtml" />
     <Content Include="Views\LoginLogoutRegister.cshtml" />
     <Content Include="Views\LogOn.cshtml" />
     <Content Include="Views\OpenAuthLogOn.cshtml" />
@@ -277,6 +285,17 @@
     <Content Include="Views\LogOnForm.cshtml" />
     <Content Include="Views\RegisterForm.cshtml" />
     <Content Include="Views\ShoppingCart.cshtml" />
+    <Content Include="Views\Stripe\Ship.cshtml" />
+    <Content Include="Views\CommerceAddressForm.cshtml" />
+    <Content Include="Views\Stripe\Pay.cshtml" />
+    <Content Include="Views\Order.Confirmation.cshtml" />
+    <Content Include="Views\Stripe.cshtml" />
+    <Content Include="Views\Parts\ProductPart.AddToWishListButton.Detail.cshtml" />
+    <Content Include="Views\Parts\ProductPart.AddToWishListButton.cshtml" />
+    <Content Include="Views\Parts\ListOfWishLists.cshtml" />
+    <Content Include="Views\Parts\WishListsActions.cshtml" />
+    <Content Include="Views\Parts\WishListItem.cshtml" />
+    <Content Include="Views\Parts\WishListList.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

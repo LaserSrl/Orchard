@@ -345,7 +345,7 @@ ul.multi-column-dropdown h6 {
 }
 /*-- //banner --*/
 /*-- banner-bottom --*/
-.banner-bottom,.team,.checkout,.additional_info,.team-bottom,.single,.mail,.special-deals,.about,.faq,.typo,.new-products,.banner-bottom1,.top-brands,.dresses,.ecommerce_related_contents{
+.banner-bottom,.team,.checkout,.additional_info,.team-bottom,.single,.mail,.ship,.special-deals,.about,.faq,.typo,.new-products,.banner-bottom1,.top-brands,.dresses,.ecommerce_related_contents{
 	padding:5em 0;
 }
 .modal-body iframe {
@@ -677,14 +677,14 @@ ul.multi-column-dropdown h6 {
 }
 /*-- //banner-bottom --*/
 /*-- special-deals --*/
-.special-deals h2,.new-products h3,.top-brands h3,.ecommerce_related_contents h3,.team h3,.mail h3{
+.special-deals h2,.new-products h3,.top-brands h3,.ecommerce_related_contents h3,.team h3,.mail h3,.ship h3{
 	font-size:2em;
 	color:#212121;
 	position:relative;
 	padding-bottom:1em;
 	text-align:center;
 }
-.special-deals h2:before,.new-products h3:before,.top-brands h3:before,.ecommerce_related_contents h3:before,.team h3:before,.mail h3:before{
+.special-deals h2:before,.new-products h3:before,.top-brands h3:before,.ecommerce_related_contents h3:before,.team h3:before,.mail h3:before,.ship h3:before{
 	content: '';
     position: absolute;
     top: 27%;
@@ -693,7 +693,7 @@ ul.multi-column-dropdown h6 {
     height: 1px;
     width: 10%;
 }
-.special-deals h2:after,.new-products h3:after,.top-brands h3:after,.ecommerce_related_contents h3:after,.team h3:after,.mail h3:after{
+.special-deals h2:after,.new-products h3:after,.top-brands h3:after,.ecommerce_related_contents h3:after,.team h3:after,.mail h3:after,.ship h3:after{
 	content: '';
     position: absolute;
     bottom: 79%;
@@ -2147,6 +2147,10 @@ h2.typoh2{
 	width: 32.7%;
 	float: left;
 }
+.ship .contact-left input[type="text"],.ship .contact-left input[type="email"]{
+	width: 32.7%;
+	float: none;
+}
 .contact-left input[type="email"]{
 	margin:0 5px;
 }
@@ -2433,7 +2437,7 @@ div#horizontalTab1 ul {
 	font-size:1em;
 	color:#212121;
 	text-transform:uppercase;
-	margin:0 0 3em;
+	margin:0 0 1em;
 }
 .checkout h3 span{
 	color:#ff9b05;
@@ -2464,6 +2468,18 @@ table.timetable_sub {
 }
 .timetable_sub td {
 	border:1px solid #CDCDCD;
+}
+.timetable_sub .timetable_sub_footer {
+    font-weight: bold;
+}
+.timetable_sub .timetable_sub_footer button {
+    background: #ff9b05;
+    padding: 1em;
+    font-size: 1.1em;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    border: none;
 }
 td.invert-image a img {
     width:30%;
@@ -2511,6 +2527,10 @@ td.invert-image a img {
 	float: right;
     margin: 0; /*8em 0 0 0em;*/
 }
+.checkout-right-basket ul li {
+    list-style-type: none;
+    text-align: center;
+}
 .checkout-left-basket ul li span {
     float: right;
 }
@@ -2522,6 +2542,23 @@ td.invert-image a img {
     border-top: 1px solid #DDD;
 	border-bottom: 1px solid #DDD;
     margin: 2em 0 0;
+}
+.checkout-left-basket .estimate-shipping {
+    background: #ff9b05;
+    padding: 1em;
+    font-size: 1.1em;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    border: none;
+}
+.checkout-left-basket button {
+    background: #ff9b05;
+    padding: 1em;
+    font-size: 1.1em;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
 }
 .checkout-right-basket a{
 	padding:10px 30px;
@@ -2537,8 +2574,93 @@ td.invert-image a img {
     left: -.5em;
     top: 0.1em;
 }
+.checkout-right-basket ul li button, .checkout-right-basket ul li input[type=submit] {
+    background: #ff9b05;
+    padding: 0.5em;
+    font-size: 1.1em;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    border: none;
+}
+.ship .hint {
+    font-size: 0.7em;
+}
+.ship .actions .back-button {
+    padding:1em;
+	color:#fff;
+	font-size:1.1em;
+	background:#212121;
+	text-decoration:none;
+    text-transform: uppercase;
+    text-align: center;
+    border:none;
+}
+.ship .actions .submit-button {
+    background: #ff9b05;
+    padding: 1em;
+    font-size: 1.1em;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    border: none;
+}
+.ship .actions form {
+    display: inline;
+}
+.ship .actions input[type="submit"]{
+    width: initial;
+}
+.order-confirmation {
+    float: left;
+    width: 100%;
+    padding: 1%;
+    display: table;
+}
+.order-confirmation h3 {
+	font-size: 1em;
+    font-weight: bold;
+	color: #212121;
+	text-transform: uppercase;
+	margin:0 0 1em;
+}
+.order-confirmation-block {
+    display: table-cell;
+    float: left;
+    width: 32.5%;
+    padding: 0.5em;
+    height: 100%;
+}
+.order-confirmation-block h4 {
+    text-transform: uppercase;
+    color: #ff9b05;
+    margin-left: 1em;
+}
 /*-- //checkout --*/
+/*-- wishlists --*/
+.wishlist-actions {
+    float: right;
+}
+.wishlist-actions a {
+	padding:10px 30px;
+	color:#fff;
+	font-size:1em;
+	background:#212121;
+	text-decoration:none;
+    float:right;
+    margin-left: 0.5em;
+}
+.wishlist-actions a:hover {
+	background:#ff9b05;
+}
+.wishlist-actions a span {
+    left: -.5em;
+    top: 0.1em;
+}
+.wishListList_grid {
 
+}
+/*-- //wishlists --*/
 /*-- ui-dialog --*/
 .ui-widget.review-dialog {
     /*font-family: Verdana,Arial,sans-serif;*/
@@ -2910,7 +3032,7 @@ td.invert-image a img {
 	.agileinfo_banner_bottom1_grid_right h4 {
 		width: 30%;
 	}
-	.banner-bottom, .team, .checkout, .additional_info, .team-bottom, .single, .mail, .special-deals, .about, .faq, .typo, .new-products, .banner-bottom1, .top-brands, .dresses, .ecommerce_related_contents {
+	.banner-bottom, .team, .checkout, .additional_info, .team-bottom, .single, .mail, .ship, .special-deals, .about, .faq, .typo, .new-products, .banner-bottom1, .top-brands, .dresses, .ecommerce_related_contents {
 		padding: 4em 0;
 	}
 	.footer-copy-pos {
@@ -2989,11 +3111,11 @@ td.invert-image a img {
 	.w3agile_special_deals_grid_left_grid1 {
 		padding: 1em 1em 4.3em;
 	}
-	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before {
+	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before, .ship h3:before {
 		left: 22%;
 		width: 15%;
 	}
-	.special-deals h2:after, .new-products h3:after, .top-brands h3:after, .ecommerce_related_contents h3:after, .team h3:after, .mail h3:after {
+	.special-deals h2:after, .new-products h3:after, .top-brands h3:after, .ecommerce_related_contents h3:after, .team h3:after, .mail h3:after, .ship h3:after {
 		right: 40%;
 		width: 13%;
 	}
@@ -3143,13 +3265,13 @@ td.invert-image a img {
 	.agileinfo_banner_bottom1_grid_right {
 		padding: 8.5em 0 0;
 	}
-	.banner-bottom, .team, .checkout, .additional_info, .team-bottom, .single, .mail, .special-deals, .about, .faq, .typo, .new-products, .banner-bottom1, .top-brands, .dresses, .ecommerce_related_contents {
+	.banner-bottom, .team, .checkout, .additional_info, .team-bottom, .single, .mail, .ship, .special-deals, .about, .faq, .typo, .new-products, .banner-bottom1, .top-brands, .dresses, .ecommerce_related_contents {
 		padding: 3em 0;
 	}
-	.special-deals h2, .new-products h3, .top-brands h3, .ecommerce_related_contents h3, .team h3, .mail h3 {
+	.special-deals h2, .new-products h3, .top-brands h3, .ecommerce_related_contents h3, .team h3, .mail h3, .ship h3 {
 		font-size: 1.8em;
 	}
-	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before {
+	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before, .ship h3:before {
 		left: 18%;
 	}
 	.w3agile_special_deals_grids {
@@ -3660,13 +3782,13 @@ td.invert-image a img {
 	.agileinfo_banner_bottom1_grid_left {
 		background-position: -85px 0px;
 	}
-	.special-deals h2, .new-products h3, .top-brands h3, .ecommerce_related_contents h3, .team h3, .mail h3 {
+	.special-deals h2, .new-products h3, .top-brands h3, .ecommerce_related_contents h3, .team h3, .mail h3, .ship h3 {
 		font-size: 1.6em;
 	}
 	.w3agile_special_deals_grid_right {
 		width: 72%;
 	}
-	.banner-bottom, .team, .checkout, .additional_info, .team-bottom, .single, .mail, .special-deals, .about, .faq, .typo, .new-products, .banner-bottom1, .top-brands, .dresses, .ecommerce_related_contents {
+	.banner-bottom, .team, .checkout, .additional_info, .team-bottom, .single, .mail, .ship, .special-deals, .about, .faq, .typo, .new-products, .banner-bottom1, .top-brands, .dresses, .ecommerce_related_contents {
 		padding: 2em 0;
 	}
 	.agileinfo_new_products_grid {
@@ -3771,10 +3893,10 @@ td.invert-image a img {
 	.ecommerce_about_grid_right {
 		margin: 1em 0 0;
 	}
-	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before {
+	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before, .ship h3:before {
 		left:18%;
 	}
-	.mail h3:before {
+	.mail h3:before, .ship h3:before {
 		left: 25% !important;
 	}
 }
@@ -3900,11 +4022,11 @@ td.invert-image a img {
 	.agileinfo_banner_bottom1_grid_right h4 {
 		width: 30%;
 	}
-	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before {
+	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before, .ship h3:before {
 		left: 7%;
 		width: 20%;
 	}
-	.special-deals h2:after, .new-products h3:after, .top-brands h3:after, .ecommerce_related_contents h3:after, .team h3:after, .mail h3:after {
+	.special-deals h2:after, .new-products h3:after, .top-brands h3:after, .ecommerce_related_contents h3:after, .team h3:after, .mail h3:after, .ship h3:after {
 		right: 36%;
 		width: 20%;
 	}
@@ -4055,7 +4177,7 @@ td.invert-image a img {
 	.w3l_faq_grid h3 {
 		font-size: 1em;
 	}
-	.mail h3:before {
+	.mail h3:before, .ship h3:before {
 		left: 15% !important;
 	}
 	.agile_mail_grids {
@@ -4183,7 +4305,7 @@ td.invert-image a img {
 	.w3agile_special_deals_grid_right_pos h4, .w3agile_special_deals_grid_right_pos h5 {
 		font-size: 1.5em;
 	}
-	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before {
+	.special-deals h2:before, .new-products h3:before, .top-brands h3:before, .ecommerce_related_contents h3:before, .team h3:before, .mail h3:before, .ship h3:before {
 		left: 1%;
 	}
 	.ecommerce_newsletter_right input[type="submit"] {
@@ -4271,7 +4393,7 @@ td.invert-image a img {
 	.banner1, .banner2, .banner3, .banner4, .banner5, .banner6, .banner7, .banner8, .banner9 {
 		min-height: 150px;
 	}
-	.special-deals h2, .new-products h3, .top-brands h3, .ecommerce_related_contents h3, .team h3, .mail h3 {
+	.special-deals h2, .new-products h3, .top-brands h3, .ecommerce_related_contents h3, .team h3, .mail h3, .ship h3 {
 		font-size: 1.4em;
 	}
 	.color-quality-left {
@@ -4531,7 +4653,7 @@ td.invert-image a img {
 	.modal-body {
 		padding: 0em 1em 0em;
 	}
-	.special-deals h2, .new-products h3, .top-brands h3, .ecommerce_related_contents h3, .team h3, .mail h3 {
+	.special-deals h2, .new-products h3, .top-brands h3, .ecommerce_related_contents h3, .team h3, .mail h3, .ship h3 {
 		font-size: 1.2em;
 	}
 	.banner2 {

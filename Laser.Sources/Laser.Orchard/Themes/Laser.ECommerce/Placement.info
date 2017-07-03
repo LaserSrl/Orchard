@@ -36,12 +36,14 @@
            Fields_Common_Text__Description="Content:3"
            Parts_Product="Content:4.1;Alternate=Parts_ProductPart_Detail" 
            Parts_Product_AddButton="Content:4.2;Alternate=Parts_ProductPart_AddButton_Detail"
+           Parts_Product_AddToWishListButton="Content:4.3;Alternate=Parts_ProductPart_AddToWishListButton_Detail"
            Parts_Common_Body="Content:5;Alternate=Parts_Product_AdditionalInfo_Detail"
            Parts_Reviews="-" />
   </Match>
   <Match DisplayType="Summary">
     <Place Parts_Product="Content:3.1;Alternate=Parts_ProductPart" />
     <Place Parts_Product_AddButton="Content:3.3;Alternate=Parts_ProductPart_AddButton" />
+    <Place Parts_Product_AddToWishListButton="Content:4.3;Alternate=Parts_ProductPart_AddToWishListButton" />
     <Place Parts_Common_Body_Summary="-" />
     <Place Fields_ContentPicker__RelatedProducts="-" />
     <Place Fields_Common_Text__Description="-" />
