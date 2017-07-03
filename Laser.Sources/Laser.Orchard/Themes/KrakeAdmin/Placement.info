@@ -18,5 +18,7 @@
     <Place Fields_MediaLibraryPicker_SummaryAdmin="DetailInfos:after"/>
     <Place Fields_MediaLibraryPicker_SummaryAdmin__MapPart-MapSourceFile="-" />
     <Place Parts_Localization_ContentTranslations_SummaryAdmin="DetailInfos:before"/>
+    <Place Parts_ActivityDisplay="DetailInfos:3" />
+    <Place Parts_Localization_ContentTranslations_SummaryAdmin="DetailInfos:5"/>
   </Match>
 </Placement>
