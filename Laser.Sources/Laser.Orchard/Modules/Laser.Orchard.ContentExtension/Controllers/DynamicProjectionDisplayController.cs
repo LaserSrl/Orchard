@@ -84,13 +84,17 @@ public class DynamicProjectionDisplayController : Controller {
         if (ci == null || ci.As<DynamicProjectionPart>() == null)
             return null;
         else {
+            var newci = _contentManager.New("FakeContentForDynamicProjection");
             var formfile = string.Empty;
             if (!string.IsNullOrEmpty(ci.As<DynamicProjectionPart>().Shape))
                 formfile = String.Format("~/App_Data/Sites/{0}/Code/{1}", _shellSettings.Name, ci.As<DynamicProjectionPart>().Shape);
-            var lcf = ci.Parts.Where(x => ((dynamic)x).PartDefinition.Name == ci.ContentType).FirstOrDefault().Fields;
-            var newci = _contentManager.New("FakeContentForDynamicProjection");
-            foreach (var field in lcf)
-                newci.Parts.FirstOrDefault().Weld(field);
+            var contpart = ci.Parts.Where(x => ((dynamic)x).PartDefinition.Name == ci.ContentType).FirstOrDefault();
+            IEnumerable<ContentField> lcf = null;
+            if (contpart != null) {
+                lcf = contpart.Fields;
+                foreach (var field in lcf)
+                    newci.Parts.FirstOrDefault().Weld(field);
+            }
             var viewModel = _shapeFactory.ViewModel()
             .Part(ci.As<DynamicProjectionPart>())
             .Form(formfile)
