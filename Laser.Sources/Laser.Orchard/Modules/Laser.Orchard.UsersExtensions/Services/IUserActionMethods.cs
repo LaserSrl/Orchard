@@ -185,7 +185,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
                     sb.Append(",");
                 }
                 sb.Append("{");
-                dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour.Split(','), _orchardServices);
+                dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour.Split(','));
                 projectionDump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
                 JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                 sb.Append("}");

@@ -1,54 +1,51 @@
 ﻿@using Orchard.Utility.Extensions;
-@using Laser.Orchard.StartupConfig.Localization;
 @{
     Model.Classes.Add("content-item");
-    dynamic dateLocal = WorkContext.Resolve<IDateLocalization>();
+
     var contentTypeClassName = ((string)Model.ContentItem.ContentType).HtmlClassify();
     Model.Classes.Add(contentTypeClassName);
 
+    var tag = Tag(Model, "article");
     var eventDates = "";
-    var dataInizioFull = dateLocal.ReadDateLocalized(Model.ContentItem.ActivityPart.DateTimeStart, true);
-    var dataFineFull = dateLocal.ReadDateLocalized(Model.ContentItem.ActivityPart.DateTimeEnd, true);
-    var dataInizio = dataInizioFull.Date;
-    var dataFine = dataFineFull.Date;
-    var oraInizio = dataInizioFull.ToString("HH:mm");
-    var oraFine = dataFineFull.ToString("HH:mm");
+    var dataInizioFull = Model.ContentItem.ActivityPart.DateTimeStart;
+    var dataFineFull = Model.ContentItem.ActivityPart.DateTimeEnd;
+    var dataInizio = Model.ContentItem.ActivityPart.DateTimeStart.Date;
+    var dataFine = Model.ContentItem.ActivityPart.DateTimeEnd.Date;
+    var oraInizio = Model.ContentItem.ActivityPart.DateTimeStart.ToString("HH:mm");
+    var oraFine = Model.ContentItem.ActivityPart.DateTimeEnd.ToString("HH:mm");
     if (Model.ContentItem.ActivityPart.AllDay) {
         if (dataInizio == dataFine) {
-            eventDates = dataInizio.ToString("dd MMMM yyyy");
+            eventDates = Model.ContentItem.ActivityPart.DateTimeStart.ToString("D");
         } else {
             eventDates = String.Format("{0} - {1}", dataInizio.ToString("dd MMMM yyyy"), dataFine.ToString("dd MMMM yyyy"));
         }
+
     } else {
         if (dataInizio == dataFine) {
-            if (!oraFine.ToString().EndsWith("59")) {
-                eventDates = String.Format("{0}, {1} / {2}", dataInizio.ToString("dd MMMM yyyy"), oraInizio, oraFine);
+            if (!oraFine.EndsWith("59")){
+                eventDates = String.Format("{0}, {1} / {2}", Model.ContentItem.ActivityPart.DateTimeStart.ToString("dd MMMM yyyy"), oraInizio, oraFine);
             } else {
-                eventDates = String.Format("{0}, {1}", dataInizio.ToString("dd MMMM yyyy"), oraInizio);
+                eventDates = String.Format("{0}, {1}", Model.ContentItem.ActivityPart.DateTimeStart.ToString("dd MMMM yyyy"), oraInizio);
             }
         } else {
             if (!oraFine.EndsWith("59")) {
-                eventDates = String.Format("{0} - {1} / {2} - {3}", dataInizio.ToString("dd MMMM yyyy"), oraInizio, dataFine.ToString("dd MMMM yyyy"), oraFine);
+                eventDates = String.Format("{0} - {1}, {2} / {3}", Model.ContentItem.ActivityPart.DateTimeStart.ToString("dd MMMM yyyy"), Model.ContentItem.ActivityPart.DateTimeEnd.ToString("dd MMMM yyyy"), oraInizio, oraFine);
             } else {
-                eventDates = String.Format("{0} - {1}, {2}", dataInizio.ToString("dd MMMM yyyy"), dataFine.ToString("dd MMMM yyyy"), oraInizio);
+                eventDates = String.Format("{0} - {1}, {2}", Model.ContentItem.ActivityPart.DateTimeStart.ToString("dd MMMM yyyy"), Model.ContentItem.ActivityPart.DateTimeEnd.ToString("dd MMMM yyyy"), oraInizio);
             }
         }
     }
-
+    
 }
 <div class="row">
     <div class="col-xs-12 col-sm-4">
         <a href="@Url.ItemDisplayUrl((Orchard.ContentManagement.IContent)Model.ContentItem)" title="@T("Go to page {0}",Model.ContentItem.TitlePart.Title)">
-		@{
-            string alt = "";
-            if (Model.ContentItem.CalendarEvent.Gallery.MediaParts.Count != 0) {
-                alt = Model.ContentItem.CalendarEvent.Gallery.MediaParts[0].AlternateText;
-                if (string.IsNullOrEmpty(alt)) {
-                    alt = Model.ContentItem.TitlePart.Title;
-                }
-                <img src="@Display.ResizeMediaUrl(Width: 720, Height: 480, Mode: "pad", Alignment: "middlecenter", Path: Model.ContentItem.CalendarEvent.Gallery.MediaParts[0].MediaUrl)" class="img-responsive" alt="@alt">
-            }
-        }
+		@{var alt=Model.ContentItem.CalendarEvent.Gallery.MediaParts[0].AlternateText;
+		if (string.IsNullOrEmpty(alt)){
+		alt=Model.ContentItem.TitlePart.Title;
+		}
+		}
+            <img src="@Display.ResizeMediaUrl(Width: 720, Height: 480, Mode: "pad", Alignment: "middlecenter", Path: Model.ContentItem.CalendarEvent.Gallery.MediaParts[0].MediaUrl)" class="img-responsive" alt="@alt">
         </a>
     </div>
     <div class="col-xs-12 col-sm-8">
