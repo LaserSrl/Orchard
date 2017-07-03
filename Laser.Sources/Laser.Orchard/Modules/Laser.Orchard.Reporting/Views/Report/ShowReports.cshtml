@@ -1,6 +1,7 @@
 ﻿@model Laser.Orchard.Reporting.ViewModels.ShowReportsViewModel
 <h1>@Html.TitleForPage(T("Execute Data Reports").ToString())</h1>
-@using (Html.BeginFormAntiForgeryPost()) {
+@using (Html.BeginForm("ShowReports", "Report", FormMethod.Get)) {
+    @Html.AntiForgeryToken() 
     @Html.LabelFor(m => m.TitleFilter)
     @Html.TextBoxFor(m => m.TitleFilter)
     <button type="submit">@T("Apply Filter")</button>
