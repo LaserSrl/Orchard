@@ -95,6 +95,8 @@ public class DynamicProjectionDisplayController : Controller {
                 foreach (var field in lcf)
                     newci.Parts.FirstOrDefault().Weld(field);
             }
+            else
+                newci = null;
             var viewModel = _shapeFactory.ViewModel()
             .Part(ci.As<DynamicProjectionPart>())
             .Form(formfile)
