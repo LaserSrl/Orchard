@@ -25,8 +25,9 @@
     mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/Attachments/attachments", "Attachment");
 	mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/Attachments/Attachment/images/medium_large", "mediumlarge");
 	
-    mydoc = aggiungipadre(mydoc, "root/ExternalNews/ExternalNew", "Custom_fields", "custom_fields");
-    mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/Custom_fields/custom_fields", "Custom_field");
+	mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/custom_fields", "ToRemove");
+    //mydoc = aggiungipadre(mydoc, "root/ExternalNews/ExternalNew", "Custom_fields", "custom_fields");
+    //mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/Custom_fields/custom_fields", "Custom_field");
 	
     mydoc = aggiungipadre(mydoc, "root/ExternalNews/ExternalNew", "ThumbnailImages", "thumbnail_images");
     mydoc = cambianome(mydoc, "root/ExternalNews/ExternalNew/ThumbnailImages/thumbnail_images", "ThumbnailImage");
