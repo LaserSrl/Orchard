@@ -61,6 +61,9 @@
       <HintPath>..\..\packages\NHibernate.4.0.1.4000\lib\net40\NHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Orchard.ContentPicker">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPicker\bin\Orchard.ContentPicker.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Core\bin\Orchard.Core.dll</HintPath>
     </Reference>
@@ -221,16 +224,21 @@
     <Content Include="Views\Report\Display.cshtml" />
     <Content Include="Views\Report\DisplayChart.cshtml" />
     <Content Include="Views\Report\ShowReports.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\DataReportDashboard.cshtml" />
+    <Content Include="Views\Report\ShowDashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Drivers\DataReportDashboardDriver.cs" />
     <Compile Include="Drivers\DataReportViewerDriver.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Handlers\DataReportDashboardHandler.cs" />
     <Compile Include="Handlers\DataReportViewerHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\AggregateMethods.cs" />
     <Compile Include="Models\ChartTypes.cs" />
+    <Compile Include="Models\DataReportDashboardPart.cs" />
     <Compile Include="Models\DataReportViewerPart.cs" />
     <Compile Include="Models\ReportItem.cs" />
     <Compile Include="Models\ReportRecord.cs" />
@@ -257,6 +265,7 @@
     <Compile Include="ViewModels\ReportListViewModel.cs" />
     <Compile Include="ViewModels\ReportViewModel.cs" />
     <Compile Include="ViewModels\DataReportViewerViewModel.cs" />
+    <Compile Include="ViewModels\ShowDashboardViewModel.cs" />
     <Compile Include="ViewModels\ShowReportsViewModel.cs" />
   </ItemGroup>
   <ItemGroup />

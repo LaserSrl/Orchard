@@ -71,7 +71,8 @@ namespace Laser.Orchard.Reporting.Drivers
                     JsonData = serializer.Serialize(reportData.Select(c=> new {Label = c.Label, Value = c.AggregationValue}).ToArray()),
                     Data = reportData.ToList(),
                     ChartCssClass = part.Record.ChartTagCssClass,
-                    ContainerCssClass = part.Record.ContainerTagCssClass
+                    ContainerCssClass = part.Record.ContainerTagCssClass,
+                    HtmlId = part.Record.Id
                 };
 
                 if (report.ChartType == (int)ChartTypes.PieChart)

@@ -14,5 +14,6 @@ namespace Laser.Orchard.Reporting.ViewModels
         public string ContainerCssClass { get; set; }
         public string ChartCssClass { get; set; }
         public List<AggregationResult> Data { get; set; }
+        public int HtmlId { get; set; }
     }
 }

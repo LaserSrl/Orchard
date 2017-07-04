@@ -19,6 +19,7 @@ using Orchard.Settings;
 using Orchard.DisplayManagement;
 using Orchard;
 using Orchard.Themes;
+using Orchard.ContentPicker.Fields;
 
 namespace Laser.Orchard.Reporting.Controllers {
     [ValidateInput(false), Admin]
@@ -385,6 +386,33 @@ namespace Laser.Orchard.Reporting.Controllers {
             var pagerShape = services.New.Pager(pager).TotalItemCount(list.Count());
             model.Pager = pagerShape;
             model.Reports = list.Skip(pager.GetStartIndex()).Take(pager.PageSize);
+            return View(model);
+        }
+        public ActionResult ShowDashboard(ShowDashboardViewModel model) {
+            // recupera l'elenco dei report e lo aggiunge al model
+            var dashboard = services.ContentManager.Get<DataReportDashboardPart>(model.Id);
+            var cpf = dashboard.Fields.FirstOrDefault(x => x.Name == "ReportIds") as ContentPickerField;
+            var reports = services.ContentManager.GetMany<ContentItem>(cpf.Ids, VersionOptions.Published, QueryHints.Empty);
+            ContentPart dashboardFilters = null;
+            model.Filters = services.ContentManager.New("DataReportEmptyType");
+            foreach (var rep in reports) {
+                // grafico
+                var ci = services.ContentManager.New("DataReportEmptyType");
+                ci.Weld(rep.As<DataReportViewerPart>());
+                model.Reports.Add(ci);
+                // filtri
+                var filterPart = rep.Parts.FirstOrDefault(x => x.PartDefinition.Name == rep.ContentType);
+                if(filterPart != null) {
+                    if (dashboardFilters == null) {
+                        model.Filters.Weld(filterPart);
+                        dashboardFilters = filterPart;
+                    } else {
+                        foreach (var field in filterPart.Fields) {
+                            dashboardFilters.Weld(field);
+                        }
+                    }
+                }
+            }
             return View(model);
         }
         private string EncodeGroupByCategoryAndGroupByType(string category, string type)

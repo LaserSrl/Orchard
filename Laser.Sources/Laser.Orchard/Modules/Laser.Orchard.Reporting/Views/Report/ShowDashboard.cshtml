@@ -1,0 +1,52 @@
+﻿@model Laser.Orchard.Reporting.ViewModels.ShowDashboardViewModel
+@using Orchard.ContentManagement
+@using Laser.Orchard.Reporting.Models
+@{
+    Style.Include("jquery-ui.css");
+    Style.Include("jquery.jqplot.css");
+    Style.Include("reporting.css");
+    Script.Require("jQueryUI_Widget").AtHead();
+    Script.Require("jqplot").AtHead();
+    Script.Require("barjqplot").AtHead();
+    Script.Require("categoryAxisjqplot").AtHead();
+    Script.Require("piejqplot").AtHead();
+    Script.Require("donutRendererjqplot").AtHead();
+    Script.Require("Chosen").AtHead();
+    Script.Require("Reporting").AtHead();
+    IContentManager contentManager = null;
+    WorkContext.TryResolve<IContentManager>(out contentManager);
+}
+Dashboard id: @Model.Id
+<br/>
+@if (Model.Filters != null) {
+    using (Html.BeginFormAntiForgeryPost(Url.Action("DisplayChart"))) {
+        <div id="reportFilters">
+            @Display(contentManager.BuildEditor(Model.Filters))
+            <button class="primaryAction" type="button" value="@T("Refresh")" id="btnRefresh">@T("Refresh")</button>
+        </div>
+    }
+    <div>
+        @foreach (var rep in Model.Reports.AsPart<DataReportViewerPart>()) {
+            <div style="float:left" data-report-id="@rep.Record.Id"></div>
+        }
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $("#reportFilters button[value='submit.Save']").hide();
+            var theForm = $("#reportFilters").parent();
+            $("#btnRefresh").click(function () {
+                var formData = theForm.serialize();
+                $("div[data-report-id]").each(function (i, elem) {
+                    $(elem).html("<label style='padding:30px'>@T("Loading report...")</label>");
+                    $.post(theForm.attr("action"), formData + "&id=" + $(elem).attr("data-report-id"), function (data) {
+                        $(elem).html(data);
+                    });
+                });
+            });
+        });
+    </script>
+} else {
+    foreach (var rep in Model.Reports) {
+        @Display(BuildDisplay(rep, "Detail"))
+    }
+}

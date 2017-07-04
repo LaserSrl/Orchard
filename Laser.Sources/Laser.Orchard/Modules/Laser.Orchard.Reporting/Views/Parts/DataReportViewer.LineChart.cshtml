@@ -1,8 +1,8 @@
 ﻿@using Laser.Orchard.Reporting.ViewModels;
 @{
     DataReportViewerViewModel dataReportViewerViewModel = Model.Model;
-    string chartContainerId = "chartContainer" + Model.ContentItem.Id.ToString();
-    string chartId = "chart" + Model.ContentItem.Id.ToString();
+    string chartContainerId = "chartContainer" + dataReportViewerViewModel.HtmlId; //Model.ContentItem.Id.ToString();
+    string chartId = "chart" + dataReportViewerViewModel.HtmlId; //Model.ContentItem.Id.ToString();
     string chartClass = string.IsNullOrEmpty(dataReportViewerViewModel.ChartCssClass) ? "default-chart" : dataReportViewerViewModel.ChartCssClass;
 }
 <div class="@dataReportViewerViewModel.ContainerCssClass" id="@chartContainerId">

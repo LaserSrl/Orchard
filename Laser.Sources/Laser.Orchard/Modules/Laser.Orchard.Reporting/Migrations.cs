@@ -51,5 +51,33 @@ namespace Laser.Orchard.Reporting
 
             return 4;
         }
+        public int UpdateFrom4() {
+            SchemaBuilder.CreateTable("DataReportDashboardPartRecord", t => t
+                .ContentPartRecord()
+            );
+            ContentDefinitionManager.AlterPartDefinition("DataReportDashboardPart", p => p
+                .Attachable()
+                .WithField("ReportIds", f => f
+                    .OfType("ContentPickerField")
+                    .WithSetting("ContentPickerFieldSettings.Hint", "Select one or more Reports.")
+                    .WithSetting("ContentPickerFieldSettings.Required", "True")
+                    .WithSetting("ContentPickerFieldSettings.Multiple", "True")
+                    .WithSetting("ContentPickerFieldSettings.ShowContentTab", "True")
+                    .WithSetting("ContentPickerFieldSettings.ShowSearchTab", "True")
+                    .WithSetting("ContentPickerFieldSettings.DisplayedContentTypes", "")
+                    .WithDisplayName("Reports included")
+                )
+            );
+            ContentDefinitionManager.AlterTypeDefinition("DataReportDashboard", t => t
+                .WithPart("TitlePart")
+                .WithPart("CommonPart")
+                .WithPart("DataReportDashboardPart")
+                .Creatable()
+                .Listable()
+                .Draftable(false)
+                .Securable()
+            );
+            return 10;
+        }
     }
 }
