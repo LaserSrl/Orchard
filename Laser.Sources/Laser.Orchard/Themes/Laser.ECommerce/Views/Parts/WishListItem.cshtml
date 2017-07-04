@@ -20,20 +20,20 @@
     }
     var contentItem = (ContentItem)Model.ContentItem;
 }
-<fieldset class="wishlist-item">
-    <legend><a href="@Url.ItemDisplayUrl(contentItem)">@title</a></legend>
-    <div id="wish-list-element-product-details">
-        @if (!string.IsNullOrWhiteSpace(imageUrl)) {
-            <div id="wish-list-item-product-image" style="float:left;">
-                <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@Href(imageUrl)" alt="@title" class="product-image" /></a>
-            </div>
-        }
-        @Html.Raw(originalUnitPrice)
-        @Model.CurrencyProvider.GetPriceString(unitPrice)
+
+@if (!string.IsNullOrWhiteSpace(imageUrl)) {
+    <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link">
+        <img src="@Display.ResizeMediaUrl(Width: 140, Height: 120, Mode: "pad", Alignment: "middlecenter", Path: imageUrl)" alt="@title" class="product-image" />
+    </a>
+}
+<div>
+    <h5><a href="@Url.ItemDisplayUrl(contentItem)">@title</a></h5>
+    <div class="price">
+        @Display.Price(Price: unitPriceOriginal, DiscountedPrice: unitPrice, CurrencyProvider: Model.CurrencyProvider)
     </div>
-    <div>
+    <div class="extension_shapes">
         @foreach (var shape in Model.ExtensionShapes) {
             @Display(shape);
         }
     </div>
-</fieldset>
+</div>

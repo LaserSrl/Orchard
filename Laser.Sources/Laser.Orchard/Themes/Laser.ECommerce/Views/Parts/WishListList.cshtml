@@ -7,8 +7,8 @@
     //and feed them all to the slider view
     var wishListListPart = (WishListListPart)Model.ContentPart;
     var wlItems = wishListListPart.WishListItems;
+    var _contentManager = WorkContext.Resolve<IContentManager>();
     if (wlItems.Any()) {
-        var _contentManager = WorkContext.Resolve<IContentManager>();
         var related = new List<ContentItem>();
         foreach (var item in wlItems) {
             var productId = item.As<WishListItemPart>().Item.ProductId;
@@ -27,9 +27,8 @@
                 ), "5");
         }
     }
-
-    
 }
+
 <div class="wishListList_grid">
 
     @foreach (var shape in Model.ElementsShapes) {

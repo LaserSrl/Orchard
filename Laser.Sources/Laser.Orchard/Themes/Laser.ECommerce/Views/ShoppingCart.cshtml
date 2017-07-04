@@ -155,7 +155,7 @@
                                                 hiddenQ = $(this).parent().find('.addtocart-quantity'),
                                                 newVal = parseInt(divUpd.text(), 10) + 1;
                                             divUpd.text(newVal);
-                                            hiddenQ.value = newVal;
+                                            hiddenQ.val(newVal);
                                         });
 
                                         $('.value-minus').on('click', function () {
@@ -164,7 +164,7 @@
                                                 newVal = parseInt(divUpd.text(), 10) - 1;
                                             if (newVal >= 0) {
                                                 divUpd.text(newVal);
-                                                hiddenQ.value = newVal;
+                                                hiddenQ.val(newVal);
                                             }
                                         });
                                     </script>

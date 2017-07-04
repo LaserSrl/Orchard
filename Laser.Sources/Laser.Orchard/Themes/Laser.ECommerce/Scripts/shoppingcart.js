@@ -181,7 +181,7 @@
             if (useLocalStorage && hasLocalStorage()) {
                 localStorage.removeItem(nwazetCart);
             }
-            return cartContainerLoad($(this).closest("form"));
+            //return cartContainerLoad($(this).closest("form"));
         })
         .on("click", ".minicart .update-button", function () {
             return cartContainerLoad($(this).closest("form"));

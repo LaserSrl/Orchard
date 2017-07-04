@@ -155,6 +155,7 @@
     </Content>
     <Content Include="Styles\fonts\font-awesome-4.6.2\fonts\fontawesome-webfont.svg" />
     <Content Include="Styles\fonts\krake.svg" />
+    <Content Include="Styles\Images\bag.png" />
     <Content Include="Styles\Images\close.png" />
     <Content Include="Styles\Images\img-sp.png" />
     <Content Include="Styles\Images\left-arrow.png" />
@@ -296,6 +297,10 @@
     <Content Include="Views\Parts\WishListsActions.cshtml" />
     <Content Include="Views\Parts\WishListItem.cshtml" />
     <Content Include="Views\Parts\WishListList.cshtml" />
+    <Content Include="Views\Content-WishListItem.cshtml" />
+    <Content Include="Views\Parts\Product.RemoveFromWishList.cshtml" />
+    <Content Include="Views\Parts\Product.AddToCartFromWishList.cshtml" />
+    <Content Include="Views\Widget-Name-LinkToWishlist.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
