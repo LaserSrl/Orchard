@@ -9613,3 +9613,12 @@ div.summary div.stars-rating h3 {
 input#adminfilter {
     display: none;
 }
+
+/*settings vimeo*/
+#VideoSettings #Whitelist{
+margin-top: 20px;
+}
+
+#VideoSettings #License, #VideoSettings #ReviewLink, #VideoSettings #Locale{
+margin-bottom: 20px;
+}

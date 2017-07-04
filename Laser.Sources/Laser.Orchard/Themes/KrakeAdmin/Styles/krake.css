@@ -1505,3 +1505,12 @@ html.dashboard #content {
     box-sizing: border-box;
    
 }
+
+/*settings vimeo*/
+#VideoSettings #Whitelist{
+margin-top: 20px;
+}
+
+#VideoSettings #License, #VideoSettings #ReviewLink, #VideoSettings #Locale{
+margin-bottom: 20px;
+}
