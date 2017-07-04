@@ -426,7 +426,7 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-xs-12 col-md-4">
+                        <div class="col-xs-12 col-md-2">
                             <label for="dateFromResults" class="bulk-filter">@T("Date From")</label>
                             @Html.EditorFor(m => AdvancedOptions.SelectedFromDateEditor, new { id = "dateFromResults"})
                             @*@Html.TextBox("AdvancedOptions.SelectedFromDate", (string)(Model.AdvancedOptions.SelectedFromDate != null ? Model.AdvancedOptions.SelectedFromDate.ToString() : ""), new { id = "dateFromResults" })*@
@@ -436,7 +436,7 @@
                             @Html.EditorFor(m => AdvancedOptions.SelectedToDateEditor, new { id = "dateToResults" })
                             @*@Html.TextBox("AdvancedOptions.SelectedToDate", (string)(Model.AdvancedOptions.SelectedToDate != null ? Model.AdvancedOptions.SelectedToDate.ToString() : ""), new { id = "dateToResults" })*@
                         </div>
-                        <div class="col-xs-12 col-md-2">
+                        <div class="col-xs-12 col-md-4" id="onlyWithMedia">
                             <label for="hasMediaResults" class="bulk-filter">@T("Only with media")</label>
                             @Html.CheckBox("AdvancedOptions.HasMedia", (bool)Model.AdvancedOptions.HasMedia, new { id = "hasMediaResults" })
                         </div>

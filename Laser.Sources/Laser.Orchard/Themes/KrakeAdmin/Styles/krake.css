@@ -311,7 +311,7 @@ select:not(.selector):not(.ui-datepicker-month):not(.ui-datepicker-year):not(.ca
     min-width: 300px;
 }
 
-.bulk-actions > #filterResults, #orderResults, #filterCultures{
+.bulk-actions > #filterResults, #filterCultures{
     min-width: 10px;
 }
 
@@ -1513,4 +1513,13 @@ margin-top: 20px;
 
 #VideoSettings #License, #VideoSettings #ReviewLink, #VideoSettings #Locale{
 margin-bottom: 20px;
+}
+
+/*advanced search*/
+input#AdvancedOptions_SelectedToDateEditor_Date, input#AdvancedOptions_SelectedFromDateEditor_Date{
+    min-width: 100px;
+}
+
+#onlyWithMedia{
+    padding-left: 180px;
 }
