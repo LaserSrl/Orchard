@@ -37,6 +37,10 @@
         child_node.InnerText = "ExternalNew:" + child_node.InnerText;
     }
 
+	foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalNews/ExternalNew")) {
+        mydoc = AggiungiShareLink(mydoc, child_node, child_node["TitleText"].InnerText, child_node["LinkText"].InnerText, child_node["ImageUrl"].InnerText);
+    }
+
     mydoc = cambianome(mydoc, "/ExternalNews/ExternalNew/author", "Author");
     mydoc = cambianome(mydoc, "/ExternalNews/ExternalNew/Author/id", "Sid");
     foreach (XmlNode child_node in mydoc.SelectNodes("//ExternalNews/ExternalNew/Author/Sid")) {
