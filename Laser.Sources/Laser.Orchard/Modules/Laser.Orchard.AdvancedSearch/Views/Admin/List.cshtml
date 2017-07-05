@@ -13,6 +13,7 @@
     Style.Require("AdvancedSearch").AtHead();
     Style.Require("FontAwesome430").AtHead();
     Style.Require("Accordion").AtHead();
+    Style.Require("Bootstrap");
     var typeDisplayName = Model.TypeDisplayName;
     var pageTitle = T("Manage Content");
     var createLinkText = T("Create New Content");
@@ -221,7 +222,7 @@
                                 @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
                                 @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
                             </select>
-                            <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+                            <button type="submit" id="applyManageContentBtn" name="submit.BulkEdit" value="yes">@T("Apply")</button>
                         </div>
                     </div>
                 </div>

@@ -130,7 +130,7 @@ button:hover, .button:hover, a.button:hover {
     color: #fff !important;
 }
 
-select, textarea, input.text, input.textMedium, input.text-medium, input.text-small, input.text-box {
+select, textarea, input.text, input.textMedium, input.text-medium, input.text-small, input.text-box, .ui-autocomplete-input {
     color: #555 !important;
     height: 30px;
     margin-bottom: -3px;
@@ -1522,4 +1522,19 @@ input#AdvancedOptions_SelectedToDateEditor_Date, input#AdvancedOptions_SelectedF
 
 #onlyWithMedia{
     padding-left: 180px;
+}
+
+
+div#appliedFilters {
+    padding: 12px;
+}
+
+/*taxonomy*/
+.taxonomy-wrapper span.expando-glyph-container {
+    bottom: -4px;
+}
+
+.bulk-actions > button[name="submit.BulkEdit"] {
+    float: initial;
+    margin-top: 0px;
 }
