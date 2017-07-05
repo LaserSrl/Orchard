@@ -4,4 +4,5 @@
 		<Place Parts_Order="Content:1;Alternate=PaymentGatewayOrder"/>
     </Match>
   </Match>
+  <Place Parts_NwazetContact="Content:5" />
 </Placement>
