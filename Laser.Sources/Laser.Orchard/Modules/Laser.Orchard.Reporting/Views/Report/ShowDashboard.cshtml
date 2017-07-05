@@ -16,14 +16,16 @@
     IContentManager contentManager = null;
     WorkContext.TryResolve<IContentManager>(out contentManager);
 }
-Dashboard id: @Model.Id
-<br/>
+<h3>@Model.Title</h3>
 @if (Model.Filters != null) {
     using (Html.BeginFormAntiForgeryPost(Url.Action("DisplayChart"))) {
-        <div id="reportFilters">
-            @Display(contentManager.BuildEditor(Model.Filters))
-            <button class="primaryAction" type="button" value="@T("Refresh")" id="btnRefresh">@T("Refresh")</button>
-        </div>
+        <fieldset id="reportFilters">
+            <legend>@T("Filters")</legend>
+            <div>
+                @Display(contentManager.BuildEditor(Model.Filters))
+                <button class="primaryAction" type="button" value="@T("Refresh")" id="btnRefresh">@T("Refresh")</button>
+            </div>
+        </fieldset>
     }
     <div>
         @foreach (var rep in Model.Reports.AsPart<DataReportViewerPart>()) {

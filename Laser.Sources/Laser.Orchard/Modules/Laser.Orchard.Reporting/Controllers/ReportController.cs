@@ -391,10 +391,9 @@ namespace Laser.Orchard.Reporting.Controllers {
         public ActionResult ShowDashboard(ShowDashboardViewModel model) {
             // recupera l'elenco dei report e lo aggiunge al model
             var dashboard = services.ContentManager.Get<DataReportDashboardPart>(model.Id);
+            model.Title = dashboard.As<TitlePart>().Title;
             var cpf = dashboard.Fields.FirstOrDefault(x => x.Name == "ReportIds") as ContentPickerField;
             var reports = services.ContentManager.GetMany<ContentItem>(cpf.Ids, VersionOptions.Published, QueryHints.Empty);
-            ContentPart dashboardFilters = null;
-            model.Filters = services.ContentManager.New("DataReportEmptyType");
             foreach (var rep in reports) {
                 // grafico
                 var ci = services.ContentManager.New("DataReportEmptyType");
@@ -403,13 +402,13 @@ namespace Laser.Orchard.Reporting.Controllers {
                 // filtri
                 var filterPart = rep.Parts.FirstOrDefault(x => x.PartDefinition.Name == rep.ContentType);
                 if(filterPart != null) {
-                    if (dashboardFilters == null) {
+                    if(model.Filters == null) {
+                        model.Filters = services.ContentManager.New("DataReportEmptyType");
+                    }
+                    // controlla che questa specifica part di filtro non sia già stata aggiunta
+                    var checkPart = model.Filters.Parts.FirstOrDefault(x => x.PartDefinition.Name == filterPart.PartDefinition.Name);
+                    if(checkPart == null) {
                         model.Filters.Weld(filterPart);
-                        dashboardFilters = filterPart;
-                    } else {
-                        foreach (var field in filterPart.Fields) {
-                            dashboardFilters.Weld(field);
-                        }
                     }
                 }
             }

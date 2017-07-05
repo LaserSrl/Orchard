@@ -55,8 +55,11 @@ namespace Laser.Orchard.Reporting
             SchemaBuilder.CreateTable("DataReportDashboardPartRecord", t => t
                 .ContentPartRecord()
             );
+            return 10;
+        }
+        public int UpdateFrom10() {
             ContentDefinitionManager.AlterPartDefinition("DataReportDashboardPart", p => p
-                .Attachable()
+                .Attachable(false)
                 .WithField("ReportIds", f => f
                     .OfType("ContentPickerField")
                     .WithSetting("ContentPickerFieldSettings.Hint", "Select one or more Reports.")
@@ -77,7 +80,7 @@ namespace Laser.Orchard.Reporting
                 .Draftable(false)
                 .Securable()
             );
-            return 10;
+            return 11;
         }
     }
 }
