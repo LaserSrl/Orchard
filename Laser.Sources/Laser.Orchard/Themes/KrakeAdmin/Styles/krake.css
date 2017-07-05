@@ -317,7 +317,6 @@ select:not(.selector):not(.ui-datepicker-month):not(.ui-datepicker-year):not(.ca
 
 .bulk-actions > button {
     float: right;
-    margin-top: 10px;
 }
 
 /*ie fix*/
