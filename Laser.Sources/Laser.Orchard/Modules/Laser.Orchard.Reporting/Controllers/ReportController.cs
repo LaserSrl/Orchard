@@ -498,6 +498,7 @@ namespace Laser.Orchard.Reporting.Controllers {
             chartTypes.Add(new SelectListItem { Text = T("Simple List").Text, Value = ((byte)ChartTypes.SimpleList).ToString(CultureInfo.InvariantCulture) });
             chartTypes.Add(new SelectListItem { Text = T("Histogram").Text, Value = ((byte)ChartTypes.Histogram).ToString(CultureInfo.InvariantCulture) });
             chartTypes.Add(new SelectListItem { Text = T("Line Chart").Text, Value = ((byte)ChartTypes.LineChart).ToString(CultureInfo.InvariantCulture) });
+            chartTypes.Add(new SelectListItem { Text = T("Donut Chart").Text, Value = ((byte)ChartTypes.Donut).ToString(CultureInfo.InvariantCulture) });
         }
     }
 }

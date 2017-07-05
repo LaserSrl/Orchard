@@ -88,6 +88,12 @@ namespace Laser.Orchard.Reporting.Drivers
                          () => shapeHelper.Parts_DataReportViewer_SimpleList(
                              Model: model
                              ));
+                } else if (report.ChartType == (int)ChartTypes.Donut) {
+                    return ContentShape("Parts_DataReportViewer_Donut",
+                         () => shapeHelper.Parts_DataReportViewer_Donut(
+                             Model: model,
+                             Series1: serializer.Serialize(reportData.Select(c => new object[] { c.Label, c.AggregationValue }).ToArray())
+                             ));
                 } else if (report.ChartType == (int)ChartTypes.Histogram) {
                     return ContentShape("Parts_DataReportViewer_Histogram",
                          () => shapeHelper.Parts_DataReportViewer_Histogram(

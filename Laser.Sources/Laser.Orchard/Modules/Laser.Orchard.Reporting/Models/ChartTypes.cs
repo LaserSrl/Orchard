@@ -11,6 +11,7 @@ namespace Laser.Orchard.Reporting.Models
         PieChart = 1,
         SimpleList = 2,
         Histogram = 3,
-        LineChart = 4
+        LineChart = 4,
+        Donut = 5
     }
 }

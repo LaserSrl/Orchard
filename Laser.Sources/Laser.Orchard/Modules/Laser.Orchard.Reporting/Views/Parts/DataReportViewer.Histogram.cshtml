@@ -16,6 +16,10 @@
     (function(){
         var s1 = @Html.Raw(Model.Series1);
         $('#@chartId').jqplot([s1], {
+            // Turns on animatino for all series in this plot.
+            animate: true,
+            // Will animate plot on calls to plot1.replot({resetAxes:true})
+            animateReplot: true,
             seriesDefaults: {
                 renderer: $.jqplot.BarRenderer
             },

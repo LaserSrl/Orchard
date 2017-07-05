@@ -1,7 +1,8 @@
 ﻿@using Laser.Orchard.Reporting.ViewModels;
 @{
     DataReportViewerViewModel dataReportViewerViewModel = Model.Model;
-    string chartContainerId = "chartContainer" + dataReportViewerViewModel.HtmlId; //Model.ContentItem.Id.ToString();
+    var data = dataReportViewerViewModel.JsonData;
+    string chartContainerId = "chartContainer" + dataReportViewerViewModel.HtmlId; // Model.ContentItem.Id.ToString();
     string chartId = "chart" + dataReportViewerViewModel.HtmlId; //Model.ContentItem.Id.ToString();
     string chartClass = string.IsNullOrEmpty(dataReportViewerViewModel.ChartCssClass) ? "default-chart" : dataReportViewerViewModel.ChartCssClass;
 }
@@ -16,16 +17,16 @@
     (function(){
         var s1 = @Html.Raw(Model.Series1);
         $('#@chartId').jqplot([s1], {
-            // Turns on animatino for all series in this plot.
-            animate: true,
-            // Will animate plot on calls to plot1.replot({resetAxes:true})
-            animateReplot: true,
-            axes: {
-                xaxis: {
-                    renderer: $.jqplot.CategoryAxisRenderer
+            seriesDefaults: {
+                // Make this a pie chart.
+                renderer: jQuery.jqplot.DonutRenderer,
+                rendererOptions: {
+                    // Put data labels on the pie slices.
+                    // By default, labels show the percentage of the slice.
+                    showDataLabels: true,
                 }
-            }
+            },
+            legend: { show: true, location: 'e' }
         });
     })();
 </script>
-

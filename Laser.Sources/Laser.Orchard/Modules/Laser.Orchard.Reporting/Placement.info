@@ -5,4 +5,5 @@
   <Place Parts_DataReportViewer_SimpleList="Content:3"/>
   <Place Parts_DataReportViewer_Histogram="Content:3"/>
   <Place Parts_DataReportViewer_LineChart="Content:3"/>
+  <Place Parts_DataReportViewer_Donut="Content:3"/>
 </Placement>

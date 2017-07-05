@@ -226,6 +226,7 @@
     <Content Include="Views\Report\ShowReports.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\DataReportDashboard.cshtml" />
     <Content Include="Views\Report\ShowDashboard.cshtml" />
+    <Content Include="Views\Parts\DataReportViewer.Donut.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
