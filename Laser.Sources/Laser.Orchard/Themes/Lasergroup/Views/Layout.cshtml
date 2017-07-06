@@ -41,7 +41,7 @@
     ***************************************************************/
     //WorkContext.Layout.Logo.Add(New.Branding(), "1");
     //WorkContext.Layout.Footer.Add(New.BadgeOfHonor(), "5"); // Powered by Orchard
-    //WorkContext.Layout.Footer.Add(New.User(), "10"); // Login and dashboard links
+    WorkContext.Layout.Footer.Add(New.User(), "10"); // Login and dashboard links
 
     /* Last bit of code to prep the layout wrapper
     ***************************************************************/
@@ -56,7 +56,7 @@
     var urlPath = (Request.Path.EndsWith("/") ? Request.Path : Request.Path + "/");
     var urlHome = Url.Content("~/" + (!String.IsNullOrWhiteSpace(prefix) ? prefix + "/" : ""));
 
-    
+
 
 }
 
