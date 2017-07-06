@@ -301,6 +301,14 @@
     <Content Include="Views\Parts\Product.RemoveFromWishList.cshtml" />
     <Content Include="Views\Parts\Product.AddToCartFromWishList.cshtml" />
     <Content Include="Views\Widget-Name-LinkToWishlist.cshtml" />
+    <Content Include="Views\Widget-Name-NewArrivalsHomePage.cshtml" />
+    <Content Include="Views\Content-TopBrand.Summary.cshtml" />
+    <Content Include="Views\Widget-Name-TopBrandsHomePage.cshtml" />
+    <Content Include="Views\Content-HomePageHighlight.Summary.cshtml" />
+    <Content Include="Views\HomePageHighlightBanner.cshtml" />
+    <Content Include="Views\HomePageHighlightZoom.cshtml" />
+    <Content Include="Views\HomePageHighlightSimple.cshtml" />
+    <Content Include="Views\HomePageHighlightReview.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

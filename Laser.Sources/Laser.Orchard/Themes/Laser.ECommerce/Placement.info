@@ -48,4 +48,10 @@
     <Place Fields_ContentPicker__RelatedProducts="-" />
     <Place Fields_Common_Text__Description="-" />
   </Match>
+  <Match ContentType="HomePageHighlight" DisplayType="Summary">
+    <Place Fields_Common_Text="-" 
+           Fields_DateTime="-"
+           Fields_Enumeration="-" 
+           Fields_Link="-" />
+  </Match>
 </Placement>

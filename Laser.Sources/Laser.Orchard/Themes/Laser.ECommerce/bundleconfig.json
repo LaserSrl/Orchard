@@ -82,5 +82,11 @@
     "inputFiles": [
       "Scripts/wishlists.js"
     ]
+  },
+  {
+    "outputFileName": "Scripts/jquery.countdown.min.js",
+    "inputFiles": [
+      "Scripts/jquery.countdown.js"
+    ]
   }
 ]
