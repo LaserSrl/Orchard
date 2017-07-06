@@ -15,6 +15,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Laser.Orchard.Reporting.Providers;
+using Orchard.ContentManagement.Handlers;
+using System.Xml.Linq;
+using Orchard.Projections.Models;
 
 namespace Laser.Orchard.Reporting.Drivers
 {
@@ -23,15 +26,18 @@ namespace Laser.Orchard.Reporting.Drivers
         private readonly IReportManager reportManger;
         private readonly IRepository<ReportRecord> reportRepository;
         private readonly IProjectionManager projectionManager;
+        private readonly IContentManager _contentManager;
 
         public DataReportViewerDriver(
             IReportManager reportManger,
             IProjectionManager projectionManager,
-            IRepository<ReportRecord> reportRepository)
+            IRepository<ReportRecord> reportRepository,
+            IContentManager contentManager)
         {
             this.projectionManager = projectionManager;
             this.reportRepository = reportRepository;
             this.reportManger = reportManger;
+            _contentManager = contentManager;
             T = NullLocalizer.Instance;
         }
 
@@ -178,6 +184,87 @@ namespace Laser.Orchard.Reporting.Drivers
                         TemplateName: "Parts/DataReportViewer",
                         Model: model,
                         Prefix: Prefix));
+        }
+        protected override void Exporting(DataReportViewerPart part, ExportContentContext context) {
+            var root = context.Element(part.PartDefinition.Name);
+            if(part.Record != null) {
+                root.SetAttributeValue("ContainerTagCssClass", part.Record.ContainerTagCssClass);
+                root.SetAttributeValue("ChartTagCssClass", part.Record.ChartTagCssClass);
+                XElement report = new XElement("Report");
+                var reportRecord = part.Record.Report;
+                report.SetAttributeValue("Name", reportRecord.Name ?? "");
+                report.SetAttributeValue("Title", reportRecord.Title ?? "");
+                report.SetAttributeValue("State", reportRecord.State ?? "");
+                report.SetAttributeValue("ChartType", reportRecord.ChartType);
+                report.SetAttributeValue("GroupByCategory", reportRecord.GroupByCategory ?? "");
+                report.SetAttributeValue("GroupByType", reportRecord.GroupByType ?? "");
+                report.SetAttributeValue("AggregateMethod", reportRecord.AggregateMethod);
+                var query = _contentManager.Get(reportRecord.Query.Id);
+                report.SetAttributeValue("QueryId", _contentManager.GetItemMetadata(query).Identity.ToString());
+                root.Add(report);
+            }
+        }
+        protected override void Importing(DataReportViewerPart part, ImportContentContext context) {
+            var root = context.Data.Element(part.PartDefinition.Name);
+            var containerTagCssClass = root.Attribute("ContainerTagCssClass");
+            if (containerTagCssClass != null) {
+                part.Record.ContainerTagCssClass = containerTagCssClass.Value;
+            }
+            var chartTagCssClass = root.Attribute("ChartTagCssClass");
+            if (chartTagCssClass != null) {
+                part.Record.ChartTagCssClass = chartTagCssClass.Value;
+            }
+            var report = root.Element("Report");
+            if(report != null) {
+                ReportRecord reportRecord = null;
+                if (part.Record.Report == null) {
+                    reportRecord = new ReportRecord();
+                } else {
+                    reportRecord = part.Record.Report;
+                }
+                var name = report.Attribute("Name");
+                if (name != null) {
+                    reportRecord.Name = name.Value;
+                }
+                var title = report.Attribute("Title");
+                if (title != null) {
+                    reportRecord.Title = title.Value;
+                }
+                var state = report.Attribute("State");
+                if (state != null) {
+                    reportRecord.State = string.IsNullOrEmpty(state.Value) ? null : state.Value;
+                }
+                var chartType = report.Attribute("ChartType");
+                if (chartType != null) {
+                    reportRecord.ChartType = Convert.ToInt32(chartType.Value);
+                }
+                var groupByCategory = report.Attribute("GroupByCategory");
+                if (groupByCategory != null) {
+                    reportRecord.GroupByCategory = groupByCategory.Value;
+                }
+                var groupByType = report.Attribute("GroupByType");
+                if (groupByType != null) {
+                    reportRecord.GroupByType = groupByType.Value;
+                }
+                var aggregateMethod = report.Attribute("AggregateMethod");
+                if (aggregateMethod != null) {
+                    reportRecord.AggregateMethod = Convert.ToInt32(aggregateMethod.Value);
+                }
+                var queryId = report.Attribute("QueryId");
+                if (queryId != null) {
+                    var ciQuery = _contentManager.ResolveIdentity(new ContentIdentity(queryId.Value));
+                    if (ciQuery != null) {
+                        reportRecord.Query = new QueryPartRecord();
+                        reportRecord.Query.Id = ciQuery.Id;
+                    }
+                }
+                if(part.Record.Report == null) {
+                    part.Record.Report = reportRecord;
+                    reportRepository.Create(reportRecord);
+                } else {
+                    reportRepository.Update(reportRecord);
+                }
+            }
         }
     }
 }

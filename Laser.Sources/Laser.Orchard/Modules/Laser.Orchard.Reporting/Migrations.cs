@@ -36,6 +36,7 @@ namespace Laser.Orchard.Reporting
 
             ContentDefinitionManager.AlterTypeDefinition("DataReportViewer", cfg => cfg
               .WithPart("CommonPart")
+              .WithPart("IdentityPart")
               .WithPart("TitlePart")
               .WithPart("DataReportViewerPart")
               .Creatable()
@@ -44,20 +45,18 @@ namespace Laser.Orchard.Reporting
 
             ContentDefinitionManager.AlterTypeDefinition("DataReportViewerWidget", cfg => cfg
               .WithPart("CommonPart")
+              .WithPart("IdentityPart")
               .WithPart("DataReportViewerPart")
               .WithPart("WidgetPart")
               .WithSetting("Stereotype", "Widget")
               .DisplayedAs("Data Report Viewer Widget"));
 
-            return 4;
+            return 1;
         }
-        public int UpdateFrom4() {
+        public int UpdateFrom1() {
             SchemaBuilder.CreateTable("DataReportDashboardPartRecord", t => t
                 .ContentPartRecord()
             );
-            return 10;
-        }
-        public int UpdateFrom10() {
             ContentDefinitionManager.AlterPartDefinition("DataReportDashboardPart", p => p
                 .Attachable(false)
                 .WithField("ReportIds", f => f
@@ -80,7 +79,7 @@ namespace Laser.Orchard.Reporting
                 .Draftable(false)
                 .Securable()
             );
-            return 11;
+            return 2;
         }
     }
 }

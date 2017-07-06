@@ -168,7 +168,7 @@ namespace Laser.Orchard.Reporting.Services {
 
             foreach(var record in result) {
                 var ht = record as Hashtable;
-                string key = ht[hql.ReturnAliases[0]].ToString();
+                string key = Convert.ToString(ht[hql.ReturnAliases[0]]);
                 if (returnValue.ContainsKey(key)) {
                     var previousItem = returnValue[key];
                     previousItem.AggregationValue += Convert.ToDouble(ht[hql.ReturnAliases[1]]);
