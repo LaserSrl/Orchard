@@ -17,6 +17,8 @@ namespace KrakeAdmin {
             manifest.DefineStyle(KrakeNavigation).SetUrl("krake-navicon.css", "krake-navicon.css");
             manifest.DefineStyle(Bootstrap).SetUrl("bootstrap.css", "bootstrap.css");
             manifest.DefineStyle(Site).SetUrl("site.css", "site.css");
+
+            manifest.DefineScript(Bootstrap).SetUrl("bootstrap.js", "bootstrap.js");
             //Style.Include("font-awesome.min.css").AtHead();
             //Style.Include("iconic-font.min.css").AtHead();
             //Style.Include("https://fonts.googleapis.com/css?family=Roboto:400,700,500,300,100,900").AtHead();

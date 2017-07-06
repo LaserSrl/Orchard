@@ -9,11 +9,12 @@
     Script.Require("jQuery");
     Script.Require("jQueryUI_Core").AtHead();
     Script.Require("jQueryUI_Autocomplete").AtHead();
+    Script.Require("Bootstrap").AtHead();
     Style.Require("jQuery_Autocomplete").AtHead();
     Style.Require("AdvancedSearch").AtHead();
     Style.Require("FontAwesome430").AtHead();
     Style.Require("Accordion").AtHead();
-    Style.Require("Bootstrap");
+    Style.Require("Bootstrap").AtHead();
     var typeDisplayName = Model.TypeDisplayName;
     var pageTitle = T("Manage Content");
     var createLinkText = T("Create New Content");
@@ -63,7 +64,8 @@
             });
 
             function close_accordion_section() {
-                $('.accordion .accordion-section-title').removeClass('active');
+                var conpnl = $('.accordion .accordion-section-title');
+                conpnl.removeClass('active');
                 //  $('.accordion .accordion-section-content').slideUp(300).removeClass('open');
             }
 
@@ -81,7 +83,8 @@
                     // Add active class to section title
                     $(this).addClass('active');
                     // Open up the hidden content panel
-                    $('.accordion ' + currentAttrValue).slideDown(300).addClass('open');
+                    var conpnl = $('.accordion ' + currentAttrValue);
+                    conpnl.slideDown(300).addClass('open');
                 }
 
                 e.preventDefault();

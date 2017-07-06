@@ -9587,6 +9587,28 @@ li.L8 {
     box-sizing: border-box;
 }
 
+.summary .infos .media-thumbnail img {
+    width: 100%;
+    height: 100%;
+}
+
+.summary .infos .media-thumbnail-document > div {
+    width: 100%;
+    height: 100%;
+}
+
+.summary .infos .media-thumbnail {
+    width: 90px;
+    height: 90px;
+}
+
+.summary .infos .media-thumbnail:hover {
+  z-index: 1;
+    transform: scale(1.7,1.7);
+  transition: .3s transform;
+}
+
+
 div.zone-header > #culture-selection {
     width: 100%;
     height: 0px;
