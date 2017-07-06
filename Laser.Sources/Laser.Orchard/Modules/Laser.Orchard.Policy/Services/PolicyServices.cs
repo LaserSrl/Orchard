@@ -44,7 +44,6 @@ namespace Laser.Orchard.Policy.Services {
         private readonly IRepository<UserPolicyAnswersHistoryRecord> _userPolicyAnswersHistoryRepository;
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IPolicyEventHandler _policyEventHandler;
-        private readonly IOrchardServices _orchardServices;
 
         public PolicyServices(IContentManager contentManager,
                               IContentSerializationServices contentSerializationServices,
@@ -53,8 +52,7 @@ namespace Laser.Orchard.Policy.Services {
                               IRepository<UserPolicyAnswersRecord> userPolicyAnswersRepository,
                               IRepository<UserPolicyAnswersHistoryRecord> userPolicyAnswersHistoryRepository,
                               IControllerContextAccessor controllerContextAccessor,
-                              IPolicyEventHandler policyEventHandler,
-                              IOrchardServices orchardService) {
+                              IPolicyEventHandler policyEventHandler) {
             _contentManager = contentManager;
             _contentSerializationServices = contentSerializationServices;
             _workContext = workContext;
@@ -63,7 +61,6 @@ namespace Laser.Orchard.Policy.Services {
             _userPolicyAnswersHistoryRepository = userPolicyAnswersHistoryRepository;
             _controllerContextAccessor = controllerContextAccessor;
             _policyEventHandler = policyEventHandler;
-            _orchardServices = orchardService;
         }
 
         public PoliciesForUserViewModel GetPoliciesForUserOrSession(bool writeMode, string language = null) {
@@ -391,7 +388,7 @@ namespace Laser.Orchard.Policy.Services {
                     sb.Append(",");
                 }
                 sb.Append("{");
-                dumper = new ObjectDumper(10,null,false,true,complexBehaviours, _orchardServices);
+                dumper = new ObjectDumper(10,null,false,true,complexBehaviours);
                 dump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
                 JsonConverter.ConvertToJSon(dump, sb, minified, realFormat);
                 sb.Append("}");

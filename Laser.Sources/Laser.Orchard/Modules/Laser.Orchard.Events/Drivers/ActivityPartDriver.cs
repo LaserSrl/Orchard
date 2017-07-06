@@ -32,68 +32,10 @@ namespace Laser.Orchard.Events.Drivers {
         /// <param name="displayType">The display type.</param>
         /// <param name="shapeHelper">The shape helper.</param>
         protected override DriverResult Display(ActivityPart part, string displayType, dynamic shapeHelper) {
-
-            var partSettings = part.Settings.GetModel<ActivityPartSettings>();
-
-            DateTime? localDateTimeStart = _dataLocalization.ReadDateLocalized(part.DateTimeStart, true);
-            DateTime? localDateTimeEnd = _dataLocalization.ReadDateLocalized(part.DateTimeEnd, true);
-            DateTime? localDateRepeatEnd = _dataLocalization.ReadDateLocalized(part.RepeatEndDate, true);
-            ActivityViewModel activityVM = new ActivityViewModel();
- 
-            Mapper.Initialize(cfg => {
-                cfg.CreateMap<ActivityPart, ActivityViewModel>()
-                    .ForMember(dest => dest.DateStart, opt => opt.Ignore())
-                    .ForMember(dest => dest.DateEnd, opt => opt.Ignore())
-                    .ForMember(dest => dest.TimeStart, opt => opt.Ignore())
-                    .ForMember(dest => dest.TimeEnd, opt => opt.Ignore())
-                    .ForMember(dest => dest.RepeatEndDate, opt => opt.Ignore())
-                    .ForMember(dest => dest.Monday, opt => opt.Ignore())
-                    .ForMember(dest => dest.Tuesday, opt => opt.Ignore())
-                    .ForMember(dest => dest.Wednesday, opt => opt.Ignore())
-                    .ForMember(dest => dest.Thursday, opt => opt.Ignore())
-                    .ForMember(dest => dest.Friday, opt => opt.Ignore())
-                    .ForMember(dest => dest.Saturday, opt => opt.Ignore())
-                    .ForMember(dest => dest.Sunday, opt => opt.Ignore())
-                    .ForMember(dest => dest.RepeatByDayNumber, opt => opt.Ignore())
-                    .ForMember(dest => dest.Settings, opt => opt.Ignore());
-            });
-
-            Mapper.Map(part, activityVM);
-
-            activityVM.DateStart = _dataLocalization.WriteDateLocalized(localDateTimeStart);
-            activityVM.DateEnd = _dataLocalization.WriteDateLocalized(localDateTimeEnd);
-            activityVM.TimeStart = _dataLocalization.WriteTimeLocalized(localDateTimeStart);
-            activityVM.TimeEnd = _dataLocalization.WriteTimeLocalized(localDateTimeEnd);
-            activityVM.RepeatEndDate = _dataLocalization.WriteDateLocalized(part.RepeatEndDate);
-            activityVM.Settings = partSettings;
-            if (part.RepeatType == "W") {
-                activityVM.Monday = part.RepeatDetails.Contains(DayOfWeek.Monday.ToString());
-                activityVM.Tuesday = part.RepeatDetails.Contains(DayOfWeek.Tuesday.ToString());
-                activityVM.Wednesday = part.RepeatDetails.Contains(DayOfWeek.Wednesday.ToString());
-                activityVM.Thursday = part.RepeatDetails.Contains(DayOfWeek.Thursday.ToString());
-                activityVM.Friday = part.RepeatDetails.Contains(DayOfWeek.Friday.ToString());
-                activityVM.Saturday = part.RepeatDetails.Contains(DayOfWeek.Saturday.ToString());
-                activityVM.Sunday = part.RepeatDetails.Contains(DayOfWeek.Sunday.ToString());
-            } else {
-                activityVM.Monday = false;
-                activityVM.Tuesday = false;
-                activityVM.Wednesday = false;
-                activityVM.Thursday = false;
-                activityVM.Friday = false;
-                activityVM.Saturday = false;
-                activityVM.Sunday = false;
-            }
-
-            if (part.RepeatType == "M")
-                activityVM.RepeatByDayNumber = part.RepeatDetails.Contains("DayNum");
-            else
-                activityVM.RepeatByDayNumber = true;
-
-            return ContentShape("Parts_ActivityDisplay",
-                                    () => shapeHelper.EditorTemplate(
-                                          TemplateName: "Parts/ActivityDisplay",
-                                          Model: activityVM,
-                                          Prefix: Prefix));
+            return ContentShape("Parts_Activity",
+                () => shapeHelper.Parts_Activity(
+                    Activity: part
+                    ));
         }
 
         /// <summary>
@@ -104,9 +46,9 @@ namespace Laser.Orchard.Events.Drivers {
         protected override DriverResult Editor(ActivityPart part, dynamic shapeHelper) {
             var partSettings = part.Settings.GetModel<ActivityPartSettings>();
 
-            DateTime? localDateTimeStart = _dataLocalization.ReadDateLocalized(part.DateTimeStart, true);
-            DateTime? localDateTimeEnd = _dataLocalization.ReadDateLocalized(part.DateTimeEnd, true);
-            DateTime? localDateRepeatEnd = _dataLocalization.ReadDateLocalized(part.RepeatEndDate, true);
+            DateTime? localDateTimeStart = _dataLocalization.ReadDateLocalized(part.DateTimeStart);
+            DateTime? localDateTimeEnd = _dataLocalization.ReadDateLocalized(part.DateTimeEnd);
+            DateTime? localDateRepeatEnd = _dataLocalization.ReadDateLocalized(part.RepeatEndDate);
             ActivityViewModel activityVM = new ActivityViewModel();
 
             //Mapper.CreateMap<ActivityPart, ActivityViewModel>()
@@ -216,19 +158,19 @@ namespace Laser.Orchard.Events.Drivers {
                 if (!String.IsNullOrWhiteSpace(activityVM.DateStart) && !String.IsNullOrWhiteSpace(activityVM.DateEnd) &&
                     (activityVM.AllDay || (!activityVM.AllDay && !String.IsNullOrWhiteSpace(activityVM.TimeStart) && !String.IsNullOrWhiteSpace(activityVM.TimeEnd)))) {
                     if (activityVM.AllDay) {
-                        part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, "", true);
-                        part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, "", true);
+                        part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, "");
+                        part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, "");
                     }
                     else {
-                        part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, activityVM.TimeStart, true);
-                        part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, activityVM.TimeEnd, true);
+                        part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, activityVM.TimeStart);
+                        part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, activityVM.TimeEnd);
                     }
                 }
                 else
                     updater.AddModelError(Prefix + "DateRequiredError", T("The starting date and ending date of the event are required."));
 
                 if (part.Repeat) {
-                    part.RepeatEndDate = _dataLocalization.StringToDatetime(activityVM.RepeatEndDate, "", true);
+                    part.RepeatEndDate = _dataLocalization.StringToDatetime(activityVM.RepeatEndDate, "");
                     if (part.RepeatEnd && part.RepeatEndDate == null){
                         updater.AddModelError(Prefix + "DateRepeateRequiredError", T("The repeat end date is required."));
                     }
