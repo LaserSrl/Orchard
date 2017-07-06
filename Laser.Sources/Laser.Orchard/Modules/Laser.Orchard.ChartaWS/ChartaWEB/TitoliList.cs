@@ -266,7 +266,7 @@ namespace ChartaWEB
                 // serializza il risultato
                 var sb = new StringBuilder();
                 sb.Append("{\"m\":[{\"n\":\"Reply\",\"v\":\"Reply\"}], \"l\":[{"); // lista start
-                var dumper = new ObjectDumper(10, null, false, true, null, null); //da passare l' orchard service
+                var dumper = new ObjectDumper(10, null, false, true, null);
                 var dump = dumper.Dump(lista.ToArray(), "TitoliList");
                 JsonConverter.ConvertToJSon(dump, sb, false, true);
                 sb.Append("}]}"); // lista end
@@ -402,7 +402,7 @@ namespace ChartaWEB
                 // serializza il risultato
                 var sb = new StringBuilder();
                 sb.Append("{\"m\":[{\"n\":\"Reply\",\"v\":\"Reply\"}], \"l\":[{"); // lista start
-                var dumper = new ObjectDumper(10, null, false, true, null, null); //da passare orchard Service
+                var dumper = new ObjectDumper(10, null, false, true, null);
                 var dump = dumper.Dump(lista.ToArray(), "TitoliList");
                 JsonConverter.ConvertToJSon(dump, sb, false, true);
                 sb.Append("}]}"); // lista end

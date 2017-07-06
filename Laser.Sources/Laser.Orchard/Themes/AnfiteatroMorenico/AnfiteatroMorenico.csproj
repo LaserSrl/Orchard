@@ -48,9 +48,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Laser.Orchard.StartupConfig">
-      <HintPath>..\..\Modules\Laser.Orchard.StartupConfig\bin\Laser.Orchard.StartupConfig.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
