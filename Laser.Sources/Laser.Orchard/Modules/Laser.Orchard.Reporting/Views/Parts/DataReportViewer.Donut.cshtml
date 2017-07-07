@@ -17,8 +17,8 @@
     (function(){
         var s1 = @Html.Raw(Model.Series1);
         $('#@chartId').jqplot([s1], {
+            seriesColors: laserOrchardReportingColors,
             seriesDefaults: {
-                // Make this a pie chart.
                 renderer: jQuery.jqplot.DonutRenderer,
                 rendererOptions: {
                     // Put data labels on the pie slices.

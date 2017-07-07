@@ -16,5 +16,21 @@
     }
 </div>
 <script language="javascript" type="text/javascript">
-    $("#@chartContainerId").Reporting();
+    //$("#@chartContainerId").Reporting();
+    (function(){
+        var s1 = @Html.Raw(Model.Series1);
+        $('#@chartId').jqplot([s1], {
+            seriesColors: laserOrchardReportingColors,
+            seriesDefaults: {
+                // Make this a pie chart.
+                renderer: jQuery.jqplot.PieRenderer,
+                rendererOptions: {
+                    // Put data labels on the pie slices.
+                    // By default, labels show the percentage of the slice.
+                    showDataLabels: true
+                }
+            },
+            legend: { show: true, location: 'e' }
+        });
+    })();
 </script>

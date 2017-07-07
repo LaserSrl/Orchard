@@ -85,7 +85,8 @@ namespace Laser.Orchard.Reporting.Drivers
                 {
                     return ContentShape("Parts_DataReportViewer_PieChart",
                          () => shapeHelper.Parts_DataReportViewer_PieChart(
-                             Model: model
+                             Model: model,
+                             Series1: serializer.Serialize(reportData.Select(c => new object[] { c.Label, c.AggregationValue }).ToArray())
                              ));
                 }
                 else if (report.ChartType == (int)ChartTypes.SimpleList)
