@@ -15,11 +15,11 @@ namespace Laser.Orchard.Reporting.Services
 {
     public class FieldAggregateQueryService : IFieldAggregateQueryService
     {
-        private readonly Lazy<ISessionLocator> sessionLocator;
+        private readonly Lazy<ITransactionManager> _transactionManager;
 
-        public FieldAggregateQueryService(Lazy<ISessionLocator> sessionLocator)
+        public FieldAggregateQueryService(Lazy<ITransactionManager> transactionManager)
         {
-            this.sessionLocator = sessionLocator;
+            _transactionManager = transactionManager;
             this.T = NullLocalizer.Instance;
         }
 
@@ -159,7 +159,7 @@ namespace Laser.Orchard.Reporting.Services
 
             hql = string.Format(CultureInfo.InvariantCulture, hql, groupKey, groupValue, partName, fieldName, queryHql, fieldTableName);
 
-            var session = this.sessionLocator.Value.For(typeof(ContentItem));
+            var session = _transactionManager.Value.GetSession();
             return session
                    .CreateQuery(hql)
                    .SetCacheable(false)

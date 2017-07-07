@@ -25,18 +25,20 @@ namespace Laser.Orchard.Reporting {
                     q => q.Action("Index", "Report", new { area = "Laser.Orchard.Reporting" }).Permission(Permissions.ManageQueries).LocalNav()), null);
 
             builder.Add(item => {
-                item.Caption(T("Admin Data Reports"))
+                item.Caption(T("Execute Data Reports"))
                     .Permission(Security.Permissions.ShowDataReports)
                     .Position("3.05")
                     .Action("ShowReports", "Report", new { area = "Laser.Orchard.Reporting" });
             });
             builder.Add(item => {
                 item.Caption(T("Data Report Dashboards"))
-                    .Permission(Security.Permissions.ShowDataReports)
+                    .Permission(Security.Permissions.ShowDataDashboard)
                     .Position("3.06");
+                var dashboardPermissions = new Security.Permissions(_contentManager).GetDashboardPermissions();
                 foreach(var dashboard in GetDashboards()) {
                     item.Add(T(dashboard.As<TitlePart>().Title), sub => sub
                         .Action("ShowDashboard", "Report", new { area = "Laser.Orchard.Reporting", Id = dashboard.Id })
+                        .Permission(dashboardPermissions[dashboard.Id])
                     );
                 }
             });

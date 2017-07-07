@@ -20,6 +20,7 @@ using Orchard.DisplayManagement;
 using Orchard;
 using Orchard.Themes;
 using Orchard.ContentPicker.Fields;
+using Orchard.Security;
 
 namespace Laser.Orchard.Reporting.Controllers {
     [ValidateInput(false), Admin]
@@ -28,6 +29,7 @@ namespace Laser.Orchard.Reporting.Controllers {
         private readonly IRepository<QueryPartRecord> queryRepository;
         private readonly IRepository<ReportRecord> reportRepository;
         private readonly IReportManager reportManager;
+        private readonly IAuthorizer _authorizer;
         private IOrchardServices services { get; set; }
         private readonly ISiteService siteService;
 
@@ -36,6 +38,7 @@ namespace Laser.Orchard.Reporting.Controllers {
             IReportManager reportManager,
             IShapeFactory shapeFactory,
             IOrchardServices services,
+            IAuthorizer authorizer,
             IRepository<QueryPartRecord> queryRepository,
             IRepository<ReportRecord> reportRepository)
         {
@@ -45,6 +48,7 @@ namespace Laser.Orchard.Reporting.Controllers {
             this.queryRepository = queryRepository;
             this.services = services;
             this.Shape = shapeFactory;
+            _authorizer = authorizer;
         }
 
         public Localizer T { get; set; }
@@ -345,8 +349,7 @@ namespace Laser.Orchard.Reporting.Controllers {
         }
 
         public ActionResult Display(ReportDisplayViewModel model) {
-            var reportList = reportManager.GetReportListForCurrentUser();
-            if(reportList.FirstOrDefault(x => x.Id == model.Id) == null) { 
+            if (_authorizer.Authorize(reportManager.GetReportPermissions()[model.Id]) == false) { 
                 return new HttpUnauthorizedResult(T("Not authorized to list Reports").ToString());
             }
             var ci = services.ContentManager.Get(model.Id);
@@ -366,8 +369,7 @@ namespace Laser.Orchard.Reporting.Controllers {
         }
         [Themed(Enabled = false)]
         public ActionResult DisplayChart(int id) {
-            var reportList = reportManager.GetReportListForCurrentUser();
-            if (reportList.FirstOrDefault(x => x.Id == id) == null) {
+            if (_authorizer.Authorize(reportManager.GetReportPermissions()[id]) == false) {
                 return new HttpUnauthorizedResult(T("Not authorized to list Reports").ToString());
             }
             var ci = services.ContentManager.Get(id);
@@ -389,9 +391,16 @@ namespace Laser.Orchard.Reporting.Controllers {
             return View(model);
         }
         public ActionResult ShowDashboard(ShowDashboardViewModel model) {
+            if (_authorizer.Authorize(reportManager.GetDashboardPermissions()[model.Id]) == false) {
+                return new HttpUnauthorizedResult(T("Not authorized to execute this dashboard").ToString());
+            }
             // recupera l'elenco dei report e lo aggiunge al model
-            var dashboard = services.ContentManager.Get<DataReportDashboardPart>(model.Id);
-            model.Title = dashboard.As<TitlePart>().Title;
+            var ciDashboard = services.ContentManager.Get(model.Id);
+            var dashboard = ciDashboard.Parts.FirstOrDefault(x => x.PartDefinition.Name == "DataReportDashboardPart");
+            if(dashboard == null) {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "{0}={1}", T("There is no dashboard with the Id"), model.Id));
+            }
+            model.Title = ciDashboard.As<TitlePart>().Title;
             var cpf = dashboard.Fields.FirstOrDefault(x => x.Name == "ReportIds") as ContentPickerField;
             var reports = services.ContentManager.GetMany<ContentItem>(cpf.Ids, VersionOptions.Published, QueryHints.Empty);
             foreach (var rep in reports) {

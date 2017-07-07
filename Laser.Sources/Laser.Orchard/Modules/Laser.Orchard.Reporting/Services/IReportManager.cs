@@ -4,6 +4,7 @@ using Laser.Orchard.Reporting.Models;
 using Laser.Orchard.Reporting.Providers;
 using System.Collections.Generic;
 using Orchard;
+using Orchard.Security.Permissions;
 
 namespace Laser.Orchard.Reporting.Services {
     public interface IReportManager: IDependency
@@ -14,5 +15,7 @@ namespace Laser.Orchard.Reporting.Services {
         int GetCount(ReportRecord report, IContent container);
         IEnumerable<ReportItem> GetReportListForCurrentUser(string titleFilter = "");
         IEnumerable<DataReportViewerPart> GetReports();
+        Dictionary<int, Permission> GetReportPermissions();
+        Dictionary<int, Permission> GetDashboardPermissions();
     }
 }

@@ -31,15 +31,8 @@ namespace Laser.Orchard.Reporting.Services {
         private readonly ITransactionManager _transactionManager;
         private readonly IAuthorizer _authorizer;
         private Dictionary<int, Permission> _reportPermissions;
+        private Dictionary<int, Permission> _dashboardPermissions;
         public Localizer T { get; set; }
-        private Dictionary<int, Permission> ReportPermissions {
-            get {
-                if (_reportPermissions == null) {
-                    _reportPermissions = new Security.Permissions(contentManager).GetReportPermissions();
-                }
-                return _reportPermissions;
-            }
-        }
 
         public ReportManager(
             IRepository<QueryPartRecord> queryRepository,
@@ -245,7 +238,7 @@ namespace Laser.Orchard.Reporting.Services {
             });
             foreach(var report in unfilteredList) {
                 if (report.Title.ToLowerInvariant().Contains(filter)) {
-                    if (_authorizer.Authorize(ReportPermissions[report.Id])) {
+                    if (_authorizer.Authorize(GetReportPermissions()[report.Id])) {
                         reportLst.Add(report);
                     }
                 }
@@ -254,6 +247,18 @@ namespace Laser.Orchard.Reporting.Services {
         }
         public IEnumerable<DataReportViewerPart> GetReports() {
             return contentManager.Query<DataReportViewerPart>().List();
+        }
+        public Dictionary<int, Permission> GetReportPermissions() {
+            if (_reportPermissions == null) {
+                _reportPermissions = new Security.Permissions(contentManager).GetReportPermissions();
+            }
+            return _reportPermissions;
+        }
+        public Dictionary<int, Permission> GetDashboardPermissions() {
+            if (_dashboardPermissions == null) {
+                _dashboardPermissions = new Security.Permissions(contentManager).GetDashboardPermissions();
+            }
+            return _dashboardPermissions;
         }
     }
 }

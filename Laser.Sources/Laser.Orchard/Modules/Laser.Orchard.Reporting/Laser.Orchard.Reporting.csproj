@@ -125,7 +125,9 @@
     <Content Include="Scripts\chosen\chosen.jquery.min.js" />
     <Content Include="Scripts\chosen\chosen.proto.js" />
     <Content Include="Scripts\chosen\chosen.proto.min.js" />
-    <Content Include="Placement.info" />
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
@@ -231,15 +233,12 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\ReportController.cs" />
-    <Compile Include="Drivers\DataReportDashboardDriver.cs" />
     <Compile Include="Drivers\DataReportViewerDriver.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Handlers\DataReportDashboardHandler.cs" />
     <Compile Include="Handlers\DataReportViewerHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\AggregateMethods.cs" />
     <Compile Include="Models\ChartTypes.cs" />
-    <Compile Include="Models\DataReportDashboardPart.cs" />
     <Compile Include="Models\DataReportViewerPart.cs" />
     <Compile Include="Models\ReportItem.cs" />
     <Compile Include="Models\ReportRecord.cs" />

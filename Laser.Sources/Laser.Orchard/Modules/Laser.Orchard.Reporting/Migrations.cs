@@ -54,9 +54,6 @@ namespace Laser.Orchard.Reporting
             return 1;
         }
         public int UpdateFrom1() {
-            SchemaBuilder.CreateTable("DataReportDashboardPartRecord", t => t
-                .ContentPartRecord()
-            );
             ContentDefinitionManager.AlterPartDefinition("DataReportDashboardPart", p => p
                 .Attachable(false)
                 .WithField("ReportIds", f => f
@@ -73,6 +70,7 @@ namespace Laser.Orchard.Reporting
             ContentDefinitionManager.AlterTypeDefinition("DataReportDashboard", t => t
                 .WithPart("TitlePart")
                 .WithPart("CommonPart")
+                .WithPart("IdentityPart")
                 .WithPart("DataReportDashboardPart")
                 .Creatable()
                 .Listable()
