@@ -24,12 +24,10 @@
     var displayMap = new Dictionary<string, Func<ContentItem, dynamic>>() {
         {"Banner", (ci) => Display.HomePageHighlightBanner(ContentItem: ci) },
         {"Zoom", (ci) => Display.HomePageHighlightZoom(ContentItem: ci) },
-        {"Simple", (ci) => Display.HomePageHighlightSimple(ContentItem: ci) },
+        {"Vertical", (ci) => Display.HomePageHighlightVertical(ContentItem: ci) },
         {"Review", (ci) => Display.HomePageHighlightReview(ContentItem: ci) }
     };
 }
 @if (displayMap.ContainsKey(displayType)) {
-    @tag.StartElement
     @displayMap[displayType](contentItem)
-    @tag.EndElement
 }

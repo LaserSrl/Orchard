@@ -88,5 +88,17 @@
     "inputFiles": [
       "Scripts/jquery.countdown.js"
     ]
+  },
+  {
+    "outputFileName": "Styles/jquery.countdown.min.css",
+    "inputFiles": [
+      "Styles/jquery.countdown.css"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/jquery.wmuSlider.min.js",
+    "inputFiles": [
+      "Scripts/jquery.wmuSlider.js"
+    ]
   }
 ]

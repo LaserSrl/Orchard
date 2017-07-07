@@ -15,6 +15,8 @@
     }
 }
 @{
+    Style.Include("jquery.countdown.css", "jquery.countdown.min.css").AtFoot();
+
     contentItem = (ContentItem)Model.ContentItem;
     fields = contentItem.Parts
        .SelectMany(pa => pa.Fields);
@@ -32,6 +34,9 @@
     var targetUrlField = fields.Where(fi => fi is LinkField && fi.Name == "TargetUrl")
         .FirstOrDefault() as LinkField;
     var targetUrl = targetUrlField == null ? "#" : targetUrlField.Value;
+    textTwo = targetUrlField == null ? 
+        textTwo : string.IsNullOrWhiteSpace(targetUrlField.Text) ? 
+            textTwo : targetUrlField.Text;
 
     var picturesField = fields.Where(fi => fi is MediaLibraryPickerField && fi.Name == "Picture")
         .FirstOrDefault() as MediaLibraryPickerField;
@@ -51,33 +56,29 @@
 }
 <div class="banner-bottom1">
     <div class="agileinfo_banner_bottom1_grids">
-        <a href="@targetUrl">
-            <div class="@divClass" style="@divStyle1">
-                <h3>@textOne<span>@titleOne<i>@titleTwo</i></span></h3>
-                @textTwo
-            </div>
-            @if (pictures.Length > 1) {
-                <div class="col-md-5 agileinfo_banner_bottom1_grid_right">
-                    <h4>@textThree</h4>
-                    @if (endTime.HasValue) {
-                        var rightNow = DateTime.Now;
-                        <div class="timer_wrap">
-                            <div id="counter_@guid"> </div>
-                        </div>
-                        @{
-                            Script.Include("jquery.countdown.js", "jquery.countdown.min.js");
-                        }
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#counter_@guid').countdown({
-                                    timestamp: @endTime.Value.Millisecond
+        <div class="@divClass" style="@divStyle1">
+            <h3>@textOne<span>@titleOne<i>@titleTwo</i></span></h3>
+            <a href="@targetUrl">@textTwo</a>
+        </div>
+        @if (pictures.Length > 1) {
+            <div class="col-md-5 agileinfo_banner_bottom1_grid_right" style="@divStyle2">
+                <h4>@textThree</h4>
+                @if (endTime.HasValue) {
+                    Script.Include("jquery.countdown.js", "jquery.countdown.min.js");
+                    var rightNow = DateTime.Now;
+                    <div class="timer_wrap">
+                        <div id="counter_@guid" class="counter_timer"> </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#counter_@guid').countdown({
+                                timestamp: @endTime.Value.Subtract(new System.DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds
                                 });
-                            });
-                        </script>
-                    }
-                </div>
-            }
-        </a>
+                        });
+                    </script>
+                }
+            </div>
+        }
         <div class="clearfix"> </div>
     </div>
 </div>

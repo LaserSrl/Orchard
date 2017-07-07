@@ -8,7 +8,7 @@
     ContentItem contentItem;
     IEnumerable<ContentField> fields;
 
-    string titleOne, textOne, pictureUrl;
+    string titleOne, titleTwo, textOne, textTwo, textThree, pictureUrl;
 
     public string TextFieldValue(string fieldName) {
         var field = fields.Where(fi => fi is TextField && fi.Name == fieldName)
@@ -23,7 +23,10 @@
        .SelectMany(pa => pa.Fields);
 
     titleOne = TextFieldValue("TitleOne");
+    titleTwo = TextFieldValue("TitleTwo");
     textOne = TextFieldValue("TextOne");
+    textTwo = TextFieldValue("TextTwo");
+    textThree = TextFieldValue("TextThree");
 
     var targetUrlField = fields.Where(fi => fi is LinkField && fi.Name == "TargetUrl")
         .FirstOrDefault() as LinkField;
@@ -36,18 +39,16 @@
 }
 @helper DrawTheDiv() {
     if (!string.IsNullOrWhiteSpace(pictureUrl)) {
-        <img src="@Display.ResizeMediaUrl(Width: 80, Height: 80, Mode: "pad", Alignment: "middlecenter", Path: pictureUrl)" alt=" " class="img-responsive" />
+        <img src="@Display.ResizeMediaUrl(Width: 400, Height: 600, Mode: "pad", Alignment: "middlecenter", Path: pictureUrl)" alt=" " class="img-responsive" />
     }
-    <p>
-        @textOne
-    </p>
-    <h4>@titleOne</h4>
+    <div class="home_highlight_group_grid_right_pos">
+        <h4>@titleOne<span>@titleTwo</span></h4>
+        <h5>@textOne <span>@textTwo</span> @textThree</h5>
+    </div>
 }
 
-<div class="home_highlight_group_grid_left_grid1">
-    @if (string.IsNullOrWhiteSpace(targetUrl)) {
-        @DrawTheDiv()
-    } else {
-        <a href="@targetUrl">@DrawTheDiv()</a>
-    }
-</div>
+@if (string.IsNullOrWhiteSpace(targetUrl)) {
+    @DrawTheDiv()
+} else {
+    <a href="@targetUrl">@DrawTheDiv()</a>
+}

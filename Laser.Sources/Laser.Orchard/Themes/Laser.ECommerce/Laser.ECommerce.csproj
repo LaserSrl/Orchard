@@ -119,6 +119,10 @@
     <Content Include="Scripts\imagezoom.min.js">
       <DependentUpon>imagezoom.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\jquery.countdown.js" />
+    <Content Include="Scripts\jquery.countdown.min.js">
+      <DependentUpon>jquery.countdown.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery.flexisel.min.js">
       <DependentUpon>jquery.flexisel.js</DependentUpon>
     </Content>
@@ -129,6 +133,10 @@
     <Content Include="Scripts\jquery.iframe-transport.js" />
     <Content Include="Scripts\jquery.iframe-transport.min.js">
       <DependentUpon>jquery.iframe-transport.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.wmuSlider.js" />
+    <Content Include="Scripts\jquery.wmuSlider.min.js">
+      <DependentUpon>jquery.wmuSlider.js</DependentUpon>
     </Content>
     <Content Include="Scripts\ship.js" />
     <Content Include="Scripts\ship.min.js">
@@ -168,6 +176,10 @@
     </Content>
     <Content Include="Styles\Images\star-.png" />
     <Content Include="Styles\Images\star.png" />
+    <Content Include="Styles\jquery.countdown.css" />
+    <Content Include="Styles\jquery.countdown.min.css">
+      <DependentUpon>jquery.countdown.css</DependentUpon>
+    </Content>
     <Content Include="Styles\Style.css" />
     <Content Include="Styles\Style.min.css">
       <DependentUpon>Style.css</DependentUpon>
@@ -307,8 +319,10 @@
     <Content Include="Views\Content-HomePageHighlight.Summary.cshtml" />
     <Content Include="Views\HomePageHighlightBanner.cshtml" />
     <Content Include="Views\HomePageHighlightZoom.cshtml" />
-    <Content Include="Views\HomePageHighlightSimple.cshtml" />
+    <Content Include="Views\HomePageHighlightVertical.cshtml" />
     <Content Include="Views\HomePageHighlightReview.cshtml" />
+    <Content Include="Views\Widget-Name-BannerHighlightHomePage.cshtml" />
+    <Content Include="Views\Widget-Name-HighlightGroupHomePage.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
