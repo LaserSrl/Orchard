@@ -100,5 +100,17 @@
     "inputFiles": [
       "Scripts/jquery.wmuSlider.js"
     ]
+  },
+  {
+    "outputFileName": "Styles/popup-box.min.css",
+    "inputFiles": [
+      "Styles/popup-box.css"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/jquery.magnific-popup.min.js",
+    "inputFiles": [
+      "Scripts/jquery.magnific-popup.js"
+    ]
   }
 ]
