@@ -21,3 +21,10 @@
 .cc-cookies {
     width: 100%;
 }
+.questionnaire-container ul li ul li label {
+    display: block;
+}
+
+.questionnaire-container ul {
+    list-style-type: none;
+}
