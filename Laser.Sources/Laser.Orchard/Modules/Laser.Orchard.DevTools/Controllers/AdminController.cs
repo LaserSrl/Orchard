@@ -21,6 +21,7 @@ using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
 using System.Dynamic;
+using NHibernate.Transform;
 
 namespace Laser.Orchard.DevTools.Controllers {
 
@@ -251,6 +252,39 @@ namespace Laser.Orchard.DevTools.Controllers {
             string iv = string.Format("{0}{0}", DateTime.UtcNow.ToString("ddMMyyyy").Substring(0, 8));
             byte[] arr = Encoding.UTF8.GetBytes(iv);
             return Convert.ToBase64String(arr);
+        }
+        [HttpGet]
+        [Admin]
+        public ActionResult ShowCustomHqlQuery() {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
+                return new HttpUnauthorizedResult();
+            return View("CustomHqlQuery", new CustomHqlQuery());
+        }
+        [HttpPost]
+        [Admin]
+        public ActionResult ExecHqlQuery(CustomHqlQuery model) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
+                return new HttpUnauthorizedResult();
+
+            string query = model.HqlQuery.Trim();
+            var hql = _orchardServices.TransactionManager.GetSession().CreateQuery(query);
+            if (query.StartsWith("select ", StringComparison.InvariantCultureIgnoreCase)) {
+                model.Results = hql.SetResultTransformer(Transformers.AliasToEntityMap).Enumerable();
+            } else {
+                var result = new List<Hashtable>();
+                var aux1 = hql.List();
+                foreach(var obj in aux1) {
+                    var h = new Hashtable();
+                    foreach(var field in obj.GetType().GetProperties()) {
+                        h.Add(field.Name, field.GetValue(obj));
+                    }
+                    result.Add(h);
+                }
+                model.Results = result;
+            }
+            //model.Results = hql.SetResultTransformer(Transformers.AliasToEntityMap)
+            //    .List() as IList<object>;
+            return View("CustomHqlQuery", model);
         }
     }
 }
