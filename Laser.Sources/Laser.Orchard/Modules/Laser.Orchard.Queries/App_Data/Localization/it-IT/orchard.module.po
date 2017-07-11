@@ -77,6 +77,10 @@ msgid "Clear"
 msgstr "Cancella"
 
 msgctxt "~/Modules/Laser.Orchard.Queries/Views/MyQueryAdmin/index.cshtml"
+msgid "Create New HQL Query"
+msgstr "Crea nuova query HQL"
+
+msgctxt "~/Modules/Laser.Orchard.Queries/Views/MyQueryAdmin/index.cshtml"
 msgid "Create New One Shot Query"
 msgstr "Crea nuova Ricerca One Shot"
 

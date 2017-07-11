@@ -8,6 +8,14 @@
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
 
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/CustomHqlQuery.cshtml"
+msgid "Cutom HQL query"
+msgstr "Query HQL custom"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Custom HQL query"
+msgstr "Query HQL custom"
+
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
 msgid "DeviceList"
 msgstr "Lista Device"

@@ -1,0 +1,31 @@
+﻿@model Laser.Orchard.DevTools.ViewModels.CustomHqlQuery
+@using (Html.BeginFormAntiForgeryPost("ExecHqlQuery", FormMethod.Post)) {
+    <div>
+        @Html.LabelFor(m => m.HqlQuery, T("Cutom HQL query"))
+        @Html.TextAreaFor(m => m.HqlQuery)
+        <button type="submit">Exec</button>
+        <div style="overflow:scroll;margin-top:10px">
+            @{ 
+                var isHeader = true;
+            }
+            <table>
+            @foreach (var row in Model.Results) {
+                var fields = row as System.Collections.Hashtable;
+                if (isHeader) {
+                    <tr>
+                        @foreach (var col in fields.Keys) {
+                            <td style="border:solid 1px red;padding:5px;color:red;font-weight:700">@col</td>
+                        }
+                    </tr>
+                    isHeader = false;
+                }
+                <tr>
+                    @foreach (var col in fields.Values) {
+                        <td style="border:solid 1px black;padding:5px">@col</td>
+                    }
+                </tr>
+            }
+            </table>
+        </div>
+    </div>
+}
