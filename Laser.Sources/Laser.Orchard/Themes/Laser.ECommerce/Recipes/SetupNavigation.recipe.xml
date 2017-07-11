@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Orchard>
+  <Recipe>
+    <Name>SetupNavigation</Name>
+    <Author>Laser srl</Author>
+    <WebSite>www.laser-group.com</WebSite>
+    <Version>1.0</Version>
+    <IsSetupRecipe>false</IsSetupRecipe>
+  </Recipe>
+  <Content>
+    <Menu Id="/Identifier=6890acdfcfee4bb6ba9badf452aaeda0" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="6890acdfcfee4bb6ba9badf452aaeda0" />
+      <TitlePart Title="Main Menu" />
+    </Menu>
+    <Menu Id="/Identifier=cbb7f6fc7fd644ddac5aaa2c5c4511a2" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="cbb7f6fc7fd644ddac5aaa2c5c4511a2" />
+      <TitlePart Title="CategoriesSideMenu" />
+    </Menu>
+    <MenuItem Id="/Identifier=061be955c9724a00a38a4454c7765c51" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="061be955c9724a00a38a4454c7765c51" />
+      <MenuItemPart Url="~/products/new-arrivals" />
+      <MenuPart Menu="/Identifier=cbb7f6fc7fd644ddac5aaa2c5c4511a2" MenuText="New Arrivals" MenuPosition="3" />
+    </MenuItem>
+    <MenuItem Id="/Identifier=5c2461e14f4646d7aee538672ac28566" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="5c2461e14f4646d7aee538672ac28566" />
+      <MenuItemPart Url="~/" />
+      <MenuPart Menu="/Identifier=cbb7f6fc7fd644ddac5aaa2c5c4511a2" MenuText="Summer Store" MenuPosition="2" />
+    </MenuItem>
+    <MenuItem Id="/Identifier=6e3196b7367e492c934603470f6f3807" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="6e3196b7367e492c934603470f6f3807" />
+      <MenuItemPart Url="~/" />
+      <MenuPart Menu="/Identifier=6890acdfcfee4bb6ba9badf452aaeda0" MenuText="Home" MenuPosition="1" />
+    </MenuItem>
+    <MenuItem Id="/Identifier=83071159194a45df865337e7ddce1964" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="83071159194a45df865337e7ddce1964" />
+      <MenuItemPart Url="~/" />
+      <MenuPart Menu="/Identifier=cbb7f6fc7fd644ddac5aaa2c5c4511a2" MenuText="Latest Watches" MenuPosition="4" />
+    </MenuItem>
+    <MenuItem Id="/Identifier=ace95bc7a8774a16b219147328c46efb" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="ace95bc7a8774a16b219147328c46efb" />
+      <MenuItemPart Url="~/" />
+      <MenuPart Menu="/Identifier=6890acdfcfee4bb6ba9badf452aaeda0" MenuText="Mail Us" MenuPosition="4" />
+    </MenuItem>
+    <MenuItem Id="/Identifier=cd18e1274ba34be08d31e0b2fdc76bea" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="cd18e1274ba34be08d31e0b2fdc76bea" />
+      <MenuItemPart Url="~/about" />
+      <MenuPart Menu="/Identifier=6890acdfcfee4bb6ba9badf452aaeda0" MenuText="About Us" MenuPosition="3" />
+    </MenuItem>
+    <TaxonomyNavigationMenuItem Id="/Identifier=3866550b63da40d899f63805c3ef7b39" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="3866550b63da40d899f63805c3ef7b39" />
+      <MenuPart Menu="/Identifier=cbb7f6fc7fd644ddac5aaa2c5c4511a2" MenuPosition="1" />
+      <TaxonomyNavigationPart DisplayContentCount="false" DisplayRootTerm="false" HideEmptyTerms="false" LevelsToDisplay="0" TaxonomyId="/alias=products" TermId="/alias=products\/products" />
+    </TaxonomyNavigationMenuItem>
+    <TaxonomyNavigationMenuItem Id="/Identifier=898d4312015e46e593e93c7745c6cd0a" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="898d4312015e46e593e93c7745c6cd0a" />
+      <MenuPart Menu="/Identifier=6890acdfcfee4bb6ba9badf452aaeda0" MenuText="Products" MenuPosition="2" />
+      <TaxonomyNavigationPart DisplayContentCount="false" DisplayRootTerm="true" HideEmptyTerms="false" LevelsToDisplay="0" TaxonomyId="/alias=products" TermId="/alias=products\/products" />
+    </TaxonomyNavigationMenuItem>
+  </Content>
+</Orchard>

@@ -111,6 +111,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets.json" />
+    <Content Include="Recipes\ECommerceThemeSetup.recipe.xml" />
+    <Content Include="Recipes\SetupDemoContents.recipe.xml" />
+    <Content Include="Recipes\SetupDemoSite.recipe.xml" />
+    <Content Include="Recipes\SetupNavigation.recipe.xml" />
+    <Content Include="Recipes\SetupProjections.recipe.xml" />
+    <Content Include="Recipes\SetupTaxonomies.recipe.xml" />
+    <Content Include="Recipes\SetupWidgets.recipe.xml" />
     <Content Include="Scripts\easyResponsiveTabs.js" />
     <Content Include="Scripts\easyResponsiveTabs.min.js">
       <DependentUpon>easyResponsiveTabs.js</DependentUpon>
@@ -330,7 +337,6 @@
     <Content Include="Views\Widget-Name-HighlightGroupHomePage.cshtml" />
     <Content Include="Views\HomePageTaxonomyTermPart.cshtml" />
     <Content Include="Views\Widget-Name-VideoCategoriesHomePage.cshtml" />
-    <Content Include="Views\Parts\OEmbed.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
