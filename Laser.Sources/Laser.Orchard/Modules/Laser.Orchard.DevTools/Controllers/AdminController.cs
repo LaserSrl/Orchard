@@ -21,6 +21,8 @@ using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
 using System.Dynamic;
+using Orchard.Tokens;
+using Orchard.ContentManagement;
 
 namespace Laser.Orchard.DevTools.Controllers {
 
@@ -31,6 +33,7 @@ namespace Laser.Orchard.DevTools.Controllers {
         private readonly ICacheStorageProvider _cacheStorageProvider;
         private readonly ShellSettings _shellSetting;
         private readonly IRazorTemplateManager _razorTemplateManager;
+        private readonly ITokenizer _tokenizer;
         public IOrchardServices _orchardServices { get; set; }
         private readonly INotifier _notifier;
         public Localizer T { get; set; }
@@ -42,7 +45,9 @@ namespace Laser.Orchard.DevTools.Controllers {
              INotifier notifier,
              ICacheStorageProvider cacheStorageProvider,
             ShellSettings shellSetting,
-            IRazorTemplateManager razorTemplateManager) {
+            IRazorTemplateManager razorTemplateManager,
+            ITokenizer tokenizer) {
+            _tokenizer = tokenizer;
             _csrfTokenHelper = csrfTokenHelper;
             _orchardServices = orchardServices;
             _notifier = notifier;
@@ -53,6 +58,7 @@ namespace Laser.Orchard.DevTools.Controllers {
             _shellSetting = shellSetting;
             _razorTemplateManager = razorTemplateManager;
         }
+
 
         [HttpGet]
         [Admin]
@@ -122,6 +128,34 @@ namespace Laser.Orchard.DevTools.Controllers {
             else
                 se = new Segnalazione { Testo = "Nessun file di log oggi" };
             return View("Index", se);
+        }
+
+
+        [HttpGet]
+        [Admin]
+        public ActionResult TestToken() {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
+                return new HttpUnauthorizedResult();
+            return View("TestToken");
+        }
+
+        [HttpGet]
+        [Admin]
+        public string TestTokenExecute(int contentItemId, string token, bool lastVersion) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
+                return "";
+            try {
+                ContentItem contentItem;
+                if (lastVersion)
+                    contentItem = _orchardServices.ContentManager.Get(contentItemId, VersionOptions.Latest);
+                else
+                    contentItem = _orchardServices.ContentManager.Get(contentItemId);
+                var tokens = new Dictionary<string, object> { { "Content", contentItem } };
+                return _tokenizer.Replace(token, tokens);
+            }
+            catch (Exception ex) {
+                return "Error " + ex.Message;
+            }
         }
 
         [HttpGet]

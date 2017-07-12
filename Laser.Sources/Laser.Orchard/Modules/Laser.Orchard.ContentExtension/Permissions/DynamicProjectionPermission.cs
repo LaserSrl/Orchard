@@ -3,10 +3,12 @@ using System.Linq;
 using Laser.Orchard.ContentExtension.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Laser.Orchard.ContentExtension.Permissions {
+    [OrchardFeature("Laser.Orchard.ContentExtension.DynamicProjection")]
     public class DynamicProjectionPermission : IPermissionProvider {
         public static readonly Dictionary<string, Permission> PermissionsList=new Dictionary<string, Permission>();
 
