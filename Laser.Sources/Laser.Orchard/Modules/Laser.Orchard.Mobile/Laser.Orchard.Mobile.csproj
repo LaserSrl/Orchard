@@ -290,6 +290,8 @@
     <Compile Include="Models\SmsGatewayPart.cs" />
     <Compile Include="Models\SmsPlaceholdersSettingsPart.cs" />
     <Compile Include="Models\UserPwdRecoveryPart.cs" />
+    <Compile Include="Projections\DeviceTypeFilter.cs" />
+    <Compile Include="Projections\DeviceTypeForm.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Service References\SmsServiceReference\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -302,7 +304,7 @@
     <Compile Include="Services\SmsValidationService.cs" />
     <Compile Include="SMSGatewayMigration.cs" />
     <Compile Include="SmsMigrations.cs" />
-    <Compile Include="Handlers\DeviceFilter.cs" />
+    <Compile Include="Projections\DeviceFilter.cs" />
     <Compile Include="Handlers\SmsSettingsPartHandler.cs" />
     <Compile Include="Handlers\UserDeviceHandler.cs" />
     <Compile Include="Models\UserDeviceRecord.cs" />
