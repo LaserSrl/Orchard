@@ -698,6 +698,10 @@ input[type="number"]:focus {
     height: 100%;
 }
 
+#media-library-main-selection-actions button {
+    margin: 2px 0 2px 0;
+}
+
 #site a, #site a:visited, #site a:active {
     color: #fff;
     float: none;
@@ -1344,21 +1348,27 @@ fieldset {
     text-decoration: underline;
 }
 
-.switch-for-switchable.summary-switched .summary-view {
-    background: rgba(0, 0, 0, 0) url("Images/summary-view-on.png") no-repeat scroll left top;
+.switch-for-switchable.summary-switched .summary-view, .switch-for-switchable.detail-switched .summary-view {
     border: 1px solid #f4f4f4;
     border-radius: 3px;
-    margin-right: 10px;
+    margin-right: 5px;
     cursor: pointer;
     padding: 10px;
 }
 
-.switch-for-switchable .detail-view {
-    background: rgba(0, 0, 0, 0) url("Images/detail-view.png") no-repeat scroll left top;
+.switch-for-switchable.summary-switched .detail-view, .switch-for-switchable.detail-switched .detail-view {
     border: 1px solid #f4f4f4;
     border-radius: 3px;
     cursor: pointer;
     padding: 10px;
+}
+
+.switch-for-switchable.summary-switched .detail-view {
+    background: rgba(0, 0, 0, 0) url("Images/detail-view.png") no-repeat scroll left top;
+}
+
+.switch-for-switchable.detail-switched .summary-view {
+    background: rgba(0, 0, 0, 0) url("Images/summary-view-on.png") no-repeat scroll left top;
 }
 
 .sections .primary {
