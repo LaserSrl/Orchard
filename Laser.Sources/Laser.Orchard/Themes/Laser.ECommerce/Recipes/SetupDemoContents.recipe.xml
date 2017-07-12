@@ -6,7 +6,8 @@
     <WebSite>www.laser-group.com</WebSite>
     <Version>1.0</Version>
     <Category>Demo</Category>
-    <IsSetupRecipe>true</IsSetupRecipe>
+    <Description>This recipes creates the contents for an ecommerce demo site. Remember to paste the correct media.</Description>
+    <IsSetupRecipe>false</IsSetupRecipe>
   </Recipe>
   <Content>
     <CustomTemplate Id="/Identifier=0431b7da7ee04c70a07263c6c1c9a420" Status="Published">
@@ -49,246 +50,6 @@
       <IdentityPart Identifier="e49f88e41d7b4771bcff87fe8c21f80f" />
       <TemplatePart Title="Newsletter - Subscription Template" Subject="Newsletter - Conferma iscrizione" Text="" IsLayout="false" />
     </CustomTemplate>
-    <HomePage Id="/alias=" Status="Published">
-      <MediaLibraryPickerField.Banner ContentItems="/Identifier=93a2de8f38d740ad82898d0e20de22e0" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <NumericField.BannerHeight Value="700" />
-      <TextField.BannerH3 Text="Fashions fade, &lt;span&gt; style is eternal&lt;span&gt;" />
-      <AutoroutePart Alias="" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="true" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T13:35:51.4582591Z" PublishedUtc="2017-07-10T10:19:04.6780546Z" ModifiedUtc="2017-07-10T10:19:04.4760223Z" />
-    </HomePage>
-    <HomePageHighlight Id="/Identifier=2f53eb22e3084c118e53f54e8934c698" Status="Published">
-      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Vertical" />
-      <LinkField.TargetUrl Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=c93b4f4cd9b147a2b3e19e16ebe1276f" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="Women" />
-      <TextField.TitleTwo Text="'s Special" />
-      <TextField.TextOne Text="Save up" />
-      <TextField.TextTwo Text="to" />
-      <TextField.TextThree Text="50%" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:04:22.5087444Z" PublishedUtc="2017-07-11T14:51:01.0101684Z" ModifiedUtc="2017-07-11T14:51:01.0031327Z" />
-      <IdentityPart Identifier="2f53eb22e3084c118e53f54e8934c698" />
-      <TitlePart Title="Other 2" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=34e6cc6de76a41fcac0f9667b3fc8965" Status="Published">
-      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Zoom" />
-      <LinkField.TargetUrl Url="/products/dresses" Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=29fe54c1171346e18a614a93c575b599" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="Look" />
-      <TextField.TitleTwo Text="A sheep" />
-      <TextField.TextOne Text="wondering what" />
-      <TextField.TextTwo Text="disaster" />
-      <TextField.TextThree />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T12:52:47.129898Z" PublishedUtc="2017-07-11T14:49:48.1800398Z" ModifiedUtc="2017-07-11T14:49:48.1722926Z" />
-      <IdentityPart Identifier="34e6cc6de76a41fcac0f9667b3fc8965" />
-      <TitlePart Title="Other 7" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=3534dad616cc4462a6e0e5e26e72a94a" Status="Published">
-      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Zoom" />
-      <LinkField.TargetUrl Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=00877b058dce442a9cfd36dd49150de2" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="We Offer" />
-      <TextField.TitleTwo Text="Best Products" />
-      <TextField.TextOne Text="30%" />
-      <TextField.TextTwo Text="Off" />
-      <TextField.TextThree />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:00:02.1961305Z" PublishedUtc="2017-07-11T14:56:50.6022606Z" ModifiedUtc="2017-07-11T14:47:01.7472747Z" />
-      <IdentityPart Identifier="3534dad616cc4462a6e0e5e26e72a94a" />
-      <TitlePart Title="Other 1" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=466a1b27137945ba9122b0ae029a355b" Status="Published">
-      <HomePageHighlight.EndDate Value="2017-07-31T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Banner" />
-      <LinkField.TargetUrl Text="Actual link text" Url="/products/jeans" Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=a55f8ad75a9c43c798c19edb14709cfc,/Identifier=d6536d9355f1414f98a92b351f2da8eb" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="OMG" />
-      <TextField.TitleTwo Text="such banner" />
-      <TextField.TextOne Text="brief description goes here" />
-      <TextField.TextTwo Text="Link text!" />
-      <TextField.TextThree Text="testing" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:11:11.9453625Z" PublishedUtc="2017-07-11T14:49:00.3185416Z" ModifiedUtc="2017-07-11T14:49:00.3106898Z" />
-      <IdentityPart Identifier="466a1b27137945ba9122b0ae029a355b" />
-      <TitlePart Title="Another Banner" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=63ad2b735795415db7db2c4b02f27147" Status="Published">
-      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Vertical" />
-      <LinkField.TargetUrl Url="/products/jeans" Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=d8489ef699c64bd9b994797f37444ffa" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="Verticality" />
-      <TextField.TitleTwo Text="Special" />
-      <TextField.TextOne Text="figures" />
-      <TextField.TextTwo Text="nice" />
-      <TextField.TextThree Text="watermelon" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T12:54:30.0665857Z" PublishedUtc="2017-07-11T14:49:33.0246691Z" ModifiedUtc="2017-07-11T14:49:32.8983395Z" />
-      <IdentityPart Identifier="63ad2b735795415db7db2c4b02f27147" />
-      <TitlePart Title="Other 7" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=7dc1fdbb4e1546cbab6b0e8dee45a74b" Status="Published">
-      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Review" />
-      <LinkField.TargetUrl Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=2c5e7c5249844f1aace69cf34a9c086d" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="Michael" />
-      <TextField.TitleTwo />
-      <TextField.TextOne Text="Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur" />
-      <TextField.TextTwo />
-      <TextField.TextThree />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:06:09.1444895Z" PublishedUtc="2017-07-11T14:56:01.1166733Z" ModifiedUtc="2017-07-11T14:48:21.6995523Z" />
-      <IdentityPart Identifier="7dc1fdbb4e1546cbab6b0e8dee45a74b" />
-      <TitlePart Title="Other 4" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=7fc0c6975851404185d4be98105cebd3" Status="Published">
-      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Vertical" />
-      <LinkField.TargetUrl Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=c93b4f4cd9b147a2b3e19e16ebe1276f" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="Women" />
-      <TextField.TitleTwo Text="'s Special" />
-      <TextField.TextOne Text="Save up" />
-      <TextField.TextTwo Text="to" />
-      <TextField.TextThree Text="40%" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:04:22.5087444Z" PublishedUtc="2017-07-11T14:50:20.6820364Z" ModifiedUtc="2017-07-11T14:50:20.6735023Z" />
-      <IdentityPart Identifier="7fc0c6975851404185d4be98105cebd3" />
-      <TitlePart Title="Other 2" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=a8d22d3be6af4027ab7b161d6e05a242" Status="Published">
-      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Vertical" />
-      <LinkField.TargetUrl Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=c93b4f4cd9b147a2b3e19e16ebe1276f" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="Women" />
-      <TextField.TitleTwo Text="'s Special" />
-      <TextField.TextOne Text="Save up" />
-      <TextField.TextTwo Text="to" />
-      <TextField.TextThree Text="30%" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:04:22.5087444Z" PublishedUtc="2017-07-11T14:47:40.0586927Z" ModifiedUtc="2017-07-11T14:47:40.0501444Z" />
-      <IdentityPart Identifier="a8d22d3be6af4027ab7b161d6e05a242" />
-      <TitlePart Title="Other 2" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=b226b5ad342f4876bdb52ca19d74a11d" Status="Published">
-      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Vertical" />
-      <LinkField.TargetUrl Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=c93b4f4cd9b147a2b3e19e16ebe1276f" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="Women" />
-      <TextField.TitleTwo Text="'s Special" />
-      <TextField.TextOne Text="Save up" />
-      <TextField.TextTwo Text="to" />
-      <TextField.TextThree Text="35%" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:04:22.5087444Z" PublishedUtc="2017-07-11T14:50:04.5538864Z" ModifiedUtc="2017-07-11T14:50:04.5448837Z" />
-      <IdentityPart Identifier="b226b5ad342f4876bdb52ca19d74a11d" />
-      <TitlePart Title="Other 2" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=cf714e79057a4fccb5a8617ad56fea04" Status="Published">
-      <HomePageHighlight.EndDate Value="2017-07-13T06:07:00Z" />
-      <EnumerationField.DisplayStyle Value="Banner" />
-      <LinkField.TargetUrl Url="/products/dresses" Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=29fe54c1171346e18a614a93c575b599,/Identifier=4f7a631b940f4c3f92549485ea5e5272" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="20%" />
-      <TextField.TitleTwo Text="Discount" />
-      <TextField.TextOne Text="Grand Opening Event With Flat" />
-      <TextField.TextTwo Text="Shop Now" />
-      <TextField.TextThree Text="Hot Deal" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-06T09:07:33.6984554Z" PublishedUtc="2017-07-11T14:46:35.0383067Z" ModifiedUtc="2017-07-11T14:46:35.0287908Z" />
-      <IdentityPart Identifier="cf714e79057a4fccb5a8617ad56fea04" />
-      <TitlePart Title="HomeBanner 1" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=d2744f0e8b4145aabad06da476513e86" Status="Published">
-      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Vertical" />
-      <LinkField.TargetUrl Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=c93b4f4cd9b147a2b3e19e16ebe1276f" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="Women" />
-      <TextField.TitleTwo Text="'s Special" />
-      <TextField.TextOne Text="Save up" />
-      <TextField.TextTwo Text="to" />
-      <TextField.TextThree Text="45%" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:04:22.5087444Z" PublishedUtc="2017-07-11T14:50:42.3587294Z" ModifiedUtc="2017-07-11T14:50:42.3491752Z" />
-      <IdentityPart Identifier="d2744f0e8b4145aabad06da476513e86" />
-      <TitlePart Title="Other 2" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=d31ee2e7f9af44b5914e9f10be1a0254" Status="Published">
-      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Review" />
-      <LinkField.TargetUrl Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=3326bf36ac4548fe836aadcabdb30aaf" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="Fus Ro Dah" />
-      <TextField.TitleTwo />
-      <TextField.TextOne Text="Monkeys are smelly" />
-      <TextField.TextTwo />
-      <TextField.TextThree />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T12:37:09.8270264Z" PublishedUtc="2017-07-11T14:49:17.3039895Z" ModifiedUtc="2017-07-11T14:49:17.2929981Z" />
-      <IdentityPart Identifier="d31ee2e7f9af44b5914e9f10be1a0254" />
-      <TitlePart Title="Other 6" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=d9573d22f0754c658bce755185f55abe" Status="Published">
-      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Review" />
-      <LinkField.TargetUrl Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=0467248fcc074f89ba82635727353a1f" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="Laura" />
-      <TextField.TitleTwo />
-      <TextField.TextOne Text="Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur" />
-      <TextField.TextTwo />
-      <TextField.TextThree />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:05:22.2172806Z" PublishedUtc="2017-07-11T14:56:01.133228Z" ModifiedUtc="2017-07-11T14:48:00.0396795Z" />
-      <IdentityPart Identifier="d9573d22f0754c658bce755185f55abe" />
-      <TitlePart Title="Other 3" />
-    </HomePageHighlight>
-    <HomePageHighlight Id="/Identifier=f7f50607792c4fc88d5e90048cc9fa9f" Status="Published">
-      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
-      <EnumerationField.DisplayStyle Value="Review" />
-      <LinkField.TargetUrl Target="_top" />
-      <MediaLibraryPickerField.Picture ContentItems="/Identifier=e07eef2ae7284ae6add15d05a81891cc" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TextField.TitleOne Text="Rosy" />
-      <TextField.TitleTwo />
-      <TextField.TextOne Text="Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur" />
-      <TextField.TextTwo />
-      <TextField.TextThree />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:06:53.4044664Z" PublishedUtc="2017-07-11T14:56:01.0765871Z" ModifiedUtc="2017-07-11T14:48:42.1332414Z" />
-      <IdentityPart Identifier="f7f50607792c4fc88d5e90048cc9fa9f" />
-      <TitlePart Title="Other 5" />
-    </HomePageHighlight>
-    <HomePageVideo Id="/Identifier=20d4fbf389484c02803f67983c69f74f" Status="Published">
-      <MediaLibraryPickerField.Video ContentItems="/Identifier=df55b3b1c6a04bbb93590b427bfe0c29" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-10T07:24:00.0949798Z" PublishedUtc="2017-07-11T14:43:14.9096229Z" ModifiedUtc="2017-07-11T14:43:14.8785935Z" />
-      <IdentityPart Identifier="20d4fbf389484c02803f67983c69f74f" />
-    </HomePageVideo>
     <Image Id="/Identifier=00877b058dce442a9cfd36dd49150de2" Status="Published">
       <NumericField.Creator Value="" />
       <NumericField.LastModifier Value="" />
@@ -2035,11 +1796,12 @@
       <MediaPart MimeType="image/jpeg" Caption="" AlternateText="" FolderPath="images\Sweaters" FileName="s1.jpg" LogicalType="Image" />
       <TitlePart Title="s1" />
     </Image>
-    <NewsletterDefinition Id="" Status="Published">
+    <NewsletterDefinition Id="/Identifier=8d0fb770674e4af8be8576b629693b5e" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <BodyPart Text="&lt;p&gt;This is the body&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T13:53:59.8011507Z" PublishedUtc="2017-06-26T13:53:59.9161384Z" ModifiedUtc="2017-06-26T13:53:59.9122127Z" />
+      <BodyPart Text="&lt;p&gt;Body text&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-12T10:27:51.2043597Z" PublishedUtc="2017-07-12T10:27:51.4940863Z" ModifiedUtc="2017-07-12T10:27:51.4664995Z" />
+      <IdentityPart Identifier="8d0fb770674e4af8be8576b629693b5e" />
       <TitlePart Title="ECommerce News" />
     </NewsletterDefinition>
     <OEmbed Id="/Identifier=df55b3b1c6a04bbb93590b427bfe0c29" Status="Published">
@@ -2067,6 +1829,246 @@
       </OEmbedPart>
       <TitlePart Title="Gucci Jewelry and Timepieces Collection: Spring Summer 2017" />
     </OEmbed>
+    <HomePage Id="/alias=" Status="Published">
+      <MediaLibraryPickerField.Banner ContentItems="/Identifier=93a2de8f38d740ad82898d0e20de22e0" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <NumericField.BannerHeight Value="700" />
+      <TextField.BannerH3 Text="Fashions fade, &lt;span&gt; style is eternal&lt;span&gt;" />
+      <AutoroutePart Alias="" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="true" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T13:35:51.4582591Z" PublishedUtc="2017-07-10T10:19:04.6780546Z" ModifiedUtc="2017-07-10T10:19:04.4760223Z" />
+    </HomePage>
+    <HomePageHighlight Id="/Identifier=2f53eb22e3084c118e53f54e8934c698" Status="Published">
+      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Vertical" />
+      <LinkField.TargetUrl Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=c93b4f4cd9b147a2b3e19e16ebe1276f" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="Women" />
+      <TextField.TitleTwo Text="'s Special" />
+      <TextField.TextOne Text="Save up" />
+      <TextField.TextTwo Text="to" />
+      <TextField.TextThree Text="50%" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:04:22.5087444Z" PublishedUtc="2017-07-11T14:51:01.0101684Z" ModifiedUtc="2017-07-11T14:51:01.0031327Z" />
+      <IdentityPart Identifier="2f53eb22e3084c118e53f54e8934c698" />
+      <TitlePart Title="Other 2" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=34e6cc6de76a41fcac0f9667b3fc8965" Status="Published">
+      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Zoom" />
+      <LinkField.TargetUrl Url="/products/dresses" Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=29fe54c1171346e18a614a93c575b599" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="Look" />
+      <TextField.TitleTwo Text="A sheep" />
+      <TextField.TextOne Text="wondering what" />
+      <TextField.TextTwo Text="disaster" />
+      <TextField.TextThree />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T12:52:47.129898Z" PublishedUtc="2017-07-11T14:49:48.1800398Z" ModifiedUtc="2017-07-11T14:49:48.1722926Z" />
+      <IdentityPart Identifier="34e6cc6de76a41fcac0f9667b3fc8965" />
+      <TitlePart Title="Other 7" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=3534dad616cc4462a6e0e5e26e72a94a" Status="Published">
+      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Zoom" />
+      <LinkField.TargetUrl Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=00877b058dce442a9cfd36dd49150de2" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="We Offer" />
+      <TextField.TitleTwo Text="Best Products" />
+      <TextField.TextOne Text="30%" />
+      <TextField.TextTwo Text="Off" />
+      <TextField.TextThree />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:00:02.1961305Z" PublishedUtc="2017-07-11T14:56:50.6022606Z" ModifiedUtc="2017-07-11T14:47:01.7472747Z" />
+      <IdentityPart Identifier="3534dad616cc4462a6e0e5e26e72a94a" />
+      <TitlePart Title="Other 1" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=466a1b27137945ba9122b0ae029a355b" Status="Published">
+      <HomePageHighlight.EndDate Value="2017-07-31T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Banner" />
+      <LinkField.TargetUrl Text="Actual link text" Url="/products/jeans" Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=a55f8ad75a9c43c798c19edb14709cfc,/Identifier=d6536d9355f1414f98a92b351f2da8eb" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="OMG" />
+      <TextField.TitleTwo Text="such banner" />
+      <TextField.TextOne Text="brief description goes here" />
+      <TextField.TextTwo Text="Link text!" />
+      <TextField.TextThree Text="testing" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:11:11.9453625Z" PublishedUtc="2017-07-11T14:49:00.3185416Z" ModifiedUtc="2017-07-11T14:49:00.3106898Z" />
+      <IdentityPart Identifier="466a1b27137945ba9122b0ae029a355b" />
+      <TitlePart Title="Another Banner" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=63ad2b735795415db7db2c4b02f27147" Status="Published">
+      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Vertical" />
+      <LinkField.TargetUrl Url="/products/jeans" Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=d8489ef699c64bd9b994797f37444ffa" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="Verticality" />
+      <TextField.TitleTwo Text="Special" />
+      <TextField.TextOne Text="figures" />
+      <TextField.TextTwo Text="nice" />
+      <TextField.TextThree Text="watermelon" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T12:54:30.0665857Z" PublishedUtc="2017-07-11T14:49:33.0246691Z" ModifiedUtc="2017-07-11T14:49:32.8983395Z" />
+      <IdentityPart Identifier="63ad2b735795415db7db2c4b02f27147" />
+      <TitlePart Title="Other 7" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=7dc1fdbb4e1546cbab6b0e8dee45a74b" Status="Published">
+      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Review" />
+      <LinkField.TargetUrl Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=2c5e7c5249844f1aace69cf34a9c086d" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="Michael" />
+      <TextField.TitleTwo />
+      <TextField.TextOne Text="Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur" />
+      <TextField.TextTwo />
+      <TextField.TextThree />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:06:09.1444895Z" PublishedUtc="2017-07-11T14:56:01.1166733Z" ModifiedUtc="2017-07-11T14:48:21.6995523Z" />
+      <IdentityPart Identifier="7dc1fdbb4e1546cbab6b0e8dee45a74b" />
+      <TitlePart Title="Other 4" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=7fc0c6975851404185d4be98105cebd3" Status="Published">
+      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Vertical" />
+      <LinkField.TargetUrl Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=c93b4f4cd9b147a2b3e19e16ebe1276f" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="Women" />
+      <TextField.TitleTwo Text="'s Special" />
+      <TextField.TextOne Text="Save up" />
+      <TextField.TextTwo Text="to" />
+      <TextField.TextThree Text="40%" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:04:22.5087444Z" PublishedUtc="2017-07-11T14:50:20.6820364Z" ModifiedUtc="2017-07-11T14:50:20.6735023Z" />
+      <IdentityPart Identifier="7fc0c6975851404185d4be98105cebd3" />
+      <TitlePart Title="Other 2" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=a8d22d3be6af4027ab7b161d6e05a242" Status="Published">
+      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Vertical" />
+      <LinkField.TargetUrl Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=c93b4f4cd9b147a2b3e19e16ebe1276f" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="Women" />
+      <TextField.TitleTwo Text="'s Special" />
+      <TextField.TextOne Text="Save up" />
+      <TextField.TextTwo Text="to" />
+      <TextField.TextThree Text="30%" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:04:22.5087444Z" PublishedUtc="2017-07-11T14:47:40.0586927Z" ModifiedUtc="2017-07-11T14:47:40.0501444Z" />
+      <IdentityPart Identifier="a8d22d3be6af4027ab7b161d6e05a242" />
+      <TitlePart Title="Other 2" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=b226b5ad342f4876bdb52ca19d74a11d" Status="Published">
+      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Vertical" />
+      <LinkField.TargetUrl Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=c93b4f4cd9b147a2b3e19e16ebe1276f" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="Women" />
+      <TextField.TitleTwo Text="'s Special" />
+      <TextField.TextOne Text="Save up" />
+      <TextField.TextTwo Text="to" />
+      <TextField.TextThree Text="35%" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:04:22.5087444Z" PublishedUtc="2017-07-11T14:50:04.5538864Z" ModifiedUtc="2017-07-11T14:50:04.5448837Z" />
+      <IdentityPart Identifier="b226b5ad342f4876bdb52ca19d74a11d" />
+      <TitlePart Title="Other 2" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=cf714e79057a4fccb5a8617ad56fea04" Status="Published">
+      <HomePageHighlight.EndDate Value="2017-07-13T06:07:00Z" />
+      <EnumerationField.DisplayStyle Value="Banner" />
+      <LinkField.TargetUrl Url="/products/dresses" Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=29fe54c1171346e18a614a93c575b599,/Identifier=4f7a631b940f4c3f92549485ea5e5272" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="20%" />
+      <TextField.TitleTwo Text="Discount" />
+      <TextField.TextOne Text="Grand Opening Event With Flat" />
+      <TextField.TextTwo Text="Shop Now" />
+      <TextField.TextThree Text="Hot Deal" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-06T09:07:33.6984554Z" PublishedUtc="2017-07-11T14:46:35.0383067Z" ModifiedUtc="2017-07-11T14:46:35.0287908Z" />
+      <IdentityPart Identifier="cf714e79057a4fccb5a8617ad56fea04" />
+      <TitlePart Title="HomeBanner 1" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=d2744f0e8b4145aabad06da476513e86" Status="Published">
+      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Vertical" />
+      <LinkField.TargetUrl Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=c93b4f4cd9b147a2b3e19e16ebe1276f" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="Women" />
+      <TextField.TitleTwo Text="'s Special" />
+      <TextField.TextOne Text="Save up" />
+      <TextField.TextTwo Text="to" />
+      <TextField.TextThree Text="45%" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:04:22.5087444Z" PublishedUtc="2017-07-11T14:50:42.3587294Z" ModifiedUtc="2017-07-11T14:50:42.3491752Z" />
+      <IdentityPart Identifier="d2744f0e8b4145aabad06da476513e86" />
+      <TitlePart Title="Other 2" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=d31ee2e7f9af44b5914e9f10be1a0254" Status="Published">
+      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Review" />
+      <LinkField.TargetUrl Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=3326bf36ac4548fe836aadcabdb30aaf" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="Fus Ro Dah" />
+      <TextField.TitleTwo />
+      <TextField.TextOne Text="Monkeys are smelly" />
+      <TextField.TextTwo />
+      <TextField.TextThree />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T12:37:09.8270264Z" PublishedUtc="2017-07-11T14:49:17.3039895Z" ModifiedUtc="2017-07-11T14:49:17.2929981Z" />
+      <IdentityPart Identifier="d31ee2e7f9af44b5914e9f10be1a0254" />
+      <TitlePart Title="Other 6" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=d9573d22f0754c658bce755185f55abe" Status="Published">
+      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Review" />
+      <LinkField.TargetUrl Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=0467248fcc074f89ba82635727353a1f" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="Laura" />
+      <TextField.TitleTwo />
+      <TextField.TextOne Text="Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur" />
+      <TextField.TextTwo />
+      <TextField.TextThree />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:05:22.2172806Z" PublishedUtc="2017-07-11T14:56:01.133228Z" ModifiedUtc="2017-07-11T14:48:00.0396795Z" />
+      <IdentityPart Identifier="d9573d22f0754c658bce755185f55abe" />
+      <TitlePart Title="Other 3" />
+    </HomePageHighlight>
+    <HomePageHighlight Id="/Identifier=f7f50607792c4fc88d5e90048cc9fa9f" Status="Published">
+      <HomePageHighlight.EndDate Value="2001-01-01T00:00:00Z" />
+      <EnumerationField.DisplayStyle Value="Review" />
+      <LinkField.TargetUrl Target="_top" />
+      <MediaLibraryPickerField.Picture ContentItems="/Identifier=e07eef2ae7284ae6add15d05a81891cc" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.TitleOne Text="Rosy" />
+      <TextField.TitleTwo />
+      <TextField.TextOne Text="Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur" />
+      <TextField.TextTwo />
+      <TextField.TextThree />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T08:06:53.4044664Z" PublishedUtc="2017-07-11T14:56:01.0765871Z" ModifiedUtc="2017-07-11T14:48:42.1332414Z" />
+      <IdentityPart Identifier="f7f50607792c4fc88d5e90048cc9fa9f" />
+      <TitlePart Title="Other 5" />
+    </HomePageHighlight>
+    <HomePageVideo Id="/Identifier=20d4fbf389484c02803f67983c69f74f" Status="Published">
+      <MediaLibraryPickerField.Video ContentItems="/Identifier=df55b3b1c6a04bbb93590b427bfe0c29" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-10T07:24:00.0949798Z" PublishedUtc="2017-07-11T14:43:14.9096229Z" ModifiedUtc="2017-07-11T14:43:14.8785935Z" />
+      <IdentityPart Identifier="20d4fbf389484c02803f67983c69f74f" />
+    </HomePageVideo>
     <Page Id="/alias=about" Status="Published">
       <MediaLibraryPickerField.Banner ContentItems="/Identifier=93a2de8f38d740ad82898d0e20de22e0" />
       <NumericField.Creator Value="2" />
@@ -2083,388 +2085,6 @@
       <TagsPart Tags="" />
       <TitlePart Title="About Us" />
     </Page>
-    <Product Id="/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=knit-look-top/Sku=SKU-knit-look-top,/alias=blue-top/Sku=SKU-blue-top,/alias=white-top/Sku=SKU-white-top,/alias=brown-top/Sku=SKU-brown-top" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=9dc34818ebd546df8061926a364cef75,/Identifier=beda2b785bf549dab559077efc7d3d47,/Identifier=589f43f11bd344c4a0abe69c1850da42,/Identifier=b40ccdb222bb44fcb068073f78ada384" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/jeans" />
-      <TextField.Description />
-      <AutoroutePart Alias="beige-solid-chinos" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;fkd&amp;egrave;&amp;agrave;po lihqedfii iugahdisgbu iefugiqwb iud9hfvas isuadga &amp;ograve;iasdiog&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:20:53.7767474Z" PublishedUtc="2017-06-26T10:15:35.4650696Z" ModifiedUtc="2017-06-26T10:15:35.4014009Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-beige-solid-chinos" />
-    </Product>
-    <Product Id="/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo" Status="Published">
-      <BooleanField.IsNewProduct Value="true" />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=sweater-2/Sku=SKU-sweater" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=6f8b89c8f3e64dd69386c026552f3e31,/Identifier=a31db30d8425409997dacc1a98ce4d65,/Identifier=9dc34818ebd546df8061926a364cef75,/Identifier=a9976c269f554f298e8c62c64b572394" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/jeans" />
-      <TextField.Description />
-      <AutoroutePart Alias="black-solid-palazzo" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;ijkbqioubu iqudfiqai q hohjebniqwe i vuwqeiu riquweiohf&amp;ograve;d&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:21:46.1281284Z" PublishedUtc="2017-06-27T07:40:40.9793179Z" ModifiedUtc="2017-06-27T07:40:40.9363549Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-black-solid-palazzo" />
-    </Product>
-    <Product Id="/alias=black-solid-salwar/Sku=SKU-black-solid-salwar" Status="Published">
-      <BooleanField.IsNewProduct Value="false" />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=red-pencil-skirt/Sku=SKU-red-pencil-skirt,/alias=sweater-2/Sku=SKU-sweater,/alias=sweater-3/Sku=SKU-sweater" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=ae3fe42097564ddfbc38d4a3724f72b9,/Identifier=a9976c269f554f298e8c62c64b572394,/Identifier=b40ccdb222bb44fcb068073f78ada384,/Identifier=1abc3812c1d448c2acbfcf11bed3ab1e" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
-      <TextField.Description Text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt." />
-      <AutoroutePart Alias="black-solid-salwar" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T14:04:20.9263078Z" PublishedUtc="2017-07-07T14:04:21.2152673Z" ModifiedUtc="2017-07-07T14:04:21.1256157Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-black-solid-salwar" />
-    </Product>
-    <Product Id="/alias=blue-solid-patiala/Sku=SKU-blue-solid-patiala" Status="Published">
-      <BooleanField.IsNewProduct Value="true" />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=dadab75cf34545a19e547185be74895d,/Identifier=054b70a67efc4e588d980f5715c02341,/Identifier=c5be049c09344cbfa407d7b5dbb1c127" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
-      <TextField.Description Text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt." />
-      <AutoroutePart Alias="blue-solid-patiala" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T14:36:36.3482728Z" PublishedUtc="2017-07-07T14:36:36.6600965Z" ModifiedUtc="2017-07-07T14:36:36.5915401Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-blue-solid-patiala" />
-    </Product>
-    <Product Id="/alias=blue-top/Sku=SKU-blue-top" Status="Published">
-      <BooleanField.IsNewProduct Value="true" />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos,/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos,/alias=brown-solid-chinos/Sku=SKU-brown-solid-chinos" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=3824fcf6315544bba05f65958ea80a5e,/Identifier=f5a53d57ae994eafa3c204ed2b5861ce,/Identifier=68ec75d604384ee99d6829644ef725c6,/Identifier=25df813b9c42412d9a41cd9e8aa5f448" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/shirts-tops" />
-      <TextField.Description />
-      <AutoroutePart Alias="blue-top" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;qweri ipquewsarhifu uiaorhg isudrgh psoi4er sudfhgos rieh9 poesr&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:34:40.1622503Z" PublishedUtc="2017-06-27T07:40:55.4853098Z" ModifiedUtc="2017-06-27T07:40:55.3606395Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-blue-top" />
-    </Product>
-    <Product Id="/alias=brown-solid-chinos/Sku=SKU-brown-solid-chinos" Status="Published">
-      <BooleanField.IsNewProduct Value="true" />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=sweater-2/Sku=SKU-sweater,/alias=sweater-4/Sku=SKU-sweater" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=4399bd112e9a47488b85151070e00bdd,/Identifier=beda2b785bf549dab559077efc7d3d47,/Identifier=9dc34818ebd546df8061926a364cef75,/Identifier=a31db30d8425409997dacc1a98ce4d65" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/jeans" />
-      <TextField.Description Text="this is a description" />
-      <AutoroutePart Alias="brown-solid-chinos" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;lfoqboihds asIYBq asxuoihI&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:18:52.8336475Z" PublishedUtc="2017-06-28T07:25:00.9773916Z" ModifiedUtc="2017-06-28T07:25:00.5591048Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-brown-solid-chinos" />
-    </Product>
-    <Product Id="/alias=brown-top/Sku=SKU-brown-top" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt,/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=b8aa77ac9d944f899d03e431286c844f,/Identifier=610429947ab24259a0d27407bf71c267,/Identifier=3824fcf6315544bba05f65958ea80a5e,/Identifier=f5a53d57ae994eafa3c204ed2b5861ce" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/shirts-tops" />
-      <TextField.Description />
-      <AutoroutePart Alias="brown-top" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;the broandah audsbwei iueqwbasdjn iausdfj o9&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:32:59.3450636Z" PublishedUtc="2017-06-26T10:10:06.3995544Z" ModifiedUtc="2017-06-26T10:10:06.3088089Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-brown-top" />
-    </Product>
-    <Product Id="/alias=dark-gray-salwar/Sku=SKU-dark-gray-salwar" Status="Published">
-      <BooleanField.IsNewProduct Value="true" />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=0aa895b2854740f9a89243b65b69133a,/Identifier=8af614aa96e84d56be2f4ec18f13e386,/Identifier=68181eb32ce64a9fa72916a0f0f56722" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
-      <TextField.Description Text="frxck uytgioausdyfi aiushf jasi hiasbvxucbais fasdg fisad bl" />
-      <AutoroutePart Alias="dark-gray-salwar" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;xyctvoi iousdahjf aoidfu pao9udfh aoodfh9adfijaopij i eofnaibed9 aihvbdsfiuhasodf ujaobasi df piuzbsokdf ai sfaio fiasg oasizsbg iasd basodviasdivb asijdf asdh ouais fvn 9oxb ah vnoiascnbj asvhasdj asc hvioasdjlk fvozsid buias hvipaz&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T14:01:12.588517Z" PublishedUtc="2017-07-07T14:01:13.1263735Z" ModifiedUtc="2017-07-07T14:01:12.8996039Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-dark-gray-salwar" />
-    </Product>
-    <Product Id="/alias=dhoti-salwar/Sku=SKU-dhoti-salwar" Status="Published">
-      <BooleanField.IsNewProduct Value="false" />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=203747d5294a4c5d8a37a6350a3d634a,/Identifier=2be78d6b787d4b89b33f751084f72ee8,/Identifier=054b70a67efc4e588d980f5715c02341" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
-      <TextField.Description Text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt." />
-      <AutoroutePart Alias="dhoti-salwar" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T14:04:07.8626419Z" PublishedUtc="2017-07-07T14:04:08.3030643Z" ModifiedUtc="2017-07-07T14:04:08.1200404Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-dhoti-salwar" />
-    </Product>
-    <Product Id="/alias=dresses/Sku=SKU-dresses-1" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos,/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=5feaa3e1fd974c95b36f761020e0dca6,/Identifier=b3084d3aaa4f40ddb493180eb4a71fab,/Identifier=7b738e1611b64a9484e83b9ff1e83b7d,/Identifier=3181222e25c34b87b287c7d67aca711a" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/dresses" />
-      <TextField.Description />
-      <AutoroutePart Alias="dresses" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-20T10:19:24.1412507Z" PublishedUtc="2017-06-26T10:13:29.7784242Z" ModifiedUtc="2017-06-26T10:13:29.7402477Z" />
-      <ProductAttributesPart Attributes="/AttributeName=Color" Ids="204" />
-      <ProductPart Sku="SKU-dresses-1" />
-    </Product>
-    <Product Id="/alias=dresses-2/Sku=SKU-dresses-2" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=7b738e1611b64a9484e83b9ff1e83b7d,/Identifier=5be52f83f5b1412781c51fbcb05859c3,/Identifier=aab6f4de6e9c49149255123ded8c0f67,/Identifier=1fb21221fd254a9b96033d4c4ffd5096" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/dresses" />
-      <TextField.Description />
-      <AutoroutePart Alias="dresses-2" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-20T10:25:52.8329965Z" PublishedUtc="2017-06-26T10:13:15.7930815Z" ModifiedUtc="2017-06-26T10:13:15.6572076Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-dresses-2" />
-    </Product>
-    <Product Id="/alias=dresses-3/Sku=SKU-dresses-3" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos,/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=5feaa3e1fd974c95b36f761020e0dca6,/Identifier=17c28fe22d234b85ab9d454cb3234732,/Identifier=2588e3d6844143d69b8a1f6e0d163df7" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/dresses" />
-      <TextField.Description />
-      <AutoroutePart Alias="dresses-3" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;oiasiopjfkjoivbo &amp;ograve;iousdbadfgio q&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T07:54:48.9968779Z" PublishedUtc="2017-06-26T10:13:20.6770105Z" ModifiedUtc="2017-06-26T10:13:20.6071697Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-dresses-3" />
-    </Product>
-    <Product Id="/alias=dresses-4/Sku=SKU-dresses-4" Status="Published">
-      <BooleanField.IsNewProduct Value="true" />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt,/alias=red-pencil-skirt/Sku=SKU-red-pencil-skirt,/alias=pink-flared-skirt/Sku=SKU-pink-flared-skirt" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=3181222e25c34b87b287c7d67aca711a,/Identifier=1fb21221fd254a9b96033d4c4ffd5096,/Identifier=aab6f4de6e9c49149255123ded8c0f67" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/dresses" />
-      <TextField.Description Text="qweroinqowbfrqow ddshavl" />
-      <AutoroutePart Alias="dresses-4" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;opujbiju sda8o9ni 9 rg98hwer9u&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T07:56:20.5344396Z" PublishedUtc="2017-06-27T10:34:51.9473184Z" ModifiedUtc="2017-06-27T10:34:51.4933095Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-dresses-4" />
-    </Product>
-    <Product Id="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=knit-look-top/Sku=SKU-knit-look-top,/alias=blue-top/Sku=SKU-blue-top,/alias=white-top/Sku=SKU-white-top" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=f536c03083384e84850a6c38aef22a53,/Identifier=9f3ee872694643979fd65ac41dd8fdb2,/Identifier=2a0a59e59efc4aaab05ac08f712e972b" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/shorts-skirts" />
-      <TextField.Description />
-      <AutoroutePart Alias="floreal-border-skirt" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;ouofd &amp;nbsp;b ub9woeahri waduyfoibg744t ikawevdhfg9 qekbjadsfk&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:43:55.4870112Z" PublishedUtc="2017-06-26T10:06:24.9276852Z" ModifiedUtc="2017-06-26T10:06:24.8951111Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-floreal-border-skirt" />
-    </Product>
-    <Product Id="/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=knit-look-top/Sku=SKU-knit-look-top,/alias=blue-top/Sku=SKU-blue-top" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=a9976c269f554f298e8c62c64b572394,/Identifier=70631a9896254a77b130c907620b56cd,/Identifier=9dc34818ebd546df8061926a364cef75,/Identifier=589f43f11bd344c4a0abe69c1850da42" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/jeans" />
-      <TextField.Description />
-      <AutoroutePart Alias="gray-solid-chinos" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;ohpp paojdfgjq pqwrpm qpjoEHR8 CVIadjth&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:19:48.0979823Z" PublishedUtc="2017-06-26T10:15:40.1833176Z" ModifiedUtc="2017-06-26T10:15:40.119306Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-gray-solid-chinos" />
-    </Product>
-    <Product Id="/alias=green-solid-salwar/Sku=SKU-green-solid-salwar" Status="Published">
-      <BooleanField.IsNewProduct Value="false" />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=dresses/Sku=SKU-dresses-1,/alias=white-top/Sku=SKU-white-top,/alias=sweater-2/Sku=SKU-sweater" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=dd4c22cf7f6b4ce4bf2e3fb8f73cf9c8,/Identifier=dadab75cf34545a19e547185be74895d,/Identifier=054b70a67efc4e588d980f5715c02341" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
-      <TextField.Description Text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt." />
-      <AutoroutePart Alias="green-solid-salwar" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T14:06:54.9573224Z" PublishedUtc="2017-07-07T14:06:55.5575745Z" ModifiedUtc="2017-07-07T14:06:55.3747006Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-green-solid-salwar" />
-    </Product>
-    <Product Id="/alias=knit-look-top/Sku=SKU-knit-look-top" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=knit-look-top/Sku=SKU-knit-look-top,/alias=blue-top/Sku=SKU-blue-top,/alias=white-top/Sku=SKU-white-top" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=68ec75d604384ee99d6829644ef725c6,/Identifier=f5a53d57ae994eafa3c204ed2b5861ce,/Identifier=aedca37343894b62b4f9710c2e8bd668,/Identifier=b7963dddf3be4760bd986208de91670f" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/shirts-tops" />
-      <TextField.Description />
-      <AutoroutePart Alias="knit-look-top" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;aiuesto iaewjopr otjaow oaseoritgon qa tnogjasdfj giopaqkg0hq 9phwlkghnbiouef phtWGIJBASD POURO&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:35:33.106351Z" PublishedUtc="2017-06-26T10:10:18.4872919Z" ModifiedUtc="2017-06-26T10:10:18.4512436Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-knit-look-top" />
-    </Product>
-    <Product Id="/alias=maroon-solid-patiala/Sku=SKU-maroon-solid-patiala" Status="Published">
-      <BooleanField.IsNewProduct Value="false" />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=brown-solid-chinos/Sku=SKU-brown-solid-chinos,/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=68181eb32ce64a9fa72916a0f0f56722,/Identifier=8af614aa96e84d56be2f4ec18f13e386,/Identifier=0aa895b2854740f9a89243b65b69133a" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
-      <TextField.Description Text="qewfI gas hfiashsa hfsd v&lt;oid fansd fh9azsduvco sazdivag i d iuas d" />
-      <AutoroutePart Alias="maroon-solid-patiala" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;oiuhwqrb ioaudfi qiuef iadfsb oasiudfoiuash 9 iaghsd89g adfuasdi &amp;nbsp;uhasd hfua sdfhuias oi f9ia s vfioas f q wegf8uiqwjbfgvioa sjdio vua0ws gv9quwi gwia giuasvd9f asbvd fh&amp;lt;g fioasdgfasdop fuiasediv&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T13:58:40.086356Z" PublishedUtc="2017-07-07T13:58:40.732637Z" ModifiedUtc="2017-07-07T13:58:40.6400636Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-maroon-solid-patiala" />
-    </Product>
-    <Product Id="/alias=navy-blue-salwar/Sku=SKU-navy-blue-salwar" Status="Published">
-      <BooleanField.IsNewProduct Value="false" />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=green-solid-salwar/Sku=SKU-green-solid-salwar,/alias=black-solid-salwar/Sku=SKU-black-solid-salwar,/alias=dresses-4/Sku=SKU-dresses-4" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=dadab75cf34545a19e547185be74895d,/Identifier=054b70a67efc4e588d980f5715c02341,/Identifier=6a594b5a01e546dd8d42953c4914ac61" />
-      <NumericField.Creator Value="2" />
-      <NumericField.LastModifier Value="2" />
-      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
-      <TextField.Description Text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt." />
-      <AutoroutePart Alias="navy-blue-salwar" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T14:35:04.4159557Z" PublishedUtc="2017-07-07T14:35:04.8174776Z" ModifiedUtc="2017-07-07T14:35:04.6770542Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-navy-blue-salwar" />
-    </Product>
-    <Product Id="/alias=pink-flared-skirt/Sku=SKU-pink-flared-skirt" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=sweater-2/Sku=SKU-sweater" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=36e34fe23ef742d7959b7b7fddc20364,/Identifier=d3b1b244d4f74db484566840cb8fb99e,/Identifier=6466bf891ca74c54bd0f24449eb6b36d,/Identifier=f536c03083384e84850a6c38aef22a53" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/shorts-skirts" />
-      <TextField.Description />
-      <AutoroutePart Alias="pink-flared-skirt" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;iyasdgk iasdhfiuh 9w8rg isado oasdofhqw oweh owaeho h&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:41:06.1510986Z" PublishedUtc="2017-06-26T10:06:10.4117279Z" ModifiedUtc="2017-06-26T10:06:10.0868797Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-pink-flared-skirt" />
-    </Product>
-    <Product Id="/alias=red-pencil-skirt/Sku=SKU-red-pencil-skirt" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=sweater-2/Sku=SKU-sweater,/alias=sweater-4/Sku=SKU-sweater,/alias=knit-look-top/Sku=SKU-knit-look-top,/alias=blue-top/Sku=SKU-blue-top,/alias=white-top/Sku=SKU-white-top" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=d3b1b244d4f74db484566840cb8fb99e,/Identifier=5fd03b271f7a4f6bbcedbe324e35bb06,/Identifier=831257f5cf1d40a995746bfa24905c3f,/Identifier=2a0a59e59efc4aaab05ac08f712e972b" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/shorts-skirts" />
-      <TextField.Description />
-      <AutoroutePart Alias="red-pencil-skirt" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;iubeuiijb &amp;nbsp;dfuibhu9beiob ie vfhopi hoewfh ou seefgljfdslkgy wikh viweur&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:41:45.2977692Z" PublishedUtc="2017-06-26T10:06:16.2772122Z" ModifiedUtc="2017-06-26T10:06:16.2395157Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-red-pencil-skirt" />
-    </Product>
-    <Product Id="/alias=sweater/Sku=SKU-sweater" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=fd4d57032ab04930aefb835dd8a5774f,/Identifier=de9f5b6ab0794dc9bdd8c62b6bd9998d,/Identifier=d80ff135e7674adeb44f417dbdda3d1b,/Identifier=4c87a70bdc974b6f9114a426d7f67a40" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/sweaters" />
-      <TextField.Description />
-      <AutoroutePart Alias="sweater" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;iucvbiugas oosiuhdfg aw98ehy fuawhe fugausdgf iuyqaw erofhbdfh glskdhogsdb&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T09:00:05.6526352Z" PublishedUtc="2017-06-26T10:03:52.7858838Z" ModifiedUtc="2017-06-26T10:03:52.3146369Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-sweater" />
-    </Product>
-    <Product Id="/alias=sweater-2/Sku=SKU-sweater" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos,/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos,/alias=brown-solid-chinos/Sku=SKU-brown-solid-chinos" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=de9f5b6ab0794dc9bdd8c62b6bd9998d,/Identifier=8dddd2a5f56f4b2cb81d805487acce5f,/Identifier=8378df039792467cbb19ff989cb5dd2b,/Identifier=d80ff135e7674adeb44f417dbdda3d1b" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/sweaters" />
-      <TextField.Description />
-      <AutoroutePart Alias="sweater-2" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;rojpiojsefg opij bwroihjirwa kij giqoiqowehf oasdohg ksaigawriuotwhgoash9p&amp;ograve;&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T09:00:51.7706136Z" PublishedUtc="2017-06-26T10:04:06.254662Z" ModifiedUtc="2017-06-26T10:04:06.1905038Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-sweater" />
-    </Product>
-    <Product Id="/alias=sweater-3/Sku=SKU-sweater" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=8dddd2a5f56f4b2cb81d805487acce5f,/Identifier=8378df039792467cbb19ff989cb5dd2b,/Identifier=655f45547d2a48e5abb2e2bb187340b8,/Identifier=fd4d57032ab04930aefb835dd8a5774f" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/sweaters" />
-      <TextField.Description />
-      <AutoroutePart Alias="sweater-3" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;kjnlj ouihjsoa ifgoash dofai sufhgo sdo if osaejop gw aerj vg&amp;egrave;oawsdfhg 9zsdrr g9a&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T09:26:57.8922517Z" PublishedUtc="2017-06-26T10:03:56.0982847Z" ModifiedUtc="2017-06-26T10:03:55.9733647Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-sweater" />
-    </Product>
-    <Product Id="/alias=sweater-4/Sku=SKU-sweater" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt,/alias=red-pencil-skirt/Sku=SKU-red-pencil-skirt,/alias=pink-flared-skirt/Sku=SKU-pink-flared-skirt" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=655f45547d2a48e5abb2e2bb187340b8,/Identifier=fd4d57032ab04930aefb835dd8a5774f,/Identifier=de9f5b6ab0794dc9bdd8c62b6bd9998d,/Identifier=8dddd2a5f56f4b2cb81d805487acce5f" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/sweaters" />
-      <TextField.Description />
-      <AutoroutePart Alias="sweater-4" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;&amp;nbsp;ivyhsdof piub feb ihpi iperguobn,m-we,nqwe uiobadscviupxczoub wipiuwaeubgv&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T09:27:49.6400607Z" PublishedUtc="2017-06-26T10:04:00.9548738Z" ModifiedUtc="2017-06-26T10:04:00.8971398Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-sweater" />
-    </Product>
-    <Product Id="/alias=white-top/Sku=SKU-white-top" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt,/alias=red-pencil-skirt/Sku=SKU-red-pencil-skirt,/alias=pink-flared-skirt/Sku=SKU-pink-flared-skirt" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=610429947ab24259a0d27407bf71c267,/Identifier=aedca37343894b62b4f9710c2e8bd668,/Identifier=3824fcf6315544bba05f65958ea80a5e,/Identifier=b7963dddf3be4760bd986208de91670f" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/shirts-tops" />
-      <TextField.Description />
-      <AutoroutePart Alias="white-top" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;ibsq noq nwetunqwbf aw eefoj sofuvy aiugyak boifo gaose&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:33:36.6531298Z" PublishedUtc="2017-06-26T10:10:10.3063571Z" ModifiedUtc="2017-06-26T10:10:10.2361628Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-white-top" />
-    </Product>
-    <Product Id="/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt" Status="Published">
-      <BooleanField.IsNewProduct />
-      <ContentPickerField.RelatedProducts ContentItems="/alias=sweater-4/Sku=SKU-sweater,/alias=sweater-3/Sku=SKU-sweater,/alias=sweater/Sku=SKU-sweater" />
-      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=6466bf891ca74c54bd0f24449eb6b36d,/Identifier=9f3ee872694643979fd65ac41dd8fdb2,/Identifier=f536c03083384e84850a6c38aef22a53" />
-      <NumericField.Creator Value="" />
-      <NumericField.LastModifier Value="" />
-      <TaxonomyField.Category Terms="/alias=products\/clothing\/shorts-skirts" />
-      <TextField.Description />
-      <AutoroutePart Alias="yellow-cotton-skirt" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <BodyPart Text="&lt;p&gt;dsgf iwiert0 iertoiwejr poijtgoiasdfog oawiejrfowadn oiqejfo asdofojhnfsad&amp;nbsp;&lt;/p&gt;" />
-      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:42:42.3224643Z" PublishedUtc="2017-06-26T10:06:20.3862258Z" ModifiedUtc="2017-06-26T10:06:20.3239169Z" />
-      <ProductAttributesPart Attributes="" Ids="" />
-      <ProductPart Sku="SKU-yellow-cotton-skirt" />
-    </Product>
-    <ProductAttribute Id="/AttributeName=Color" Status="Published">
-      <ProductAttributePart SortOrder="0" DisplayName="Color" TechnicalName="Color" Values="Red=0,False,1,;Yellow=0,False,2,;Blue=0,False,3,;Green=0,False,4," />
-      <TitlePart Title="Color" />
-    </ProductAttribute>
     <ProductsTerm Id="/alias=products\/clothing" Status="Published">
       <NumericField.Creator Value="" />
       <NumericField.LastModifier Value="" />
@@ -2590,6 +2210,415 @@
       <TermPart Count="27" Selectable="true" Weight="0" TaxonomyId="/alias=products" Path="" />
       <TitlePart Title="Products" />
     </ProductsTerm>
+    <ProductAttribute Id="/AttributeName=Color" Status="Published">
+      <ProductAttributePart SortOrder="0" DisplayName="Color" TechnicalName="Color" Values="Red=0,False,1,;Yellow=0,False,2,;Blue=0,False,3,;Green=0,False,4," />
+      <TitlePart Title="Color" />
+    </ProductAttribute>
+    <Product Id="/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=knit-look-top/Sku=SKU-knit-look-top,/alias=blue-top/Sku=SKU-blue-top,/alias=white-top/Sku=SKU-white-top,/alias=brown-top/Sku=SKU-brown-top" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=9dc34818ebd546df8061926a364cef75,/Identifier=beda2b785bf549dab559077efc7d3d47,/Identifier=589f43f11bd344c4a0abe69c1850da42,/Identifier=b40ccdb222bb44fcb068073f78ada384" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/jeans" />
+      <TextField.Description />
+      <AutoroutePart Alias="beige-solid-chinos" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;fkd&amp;egrave;&amp;agrave;po lihqedfii iugahdisgbu iefugiqwb iud9hfvas isuadga &amp;ograve;iasdiog&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:20:53.7767474Z" PublishedUtc="2017-06-26T10:15:35.4650696Z" ModifiedUtc="2017-06-26T10:15:35.4014009Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-beige-solid-chinos" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="9" Price="¤231.00" DiscountPrice="¤200.00" PriceTiers="" />
+      <TitlePart Title="Beige Solid Chinos" />
+    </Product>
+    <Product Id="/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo" Status="Published">
+      <BooleanField.IsNewProduct Value="true" />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=sweater-2/Sku=SKU-sweater" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=6f8b89c8f3e64dd69386c026552f3e31,/Identifier=a31db30d8425409997dacc1a98ce4d65,/Identifier=9dc34818ebd546df8061926a364cef75,/Identifier=a9976c269f554f298e8c62c64b572394" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/jeans" />
+      <TextField.Description />
+      <AutoroutePart Alias="black-solid-palazzo" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;ijkbqioubu iqudfiqai q hohjebniqwe i vuwqeiu riquweiohf&amp;ograve;d&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:21:46.1281284Z" PublishedUtc="2017-06-27T07:40:40.9793179Z" ModifiedUtc="2017-06-27T07:40:40.9363549Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-black-solid-palazzo" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="0" Price="¤233.00" DiscountPrice="¤190.00" PriceTiers="" />
+      <TitlePart Title="Black Solid Palazzo" />
+    </Product>
+    <Product Id="/alias=black-solid-salwar/Sku=SKU-black-solid-salwar" Status="Published">
+      <BooleanField.IsNewProduct Value="false" />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=red-pencil-skirt/Sku=SKU-red-pencil-skirt,/alias=sweater-2/Sku=SKU-sweater,/alias=sweater-3/Sku=SKU-sweater" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=ae3fe42097564ddfbc38d4a3724f72b9,/Identifier=a9976c269f554f298e8c62c64b572394,/Identifier=b40ccdb222bb44fcb068073f78ada384,/Identifier=1abc3812c1d448c2acbfcf11bed3ab1e" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
+      <TextField.Description Text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt." />
+      <AutoroutePart Alias="black-solid-salwar" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T14:04:20.9263078Z" PublishedUtc="2017-07-07T14:04:21.2152673Z" ModifiedUtc="2017-07-07T14:04:21.1256157Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-black-solid-salwar" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="984" Price="¤231.00" DiscountPrice="¤200.00" PriceTiers="" />
+      <TitlePart Title="Black Solid Salwar" />
+    </Product>
+    <Product Id="/alias=blue-solid-patiala/Sku=SKU-blue-solid-patiala" Status="Published">
+      <BooleanField.IsNewProduct Value="true" />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=dadab75cf34545a19e547185be74895d,/Identifier=054b70a67efc4e588d980f5715c02341,/Identifier=c5be049c09344cbfa407d7b5dbb1c127" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
+      <TextField.Description Text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt." />
+      <AutoroutePart Alias="blue-solid-patiala" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T14:36:36.3482728Z" PublishedUtc="2017-07-07T14:36:36.6600965Z" ModifiedUtc="2017-07-07T14:36:36.5915401Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-blue-solid-patiala" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤312.00" DiscountPrice="¤212.00" PriceTiers="" />
+      <TitlePart Title="Blue solid patiala" />
+    </Product>
+    <Product Id="/alias=blue-top/Sku=SKU-blue-top" Status="Published">
+      <BooleanField.IsNewProduct Value="true" />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos,/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos,/alias=brown-solid-chinos/Sku=SKU-brown-solid-chinos" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=3824fcf6315544bba05f65958ea80a5e,/Identifier=f5a53d57ae994eafa3c204ed2b5861ce,/Identifier=68ec75d604384ee99d6829644ef725c6,/Identifier=25df813b9c42412d9a41cd9e8aa5f448" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/shirts-tops" />
+      <TextField.Description />
+      <AutoroutePart Alias="blue-top" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;qweri ipquewsarhifu uiaorhg isudrgh psoi4er sudfhgos rieh9 poesr&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:34:40.1622503Z" PublishedUtc="2017-06-27T07:40:55.4853098Z" ModifiedUtc="2017-06-27T07:40:55.3606395Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-blue-top" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="987" Price="¤231.00" DiscountPrice="¤200.00" PriceTiers="" />
+      <TitlePart Title="Blue Top" />
+    </Product>
+    <Product Id="/alias=brown-solid-chinos/Sku=SKU-brown-solid-chinos" Status="Published">
+      <BooleanField.IsNewProduct Value="true" />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=sweater-2/Sku=SKU-sweater,/alias=sweater-4/Sku=SKU-sweater" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=4399bd112e9a47488b85151070e00bdd,/Identifier=beda2b785bf549dab559077efc7d3d47,/Identifier=9dc34818ebd546df8061926a364cef75,/Identifier=a31db30d8425409997dacc1a98ce4d65" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/jeans" />
+      <TextField.Description Text="this is a description" />
+      <AutoroutePart Alias="brown-solid-chinos" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;lfoqboihds asIYBq asxuoihI&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:18:52.8336475Z" PublishedUtc="2017-06-28T07:25:00.9773916Z" ModifiedUtc="2017-06-28T07:25:00.5591048Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-brown-solid-chinos" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤420.00" DiscountPrice="¤340.00" PriceTiers="" />
+      <TitlePart Title="Brown Solid Chinos" />
+    </Product>
+    <Product Id="/alias=brown-top/Sku=SKU-brown-top" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt,/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=b8aa77ac9d944f899d03e431286c844f,/Identifier=610429947ab24259a0d27407bf71c267,/Identifier=3824fcf6315544bba05f65958ea80a5e,/Identifier=f5a53d57ae994eafa3c204ed2b5861ce" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/shirts-tops" />
+      <TextField.Description />
+      <AutoroutePart Alias="brown-top" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;the broandah audsbwei iueqwbasdjn iausdfj o9&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:32:59.3450636Z" PublishedUtc="2017-06-26T10:10:06.3995544Z" ModifiedUtc="2017-06-26T10:10:06.3088089Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-brown-top" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="4" Price="¤420.00" DiscountPrice="¤340.00" PriceTiers="" />
+      <TitlePart Title="Brown top" />
+    </Product>
+    <Product Id="/alias=dark-gray-salwar/Sku=SKU-dark-gray-salwar" Status="Published">
+      <BooleanField.IsNewProduct Value="true" />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=0aa895b2854740f9a89243b65b69133a,/Identifier=8af614aa96e84d56be2f4ec18f13e386,/Identifier=68181eb32ce64a9fa72916a0f0f56722" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
+      <TextField.Description Text="frxck uytgioausdyfi aiushf jasi hiasbvxucbais fasdg fisad bl" />
+      <AutoroutePart Alias="dark-gray-salwar" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;xyctvoi iousdahjf aoidfu pao9udfh aoodfh9adfijaopij i eofnaibed9 aihvbdsfiuhasodf ujaobasi df piuzbsokdf ai sfaio fiasg oasizsbg iasd basodviasdivb asijdf asdh ouais fvn 9oxb ah vnoiascnbj asvhasdj asc hvioasdjlk fvozsid buias hvipaz&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T14:01:12.588517Z" PublishedUtc="2017-07-07T14:01:13.1263735Z" ModifiedUtc="2017-07-07T14:01:12.8996039Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-dark-gray-salwar" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="0" Price="¤320.00" DiscountPrice="¤250.00" PriceTiers="" />
+      <TitlePart Title="Dark Gray Salwar" />
+    </Product>
+    <Product Id="/alias=dhoti-salwar/Sku=SKU-dhoti-salwar" Status="Published">
+      <BooleanField.IsNewProduct Value="false" />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=203747d5294a4c5d8a37a6350a3d634a,/Identifier=2be78d6b787d4b89b33f751084f72ee8,/Identifier=054b70a67efc4e588d980f5715c02341" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
+      <TextField.Description Text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt." />
+      <AutoroutePart Alias="dhoti-salwar" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T14:04:07.8626419Z" PublishedUtc="2017-07-07T14:04:08.3030643Z" ModifiedUtc="2017-07-07T14:04:08.1200404Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-dhoti-salwar" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="21" Price="¤323.00" DiscountPrice="¤270.00" PriceTiers="" />
+      <TitlePart Title="Dhoti Salwar" />
+    </Product>
+    <Product Id="/alias=dresses/Sku=SKU-dresses-1" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos,/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=5feaa3e1fd974c95b36f761020e0dca6,/Identifier=b3084d3aaa4f40ddb493180eb4a71fab,/Identifier=7b738e1611b64a9484e83b9ff1e83b7d,/Identifier=3181222e25c34b87b287c7d67aca711a" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/dresses" />
+      <TextField.Description />
+      <AutoroutePart Alias="dresses" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-20T10:19:24.1412507Z" PublishedUtc="2017-06-26T10:13:29.7784242Z" ModifiedUtc="2017-06-26T10:13:29.7402477Z" />
+      <ProductAttributesPart Attributes="/AttributeName=Color" Ids="204" />
+      <ProductPart Sku="SKU-dresses-1" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="10" Price="¤420.00" DiscountPrice="¤340.00" PriceTiers="" />
+      <TitlePart Title="Dresses-1" />
+    </Product>
+    <Product Id="/alias=dresses-2/Sku=SKU-dresses-2" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=7b738e1611b64a9484e83b9ff1e83b7d,/Identifier=5be52f83f5b1412781c51fbcb05859c3,/Identifier=aab6f4de6e9c49149255123ded8c0f67,/Identifier=1fb21221fd254a9b96033d4c4ffd5096" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/dresses" />
+      <TextField.Description />
+      <AutoroutePart Alias="dresses-2" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-20T10:25:52.8329965Z" PublishedUtc="2017-06-26T10:13:15.7930815Z" ModifiedUtc="2017-06-26T10:13:15.6572076Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-dresses-2" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="10" Price="¤320.00" DiscountPrice="(¤1.00)" PriceTiers="" />
+      <TitlePart Title="Dresses-2" />
+    </Product>
+    <Product Id="/alias=dresses-3/Sku=SKU-dresses-3" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos,/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=5feaa3e1fd974c95b36f761020e0dca6,/Identifier=17c28fe22d234b85ab9d454cb3234732,/Identifier=2588e3d6844143d69b8a1f6e0d163df7" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/dresses" />
+      <TextField.Description />
+      <AutoroutePart Alias="dresses-3" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;oiasiopjfkjoivbo &amp;ograve;iousdbadfgio q&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T07:54:48.9968779Z" PublishedUtc="2017-06-26T10:13:20.6770105Z" ModifiedUtc="2017-06-26T10:13:20.6071697Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-dresses-3" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="0" Price="¤231.00" DiscountPrice="¤200.00" PriceTiers="" />
+      <TitlePart Title="Dresses-3" />
+    </Product>
+    <Product Id="/alias=dresses-4/Sku=SKU-dresses-4" Status="Published">
+      <BooleanField.IsNewProduct Value="true" />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt,/alias=red-pencil-skirt/Sku=SKU-red-pencil-skirt,/alias=pink-flared-skirt/Sku=SKU-pink-flared-skirt" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=3181222e25c34b87b287c7d67aca711a,/Identifier=1fb21221fd254a9b96033d4c4ffd5096,/Identifier=aab6f4de6e9c49149255123ded8c0f67" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/dresses" />
+      <TextField.Description Text="qweroinqowbfrqow ddshavl" />
+      <AutoroutePart Alias="dresses-4" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;opujbiju sda8o9ni 9 rg98hwer9u&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T07:56:20.5344396Z" PublishedUtc="2017-06-27T10:34:51.9473184Z" ModifiedUtc="2017-06-27T10:34:51.4933095Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-dresses-4" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="0" Price="¤323.00" DiscountPrice="¤270.00" PriceTiers="" />
+      <TitlePart Title="Dresses-4" />
+    </Product>
+    <Product Id="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=knit-look-top/Sku=SKU-knit-look-top,/alias=blue-top/Sku=SKU-blue-top,/alias=white-top/Sku=SKU-white-top" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=f536c03083384e84850a6c38aef22a53,/Identifier=9f3ee872694643979fd65ac41dd8fdb2,/Identifier=2a0a59e59efc4aaab05ac08f712e972b" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/shorts-skirts" />
+      <TextField.Description />
+      <AutoroutePart Alias="floreal-border-skirt" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;ouofd &amp;nbsp;b ub9woeahri waduyfoibg744t ikawevdhfg9 qekbjadsfk&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:43:55.4870112Z" PublishedUtc="2017-06-26T10:06:24.9276852Z" ModifiedUtc="2017-06-26T10:06:24.8951111Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-floreal-border-skirt" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤323.00" DiscountPrice="¤270.00" PriceTiers="" />
+      <TitlePart Title="Floreal Border Skirt" />
+    </Product>
+    <Product Id="/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=knit-look-top/Sku=SKU-knit-look-top,/alias=blue-top/Sku=SKU-blue-top" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=a9976c269f554f298e8c62c64b572394,/Identifier=70631a9896254a77b130c907620b56cd,/Identifier=9dc34818ebd546df8061926a364cef75,/Identifier=589f43f11bd344c4a0abe69c1850da42" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/jeans" />
+      <TextField.Description />
+      <AutoroutePart Alias="gray-solid-chinos" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;ohpp paojdfgjq pqwrpm qpjoEHR8 CVIadjth&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:19:48.0979823Z" PublishedUtc="2017-06-26T10:15:40.1833176Z" ModifiedUtc="2017-06-26T10:15:40.119306Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-gray-solid-chinos" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="6" Price="¤320.00" DiscountPrice="¤250.00" PriceTiers="" />
+      <TitlePart Title="Gray Solid Chinos" />
+    </Product>
+    <Product Id="/alias=green-solid-salwar/Sku=SKU-green-solid-salwar" Status="Published">
+      <BooleanField.IsNewProduct Value="false" />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=dresses/Sku=SKU-dresses-1,/alias=white-top/Sku=SKU-white-top,/alias=sweater-2/Sku=SKU-sweater" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=dd4c22cf7f6b4ce4bf2e3fb8f73cf9c8,/Identifier=dadab75cf34545a19e547185be74895d,/Identifier=054b70a67efc4e588d980f5715c02341" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
+      <TextField.Description Text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt." />
+      <AutoroutePart Alias="green-solid-salwar" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T14:06:54.9573224Z" PublishedUtc="2017-07-07T14:06:55.5575745Z" ModifiedUtc="2017-07-07T14:06:55.3747006Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-green-solid-salwar" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤233.00" DiscountPrice="¤190.00" PriceTiers="" />
+      <TitlePart Title="Green Solid Salwar" />
+    </Product>
+    <Product Id="/alias=knit-look-top/Sku=SKU-knit-look-top" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=knit-look-top/Sku=SKU-knit-look-top,/alias=blue-top/Sku=SKU-blue-top,/alias=white-top/Sku=SKU-white-top" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=68ec75d604384ee99d6829644ef725c6,/Identifier=f5a53d57ae994eafa3c204ed2b5861ce,/Identifier=aedca37343894b62b4f9710c2e8bd668,/Identifier=b7963dddf3be4760bd986208de91670f" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/shirts-tops" />
+      <TextField.Description />
+      <AutoroutePart Alias="knit-look-top" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;aiuesto iaewjopr otjaow oaseoritgon qa tnogjasdfj giopaqkg0hq 9phwlkghnbiouef phtWGIJBASD POURO&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:35:33.106351Z" PublishedUtc="2017-06-26T10:10:18.4872919Z" ModifiedUtc="2017-06-26T10:10:18.4512436Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-knit-look-top" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="0" Price="¤323.00" DiscountPrice="¤270.00" PriceTiers="" />
+      <TitlePart Title="Knit Look Top" />
+    </Product>
+    <Product Id="/alias=maroon-solid-patiala/Sku=SKU-maroon-solid-patiala" Status="Published">
+      <BooleanField.IsNewProduct Value="false" />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=brown-solid-chinos/Sku=SKU-brown-solid-chinos,/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=68181eb32ce64a9fa72916a0f0f56722,/Identifier=8af614aa96e84d56be2f4ec18f13e386,/Identifier=0aa895b2854740f9a89243b65b69133a" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
+      <TextField.Description Text="qewfI gas hfiashsa hfsd v&lt;oid fansd fh9azsduvco sazdivag i d iuas d" />
+      <AutoroutePart Alias="maroon-solid-patiala" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;oiuhwqrb ioaudfi qiuef iadfsb oasiudfoiuash 9 iaghsd89g adfuasdi &amp;nbsp;uhasd hfua sdfhuias oi f9ia s vfioas f q wegf8uiqwjbfgvioa sjdio vua0ws gv9quwi gwia giuasvd9f asbvd fh&amp;lt;g fioasdgfasdop fuiasediv&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T13:58:40.086356Z" PublishedUtc="2017-07-07T13:58:40.732637Z" ModifiedUtc="2017-07-07T13:58:40.6400636Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-maroon-solid-patiala" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="7" Price="¤420.00" DiscountPrice="¤340.00" PriceTiers="" />
+      <TitlePart Title="Maroon Solid Patiala" />
+    </Product>
+    <Product Id="/alias=navy-blue-salwar/Sku=SKU-navy-blue-salwar" Status="Published">
+      <BooleanField.IsNewProduct Value="false" />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=green-solid-salwar/Sku=SKU-green-solid-salwar,/alias=black-solid-salwar/Sku=SKU-black-solid-salwar,/alias=dresses-4/Sku=SKU-dresses-4" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=dadab75cf34545a19e547185be74895d,/Identifier=054b70a67efc4e588d980f5715c02341,/Identifier=6a594b5a01e546dd8d42953c4914ac61" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TaxonomyField.Category Terms="/alias=products\/ethnic-wear\/salwars" />
+      <TextField.Description Text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt." />
+      <AutoroutePart Alias="navy-blue-salwar" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-07T14:35:04.4159557Z" PublishedUtc="2017-07-07T14:35:04.8174776Z" ModifiedUtc="2017-07-07T14:35:04.6770542Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-navy-blue-salwar" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤342.00" DiscountPrice="¤270.00" PriceTiers="" />
+      <TitlePart Title="Navy Blue Salwar" />
+    </Product>
+    <Product Id="/alias=pink-flared-skirt/Sku=SKU-pink-flared-skirt" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=sweater-2/Sku=SKU-sweater" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=36e34fe23ef742d7959b7b7fddc20364,/Identifier=d3b1b244d4f74db484566840cb8fb99e,/Identifier=6466bf891ca74c54bd0f24449eb6b36d,/Identifier=f536c03083384e84850a6c38aef22a53" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/shorts-skirts" />
+      <TextField.Description />
+      <AutoroutePart Alias="pink-flared-skirt" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;iyasdgk iasdhfiuh 9w8rg isado oasdofhqw oweh owaeho h&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:41:06.1510986Z" PublishedUtc="2017-06-26T10:06:10.4117279Z" ModifiedUtc="2017-06-26T10:06:10.0868797Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-pink-flared-skirt" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤420.00" DiscountPrice="¤340.00" PriceTiers="" />
+      <TitlePart Title="Pink Flared Skirt" />
+    </Product>
+    <Product Id="/alias=red-pencil-skirt/Sku=SKU-red-pencil-skirt" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=sweater-2/Sku=SKU-sweater,/alias=sweater-4/Sku=SKU-sweater,/alias=knit-look-top/Sku=SKU-knit-look-top,/alias=blue-top/Sku=SKU-blue-top,/alias=white-top/Sku=SKU-white-top" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=d3b1b244d4f74db484566840cb8fb99e,/Identifier=5fd03b271f7a4f6bbcedbe324e35bb06,/Identifier=831257f5cf1d40a995746bfa24905c3f,/Identifier=2a0a59e59efc4aaab05ac08f712e972b" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/shorts-skirts" />
+      <TextField.Description />
+      <AutoroutePart Alias="red-pencil-skirt" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;iubeuiijb &amp;nbsp;dfuibhu9beiob ie vfhopi hoewfh ou seefgljfdslkgy wikh viweur&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:41:45.2977692Z" PublishedUtc="2017-06-26T10:06:16.2772122Z" ModifiedUtc="2017-06-26T10:06:16.2395157Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-red-pencil-skirt" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="87" Price="¤320.00" DiscountPrice="¤250.00" PriceTiers="" />
+      <TitlePart Title="Red Pencil Skirt" />
+    </Product>
+    <Product Id="/alias=sweater/Sku=SKU-sweater" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=fd4d57032ab04930aefb835dd8a5774f,/Identifier=de9f5b6ab0794dc9bdd8c62b6bd9998d,/Identifier=d80ff135e7674adeb44f417dbdda3d1b,/Identifier=4c87a70bdc974b6f9114a426d7f67a40" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/sweaters" />
+      <TextField.Description />
+      <AutoroutePart Alias="sweater" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;iucvbiugas oosiuhdfg aw98ehy fuawhe fugausdgf iuyqaw erofhbdfh glskdhogsdb&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T09:00:05.6526352Z" PublishedUtc="2017-06-26T10:03:52.7858838Z" ModifiedUtc="2017-06-26T10:03:52.3146369Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-sweater" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="23" Price="¤420.00" DiscountPrice="¤340.00" PriceTiers="" />
+      <TitlePart Title="Sweater" />
+    </Product>
+    <Product Id="/alias=sweater-2/Sku=SKU-sweater" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=black-solid-palazzo/Sku=SKU-black-solid-palazzo,/alias=beige-solid-chinos/Sku=SKU-beige-solid-chinos,/alias=gray-solid-chinos/Sku=SKU-gray-solid-chinos,/alias=brown-solid-chinos/Sku=SKU-brown-solid-chinos" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=de9f5b6ab0794dc9bdd8c62b6bd9998d,/Identifier=8dddd2a5f56f4b2cb81d805487acce5f,/Identifier=8378df039792467cbb19ff989cb5dd2b,/Identifier=d80ff135e7674adeb44f417dbdda3d1b" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/sweaters" />
+      <TextField.Description />
+      <AutoroutePart Alias="sweater-2" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;rojpiojsefg opij bwroihjirwa kij giqoiqowehf oasdohg ksaigawriuotwhgoash9p&amp;ograve;&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T09:00:51.7706136Z" PublishedUtc="2017-06-26T10:04:06.254662Z" ModifiedUtc="2017-06-26T10:04:06.1905038Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-sweater" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="0" Price="¤431.00" DiscountPrice="(¤1.00)" PriceTiers="" />
+      <TitlePart Title="Sweater" />
+    </Product>
+    <Product Id="/alias=sweater-3/Sku=SKU-sweater" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=8dddd2a5f56f4b2cb81d805487acce5f,/Identifier=8378df039792467cbb19ff989cb5dd2b,/Identifier=655f45547d2a48e5abb2e2bb187340b8,/Identifier=fd4d57032ab04930aefb835dd8a5774f" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/sweaters" />
+      <TextField.Description />
+      <AutoroutePart Alias="sweater-3" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;kjnlj ouihjsoa ifgoash dofai sufhgo sdo if osaejop gw aerj vg&amp;egrave;oawsdfhg 9zsdrr g9a&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T09:26:57.8922517Z" PublishedUtc="2017-06-26T10:03:56.0982847Z" ModifiedUtc="2017-06-26T10:03:55.9733647Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-sweater" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="8" Price="¤231.00" DiscountPrice="(¤1.00)" PriceTiers="" />
+      <TitlePart Title="Sweater" />
+    </Product>
+    <Product Id="/alias=sweater-4/Sku=SKU-sweater" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt,/alias=red-pencil-skirt/Sku=SKU-red-pencil-skirt,/alias=pink-flared-skirt/Sku=SKU-pink-flared-skirt" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=655f45547d2a48e5abb2e2bb187340b8,/Identifier=fd4d57032ab04930aefb835dd8a5774f,/Identifier=de9f5b6ab0794dc9bdd8c62b6bd9998d,/Identifier=8dddd2a5f56f4b2cb81d805487acce5f" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/sweaters" />
+      <TextField.Description />
+      <AutoroutePart Alias="sweater-4" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;&amp;nbsp;ivyhsdof piub feb ihpi iperguobn,m-we,nqwe uiobadscviupxczoub wipiuwaeubgv&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T09:27:49.6400607Z" PublishedUtc="2017-06-26T10:04:00.9548738Z" ModifiedUtc="2017-06-26T10:04:00.8971398Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-sweater" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="7" Price="¤323.00" DiscountPrice="¤270.00" PriceTiers="" />
+      <TitlePart Title="Sweater" />
+    </Product>
+    <Product Id="/alias=white-top/Sku=SKU-white-top" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=floreal-border-skirt/Sku=SKU-floreal-border-skirt,/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt,/alias=red-pencil-skirt/Sku=SKU-red-pencil-skirt,/alias=pink-flared-skirt/Sku=SKU-pink-flared-skirt" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=610429947ab24259a0d27407bf71c267,/Identifier=aedca37343894b62b4f9710c2e8bd668,/Identifier=3824fcf6315544bba05f65958ea80a5e,/Identifier=b7963dddf3be4760bd986208de91670f" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/shirts-tops" />
+      <TextField.Description />
+      <AutoroutePart Alias="white-top" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;ibsq noq nwetunqwbf aw eefoj sofuvy aiugyak boifo gaose&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:33:36.6531298Z" PublishedUtc="2017-06-26T10:10:10.3063571Z" ModifiedUtc="2017-06-26T10:10:10.2361628Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-white-top" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤320.00" DiscountPrice="¤250.00" PriceTiers="" />
+      <TitlePart Title="White Top" />
+    </Product>
+    <Product Id="/alias=yellow-cotton-skirt/Sku=SKU-yellow-cotton-skirt" Status="Published">
+      <BooleanField.IsNewProduct />
+      <ContentPickerField.RelatedProducts ContentItems="/alias=sweater-4/Sku=SKU-sweater,/alias=sweater-3/Sku=SKU-sweater,/alias=sweater/Sku=SKU-sweater" />
+      <MediaLibraryPickerField.ProductImage ContentItems="/Identifier=6466bf891ca74c54bd0f24449eb6b36d,/Identifier=9f3ee872694643979fd65ac41dd8fdb2,/Identifier=f536c03083384e84850a6c38aef22a53" />
+      <NumericField.Creator Value="" />
+      <NumericField.LastModifier Value="" />
+      <TaxonomyField.Category Terms="/alias=products\/clothing\/shorts-skirts" />
+      <TextField.Description />
+      <AutoroutePart Alias="yellow-cotton-skirt" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;dsgf iwiert0 iertoiwejr poijtgoiasdfog oawiejrfowadn oiqejfo asdofojhnfsad&amp;nbsp;&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-06-26T08:42:42.3224643Z" PublishedUtc="2017-06-26T10:06:20.3862258Z" ModifiedUtc="2017-06-26T10:06:20.3239169Z" />
+      <ProductAttributesPart Attributes="" Ids="" />
+      <ProductPart Sku="SKU-yellow-cotton-skirt" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="0" Price="¤231.00" DiscountPrice="¤200.00" PriceTiers="" />
+      <TitlePart Title="Yellow Cotton Skirt" />
+    </Product>
     <TopBrand Id="/Identifier=0badb153aa984ca79bac193264e87257" Status="Published">
       <MediaLibraryPickerField.Logo ContentItems="/Identifier=4ec3e61b98034c9eaf37186347a38920" />
       <NumericField.Creator Value="2" />
@@ -2630,9 +2659,18 @@
       <IdentityPart Identifier="eea0fa3c523a4d78b1e8c35f5c9c3d0d" />
       <TitlePart Title="Levi's" />
     </TopBrand>
-    <WeightBasedShippingMethod Id="" Status="Published">
+    <WeightBasedShippingMethod Id="/Identifier=e926e4b119b7466eb8559c2dbe4e01ab" Status="Published">
+      <IdentityPart Identifier="e926e4b119b7466eb8559c2dbe4e01ab" />
       <TitlePart Title="Laser deliveries" />
       <WeightBasedShippingMethodPart Name="LaserDeliveries" ShippingCompany="Laser srl" MinimumWeight="0" MaximumWeight="null" IncludedShippingAreas="world" ExcludedShippingAreas="" Price="€ 5,00" />
     </WeightBasedShippingMethod>
+    <SubscriberRegistrationWidget Id="/Identifier=e6a770a087d14b489982d768df2e50d8" Status="Published">
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <CommonPart Owner="/User.UserName=admin" Container="/Layer.LayerName=Default" CreatedUtc="2017-06-26T13:54:26.6482907Z" PublishedUtc="2017-07-12T10:28:18.0176596Z" ModifiedUtc="2017-07-12T10:28:18.0009686Z" />
+      <IdentityPart Identifier="e6a770a087d14b489982d768df2e50d8" />
+      <SubscriberRegistrationPart NewsletterDefinitionIds="/Identifier=8d0fb770674e4af8be8576b629693b5e" PermitCumulativeRegistrations="false" />
+      <WidgetPart Title="Newsletter" Position="7" Zone="AfterMain" RenderTitle="false" Name="" CssClasses="" />
+    </SubscriberRegistrationWidget>
   </Content>
 </Orchard>

@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Orchard>
   <Recipe>
-    <Name>ECommerceThemeSetup</Name>
-    <Description>This recipes configures a new instance to use the ecommerce theme.</Description>
+    <Name>SetupTheme</Name>
+    <Description>This recipes configures the current instance to use the ecommerce theme.</Description>
     <Author>Laser srl</Author>
     <WebSite>www.laser-group.com</WebSite>
     <Version>1.0</Version>
     <Category>Default</Category>
-    <IsSetupRecipe>true</IsSetupRecipe>
+    <IsSetupRecipe>false</IsSetupRecipe>
   </Recipe>
   <Feature enable="Common,
         Containers,

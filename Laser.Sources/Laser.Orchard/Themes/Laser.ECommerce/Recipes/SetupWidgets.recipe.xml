@@ -5,6 +5,8 @@
     <Author>Laser srl</Author>
     <WebSite>www.laser-group.com</WebSite>
     <Version>1.0</Version>
+    <Category>Setup</Category>
+    <Description>Set up the widgets for the ecommerce theme.</Description>
     <IsSetupRecipe>false</IsSetupRecipe>
   </Recipe>
   <Content>

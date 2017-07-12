@@ -113,7 +113,7 @@
     <Content Include="Assets.json" />
     <Content Include="Recipes\ECommerceThemeSetup.recipe.xml" />
     <Content Include="Recipes\SetupDemoContents.recipe.xml" />
-    <Content Include="Recipes\SetupDemoSite.recipe.xml" />
+    <Content Include="Recipes\SetupEcommerceTheme.recipe.xml" />
     <Content Include="Recipes\SetupNavigation.recipe.xml" />
     <Content Include="Recipes\SetupProjections.recipe.xml" />
     <Content Include="Recipes\SetupTaxonomies.recipe.xml" />
@@ -215,7 +215,6 @@
     <Content Include="Views\Document.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\" />
     <Folder Include="Styles\fonts\font-awesome-4.6.2\scss\" />
   </ItemGroup>
   <ItemGroup>
@@ -252,6 +251,7 @@
     <Content Include="Views\NavigationTaxonomyMenuLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\DemoMedia.zip" />
     <None Include="bundleconfig.json" />
     <Content Include="Views\Banner.cshtml" />
     <Content Include="Views\Fields.MediaLibraryPicker-Banner.cshtml" />
