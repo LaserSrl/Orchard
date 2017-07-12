@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.Reporting.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
+using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Projections;
 using Orchard.UI.Navigation;
@@ -10,8 +11,10 @@ namespace Laser.Orchard.Reporting {
     public class AdminMenu : INavigationProvider
     {
         private readonly IContentManager _contentManager;
-        public AdminMenu(IContentManager contentManager) {
+        private readonly ITransactionManager _transactionManager;
+        public AdminMenu(IContentManager contentManager, ITransactionManager transactionManager) {
             _contentManager = contentManager;
+            _transactionManager = transactionManager;
             T = NullLocalizer.Instance;
         }
         public Localizer T { get; set; }
@@ -34,7 +37,7 @@ namespace Laser.Orchard.Reporting {
                 item.Caption(T("Data Report Dashboards"))
                     .Permission(Security.Permissions.ShowDataDashboard)
                     .Position("3.06");
-                var dashboardPermissions = new Security.Permissions(_contentManager).GetDashboardPermissions();
+                var dashboardPermissions = new Security.Permissions(_contentManager, _transactionManager).GetDashboardPermissions();
                 foreach(var dashboard in GetDashboards()) {
                     item.Add(T(dashboard.As<TitlePart>().Title), sub => sub
                         .Action("ShowDashboard", "Report", new { area = "Laser.Orchard.Reporting", Id = dashboard.Id })
