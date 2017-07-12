@@ -250,13 +250,13 @@ namespace Laser.Orchard.Reporting.Services {
         }
         public Dictionary<int, Permission> GetReportPermissions() {
             if (_reportPermissions == null) {
-                _reportPermissions = new Security.Permissions(contentManager).GetReportPermissions();
+                _reportPermissions = new Security.Permissions(contentManager, _transactionManager).GetReportPermissions();
             }
             return _reportPermissions;
         }
         public Dictionary<int, Permission> GetDashboardPermissions() {
             if (_dashboardPermissions == null) {
-                _dashboardPermissions = new Security.Permissions(contentManager).GetDashboardPermissions();
+                _dashboardPermissions = new Security.Permissions(contentManager, _transactionManager).GetDashboardPermissions();
             }
             return _dashboardPermissions;
         }
